@@ -8,7 +8,7 @@
     <!-- Phase 1: curated nullability warnings only (not global TreatWarningsAsErrors). Full strictness deferred to phase 31. -->
     <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CS8625</WarningsAsErrors>
     <!-- Explicit using ordering per .rules; do NOT auto-reorder usings -->
-    <NoWarn>CS1591</NoWarn>
+    <NoWarn>CS1591;NU1902;NU1903</NoWarn>
   </PropertyGroup>
 
   <!-- dotnet format-compatible style for non-using concerns -->

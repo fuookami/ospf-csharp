@@ -6,8 +6,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// <summary>
 /// 二维轴置换 / 2D axis permutation.
 /// </summary>
-public sealed record AxisPermutation2(Axis2 WidthAxis, Axis2 HeightAxis)
-{
+public sealed record AxisPermutation2(Axis2 WidthAxis, Axis2 HeightAxis) {
     /// <summary>XY 置换 / XY permutation.</summary>
     public static readonly AxisPermutation2 XY = new(Axis2.X, Axis2.Y);
     /// <summary>YX 置换 / YX permutation.</summary>

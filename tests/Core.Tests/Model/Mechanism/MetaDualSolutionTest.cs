@@ -1,7 +1,5 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -15,90 +13,84 @@ using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
+using System.Collections.Generic;
 using Xunit;
 
-namespace Fuookami.Ospf.Core.Tests.Model.Mechanism
-{
-    public class MetaDualSolutionTest
-    {
-        [Fact]
-        public void Create_FromLinearDualMap_ShouldPartitionConstraintsAndSymbols()
+namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
+
+public class MetaDualSolutionTest {
+    [Fact]
+    public void Create_FromLinearDualMap_ShouldPartitionConstraintsAndSymbols() {
+        var variable = new RealVar("x");
+        var mathConstraint = new TestMathConstraint();
+        var tokenTable = new Fuookami.Ospf.Core.Token.ConcurrentAutoTokenTable<Flt64>(
+            LinearCategory.Instance, new List<IIntermediateSymbol>());
+        tokenTable.Add(variable);
+
+        var monomials = new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) };
+        var flattenData = new Fuookami.Ospf.Core.Symbol.Flatten.LinearFlattenData<Flt64>(monomials, Flt64.Zero);
+        var relation = new LinearRelationImpl<Flt64>(flattenData, Comparison.LE, "c1");
+        Result<LinearConstraintImpl<Flt64>, ErrorCode, Error<ErrorCode>> createResult = LinearConstraintImpl<Flt64>.Create(relation, tokenTable,
+            new IdentityFlt64Converter(), name: "c1", origin: mathConstraint);
+        LinearConstraintImpl<Flt64> constraint = ((Result<LinearConstraintImpl<Flt64>, ErrorCode, Error<ErrorCode>>)createResult).Value;
+
+        var dualMap = new Dictionary<IConstraint<Flt64, LinearCategory>, Flt64>
         {
-            var variable = new RealVar("x");
-            var mathConstraint = new TestMathConstraint();
-            var tokenTable = new Fuookami.Ospf.Core.Token.ConcurrentAutoTokenTable<Flt64>(
-                LinearCategory.Instance, new List<IIntermediateSymbol>());
-            tokenTable.Add(variable);
+            { constraint, Flt64.One }
+        };
 
-            var monomials = new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) };
-            var flattenData = new Fuookami.Ospf.Core.Symbol.Flatten.LinearFlattenData<Flt64>(monomials, Flt64.Zero);
-            var relation = new LinearRelationImpl<Flt64>(flattenData, Comparison.LE, "c1");
-            var createResult = LinearConstraintImpl<Flt64>.Create(relation, tokenTable,
-                new IdentityFlt64Converter(), name: "c1", origin: mathConstraint);
-            var constraint = ((Result<LinearConstraintImpl<Flt64>, ErrorCode, Error<ErrorCode>>)createResult).Value;
+        // MetaDualSolution.Create is a PUBLIC factory (no reflection!)
+        var result = MetaDualSolution.Create(dualMap);
 
-            var dualMap = new Dictionary<IConstraint<Flt64, LinearCategory>, Flt64>
-            {
-                { constraint, Flt64.One }
-            };
+        result.Should().NotBeNull();
+        result.Constraints.Should().ContainKey(mathConstraint);
+        result.Constraints[mathConstraint].Should().Be(Flt64.One);
+    }
 
-            // MetaDualSolution.Create is a PUBLIC factory (no reflection!)
-            var result = MetaDualSolution.Create(dualMap);
+    [Fact]
+    public void Create_EmptyDualMap_ShouldReturnEmptySolution() {
+        var dualMap = new Dictionary<IConstraint<Flt64, LinearCategory>, Flt64>();
 
-            result.Should().NotBeNull();
-            result.Constraints.Should().ContainKey(mathConstraint);
-            result.Constraints[mathConstraint].Should().Be(Flt64.One);
-        }
+        var result = MetaDualSolution.Create(dualMap);
 
-        [Fact]
-        public void Create_EmptyDualMap_ShouldReturnEmptySolution()
-        {
-            var dualMap = new Dictionary<IConstraint<Flt64, LinearCategory>, Flt64>();
+        result.Should().NotBeNull();
+        result.Constraints.Should().BeEmpty();
+        result.Symbols.Should().BeEmpty();
+    }
 
-            var result = MetaDualSolution.Create(dualMap);
+    [Fact]
+    public void Empty_ShouldReturnSingleton() {
+        MetaDualSolution result = MetaDualSolution.Empty;
 
-            result.Should().NotBeNull();
-            result.Constraints.Should().BeEmpty();
-            result.Symbols.Should().BeEmpty();
-        }
+        result.Should().NotBeNull();
+        result.Constraints.Should().BeEmpty();
+        result.Symbols.Should().BeEmpty();
+    }
 
-        [Fact]
-        public void Empty_ShouldReturnSingleton()
-        {
-            var result = MetaDualSolution.Empty;
+    [Fact]
+    public void ToMeta_Extension_ShouldDelegateToCreate() {
+        var dualMap = new Dictionary<IConstraint<Flt64, LinearCategory>, Flt64>();
 
-            result.Should().NotBeNull();
-            result.Constraints.Should().BeEmpty();
-            result.Symbols.Should().BeEmpty();
-        }
+        MetaDualSolution result = dualMap.ToMeta();
 
-        [Fact]
-        public void ToMeta_Extension_ShouldDelegateToCreate()
-        {
-            var dualMap = new Dictionary<IConstraint<Flt64, LinearCategory>, Flt64>();
+        result.Should().NotBeNull();
+        result.Constraints.Should().BeEmpty();
+    }
 
-            var result = dualMap.ToMeta();
+    private class TestMathConstraint : MathConstraint {
+        public IMetaConstraintGroup? Group => null;
+        public bool Lazy => false;
+        public object? Args => null;
+        public int Priority => 0;
+        public string Name => "test";
+        public string? DisplayName => null;
+    }
 
-            result.Should().NotBeNull();
-            result.Constraints.Should().BeEmpty();
-        }
-
-        private class TestMathConstraint : MathConstraint
-        {
-            public IMetaConstraintGroup? Group => null;
-            public bool Lazy => false;
-            public object? Args => null;
-            public int Priority => 0;
-            public string Name => "test";
-            public string? DisplayName => null;
-        }
-
-        private class IdentityFlt64Converter : IFlt64ValueConverter<Flt64>
-        {
-            public Flt64 Zero => Flt64.Zero;
-            public Flt64 One => Flt64.One;
-            public Flt64 IntoValue(Flt64 value) => value;
-            public Flt64 FromValue(Flt64 value) => value;
-        }
+    private class IdentityFlt64Converter : IFlt64ValueConverter<Flt64> {
+        public Flt64 Zero => Flt64.Zero;
+        public Flt64 One => Flt64.One;
+        public Flt64 IntoValue(Flt64 value) => value;
+        public Flt64 FromValue(Flt64 value) => value;
     }
 }

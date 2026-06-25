@@ -11,8 +11,7 @@ namespace Fuookami.Ospf.Quantities.Geometry;
 /// </summary>
 /// <typeparam name="V">数值类型 / Number type.</typeparam>
 public interface IQuantityShape3<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>最小包围长方体 / Minimum bounding cuboid.</summary>
     QuantityCuboid3<V> BoundingCuboid { get; }
 }

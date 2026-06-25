@@ -1,29 +1,25 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
+using Fuookami.Ospf.Core.Token;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Symbol;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
-using Fuookami.Ospf.Core.Token;
-namespace Fuookami.Ospf.Core.Symbol.Function
-{
-    using Try = Result<Success, ErrorCode, Error<ErrorCode>>;
+using System;
+using System.Collections.Generic;
+using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional.Success, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>;
 
-
+namespace Fuookami.Ospf.Core.Symbol.Function;
 /// <summary>
 /// 下取整函数 / Floor function
 /// </summary>
-public sealed class FloorFunction : IMathFunctionSymbol<Flt64>
-{
+public sealed class FloorFunction : IMathFunctionSymbol<Flt64> {
     public string Name { get; set; }
     public string? DisplayName { get; set; }
     public IReadOnlyList<IVariableItem> HelperVariables => Array.Empty<IVariableItem>();
 
-    public FloorFunction(string name = "floor", string? displayName = null)
-    {
+    public FloorFunction(string name = "floor", string? displayName = null) {
         Name = name;
         DisplayName = displayName;
     }
@@ -35,5 +31,4 @@ public sealed class FloorFunction : IMathFunctionSymbol<Flt64>
 
     public Try RegisterConstraints(object model) =>
         Results.Ok<Success>(Results.SuccessInstance);
-}
 }

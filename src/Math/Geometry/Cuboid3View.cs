@@ -6,16 +6,14 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// <summary>
 /// 长方体轴置换视图 / Axis-permuted view of a cuboid.
 /// </summary>
-public sealed record Cuboid3View<V> where V : struct, IFloatingNumber<V>
-{
+public sealed record Cuboid3View<V> where V : struct, IFloatingNumber<V> {
     /// <summary>原始长方体 / Origin cuboid.</summary>
     public Cuboid3<V> Origin { get; }
 
     /// <summary>置换 / Permutation.</summary>
     public AxisPermutation3 Permutation { get; }
 
-    public Cuboid3View(Cuboid3<V> origin, AxisPermutation3? permutation = null)
-    {
+    public Cuboid3View(Cuboid3<V> origin, AxisPermutation3? permutation = null) {
         Origin = origin;
         Permutation = permutation ?? AxisPermutation3.XYZ;
     }

@@ -1,9 +1,9 @@
 #nullable enable
-using System.Collections.Generic;
-using System.Linq;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Algebra.ValueRange;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
@@ -12,8 +12,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// </summary>
 public sealed record Rectangle<D, V>
     where D : struct, IDimension
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>顶点 1 / Vertex 1.</summary>
     public Point<D, V> P1 { get; }
     /// <summary>顶点 2 / Vertex 2.</summary>
@@ -27,17 +26,16 @@ public sealed record Rectangle<D, V>
     /// <summary>短边 / Shorter side.</summary>
     public V Width { get; }
 
-    public Rectangle(Point<D, V> p1, Point<D, V> p2, Point<D, V> p3, Point<D, V> p4)
-    {
+    public Rectangle(Point<D, V> p1, Point<D, V> p2, Point<D, V> p3, Point<D, V> p4) {
         P1 = p1;
         P2 = p2;
         P3 = p3;
         P4 = p4;
         var e1 = new Edge<D, V>(p1, p2);
         var e2 = new Edge<D, V>(p2, p3);
-        var l1 = e1.Length;
-        var l2 = e2.Length;
-        var (mn, mx) = GeometryOps.MinMax(l1, l2);
+        V l1 = e1.Length;
+        V l2 = e2.Length;
+        (V mn, V mx) = GeometryOps.MinMax(l1, l2);
         Width = mn;
         Length = mx;
     }
@@ -52,12 +50,10 @@ public sealed record Rectangle<D, V>
     /// <summary>面积 / Area.</summary>
     public V Area => Length.Times(Width);
 
-    private (V[] Mins, V[] Maxs) LeftUpperRightBottom
-    {
-        get
-        {
-            var mins = P1.Indices.Select(i => GeometryOps.MinMax(P1[i], P2[i], P3[i], P4[i]).Min).ToArray();
-            var maxs = P1.Indices.Select(i => GeometryOps.MinMax(P1[i], P2[i], P3[i], P4[i]).Max).ToArray();
+    private (V[] Mins, V[] Maxs) LeftUpperRightBottom {
+        get {
+            V[] mins = P1.Indices.Select(i => GeometryOps.MinMax(P1[i], P2[i], P3[i], P4[i]).Min).ToArray();
+            V[] maxs = P1.Indices.Select(i => GeometryOps.MinMax(P1[i], P2[i], P3[i], P4[i]).Max).ToArray();
             return (mins, maxs);
         }
     }
@@ -70,22 +66,26 @@ public sealed record Rectangle<D, V>
 }
 
 /// <summary>二维矩形扩展 / 2D rectangle extensions.</summary>
-public static class Rectangle2DExtensions
-{
+public static class Rectangle2DExtensions {
     /// <summary>点是否在矩形内 / Whether a point is inside the rectangle.</summary>
     public static bool Contains(
         this Rectangle<Dim2, Flt64> rect,
         Point<Dim2, Flt64> point,
         bool withLowerBound = true,
         bool withUpperBound = true,
-        bool withBorder = true)
-    {
-        var (minX, maxX) = GeometryOps.MinMax(rect.P1.X(), rect.P2.X(), rect.P3.X(), rect.P4.X());
-        var (minY, maxY) = GeometryOps.MinMax(rect.P1.Y(), rect.P2.Y(), rect.P3.Y(), rect.P4.Y());
-        var lower = (withBorder && withLowerBound) ? (Interval)new Interval.Closed() : new Interval.Open();
-        var upper = (withBorder && withUpperBound) ? (Interval)new Interval.Closed() : new Interval.Open();
-        if (ValueRange<Flt64>.Of(minX, maxX, lower, upper) is not { } xRange) return false;
-        if (ValueRange<Flt64>.Of(minY, maxY, lower, upper) is not { } yRange) return false;
+        bool withBorder = true) {
+        (Flt64 minX, Flt64 maxX) = GeometryOps.MinMax(rect.P1.X(), rect.P2.X(), rect.P3.X(), rect.P4.X());
+        (Flt64 minY, Flt64 maxY) = GeometryOps.MinMax(rect.P1.Y(), rect.P2.Y(), rect.P3.Y(), rect.P4.Y());
+        Interval lower = (withBorder && withLowerBound) ? (Interval)new Interval.Closed() : new Interval.Open();
+        Interval upper = (withBorder && withUpperBound) ? (Interval)new Interval.Closed() : new Interval.Open();
+        if (ValueRange<Flt64>.Of(minX, maxX, lower, upper) is not { } xRange) {
+            return false;
+        }
+
+        if (ValueRange<Flt64>.Of(minY, maxY, lower, upper) is not { } yRange) {
+            return false;
+        }
+
         return xRange.Value.Contains(point.X()) && yRange.Value.Contains(point.Y());
     }
 }

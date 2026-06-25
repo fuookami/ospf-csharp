@@ -1,6 +1,6 @@
 #nullable enable
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
+using System;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
@@ -12,8 +12,7 @@ public abstract record Projection2<V> where V : struct, IFloatingNumber<V>;
 /// <summary>
 /// 二维圆形投影 / 2D circle projection (radius).
 /// </summary>
-public sealed record Circle2<V>(V Radius) : Projection2<V> where V : struct, IFloatingNumber<V>
-{
+public sealed record Circle2<V>(V Radius) : Projection2<V> where V : struct, IFloatingNumber<V> {
     /// <summary>直径 / Diameter.</summary>
     public V Diameter => GeometryOps.Plus(Radius, Radius);
 
@@ -27,14 +26,12 @@ public sealed record Circle2<V>(V Radius) : Projection2<V> where V : struct, IFl
 /// <summary>
 /// 二维矩形投影 / 2D rectangle projection (width x height).
 /// </summary>
-public sealed record Rectangle2<V>(V Width, V Height) : Projection2<V> where V : struct, IFloatingNumber<V>
-{
+public sealed record Rectangle2<V>(V Width, V Height) : Projection2<V> where V : struct, IFloatingNumber<V> {
     /// <summary>面积 / Area.</summary>
     public V Area => Width.Times(Height);
 
     /// <summary>沿指定轴的尺寸 / Dimension along an axis.</summary>
-    public V Along(Axis2 axis) => axis switch
-    {
+    public V Along(Axis2 axis) => axis switch {
         Axis2.X => Width,
         Axis2.Y => Height,
         _ => throw new ArgumentOutOfRangeException(nameof(axis)),

@@ -1,9 +1,9 @@
 #nullable enable
+using Fuookami.Ospf.Math.Algebra.Concept;
+using Fuookami.Ospf.Math.Algebra.Number;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fuookami.Ospf.Math.Algebra.Concept;
-using Fuookami.Ospf.Math.Algebra.Number;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
@@ -14,17 +14,18 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// </summary>
 public class Vector<D, V> : INormedSpace<Vector<D, V>, V>
     where D : struct, IDimension
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>分量列表 / Components.</summary>
     public IReadOnlyList<V> Components { get; }
 
     /// <summary>维度信息 / Dimension information.</summary>
     public D Dim { get; }
 
-    public Vector(IReadOnlyList<V> components, D dim)
-    {
-        if (components.Count != dim.Size) throw new ArgumentException("components.Count must equal dim.Size");
+    public Vector(IReadOnlyList<V> components, D dim) {
+        if (components.Count != dim.Size) {
+            throw new ArgumentException("components.Count must equal dim.Size");
+        }
+
         Components = components;
         Dim = dim;
         _norm = new Lazy<V>(() => NormOf(components));
@@ -50,10 +51,9 @@ public class Vector<D, V> : INormedSpace<Vector<D, V>, V>
     /// <summary>单位向量 / Unit vector.</summary>
     public Vector<D, V> Unit => _unit.Value;
 
-    private static V NormOf(IReadOnlyList<V> v)
-    {
-        var c = v[0].Constants;
-        var sum = v.Select((_, i) => v[i].Sqr()).Aggregate(c.Zero, (acc, x) => acc.Plus(x));
+    private static V NormOf(IReadOnlyList<V> v) {
+        IFloatingNumberConstants<V> c = v[0].Constants;
+        V sum = v.Select((_, i) => v[i].Sqr()).Aggregate(c.Zero, (acc, x) => acc.Plus(x));
         return sum.Sqrt();
     }
 
@@ -99,9 +99,8 @@ public class Vector<D, V> : INormedSpace<Vector<D, V>, V>
     public static Vector<D, V> operator *(V lhs, Vector<D, V> rhs) => rhs.Scale(lhs);
 
     /// <inheritdoc/>
-    public V Dot(Vector<D, V> rhs)
-    {
-        var c = this[0].Constants;
+    public V Dot(Vector<D, V> rhs) {
+        IFloatingNumberConstants<V> c = this[0].Constants;
         return Indices.Select(i => this[i].Times(rhs[i])).Aggregate(c.Zero, (acc, x) => acc.Plus(x));
     }
 
@@ -113,10 +112,12 @@ public class Vector<D, V> : INormedSpace<Vector<D, V>, V>
         new(lhs.Indices.Select(i => lhs[i].Plus(rhs[i])).ToArray(), lhs.Dim);
 
     /// <summary>夹角（弧度），零向量返回 null / Angle in radians, null for zero vector.</summary>
-    public V? Angle(Vector<D, V> rhs)
-    {
-        var denom = Norm.Times(rhs.Norm);
-        if (denom.Eq(default)) return null;
+    public V? Angle(Vector<D, V> rhs) {
+        V denom = Norm.Times(rhs.Norm);
+        if (denom.Eq(default)) {
+            return null;
+        }
+
         return Dot(rhs).Div(denom).Acos();
     }
 
@@ -124,9 +125,8 @@ public class Vector<D, V> : INormedSpace<Vector<D, V>, V>
     public bool IsOrthogonal(Vector<D, V> rhs, V epsilon) => Dot(rhs).Abs().Ls(epsilon);
 
     /// <summary>余弦相似度 / Cosine similarity.</summary>
-    public V? CosineSimilarity(Vector<D, V> rhs)
-    {
-        var denom = Norm.Times(rhs.Norm);
+    public V? CosineSimilarity(Vector<D, V> rhs) {
+        V denom = Norm.Times(rhs.Norm);
         return denom.Eq(default) ? default(V?) : Dot(rhs).Div(denom);
     }
 
@@ -163,8 +163,7 @@ public class Vector<D, V> : INormedSpace<Vector<D, V>, V>
 }
 
 /// <summary>向量扩展方法 / Vector extension methods.</summary>
-public static class VectorExtensions
-{
+public static class VectorExtensions {
     /// <summary>二维向量 X 分量 / 2D vector X component.</summary>
     public static Flt64 X(this Vector<Dim2, Flt64> v) => v[0];
 

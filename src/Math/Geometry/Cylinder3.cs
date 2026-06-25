@@ -1,8 +1,8 @@
 #nullable enable
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
@@ -13,14 +13,12 @@ public sealed record AxisLine3<V>(Axis3 Axis, V From, V To) where V : struct, IF
 /// 三维圆柱体 / 3D cylinder (radius x height x axis).
 /// </summary>
 public sealed record Cylinder3<V>(V Radius, V Height, Axis3 Axis) : IShape3<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>直径 / Diameter.</summary>
     public V Diameter => GeometryOps.Plus(Radius, Radius);
 
     /// <inheritdoc/>
-    public Cuboid3<V> BoundingCuboid => Axis switch
-    {
+    public Cuboid3<V> BoundingCuboid => Axis switch {
         Axis3.X => new(Height, Diameter, Diameter),
         Axis3.Y => new(Diameter, Height, Diameter),
         Axis3.Z => new(Diameter, Diameter, Height),

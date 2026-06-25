@@ -1,9 +1,9 @@
 #nullable enable
 
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Quantities.Quantity;
+using System;
 
 namespace Fuookami.Ospf.Quantities.Geometry;
 
@@ -17,8 +17,7 @@ public sealed record QuantityCuboid3<V>(
     Quantity<V> Height,
     Quantity<V> Depth
 ) : IQuantityShape3<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>最小包围长方体（自身）/ Minimum bounding cuboid (self).</summary>
     public QuantityCuboid3<V> BoundingCuboid => this;
 
@@ -36,8 +35,7 @@ public sealed record QuantityCuboid3<V>(
         new(x, y, z, this);
 
     /// <summary>获取沿指定轴的尺寸 / Get the dimension along a specified axis.</summary>
-    public Quantity<V> Along(Axis3 axis) => axis switch
-    {
+    public Quantity<V> Along(Axis3 axis) => axis switch {
         Axis3.X => Width,
         Axis3.Y => Height,
         Axis3.Z => Depth,

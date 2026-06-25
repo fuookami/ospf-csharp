@@ -1,16 +1,15 @@
 #nullable enable
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
 /// <summary>
 /// 三维轴置换 / 3D axis permutation.
 /// </summary>
-public sealed record AxisPermutation3
-{
+public sealed record AxisPermutation3 {
     /// <summary>宽度轴 / Width axis.</summary>
     public Axis3 WidthAxis { get; }
     /// <summary>高度轴 / Height axis.</summary>
@@ -18,10 +17,11 @@ public sealed record AxisPermutation3
     /// <summary>深度轴 / Depth axis.</summary>
     public Axis3 DepthAxis { get; }
 
-    public AxisPermutation3(Axis3 widthAxis, Axis3 heightAxis, Axis3 depthAxis)
-    {
-        if (widthAxis == heightAxis || heightAxis == depthAxis || widthAxis == depthAxis)
+    public AxisPermutation3(Axis3 widthAxis, Axis3 heightAxis, Axis3 depthAxis) {
+        if (widthAxis == heightAxis || heightAxis == depthAxis || widthAxis == depthAxis) {
             throw new ArgumentException("AxisPermutation3 requires three distinct axes.");
+        }
+
         WidthAxis = widthAxis;
         HeightAxis = heightAxis;
         DepthAxis = depthAxis;
@@ -50,8 +50,7 @@ public sealed record AxisPermutation3
         => MapAxis(cylinder.Axis).Map(axis => cylinder with { Axis = axis, });
 
     /// <summary>原始轴 → 置换后标准轴 / Original axis → permuted standard axis.</summary>
-    public Result<Axis3, ErrorCode, Error<ErrorCode>> MapAxis(Axis3 axis) => axis switch
-    {
+    public Result<Axis3, ErrorCode, Error<ErrorCode>> MapAxis(Axis3 axis) => axis switch {
         _ when axis == WidthAxis => Results.Ok(Axis3.X),
         _ when axis == HeightAxis => Results.Ok(Axis3.Y),
         _ when axis == DepthAxis => Results.Ok(Axis3.Z),

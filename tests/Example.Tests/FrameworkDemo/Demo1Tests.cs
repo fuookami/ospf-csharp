@@ -2,76 +2,70 @@
 
 using FluentAssertions;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo1;
+using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 using Xunit;
 
-namespace Fuookami.Ospf.Example.Tests.FrameworkDemo
-{
-    public class Demo1CapitalInvestmentTests
-    {
-        [Fact]
-        public void BuildModel_ShouldSucceed()
-        {
-            // Arrange
-            var demo = new CapitalInvestmentDemo();
+namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
-            // Act
-            var result = demo.BuildModel();
+public class Demo1CapitalInvestmentTests {
+    [Fact]
+    public void BuildModel_ShouldSucceed() {
+        // Arrange
+        var demo = new CapitalInvestmentDemo();
 
-            // Assert
-            result.Should().BeOfType<Ok<Success, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>>();
-        }
+        // Act
+        Result<Success, ErrorCode, Error<ErrorCode>> result = demo.BuildModel();
 
-        [Fact]
-        public void Model_ShouldHaveCorrectName()
-        {
-            // Arrange
-            var demo = new CapitalInvestmentDemo();
+        // Assert
+        result.Should().BeOfType<Ok<Success, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>>();
+    }
 
-            // Act
-            demo.BuildModel();
+    [Fact]
+    public void Model_ShouldHaveCorrectName() {
+        // Arrange
+        var demo = new CapitalInvestmentDemo();
 
-            // Assert
-            demo.MetaModel.Name.Should().Be("demo1-capital-investment");
-        }
+        // Act
+        demo.BuildModel();
 
-        [Fact]
-        public void Model_ShouldHaveMaximumObjective()
-        {
-            // Arrange
-            var demo = new CapitalInvestmentDemo();
+        // Assert
+        demo.MetaModel.Name.Should().Be("demo1-capital-investment");
+    }
 
-            // Act
-            demo.BuildModel();
+    [Fact]
+    public void Model_ShouldHaveMaximumObjective() {
+        // Arrange
+        var demo = new CapitalInvestmentDemo();
 
-            // Assert
-            demo.MetaModel.ObjectCategory.Should().Be(Fuookami.Ospf.Core.Model.Basic.ObjectCategory.Maximum);
-        }
+        // Act
+        demo.BuildModel();
 
-        [Fact]
-        public void Model_ShouldHaveFiveVariables()
-        {
-            // Arrange
-            var demo = new CapitalInvestmentDemo();
+        // Assert
+        demo.MetaModel.ObjectCategory.Should().Be(Fuookami.Ospf.Core.Model.Basic.ObjectCategory.Maximum);
+    }
 
-            // Act
-            demo.BuildModel();
+    [Fact]
+    public void Model_ShouldHaveFiveVariables() {
+        // Arrange
+        var demo = new CapitalInvestmentDemo();
 
-            // Assert
-            demo.MetaModel.MetaSubObjects.Should().NotBeEmpty();
-        }
+        // Act
+        demo.BuildModel();
 
-        [Fact]
-        public void Model_ShouldHaveConstraints()
-        {
-            // Arrange
-            var demo = new CapitalInvestmentDemo();
+        // Assert
+        demo.MetaModel.MetaSubObjects.Should().NotBeEmpty();
+    }
 
-            // Act
-            demo.BuildModel();
+    [Fact]
+    public void Model_ShouldHaveConstraints() {
+        // Arrange
+        var demo = new CapitalInvestmentDemo();
 
-            // Assert
-            demo.MetaModel.RelationConstraints.Should().NotBeEmpty();
-        }
+        // Act
+        demo.BuildModel();
+
+        // Assert
+        demo.MetaModel.RelationConstraints.Should().NotBeEmpty();
     }
 }

@@ -6,11 +6,9 @@ using Xunit;
 
 namespace Fuookami.Ospf.Math.Tests.Geometry;
 
-public class RectangleTest
-{
+public class RectangleTest {
     [Fact]
-    public void Rectangle_FromCorners()
-    {
+    public void Rectangle_FromCorners() {
         var lu = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(10));
         var rb = Point<Dim2, Flt64>.Point2(new Flt64(5), new Flt64(0));
         var rect = Rectangle<Dim2, Flt64>.FromCorners(lu, rb);
@@ -20,8 +18,7 @@ public class RectangleTest
     }
 
     [Fact]
-    public void Rectangle_Area()
-    {
+    public void Rectangle_Area() {
         var p1 = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var p2 = Point<Dim2, Flt64>.Point2(new Flt64(3), new Flt64(0));
         var p3 = Point<Dim2, Flt64>.Point2(new Flt64(3), new Flt64(4));
@@ -31,8 +28,7 @@ public class RectangleTest
     }
 
     [Fact]
-    public void Rectangle_Contains()
-    {
+    public void Rectangle_Contains() {
         var lu = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(10));
         var rb = Point<Dim2, Flt64>.Point2(new Flt64(10), new Flt64(0));
         var rect = Rectangle<Dim2, Flt64>.FromCorners(lu, rb);
@@ -41,8 +37,7 @@ public class RectangleTest
     }
 
     [Fact]
-    public void Rectangle_Contains_Outside()
-    {
+    public void Rectangle_Contains_Outside() {
         var lu = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(10));
         var rb = Point<Dim2, Flt64>.Point2(new Flt64(10), new Flt64(0));
         var rect = Rectangle<Dim2, Flt64>.FromCorners(lu, rb);

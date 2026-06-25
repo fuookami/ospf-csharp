@@ -8,8 +8,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// <summary>
 /// 几何数量运算 / Geometry quantity operations (internal).
 /// </summary>
-internal static class GeometryOps
-{
+internal static class GeometryOps {
     /// <summary>加法 / Addition.</summary>
     public static V Plus<V>(V lhs, V rhs) where V : struct, IFloatingNumber<V> => lhs.Plus(rhs);
 
@@ -45,23 +44,23 @@ internal static class GeometryOps
 
     /// <summary>钳制 / Clamp.</summary>
     public static Result<V, ErrorCode, Error<ErrorCode>> Clamp<V>(V value, V lb, V ub, string axis)
-        where V : struct, IFloatingNumber<V>
-    {
-        if (value.PartialOrd(lb) is Order.Less) return Results.Ok(lb);
+        where V : struct, IFloatingNumber<V> {
+        if (value.PartialOrd(lb) is Order.Less) {
+            return Results.Ok(lb);
+        }
+
         return MaxSafe(value, ub, axis + "-ub").Map(o => o is Order.Greater ? ub : value);
     }
 
     /// <summary>是否在范围内 / Whether in range.</summary>
     public static Result<bool, ErrorCode, Error<ErrorCode>> ContainsInRange<V>(
         V value, V lb, V ub, bool withLower, bool withUpper, string axis)
-        where V : struct, IFloatingNumber<V>
-    {
-        var lo = value.PartialOrd(lb);
-        var hi = value.PartialOrd(ub);
-        if (lo is { } l && hi is { } h)
-        {
-            var lowerOk = withLower ? l is Order.Equal or Order.Greater : l is Order.Greater;
-            var upperOk = withUpper ? h is Order.Equal or Order.Less : h is Order.Less;
+        where V : struct, IFloatingNumber<V> {
+        Order? lo = value.PartialOrd(lb);
+        Order? hi = value.PartialOrd(ub);
+        if (lo is { } l && hi is { } h) {
+            bool lowerOk = withLower ? l is Order.Equal or Order.Greater : l is Order.Greater;
+            bool upperOk = withUpper ? h is Order.Equal or Order.Less : h is Order.Less;
             return Results.Ok(lowerOk && upperOk);
         }
         return Results.Failed<bool>(new Err<ErrorCode>(ErrorCode.IllegalArgument, $"Incomparable scalar: axis={axis}"));
@@ -71,14 +70,17 @@ internal static class GeometryOps
     public static V ZeroOf<V>(V value) where V : struct, IFloatingNumber<V> => value.Constants.Zero;
 
     /// <summary>多值 min/max（math/ordinary.minMax 的本地替身）/ Local stand-in for ordinary.MinMax.</summary>
-    public static (V Min, V Max) MinMax<V>(params V[] values) where V : struct, IFloatingNumber<V>
-    {
-        var min = values[0];
-        var max = values[0];
-        foreach (var v in values)
-        {
-            if (v.Ls(min)) min = v;
-            if (v.Gr(max)) max = v;
+    public static (V Min, V Max) MinMax<V>(params V[] values) where V : struct, IFloatingNumber<V> {
+        V min = values[0];
+        V max = values[0];
+        foreach (V v in values) {
+            if (v.Ls(min)) {
+                min = v;
+            }
+
+            if (v.Gr(max)) {
+                max = v;
+            }
         }
         return (min, max);
     }

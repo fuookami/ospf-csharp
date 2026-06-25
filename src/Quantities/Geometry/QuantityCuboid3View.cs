@@ -14,8 +14,7 @@ namespace Fuookami.Ospf.Quantities.Geometry;
 public sealed record QuantityCuboid3View<V>(
     QuantityCuboid3<V> Origin,
     AxisPermutation3? Permutation = null
-) where V : struct, IFloatingNumber<V>
-{
+) where V : struct, IFloatingNumber<V> {
     /// <summary>实际置换 / Effective permutation.</summary>
     public AxisPermutation3 EffectivePermutation => Permutation ?? AxisPermutation3.XYZ;
 

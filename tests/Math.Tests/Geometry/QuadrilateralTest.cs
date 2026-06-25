@@ -6,12 +6,10 @@ using Xunit;
 
 namespace Fuookami.Ospf.Math.Tests.Geometry;
 
-public class QuadrilateralTest
-{
+public class QuadrilateralTest {
     [Fact]
-    public void Quadrilateral_Perimeter()
-    {
-        var q = Quadrilateral2DExtensions.Quadrilateral2(
+    public void Quadrilateral_Perimeter() {
+        Quadrilateral<Dim2, Flt64> q = Quadrilateral2DExtensions.Quadrilateral2(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(3)),
@@ -20,9 +18,8 @@ public class QuadrilateralTest
     }
 
     [Fact]
-    public void Quadrilateral_Area()
-    {
-        var q = Quadrilateral2DExtensions.Quadrilateral2(
+    public void Quadrilateral_Area() {
+        Quadrilateral<Dim2, Flt64> q = Quadrilateral2DExtensions.Quadrilateral2(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(3)),
@@ -31,9 +28,8 @@ public class QuadrilateralTest
     }
 
     [Fact]
-    public void Quadrilateral_IsConvex()
-    {
-        var q = Quadrilateral2DExtensions.Quadrilateral2(
+    public void Quadrilateral_IsConvex() {
+        Quadrilateral<Dim2, Flt64> q = Quadrilateral2DExtensions.Quadrilateral2(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(3)),
@@ -42,9 +38,8 @@ public class QuadrilateralTest
     }
 
     [Fact]
-    public void Quadrilateral_Edges()
-    {
-        var q = Quadrilateral2DExtensions.Quadrilateral2(
+    public void Quadrilateral_Edges() {
+        Quadrilateral<Dim2, Flt64> q = Quadrilateral2DExtensions.Quadrilateral2(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(3)),
@@ -54,22 +49,20 @@ public class QuadrilateralTest
     }
 
     [Fact]
-    public void Quadrilateral_Centroid()
-    {
-        var q = Quadrilateral2DExtensions.Quadrilateral2(
+    public void Quadrilateral_Centroid() {
+        Quadrilateral<Dim2, Flt64> q = Quadrilateral2DExtensions.Quadrilateral2(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(4)),
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(4)));
-        var c = q.Centroid;
+        Point<Dim2, Flt64> c = q.Centroid;
         c.X().Value.Should().Be(2.0);
         c.Y().Value.Should().Be(2.0);
     }
 
     [Fact]
-    public void Quadrilateral_Illegal()
-    {
-        var q = Quadrilateral2DExtensions.Quadrilateral2(
+    public void Quadrilateral_Illegal() {
+        Quadrilateral<Dim2, Flt64> q = Quadrilateral2DExtensions.Quadrilateral2(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),

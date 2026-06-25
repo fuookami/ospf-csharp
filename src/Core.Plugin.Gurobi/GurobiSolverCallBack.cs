@@ -1,13 +1,13 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Gurobi;
 using Fuookami.Ospf.Core.Solver.Output;
 using Fuookami.Ospf.Utils.Concept;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using Gurobi;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 
@@ -31,8 +31,7 @@ public delegate Task<Result<Success, ErrorCode, Error<ErrorCode>>> QuadraticSolv
 /// <summary>
 /// 求解器回调时机枚举 / Solver callback point enum.
 /// </summary>
-public enum CallBackPoint
-{
+public enum CallBackPoint {
     /// <summary>建模完成后 / After modeling.</summary>
     AfterModeling,
     /// <summary>配置阶段 / Configuration phase.</summary>
@@ -46,8 +45,7 @@ public enum CallBackPoint
 /// <summary>
 /// Gurobi 线性求解器回调管理器 / Gurobi linear solver callback manager.
 /// </summary>
-public sealed class GurobiLinearSolverCallBack : ICloneable
-{
+public sealed class GurobiLinearSolverCallBack : ICloneable {
     /// <summary>原生回调函数 / Native callback function.</summary>
     public NativeCallBack? NativeCallback { get; set; }
     /// <summary>创建环境函数 / Creating environment function.</summary>
@@ -58,14 +56,11 @@ public sealed class GurobiLinearSolverCallBack : ICloneable
     public GurobiLinearSolverCallBack(
         NativeCallBack? nativeCallback = null,
         CreatingEnvironmentFunction? creatingEnvironmentFunction = null,
-        Dictionary<CallBackPoint, List<LinearSolverFunction>>? map = null)
-    {
+        Dictionary<CallBackPoint, List<LinearSolverFunction>>? map = null) {
         NativeCallback = nativeCallback;
         CreatingEnvironmentFunction = creatingEnvironmentFunction;
-        if (map is not null)
-        {
-            foreach (var kv in map)
-            {
+        if (map is not null) {
+            foreach (KeyValuePair<CallBackPoint, List<LinearSolverFunction>> kv in map) {
                 _map[kv.Key] = new List<LinearSolverFunction>(kv.Value);
             }
         }
@@ -80,9 +75,11 @@ public sealed class GurobiLinearSolverCallBack : ICloneable
     /// <summary>在求解失败后添加回调函数 / Add callback after failure.</summary>
     public GurobiLinearSolverCallBack AfterFailure(LinearSolverFunction f) => Add(CallBackPoint.AfterFailure, f);
 
-    private GurobiLinearSolverCallBack Add(CallBackPoint p, LinearSolverFunction f)
-    {
-        if (!_map.TryGetValue(p, out var list)) _map[p] = list = new List<LinearSolverFunction>();
+    private GurobiLinearSolverCallBack Add(CallBackPoint p, LinearSolverFunction f) {
+        if (!_map.TryGetValue(p, out List<LinearSolverFunction>? list)) {
+            _map[p] = list = new List<LinearSolverFunction>();
+        }
+
         list.Add(f);
         return this;
     }
@@ -92,7 +89,7 @@ public sealed class GurobiLinearSolverCallBack : ICloneable
 
     /// <summary>获取指定时机的回调函数列表 / Get callback function list at point.</summary>
     public IReadOnlyList<LinearSolverFunction>? Get(CallBackPoint point) =>
-        _map.TryGetValue(point, out var l) ? l : null;
+        _map.TryGetValue(point, out List<LinearSolverFunction>? l) ? l : null;
 
     /// <summary>执行创建环境回调 / Execute creating-environment callback if present.</summary>
     public Result<Success, ErrorCode, Error<ErrorCode>>? ExecIfContain(GRBEnv env) => CreatingEnvironmentFunction?.Invoke(env);
@@ -100,16 +97,18 @@ public sealed class GurobiLinearSolverCallBack : ICloneable
     /// <summary>执行指定时机回调 / Execute callbacks at point if present.</summary>
     public async Task<Result<Success, ErrorCode, Error<ErrorCode>>?> ExecIfContainAsync(
         CallBackPoint point, SolverStatus? status, GRBModel grbModel,
-        IReadOnlyList<GRBVar> variables, IReadOnlyList<GRBConstr> constraints)
-    {
-        if (!_map.TryGetValue(point, out var list) || list.Count == 0) return null;
+        IReadOnlyList<GRBVar> variables, IReadOnlyList<GRBConstr> constraints) {
+        if (!_map.TryGetValue(point, out List<LinearSolverFunction>? list) || list.Count == 0) {
+            return null;
+        }
+
         Result<Success, ErrorCode, Error<ErrorCode>>? last = null;
-        foreach (var f in list)
-        {
+        foreach (LinearSolverFunction f in list) {
             last = await f(status, grbModel, variables, constraints).ConfigureAwait(false);
             if (last is Failed<Success, ErrorCode, Error<ErrorCode>>
-                or Fatal<Success, ErrorCode, Error<ErrorCode>>)
+                or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
                 return last;
+            }
         }
         return last;
     }
@@ -122,8 +121,7 @@ public sealed class GurobiLinearSolverCallBack : ICloneable
 /// <summary>
 /// Gurobi 二次求解器回调管理器 / Gurobi quadratic solver callback manager.
 /// </summary>
-public sealed class GurobiQuadraticSolverCallBack : ICloneable
-{
+public sealed class GurobiQuadraticSolverCallBack : ICloneable {
     /// <summary>原生回调函数 / Native callback function.</summary>
     public NativeCallBack? NativeCallback { get; set; }
     /// <summary>创建环境函数 / Creating environment function.</summary>
@@ -134,14 +132,11 @@ public sealed class GurobiQuadraticSolverCallBack : ICloneable
     public GurobiQuadraticSolverCallBack(
         NativeCallBack? nativeCallback = null,
         CreatingEnvironmentFunction? creatingEnvironmentFunction = null,
-        Dictionary<CallBackPoint, List<QuadraticSolverFunction>>? map = null)
-    {
+        Dictionary<CallBackPoint, List<QuadraticSolverFunction>>? map = null) {
         NativeCallback = nativeCallback;
         CreatingEnvironmentFunction = creatingEnvironmentFunction;
-        if (map is not null)
-        {
-            foreach (var kv in map)
-            {
+        if (map is not null) {
+            foreach (KeyValuePair<CallBackPoint, List<QuadraticSolverFunction>> kv in map) {
                 _map[kv.Key] = new List<QuadraticSolverFunction>(kv.Value);
             }
         }
@@ -156,9 +151,11 @@ public sealed class GurobiQuadraticSolverCallBack : ICloneable
     /// <summary>在求解失败后添加回调函数 / Add callback after failure.</summary>
     public GurobiQuadraticSolverCallBack AfterFailure(QuadraticSolverFunction f) => Add(CallBackPoint.AfterFailure, f);
 
-    private GurobiQuadraticSolverCallBack Add(CallBackPoint p, QuadraticSolverFunction f)
-    {
-        if (!_map.TryGetValue(p, out var list)) _map[p] = list = new List<QuadraticSolverFunction>();
+    private GurobiQuadraticSolverCallBack Add(CallBackPoint p, QuadraticSolverFunction f) {
+        if (!_map.TryGetValue(p, out List<QuadraticSolverFunction>? list)) {
+            _map[p] = list = new List<QuadraticSolverFunction>();
+        }
+
         list.Add(f);
         return this;
     }
@@ -168,7 +165,7 @@ public sealed class GurobiQuadraticSolverCallBack : ICloneable
 
     /// <summary>获取指定时机的回调函数列表 / Get callback function list at point.</summary>
     public IReadOnlyList<QuadraticSolverFunction>? Get(CallBackPoint point) =>
-        _map.TryGetValue(point, out var l) ? l : null;
+        _map.TryGetValue(point, out List<QuadraticSolverFunction>? l) ? l : null;
 
     /// <summary>执行创建环境回调 / Execute creating-environment callback if present.</summary>
     public Result<Success, ErrorCode, Error<ErrorCode>>? ExecIfContain(GRBEnv env) => CreatingEnvironmentFunction?.Invoke(env);
@@ -176,16 +173,18 @@ public sealed class GurobiQuadraticSolverCallBack : ICloneable
     /// <summary>执行指定时机回调 / Execute callbacks at point if present.</summary>
     public async Task<Result<Success, ErrorCode, Error<ErrorCode>>?> ExecIfContainAsync(
         CallBackPoint point, SolverStatus? status, GRBModel grbModel,
-        IReadOnlyList<GRBVar> variables, IReadOnlyList<GRBQConstr> constraints)
-    {
-        if (!_map.TryGetValue(point, out var list) || list.Count == 0) return null;
+        IReadOnlyList<GRBVar> variables, IReadOnlyList<GRBQConstr> constraints) {
+        if (!_map.TryGetValue(point, out List<QuadraticSolverFunction>? list) || list.Count == 0) {
+            return null;
+        }
+
         Result<Success, ErrorCode, Error<ErrorCode>>? last = null;
-        foreach (var f in list)
-        {
+        foreach (QuadraticSolverFunction f in list) {
             last = await f(status, grbModel, variables, constraints).ConfigureAwait(false);
             if (last is Failed<Success, ErrorCode, Error<ErrorCode>>
-                or Fatal<Success, ErrorCode, Error<ErrorCode>>)
+                or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
                 return last;
+            }
         }
         return last;
     }

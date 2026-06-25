@@ -8,8 +8,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// <summary>
 /// 二维放置 / 2D placement (position + projection shape).
 /// </summary>
-public sealed record Placement2<V>(V X, V Y, Projection2<V> Shape) where V : struct, IFloatingNumber<V>
-{
+public sealed record Placement2<V>(V X, V Y, Projection2<V> Shape) where V : struct, IFloatingNumber<V> {
     private Box2<V> Box => new(X, Y, Shape);
 
     /// <summary>宽度 / Width.</summary>

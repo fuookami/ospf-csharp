@@ -17,8 +17,7 @@ public sealed record QuantityPlacement2<V>(
     Quantity<V> X,
     Quantity<V> Y,
     IQuantityProjection2<V> Shape
-) where V : struct, IFloatingNumber<V>
-{
+) where V : struct, IFloatingNumber<V> {
     private QuantityBox2<V> Box => new(X, Y, Shape);
 
     /// <summary>放置宽度 / Placement width.</summary>
@@ -53,13 +52,17 @@ public sealed record QuantityPlacement2<V>(
         Box.Overlapped(rhs.Box);
 
     /// <summary>计算两个放置区域的交集 / Compute the intersection of two placement areas.</summary>
-    public Result<QuantityPlacement2<V>?, ErrorCode, Error<ErrorCode>> Intersect(QuantityPlacement2<V> rhs)
-    {
-        var result = Box.Intersect(rhs.Box);
-        if (result is Failed<QuantityBox2<V>?, ErrorCode, Error<ErrorCode>> f)
+    public Result<QuantityPlacement2<V>?, ErrorCode, Error<ErrorCode>> Intersect(QuantityPlacement2<V> rhs) {
+        Result<QuantityBox2<V>?, ErrorCode, Error<ErrorCode>> result = Box.Intersect(rhs.Box);
+        if (result is Failed<QuantityBox2<V>?, ErrorCode, Error<ErrorCode>> f) {
             return Results.Failed<QuantityPlacement2<V>?>(f.Error);
-        var intersected = result.Value;
-        if (intersected is null) return Results.Ok<QuantityPlacement2<V>?>(null);
+        }
+
+        QuantityBox2<V>? intersected = result.Value;
+        if (intersected is null) {
+            return Results.Ok<QuantityPlacement2<V>?>(null);
+        }
+
         return Results.Ok<QuantityPlacement2<V>?>(
             new QuantityPlacement2<V>(intersected.X, intersected.Y, intersected.Shape));
     }

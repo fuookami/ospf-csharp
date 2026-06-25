@@ -5,8 +5,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// <summary>
 /// 三维主平面 / 3D principal plane.
 /// </summary>
-public sealed class AxisPlane3
-{
+public sealed class AxisPlane3 {
     /// <summary>第一轴 / First axis.</summary>
     public Axis3 FirstAxis { get; }
     /// <summary>第二轴 / Second axis.</summary>
@@ -14,8 +13,7 @@ public sealed class AxisPlane3
     /// <summary>法向轴 / Normal axis.</summary>
     public Axis3 NormalAxis { get; }
 
-    private AxisPlane3(Axis3 first, Axis3 second, Axis3 normal)
-    {
+    private AxisPlane3(Axis3 first, Axis3 second, Axis3 normal) {
         FirstAxis = first;
         SecondAxis = second;
         NormalAxis = normal;

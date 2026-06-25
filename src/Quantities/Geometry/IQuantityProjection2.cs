@@ -1,9 +1,9 @@
 #nullable enable
 
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Quantities.Quantity;
+using System;
 
 namespace Fuookami.Ospf.Quantities.Geometry;
 
@@ -14,8 +14,7 @@ namespace Fuookami.Ospf.Quantities.Geometry;
 /// </summary>
 /// <typeparam name="V">数值类型 / Number type.</typeparam>
 public interface IQuantityProjection2<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
 }
 
 /// <summary>
@@ -24,8 +23,7 @@ public interface IQuantityProjection2<V>
 public sealed record QuantityCircle2<V>(
     Quantity<V> Radius
 ) : IQuantityProjection2<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>直径 / Diameter.</summary>
     public Quantity<V> Diameter => new(Radius.Value.Plus(Radius.Value), Radius.Unit);
 
@@ -46,14 +44,12 @@ public sealed record QuantityRectangle2<V>(
     Quantity<V> Width,
     Quantity<V> Height
 ) : IQuantityProjection2<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>面积 / Area.</summary>
     public Quantity<V> Area => QuantityOps.QuantityProduct(Width, Height);
 
     /// <summary>获取沿指定轴的尺寸 / Get the dimension along a specified axis.</summary>
-    public Quantity<V> Along(Axis2 axis) => axis switch
-    {
+    public Quantity<V> Along(Axis2 axis) => axis switch {
         Axis2.X => Width,
         Axis2.Y => Height,
         _ => throw new ArgumentOutOfRangeException(nameof(axis)),

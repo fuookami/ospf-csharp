@@ -1,11 +1,11 @@
 #nullable enable
 
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Quantities.Quantity;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
 
 namespace Fuookami.Ospf.Quantities.Geometry;
 
@@ -14,8 +14,7 @@ namespace Fuookami.Ospf.Quantities.Geometry;
 /// 纯几何概念；Apply/mapAxis 可被桥接层复用。
 /// Pure geometry; Apply/mapAxis are reusable by bridges.
 /// </summary>
-public sealed record QuantityAxisPermutation3(Axis3 WidthAxis, Axis3 HeightAxis, Axis3 DepthAxis)
-{
+public sealed record QuantityAxisPermutation3(Axis3 WidthAxis, Axis3 HeightAxis, Axis3 DepthAxis) {
     /// <summary>XYZ 置换 / XYZ permutation.</summary>
     public static readonly QuantityAxisPermutation3 XYZ = new(Axis3.X, Axis3.Y, Axis3.Z);
 
@@ -45,8 +44,7 @@ public sealed record QuantityAxisPermutation3(Axis3 WidthAxis, Axis3 HeightAxis,
         => MapAxis(cylinder.Axis).Map(axis => cylinder with { Axis = axis });
 
     /// <summary>将原始轴映射到置换后的轴 / Map an original axis to its permuted counterpart.</summary>
-    public Result<Axis3, ErrorCode, Error<ErrorCode>> MapAxis(Axis3 axis) => axis switch
-    {
+    public Result<Axis3, ErrorCode, Error<ErrorCode>> MapAxis(Axis3 axis) => axis switch {
         _ when axis == WidthAxis => Results.Ok(Axis3.X),
         _ when axis == HeightAxis => Results.Ok(Axis3.Y),
         _ when axis == DepthAxis => Results.Ok(Axis3.Z),

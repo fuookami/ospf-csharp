@@ -10,6 +10,7 @@
     <PackageReference Include="xUnit.runner.visualstudio" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="coverlet.collector" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Heuristic\Core.Plugin.Heuristic.csproj" />

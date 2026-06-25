@@ -18,8 +18,7 @@ public sealed record QuantityBox3<V>(
     Quantity<V> Y,
     Quantity<V> Z,
     QuantityCuboid3<V> Cuboid
-) where V : struct, IFloatingNumber<V>
-{
+) where V : struct, IFloatingNumber<V> {
     /// <summary>在原点创建包围盒 / Create a bounding box at the origin.</summary>
     public static QuantityBox3<V> AtOrigin(QuantityCuboid3<V> cuboid) => new(
         QuantityOps.QuantityZeroOf(cuboid.Width),
@@ -61,99 +60,207 @@ public sealed record QuantityBox3<V>(
         Quantity<V> z,
         bool withLowerBound = true,
         bool withUpperBound = true,
-        bool withBorder = true)
-    {
-        var includeLower = withBorder && withLowerBound;
-        var includeUpper = withBorder && withUpperBound;
+        bool withBorder = true) {
+        bool includeLower = withBorder && withLowerBound;
+        bool includeUpper = withBorder && withUpperBound;
 
-        var maxXResult = MaxX();
-        if (maxXResult is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f1) return Results.Failed<bool>(f1.Error);
-        var maxYResult = MaxY();
-        if (maxYResult is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f2) return Results.Failed<bool>(f2.Error);
-        var maxZResult = MaxZ();
-        if (maxZResult is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f3) return Results.Failed<bool>(f3.Error);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> maxXResult = MaxX();
+        if (maxXResult is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f1) {
+            return Results.Failed<bool>(f1.Error);
+        }
 
-        var xIn = QuantityOps.ContainsInRangeSafe(x, X, maxXResult.Value, includeLower, includeUpper, "x");
-        if (xIn is Failed<bool, ErrorCode, Error<ErrorCode>> f4) return Results.Failed<bool>(f4.Error);
-        if (!xIn.Value) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> maxYResult = MaxY();
+        if (maxYResult is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f2) {
+            return Results.Failed<bool>(f2.Error);
+        }
 
-        var yIn = QuantityOps.ContainsInRangeSafe(y, Y, maxYResult.Value, includeLower, includeUpper, "y");
-        if (yIn is Failed<bool, ErrorCode, Error<ErrorCode>> f5) return Results.Failed<bool>(f5.Error);
-        if (!yIn.Value) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> maxZResult = MaxZ();
+        if (maxZResult is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f3) {
+            return Results.Failed<bool>(f3.Error);
+        }
+
+        Result<bool, ErrorCode, Error<ErrorCode>> xIn = QuantityOps.ContainsInRangeSafe(x, X, maxXResult.Value, includeLower, includeUpper, "x");
+        if (xIn is Failed<bool, ErrorCode, Error<ErrorCode>> f4) {
+            return Results.Failed<bool>(f4.Error);
+        }
+
+        if (!xIn.Value) {
+            return Results.Ok(false);
+        }
+
+        Result<bool, ErrorCode, Error<ErrorCode>> yIn = QuantityOps.ContainsInRangeSafe(y, Y, maxYResult.Value, includeLower, includeUpper, "y");
+        if (yIn is Failed<bool, ErrorCode, Error<ErrorCode>> f5) {
+            return Results.Failed<bool>(f5.Error);
+        }
+
+        if (!yIn.Value) {
+            return Results.Ok(false);
+        }
 
         return QuantityOps.ContainsInRangeSafe(z, Z, maxZResult.Value, includeLower, includeUpper, "z");
     }
 
     /// <summary>判断两个包围盒是否重叠 / Check if two bounding boxes overlap.</summary>
-    public Result<bool, ErrorCode, Error<ErrorCode>> Overlapped(QuantityBox3<V> rhs)
-    {
-        var thisMaxX = MaxX();
-        if (thisMaxX is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f1) return Results.Failed<bool>(f1.Error);
-        var thisMaxY = MaxY();
-        if (thisMaxY is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f2) return Results.Failed<bool>(f2.Error);
-        var thisMaxZ = MaxZ();
-        if (thisMaxZ is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f3) return Results.Failed<bool>(f3.Error);
-        var rhsMaxX = rhs.MaxX();
-        if (rhsMaxX is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f4) return Results.Failed<bool>(f4.Error);
-        var rhsMaxY = rhs.MaxY();
-        if (rhsMaxY is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f5) return Results.Failed<bool>(f5.Error);
-        var rhsMaxZ = rhs.MaxZ();
-        if (rhsMaxZ is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f6) return Results.Failed<bool>(f6.Error);
+    public Result<bool, ErrorCode, Error<ErrorCode>> Overlapped(QuantityBox3<V> rhs) {
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> thisMaxX = MaxX();
+        if (thisMaxX is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f1) {
+            return Results.Failed<bool>(f1.Error);
+        }
 
-        var maxOrd = QuantityOps.OrdSafe(thisMaxX.Value, rhs.X, "x");
-        if (maxOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f7) return Results.Failed<bool>(f7.Error);
-        if (maxOrd.Value is not Order.Greater) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> thisMaxY = MaxY();
+        if (thisMaxY is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f2) {
+            return Results.Failed<bool>(f2.Error);
+        }
 
-        var xOrd = QuantityOps.OrdSafe(X, rhsMaxX.Value, "x");
-        if (xOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f8) return Results.Failed<bool>(f8.Error);
-        if (xOrd.Value is not Order.Less) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> thisMaxZ = MaxZ();
+        if (thisMaxZ is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f3) {
+            return Results.Failed<bool>(f3.Error);
+        }
 
-        var maxYOrd = QuantityOps.OrdSafe(thisMaxY.Value, rhs.Y, "y");
-        if (maxYOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f9) return Results.Failed<bool>(f9.Error);
-        if (maxYOrd.Value is not Order.Greater) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> rhsMaxX = rhs.MaxX();
+        if (rhsMaxX is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f4) {
+            return Results.Failed<bool>(f4.Error);
+        }
 
-        var yOrd = QuantityOps.OrdSafe(Y, rhsMaxY.Value, "y");
-        if (yOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f10) return Results.Failed<bool>(f10.Error);
-        if (yOrd.Value is not Order.Less) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> rhsMaxY = rhs.MaxY();
+        if (rhsMaxY is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f5) {
+            return Results.Failed<bool>(f5.Error);
+        }
 
-        var maxZOrd = QuantityOps.OrdSafe(thisMaxZ.Value, rhs.Z, "z");
-        if (maxZOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f11) return Results.Failed<bool>(f11.Error);
-        if (maxZOrd.Value is not Order.Greater) return Results.Ok(false);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> rhsMaxZ = rhs.MaxZ();
+        if (rhsMaxZ is Failed<Quantity<V>, ErrorCode, Error<ErrorCode>> f6) {
+            return Results.Failed<bool>(f6.Error);
+        }
 
-        var zOrd = QuantityOps.OrdSafe(Z, rhsMaxZ.Value, "z");
-        if (zOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f12) return Results.Failed<bool>(f12.Error);
+        Result<Order, ErrorCode, Error<ErrorCode>> maxOrd = QuantityOps.OrdSafe(thisMaxX.Value, rhs.X, "x");
+        if (maxOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f7) {
+            return Results.Failed<bool>(f7.Error);
+        }
+
+        if (maxOrd.Value is not Order.Greater) {
+            return Results.Ok(false);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> xOrd = QuantityOps.OrdSafe(X, rhsMaxX.Value, "x");
+        if (xOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f8) {
+            return Results.Failed<bool>(f8.Error);
+        }
+
+        if (xOrd.Value is not Order.Less) {
+            return Results.Ok(false);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> maxYOrd = QuantityOps.OrdSafe(thisMaxY.Value, rhs.Y, "y");
+        if (maxYOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f9) {
+            return Results.Failed<bool>(f9.Error);
+        }
+
+        if (maxYOrd.Value is not Order.Greater) {
+            return Results.Ok(false);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> yOrd = QuantityOps.OrdSafe(Y, rhsMaxY.Value, "y");
+        if (yOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f10) {
+            return Results.Failed<bool>(f10.Error);
+        }
+
+        if (yOrd.Value is not Order.Less) {
+            return Results.Ok(false);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> maxZOrd = QuantityOps.OrdSafe(thisMaxZ.Value, rhs.Z, "z");
+        if (maxZOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f11) {
+            return Results.Failed<bool>(f11.Error);
+        }
+
+        if (maxZOrd.Value is not Order.Greater) {
+            return Results.Ok(false);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> zOrd = QuantityOps.OrdSafe(Z, rhsMaxZ.Value, "z");
+        if (zOrd is Failed<Order, ErrorCode, Error<ErrorCode>> f12) {
+            return Results.Failed<bool>(f12.Error);
+        }
+
         return Results.Ok(zOrd.Value is Order.Less);
     }
 
     /// <summary>计算两个包围盒的交集 / Compute the intersection of two bounding boxes.</summary>
-    public Result<QuantityBox3<V>?, ErrorCode, Error<ErrorCode>> Intersect(QuantityBox3<V> rhs)
-    {
-        var thisMaxX = MaxX(); if (thisMaxX.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var thisMaxY = MaxY(); if (thisMaxY.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var thisMaxZ = MaxZ(); if (thisMaxZ.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var rhsMaxX = rhs.MaxX(); if (rhsMaxX.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var rhsMaxY = rhs.MaxY(); if (rhsMaxY.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var rhsMaxZ = rhs.MaxZ(); if (rhsMaxZ.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
+    public Result<QuantityBox3<V>?, ErrorCode, Error<ErrorCode>> Intersect(QuantityBox3<V> rhs) {
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> thisMaxX = MaxX(); if (thisMaxX.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
 
-        var minX = QuantityOps.MaxSafe(X, rhs.X, "x"); if (minX.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var maxX = QuantityOps.MinSafe(thisMaxX.Value, rhsMaxX.Value, "x"); if (maxX.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var minY = QuantityOps.MaxSafe(Y, rhs.Y, "y"); if (minY.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var maxY = QuantityOps.MinSafe(thisMaxY.Value, rhsMaxY.Value, "y"); if (maxY.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var minZ = QuantityOps.MaxSafe(Z, rhs.Z, "z"); if (minZ.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var maxZ = QuantityOps.MinSafe(thisMaxZ.Value, rhsMaxZ.Value, "z"); if (maxZ.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> thisMaxY = MaxY(); if (thisMaxY.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
 
-        var xOrd = QuantityOps.OrdSafe(minX.Value, maxX.Value, "x");
-        if (xOrd.IsFailed || xOrd.Value is not Order.Less) return Results.Ok<QuantityBox3<V>?>(null);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> thisMaxZ = MaxZ(); if (thisMaxZ.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
 
-        var yOrd = QuantityOps.OrdSafe(minY.Value, maxY.Value, "y");
-        if (yOrd.IsFailed || yOrd.Value is not Order.Less) return Results.Ok<QuantityBox3<V>?>(null);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> rhsMaxX = rhs.MaxX(); if (rhsMaxX.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
 
-        var zOrd = QuantityOps.OrdSafe(minZ.Value, maxZ.Value, "z");
-        if (zOrd.IsFailed || zOrd.Value is not Order.Less) return Results.Ok<QuantityBox3<V>?>(null);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> rhsMaxY = rhs.MaxY(); if (rhsMaxY.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
 
-        var w = QuantityOps.MinusSafe(maxX.Value, minX.Value); if (w.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var h = QuantityOps.MinusSafe(maxY.Value, minY.Value); if (h.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
-        var d = QuantityOps.MinusSafe(maxZ.Value, minZ.Value); if (d.IsFailed) return Results.Ok<QuantityBox3<V>?>(null);
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> rhsMaxZ = rhs.MaxZ(); if (rhsMaxZ.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> minX = QuantityOps.MaxSafe(X, rhs.X, "x"); if (minX.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> maxX = QuantityOps.MinSafe(thisMaxX.Value, rhsMaxX.Value, "x"); if (maxX.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> minY = QuantityOps.MaxSafe(Y, rhs.Y, "y"); if (minY.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> maxY = QuantityOps.MinSafe(thisMaxY.Value, rhsMaxY.Value, "y"); if (maxY.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> minZ = QuantityOps.MaxSafe(Z, rhs.Z, "z"); if (minZ.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> maxZ = QuantityOps.MinSafe(thisMaxZ.Value, rhsMaxZ.Value, "z"); if (maxZ.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> xOrd = QuantityOps.OrdSafe(minX.Value, maxX.Value, "x");
+        if (xOrd.IsFailed || xOrd.Value is not Order.Less) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> yOrd = QuantityOps.OrdSafe(minY.Value, maxY.Value, "y");
+        if (yOrd.IsFailed || yOrd.Value is not Order.Less) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Order, ErrorCode, Error<ErrorCode>> zOrd = QuantityOps.OrdSafe(minZ.Value, maxZ.Value, "z");
+        if (zOrd.IsFailed || zOrd.Value is not Order.Less) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> w = QuantityOps.MinusSafe(maxX.Value, minX.Value); if (w.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> h = QuantityOps.MinusSafe(maxY.Value, minY.Value); if (h.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
+
+        Result<Quantity<V>, ErrorCode, Error<ErrorCode>> d = QuantityOps.MinusSafe(maxZ.Value, minZ.Value); if (d.IsFailed) {
+            return Results.Ok<QuantityBox3<V>?>(null);
+        }
 
         return Results.Ok<QuantityBox3<V>?>(new QuantityBox3<V>(
             minX.Value, minY.Value, minZ.Value,

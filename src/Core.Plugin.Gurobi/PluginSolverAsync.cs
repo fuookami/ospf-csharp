@@ -9,8 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi 插件异步求解辅助类，替代 Kotlin pluginSolverAsyncScope。
 /// Gurobi plugin async solver helper, replaces Kotlin pluginSolverAsyncScope.
 /// </summary>
-internal static class PluginSolverAsync
-{
+internal static class PluginSolverAsync {
     /// <summary>
     /// 在后台线程执行操作 / Execute action on a background thread.
     /// </summary>

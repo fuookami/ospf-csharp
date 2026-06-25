@@ -1,12 +1,12 @@
 #nullable enable
 
-using System;
-using System.Threading.Tasks;
-using Gurobi;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Output;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using Gurobi;
+using System;
+using System.Threading.Tasks;
 
 namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 
@@ -14,8 +14,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi 求解器抽象基类，提供环境初始化、求解和状态分析的通用实现。
 /// Gurobi solver abstract base, owns the native GRBEnv/GRBModel lifecycle.
 /// </summary>
-public abstract class GurobiSolver : IDisposable
-{
+public abstract class GurobiSolver : IDisposable {
     private bool _disposed;
     private GRBEnv? _env;
     private GRBModel? _grbModel;
@@ -32,9 +31,11 @@ public abstract class GurobiSolver : IDisposable
     /// 关闭 Gurobi 模型和环境，释放资源。
     /// Close Gurobi model and environment, release native resources.
     /// </summary>
-    public void Dispose()
-    {
-        if (_disposed) return;
+    public void Dispose() {
+        if (_disposed) {
+            return;
+        }
+
         try { _grbModel?.Dispose(); } catch { /* swallow on dispose */ }
         try { _env?.Dispose(); } catch { /* swallow on dispose */ }
         _disposed = true;
@@ -47,19 +48,18 @@ public abstract class GurobiSolver : IDisposable
     /// </summary>
     protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> InitAsync(
         string server, string password, TimeSpan connectionTime, string name,
-        CreatingEnvironmentFunction? callBack = null)
-    {
-        try
-        {
+        CreatingEnvironmentFunction? callBack = null) {
+        try {
             _env = new GRBEnv(true);
             Env.Set(GRB.IntParam.ServerTimeout, (int)connectionTime.TotalSeconds);
             Env.Set(GRB.DoubleParam.CSQueueTimeout, connectionTime.TotalSeconds);
             Env.Set(GRB.StringParam.ComputeServer, server);
             Env.Set(GRB.StringParam.ServerPassword, password);
-            if (callBack is { } cb)
-            {
-                var r = cb(Env);
-                if (r is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) return r;
+            if (callBack is { } cb) {
+                Result<Success, ErrorCode, Error<ErrorCode>> r = cb(Env);
+                if (r is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
+                    return r;
+                }
             }
             Env.Start();
             _grbModel = new GRBModel(Env);
@@ -75,15 +75,14 @@ public abstract class GurobiSolver : IDisposable
     /// 使用本地环境初始化 Gurobi 模型。
     /// Initialize Gurobi model using a local environment.
     /// </summary>
-    protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> InitAsync(string name, CreatingEnvironmentFunction? callBack = null)
-    {
-        try
-        {
+    protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> InitAsync(string name, CreatingEnvironmentFunction? callBack = null) {
+        try {
             _env = new GRBEnv();
-            if (callBack is { } cb)
-            {
-                var r = cb(Env);
-                if (r is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) return r;
+            if (callBack is { } cb) {
+                Result<Success, ErrorCode, Error<ErrorCode>> r = cb(Env);
+                if (r is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
+                    return r;
+                }
             }
             _grbModel = new GRBModel(Env);
             GrbModel.Set(GRB.StringAttr.ModelName, name);
@@ -95,8 +94,7 @@ public abstract class GurobiSolver : IDisposable
     }
 
     /// <summary>执行 Gurobi 求解 / Execute Gurobi optimize.</summary>
-    protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> SolveAsync()
-    {
+    protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> SolveAsync() {
         try { GrbModel.Optimize(); return Results.OkInstance; }
         catch (GRBException e) { return new Failed<Success, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException, e.Message)); }
         catch { return new Failed<Success, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineTerminated)); }
@@ -104,12 +102,9 @@ public abstract class GurobiSolver : IDisposable
     }
 
     /// <summary>分析 Gurobi 求解状态 / Analyze Gurobi status into SolverStatus.</summary>
-    protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> AnalyzeStatusAsync()
-    {
-        try
-        {
-            _status = GrbModel.Get(GRB.IntAttr.Status) switch
-            {
+    protected async Task<Result<Success, ErrorCode, Error<ErrorCode>>> AnalyzeStatusAsync() {
+        try {
+            _status = GrbModel.Get(GRB.IntAttr.Status) switch {
                 var s when s == GRB.Status.OPTIMAL => SolverStatus.Optimal,
                 var s when s == GRB.Status.INFEASIBLE => SolverStatus.Infeasible,
                 var s when s == GRB.Status.UNBOUNDED => SolverStatus.Unbounded,

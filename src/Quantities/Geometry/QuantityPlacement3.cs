@@ -18,8 +18,7 @@ public sealed record QuantityPlacement3<V>(
     Quantity<V> Y,
     Quantity<V> Z,
     IQuantityShape3<V> Shape
-) where V : struct, IFloatingNumber<V>
-{
+) where V : struct, IFloatingNumber<V> {
     /// <summary>包围盒 / Bounding box.</summary>
     public QuantityBox3<V> Box => new(X, Y, Z, Shape.BoundingCuboid);
 
@@ -65,13 +64,17 @@ public sealed record QuantityPlacement3<V>(
         Box.Overlapped(rhs.Box);
 
     /// <summary>计算两个放置区域的交集 / Compute the intersection of two placement areas.</summary>
-    public Result<QuantityPlacement3<V>?, ErrorCode, Error<ErrorCode>> Intersect(QuantityPlacement3<V> rhs)
-    {
-        var result = Box.Intersect(rhs.Box);
-        if (result is Failed<QuantityBox3<V>?, ErrorCode, Error<ErrorCode>> f)
+    public Result<QuantityPlacement3<V>?, ErrorCode, Error<ErrorCode>> Intersect(QuantityPlacement3<V> rhs) {
+        Result<QuantityBox3<V>?, ErrorCode, Error<ErrorCode>> result = Box.Intersect(rhs.Box);
+        if (result is Failed<QuantityBox3<V>?, ErrorCode, Error<ErrorCode>> f) {
             return Results.Failed<QuantityPlacement3<V>?>(f.Error);
-        var intersected = result.Value;
-        if (intersected is null) return Results.Ok<QuantityPlacement3<V>?>(null);
+        }
+
+        QuantityBox3<V>? intersected = result.Value;
+        if (intersected is null) {
+            return Results.Ok<QuantityPlacement3<V>?>(null);
+        }
+
         return Results.Ok<QuantityPlacement3<V>?>(
             new QuantityPlacement3<V>(intersected.X, intersected.Y, intersected.Z, intersected.Cuboid));
     }

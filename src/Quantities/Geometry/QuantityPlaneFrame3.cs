@@ -1,11 +1,11 @@
 #nullable enable
 
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Quantities.Quantity;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
 
 namespace Fuookami.Ospf.Quantities.Geometry;
 
@@ -15,11 +15,9 @@ public sealed record QuantityPlanePoint2<V>(Quantity<V> X, Quantity<V> Y)
 
 /// <summary>三维空间中的点 / 3D point in space.</summary>
 public sealed record QuantityPlanePoint3<V>(Quantity<V> X, Quantity<V> Y, Quantity<V> Z)
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>获取沿指定轴的坐标 / Coordinate along axis.</summary>
-    public Quantity<V> Along(Axis3 axis) => axis switch
-    {
+    public Quantity<V> Along(Axis3 axis) => axis switch {
         Axis3.X => X,
         Axis3.Y => Y,
         Axis3.Z => Z,
@@ -36,12 +34,10 @@ public sealed record QuantityPlaneVector3<V>(Quantity<V> X, Quantity<V> Y, Quant
 /// 定义三维空间中的平面坐标框架，支持点投影、法向量计算和长方体底面积投影。
 /// Plane frame is pure geometry; BPP3D Bottom/Side/Front mapping stays in bridge layer.
 /// </summary>
-public sealed class QuantityPlaneFrame3
-{
+public sealed class QuantityPlaneFrame3 {
     private readonly Axis3 _normalAxis;
 
-    private QuantityPlaneFrame3(Axis3 firstAxis, Axis3 secondAxis, Axis3 normalAxis)
-    {
+    private QuantityPlaneFrame3(Axis3 firstAxis, Axis3 secondAxis, Axis3 normalAxis) {
         FirstAxis = firstAxis;
         SecondAxis = secondAxis;
         _normalAxis = normalAxis;
@@ -72,21 +68,18 @@ public sealed class QuantityPlaneFrame3
 
     /// <summary>从二维平面坐标和距离恢复三维点 / Restore a 3D point from 2D plane coordinates and distance.</summary>
     public QuantityPlanePoint3<V> Point3<V>(QuantityPlanePoint2<V> point, Quantity<V> distance)
-        where V : struct, IFloatingNumber<V>
-    {
-        var x = FirstAxis == Axis3.X ? point.X : SecondAxis == Axis3.X ? point.Y : distance;
-        var y = FirstAxis == Axis3.Y ? point.X : SecondAxis == Axis3.Y ? point.Y : distance;
-        var z = FirstAxis == Axis3.Z ? point.X : SecondAxis == Axis3.Z ? point.Y : distance;
+        where V : struct, IFloatingNumber<V> {
+        Quantity<V> x = FirstAxis == Axis3.X ? point.X : SecondAxis == Axis3.X ? point.Y : distance;
+        Quantity<V> y = FirstAxis == Axis3.Y ? point.X : SecondAxis == Axis3.Y ? point.Y : distance;
+        Quantity<V> z = FirstAxis == Axis3.Z ? point.X : SecondAxis == Axis3.Z ? point.Y : distance;
         return new QuantityPlanePoint3<V>(x, y, z);
     }
 
     /// <summary>根据距离生成法向量 / Generate a normal vector from a distance value.</summary>
     public QuantityPlaneVector3<V> Vector<V>(Quantity<V> distance)
-        where V : struct, IFloatingNumber<V>
-    {
-        var zero = QuantityOps.QuantityZeroOf(distance);
-        return _normalAxis switch
-        {
+        where V : struct, IFloatingNumber<V> {
+        Quantity<V> zero = QuantityOps.QuantityZeroOf(distance);
+        return _normalAxis switch {
             Axis3.X => new QuantityPlaneVector3<V>(distance, zero, zero),
             Axis3.Y => new QuantityPlaneVector3<V>(zero, distance, zero),
             Axis3.Z => new QuantityPlaneVector3<V>(zero, zero, distance),
@@ -127,8 +120,7 @@ public sealed class QuantityPlaneFrame3
             : null;
 
     private static Axis3? NormalAxisOf(Axis3 firstAxis, Axis3 secondAxis) =>
-        (firstAxis, secondAxis) switch
-        {
+        (firstAxis, secondAxis) switch {
             (Axis3.X, Axis3.Y) or (Axis3.Y, Axis3.X) => Axis3.Z,
             (Axis3.X, Axis3.Z) or (Axis3.Z, Axis3.X) => Axis3.Y,
             (Axis3.Y, Axis3.Z) or (Axis3.Z, Axis3.Y) => Axis3.X,

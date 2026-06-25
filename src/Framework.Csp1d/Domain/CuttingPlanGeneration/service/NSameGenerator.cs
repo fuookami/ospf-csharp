@@ -1,99 +1,92 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration;
 using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
+using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
+using Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model;
+using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
+using System.Collections.Generic;
 using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 
-namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service
-{
+namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
+/// <summary>
+/// N-Same 方案生成器，为每个产品-宽度组合生成单产品方案 / N-Same generator producing single-product plans.
+/// </summary>
+/// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
+internal sealed class NSameGenerator<V> : ICsp1dInitialCuttingPlanGenerator<CuttingPlan<V>, GenerationInput<V>>
+    where V : struct, IComparable<V> {
+    private readonly IReadOnlyList<ICuttingPlanConstraint<V>> _constraints;
+    private readonly bool _allAmount;
+    private readonly long? _timeoutMs;
+    private readonly long _maxPlans;
+    private readonly long _parallelism;
+    private readonly bool _enableDominancePruning;
+    private readonly DominanceStrategy _dominanceStrategy;
+    private readonly UInt64? _maxKnifeCount;
+
     /// <summary>
-    /// N-Same 方案生成器，为每个产品-宽度组合生成单产品方案 / N-Same generator producing single-product plans.
+    /// 创建 NSame 生成器 / Create NSame generator.
     /// </summary>
-    /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
-    internal sealed class NSameGenerator<V> : ICsp1dInitialCuttingPlanGenerator<CuttingPlanStub<V>, GenerationInputStub<V>>
-        where V : struct, IComparable<V>
-    {
-        private readonly IReadOnlyList<ICuttingPlanConstraint<V>> _constraints;
-        private readonly bool _allAmount;
-        private readonly long? _timeoutMs;
-        private readonly long _maxPlans;
-        private readonly long _parallelism;
-        private readonly bool _enableDominancePruning;
-        private readonly DominanceStrategy _dominanceStrategy;
-        private readonly UInt64? _maxKnifeCount;
+    public NSameGenerator(
+        IReadOnlyList<ICuttingPlanConstraint<V>> constraints,
+        bool allAmount = false,
+        long? timeoutMs = null,
+        long maxPlans = 1000L,
+        long parallelism = 1L,
+        bool enableDominancePruning = false,
+        DominanceStrategy dominanceStrategy = DominanceStrategy.SameContribution) {
+        _constraints = constraints;
+        _allAmount = allAmount;
+        _timeoutMs = timeoutMs;
+        _maxPlans = maxPlans;
+        _parallelism = global::System.Math.Max(1L, parallelism);
+        _enableDominancePruning = enableDominancePruning;
+        _dominanceStrategy = dominanceStrategy;
+        _maxKnifeCount = System.Linq.Enumerable.FirstOrDefault(
+            System.Linq.Enumerable.OfType<MaxKnifeCountConstraint<V>>(constraints))?.Threshold;
+    }
 
-        /// <summary>
-        /// 创建 NSame 生成器 / Create NSame generator.
-        /// </summary>
-        public NSameGenerator(
-            IReadOnlyList<ICuttingPlanConstraint<V>> constraints,
-            bool allAmount = false,
-            long? timeoutMs = null,
-            long maxPlans = 1000L,
-            long parallelism = 1L,
-            bool enableDominancePruning = false,
-            DominanceStrategy dominanceStrategy = DominanceStrategy.SameContribution)
-        {
-            _constraints = constraints;
-            _allAmount = allAmount;
-            _timeoutMs = timeoutMs;
-            _maxPlans = maxPlans;
-            _parallelism = global::System.Math.Max(1L, parallelism);
-            _enableDominancePruning = enableDominancePruning;
-            _dominanceStrategy = dominanceStrategy;
-            _maxKnifeCount = System.Linq.Enumerable.FirstOrDefault(
-                System.Linq.Enumerable.OfType<MaxKnifeCountConstraint<V>>(constraints))?.Threshold;
-        }
+    /// <summary>
+    /// 从 GenerationConstraints 创建 / Create from GenerationConstraints.
+    /// </summary>
+    public NSameGenerator(
+        GenerationConstraints<V> constraints,
+        bool allAmount = false,
+        long? timeoutMs = null,
+        long maxPlans = 1000L)
+        : this(
+            constraints: constraints.ToConstraints(),
+            allAmount: allAmount,
+            timeoutMs: timeoutMs,
+            maxPlans: maxPlans,
+            parallelism: constraints.Parallelism,
+            enableDominancePruning: constraints.EnableDominancePruning,
+            dominanceStrategy: constraints.DominanceStrategy) {
+    }
 
-        /// <summary>
-        /// 从 GenerationConstraints 创建 / Create from GenerationConstraints.
-        /// </summary>
-        public NSameGenerator(
-            GenerationConstraints<V> constraints,
-            bool allAmount = false,
-            long? timeoutMs = null,
-            long maxPlans = 1000L)
-            : this(
-                constraints: constraints.ToConstraints(),
-                allAmount: allAmount,
-                timeoutMs: timeoutMs,
-                maxPlans: maxPlans,
-                parallelism: constraints.Parallelism,
-                enableDominancePruning: constraints.EnableDominancePruning,
-                dominanceStrategy: constraints.DominanceStrategy)
-        {
-        }
+    /// <inheritdoc/>
+    public IReadOnlyList<CuttingPlan<V>> Generate(GenerationInput<V> input) => GenerateWithReport(input).Plans;
 
-        /// <inheritdoc/>
-        public IReadOnlyList<CuttingPlanStub<V>> Generate(GenerationInputStub<V> input)
-        {
-            return GenerateWithReport(input).Plans;
-        }
+    /// <inheritdoc/>
+    public CuttingPlanGenerationReport<CuttingPlan<V>> GenerateWithReport(GenerationInput<V> input) {
+        long startTime = Environment.TickCount64;
+        var collector = new GenerationCollector<CuttingPlan<V>>(
+            maxPlans: _maxPlans,
+            deadlineMs: _timeoutMs.HasValue ? startTime + _timeoutMs.Value : null,
+            enableDominancePruning: _enableDominancePruning,
+            dominanceStrategy: _dominanceStrategy
+        );
 
-        /// <inheritdoc/>
-        public CuttingPlanGenerationReport<CuttingPlanStub<V>> GenerateWithReport(GenerationInputStub<V> input)
-        {
-            var startTime = Environment.TickCount64;
-            var collector = new GenerationCollector<CuttingPlanStub<V>>(
-                maxPlans: _maxPlans,
-                deadlineMs: _timeoutMs.HasValue ? startTime + _timeoutMs.Value : null,
-                enableDominancePruning: _enableDominancePruning,
-                dominanceStrategy: _dominanceStrategy
-            );
+        // Stub: NSame generation implementation deferred
 
-            // Stub: NSame generation implementation deferred
-
-            return new CuttingPlanGenerationReport<CuttingPlanStub<V>>(
-                Plans: collector.Plans,
-                Statistics: collector.Report() with
-                {
-                    ElapsedMilliseconds = Environment.TickCount64 - startTime
-                }
-            );
-        }
+        return new CuttingPlanGenerationReport<CuttingPlan<V>>(
+            Plans: collector.Plans,
+            Statistics: collector.Report() with {
+                ElapsedMilliseconds = Environment.TickCount64 - startTime
+            }
+        );
     }
 }

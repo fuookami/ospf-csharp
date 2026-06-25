@@ -1,8 +1,8 @@
 #nullable enable
-using System.Collections.Generic;
-using System.Linq;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
@@ -12,8 +12,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// </summary>
 public sealed record Quadrilateral<D, V>(Point<D, V> P1, Point<D, V> P2, Point<D, V> P3, Point<D, V> P4)
     where D : struct, IDimension
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>边 1 / Edge 1.</summary>
     public Edge<D, V> E1 => new(P1, P2);
     /// <summary>边 2 / Edge 2.</summary>
@@ -33,12 +32,10 @@ public sealed record Quadrilateral<D, V>(Point<D, V> P1, Point<D, V> P2, Point<D
     public V Perimeter => E1.Length.Plus(E2.Length).Plus(E3.Length).Plus(E4.Length);
 
     /// <summary>重心 / Centroid.</summary>
-    public Point<D, V> Centroid
-    {
-        get
-        {
-            var two = ((IRealNumberConstants<V>)P1[0].Constants).Two;
-            var four = two.Plus(two);
+    public Point<D, V> Centroid {
+        get {
+            V two = ((IRealNumberConstants<V>)P1[0].Constants).Two;
+            V four = two.Plus(two);
             return new(P1.Indices.Select(i => P1[i].Plus(P2[i]).Plus(P3[i]).Plus(P4[i]).Div(four)).ToArray(), P1.Dim);
         }
     }
@@ -49,29 +46,26 @@ public sealed record Quadrilateral<D, V>(Point<D, V> P1, Point<D, V> P2, Point<D
 }
 
 /// <summary>二维四边形扩展 / 2D quadrilateral extensions.</summary>
-public static class Quadrilateral2DExtensions
-{
+public static class Quadrilateral2DExtensions {
     /// <summary>二维四边形面积（鞋带公式）/ 2D area (Shoelace).</summary>
-    public static Flt64 Area(this Quadrilateral<Dim2, Flt64> q)
-    {
-        var sum1 = q.P1.X().Times(q.P2.Y()).Plus(q.P2.X().Times(q.P3.Y()))
+    public static Flt64 Area(this Quadrilateral<Dim2, Flt64> q) {
+        Flt64 sum1 = q.P1.X().Times(q.P2.Y()).Plus(q.P2.X().Times(q.P3.Y()))
                        .Plus(q.P3.X().Times(q.P4.Y())).Plus(q.P4.X().Times(q.P1.Y()));
-        var sum2 = q.P1.Y().Times(q.P2.X()).Plus(q.P2.Y().Times(q.P3.X()))
+        Flt64 sum2 = q.P1.Y().Times(q.P2.X()).Plus(q.P2.Y().Times(q.P3.X()))
                        .Plus(q.P3.Y().Times(q.P4.X())).Plus(q.P4.Y().Times(q.P1.X()));
-        var d = sum1.Minus(sum2);
-        var abs = d.Ls(default) ? d.Negate() : d;
+        Flt64 d = sum1.Minus(sum2);
+        Flt64 abs = d.Ls(default) ? d.Negate() : d;
         return abs.Div(new Flt64(2.0));
     }
 
     /// <summary>是否为凸四边形 / Whether convex.</summary>
-    public static bool IsConvex(this Quadrilateral<Dim2, Flt64> q)
-    {
-        var cross1 = Cross2D(q.P1, q.P2, q.P3);
-        var cross2 = Cross2D(q.P2, q.P3, q.P4);
-        var cross3 = Cross2D(q.P3, q.P4, q.P1);
-        var cross4 = Cross2D(q.P4, q.P1, q.P2);
-        var pos = cross1 > 0 && cross2 > 0 && cross3 > 0 && cross4 > 0;
-        var neg = cross1 < 0 && cross2 < 0 && cross3 < 0 && cross4 < 0;
+    public static bool IsConvex(this Quadrilateral<Dim2, Flt64> q) {
+        double cross1 = Cross2D(q.P1, q.P2, q.P3);
+        double cross2 = Cross2D(q.P2, q.P3, q.P4);
+        double cross3 = Cross2D(q.P3, q.P4, q.P1);
+        double cross4 = Cross2D(q.P4, q.P1, q.P2);
+        bool pos = cross1 > 0 && cross2 > 0 && cross3 > 0 && cross4 > 0;
+        bool neg = cross1 < 0 && cross2 < 0 && cross3 < 0 && cross4 < 0;
         return pos || neg;
     }
 

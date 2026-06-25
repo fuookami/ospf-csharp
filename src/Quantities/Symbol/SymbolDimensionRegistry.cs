@@ -1,12 +1,12 @@
 #nullable enable
 
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using Fuookami.Ospf.Math.Symbol;
 using Fuookami.Ospf.Quantities.Dimension;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Fuookami.Ospf.Quantities.Symbol;
 
@@ -14,8 +14,7 @@ namespace Fuookami.Ospf.Quantities.Symbol;
 /// 运算类型 / Operation type.
 /// 用于量纲推导时指定运算类型 / Used to specify operation type for dimension inference.
 /// </summary>
-public enum Operation
-{
+public enum Operation {
     /// <summary>加法 / Addition.</summary>
     Add,
 
@@ -35,8 +34,7 @@ public enum Operation
 /// Maintains symbol-to-dimension mapping for dimension validation before/after expression construction.
 /// 使用 ConcurrentDictionary 保证线程安全 / Uses ConcurrentDictionary for thread safety.
 /// </summary>
-public sealed class SymbolDimensionRegistry
-{
+public sealed class SymbolDimensionRegistry {
     private readonly ConcurrentDictionary<ISymbol, DimensionedSymbol> _symbolDimensions = new(SymbolNameComparer.Instance);
 
     /// <summary>注册符号及其量纲 / Register symbol with its dimension.</summary>
@@ -47,38 +45,32 @@ public sealed class SymbolDimensionRegistry
     /// </summary>
     /// <returns>带量纲的符号，或 null 如果未注册 / Dimensioned symbol, or null if not registered.</returns>
     public DimensionedSymbol? GetDimension(ISymbol symbol) =>
-        _symbolDimensions.TryGetValue(symbol, out var dim) ? dim : null;
+        _symbolDimensions.TryGetValue(symbol, out DimensionedSymbol? dim) ? dim : null;
 
     /// <summary>
     /// 校验加减运算的量纲一致性 / Validate dimension consistency for add/sub operations.
     /// 确保所有符号具有相同的量纲，否则返回 Failed。
     /// Ensures all symbols have the same dimension, otherwise returns Failed.
     /// </summary>
-    public Result<Fuookami.Ospf.Utils.Functional.Unit, ErrorCode, Error<ErrorCode>> ValidateAddSubDimension(IEnumerable<ISymbol> symbols)
-    {
+    public Result<Fuookami.Ospf.Utils.Functional.Unit, ErrorCode, Error<ErrorCode>> ValidateAddSubDimension(IEnumerable<ISymbol> symbols) {
         var list = symbols.ToList();
-        if (list.Count == 0)
-        {
+        if (list.Count == 0) {
             return Results.Ok(default(Fuookami.Ospf.Utils.Functional.Unit));
         }
 
-        if (!_symbolDimensions.TryGetValue(list[0], out var first) || first is null)
-        {
+        if (!_symbolDimensions.TryGetValue(list[0], out DimensionedSymbol? first) || first is null) {
             return Results.Failed<Fuookami.Ospf.Utils.Functional.Unit>(
                 new Err<ErrorCode>(ErrorCode.IllegalArgument, $"Symbol {list[0].Name} not registered"));
         }
 
-        var firstDimension = first.Quantity;
-        for (var i = 1; i < list.Count; i++)
-        {
-            if (!_symbolDimensions.TryGetValue(list[i], out var dim) || dim is null)
-            {
+        DerivedQuantity firstDimension = first.Quantity;
+        for (int i = 1; i < list.Count; i++) {
+            if (!_symbolDimensions.TryGetValue(list[i], out DimensionedSymbol? dim) || dim is null) {
                 return Results.Failed<Fuookami.Ospf.Utils.Functional.Unit>(
                     new Err<ErrorCode>(ErrorCode.IllegalArgument, $"Symbol {list[i].Name} not registered"));
             }
 
-            if (!dim.Quantity.Equals(firstDimension))
-            {
+            if (!dim.Quantity.Equals(firstDimension)) {
                 return Results.Failed<Fuookami.Ospf.Utils.Functional.Unit>(
                     new Err<ErrorCode>(ErrorCode.IllegalArgument,
                         $"Dimension mismatch for addition/subtraction: expected {firstDimension.DimensionSymbol()}, got {dim.Quantity.DimensionSymbol()}"));
@@ -96,22 +88,18 @@ public sealed class SymbolDimensionRegistry
     /// - 除法: 结果量纲为操作数量纲之商 / Divide: quotient of operands' dimensions.
     /// </summary>
     public Result<DerivedQuantity, ErrorCode, Error<ErrorCode>> InferDimension(
-        ISymbol symbol1, ISymbol symbol2, Operation operation)
-    {
-        if (!_symbolDimensions.TryGetValue(symbol1, out var dim1) || dim1 is null)
-        {
+        ISymbol symbol1, ISymbol symbol2, Operation operation) {
+        if (!_symbolDimensions.TryGetValue(symbol1, out DimensionedSymbol? dim1) || dim1 is null) {
             return Results.Failed<DerivedQuantity>(
                 new Err<ErrorCode>(ErrorCode.IllegalArgument, $"Symbol {symbol1.Name} not registered"));
         }
 
-        if (!_symbolDimensions.TryGetValue(symbol2, out var dim2) || dim2 is null)
-        {
+        if (!_symbolDimensions.TryGetValue(symbol2, out DimensionedSymbol? dim2) || dim2 is null) {
             return Results.Failed<DerivedQuantity>(
                 new Err<ErrorCode>(ErrorCode.IllegalArgument, $"Symbol {symbol2.Name} not registered"));
         }
 
-        return operation switch
-        {
+        return operation switch {
             Operation.Add or Operation.Subtract => !dim1.Quantity.Equals(dim2.Quantity)
                 ? Results.Failed<DerivedQuantity>(new Err<ErrorCode>(ErrorCode.IllegalArgument,
                     $"Dimension mismatch for {operation.ToString().ToLowerInvariant()}: expected {dim1.Quantity.DimensionSymbol()}, got {dim2.Quantity.DimensionSymbol()}"))
@@ -139,8 +127,7 @@ public sealed class SymbolDimensionRegistry
 /// Symbol equality comparer by Name / 按名称比较符号相等性.
 /// ConcurrentDictionary needs a stable key; ISymbol.Name is the natural key.
 /// </summary>
-internal sealed class SymbolNameComparer : IEqualityComparer<ISymbol>
-{
+internal sealed class SymbolNameComparer : IEqualityComparer<ISymbol> {
     public static readonly SymbolNameComparer Instance = new();
 
     public bool Equals(ISymbol? x, ISymbol? y) =>

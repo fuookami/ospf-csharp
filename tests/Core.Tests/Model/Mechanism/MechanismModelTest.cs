@@ -1,8 +1,5 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -16,75 +13,73 @@ using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Fuookami.Ospf.Core.Tests.Model.Mechanism
-{
-    public class MechanismModelTest
-    {
-        [Fact]
-        public async Task LinearMechanismModel_InvokeAsync_ShouldBuildFromMetaModel()
-        {
-            var metaModel = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var x = new RealVar("x");
-            var y = new RealVar("y");
-            metaModel.Add(x);
-            metaModel.Add(y);
+namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 
-            // Add constraint: x + y <= 10
-            var lhs = new LinearPolynomial<Flt64>(
-                new List<LinearMonomial<Flt64>>
-                {
-                    new(Flt64.One, x),
-                    new(Flt64.One, y)
-                },
-                Flt64.Zero);
-            var rhs = new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), new Flt64(10));
-            metaModel.AddConstraint(new LinearInequality<Flt64>(lhs, rhs, Comparison.LE), null, name: "c1");
+public class MechanismModelTest {
+    [Fact]
+    public async Task LinearMechanismModel_InvokeAsync_ShouldBuildFromMetaModel() {
+        var metaModel = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var x = new RealVar("x");
+        var y = new RealVar("y");
+        metaModel.Add(x);
+        metaModel.Add(y);
 
-            // Add objective: minimize x
-            var objPoly = new LinearPolynomial<Flt64>(
-                new List<LinearMonomial<Flt64>> { new(Flt64.One, x) },
-                Flt64.Zero);
-            metaModel.AddObject(ObjectCategory.Minimum, objPoly, "obj", null);
+        // Add constraint: x + y <= 10
+        var lhs = new LinearPolynomial<Flt64>(
+            new List<LinearMonomial<Flt64>>
+            {
+                new(Flt64.One, x),
+                new(Flt64.One, y)
+            },
+            Flt64.Zero);
+        var rhs = new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), new Flt64(10));
+        metaModel.AddConstraint(new LinearInequality<Flt64>(lhs, rhs, Comparison.LE), null, name: "c1");
 
-            var result = await LinearMechanismModel<Flt64>.InvokeAsync(metaModel);
+        // Add objective: minimize x
+        var objPoly = new LinearPolynomial<Flt64>(
+            new List<LinearMonomial<Flt64>> { new(Flt64.One, x) },
+            Flt64.Zero);
+        metaModel.AddObject(ObjectCategory.Minimum, objPoly, "obj", null);
 
-            result.Should().NotBeNull();
-            var model = ((Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>)result).Value;
-            model.Name.Should().Be("test");
-            model.NumVariables.Should().BeGreaterThan(0);
-        }
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> result = await LinearMechanismModel<Flt64>.InvokeAsync(metaModel);
 
-        [Fact]
-        public async Task QuadraticMechanismModel_InvokeAsync_ShouldBuildFromMetaModel()
-        {
-            var metaModel = new QuadraticMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var x = new RealVar("x");
-            metaModel.Add(x);
+        result.Should().NotBeNull();
+        LinearMechanismModel<Flt64> model = ((Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>)result).Value;
+        model.Name.Should().Be("test");
+        model.NumVariables.Should().BeGreaterThan(0);
+    }
 
-            // Add quadratic constraint: x^2 <= 4
-            var qLhs = new QuadraticPolynomial<Flt64>(
-                new List<QuadraticMonomial<Flt64>> { new(Flt64.One, x, x) },
-                Flt64.Zero);
-            var qRhs = new QuadraticPolynomial<Flt64>(Array.Empty<QuadraticMonomial<Flt64>>(), new Flt64(4));
-            metaModel.AddConstraint(new QuadraticInequalityOf<Flt64>(qLhs, qRhs, Comparison.LE), null, name: "q1");
+    [Fact]
+    public async Task QuadraticMechanismModel_InvokeAsync_ShouldBuildFromMetaModel() {
+        var metaModel = new QuadraticMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var x = new RealVar("x");
+        metaModel.Add(x);
 
-            var result = await QuadraticMechanismModel<Flt64>.InvokeAsync(metaModel);
+        // Add quadratic constraint: x^2 <= 4
+        var qLhs = new QuadraticPolynomial<Flt64>(
+            new List<QuadraticMonomial<Flt64>> { new(Flt64.One, x, x) },
+            Flt64.Zero);
+        var qRhs = new QuadraticPolynomial<Flt64>(Array.Empty<QuadraticMonomial<Flt64>>(), new Flt64(4));
+        metaModel.AddConstraint(new QuadraticInequalityOf<Flt64>(qLhs, qRhs, Comparison.LE), null, name: "q1");
 
-            result.Should().NotBeNull();
-            var model = ((Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>)result).Value;
-            model.Name.Should().Be("test");
-        }
+        Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> result = await QuadraticMechanismModel<Flt64>.InvokeAsync(metaModel);
 
-        [Fact]
-        public void LinearMechanismModel_Dispose_ShouldNotThrow()
-        {
-            var metaModel = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var buildResult = LinearMechanismModel<Flt64>.InvokeAsync(metaModel).GetAwaiter().GetResult();
-            var model = ((Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>)buildResult).Value;
+        result.Should().NotBeNull();
+        QuadraticMechanismModel<Flt64> model = ((Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>)result).Value;
+        model.Name.Should().Be("test");
+    }
 
-            model.Invoking(m => m.Dispose()).Should().NotThrow();
-        }
+    [Fact]
+    public async Task LinearMechanismModel_Dispose_ShouldNotThrow() {
+        var metaModel = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> buildResult = await LinearMechanismModel<Flt64>.InvokeAsync(metaModel);
+        LinearMechanismModel<Flt64> model = ((Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>)buildResult).Value;
+
+        model.Invoking(m => m.Dispose()).Should().NotThrow();
     }
 }

@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Framework.Plugin</RootNamespace>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <NoWarn>$(NoWarn);RS2008</NoWarn>
     <AssemblyName>Fuookami.Ospf.Framework.Plugin</AssemblyName>
   </PropertyGroup>
   <ItemGroup>

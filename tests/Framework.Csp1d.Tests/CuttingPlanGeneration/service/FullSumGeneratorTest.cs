@@ -1,42 +1,39 @@
 #nullable enable
 
 using FluentAssertions;
-using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration;
 using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
+using Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model;
+using Fuookami.Ospf.Math.Algebra.Number;
+using System.Collections.Generic;
 using Xunit;
 
-namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service
-{
-    /// <summary>
-    /// FullSum 生成器测试 / FullSum generator tests.
-    /// </summary>
-    public class FullSumGeneratorTest
-    {
-        [Fact]
-        public void EmptyDemands_ShouldReturnEmpty()
-        {
-            var constraints = GenerationConstraints<Flt64>.Unconstrained();
-            var generator = new FullSumGenerator<Flt64>(constraints);
-            var input = new GenerationInputStub<Flt64>();
+namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
+/// <summary>
+/// FullSum 生成器测试 / FullSum generator tests.
+/// </summary>
+public class FullSumGeneratorTest {
+    [Fact]
+    public void EmptyDemands_ShouldReturnEmpty() {
+        var constraints = GenerationConstraints<Flt64>.Unconstrained();
+        var generator = new FullSumGenerator<Flt64>(constraints);
+        var input = new GenerationInput<Flt64>();
 
-            var result = generator.Generate(input);
+        IReadOnlyList<CuttingPlan<Flt64>> result = generator.Generate(input);
 
-            result.Should().BeEmpty();
-        }
+        result.Should().BeEmpty();
+    }
 
-        [Fact]
-        public void GenerateWithReport_ShouldReturnReport()
-        {
-            var constraints = GenerationConstraints<Flt64>.Unconstrained();
-            var generator = new FullSumGenerator<Flt64>(constraints);
-            var input = new GenerationInputStub<Flt64>();
+    [Fact]
+    public void GenerateWithReport_ShouldReturnReport() {
+        var constraints = GenerationConstraints<Flt64>.Unconstrained();
+        var generator = new FullSumGenerator<Flt64>(constraints);
+        var input = new GenerationInput<Flt64>();
 
-            var report = generator.GenerateWithReport(input);
+        CuttingPlanGenerationReport<CuttingPlan<Flt64>> report = generator.GenerateWithReport(input);
 
-            report.Should().NotBeNull();
-            report.Statistics.Should().NotBeNull();
-        }
+        report.Should().NotBeNull();
+        report.Statistics.Should().NotBeNull();
     }
 }

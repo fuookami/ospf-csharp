@@ -1,11 +1,11 @@
 #nullable enable
 
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Quantities.Quantity;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
+using System;
 
 namespace Fuookami.Ospf.Quantities.Geometry;
 
@@ -19,14 +19,12 @@ public sealed record QuantityCylinder3<V>(
     Quantity<V> Height,
     Axis3 Axis
 ) : IQuantityShape3<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <summary>直径 / Diameter.</summary>
     public Quantity<V> Diameter => new(Radius.Value.Plus(Radius.Value), Radius.Unit);
 
     /// <summary>最小包围长方体 / Minimum bounding cuboid.</summary>
-    public QuantityCuboid3<V> BoundingCuboid => Axis switch
-    {
+    public QuantityCuboid3<V> BoundingCuboid => Axis switch {
         Axis3.X => new QuantityCuboid3<V>(Height, Diameter, Diameter),
         Axis3.Y => new QuantityCuboid3<V>(Diameter, Height, Diameter),
         Axis3.Z => new QuantityCuboid3<V>(Diameter, Diameter, Height),

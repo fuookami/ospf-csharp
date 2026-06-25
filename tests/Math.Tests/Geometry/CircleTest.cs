@@ -1,17 +1,15 @@
 #nullable enable
-using System;
 using FluentAssertions;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Geometry;
+using System;
 using Xunit;
 
 namespace Fuookami.Ospf.Math.Tests.Geometry;
 
-public class CircleTest
-{
+public class CircleTest {
     [Fact]
-    public void Circle_Creation()
-    {
+    public void Circle_Creation() {
         var center = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var dir = Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0));
         var c = new Circle<Dim2, Flt64>(center, dir, new Flt64(5.0));
@@ -19,8 +17,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_Area()
-    {
+    public void Circle_Area() {
         var center = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var dir = Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0));
         var c = new Circle<Dim2, Flt64>(center, dir, new Flt64(5.0));
@@ -28,8 +25,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_Circumference()
-    {
+    public void Circle_Circumference() {
         var center = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var dir = Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0));
         var c = new Circle<Dim2, Flt64>(center, dir, new Flt64(5.0));
@@ -37,8 +33,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_Diameter()
-    {
+    public void Circle_Diameter() {
         var center = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var dir = Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0));
         var c = new Circle<Dim2, Flt64>(center, dir, new Flt64(5.0));
@@ -46,8 +41,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_ContainsPoint()
-    {
+    public void Circle_ContainsPoint() {
         var center = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var dir = Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0));
         var c = new Circle<Dim2, Flt64>(center, dir, new Flt64(5.0));
@@ -58,8 +52,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_ContainsPointStrict()
-    {
+    public void Circle_ContainsPointStrict() {
         var center = Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0));
         var dir = Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0));
         var c = new Circle<Dim2, Flt64>(center, dir, new Flt64(5.0));
@@ -68,8 +61,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_Intersects()
-    {
+    public void Circle_Intersects() {
         var c1 = new Circle<Dim2, Flt64>(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0)),
@@ -82,8 +74,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_NoIntersect()
-    {
+    public void Circle_NoIntersect() {
         var c1 = new Circle<Dim2, Flt64>(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Vector<Dim2, Flt64>.Vector2(new Flt64(1), new Flt64(0)),
@@ -96,8 +87,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Circle_CircumcircleOf()
-    {
+    public void Circle_CircumcircleOf() {
         var t = new Triangle<Dim2, Flt64>(
             Point<Dim2, Flt64>.Point2(new Flt64(0), new Flt64(0)),
             Point<Dim2, Flt64>.Point2(new Flt64(4), new Flt64(0)),
@@ -108,8 +98,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Sphere_Volume()
-    {
+    public void Sphere_Volume() {
         var center = Point<Dim3, Flt64>.Point3(new Flt64(0), new Flt64(0), new Flt64(0));
         var dir = Vector<Dim3, Flt64>.Vector3(new Flt64(1), new Flt64(0), new Flt64(0));
         var s = new Circle<Dim3, Flt64>(center, dir, new Flt64(3.0));
@@ -117,8 +106,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Sphere_SurfaceArea()
-    {
+    public void Sphere_SurfaceArea() {
         var center = Point<Dim3, Flt64>.Point3(new Flt64(0), new Flt64(0), new Flt64(0));
         var dir = Vector<Dim3, Flt64>.Vector3(new Flt64(1), new Flt64(0), new Flt64(0));
         var s = new Circle<Dim3, Flt64>(center, dir, new Flt64(3.0));
@@ -126,8 +114,7 @@ public class CircleTest
     }
 
     [Fact]
-    public void Sphere_ContainsPoint()
-    {
+    public void Sphere_ContainsPoint() {
         var center = Point<Dim3, Flt64>.Point3(new Flt64(0), new Flt64(0), new Flt64(0));
         var dir = Vector<Dim3, Flt64>.Vector3(new Flt64(1), new Flt64(0), new Flt64(0));
         var s = new Circle<Dim3, Flt64>(center, dir, new Flt64(3.0));

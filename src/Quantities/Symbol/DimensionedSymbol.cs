@@ -16,8 +16,7 @@ public sealed record DimensionedSymbol(
     string? DisplayName,
     DerivedQuantity Quantity,
     PhysicalUnit? PreferredUnit
-) : ISymbol
-{
+) : ISymbol {
     /// <summary>
     /// 检查是否可以与另一个符号相加 / Check if this symbol can be added to another.
     /// 只有量纲相同的符号才能相加 / Only symbols with the same dimension can be added.

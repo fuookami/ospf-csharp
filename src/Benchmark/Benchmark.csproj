@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Fuookami.Ospf.Benchmark</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Benchmark</AssemblyName>
   </PropertyGroup>
@@ -7,5 +8,9 @@
     <ProjectReference Include="..\Utils\Utils.csproj" />
     <ProjectReference Include="..\Math\Math.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\MultiArray\MultiArray.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
   </ItemGroup>
 </Project>

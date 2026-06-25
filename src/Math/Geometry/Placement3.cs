@@ -8,8 +8,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// <summary>
 /// 三维放置 / 3D placement (position + 3D shape).
 /// </summary>
-public sealed record Placement3<V>(V X, V Y, V Z, IShape3<V> Shape) where V : struct, IFloatingNumber<V>
-{
+public sealed record Placement3<V>(V X, V Y, V Z, IShape3<V> Shape) where V : struct, IFloatingNumber<V> {
     /// <summary>包围盒 / Bounding box.</summary>
     public Box3<V> Box => new(X, Y, Z, Shape.BoundingCuboid);
 

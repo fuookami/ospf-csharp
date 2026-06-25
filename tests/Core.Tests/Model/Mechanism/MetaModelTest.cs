@@ -1,8 +1,5 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -14,137 +11,131 @@ using Fuookami.Ospf.Math.Symbol;
 using Fuookami.Ospf.Math.Symbol.Inequality;
 using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
-namespace Fuookami.Ospf.Core.Tests.Model.Mechanism
-{
-    public class MetaModelTest
-    {
-        [Fact]
-        public void LinearMetaModel_AddVariable_ShouldSucceed()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var variable = new RealVar("x");
+namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 
-            var result = model.Add(variable);
+public class MetaModelTest {
+    [Fact]
+    public void LinearMetaModel_AddVariable_ShouldSucceed() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var variable = new RealVar("x");
 
-            result.Should().NotBeNull();
-            model.Tokens.Find(variable).Should().NotBeNull();
-        }
+        Result<Success, ErrorCode, Error<ErrorCode>> result = model.Add(variable);
 
-        [Fact]
-        public void LinearMetaModel_RemoveVariable_ShouldSucceed()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var variable = new RealVar("x");
-            model.Add(variable);
+        result.Should().NotBeNull();
+        model.Tokens.Find(variable).Should().NotBeNull();
+    }
 
-            model.Remove(variable);
+    [Fact]
+    public void LinearMetaModel_RemoveVariable_ShouldSucceed() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var variable = new RealVar("x");
+        model.Add(variable);
 
-            model.Tokens.Find(variable).Should().BeNull();
-        }
+        model.Remove(variable);
 
-        [Fact]
-        public void LinearMetaModel_AddConstraint_ShouldAddToConstraints()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var variable = new RealVar("x");
-            model.Add(variable);
+        model.Tokens.Find(variable).Should().BeNull();
+    }
 
-            var lhs = new LinearPolynomial<Flt64>(
-                new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) },
-                Flt64.Zero);
-            var rhs = new LinearPolynomial<Flt64>(
-                Array.Empty<LinearMonomial<Flt64>>(),
-                Flt64.One);
-            var inequality = new LinearInequality<Flt64>(lhs, rhs, Comparison.LE);
+    [Fact]
+    public void LinearMetaModel_AddConstraint_ShouldAddToConstraints() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var variable = new RealVar("x");
+        model.Add(variable);
 
-            var result = model.AddConstraint(inequality, null, name: "c1");
+        var lhs = new LinearPolynomial<Flt64>(
+            new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) },
+            Flt64.Zero);
+        var rhs = new LinearPolynomial<Flt64>(
+            Array.Empty<LinearMonomial<Flt64>>(),
+            Flt64.One);
+        var inequality = new LinearInequality<Flt64>(lhs, rhs, Comparison.LE);
 
-            result.Should().NotBeNull();
-            model.Constraints.Should().HaveCount(1);
-        }
+        Result<Success, ErrorCode, Error<ErrorCode>> result = model.AddConstraint(inequality, null, name: "c1");
 
-        [Fact]
-        public void LinearMetaModel_AddObject_ShouldSucceed()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var variable = new RealVar("x");
-            model.Add(variable);
+        result.Should().NotBeNull();
+        model.Constraints.Should().HaveCount(1);
+    }
 
-            var polynomial = new LinearPolynomial<Flt64>(
-                new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) },
-                Flt64.Zero);
+    [Fact]
+    public void LinearMetaModel_AddObject_ShouldSucceed() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var variable = new RealVar("x");
+        model.Add(variable);
 
-            var result = model.AddObject(ObjectCategory.Minimum, polynomial, "obj", null);
+        var polynomial = new LinearPolynomial<Flt64>(
+            new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) },
+            Flt64.Zero);
 
-            result.Should().NotBeNull();
-        }
+        Result<Success, ErrorCode, Error<ErrorCode>> result = model.AddObject(ObjectCategory.Minimum, polynomial, "obj", null);
 
-        [Fact]
-        public void QuadraticMetaModel_AddQuadraticConstraint_ShouldSucceed()
-        {
-            var model = new QuadraticMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var variable = new RealVar("x");
-            model.Add(variable);
+        result.Should().NotBeNull();
+    }
 
-            var qLhs = new QuadraticPolynomial<Flt64>(
-                new List<QuadraticMonomial<Flt64>> { new(Flt64.One, variable, variable) },
-                Flt64.Zero);
-            var qRhs = new QuadraticPolynomial<Flt64>(
-                Array.Empty<QuadraticMonomial<Flt64>>(),
-                Flt64.One);
-            var inequality = new QuadraticInequalityOf<Flt64>(qLhs, qRhs, Comparison.LE);
+    [Fact]
+    public void QuadraticMetaModel_AddQuadraticConstraint_ShouldSucceed() {
+        var model = new QuadraticMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var variable = new RealVar("x");
+        model.Add(variable);
 
-            var result = model.AddConstraint(inequality, null, name: "q1");
+        var qLhs = new QuadraticPolynomial<Flt64>(
+            new List<QuadraticMonomial<Flt64>> { new(Flt64.One, variable, variable) },
+            Flt64.Zero);
+        var qRhs = new QuadraticPolynomial<Flt64>(
+            Array.Empty<QuadraticMonomial<Flt64>>(),
+            Flt64.One);
+        var inequality = new QuadraticInequalityOf<Flt64>(qLhs, qRhs, Comparison.LE);
 
-            result.Should().NotBeNull();
-            model.Constraints.Should().HaveCount(1);
-        }
+        Result<Success, ErrorCode, Error<ErrorCode>> result = model.AddConstraint(inequality, null, name: "q1");
 
-        [Fact]
-        public void LinearMetaModel_RegisterConstraintGroup_ShouldTrackIndices()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
-            var group = new TestConstraintGroup("group1");
-            var variable = new RealVar("x");
-            model.Add(variable);
+        result.Should().NotBeNull();
+        model.Constraints.Should().HaveCount(1);
+    }
 
-            model.RegisterConstraintGroup(group);
-            var lhs = new LinearPolynomial<Flt64>(
-                new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) },
-                Flt64.Zero);
-            var rhs = new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), Flt64.One);
-            model.AddConstraint(new LinearInequality<Flt64>(lhs, rhs, Comparison.LE), group, name: "c1");
-            model.AddConstraint(new LinearInequality<Flt64>(lhs, rhs, Comparison.LE), group, name: "c2");
+    [Fact]
+    public void LinearMetaModel_RegisterConstraintGroup_ShouldTrackIndices() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        var group = new TestConstraintGroup("group1");
+        var variable = new RealVar("x");
+        model.Add(variable);
 
-            var indices = model.IndicesOfConstraintGroup(group);
-            indices.Should().NotBeNull();
-            model.ConstraintsOfGroup(group).Should().HaveCount(2);
-        }
+        model.RegisterConstraintGroup(group);
+        var lhs = new LinearPolynomial<Flt64>(
+            new List<LinearMonomial<Flt64>> { new(Flt64.One, variable) },
+            Flt64.Zero);
+        var rhs = new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), Flt64.One);
+        model.AddConstraint(new LinearInequality<Flt64>(lhs, rhs, Comparison.LE), group, name: "c1");
+        model.AddConstraint(new LinearInequality<Flt64>(lhs, rhs, Comparison.LE), group, name: "c2");
 
-        [Fact]
-        public void LinearMetaModel_Flush_ShouldNotThrow()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        Range? indices = model.IndicesOfConstraintGroup(group);
+        indices.Should().NotBeNull();
+        model.ConstraintsOfGroup(group).Should().HaveCount(2);
+    }
 
-            model.Invoking(m => m.Flush()).Should().NotThrow();
-            model.Invoking(m => m.Flush(force: true)).Should().NotThrow();
-        }
+    [Fact]
+    public void LinearMetaModel_Flush_ShouldNotThrow() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
 
-        [Fact]
-        public void LinearMetaModel_Dispose_ShouldNotThrow()
-        {
-            var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
+        model.Invoking(m => m.Flush()).Should().NotThrow();
+        model.Invoking(m => m.Flush(force: true)).Should().NotThrow();
+    }
 
-            model.Invoking(m => m.Dispose()).Should().NotThrow();
-        }
+    [Fact]
+    public void LinearMetaModel_Dispose_ShouldNotThrow() {
+        var model = new LinearMetaModel<Flt64>("test", ObjectCategory.Minimum);
 
-        private class TestConstraintGroup : IMetaConstraintGroup
-        {
-            public bool Lazy => false;
-            public string Name { get; }
-            public TestConstraintGroup(string name) => Name = name;
-        }
+        model.Invoking(m => m.Dispose()).Should().NotThrow();
+    }
+
+    private class TestConstraintGroup : IMetaConstraintGroup {
+        public bool Lazy => false;
+        public string Name { get; }
+        public TestConstraintGroup(string name) => Name = name;
     }
 }

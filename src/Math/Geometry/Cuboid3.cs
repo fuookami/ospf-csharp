@@ -1,6 +1,6 @@
 #nullable enable
-using System;
 using Fuookami.Ospf.Math.Algebra.Concept;
+using System;
 
 namespace Fuookami.Ospf.Math.Geometry;
 
@@ -8,8 +8,7 @@ namespace Fuookami.Ospf.Math.Geometry;
 /// 三维长方体 / 3D cuboid (width x height x depth).
 /// </summary>
 public sealed record Cuboid3<V>(V Width, V Height, V Depth) : IShape3<V>
-    where V : struct, IFloatingNumber<V>
-{
+    where V : struct, IFloatingNumber<V> {
     /// <inheritdoc/>
     public Cuboid3<V> BoundingCuboid => this;
 
@@ -23,8 +22,7 @@ public sealed record Cuboid3<V>(V Width, V Height, V Depth) : IShape3<V>
     public Box3<V> At(V x, V y, V z) => new(x, y, z, this);
 
     /// <summary>沿指定轴的尺寸 / Dimension along an axis.</summary>
-    public V Along(Axis3 axis) => axis switch
-    {
+    public V Along(Axis3 axis) => axis switch {
         Axis3.X => Width,
         Axis3.Y => Height,
         Axis3.Z => Depth,

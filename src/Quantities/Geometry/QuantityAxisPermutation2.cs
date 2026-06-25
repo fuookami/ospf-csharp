@@ -11,8 +11,7 @@ namespace Fuookami.Ospf.Quantities.Geometry;
 /// 纯几何概念；仅 Apply 与数量模型绑定。
 /// Pure geometry; only Apply binds to quantity models.
 /// </summary>
-public sealed record QuantityAxisPermutation2(Axis2 WidthAxis, Axis2 HeightAxis)
-{
+public sealed record QuantityAxisPermutation2(Axis2 WidthAxis, Axis2 HeightAxis) {
     /// <summary>X-Y 置换 / X-Y permutation.</summary>
     public static readonly QuantityAxisPermutation2 XY = new(Axis2.X, Axis2.Y);
 
