@@ -92,8 +92,8 @@ public abstract record ValueWrapper<T> :
     /// <summary>解包获取实际数值 / Unwraps to get actual number.</summary>
     public T Unwrap() => this switch {
         Value v => v.Number,
-        Infinity => Constants.PositiveInfinity.Value,
-        NegativeInfinity => Constants.NegativeInfinity.Value,
+        Infinity => Constants.PositiveInfinity ?? throw new InvalidOperationException("PositiveInfinity constant is null"),
+        NegativeInfinity => Constants.NegativeInfinity ?? throw new InvalidOperationException("NegativeInfinity constant is null"),
         _ => throw new InvalidOperationException(),
     };
 

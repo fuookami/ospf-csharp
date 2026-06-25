@@ -31,14 +31,14 @@ public abstract record LengthAssignmentConstraint<V> where V : struct {
     /// 超长约束：产品卷长不得超过 maxOverProduceLength / Over-length constraint: product length must not exceed maxOverProduceLength.
     /// </summary>
     /// <param name="Product">产品 / Product.</param>
-    public sealed record MaxOverLength<V>(Product<V> Product) : LengthAssignmentConstraint<V> where V : struct;
+    public sealed record MaxOverLength(Product<V> Product) : LengthAssignmentConstraint<V>;
 
     /// <summary>
     /// 最小批次约束：产品分配批次数不得低于给定值 / Minimum batch constraint: assigned batch count must not be below given value.
     /// </summary>
     /// <param name="Product">产品 / Product.</param>
     /// <param name="MinBatches">最小批次数 / Minimum batch count.</param>
-    public sealed record MinBatchCount<V>(Product<V> Product, UInt64 MinBatches) : LengthAssignmentConstraint<V> where V : struct;
+    public sealed record MinBatchCount(Product<V> Product, UInt64 MinBatches) : LengthAssignmentConstraint<V>;
 }
 
 /// <summary>

@@ -4,9 +4,7 @@ using Fuookami.Ospf.Core.Solver.Heuristic;
 using Fuookami.Ospf.Math.Algebra.Number;
 using System;
 using System.Collections.Generic;
-/// <summary>
-/// 灰狼个体类型 / Wolf type, alias for SolutionWithFitness.
-/// </summary>
+// Wolf type alias: alias for SolutionWithFitness<Flt64, Flt64>.
 using Wolf = Fuookami.Ospf.Core.Solver.Heuristic.SolutionWithFitness<Fuookami.Ospf.Math.Algebra.Number.Flt64, Fuookami.Ospf.Math.Algebra.Number.Flt64>;
 
 namespace Fuookami.Ospf.Core.Plugin.Heuristic.Gwo;

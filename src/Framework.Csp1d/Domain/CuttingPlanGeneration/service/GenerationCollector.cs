@@ -35,7 +35,9 @@ internal sealed class GenerationCollector<TPlan> {
     private long _materialWidthIndexCacheHits;
     private long _materialSliceTemplateCacheHits;
     private long _materialSliceTemplateCacheMisses;
+#pragma warning disable CS0649 // Intentionally unassigned: reserved for future use
     private long _crossContributionDominated;
+#pragma warning restore CS0649
     private bool _timedOut;
 
     /// <summary>

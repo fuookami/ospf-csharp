@@ -10,14 +10,14 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 2D box need (axis-aligned bounding box).
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type</typeparam>
+/// <param name="MinX">最小 X 坐标 / Minimum X coordinate</param>
+/// <param name="MinY">最小 Y 坐标 / Minimum Y coordinate</param>
+/// <param name="MaxX">最大 X 坐标 / Maximum X coordinate</param>
+/// <param name="MaxY">最大 Y 坐标 / Maximum Y coordinate</param>
 public sealed record Box2Need<V>(
-    /// <summary>最小 X 坐标 / Minimum X coordinate</summary>
     Quantity<V> MinX,
-    /// <summary>最小 Y 坐标 / Minimum Y coordinate</summary>
     Quantity<V> MinY,
-    /// <summary>最大 X 坐标 / Maximum X coordinate</summary>
     Quantity<V> MaxX,
-    /// <summary>最大 Y 坐标 / Maximum Y coordinate</summary>
     Quantity<V> MaxY
 ) where V : struct, IFloatingNumber<V> {
     /// <summary>宽度 / Width</summary>

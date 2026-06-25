@@ -36,11 +36,11 @@ public static class SymbolQuantityOps {
         }
 
         Scale? factor = q.Unit.To(unit);
-        if (factor is null) {
+        if (factor is not { } resolvedFactor || resolvedFactor.Value is not { } resolvedValue) {
             return null;
         }
 
-        var f = factor.Value.Value.ToFlt64();
+        var f = resolvedValue.ToFlt64();
 
         var convertedMonomials = new List<LinearMonomial<Flt64>>();
         foreach (LinearMonomial<Flt64> m in q.Value.Monomials) {
@@ -64,11 +64,11 @@ public static class SymbolQuantityOps {
         }
 
         Scale? factor = q.Unit.To(unit);
-        if (factor is null) {
+        if (factor is not { } resolvedFactor || resolvedFactor.Value is not { } resolvedValue) {
             return null;
         }
 
-        var f = factor.Value.Value.ToFltX();
+        var f = resolvedValue.ToFltX();
 
         var convertedMonomials = new List<LinearMonomial<FltX>>();
         foreach (LinearMonomial<FltX> m in q.Value.Monomials) {

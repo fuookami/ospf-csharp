@@ -26,8 +26,5 @@ public sealed class Async<T> : IDisposable {
     }
 }
 
-/// <summary>
-/// ThreadGuard 类型别名 / ThreadGuard type alias.
-/// Usage: `using ThreadGuard = Fuookami.Ospf.Utils.Parallel.Async&lt;Fuookami.Ospf.Utils.Functional.Unit&gt;;`
-/// </summary>
 // ThreadGuard is a type alias — use `Async<Unit>` directly at call sites.
+// Example: using ThreadGuard = Fuookami.Ospf.Utils.Parallel.Async&lt;Fuookami.Ospf.Utils.Functional.Unit&gt;;

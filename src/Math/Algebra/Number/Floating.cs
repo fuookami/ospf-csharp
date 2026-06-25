@@ -181,6 +181,62 @@ public readonly struct Flt32 : IFloatingNumber<Flt32>, ICopyable<Flt32>, IEquata
     public Flt32 Acos() => new((float)global::System.Math.Acos(Value));
     public static Flt32 FromInt32(int value) => new(value);
 
+    // ===== Trigonometric =====
+    public Flt32 Sin() => new((float)global::System.Math.Sin(Value));
+    public Flt32 Cos() => new((float)global::System.Math.Cos(Value));
+    public Flt32? Tan() { Flt32 c = Cos(); return c.Equiv(Flt32Constants.Instance.Zero) ? null : new((float)global::System.Math.Tan(Value)); }
+    public Flt32? Sec() { Flt32 c = Cos(); return c.Equiv(Flt32Constants.Instance.Zero) ? null : c.Reciprocal(); }
+    public Flt32? Csc() { Flt32 s = Sin(); return s.Equiv(Flt32Constants.Instance.Zero) ? null : s.Reciprocal(); }
+    public Flt32? Cot() { Flt32 s = Sin(); return s.Equiv(Flt32Constants.Instance.Zero) ? null : Cos() / s; }
+    public Flt32? Asin() => Value < -1f || Value > 1f ? null : new((float)global::System.Math.Asin(Value));
+    public Flt32 Atan() => new((float)global::System.Math.Atan(Value));
+    public Flt32? Asec() => Equiv(Flt32Constants.Instance.Zero) ? null : Reciprocal().Acos();
+    public Flt32? Acsc() => Equiv(Flt32Constants.Instance.Zero) ? null : Reciprocal().Asin();
+    public Flt32? Acot() => Equiv(Flt32Constants.Instance.Zero) ? null : Reciprocal().Atan();
+
+    // ===== Hyperbolic =====
+    public Flt32 Sinh() => new((float)global::System.Math.Sinh(Value));
+    public Flt32 Cosh() => new((float)global::System.Math.Cosh(Value));
+    public Flt32 Sech() => Cosh().Reciprocal();
+    public Flt32? Csch() => Equiv(Flt32Constants.Instance.Zero) ? null : Sinh().Reciprocal();
+    public Flt32 Tanh() => new((float)global::System.Math.Tanh(Value));
+    public Flt32? Coth() => Equiv(Flt32Constants.Instance.Zero) ? null : new(1f / (float)global::System.Math.Tanh(Value));
+    public Flt32 Asinh() => new((float)global::System.Math.Asinh(Value));
+    public Flt32? Acosh() => Value < 1f ? null : new((float)global::System.Math.Acosh(Value));
+    public Flt32? Asech() => Equiv(Flt32Constants.Instance.Zero) ? null : Reciprocal().Acosh();
+    public Flt32? Acsch() => Equiv(Flt32Constants.Instance.Zero) ? null : Reciprocal().Asinh();
+    public Flt32? Atanh() => Value <= -1f || Value >= 1f ? null : new((float)global::System.Math.Atanh(Value));
+    public Flt32? Acoth() => Equiv(Flt32Constants.Instance.Zero) ? null : Reciprocal().Atanh();
+
+    // ===== Exponential / Logarithmic =====
+    public Flt32 Exp() => new((float)global::System.Math.Exp(Value));
+    public Flt32? Ln() => Value <= 0f ? null : new((float)global::System.Math.Log(Value));
+    public Flt32? Lg() => Value <= 0f ? null : new((float)global::System.Math.Log10(Value));
+    public Flt32? Lg2() => Value <= 0f ? null : new((float)global::System.Math.Log2(Value));
+    public Flt32? Log(Flt32 baseValue) => Value <= 0f || baseValue.Value <= 0f || baseValue.Equiv(Flt32Constants.Instance.One) ? null : new((float)(global::System.Math.Log(Value) / global::System.Math.Log(baseValue.Value)));
+
+    // ===== Rounding =====
+    public Flt32 Floor() => new((float)global::System.Math.Floor(Value));
+    public Flt32 Ceil() => new((float)global::System.Math.Ceiling(Value));
+    public Flt32 Round() => new((float)global::System.Math.Round(Value));
+    public Flt32 Trunc() => new((float)global::System.Math.Truncate(Value));
+    public Flt32 BankerRound() => new((float)global::System.Math.Round(Value, MidpointRounding.ToEven));
+    public Flt32 FloorTo(int precision) => new((float)(global::System.Math.Floor(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision)));
+    public Flt32 CeilTo(int precision) => new((float)(global::System.Math.Ceiling(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision)));
+    public Flt32 RoundTo(int precision) => new((float)(global::System.Math.Round(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision)));
+    public Flt32 TruncTo(int precision) => new((float)(global::System.Math.Truncate(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision)));
+    public Flt32 BankerRoundTo(int precision) => new((float)(global::System.Math.Round(Value * global::System.Math.Pow(10, precision), MidpointRounding.ToEven) / global::System.Math.Pow(10, precision)));
+
+    // ===== Type Conversions =====
+    public Int8 ToInt8() => new((sbyte)(int)Value);
+    public Int16 ToInt16() => new((short)(int)Value);
+    public UInt8 ToUInt8() => new((byte)(uint)Value);
+    public UInt16 ToUInt16() => new((ushort)(uint)Value);
+    public UInt32 ToUInt32() => new((uint)Value);
+    public UInt64 ToUInt64() => new((ulong)Value);
+    public IntX ToIntX() => new((long)Value);
+    public UIntX ToUIntX() => new((long)(ulong)Value);
+
     // ===== Comparison =====
     public Order Ord(Flt32 rhs) => Value.CompareTo(rhs.Value) < 0 ? new Order.Less() : Value > rhs.Value ? new Order.Greater() : new Order.Equal();
     public Order? PartialOrd(Flt32 rhs) => Ord(rhs);
@@ -306,6 +362,62 @@ public readonly struct Flt64 : IFloatingNumber<Flt64>, ICopyable<Flt64>, IEquata
     public Flt64 Acos() => new(global::System.Math.Acos(Value));
     public static Flt64 FromInt32(int value) => new(value);
     public double ToDouble() => Value;
+
+    // ===== Trigonometric =====
+    public Flt64 Sin() => new(global::System.Math.Sin(Value));
+    public Flt64 Cos() => new(global::System.Math.Cos(Value));
+    public Flt64? Tan() { Flt64 c = Cos(); return c.Equiv(Flt64Constants.Instance.Zero) ? null : new(global::System.Math.Tan(Value)); }
+    public Flt64? Sec() { Flt64 c = Cos(); return c.Equiv(Flt64Constants.Instance.Zero) ? null : c.Reciprocal(); }
+    public Flt64? Csc() { Flt64 s = Sin(); return s.Equiv(Flt64Constants.Instance.Zero) ? null : s.Reciprocal(); }
+    public Flt64? Cot() { Flt64 s = Sin(); return s.Equiv(Flt64Constants.Instance.Zero) ? null : Cos() / s; }
+    public Flt64? Asin() => Value < -1.0 || Value > 1.0 ? null : new(global::System.Math.Asin(Value));
+    public Flt64 Atan() => new(global::System.Math.Atan(Value));
+    public Flt64? Asec() => Equiv(Flt64Constants.Instance.Zero) ? null : Reciprocal().Acos();
+    public Flt64? Acsc() => Equiv(Flt64Constants.Instance.Zero) ? null : Reciprocal().Asin();
+    public Flt64? Acot() => Equiv(Flt64Constants.Instance.Zero) ? null : Reciprocal().Atan();
+
+    // ===== Hyperbolic =====
+    public Flt64 Sinh() => new(global::System.Math.Sinh(Value));
+    public Flt64 Cosh() => new(global::System.Math.Cosh(Value));
+    public Flt64 Sech() => Cosh().Reciprocal();
+    public Flt64? Csch() => Equiv(Flt64Constants.Instance.Zero) ? null : Sinh().Reciprocal();
+    public Flt64 Tanh() => new(global::System.Math.Tanh(Value));
+    public Flt64? Coth() => Equiv(Flt64Constants.Instance.Zero) ? null : new(1.0 / global::System.Math.Tanh(Value));
+    public Flt64 Asinh() => new(global::System.Math.Asinh(Value));
+    public Flt64? Acosh() => Value < 1.0 ? null : new(global::System.Math.Acosh(Value));
+    public Flt64? Asech() => Equiv(Flt64Constants.Instance.Zero) ? null : Reciprocal().Acosh();
+    public Flt64? Acsch() => Equiv(Flt64Constants.Instance.Zero) ? null : Reciprocal().Asinh();
+    public Flt64? Atanh() => Value <= -1.0 || Value >= 1.0 ? null : new(global::System.Math.Atanh(Value));
+    public Flt64? Acoth() => Equiv(Flt64Constants.Instance.Zero) ? null : Reciprocal().Atanh();
+
+    // ===== Exponential / Logarithmic =====
+    public Flt64 Exp() => new(global::System.Math.Exp(Value));
+    public Flt64? Ln() => Value <= 0.0 ? null : new(global::System.Math.Log(Value));
+    public Flt64? Lg() => Value <= 0.0 ? null : new(global::System.Math.Log10(Value));
+    public Flt64? Lg2() => Value <= 0.0 ? null : new(global::System.Math.Log2(Value));
+    public Flt64? Log(Flt64 baseValue) => Value <= 0.0 || baseValue.Value <= 0.0 || baseValue.Equiv(Flt64Constants.Instance.One) ? null : new(global::System.Math.Log(Value) / global::System.Math.Log(baseValue.Value));
+
+    // ===== Rounding =====
+    public Flt64 Floor() => new(global::System.Math.Floor(Value));
+    public Flt64 Ceil() => new(global::System.Math.Ceiling(Value));
+    public Flt64 Round() => new(global::System.Math.Round(Value));
+    public Flt64 Trunc() => new(global::System.Math.Truncate(Value));
+    public Flt64 BankerRound() => new(global::System.Math.Round(Value, MidpointRounding.ToEven));
+    public Flt64 FloorTo(int precision) => new(global::System.Math.Floor(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision));
+    public Flt64 CeilTo(int precision) => new(global::System.Math.Ceiling(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision));
+    public Flt64 RoundTo(int precision) => new(global::System.Math.Round(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision));
+    public Flt64 TruncTo(int precision) => new(global::System.Math.Truncate(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision));
+    public Flt64 BankerRoundTo(int precision) => new(global::System.Math.Round(Value * global::System.Math.Pow(10, precision), MidpointRounding.ToEven) / global::System.Math.Pow(10, precision));
+
+    // ===== Type Conversions =====
+    public Int8 ToInt8() => new((sbyte)(int)Value);
+    public Int16 ToInt16() => new((short)(int)Value);
+    public UInt8 ToUInt8() => new((byte)(uint)Value);
+    public UInt16 ToUInt16() => new((ushort)(uint)Value);
+    public UInt32 ToUInt32() => new((uint)Value);
+    public UInt64 ToUInt64() => new((ulong)Value);
+    public IntX ToIntX() => new((long)Value);
+    public UIntX ToUIntX() => new((long)(ulong)Value);
 
     // ===== Comparison =====
     public Order Ord(Flt64 rhs) => Value.CompareTo(rhs.Value) < 0 ? new Order.Less() : Value > rhs.Value ? new Order.Greater() : new Order.Equal();
@@ -438,6 +550,66 @@ public readonly struct FltX : IFloatingNumber<FltX>, ICopyable<FltX>, IEquatable
     public FltX Sqrt() => new((decimal)global::System.Math.Sqrt((double)Value));
     public FltX Acos() => new((decimal)global::System.Math.Acos((double)Value));
     public static FltX FromInt32(int value) => new(value);
+
+    // ===== Trigonometric (delegate to Flt64) =====
+    public FltX Sin() => ToFlt64().Sin().ToFltX();
+    public FltX Cos() => ToFlt64().Cos().ToFltX();
+    public FltX? Tan() => ToFlt64().Tan()?.ToFltX();
+    public FltX? Sec() => ToFlt64().Sec()?.ToFltX();
+    public FltX? Csc() => ToFlt64().Csc()?.ToFltX();
+    public FltX? Cot() => ToFlt64().Cot()?.ToFltX();
+    public FltX? Asin() => ToFlt64().Asin()?.ToFltX();
+    public FltX Atan() => ToFlt64().Atan().ToFltX();
+    public FltX? Asec() => ToFlt64().Asec()?.ToFltX();
+    public FltX? Acsc() => ToFlt64().Acsc()?.ToFltX();
+    public FltX? Acot() => ToFlt64().Acot()?.ToFltX();
+
+    // ===== Hyperbolic (delegate to Flt64) =====
+    public FltX Sinh() => ToFlt64().Sinh().ToFltX();
+    public FltX Cosh() => ToFlt64().Cosh().ToFltX();
+    public FltX Sech() => ToFlt64().Sech().ToFltX();
+    public FltX? Csch() => ToFlt64().Csch()?.ToFltX();
+    public FltX Tanh() => ToFlt64().Tanh().ToFltX();
+    public FltX? Coth() => ToFlt64().Coth()?.ToFltX();
+    public FltX Asinh() => ToFlt64().Asinh().ToFltX();
+    public FltX? Acosh() => ToFlt64().Acosh()?.ToFltX();
+    public FltX? Asech() => ToFlt64().Asech()?.ToFltX();
+    public FltX? Acsch() => ToFlt64().Acsch()?.ToFltX();
+    public FltX? Atanh() => ToFlt64().Atanh()?.ToFltX();
+    public FltX? Acoth() => ToFlt64().Acoth()?.ToFltX();
+
+    // ===== Exponential / Logarithmic (delegate to Flt64) =====
+    public FltX Exp() => ToFlt64().Exp().ToFltX();
+    public FltX? Ln() => Value <= 0m ? null : new((decimal)global::System.Math.Log((double)Value));
+    public FltX? Lg() => Value <= 0m ? null : new((decimal)global::System.Math.Log10((double)Value));
+    public FltX? Lg2() => Value <= 0m ? null : new((decimal)global::System.Math.Log2((double)Value));
+    public FltX? Log(FltX baseValue) => Value <= 0m || baseValue.Value <= 0m || baseValue.Equiv(FltXConstants.Instance.One) ? null : new((decimal)(global::System.Math.Log((double)Value) / global::System.Math.Log((double)baseValue.Value)));
+
+    // ===== Rounding (decimal math) =====
+    public FltX Floor() => new(global::System.Math.Floor(Value));
+    public FltX Ceil() => new(global::System.Math.Ceiling(Value));
+    public FltX Round() => new(global::System.Math.Round(Value));
+    public FltX Trunc() => new(global::System.Math.Truncate(Value));
+    public FltX BankerRound() => new(global::System.Math.Round(Value, MidpointRounding.ToEven));
+    public FltX FloorTo(int precision) => new(global::System.Math.Round(Value, precision, MidpointRounding.ToNegativeInfinity));
+    public FltX CeilTo(int precision) => new(global::System.Math.Round(Value, precision, MidpointRounding.ToPositiveInfinity));
+    public FltX RoundTo(int precision) => new(global::System.Math.Round(Value, precision));
+    public FltX TruncTo(int precision) => new(global::System.Math.Round(Value, precision, Value >= 0 ? MidpointRounding.ToNegativeInfinity : MidpointRounding.ToPositiveInfinity));
+    public FltX BankerRoundTo(int precision) => new(global::System.Math.Round(Value, precision, MidpointRounding.ToEven));
+
+    // ===== Type Conversions =====
+    public Int8 ToInt8() => new((sbyte)(int)Value);
+    public Int16 ToInt16() => new((short)(int)Value);
+    public UInt8 ToUInt8() => new((byte)(uint)Value);
+    public UInt16 ToUInt16() => new((ushort)(uint)Value);
+    public UInt32 ToUInt32() => new((uint)Value);
+    public UInt64 ToUInt64() => new((ulong)Value);
+    public IntX ToIntX() => new((long)global::System.Math.Truncate(Value));
+    public UIntX ToUIntX() => new((long)global::System.Math.Truncate(Value));
+
+    // ===== Decimal-specific =====
+    public string ToPlainString() => Value.ToString();
+    public string ToEngineeringString() => Value.ToString();
 
     // ===== Comparison =====
     public Order Ord(FltX rhs) => Value.CompareTo(rhs.Value) < 0 ? new Order.Less() : Value > rhs.Value ? new Order.Greater() : new Order.Equal();

@@ -7,7 +7,7 @@ using Fuookami.Ospf.Math.Functional;
 namespace Fuookami.Ospf.Math.Chaotic;
 /// <summary>
 /// 帐篷映射 / Tent Map.
-/// x_{n+1} = mu*x if x < 0.5, mu*(1-x) if x >= 0.5.
+/// x_{n+1} = mu*x if x &lt; 0.5, mu*(1-x) if x &gt;= 0.5.
 /// </summary>
 public sealed record TentMap<V>(V Mu) : IExtractor<V, V>
     where V : struct, IFloatingNumber<V> {

@@ -109,7 +109,7 @@ public sealed class Csp1dMilp<V> where V : struct {
                 machines: problem.Machines);
         }
 
-        MilpSolveResult<V> milpResult = await SolveMilpAsync(
+        MilpSolveResult milpResult = await SolveMilpAsync(
             problem,
             generatedPlans,
             resolvedConfig,
@@ -209,7 +209,7 @@ public sealed class Csp1dMilp<V> where V : struct {
     /// <summary>
     /// 求解 MILP / Solve MILP.
     /// </summary>
-    private async Task<MilpSolveResult<V>> SolveMilpAsync(
+    private async Task<MilpSolveResult> SolveMilpAsync(
         Csp1dProblem<V> problem,
         IReadOnlyList<CuttingPlan<V>> cuttingPlans,
         Csp1dSolveConfig<V> config,
@@ -232,32 +232,32 @@ public sealed class Csp1dMilp<V> where V : struct {
 
         if (solveResult is Ok<Csp1dMilpSolver.MilpResult<V>?, ErrorCode, Error<ErrorCode>> ok) {
             if (ok.Value is not null) {
-                return new MilpSolveResult<V>(
+                return new MilpSolveResult(
                     Status: Csp1dFinalMilpStatus.Solved,
                     Result: ok.Value,
                     FailureMessage: null);
             }
-            return new MilpSolveResult<V>(
+            return new MilpSolveResult(
                 Status: Csp1dFinalMilpStatus.Failed,
                 Result: null,
                 FailureMessage: "MILP returned no solution");
         }
 
         if (solveResult is Failed<Csp1dMilpSolver.MilpResult<V>?, ErrorCode, Error<ErrorCode>> failed) {
-            return new MilpSolveResult<V>(
+            return new MilpSolveResult(
                 Status: Csp1dFinalMilpStatus.Failed,
                 Result: null,
                 FailureMessage: failed.Error.Message);
         }
 
         if (solveResult is Fatal<Csp1dMilpSolver.MilpResult<V>?, ErrorCode, Error<ErrorCode>> fatal) {
-            return new MilpSolveResult<V>(
+            return new MilpSolveResult(
                 Status: Csp1dFinalMilpStatus.Failed,
                 Result: null,
                 FailureMessage: string.Join("; ", fatal.Errors.Select(e => e.Message)));
         }
 
-        return new MilpSolveResult<V>(
+        return new MilpSolveResult(
             Status: Csp1dFinalMilpStatus.Failed,
             Result: null,
             FailureMessage: "MILP returned no solution");
@@ -277,11 +277,11 @@ public sealed class Csp1dMilp<V> where V : struct {
     /// <summary>
     /// MILP 求解结果 / MILP solve result.
     /// </summary>
-    private sealed record MilpSolveResult<V>(
+    private sealed record MilpSolveResult(
         Csp1dFinalMilpStatus Status,
         Csp1dMilpSolver.MilpResult<V>? Result,
         string? FailureMessage
-    ) where V : struct;
+    );
 }
 
 /// <summary>

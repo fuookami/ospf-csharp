@@ -837,20 +837,20 @@ public interface ICsp1dExtractionPolicy<V>
 /// Default empty implementation does not change existing solver behavior.
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
+/// <param name="ModelingExtensions">建模扩展管线列表 / Modeling extension pipeline list.</param>
+/// <param name="DomainPolicies">领域策略列表 / Domain policy list.</param>
+/// <param name="ObjectivePolicies">目标策略列表 / Objective policy list.</param>
+/// <param name="GenerationStrategies">生成策略列表 / Generation strategy list.</param>
+/// <param name="PricingPolicies">定价策略列表 / Pricing policy list.</param>
+/// <param name="FlowPolicies">流程策略列表 / Flow policy list.</param>
+/// <param name="ExtractionPolicies">提取策略列表 / Extraction policy list.</param>
 public sealed record Csp1dExtensionSet<V>(
-    /// <summary>建模扩展管线列表 / Modeling extension pipeline list.</summary>
     IReadOnlyList<Csp1dModelingExtension<V>> ModelingExtensions,
-    /// <summary>领域策略列表 / Domain policy list.</summary>
     IReadOnlyList<ICsp1dDomainPolicy<V>> DomainPolicies,
-    /// <summary>目标策略列表 / Objective policy list.</summary>
     IReadOnlyList<ICsp1dObjectivePolicy<V>> ObjectivePolicies,
-    /// <summary>生成策略列表 / Generation strategy list.</summary>
     IReadOnlyList<ICsp1dGenerationStrategy<V>> GenerationStrategies,
-    /// <summary>定价策略列表 / Pricing policy list.</summary>
     IReadOnlyList<ICsp1dPricingPolicy<V>> PricingPolicies,
-    /// <summary>流程策略列表 / Flow policy list.</summary>
     IReadOnlyList<ICsp1dFlowPolicy<V>> FlowPolicies,
-    /// <summary>提取策略列表 / Extraction policy list.</summary>
     IReadOnlyList<ICsp1dExtractionPolicy<V>> ExtractionPolicies
 )
     where V : struct {

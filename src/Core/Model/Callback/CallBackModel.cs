@@ -8,7 +8,6 @@ using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Symbol;
-using Fuookami.Ospf.Math.Symbol;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 using System;
@@ -140,7 +139,7 @@ public sealed class CallBackModel<V> : ICallBackModelInterface<V>
         Func<ulong, ulong, V>? initialSolutionGenerator = null) {
         CallBackModel<V> model = Create(metaModel.ObjectCategory, converter, initialSolutionGenerator);
         foreach (MathConstraint constraint in metaModel.Constraints) {
-            model._constraints.Add((solution => null, constraint.ToString()));
+            model._constraints.Add(((Func<IReadOnlyList<V>, bool?>)(solution => null), constraint.ToString()!));
         }
 
         return model;

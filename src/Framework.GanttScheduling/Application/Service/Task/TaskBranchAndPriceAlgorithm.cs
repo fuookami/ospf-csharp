@@ -88,9 +88,7 @@ public class TaskBranchAndPriceAlgorithm<Map, Args, IT, T, E, A>
 
     private ulong _mainProblemSolvingTimes;
     private TimeSpan _mainProblemSolvingTime;
-    private TimeSpan _mainProblemModelingTime;
     private ulong _subProblemSolvingTimes;
-    private TimeSpan _subProblemSolvingTime;
 
     /// <summary>
     /// 任务分支定价算法构造 / Task branch and price algorithm constructor

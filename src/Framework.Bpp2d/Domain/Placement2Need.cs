@@ -9,12 +9,12 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 2D placement need.
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type</typeparam>
+/// <param name="X">X 坐标 / X coordinate</param>
+/// <param name="Y">Y 坐标 / Y coordinate</param>
+/// <param name="Projection">投影需求 / Projection need</param>
 public sealed record Placement2Need<V>(
-    /// <summary>X 坐标 / X coordinate</summary>
     Quantity<V> X,
-    /// <summary>Y 坐标 / Y coordinate</summary>
     Quantity<V> Y,
-    /// <summary>投影需求 / Projection need</summary>
     Projection2Need<V> Projection
 ) where V : struct, IFloatingNumber<V> {
     /// <summary>最大 X 坐标 / Maximum X coordinate</summary>

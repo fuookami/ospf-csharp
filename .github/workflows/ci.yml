@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [master, "feature/*"]
+  pull_request:
+    branches: [master]
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  build-and-test:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore ospf-csharp.sln
+
+      - name: Build (clean Release)
+        run: dotnet build ospf-csharp.sln -c Release --no-incremental --no-restore
+
+      - name: Test
+        run: dotnet test ospf-csharp.sln -c Release --no-build --verbosity normal
+
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore ospf-csharp.sln
+
+      - name: Verify formatting
+        run: dotnet format ospf-csharp.sln --verify-no-changes --no-restore

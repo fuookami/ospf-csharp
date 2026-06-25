@@ -88,14 +88,11 @@ public interface IIntermediateSymbol<V> : IIntermediateSymbol
     /// <summary>是否已缓存 / Whether the value is cached.</summary>
     bool Cached { get; }
 
-    new
+    /// <summary>父符号 / Parent symbol.</summary>
+    new IIntermediateSymbol? Parent => null;
 
-        /// <summary>父符号 / Parent symbol.</summary>
-        IIntermediateSymbol? Parent => null;
-
-    new
-        /// <summary>参数 / Arguments.</summary>
-        object? Args => Parent?.Args;
+    /// <summary>参数 / Arguments.</summary>
+    new object? Args => Parent?.Args;
 
     /// <summary>依赖符号集合 / Set of dependency symbols.</summary>
     IReadOnlySet<IIntermediateSymbol> Dependencies { get; }
@@ -106,10 +103,9 @@ public interface IIntermediateSymbol<V> : IIntermediateSymbol
     /// <summary>注册辅助令牌 / Register auxiliary tokens.</summary>
     Try RegisterAuxiliaryTokens(IAddableTokenCollection<V> tokens) =>
         Results.Ok<Success>(Results.SuccessInstance);
-    new
 
-        /// <summary>原始字符串表示 / Raw string representation.</summary>
-        string ToRawString(UInt64 unfold);
+    /// <summary>原始字符串表示 / Raw string representation.</summary>
+    new string ToRawString(UInt64 unfold);
 }
 
 /// <summary>

@@ -50,25 +50,25 @@ public abstract record WasteMinimizationObjective<V> where V : struct {
     /// 最小化余宽 / Minimize rest width.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeRestWidth<V>(V Weight) : WasteMinimizationObjective<V> where V : struct;
+    public sealed record MinimizeRestWidth(V Weight) : WasteMinimizationObjective<V>;
 
     /// <summary>
     /// 最小化余料 / Minimize rest material.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeRestMaterial<V>(V Weight) : WasteMinimizationObjective<V> where V : struct;
+    public sealed record MinimizeRestMaterial(V Weight) : WasteMinimizationObjective<V>;
 
     /// <summary>
     /// 最小化成本 / Minimize cost.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeCost<V>(V Weight) : WasteMinimizationObjective<V> where V : struct;
+    public sealed record MinimizeCost(V Weight) : WasteMinimizationObjective<V>;
 
     /// <summary>
     /// 最小化超产面积浪费 / Minimize over-production area waste.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeOverProductionArea<V>(V Weight) : WasteMinimizationObjective<V> where V : struct;
+    public sealed record MinimizeOverProductionArea(V Weight) : WasteMinimizationObjective<V>;
 }
 
 /// <summary>

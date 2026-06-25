@@ -85,7 +85,7 @@ public static class ParseOps {
 
     /// <summary>
     /// 解析 Flt64 线性不等式 / Parse Flt64 linear inequality.
-    /// 格式: "3x + 2y <= 5"
+    /// 格式: "3x + 2y &lt;= 5"
     /// </summary>
     public static LinearInequality<Flt64>? ParseLinearInequalityFlt64(
         string text,
@@ -103,7 +103,7 @@ public static class ParseOps {
             return null;
         }
 
-        return new LinearInequality<Flt64>(lhs, rhs, comp.Value);
+        return new LinearInequality<Flt64>(lhs, rhs, comp!.Value); // CS8629: comp is non-null here after SplitInequality success
     }
 
     // ===== Internal parsing helpers =====

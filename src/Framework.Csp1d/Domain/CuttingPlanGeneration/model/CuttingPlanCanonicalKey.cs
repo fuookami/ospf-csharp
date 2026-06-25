@@ -68,7 +68,7 @@ public sealed record CuttingPlanCanonicalKey(
     /// <summary>
     /// 从切割方案构建 canonical key / Build canonical key from a cutting plan.
     /// </summary>
-    /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
+    /// <typeparam name="TPlan">切割方案类型 / Cutting plan type.</typeparam>
     /// <param name="plan">切割方案 / Cutting plan.</param>
     /// <returns>结构化去重键 / Structural deduplication key.</returns>
     public static CuttingPlanCanonicalKey From<TPlan>(TPlan plan)

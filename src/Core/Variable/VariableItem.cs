@@ -39,9 +39,8 @@ public interface IVariableItem : ISymbol {
     int Index { get; }
     /// <summary>键 / Key</summary>
     VariableItemKey Key { get; }
-    new
-        /// <summary>显示名称 / Display name</summary>
-        string Name { get; }
+    /// <summary>显示名称 / Display name</summary>
+    new string Name { get; }
     /// <summary>变量类型分类 / Variable type kind</summary>
     IVariableTypeKind TypeKind { get; }
     /// <summary>下界（Flt64 视图）/ Lower bound (Flt64 view)</summary>

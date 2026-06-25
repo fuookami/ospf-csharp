@@ -92,9 +92,8 @@ public interface INumberField<TSelf> : IField<TSelf>, INumberRing<TSelf>, ITimes
 public interface IScalar<TSelf> : IArithmetic<TSelf>, IPlusSemigroup<TSelf>, ITimesSemigroup<TSelf>,
     ICross<TSelf, TSelf>, IAbs<TSelf>
     where TSelf : struct, IScalar<TSelf> {
-    new
-        /// <summary>叉积（标量退化为乘法）/ Cross product (degrades to multiplication for scalars)</summary>
-        TSelf Cross(TSelf rhs) => Times(rhs);
+    /// <summary>叉积（标量退化为乘法）/ Cross product (degrades to multiplication for scalars)</summary>
+    new TSelf Cross(TSelf rhs) => Times(rhs);
 }
 
 // ===== Real number (CRTP root) =====
@@ -106,9 +105,8 @@ public interface IRealNumber<TSelf> : IScalar<TSelf>, IInvariant<TSelf>,
     IOrd<TSelf>, IEq<TSelf>,
     IBounded<TSelf>, IInfinite<TSelf>, IFixed<TSelf>, IEpsilon<TSelf>
     where TSelf : struct, IRealNumber<TSelf> {
-    new
-        /// <summary>获取常量（类型化视图，由 NumericConstantsRegistry 支持）/ Get constants (typed view, backed by NumericConstantsRegistry)</summary>
-        IRealNumberConstants<TSelf> Constants { get; }
+    /// <summary>获取常量（类型化视图，由 NumericConstantsRegistry 支持）/ Get constants (typed view, backed by NumericConstantsRegistry)</summary>
+    new IRealNumberConstants<TSelf> Constants { get; }
 
     /// <summary>是否为正无穷 / Whether is positive infinity</summary>
     bool IsPositiveInfinity();
@@ -122,9 +120,8 @@ public interface IRealNumber<TSelf> : IScalar<TSelf>, IInvariant<TSelf>,
     bool IsSelfWithinBounds();
     /// <summary>将自身限制在范围内 / Clamp self to bounds</summary>
     TSelf ClampSelfToBounds();
-    new
-        /// <summary>近似相等 / Approximately equal</summary>
-        bool Equiv(TSelf rhs) => Equals(rhs);
+    /// <summary>近似相等 / Approximately equal</summary>
+    new bool Equiv(TSelf rhs) => Equals(rhs);
 
     // ===== Type conversions =====
     /// <summary>转为 Flt64 / Convert to Flt64</summary>
@@ -180,9 +177,8 @@ public interface IFloatingNumber<TSelf> : IRealNumber<TSelf>, INumberField<TSelf
     /// <summary>获取浮点数常量 / Get floating number constants</summary>
     new IFloatingNumberConstants<TSelf> Constants { get; }
 
-    new
-        /// <summary>倒数 / Reciprocal</summary>
-        TSelf Reciprocal();
+    /// <summary>倒数 / Reciprocal</summary>
+    new TSelf Reciprocal();
     /// <summary>平方根 / Square root</summary>
     TSelf Sqrt();
     /// <summary>反余弦（弧度），值域 [0, pi]，|x|>1 返回 NaN / Arccosine (radians), range [0, pi], NaN for |x|>1</summary>

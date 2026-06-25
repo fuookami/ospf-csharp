@@ -49,7 +49,7 @@ internal static class GeometryOps {
             return Results.Ok(lb);
         }
 
-        return MaxSafe(value, ub, axis + "-ub").Map(o => o is Order.Greater ? ub : value);
+        return MinSafe(value, ub, axis + "-ub");
     }
 
     /// <summary>是否在范围内 / Whether in range.</summary>

@@ -85,7 +85,7 @@ internal sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
     /// <inheritdoc/>
     public CuttingPlanGenerationReport<CuttingPlan<V>> GenerateWithReport(GenerationInput<V> input) {
         long startTime = Environment.TickCount64;
-        int planIndex = 0;
+        // planIndex removed — assigned but never used (CS0219)
         var collector = new GenerationCollector<CuttingPlan<V>>(
             maxPlans: _maxPlans,
             deadlineMs: _timeoutMs.HasValue ? startTime + _timeoutMs.Value : null,

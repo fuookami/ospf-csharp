@@ -42,17 +42,17 @@ public abstract record LengthAssignmentObjective<V> where V : struct {
     /// 最小化总卷长 / Minimize total assigned length.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeTotalLength<V>(V Weight) : LengthAssignmentObjective<V> where V : struct;
+    public sealed record MinimizeTotalLength(V Weight) : LengthAssignmentObjective<V>;
 
     /// <summary>
     /// 最小化批次数 / Minimize batch count.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeBatchCount<V>(V Weight) : LengthAssignmentObjective<V> where V : struct;
+    public sealed record MinimizeBatchCount(V Weight) : LengthAssignmentObjective<V>;
 
     /// <summary>
     /// 最小化超长 / Minimize over-length.
     /// </summary>
     /// <param name="Weight">目标权重 / Objective weight.</param>
-    public sealed record MinimizeOverLength<V>(V Weight) : LengthAssignmentObjective<V> where V : struct;
+    public sealed record MinimizeOverLength(V Weight) : LengthAssignmentObjective<V>;
 }

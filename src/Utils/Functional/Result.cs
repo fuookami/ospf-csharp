@@ -28,7 +28,7 @@ public interface ExResult<T, C, E> where C : notnull where E : Error<C> {
     bool IsOk { get; }
     bool IsFailed { get; }
     bool IsWarned { get; }
-    T Value { get; }
+    T? Value { get; }
     ExResult<U, C, E> Map<U>(Func<T, U> transform);
 }
 

@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 2D packing scene.
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type</typeparam>
+/// <param name="Sheet">板材 / Sheet</param>
+/// <param name="Placements">放置列表 / List of placements</param>
 public sealed record PackingScene2<V>(
-    /// <summary>板材 / Sheet</summary>
     Sheet2<V> Sheet,
-    /// <summary>放置列表 / List of placements</summary>
     IReadOnlyList<PlannedRectangle2<V>> Placements
 ) where V : struct, IFloatingNumber<V> {
     /// <summary>板材面积 / Sheet area</summary>

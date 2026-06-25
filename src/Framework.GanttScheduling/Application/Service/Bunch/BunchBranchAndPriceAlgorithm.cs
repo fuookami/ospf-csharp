@@ -87,9 +87,7 @@ public class BunchBranchAndPriceAlgorithm<Map, Args, B, T, E, A>
 
     private ulong _mainProblemSolvingTimes;
     private TimeSpan _mainProblemSolvingTime;
-    private TimeSpan _mainProblemModelingTime;
     private ulong _subProblemSolvingTimes;
-    private TimeSpan _subProblemSolvingTime;
 
     /// <summary>
     /// 任务束分支定价算法构造 / Bunch branch and price algorithm constructor

@@ -71,6 +71,7 @@ public interface IBendersDecompositionSolver {
     }
 
     /// <summary>线性可行子问题结果 / Linear feasible sub problem result</summary>
+#pragma warning disable CS8907 // Cuts parameter shadows base LinearSubResult.Cuts by design
     public sealed record LinearFeasibleResult(
         FeasibleSolverOutput<Flt64> Result,
         IReadOnlyDictionary<MathConstraint, Flt64> DualSolution,
@@ -87,12 +88,15 @@ public interface IBendersDecompositionSolver {
         /// <summary>间隙 / Gap</summary>
         public Flt64 Gap => Result.Gap;
     }
+#pragma warning restore CS8907
 
     /// <summary>线性不可行子问题结果 / Linear infeasible sub problem result</summary>
+#pragma warning disable CS8907 // Cuts parameter shadows base LinearSubResult.Cuts by design
     public sealed record LinearInfeasibleResult(
         IReadOnlyDictionary<MathConstraint, Flt64> FarkasDualSolution,
         List<LinearInequality<Flt64>>? Cuts)
         : LinearSubResult, ILinearSubResultWithCuts;
+#pragma warning restore CS8907
 }
 
 /// <summary>

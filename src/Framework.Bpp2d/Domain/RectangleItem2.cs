@@ -9,13 +9,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 2D rectangle item.
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type</typeparam>
+/// <param name="Id">物料标识 / Item identifier</param>
+/// <param name="Width">宽度 / Width</param>
+/// <param name="Height">高度 / Height</param>
+/// <param name="AllowRotate">是否允许旋转 / Whether rotation is allowed</param>
 public sealed record RectangleItem2<V>(
-    /// <summary>物料标识 / Item identifier</summary>
     string Id,
-    /// <summary>宽度 / Width</summary>
     Quantity<V> Width,
-    /// <summary>高度 / Height</summary>
     Quantity<V> Height,
-    /// <summary>是否允许旋转 / Whether rotation is allowed</summary>
     bool AllowRotate = false
 ) where V : struct, IFloatingNumber<V>;

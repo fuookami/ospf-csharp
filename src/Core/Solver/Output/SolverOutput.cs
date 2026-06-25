@@ -55,6 +55,7 @@ public interface IQuadraticSolverOutputMarker { }
 /// 可行求解器输出，包含目标值、解和求解统计信息。
 /// Feasible solver output: objective, solution, and solving statistics.
 /// </summary>
+#pragma warning disable CS8907 // Parameters shadow base UnifiedSolverOutput init properties by design
 public sealed record FeasibleSolverOutput<V>(
     Flt64 Obj,
     Solution<V> Solution,
@@ -110,12 +111,14 @@ public sealed record FeasibleSolverOutput<V>(
             SolveTime);
     }
 }
+#pragma warning restore CS8907
 
 // ===== Infeasible outputs =====
 
 /// <summary>
 /// 线性不可行求解器输出 / Linear infeasible solver output.
 /// </summary>
+#pragma warning disable CS8907 // Parameters shadow base UnifiedSolverOutput init properties by design
 public sealed record LinearInfeasibleSolverOutput(
     SolverStatus Status,
     ulong? Iterations = null,
@@ -123,10 +126,12 @@ public sealed record LinearInfeasibleSolverOutput(
     TimeSpan? SolveTime = null)
     : UnifiedSolverOutput
       , ILinearSolverOutputMarker;
+#pragma warning restore CS8907
 
 /// <summary>
 /// 二次不可行求解器输出 / Quadratic infeasible solver output.
 /// </summary>
+#pragma warning disable CS8907 // Parameters shadow base UnifiedSolverOutput init properties by design
 public sealed record QuadraticInfeasibleSolverOutput(
     SolverStatus Status,
     ulong? Iterations = null,
@@ -134,6 +139,7 @@ public sealed record QuadraticInfeasibleSolverOutput(
     TimeSpan? SolveTime = null)
     : UnifiedSolverOutput
       , IQuadraticSolverOutputMarker;
+#pragma warning restore CS8907
 
 // ===== SolverOutputWithIIS =====
 

@@ -40,7 +40,7 @@ public sealed class InvestmentProduct {
 /// Investment portfolio optimization demo: maximize yield subject to risk and fund allocation constraints.
 /// </summary>
 public sealed class InvestmentPortfolioDemo {
-    private static readonly int NumProducts = 5;
+    // NumProducts removed — unused field (CS0414)
 
     private static readonly Flt64 Funds = new(1000000);
     private static readonly Flt64 MaxRisk = new(0.02);

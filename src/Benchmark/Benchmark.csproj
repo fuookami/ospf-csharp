@@ -2,7 +2,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Fuookami.Ospf.Benchmark</RootNamespace>
-    <AssemblyName>Fuookami.Ospf.Benchmark</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />
