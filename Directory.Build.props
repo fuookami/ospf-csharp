@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Phase 1: curated nullability warnings only (not global TreatWarningsAsErrors). Full strictness deferred to phase 31. -->
+    <WarningsAsErrors>CS8600;CS8601;CS8602;CS8603;CS8604;CS8625</WarningsAsErrors>
+    <!-- Explicit using ordering per .rules; do NOT auto-reorder usings -->
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!-- dotnet format-compatible style for non-using concerns -->
+  <PropertyGroup>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Heuristic.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Heuristic.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Heuristic\Core.Plugin.Heuristic.csproj" />
+    <ProjectReference Include="..\..\src\Utils\Utils.csproj" />
+    <ProjectReference Include="..\..\src\Math\Math.csproj" />
+    <ProjectReference Include="..\..\src\Core\Core.csproj" />
+  </ItemGroup>
+</Project>

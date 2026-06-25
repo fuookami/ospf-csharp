@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Gurobi.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Gurobi.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <!-- Pinned Gurobi 10.0.1 managed assembly — same as main project -->
+  <ItemGroup>
+    <Reference Include="Gurobi">
+      <HintPath>$(GUROBI_HOME)\lib\gurobi100.netstandard20.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Gurobi\Core.Plugin.Gurobi.csproj" />
+  </ItemGroup>
+</Project>

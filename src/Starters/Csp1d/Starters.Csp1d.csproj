@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Starters</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Starters</AssemblyName>
+  </PropertyGroup>
+</Project>

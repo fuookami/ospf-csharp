@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Gurobi</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Gurobi</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Gurobi.Tests" />
+  </ItemGroup>
+  <!-- Pinned Gurobi 10.0.1 managed assembly — ABI-matched to gurobi1001 native runtime.
+       GUROBI_HOME=D:\environment\solvers\gurobi1001\win64.
+       Managed version: 10.0.1 (gurobi100.netstandard20.dll).
+       If switching to NuGet Gurobi.Optimizer, also upgrade native to gurobi13xx. -->
+  <ItemGroup>
+    <Reference Include="Gurobi">
+      <HintPath>$(GUROBI_HOME)\lib\gurobi100.netstandard20.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+</Project>

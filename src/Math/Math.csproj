@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Math</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Math</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Math.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\MultiArray\MultiArray.csproj" />
+  </ItemGroup>
+
+</Project>

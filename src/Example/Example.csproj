@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Example</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Example</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Quantities\Quantities.csproj" />
+    <ProjectReference Include="..\MultiArray\MultiArray.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+    <ProjectReference Include="..\Framework.Bpp3d\Framework.Bpp3d.csproj" />
+    <ProjectReference Include="..\Framework.Csp1d\Framework.Csp1d.csproj" />
+    <ProjectReference Include="..\Framework.GanttScheduling\Framework.GanttScheduling.csproj" />
+    <ProjectReference Include="..\Core.Plugin.Heuristic\Core.Plugin.Heuristic.csproj" />
+  </ItemGroup>
+</Project>

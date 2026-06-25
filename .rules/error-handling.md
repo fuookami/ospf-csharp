@@ -4,35 +4,45 @@
 
 **整个项目统一使用返回错误（Result 模式），不抛出异常。**
 
-所有可能失败的操作都应返回 `Result<T>` 或其变体，而不是抛出异常。
+所有可能失败的操作都应返回 `Result<T, C, E>` 或其变体（`ExResult`、`Try`、`Ret<T>` 等），而不是抛出异常。
 
 ## 2. 错误类型体系
 
 ### 2.1 基础类型（Fuookami.Ospf.Utils）
 
 - `ErrorCode` - 错误码枚举，定义所有标准错误码
-- `Error` - 错误基类（record）
-  - `Err` - 基本错误，包含 Code 和 Message
-  - `ExErr<T>` - 带关联值的错误
-- `IError` - 错误接口
+- `Error<C>` - 错误基类（abstract record）
+  - `Err<C>` - 基本错误，包含 Code 和 Message
+  - `LazyErr<C>` - 惰性消息错误，延迟消息构造
+  - `ExErr<C, T>` - 带关联值的错误
+  - `LazyExErr<C, T>` - 惰性带关联值错误
+- `IError<C>` - 错误接口
 
 ### 2.2 结果类型（Fuookami.Ospf.Utils）
 
-- `Result<T>` - 基础结果类型（record）
-  - `Ok<T>` - 成功结果，包含值
-  - `Failed<T>` - 失败结果，包含单个错误
-  - `Fatal<T>` - 致命结果，包含多个错误
+- `Result<T, C, E>` - 基础结果类型（abstract record）
+  - `Ok<T, C, E>` - 成功结果，包含值
+  - `Failed<T, C, E>` - 失败结果，包含单个错误
+  - `Fatal<T, C, E>` - 致命结果，包含多个错误
 
-- `ExResult<T>` - 扩展结果类型（record）
-  - `Ok<T>` - 成功结果
-  - `Failed<T>` - 失败结果
-  - `Fatal<T>` - 致命结果
-  - `Warn<T>` - 警告结果，同时包含值和警告
+- `ExResult<T, C, E>` - 扩展结果类型（abstract record）
+  - `Ok<T, C, E>` - 成功结果
+  - `Failed<T, C, E>` - 失败结果
+  - `Fatal<T, C, E>` - 致命结果
+  - `Warn<T, C, E>` - 警告结果，同时包含值和警告
 
 ### 2.3 类型别名
 
-- `Try` - 无返回值的结果：`Result<Unit>`
-- `Ret<T>` - 带返回值的结果：`Result<T>`
+- `Try` - 无返回值的结果：`Result<Success, ErrorCode, Error<ErrorCode>>`
+- `TryOf<C>` - 自定义错误码的无返回值结果：`Result<Success, C, Error<C>>`
+- `TryWith<E>` - 自定义错误类型的无返回值结果：`Result<Success, ErrorCode, E>`
+- `Ret<T>` - 带返回值的结果：`Result<T, ErrorCode, Error<ErrorCode>>`
+- `RetOf<T, C>` - 自定义错误码的带返回值结果：`Result<T, C, Error<C>>`
+- `ExTry` - 无返回值的扩展结果：`ExResult<Success, ErrorCode, Error<ErrorCode>>`
+- `ExTryWithCode<C>` - 自定义错误码的无返回值扩展结果：`ExResult<Success, C, Error<C>>`
+- `ExTryWith<E>` - 自定义错误类型的无返回值扩展结果：`ExResult<Success, ErrorCode, E>`
+- `ExRet<T>` - 带返回值的扩展结果：`ExResult<T, ErrorCode, Error<ErrorCode>>`
+- `ExRetWithCode<T, C>` - 自定义错误码的带返回值扩展结果：`ExResult<T, C, Error<C>>`
 
 ## 3. 使用规范
 
@@ -40,19 +50,19 @@
 
 ```csharp
 // 正确：返回 Result
-public Result<ParsedData> Parse(string input)
+public Ret<ParsedData> Parse(string input)
 {
     return IsValid(input)
-        ? new Ok<ParsedData>(ParseData(input))
-        : new Failed<ParsedData>(ErrorCode.IllegalArgument, "Invalid input format");
+        ? new Ok<ParsedData, ErrorCode, Error<ErrorCode>>(ParseData(input))
+        : new Failed<ParsedData, ErrorCode, Error<ErrorCode>>(ErrorCode.IllegalArgument, "Invalid input format");
 }
 
 // 正确：返回 Try（无有意义返回值）
-public Result<Unit> Save(Data data)
+public Try Save(Data data)
 {
     return _repository.Save(data)
         ? Result.Ok
-        : new Failed<Unit>(ErrorCode.ApplicationFailed, "Save failed");
+        : new Failed<Success, ErrorCode, Error<ErrorCode>>(ErrorCode.ApplicationFailed, "Save failed");
 }
 
 // 错误：抛出异常
@@ -68,25 +78,27 @@ public ParsedData Parse(string input)
 
 ### 3.2 错误传播
 
-使用链式调用或扩展方法顺序执行多个可能失败的操作：
+使用 `Run`、`ExRun` 等方法顺序执行多个可能失败的操作：
 
 ```csharp
-public Result<Output> Process(string input)
+public Ret<Output> Process(string input)
 {
-    return Validate(input)
-        .Bind(validated => Transform(validated))
-        .Bind(transformed => Save(transformed));
+    return Result.Run(
+        () => Validate(input),
+        () => Transform(input),
+        lastBlock: output => Save(output)
+    );
 }
 ```
 
 ### 3.3 错误映射
 
-使用 `Map` 转换成功值，使用 `OnFailed` 处理失败：
+使用 `Map` 转换成功值，使用 `IfFailed` 处理失败：
 
 ```csharp
 var result = Parse(input)
     .Map(data => data.ToString())
-    .OnFailed(error => Logger.LogError("Parse failed: {Message}", error.Message));
+    .IfFailed(error => Logger.LogError("Parse failed: {Message}", error.Message));
 ```
 
 ### 3.4 工厂方法
@@ -95,18 +107,21 @@ var result = Parse(input)
 
 ```csharp
 // 成功
-new Ok<T>(value)
+new Ok<T, C, E>(value)
 Result.Ok  // Try 的成功实例
 Result.Ok(value)  // Ret<T> 的成功实例
 
 // 失败
-new Failed<T>(ErrorCode.IllegalArgument, "message")
+new Failed<T, C, E>(ErrorCode.IllegalArgument, "message")
+new Failed<T, C, E>(ErrorCode.IllegalArgument, "message", additionalValue)
 
 // 致命
-new Fatal<T>(ErrorCode.ApplicationError, "fatal message")
+new Fatal<T, C, E>(ErrorCode.ApplicationError, "fatal message")
+new Fatal<T, C, E>(new[] { error1, error2 })
 
 // 警告
-new Warn<T>(value, ErrorCode.Other, "warning message")
+new Warn<T, C, E>(value, ErrorCode.Other, "warning message")
+new Warn<T, C, E>(value, ErrorCode.Other, "warning message", warningValue)
 ```
 
 ## 4. 禁止的模式
@@ -131,7 +146,7 @@ throw new ApplicationException("...");
 // 禁止
 switch (result)
 {
-    case Failed<Unit> failed:
+    case Failed<Success, ErrorCode, Error<ErrorCode>> failed:
         throw new InvalidOperationException(failed.Error.Message);
     // ...
 }
@@ -156,15 +171,15 @@ public override Type Method() => throw new NotSupportedException("stub");
 与不支持 Result 模式的外部库交互时，可以在边界处捕获异常并转换为 Result：
 
 ```csharp
-public Result<Response> ExternalCall()
+public Ret<Response> ExternalCall()
 {
     try
     {
-        return new Ok<Response>(_externalLibrary.DoSomething());
+        return new Ok<Response, ErrorCode, Error<ErrorCode>>(_externalLibrary.DoSomething());
     }
     catch (ExternalException e)
     {
-        return new Failed<Response>(ErrorCode.Other, $"External call failed: {e.Message}");
+        return new Failed<Response, ErrorCode, Error<ErrorCode>>(ErrorCode.Other, $"External call failed: {e.Message}");
     }
 }
 ```
@@ -173,9 +188,10 @@ public Result<Response> ExternalCall()
 
 以下场景因协议或不变量约束而保留 `throw`/`ArgumentException`，不属于迁移范围：
 
-- **序列化协议**：`JsonConverter.ReadJson` 返回类型为 `object`，框架不允许返回 `Result<T>`，反序列化失败必须抛 `JsonException`。
+- **序列化协议**：`JsonConverter.ReadJson` 返回类型为 `object`，框架不允许返回 `Result<T, C, E>`，反序列化失败必须抛 `JsonException`。
 - **迭代器协议**：`IEnumerator.MoveNext()` 在 `Current` 访问时必须在无效状态下抛 `InvalidOperationException`，这是 .NET 标准库契约。
 - **值对象内部不变量**：`UInteger`/`Integer`/`Rational` 的倒数、零分母等在内部工厂返回 `Result` 后的不可达路径中保留 `throw`，作为防御性断言。
+- **已编译闭包运行时校验**：求值闭包中参数数量等校验在已编译求值闭包中运行，属于调用方契约违反的快速失败，不返回 `Ret`。
 
 ## 6. ErrorCode 扩展
 
@@ -194,21 +210,43 @@ public Result<Response> ExternalCall()
 
 ## 8. C# 特有注意事项
 
-### 8.1 Pattern Matching
+### 8.1 三泛型参数设计
+
+`Result<T, C, E>` 使用三个泛型参数，与 Kotlin 版本保持一致：
+- `T` - 成功值的类型
+- `C` - 错误码的类型（必须为非空类型，通常为 `ErrorCode`）
+- `E` - 错误的类型（必须继承自 `Error<C>`）
+
+```csharp
+// 完整泛型参数
+Result<ParsedData, ErrorCode, Error<ErrorCode>>
+
+// 使用类型别名简化
+Ret<ParsedData>
+
+// 自定义错误码类型
+Result<ParsedData, CustomErrorCode, Error<CustomErrorCode>>
+RetOf<ParsedData, CustomErrorCode>
+```
+
+C# 不支持 Kotlin 的 `out` 协变泛型修饰符用于 class 类型参数，但 record 类型天然不可变，
+因此在需要协变的场景（如 LINQ、Map）中，通过隐式转换或工厂方法实现类型安全转换。
+
+### 8.2 Pattern Matching
 
 使用 C# 的 pattern matching 与 Result 模式配合：
 
 ```csharp
 return result switch
 {
-    Ok<T> ok => ProcessValue(ok.Value),
-    Failed<T> failed => HandleError(failed.Error),
-    Fatal<T> fatal => HandleFatal(fatal.Errors),
+    Ok<T, C, E> ok => ProcessValue(ok.Value),
+    Failed<T, C, E> failed => HandleError(failed.Error),
+    Fatal<T, C, E> fatal => HandleFatal(fatal.Errors),
     _ => throw new UnreachableException()
 };
 ```
 
-### 8.2 LINQ 集成
+### 8.3 LINQ 集成
 
 实现 LINQ 扩展方法以支持查询语法：
 
@@ -219,16 +257,20 @@ var query = from data in Parse(input)
             select saved;
 ```
 
-### 8.3 Async 支持
+### 8.4 Async 支持
 
 提供异步版本的扩展方法：
 
 ```csharp
-public async Task<Result<T>> BindAsync<T>(this Result<T> result, Func<T, Task<Result<T>>> func)
+public async Task<Result<T, C, E>> BindAsync<T, C, E>(
+    this Result<T, C, E> result,
+    Func<T, Task<Result<T, C, E>>> func)
+    where C : notnull
+    where E : Error<C>
 {
     return result switch
     {
-        Ok<T> ok => await func(ok.Value),
+        Ok<T, C, E> ok => await func(ok.Value),
         _ => result
     };
 }
