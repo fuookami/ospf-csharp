@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Mosek.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Mosek.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll')">
+    <Reference Include="mosekdotnet10_2">
+      <HintPath>D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Mosek\Core.Plugin.Mosek.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Optverse</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Optverse</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Optverse.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+</Project>

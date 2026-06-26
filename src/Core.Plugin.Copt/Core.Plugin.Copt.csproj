@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Copt</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Copt</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Copt.Tests" />
+  </ItemGroup>
+  <ItemGroup Condition="Exists('D:\environment\solvers\copt80\bin\copt_dotnet20.dll')">
+    <Reference Include="copt_dotnet20">
+      <HintPath>D:\environment\solvers\copt80\bin\copt_dotnet20.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+</Project>

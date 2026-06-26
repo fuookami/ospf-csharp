@@ -46,3 +46,13 @@ public sealed record GurobiSolverConfig : SolverConfig {
 /// SCIP 求解器配置 / SCIP solver configuration.
 /// </summary>
 public sealed record ScipSolverConfig : SolverConfig;
+
+/// <summary>
+/// Mosek 求解器配置 / Mosek solver configuration.
+/// </summary>
+public sealed record MosekSolverConfig : SolverConfig;
+
+/// <summary>
+/// Hexaly 求解器配置 / Hexaly solver configuration.
+/// </summary>
+public sealed record HexalySolverConfig : SolverConfig;

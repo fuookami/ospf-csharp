@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Hexaly.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Hexaly.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll')">
+    <Reference Include="Hexaly.NET">
+      <HintPath>D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Hexaly\Core.Plugin.Hexaly.csproj" />
+  </ItemGroup>
+</Project>

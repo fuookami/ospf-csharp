@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Hexaly</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Hexaly</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Hexaly.Tests" />
+  </ItemGroup>
+  <!-- Hexaly 13.0 managed assembly.
+       Native runtime: hexaly130.dll on PATH or next to managed DLL.
+       HEXALY_HOME=D:\environment\solvers\hexaly_13_0 -->
+  <ItemGroup Condition="Exists('D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll')">
+    <Reference Include="Hexaly.NET">
+      <HintPath>D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+</Project>

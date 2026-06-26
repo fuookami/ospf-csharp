@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Cplex</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Cplex</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Cplex.Tests" />
+  </ItemGroup>
+  <ItemGroup Condition="Exists('D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll')">
+    <Reference Include="ILOG.CPLEX">
+      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ILOG.Concert">
+      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.Concert.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+</Project>

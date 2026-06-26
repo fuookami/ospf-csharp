@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Copt.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Copt.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('D:\environment\solvers\copt80\bin\copt_dotnet20.dll')">
+    <Reference Include="copt_dotnet20">
+      <HintPath>D:\environment\solvers\copt80\bin\copt_dotnet20.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Copt\Core.Plugin.Copt.csproj" />
+  </ItemGroup>
+</Project>

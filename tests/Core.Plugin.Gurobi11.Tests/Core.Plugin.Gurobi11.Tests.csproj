@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Gurobi11.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Gurobi11.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Gurobi11\Core.Plugin.Gurobi11.csproj" />
+  </ItemGroup>
+</Project>

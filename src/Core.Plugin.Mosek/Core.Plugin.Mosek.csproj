@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Mosek</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Mosek</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Mosek.Tests" />
+  </ItemGroup>
+  <!-- Mosek 10.2 managed assembly.
+       Native runtime: mosek64_10_2.dll on PATH or next to managed DLL.
+       MOSEK_HOME=D:\environment\solvers\Mosek\10.2 -->
+  <ItemGroup Condition="Exists('D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll')">
+    <Reference Include="mosekdotnet10_2">
+      <HintPath>D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+</Project>

@@ -134,15 +134,18 @@ public class WorkingCalendar<V> where V : struct, IRealNumber<V> {
         IReadOnlyList<TimeRange> breakTimes,
         IReadOnlyList<TimeRange> connectionTimes) {
         DateTimeOffset maximum = TimeRange.DistantPast;
-        foreach (TimeRange t in times) { if (t.End > maximum) {
+        foreach (TimeRange t in times) {
+            if (t.End > maximum) {
                 maximum = t.End;
             }
         }
-        foreach (TimeRange t in breakTimes) { if (t.End > maximum) {
+        foreach (TimeRange t in breakTimes) {
+            if (t.End > maximum) {
                 maximum = t.End;
             }
         }
-        foreach (TimeRange t in connectionTimes) { if (t.End > maximum) {
+        foreach (TimeRange t in connectionTimes) {
+            if (t.End > maximum) {
                 maximum = t.End;
             }
         }
@@ -155,15 +158,18 @@ public class WorkingCalendar<V> where V : struct, IRealNumber<V> {
         IReadOnlyList<TimeRange> breakTimes,
         IReadOnlyList<TimeRange> connectionTimes) {
         DateTimeOffset minimum = TimeRange.DistantFuture;
-        foreach (TimeRange t in times) { if (t.Start < minimum) {
+        foreach (TimeRange t in times) {
+            if (t.Start < minimum) {
                 minimum = t.Start;
             }
         }
-        foreach (TimeRange t in breakTimes) { if (t.Start < minimum) {
+        foreach (TimeRange t in breakTimes) {
+            if (t.Start < minimum) {
                 minimum = t.Start;
             }
         }
-        foreach (TimeRange t in connectionTimes) { if (t.Start < minimum) {
+        foreach (TimeRange t in connectionTimes) {
+            if (t.Start < minimum) {
                 minimum = t.Start;
             }
         }

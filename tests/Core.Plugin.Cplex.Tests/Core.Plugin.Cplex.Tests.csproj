@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Core.Plugin.Cplex.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Core.Plugin.Cplex.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup Condition="Exists('D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll')">
+    <Reference Include="ILOG.CPLEX">
+      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="ILOG.Concert">
+      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.Concert.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Cplex\Core.Plugin.Cplex.csproj" />
+  </ItemGroup>
+</Project>
