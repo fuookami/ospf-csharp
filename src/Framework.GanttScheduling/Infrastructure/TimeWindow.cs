@@ -2,6 +2,8 @@
 
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Quantities.Quantity;
+using Fuookami.Ospf.Quantities.Unit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,4 +57,25 @@ public sealed record TimeWindow<V>(
     /// <summary>创建新的时间窗口 / Create a new time window.</summary>
     public TimeWindow<V> New(TimeRange window, bool continues)
         => new(window, continues, Interval);
+
+    // ===== Duration/value conversion methods (used by WorkingCalendar/ProductivityCalendar) =====
+
+    /// <summary>将 TimeSpan 转换为以 Interval 为单位的 Flt64 值 / Convert TimeSpan to Flt64 value in Interval units.</summary>
+    public Flt64 ValueOf(TimeSpan duration) => new(duration.TotalSeconds / Interval.TotalSeconds);
+
+    /// <summary>将 Flt64 值（以 Interval 为单位）转换为 TimeSpan / Convert Flt64 value (in Interval units) to TimeSpan.</summary>
+    public TimeSpan DurationOf(Flt64 value) => TimeSpan.FromSeconds(value.ToDouble() * Interval.TotalSeconds);
+
+    /// <summary>将 double 值（以 Interval 为单位）转换为 TimeSpan / Convert double value (in Interval units) to TimeSpan.</summary>
+    public TimeSpan DurationOf(double value) => TimeSpan.FromSeconds(value * Interval.TotalSeconds);
+
+    /// <summary>向上取整到下一个 Interval 边界 / Ceil to the next Interval boundary.</summary>
+    public TimeSpan Ceil(TimeSpan duration) {
+        double units = duration.TotalSeconds / Interval.TotalSeconds;
+        return TimeSpan.FromSeconds(global::System.Math.Ceiling(units) * Interval.TotalSeconds);
+    }
+
+    /// <summary>从 TimeSpan 创建 Quantity / Create a Quantity from a TimeSpan.</summary>
+    public Quantity<V> QuantityOf(TimeSpan duration, Func<double, V> fromDouble, PhysicalUnit? unit = null)
+        => new(fromDouble(duration.TotalSeconds / Interval.TotalSeconds), unit ?? NoneUnit.Instance);
 }

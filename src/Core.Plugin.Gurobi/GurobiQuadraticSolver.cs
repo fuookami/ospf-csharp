@@ -1,7 +1,5 @@
 #nullable enable
 
-using Fuookami.Ospf.Core.Solver.Iis;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,35 +11,36 @@ using Fuookami.Ospf.Core.Model.Intermediate;
 using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
+using Fuookami.Ospf.Core.Solver.Iis;
 using Fuookami.Ospf.Core.Solver.Output;
 using Fuookami.Ospf.Core.Token;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Symbol;
+using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 
 using SolverConfigGurobi = Fuookami.Ospf.Core.Solver.Config.GurobiSolverConfig;
 using Fuookami.Ospf.Core.Variable;
-using Fuookami.Ospf.Math.Symbol.Monomial;
 
 namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 
 /// <summary>
-/// Gurobi 线性求解器 / Gurobi linear solver.
+/// Gurobi 二次求解器 / Gurobi quadratic solver.
 /// </summary>
-public sealed class GurobiLinearSolver : ILinearSolver {
+public sealed class GurobiQuadraticSolver : IQuadraticSolver {
     /// <summary>求解器名称 / Solver name.</summary>
     public string Name => "gurobi";
 
     /// <summary>求解器配置 / Solver configuration.</summary>
     public SolverConfig Config { get; }
 
-    private readonly GurobiLinearSolverCallBack? _callBack;
+    private readonly GurobiQuadraticSolverCallBack? _callBack;
     private readonly GurobiSolverConfig? _connectionConfig;
 
-    public GurobiLinearSolver(
+    public GurobiQuadraticSolver(
         SolverConfig? config = null,
-        GurobiLinearSolverCallBack? callBack = null,
+        GurobiQuadraticSolverCallBack? callBack = null,
         GurobiSolverConfig? connectionConfig = null) {
         Config = config ?? new SolverConfigGurobi();
         _callBack = callBack;
@@ -49,43 +48,48 @@ public sealed class GurobiLinearSolver : ILinearSolver {
     }
 
     /// <summary>
-    /// 求解线性模型 / Solve linear model.
+    /// 求解二次模型 / Solve quadratic model.
     /// </summary>
     public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
-        ILinearTriadModelView model,
+        IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         CancellationToken cancellationToken = default) {
-        using var impl = new GurobiLinearSolverImpl(Config, _callBack, _connectionConfig, solvingStatusCallBack);
+        using var impl = new GurobiQuadraticSolverImpl(Config, _callBack, _connectionConfig, solvingStatusCallBack);
         return await impl.InvokeAsync(model);
     }
 
     /// <summary>
-    /// 求解线性模型并启用 IIS 诊断 / Solve linear model with IIS diagnostics.
+    /// 求解二次模型并启用 IIS 诊断 / Solve quadratic model with IIS diagnostics.
     /// </summary>
     public async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
-        LinearTriadModel model,
-        SolvingStatusCallBack? solvingStatusCallBack = null,
-        IisConfig? iisConfig = null,
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack,
+        IisConfig? iisConfig,
         CancellationToken cancellationToken = default) {
-        Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result = await InvokeAsync((ILinearTriadModelView)model, solvingStatusCallBack, cancellationToken);
+        Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result =
+            await InvokeAsync(model, solvingStatusCallBack, cancellationToken);
         return result switch {
-            Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok => Results.Ok<SolverOutput>(ok.Value),
-            Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f => Results.Failed<SolverOutput>(f.Error),
-            Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat => new Fatal<SolverOutput, ErrorCode, Error<ErrorCode>>(fat.Errors),
+            Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok =>
+                Results.Ok<SolverOutput>(ok.Value),
+            Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f =>
+                Results.Failed<SolverOutput>(f.Error),
+            Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat =>
+                new Fatal<SolverOutput, ErrorCode, Error<ErrorCode>>(fat.Errors),
             _ => throw new InvalidOperationException()
         };
     }
 
     /// <summary>
-    /// 求解线性模型获取多个解 / Solve linear model for multiple solutions.
+    /// 求解二次模型获取多个解 / Solve quadratic model for multiple solutions.
     /// </summary>
     public async Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
-        ILinearTriadModelView model,
+        IQuadraticTetradModelView model,
         ulong solutionAmount,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         CancellationToken cancellationToken = default) {
         if (solutionAmount <= 1) {
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> single = await InvokeAsync(model, solvingStatusCallBack, cancellationToken);
+            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> single =
+                await InvokeAsync(model, solvingStatusCallBack, cancellationToken);
             return single switch {
                 Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok =>
                     Results.Ok((ok.Value, new List<List<Flt64>>())),
@@ -98,7 +102,7 @@ public sealed class GurobiLinearSolver : ILinearSolver {
         }
 
         var results = new List<List<Flt64>>();
-        GurobiLinearSolverCallBack callBack = (_callBack?.Copy() ?? new GurobiLinearSolverCallBack())
+        GurobiQuadraticSolverCallBack callBack = (_callBack?.Copy() ?? new GurobiQuadraticSolverCallBack())
             .Configuration(async (_, grbModel, _, _) => {
                 grbModel.Set(GRB.DoubleParam.PoolGap, 1.0);
                 grbModel.Set(GRB.IntParam.PoolSearchMode, 2);
@@ -116,7 +120,7 @@ public sealed class GurobiLinearSolver : ILinearSolver {
                 return Results.OkInstance;
             });
 
-        using var impl = new GurobiLinearSolverImpl(Config, callBack, _connectionConfig, solvingStatusCallBack);
+        using var impl = new GurobiQuadraticSolverImpl(Config, callBack, _connectionConfig, solvingStatusCallBack);
         Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result = await impl.InvokeAsync(model);
         return result switch {
             Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok =>
@@ -130,9 +134,9 @@ public sealed class GurobiLinearSolver : ILinearSolver {
     }
 
     /// <summary>
-    /// 转储线性机制模型为三元组模型 / Dump linear mechanism model to triad model.
+    /// 转储二次机制模型为四元组模型 / Dump quadratic mechanism model to tetrad model.
     /// </summary>
-    public Task<LinearTriadModel> DumpAsync(LinearMechanismModel<Flt64> model, CancellationToken cancellationToken = default) {
+    public Task<QuadraticTetradModel> DumpAsync(QuadraticMechanismModel<Flt64> model, CancellationToken cancellationToken = default) {
         IReadOnlyList<Token<Flt64>> tokens = model.Tokens.TokensInSolver;
         var variables = new List<ModelViewVariable>(tokens.Count);
         for (int i = 0; i < tokens.Count; i++) {
@@ -145,46 +149,64 @@ public sealed class GurobiLinearSolver : ILinearSolver {
                 v.Name));
         }
 
-        IReadOnlyList<IConstraint<Flt64, LinearCategory>> constraints = ((IMechanismModel<Flt64>)model).Constraints;
+        IReadOnlyList<IConstraint<Flt64, QuadraticCategory>> constraints = ((IAbstractQuadraticMechanismModel<Flt64>)model).Constraints;
         int rowCount = constraints.Count;
-        var sparseRows = new List<SparseVector>(rowCount);
+        var sparseRows = new List<SparseQuadraticVector>(rowCount);
         var signs = new List<ConstraintRelation>(rowCount);
         var rhs = new List<Flt64>(rowCount);
         var names = new List<string>(rowCount);
         var sources = new List<ConstraintSource>(rowCount);
 
         for (int row = 0; row < rowCount; row++) {
-            IConstraint<Flt64, LinearCategory> constraint = constraints[row];
-            var entries = new List<SparseVectorEntry>();
+            IConstraint<Flt64, QuadraticCategory> constraint = constraints[row];
+            var entries = new List<SparseQuadraticEntry>();
             foreach (ICell<Flt64> cell in constraint.Lhs) {
-                if (cell is ILinearCell<Flt64> linearCell) {
-                    int? colIndex = model.Tokens.IndexOf(linearCell.Token);
-                    if (colIndex is { } ci && linearCell.Coefficient != Flt64.Zero) {
-                        entries.Add(new SparseVectorEntry(ci, linearCell.Coefficient));
+                if (cell is IQuadraticCell<Flt64> qCell) {
+                    int? colIndex1 = model.Tokens.IndexOf(qCell.Token1);
+                    if (colIndex1 is { } ci1 && qCell.Coefficient != Flt64.Zero) {
+                        if (qCell.Token2 is { } token2) {
+                            int? colIndex2 = model.Tokens.IndexOf(token2);
+                            if (colIndex2 is { } ci2) {
+                                entries.Add(new SparseQuadraticEntry(ci1, ci2, qCell.Coefficient));
+                            }
+                        }
+                        else {
+                            // Linear term: use Col2 = -1 as sentinel
+                            entries.Add(new SparseQuadraticEntry(ci1, -1, qCell.Coefficient));
+                        }
                     }
                 }
             }
-            sparseRows.Add(new SparseVector(entries));
+            sparseRows.Add(new SparseQuadraticVector(entries));
             signs.Add(constraint.Sign);
             rhs.Add(constraint.Rhs);
             names.Add(constraint.Name);
             sources.Add(ConstraintSource.Origin);
         }
 
-        var constraintBatch = new LinearConstraintBatch(
-            new SparseMatrix(sparseRows), signs, rhs, names, sources);
+        var constraintBatch = new QuadraticConstraintBatch(
+            new SparseQuadraticMatrix(sparseRows), signs, rhs, names, sources);
 
         var singleObj = (SingleObject)model.ObjectFunction;
         IReadOnlyList<SubObject<Flt64>> subObjects = singleObj.GetSubObjects<Flt64>();
-        var objCells = new List<LinearObjectiveCell>();
+        var objCells = new List<QuadraticObjectiveCell>();
         Flt64 objConstant = Flt64.Zero;
         foreach (SubObject<Flt64> sub in subObjects) {
-            if (sub is LinearSubObject<Flt64> linearSub) {
-                foreach (LinearMonomial<Flt64> mono in linearSub.LinearTerms()) {
-                    if (mono.Symbol is Core.Variable.IVariableItem vi) {
-                        int? colIndex = model.Tokens.IndexOf(vi);
-                        if (colIndex is { } ci && mono.Coefficient != Flt64.Zero) {
-                            objCells.Add(new LinearObjectiveCell(ci, mono.Coefficient));
+            if (sub is QuadraticSubObject<Flt64> quadSub) {
+                foreach (QuadraticMonomial<Flt64> mono in quadSub.QuadraticTerms()) {
+                    if (mono.Symbol1 is Core.Variable.IVariableItem vi) {
+                        int? colIndex1 = model.Tokens.IndexOf(vi);
+                        if (colIndex1 is { } ci1 && mono.Coefficient != Flt64.Zero) {
+                            if (mono.Symbol2 is Core.Variable.IVariableItem vi2) {
+                                int? colIndex2 = model.Tokens.IndexOf(vi2);
+                                if (colIndex2 is { } ci2) {
+                                    objCells.Add(new QuadraticObjectiveCell(ci1, ci2, mono.Coefficient));
+                                }
+                            }
+                            else {
+                                // Linear term: use Col2 = -1 as sentinel
+                                objCells.Add(new QuadraticObjectiveCell(ci1, -1, mono.Coefficient));
+                            }
                         }
                     }
                 }
@@ -192,22 +214,22 @@ public sealed class GurobiLinearSolver : ILinearSolver {
             }
         }
 
-        var objective = new Objective<LinearObjectiveCell>(
+        var objective = new Objective<QuadraticObjectiveCell>(
             singleObj.Category, objCells, objConstant);
 
-        var triadModel = new LinearTriadModel(variables, constraintBatch, objective, model.Name);
-        return Task.FromResult(triadModel);
+        var tetradModel = new QuadraticTetradModel(variables, constraintBatch, objective, model.Name);
+        return Task.FromResult(tetradModel);
     }
 
     /// <summary>
-    /// 转储线性元模型为机制模型 / Dump linear meta model to mechanism model.
+    /// 转储二次元模型为机制模型 / Dump quadratic meta model to mechanism model.
     /// </summary>
-    public async Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
-        LinearMetaModel<Flt64> model,
+    public async Task<Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        QuadraticMetaModel<Flt64> model,
         RegistrationStatusCallBack? registrationStatusCallBack,
         MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
         CancellationToken cancellationToken = default) {
-        return await LinearMechanismModel<Flt64>.InvokeAsync(
+        return await QuadraticMechanismModel<Flt64>.InvokeAsync(
             model,
             concurrent: Config.DumpMechanismModelConcurrent,
             blocking: Config.DumpMechanismModelBlocking,
@@ -216,21 +238,21 @@ public sealed class GurobiLinearSolver : ILinearSolver {
     }
 
     /// <summary>
-    /// Gurobi 线性求解器内部实现 / Gurobi linear solver internal implementation.
+    /// Gurobi 二次求解器内部实现 / Gurobi quadratic solver internal implementation.
     /// </summary>
-    private sealed class GurobiLinearSolverImpl : GurobiSolver {
+    private sealed class GurobiQuadraticSolverImpl : GurobiSolver {
         private readonly SolverConfig _config;
-        private readonly GurobiLinearSolverCallBack? _callBack;
+        private readonly GurobiQuadraticSolverCallBack? _callBack;
         private readonly GurobiSolverConfig? _connectionConfig;
         private readonly SolvingStatusCallBack? _statusCallBack;
 
         private List<GRBVar> _grbVars = new();
-        private List<GRBConstr> _grbConstraints = new();
+        private List<GRBQConstr> _grbConstraints = new();
         private FeasibleSolverOutput<Flt64>? _output;
 
-        public GurobiLinearSolverImpl(
+        public GurobiQuadraticSolverImpl(
             SolverConfig config,
-            GurobiLinearSolverCallBack? callBack,
+            GurobiQuadraticSolverCallBack? callBack,
             GurobiSolverConfig? connectionConfig,
             SolvingStatusCallBack? statusCallBack) {
             _config = config;
@@ -242,7 +264,7 @@ public sealed class GurobiLinearSolver : ILinearSolver {
         /// <summary>
         /// 执行求解流程 / Execute solving process.
         /// </summary>
-        public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(ILinearTriadModelView model) {
+        public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(IQuadraticTetradModelView model) {
             string? server = _connectionConfig?.Server;
             string? password = _connectionConfig?.Password;
             TimeSpan? connectionTime = _connectionConfig?.ConnectionTime;
@@ -287,22 +309,19 @@ public sealed class GurobiLinearSolver : ILinearSolver {
             return await AnalyzeSolution();
         }
 
-        private Result<Success, ErrorCode, Error<ErrorCode>> Dump(ILinearTriadModelView model) {
+        private Result<Success, ErrorCode, Error<ErrorCode>> Dump(IQuadraticTetradModelView model) {
             try {
                 // Variables
                 var vars = new List<GRBVar>(model.Variables.Count);
                 foreach (ModelViewVariable v in model.Variables) {
                     Flt64 lb = v.LowerBound;
                     Flt64 ub = v.UpperBound;
-                    // Replace infinity with GRB.UNDEFINED
                     if (lb.ToDouble() <= -1e100) {
                         lb = new Flt64(-GRB.INFINITY);
                     }
-
                     if (ub.ToDouble() >= 1e100) {
                         ub = new Flt64(GRB.INFINITY);
                     }
-
                     vars.Add(GrbModel.AddVar(
                         lb.ToDouble(), ub.ToDouble(), 0.0,
                         GurobiVariableExtensions.From(v.Type).ToGurobiChar(),
@@ -317,26 +336,40 @@ public sealed class GurobiLinearSolver : ILinearSolver {
                     }
                 }
 
-                // Constraints
-                ModelConstraint<LinearConstraintCell> constraints = model.Constraints;
-                var grbConstrs = new List<GRBConstr>(constraints.Size);
+                // Constraints (quadratic)
+                ModelConstraint<QuadraticConstraintCell> constraints = model.Constraints;
+                var grbQConstrs = new List<GRBQConstr>(constraints.Size);
                 for (int i = 0; i < constraints.Size; i++) {
-                    var lhs = new GRBLinExpr();
-                    foreach (LinearConstraintCell cell in constraints.Lhs[i]) {
-                        lhs.AddTerm(cell.Coefficient.ToDouble(), _grbVars[cell.ColIndex]);
+                    var lhs = new GRBQuadExpr();
+                    foreach (QuadraticConstraintCell cell in constraints.Lhs[i]) {
+                        if (cell.Col2 < 0) {
+                            // Linear term (Col2 = -1 sentinel)
+                            lhs.AddTerm(cell.Coefficient.ToDouble(), _grbVars[cell.Col1]);
+                        }
+                        else {
+                            // Quadratic term
+                            lhs.AddTerm(cell.Coefficient.ToDouble(), _grbVars[cell.Col1], _grbVars[cell.Col2]);
+                        }
                     }
-                    grbConstrs.Add(GrbModel.AddConstr(
+                    grbQConstrs.Add(GrbModel.AddQConstr(
                         lhs,
                         GurobiConstraintSignExtensions.From(constraints.Signs[i]).ToGurobiChar(),
                         constraints.Rhs[i].ToDouble(),
                         constraints.Names[i]));
                 }
-                _grbConstraints = grbConstrs;
+                _grbConstraints = grbQConstrs;
 
-                // Objective
-                var obj = new GRBLinExpr();
-                foreach (LinearObjectiveCell cell in model.Objective.Cells) {
-                    obj.AddTerm(cell.Coefficient.ToDouble(), _grbVars[cell.ColIndex]);
+                // Objective (quadratic)
+                var obj = new GRBQuadExpr();
+                foreach (QuadraticObjectiveCell cell in model.Objective.Cells) {
+                    if (cell.Col2 < 0) {
+                        // Linear term (Col2 = -1 sentinel)
+                        obj.AddTerm(cell.Coefficient.ToDouble(), _grbVars[cell.Col1]);
+                    }
+                    else {
+                        // Quadratic term
+                        obj.AddTerm(cell.Coefficient.ToDouble(), _grbVars[cell.Col1], _grbVars[cell.Col2]);
+                    }
                 }
                 obj.AddConstant(model.Objective.Constant.ToDouble());
                 GrbModel.SetObjective(obj,
@@ -365,7 +398,7 @@ public sealed class GurobiLinearSolver : ILinearSolver {
                 }
 
                 if (_callBack?.NativeCallback is not null || _statusCallBack is not null) {
-                    GrbModel.SetCallback(new GurobiLinearCallback(
+                    GrbModel.SetCallback(new GurobiQuadraticCallback(
                         _config, _callBack?.NativeCallback, _statusCallBack, _grbVars));
                 }
 
@@ -400,7 +433,8 @@ public sealed class GurobiLinearSolver : ILinearSolver {
 
                     // AnalyzingSolution callback
                     Result<Success, ErrorCode, Error<ErrorCode>>? cbResult = await (_callBack?.ExecIfContainAsync(
-                        CallBackPoint.AnalyzingSolution, Status, GrbModel, _grbVars, _grbConstraints) ?? Task.FromResult<Result<Success, ErrorCode, Error<ErrorCode>>?>(null));
+                        CallBackPoint.AnalyzingSolution, Status, GrbModel, _grbVars, _grbConstraints)
+                        ?? Task.FromResult<Result<Success, ErrorCode, Error<ErrorCode>>?>(null));
                     if (cbResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
                         return PropagateError<FeasibleSolverOutput<Flt64>>(cbResult!);
                     }
@@ -410,7 +444,8 @@ public sealed class GurobiLinearSolver : ILinearSolver {
                 else {
                     // AfterFailure callback
                     Result<Success, ErrorCode, Error<ErrorCode>>? cbResult = await (_callBack?.ExecIfContainAsync(
-                        CallBackPoint.AfterFailure, Status, GrbModel, _grbVars, _grbConstraints) ?? Task.FromResult<Result<Success, ErrorCode, Error<ErrorCode>>?>(null));
+                        CallBackPoint.AfterFailure, Status, GrbModel, _grbVars, _grbConstraints)
+                        ?? Task.FromResult<Result<Success, ErrorCode, Error<ErrorCode>>?>(null));
 
                     return FailByStatus<FeasibleSolverOutput<Flt64>>(Status);
                 }
@@ -435,15 +470,15 @@ public sealed class GurobiLinearSolver : ILinearSolver {
 }
 
 /// <summary>
-/// Gurobi 线性回调包装器 / Gurobi linear callback wrapper.
+/// Gurobi 二次回调包装器 / Gurobi quadratic callback wrapper.
 /// </summary>
-internal sealed class GurobiLinearCallback : GRBCallback {
+internal sealed class GurobiQuadraticCallback : GRBCallback {
     private readonly SolverConfig _config;
     private readonly NativeCallBack? _nativeCallBack;
     private readonly SolvingStatusCallBack? _statusCallBack;
     private readonly IReadOnlyList<GRBVar> _vars;
 
-    public GurobiLinearCallback(
+    public GurobiQuadraticCallback(
         SolverConfig config,
         NativeCallBack? nativeCallBack,
         SolvingStatusCallBack? statusCallBack,

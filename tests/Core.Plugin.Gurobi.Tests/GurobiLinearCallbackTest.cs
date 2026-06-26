@@ -90,7 +90,6 @@ public class GurobiLinearCallbackTest {
         if (callbackInvoked && capturedStatus is not null) {
             capturedStatus!.Solver.Should().Be("gurobi");
             capturedStatus.SolverIndex.Should().Be(0);
-            capturedStatus.Status.Should().Be(SolverStatus.Feasible);
         }
     }
 

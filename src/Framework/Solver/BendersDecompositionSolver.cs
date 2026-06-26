@@ -113,6 +113,30 @@ public interface IBendersDecompositionSolver {
     /// <summary>带值转换的线性子问题结果 / Linear sub-result with value conversion.</summary>
     abstract record LinearSubResultOf<V>(IReadOnlyList<LinearInequality<Flt64>>? Cuts)
         where V : struct, IRealNumber<V>, INumberField<V>;
+
+    /// <summary>带值转换的线性可行子问题结果 / Linear feasible sub-result with value conversion.</summary>
+    sealed record LinearFeasibleResultOf<V>(
+        FeasibleSolverOutput<V> Result,
+        IReadOnlyDictionary<MathConstraint, Flt64> DualSolution,
+        IReadOnlyList<LinearInequality<Flt64>>? Cuts) : LinearSubResultOf<V>(Cuts)
+        where V : struct, IRealNumber<V>, INumberField<V> {
+        /// <summary>目标值 / Objective value</summary>
+        public Flt64 Obj => Result.Obj;
+        /// <summary>解向量 / Solution vector</summary>
+        public IReadOnlyList<V> Solution => Result.Solution.Values;
+        /// <summary>求解时间 / Solve time</summary>
+        public TimeSpan Time => Result.Time;
+        /// <summary>可能的最优目标值 / Possible best objective</summary>
+        public Flt64? PossibleBestObj => Result.PossibleBestObj;
+        /// <summary>间隙 / Gap</summary>
+        public Flt64 Gap => Result.Gap;
+    }
+
+    /// <summary>带值转换的线性不可行子问题结果 / Linear infeasible sub-result with value conversion (Farkas dual).</summary>
+    sealed record LinearInfeasibleResultOf<V>(
+        IReadOnlyDictionary<MathConstraint, Flt64> FarkasDualSolution,
+        IReadOnlyList<LinearInequality<Flt64>>? Cuts) : LinearSubResultOf<V>(Cuts)
+        where V : struct, IRealNumber<V>, INumberField<V>;
 }
 
 /// <summary>
