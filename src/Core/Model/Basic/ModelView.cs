@@ -137,6 +137,9 @@ public abstract class ModelConstraint<ConCell> : ICopyable<ModelConstraint<ConCe
     /// <summary>约束来源 / Constraint sources</summary>
     public IReadOnlyList<ConstraintSource> Sources => _sources;
 
+    /// <summary>约束优先级（可选）/ Constraint priorities (optional)</summary>
+    public virtual IReadOnlyList<int>? Priorities => null;
+
     /// <summary>约束数量（行数）/ Row count</summary>
     public int Size => _rhs.Count;
     /// <summary>索引范围 / Index range</summary>
