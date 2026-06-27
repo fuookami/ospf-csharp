@@ -4,6 +4,9 @@
     <AssemblyName>Fuookami.Ospf.Example</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Example.Tests" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />
     <ProjectReference Include="..\Math\Math.csproj" />
     <ProjectReference Include="..\Quantities\Quantities.csproj" />

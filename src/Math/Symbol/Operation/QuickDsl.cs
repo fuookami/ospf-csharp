@@ -153,4 +153,46 @@ public sealed class QuickOps<V>
     public LinearPolynomial<V> Add(int lhs, ISymbol rhs)
         => new(new[] { new LinearMonomial<V>(_converter.One, rhs) },
                _converter.IntoValue(new Flt64(lhs)));
+
+    // ===== double * Symbol =====
+
+    /// <summary>double * Symbol / Double times symbol.</summary>
+    public LinearMonomial<V> Multiply(double lhs, ISymbol rhs)
+        => new(_converter.IntoValue(new Flt64(lhs)), rhs);
+
+    /// <summary>Symbol * double / Symbol times double.</summary>
+    public LinearMonomial<V> Multiply(ISymbol lhs, double rhs)
+        => new(_converter.IntoValue(new Flt64(rhs)), lhs);
+
+    // ===== double +/- Symbol =====
+
+    /// <summary>double - Symbol / Double minus symbol.</summary>
+    public LinearPolynomial<V> Subtract(double lhs, ISymbol rhs)
+        => new(new[] { new LinearMonomial<V>(_converter.One.Negate(), rhs) },
+               _converter.IntoValue(new Flt64(lhs)));
+
+    /// <summary>double + Symbol / Double plus symbol.</summary>
+    public LinearPolynomial<V> Add(double lhs, ISymbol rhs)
+        => new(new[] { new LinearMonomial<V>(_converter.One, rhs) },
+               _converter.IntoValue(new Flt64(lhs)));
+
+    // ===== Symbol +/- Symbol =====
+
+    /// <summary>Symbol negation / Negate symbol.</summary>
+    public LinearMonomial<V> Negate(ISymbol s)
+        => new(_converter.One.Negate(), s);
+
+    /// <summary>Symbol + Symbol / Add two symbols.</summary>
+    public LinearPolynomial<V> Add(ISymbol lhs, ISymbol rhs)
+        => new(new[] {
+            new LinearMonomial<V>(_converter.One, lhs),
+            new LinearMonomial<V>(_converter.One, rhs)
+        }, _converter.Zero);
+
+    /// <summary>Symbol - Symbol / Subtract two symbols.</summary>
+    public LinearPolynomial<V> Subtract(ISymbol lhs, ISymbol rhs)
+        => new(new[] {
+            new LinearMonomial<V>(_converter.One, lhs),
+            new LinearMonomial<V>(_converter.One.Negate(), rhs)
+        }, _converter.Zero);
 }
