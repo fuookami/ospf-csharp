@@ -158,21 +158,18 @@ public class PackingTests {
 
     [Fact]
     public async Task ExhaustiveMaterialPackingSolverExecutorShouldReturnOptimal() {
-        var executor = new ExhaustiveMaterialPackingSolverExecutor();
-        MaterialPackingDemand[] demands = new[] { new MaterialPackingDemand() };
-        MaterialPackingPlan result = await executor.ExecuteAsync(demands, new MaterialPackingObjectiveConfig());
-        result.SolveInfo.Status.Should().Be(PackingStatus.Optimal);
-        result.RestMaterials.Should().BeEmpty();
-        result.PackagedItems.Should().BeEmpty();
+        var executor = new ExhaustiveMaterialPackingSolverExecutor<FltX>();
+        Result<IReadOnlyList<MaterialPackingPlan<FltX>>, ErrorCode, Error<ErrorCode>> result = await executor.ExecuteAsync();
+        result.IsFailed.Should().BeFalse();
+        result.Value.Should().BeEmpty();
     }
 
     [Fact]
     public async Task MaterialPackerShouldDelegateToExecutor() {
-        var executor = new ExhaustiveMaterialPackingSolverExecutor();
+        var executor = new ExhaustiveMaterialPackingSolverExecutor<FltX>();
         var packer = new MaterialPacker(executor);
-        MaterialPackingDemand[] demands = new[] { new MaterialPackingDemand() };
-        MaterialPackingPlan result = await packer.PlanAsync(demands, new MaterialPackingObjectiveConfig());
-        result.SolveInfo.Status.Should().Be(PackingStatus.Optimal);
+        Result<IReadOnlyList<MaterialPackingPlan<FltX>>, ErrorCode, Error<ErrorCode>> result = await packer.PlanAsync();
+        result.IsFailed.Should().BeFalse();
     }
 
     [Fact]
