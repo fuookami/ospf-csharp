@@ -105,16 +105,40 @@ public sealed record ExecutorCapacityResult(
     TimeSpan TotalDuration);
 
 /// <summary>
+/// 一个顺序位上的选中标记 / The selection flag of one order position.
+/// </summary>
+/// <remarks>
+/// **这是 `b[动作, 时隙, 顺序位]` 的读出值**，与 `ActionAllocation` 里的数量是两件事。B733 的变异证明了为什么必须读它：
+/// "把上界关联式反向"只影响 `b` 与 `x` 的耦合，**只读数量的解完全看不出来**。
+///
+/// **This is the read-back of `b[action, slot, order position]`**, distinct from the amount inside `ActionAllocation`. B733's mutations show why it must be read: reversing the upper
+/// linking row only changes how `b` couples with `x`, and **a solution that reads amounts alone cannot see it**.
+/// </remarks>
+/// <typeparam name="A">生产动作类型 / Production action type</typeparam>
+/// <param name="Action">动作 / The action.</param>
+/// <param name="SlotIndex">时隙下标 / The slot index.</param>
+/// <param name="OrderPosition">顺序位下标 / The order-position index.</param>
+/// <param name="Selected">是否选中 / Whether it is selected.</param>
+public sealed record OrderSelection<A>(
+    A Action,
+    int SlotIndex,
+    int OrderPosition,
+    bool Selected)
+    where A : IProductionAction;
+
+/// <summary>
 /// 产能调度解 / Capacity scheduling solution
 /// </summary>
 /// <typeparam name="A">生产动作类型 / Production action type</typeparam>
 /// <param name="Actions">所有动作 / All actions</param>
 /// <param name="ActionAllocations">所有动作分配 / All action allocations</param>
 /// <param name="ExecutorCapacities">所有执行器产能结果 / All executor capacity results</param>
+/// <param name="Selections">顺序位上的选中标记 / The selected order positions.</param>
 public sealed record CapacitySchedulingSolution<A>(
     IReadOnlyList<A> Actions,
     IReadOnlyList<ActionAllocation<A>> ActionAllocations,
-    IReadOnlyList<ExecutorCapacityResult> ExecutorCapacities)
+    IReadOnlyList<ExecutorCapacityResult> ExecutorCapacities,
+    IReadOnlyList<OrderSelection<A>>? Selections = null)
     where A : IProductionAction {
     /// <summary>所有动作分配（按时隙分组）/ Action allocations grouped by slot</summary>
     public IReadOnlyDictionary<TimeRange, List<ActionAllocation<A>>> AllocationsBySlot

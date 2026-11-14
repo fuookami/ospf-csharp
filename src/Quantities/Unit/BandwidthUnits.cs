@@ -20,6 +20,34 @@ public static class BandwidthUnits {
     /// <summary>字节每秒 / Bytes per second.</summary>
     public static readonly PhysicalUnit BytesPerSecond = new DerivedUnit(BitsPerSecond.ScaleMultiply(Scale.Invoke(8)), "bytes per second", "B/s");
 
+    // 以下 5 个是 B1142 按基线 Bandwidth.kt 补的（现存 5 个 → 10 个）。
+    //
+    // **带宽单位延续了 `Information` 的十进制/二进制之分**：
+    // **`KilobytesPerSecond` 是 1000 B/s，`KibibytesPerSecond` 才是 1024 B/s。**
+    // **基线只定义到十进制那一套，所以这里也只有十进制。**
+    //
+    // The five below were added in B1142 from the baseline Bandwidth.kt (five existing, ten total).
+    //
+    // **Bandwidth keeps the decimal/binary split from `Information`**:
+    // **`KilobytesPerSecond` is 1000 B/s and `KibibytesPerSecond` would be 1024.**
+    // **The baseline defines only the decimal family, and so does this.**
+
+    /// <summary>太比特每秒（10¹² bit/s）/ Terabit per second.</summary>
+    public static readonly PhysicalUnit TerabitsPerSecond = new DerivedUnit(
+        InformationUnits.Terabit.Divide(SIBaseUnits.Second), "terabit-per-second", "Tbit/s");
+    /// <summary>拍比特每秒（10¹⁵）/ Petabit per second.</summary>
+    public static readonly PhysicalUnit PetabitsPerSecond = new DerivedUnit(
+        InformationUnits.Petabit.Divide(SIBaseUnits.Second), "petabit-per-second", "Pbit/s");
+    /// <summary>艾比特每秒（10¹⁸）/ Exabit per second.</summary>
+    public static readonly PhysicalUnit ExabitsPerSecond = new DerivedUnit(
+        InformationUnits.Exabit.Divide(SIBaseUnits.Second), "exabit-per-second", "Ebit/s");
+    /// <summary>**千字节每秒（1000 B/s，不是 1024）** / Kilobyte per second.</summary>
+    public static readonly PhysicalUnit KilobytesPerSecond = new DerivedUnit(
+        InformationUnits.Kilobyte.Divide(SIBaseUnits.Second), "kilobyte-per-second", "KB/s");
+    /// <summary>兆字节每秒（10⁶ B/s）/ Megabyte per second.</summary>
+    public static readonly PhysicalUnit MegabytesPerSecond = new DerivedUnit(
+        InformationUnits.Megabyte.Divide(SIBaseUnits.Second), "megabyte-per-second", "MB/s");
+
     private sealed class DerivedUnit : PhysicalUnit {
         private readonly PhysicalUnit _inner;
         private readonly string _name;

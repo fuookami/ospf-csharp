@@ -17,11 +17,21 @@ internal static class SymbolIdentitySerde {
 
     /// <summary>从标识字符串反序列化符号 / Deserialize symbol from identifier string.</summary>
     public static ISymbol SymbolOfSerializedIdentifier(string identifier) {
-        if (identifier.StartsWith("path:")) {
+        ArgumentNullException.ThrowIfNull(identifier);
+
+        if (identifier.StartsWith("path:", StringComparison.Ordinal)) {
             return PathSymbol.From(identifier["path:".Length..]);
         }
+        if (identifier.StartsWith("name:", StringComparison.Ordinal)) {
+            return NamedSymbol.Of(identifier["name:".Length..]);
+        }
 
-        throw new NotSupportedException("Full symbol deserialization requires phase 13.");
+        // **基线对非前缀标识符走 `defaultSymbolOf(identifier)`，即"按名字建一个普通符号"。**
+        // **B1086 之前这里直接抛异常，而多项式解析出来的记号全是这种标识符。**
+        // **缺的不是 hex/JSON 那几段（那些确实留给 phase 13），缺的是最简单的那个回退。**
+        // **The baseline routes unprefixed identifiers to `defaultSymbolOf(identifier)`.**
+        // **Before B1086 this threw, and every identifier a polynomial parse produces is one of those.**
+        return NamedSymbol.Of(identifier);
     }
 }
 

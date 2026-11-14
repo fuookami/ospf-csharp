@@ -39,8 +39,29 @@ public static class BendersStrategy
     /// <summary>
     /// 判断飞机类型是否支持 Benders。Check if aircraft type supports Benders decomposition.
     /// </summary>
+    /// <remarks>
+    /// **基线的判据只有一条：不是 `Unknown`**（B827 实测 `BendersStrategy.kt`）：
+    ///
+    /// ```kotlin
+    /// fun supportedAircraft(aircraftType: AircraftTypeInput): Boolean =
+    ///     aircraftType != AircraftTypeInput.Unknown
+    /// ```
+    ///
+    /// 本仓此前写成 `B737 || B757`，**是移植时自己加的一条规则**：B767/B747 在基线里是支持的。
+    /// 这条误判的后果是"换一个机型就报不支持"，而报告的理由指向机型本身——**看起来像个业务限制**。
+    ///
+    /// **The baseline has exactly one condition — not `Unknown`** (measured in B827):
+    ///
+    /// ```kotlin
+    /// fun supportedAircraft(aircraftType: AircraftTypeInput): Boolean =
+    ///     aircraftType != AircraftTypeInput.Unknown
+    /// ```
+    ///
+    /// This port said `B737 || B757`, **a rule added during the port itself**: B767 and B747 are supported in the baseline. The misjudgement shows up as "another
+    /// aircraft type reports unsupported", with the reason pointing at the aircraft — **it reads like a business restriction.**
+    /// </remarks>
     public static bool SupportedAircraft(AircraftTypeInput aircraftType) =>
-        aircraftType == AircraftTypeInput.B737 || aircraftType == AircraftTypeInput.B757;
+        aircraftType != AircraftTypeInput.Unknown;
 
     /// <summary>
     /// 调优自适应配置。Tune adaptive configuration based on problem size.
@@ -105,7 +126,29 @@ public static class BendersStrategy
     /// </summary>
     public static SolveMode ResolveSolveMode(RequestDTO request, List<string> notes)
     {
-        int binaryVariables = request.Cargos.Count * request.Positions.Count;
+        // **基线数的是"每件货能放几个舱位"，不是"货 × 舱位"**（B828 实测）：
+        //
+        // ```kotlin
+        // binaryVariables = request.cargos.sumOf { cargo ->
+        //     request.positions.count { position -> cargo.allowedPositions?.contains(position.name) != false } }
+        // ```
+        //
+        // 本仓当时写成 `Cargos.Count * Positions.Count`，并把等价的**前提**钉成判据：`CargoInput` 没有 `AllowedPositions`，
+        // 于是每件货"允许全部舱位"，求和恰好等于乘积。**B937 把那个字段补上了，判据应声变红**，于是这一行按基线的公式改写——
+        // **这正是"把前提钉成判据"的用处：字段落地那天它会自己来叫。**
+        //
+        // **The baseline counts "how many positions each cargo may use", not "cargos times positions"** (measured by B828). This port multiplied and pinned
+        // the premise of the equivalence as a criterion: `CargoInput` had no `AllowedPositions`, so every cargo allowed every position and the sum equalled the
+        // product. **B937 added that field, the criterion reddened, and this line was rewritten to the baseline's formula** — **which is exactly what pinning the
+        // premise buys: the day the field lands, it comes and tells you.**
+        int binaryVariables = 0;
+        foreach (CargoInput cargo in request.Cargos) {
+            foreach (PositionInput position in request.Positions) {
+                if (cargo.AllowedPositions is null || cargo.AllowedPositions.Contains(position.Name)) {
+                    ++binaryVariables;
+                }
+            }
+        }
         var tunedAdaptive = TuneAdaptiveConfig(request.ResolvedBendersAdaptive, binaryVariables);
         var qualityGuard = ResolveQualityGuardConfig(request.BendersQualityOverrides);
 

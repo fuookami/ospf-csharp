@@ -112,4 +112,81 @@ public sealed class UInt64DurationConverter : IDurationConverter<UInt64> {
         var seconds = new Quantity<UInt64>(new UInt64((ulong)duration.TotalSeconds), SIBaseUnits.Second);
         return seconds.To(unit);
     }
+
+}
+
+/// <summary>**IntX 时长转换器** / IntX duration converter.</summary>
+/// <remarks>
+/// **`IntX` 是整数，所以 `TimeSpan` 的亚秒部分会被截断。**
+/// **这不是精度损失，是类型本身的语义：一个整数秒的量在转换为 TimeSpan 时不带小数。**
+/// **基线用 `value.toLong()` 也是截断，行为一致。**
+///
+/// **`IntX` is integral, so the sub-second part of a `TimeSpan` is truncated.**
+/// **That is not lost precision but the type semantics: an integer-seconds quantity carries no fraction when
+/// converted.** **The baseline truncates with `value.toLong()` too, so the behaviour matches.**
+/// </remarks>
+public sealed class IntXDurationConverter : IDurationConverter<IntX> {
+    public static readonly IntXDurationConverter Instance = new();
+
+    public Result<TimeSpan, ErrorCode, Error<ErrorCode>> ToDuration(Quantity<IntX> quantity) {
+        Result<Quantity<IntX>, ErrorCode, Error<ErrorCode>> converted = quantity.To(SIBaseUnits.Second);
+        if (converted.IsFailed) {
+            return new Failed<TimeSpan, ErrorCode, Error<ErrorCode>>(
+                ((Failed<Quantity<IntX>, ErrorCode, Error<ErrorCode>>)converted).Error);
+        }
+
+        var seconds = converted.Value.Value.ToBigInteger();
+        if (seconds > long.MaxValue || seconds < long.MinValue) {
+            return new Failed<TimeSpan, ErrorCode, Error<ErrorCode>>(
+                ErrorCode.IllegalArgument,
+                "duration does not fit in a TimeSpan");
+        }
+
+        return new Ok<TimeSpan, ErrorCode, Error<ErrorCode>>(TimeSpan.FromSeconds((double)(long)seconds));
+    }
+
+    public Result<Quantity<IntX>, ErrorCode, Error<ErrorCode>> ToQuantity(TimeSpan duration, PhysicalUnit unit) {
+        var seconds = new Quantity<IntX>(new IntX((long)duration.TotalSeconds), SIBaseUnits.Second);
+        return seconds.To(unit);
+    }
+}
+
+/// <summary>**UIntX 时长转换器** / UIntX duration converter.</summary>
+/// <remarks>
+/// **负时长必须拒绝，不能截断到 0**：**把 -5 秒变成 0 秒会让"早于基准点"的信息悄悄消失，
+/// 而调用方看到的是一个合法的 0。**
+///
+/// **A negative duration has to be rejected, not truncated to zero**: **turning -5 s into 0 s silently erases
+/// "before the reference point" while handing the caller a legal zero.**
+/// </remarks>
+public sealed class UIntXDurationConverter : IDurationConverter<UIntX> {
+    public static readonly UIntXDurationConverter Instance = new();
+
+    public Result<TimeSpan, ErrorCode, Error<ErrorCode>> ToDuration(Quantity<UIntX> quantity) {
+        Result<Quantity<UIntX>, ErrorCode, Error<ErrorCode>> converted = quantity.To(SIBaseUnits.Second);
+        if (converted.IsFailed) {
+            return new Failed<TimeSpan, ErrorCode, Error<ErrorCode>>(
+                ((Failed<Quantity<UIntX>, ErrorCode, Error<ErrorCode>>)converted).Error);
+        }
+
+        var seconds = converted.Value.Value.ToBigInteger();
+        if (seconds > long.MaxValue) {
+            return new Failed<TimeSpan, ErrorCode, Error<ErrorCode>>(
+                ErrorCode.IllegalArgument,
+                "duration does not fit in a TimeSpan");
+        }
+
+        return new Ok<TimeSpan, ErrorCode, Error<ErrorCode>>(TimeSpan.FromSeconds((double)(long)seconds));
+    }
+
+    public Result<Quantity<UIntX>, ErrorCode, Error<ErrorCode>> ToQuantity(TimeSpan duration, PhysicalUnit unit) {
+        if (duration < TimeSpan.Zero) {
+            return new Failed<Quantity<UIntX>, ErrorCode, Error<ErrorCode>>(
+                ErrorCode.IllegalArgument,
+                $"cannot convert negative duration {duration} to UIntX");
+        }
+
+        var seconds = new Quantity<UIntX>(new UIntX((long)duration.TotalSeconds), SIBaseUnits.Second);
+        return seconds.To(unit);
+    }
 }

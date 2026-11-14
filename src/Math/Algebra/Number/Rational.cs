@@ -49,6 +49,9 @@ public readonly struct RtnX : IFloatingNumber<RtnX>, ICopyable<RtnX>, IEquatable
     // ===== ICopyable =====
     public RtnX Copy() => new(Numerator, Denominator);
 
+    /// <summary>获取原始分子与分母 / Get the underlying numerator and denominator.</summary>
+    public (double Numerator, double Denominator) ToParts() => (Numerator, Denominator);
+
     // ===== IInvariant =====
     RtnX IInvariant<RtnX>.Value() => this;
 

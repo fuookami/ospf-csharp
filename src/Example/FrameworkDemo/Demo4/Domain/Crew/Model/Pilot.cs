@@ -1,8 +1,9 @@
 #nullable enable
 
-using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Crew.Model;
 
@@ -22,10 +23,10 @@ public sealed record Pilot(
     string Nationality,
     string? DisplayName = null
 ) : IAbstractCrewMan {
-    private static readonly Dictionary<PilotCode, Pilot> Pool = new();
+    private static readonly ConcurrentDictionary<PilotCode, Pilot> Pool = new();
 
-    /// <summary>所有已注册的飞行员 / All registered pilots.</summary>
-    public static IReadOnlyCollection<Pilot> Values => Pool.Values;
+    /// <summary>已注册飞行员的快照 / Snapshot of registered pilots.</summary>
+    public static IReadOnlyCollection<Pilot> Values => Pool.Values.ToArray();
 
     WorkerNo? IAbstractCrewMan.WorkerNo => WorkerNo;
 

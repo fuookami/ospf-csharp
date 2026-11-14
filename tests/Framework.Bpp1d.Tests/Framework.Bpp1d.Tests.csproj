@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Framework.Bpp1d.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Framework.Bpp1d.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!--
+      真实求解器集成测试的开关 / The switch for real-solver integration tests.
+      开启方式：dotnet test … -p:RunScipIntegration=true，**必须在 build 时带上**；
+      只给 test 加不会定义这个常量，那些用例会被静默跳过。
+      Enable with -p:RunScipIntegration=true, **passed to the build**; adding it only to `test` will not define this constant and those cases silently disappear.
+    -->
+    <DefineConstants Condition="'$(RunScipIntegration)' == 'true'">$(DefineConstants);SCIP_INTEGRATION</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Framework.Bpp1d\Framework.Bpp1d.csproj" />
+    <ProjectReference Include="..\..\src\Core.Plugin.Scip\Core.Plugin.Scip.csproj" />
+  </ItemGroup>
+</Project>

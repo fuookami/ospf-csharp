@@ -2,15 +2,21 @@
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Core.Plugin.Copt</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Copt</AssemblyName>
+    <CoptManagedAssembly>$(COPT_HOME)/bin/copt_dotnet20.dll</CoptManagedAssembly>
+    <CoptAvailable Condition="Exists('$(CoptManagedAssembly)')">true</CoptAvailable>
+    <DefineConstants Condition="'$(CoptAvailable)' == 'true'">$(DefineConstants);COPT_AVAILABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Copt.Tests" />
   </ItemGroup>
-  <ItemGroup Condition="Exists('D:\environment\solvers\copt80\bin\copt_dotnet20.dll')">
+  <ItemGroup Condition="Exists('$(CoptManagedAssembly)')">
     <Reference Include="copt_dotnet20">
-      <HintPath>D:\environment\solvers\copt80\bin\copt_dotnet20.dll</HintPath>
+      <HintPath>$(CoptManagedAssembly)</HintPath>
       <Private>false</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(CoptAvailable)' != 'true'">
+    <Compile Remove="CoptLinearSolver.cs;CoptNativeSolver.cs;CoptQuadraticSolver.cs;CoptSnapshot.cs;CoptSolveCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />

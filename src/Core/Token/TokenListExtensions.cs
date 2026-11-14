@@ -20,8 +20,15 @@ namespace Fuookami.Ospf.Core.Token;
 public sealed class AutoTokenList<T> : AbstractMutableTokenList<T>
     where T : struct, IRealNumber<T>, INumberField<T> {
     private readonly Dictionary<VariableItemKey, Token<T>> _list = new();
+    private readonly bool _checkTokenExists;
     private int _currentIndex;
     private IReadOnlyList<Token<T>>? _tokensInSolver;
+
+    /// <summary>创建自动列表并选择重复键策略 / Create an auto list with a duplicate-key policy.</summary>
+    /// <param name="checkTokenExists">是否拒绝重复变量 / Whether to reject duplicate variables.</param>
+    public AutoTokenList(bool checkTokenExists = false) {
+        _checkTokenExists = checkTokenExists;
+    }
 
     /// <inheritdoc/>
     public override ICollection<Token<T>> Tokens => _list.Values;
@@ -38,12 +45,10 @@ public sealed class AutoTokenList<T> : AbstractMutableTokenList<T>
     /// <returns>Token 实例 / Token instance</returns>
     public override Token<T>? Find(IVariableItem item) {
         VariableItemKey key = item.Key;
-        if (!_list.ContainsKey(key)) {
-            var token = new Token<T>(item, _currentIndex++, new Dictionary<object, Action<bool>>());
-            _list[key] = token;
-            _tokensInSolver = null;
+        if (!_list.TryGetValue(key, out Token<T>? token) && Add(item).IsOk) {
+            _list.TryGetValue(key, out token);
         }
-        return _list[key];
+        return token;
     }
 
     /// <inheritdoc/>
@@ -53,32 +58,53 @@ public sealed class AutoTokenList<T> : AbstractMutableTokenList<T>
     }
 
     /// <inheritdoc/>
-    public override Try Add(IVariableItem item) {
-        Find(item);
-        return Results.Ok<Success>(Results.SuccessInstance);
-    }
+    public override Try Add(IVariableItem item) => Add(new[] { item });
 
     /// <inheritdoc/>
     public override Try Add(IEnumerable<IVariableItem> items) {
-        foreach (IVariableItem item in items) {
-            Try result = Add(item);
-            if (result is Failed<Success, ErrorCode, Error<ErrorCode>> f) {
-                return f;
-            }
+        Try result = TokenBatchSupport.Add<T>(
+            items: items,
+            contains: _list.ContainsKey,
+            add: (key, token) => { _list[key] = token; _tokensInSolver = null; },
+            captureRollback: key => {
+                _list.TryGetValue(key, out Token<T>? original);
+                return () => {
+                    if (original is null) { _list.Remove(key); }
+                    else { _list[key] = original; }
+                    _tokensInSolver = null;
+                };
+            },
+            checkTokenExists: _checkTokenExists,
+            skipExisting: null,
+            firstIndex: _currentIndex,
+            converter: null,
+            nextIndex: out int nextIndex,
+            replaced: out _
+        );
+        if (result.IsOk) {
+            _currentIndex = nextIndex;
         }
-        return Results.Ok<Success>(Results.SuccessInstance);
+        return result;
     }
 }
 
 /// <summary>
-/// 手动令牌列表，使用变量自身的索引。
-/// Manual token list, using the variable's own index.
+/// 手动令牌列表，仅显式注册变量并按顺序分配索引。
+/// Manual token list, registering variables explicitly and assigning indices in order.
 /// </summary>
 /// <typeparam name="T">数值类型 / The number type</typeparam>
 public sealed class ManualTokenList<T> : AbstractMutableTokenList<T>
     where T : struct, IRealNumber<T>, INumberField<T> {
     private readonly Dictionary<VariableItemKey, Token<T>> _list = new();
+    private readonly bool _checkTokenExists;
+    private int _currentIndex;
     private IReadOnlyList<Token<T>>? _tokensInSolver;
+
+    /// <summary>创建手动列表并选择重复键策略 / Create a manual list with a duplicate-key policy.</summary>
+    /// <param name="checkTokenExists">是否拒绝重复变量 / Whether to reject duplicate variables.</param>
+    public ManualTokenList(bool checkTokenExists = false) {
+        _checkTokenExists = checkTokenExists;
+    }
 
     /// <inheritdoc/>
     public override ICollection<Token<T>> Tokens => _list.Values;
@@ -103,24 +129,32 @@ public sealed class ManualTokenList<T> : AbstractMutableTokenList<T>
     }
 
     /// <inheritdoc/>
-    public override Try Add(IVariableItem item) {
-        VariableItemKey key = item.Key;
-        if (!_list.ContainsKey(key)) {
-            var token = new Token<T>(item, item.Index, new Dictionary<object, Action<bool>>());
-            _list[key] = token;
-            _tokensInSolver = null;
-        }
-        return Results.Ok<Success>(Results.SuccessInstance);
-    }
+    public override Try Add(IVariableItem item) => Add(new[] { item });
 
     /// <inheritdoc/>
     public override Try Add(IEnumerable<IVariableItem> items) {
-        foreach (IVariableItem item in items) {
-            Try result = Add(item);
-            if (result is Failed<Success, ErrorCode, Error<ErrorCode>> f) {
-                return f;
-            }
+        Try result = TokenBatchSupport.Add<T>(
+            items: items,
+            contains: _list.ContainsKey,
+            add: (key, token) => { _list[key] = token; _tokensInSolver = null; },
+            captureRollback: key => {
+                _list.TryGetValue(key, out Token<T>? original);
+                return () => {
+                    if (original is null) { _list.Remove(key); }
+                    else { _list[key] = original; }
+                    _tokensInSolver = null;
+                };
+            },
+            checkTokenExists: _checkTokenExists,
+            skipExisting: null,
+            firstIndex: _currentIndex,
+            converter: null,
+            nextIndex: out int nextIndex,
+            replaced: out _
+        );
+        if (result.IsOk) {
+            _currentIndex = nextIndex;
         }
-        return Results.Ok<Success>(Results.SuccessInstance);
+        return result;
     }
 }

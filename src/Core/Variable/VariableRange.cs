@@ -78,6 +78,26 @@ public readonly struct InvariantInt8Wrapper : IInvariant<Int8> {
 }
 
 /// <summary>
+/// UInt64 的不变量包装器 / Invariant wrapper for UInt64
+/// </summary>
+/// <remarks>
+/// **补这个包装器是必要的，不是凑数**：`UIntVar` 的缺省上界是 `ulong.MaxValue`，
+/// 换成 `double` 是 `1.8e19`，**超过 binary64 能精确表示的整数上界 `2^53`**，
+/// 求解器在注册阶段就会拒（"整数变量边界须在二进制64精确整数范围内且有限"）。
+/// 于是**每个 `UIntVar` 都必须显式设上界**，而 `Range.Leq` 只接受 `IInvariant&lt;V&gt;`——
+/// 现有包装器只有 `UInt8` / `Int8` / `Flt64`，没有 `UInt64`。
+///
+/// **This wrapper is necessary, not filler**: `UIntVar`'s default upper bound is `ulong.MaxValue`, which as a `double` is `1.8e19` — **beyond binary64's exact-integer
+/// limit `2^53`** — and the solver rejects it at registration. So **every `UIntVar` needs an explicit upper bound**, and `Range.Leq` only accepts an `IInvariant&lt;V&gt;`;
+/// the existing wrappers cover `UInt8`, `Int8` and `Flt64` only.
+/// </remarks>
+public readonly struct InvariantUInt64Wrapper : IInvariant<UInt64> {
+    private readonly UInt64 _value;
+    public InvariantUInt64Wrapper(UInt64 value) => _value = value;
+    public UInt64 Value() => _value;
+}
+
+/// <summary>
 /// Flt64 的不变量包装器 / Invariant wrapper for Flt64
 /// </summary>
 public readonly struct InvariantFlt64Wrapper : IInvariant<Flt64> {

@@ -48,5 +48,14 @@ public class TaskStepConflictConstraint<T, E, A>
     bool IMetaConstraintGroup.Lazy => false;
 
     /// <inheritdoc/>
-    public Try Invoke(object model) => Results.Ok<Success>(Results.SuccessInstance);
+    /// <remarks>
+    /// **未接线就失败，不要静默成功。** 一个返回 `Ok` 的空壳等于宣称"该约束已施加且未违反"——
+    /// 而实际什么都没做。这类缺陷不报错、不崩、只是结果偏掉，是最难查的一种。
+    ///
+    /// **Fails while unwired; never silently succeeds.** An empty stub returning `Ok` claims "this constraint was applied and is satisfied" while doing nothing at all. The
+    /// defect raises nothing, crashes nothing and merely skews the result — the hardest kind to find.
+    /// </remarks>
+    public Try Invoke(object model) => Results.Failed<Success>(new Err<ErrorCode>(
+        ErrorCode.ApplicationError,
+        "TaskStepConflictConstraint 尚未接线，不能当作已施加 / not wired yet; it must not be treated as applied"));
 }

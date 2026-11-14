@@ -4,12 +4,23 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Mosek.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <MosekManagedAssembly Condition="'$(MosekManagedAssembly)' == ''">$(MOSEK_10_2_INSTALLDIR)/tools/platform/win64x86/bin/mosekdotnet10_2.dll</MosekManagedAssembly>
+    <MosekAvailable Condition="Exists('$(MosekManagedAssembly)')">true</MosekAvailable>
+    <DefineConstants Condition="'$(MosekAvailable)' == 'true'">$(DefineConstants);MOSEK_AVAILABLE</DefineConstants>
+    <MosekIntegration Condition="'$(RunMosekIntegration)' == 'true'">true</MosekIntegration>
+    <DefineConstants Condition="'$(MosekIntegration)' == 'true'">$(DefineConstants);MOSEK_INTEGRATION</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="Exists('D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll')">
+  <Target Name="RequireMosekForIntegration" BeforeTargets="PrepareForBuild" Condition="'$(MosekIntegration)' == 'true' and '$(MosekAvailable)' != 'true'">
+    <Error Text="MOSEK integration tests require MOSEK_10_2_INSTALLDIR or MosekManagedAssembly." />
+  </Target>
+  <ItemGroup Condition="'$(MosekAvailable)' == 'true'">
     <Reference Include="mosekdotnet10_2">
-      <HintPath>D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(MosekManagedAssembly)</HintPath>
+      <Private>true</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(MosekAvailable)' != 'true'">
+    <Compile Remove="MosekLinearSolverSmokeTest.cs;MosekIntegrationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />

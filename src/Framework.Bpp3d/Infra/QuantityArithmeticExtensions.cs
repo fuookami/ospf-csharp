@@ -100,4 +100,5 @@ public static class QuantityArithmeticExtensions {
 
     /// <summary>创建零 Quantity / Create zero Quantity.</summary>
     public static Quantity<FltX> ZeroQuantity(PhysicalUnit unit) => new(FltX.Zero, unit);
+
 }

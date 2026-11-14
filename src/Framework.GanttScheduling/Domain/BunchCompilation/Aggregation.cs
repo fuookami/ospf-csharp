@@ -1,5 +1,6 @@
 #nullable enable
 
+using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.BunchCompilation.Model;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.Task.Model;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
@@ -104,7 +105,9 @@ public abstract class AbstractBunchCompilationAggregation<B, T, E, A>
         ISet<B> fixedBunches,
         ISet<B> keptBunches,
         object model) {
-        foreach (B bunch in Bunches) {
+        // 遍历**快照**：下面每移除一束都会改 `Bunches`，直接遍历会抛"集合已被修改"。
+        // Iterate a **snapshot**: every removal mutates `Bunches`, and enumerating it directly throws "collection was modified".
+        foreach (B bunch in Bunches.ToList()) {
             if (RemovedBunches.Contains(bunch)) {
                 continue;
             }
@@ -112,13 +115,19 @@ public abstract class AbstractBunchCompilationAggregation<B, T, E, A>
             if (reducedCost(bunch) >= maximumReducedCost
                 && !fixedBunches.Contains(bunch)
                 && !keptBunches.Contains(bunch)) {
-                Compilation.Aggregation.RemoveColumn(bunch);
+                Try removed = Compilation.RemoveColumn(bunch, model);
+                if (removed.IsFailed) {
+                    return removed switch {
+                        Failed<Success, ErrorCode, Error<ErrorCode>> failed => Results.Failed<Flt64>(failed.Error),
+                        _ => Results.Failed<Flt64>(new Err<ErrorCode>(ErrorCode.ApplicationError, "移除列失败 / removing a column failed")),
+                    };
+                }
             }
         }
 
         ulong remainingAmount = (ulong)Bunches.Count;
         if (remainingAmount > maximumColumnAmount) {
-            return Results.Ok<Flt64>(NextReducedCostCutoff(maximumReducedCost));
+            return Results.Ok<Flt64>(ReducedCostCutoff.Next(maximumReducedCost));
         }
         return Results.Ok(maximumReducedCost);
     }
@@ -205,10 +214,6 @@ public abstract class AbstractBunchCompilationAggregation<B, T, E, A>
     /// <returns>操作结果 / Operation result</returns>
     public virtual Try Flush(ulong iteration, IReadOnlyList<T>? tasks = null, IReadOnlySet<T>? lockCancelTasks = null) => Results.Ok<Success>(Results.SuccessInstance);
 
-    private static Flt64 NextReducedCostCutoff(Flt64 maximumReducedCost) {
-        long reducedCostCutoff = (long)(maximumReducedCost.ToDouble() * 2.0 / 3.0);
-        return new Flt64(System.Math.Max(reducedCostCutoff, 5L));
-    }
 }
 
 /// <summary>
@@ -334,7 +339,17 @@ public class BunchCompilationAggregationWithTime<B, T, E, A> : AbstractBunchComp
         }
 
         IReadOnlyList<B> undupBunches = ((Ok<IReadOnlyList<B>, ErrorCode, Error<ErrorCode>>)result).Value;
-        TaskTime.AddColumns(iteration, undupBunches, model);
+        // **返回值必须看**：`TaskTime.AddColumns` 目前明确失败（迭代列需要编译层的每轮列变量），
+        // 之前这里把返回值丢掉，"加列失败"与"加列成功"长得一模一样。
+        // **The result must be checked**: `TaskTime.AddColumns` currently fails on purpose (iteration columns need the compilation layer's per-round variables), and this call
+        // used to discard the result, making "columns not added" look exactly like "columns added".
+        Try timeResult = TaskTime.AddColumns(iteration, undupBunches, model);
+        if (!timeResult.IsOk) {
+            return Results.Failed<IReadOnlyList<B>>(new Err<ErrorCode>(
+                ErrorCode.ApplicationError,
+                "任务束的迭代列没有加上（迭代 " + iteration
+                + "）/ the bunch iteration columns were not added (iteration " + iteration + ")"));
+        }
 
         return Results.Ok(undupBunches);
     }

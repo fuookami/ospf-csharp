@@ -2,18 +2,23 @@
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Core.Plugin.Mosek</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Mosek</AssemblyName>
+    <MosekManagedAssembly Condition="'$(MosekManagedAssembly)' == ''">$(MOSEK_10_2_INSTALLDIR)/tools/platform/win64x86/bin/mosekdotnet10_2.dll</MosekManagedAssembly>
+    <MosekAvailable Condition="Exists('$(MosekManagedAssembly)')">true</MosekAvailable>
+    <DefineConstants Condition="'$(MosekAvailable)' == 'true'">$(DefineConstants);MOSEK_AVAILABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Mosek.Tests" />
   </ItemGroup>
-  <!-- Mosek 10.2 managed assembly.
-       Native runtime: mosek64_10_2.dll on PATH or next to managed DLL.
-       MOSEK_HOME=D:\environment\solvers\Mosek\10.2 -->
-  <ItemGroup Condition="Exists('D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll')">
+  <!-- Native runtime: mosek64_10_2.dll on PATH or next to the managed DLL. -->
+  <ItemGroup Condition="'$(MosekAvailable)' == 'true'">
+    <Compile Remove="MosekUnavailable.cs" />
     <Reference Include="mosekdotnet10_2">
-      <HintPath>D:\environment\solvers\Mosek\10.2\tools\platform\win64x86\bin\mosekdotnet10_2.dll</HintPath>
+      <HintPath>$(MosekManagedAssembly)</HintPath>
       <Private>false</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(MosekAvailable)' != 'true'">
+    <Compile Remove="MosekLinearSolver.cs;MosekSolver.cs;MosekSolverCallBack.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />

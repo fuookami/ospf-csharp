@@ -4,9 +4,9 @@ using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Intermediate;
 using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
-using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Iis;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
@@ -22,208 +22,410 @@ namespace Fuookami.Ospf.Framework.Solver;
 /// <summary>
 /// 并行组合二次求解器 / Parallel combinatorial quadratic solver.
 /// </summary>
-public sealed class ParallelCombinatorialQuadraticSolver : IQuadraticSolver {
-    private readonly IReadOnlyList<Func<IQuadraticSolver>> _solverFactories;
+public sealed class ParallelCombinatorialQuadraticSolver : IAbstractQuadraticSolver {
+    private readonly IReadOnlyList<Func<IAbstractQuadraticSolver>> _solverFactories;
     private readonly ParallelCombinatorialMode _mode;
     private readonly ILogger _logger;
+    private readonly Lazy<string> _name;
 
-    public string Name { get; }
-    public SolverConfig Config => _solverFactories[0]().Config;
-
+    public string Name => _name.Value;
     public ParallelCombinatorialQuadraticSolver(
-        IEnumerable<IQuadraticSolver> solvers,
+        IEnumerable<IAbstractQuadraticSolver> solvers,
         ParallelCombinatorialMode mode = ParallelCombinatorialMode.Best,
         ILogger? logger = null)
-        : this(solvers.Select(s => (Func<IQuadraticSolver>)(() => s)).ToList(), mode, logger) { }
+        : this(solvers.Select(s => (Func<IAbstractQuadraticSolver>)(() => s)).ToList(), mode, logger) { }
 
     public ParallelCombinatorialQuadraticSolver(
-        IReadOnlyList<Func<IQuadraticSolver>> solverFactories,
+        IReadOnlyList<Func<IAbstractQuadraticSolver>> solverFactories,
         ParallelCombinatorialMode mode = ParallelCombinatorialMode.Best,
         ILogger? logger = null) {
-        _solverFactories = solverFactories;
+        _solverFactories = solverFactories.ToArray();
         _mode = mode;
         _logger = logger ?? NullLogger.Instance;
-        Name = $"ParallelCombinatorialQuadratic({string.Join(",", _solverFactories.Select(f => f().Name))})";
+        _name = new Lazy<string>(() => $"ParallelCombinatorialQuadratic({string.Join(",", _solverFactories.Select(f => f().Name))})");
     }
 
-    public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <summary>并行求解并保留所有尝试 / Solve in parallel and retain every attempt.</summary>
+    /// <remarks>等待所有尝试结束；First 按工厂顺序选择。Best 在所有候选目标均为有限值时比较，否则退回 First。调用方须保证模型不被修改或关闭，并保证后端和回调可并发使用。 / Waits for every attempt; First uses factory order. Best compares only when all candidate objectives are finite, otherwise it falls back to First. The caller must keep the model unchanged and open, and ensure backends and callbacks are concurrency-safe.</remarks>
+    /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>组合报告或校验错误 / Combinatorial report or validation error.</returns>
+    public Task<Result<CombinatorialSolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveCombinatorialReportAsync(
         IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default) {
-        var tasks = _solverFactories
-            .Select(f => SafeInvokeAsync(() => f().InvokeAsync(model, solvingStatusCallBack, cancellationToken)))
-            .ToList();
+        CancellationToken cancellationToken = default) =>
+        ParallelCombinatorialReportSupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            mode: _mode,
+            category: () => model.Objective.Category,
+            name: solver => solver.Name,
+            solve: solver => solver.InvokeReportAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-        return _mode == ParallelCombinatorialMode.First
-            ? await FirstSuccessAsync(tasks)
-            : await BestSuccessAsync(tasks);
-    }
+    /// <summary>并行求解并保留解池和尝试 / Solve in parallel and retain solution pools and attempts.</summary>
+    /// <remarks>选择与生命周期规则同普通报告入口。 / Selection and lifetime rules match the ordinary report entry.</remarks>
+    /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
+    /// <param name="solutionAmount">每个后端的解池容量 / Solution pool capacity per backend.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>组合报告或校验错误 / Combinatorial report or validation error.</returns>
+    public Task<Result<CombinatorialSolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveCombinatorialReportAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        ParallelCombinatorialReportSupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            mode: _mode,
+            category: () => model.Objective.Category,
+            name: solver => solver.Name,
+            solve: solver => solver.InvokeReportAsync(
+                model: model,
+                solutionAmount: solutionAmount,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-    public async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <inheritdoc/>
+    /// <remarks>等待所有尝试；模型不得并发修改或关闭，后端和回调须支持并发。 / Waits for all attempts; do not mutate or close the model concurrently, and ensure backends and callbacks are concurrency-safe.</remarks>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        (await SolveCombinatorialReportAsync(
+            model: model,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken)).Map(SerialCombinatorialReportSupport.ToTerminalReport);
+
+    /// <inheritdoc/>
+    /// <remarks>等待所有尝试；模型不得并发修改或关闭，后端和回调须支持并发。 / Waits for all attempts; do not mutate or close the model concurrently, and ensure backends and callbacks are concurrency-safe.</remarks>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        (await SolveCombinatorialReportAsync(
+            model: model,
+            solutionAmount: solutionAmount,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken)).Map(SerialCombinatorialReportSupport.ToTerminalReport);
+
+    /// <inheritdoc/>
+    /// <remarks>等待所有已调度后端，模型不得并发修改或关闭。 / Waits for all scheduled backends; do not mutate or close the model concurrently.</remarks>
+    public Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        CombinatorialLegacySupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            mode: _mode,
+            category: () => model.Objective.Category,
+            solve: solver => solver.InvokeAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            describe: CombinatorialLegacySupport.Describe,
+            logger: _logger,
+            cancellationToken: cancellationToken);
+
+    /// <summary>求解二次模型并保留原始 IIS 输出 / Solve a quadratic model and retain the original IIS output.</summary>
+    /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="iisConfig">IIS 配置 / IIS configuration.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>所选输出或错误 / Selected output or error.</returns>
+    public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         QuadraticTetradModel model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         IisConfig? iisConfig = null,
-        CancellationToken cancellationToken = default) {
-        var tasks = _solverFactories
-            .Select(f => SafeInvokeSolverOutputAsync(() => f().InvokeAsync(model, solvingStatusCallBack, iisConfig, cancellationToken)))
-            .ToList();
+        CancellationToken cancellationToken = default) => InvokeAsync(
+            model: (IQuadraticTetradModelView)model,
+            solvingStatusCallBack: solvingStatusCallBack,
+            iisConfig: iisConfig,
+            cancellationToken: cancellationToken);
 
-        return _mode == ParallelCombinatorialMode.First
-            ? await FirstSuccessAsync(tasks)
-            : await BestSuccessAsync(tasks);
-    }
-
-    public async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <inheritdoc/>
+    /// <remarks>保留所选后端原始输出；等待所有已调度后端。 / Preserves the selected backend output and waits for all scheduled backends.</remarks>
+    public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack,
         IisConfig? iisConfig,
-        CancellationToken cancellationToken = default) {
-        var tasks = _solverFactories
-            .Select(f => SafeInvokeSolverOutputAsync(() => f().InvokeAsync(model, solvingStatusCallBack, iisConfig, cancellationToken)))
-            .ToList();
+        CancellationToken cancellationToken = default) =>
+        CombinatorialLegacySupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            mode: _mode,
+            category: () => model.Objective.Category,
+            solve: solver => solver.InvokeAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                iisConfig: iisConfig,
+                cancellationToken: cancellationToken),
+            describe: CombinatorialLegacySupport.Describe,
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-        return _mode == ParallelCombinatorialMode.First
-            ? await FirstSuccessAsync(tasks)
-            : await BestSuccessAsync(tasks);
-    }
-
+    /// <inheritdoc/>
+    /// <remarks>保留所选后端的解池；等待所有已调度后端。 / Preserves the selected backend's pool and waits for all scheduled backends.</remarks>
     public Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
         IQuadraticTetradModelView model,
         ulong solutionAmount,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default)
-        => _solverFactories[0]().InvokeAsync(model, solutionAmount, solvingStatusCallBack, cancellationToken);
+        CancellationToken cancellationToken = default) =>
+        CombinatorialLegacySupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            mode: _mode,
+            category: () => model.Objective.Category,
+            solve: solver => solver.InvokeAsync(
+                model: model,
+                solutionAmount: solutionAmount,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            describe: CombinatorialLegacySupport.Describe,
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-    public Task<QuadraticTetradModel> DumpAsync(
+    /// <inheritdoc/>
+    /// <remarks>只使用首个工厂，不重试其他后端。 / Uses only the first factory; does not retry other backends.</remarks>
+    public Task<Result<QuadraticTetradModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
         QuadraticMechanismModel<Flt64> model,
-        CancellationToken cancellationToken = default)
-        => _solverFactories[0]().DumpAsync(model, cancellationToken);
+        CancellationToken cancellationToken = default) =>
+        CombinatorialDumpSupport.DumpAsync(
+            factories: _solverFactories,
+            dump: solver => solver.DumpAsync(model, cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
+    /// <inheritdoc/>
+    /// <remarks>只使用首个工厂，不重试其他后端。 / Uses only the first factory; does not retry other backends.</remarks>
     public Task<Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
         QuadraticMetaModel<Flt64> model,
         RegistrationStatusCallBack? registrationStatusCallBack,
         MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
-        CancellationToken cancellationToken = default)
-        => _solverFactories[0]().DumpAsync(model, registrationStatusCallBack, dumpingStatusCallBack, cancellationToken);
+        CancellationToken cancellationToken = default) =>
+        CombinatorialDumpSupport.DumpAsync(
+            factories: _solverFactories,
+            dump: solver => solver.DumpAsync(
+                model: model,
+                registrationStatusCallBack: registrationStatusCallBack,
+                dumpingStatusCallBack: dumpingStatusCallBack,
+                cancellationToken: cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-    private static async Task<Result<T, ErrorCode, Error<ErrorCode>>> FirstSuccessAsync<T>(IEnumerable<Task<Result<T, ErrorCode, Error<ErrorCode>>>> tasks) where T : class {
-        using var cts = new CancellationTokenSource();
-        var taskList = tasks.ToList();
-        var pending = new List<Task<Result<T, ErrorCode, Error<ErrorCode>>>>(taskList);
-        try {
-            while (pending.Count > 0) {
-                Task<Result<T, ErrorCode, Error<ErrorCode>>> completed = await Task.WhenAny(pending);
-                pending.Remove(completed);
-                Result<T, ErrorCode, Error<ErrorCode>> result = await completed;
-                if (result is Ok<T, ErrorCode, Error<ErrorCode>>) { cts.Cancel(); return result; }
-            }
-        }
-        catch (OperationCanceledException) { }
-        return new Failed<T, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.SolverNotFound, "No solver succeeded"));
-    }
-
-    private static async Task<Result<T, ErrorCode, Error<ErrorCode>>> BestSuccessAsync<T>(IEnumerable<Task<Result<T, ErrorCode, Error<ErrorCode>>>> tasks) where T : class {
-        Result<T, ErrorCode, Error<ErrorCode>>[] results = await Task.WhenAll(tasks);
-        var success = results.OfType<Ok<T, ErrorCode, Error<ErrorCode>>>().Select(o => o.Value).ToList();
-        if (success.Count == 0) {
-            return new Failed<T, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.SolverNotFound, "No solver succeeded"));
-        }
-
-        return new Ok<T, ErrorCode, Error<ErrorCode>>(success[0]);
-    }
-
-    private async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> SafeInvokeAsync(Func<Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>>> solve) {
-        try { return await solve(); }
-        catch (Exception e) { _logger.LogError(e, "parallel quadratic solver threw"); return new Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>(ErrorCode.OREngineSolvingException); }
-    }
-
-    private async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> SafeInvokeSolverOutputAsync(Func<Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>>> solve) {
-        try { return await solve(); }
-        catch (Exception e) { _logger.LogError(e, "parallel quadratic solver threw"); return new Failed<SolverOutput, ErrorCode, Error<ErrorCode>>(ErrorCode.OREngineSolvingException); }
-    }
 }
 
 /// <summary>
 /// 串行组合二次求解器 / Serial combinatorial quadratic solver.
 /// </summary>
-public sealed class SerialCombinatorialQuadraticSolver : IQuadraticSolver {
-    private readonly IReadOnlyList<Func<IQuadraticSolver>> _solverFactories;
+public sealed class SerialCombinatorialQuadraticSolver : IAbstractQuadraticSolver {
+    private readonly IReadOnlyList<Func<IAbstractQuadraticSolver>> _solverFactories;
     private readonly ILogger _logger;
+    private readonly IReadOnlySet<ErrorCode> _stopCodes;
+    private readonly Lazy<string> _name;
 
-    public string Name { get; }
-    public SolverConfig Config => _solverFactories[0]().Config;
-
+    public string Name => _name.Value;
+    /// <summary>创建串行二次组合器 / Create a serial quadratic combinator.</summary>
+    /// <param name="solvers">按顺序尝试的求解器 / Solvers attempted in order.</param>
+    /// <param name="logger">异常记录器 / Exception logger.</param>
+    /// <param name="stopCodes">停止重试的错误码；默认不可行或无界 / Stop codes, defaulting to infeasible or unbounded.</param>
     public SerialCombinatorialQuadraticSolver(
-        IEnumerable<IQuadraticSolver> solvers, ILogger? logger = null)
-        : this(solvers.Select(s => (Func<IQuadraticSolver>)(() => s)).ToList(), logger) { }
+        IEnumerable<IAbstractQuadraticSolver> solvers,
+        ILogger? logger = null,
+        IReadOnlySet<ErrorCode>? stopCodes = null)
+        : this(
+            solverFactories: solvers.Select(s => (Func<IAbstractQuadraticSolver>)(() => s)).ToList(),
+            logger: logger,
+            stopCodes: stopCodes) { }
 
+    /// <summary>使用工厂创建串行二次组合器 / Create a serial quadratic combinator from factories.</summary>
+    /// <param name="solverFactories">按顺序调用的工厂 / Factories invoked in order.</param>
+    /// <param name="logger">异常记录器 / Exception logger.</param>
+    /// <param name="stopCodes">停止重试的错误码；默认不可行或无界 / Stop codes, defaulting to infeasible or unbounded.</param>
     public SerialCombinatorialQuadraticSolver(
-        IReadOnlyList<Func<IQuadraticSolver>> solverFactories, ILogger? logger = null) {
-        _solverFactories = solverFactories;
+        IReadOnlyList<Func<IAbstractQuadraticSolver>> solverFactories,
+        ILogger? logger = null,
+        IReadOnlySet<ErrorCode>? stopCodes = null) {
+        _solverFactories = solverFactories.ToArray();
         _logger = logger ?? NullLogger.Instance;
-        Name = $"SerialCombinatorialQuadratic({string.Join(",", _solverFactories.Select(f => f().Name))})";
+        _stopCodes = new HashSet<ErrorCode>(stopCodes ?? SerialCombinatorialReportSupport.DefaultStopCodes);
+        _name = new Lazy<string>(() => $"SerialCombinatorialQuadratic({string.Join(",", _solverFactories.Select(f => f().Name))})");
     }
 
-    public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <summary>串行求解并保留所有尝试 / Solve serially and retain every attempt.</summary>
+    /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>组合报告或校验错误 / Combinatorial report or validation error.</returns>
+    public Task<Result<CombinatorialSolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveCombinatorialReportAsync(
         IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default) {
-        foreach (Func<IQuadraticSolver> factory in _solverFactories) {
-            try {
-                Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result = await factory().InvokeAsync(model, solvingStatusCallBack, cancellationToken);
-                if (result is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>) {
-                    return result;
-                }
-            }
-            catch (Exception e) { _logger.LogError(e, "serial quadratic solver threw"); }
-        }
-        return new Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.SolverNotFound, "No solver succeeded"));
-    }
+        CancellationToken cancellationToken = default) =>
+        SerialCombinatorialReportSupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            stopCodes: _stopCodes,
+            name: solver => solver.Name,
+            solve: solver => solver.InvokeReportAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-    public async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <summary>串行求解并保留解池和尝试 / Solve serially and retain the solution pool and attempts.</summary>
+    /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
+    /// <param name="solutionAmount">解池容量 / Solution pool capacity.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>组合报告或校验错误 / Combinatorial report or validation error.</returns>
+    public Task<Result<CombinatorialSolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveCombinatorialReportAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        SerialCombinatorialReportSupport.SolveAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            stopCodes: _stopCodes,
+            name: solver => solver.Name,
+            solve: solver => solver.InvokeReportAsync(
+                model: model,
+                solutionAmount: solutionAmount,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
+
+    /// <inheritdoc/>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        (await SolveCombinatorialReportAsync(
+            model: model,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken)).Map(SerialCombinatorialReportSupport.ToTerminalReport);
+
+    /// <inheritdoc/>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        (await SolveCombinatorialReportAsync(
+            model: model,
+            solutionAmount: solutionAmount,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken)).Map(SerialCombinatorialReportSupport.ToTerminalReport);
+
+    /// <inheritdoc/>
+    public Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        CombinatorialLegacySupport.SolveSerialAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            stopCodes: _stopCodes,
+            solve: solver => solver.InvokeAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            describe: CombinatorialLegacySupport.Describe,
+            logger: _logger,
+            cancellationToken: cancellationToken);
+
+    /// <summary>求解二次模型并保留原始 IIS 输出 / Solve a quadratic model and retain the original IIS output.</summary>
+    /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="iisConfig">IIS 配置 / IIS configuration.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>原始输出或错误 / Original output or error.</returns>
+    public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         QuadraticTetradModel model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         IisConfig? iisConfig = null,
-        CancellationToken cancellationToken = default) {
-        foreach (Func<IQuadraticSolver> factory in _solverFactories) {
-            try {
-                Result<SolverOutput, ErrorCode, Error<ErrorCode>> result = await factory().InvokeAsync(model, solvingStatusCallBack, iisConfig, cancellationToken);
-                if (result is Ok<SolverOutput, ErrorCode, Error<ErrorCode>>) {
-                    return result;
-                }
-            }
-            catch (Exception e) { _logger.LogError(e, "serial quadratic solver threw"); }
-        }
-        return new Failed<SolverOutput, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.SolverNotFound, "No solver succeeded"));
-    }
+        CancellationToken cancellationToken = default) => InvokeAsync(
+            model: (IQuadraticTetradModelView)model,
+            solvingStatusCallBack: solvingStatusCallBack,
+            iisConfig: iisConfig,
+            cancellationToken: cancellationToken);
 
-    public async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <inheritdoc/>
+    /// <remarks>保留终态或首个非终态原始诊断；不生成 IIS。 / Retains the terminal or first nonterminal raw diagnostic; does not generate an IIS.</remarks>
+    public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack,
         IisConfig? iisConfig,
-        CancellationToken cancellationToken = default) {
-        foreach (Func<IQuadraticSolver> factory in _solverFactories) {
-            try {
-                Result<SolverOutput, ErrorCode, Error<ErrorCode>> result = await factory().InvokeAsync(model, solvingStatusCallBack, iisConfig, cancellationToken);
-                if (result is Ok<SolverOutput, ErrorCode, Error<ErrorCode>>) {
-                    return result;
-                }
-            }
-            catch (Exception e) { _logger.LogError(e, "serial quadratic solver threw"); }
-        }
-        return new Failed<SolverOutput, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.SolverNotFound, "No solver succeeded"));
-    }
+        CancellationToken cancellationToken = default) =>
+        CombinatorialLegacySupport.SolveSerialAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            stopCodes: _stopCodes,
+            solve: solver => solver.InvokeAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                iisConfig: iisConfig,
+                cancellationToken: cancellationToken),
+            describe: CombinatorialLegacySupport.Describe,
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
+    /// <inheritdoc/>
     public Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
-        IQuadraticTetradModelView model, ulong solutionAmount,
-        SolvingStatusCallBack? solvingStatusCallBack = null, CancellationToken cancellationToken = default)
-        => _solverFactories[0]().InvokeAsync(model, solutionAmount, solvingStatusCallBack, cancellationToken);
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        CombinatorialLegacySupport.SolveSerialAsync(
+            validation: model.ValidateIdentity(),
+            factories: _solverFactories,
+            stopCodes: _stopCodes,
+            solve: solver => solver.InvokeAsync(
+                model: model,
+                solutionAmount: solutionAmount,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken),
+            describe: CombinatorialLegacySupport.Describe,
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
-    public Task<QuadraticTetradModel> DumpAsync(QuadraticMechanismModel<Flt64> model, CancellationToken cancellationToken = default)
-        => _solverFactories[0]().DumpAsync(model, cancellationToken);
+    /// <inheritdoc/>
+    /// <remarks>只使用首个工厂，不重试其他后端。 / Uses only the first factory; does not retry other backends.</remarks>
+    public Task<Result<QuadraticTetradModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        QuadraticMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default) =>
+        CombinatorialDumpSupport.DumpAsync(
+            factories: _solverFactories,
+            dump: solver => solver.DumpAsync(model, cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 
+    /// <inheritdoc/>
+    /// <remarks>只使用首个工厂，不重试其他后端。 / Uses only the first factory; does not retry other backends.</remarks>
     public Task<Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
-        QuadraticMetaModel<Flt64> model, RegistrationStatusCallBack? registrationStatusCallBack,
-        MechanismModelDumpingStatusCallBack? dumpingStatusCallBack, CancellationToken cancellationToken = default)
-        => _solverFactories[0]().DumpAsync(model, registrationStatusCallBack, dumpingStatusCallBack, cancellationToken);
+        QuadraticMetaModel<Flt64> model,
+        RegistrationStatusCallBack? registrationStatusCallBack,
+        MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
+        CancellationToken cancellationToken = default) =>
+        CombinatorialDumpSupport.DumpAsync(
+            factories: _solverFactories,
+            dump: solver => solver.DumpAsync(
+                model: model,
+                registrationStatusCallBack: registrationStatusCallBack,
+                dumpingStatusCallBack: dumpingStatusCallBack,
+                cancellationToken: cancellationToken),
+            logger: _logger,
+            cancellationToken: cancellationToken);
 }

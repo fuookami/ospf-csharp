@@ -49,7 +49,7 @@ public abstract record ConstraintRelation {
             : Results.Failed<ConstraintRelation>(
                 new Err<ErrorCode>(
                     ErrorCode.IllegalArgument,
-                    $"No matched constraint sign for comparison: {comparison}."));
+                    $"不支持的约束比较符：{comparison} / Unsupported constraint comparison: {comparison}."));
 
     private sealed record LessEqualRelation : ConstraintRelation {
         public override ConstraintRelation Reverse => GreaterEqual;

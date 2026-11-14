@@ -12,6 +12,10 @@
     <PackageReference Include="FluentAssertions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Framework\Framework.csproj" />
+    <ProjectReference Include="..\\..\\src\\Framework\\Framework.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RemoteFixtures\\*.json" CopyToOutputDirectory="PreserveNewest" Link="remote-fixtures\\%(Filename)%(Extension)" />
+    <None Include="RemoteFixtures\\*.txt" CopyToOutputDirectory="PreserveNewest" Link="remote-fixtures\\%(Filename)%(Extension)" />
   </ItemGroup>
 </Project>

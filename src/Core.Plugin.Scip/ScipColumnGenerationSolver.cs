@@ -21,13 +21,8 @@ using System.Threading.Tasks;
 namespace Fuookami.Ospf.Core.Plugin.Scip;
 
 /// <summary>
-/// SCIP 列生成求解器实现（桩）。
-/// SCIP column generation solver implementation (structural stub).
-///
-/// 使用 SCIP 求解器实现列生成策略，支持 MILP 求解、多解求解和 LP 松弛求解。
-/// 运行时需加载 SCIP 托管 DLL，否则返回 OREngineEnvironmentLost。
-/// Implements column generation strategy using SCIP solver. Requires SCIP managed DLL at runtime;
-/// returns OREngineEnvironmentLost otherwise.
+/// SCIP 列生成求解器入口，LP 模式提供行对偶与强对偶校验回退。
+/// SCIP column-generation entry; the LP mode provides row duals with a strong-duality fallback.
 /// </summary>
 public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerationSolver {
     /// <summary>求解器名称 / Solver name.</summary>
@@ -41,7 +36,7 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public ScipColumnGenerationSolver(SolverConfig? config = null) {
-        Config = config ?? new VendorSolverConfig();
+        Config = config ?? new SolverConfig();
     }
 
     /// <summary>
@@ -59,6 +54,11 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
         bool toLogModel = false,
         RegistrationStatusCallBack? registrationStatusCallBack = null,
         SolvingStatusCallBack? solvingStatusCallBack = null) {
+        if (toLogModel) {
+            return Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持 SCIP 模型日志导出 / SCIP model logging export is not yet supported"));
+        }
         Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
             await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
         if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>) {
@@ -70,7 +70,7 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Bind(_ => solveResult);
         }
 
         return solveResult;
@@ -106,6 +106,7 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
     /// <summary>
     /// 求解 MILP 主问题并获取多个解 / Solve MILP master problem and obtain multiple solutions.
     /// </summary>
+    /// <remarks>返回的列表以主解开头，即使数量不超过 1；附加解可能不足请求数量且不保证完整枚举。所有向量按机制模型列顺序排列。 / The list starts with the main solution even when the amount is at most 1; alternatives may be fewer than requested and are not an exhaustive enumeration. All vectors follow mechanism-model column order.</remarks>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
     /// <param name="amount">期望解的数量 / Desired number of solutions.</param>
@@ -120,26 +121,48 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
         bool toLogModel = false,
         RegistrationStatusCallBack? registrationStatusCallBack = null,
         SolvingStatusCallBack? solvingStatusCallBack = null) {
+        if (toLogModel) {
+            return Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持 SCIP 模型日志导出 / SCIP model logging export is not yet supported"));
+        }
+        if (amount > int.MaxValue) {
+            return Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "解池容量超出 SCIP 整数范围 / Solution pool capacity exceeds the SCIP integer range"));
+        }
         Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
             await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
         if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>) {
             return PropagateModelResult<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(mechanismResult);
         }
-
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         ScipLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
-
-        using (triadModel) {
-            Result<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)triadModel, amount, solvingStatusCallBack);
-
-            if (solveResult is Ok<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Item1.Solution.Values);
-            }
-
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult = await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(_ => Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>> solveResult = await solver.InvokeAsync(
+            model: triadModel,
+            solutionAmount: amount,
+            solvingStatusCallBack: solvingStatusCallBack);
+        if (solveResult is not Ok<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>> ok) {
             return solveResult;
         }
+        var pool = new List<List<Flt64>>();
+        foreach (IReadOnlyList<Flt64> values in new[] { ok.Value.Output.Solution.Values }.Concat(ok.Value.Solutions)) {
+            Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> restored = mechanismModel.RestoreSolverSolution(triadModel, values);
+            if (!restored.IsOk) {
+                return restored.Bind<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(_ => Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException)));
+            }
+            pool.Add(restored.Value.ToList());
+        }
+        return mechanismModel.ApplySolverSolution(triadModel, ok.Value.Output.Solution.Values).Map(_ => (
+            ok.Value.Output with { Solution = new Solution<Flt64>(Array.AsReadOnly(pool[0].ToArray())) },
+            pool));
     }
 
     /// <summary>
@@ -162,9 +185,11 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
     /// <summary>
     /// 求解 LP 松弛问题（含对偶解提取）/ Solve LP relaxation problem (with dual solution extraction).
     ///
-    /// 注意：桩求解器无法提取对偶解，返回空字典。
-    /// Note: stub solver cannot extract duals; returns empty dictionary.
+    /// LP 以关闭预处理与启发式的单线程模式求解，逐行读取原生对偶解；当强对偶等式不成立时改求解显式对偶模型。
+    /// The LP is solved in single-threaded mode with presolving and heuristics off, and row duals are read natively;
+    /// when the strong-duality equality fails, the explicit dual model is solved instead.
     /// </summary>
+    /// <remarks>无 incumbent 时返回失败而不是空对偶；行到机制约束的映射按行索引完成，缺少 Origin 的行使用占位键。 / Missing incumbents fail instead of returning empty duals; rows map to mechanism constraints by index, and rows without an Origin get a placeholder key.</remarks>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
     /// <param name="toLogModel">是否记录模型日志 / Whether to log model.</param>
@@ -177,41 +202,70 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
         bool toLogModel = false,
         RegistrationStatusCallBack? registrationStatusCallBack = null,
         SolvingStatusCallBack? solvingStatusCallBack = null) {
+        if (toLogModel) {
+            return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持 SCIP 模型日志导出 / SCIP model logging export is not yet supported"));
+        }
         Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
             await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
-        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>) {
+        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismOk) {
             return PropagateModelResult<Framework.Solver.IColumnGenerationSolver.LpResult>(mechanismResult);
         }
-
-        using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
-
-        // Stub solver cannot extract duals; return empty dual dictionary
-        var dualSolution = new Dictionary<MathConstraint, Flt64>();
+        using LinearMechanismModel<Flt64> mechanismModel = mechanismOk.Value;
+        MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
 
         ScipLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
-        LinearTriadModel relaxedModel = RelaxToLP(triadModel);
-
-        using (triadModel)
-        using (relaxedModel) {
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)relaxedModel, solvingStatusCallBack);
-
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                return Results.Ok(new Framework.Solver.IColumnGenerationSolver.LpResult(ok.Value, dualSolution));
-            }
-
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(f.Error);
-            }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-            }
-
-            return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult = await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IColumnGenerationSolver.LpResult>(_ => Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(
+                new Err<ErrorCode>(
+                    ErrorCode.OREngineModelingException,
+                    "线性模型转换结果无效 / Invalid linear model conversion result")));
         }
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> relaxation = triadModel.RelaxToContinuous();
+        if (relaxation is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> relaxOk) {
+            return relaxation.Bind<Framework.Solver.IColumnGenerationSolver.LpResult>(_ => Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(
+                new Err<ErrorCode>(
+                    ErrorCode.OREngineModelingException,
+                    "松弛模型转换结果无效 / Invalid relaxation result")));
+        }
+        using LinearTriadModel lpModel = relaxOk.Value;
+
+        Result<ScipLpOutcome, ErrorCode, Error<ErrorCode>> lp = await solver.InvokeLpAsync(
+            model: lpModel,
+            solvingStatusCallBack: solvingStatusCallBack);
+        if (lp is not Ok<ScipLpOutcome, ErrorCode, Error<ErrorCode>> lpOk) {
+            return ScipLpDualSupport.Propagate<Framework.Solver.IColumnGenerationSolver.LpResult, ScipLpOutcome>(
+                lp, "SCIP LP 求解失败 / SCIP LP solving failed");
+        }
+        ScipLpOutcome outcome = lpOk.Value;
+        if (outcome.Output is not { } output) {
+            return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "SCIP LP 未找到 incumbent，不能回填解或生成定价对偶 / " +
+                    "SCIP LP produced no incumbent; solution values and pricing duals are unavailable " +
+                    $"(problemStatus={outcome.Report.ProblemStatus}, terminationReason={outcome.Report.TerminationReason})"));
+        }
+
+        Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> rowDuals = await ScipLpDualSupport.RowDualsAsync(
+            model: lpModel,
+            outcome: outcome,
+            dualSolver: new ScipLinearSolver(Config),
+            cancellationToken: default);
+        if (rowDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+            return ScipLpDualSupport.Propagate<Framework.Solver.IColumnGenerationSolver.LpResult, IReadOnlyList<Flt64>>(
+                rowDuals, "SCIP 对偶提取失败 / SCIP dual extraction failed");
+        }
+        IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+            MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+
+        return mechanismModel.ApplySolverSolution(
+            matrix: triadModel,
+            solvedMatrix: lpModel,
+            solution: output.Solution.Values)
+            .Map(_ => new Framework.Solver.IColumnGenerationSolver.LpResult(output, dualSolution));
     }
 
     /// <summary>
@@ -259,7 +313,14 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         ScipLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
@@ -285,29 +346,6 @@ public sealed class ScipColumnGenerationSolver : Framework.Solver.IColumnGenerat
             Time: output.Time,
             PossibleBestObj: output.PossibleBestObj,
             Gap: output.Gap);
-    }
-
-    /// <summary>
-    /// 将三元组模型松弛为 LP / Relax a triad model to LP (all variables become continuous).
-    /// </summary>
-    private static LinearTriadModel RelaxToLP(LinearTriadModel model) {
-        var relaxedVars = new List<ModelViewVariable>(model.Variables.Count);
-        foreach (ModelViewVariable v in model.Variables) {
-            relaxedVars.Add(new ModelViewVariable(
-                v.Index,
-                v.LowerBound,
-                v.UpperBound,
-                Continuous.Instance,
-                v.Name,
-                v.InitialResult,
-                v.Slack));
-        }
-
-        return new LinearTriadModel(
-            relaxedVars,
-            (LinearConstraintBatch)model.Constraints,
-            model.Objective,
-            model.Name);
     }
 
     /// <summary>

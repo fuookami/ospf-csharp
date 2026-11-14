@@ -223,13 +223,28 @@ public class ColumnGenerationAlgorithmTest {
 
     // ===== Helpers =====
 
+    /// <summary>
+    /// 构造一层，边长由 `id` 决定 / Build a layer whose edge length is derived from `id`.
+    /// </summary>
+    /// <param name="id">用于区分几何的标识 / The identifier that distinguishes the geometry.</param>
+    /// <returns>层 / The layer.</returns>
+    /// <remarks>
+    /// **两个不同的列必须在几何上真的不同**。这一版之前两个层都是 3×3×3、只差一个从未被使用的 `id` 参数，
+    /// 于是"追加一列"实际上追加了一个**重复列**——而当时的去重因为哈希不稳定而失效，重复列被当成新列收了进去，
+    /// 判据才一直通过。修好哈希契约后去重开始正常工作，这条判据立刻暴露出它依赖的是失效行为。
+    ///
+    /// **Two distinct columns must actually differ geometrically.** Before this version both layers were 3×3×3 and differed only by an unused `id` parameter, so
+    /// "append a column" appended a **duplicate** — and deduplication was silently broken by the unstable hash, so the duplicate was accepted as new and the criterion
+    /// kept passing. Once the hash contract was fixed, deduplication started working and this criterion immediately showed it had depended on the broken behaviour.
+    /// </remarks>
     private static BinLayer MakeLayer(string id) {
+        double edge = 3.0 + (id.Length % 3);
         return new BinLayer {
             Iteration = 0,
             Shape = new Container3Shape<FltX>(
-                new Quantity<FltX>(new FltX(3.0), SIBaseUnits.Meter),
-                new Quantity<FltX>(new FltX(3.0), SIBaseUnits.Meter),
-                new Quantity<FltX>(new FltX(3.0), SIBaseUnits.Meter)),
+                new Quantity<FltX>(new FltX(edge), SIBaseUnits.Meter),
+                new Quantity<FltX>(new FltX(edge), SIBaseUnits.Meter),
+                new Quantity<FltX>(new FltX(edge), SIBaseUnits.Meter)),
             Units = Array.Empty<QuantityPlacement3<Item, FltX>>()
         };
     }

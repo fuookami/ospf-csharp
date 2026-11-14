@@ -6,21 +6,37 @@ using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 using Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Quantities.Quantity;
-using Fuookami.Ospf.Quantities.Unit;
+using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 
 namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// <summary>
-/// DFS 方案生成器，栈式深度优先搜索枚举多产品组合方案 / DFS generator: stack-based depth-first search for multi-product combination plans.
+/// DFS 方案生成器，搜索时做剪枝约束检查 / DFS generator that checks pruning constraints while searching.
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
-internal sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<CuttingPlan<V>, GenerationInput<V>>
+/// <remarks>
+/// 与 `FullSumGenerator` 的**唯一差别**：本生成器在**扩展分支时**检查剪枝约束
+/// （`ICuttingPlanConstraint.IsPruning == true` 的那些），而全和生成器只在叶节点检查。
+///
+/// 这个差别来自基线：`DFSGenerator.dfsSearch` 在每个新切片压栈前调用 `satisfiesPruningConstraints`，
+/// `FullSumGenerator.fullSumSearch` 没有这一步。
+///
+/// **搜索逻辑本身完全相同**，所以这里不重复实现，而是把 `applyPruningConstraints` 传 `true`。
+///
+/// **The only difference from `FullSumGenerator`**: this generator checks pruning constraints **while expanding** (`ICuttingPlanConstraint.IsPruning == true`),
+/// whereas the full-sum generator checks only at leaves.
+///
+/// That difference comes from the baseline: `DFSGenerator.dfsSearch` calls `satisfiesPruningConstraints` before pushing each new slice, and
+/// `FullSumGenerator.fullSumSearch` does not.
+///
+/// **The search logic itself is identical**, so it is not reimplemented here; instead `applyPruningConstraints` is passed as `true`.
+/// </remarks>
+public sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<CuttingPlan<V>, GenerationInput<V>>
     where V : struct, IComparable<V> {
     private readonly IReadOnlyList<ICuttingPlanConstraint<V>> _constraints;
     private readonly long _maxPlans;
@@ -29,20 +45,9 @@ internal sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
     private readonly bool _enableDominancePruning;
     private readonly DominanceStrategy _dominanceStrategy;
 
-    private readonly IReadOnlyList<ICuttingPlanConstraint<V>> _pruningConstraints;
-    private readonly IReadOnlyList<ICuttingPlanConstraint<V>> _leafConstraints;
-    private readonly UInt64? _maxKnifeCount;
-    private readonly UInt64? _minKnifeCount;
-
     /// <summary>
     /// 创建 DFS 生成器 / Create DFS generator.
     /// </summary>
-    /// <param name="constraints">约束列表 / Constraint list.</param>
-    /// <param name="maxPlans">最大方案数 / Max plans.</param>
-    /// <param name="timeoutMs">超时限制（毫秒）/ Timeout limit (milliseconds).</param>
-    /// <param name="parallelism">并行度 / Parallelism.</param>
-    /// <param name="enableDominancePruning">是否启用 dominance 剪枝 / Enable dominance pruning.</param>
-    /// <param name="dominanceStrategy">dominance 策略 / Dominance strategy.</param>
     public DFSGenerator(
         IReadOnlyList<ICuttingPlanConstraint<V>> constraints,
         long maxPlans = 1000L,
@@ -56,15 +61,10 @@ internal sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
         _parallelism = global::System.Math.Max(1L, parallelism);
         _enableDominancePruning = enableDominancePruning;
         _dominanceStrategy = dominanceStrategy;
-
-        _pruningConstraints = constraints.Where(c => c.IsPruning).ToList();
-        _leafConstraints = constraints.Where(c => !c.IsPruning).ToList();
-        _maxKnifeCount = constraints.OfType<MaxKnifeCountConstraint<V>>().FirstOrDefault()?.Threshold;
-        _minKnifeCount = constraints.OfType<MinKnifeCountConstraint<V>>().FirstOrDefault()?.Threshold;
     }
 
     /// <summary>
-    /// 从 GenerationConstraints 创建 DFS 生成器 / Create DFS generator from GenerationConstraints.
+    /// 从 GenerationConstraints 创建 / Create from GenerationConstraints.
     /// </summary>
     public DFSGenerator(
         GenerationConstraints<V> constraints,
@@ -85,16 +85,34 @@ internal sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
     /// <inheritdoc/>
     public CuttingPlanGenerationReport<CuttingPlan<V>> GenerateWithReport(GenerationInput<V> input) {
         long startTime = Environment.TickCount64;
-        // planIndex removed — assigned but never used (CS0219)
         var collector = new GenerationCollector<CuttingPlan<V>>(
             maxPlans: _maxPlans,
             deadlineMs: _timeoutMs.HasValue ? startTime + _timeoutMs.Value : null,
             enableDominancePruning: _enableDominancePruning,
-            dominanceStrategy: _dominanceStrategy
+            dominanceStrategy: _dominanceStrategy,
+            // **把配置里的 dominance 覆盖喂给收集器**：钩子早就实现了，只是没人传。
+            // **Feed the configured dominance overrides to the collector**: the hook existed all along, nothing passed it.
+            dominanceAcceptOverride: GenerationOverrideResolution.Fold(input.DominanceAcceptOverrides),
+            candidateFilter: GenerationOverrideResolution.FoldCandidateFilters(input.CandidateFilters),
+            existingPlansForFilter: input.ExistingPlans,
+            crossContributionProjector: CrossContributionProjector.ForGenerator<V>()
         );
 
-        // Stub implementation: DFS search would go here
-        // Full implementation deferred to later phase
+        var widthIndex = GenerationWidthIndex<V>.FromDemands(
+            input.Demands,
+            demand => demand.Product.Id,
+            demand => demand.Product.Width,
+            demand => demand.Quantity.Unit
+        );
+
+        if (!widthIndex.IsEmpty) {
+            foreach (Material<V> material in input.Materials) {
+                if (collector.ShouldStop()) {
+                    break;
+                }
+                Search(material, input, widthIndex, collector);
+            }
+        }
 
         return new CuttingPlanGenerationReport<CuttingPlan<V>>(
             Plans: collector.Plans,
@@ -103,4 +121,33 @@ internal sealed class DFSGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
             }
         );
     }
+
+    /// <summary>
+    /// 对每个物料执行共享的求和搜索 / Run the shared sum search for each material.
+    /// </summary>
+    /// <param name="material">物料 / Material.</param>
+    /// <param name="input">生成输入 / Generation input.</param>
+    /// <param name="widthIndex">宽度索引 / Width index.</param>
+    /// <param name="collector">收集器 / Collector.</param>
+    /// <remarks>
+    /// **本类不自己实现搜索**：逻辑在 `GenerationSumSearch`，这里传 `applyPruningConstraints: true`
+    /// （DFS 在**扩展时**检查剪枝约束）。
+    ///
+    /// **This class does not implement the search**: the logic lives in `GenerationSumSearch`; this passes `applyPruningConstraints: true`
+    /// (DFS checks pruning constraints **while expanding**).
+    /// </remarks>
+    private void Search(
+        Material<V> material,
+        GenerationInput<V> input,
+        GenerationWidthIndex<V> widthIndex,
+        GenerationCollector<CuttingPlan<V>> collector) =>
+        GenerationSumSearch.Run(
+            material: material,
+            input: input,
+            widthIndex: widthIndex,
+            collector: collector,
+            constraints: _constraints,
+            planIdPrefix: "dfs",
+            applyPruningConstraints: true
+        );
 }

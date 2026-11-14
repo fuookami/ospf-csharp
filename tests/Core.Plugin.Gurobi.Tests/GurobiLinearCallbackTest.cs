@@ -37,7 +37,7 @@ public class GurobiLinearCallbackTest {
     [Fact]
     public void Callback_Class_Should_Exist() {
         // Verify the internal callback class is accessible via InternalsVisibleTo
-        Type type = typeof(GurobiLinearCallback);
+        Type type = typeof(GurobiSolveCallback);
         type.Should().NotBeNull();
         type.IsSealed.Should().BeTrue();
     }

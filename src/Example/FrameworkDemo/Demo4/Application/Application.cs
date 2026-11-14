@@ -1,5 +1,15 @@
 #nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Framework.GanttScheduling.Domain.BunchCompilation.Model;
+using Fuookami.Ospf.Framework.GanttScheduling.Domain.Task.Model;
+using Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
+using Fuookami.Ospf.Framework.Solver;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Service;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchGeneration;
@@ -9,16 +19,6 @@ using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Rule.Model;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Task.Model;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure.Dto;
-using Fuookami.Ospf.Framework.GanttScheduling.Domain.BunchCompilation.Model;
-using Fuookami.Ospf.Framework.GanttScheduling.Domain.Task.Model;
-using Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
-using Fuookami.Ospf.Framework.Solver;
-using Fuookami.Ospf.Math.Algebra.Number;
-using Fuookami.Ospf.Utils.Error;
-using Fuookami.Ospf.Utils.Functional;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional.Success, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>;
 
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Application;
@@ -50,15 +50,36 @@ public sealed class FlightRecoveryApplication {
     /// <summary>
     /// 执行航班恢复调度的端到端流程。
     /// Executes the end-to-end flight recovery scheduling flow.
+    /// 每次输入独立构建领域对象，不使用进程级注册池。
+    /// Domain objects are built per input without using the process-wide registries.
     /// </summary>
     /// <param name="input">输入数据 / Input data.</param>
     /// <returns>输出结果 / Output result.</returns>
-    public async Task<Result<Output, ErrorCode, Error<ErrorCode>>> RunAsync(Input input) {
+    public Task<Result<Output, ErrorCode, Error<ErrorCode>>> RunAsync(Input input) => RunAsync(input, null);
+
+    /// <summary>
+    /// 使用请求范围的领域数据执行航班恢复；不读取或修改进程级注册池。
+    /// Runs flight recovery with request-scoped domain data without using process-wide registries.
+    /// </summary>
+    /// <param name="input">问题标识和求解配置 / Problem identifier and solve configuration.</param>
+    /// <param name="domainData">已装配领域数据；为空时从输入构建 / Prepared domain data, or null to build it from the input.</param>
+    /// <returns>输出结果 / Output result.</returns>
+    /// <remarks>
+    /// 调用方须在求解期间保持传入的集合及领域对象不变，并负责隔离并发请求；编排可能设置飞机索引。
+    /// Callers must keep supplied collections and domain objects unchanged while solving and isolate concurrent requests; orchestration may set aircraft indices.
+    /// 仅校验基本引用和时间，尚不保证自定义领域数据能够完整建模或求解。
+    /// Only basic references and times are validated; custom domain data is not guaranteed to be fully modeled or solved.
+    /// </remarks>
+    public async Task<Result<Output, ErrorCode, Error<ErrorCode>>> RunAsync(Input input, DomainData? domainData) {
         // Step 1: Build domain objects from input
-        var domainData = BuildDomainData(input);
-        if (domainData is null) {
+        if (input is null) {
             return Results.Failed<Output>(new Err<ErrorCode>(
-                ErrorCode.IllegalArgument, "Failed to build domain data from input."));
+                ErrorCode.IllegalArgument, "输入不能为空。 / Input cannot be null."));
+        }
+        domainData ??= BuildDomainData(input);
+        if (domainData is null || !IsValidDomainData(domainData)) {
+            return Results.Failed<Output>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument, "领域数据无效或飞机可用性不一致。 / Domain data is invalid or aircraft usability is inconsistent."));
         }
 
         // Step 2: Initialize bunch generation context
@@ -127,6 +148,67 @@ public sealed class FlightRecoveryApplication {
         return Results.Ok(BuildOutput(ok.Value));
     }
 
+    private static bool IsValidDomainData(DomainData? data) {
+        if (data is null || data.TimeWindow is null || data.TimeWindow.Empty || data.Aircrafts is null ||
+            data.AircraftUsability is null || data.FlightTasks is null || data.OriginBunches is null) {
+            return false;
+        }
+        var aircraftByRegNo = new Dictionary<AircraftRegisterNumber, Aircraft>();
+        foreach (Aircraft? aircraft in data.Aircrafts) {
+            if (aircraft is null || aircraft.RegNo.No is null || aircraft.MinorType is null ||
+                aircraft.Capacity is null || aircraft.MinorType.Type is null ||
+                aircraft.MinorType.RouteFlyTime is null || aircraft.MinorType.ConnectionTime is null ||
+                !data.AircraftUsability.TryGetValue(aircraft, out AircraftUsability? usability) ||
+                usability is null || usability.Location is null ||
+                (usability.LastTask is not null &&
+                    (usability.LastTask is not FlightTask lastTask || !IsValidFlightTask(lastTask) || lastTask.Time is null)) ||
+                !ReferenceEquals(aircraft.ConfiguredUsability, usability)) {
+                return false;
+            }
+            if (aircraftByRegNo.TryGetValue(aircraft.RegNo, out Aircraft? existing) &&
+                !ReferenceEquals(existing, aircraft)) {
+                return false;
+            }
+            aircraftByRegNo[aircraft.RegNo] = aircraft;
+        }
+        foreach (FlightTask? task in data.FlightTasks) {
+            if (!IsValidFlightTask(task)) {
+                return false;
+            }
+        }
+        foreach (FlightTaskBunch? bunch in data.OriginBunches) {
+            if (bunch is null || bunch.Executor is null || bunch.Tasks is null ||
+                !aircraftByRegNo.TryGetValue(bunch.Executor.RegNo, out Aircraft? aircraft) ||
+                !ReferenceEquals(aircraft, bunch.Executor)) {
+                return false;
+            }
+            foreach (FlightTask? task in bunch.Tasks) {
+                if (!IsValidFlightTask(task)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private static bool IsValidFlightTask(FlightTask? task) {
+        if (task is null || task.Plan is null || task.Dep is null || task.Arr is null ||
+            task.DepBackup is null || task.ArrBackup is null || (task.Time is null && task.TimeWindow is null)) {
+            return false;
+        }
+        foreach (Airport? airport in task.DepBackup) {
+            if (airport is null) {
+                return false;
+            }
+        }
+        foreach (Airport? airport in task.ArrBackup) {
+            if (airport is null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /// <summary>
     /// 从输入构建域数据。
     /// Builds domain data from input.
@@ -141,11 +223,33 @@ public sealed class FlightRecoveryApplication {
 
         var aircrafts = new List<Aircraft>();
         var aircraftUsability = new Dictionary<Aircraft, AircraftUsability>();
+        var aircraftByRegNo = new Dictionary<AircraftRegisterNumber, Aircraft>();
+        var typesByCode = new Dictionary<AircraftTypeCode, AircraftType>();
+        var minorTypesByCode = new Dictionary<AircraftMinorTypeCode, AircraftMinorType>();
+        var airportsByIcao = new Dictionary<ICAO, Airport>();
+
+        if (input.Airports is not null) {
+            foreach (Input.AirportInput? airportInput in input.Airports) {
+                if (airportInput is null || airportInput.Icao is null || airportInput.Icao.Length != 4
+                    || !Enum.IsDefined(airportInput.Type ?? AirportType.Domestic)) {
+                    return null;
+                }
+                var icao = new ICAO(airportInput.Icao);
+                airportsByIcao.TryAdd(icao, new Airport(icao, airportInput.Type ?? AirportType.Domestic));
+            }
+        }
+
+        Airport GetAirport(ICAO icao) {
+            if (!airportsByIcao.TryGetValue(icao, out Airport? airport)) {
+                airport = new Airport(icao, AirportType.Domestic);
+                airportsByIcao.Add(icao, airport);
+            }
+            return airport;
+        }
 
         foreach (var acInput in input.Aircrafts) {
             var regNo = new AircraftRegisterNumber(acInput.RegNo);
-            var existing = Aircraft.Find(regNo);
-            if (existing is not null) {
+            if (aircraftByRegNo.TryGetValue(regNo, out Aircraft? existing)) {
                 aircrafts.Add(existing);
                 if (!aircraftUsability.ContainsKey(existing)) {
                     aircraftUsability[existing] = existing.Usability;
@@ -153,31 +257,35 @@ public sealed class FlightRecoveryApplication {
                 continue;
             }
 
-            var typeCode = new AircraftTypeCode(acInput.AircraftTypeCode);
-            var type = AircraftType.GetOrAdd(typeCode);
             var minorCode = new AircraftMinorTypeCode(acInput.MinorTypeCode);
-            var minorType = AircraftMinorType.Find(minorCode);
-            if (minorType is null) {
+            if (!minorTypesByCode.TryGetValue(minorCode, out AircraftMinorType? minorType)) {
+                var typeCode = new AircraftTypeCode(acInput.AircraftTypeCode);
+                if (!typesByCode.TryGetValue(typeCode, out AircraftType? type)) {
+                    type = new AircraftType(typeCode);
+                    typesByCode.Add(typeCode, type);
+                }
                 minorType = new AircraftMinorType(
-                    type, minorCode, new Flt64(acInput.CostPerHour ?? 100.0),
-                    new Dictionary<Route, TimeSpan>(),
-                    new Dictionary<Airport, TimeSpan>());
-                AircraftMinorType.Register(minorType);
+                    Type: type,
+                    Code: minorCode,
+                    CostPerHour: new Flt64(acInput.CostPerHour ?? 100.0),
+                    RouteFlyTime: new Dictionary<Route, TimeSpan>(),
+                    ConnectionTime: new Dictionary<Airport, TimeSpan>());
+                minorTypesByCode.Add(minorCode, minorType);
             }
 
             var capacity = new AircraftCapacity.PassengerCapacity(
                 new Dictionary<PassengerClassId, ulong>());
-            var aircraft = new Aircraft(regNo, minorType, capacity);
-            Aircraft.Register(aircraft);
+            var aircraft = new Aircraft(
+                RegNo: regNo,
+                MinorType: minorType,
+                Capacity: capacity);
+            Airport location = GetAirport(new ICAO(acInput.LocationIcao));
 
-            var locationIcao = new ICAO(acInput.LocationIcao);
-            var location = Airport.Find(locationIcao);
-            if (location is null) {
-                location = new Airport(locationIcao, AirportType.Domestic);
-                Airport.Register(location);
-            }
-
-            aircraft.SetUsability(new AircraftUsability(null, location, acInput.EnabledTime ?? DateTimeOffset.UtcNow));
+            aircraft.SetUsability(new AircraftUsability(
+                lastTask: null,
+                location: location,
+                enabledTime: acInput.EnabledTime ?? DateTimeOffset.UtcNow));
+            aircraftByRegNo.Add(regNo, aircraft);
             aircrafts.Add(aircraft);
             aircraftUsability[aircraft] = aircraft.Usability;
         }
@@ -186,12 +294,13 @@ public sealed class FlightRecoveryApplication {
         foreach (var legInput in input.FlightLegs) {
             var depIcao = new ICAO(legInput.DepIcao);
             var arrIcao = new ICAO(legInput.ArrIcao);
-            var dep = Airport.Find(depIcao) ?? RegisterAirport(depIcao, AirportType.Domestic);
-            var arr = Airport.Find(arrIcao) ?? RegisterAirport(arrIcao, AirportType.Domestic);
+            Airport dep = GetAirport(depIcao);
+            Airport arr = GetAirport(arrIcao);
 
             var regNo = new AircraftRegisterNumber(legInput.AircraftRegNo);
-            var aircraft = Aircraft.Find(regNo);
-            if (aircraft is null) continue;
+            if (!aircraftByRegNo.TryGetValue(regNo, out Aircraft? aircraft)) {
+                continue;
+            }
 
             var scheduledTime = new TimeRange(
                 legInput.ScheduledDepTime ?? DateTimeOffset.UtcNow,
@@ -223,12 +332,6 @@ public sealed class FlightRecoveryApplication {
             aircraftUsability,
             flightTasks,
             Array.Empty<FlightTaskBunch>());
-    }
-
-    private static Airport RegisterAirport(ICAO icao, AirportType type) {
-        var airport = new Airport(icao, type);
-        Airport.Register(airport);
-        return airport;
     }
 
     private static Output BuildOutput(BunchSolution<FlightTaskBunch, FlightTask, Aircraft, FlightTaskAssignment> solution) {
@@ -304,10 +407,15 @@ public sealed class FlightRecoveryApplication {
         => (aircraft, prevTask, task) => true;
 
     /// <summary>
-    /// 域数据中间结构，用于在构建和使用之间传递。
-    /// Intermediate domain data structure for passing between build and use phases.
+    /// 请求范围的已装配领域数据；其集合与对象由调用方持有。
+    /// Prepared request-scoped domain data whose collections and objects remain caller-owned.
     /// </summary>
-    internal sealed record DomainData(
+    /// <param name="TimeWindow">恢复时间窗口 / Recovery time window.</param>
+    /// <param name="Aircrafts">飞机列表 / Aircraft list.</param>
+    /// <param name="AircraftUsability">每架飞机的可用性，须与飞机自身引用一致 / Usability per aircraft, matching each aircraft's own reference.</param>
+    /// <param name="FlightTasks">航班任务 / Flight tasks.</param>
+    /// <param name="OriginBunches">初始航班束 / Origin flight bunches.</param>
+    public sealed record DomainData(
         TimeRange TimeWindow,
         IReadOnlyList<Aircraft> Aircrafts,
         IReadOnlyDictionary<Aircraft, AircraftUsability> AircraftUsability,

@@ -1,13 +1,14 @@
 #nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Fuookami.Ospf.Utils.Functional;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Algebra.ValueRange;
 using Fuookami.Ospf.Math.Symbol;
-using Fuookami.Ospf.Utils.Functional;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Int64 = Fuookami.Ospf.Math.Algebra.Number.Int64;
 using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 
@@ -61,12 +62,16 @@ public interface IVariableCombination {
     UInt64 Identifier { get; }
 }
 
+internal interface IVariableRangeSnapshot {
+    object? CurrentRange { get; }
+}
+
 /// <summary>
 /// 抽象变量项基类 / Abstract base class for variable items
 /// </summary>
 /// <typeparam name="T">数值类型 / The number type</typeparam>
 /// <typeparam name="TType">变量类型 / The variable type</typeparam>
-public abstract class AbstractVariableItem<T, TType> : IVariableItem
+public abstract class AbstractVariableItem<T, TType> : IVariableItem, IVariableRangeSnapshot
     where T : struct, IRealNumber<T>, INumberField<T>
     where TType : VariableType<T> {
     /// <summary>变量类型 / Variable type</summary>
@@ -94,6 +99,7 @@ public abstract class AbstractVariableItem<T, TType> : IVariableItem
     public IReadOnlyList<UInt64> UVector => VectorView.Select(i => new UInt64((ulong)i)).ToList();
     /// <summary>值范围 / Value range</summary>
     public Range<TType, T> Range { get; }
+    object? IVariableRangeSnapshot.CurrentRange => Range.Range;
     /// <summary>下界（Flt64 视图）/ Lower bound (Flt64 view)</summary>
     public Bound<Flt64>? LowerBound => Range.LowerBound?.ToFlt64();
     /// <summary>上界（Flt64 视图）/ Upper bound (Flt64 view)</summary>
@@ -120,16 +126,16 @@ public abstract class AbstractVariableItem<T, TType> : IVariableItem
 }
 
 /// <summary>
-/// 变量标识符生成器（线程不安全）/ Variable identifier generator (not thread-safe)
+/// 原子生成进程内标识；重置或回绕会复用标识 / Atomic process-local identifiers; reset or wraparound reuses identifiers.
 /// </summary>
 internal sealed class IdentifierGenerator {
-    private static UInt64 _next = UInt64.Zero;
+    private static ulong _last = ulong.MaxValue;
 
     /// <summary>重置标识符 / Flush identifiers</summary>
-    public static void Flush() => _next = UInt64.Zero;
+    public static void Flush() => Interlocked.Exchange(ref _last, ulong.MaxValue);
 
     /// <summary>生成下一个标识符 / Generate next identifier</summary>
-    public static UInt64 Gen() => _next++;
+    public static UInt64 Gen() => new(Interlocked.Increment(ref _last));
 }
 
 /// <summary>

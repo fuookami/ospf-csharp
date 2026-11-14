@@ -1,9 +1,11 @@
 #nullable enable
 
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Fuookami.Ospf.Framework.Plugin.Persistence;
 using Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 using Fuookami.Ospf.Framework.Plugin.Persistence.MySQL;
+using Fuookami.Ospf.Framework.Plugin.Persistence.PostgreSQL;
 using Fuookami.Ospf.Framework.Plugin.Persistence.Redis;
 using Fuookami.Ospf.Framework.Plugin.Persistence.SQLite;
 using Fuookami.Ospf.Utils.Error;
@@ -138,4 +140,33 @@ public class InterfaceVerificationTests {
         (key1 == key2).Should().BeTrue();
         (key1 == key3).Should().BeFalse();
     }
+
+    /// <summary>**PostgreSQL 仓储也必须是抽象基类**（B926）/ The PostgreSQL repository must be an abstract base too.</summary>
+    [Fact]
+    public void PostgreSqlRepository_Should_Be_Abstract() {
+        Type type = typeof(PostgreSqlRepository<>);
+        type.IsAbstract.Should().BeTrue("it is a base class to be specialised, not an implementation");
+        typeof(IRepository<>).MakeGenericType(typeof(object)).IsAssignableFrom(typeof(PostgreSqlRepository<>))
+            .Should().BeFalse("the closed generic is abstract; only closed subclasses implement the contract");
+    }
+
+
+    /// <summary>**PostgreSQL 提供程序真的接上了**（B926）/ The PostgreSQL provider is really wired (B926).</summary>
+    /// <remarks>
+    /// 这一条**不需要活的数据库**：`UseNpgsql` 在配置阶段就确定提供程序名，
+    /// 所以它能证明"依赖进了程序集、配置写对了"，而不能证明"能连上"——**后者是外部未验收项**。
+    ///
+    /// This **needs no live database**: `UseNpgsql` fixes the provider name during configuration, so it proves "the dependency is in the assembly and the
+    /// configuration is right", not "it can connect" — **the latter is an externally unverified item**.
+    /// </remarks>
+    [Fact]
+    public void PostgreSqlProvider_ShouldBeConfiguredWithoutALiveDatabase() {
+        DbContextOptions<DbContext> options = new DbContextOptionsBuilder<DbContext>()
+            .UseNpgsql("Host=localhost;Database=ospf;Username=ospf;Password=ospf")
+            .Options;
+
+        using var context = new DbContext(options);
+        context.Database.ProviderName.Should().Be("Npgsql.EntityFrameworkCore.PostgreSQL");
+    }
+
 }

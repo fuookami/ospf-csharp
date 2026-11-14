@@ -101,6 +101,18 @@ public sealed class VrptwDemo {
         }
     }
 
+    /// <summary>起始仓库 / The origin depot.</summary>
+    public static CustomerNode OriginNode => Origin;
+
+    /// <summary>结束仓库 / The end depot.</summary>
+    public static CustomerNode EndNode => End;
+
+    /// <summary>需求节点 / Demand nodes.</summary>
+    public static IReadOnlyList<CustomerNode> CustomerNodes => DemandNodes;
+
+    /// <summary>车辆 / Vehicles.</summary>
+    public static IReadOnlyList<Vehicle> VehicleList => Vehicles;
+
     private static Flt64 Distance(CustomerNode a, CustomerNode b) {
         Flt64 dx = a.PosX.Minus(b.PosX);
         Flt64 dy = a.PosY.Minus(b.PosY);

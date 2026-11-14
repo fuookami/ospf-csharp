@@ -63,11 +63,24 @@ public sealed class CapacityCompilation<A> : ICapacity<A>
     public TimeWindow<Flt64> TimeWindow => _timeWindow;
 
     /// <inheritdoc/>
+    /// <summary>
+    /// 提取解 / Extract the solution.
+    /// </summary>
+    /// <param name="model">模型 / The model.</param>
+    /// <returns>解或失败 / The solution or a failure.</returns>
+    /// <remarks>
+    /// **这个编译对象没有决策变量**，所以解无从谈起。第一版返回的是 `Ok` 加一个分配表为空的解——
+    /// 调用方读到的是「排好了，什么都没排」，**空解和真解无法区分**。
+    ///
+    /// **This compilation has no decision variables**, so there is no solution to speak of. The first version returned `Ok` with an empty allocation table — the caller read
+    /// "solved, nothing scheduled", and **an empty solution and a real one cannot be told apart**.
+    /// </remarks>
     public Result<CapacitySchedulingSolution<A>, ErrorCode, Error<ErrorCode>> ExtractSolution(object model) {
-        var actionAllocations = new List<ActionAllocation<A>>();
-        var executorCapacities = new List<ExecutorCapacityResult>();
-
-        return Results.Ok<CapacitySchedulingSolution<A>>(new CapacitySchedulingSolution<A>(
-            _actions, actionAllocations, executorCapacities));
+        ArgumentNullException.ThrowIfNull(model);
+        return new Failed<CapacitySchedulingSolution<A>, ErrorCode, Error<ErrorCode>>(
+            new Err<ErrorCode>(
+                ErrorCode.ApplicationError,
+                "这个容量编译对象没有决策变量，解无从提取；用 `CapacityOrderCompilation` 的那条路径 / "
+                + "this capacity compilation has no decision variables, so there is no solution to extract; use the `CapacityOrderCompilation` path"));
     }
 }

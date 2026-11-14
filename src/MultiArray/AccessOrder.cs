@@ -1,8 +1,11 @@
 #nullable enable
 
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Fuookami.Ospf.MultiArray;
 /// <summary>
@@ -77,7 +80,9 @@ public sealed class MultiIndexIterator : IEnumerator<int[]> {
     }
 
     /// <inheritdoc/>
-    public int[] Current => _current ?? throw new InvalidOperationException("Iterator is not positioned at a valid element.");
+    public int[] Current => _current is null
+        ? throw new InvalidOperationException("Iterator is not positioned at a valid element.")
+        : (int[])_current.Clone();
 
     /// <inheritdoc/>
     object? IEnumerator.Current => Current;
@@ -166,4 +171,135 @@ public sealed class MultiIndexSequence : IEnumerable<int[]> {
 
     /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+/// <summary>
+/// 多维数组访问顺序扩展 / Multi-array access-order extensions.
+/// </summary>
+public static class MultiArrayAccessExtensions {
+    /// <summary>按指定访问顺序迭代元素 / Iterate elements in the requested access order.</summary>
+    public static IEnumerable<T> IterWithOrder<T, S>(
+        this AbstractMultiArray<T, S> source,
+        AccessOrder accessOrder = AccessOrders.Default)
+        where T : notnull
+        where S : IShape {
+        bool matchingOrder = (accessOrder, source.StorageOrder) switch {
+            (AccessOrder.RowMajor, StorageOrder.RowMajor) => true,
+            (AccessOrder.ColumnMajor, StorageOrder.ColumnMajor) => true,
+            _ => false
+        };
+
+        if (matchingOrder && source.Shape.HasCanonicalTraversalIndexing()) {
+            for (int i = 0; i < source.Count; i++) {
+                yield return source[i];
+            }
+            yield break;
+        }
+
+        foreach (int[] vector in new MultiIndexSequence(source.Shape, accessOrder)) {
+            yield return source[vector];
+        }
+    }
+
+    /// <summary>按指定访问顺序枚举元素 / Enumerate elements in the requested access order.</summary>
+    public static IEnumerable<(int LinearIndex, int[] Vector, T Value)> EnumerateWithOrder<T, S>(
+        this AbstractMultiArray<T, S> source,
+        AccessOrder accessOrder = AccessOrders.Default)
+        where T : notnull
+        where S : IShape {
+        int linearIndex = 0;
+        foreach (int[] vector in new MultiIndexSequence(source.Shape, accessOrder)) {
+            yield return (linearIndex++, vector, source[vector]);
+        }
+    }
+
+    /// <summary>按指定访问顺序展平 / Flatten in the requested access order.</summary>
+    public static List<T> Flatten<T, S>(
+        this AbstractMultiArray<T, S> source,
+        AccessOrder accessOrder = AccessOrders.Default)
+        where T : notnull
+        where S : IShape =>
+        source.IterWithOrder(accessOrder).ToList();
+
+    /// <summary>按请求顺序迭代多维数组视图 / Iterate a view in the requested order.</summary>
+    public static IEnumerable<T> IterWithOrder<T, S>(
+        this MultiArrayView<T, S> source,
+        AccessOrder accessOrder = AccessOrders.Default)
+        where T : notnull
+        where S : IShape {
+        foreach (int[] vector in new MultiIndexSequence(source.Shape, accessOrder)) {
+            Result<T, ErrorCode, Error<ErrorCode>> result = source[vector];
+            if (result.IsOk) {
+                yield return result.Value;
+            }
+        }
+    }
+
+    /// <summary>按指定访问顺序迭代虚拟向量 / Iterate a dummy vector in the requested access order.</summary>
+    public static IEnumerable<int[]> IterateWithOrder(
+        this IReadOnlyList<DummyIndex> dummyVector,
+        IShape shape,
+        AccessOrder accessOrder = AccessOrders.Default) {
+        IReadOnlyList<DummyIndexIterator> iteratorVector = shape.DummyToIteratorVector(dummyVector);
+        int[] lengths = iteratorVector.Select(iterator => iterator.Len()).ToArray();
+        if (lengths.Length == 0 || lengths.Any(length => length == 0)) {
+            yield break;
+        }
+
+        int[] current = new int[lengths.Length];
+        bool exhausted = false;
+        while (!exhausted) {
+            int[] vector = new int[shape.Dimension];
+            for (int i = 0; i < vector.Length; i++) {
+                vector[i] = iteratorVector[i].Get(current[i]) ?? 0;
+            }
+            yield return vector;
+
+            int axis;
+            switch (accessOrder) {
+                case AccessOrder.RowMajor:
+                    for (axis = current.Length - 1; axis >= 0; axis--) {
+                        if (current[axis] + 1 < lengths[axis]) {
+                            current[axis]++;
+                            break;
+                        }
+                        current[axis] = 0;
+                    }
+                    exhausted = axis < 0;
+                    break;
+
+                case AccessOrder.ColumnMajor:
+                    for (axis = 0; axis < current.Length; axis++) {
+                        if (current[axis] + 1 < lengths[axis]) {
+                            current[axis]++;
+                            break;
+                        }
+                        current[axis] = 0;
+                    }
+                    exhausted = axis >= current.Length;
+                    break;
+
+                default:
+                    yield break;
+            }
+        }
+    }
+
+    private static bool HasCanonicalTraversalIndexing(this IShape shape) {
+        if (shape is not Shape1 && shape is not Shape2 && shape is not Shape3 && shape is not Shape4 && shape is not DynShape) {
+            return false;
+        }
+
+        int stride = 1;
+        IEnumerable<int> axes = shape.StorageOrder == StorageOrder.RowMajor
+            ? Enumerable.Range(0, shape.Dimension).Reverse()
+            : Enumerable.Range(0, shape.Dimension);
+        foreach (int axis in axes) {
+            if (shape.Offsets[axis] != stride) {
+                return false;
+            }
+            stride *= shape[axis];
+        }
+        return true;
+    }
 }

@@ -73,16 +73,51 @@ internal static class Common {
             return Results.Ok(new List<TResult>());
         }
 
-        List<Result<TResult, ErrorCode, Error<ErrorCode>>> results = await source.ExecuteWithWorkerPool(concurrent, func).ConfigureAwait(false);
+        List<Result<TResult, ErrorCode, Error<ErrorCode>>> results =
+            await items.ExecuteWithWorkerPool(concurrent, func).ConfigureAwait(false);
 
         var okResults = new List<TResult>();
-        foreach (Result<TResult, ErrorCode, Error<ErrorCode>>? r in results) {
-            if (r.IsFailed) {
-                return new Failed<List<TResult>, ErrorCode, Error<ErrorCode>>(((dynamic)r).Error);
+        foreach (Result<TResult, ErrorCode, Error<ErrorCode>> result in results) {
+            switch (result) {
+                case Ok<TResult, ErrorCode, Error<ErrorCode>> ok:
+                    okResults.Add(ok.Value);
+                    break;
+                case Failed<TResult, ErrorCode, Error<ErrorCode>> failed:
+                    return new Failed<List<TResult>, ErrorCode, Error<ErrorCode>>(failed.Error);
+                case Fatal<TResult, ErrorCode, Error<ErrorCode>> fatal:
+                    return new Fatal<List<TResult>, ErrorCode, Error<ErrorCode>>(fatal.Errors);
             }
-
-            okResults.Add(r.Value!);
         }
         return Results.Ok(okResults);
+    }
+
+    /// <summary>使用工作池执行并收集全部错误 / Execute with a worker pool and collect all errors.</summary>
+    public static async Task<ExResult<List<TResult>, ErrorCode, Error<ErrorCode>>> ExecuteExTryWithWorkerPool<TSource, TResult>(
+        this IEnumerable<TSource> source,
+        int concurrent,
+        Func<int, TSource, Task<Result<TResult, ErrorCode, Error<ErrorCode>>>> func) {
+        var items = source.ToList();
+        List<Result<TResult, ErrorCode, Error<ErrorCode>>> results =
+            await items.ExecuteWithWorkerPool(concurrent, func).ConfigureAwait(false);
+
+        var okResults = new List<TResult>();
+        var errors = new List<Error<ErrorCode>>();
+        foreach (Result<TResult, ErrorCode, Error<ErrorCode>> result in results) {
+            switch (result) {
+                case Ok<TResult, ErrorCode, Error<ErrorCode>> ok:
+                    okResults.Add(ok.Value);
+                    break;
+                case Failed<TResult, ErrorCode, Error<ErrorCode>> failed:
+                    errors.Add(failed.Error);
+                    break;
+                case Fatal<TResult, ErrorCode, Error<ErrorCode>> fatal:
+                    errors.AddRange(fatal.Errors);
+                    break;
+            }
+        }
+
+        return errors.Count == 0
+            ? new Ok<List<TResult>, ErrorCode, Error<ErrorCode>>(okResults)
+            : new Fatal<List<TResult>, ErrorCode, Error<ErrorCode>>(errors);
     }
 }

@@ -1,9 +1,11 @@
 #nullable enable
 
-using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
-using Fuookami.Ospf.Math.Algebra.Number;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Task.Model;
 
@@ -13,10 +15,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Task.Model;
 /// </summary>
 /// <param name="Code">类型代码 / Type code.</param>
 public sealed record AircraftType(AircraftTypeCode Code) {
-    private static readonly Dictionary<AircraftTypeCode, AircraftType> Pool = new();
+    private static readonly ConcurrentDictionary<AircraftTypeCode, AircraftType> Pool = new();
 
-    /// <summary>所有已注册的飞机类型 / All registered aircraft types.</summary>
-    public static IReadOnlyCollection<AircraftType> Values => Pool.Values;
+    /// <summary>已注册飞机类型的快照 / Snapshot of registered aircraft types.</summary>
+    public static IReadOnlyCollection<AircraftType> Values => Pool.Values.ToArray();
 
     /// <summary>
     /// 按代码检索或创建 AircraftType。
@@ -24,13 +26,8 @@ public sealed record AircraftType(AircraftTypeCode Code) {
     /// </summary>
     /// <param name="code">类型代码 / Type code.</param>
     /// <returns>飞机类型 / The aircraft type.</returns>
-    public static AircraftType GetOrAdd(AircraftTypeCode code) {
-        if (!Pool.TryGetValue(code, out var type)) {
-            type = new AircraftType(code);
-            Pool[code] = type;
-        }
-        return type;
-    }
+    public static AircraftType GetOrAdd(AircraftTypeCode code)
+        => Pool.GetOrAdd(code, static key => new AircraftType(key));
 }
 
 /// <summary>
@@ -51,10 +48,10 @@ public sealed record AircraftMinorType(
     IReadOnlyDictionary<Airport, TimeSpan> ConnectionTime,
     TimeSpan? MaxFlyTime = null
 ) {
-    private static readonly Dictionary<AircraftMinorTypeCode, AircraftMinorType> Pool = new();
+    private static readonly ConcurrentDictionary<AircraftMinorTypeCode, AircraftMinorType> Pool = new();
 
-    /// <summary>所有已注册的子类型 / All registered minor types.</summary>
-    public static IReadOnlyCollection<AircraftMinorType> Values => Pool.Values;
+    /// <summary>已注册子类型的快照 / Snapshot of registered minor types.</summary>
+    public static IReadOnlyCollection<AircraftMinorType> Values => Pool.Values.ToArray();
 
     /// <summary>最大航线飞行时间 / Maximum route fly time.</summary>
     public TimeSpan MaxRouteFlyTime { get; } = ComputeMaxRouteFlyTime(RouteFlyTime);

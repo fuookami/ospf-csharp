@@ -58,7 +58,32 @@ public sealed record CuboidPackingShape3<V>(QuantityCuboid3<V> Cuboid) : IPackin
 }
 
 /// <summary>圆柱体装箱形状 / Cylinder packing shape.</summary>
-public sealed record CylinderPackingShape3(QuantityCylinder3<FltX> Cylinder) : IPackingShape3<FltX> {
+/// <param name="Cylinder">圆柱几何 / Cylinder geometry.</param>
+/// <param name="RadiusWeightFunctionKey">
+/// 半径权重函数键；null 表示该圆柱不参与连续半径优化。
+/// / The radius weight-function key; null means this cylinder does not participate in continuous-radius optimisation.
+/// </param>
+/// <param name="RadiusMin">连续半径下界（可空）/ Continuous radius lower bound (nullable).</param>
+/// <param name="RadiusMax">连续半径上界（可空）/ Continuous radius upper bound (nullable).</param>
+/// <remarks>
+/// **后三个参数在 B312 之前不存在**，它们是基线 `PackageShapeSpec.VerticalCylinder` 的
+/// `radiusWeightFunctionKey / radiusMin / radiusMax` 在 C# 侧的对应物。
+///
+/// **缺了它会怎样**：`ContinuousRadiusSolverHelpers.PrototypesFromItems` 无法判断"哪些圆柱参与连续半径优化"，
+/// 只能对**所有**竖直圆柱产出原型——那比基线激进，会把列生成推进基线不会进入的分支（B311 已记录该偏差）。
+///
+/// **The latter three parameters did not exist before B312**; they are the C# counterparts of the baseline
+/// `PackageShapeSpec.VerticalCylinder`'s `radiusWeightFunctionKey / radiusMin / radiusMax`.
+///
+/// **What their absence caused**: `ContinuousRadiusSolverHelpers.PrototypesFromItems` could not tell "which cylinders participate in continuous-radius
+/// optimisation", so it produced prototypes for **every** vertical cylinder — more aggressive than the baseline and pushing column generation down a branch the
+/// baseline would not enter (a deviation recorded in B311).
+/// </remarks>
+public sealed record CylinderPackingShape3(
+    QuantityCylinder3<FltX> Cylinder,
+    string? RadiusWeightFunctionKey = null,
+    Quantity<FltX>? RadiusMin = null,
+    Quantity<FltX>? RadiusMax = null) : IPackingShape3<FltX> {
     public PackingShapeType ShapeType => PackingShapeType.Cylinder;
     public PackingAlgorithmShapeType AlgorithmShapeType => Cylinder.Axis switch {
         Axis3.X => PackingAlgorithmShapeType.HorizontalCylinderX,

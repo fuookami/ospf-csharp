@@ -4,12 +4,26 @@
     <AssemblyName>Fuookami.Ospf.Framework.Csp1d.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!--
+      真实求解集成测试的开关。默认不打开，使没有 SCIP 原生库的机器照常构建。
+      开启方式：dotnet test … -p:RunScipIntegration=true，**必须在 build 时带上**；
+      只给 test 加 no-build 不会重编，集成测试不会生效。
+
+      Opt-in switch for real-solver integration tests. Off by default so machines without
+      the SCIP native library still build. Enable with -p:RunScipIntegration=true
+      **at build time**; passing it only to test with no-build does not recompile and the
+      integration tests silently will not run.
+    -->
+    <DefineConstants Condition="'$(RunScipIntegration)' == 'true'">$(DefineConstants);SCIP_INTEGRATION</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />
     <PackageReference Include="xUnit.runner.visualstudio" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(RunScipIntegration)' == 'true'">
+    <ProjectReference Include="..\..\src\Core.Plugin.Scip\Core.Plugin.Scip.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Framework.Csp1d\Framework.Csp1d.csproj" />

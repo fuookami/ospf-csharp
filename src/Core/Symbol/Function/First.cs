@@ -1,5 +1,6 @@
 #nullable enable
 
+using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Token;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Number;
@@ -29,6 +30,6 @@ public sealed class FirstFunction : IMathFunctionSymbol<Flt64> {
     public Try RegisterAuxiliaryTokens(IAddableTokenCollection<Flt64> tokens) =>
         Results.Ok<Success>(Results.SuccessInstance);
 
-    public Try RegisterConstraints(object model) =>
+    public Try RegisterConstraints(IAbstractLinearMechanismModel<Flt64> model) =>
         Results.Ok<Success>(Results.SuccessInstance);
 }

@@ -11,6 +11,7 @@ using Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model;
 using Fuookami.Ospf.Framework.Csp1d.Domain.Produce;
 using Fuookami.Ospf.Framework.Csp1d.Domain.Produce.Model;
 using Fuookami.Ospf.Framework.Csp1d.Domain.Yield.Model;
+using Fuookami.Ospf.Core.Solver.Progress;
 using Fuookami.Ospf.Framework.Solver;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
@@ -20,6 +21,7 @@ using Fuookami.Ospf.Utils.Functional;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Int64 = Fuookami.Ospf.Math.Algebra.Number.Int64;
 using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
@@ -136,20 +138,44 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
     /// </summary>
     /// <param name="problem">问题定义 / Problem definition.</param>
     /// <param name="solveConfig">显式求解配置 / Explicit solve configuration.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <param name="progressContext">进度上报上下文；为 null 时不启用 / Progress reporting context; off when null.</param>
     /// <returns>CSP1D 解 / CSP1D solution.</returns>
     public async Task<Csp1dSolution<V>> SolveAsync(
         Csp1dProblem<V> problem,
-        Csp1dSolveConfig<V>? solveConfig = null) => (await SolveWithTraceAsync(problem, solveConfig)).Solution;
+        Csp1dSolveConfig<V>? solveConfig = null,
+        CancellationToken cancellationToken = default,
+        SolverProgressContext? progressContext = null) =>
+        (await SolveWithTraceAsync(problem, solveConfig, cancellationToken, progressContext)).Solution;
 
     /// <summary>
     /// 带追踪信息的列生成求解 / Column generation solve with trace.
     /// </summary>
     /// <param name="problem">问题定义 / Problem definition.</param>
     /// <param name="solveConfig">显式求解配置 / Explicit solve configuration.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <param name="progressContext">进度上报上下文；为 null 时不启用 / Progress reporting context; off when null.</param>
     /// <returns>列生成结果（含追踪信息）/ Column generation result with trace.</returns>
+    /// <remarks>
+    /// **取消有两套机制，必须一起生效。** `cancellationToken` 是平台原生的协作式取消（B323 接入），
+    /// `progressContext.IsCancelled` 是基线 `throwIfCancelled()` 用的判定（B324 移植）。
+    /// 两者**语义相同、来源不同**：调用方可能只给了其中之一。
+    ///
+    /// 所以这里**两条都查**，并在每轮迭代开头检查 `progressContext` 的阶段快照与取消。
+    ///
+    /// **There are two cancellation mechanisms and both must take effect.** `cancellationToken` is the platform's cooperative cancellation (wired in B323);
+    /// `progressContext.IsCancelled` is the predicate the baseline's `throwIfCancelled()` uses (ported in B324). They are **semantically identical but sourced
+    /// differently**: a caller may supply only one of them.
+    ///
+    /// So **both are checked here**, and each iteration start checks the `progressContext`'s stage snapshot and cancellation.
+    /// </remarks>
     public async Task<Csp1dColumnGenerationResult> SolveWithTraceAsync(
         Csp1dProblem<V> problem,
-        Csp1dSolveConfig<V>? solveConfig = null) {
+        Csp1dSolveConfig<V>? solveConfig = null,
+        CancellationToken cancellationToken = default,
+        SolverProgressContext? progressContext = null) {
+        cancellationToken.ThrowIfCancellationRequested();
+        progressContext?.ThrowIfCancelled();
         Csp1dSolveConfig<V> resolvedConfig = ResolveSolveConfig(problem, solveConfig);
         Csp1dConfiguration<V> columnConfig = resolvedConfig.ColumnGeneration;
         IReadOnlyList<ICsp1dDomainPolicy<V>> domainPolicies = resolvedConfig.ExtensionSet.DomainPolicies;
@@ -164,9 +190,65 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             ? Csp1dDomainPolicyHelpers.WidthFeasibilityCheckFromPolicies(domainPolicies, domainValueSample.Value)
             : null;
 
-        InitialPlanPool initialPlanPool = await InitialPlanPoolAsync(problem, columnConfig, domainPolicies, widthCheck, resolvedConfig.ExtensionSet.FlowPolicies);
+        // **把 `ICsp1dGenerationStrategy.CanonicalKeyFor` 解析成回调列表。**
+        //
+        // 基线的三个生成策略扩展点（`acceptCandidate` / `canonicalKeyFor` / `acceptDominance`）在 C# 里
+        // **接口都定义了，却一个调用点都没有**——这是"接口在、连接件是空壳"的形态。
+        // 本批只接 `CanonicalKeyFor`（缺口清单里点名的那一项），另两个仍未接线。
+        //
+        // **Resolve `ICsp1dGenerationStrategy.CanonicalKeyFor` into callback lists.**
+        //
+        // The baseline's three generation-strategy extension points (`acceptCandidate` / `canonicalKeyFor` / `acceptDominance`) are **all defined in C# with zero call
+        // sites** — the "interfaces present, connecting piece is a shell" shape. This batch wires only `CanonicalKeyFor` (the gap named in the ledger); the other two
+        // remain unwired.
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, string?>> canonicalKeyOverrides =
+            Csp1dGenerationStrategyProjection.CanonicalKeyOverrides(resolvedConfig.ExtensionSet.GenerationStrategies);
+
+        // **`AcceptDominance` 的投影，语义是"全部通过"。**
+        //
+        // 收集器里的 `dominanceAcceptOverride` 钩子**早就实现了**（`GenerationCollector.cs:187`），
+        // 但四个生成器构造时**一个都没传**——又一处"钩子在、没人喂"。
+        // 本批把它接上，同时把 `AcceptCandidate` 留给下一批。
+        //
+        // **The `AcceptDominance` projection; the semantics are "all must pass".**
+        //
+        // The collector's `dominanceAcceptOverride` hook **already existed** (`GenerationCollector.cs:187`), but **none of the four generators passed it** — another
+        // "hook present, nothing feeding it". This batch wires it and leaves `AcceptCandidate` for the next one.
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, IReadOnlyList<CuttingPlan<V>>, bool>> dominanceAcceptOverrides =
+            Csp1dGenerationStrategyProjection.DominanceAcceptOverrides(resolvedConfig.ExtensionSet.GenerationStrategies);
+
+        // **`AcceptCandidate` 的投影。** 这是三个扩展点里最后一个，也是唯一一个
+        // **第二个参数有实际差别**的：初始池传空列表、定价传当前列池（见 `ExistingPlans`）。
+        //
+        // **The `AcceptCandidate` projection.** The last of the three and the only one whose **second argument really differs**: the initial pool passes an empty list
+        // and pricing passes the current column pool (see `ExistingPlans`).
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, IReadOnlyList<CuttingPlan<V>>, bool>> candidateFilters =
+            Csp1dGenerationStrategyProjection.CandidateFilters(resolvedConfig.ExtensionSet.GenerationStrategies);
+
+        InitialPlanPool initialPlanPool = await InitialPlanPoolAsync(
+            problem,
+            columnConfig,
+            domainPolicies,
+            widthCheck,
+            resolvedConfig.ExtensionSet.FlowPolicies,
+            canonicalKeyOverrides,
+            dominanceAcceptOverrides,
+            candidateFilters);
+        cancellationToken.ThrowIfCancellationRequested();
+        progressContext?.ThrowIfCancelled();
         IReadOnlyList<CuttingPlan<V>> initialPlans = initialPlanPool.Plans;
         int initialCount = initialPlans.Count;
+        ReportProgress(
+            context: progressContext,
+            stage: SolverStages.ColumnGeneration,
+            subStage: new SolverSubStage(
+                Key: "initial_columns",
+                DefaultTemplate: "初始列生成（{count} 列）",
+                MessageKey: "i18n.ospf.substage.initial_columns",
+                Args: new Dictionary<string, string> { ["count"] = initialCount.ToString() }),
+            progressInStage: 0,
+            overallProgress: 15,
+            diagnostics: new Dictionary<string, string> { ["initialPlans"] = initialCount.ToString() });
 
         if (initialPlans.Count == 0) {
             return BuildNoInitialPlansResult(problem, initialPlanPool, resolvedConfig);
@@ -177,6 +259,8 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         var iterationRecords = new List<Csp1dIterationRecord>();
         Csp1dTerminationReason terminationReason = Csp1dTerminationReason.PricingConverged;
         bool hasValidLpResult = false;
+        // 是否处于"只最小化人工短缺"的可行性阶段 / Whether the "minimise artificial deficits only" feasibility phase is active.
+        bool feasibilityPhase = false;
         string? lpFailureMessage = null;
         CuttingPlanGenerationStatistics? pricingGenerationStatistics = null;
         IReadOnlyList<ICsp1dFlowPolicy<V>> flowPolicies = resolvedConfig.ExtensionSet.FlowPolicies;
@@ -206,11 +290,94 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         }
 
         if (lpMaster is not null) {
+            ReportProgress(
+                context: progressContext,
+                stage: SolverStages.ModelBuilding,
+                subStage: new SolverSubStage(
+                    Key: "lp_master_ready",
+                    DefaultTemplate: "LP 主问题已就绪",
+                    MessageKey: "i18n.ospf.substage.lp_master_ready"),
+                progressInStage: 100,
+                overallProgress: 20,
+                diagnostics: new Dictionary<string, string> { ["model"] = problem.Products.FirstOrDefault()?.Id ?? "" });
+
             for (int iteration = 0; iteration < iterationLimitBound; iteration++) {
+                // 每轮迭代开头检查取消，与基线 `progressContext?.throwIfCancelled()` 同位置。
+                // Check cancellation at the start of each iteration, matching the baseline's `progressContext?.throwIfCancelled()` position.
+                cancellationToken.ThrowIfCancellationRequested();
+                progressContext?.ThrowIfCancelled();
                 var iterationNumber = new Int64(iteration);
                 int planCountBefore = currentPlans.Count;
+                // 迭代区间 20—75，与基线 `rangedProgress(20, 75, ...)` 一致。
+                // Iteration band 20—75, matching the baseline's `rangedProgress(20, 75, ...)`.
+                int iterationStart = RangedProgress(20, 75, iteration, iterationLimitBound);
+                int iterationEnd = RangedProgress(20, 75, iteration + 1, iterationLimitBound);
 
-                Csp1dMilpSolver.LpResult<V>? lpResult = await SolveLpMasterAsync(lpMaster, iterationNumber);
+                (Csp1dMilpSolver.LpResult<V>? Result, ErrorCode? ErrorCode) lpSolve = await SolveLpMasterAsync(
+                    lpMaster,
+                    iterationNumber,
+                    // 迭代区间 20—75 由 `phase` 重映射，与基线 `progressContext?.phase(iterationStart, iterationEnd)` 同位置。
+                    // The 20—75 band is remapped by `phase`, matching the baseline's `progressContext?.phase(iterationStart, iterationEnd)`.
+                    progressContext?.Phase(iterationStart, iterationEnd));
+                Csp1dMilpSolver.LpResult<V>? lpResult = lpSolve.Result;
+
+                // ===== 第一阶段：可行性回退 / Phase one: feasibility fallback =====
+                // 基线：**从未解出可行解**且当前不是可行性阶段、且 LP 以「模型不可行」失败时，
+                // 重建一个**只最小化人工短缺**的主问题再解一次。C# 原本**完全没有这个分支**——
+                // 一旦 LP 不可行就直接终止，哪怕"加人工短缺就能解"。
+                //
+                // **注意判据里的 `!hasValidLpResult`**：可行性阶段只是**重建**，不能挽救已经正常跑起来的流程。
+                //
+                // The baseline: when **no feasible solution has ever been found**, we are not already in the feasibility phase, and the LP failed with
+                // "model infeasible", rebuild a master that **only minimises artificial deficits** and solve again. C# had **no such branch at all** — an infeasible
+                // LP terminated immediately even when "an artificial deficit would make it solvable".
+                //
+                // **Note the `!hasValidLpResult` guard**: the feasibility phase only **rebuilds**; it must not rescue a run that already worked.
+                // **必须确认错误码是「模型不可行」**：别的失败（例如求解器未找到）重建可行性主问题也没用，
+                // 只会掩盖真正的错误。
+                // **The error code must be "model infeasible"**: rebuilding a feasibility master for any other failure (say solver-not-found) is useless and only masks
+                // the real problem.
+                if (lpResult is null && lpSolve.ErrorCode == ErrorCode.ORModelInfeasible
+                    && !hasValidLpResult && !feasibilityPhase) {
+                    LpMaster? phaseOne = await BuildLpMasterAsync(
+                        problem,
+                        currentPlans,
+                        resolvedConfig.AllExtensions,
+                        lpDomainValueSample,
+                        feasibilityPhase: true);
+                    if (phaseOne is not null) {
+                        lpMaster = phaseOne;
+                        feasibilityPhase = true;
+                        lpResult = (await SolveLpMasterAsync(
+                            lpMaster,
+                            iterationNumber,
+                            progressContext?.Phase(iterationStart, iterationEnd))).Result;
+                    }
+                }
+
+                // ===== 第二阶段：可行性达成后恢复原始主问题 / Phase two: restore the original master once feasible =====
+                // 基线：目标值 ≤ 1e-7（人工短缺归零）时，**丢弃人工短缺、重建原始硬约束主问题**并重新求解。
+                // 不恢复的话，最终解会带着人工短缺——**看起来可行，实际不可行**。
+                //
+                // The baseline: once the objective is ≤ 1e-7 (the artificial deficit is zero), **discard the deficits, rebuild the original hard-constrained master**
+                // and solve again. Without the restore the final solution carries artificial deficits — **apparently feasible, actually infeasible**.
+                if (feasibilityPhase && lpResult is not null
+                    && lpResult.LpOutput.Obj.ToDouble() <= 1e-7) {
+                    LpMaster? restored = await BuildLpMasterAsync(
+                        problem,
+                        currentPlans,
+                        resolvedConfig.AllExtensions,
+                        lpDomainValueSample);
+                    if (restored is not null) {
+                        lpMaster = restored;
+                        feasibilityPhase = false;
+                        lpResult = (await SolveLpMasterAsync(
+                            lpMaster,
+                            iterationNumber,
+                            progressContext?.Phase(iterationStart, iterationEnd))).Result;
+                    }
+                }
+
                 if (lpResult is null) {
                     pricedPlanCounts.Add(UInt64.Zero);
                     iterationRecords.Add(new Csp1dIterationRecord(
@@ -227,14 +394,76 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                 Flt64 lpObjective = lpResult.LpOutput.Obj;
                 ShadowPriceMap<V> shadowPrices = lpResult.ShadowPrices;
 
+                ReportProgress(
+                    context: progressContext,
+                    stage: SolverStages.ColumnGeneration,
+                    subStage: PricingIterationSubStage(iterationNumber),
+                    progressInStage: 40,
+                    overallProgress: iterationStart + ((iterationEnd - iterationStart) * 40 / 100),
+                    diagnostics: new Dictionary<string, string> {
+                        ["iteration"] = iterationNumber.ToString(),
+                        ["planCount"] = currentPlans.Count.ToString(),
+                    });
+
+                // **把配置里的定价策略接进来**：基线从 `resolvedConfig.extensionSet.pricingPolicies` 取三个回调，
+                // 而 B348 时这三个参数在**生产路径上恒为 null**——`ICsp1dPricingPolicy` 存在、能从 builder 配到
+                // `SolveConfig`，但**从没到达定价器**。
+                //
+                // **Wire the config's pricing policies in**: the baseline derives the three callbacks from
+                // `resolvedConfig.extensionSet.pricingPolicies`, and as of B348 they were **always null on the production path** —
+                // `ICsp1dPricingPolicy` existed and flowed from the builder into `SolveConfig`, but **never reached the pricing generator**.
+                IReadOnlyList<ICsp1dPricingPolicy<V>> pricingPolicies = resolvedConfig.ExtensionSet.PricingPolicies;
+                // **基线从配置构造目标成本**：`pricingObjectiveConfig(resolvedConfig)` 取
+                // `lengthConfig.batchMinPenalty` 与 `wasteConfig` 的三个惩罚项。
+                // **不接的话 `ObjectiveConfig` 恒为 null，成本永远只有基础值 1**——
+                // 与 B348/B349 修的是同一类缺陷（配置项存在、没到达消费者）。
+                //
+                // **The baseline builds the objective cost from config**: `pricingObjectiveConfig(resolvedConfig)` reads
+                // `lengthConfig.batchMinPenalty` and the three waste penalties. **Without this, `ObjectiveConfig` is always null and
+                // the cost is always the base 1** — the same defect class as B348/B349 (the knob exists but never reaches its consumer).
+                var pricingObjectiveConfig = new Csp1dPricingObjectiveConfig<V>(
+                    PlanUsagePenalty: resolvedConfig.LengthConfig?.BatchMinPenalty,
+                    TrimWidthPenalty: resolvedConfig.WasteConfig?.TrimWidthPenalty,
+                    RestMaterialPenalty: resolvedConfig.WasteConfig?.RestMaterialPenalty,
+                    MaterialCostPenalty: resolvedConfig.WasteConfig?.MaterialCostPenalty);
                 var pricingInput = new Csp1dPricingInput<V>(
                     GenerationInput: new GenerationInput<V> {
                         Materials = problem.Materials,
                         Demands = problem.Demands,
-                        Costars = problem.Costars
+                        Costars = problem.Costars,
+                        // **与基线一致：把池里已有的方案传进来。** 基线 `Csp1dColumnGeneration.kt:513` 正是这样做的。
+                        //
+                        // **B355 曾判定"接上去比不接更糟"，那是错的。** 当时看到"接上后定价一条列都不产"就下了结论，
+                        // 但去查基线验收测试（`Csp1dApplicationAcceptanceTest.kt:726`）后发现：
+                        // **基线在同样的场景下也断言 `AllDuplicates`**——第一轮全是重复列**是预期行为**，不是缺陷。
+                        //
+                        // 原因是定价用的枚举器与初始方案池**是同一个**（`SimpleInitialCuttingPlanGenerator`），
+                        // 所以它会重新枚举出池里已有的方案，去重后自然为空。**基线如此，C# 也一样。**
+                        //
+                        // **Matches the baseline: pass the plans already in the pool.** That is exactly what the baseline does at `Csp1dColumnGeneration.kt:513`.
+                        //
+                        // **B355 concluded "wiring it is worse than not wiring it", which was wrong.** That conclusion came from seeing "pricing produces no columns"
+                        // without checking the baseline, whose acceptance test (`Csp1dApplicationAcceptanceTest.kt:726`) **also asserts `AllDuplicates`** in the same
+                        // situation — an all-duplicate first round **is expected behaviour**, not a defect.
+                        //
+                        // The reason is that pricing and the initial pool **share the same enumerator** (`SimpleInitialCuttingPlanGenerator`), so it re-enumerates plans
+                        // already in the pool and deduplication naturally empties the result. **The baseline behaves this way, and so does C#.**
+                        ExistingPlans = currentPlans,
+                        DominanceAcceptOverrides = dominanceAcceptOverrides,
+                        CandidateFilters = candidateFilters,
                     },
                     ShadowPrices: shadowPrices,
-                    MaxGeneratedPlans: new UInt64((ulong)System.Math.Max(0L, columnConfig.MaxPricingPlans.ToLong())));
+                    MaxGeneratedPlans: new UInt64((ulong)System.Math.Max(0L, columnConfig.MaxPricingPlans.ToLong())),
+                    ObjectiveConfig: pricingObjectiveConfig,
+                    BenefitModifiers: pricingPolicies.Count == 0
+                        ? null
+                        : pricingPolicies.Select(policy => (global::System.Func<CuttingPlan<V>, V, V>)policy.ModifyBenefit).ToList(),
+                    CostModifiers: pricingPolicies.Count == 0
+                        ? null
+                        : pricingPolicies.Select(policy => (global::System.Func<CuttingPlan<V>, V, V>)policy.ModifyCost).ToList(),
+                    ImprovingJudges: pricingPolicies.Count == 0
+                        ? null
+                        : pricingPolicies.Select(policy => (global::System.Func<CuttingPlan<V>, V, V, bool?>)policy.IsImproving).ToList());
 
                 CuttingPlanGenerationReport<CuttingPlan<V>> pricingReport = _pricingGenerator.GenerateWithReport(pricingInput);
                 pricingGenerationStatistics = MergeGenerationStatistics(pricingGenerationStatistics, pricingReport.Statistics);
@@ -259,7 +488,8 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                     PricingStatistics = pricingGenerationStatistics
                 };
 
-                List<CuttingPlan<V>> addedPlans = DeduplicatePlans(currentPlans, newPlans, flowPolicies, flowContext);
+                List<CuttingPlan<V>> addedPlans = DeduplicatePlans(
+                    currentPlans, newPlans, flowPolicies, flowContext, canonicalKeyOverrides);
                 if (addedPlans.Count == 0) {
                     pricedPlanCounts.Add(UInt64.Zero);
                     iterationRecords.Add(new Csp1dIterationRecord(
@@ -309,7 +539,10 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             }
         }
 
-        FinalMilpSolveResult finalMilp = await SolveFinalMilpAsync(problem, currentPlans, resolvedConfig);
+        // 最终 MILP 拥有总体进度的 75—99 带，与基线 `progressContext?.phase(75, 99)` 同位置。
+        // The final MILP owns the 75—99 band, matching the baseline's `progressContext?.phase(75, 99)`.
+        FinalMilpSolveResult finalMilp = await SolveFinalMilpAsync(
+            problem, currentPlans, resolvedConfig, progressContext?.Phase(75, 99));
         Produce<V> produce = finalMilp.MilpResult?.Produce ?? EmptyProduce(problem);
         Csp1dSolution<V> baseSolution = _analyzer.Analyze(problem, produce, currentPlans);
         List<CuttingPlan<V>> topPlans = Csp1dSolutionEnrichmentHelper.TopCuttingPlans<V>(currentPlans, resolvedConfig.TopKPlanLimit);
@@ -349,6 +582,19 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             materials: problem.Materials,
             machines: problem.Machines);
 
+        // 收尾快照：没有它进度条会**停在 60**（B329 记录的缺口）。
+        // Closing snapshot: without it the progress bar **freezes at 60** (the gap recorded in B329).
+        ReportProgress(
+            context: progressContext,
+            stage: SolverStages.ColumnGeneration,
+            subStage: PricingIterationSubStage(new Int64(global::System.Math.Max(0, iterationRecords.Count - 1))),
+            progressInStage: 100,
+            overallProgress: 99,
+            diagnostics: new Dictionary<string, string> {
+                ["iterations"] = iterationRecords.Count.ToString(),
+                ["finalPlans"] = currentPlans.Count.ToString(),
+            });
+
         return new Csp1dColumnGenerationResult(
             Solution: enrichedSolution,
             Trace: new Csp1dColumnGenerationTrace(
@@ -370,7 +616,10 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         Csp1dConfiguration<V> configuration,
         IReadOnlyList<ICsp1dDomainPolicy<V>> domainPolicies,
         Func<Material<V>, Product<V>, Quantity<V>, bool>? widthFeasibilityCheck,
-        IReadOnlyList<ICsp1dFlowPolicy<V>> flowPolicies) {
+        IReadOnlyList<ICsp1dFlowPolicy<V>> flowPolicies,
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, string?>> canonicalKeyOverrides,
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, IReadOnlyList<CuttingPlan<V>>, bool>> dominanceAcceptOverrides,
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, IReadOnlyList<CuttingPlan<V>>, bool>> candidateFilters) {
         if (configuration.MaxInitialPlans.ToLong() <= 0L) {
             return new InitialPlanPool(Array.Empty<CuttingPlan<V>>(), null);
         }
@@ -378,12 +627,14 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         var generationInput = new GenerationInput<V> {
             Materials = problem.Materials,
             Demands = problem.Demands,
-            Costars = problem.Costars
+            Costars = problem.Costars,
+            DominanceAcceptOverrides = dominanceAcceptOverrides,
+            CandidateFilters = candidateFilters,
         };
 
         CuttingPlanGenerationReport<CuttingPlan<V>> report = _initialGenerator.GenerateWithReport(generationInput);
         var generatedPlans = report.Plans
-            .GroupBy(p => CuttingPlanCanonicalKey.From(p))
+            .GroupBy(p => Csp1dGenerationStrategyProjection.Resolve(p, canonicalKeyOverrides))
             .Select(g => g.First())
             .Take((int)configuration.MaxInitialPlans.ToLong())
             .ToList();
@@ -438,11 +689,38 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                 FailureMessage: failureMessage));
     }
 
+    /// <summary>
+    /// 构建 LP 主问题 / Build the LP master problem.
+    /// </summary>
+    /// <param name="problem">问题定义 / Problem definition.</param>
+    /// <param name="cuttingPlans">当前方案列表 / Current cutting plans.</param>
+    /// <param name="extensions">建模扩展 / Modeling extensions.</param>
+    /// <param name="domainValueSample">领域数值样本 / Domain value sample.</param>
+    /// <param name="feasibilityPhase">
+    /// 是否为"只最小化人工短缺"的可行性阶段 / Whether this is the "minimise artificial deficits only" feasibility phase.
+    /// </param>
+    /// <returns>LP 主问题；注册失败时返回 null / The LP master; null when registration fails.</returns>
+    /// <remarks>
+    /// **可行性阶段额外做两件事**（照抄基线 `buildLpMaster(..., feasibilityPhase = true)`）：
+    ///
+    /// 1. `context.FeasibilityPhase()` —— 让 LP 模式下**也构建 yield 聚合**（基线是 `_mode == MILP || _feasibilityPhase`）。
+    /// 2. 用一个**只惩罚欠产、超产惩罚为零**的 `YieldModelingConfig`——这样目标函数就退化成
+    ///    "最小化人工需求短缺"，解出来的就是**让硬约束可以被满足的最小短缺量**。
+    ///
+    /// **欠产惩罚用的是 `domainValueSample.constants.one`**（单位 1），超产是 `zero`。
+    /// 这不是随手取的值：系数必须**严格为正**才能让人工短缺进入目标；
+    /// 超产为 `zero` 是让**多产不获奖励**，否则求解器会用超产去抵欠产，**短缺量就失真了**。
+    ///
+    /// **The feasibility phase does two extra things** (copied from the baseline's `buildLpMaster(..., feasibilityPhase = true)`): the two steps above. The
+    /// under-production penalty of **one** and over-production of **zero** are not arbitrary: the coefficient must be **strictly positive** for the artificial deficit to
+    /// enter the objective, and over-production must be **zero** so the solver cannot offset deficits with surplus and **distort the deficit amount**.
+    /// </remarks>
     private async Task<LpMaster?> BuildLpMasterAsync(
         Csp1dProblem<V> problem,
         IReadOnlyList<CuttingPlan<V>> cuttingPlans,
         IReadOnlyList<Csp1dModelingExtension<V>> extensions,
-        V domainValueSample) {
+        V domainValueSample,
+        bool feasibilityPhase = false) {
         var model = new LinearMetaModel<Flt64>(name: "csp1d_produce_lp");
         var input = new ProduceInput<V>(
             cuttingPlans: cuttingPlans,
@@ -450,10 +728,14 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             materials: problem.Materials,
             machines: problem.Machines);
 
-        Csp1dProduceContext<V> context = new Csp1dProduceContextBuilder<V>(input)
+        Csp1dProduceContextBuilder<V> builder = new Csp1dProduceContextBuilder<V>(input)
             .Mode(Csp1dModelingMode.LP)
-            .Extensions(extensions)
-            .Build();
+            .Extensions(extensions);
+        if (feasibilityPhase) {
+            builder = builder.FeasibilityPhase();
+            builder = builder.YieldConfig(BuildFeasibilityYieldConfig(problem, domainValueSample));
+        }
+        Csp1dProduceContext<V> context = builder.Build();
 
         Result<Success, ErrorCode, Error<ErrorCode>> registerResult = context.Register(model);
         if (registerResult.IsFailed) {
@@ -463,34 +745,110 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         return new LpMaster(model, context, domainValueSample);
     }
 
-    private async Task<Csp1dMilpSolver.LpResult<V>?> SolveLpMasterAsync(LpMaster master, Int64 iteration) {
-        Result<IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>> lpSolveResult = await _solver.SolveLPAsync($"csp1d-produce-lp-{iteration}", master.Model);
+    /// <summary>
+    /// 构建可行性阶段的人工短缺惩罚配置 / Build the artificial-deficit penalty config for the feasibility phase.
+    /// </summary>
+    /// <param name="problem">问题定义 / Problem definition.</param>
+    /// <param name="domainValueSample">领域数值样本 / Domain value sample.</param>
+    /// <returns>yield 建模配置 / The yield modeling config.</returns>
+    /// <remarks>
+    /// 每条需求一个键：`ProductDemandShadowPriceKey(产品 id, 单位键)`，单位键走唯一实现
+    /// `GenerationQuantityMath.UnitKey`——**与影子价格的键必须一致**，否则这里建的惩罚和
+    /// 后续读的对偶价格**对不上**（B343 修过同形的分叉）。
+    ///
+    /// One key per demand, with the unit key from the single implementation `GenerationQuantityMath.UnitKey` — **it must match the shadow-price key**, or these penalties
+    /// and the duals read later **will not line up** (the same divergence fixed in B343).
+    /// </remarks>
+    private static YieldModelingConfig<V> BuildFeasibilityYieldConfig(
+        Csp1dProblem<V> problem,
+        V domainValueSample) {
+        var underPenalty = new Dictionary<ProductDemandShadowPriceKey, V>();
+        var overPenalty = new Dictionary<ProductDemandShadowPriceKey, V>();
+        // `domainValueSample` 只在这里用作"能否转换"的样本；实际值取 solver 侧的 1 与 0。
+        // **`Flt64` 是唯一受支持的领域数值类型**，其它类型直接跳过该项（与定价器里的早退一致）。
+        // `domainValueSample` is only the sample used to check convertibility; the actual values are solver-side 1 and 0.
+        // **`Flt64` is the only supported domain numeric type**; others skip this term (matching the early exits in the pricing generator).
+        if (typeof(V) != typeof(Flt64)) {
+            return new YieldModelingConfig<V>();
+        }
+        var one = (V)(object)new Flt64(1.0);
+        var zero = (V)(object)Flt64.Zero;
+        foreach (ProductDemand<V> demand in problem.Demands) {
+            var key = new ProductDemandShadowPriceKey(
+                demand.Product.Id,
+                global::Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service.GenerationQuantityMath.UnitKey(demand.Quantity.Unit));
+            underPenalty[key] = one;
+            overPenalty[key] = zero;
+        }
+        return new YieldModelingConfig<V>(
+            UnderProductionPenalty: underPenalty,
+            OverProductionPenalty: overPenalty);
+    }
+
+    /// <summary>
+    /// 求解 LP 主问题，并保留失败的错误码 / Solve the LP master, keeping the failure's error code.
+    /// </summary>
+    /// <param name="master">LP 主问题 / LP master.</param>
+    /// <param name="iteration">迭代号 / Iteration number.</param>
+    /// <param name="progressContext">进度上下文 / Progress context.</param>
+    /// <returns>
+    /// 求解结果；失败时 <c>Result</c> 为 null 且 <c>ErrorCode</c> 带出具体原因 /
+    /// The solve result; on failure <c>Result</c> is null and <c>ErrorCode</c> carries the reason.
+    /// </returns>
+    /// <remarks>
+    /// **为什么必须保留错误码**：两阶段可行性只在**「模型不可行」这个具体错误码**上才触发。
+    /// 原实现失败时直接 `return null`，**把错误码丢掉了**——所以即便调用方想区分"不可行"与"别的失败"，
+    /// **也拿不到依据**。
+    ///
+    /// **Why the error code must be kept**: the two-phase feasibility only triggers on **the specific "model infeasible" code**. The original returned `null` on any
+    /// failure, **discarding the code** — so even a caller wanting to tell "infeasible" from "some other failure" **had no basis**.
+    /// </remarks>
+    private async Task<(Csp1dMilpSolver.LpResult<V>? Result, ErrorCode? ErrorCode)> SolveLpMasterAsync(
+        LpMaster master,
+        Int64 iteration,
+        SolverProgressContext? progressContext) {
+        // 走带 options 的重载，把进度上下文传进框架层——基线正是这样把 `phase(...)` 的子上下文转给 `solver.solveLP`。
+        // Use the options overload so the progress context reaches the framework layer — exactly how the baseline forwards `phase(...)`'s sub-context to `solver.solveLP`.
+        Result<IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>> lpSolveResult = await _solver.SolveLPAsync(
+            master.Model,
+            new FrameworkSolveOptions {
+                Name = $"csp1d-produce-lp-{iteration}",
+                ProgressContext = progressContext,
+            });
         if (lpSolveResult.IsFailed) {
-            return null;
+            return (null, lpSolveResult is Failed<IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>> failed
+                ? failed.Error.Code
+                : null);
         }
 
         try {
-            var lifecycle = new Csp1dShadowPriceLifecycle<V>(master.DomainValueSample);
+            // **与基线一致**：`Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`。
+            // 不传 pipeline 时提取器是空转的，影子价格表永远为空，定价因此永远不产列。
+            // **Matches the baseline**: `Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`.
+            // Without pipelines the extractor is a no-op, the shadow-price map stays empty, and pricing never emits a column.
+            var lifecycle = new Csp1dShadowPriceLifecycle<V>(master.DomainValueSample, master.Context.CgPipelines);
             Result<ShadowPriceMap<V>, ErrorCode, Error<ErrorCode>> shadowPriceResult = lifecycle.ExtractFromDualSolution(master.Model, lpSolveResult.Value.DualSolution);
             if (shadowPriceResult.IsFailed) {
-                return null;
+                return (null, null);
             }
 
-            return new Csp1dMilpSolver.LpResult<V>(
+            var solved = new Csp1dMilpSolver.LpResult<V>(
                 ShadowPrices: shadowPriceResult.Value,
                 Model: master.Model,
                 LpOutput: lpSolveResult.Value,
                 FrameworkShadowPriceMap: lifecycle.FrameworkShadowPriceMap);
+            return (solved, null);
         }
         catch {
-            return null;
+            return (null, null);
         }
     }
 
     private async Task<FinalMilpSolveResult> SolveFinalMilpAsync(
         Csp1dProblem<V> problem,
         IReadOnlyList<CuttingPlan<V>> cuttingPlans,
-        Csp1dSolveConfig<V> solveConfig) {
+        Csp1dSolveConfig<V> solveConfig,
+        SolverProgressContext? progressContext) {
         Result<Csp1dMilpSolver.MilpResult<V>?, ErrorCode, Error<ErrorCode>> solveResult = await new Csp1dMilpSolver(_solver).SolveAsync(
             input: new ProduceInput<V>(
                 CuttingPlans: cuttingPlans,
@@ -503,7 +861,8 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             lengthConfig: solveConfig.LengthConfig,
             extensions: solveConfig.AllExtensions,
             objectivePolicies: solveConfig.ExtensionSet.ObjectivePolicies,
-            isFinalMilp: true);
+            isFinalMilp: true,
+            progressContext: progressContext);
 
         if (solveResult.IsFailed) {
             string message = solveResult is Fatal<Csp1dMilpSolver.MilpResult<V>?, ErrorCode, Error<ErrorCode>> fatal
@@ -539,10 +898,12 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         IReadOnlyList<CuttingPlan<V>> existing,
         IReadOnlyList<CuttingPlan<V>> candidates,
         IReadOnlyList<ICsp1dFlowPolicy<V>> flowPolicies,
-        ICsp1dFlowContext<V> flowContext) {
-        var existingKeys = new HashSet<CuttingPlanCanonicalKey>(existing.Select(p => CuttingPlanCanonicalKey.From(p)));
+        ICsp1dFlowContext<V> flowContext,
+        IReadOnlyList<global::System.Func<CuttingPlan<V>, string?>> canonicalKeyOverrides) {
+        var existingKeys = new HashSet<CuttingPlanCanonicalKey>(
+            existing.Select(p => Csp1dGenerationStrategyProjection.Resolve(p, canonicalKeyOverrides)));
         return candidates.Where(candidate => {
-            var key = CuttingPlanCanonicalKey.From(candidate);
+            CuttingPlanCanonicalKey key = Csp1dGenerationStrategyProjection.Resolve(candidate, canonicalKeyOverrides);
             if (existingKeys.Contains(key)) {
                 return false;
             }
@@ -584,5 +945,63 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             CrossContributionDominated: left.CrossContributionDominated + right.CrossContributionDominated,
             ElapsedMilliseconds: left.ElapsedMilliseconds + right.ElapsedMilliseconds,
             StopReason: right.StopReason);
+    }
+
+    /// <summary>
+    /// 定价迭代子阶段 / The pricing-iteration sub-stage.
+    /// </summary>
+    /// <param name="iterationNumber">迭代号 / Iteration number.</param>
+    /// <returns>子阶段 / The sub-stage.</returns>
+    private static SolverSubStage PricingIterationSubStage(Int64 iterationNumber) =>
+        new(
+            Key: "pricing_iteration",
+            DefaultTemplate: "定价迭代 {iter}",
+            MessageKey: "i18n.ospf.substage.pricing_iteration",
+            Args: new Dictionary<string, string> { ["iter"] = iterationNumber.ToString() });
+
+    /// <summary>
+    /// 上报进度（对齐基线的 `reportProgress`）/ Report progress (matching the baseline's `reportProgress`).
+    /// </summary>
+    /// <param name="context">进度上下文 / Progress context.</param>
+    /// <param name="stage">阶段 / Stage.</param>
+    /// <param name="subStage">子阶段 / Sub-stage.</param>
+    /// <param name="progressInStage">阶段内进度 / In-stage progress.</param>
+    /// <param name="overallProgress">总体进度 / Overall progress.</param>
+    /// <param name="diagnostics">诊断信息 / Diagnostics.</param>
+    private static void ReportProgress(
+        SolverProgressContext? context,
+        SolverStage stage,
+        SolverSubStage subStage,
+        int progressInStage,
+        int overallProgress,
+        Dictionary<string, string> diagnostics) {
+        context?.Report(new SolverProgressSnapshot(
+            Stage: stage,
+            ProgressInStage: progressInStage,
+            OverallProgress: overallProgress,
+            SubStage: subStage,
+            Diagnostics: diagnostics));
+    }
+
+    /// <summary>
+    /// 按比例计算区间内进度（对齐基线的 `rangedProgress`）/ Compute ranged progress (matching the baseline's `rangedProgress`).
+    /// </summary>
+    /// <param name="start">区间起点 / Range start.</param>
+    /// <param name="end">区间终点 / Range end.</param>
+    /// <param name="index">当前序号 / Current index.</param>
+    /// <param name="total">总数 / Total.</param>
+    /// <returns>区间内进度 / Progress within the range.</returns>
+    /// <remarks>
+    /// **`total` 不大于 0 时返回 `end`**，与基线一致——总数为零意味着"已经走完"，
+    /// 而不是"进度为零"。**区间夹取用 `end - start`**，防止 `index` 超出 `total` 时越界。
+    ///
+    /// **Returns `end` when `total` is not positive**, matching the baseline — a zero total means "already done", not "zero progress". The clamp uses
+    /// `end - start` so an `index` beyond `total` cannot overshoot.
+    /// </remarks>
+    private static int RangedProgress(int start, int end, int index, int total) {
+        if (total <= 0) {
+            return end;
+        }
+        return start + global::System.Math.Clamp((end - start) * index / total, 0, end - start);
     }
 }

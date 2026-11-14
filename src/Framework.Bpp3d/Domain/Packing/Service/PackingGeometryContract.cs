@@ -11,6 +11,23 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing.Service;
 /// </summary>
 internal static class PackingGeometryContract {
     /// <summary>
+    /// 箱子类型缺失错误信息 / Missing bin type message.
+    /// </summary>
+    /// <param name="source">调用来源 / Call source</param>
+    /// <returns>错误信息 / Error message</returns>
+    public static string UnsupportedMissingBinTypeMessage(string source)
+        => $"Unsupported placement geometry in {source}: type=missing_bin_type, the bin carries no container extents, so the outside-bin check cannot be verified.";
+
+    /// <summary>
+    /// 几何信息缺失错误信息 / Missing geometry snapshot message.
+    /// </summary>
+    /// <param name="source">调用来源 / Call source</param>
+    /// <param name="itemIndex">物品序号 / Item index</param>
+    /// <returns>错误信息 / Error message</returns>
+    public static string UnsupportedMissingGeometryMessage(string source, int itemIndex)
+        => $"Unsupported placement geometry in {source}: type=missing_geometry, item[{itemIndex}] carries no frozen bounding box; the overlap check cannot be verified.";
+
+    /// <summary>
     /// 横向圆柱支撑不足错误信息 / Horizontal cylinder support violation message.
     /// </summary>
     /// <param name="source">调用来源 / Call source</param>

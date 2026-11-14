@@ -3,10 +3,7 @@
 using Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
-using Fuookami.Ospf.Utils.Functional;
-using System;
 using System.Collections.Generic;
-using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional.Success, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>;
 
 namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Resource.Model;
 /// <summary>
@@ -17,47 +14,20 @@ public class BunchCapacitySchedulingResourceUsage<R, C, V>
     where R : Resource<C, V>, ICapacityActionResource<C, V>
     where C : IAbstractResourceCapacity<V>
     where V : struct, IRealNumber<V> {
-    private readonly string _name;
-
-    public BunchCapacitySchedulingResourceUsage(TimeWindow<V> timeWindow, IReadOnlyList<R> resources) {
-        _name = "bunch_capacity_scheduling_resource";
-        TimeSlots = BuildTimeSlots(timeWindow, resources);
-    }
-
-    /// <inheritdoc/>
-    public override string Name => _name;
-
-    /// <inheritdoc/>
-    public override IReadOnlyList<CapacityActionResourceTimeSlot<R, C, V>> TimeSlots { get; }
-
-    /// <inheritdoc/>
-    public override Try Register(object model) => Results.Ok<Success>(Results.SuccessInstance);
-
-    private static IReadOnlyList<CapacityActionResourceTimeSlot<R, C, V>> BuildTimeSlots(
-        TimeWindow<V> timeWindow, IReadOnlyList<R> resources) {
-        var timeSlots = new List<CapacityActionResourceTimeSlot<R, C, V>>();
-        foreach (R resource in resources) {
-            foreach (C capacity in resource.Capacities) {
-                ulong index = 0;
-                DateTimeOffset beginTime = capacity.Time.Start > timeWindow.Start ? capacity.Time.Start : timeWindow.Start;
-                DateTimeOffset endTime = capacity.Time.End < timeWindow.End ? capacity.Time.End : timeWindow.End;
-                while (beginTime < endTime) {
-                    TimeSpan thisInterval = endTime - beginTime;
-                    if (thisInterval > capacity.Interval) {
-                        thisInterval = capacity.Interval;
-                    }
-
-                    if (thisInterval > timeWindow.Interval) {
-                        thisInterval = timeWindow.Interval;
-                    }
-
-                    var time = new TimeRange(beginTime, beginTime + thisInterval);
-                    timeSlots.Add(new CapacityActionResourceTimeSlot<R, C, V>(time, resource, capacity, index));
-                    beginTime += thisInterval;
-                    index++;
-                }
-            }
-        }
-        return timeSlots;
+    /// <summary>
+    /// 构造 / Constructor.
+    /// </summary>
+    /// <param name="timeWindow">时间窗口 / The time window.</param>
+    /// <param name="resources">资源列表 / The resources.</param>
+    /// <param name="amounts">产能决策变量视图 / The capacity decision-variable view.</param>
+    /// <remarks>
+    /// **B729 之后这个类只剩一个名字**：它原先与 PlanCapacitySchedulingResourceUsage 逐字相同（整份文件只差名字字符串），
+    /// 切时隙与注册失败的处理都已上移到 `CapacitySchedulingResourceUsage`。
+    ///
+    /// **After B729 this class is just a name**: it used to be byte-identical to PlanCapacitySchedulingResourceUsage (the whole file differed only in the name string), and both slot cutting and the failing
+    /// registration moved up into `CapacitySchedulingResourceUsage`.
+    /// </remarks>
+    public BunchCapacitySchedulingResourceUsage(TimeWindow<V> timeWindow, IReadOnlyList<R> resources, ICapacityAmountSource? amounts = null)
+        : base("bunch_capacity_scheduling_resource", timeWindow, resources, amounts) {
     }
 }

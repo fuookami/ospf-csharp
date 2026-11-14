@@ -4,6 +4,15 @@
     <AssemblyName>Fuookami.Ospf.Example.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!--
+      真实求解用例的开关（B752）/ The switch for real-solve cases (B752).
+      开启方式：dotnet test … -p:RunScipIntegration=true，**必须在 build 时带上**；
+      只在 `test` 上加不会定义这个常量，那些用例会**静默消失**——本批就是因为缺这三行，
+      Demo4 的真实求解判据一开始根本没被发现。
+      Enable with -p:RunScipIntegration=true, **passed to the build**; adding it only to `test` does not define this constant and those cases silently disappear — this batch started with
+      exactly that gap, and Demo4's real-solve criterion was never discovered because these three lines were missing.
+    -->
+    <DefineConstants Condition="'$(RunScipIntegration)' == 'true'">$(DefineConstants);SCIP_INTEGRATION</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />

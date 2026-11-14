@@ -1,35 +1,35 @@
 #nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
+using Fuookami.Ospf.Math.Algebra.Concept;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Math.Symbol;
+using Fuookami.Ospf.Math.Symbol.Inequality;
 using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Intermediate;
 using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
-using Fuookami.Ospf.Math.Algebra.Concept;
-using Fuookami.Ospf.Math.Algebra.Number;
-using Fuookami.Ospf.Math.Symbol;
-using Fuookami.Ospf.Math.Symbol.Inequality;
-using Fuookami.Ospf.Utils.Error;
-using Fuookami.Ospf.Utils.Functional;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using FrameworkSolveOptions = Fuookami.Ospf.Framework.Solver.FrameworkSolveOptions;
 
 namespace Fuookami.Ospf.Core.Plugin.Mindopt;
 
 /// <summary>
-/// Mindopt Benders 分解求解器实现。
-/// Mindopt Benders decomposition solver implementation.
+/// MindOPT Benders 分解求解器实现。
+/// MindOPT Benders decomposition solver implementation.
 ///
-/// 使用 Mindopt 求解器实现线性 Benders 分解策略，支持主问题求解和子问题求解（桩求解器无法提取对偶解和 Farkas 证明）。
-/// Implements linear Benders decomposition strategy using Mindopt solver, supporting master problem solving
-/// and sub-problem solving (stub solver cannot extract dual solutions and Farkas proofs).
+/// 使用 MindOPT 求解器实现线性 Benders 主问题、行对偶和 Farkas 子问题证据。
+/// Implements linear Benders master solves with MindOPT row duals and Farkas sub-problem evidence.
 /// </summary>
 public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBendersDecompositionSolver {
     /// <summary>求解器名称 / Solver name.</summary>
@@ -43,8 +43,12 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public MindoptBendersDecompositionSolver(SolverConfig? config = null) {
-        Config = config ?? new VendorSolverConfig();
+        Config = config ?? new SolverConfig();
     }
+
+    /// <inheritdoc/>
+    public Framework.Solver.IBendersDecompositionSolver WithTimeLimit(TimeSpan timeLimit) =>
+        new MindoptBendersDecompositionSolver(Config with { TimeLimit = timeLimit });
 
     // ===== IBendersDecompositionSolver: Master problem =====
 
@@ -74,8 +78,7 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-            return Results.Ok<SolverOutput>(ok.Value);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Map<SolverOutput>(_ => ok.Value);
         }
 
         if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
@@ -87,6 +90,56 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
         }
 
         return Results.Failed<SolverOutput>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+    }
+
+    /// <summary>
+    /// 求解线性 Benders 主问题并保留统一报告。
+    /// Solve a linear Benders master problem while retaining the unified report.
+    /// </summary>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveMasterReportAsync(
+        string name,
+        LinearMetaModel<Flt64> metaModel,
+        bool toLogModel = false,
+        RegistrationStatusCallBack? registrationStatusCallBack = null,
+        SolvingStatusCallBack? solvingStatusCallBack = null) {
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
+            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
+        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismOk) {
+            return MindoptDualSupport.Propagate<SolveReport<Flt64>, LinearMechanismModel<Flt64>>(
+                mechanismResult,
+                "MindOPT 主问题模型转储失败 / MindOPT master model dump failed");
+        }
+
+        using LinearMechanismModel<Flt64> mechanismModel = mechanismOk.Value;
+        MindoptLinearSolver solver = CreateSolver();
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return MindoptDualSupport.Propagate<SolveReport<Flt64>, LinearTriadModel>(
+                triadResult,
+                "MindOPT 主问题矩阵转换失败 / MindOPT master matrix conversion failed");
+        }
+
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportResult =
+            await solver.InvokeReportAsync(
+                model: triadModel,
+                solvingStatusCallBack: solvingStatusCallBack);
+        if (reportResult is not Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportOk) {
+            return MindoptDualSupport.Propagate<SolveReport<Flt64>, SolveReport<Flt64>>(
+                reportResult,
+                "MindOPT 主问题求解失败 / MindOPT master solve failed");
+        }
+        if (reportOk.Value.Solution is { } solution) {
+            Result<Success, ErrorCode, Error<ErrorCode>> applied =
+                mechanismModel.ApplySolverSolution(solution.Values.Values);
+            if (!applied.IsOk) {
+                return MindoptDualSupport.Propagate<SolveReport<Flt64>, Success>(
+                    applied,
+                    "MindOPT 主问题解回填失败 / MindOPT master solution writeback failed");
+            }
+        }
+        return Results.Ok(reportOk.Value);
     }
 
     /// <summary>
@@ -121,10 +174,7 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
     // ===== IBendersDecompositionSolver: Sub problem =====
 
     /// <summary>
-    /// 求解线性 Benders 子问题 / Solve linear Benders sub problem.
-    ///
-    /// 桩求解器无法提取对偶解和 Farkas 证明，返回空字典。
-    /// Stub solver cannot extract dual solutions and Farkas proofs, returns empty dictionaries.
+    /// 求解线性 Benders 子问题 / Solve a linear Benders sub-problem.
     /// </summary>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
@@ -154,7 +204,7 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
         // Step 2: Build fixed variable index map (IVariableItem -> triad model column index)
         var fixedIndexMap = new Dictionary<int, Flt64>();
         foreach (KeyValuePair<IVariableItem, Flt64> kv in fixedVariables) {
-            int? colIndex = metaModel.Tokens.IndexOf(kv.Key);
+            int? colIndex = mechanismModel.Tokens.IndexOf(kv.Key);
             if (colIndex is { } ci) {
                 fixedIndexMap[ci] = kv.Value;
             }
@@ -162,45 +212,96 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
 
         // Step 3: Dump mechanism model to triad model, then fix and relax
         MindoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ => Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
         LinearTriadModel subModel = FixAndRelaxToLP(triadModel, fixedIndexMap);
 
         using (triadModel)
         using (subModel) {
-            // Step 4: Solve the sub-problem (stub solver — dual/Farkas extraction not supported)
-            var dualSolution = new Dictionary<MathConstraint, Flt64>();
-            var farkasSolution = new Dictionary<MathConstraint, Flt64>();
+            MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
+            Result<MindoptLinearOutcome, ErrorCode, Error<ErrorCode>> solved =
+                await solver.InvokeReportWithDualsAsync(
+                    model: subModel,
+                    solvingStatusCallBack: solvingStatusCallBack,
+                    requireFarkas: true);
+            if (solved is not Ok<MindoptLinearOutcome, ErrorCode, Error<ErrorCode>> solvedOk) {
+                return MindoptDualSupport.Propagate<
+                    Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                    MindoptLinearOutcome>(
+                        solved,
+                        "MindOPT Benders 子问题求解失败 / MindOPT Benders sub-problem solving failed");
+            }
 
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)subModel, solvingStatusCallBack);
+            MindoptLinearOutcome outcome = solvedOk.Value;
+            if (outcome.Report.ProblemStatus == ProblemStatus.Feasible
+                && outcome.RowDuals is { } nativeDuals) {
+                Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> tidyDuals =
+                    subModel.TidyDualSolution(nativeDuals);
+                if (tidyDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+                    return MindoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyList<Flt64>>(
+                            tidyDuals,
+                            "MindOPT 对偶值与子问题行数不一致 / MindOPT duals do not align with the sub-problem rows");
+                }
+                Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+                    MindoptReportSupport.ToLegacy(Results.Ok(outcome.Report));
+                if (legacy is not Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> output) {
+                    return MindoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        FeasibleSolverOutput<Flt64>>(
+                            legacy,
+                            "MindOPT Benders 子问题无可返回的可行解 / MindOPT Benders sub-problem has no feasible output");
+                }
+                IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+                    MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+                return mechanismModel.ApplySolverSolution(output.Value.Solution.Values)
+                    .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                        new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
+                            Result: output.Value,
+                            DualSolution: dualSolution,
+                            Cuts: null) {
+                            Report = outcome.Report,
+                        });
+            }
 
-            // Step 5: Build result
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
+            if (outcome.Report.ProblemStatus == ProblemStatus.Infeasible
+                && outcome.FarkasDuals is { } nativeFarkas) {
+                Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> tidyFarkas =
+                    subModel.TidyDualSolution(nativeFarkas);
+                if (tidyFarkas is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> farkasOk) {
+                    return MindoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyList<Flt64>>(
+                            tidyFarkas,
+                            "MindOPT Farkas 值与子问题行数不一致 / MindOPT Farkas values do not align with the sub-problem rows");
+                }
+                Result<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkas =
+                    MathConstraintOrigins.ToFarkasSolution(farkasOk.Value, originMap, "MindOPT");
+                if (farkas is not Ok<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkasResult) {
+                    return MindoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyDictionary<MathConstraint, Flt64>>(
+                            farkas,
+                            "MindOPT Benders 子问题没有可用的 Farkas 证书 / MindOPT Benders sub-problem has no usable Farkas certificate");
+                }
                 return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                    new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
-                        Result: ok.Value,
-                        DualSolution: dualSolution,
+                    new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
+                        FarkasDualSolution: farkasResult.Value,
                         Cuts: null));
             }
 
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                if (f.Error.Code == ErrorCode.ORModelInfeasible) {
-                    // Return infeasible result with empty Farkas duals
-                    return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                        new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
-                            FarkasDualSolution: farkasSolution,
-                            Cuts: null));
-                }
-                return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
-            }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-            }
-
             return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+                new Err<ErrorCode>(
+                    ErrorCode.OREngineSolvingException,
+                    "MindOPT Benders 子问题未给出可用对偶或 Farkas 证据 / " +
+                    $"MindOPT Benders sub-problem returned neither usable duals nor Farkas evidence: {outcome.Report.ProblemStatus}"));
         }
     }
 
@@ -263,7 +364,14 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         MindoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
@@ -284,19 +392,25 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
             if (fixedVarMap.ContainsKey(v.Index)) {
                 // Fix variable: LB = UB = fixed value, relax to continuous
                 Flt64 fixedVal = fixedVarMap[v.Index];
-                vars.Add(new ModelViewVariable(
-                    v.Index, fixedVal, fixedVal,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
+                vars.Add(v.WithDomain(
+                    lowerBound: fixedVal,
+                    upperBound: fixedVal,
+                    type: Continuous.Instance));
             }
             else {
                 // Relax to continuous
-                vars.Add(new ModelViewVariable(
-                    v.Index, v.LowerBound, v.UpperBound,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
+                vars.Add(v.WithDomain(
+                    lowerBound: v.LowerBound,
+                    upperBound: v.UpperBound,
+                    type: Continuous.Instance));
             }
         }
 
-        return new LinearTriadModel(vars, (LinearConstraintBatch)model.Constraints, model.Objective, model.Name);
+        return new LinearTriadModel(
+            variables: vars,
+            constraints: (LinearConstraintBatch)model.Constraints.Copy(),
+            objective: model.Objective,
+            name: model.Name);
     }
 
     /// <summary>
@@ -335,7 +449,9 @@ public sealed class MindoptBendersDecompositionSolver : Framework.Solver.IBender
                 new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResultOf<V>(
                     Result: ConvertFeasibleOutput<V>(feasible.Result),
                     DualSolution: feasible.DualSolution,
-                    Cuts: feasible.Cuts),
+                    Cuts: feasible.Cuts) {
+                    Report = feasible.Report,
+                },
             Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult infeasible =>
                 new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResultOf<V>(
                     FarkasDualSolution: infeasible.FarkasDualSolution,

@@ -23,6 +23,22 @@ public static class ForceUnits {
     /// <summary>磅力 / Pound-force (1 lbf = 4.4482216152605 N).</summary>
     public static readonly PhysicalUnit PoundForce = new DerivedUnit(Newton.ScaleMultiply(Scale.Invoke(4.4482216152605)), "pound-force", "lbf");
 
+    // 以下 2 个是 B1143 按基线 Force.kt 补的。
+    //
+    // The two below were added in B1143 from Force.kt.
+
+    /// <summary>**克力（千克力的千分之一 = 0.00980665 N）** / Gram-force.</summary>
+    public static readonly PhysicalUnit GramForce = new DerivedUnit(
+        Newton.ScaleMultiply(Scale.Invoke(0.00980665)), "gram-force", "gf");
+    /// <summary>**千磅力（磅力的一千倍 = 4448.2216 N）** / Kilopound-force.</summary>
+    /// <remarks>
+    /// **名字里的 kilo 是"一千磅力"，不是"千磅"的质量**——**它在工程里常写作 `kip`。**
+    ///
+    /// **The kilo means "a thousand pound-forces", not a thousand pounds of mass** — **engineers write it as `kip`.**
+    /// </remarks>
+    public static readonly PhysicalUnit KilopoundForce = new DerivedUnit(
+        Newton.ScaleMultiply(Scale.Invoke(4448.2216152605)), "kilopound-force", "kip");
+
     private sealed class DerivedUnit : PhysicalUnit {
         private readonly PhysicalUnit _inner;
         private readonly string _name;

@@ -1,32 +1,32 @@
 #nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
+using Fuookami.Ospf.Math.Algebra.Concept;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Math.Symbol;
 using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Intermediate;
 using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
-using Fuookami.Ospf.Math.Algebra.Concept;
-using Fuookami.Ospf.Math.Algebra.Number;
-using Fuookami.Ospf.Math.Symbol;
-using Fuookami.Ospf.Utils.Error;
-using Fuookami.Ospf.Utils.Functional;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Fuookami.Ospf.Core.Plugin.Mindopt;
 
 /// <summary>
-/// Mindopt 列生成求解器实现。
-/// Mindopt column generation solver implementation.
+/// MindOPT 列生成求解器实现。
+/// MindOPT column generation solver implementation.
 ///
-/// 使用 Mindopt 求解器实现列生成策略，支持 MILP 求解、多解求解和 LP 松弛求解（桩求解器无法提取对偶解）。
-/// Implements column generation strategy using Mindopt solver, supporting MILP solving,
-/// multi-solution solving, and LP relaxation solving (stub solver cannot extract dual solutions).
+/// 使用 MindOPT 求解器实现列生成策略，支持 MILP、多解和带原生行对偶的 LP 松弛。
+/// Implements column generation using MindOPT, including MILP, solution pools, and LP row duals.
 /// </summary>
 public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGenerationSolver {
     /// <summary>求解器名称 / Solver name.</summary>
@@ -40,7 +40,7 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public MindoptColumnGenerationSolver(SolverConfig? config = null) {
-        Config = config ?? new VendorSolverConfig();
+        Config = config ?? new SolverConfig();
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Bind(_ => solveResult);
         }
 
         return solveResult;
@@ -127,14 +127,21 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
 
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         MindoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(_ => Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             Result<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> solveResult =
                 await solver.InvokeAsync(triadModel, amount, solvingStatusCallBack);
 
             if (solveResult is Ok<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Item1.Solution.Values);
+                return mechanismModel.ApplySolverSolution(ok.Value.Item1.Solution.Values).Bind(_ => solveResult);
             }
 
             return solveResult;
@@ -159,15 +166,14 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
     }
 
     /// <summary>
-    /// 求解 LP 松弛问题（桩求解器无法提取对偶解，返回空对偶字典）。
-    /// Solve LP relaxation problem (stub solver cannot extract duals, returns empty dual dictionary).
+    /// 求解 LP 松弛问题并返回逐行对偶 / Solve the LP relaxation and return row duals.
     /// </summary>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
     /// <param name="toLogModel">是否记录模型日志 / Whether to log model.</param>
     /// <param name="registrationStatusCallBack">注册状态回调 / Registration status callback.</param>
     /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
-    /// <returns>LP 求解结果（空对偶解）/ LP solving result with empty dual solution.</returns>
+    /// <returns>LP 求解结果（含逐行对偶）/ LP solving result with row duals.</returns>
     public async Task<Result<Framework.Solver.IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>>> SolveLPAsync(
         string name,
         LinearMetaModel<Flt64> metaModel,
@@ -182,31 +188,64 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
 
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         MindoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IColumnGenerationSolver.LpResult>(_ => Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
         LinearTriadModel relaxedModel = RelaxToLP(triadModel);
 
         using (triadModel)
         using (relaxedModel) {
-            // Stub solver: dual extraction not supported — return empty dual dictionary
-            var dualSolution = new Dictionary<MathConstraint, Flt64>();
-
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)relaxedModel, solvingStatusCallBack);
-
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                return Results.Ok(new Framework.Solver.IColumnGenerationSolver.LpResult(ok.Value, dualSolution));
+            MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
+            Result<MindoptLinearOutcome, ErrorCode, Error<ErrorCode>> solved =
+                await solver.InvokeReportWithDualsAsync(
+                    model: relaxedModel,
+                    solvingStatusCallBack: solvingStatusCallBack);
+            if (solved is not Ok<MindoptLinearOutcome, ErrorCode, Error<ErrorCode>> solvedOk) {
+                return MindoptDualSupport.Propagate<
+                    Framework.Solver.IColumnGenerationSolver.LpResult,
+                    MindoptLinearOutcome>(
+                        solved,
+                        "MindOPT LP 求解失败 / MindOPT LP solving failed");
+            }
+            if (solvedOk.Value.Report.ProblemStatus != ProblemStatus.Feasible
+                || solvedOk.Value.RowDuals is null) {
+                return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(
+                    new Err<ErrorCode>(
+                        ErrorCode.Other,
+                        "MindOPT LP 未找到可用于定价的 incumbent 或对偶 / " +
+                        $"MindOPT LP produced no pricing incumbent or duals " +
+                        $"(problemStatus={solvedOk.Value.Report.ProblemStatus})"));
             }
 
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(f.Error);
+            Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> rowDuals =
+                relaxedModel.TidyDualSolution(solvedOk.Value.RowDuals);
+            if (rowDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+                return MindoptDualSupport.Propagate<
+                    Framework.Solver.IColumnGenerationSolver.LpResult,
+                    IReadOnlyList<Flt64>>(
+                        rowDuals,
+                        "MindOPT 对偶值与 LP 行数不一致 / MindOPT duals do not align with the LP rows");
             }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
+            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+                MindoptReportSupport.ToLegacy(Results.Ok(solvedOk.Value.Report));
+            if (legacy is not Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> output) {
+                return MindoptDualSupport.Propagate<
+                    Framework.Solver.IColumnGenerationSolver.LpResult,
+                    FeasibleSolverOutput<Flt64>>(
+                        legacy,
+                        "MindOPT LP 没有可返回的可行解 / MindOPT LP has no feasible output");
             }
-
-            return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+            IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+                MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+            return mechanismModel.ApplySolverSolution(output.Value.Solution.Values)
+                .Map(_ => new Framework.Solver.IColumnGenerationSolver.LpResult(
+                    output.Value,
+                    dualSolution));
         }
     }
 
@@ -255,7 +294,14 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         MindoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
@@ -289,21 +335,17 @@ public sealed class MindoptColumnGenerationSolver : Framework.Solver.IColumnGene
     private static LinearTriadModel RelaxToLP(LinearTriadModel model) {
         var relaxedVars = new List<ModelViewVariable>(model.Variables.Count);
         foreach (ModelViewVariable v in model.Variables) {
-            relaxedVars.Add(new ModelViewVariable(
-                v.Index,
-                v.LowerBound,
-                v.UpperBound,
-                Continuous.Instance,
-                v.Name,
-                v.InitialResult,
-                v.Slack));
+            relaxedVars.Add(v.WithDomain(
+                lowerBound: v.LowerBound,
+                upperBound: v.UpperBound,
+                type: Continuous.Instance));
         }
 
         return new LinearTriadModel(
-            relaxedVars,
-            (LinearConstraintBatch)model.Constraints,
-            model.Objective,
-            model.Name);
+            variables: relaxedVars,
+            constraints: (LinearConstraintBatch)model.Constraints.Copy(),
+            objective: model.Objective,
+            name: model.Name);
     }
 
     /// <summary>

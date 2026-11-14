@@ -1,10 +1,12 @@
 #nullable enable
 
-using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
-using Fuookami.Ospf.Framework.GanttScheduling.Domain.Task.Model;
-using Fuookami.Ospf.Math.Algebra.Number;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Framework.GanttScheduling.Domain.Task.Model;
+using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Task.Model;
 
@@ -20,7 +22,7 @@ public sealed class Aircraft(
     AircraftMinorType MinorType,
     AircraftCapacity Capacity
 ) : Executor(RegNo.No, RegNo.No) {
-    private static readonly Dictionary<AircraftRegisterNumber, Aircraft> Pool = new();
+    private static readonly ConcurrentDictionary<AircraftRegisterNumber, Aircraft> Pool = new();
     private AircraftUsability? _usability;
 
     /// <summary>注册号 / Register number.</summary>
@@ -32,8 +34,8 @@ public sealed class Aircraft(
     /// <summary>容量 / Capacity.</summary>
     public AircraftCapacity Capacity { get; } = Capacity;
 
-    /// <summary>所有已注册的飞机 / All registered aircraft.</summary>
-    public static IReadOnlyCollection<Aircraft> Values => Pool.Values;
+    /// <summary>已注册飞机的快照 / Snapshot of registered aircraft.</summary>
+    public static IReadOnlyCollection<Aircraft> Values => Pool.Values.ToArray();
 
     /// <summary>飞机类型 / Aircraft type.</summary>
     public AircraftType Type => MinorType.Type;
@@ -59,6 +61,8 @@ public sealed class Aircraft(
     /// <summary>可用性 / Usability.</summary>
     public AircraftUsability Usability => _usability
         ?? throw new InvalidOperationException("Usability not initialized. Call SetUsability first.");
+
+    internal AircraftUsability? ConfiguredUsability => _usability;
 
     /// <summary>
     /// 设置飞机可用性。

@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using Fuookami.Ospf.Framework.Log;
 
 namespace Fuookami.Ospf.Framework.Persistence;
 /// <summary>
@@ -11,7 +12,7 @@ public sealed record LogRecordBytePo(
     string Version,
     string ServiceId,
     string Step,
-    Log.LogRecordType Type,
+    LogRecordType Type,
     DateTime Time,
     DateTime AvailableTime,
     byte[] Value);
@@ -24,7 +25,7 @@ public sealed record LogRecordStringPo(
     string Version,
     string ServiceId,
     string Step,
-    Log.LogRecordType Type,
+    LogRecordType Type,
     DateTime Time,
     DateTime AvailableTime,
     string Value);

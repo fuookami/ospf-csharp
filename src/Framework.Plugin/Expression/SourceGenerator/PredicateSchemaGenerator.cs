@@ -253,7 +253,14 @@ internal static class PredicateSchemaRenderer {
         sb.AppendLine($"{indent}/// <summary>");
         sb.AppendLine($"{indent}/// 自动生成的谓词 schema / Auto-generated predicate schema for {model.EntityName}.");
         sb.AppendLine($"{indent}/// </summary>");
-        sb.AppendLine($"{indent}public sealed partial class {model.SchemaName}");
+        // **`HasColumnMapping` 只在真要生成列映射时才实现**：空实现这个接口等于声称"我提供列映射"，
+        // 而调用方会据此去读 `ColumnMapping`——一个不存在的成员。
+        // **`IHasColumnMapping` is implemented only when the column mapping is really generated**: implementing it with nothing behind it claims "I provide a column mapping", and a caller would then
+        // go and read `ColumnMapping`, a member that does not exist.
+        string declaration = model.GenerateColumnMapping
+            ? $"public sealed partial class {model.SchemaName} : Fuookami.Ospf.Framework.Persistence.Expression.IHasColumnMapping"
+            : $"public sealed partial class {model.SchemaName}";
+        sb.AppendLine($"{indent}{declaration}");
         sb.AppendLine($"{indent}{{");
 
         // Properties
@@ -286,6 +293,28 @@ internal static class PredicateSchemaRenderer {
                 sb.AppendLine($"{indent}            [\"{Escape(prop.PropertyName)}\"] = \"{Escape(prop.BackendName)}\",");
             }
             sb.AppendLine($"{indent}        }};");
+
+            // **`CreateBinder` 是"用列映射包一层外部解析器"**：调用方给一个 `(后端名) -> 列` 的解析器，
+            // 这里先把属性路径翻成后端名再交给它。少了这一层，调用方就得自己查 `ColumnMapping`，
+            // 于是每个后端各写一遍同样的查表逻辑。
+            // **`CreateBinder` wraps an external resolver with the column mapping**: the caller supplies a `(backend name) -> column` resolver and this first translates the property path into the
+            // backend name. Without it every backend would re-implement the same lookup.
+            sb.AppendLine();
+            sb.AppendLine($"{indent}    /// <summary>用列映射包装外部解析器 / Wrap an external resolver with the column mapping.</summary>");
+            sb.AppendLine($"{indent}    public static Fuookami.Ospf.Framework.Persistence.Expression.IColumnBinder<C> CreateBinder<C>(");
+            sb.AppendLine($"{indent}        System.Func<string, C?> resolver)");
+            sb.AppendLine($"{indent}        where C : notnull =>");
+            sb.AppendLine($"{indent}        new Binder<C>(resolver);");
+            sb.AppendLine();
+            sb.AppendLine($"{indent}    private sealed class Binder<C>(");
+            sb.AppendLine($"{indent}        System.Func<string, C?> resolver)");
+            sb.AppendLine($"{indent}        : Fuookami.Ospf.Framework.Persistence.Expression.IColumnBinder<C>");
+            sb.AppendLine($"{indent}        where C : notnull {{");
+            sb.AppendLine($"{indent}        public C? Resolve(string propertyPath) {{");
+            sb.AppendLine($"{indent}            string backendName = ColumnMapping.TryGetValue(propertyPath, out string? mapped) ? mapped : propertyPath;");
+            sb.AppendLine($"{indent}            return resolver(backendName);");
+            sb.AppendLine($"{indent}        }}");
+            sb.AppendLine($"{indent}    }}");
         }
 
         sb.AppendLine($"{indent}}}");

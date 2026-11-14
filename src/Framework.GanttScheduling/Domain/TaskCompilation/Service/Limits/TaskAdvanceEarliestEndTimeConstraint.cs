@@ -83,21 +83,62 @@ public class TaskAdvanceEarliestEndTimeConstraint<E, A>
     bool IMetaConstraintGroup.Lazy => false;
 
     /// <inheritdoc/>
-    public Try Invoke(object model) => Results.Ok<Success>(Results.SuccessInstance);
+    /// <remarks>
+    /// 每任务一行：`estEnd ≥ 最早结束时间`，名字 `task_advance_earliest_end_time_{任务}`。任务筛选（含基线里看起来反了的那一半）见
+    /// `EndConstraintRows.Add` 的注释。
+    ///
+    /// 影子价格**已接线**：行上带 `args`（本类键类型），`Refresh` 从对偶解里认回这些行，`Extractor` 按任务取价。
+    ///
+    /// One row per task: `estEnd >= the earliest allowed end`, named `task_advance_earliest_end_time_{task}`. Task selection (including the part of the baseline that looks inverted) is documented on `EndConstraintRows.Add`.
+    /// The shadow price **is wired**: rows carry `args` (this class's key type), `Refresh` recognises those rows in the dual solution, and `Extractor` reads the price by task.
+    /// </remarks>
+    public Try Invoke(object model) {
+        ArgumentNullException.ThrowIfNull(model);
 
+        if (model is not Fuookami.Ospf.Core.Model.Mechanism.IAbstractLinearMetaModel<Flt64> linear) {
+            return Results.Failed<Success>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "结束时间偏移约束只能施加到线性元模型 / the end-time deviation constraint can only be applied to a linear meta model"));
+        }
+        return EndConstraintRows.Add(
+            linear, _timeBoundary, _tasks, _taskTime, delaySide: false, _name,
+            argsOf: task => new TaskAdvanceEarliestEndTimeShadowPriceKey<E, A>(task));
+    }
     /// <inheritdoc/>
+    /// <remarks>
+    /// 按 `args.Task` 认回该任务的价格；`Task == null`（执行器级询问）返回零，而不是把某个任务的价格当成所有任务的。
+    ///
+    /// Resolves the price by `args.Task`; a `Task == null` query (executor level) returns zero rather than reusing one task's price for every task.
+    /// </remarks>
     public ShadowPriceExtractor<IGanttSchedulingShadowPriceArguments<E, A>, GanttSchedulingShadowPriceMap<E, A>>? Extractor()
         => (map, args) => {
-            if (args.Task != null) {
-                var key = new TaskAdvanceEarliestEndTimeShadowPriceKey<E, A>(args.Task);
-                return map.Map.TryGetValue(key, out ShadowPrice? sp) ? sp.Price : Flt64.Zero;
+            if (args.Task is not { } asked) {
+                return Flt64.Zero;
             }
-            return Flt64.Zero;
+            var key = new TaskAdvanceEarliestEndTimeShadowPriceKey<E, A>(asked);
+            return map.Map.TryGetValue(key, out ShadowPrice? price) ? price.Price : Flt64.Zero;
         };
 
     /// <inheritdoc/>
+    /// <remarks>
+    /// 只认 `Args` 是本类键类型的行，别的管线的行一律不碰。这是"对偶 → 价格 → 约简成本"链条里此前缺的一环：
+    /// 没有它，`Extractor` 读的是一张**永远为空**的表，约简成本于是恒等于自身的成本——列生成看起来在跑，其实按零价格在挑列。
+    ///
+    /// Only rows whose `Args` is this class's key type; rows belonging to other pipelines are left alone. This is the link that was missing in "dual → price → reduced cost": without
+    /// it, `Extractor` reads a table that is **forever empty**, reduced cost degenerates to the column's own cost, and column generation appears to run while selecting at zero prices.
+    /// </remarks>
     public Try Refresh(
         GanttSchedulingShadowPriceMap<E, A> shadowPriceMap,
         object model,
-        MetaDualSolution shadowPrices) => Results.Ok<Success>(Results.SuccessInstance);
+        MetaDualSolution shadowPrices) {
+        ArgumentNullException.ThrowIfNull(shadowPriceMap);
+        ArgumentNullException.ThrowIfNull(shadowPrices);
+
+        foreach (KeyValuePair<MathConstraint, Flt64> pair in shadowPrices.Constraints) {
+            if (pair.Key.Args is TaskAdvanceEarliestEndTimeShadowPriceKey<E, A> key) {
+                shadowPriceMap.Put(new ShadowPrice(key, pair.Value));
+            }
+        }
+        return Results.Ok<Success>(Results.SuccessInstance);
+    }
 }

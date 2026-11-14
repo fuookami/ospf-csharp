@@ -203,8 +203,14 @@ public class BunchSchedulingProduceTests {
         var produce = new BunchSchedulingProduce<TestProduct>(
             new[] { (product, (MaterialDemand?)null) });
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = produce.Register(new object());
+        // **必须是真线性元模型**：注册现在真的建符号表、加约束，`new object()` 会被拒——
+        // 这正是本批修掉的那类"返回 `Ok` 却什么都没做"。
+        // **A real linear meta model is required**: registration now builds symbol tables and adds rows, so `new object()` is rejected — which is exactly the "returns `Ok` while doing nothing"
+        // defect this batch removes.
+        using var model = new LinearMetaModel<Flt64>();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = produce.Register(model);
         result.IsOk.Should().BeTrue();
+        produce.Quantity.Should().NotBeNull();
     }
 }
 
@@ -249,8 +255,10 @@ public class BunchSchedulingConsumptionTests {
         var consumption = new BunchSchedulingConsumption<TestRawMaterial>(
             new[] { (material, (MaterialReserves?)null) });
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = consumption.Register(new object());
+        using var model = new LinearMetaModel<Flt64>();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = consumption.Register(model);
         result.IsOk.Should().BeTrue();
+        consumption.Quantity.Should().NotBeNull();
     }
 }
 
@@ -309,8 +317,14 @@ public class ProduceQuantityConstraintTests {
         var constraint = new ProduceQuantityConstraint<TestProduct>(
             new[] { (product, (MaterialDemand?)demand) }, produce);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = constraint.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        produce.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = constraint.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -338,8 +352,14 @@ public class ConsumptionQuantityConstraintTests {
         var constraint = new ConsumptionQuantityConstraint<TestRawMaterial>(
             new[] { (material, (MaterialReserves?)reserves) }, consumption);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = constraint.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        consumption.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = constraint.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -367,8 +387,14 @@ public class ProduceLessQuantityMinimizationTests {
         var minimization = new ProduceLessQuantityMinimization<TestProduct>(
             new[] { (product, (MaterialDemand?)demand) }, produce);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        produce.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -396,8 +422,14 @@ public class ProduceOverQuantityMinimizationTests {
         var minimization = new ProduceOverQuantityMinimization<TestProduct>(
             new[] { (product, (MaterialDemand?)demand) }, produce);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        produce.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -423,8 +455,14 @@ public class ProduceQuantityMaximizationTests {
         var maximization = new ProduceQuantityMaximization<TestProduct>(
             new[] { product }, produce);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = maximization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        produce.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = maximization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -450,8 +488,14 @@ public class ProduceQuantityMinimizationTests {
         var minimization = new ProduceQuantityMinimization<TestProduct>(
             new[] { product }, produce);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        produce.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -479,8 +523,14 @@ public class ConsumptionLessQuantityMinimizationTests {
         var minimization = new ConsumptionLessQuantityMinimization<TestRawMaterial>(
             new[] { (material, (MaterialReserves?)reserves) }, consumption);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        consumption.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -508,8 +558,14 @@ public class ConsumptionOverQuantityMinimizationTests {
         var minimization = new ConsumptionOverQuantityMinimization<TestRawMaterial>(
             new[] { (material, (MaterialReserves?)reserves) }, consumption);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        consumption.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -535,8 +591,14 @@ public class ConsumptionQuantityMaximizationTests {
         var maximization = new ConsumptionQuantityMaximization<TestRawMaterial>(
             new[] { material }, consumption);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = maximization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        consumption.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = maximization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 
@@ -562,8 +624,14 @@ public class ConsumptionQuantityMinimizationTests {
         var minimization = new ConsumptionQuantityMinimization<TestRawMaterial>(
             new[] { material }, consumption);
 
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
+        // **真实注册 + 线性模型**：目标现在真的建符号、加目标，`new object()` 与未注册都会失败——
+        // 这正是本批修掉的"返回 `Ok` 却什么都没做"。
+        // **Real registration and a linear model**: the objective now builds symbols and adds an objective, so `new object()` and an unregistered table both fail — which is exactly the
+        // "returns `Ok` while doing nothing" shape this batch removed.
+        using var model = new LinearMetaModel<Flt64>();
+        consumption.Register(model).IsOk.Should().BeTrue();
+        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(model);
+        result.IsOk.Should().BeTrue("invocation failed: " + result);
     }
 }
 

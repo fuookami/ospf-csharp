@@ -2,6 +2,7 @@
 
 using Fuookami.Ospf.Framework.Bpp3d.Infra;
 using Fuookami.Ospf.Math.Algebra.Concept;
+using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
@@ -85,10 +86,65 @@ public delegate Task<Bpp3dLayerGenerationRequest<V>> ColumnGenerationLayerReques
 // ===== Helpers =====
 
 public static class ContinuousRadiusSolverHelpers {
+    /// <summary>
+    /// 从货物列表抽取连续半径 solver 变量原型 / Extract continuous-radius solver prototypes from the item list.
+    /// </summary>
+    /// <param name="items">货物列表 / Item list.</param>
+    /// <returns>原型列表，按货物顺序、变量名去重 / Prototypes in item order, de-duplicated by variable name.</returns>
+    /// <remarks>
+    /// 基线 `continuousRadiusSolverPrototypesFromItems` 的做法：**只取竖直圆柱**，为每个这样的货物生成一个原型，
+    /// 按变量名去重（先到先得），并保持插入顺序。
+    ///
+    /// **门控是半径权重函数键**：基线的 `continuousRadiusSelectionResult()` 在该键为 null 时返回 null，
+    /// 于是**没有键的竖直圆柱不产生原型**。
+    ///
+    /// B311 实现时 C# 的形状模型**还没有这个键**，只能对所有竖直圆柱产出原型，并在文档里记下这处偏差。
+    /// B312 给 `CylinderPackingShape3` 补上了 `RadiusWeightFunctionKey`（以及 `RadiusMin / RadiusMax`），
+    /// **门控随之恢复**，实现与基线一致。
+    ///
+    /// The baseline takes **vertical cylinders only**, builds one prototype per such item, de-duplicates by variable name (first wins) and preserves insertion
+    /// order.
+    ///
+    /// **The gate is the radius weight-function key**: the baseline's `continuousRadiusSelectionResult()` returns null when that key is null, so **a vertical
+    /// cylinder without the key produces no prototype**.
+    ///
+    /// B311 implemented this while the C# shape model **still lacked that key**, so it produced prototypes for every vertical cylinder and recorded the
+    /// deviation in the documentation. B312 added `RadiusWeightFunctionKey` (plus `RadiusMin / RadiusMax`) to `CylinderPackingShape3`, **restoring the gate** and
+    /// bringing the implementation in line with the baseline.
+    /// </remarks>
     public static IReadOnlyList<ContinuousCylinderRadiusSolverPrototype> PrototypesFromItems(IReadOnlyList<Item> items) {
-        var prototypes = new Dictionary<string, ContinuousCylinderRadiusSolverPrototype>();
-        // Stub: in full implementation, would inspect item shapes
-        return prototypes.Values.ToList();
+        var prototypes = new Dictionary<string, ContinuousCylinderRadiusSolverPrototype>(StringComparer.Ordinal);
+        var order = new List<string>();
+        foreach (Item item in items) {
+            // 只取竖直圆柱；横置圆柱不进入连续半径路径。
+            // Vertical cylinders only; horizontally oriented ones stay out of the continuous-radius path.
+            if (item.Shape is not CylinderPackingShape3 cylinder || cylinder.Cylinder.Axis != Axis3.Y) {
+                continue;
+            }
+
+            // **没有半径权重函数键的竖直圆柱不参与连续半径优化**，与基线一致。
+            // **A vertical cylinder without a radius weight-function key does not participate in continuous-radius optimisation**, matching the baseline.
+            if (cylinder.RadiusWeightFunctionKey is null) {
+                continue;
+            }
+
+            ContinuousCylinderRadiusSolverPrototype prototype = ContinuousRadiusHelpers.Prototype(
+                source: ContinuousRadiusHelpers.Source(item),
+                key: cylinder.RadiusWeightFunctionKey,
+                axis: cylinder.Cylinder.Axis,
+                min: cylinder.RadiusMin,
+                max: cylinder.RadiusMax
+            );
+            if (prototypes.TryAdd(prototype.VariableName, prototype)) {
+                order.Add(prototype.VariableName);
+            }
+        }
+
+        var ordered = new List<ContinuousCylinderRadiusSolverPrototype>(order.Count);
+        foreach (string variableName in order) {
+            ordered.Add(prototypes[variableName]);
+        }
+        return ordered;
     }
 
     public static IReadOnlyDictionary<string, FltX> ExtractResults(IReadOnlyDictionary<string, string> info) {

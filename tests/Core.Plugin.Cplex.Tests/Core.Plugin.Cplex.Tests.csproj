@@ -4,15 +4,23 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Cplex.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CplexManagedDirectory>$(CPLEX_STUDIO_DIR1210)/cplex/bin/x64_win64</CplexManagedDirectory>
+    <CplexManagedAssembly>$(CplexManagedDirectory)/ILOG.CPLEX.dll</CplexManagedAssembly>
+    <CplexAvailable Condition="Exists('$(CplexManagedAssembly)')">true</CplexAvailable>
+    <DefineConstants Condition="'$(CplexAvailable)' == 'true'">$(DefineConstants);CPLEX_AVAILABLE</DefineConstants>
+    <DefineConstants Condition="'$(RunCplexIntegration)' == 'true' and '$(CplexAvailable)' == 'true'">$(DefineConstants);CPLEX_INTEGRATION</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="Exists('D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll')">
+  <Target Name="ValidateCplexIntegrationSdk" BeforeTargets="CoreCompile" Condition="'$(RunCplexIntegration)' == 'true' and '$(CplexAvailable)' != 'true'">
+    <Error Text="CPLEX integration requires the CPLEX 12.10 managed SDK. / CPLEX 集成测试需要 CPLEX 12.10 托管 SDK。" />
+  </Target>
+  <ItemGroup Condition="Exists('$(CplexManagedAssembly)')">
     <Reference Include="ILOG.CPLEX">
-      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(CplexManagedAssembly)</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="ILOG.Concert">
-      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.Concert.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(CplexManagedDirectory)/ILOG.Concert.dll</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -23,5 +31,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Cplex\Core.Plugin.Cplex.csproj" />
+    <Compile Include="..\Shared\RelaxationOwnershipTest.cs" Link="RelaxationOwnershipTest.cs" />
   </ItemGroup>
 </Project>

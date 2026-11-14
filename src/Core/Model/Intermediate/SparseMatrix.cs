@@ -1,10 +1,10 @@
 #nullable enable
 
-using Fuookami.Ospf.Math.Algebra.Number;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-
+using Fuookami.Ospf.Math.Algebra.Number;
 namespace Fuookami.Ospf.Core.Model.Intermediate;
 // ===== Sparse Vector =====
 
@@ -15,22 +15,23 @@ public sealed record SparseVectorEntry(int Index, Flt64 Value);
 
 /// <summary>稀疏向量（有序条目列表）/ Sparse vector (ordered entry list)</summary>
 public sealed class SparseVector {
-    /// <summary>条目列表（按索引排序）/ Entry list (sorted by index)</summary>
-    public List<SparseVectorEntry> Entries { get; }
+    private readonly RevisionList<SparseVectorEntry> _entries;
 
-    public SparseVector(List<SparseVectorEntry>? entries = null) {
-        Entries = entries ?? new List<SparseVectorEntry>();
+    /// <summary>条目列表（按索引排序）/ Entry list (sorted by index)</summary>
+    public IList<SparseVectorEntry> Entries => _entries;
+    internal object Revision => _entries.Revision;
+
+    /// <summary>复制传入的条目列表 / Copy the supplied entry list.</summary>
+    /// <param name="entries">初始条目 / Initial entries.</param>
+    public SparseVector(IEnumerable<SparseVectorEntry>? entries = null) {
+        _entries = new RevisionList<SparseVectorEntry>(entries);
     }
 
     /// <summary>条目数量 / Entry count</summary>
     public int Count => Entries.Count;
 
     /// <summary>添加条目 / Add entry</summary>
-    public void Add(int index, Flt64 value) {
-        if (value != Flt64.Zero) {
-            Entries.Add(new SparseVectorEntry(index, value));
-        }
-    }
+    public void Add(int index, Flt64 value) => Entries.Add(new SparseVectorEntry(index, value));
 
     /// <summary>创建取反副本 / Create negated copy</summary>
     public SparseVector Negate() =>
@@ -52,11 +53,16 @@ public sealed class SparseVector {
 
 /// <summary>稀疏矩阵（行列表）/ Sparse matrix (row list)</summary>
 public sealed class SparseMatrix {
-    /// <summary>行向量列表 / Row vector list</summary>
-    public List<SparseVector> Rows { get; }
+    private readonly RevisionList<SparseVector> _rows;
 
-    public SparseMatrix(List<SparseVector>? rows = null) {
-        Rows = rows ?? new List<SparseVector>();
+    /// <summary>行向量列表 / Row vector list</summary>
+    public IList<SparseVector> Rows => _rows;
+    internal object Revision => _rows.Revision;
+
+    /// <summary>复制行列表，保留向量引用 / Copy the row list, retaining vector references.</summary>
+    /// <param name="rows">初始行 / Initial rows.</param>
+    public SparseMatrix(IEnumerable<SparseVector>? rows = null) {
+        _rows = new RevisionList<SparseVector>(rows);
     }
 
     /// <summary>行数 / Row count</summary>
@@ -91,22 +97,28 @@ public sealed record SparseQuadraticEntry(int Col1, int Col2, Flt64 Value);
 
 /// <summary>稀疏二次向量 / Sparse quadratic vector</summary>
 public sealed class SparseQuadraticVector {
-    /// <summary>条目列表 / Entry list</summary>
-    public List<SparseQuadraticEntry> Entries { get; }
+    private readonly RevisionList<SparseQuadraticEntry> _entries;
 
-    public SparseQuadraticVector(List<SparseQuadraticEntry>? entries = null) {
-        Entries = entries ?? new List<SparseQuadraticEntry>();
+    /// <summary>条目列表 / Entry list</summary>
+    public IList<SparseQuadraticEntry> Entries => _entries;
+    internal object Revision => _entries.Revision;
+
+    /// <summary>复制传入的条目列表 / Copy the supplied entry list.</summary>
+    /// <param name="entries">初始条目 / Initial entries.</param>
+    public SparseQuadraticVector(IEnumerable<SparseQuadraticEntry>? entries = null) {
+        _entries = new RevisionList<SparseQuadraticEntry>(entries);
     }
 
     /// <summary>条目数量 / Entry count</summary>
     public int Count => Entries.Count;
 
     /// <summary>添加条目 / Add entry</summary>
-    public void Add(int col1, int col2, Flt64 value) {
-        if (value != Flt64.Zero) {
-            Entries.Add(new SparseQuadraticEntry(col1, col2, value));
-        }
-    }
+    public void Add(int col1, int col2, Flt64 value) =>
+        Entries.Add(new SparseQuadraticEntry(
+            Col1: col1,
+            Col2: col2,
+            Value: value
+        ));
 
     /// <summary>创建取反副本 / Create negated copy</summary>
     public SparseQuadraticVector Negate() =>
@@ -126,11 +138,16 @@ public sealed class SparseQuadraticVector {
 
 /// <summary>稀疏二次矩阵 / Sparse quadratic matrix</summary>
 public sealed class SparseQuadraticMatrix {
-    /// <summary>行向量列表 / Row vector list</summary>
-    public List<SparseQuadraticVector> Rows { get; }
+    private readonly RevisionList<SparseQuadraticVector> _rows;
 
-    public SparseQuadraticMatrix(List<SparseQuadraticVector>? rows = null) {
-        Rows = rows ?? new List<SparseQuadraticVector>();
+    /// <summary>行向量列表 / Row vector list</summary>
+    public IList<SparseQuadraticVector> Rows => _rows;
+    internal object Revision => _rows.Revision;
+
+    /// <summary>复制行列表，保留向量引用 / Copy the row list, retaining vector references.</summary>
+    /// <param name="rows">初始行 / Initial rows.</param>
+    public SparseQuadraticMatrix(IEnumerable<SparseQuadraticVector>? rows = null) {
+        _rows = new RevisionList<SparseQuadraticVector>(rows);
     }
 
     /// <summary>行数 / Row count</summary>
@@ -153,6 +170,37 @@ public sealed class SparseQuadraticMatrix {
 
     /// <inheritdoc/>
     public override string ToString() => $"SparseQuadraticMatrix[{RowCount}]";
+}
+
+internal sealed class RevisionList<T> : Collection<T> {
+    internal object Revision { get; private set; } = new();
+
+    internal RevisionList(IEnumerable<T>? items) : base(items is null ? new List<T>() : new List<T>(items)) {
+    }
+
+    protected override void InsertItem(int index, T item) {
+        object revision = new();
+        base.InsertItem(index, item);
+        Revision = revision;
+    }
+
+    protected override void SetItem(int index, T item) {
+        object revision = new();
+        base.SetItem(index, item);
+        Revision = revision;
+    }
+
+    protected override void RemoveItem(int index) {
+        object revision = new();
+        base.RemoveItem(index);
+        Revision = revision;
+    }
+
+    protected override void ClearItems() {
+        object revision = new();
+        base.ClearItems();
+        Revision = revision;
+    }
 }
 
 // ===== Extension methods =====

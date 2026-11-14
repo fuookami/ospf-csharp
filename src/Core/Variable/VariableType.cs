@@ -151,6 +151,7 @@ public sealed class Percentage : VariableType<Flt64>, IUContinuousVariableType<F
     private Percentage() : base(NumericConstantsRegistry.For<Flt64>()) { }
     public override string Name => "Percentage";
     public override string ShortName => "pct";
+    public override Flt64 Minimum => Constants.Zero;
     public override Flt64 Maximum => Constants.One;
     public override string ToString() => "Percentage";
 }
@@ -188,6 +189,8 @@ public sealed class Continuous : VariableType<Flt64>, IContinuousVariableType<Fl
     private Continuous() : base(NumericConstantsRegistry.For<Flt64>()) { }
     public override string Name => "Continuous";
     public override string ShortName => "real";
+    public override Flt64 Minimum => Constants.DecimalPrecision.GetValueOrDefault().Reciprocal().Negate();
+    public override Flt64 Maximum => Constants.DecimalPrecision.GetValueOrDefault().Reciprocal();
     // Kotlin returns "Continues" (typo); C# corrects to "Continuous"
     public override string ToString() => "Continuous";
 }
@@ -201,6 +204,8 @@ public sealed class UContinuous : VariableType<Flt64>, IUContinuousVariableType<
     private UContinuous() : base(NumericConstantsRegistry.For<Flt64>()) { }
     public override string Name => "UContinuous";
     public override string ShortName => "ureal";
+    public override Flt64 Minimum => Constants.Zero;
+    public override Flt64 Maximum => Constants.DecimalPrecision.GetValueOrDefault().Reciprocal();
     // Kotlin returns "UContinues" (typo); C# corrects to "UContinuous"
     public override string ToString() => "UContinuous";
 }

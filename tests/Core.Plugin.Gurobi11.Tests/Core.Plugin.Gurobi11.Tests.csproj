@@ -4,7 +4,19 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Gurobi11.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Gurobi110ManagedAssembly>$(GUROBI_HOME)/lib/gurobi110.netstandard20.dll</Gurobi110ManagedAssembly>
+    <Gurobi100ManagedAssembly>$(GUROBI_HOME)/lib/gurobi100.netstandard20.dll</Gurobi100ManagedAssembly>
+    <GurobiManagedAssembly Condition="Exists('$(Gurobi110ManagedAssembly)')">$(Gurobi110ManagedAssembly)</GurobiManagedAssembly>
+    <GurobiManagedAssembly Condition="'$(GurobiManagedAssembly)' == '' and Exists('$(Gurobi100ManagedAssembly)')">$(Gurobi100ManagedAssembly)</GurobiManagedAssembly>
+    <GurobiAvailable Condition="Exists('$(GurobiManagedAssembly)')">true</GurobiAvailable>
+    <DefineConstants Condition="'$(GurobiAvailable)' == 'true'">$(DefineConstants);GUROBI_AVAILABLE</DefineConstants>
+    <DefineConstants Condition="'$(GurobiAvailable)' == 'true' and Exists('$(Gurobi110ManagedAssembly)')">$(DefineConstants);GUROBI11_NATIVE_SDK</DefineConstants>
+    <DefineConstants Condition="'$(GurobiAvailable)' == 'true' and !Exists('$(Gurobi110ManagedAssembly)')">$(DefineConstants);GUROBI11_10_COMPAT</DefineConstants>
+    <DefineConstants Condition="'$(RunGurobi11Integration)' == 'true' and '$(GurobiAvailable)' == 'true'">$(DefineConstants);GUROBI11_INTEGRATION</DefineConstants>
   </PropertyGroup>
+  <Target Name="ValidateGurobi11IntegrationSdk" BeforeTargets="CoreCompile" Condition="'$(RunGurobi11Integration)' == 'true' and '$(GurobiAvailable)' != 'true'">
+    <Error Text="Gurobi11 integration requires GUROBI_HOME with gurobi110 or compatible gurobi100 managed assemblies. / Gurobi11 集成测试需要 GUROBI_HOME 下存在 gurobi110 或兼容的 gurobi100 托管程序集。" />
+  </Target>
   <ItemGroup>
     <PackageReference Include="xUnit" />
     <PackageReference Include="xUnit.runner.visualstudio" />
@@ -12,6 +24,9 @@
     <PackageReference Include="FluentAssertions" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Core.Plugin.Gurobi\Core.Plugin.Gurobi.csproj" />
     <ProjectReference Include="..\..\src\Core.Plugin.Gurobi11\Core.Plugin.Gurobi11.csproj" />
+    <ProjectReference Include="..\..\src\Framework\Framework.csproj" />
+    <Compile Include="..\Shared\RelaxationOwnershipTest.cs" Link="RelaxationOwnershipTest.cs" />
   </ItemGroup>
 </Project>

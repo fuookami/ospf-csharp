@@ -6,6 +6,7 @@ using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -20,8 +21,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using SolverConfigGurobi = Fuookami.Ospf.Core.Solver.Config.GurobiSolverConfig;
 using FrameworkSolveOptions = Fuookami.Ospf.Framework.Solver.FrameworkSolveOptions;
+using Try = Fuookami.Ospf.Utils.Functional.Result<
+    Fuookami.Ospf.Utils.Functional.Success,
+    Fuookami.Ospf.Utils.Error.ErrorCode,
+    Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>;
 
 namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 
@@ -29,9 +33,9 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi Benders 分解求解器实现。
 /// Gurobi Benders decomposition solver implementation.
 ///
-/// 使用 Gurobi 求解器实现线性 Benders 分解策略，支持主问题求解和子问题求解（含对偶解和 Farkas 证明提取）。
+/// 使用 Gurobi 求解器实现线性 Benders 分解策略，支持主问题和子问题求解及行乘子提取。
 /// Implements linear Benders decomposition strategy using Gurobi solver, supporting master problem solving
-/// and sub-problem solving (with dual solution and Farkas proof extraction).
+/// and sub-problem solving with row multiplier extraction.
 /// </summary>
 public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBendersDecompositionSolver {
     /// <summary>求解器名称 / Solver name.</summary>
@@ -41,22 +45,34 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
     public SolverConfig Config { get; }
 
     private readonly GurobiLinearSolverCallBack? _callBack;
-    private readonly GurobiSolverConfig? _connectionConfig;
+    private readonly GurobiBackendIdentity _identity;
 
     /// <summary>
     /// 创建 Gurobi Benders 分解求解器 / Create Gurobi Benders decomposition solver.
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     /// <param name="callBack">回调管理器 / Callback manager.</param>
-    /// <param name="connectionConfig">远程连接配置 / Remote connection configuration.</param>
     public GurobiBendersDecompositionSolver(
         SolverConfig? config = null,
-        GurobiLinearSolverCallBack? callBack = null,
-        GurobiSolverConfig? connectionConfig = null) {
-        Config = config ?? new SolverConfigGurobi();
-        _callBack = callBack;
-        _connectionConfig = connectionConfig;
+        GurobiLinearSolverCallBack? callBack = null)
+        : this(config, callBack, GurobiBackendIdentity.Gurobi) {
     }
+
+    internal GurobiBendersDecompositionSolver(
+        SolverConfig? config,
+        GurobiLinearSolverCallBack? callBack,
+        GurobiBackendIdentity identity) {
+        Config = config ?? new SolverConfig();
+        _callBack = callBack;
+        _identity = identity;
+    }
+
+    /// <inheritdoc/>
+    public Framework.Solver.IBendersDecompositionSolver WithTimeLimit(TimeSpan timeLimit) =>
+        WithTimeLimitCore(timeLimit);
+
+    internal GurobiBendersDecompositionSolver WithTimeLimitCore(TimeSpan timeLimit) =>
+        new(Config with { TimeLimit = timeLimit }, _callBack, _identity);
 
     // ===== IBendersDecompositionSolver: Master problem =====
 
@@ -86,7 +102,6 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
             await SolveTriadModelAsync(mechanismModel, _callBack, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
             return Results.Ok<SolverOutput>(ok.Value);
         }
 
@@ -99,6 +114,49 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
         }
 
         return Results.Failed<SolverOutput>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+    }
+
+    /// <summary>
+    /// 求解线性 Benders 主问题并保留统一报告。
+    /// Solve a linear Benders master problem while retaining the unified report.
+    /// </summary>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveMasterReportAsync(
+        string name,
+        LinearMetaModel<Flt64> metaModel,
+        bool toLogModel = false,
+        RegistrationStatusCallBack? registrationStatusCallBack = null,
+        SolvingStatusCallBack? solvingStatusCallBack = null) {
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
+            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
+        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismOk) {
+            return Propagate<SolveReport<Flt64>, LinearMechanismModel<Flt64>>(mechanismResult);
+        }
+
+        using LinearMechanismModel<Flt64> mechanismModel = mechanismOk.Value;
+        GurobiLinearSolver solver = CreateSolver(_callBack);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return Propagate<SolveReport<Flt64>, LinearTriadModel>(triadResult);
+        }
+
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportResult =
+            await solver.InvokeReportAsync(
+                model: triadModel,
+                solvingStatusCallBack: solvingStatusCallBack);
+        if (reportResult is not Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportOk) {
+            return Propagate<SolveReport<Flt64>, SolveReport<Flt64>>(reportResult);
+        }
+        if (reportOk.Value.Solution is { } solution) {
+            Try applied = mechanismModel.ApplySolverSolution(
+                matrix: triadModel,
+                solution: solution.Values.Values);
+            if (!applied.IsOk) {
+                return Propagate<SolveReport<Flt64>, Success>(applied);
+            }
+        }
+        return Results.Ok(reportOk.Value);
     }
 
     /// <summary>
@@ -135,9 +193,13 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
     /// <summary>
     /// 求解线性 Benders 子问题 / Solve linear Benders sub problem.
     ///
-    /// 线性松弛子问题，提取对偶解或 Farkas 证明用于生成 Benders 割平面。
-    /// Solves linear-relaxed sub-problem, extracting dual solution or Farkas proof for Benders cut generation.
+    /// 线性松弛子问题，提取对偶值或 Farkas 行乘子，不生成割。
+    /// Solves the linear-relaxed subproblem and extracts duals or Farkas row multipliers without generating cuts.
     /// </summary>
+    /// <remarks>
+    /// 行乘子未作为含变量界的完整证明独立验证；构建和转储成功后求解失败仍可能保留辅助 token。
+    /// Row multipliers are not independently verified as a complete certificate including variable bounds; a later solver failure may retain committed auxiliary tokens.
+    /// </remarks>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
     /// <param name="objectVariable">目标变量 / Objective variable (for cut generation context).</param>
@@ -154,14 +216,25 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
         bool toLogModel = false,
         RegistrationStatusCallBack? registrationStatusCallBack = null,
         SolvingStatusCallBack? solvingStatusCallBack = null) {
-        // Step 1: Dump meta model to mechanism model
-        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
-            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
-        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>) {
-            return PropagateSubModelResult(mechanismResult);
+        if (fixedVariables is null) {
+            return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "固定变量映射为空 / Fixed variable map is null"));
         }
 
-        using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
+        Result<(LinearMechanismModel<Flt64> Model, LinearTriadModel Matrix), ErrorCode, Error<ErrorCode>> built =
+            await metaModel.BuildLinearTriadModelAsync(
+                fixedVariables: fixedVariables,
+                registrationStatusCallBack: registrationStatusCallBack
+            );
+        if (!built.IsOk) {
+            return built.Bind<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ => Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型构建结果无效 / Invalid linear model build result")));
+        }
+
+        using LinearMechanismModel<Flt64> mechanismModel = built.Value.Model;
+        using LinearTriadModel triadModel = built.Value.Matrix;
 
         // Step 2: Build constraint origin map for dual-to-MathConstraint mapping
         IReadOnlyList<IConstraint<Flt64, LinearCategory>> mechConstraints = ((IMechanismModel<Flt64>)mechanismModel).Constraints;
@@ -170,30 +243,27 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
             constraintOriginMap[i] = mechConstraints[i].Origin;
         }
 
-        // Step 3: Build fixed variable index map (IVariableItem -> triad model column index)
-        var fixedIndexMap = new Dictionary<int, Flt64>();
-        foreach (KeyValuePair<IVariableItem, Flt64> kv in fixedVariables) {
-            int? colIndex = metaModel.Tokens.IndexOf(kv.Key);
-            if (colIndex is { } ci) {
-                fixedIndexMap[ci] = kv.Value;
-            }
+        // 固定列代换后松弛其余列 / Substitute fixed columns, then relax the remaining columns.
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> relaxation = triadModel.RelaxToContinuous();
+        if (!relaxation.IsOk) {
+            return relaxation.Bind<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                    ErrorCode.OREngineModelingException,
+                    "松弛模型转换结果无效 / Invalid relaxation result")));
         }
+        LinearTriadModel subModel = relaxation.Value;
 
-        // Step 4: Dump mechanism model to triad model, then fix and relax
-        GurobiLinearSolver solver = CreateSolver(null);
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
-        LinearTriadModel subModel = FixAndRelaxToLP(triadModel, fixedIndexMap);
-
-        using (triadModel)
         using (subModel) {
             // Step 5: Set up dual/Farkas extraction callbacks
-            var dualSolution = new Dictionary<MathConstraint, Flt64>();
-            var farkasSolution = new Dictionary<MathConstraint, Flt64>();
+            var dualSolution = new Dictionary<MathConstraint, Flt64>(ReferenceEqualityComparer.Instance);
+            var farkasSolution = new Dictionary<MathConstraint, Flt64>(ReferenceEqualityComparer.Instance);
+            bool farkasCaptured = false;
 
             GurobiLinearSolverCallBack subCallBack = (_callBack?.Copy() ?? new GurobiLinearSolverCallBack())
                 .Configuration(async (_, grbModel, _, _) => {
                     // Enable Farkas dual extraction for infeasible case
                     grbModel.Set(GRB.IntParam.InfUnbdInfo, 1);
+                    grbModel.Set(GRB.IntParam.DualReductions, 0);
                     return Results.OkInstance;
                 })
                 .AnalyzingSolution(async (_, _, _, grbConstrs) => {
@@ -202,7 +272,7 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
                     for (int i = 0; i < grbConstrs.Count; i++) {
                         double pi = grbConstrs[i].Get(GRB.DoubleAttr.Pi);
                         if (System.Math.Abs(pi) > 1e-12) {
-                            MathConstraint key = GetMathConstraintKey(i, constraintOriginMap);
+                            MathConstraint key = MathConstraintOrigins.ResolveOriginKey(i, constraintOriginMap);
                             dualSolution[key] = new Flt64(pi);
                         }
                     }
@@ -214,37 +284,69 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
                         farkasSolution.Clear();
                         for (int i = 0; i < grbConstrs.Count; i++) {
                             double farkas = grbConstrs[i].Get(GRB.DoubleAttr.FarkasDual);
-                            if (System.Math.Abs(farkas) > 1e-12) {
-                                MathConstraint key = GetMathConstraintKey(i, constraintOriginMap);
+                            if (!double.IsFinite(farkas)) {
+                                return Results.Failed<Success>(new Err<ErrorCode>(
+                                    ErrorCode.OREngineSolvingException,
+                                    "Farkas 对偶值无效 / Invalid Farkas dual value"));
+                            }
+                            if (farkas != 0.0) {
+                                MathConstraint key = MathConstraintOrigins.ResolveOriginKey(i, constraintOriginMap);
                                 farkasSolution[key] = new Flt64(farkas);
                             }
                         }
+                        if (farkasSolution.Count == 0) {
+                            return Results.Failed<Success>(new Err<ErrorCode>(
+                                ErrorCode.OREngineSolvingException,
+                                "Farkas 对偶结果不可用 / Farkas dual result is unavailable"));
+                        }
+                        farkasCaptured = true;
                     }
                     return Results.OkInstance;
                 });
 
             // Step 6: Solve the sub-problem
-            var subSolver = new GurobiLinearSolver(Config, subCallBack, _connectionConfig);
+            var subSolver = new GurobiLinearSolver(Config, subCallBack, _identity);
+            Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportResult =
+                await subSolver.InvokeReportAsync(
+                    model: subModel,
+                    solvingStatusCallBack: solvingStatusCallBack);
             Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await subSolver.InvokeAsync((ILinearTriadModelView)subModel, solvingStatusCallBack);
+                reportResult is Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportOk
+                    ? GurobiReportSupport.ToLegacy(Results.Ok(reportOk.Value))
+                    : Propagate<FeasibleSolverOutput<Flt64>, SolveReport<Flt64>>(reportResult);
 
             // Step 7: Build result
             if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                    new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
-                        Result: ok.Value,
-                        DualSolution: dualSolution,
-                        Cuts: null));
+                SolveReport<Flt64> report =
+                    ((Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>)reportResult).Value;
+                Flt64[] reducedSolution = ok.Value.Solution.Values.ToArray();
+                return mechanismModel.RestoreSolverSolution(
+                    matrix: triadModel,
+                    solvedMatrix: subModel,
+                    solution: reducedSolution
+                )
+                    .Bind(values => mechanismModel.ApplySolverSolution(
+                        matrix: triadModel,
+                        solvedMatrix: subModel,
+                        solution: reducedSolution
+                    )
+                        .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                            new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
+                                Result: ok.Value with { Solution = new Solution<Flt64>(values) },
+                                DualSolution: dualSolution,
+                                Cuts: null) {
+                                Report = report,
+                            }));
             }
 
             if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                if (f.Error.Code == ErrorCode.ORModelInfeasible) {
+                if (f.Error.Code == ErrorCode.ORModelInfeasible && farkasCaptured) {
                     // Return infeasible result with Farkas duals
-                    return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                        new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
-                            FarkasDualSolution: farkasSolution,
-                            Cuts: null));
+                    return mechanismModel.ValidateSolverTokenSnapshot(triadModel, subModel)
+                        .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                            new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
+                                FarkasDualSolution: farkasSolution,
+                                Cuts: null));
                 }
                 return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
             }
@@ -298,7 +400,7 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
     /// 创建 Gurobi 线性求解器 / Create Gurobi linear solver.
     /// </summary>
     private GurobiLinearSolver CreateSolver(GurobiLinearSolverCallBack? callBack) =>
-        new GurobiLinearSolver(Config, callBack?.Copy(), _connectionConfig);
+        new(Config, callBack?.Copy(), _identity);
 
     /// <summary>
     /// 转储元模型为机制模型 / Dump meta model to mechanism model.
@@ -306,8 +408,12 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
     private async Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpMechanismModelAsync(
         LinearMetaModel<Flt64> metaModel,
         RegistrationStatusCallBack? registrationStatusCallBack) {
-        GurobiLinearSolver solver = CreateSolver(_callBack);
-        return await solver.DumpAsync(metaModel, registrationStatusCallBack, null);
+        return await LinearMechanismModel<Flt64>.InvokeAsync(
+            metaModel: metaModel,
+            concurrent: Config.DumpMechanismModelConcurrent,
+            blocking: Config.DumpMechanismModelBlocking,
+            registrationStatusCallBack: registrationStatusCallBack
+        );
     }
 
     /// <summary>
@@ -318,50 +424,25 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
         GurobiLinearSolverCallBack? callBack,
         SolvingStatusCallBack? solvingStatusCallBack) {
         GurobiLinearSolver solver = CreateSolver(callBack);
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
-            return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
+            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result =
+                await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
+            return result is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok
+                ? mechanismModel.ApplySolverSolution(
+                    matrix: triadModel,
+                    solution: ok.Value.Solution.Values
+                ).Bind(_ => result)
+                : result;
         }
-    }
-
-    /// <summary>
-    /// 固定变量并松弛为 LP / Fix specified variables and relax all to LP.
-    /// </summary>
-    /// <param name="model">原始三元组模型 / Original triad model.</param>
-    /// <param name="fixedVarMap">固定变量映射（列索引 -> 值）/ Fixed variable map (col index -> value).</param>
-    /// <returns>松弛后的模型 / Relaxed model with fixed variables.</returns>
-    private static LinearTriadModel FixAndRelaxToLP(
-        LinearTriadModel model,
-        IReadOnlyDictionary<int, Flt64> fixedVarMap) {
-        var vars = new List<ModelViewVariable>(model.Variables.Count);
-        foreach (ModelViewVariable v in model.Variables) {
-            if (fixedVarMap.ContainsKey(v.Index)) {
-                // Fix variable: LB = UB = fixed value, relax to continuous
-                Flt64 fixedVal = fixedVarMap[v.Index];
-                vars.Add(new ModelViewVariable(
-                    v.Index, fixedVal, fixedVal,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
-            }
-            else {
-                // Relax to continuous
-                vars.Add(new ModelViewVariable(
-                    v.Index, v.LowerBound, v.UpperBound,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
-            }
-        }
-
-        return new LinearTriadModel(vars, (LinearConstraintBatch)model.Constraints, model.Objective, model.Name);
-    }
-
-    /// <summary>
-    /// 根据索引获取对偶解的 MathConstraint 键 / Get MathConstraint key for dual solution by index.
-    /// </summary>
-    private static MathConstraint GetMathConstraintKey(int index, MathConstraint?[] originMap) {
-        if (index >= 0 && index < originMap.Length && originMap[index] is { } mc) {
-            return mc;
-        }
-        return new FallbackMathConstraint(index);
     }
 
     /// <summary>
@@ -400,7 +481,9 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
                 new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResultOf<V>(
                     Result: ConvertFeasibleOutput<V>(feasible.Result),
                     DualSolution: feasible.DualSolution,
-                    Cuts: feasible.Cuts),
+                    Cuts: feasible.Cuts) {
+                    Report = feasible.Report,
+                },
             Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult infeasible =>
                 new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResultOf<V>(
                     FarkasDualSolution: infeasible.FarkasDualSolution,
@@ -443,21 +526,6 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
     }
 
     /// <summary>
-    /// 传播机制模型错误为子问题结果类型 / Propagate mechanism model error to sub-result type.
-    /// </summary>
-    private static Result<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>> PropagateSubModelResult(
-        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> r) {
-        if (r is Failed<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-            return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
-        }
-        if (r is Fatal<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-            return new Fatal<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-        }
-        return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-            new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
-    }
-
-    /// <summary>
     /// 传播模型错误为通用结果类型 / Propagate model error to generic result type.
     /// </summary>
     private static Result<T, ErrorCode, Error<ErrorCode>> PropagateModelResult<T>(
@@ -469,5 +537,16 @@ public sealed class GurobiBendersDecompositionSolver : Framework.Solver.IBenders
             return new Fatal<T, ErrorCode, Error<ErrorCode>>(fat.Errors);
         }
         return Results.Failed<T>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+    }
+
+    private static Result<T, ErrorCode, Error<ErrorCode>> Propagate<T, S>(
+        Result<S, ErrorCode, Error<ErrorCode>> result) {
+        return result switch {
+            Failed<S, ErrorCode, Error<ErrorCode>> failed =>
+                Results.Failed<T>(failed.Error),
+            Fatal<S, ErrorCode, Error<ErrorCode>> fatal =>
+                new Fatal<T, ErrorCode, Error<ErrorCode>>(fatal.Errors),
+            _ => Results.Failed<T>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException)),
+        };
     }
 }

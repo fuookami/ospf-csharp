@@ -32,4 +32,8 @@ public sealed record Parameter(
     Flt64 PriorityCategory = default,
     // 余度上下文 / Redundancy context
     Flt64 ExperimentalLongitudinalBalance = default,
-    Flt64 RedundancyRange = default);
+    Flt64 RedundancyRange = default,
+    // 业载最大化上下文 / Payload maximization context
+    Flt64 WeightRecommendationPayload = default,
+    // 推荐重量均衡上下文 / Recommended weight equalization context
+    Flt64 WeightRecommendationBalance = default);

@@ -2,8 +2,8 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <ItemGroup>
+    <PackageVersion Include="Tomlyn" Version="0.19.0" />
     <PackageVersion Include="xUnit" Version="2.9.3" />
     <PackageVersion Include="xUnit.runner.visualstudio" Version="2.8.2" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
@@ -11,17 +11,26 @@
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
-
     <!-- Phase 23: persistence + message + expression source-generator -->
     <PackageVersion Include="MongoDB.Driver" Version="3.1.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
-    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
+    <!--
+      B848：`9.0.0-preview.3.efcore.9.0.0` → `9.0.0`。prerelease 依赖会让打包报 NU5104
+      （"A stable release of a package should not have a prerelease dependency"），
+      而我们的包版本是稳定的 `1.1.2`。EF Core 这边已经是 `9.0.0`，Pomelo 的 `9.0.0` 正好配套。
+
+      B848: `9.0.0-preview.3.efcore.9.0.0` → `9.0.0`. A prerelease dependency makes packing warn NU5104 ("A stable release of a package should not have a prerelease
+      dependency") while our packages are the stable `1.1.2`. EF Core here is already `9.0.0`, which Pomelo's `9.0.0` matches.
+    -->
+    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <!-- B926：PostgreSQL 与 EF Core 同版本（9.0.0），与 Pomelo 的配套口径一致。 / Same EF Core line as Pomelo. -->
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
     <PackageVersion Include="StackExchange.Redis" Version="2.8.24" />
     <PackageVersion Include="Confluent.Kafka" Version="2.8.0" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-
     <!-- Phase 8: benchmark -->
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageVersion Include="YamlDotNet" Version="16.2.0" />
   </ItemGroup>
 </Project>

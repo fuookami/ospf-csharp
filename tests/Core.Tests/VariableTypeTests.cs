@@ -59,6 +59,7 @@ public class VariableTypeTests {
         kind.IsUnsignedType.Should().BeTrue();
         kind.IsContinuousType.Should().BeTrue();
         kind.IsUnsignedContinuousType.Should().BeTrue();
+        type.Minimum.Should().Be(Flt64.Zero);
         type.Maximum.Should().Be(Flt64.One);
         type.ToString().Should().Be("Percentage");
     }
@@ -94,6 +95,12 @@ public class VariableTypeTests {
         IVariableTypeKind kind = AsKind(type);
         kind.IsContinuousType.Should().BeTrue();
         kind.IsUnsignedType.Should().BeFalse();
+        type.Minimum.Should().Be(
+            type.Constants.DecimalPrecision.GetValueOrDefault().Reciprocal().Negate()
+        );
+        type.Maximum.Should().Be(
+            type.Constants.DecimalPrecision.GetValueOrDefault().Reciprocal()
+        );
         type.ToString().Should().Be("Continuous");
     }
 
@@ -106,6 +113,10 @@ public class VariableTypeTests {
         kind.IsContinuousType.Should().BeTrue();
         kind.IsUnsignedType.Should().BeTrue();
         kind.IsUnsignedContinuousType.Should().BeTrue();
+        type.Minimum.Should().Be(Flt64.Zero);
+        type.Maximum.Should().Be(
+            type.Constants.DecimalPrecision.GetValueOrDefault().Reciprocal()
+        );
         type.ToString().Should().Be("UContinuous");
     }
 

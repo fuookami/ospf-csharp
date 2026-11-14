@@ -6,6 +6,7 @@ using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -24,13 +25,8 @@ using FrameworkSolveOptions = Fuookami.Ospf.Framework.Solver.FrameworkSolveOptio
 namespace Fuookami.Ospf.Core.Plugin.Scip;
 
 /// <summary>
-/// SCIP Benders 分解求解器实现（桩）。
-/// SCIP Benders decomposition solver implementation (structural stub).
-///
-/// 使用 SCIP 求解器实现线性 Benders 分解策略，支持主问题求解和子问题求解。
-/// 运行时需加载 SCIP 托管 DLL，否则返回 OREngineEnvironmentLost。
-/// Implements linear Benders decomposition strategy using SCIP solver.
-/// Requires SCIP managed DLL at runtime; returns OREngineEnvironmentLost otherwise.
+/// SCIP Benders 求解入口，子问题提供行对偶与 Farkas 证书。
+/// SCIP Benders entry; the sub-problem provides row duals and Farkas certificates.
 /// </summary>
 public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDecompositionSolver {
     /// <summary>求解器名称 / Solver name.</summary>
@@ -44,8 +40,12 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public ScipBendersDecompositionSolver(SolverConfig? config = null) {
-        Config = config ?? new VendorSolverConfig();
+        Config = config ?? new SolverConfig();
     }
+
+    /// <inheritdoc/>
+    public Framework.Solver.IBendersDecompositionSolver WithTimeLimit(TimeSpan timeLimit) =>
+        new ScipBendersDecompositionSolver(Config with { TimeLimit = timeLimit });
 
     // ===== IBendersDecompositionSolver: Master problem =====
 
@@ -64,6 +64,11 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
         bool toLogModel = false,
         RegistrationStatusCallBack? registrationStatusCallBack = null,
         SolvingStatusCallBack? solvingStatusCallBack = null) {
+        if (toLogModel) {
+            return Results.Failed<SolverOutput>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持 SCIP 模型日志导出 / SCIP model logging export is not yet supported"));
+        }
         Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
             await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
         if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>) {
@@ -75,8 +80,7 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-            return Results.Ok<SolverOutput>(ok.Value);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Map<SolverOutput>(_ => ok.Value);
         }
 
         if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
@@ -88,6 +92,61 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
         }
 
         return Results.Failed<SolverOutput>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+    }
+
+    /// <summary>
+    /// 求解线性 Benders 主问题并保留统一报告。
+    /// Solve a linear Benders master problem while retaining the unified report.
+    /// </summary>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveMasterReportAsync(
+        string name,
+        LinearMetaModel<Flt64> metaModel,
+        bool toLogModel = false,
+        RegistrationStatusCallBack? registrationStatusCallBack = null,
+        SolvingStatusCallBack? solvingStatusCallBack = null) {
+        if (toLogModel) {
+            return Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持 SCIP 模型日志导出 / SCIP model logging export is not yet supported"));
+        }
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
+            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
+        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismOk) {
+            return ScipLpDualSupport.Propagate<SolveReport<Flt64>, LinearMechanismModel<Flt64>>(
+                mechanismResult,
+                "SCIP 主问题模型转储失败 / SCIP master model dump failed");
+        }
+
+        using LinearMechanismModel<Flt64> mechanismModel = mechanismOk.Value;
+        ScipLinearSolver solver = CreateSolver();
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return ScipLpDualSupport.Propagate<SolveReport<Flt64>, LinearTriadModel>(
+                triadResult,
+                "SCIP 主问题矩阵转换失败 / SCIP master matrix conversion failed");
+        }
+
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportResult =
+            await solver.InvokeReportAsync(
+                model: triadModel,
+                solvingStatusCallBack: solvingStatusCallBack);
+        if (reportResult is not Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportOk) {
+            return ScipLpDualSupport.Propagate<SolveReport<Flt64>, SolveReport<Flt64>>(
+                reportResult,
+                "SCIP 主问题求解失败 / SCIP master solve failed");
+        }
+        if (reportOk.Value.Solution is { } solution) {
+            Result<Success, ErrorCode, Error<ErrorCode>> applied =
+                mechanismModel.ApplySolverSolution(solution.Values.Values);
+            if (!applied.IsOk) {
+                return ScipLpDualSupport.Propagate<SolveReport<Flt64>, Success>(
+                    applied,
+                    "SCIP 主问题解回填失败 / SCIP master solution writeback failed");
+            }
+        }
+        return Results.Ok(reportOk.Value);
     }
 
     /// <summary>
@@ -124,10 +183,16 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
     /// <summary>
     /// 求解线性 Benders 子问题 / Solve linear Benders sub problem.
     ///
-    /// 线性松弛子问题。桩求解器无法提取对偶解或 Farkas 证明，返回空字典。
-    /// Solves linear-relaxed sub-problem. Stub solver cannot extract dual/Farkas;
-    /// returns empty dictionaries.
+    /// 固定列代换后以 LP 模式求解线性松弛子问题，逐行提取对偶解；不可行时提取 Farkas 乘子，不生成割。
+    /// Substitutes fixed columns, solves the linear-relaxed sub-problem in LP mode and extracts row duals; on
+    /// infeasibility it extracts Farkas multipliers, without generating cuts.
     /// </summary>
+    /// <remarks>
+    /// 行乘子未作为含变量界的完整证明独立验证，仅在过滤零值后非空时接受；Farkas 全零视为后端未提供证据并返回失败。
+    /// Row multipliers are not independently verified as a complete certificate including variable bounds and are
+    /// accepted only when non-empty after dropping zeros; an all-zero Farkas vector is reported as a missing
+    /// certificate instead of a fabricated cut.
+    /// </remarks>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
     /// <param name="objectVariable">目标变量 / Objective variable (for cut generation context).</param>
@@ -144,68 +209,114 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
         bool toLogModel = false,
         RegistrationStatusCallBack? registrationStatusCallBack = null,
         SolvingStatusCallBack? solvingStatusCallBack = null) {
-        // Step 1: Dump meta model to mechanism model
-        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
-            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
-        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>) {
-            return PropagateSubModelResult(mechanismResult);
+        if (toLogModel) {
+            return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持 SCIP 模型日志导出 / SCIP model logging export is not yet supported"));
+        }
+        if (fixedVariables is null) {
+            return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "固定变量映射为空 / Fixed variable map is null"));
         }
 
-        using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
+        Result<(LinearMechanismModel<Flt64> Model, LinearTriadModel Matrix), ErrorCode, Error<ErrorCode>> built =
+            await metaModel.BuildLinearTriadModelAsync(
+                fixedVariables: fixedVariables,
+                registrationStatusCallBack: registrationStatusCallBack
+            );
+        if (built is not Ok<(LinearMechanismModel<Flt64> Model, LinearTriadModel Matrix), ErrorCode, Error<ErrorCode>> builtOk) {
+            return ScipLpDualSupport.Propagate<Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                (LinearMechanismModel<Flt64>, LinearTriadModel)>(
+                built, "线性模型构建结果无效 / Invalid linear model build result");
+        }
 
-        // Step 2: Build fixed variable index map (IVariableItem -> triad model column index)
-        var fixedIndexMap = new Dictionary<int, Flt64>();
-        foreach (KeyValuePair<IVariableItem, Flt64> kv in fixedVariables) {
-            int? colIndex = metaModel.Tokens.IndexOf(kv.Key);
-            if (colIndex is { } ci) {
-                fixedIndexMap[ci] = kv.Value;
+        using LinearMechanismModel<Flt64> mechanismModel = builtOk.Value.Model;
+        using LinearTriadModel triadModel = builtOk.Value.Matrix;
+        MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
+
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> relaxation = triadModel.RelaxToContinuous();
+        if (relaxation is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> relaxOk) {
+            return relaxation.Bind<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ => Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
+                new Err<ErrorCode>(
+                    ErrorCode.OREngineModelingException,
+                    "松弛模型转换结果无效 / Invalid relaxation result")));
+        }
+        using LinearTriadModel lpModel = relaxOk.Value;
+
+        Result<ScipLpOutcome, ErrorCode, Error<ErrorCode>> lp = await CreateSolver().InvokeLpAsync(
+            model: lpModel,
+            solvingStatusCallBack: solvingStatusCallBack);
+        if (lp is not Ok<ScipLpOutcome, ErrorCode, Error<ErrorCode>> lpOk) {
+            return ScipLpDualSupport.Propagate<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ScipLpOutcome>(
+                lp, "SCIP 子问题求解失败 / SCIP sub-problem solving failed");
+        }
+        ScipLpOutcome outcome = lpOk.Value;
+
+        if (outcome.Output is { } output) {
+            Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> rowDuals = await ScipLpDualSupport.RowDualsAsync(
+                model: lpModel,
+                outcome: outcome,
+                dualSolver: new ScipLinearSolver(Config),
+                cancellationToken: default);
+            if (rowDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+                return ScipLpDualSupport.Propagate<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, IReadOnlyList<Flt64>>(
+                    rowDuals, "SCIP 对偶提取失败 / SCIP dual extraction failed");
             }
+            IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+                MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+            return mechanismModel.RestoreSolverSolution(
+                matrix: triadModel,
+                solvedMatrix: lpModel,
+                solution: output.Solution.Values)
+                .Bind(values => mechanismModel.ApplySolverSolution(
+                    matrix: triadModel,
+                    solvedMatrix: lpModel,
+                    solution: output.Solution.Values)
+                    .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                        new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
+                            Result: output with { Solution = new Solution<Flt64>(values) },
+                            DualSolution: dualSolution,
+                            Cuts: null) {
+                            Report = outcome.Report,
+                        }));
         }
 
-        // Step 3: Dump mechanism model to triad model, then fix and relax
-        ScipLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
-        LinearTriadModel subModel = FixAndRelaxToLP(triadModel, fixedIndexMap);
-
-        // Stub solver cannot extract duals or Farkas; use empty dictionaries
-        var dualSolution = new Dictionary<MathConstraint, Flt64>();
-        var farkasSolution = new Dictionary<MathConstraint, Flt64>();
-
-        using (triadModel)
-        using (subModel) {
-            // Step 4: Solve the sub-problem
-            ScipLinearSolver subSolver = CreateSolver();
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await subSolver.InvokeAsync((ILinearTriadModelView)subModel, solvingStatusCallBack);
-
-            // Step 5: Build result
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                    new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
-                        Result: ok.Value,
-                        DualSolution: dualSolution,
+        if (outcome.Report.ProblemStatus == ProblemStatus.Infeasible) {
+            // 与 Kotlin 一致：不可行子问题的 Farkas 乘子来自显式 Farkas 对偶模型，而不是原生逐行乘子。
+            // Like Kotlin: Farkas multipliers for the infeasible sub-problem come from the explicit Farkas dual model,
+            // not from native per-row multipliers.
+            Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> farkasDuals =
+                await TriadDualSolverSupport.SolveFarkasDualAsync(
+                    model: lpModel,
+                    solver: new ScipLinearSolver(Config),
+                    cancellationToken: default);
+            if (farkasDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> farkasDualsOk) {
+                return ScipLpDualSupport.Propagate<Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                    IReadOnlyList<Flt64>>(
+                    farkasDuals, "SCIP 未提供可用的 Farkas 证书 / SCIP did not provide a usable Farkas certificate");
+            }
+            Result<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkas =
+                MathConstraintOrigins.ToFarkasSolution(farkasDualsOk.Value, originMap, "SCIP");
+            if (farkas is not Ok<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkasOk) {
+                return ScipLpDualSupport.Propagate<Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                    IReadOnlyDictionary<MathConstraint, Flt64>>(
+                    farkas, "SCIP 未提供可用的 Farkas 证书 / SCIP did not provide a usable Farkas certificate");
+            }
+            return mechanismModel.ValidateSolverTokenSnapshot(triadModel, lpModel)
+                .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                    new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
+                        FarkasDualSolution: farkasOk.Value,
                         Cuts: null));
-            }
-
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                if (f.Error.Code == ErrorCode.ORModelInfeasible) {
-                    // Return infeasible result with empty Farkas duals
-                    return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                        new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
-                            FarkasDualSolution: farkasSolution,
-                            Cuts: null));
-                }
-                return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
-            }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-            }
-
-            return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
         }
+
+        // 其他终态（无界、未知、被取消）沿用报告映射出的错误，不伪造对偶或 Farkas 证据。
+        // Other terminal states (unbounded, unknown, cancelled) reuse the error mapped from the report instead of
+        // fabricating dual or Farkas evidence.
+        Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+            ScipLinearSolver.ToLegacy(Results.Ok(outcome.Report));
+        return ScipLpDualSupport.Propagate<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, FeasibleSolverOutput<Flt64>>(
+            legacy, "SCIP 子问题既无 incumbent 也无可用的不可行证据 / SCIP sub-problem has neither an incumbent nor usable infeasibility evidence");
     }
 
     /// <summary>
@@ -267,40 +378,18 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         ScipLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
         }
-    }
-
-    /// <summary>
-    /// 固定变量并松弛为 LP / Fix specified variables and relax all to LP.
-    /// </summary>
-    /// <param name="model">原始三元组模型 / Original triad model.</param>
-    /// <param name="fixedVarMap">固定变量映射（列索引 -> 值）/ Fixed variable map (col index -> value).</param>
-    /// <returns>松弛后的模型 / Relaxed model with fixed variables.</returns>
-    private static LinearTriadModel FixAndRelaxToLP(
-        LinearTriadModel model,
-        IReadOnlyDictionary<int, Flt64> fixedVarMap) {
-        var vars = new List<ModelViewVariable>(model.Variables.Count);
-        foreach (ModelViewVariable v in model.Variables) {
-            if (fixedVarMap.ContainsKey(v.Index)) {
-                // Fix variable: LB = UB = fixed value, relax to continuous
-                Flt64 fixedVal = fixedVarMap[v.Index];
-                vars.Add(new ModelViewVariable(
-                    v.Index, fixedVal, fixedVal,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
-            }
-            else {
-                // Relax to continuous
-                vars.Add(new ModelViewVariable(
-                    v.Index, v.LowerBound, v.UpperBound,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
-            }
-        }
-
-        return new LinearTriadModel(vars, (LinearConstraintBatch)model.Constraints, model.Objective, model.Name);
     }
 
     /// <summary>
@@ -339,7 +428,9 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
                 new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResultOf<V>(
                     Result: ConvertFeasibleOutput<V>(feasible.Result),
                     DualSolution: feasible.DualSolution,
-                    Cuts: feasible.Cuts),
+                    Cuts: feasible.Cuts) {
+                    Report = feasible.Report,
+                },
             Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult infeasible =>
                 new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResultOf<V>(
                     FarkasDualSolution: infeasible.FarkasDualSolution,
@@ -379,21 +470,6 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
         throw new NotSupportedException(
             $"Value conversion from Flt64 to {typeof(V).Name} requires an explicit IIntoValue<V> converter. " +
             "Use SolveSubAsync directly and convert at the caller level.");
-    }
-
-    /// <summary>
-    /// 传播机制模型错误为子问题结果类型 / Propagate mechanism model error to sub-result type.
-    /// </summary>
-    private static Result<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>> PropagateSubModelResult(
-        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> r) {
-        if (r is Failed<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-            return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
-        }
-        if (r is Fatal<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-            return new Fatal<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-        }
-        return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-            new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
     }
 
     /// <summary>

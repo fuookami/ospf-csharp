@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Framework.GanttNetworkScheduling</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Framework.GanttNetworkScheduling</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Framework.GanttNetworkScheduling.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--
+      桥接模块必须独立成项目：Gantt 与 Network 互相引用会形成循环，而基线里它本来就是独立模块。
+      The bridge must be its own project: Gantt and Network already reference each other, so adding this to either would close a cycle — and in the
+      baseline it is a separate module anyway.
+    -->
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Quantities\Quantities.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+    <ProjectReference Include="..\Framework.NetworkScheduling\Framework.NetworkScheduling.csproj" />
+    <ProjectReference Include="..\Framework.GanttScheduling\Framework.GanttScheduling.csproj" />
+  </ItemGroup>
+</Project>

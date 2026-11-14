@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Framework.Csp2d</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Framework.Csp2d</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Framework.Csp2d.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Quantities\Quantities.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+    <!--
+      ponytail: 几何层（Placement2 / Box2Geometry / PackingShape2 / QuantityPoint2）今天住在 Bpp2d 里，
+      所以这里向 Bpp2d 借用了「几何」而不是「装箱」。天花板：套裁从此依赖装箱模块的工程图。
+      升级路径：出现**第三个**消费者时，把几何类型搬到 `src/Framework.Geometry2d` 并让 Bpp2d/Bpp3d/Csp2d 一起引用它，
+      届时删掉这一行引用。判断依据是引用方向，不是文件多少。
+      The geometry layer (Placement2 / Box2Geometry / PackingShape2 / QuantityPoint2) lives in Bpp2d today, so this borrows
+      "geometry" rather than "bin packing". Ceiling: cutting stock now depends on the bin-packing project graph.
+      Upgrade path: once a **third** consumer appears, move the geometry types into `src/Framework.Geometry2d` and have
+      Bpp2d/Bpp3d/Csp2d reference it, then remove this line. The rule is the direction of the reference, not the file count.
+    -->
+    <ProjectReference Include="..\Framework.Bpp2d\Framework.Bpp2d.csproj" />
+  </ItemGroup>
+</Project>

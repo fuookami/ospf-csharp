@@ -87,15 +87,17 @@ public sealed class TopKCuttingPlans<V> where V : struct {
 
     private static Flt64 ComputeScore(CuttingPlan<V> plan) {
         V? v = plan.UsedWidth?.Value;
-        if (v is Flt64 f) {
-            return f;
+        if (v is not V value) {
+            return Flt64.Zero;
         }
 
-        if (v is FltX x) {
-            return x.ToFlt64();
-        }
-
-        return Flt64.Zero;
+        // **复用 `DomainValueConversion.ToFlt64`。** 本地版本对非 `Flt64` / `FltX` 的 `V`
+        // **静默返回零**——于是**所有方案的得分都变成 0**，`TopK` 退化成"取前 K 个"，
+        // **完全失去按用量排序的意义，而且没有任何报错**。
+        //
+        // **Reuses `DomainValueConversion.ToFlt64`.** The local version **silently returned zero** for any `V` other than `Flt64` / `FltX`, which made **every plan score 0** and
+        // degraded `TopK` to "take the first K" — **losing the whole point of ordering by usage, with no error at all**.
+        return value.ToFlt64();
     }
 
     /// <summary>

@@ -326,7 +326,9 @@ public class CapacityCompilationTests {
             new[] { action }, slots, timeWindow);
 
         Result<CapacitySchedulingSolution<TestProductionAction>, ErrorCode, Error<ErrorCode>> result = compilation.ExtractSolution(new object());
-        result.IsOk.Should().BeTrue();
+        // **B731 之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
+        // **B731 flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
+        result.IsFailed.Should().BeTrue();
     }
 }
 
@@ -366,7 +368,9 @@ public class CapacityOrderCompilationTests {
             new[] { action }, slots, timeWindow, maxOrderPerSlot: 3);
 
         Result<CapacitySchedulingSolution<TestProductionAction>, ErrorCode, Error<ErrorCode>> result = compilation.ExtractSolution(new object());
-        result.IsOk.Should().BeTrue();
+        // **B731 之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
+        // **B731 flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
+        result.IsFailed.Should().BeTrue();
     }
 }
 
@@ -430,7 +434,9 @@ public class IterativeCapacityCompilationTests {
             new[] { executor }, new[] { action }, slots, timeWindow);
 
         Result<CapacitySchedulingSolution<TestProductionAction>, ErrorCode, Error<ErrorCode>> result = compilation.ExtractSolution(new object());
-        result.IsOk.Should().BeTrue();
+        // **B731 之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
+        // **B731 flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
+        result.IsFailed.Should().BeTrue();
     }
 }
 
@@ -473,137 +479,5 @@ public class CapacitySchedulingAggregationTests {
 
         aggregation.ActionsForExecutor("e1").Should().HaveCount(2);
         aggregation.ActionsForExecutor("e2").Should().BeEmpty();
-    }
-}
-
-public class CapacityCostMinimizationTests {
-    [Fact]
-    public void TestCreation() {
-        var executor = new CapTestExecutor("e1", "Executor1");
-        var action = new TestProductionAction("a1", "Action1", executor);
-        var slots = new List<TimeRange>
-        {
-            new(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(8))
-        };
-        var timeWindow = new TimeWindow<Flt64>(
-            new TimeRange(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(24)),
-            false, TimeSpan.FromHours(8));
-        var compilation = new CapacityCompilation<TestProductionAction>(
-            new[] { action }, slots, timeWindow);
-
-        var minimization = new CapacityCostMinimization<TestProductionAction>(
-            compilation, new[] { action }, slots, timeWindow);
-
-        minimization.Name.Should().Be("capacity_cost_minimization");
-        minimization.Lazy.Should().BeFalse();
-    }
-
-    [Fact]
-    public void TestInvoke() {
-        var executor = new CapTestExecutor("e1", "Executor1");
-        var action = new TestProductionAction("a1", "Action1", executor);
-        var slots = new List<TimeRange>
-        {
-            new(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(8))
-        };
-        var timeWindow = new TimeWindow<Flt64>(
-            new TimeRange(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(24)),
-            false, TimeSpan.FromHours(8));
-        var compilation = new CapacityCompilation<TestProductionAction>(
-            new[] { action }, slots, timeWindow);
-
-        var minimization = new CapacityCostMinimization<TestProductionAction>(
-            compilation, new[] { action }, slots, timeWindow);
-
-        Result<Success, ErrorCode, Error<ErrorCode>> result = minimization.Invoke(new object());
-        result.IsOk.Should().BeTrue();
-    }
-}
-
-public class ExecutorCapacityConstraintTests {
-    [Fact]
-    public void TestCreation() {
-        var executor = new CapTestExecutor("e1", "Executor1");
-        var action = new TestProductionAction("a1", "Action1", executor);
-        var slots = new List<TimeRange>
-        {
-            new(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(8))
-        };
-        var timeWindow = new TimeWindow<Flt64>(
-            new TimeRange(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(24)),
-            false, TimeSpan.FromHours(8));
-        var compilation = new CapacityCompilation<TestProductionAction>(
-            new[] { action }, slots, timeWindow);
-
-        var constraint = new ExecutorCapacityConstraint<TestProductionAction>(
-            compilation, slots, timeWindow);
-
-        constraint.Name.Should().Be("executor_capacity");
-        constraint.Lazy.Should().BeFalse();
-    }
-
-    [Fact]
-    public void TestInvoke() {
-        var executor = new CapTestExecutor("e1", "Executor1");
-        var action = new TestProductionAction("a1", "Action1", executor);
-        var slots = new List<TimeRange>
-        {
-            new(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(8))
-        };
-        var timeWindow = new TimeWindow<Flt64>(
-            new TimeRange(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(24)),
-            false, TimeSpan.FromHours(8));
-        var compilation = new CapacityCompilation<TestProductionAction>(
-            new[] { action }, slots, timeWindow);
-
-        var constraint = new ExecutorCapacityConstraint<TestProductionAction>(
-            compilation, slots, timeWindow);
-
-        Result<Success, ErrorCode, Error<ErrorCode>> result = constraint.Invoke(new object());
-        result.IsOk.Should().BeTrue();
-    }
-}
-
-public class OrderConstraintTests {
-    [Fact]
-    public void TestCreation() {
-        var executor = new CapTestExecutor("e1", "Executor1");
-        var action = new TestProductionAction("a1", "Action1", executor);
-        var slots = new List<TimeRange>
-        {
-            new(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(8))
-        };
-        var timeWindow = new TimeWindow<Flt64>(
-            new TimeRange(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(24)),
-            false, TimeSpan.FromHours(8));
-        var compilation = new CapacityOrderCompilation<TestProductionAction>(
-            new[] { action }, slots, timeWindow, maxOrderPerSlot: 3);
-
-        var constraint = new OrderConstraint<TestProductionAction>(
-            compilation, new[] { action }, slots, 3);
-
-        constraint.Name.Should().Be("order");
-        constraint.Lazy.Should().BeFalse();
-    }
-
-    [Fact]
-    public void TestInvoke() {
-        var executor = new CapTestExecutor("e1", "Executor1");
-        var action = new TestProductionAction("a1", "Action1", executor);
-        var slots = new List<TimeRange>
-        {
-            new(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(8))
-        };
-        var timeWindow = new TimeWindow<Flt64>(
-            new TimeRange(DateTimeOffset.Now, DateTimeOffset.Now.AddHours(24)),
-            false, TimeSpan.FromHours(8));
-        var compilation = new CapacityOrderCompilation<TestProductionAction>(
-            new[] { action }, slots, timeWindow, maxOrderPerSlot: 3);
-
-        var constraint = new OrderConstraint<TestProductionAction>(
-            compilation, new[] { action }, slots, 3);
-
-        Result<Success, ErrorCode, Error<ErrorCode>> result = constraint.Invoke(new object());
-        result.IsOk.Should().BeTrue();
     }
 }

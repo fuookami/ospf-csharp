@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Quantities\Quantities.csproj" />
     <ProjectReference Include="..\MultiArray\MultiArray.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Tomlyn" />
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
 </Project>

@@ -28,6 +28,14 @@ public sealed record QuadraticFlattenData<T>(IReadOnlyList<QuadraticMonomial<T>>
 public sealed class LinearFlattenContext<V> where V : struct, IRing<V> {
     private readonly Dictionary<object, LinearFlattenData<V>?> _cache = new();
 
+    internal LinearFlattenContext<V> Snapshot() {
+        var copy = new LinearFlattenContext<V>();
+        foreach (KeyValuePair<object, LinearFlattenData<V>?> entry in _cache) {
+            copy._cache.Add(entry.Key, entry.Value);
+        }
+        return copy;
+    }
+
     /// <summary>是否包含指定键 / Whether contains the specified key</summary>
     public bool Contains(object cacheKey) => _cache.ContainsKey(cacheKey);
     /// <summary>获取缓存值 / Get cached value</summary>
@@ -48,6 +56,14 @@ public sealed class LinearFlattenContext<V> where V : struct, IRing<V> {
 /// </summary>
 public sealed class QuadraticFlattenContext<V> where V : struct, IRing<V> {
     private readonly Dictionary<object, QuadraticFlattenData<V>?> _cache = new();
+
+    internal QuadraticFlattenContext<V> Snapshot() {
+        var copy = new QuadraticFlattenContext<V>();
+        foreach (KeyValuePair<object, QuadraticFlattenData<V>?> entry in _cache) {
+            copy._cache.Add(entry.Key, entry.Value);
+        }
+        return copy;
+    }
 
     /// <summary>是否包含指定键 / Whether contains the specified key</summary>
     public bool Contains(object cacheKey) => _cache.ContainsKey(cacheKey);
@@ -70,6 +86,17 @@ public sealed class QuadraticFlattenContext<V> where V : struct, IRing<V> {
 public sealed class ValueCacheContext<V> where V : struct, IRealNumber<V> {
     private readonly Dictionary<(object Key, IReadOnlyList<V>? Solution), V?> _solutionCache = new();
     private readonly Dictionary<(object Key, IReadOnlyDictionary<ISymbol, V> FixedValues), V?> _fixedValueCache = new();
+
+    internal ValueCacheContext<V> Snapshot() {
+        var copy = new ValueCacheContext<V>();
+        foreach (KeyValuePair<(object Key, IReadOnlyList<V>? Solution), V?> entry in _solutionCache) {
+            copy._solutionCache.Add(entry.Key, entry.Value);
+        }
+        foreach (KeyValuePair<(object Key, IReadOnlyDictionary<ISymbol, V> FixedValues), V?> entry in _fixedValueCache) {
+            copy._fixedValueCache.Add(entry.Key, entry.Value);
+        }
+        return copy;
+    }
 
     /// <summary>清除所有缓存 / Clear all caches</summary>
     public void Clear() { _solutionCache.Clear(); _fixedValueCache.Clear(); }
@@ -102,6 +129,10 @@ public sealed class ValueCacheContext<V> where V : struct, IRealNumber<V> {
         return value;
     }
 
+    /// <summary>移除指定解对应的缓存 / Remove the cache for the specified solution.</summary>
+    public bool Remove(object cacheKey, IReadOnlyList<V>? solution) =>
+        _solutionCache.Remove((cacheKey, solution));
+
     /// <summary>按 cacheKey 移除缓存 / Remove cache by cacheKey</summary>
     public void Remove(object cacheKey) {
         var solutionKeysToRemove = new List<(object, IReadOnlyList<V>?)>();
@@ -133,6 +164,14 @@ public sealed class RangeCacheContext<V>
     where V : struct, IRealNumber<V>, INumberField<V> {
     private readonly Dictionary<object, ExpressionRange<V>?> _cache = new();
 
+    internal RangeCacheContext<V> Snapshot() {
+        var copy = new RangeCacheContext<V>();
+        foreach (KeyValuePair<object, ExpressionRange<V>?> entry in _cache) {
+            copy._cache.Add(entry.Key, entry.Value);
+        }
+        return copy;
+    }
+
     /// <summary>是否包含指定键 / Whether contains the specified key</summary>
     public bool Contains(object cacheKey) => _cache.ContainsKey(cacheKey);
     /// <summary>获取缓存值 / Get cached value</summary>
@@ -162,6 +201,13 @@ public sealed record TokenCacheContexts<V>(
     public TokenCacheContexts()
         : this(new LinearFlattenContext<V>(), new QuadraticFlattenContext<V>(),
                new ValueCacheContext<V>(), new RangeCacheContext<V>()) { }
+
+    internal TokenCacheContexts<V> Snapshot() => new(
+        LinearFlatten: LinearFlatten.Snapshot(),
+        QuadraticFlatten: QuadraticFlatten.Snapshot(),
+        Value: Value.Snapshot(),
+        Range: Range.Snapshot()
+    );
 
     /// <summary>所有绑定的符号 / All bound symbols</summary>
     public IReadOnlySet<object> BoundSymbols() {

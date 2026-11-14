@@ -1,8 +1,10 @@
 #nullable enable
 
-using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Task.Model;
 
@@ -49,10 +51,10 @@ public sealed record Airport(
     TimeSpan CargoTransferTime = default,
     bool Base = false
 ) {
-    private static readonly Dictionary<ICAO, Airport> Pool = new();
+    private static readonly ConcurrentDictionary<ICAO, Airport> Pool = new();
 
-    /// <summary>所有已注册的机场 / All registered airports.</summary>
-    public static IReadOnlyCollection<Airport> Values => Pool.Values;
+    /// <summary>已注册机场的快照 / Snapshot of registered airports.</summary>
+    public static IReadOnlyCollection<Airport> Values => Pool.Values.ToArray();
 
     /// <summary>
     /// 通过 ICAO 代码从池中获取机场。

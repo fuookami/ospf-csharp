@@ -19,6 +19,9 @@ public readonly record struct TenantId(string Value) { public override string To
 /// <summary>请求标识 / Request identifier.</summary>
 public readonly record struct RequestId(string Value) { public override string ToString() => Value; }
 
+/// <summary>分发操作标识 / Dispatch operation identifier.</summary>
+public readonly record struct DispatchId(string Value) { public override string ToString() => Value; }
+
 /// <summary>句柄标识 / Handle identifier.</summary>
 public readonly record struct HandleId(string Value) { public override string ToString() => Value; }
 

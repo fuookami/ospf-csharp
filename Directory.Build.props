@@ -15,4 +15,38 @@
   <PropertyGroup>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
+  <!--
+    打包元数据（B846）：此前 `dotnet pack` 能跑，但版本是**默认的 1.0.0**、没有作者、没有自述文件——
+    包能出来，信息是假的。
+
+    **版本号不是本仓自己定的**：它跟着固定 Kotlin 基线走（基线 `pom.xml` 在 12fdb587 上是 `1.1.2`）。
+    基线上移时，这里和 `docs/kotlin-sync-status.md` 一起改——判据 `PackagingMetadataTests` 会把两边钉住。
+
+    Packaging metadata (B846): `dotnet pack` already worked, but the version was **the default 1.0.0** with no authors and no readme — the package came out
+    carrying false information. **The version is not this repo's own**: it follows the pinned Kotlin baseline (`1.1.2` in the baseline's `pom.xml` at 12fdb587).
+    Bumping the baseline means changing this and `docs/kotlin-sync-status.md` together — the criterion `PackagingMetadataTests` pins both.
+  -->
+  <PropertyGroup>
+    <Version>1.1.2</Version>
+    <Authors>fuookami</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/fuookami/ospf-csharp.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <!--
+    **只有当工程自己没有 `README.md` 文件时**，才把仓根那份塞进包，并把 `PackageReadmeFile` 指向它（B847）。
+    两件事必须同一个条件：只设属性不塞文件是 NU5039（打包直接失败），只塞文件不设属性是"包里有个没人引用的 README"。
+
+    **Only when the project has no `README.md` of its own** does the repo-root one get packed, with `PackageReadmeFile` pointing at it (B847). Both must share
+    one condition: setting the property without the file is NU5039 (packing fails outright), and packing the file without the property is a README nobody
+    references.
+  -->
+  <PropertyGroup Condition="'$(IsPackable)' != 'false' and !Exists('$(MSBuildProjectDirectory)/README.md')">
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' != 'false' and !Exists('$(MSBuildProjectDirectory)/README.md') and Exists('$(MSBuildThisFileDirectory)README.md')">
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
 </Project>

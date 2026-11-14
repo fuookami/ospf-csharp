@@ -77,7 +77,7 @@ public class LengthObjectivePipeline<V> : IPipeline<LinearMetaModel<Flt64>>
                     continue;
                 }
 
-                monomials.Add(new LinearMonomial<Flt64>(ToFlt64(penaltyValue), assignedVar));
+                monomials.Add(new LinearMonomial<Flt64>(penaltyValue.ToFlt64(), assignedVar));
             }
         }
 
@@ -94,7 +94,7 @@ public class LengthObjectivePipeline<V> : IPipeline<LinearMetaModel<Flt64>>
                     continue;
                 }
 
-                monomials.Add(new LinearMonomial<Flt64>(ToFlt64(penalty), overVar));
+                monomials.Add(new LinearMonomial<Flt64>(penalty.ToFlt64(), overVar));
             }
         }
 
@@ -114,22 +114,20 @@ public class LengthObjectivePipeline<V> : IPipeline<LinearMetaModel<Flt64>>
             return Flt64.One;
         }
 
-        return Flt64.One + ToFlt64(batchMinPenalty.Value);
+        return Flt64.One + batchMinPenalty.Value.ToFlt64();
     }
 
-    private static Flt64 ToFlt64(V value) {
-        if (value is Flt64 f) {
-            return f;
-        }
-
-        if (value is FltX x) {
-            return x.ToFlt64();
-        }
-
-        if (value is Fuookami.Ospf.Math.Algebra.Number.Int64 i) {
-            return i.ToFlt64();
-        }
-
-        return Flt64.Zero;
-    }
+    // **本地那份 `ToFlt64` 已删除，改用 `DomainValueConversion.ToFlt64`。**
+    //
+    // 本地版本对未知 `V` **静默返回 `Flt64.Zero`**——**惩罚项会直接消失，而不是报错**。
+    // 共用版本用 `System.Convert.ToDouble` 兜底，**任何数值类型都能转换**，
+    // 与基线"`V` 有 `toFlt64()` 约束、任何 `V` 都能转"的语义一致。
+    //
+    // **这是本会话第 N 次"同一段逻辑写了两份、只有一份是对的"**（B363 的投影、
+    // B373/B377 的取整与空列表都是这个形状）。**判据只覆盖了被调用的那一份。**
+    //
+    // **The local `ToFlt64` is gone; `DomainValueConversion.ToFlt64` is used instead.** The local one **silently returned `Flt64.Zero`** for an unknown `V`, so **penalty terms
+    // vanished instead of failing**. The shared one falls back to `System.Convert.ToDouble` and **converts any numeric type**, matching the baseline's "`V` has a
+    // `toFlt64()` constraint, so every `V` converts". **This is another "same logic written twice, only one copy correct"** (B363's projection, B373/B377's rounding and
+    // empty lists all had this shape). **The criteria only ever covered the copy that was called.**
 }

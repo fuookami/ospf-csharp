@@ -274,7 +274,7 @@ public sealed record QuantityBox2<V>(
             return Results.Failed<bool>(f10.Error);
         }
 
-        return Results.Ok(ord.Value is Order.Less or Order.Equal);
+        return Results.Ok(ord.Value is Order.Less);
     }
 
     private Result<bool, ErrorCode, Error<ErrorCode>> CircleOverlapped(
@@ -327,7 +327,7 @@ public sealed record QuantityBox2<V>(
             return Results.Failed<bool>(f9.Error);
         }
 
-        return Results.Ok(ord.Value is Order.Less or Order.Equal);
+        return Results.Ok(ord.Value is Order.Less);
     }
 
     /// <summary>计算两个包围盒的交集 / Compute the intersection of two bounding boxes.</summary>

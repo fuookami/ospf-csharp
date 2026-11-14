@@ -68,7 +68,7 @@ public sealed class ColumnGenerationPackingAnalyzer {
             ["continuous_radius_solver_prototype_variables"] = string.Join("|", state.ContinuousRadiusSolverPrototypes.Select(p => p.VariableName))
         };
 
-        Latest = new ColumnGenerationPackingSnapshot(bins, packingResultRet.Value, new SchemaDTO(schemaKpi));
+        Latest = new ColumnGenerationPackingSnapshot(bins, packingResultRet.Value, new SchemaDTO(schemaKpi, schemaOk.Value.LoadingPlans));
         return new Ok<Success, ErrorCode, Error<ErrorCode>>(Results.SuccessInstance);
     }
 }

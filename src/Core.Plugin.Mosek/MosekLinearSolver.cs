@@ -1,5 +1,11 @@
 #nullable enable
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using mosek;
 using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Intermediate;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -7,19 +13,12 @@ using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Iis;
 using Fuookami.Ospf.Core.Solver.Output;
-using Fuookami.Ospf.Core.Token;
-using Fuookami.Ospf.Core.Variable;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Math.Algebra.Number;
-using Fuookami.Ospf.Math.Symbol;
-using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
-using mosek;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using MosekTask = mosek.Task;
+using SysException = System.Exception;
 
 namespace Fuookami.Ospf.Core.Plugin.Mosek;
 
@@ -27,171 +26,230 @@ namespace Fuookami.Ospf.Core.Plugin.Mosek;
 /// MOSEK 线性求解器 / MOSEK linear solver.
 /// </summary>
 public sealed class MosekLinearSolver : ILinearSolver {
-    /// <summary>求解器名称 / Solver name.</summary>
+    /// <inheritdoc/>
     public string Name => "mosek";
 
-    /// <summary>求解器配置 / Solver configuration.</summary>
+    /// <inheritdoc/>
+    public SolverDescriptor? Descriptor { get; } = MosekReportSupport.Descriptor();
+
+    /// <inheritdoc/>
     public SolverConfig Config { get; }
 
     private readonly MosekSolverCallBack? _callBack;
 
+    /// <summary>
+    /// 创建 MOSEK 线性求解器 / Create a MOSEK linear solver.
+    /// </summary>
+    /// <param name="config">求解器配置 / Solver configuration.</param>
+    /// <param name="callBack">求解器生命周期回调 / Solver lifecycle callback.</param>
     public MosekLinearSolver(
         SolverConfig? config = null,
         MosekSolverCallBack? callBack = null) {
-        Config = config ?? new MosekSolverConfig();
+        Config = config ?? new SolverConfig();
         _callBack = callBack;
     }
 
-    /// <summary>
-    /// 求解线性模型 / Solve linear model.
-    /// </summary>
-    public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <inheritdoc/>
+    public async System.Threading.Tasks.Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         ILinearTriadModelView model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default) {
-        using var impl = new MosekLinearSolverImpl(Config, _callBack, solvingStatusCallBack);
-        return await impl.InvokeAsync(model);
+        CancellationToken cancellationToken = default) =>
+        MosekReportSupport.ToLegacy(await InvokeReportAsync(
+            model: model,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken));
+
+    /// <inheritdoc/>
+    public System.Threading.Tasks.Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        InvokeReportCore(
+            model: model,
+            solutionAmount: 1,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken);
+
+    /// <inheritdoc/>
+    public System.Threading.Tasks.Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        InvokeReportCore(
+            model: model,
+            solutionAmount: solutionAmount,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken);
+
+    private async System.Threading.Tasks.Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportCore(
+        ILinearTriadModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack,
+        CancellationToken cancellationToken) {
+        if (cancellationToken.IsCancellationRequested) {
+            return Results.Ok(MosekReportSupport.Cancelled(Config));
+        }
+        if (solutionAmount > 1) {
+            return Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "MOSEK 适配器尚未实现解池 / The MOSEK adapter does not yet implement a solution pool"));
+        }
+        if (_callBack?.NativeCallback is not null) {
+            return Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "MOSEK 原生进度回调尚未同步 / Native MOSEK progress callbacks are not yet synchronized"));
+        }
+        Result<Success, ErrorCode, Error<ErrorCode>> config = ValidateConfig(Config);
+        if (!config.IsOk) {
+            return PropagateError<SolveReport<Flt64>>(config);
+        }
+        Result<MosekLinearSnapshot, ErrorCode, Error<ErrorCode>> snapshot =
+            MosekLinearSnapshot.Capture(
+                model: model,
+                cancellationToken: cancellationToken);
+        if (snapshot is not Ok<MosekLinearSnapshot, ErrorCode, Error<ErrorCode>> captured) {
+            if (cancellationToken.IsCancellationRequested) {
+                return Results.Ok(MosekReportSupport.Cancelled(Config));
+            }
+            return snapshot switch {
+                Failed<MosekLinearSnapshot, ErrorCode, Error<ErrorCode>> failed =>
+                    Results.Failed<SolveReport<Flt64>>(failed.Error),
+                Fatal<MosekLinearSnapshot, ErrorCode, Error<ErrorCode>> fatal =>
+                    new Fatal<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>(fatal.Errors),
+                _ => Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+                    ErrorCode.IllegalArgument,
+                    "MOSEK 线性模型快照无效 / Invalid MOSEK linear model snapshot")),
+            };
+        }
+        using var impl = new MosekLinearSolverImpl(
+            config: Config,
+            callBack: _callBack,
+            statusCallBack: solvingStatusCallBack);
+        return await impl.InvokeReportAsync(
+            snapshot: captured.Value,
+            name: model.Name,
+            cancellationToken: cancellationToken);
     }
 
-    /// <summary>
-    /// 求解线性模型（含 IIS） / Solve linear model with IIS diagnostics.
-    /// </summary>
-    public async Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <inheritdoc/>
+    public async System.Threading.Tasks.Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         LinearTriadModel model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         IisConfig? iisConfig = null,
         CancellationToken cancellationToken = default) {
-        Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result = await InvokeAsync((ILinearTriadModelView)model, solvingStatusCallBack, cancellationToken);
-        return result switch {
-            Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok => Results.Ok<SolverOutput>(ok.Value),
-            Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f => Results.Failed<SolverOutput>(f.Error),
-            Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat => new Fatal<SolverOutput, ErrorCode, Error<ErrorCode>>(fat.Errors),
-            _ => throw new InvalidOperationException()
-        };
+        if (iisConfig is not null) {
+            return Results.Failed<SolverOutput>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "MOSEK 原生 IIS 尚未同步 / Native MOSEK IIS has not been synchronized"));
+        }
+        return (await InvokeAsync(
+                model: model,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken))
+            .Map<SolverOutput>(output => output);
     }
 
-    /// <summary>
-    /// 求解线性模型获取多个解 / Solve linear model for multiple solutions.
-    /// </summary>
-    public async Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
+    /// <inheritdoc/>
+    public async System.Threading.Tasks.Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
         ILinearTriadModelView model,
         ulong solutionAmount,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         CancellationToken cancellationToken = default) {
-        if (solutionAmount <= 1) {
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> single = await InvokeAsync(model, solvingStatusCallBack, cancellationToken);
-            return single switch {
-                Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok =>
-                    Results.Ok((ok.Value, new List<List<Flt64>>())),
-                Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f =>
-                    Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(f.Error),
-                Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat =>
-                    new Fatal<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>>(fat.Errors),
-                _ => throw new InvalidOperationException()
-            };
-        }
-
-        // Multi-solution not supported for Mosek adapter; fall back to single
-        return await InvokeAsync(model, 1, solvingStatusCallBack, cancellationToken);
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> report =
+            await InvokeReportAsync(
+                model: model,
+                solutionAmount: solutionAmount,
+                solvingStatusCallBack: solvingStatusCallBack,
+                cancellationToken: cancellationToken);
+        Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+            MosekReportSupport.ToLegacy(report);
+        return legacy switch {
+            Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok =>
+                Results.Ok((ok.Value, new List<List<Flt64>>())),
+            Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> failed =>
+                Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(failed.Error),
+            Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fatal =>
+                new Fatal<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>>(fatal.Errors),
+            _ => Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.OREngineSolvingException)),
+        };
     }
 
-    /// <summary>
-    /// 转储线性机制模型为三元组模型 / Dump linear mechanism model to triad model.
-    /// </summary>
-    public Task<LinearTriadModel> DumpAsync(LinearMechanismModel<Flt64> model, CancellationToken cancellationToken = default) {
-        IReadOnlyList<Token<Flt64>> tokens = model.Tokens.TokensInSolver;
-        var variables = new List<ModelViewVariable>(tokens.Count);
-        for (int i = 0; i < tokens.Count; i++) {
-            IVariableItem v = tokens[i].Variable;
-            variables.Add(new ModelViewVariable(
-                i,
-                v.LowerBound?.Value is Fuookami.Ospf.Math.Algebra.ValueRange.ValueWrapper<Flt64>.Value val1 ? val1.Number : new Flt64(double.NegativeInfinity),
-                v.UpperBound?.Value is Fuookami.Ospf.Math.Algebra.ValueRange.ValueWrapper<Flt64>.Value val2 ? val2.Number : new Flt64(double.PositiveInfinity),
-                v.TypeKind,
-                v.Name));
+    /// <inheritdoc/>
+    public System.Threading.Tasks.Task<Result<LinearTriadModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        LinearMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default) {
+        if (Config.DumpIntermediateModelBounds.GetValueOrDefault()
+            || Config.DumpIntermediateModelForceBounds.GetValueOrDefault()
+            || Config.DumpIntermediateModelConcurrent.GetValueOrDefault()) {
+            return System.Threading.Tasks.Task.FromResult(
+                Results.Failed<LinearTriadModel>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "暂不支持指定的中间模型转储配置 / The requested intermediate-model dump configuration is not yet supported")));
         }
-
-        IReadOnlyList<IConstraint<Flt64, LinearCategory>> constraints = ((IMechanismModel<Flt64>)model).Constraints;
-        int rowCount = constraints.Count;
-        var sparseRows = new List<SparseVector>(rowCount);
-        var signs = new List<ConstraintRelation>(rowCount);
-        var rhs = new List<Flt64>(rowCount);
-        var names = new List<string>(rowCount);
-        var sources = new List<ConstraintSource>(rowCount);
-
-        for (int row = 0; row < rowCount; row++) {
-            IConstraint<Flt64, LinearCategory> constraint = constraints[row];
-            var entries = new List<SparseVectorEntry>();
-            foreach (ICell<Flt64> cell in constraint.Lhs) {
-                if (cell is ILinearCell<Flt64> linearCell) {
-                    int? colIndex = model.Tokens.IndexOf(linearCell.Token);
-                    if (colIndex is { } ci && linearCell.Coefficient != Flt64.Zero) {
-                        entries.Add(new SparseVectorEntry(ci, linearCell.Coefficient));
-                    }
-                }
-            }
-            sparseRows.Add(new SparseVector(entries));
-            signs.Add(constraint.Sign);
-            rhs.Add(constraint.Rhs);
-            names.Add(constraint.Name);
-            sources.Add(ConstraintSource.Origin);
-        }
-
-        var constraintBatch = new LinearConstraintBatch(
-            new SparseMatrix(sparseRows), signs, rhs, names, sources);
-
-        var singleObj = (SingleObject)model.ObjectFunction;
-        IReadOnlyList<SubObject<Flt64>> subObjects = singleObj.GetSubObjects<Flt64>();
-        var objCells = new List<LinearObjectiveCell>();
-        Flt64 objConstant = Flt64.Zero;
-        foreach (SubObject<Flt64> sub in subObjects) {
-            if (sub is LinearSubObject<Flt64> linearSub) {
-                foreach (LinearMonomial<Flt64> mono in linearSub.LinearTerms()) {
-                    if (mono.Symbol is Core.Variable.IVariableItem vi) {
-                        int? colIndex = model.Tokens.IndexOf(vi);
-                        if (colIndex is { } ci && mono.Coefficient != Flt64.Zero) {
-                            objCells.Add(new LinearObjectiveCell(ci, mono.Coefficient));
-                        }
-                    }
-                }
-                objConstant = objConstant.Plus(sub.Constant);
-            }
-        }
-
-        var objective = new Objective<LinearObjectiveCell>(
-            singleObj.Category, objCells, objConstant);
-
-        var triadModel = new LinearTriadModel(variables, constraintBatch, objective, model.Name);
-        return System.Threading.Tasks.Task.FromResult(triadModel);
+        return System.Threading.Tasks.Task.FromResult(
+            model.ToLinearTriadModel(
+            cancellationToken: cancellationToken,
+            configPolicy: Config.FunctionExpansionPolicy));
     }
 
-    /// <summary>
-    /// 转储线性元模型为机制模型 / Dump linear meta model to mechanism model.
-    /// </summary>
-    public async Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
+    /// <inheritdoc/>
+    public System.Threading.Tasks.Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
         LinearMetaModel<Flt64> model,
         RegistrationStatusCallBack? registrationStatusCallBack,
         MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
         CancellationToken cancellationToken = default) {
-        return await LinearMechanismModel<Flt64>.InvokeAsync(
-            model,
+        if (cancellationToken.IsCancellationRequested) {
+            return System.Threading.Tasks.Task.FromResult(
+                Results.Failed<LinearMechanismModel<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.ApplicationStopped,
+                "模型转换已取消 / Model conversion was cancelled")));
+        }
+        return LinearMechanismModel<Flt64>.InvokeAsync(
+            metaModel: model,
             concurrent: Config.DumpMechanismModelConcurrent,
             blocking: Config.DumpMechanismModelBlocking,
             registrationStatusCallBack: registrationStatusCallBack,
             dumpingStatusCallBack: dumpingStatusCallBack);
     }
 
-    /// <summary>
-    /// MOSEK 线性求解器内部实现 / MOSEK linear solver internal implementation.
-    /// </summary>
+    private static Result<Success, ErrorCode, Error<ErrorCode>> ValidateConfig(SolverConfig config) {
+        Result<Success, ErrorCode, Error<ErrorCode>> validation = config.ValidateRuntime();
+        if (!validation.IsOk) {
+            return validation;
+        }
+        if (config.BackendConfiguration is not null) {
+            return Results.Failed<Success>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "MOSEK 暂不支持后端连接配置 / MOSEK backend connection configuration is not yet supported"));
+        }
+        if (config.NotImprovementTime is not null) {
+            return Results.Failed<Success>(new Err<ErrorCode>(
+                ErrorCode.Other,
+                "MOSEK 无改进中断需要原生进度回调，当前尚未同步 / " +
+                "MOSEK no-improvement interruption requires native progress callbacks and is not yet synchronized"));
+        }
+        return Results.OkInstance;
+    }
+
+    private static Result<T, ErrorCode, Error<ErrorCode>> PropagateError<T>(
+        Result<Success, ErrorCode, Error<ErrorCode>> result) =>
+        result switch {
+            Failed<Success, ErrorCode, Error<ErrorCode>> failed =>
+                Results.Failed<T>(failed.Error),
+            Fatal<Success, ErrorCode, Error<ErrorCode>> fatal =>
+                new Fatal<T, ErrorCode, Error<ErrorCode>>(fatal.Errors),
+            _ => Results.Failed<T>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException)),
+        };
+
     private sealed class MosekLinearSolverImpl : MosekSolver {
         private readonly SolverConfig _config;
         private readonly MosekSolverCallBack? _callBack;
         private readonly SolvingStatusCallBack? _statusCallBack;
+        private MosekLinearSnapshot? _snapshot;
 
-        private FeasibleSolverOutput<Flt64>? _output;
-
-        public MosekLinearSolverImpl(
+        internal MosekLinearSolverImpl(
             SolverConfig config,
             MosekSolverCallBack? callBack,
             SolvingStatusCallBack? statusCallBack) {
@@ -200,205 +258,369 @@ public sealed class MosekLinearSolver : ILinearSolver {
             _statusCallBack = statusCallBack;
         }
 
-        /// <summary>
-        /// 执行求解流程 / Execute solving process.
-        /// </summary>
-        public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(ILinearTriadModelView model) {
-            // Step 1: Init
-            Result<Success, ErrorCode, Error<ErrorCode>> initResult = Init(model.Name, _callBack?.CreatingEnvironmentFunction);
-            if (initResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                return PropagateError<FeasibleSolverOutput<Flt64>>(initResult);
+        internal async System.Threading.Tasks.Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>>
+            InvokeReportAsync(
+                MosekLinearSnapshot snapshot,
+                string name,
+                CancellationToken cancellationToken) {
+            _snapshot = snapshot;
+            Result<Success, ErrorCode, Error<ErrorCode>> initialized = Init(
+                name: name,
+                callBack: _callBack?.CreatingEnvironmentFunction,
+                cancellationToken: cancellationToken);
+            if (!initialized.IsOk) {
+                return CancelledOrPropagate(initialized, cancellationToken);
             }
 
-            // Step 2: Dump
-            Result<Success, ErrorCode, Error<ErrorCode>> dumpResult = Dump(model);
-            if (dumpResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                return PropagateError<FeasibleSolverOutput<Flt64>>(dumpResult);
+            Result<Success, ErrorCode, Error<ErrorCode>> dumped = Dump();
+            if (!dumped.IsOk) {
+                return CancelledOrPropagate(dumped, cancellationToken);
             }
 
-            // Step 3: Configure
-            Result<Success, ErrorCode, Error<ErrorCode>> configResult = Configure();
-            if (configResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                return PropagateError<FeasibleSolverOutput<Flt64>>(configResult);
+            Result<Success, ErrorCode, Error<ErrorCode>> configured = Configure();
+            if (!configured.IsOk) {
+                return CancelledOrPropagate(configured, cancellationToken);
+            }
+            if (cancellationToken.IsCancellationRequested) {
+                return Results.Ok(MosekReportSupport.Cancelled(_config));
             }
 
-            // Step 4: Solve
-            Result<Success, ErrorCode, Error<ErrorCode>> solveResult = Solve();
-            if (solveResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                return PropagateError<FeasibleSolverOutput<Flt64>>(solveResult);
+            var stopwatch = Stopwatch.StartNew();
+            Result<Success, ErrorCode, Error<ErrorCode>> solved = Solve();
+            stopwatch.Stop();
+            if (!solved.IsOk) {
+                ExecuteFailureCallback();
+                return PropagateError<SolveReport<Flt64>>(solved);
+            }
+            if (cancellationToken.IsCancellationRequested) {
+                return Results.Ok(MosekReportSupport.Cancelled(_config));
             }
 
-            // Step 5: Analyze status
-            Result<Success, ErrorCode, Error<ErrorCode>> statusResult = AnalyzeStatus();
-            if (statusResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                return PropagateError<FeasibleSolverOutput<Flt64>>(statusResult);
+            Result<Success, ErrorCode, Error<ErrorCode>> status = AnalyzeStatus(
+                isMip: snapshot.Columns.Any(column => column.Integer));
+            if (!status.IsOk) {
+                ExecuteFailureCallback();
+                return PropagateError<SolveReport<Flt64>>(status);
             }
-
-            // Step 6: Analyze solution
-            return AnalyzeSolution();
+            return AnalyzeSolution(
+                elapsed: stopwatch.Elapsed,
+                cancellationToken: cancellationToken);
         }
 
-        private Result<Success, ErrorCode, Error<ErrorCode>> Dump(ILinearTriadModelView model) {
+        private Result<Success, ErrorCode, Error<ErrorCode>> Dump() {
+            MosekLinearSnapshot snapshot = _snapshot
+                ?? throw new InvalidOperationException("MOSEK snapshot not initialized.");
             try {
-                // Variables
-                int numVars = model.Variables.Count;
-                MosekModel.appendvars(numVars);
-                foreach (ModelViewVariable v in model.Variables) {
-                    int col = v.Index;
-                    MosekModel.putvarname(col, v.Name);
-                    if (v.Type.IsContinuousType) {
-                        MosekModel.putvartype(col, variabletype.type_cont);
-                    }
-                    else {
-                        MosekModel.putvartype(col, variabletype.type_int);
-                    }
-
-                    Flt64 lb = v.LowerBound;
-                    Flt64 ub = v.UpperBound;
-                    double lbVal = lb.ToDouble();
-                    double ubVal = ub.ToDouble();
-
-                    if (double.IsNegativeInfinity(lbVal) && double.IsPositiveInfinity(ubVal)) {
-                        MosekModel.putvarbound(col, boundkey.fr, 0.0, 0.0);
-                    }
-                    else if (double.IsNegativeInfinity(lbVal)) {
-                        MosekModel.putvarbound(col, boundkey.up, 0.0, ubVal);
-                    }
-                    else if (double.IsPositiveInfinity(ubVal)) {
-                        MosekModel.putvarbound(col, boundkey.lo, lbVal, 0.0);
-                    }
-                    else if (System.Math.Abs(lbVal - ubVal) < 1e-15) {
-                        MosekModel.putvarbound(col, boundkey.fx, lbVal, ubVal);
-                    }
-                    else {
-                        MosekModel.putvarbound(col, boundkey.ra, lbVal, ubVal);
+                MosekModel.appendvars(snapshot.Columns.Length);
+                for (int column = 0; column < snapshot.Columns.Length; column++) {
+                    MosekColumn source = snapshot.Columns[column];
+                    MosekModel.putvarname(column, $"x{column}");
+                    MosekModel.putvartype(
+                        column,
+                        source.Integer ? variabletype.type_int : variabletype.type_cont);
+                    PutVariableBound(column, source.Lower, source.Upper);
+                    if (source.Initial is { } initial) {
+                        MosekModel.putxxslice(
+                            soltype.bas,
+                            column,
+                            column + 1,
+                            [initial]);
                     }
                 }
 
-                // Set initial values
-                foreach (ModelViewVariable v in model.Variables) {
-                    if (v.InitialResult is { } init) {
-                        MosekModel.putxxslice(soltype.bas, v.Index, v.Index + 1, new double[] { init.ToDouble() });
-                    }
+                MosekModel.appendcons(snapshot.Rows.Length);
+                for (int row = 0; row < snapshot.Rows.Length; row++) {
+                    MosekRow source = snapshot.Rows[row];
+                    MosekModel.putconname(row, $"r{row}");
+                    PutConstraintBound(
+                        row: row,
+                        relation: source.Relation,
+                        right: source.Right);
+                    MosekModel.putarow(
+                        row,
+                        source.Columns,
+                        source.Coefficients);
                 }
 
-                // Constraints
-                ModelConstraint<LinearConstraintCell> constraints = model.Constraints;
-                int numRows = constraints.Size;
-                MosekModel.appendcons(numRows);
-                for (int i = 0; i < numRows; i++) {
-                    MosekModel.putconname(i, constraints.Names[i]);
-
-                    var cols = new List<int>();
-                    var coefficients = new List<double>();
-                    foreach (LinearConstraintCell cell in constraints.Lhs[i]) {
-                        cols.Add(cell.ColIndex);
-                        coefficients.Add(cell.Coefficient.ToDouble());
-                    }
-
-                    if (constraints.Signs[i] == ConstraintRelation.LessEqual) {
-                        MosekModel.putconbound(i, boundkey.up, 0.0, constraints.Rhs[i].ToDouble());
-                    }
-                    else if (constraints.Signs[i] == ConstraintRelation.GreaterEqual) {
-                        MosekModel.putconbound(i, boundkey.lo, constraints.Rhs[i].ToDouble(), 0.0);
-                    }
-                    else if (constraints.Signs[i] == ConstraintRelation.Equal) {
-                        MosekModel.putconbound(i, boundkey.fx, constraints.Rhs[i].ToDouble(), constraints.Rhs[i].ToDouble());
-                    }
-
-                    MosekModel.putarow(i, cols.ToArray(), coefficients.ToArray());
+                for (int column = 0; column < snapshot.Objective.Length; column++) {
+                    MosekModel.putcj(column, snapshot.Objective[column]);
                 }
-
-                // Objective
-                foreach (LinearObjectiveCell cell in model.Objective.Cells) {
-                    MosekModel.putcj(cell.ColIndex, cell.Coefficient.ToDouble());
-                }
-                MosekModel.putcfix(model.Objective.Constant.ToDouble());
+                MosekModel.putcfix(snapshot.Constant);
                 MosekModel.putobjsense(
-                    model.Objective.Category == ObjectCategory.Minimum ? objsense.minimize : objsense.maximize);
-
-                // AfterModeling callback
-                Result<Success, ErrorCode, Error<ErrorCode>>? cbResult = _callBack?.ExecIfContain(
-                    CallBackPoint.AfterModeling, null, MosekModel);
-                if (cbResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                    return cbResult!;
-                }
-
-                return Results.OkInstance;
+                    snapshot.Category == ObjectCategory.Minimum
+                        ? objsense.minimize
+                        : objsense.maximize);
+                return CallbackOrOk(CallBackPoint.AfterModeling);
             }
-            catch (mosek.Exception e) { return new Failed<Success, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineModelingException, e.Message)); }
-            catch { return new Failed<Success, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineModelingException)); }
+            catch (SysException error) when (error is not OutOfMemoryException and not AccessViolationException) {
+                return Failure(
+                    MosekReportSupport.ClassifyErrorCode(
+                        error,
+                        ErrorCode.OREngineModelingException),
+                    $"MOSEK 模型写入失败：{error.Message} / " +
+                    $"MOSEK model dump failed: {error.Message}");
+            }
         }
 
         private Result<Success, ErrorCode, Error<ErrorCode>> Configure() {
+            MosekLinearSnapshot snapshot = _snapshot
+                ?? throw new InvalidOperationException("MOSEK snapshot not initialized.");
             try {
-                MosekModel.putintparam(mosek.iparam.optimizer, mosek.optimizertype.primal_simplex);
+                MosekModel.putintparam(
+                    iparam.optimizer,
+                    snapshot.Columns.Any(column => column.Integer)
+                        ? optimizertype.mixed_int
+                        : optimizertype.free);
+                MosekModel.putdouparam(
+                    dparam.optimizer_max_time,
+                    _config.TimeLimit.TotalSeconds);
+                MosekModel.putdouparam(
+                    dparam.mio_max_time,
+                    _config.TimeLimit.TotalSeconds);
+                MosekModel.putdouparam(
+                    dparam.mio_tol_abs_gap,
+                    _config.Gap.ToDouble());
+                MosekModel.putintparam(
+                    iparam.num_threads,
+                    _config.NativeThreadCount!.Value);
+                return CallbackOrOk(CallBackPoint.Configuration);
+            }
+            catch (SysException error) when (error is not OutOfMemoryException and not AccessViolationException) {
+                return Failure(
+                    MosekReportSupport.ClassifyErrorCode(
+                        error,
+                        ErrorCode.OREngineModelingException),
+                    $"MOSEK 参数配置失败：{error.Message} / " +
+                    $"MOSEK parameter configuration failed: {error.Message}");
+            }
+        }
 
-                // Configuration callback
-                Result<Success, ErrorCode, Error<ErrorCode>>? cbResult = _callBack?.ExecIfContain(
-                    CallBackPoint.Configuration, null, MosekModel);
-                if (cbResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                    return cbResult!;
+        private Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> AnalyzeSolution(
+            TimeSpan elapsed,
+            CancellationToken cancellationToken) {
+            if (!Status.Succeeded()) {
+                ExecuteFailureCallback();
+                return MosekReportSupport.Create(
+                    status: Status,
+                    solution: null,
+                    statistics: ReadStatistics(elapsed: elapsed, solution: null),
+                    config: _config,
+                    terminationReason: MapTerminationReason(ResultCode));
+            }
+
+            try {
+                int variableCount = MosekModel.getnumvar();
+                double[] values = MosekModel.getxxslice(
+                    SolutionType,
+                    0,
+                    variableCount);
+                double objective = MosekModel.getprimalobj(SolutionType);
+                var solution = new SolveSolution<Flt64>(
+                    Values: new Solution<Flt64>(
+                        values.Select(value => new Flt64(value)).ToArray()),
+                    Objective: new Flt64(objective));
+                SolveStatistics statistics = ReadStatistics(
+                    elapsed: elapsed,
+                    solution: solution);
+                Result<Success, ErrorCode, Error<ErrorCode>> callback =
+                    CallbackOrOk(CallBackPoint.AnalyzingSolution);
+                if (!callback.IsOk) {
+                    return PropagateError<SolveReport<Flt64>>(callback);
                 }
+                Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> report =
+                    MosekReportSupport.Create(
+                        status: Status,
+                        solution: solution,
+                        statistics: statistics,
+                        config: _config,
+                        terminationReason: MapTerminationReason(ResultCode));
+                if (report is not Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
+                    return report;
+                }
+                Result<Success, ErrorCode, Error<ErrorCode>> notified = NotifyStatus(
+                    solution: solution,
+                    statistics: statistics);
+                if (!notified.IsOk) {
+                    return PropagateError<SolveReport<Flt64>>(notified);
+                }
+                return cancellationToken.IsCancellationRequested
+                    ? Results.Ok(MosekReportSupport.Cancelled(_config))
+                    : ok;
+            }
+            catch (SysException error) when (error is not OutOfMemoryException and not AccessViolationException) {
+                return Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+                    MosekReportSupport.ClassifyErrorCode(
+                        error,
+                        ErrorCode.ORSolutionInvalid),
+                    $"MOSEK 解读取失败：{error.Message} / " +
+                    $"MOSEK solution readback failed: {error.Message}"));
+            }
+        }
 
+        private SolveStatistics ReadStatistics(
+            TimeSpan elapsed,
+            SolveSolution<Flt64>? solution) {
+            double nativeTime = TryGet(dinfitem.optimizer_time) ?? double.NaN;
+            TimeSpan solveTime = double.IsFinite(nativeTime) && nativeTime >= 0
+                ? TimeSpan.FromSeconds(nativeTime)
+                : elapsed;
+            int simplex = TryGet(iinfitem.sim_primal_iter) ?? 0;
+            int dualSimplex = TryGet(iinfitem.sim_dual_iter) ?? 0;
+            int interior = TryGet(iinfitem.intpnt_iter) ?? 0;
+            ulong? iterations = simplex > 0 || dualSimplex > 0 || interior > 0
+                ? (ulong)System.Math.Max(simplex, System.Math.Max(dualSimplex, interior))
+                : null;
+            ulong? nodes = _snapshot!.Columns.Any(column => column.Integer)
+                ? (ulong)System.Math.Max(TryGet(iinfitem.mio_num_solved_nodes) ?? 0, 0)
+                : null;
+            Flt64? bestBound = null;
+            Flt64? gap = null;
+            if (solution is not null) {
+                bool isMip = _snapshot.Columns.Any(column => column.Integer);
+                double bound = isMip
+                    ? TryGet(dinfitem.mio_obj_bound) ?? double.NaN
+                    : solution.Objective?.ToDouble() ?? double.NaN;
+                if (double.IsFinite(bound)) {
+                    bestBound = new Flt64(bound);
+                }
+                double nativeGap = isMip
+                    ? TryGet(dinfitem.mio_obj_abs_gap) ?? double.NaN
+                    : 0;
+                if (double.IsFinite(nativeGap)) {
+                    gap = new Flt64(nativeGap);
+                }
+            }
+            return new SolveStatistics(
+                SolveTime: solveTime,
+                Iterations: iterations,
+                Nodes: nodes,
+                BestBound: bestBound,
+                Gap: gap);
+        }
+
+        private Result<Success, ErrorCode, Error<ErrorCode>> NotifyStatus(
+            SolveSolution<Flt64> solution,
+            SolveStatistics statistics) {
+            if (_statusCallBack is null) {
                 return Results.OkInstance;
             }
-            catch (mosek.Exception e) { return new Failed<Success, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineModelingException, e.Message)); }
-            catch { return new Failed<Success, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineModelingException)); }
+            Flt64 objective = solution.Objective ?? Flt64.Zero;
+            Flt64 bestBound = statistics.BestBound ?? objective;
+            Flt64 gap = statistics.Gap ?? Flt64.Zero;
+            Result<Success, ErrorCode, Error<ErrorCode>> result = _statusCallBack(
+                new SolvingStatus(
+                    Solver: "mosek",
+                    SolverIndex: 0,
+                    SolverConfig: _config,
+                    IntermediateModel: null,
+                    SolverModel: MosekModel,
+                    SolverCallBack: _callBack,
+                    ObjectCategory: _snapshot!.Category,
+                    Time: statistics.SolveTime ?? TimeSpan.Zero,
+                    Obj: objective,
+                    PossibleBestObj: bestBound,
+                    InitialBestObj: objective,
+                    Gap: gap,
+                    CurrentBestSolution: solution.Values.Values,
+                    Iterations: statistics.Iterations,
+                    NodeCount: statistics.Nodes,
+                    BestBound: bestBound,
+                    MipGap: gap,
+                    SolveTime: statistics.SolveTime ?? TimeSpan.Zero));
+            return result;
         }
 
-        private Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> AnalyzeSolution() {
-            try {
-                if (Status.Succeeded()) {
-                    int numVars = MosekModel.getnumvar();
-                    double[] xx = new double[numVars];
-                    MosekModel.getxxslice(soltype.bas, 0, numVars, xx);
+        private Result<Success, ErrorCode, Error<ErrorCode>> CallbackOrOk(CallBackPoint point) =>
+            _callBack?.ExecIfContain(
+                point: point,
+                status: Status.Succeeded() ? Status : null,
+                mosekModel: MosekModel)
+            ?? Results.OkInstance;
 
-                    var results = new List<Flt64>(numVars);
-                    for (int i = 0; i < numVars; i++) {
-                        results.Add(new Flt64(xx[i]));
-                    }
+        private void ExecuteFailureCallback() {
+            _callBack?.ExecIfContain(
+                point: CallBackPoint.AfterFailure,
+                status: Status,
+                mosekModel: MosekModel);
+        }
 
-                    double objVal = MosekModel.getprimalobj(soltype.bas);
-                    _output = new FeasibleSolverOutput<Flt64>(
-                        Obj: new Flt64(objVal),
-                        Solution: new Solution<Flt64>(results),
-                        Time: TimeSpan.FromSeconds(MosekModel.getdouinf(dinfitem.optimizer_time)),
-                        PossibleBestObj: new Flt64(objVal),
-                        Gap: Flt64.Zero);
-
-                    // AnalyzingSolution callback
-                    Result<Success, ErrorCode, Error<ErrorCode>>? cbResult = _callBack?.ExecIfContain(
-                        CallBackPoint.AnalyzingSolution, Status, MosekModel);
-                    if (cbResult is Failed<Success, ErrorCode, Error<ErrorCode>> or Fatal<Success, ErrorCode, Error<ErrorCode>>) {
-                        return PropagateError<FeasibleSolverOutput<Flt64>>(cbResult!);
-                    }
-
-                    return Results.Ok(_output);
-                }
-                else {
-                    // AfterFailure callback
-                    Result<Success, ErrorCode, Error<ErrorCode>>? cbResult = _callBack?.ExecIfContain(
-                        CallBackPoint.AfterFailure, Status, MosekModel);
-
-                    return FailByStatus<FeasibleSolverOutput<Flt64>>(Status);
-                }
+        private void PutVariableBound(
+            int column,
+            double lower,
+            double upper) {
+            if (double.IsNegativeInfinity(lower) && double.IsPositiveInfinity(upper)) {
+                MosekModel.putvarbound(column, boundkey.fr, 0, 0);
             }
-            catch (mosek.Exception e) { return new Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException, e.Message)); }
-            catch { return new Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException)); }
+            else if (double.IsNegativeInfinity(lower)) {
+                MosekModel.putvarbound(column, boundkey.up, 0, upper);
+            }
+            else if (double.IsPositiveInfinity(upper)) {
+                MosekModel.putvarbound(column, boundkey.lo, lower, 0);
+            }
+            else if (lower == upper) {
+                MosekModel.putvarbound(column, boundkey.fx, lower, upper);
+            }
+            else {
+                MosekModel.putvarbound(column, boundkey.ra, lower, upper);
+            }
         }
+
+        private void PutConstraintBound(
+            int row,
+            ConstraintRelation relation,
+            double right) {
+            if (relation == ConstraintRelation.LessEqual) {
+                MosekModel.putconbound(row, boundkey.up, 0, right);
+            }
+            else if (relation == ConstraintRelation.GreaterEqual) {
+                MosekModel.putconbound(row, boundkey.lo, right, 0);
+            }
+            else {
+                MosekModel.putconbound(row, boundkey.fx, right, right);
+            }
+        }
+
+        private double? TryGet(dinfitem item) {
+            try {
+                return MosekModel.getdouinf(item);
+            }
+            catch (SysException error) when (error is not OutOfMemoryException and not AccessViolationException) {
+                return null;
+            }
+        }
+
+        private int? TryGet(iinfitem item) {
+            try {
+                return MosekModel.getintinf(item);
+            }
+            catch (SysException error) when (error is not OutOfMemoryException and not AccessViolationException) {
+                return null;
+            }
+        }
+
+        private Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> CancelledOrPropagate(
+            Result<Success, ErrorCode, Error<ErrorCode>> result,
+            CancellationToken cancellationToken) =>
+            cancellationToken.IsCancellationRequested
+                ? Results.Ok(MosekReportSupport.Cancelled(_config))
+                : PropagateError<SolveReport<Flt64>>(result);
+
+        private static TerminationReason MapTerminationReason(rescode code) => code switch {
+            rescode.trm_max_time => TerminationReason.TimeLimit,
+            rescode.trm_max_iterations => TerminationReason.IterationLimit,
+            rescode.trm_objective_range => TerminationReason.ObjectiveLimit,
+            rescode.trm_num_max_num_int_solutions => TerminationReason.SolutionLimit,
+            rescode.trm_mio_num_relaxs or rescode.trm_mio_num_branches => TerminationReason.NodeLimit,
+            rescode.trm_numerical_problem => TerminationReason.NumericalFailure,
+            rescode.trm_internal or rescode.trm_internal_stop or rescode.trm_lost_race =>
+                TerminationReason.BackendFailure,
+            rescode.trm_user_callback => TerminationReason.Interrupted,
+            _ => TerminationReason.Completed,
+        };
+
+        private static Result<Success, ErrorCode, Error<ErrorCode>> Failure(
+            ErrorCode code,
+            string message) =>
+            Results.Failed<Success>(new Err<ErrorCode>(code, message));
     }
-
-    private static Result<T, ErrorCode, Error<ErrorCode>> PropagateError<T>(Result<Success, ErrorCode, Error<ErrorCode>> r) => r switch {
-        Failed<Success, ErrorCode, Error<ErrorCode>> f => Results.Failed<T>(f.Error),
-        Fatal<Success, ErrorCode, Error<ErrorCode>> fat => new Fatal<T, ErrorCode, Error<ErrorCode>>(fat.Errors),
-        _ => throw new InvalidOperationException()
-    };
-
-    private static Result<T, ErrorCode, Error<ErrorCode>> FailByStatus<T>(SolverStatus status) => status switch {
-        SolverStatus.Infeasible => Results.Failed<T>(new Err<ErrorCode>(ErrorCode.ORModelInfeasible)),
-        SolverStatus.Unbounded => Results.Failed<T>(new Err<ErrorCode>(ErrorCode.ORModelUnbounded)),
-        SolverStatus.InfeasibleOrUnbounded => Results.Failed<T>(new Err<ErrorCode>(ErrorCode.ORModelInfeasibleOrUnbounded)),
-        _ => Results.Failed<T>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException, $"Solver status: {status}"))
-    };
 }

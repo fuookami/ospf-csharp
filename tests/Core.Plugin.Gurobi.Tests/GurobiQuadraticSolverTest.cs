@@ -13,6 +13,7 @@ using Fuookami.Ospf.Utils.Functional;
 using Gurobi;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Xunit;
 
 namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
@@ -87,6 +88,64 @@ public class GurobiQuadraticSolverTest {
         output.Solution.Values[0].ToDouble().Should().BeApproximately(0.5, 1e-6, "x should be 0.5");
         output.Solution.Values[1].ToDouble().Should().BeApproximately(0.5, 1e-6, "y should be 0.5");
         output.Obj.ToDouble().Should().BeApproximately(0.5, 1e-6, "objective should be 0.5");
+    }
+
+    [Fact]
+    public void Quadratic_Export_Should_Be_Readable_By_Gurobi() {
+        if (!IsGurobiAvailable()) {
+            return;
+        }
+
+        var variables = new List<ModelViewVariable> {
+            new(0, Flt64.Zero, new Flt64(10), Continuous.Instance, "x"),
+            new(1, Flt64.Zero, new Flt64(10), Continuous.Instance, "y"),
+        };
+        var constraints = new QuadraticConstraintBatch(
+            new SparseQuadraticMatrix([
+                new SparseQuadraticVector([
+                    new SparseQuadraticEntry(0, 0, Flt64.One),
+                    new SparseQuadraticEntry(1, 1, Flt64.One),
+                ]),
+                new SparseQuadraticVector([
+                    new SparseQuadraticEntry(0, -1, Flt64.One),
+                    new SparseQuadraticEntry(1, -1, Flt64.One),
+                ]),
+            ]),
+            [ConstraintRelation.LessEqual, ConstraintRelation.GreaterEqual],
+            [Flt64.One, Flt64.One],
+            ["ball", "balance"],
+            [ConstraintSource.Origin, ConstraintSource.Origin]
+        );
+        var objective = new Objective<QuadraticObjectiveCell>(
+            ObjectCategory.Minimum,
+            [
+                new QuadraticObjectiveCell(0, 0, Flt64.One),
+                new QuadraticObjectiveCell(1, 1, Flt64.One),
+            ]
+        );
+        using var model = new QuadraticTetradModel(
+            variables,
+            constraints,
+            objective,
+            "quadratic-export"
+        );
+        string path = Path.Combine(
+            Path.GetTempPath(),
+            $"ospf-quadratic-export-{Guid.NewGuid():N}.lp"
+        );
+        try {
+            model.Export(path, ModelFileFormat.LP).IsOk.Should().BeTrue();
+            using var env = new GRBEnv();
+            env.Set(GRB.IntParam.OutputFlag, 0);
+            using var read = new GRBModel(env, path);
+            read.Optimize();
+
+            read.Status.Should().Be(GRB.Status.OPTIMAL);
+            read.ObjVal.Should().BeApproximately(0.5, 1e-6);
+        }
+        finally {
+            File.Delete(path);
+        }
     }
 
     [Fact]

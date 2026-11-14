@@ -4,11 +4,18 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Copt.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CoptManagedAssembly>$(COPT_HOME)/bin/copt_dotnet20.dll</CoptManagedAssembly>
+    <CoptAvailable Condition="Exists('$(CoptManagedAssembly)')">true</CoptAvailable>
+    <DefineConstants Condition="'$(CoptAvailable)' == 'true'">$(DefineConstants);COPT_AVAILABLE</DefineConstants>
+    <DefineConstants Condition="'$(RunCoptIntegration)' == 'true' and '$(CoptAvailable)' == 'true'">$(DefineConstants);COPT_INTEGRATION</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="Exists('D:\environment\solvers\copt80\bin\copt_dotnet20.dll')">
+  <Target Name="ValidateCoptIntegrationSdk" BeforeTargets="CoreCompile" Condition="'$(RunCoptIntegration)' == 'true' and '$(CoptAvailable)' != 'true'">
+    <Error Text="COPT integration requires the COPT 8 managed SDK. / COPT 集成测试需要 COPT 8 托管 SDK。" />
+  </Target>
+  <ItemGroup Condition="Exists('$(CoptManagedAssembly)')">
     <Reference Include="copt_dotnet20">
-      <HintPath>D:\environment\solvers\copt80\bin\copt_dotnet20.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(CoptManagedAssembly)</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -19,5 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Copt\Core.Plugin.Copt.csproj" />
+    <Compile Include="..\Shared\RelaxationOwnershipTest.cs" Link="RelaxationOwnershipTest.cs" />
   </ItemGroup>
 </Project>

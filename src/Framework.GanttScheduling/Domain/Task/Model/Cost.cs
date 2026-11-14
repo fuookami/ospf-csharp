@@ -45,7 +45,15 @@ public interface ICost<V> : IEnumerable<CostItem<V>>, ICopyable<ICost<V>>
 
     /// <summary>读取 solver 成本值（nullable）/ Read cost as a solver value (nullable).</summary>
     Flt64? SolverCostOrNull(Flt64? @default = null)
-        => CostSum.HasValue ? new Flt64(Convert.ToDouble(CostSum.Value)) : @default;
+        // **不能 `Convert.ToDouble`**：`V` 只承诺 `IRealNumber<V>`，不是 `IConvertible`——`Flt64` 本身就不实现它，
+        // 于是这条"读成本"的路径对 `Flt64` 直接抛 `InvalidCastException`。转换走值转换器（`V → Flt64`），
+        // 那是这个泛型本来就有、且对所有 `V` 都成立的通道。
+        //
+        // **No `Convert.ToDouble`**: `V` only promises `IRealNumber<V>`, not `IConvertible` — `Flt64` does not implement it, so this "read the cost" path threw
+        // `InvalidCastException` for `Flt64`. Convert through the value converter (`V → Flt64`), the channel this generic actually has and that holds for every `V`.
+        => CostSum.HasValue
+            ? CostSum.Value.ToFlt64()
+            : @default;
 
     /// <summary>读取 solver 成本值 / Read cost as a solver value.</summary>
     Result<Flt64, ErrorCode, Error<ErrorCode>> SolverCost(Flt64? @default = null) {

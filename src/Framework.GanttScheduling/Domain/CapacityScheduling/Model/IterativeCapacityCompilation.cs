@@ -111,33 +111,26 @@ public sealed class IterativeCapacityCompilation<E, A> : ICapacity<A>
         return Results.Ok<IReadOnlyList<CapacityColumn<E, A>>>(allAddedColumns);
     }
 
-    /// <summary>
-    /// 定位列对应的决策变量位置 / Locate decision variable position for a column
-    /// </summary>
-    /// <param name="iteration">迭代号 / Iteration</param>
-    /// <param name="column"></param>
-    /// <param column="column">产能列 / Capacity column</param>
-    /// <returns>变量和列索引的元组，若未找到则为 null / Variable and column index tuple, or null if not found</returns>
-    public (object Variable, int ColumnIndex)? LocateColumnDecision(ulong iteration, CapacityColumn<E, A> column) {
-        if (!_columnsByExecutor.TryGetValue(column.Executor, out CapacityColumnAggregation<E, A>? columnAgg)) {
-            return null;
-        }
-
-        IReadOnlyList<CapacityColumn<E, A>>? columnsInIteration = columnAgg.ColumnsIteration.ElementAtOrDefault((int)iteration);
-        if (columnsInIteration == null) {
-            return null;
-        }
-
-        int columnIndex = columnsInIteration.ToList().IndexOf(column);
-        return columnIndex < 0 ? null : (new object(), columnIndex);
-    }
 
     /// <inheritdoc/>
+    /// <summary>
+    /// 提取解 / Extract the solution.
+    /// </summary>
+    /// <param name="model">模型 / The model.</param>
+    /// <returns>解或失败 / The solution or a failure.</returns>
+    /// <remarks>
+    /// **这个编译对象没有决策变量**，所以解无从谈起。第一版返回的是 `Ok` 加一个分配表为空的解——
+    /// 调用方读到的是「排好了，什么都没排」，**空解和真解无法区分**。
+    ///
+    /// **This compilation has no decision variables**, so there is no solution to speak of. The first version returned `Ok` with an empty allocation table — the caller read
+    /// "solved, nothing scheduled", and **an empty solution and a real one cannot be told apart**.
+    /// </remarks>
     public Result<CapacitySchedulingSolution<A>, ErrorCode, Error<ErrorCode>> ExtractSolution(object model) {
-        var actionAllocations = new List<ActionAllocation<A>>();
-        var executorCapacities = new List<ExecutorCapacityResult>();
-
-        return Results.Ok<CapacitySchedulingSolution<A>>(new CapacitySchedulingSolution<A>(
-            _actions, actionAllocations, executorCapacities));
+        ArgumentNullException.ThrowIfNull(model);
+        return new Failed<CapacitySchedulingSolution<A>, ErrorCode, Error<ErrorCode>>(
+            new Err<ErrorCode>(
+                ErrorCode.ApplicationError,
+                "这个容量编译对象没有决策变量，解无从提取；用 `CapacityOrderCompilation` 的那条路径 / "
+                + "this capacity compilation has no decision variables, so there is no solution to extract; use the `CapacityOrderCompilation` path"));
     }
 }

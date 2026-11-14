@@ -81,6 +81,7 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
     /// <param name="objectivePolicies">目标策略列表 / Objective policy list.</param>
     /// <param name="domainValueSample">领域数值样本 / Domain value sample.</param>
     /// <param name="isFinalMilp">是否为最终 MILP 求解 / Whether this is a final MILP solve.</param>
+    /// <param name="feasibilityPhase">是否处于可行性阶段 / Whether the feasibility phase is active.</param>
     public Csp1dProduceContext(
         ProduceAggregation<V> produce,
         YieldAggregation? yield,
@@ -98,7 +99,8 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
         RestMaterialMeasure wasteRestMaterialMeasure,
         IReadOnlyList<ICsp1dObjectivePolicy<V>> objectivePolicies,
         V domainValueSample,
-        bool isFinalMilp) {
+        bool isFinalMilp,
+        bool feasibilityPhase = false) {
         Produce = produce;
         Yield = yield;
         Waste = waste;
@@ -116,6 +118,7 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
         _objectivePolicies = objectivePolicies;
         DomainValueSample = domainValueSample;
         IsFinalMilp = isFinalMilp;
+        FeasibilityPhase = feasibilityPhase;
     }
 
     // ===== ICsp1dModelingContext<V> properties =====
@@ -125,6 +128,18 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
     /// <inheritdoc/>
     public bool IsFinalMilp { get; }
+
+    /// <summary>
+    /// 是否处于可行性阶段 / Whether the feasibility phase is active.
+    /// </summary>
+    /// <remarks>
+    /// 基线把这个标志直接传给 `setObjective` 与 yield 聚合；C# 原本只传给了 yield 聚合，
+    /// **目标函数看不到它**——于是第一阶段解得的是"批次最省"而非"短缺最小"（B370）。
+    ///
+    /// The baseline passes this flag to both `setObjective` and the yield aggregation; C# originally forwarded it only to the yield aggregation, so **the objective never
+    /// saw it** — phase one solved "cheapest batches" instead of "smallest deficit" (B370).
+    /// </remarks>
+    public bool FeasibilityPhase { get; }
 
     /// <summary>列生成管线列表 / Column generation pipeline list.</summary>
     public IReadOnlyList<ICGPipeline<AbstractCsp1dShadowPriceArguments, LinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>> CgPipelines => _cgPipelines;
@@ -239,7 +254,16 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
                 continue;
             }
 
-            var amount = new UInt64((ulong)System.Math.Max((long)doubleValue.Value, 0));
+            // **必须四舍五入，不是截断。**
+            //
+            // 基线是 `doubleValue.roundToLong().coerceAtLeast(0)`；C# 原本是 `(long)doubleValue`，
+            // **那是截断**：`2.7` 得 2、`0.6` 得 0。后者更糟——**一条用了 0.6 次的方案会被
+            // 当成"没用"而整条丢弃**，物料用量、设备用量、欠产判定全部跟着少算。
+            //
+            // **It must round, not truncate.** The baseline is `doubleValue.roundToLong().coerceAtLeast(0)`; C# was `(long)doubleValue`, **which truncates**: `2.7`
+            // becomes 2 and `0.6` becomes 0. The latter is worse — **a plan used 0.6 times is discarded as "unused"**, and the material, machine and deficit figures all
+            // under-count with it.
+            var amount = new UInt64((ulong)System.Math.Max((long)System.Math.Round(doubleValue.Value, MidpointRounding.AwayFromZero), 0));
             selectedPlans.Add(new CuttingPlanUsage<V>(plan, amount));
 
             UInt64 currentMaterialUsage = materialUsageMap.TryGetValue(plan.Material.Id, out UInt64 existing)
@@ -565,9 +589,15 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
     /// <returns>影子价格映射 / Shadow price map.</returns>
     public ShadowPriceMap<V> ExtractShadowPriceMap(
         IReadOnlyDictionary<IConstraint<Flt64, LinearCategory>, Flt64> dualSolution) {
-        var frameworkMap = new Csp1dDefaultShadowPriceMap();
         // 无 model 时无法执行 CGPipeline refresh，直接从 constraint.Origin.Args 提取
         // Without model, cannot execute CGPipeline refresh; extract from constraint.Origin.Args
+        //
+        // **这里原本还建了一个 `Csp1dDefaultShadowPriceMap` 并往里 `Put`——但那个变量
+        // 从不被读取，也从不被返回。** 它只是一个**每轮迭代都白写一次**的垃圾容器，
+        // 而且会让读者以为"框架映射也更新了"。
+        //
+        // **This used to build a `Csp1dDefaultShadowPriceMap` and `Put` into it — but that variable was never read and never returned.** It was a junk container written
+        // once per iteration, and it misled readers into thinking "the framework map is updated too".
         var prices = new Dictionary<Csp1dShadowPriceKey, V>();
         foreach ((IConstraint<Flt64, LinearCategory>? constraint, Flt64 dualValue) in dualSolution) {
             if (constraint.Origin?.Args is not Csp1dShadowPriceKey args) {
@@ -579,7 +609,6 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
                 continue;
             }
 
-            frameworkMap.Put(new ShadowPrice(args, dualValue));
             if (prices.TryGetValue(args, out V existingValue)) {
                 prices[args] = (V)(dynamic)existingValue + (dynamic)convOk.Value;
             }
@@ -598,6 +627,37 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
     /// <param name="model">元模型 / Meta model.</param>
     private void SetObjective(LinearMetaModel<Flt64> model) {
         var monomials = new List<LinearMonomial<Flt64>>();
+
+        // **可行性阶段的目标只有人工短缺项。**
+        //
+        // 基线 `setObjective` 第一件事就是这个分支，并且**提前返回**：
+        //
+        // ```
+        // if (feasibilityPhase) {
+        //     monomials.addAll(yieldObjective?.objectiveMonomials() ?: emptyList())
+        //     model.minimize(polynomial = LinearPolynomial(monomials, Flt64.zero), name = "csp1d_phase_one")
+        //     return
+        // }
+        // ```
+        //
+        // C# 原本**没有这个分支**：`_feasibilityPhase` 只被传给了 yield 聚合，
+        // `SetObjective` 从未读过它。于是可行性阶段最小化的仍是**批次成本**，
+        // 人工短缺项的系数虽然被 `BuildFeasibilityYieldConfig` 设成 1，**却进不了目标**——
+        // 第一阶段解得的是"批次最省"，不是"短缺最小"。
+        //
+        // **The feasibility phase's objective contains only the artificial deficit terms.** The baseline's `setObjective` opens with this branch and **returns early**
+        // (code above). C# **had no such branch**: `_feasibilityPhase` was only forwarded to the yield aggregation and `SetObjective` never read it, so phase one still
+        // minimised **batch cost** — the artificial deficits' coefficient of 1 (set by `BuildFeasibilityYieldConfig`) **never reached the objective**, and phase one solved
+        // "cheapest batches" instead of "smallest deficit".
+        if (FeasibilityPhase) {
+            monomials.AddRange(_yieldObjective?.ObjectiveMonomials() ?? Enumerable.Empty<LinearMonomial<Flt64>>());
+            model.AddObject(
+                ObjectCategory.Minimum,
+                new LinearPolynomial<Flt64>(monomials, Flt64.Zero),
+                name: "csp1d_phase_one",
+                displayName: null);
+            return;
+        }
 
         // 基础目标: 最小化批次 / Base objective: minimize batches
         // 允许 objective policy 修正每个方案的 batch coefficient
@@ -729,7 +789,16 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
             return UInt64.Zero;
         }
 
-        return new UInt64((ulong)System.Math.Max((long)value.Value, 0));
+        // **与 `ExtractSolution` 同一处取整规则：四舍五入，不是截断。**
+        //
+        // B371 只修了 `ExtractSolution`，**漏了这里**。基线两处都是 `roundToLong()`，
+        // C# 两处都是 `(long)`——所以修一处等于没修：`SolutionAmount` 是
+        // **waste 结果（余宽、余料、物料成本）的唯一入口**，截断会让这些指标系统性偏低。
+        //
+        // **Same rounding rule as `ExtractSolution`: round, not truncate.** B371 fixed only `ExtractSolution` and **missed this one**. Both baseline sites are
+        // `roundToLong()` and both C# sites were `(long)`, so fixing one changed nothing: `SolutionAmount` is **the only entry point for the waste results** (trim width,
+        // rest material, material cost), and truncation makes all of them systematically low.
+        return new UInt64((ulong)System.Math.Max((long)System.Math.Round(value.Value, MidpointRounding.AwayFromZero), 0));
     }
 
     /// <summary>
@@ -794,6 +863,7 @@ public sealed class Csp1dProduceContextBuilder<V>
     private readonly ProduceInput<V> _input;
     private YieldModelingConfig<V>? _yieldConfig;
     private WasteMinimizationConfig<V>? _wasteConfig;
+    private bool _feasibilityPhase;
     private LengthAssignmentModelingConfig<V>? _lengthConfig;
     private Csp1dModelingMode _mode = Csp1dModelingMode.MILP;
     private bool _isFinalMilp;
@@ -846,6 +916,24 @@ public sealed class Csp1dProduceContextBuilder<V>
     /// <returns>构建器自身 / Builder itself.</returns>
     public Csp1dProduceContextBuilder<V> Mode(Csp1dModelingMode mode) {
         _mode = mode;
+        return this;
+    }
+
+    /// <summary>
+    /// 启用"只最小化人工需求短缺"的 LP 可行性阶段 / Enable the LP phase that minimises artificial demand deficits only.
+    /// </summary>
+    /// <param name="enabled">是否启用 / Whether to enable.</param>
+    /// <returns>构建器自身 / The builder itself.</returns>
+    /// <remarks>
+    /// 基线的 `feasibilityPhase()` 只做一件事：**让 LP 模式下也构建 yield 聚合**。
+    /// 基线里 `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`——
+    /// C# 原本只有 `_mode == MILP`，所以**可行性阶段根本无法表达**。
+    ///
+    /// The baseline's `feasibilityPhase()` does exactly one thing: **make an LP-mode build create the yield aggregation too**. The baseline has
+    /// `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`, while C# only had `_mode == MILP`, so **the feasibility phase could not be expressed at all**.
+    /// </remarks>
+    public Csp1dProduceContextBuilder<V> FeasibilityPhase(bool enabled = true) {
+        _feasibilityPhase = enabled;
         return this;
     }
 
@@ -946,7 +1034,7 @@ public sealed class Csp1dProduceContextBuilder<V>
         IReadOnlyList<ProductDemand<Flt64>> flt64Demands = CastToFlt64List<ProductDemand<V>, ProductDemand<Flt64>>(_input.Demands);
         IReadOnlyList<CuttingPlan<Flt64>> flt64Plans = CastToFlt64List<CuttingPlan<V>, CuttingPlan<Flt64>>(_input.CuttingPlans);
 
-        YieldAggregation? yieldAgg = _mode == Csp1dModelingMode.MILP
+        YieldAggregation? yieldAgg = _mode == Csp1dModelingMode.MILP || _feasibilityPhase
             ? _yieldConfig is not null
                 ? new YieldAggregation(
                     Config: CastConfigToFlt64(_yieldConfig),
@@ -1040,7 +1128,8 @@ public sealed class Csp1dProduceContextBuilder<V>
             wasteRestMaterialMeasure: _wasteConfig?.RestMaterialMeasure ?? RestMaterialMeasure.RestWidthByMaterialLengthProxy,
             objectivePolicies: _objectivePolicies,
             domainValueSample: domainValueSample,
-            isFinalMilp: _isFinalMilp);
+            isFinalMilp: _isFinalMilp,
+            feasibilityPhase: _feasibilityPhase);
     }
 
     /// <summary>

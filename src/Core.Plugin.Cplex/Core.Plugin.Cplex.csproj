@@ -2,19 +2,26 @@
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Core.Plugin.Cplex</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Cplex</AssemblyName>
+    <CplexManagedDirectory>$(CPLEX_STUDIO_DIR1210)/cplex/bin/x64_win64</CplexManagedDirectory>
+    <CplexManagedAssembly>$(CplexManagedDirectory)/ILOG.CPLEX.dll</CplexManagedAssembly>
+    <CplexAvailable Condition="Exists('$(CplexManagedAssembly)')">true</CplexAvailable>
+    <DefineConstants Condition="'$(CplexAvailable)' == 'true'">$(DefineConstants);CPLEX_AVAILABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Cplex.Tests" />
   </ItemGroup>
-  <ItemGroup Condition="Exists('D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll')">
+  <ItemGroup Condition="Exists('$(CplexManagedAssembly)')">
     <Reference Include="ILOG.CPLEX">
-      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.CPLEX.dll</HintPath>
+      <HintPath>$(CplexManagedAssembly)</HintPath>
       <Private>false</Private>
     </Reference>
     <Reference Include="ILOG.Concert">
-      <HintPath>D:\environment\solvers\IBM\ILOG\CPLEX_Studio1210\cplex\bin\x64_win64\ILOG.Concert.dll</HintPath>
+      <HintPath>$(CplexManagedDirectory)/ILOG.Concert.dll</HintPath>
       <Private>false</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(CplexAvailable)' != 'true'">
+    <Compile Remove="CplexLinearSolver.cs;CplexNativeSolver.cs;CplexQuadraticSolver.cs;CplexSnapshot.cs;CplexSolveCallback.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />

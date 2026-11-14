@@ -1,0 +1,1 @@
+{"payloadRef":"t/payload/task/slice","requestId":"req-1","tenantId":"tenant","complexity":"COMPLEX","timeSensitivity":"REALTIME","priority":5,"budgetScope":"budget-a","budgetLimit":42.5,"deadlineEpochMs":1700000000000,"scheduling":{"complexity":"COMPLEX","timeSensitivity":"REALTIME","priority":5,"deadlineEpochMs":1700000000000,"budgetScope":"budget-a","budgetLimit":42.5}}

@@ -66,6 +66,60 @@ public interface IPersistenceApiController {
     }
 
     /// <summary>
+    /// 持久化 API 实现（立即返回同步响应，后台处理并异步回调）
+    /// Persistence API implementation (return a sync response immediately, process in the background).
+    /// </summary>
+    /// <typeparam name="TReq">请求类型 / Request type</typeparam>
+    /// <typeparam name="TRep">处理结果类型 / Processed response type</typeparam>
+    /// <typeparam name="TSyncRep">同步响应类型 / Synchronous response type</typeparam>
+    /// <param name="api">API 名称 / API name</param>
+    /// <param name="app">应用名称 / Application name</param>
+    /// <param name="requester">请求者标识 / Requester identifier</param>
+    /// <param name="version">版本号 / Version</param>
+    /// <param name="request">请求对象 / Request object</param>
+    /// <param name="process">处理函数 / Processing function</param>
+    /// <param name="asyncResponse">异步回调，收到处理结果 / The asynchronous callback receiving the processed response</param>
+    /// <param name="syncResponse">立即返回的同步响应 / The synchronous response returned at once</param>
+    /// <returns>同步响应 / The synchronous response</returns>
+    /// <remarks>
+    /// 与基线 `MongoPersistenceApiController.persistenceApiImpl` 的第二个重载对齐。三处照抄：
+    ///
+    /// 1. **同步响应与处理结果可以是不同类型**（`TSyncRep` 与 `TRep` 各一个）：
+    ///    典型用法是先回一个"已受理"的轻响应，处理完再把完整结果回调出去。
+    ///    把两者合成一个类型，就只能在"立刻回"和"回真结果"之间选一个。
+    /// 2. **`process` 在后台跑，不阻塞返回**：请求落库、处理、结果落库、回调这一串都在后台，
+    ///    调用方拿到的就是传进来的 `syncResponse`，与处理是否完成无关。
+    /// 3. **落库仍是尽力而为**：Mongo 未配置时整条持久化路径静默跳过，处理与回调照常。
+    ///    让持久化失败打断业务处理，是把日志问题升级成业务问题。
+    ///
+    /// Aligned with the second overload of the baseline's `MongoPersistenceApiController.persistenceApiImpl`. Three things copied: **the synchronous response and the processed result may be of
+    /// different types** (`TSyncRep` and `TRep`), the typical use being to acknowledge at once and push the full result later, whereas merging them would force a choice between "answer immediately"
+    /// and "answer with the real result"; **`process` runs in the background without blocking the return**, so the caller gets exactly the `syncResponse` it passed in regardless of whether
+    /// processing has finished; and **persistence stays best-effort**, the whole path being skipped silently when Mongo is unconfigured while processing and the callback proceed, since letting a
+    /// persistence failure break the business call would escalate a logging problem into a business one.
+    /// </remarks>
+    TSyncRep PersistenceApiImplAsync<TReq, TRep, TSyncRep>(
+        string api,
+        string app,
+        string requester,
+        string version,
+        TReq request,
+        Func<TReq, TRep> process,
+        Action<TRep> asyncResponse,
+        TSyncRep syncResponse)
+        where TReq : class
+        where TRep : class
+        where TSyncRep : class {
+        _ = FireAndForgetRequestAsync(api, requester, version, request);
+        _ = Task.Run(async () => {
+            TRep response = process(request);
+            await FireAndForgetResponseAsync(api, app, requester, version, response).ConfigureAwait(false);
+            asyncResponse(response);
+        });
+        return syncResponse;
+    }
+
+    /// <summary>
     /// 异步保存响应记录 / Fire-and-forget response persistence.
     /// </summary>
     Task FireAndForgetResponseAsync<TRep>(

@@ -66,5 +66,19 @@ internal static class GenerationMaterialWidthRangeKeyExtensions {
 #pragma warning restore CS8602
     }
 
-    private static string CanonicalUnitKey(PhysicalUnit unit) => unit.Symbol ?? unit.Name ?? unit.ToString() ?? "";
+    /// <summary>
+    /// 规范单位键 / Canonical unit key.
+    /// </summary>
+    /// <param name="unit">物理单位 / Physical unit.</param>
+    /// <returns>单位键 / The unit key.</returns>
+    /// <remarks>
+    /// **委托给 `GenerationQuantityMath.UnitKey`，不再自己写一份。**
+    ///
+    /// 这是本批发现的**第四份**单位键实现。四份各写一遍，任何一份与基线分叉都会让
+    /// "同一单位"在不同代码路径上判成不同结果，而**不会有任何测试发现**。
+    ///
+    /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fourth** unit-key implementation found in this batch; with
+    /// four copies, any one diverging from the baseline makes "the same unit" resolve differently on different code paths, and **no test would notice**.
+    /// </remarks>
+    private static string CanonicalUnitKey(PhysicalUnit unit) => GenerationQuantityMath.UnitKey(unit);
 }

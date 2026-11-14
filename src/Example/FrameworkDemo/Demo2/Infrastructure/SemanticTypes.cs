@@ -50,7 +50,23 @@ public readonly record struct MAC(double Value) : IPartialOrd<MAC>
 /// 水平安定面角度（值类型）。Horizontal stabilizer angle (value type wrapper).
 /// </summary>
 /// <param name="Angle">角度字符串 / Angle string</param>
-public readonly record struct HorizontalStabilizerAngle(string Angle);
+public readonly record struct HorizontalStabilizerAngle(string Angle)
+{
+    /// <summary>
+    /// 只渲染角度字符串 / Render the angle string only.
+    /// </summary>
+    /// <returns>角度文本 / The angle text.</returns>
+    /// <remarks>
+    /// **必须重写**。基线是 `value class HorizontalStabilizerAngle(val angle: String)`，它的 `toString()` 就是 `angle`。
+    /// C# 侧 `record struct` 的默认输出是 `HorizontalStabilizerAngle { Angle = … }`，而 `HorizontalStabilizer.Key.ToString()`
+    /// 又委托给它，于是目标名 `"horizontal stabilizer {key}"` 里塞进一整个类型转储。
+    ///
+    /// **This override is required.** The baseline is a `value class` wrapping a string, whose `toString()` is just the string. The C# `record struct` defaults to
+    /// `HorizontalStabilizerAngle { Angle = … }`, and `HorizontalStabilizer.Key.ToString()` delegates to it, so the objective name `"horizontal stabilizer {key}"` ends up with a whole
+    /// type dump in it.
+    /// </remarks>
+    public override string ToString() => Angle;
+}
 
 /// <summary>
 /// 水平安定面推力减速（值类型）。Horizontal stabilizer thrust drate (value type wrapper).

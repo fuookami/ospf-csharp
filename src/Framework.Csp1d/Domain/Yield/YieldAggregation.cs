@@ -123,9 +123,22 @@ public sealed record YieldAggregation(
             }
         }
 
+        // **空列表就是空列表，不是 null。**
+        //
+        // 基线 `YieldModelingResult` 的两个字段是 `List<...> = emptyList()`——
+        // **永不为 null**，"没有欠产"由**空列表**表达。
+        //
+        // C# 原本是 `Count > 0 ? list : null`，把空列表变成了 null。
+        // 后果：调用方拿到 null 只能猜是"没有"还是"没算"——
+        // **这正是本会话在余料代理那里刚批评过的同一类混淆**（B375：
+        // "没有数据"与"零浪费"必须分开）。**这里的方向相反，但错误相同。**
+        //
+        // **An empty list is an empty list, not null.** The baseline's two fields are `List<...> = emptyList()` — **never null**, with "no deficit" expressed by an
+        // **empty list**. C# used `Count > 0 ? list : null`, turning the empty list into null. Callers then cannot tell "none" from "not computed" — **the same conflation
+        // criticised in the rest-material proxy just one batch earlier** (B375). **Opposite direction, same mistake.**
         return new YieldModelingResult<Flt64>(
-            underProductions.Count > 0 ? underProductions : null,
-            overProductions.Count > 0 ? overProductions : null
+            underProductions,
+            overProductions
         );
     }
 

@@ -48,5 +48,5 @@ public abstract class AbstractIterativeTaskSchedulingAggregation<IT, T, E, A>
     /// <summary>创建迭代任务时间 / Create iterative task time</summary>
     protected virtual IterativeTaskSchedulingTaskTime<IT, T, E, A> CreateTaskTime(
         TimeWindow<Flt64> timeWindow,
-        IterativeTaskCompilation<IT, T, E, A> compilation) => new IterativeTaskSchedulingTaskTime<IT, T, E, A>(timeWindow, compilation.Tasks, compilation);
+        IterativeTaskCompilation<IT, T, E, A> compilation) => new IterativeTaskSchedulingTaskTime<IT, T, E, A>(timeWindow, compilation.OriginTasks, compilation);
 }

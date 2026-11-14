@@ -218,7 +218,7 @@ public readonly struct Flt32 : IFloatingNumber<Flt32>, ICopyable<Flt32>, IEquata
     // ===== Rounding =====
     public Flt32 Floor() => new((float)global::System.Math.Floor(Value));
     public Flt32 Ceil() => new((float)global::System.Math.Ceiling(Value));
-    public Flt32 Round() => new((float)global::System.Math.Round(Value));
+    public Flt32 Round() => new((float)global::System.Math.Round(Value, MidpointRounding.AwayFromZero));
     public Flt32 Trunc() => new((float)global::System.Math.Truncate(Value));
     public Flt32 BankerRound() => new((float)global::System.Math.Round(Value, MidpointRounding.ToEven));
     public Flt32 FloorTo(int precision) => new((float)(global::System.Math.Floor(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision)));
@@ -400,7 +400,7 @@ public readonly struct Flt64 : IFloatingNumber<Flt64>, ICopyable<Flt64>, IEquata
     // ===== Rounding =====
     public Flt64 Floor() => new(global::System.Math.Floor(Value));
     public Flt64 Ceil() => new(global::System.Math.Ceiling(Value));
-    public Flt64 Round() => new(global::System.Math.Round(Value));
+    public Flt64 Round() => new(global::System.Math.Round(Value, MidpointRounding.AwayFromZero));
     public Flt64 Trunc() => new(global::System.Math.Truncate(Value));
     public Flt64 BankerRound() => new(global::System.Math.Round(Value, MidpointRounding.ToEven));
     public Flt64 FloorTo(int precision) => new(global::System.Math.Floor(Value * global::System.Math.Pow(10, precision)) / global::System.Math.Pow(10, precision));
@@ -588,7 +588,7 @@ public readonly struct FltX : IFloatingNumber<FltX>, ICopyable<FltX>, IEquatable
     // ===== Rounding (decimal math) =====
     public FltX Floor() => new(global::System.Math.Floor(Value));
     public FltX Ceil() => new(global::System.Math.Ceiling(Value));
-    public FltX Round() => new(global::System.Math.Round(Value));
+    public FltX Round() => new(global::System.Math.Round(Value, MidpointRounding.AwayFromZero));
     public FltX Trunc() => new(global::System.Math.Truncate(Value));
     public FltX BankerRound() => new(global::System.Math.Round(Value, MidpointRounding.ToEven));
     public FltX FloorTo(int precision) => new(global::System.Math.Round(Value, precision, MidpointRounding.ToNegativeInfinity));
@@ -608,6 +608,8 @@ public readonly struct FltX : IFloatingNumber<FltX>, ICopyable<FltX>, IEquatable
     public UIntX ToUIntX() => new((long)global::System.Math.Truncate(Value));
 
     // ===== Decimal-specific =====
+    /// <summary>获取原始 decimal 值 / Get the underlying decimal value.</summary>
+    public decimal ToDecimal() => Value;
     public string ToPlainString() => Value.ToString();
     public string ToEngineeringString() => Value.ToString();
 

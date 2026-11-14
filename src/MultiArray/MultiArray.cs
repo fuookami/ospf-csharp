@@ -35,6 +35,11 @@ public abstract class AbstractMultiArray<T, S> : ICollection<T>
         }
     }
 
+    private protected AbstractMultiArray(S shape, T value) {
+        Shape = shape;
+        DataList = Enumerable.Repeat(value, shape.Size).ToList();
+    }
+
     /// <summary>数组形状 / Array shape</summary>
     public S Shape { get; }
 
@@ -118,6 +123,7 @@ public class MultiArray<T, S> : AbstractMultiArray<T, S>
     where T : notnull
     where S : IShape {
     internal MultiArray(S shape, Func<int, int[], T>? ctor = null) : base(shape, ctor) { }
+    internal MultiArray(S shape, T value) : base(shape, value) { }
 
     /// <summary>工厂方法 / Factory methods</summary>
     public static class Factory {
@@ -133,11 +139,11 @@ public class MultiArray<T, S> : AbstractMultiArray<T, S>
                     $"Type {typeof(T).Name} does not have a registered default value");
             }
             return new Ok<MultiArray<T, S>, ErrorCode, Error<ErrorCode>>(
-                new MultiArray<T, S>(shape, (_, _) => (T)defaultValue));
+                new MultiArray<T, S>(shape, (T)defaultValue));
         }
 
         /// <summary>使用指定值创建 / Create with specified value</summary>
-        public static MultiArray<T, S> NewWith(S shape, T value) => new MultiArray<T, S>(shape, (_, _) => value);
+        public static MultiArray<T, S> NewWith(S shape, T value) => new MultiArray<T, S>(shape, value);
 
         /// <summary>使用生成器创建 / Create with generator</summary>
         public static MultiArray<T, S> NewBy(S shape, Func<int, int[], T> generator) => new MultiArray<T, S>(shape, generator);
@@ -207,6 +213,7 @@ public class MutableMultiArray<T, S> : AbstractMultiArray<T, S>
     where T : notnull
     where S : IShape {
     internal MutableMultiArray(S shape, Func<int, int[], T>? ctor = null) : base(shape, ctor) { }
+    internal MutableMultiArray(S shape, T value) : base(shape, value) { }
 
     /// <summary>工厂方法 / Factory methods</summary>
     public static class Factory {
@@ -222,11 +229,11 @@ public class MutableMultiArray<T, S> : AbstractMultiArray<T, S>
                     $"Type {typeof(T).Name} does not have a registered default value");
             }
             return new Ok<MutableMultiArray<T, S>, ErrorCode, Error<ErrorCode>>(
-                new MutableMultiArray<T, S>(shape, (_, _) => (T)defaultValue));
+                new MutableMultiArray<T, S>(shape, (T)defaultValue));
         }
 
         /// <summary>使用指定值创建 / Create with specified value</summary>
-        public static MutableMultiArray<T, S> NewWith(S shape, T value) => new MutableMultiArray<T, S>(shape, (_, _) => value);
+        public static MutableMultiArray<T, S> NewWith(S shape, T value) => new MutableMultiArray<T, S>(shape, value);
 
         /// <summary>使用生成器创建 / Create with generator</summary>
         public static MutableMultiArray<T, S> NewBy(S shape, Func<int, int[], T> generator) => new MutableMultiArray<T, S>(shape, generator);

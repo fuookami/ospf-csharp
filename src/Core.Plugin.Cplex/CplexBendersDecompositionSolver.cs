@@ -6,6 +6,7 @@ using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -24,27 +25,32 @@ using FrameworkSolveOptions = Fuookami.Ospf.Framework.Solver.FrameworkSolveOptio
 namespace Fuookami.Ospf.Core.Plugin.Cplex;
 
 /// <summary>
-/// CPLEX Benders 分解求解器实现。
-/// CPLEX Benders decomposition solver implementation.
+/// Cplex Benders 分解求解器实现。
+/// Cplex Benders decomposition solver implementation.
 ///
-/// 使用 CPLEX 求解器实现线性 Benders 分解策略，支持主问题求解和子问题求解（对偶解和 Farkas 证明返回空字典）。
-/// Implements linear Benders decomposition strategy using CPLEX solver, supporting master problem solving
-/// and sub-problem solving (dual solution and Farkas proof return empty dictionaries).
+/// 使用 Cplex 求解器实现线性 Benders 分解策略，支持主问题求解和子问题求解。
+/// 运行时需加载 Cplex 托管 DLL，否则返回 OREngineEnvironmentLost。
+/// Implements linear Benders decomposition strategy using Cplex solver, supporting master
+/// and sub-problem solving. Requires Cplex managed DLL at runtime.
 /// </summary>
 public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersDecompositionSolver {
     /// <summary>求解器名称 / Solver name.</summary>
-    public string Name => "cplex";
+    public string Name => "Cplex";
 
     /// <summary>求解器配置 / Solver configuration.</summary>
     public SolverConfig Config { get; }
 
     /// <summary>
-    /// 创建 CPLEX Benders 分解求解器 / Create CPLEX Benders decomposition solver.
+    /// 创建 Cplex Benders 分解求解器 / Create Cplex Benders decomposition solver.
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public CplexBendersDecompositionSolver(SolverConfig? config = null) {
-        Config = config ?? new CplexSolverConfig();
+        Config = config ?? new SolverConfig();
     }
+
+    /// <inheritdoc/>
+    public Framework.Solver.IBendersDecompositionSolver WithTimeLimit(TimeSpan timeLimit) =>
+        new CplexBendersDecompositionSolver(Config with { TimeLimit = timeLimit });
 
     // ===== IBendersDecompositionSolver: Master problem =====
 
@@ -74,8 +80,7 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-            return Results.Ok<SolverOutput>(ok.Value);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Map<SolverOutput>(_ => ok.Value);
         }
 
         if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
@@ -87,6 +92,56 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
         }
 
         return Results.Failed<SolverOutput>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+    }
+
+    /// <summary>
+    /// 求解线性 Benders 主问题并保留统一报告。
+    /// Solve a linear Benders master problem while retaining the unified report.
+    /// </summary>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveMasterReportAsync(
+        string name,
+        LinearMetaModel<Flt64> metaModel,
+        bool toLogModel = false,
+        RegistrationStatusCallBack? registrationStatusCallBack = null,
+        SolvingStatusCallBack? solvingStatusCallBack = null) {
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
+            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
+        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismOk) {
+            return CplexDualSupport.Propagate<SolveReport<Flt64>, LinearMechanismModel<Flt64>>(
+                mechanismResult,
+                "CPLEX 主问题模型转储失败 / CPLEX master model dump failed");
+        }
+
+        using LinearMechanismModel<Flt64> mechanismModel = mechanismOk.Value;
+        CplexLinearSolver solver = CreateSolver();
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return CplexDualSupport.Propagate<SolveReport<Flt64>, LinearTriadModel>(
+                triadResult,
+                "CPLEX 主问题矩阵转换失败 / CPLEX master matrix conversion failed");
+        }
+
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportResult =
+            await solver.InvokeReportAsync(
+                model: triadModel,
+                solvingStatusCallBack: solvingStatusCallBack);
+        if (reportResult is not Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportOk) {
+            return CplexDualSupport.Propagate<SolveReport<Flt64>, SolveReport<Flt64>>(
+                reportResult,
+                "CPLEX 主问题求解失败 / CPLEX master solve failed");
+        }
+        if (reportOk.Value.Solution is { } solution) {
+            Result<Success, ErrorCode, Error<ErrorCode>> applied =
+                mechanismModel.ApplySolverSolution(solution.Values.Values);
+            if (!applied.IsOk) {
+                return CplexDualSupport.Propagate<SolveReport<Flt64>, Success>(
+                    applied,
+                    "CPLEX 主问题解回填失败 / CPLEX master solution writeback failed");
+            }
+        }
+        return Results.Ok(reportOk.Value);
     }
 
     /// <summary>
@@ -123,9 +178,9 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
     /// <summary>
     /// 求解线性 Benders 子问题 / Solve linear Benders sub problem.
     ///
-    /// 线性松弛子问题，对偶解和 Farkas 证明返回空字典（CPLEX stub 无法提取）。
-    /// Solves linear-relaxed sub-problem; dual solution and Farkas proof return empty dictionaries
-    /// (CPLEX stub cannot extract them).
+    /// 可行子问题返回 Cplex 原生行对偶，不可行子问题返回原生 Farkas 乘子；cuts 仍由调用方生成。
+    /// Feasible sub-problems return Cplex row duals and infeasible ones return native Farkas multipliers;
+    /// cuts remain the caller's responsibility.
     /// </summary>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
@@ -155,7 +210,7 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
         // Step 2: Build fixed variable index map (IVariableItem -> triad model column index)
         var fixedIndexMap = new Dictionary<int, Flt64>();
         foreach (KeyValuePair<IVariableItem, Flt64> kv in fixedVariables) {
-            int? colIndex = metaModel.Tokens.IndexOf(kv.Key);
+            int? colIndex = mechanismModel.Tokens.IndexOf(kv.Key);
             if (colIndex is { } ci) {
                 fixedIndexMap[ci] = kv.Value;
             }
@@ -163,43 +218,98 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
 
         // Step 3: Dump mechanism model to triad model, then fix and relax
         CplexLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ => Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
         LinearTriadModel subModel = FixAndRelaxToLP(triadModel, fixedIndexMap);
 
         using (triadModel)
         using (subModel) {
-            // Step 4: Solve the sub-problem (CPLEX stub cannot extract dual/Farkas)
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)subModel, solvingStatusCallBack);
+            MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
+            Result<CplexLinearOutcome, ErrorCode, Error<ErrorCode>> solved =
+                await solver.InvokeReportWithDualsAsync(
+                    model: subModel,
+                    solvingStatusCallBack: solvingStatusCallBack,
+                    requireFarkas: true);
+            if (solved is not Ok<CplexLinearOutcome, ErrorCode, Error<ErrorCode>> solvedOk) {
+                return CplexDualSupport.Propagate<
+                    Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                    CplexLinearOutcome>(
+                    solved,
+                    "Cplex Benders 子问题求解失败 / Cplex Benders sub-problem solving failed");
+            }
 
-            // Step 5: Build result with empty dual/Farkas dictionaries
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                var dualSolution = new Dictionary<MathConstraint, Flt64>();
+            CplexLinearOutcome outcome = solvedOk.Value;
+            if (outcome.Report.ProblemStatus == ProblemStatus.Feasible
+                && outcome.RowDuals is { } nativeDuals) {
+                Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> tidyDuals =
+                    subModel.TidyDualSolution(nativeDuals);
+                if (tidyDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+                    return CplexDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyList<Flt64>>(
+                        tidyDuals,
+                        "Cplex 对偶值与子问题行数不一致 / Cplex duals do not align with the sub-problem rows");
+                }
+                Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> report =
+                    Results.Ok(outcome.Report);
+                Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+                    CplexReportSupport.ToLegacy(report);
+                if (legacy is not Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> output) {
+                    return CplexDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        FeasibleSolverOutput<Flt64>>(
+                        legacy,
+                        "Cplex Benders 子问题无可返回的可行解 / Cplex Benders sub-problem has no feasible output");
+                }
+                IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+                    MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+                return mechanismModel.ApplySolverSolution(output.Value.Solution.Values)
+                    .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                        new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
+                            Result: output.Value,
+                            DualSolution: dualSolution,
+                            Cuts: null) {
+                            Report = outcome.Report,
+                        });
+            }
+
+            if (outcome.Report.ProblemStatus == ProblemStatus.Infeasible
+                && outcome.FarkasDuals is { } nativeFarkas) {
+                Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> tidyFarkas =
+                    subModel.TidyDualSolution(nativeFarkas);
+                if (tidyFarkas is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> farkasOk) {
+                    return CplexDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyList<Flt64>>(
+                        tidyFarkas,
+                        "Cplex Farkas 值与子问题行数不一致 / Cplex Farkas values do not align with the sub-problem rows");
+                }
+                Result<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkas =
+                    MathConstraintOrigins.ToFarkasSolution(farkasOk.Value, originMap, "Cplex");
+                if (farkas is not Ok<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkasResult) {
+                    return CplexDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyDictionary<MathConstraint, Flt64>>(
+                        farkas,
+                        "Cplex Benders 子问题没有可用的 Farkas 证书 / Cplex Benders sub-problem has no usable Farkas certificate");
+                }
                 return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                    new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
-                        Result: ok.Value,
-                        DualSolution: dualSolution,
+                    new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
+                        FarkasDualSolution: farkasResult.Value,
                         Cuts: null));
             }
 
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                if (f.Error.Code == ErrorCode.ORModelInfeasible) {
-                    var farkasSolution = new Dictionary<MathConstraint, Flt64>();
-                    return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                        new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
-                            FarkasDualSolution: farkasSolution,
-                            Cuts: null));
-                }
-                return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
-            }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-            }
-
             return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+                new Err<ErrorCode>(
+                    ErrorCode.OREngineSolvingException,
+                    $"Cplex Benders 子问题未给出可用对偶或 Farkas 证据：{outcome.Report.ProblemStatus} / " +
+                    $"Cplex Benders sub-problem returned neither usable duals nor Farkas evidence: {outcome.Report.ProblemStatus}"));
         }
     }
 
@@ -236,7 +346,7 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
     // ===== Private helpers =====
 
     /// <summary>
-    /// 创建 CPLEX 线性求解器 / Create CPLEX linear solver.
+    /// 创建 Cplex 线性求解器 / Create Cplex linear solver.
     /// </summary>
     private CplexLinearSolver CreateSolver() =>
         new CplexLinearSolver(Config);
@@ -258,7 +368,14 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         CplexLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
@@ -279,19 +396,25 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
             if (fixedVarMap.ContainsKey(v.Index)) {
                 // Fix variable: LB = UB = fixed value, relax to continuous
                 Flt64 fixedVal = fixedVarMap[v.Index];
-                vars.Add(new ModelViewVariable(
-                    v.Index, fixedVal, fixedVal,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
+                vars.Add(v.WithDomain(
+                    lowerBound: fixedVal,
+                    upperBound: fixedVal,
+                    type: Continuous.Instance));
             }
             else {
                 // Relax to continuous
-                vars.Add(new ModelViewVariable(
-                    v.Index, v.LowerBound, v.UpperBound,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
+                vars.Add(v.WithDomain(
+                    lowerBound: v.LowerBound,
+                    upperBound: v.UpperBound,
+                    type: Continuous.Instance));
             }
         }
 
-        return new LinearTriadModel(vars, (LinearConstraintBatch)model.Constraints, model.Objective, model.Name);
+        return new LinearTriadModel(
+            variables: vars,
+            constraints: (LinearConstraintBatch)model.Constraints.Copy(),
+            objective: model.Objective,
+            name: model.Name);
     }
 
     /// <summary>
@@ -327,7 +450,9 @@ public sealed class CplexBendersDecompositionSolver : Framework.Solver.IBendersD
                 new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResultOf<V>(
                     Result: ConvertFeasibleOutput<V>(feasible.Result),
                     DualSolution: feasible.DualSolution,
-                    Cuts: feasible.Cuts),
+                    Cuts: feasible.Cuts) {
+                    Report = feasible.Report,
+                },
             Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult infeasible =>
                 new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResultOf<V>(
                     FarkasDualSolution: infeasible.FarkasDualSolution,

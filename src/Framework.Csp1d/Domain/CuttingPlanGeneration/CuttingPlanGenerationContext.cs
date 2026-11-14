@@ -258,4 +258,71 @@ public sealed class GenerationInput<V> where V : struct {
     /// <summary>配规列表 / Costar list.</summary>
     public IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.Costar<V>> Costars { get; init; }
         = Array.Empty<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.Costar<V>>();
+
+    /// <summary>
+    /// 已存在（已在列池里）的方案 / Plans that already exist (already in the column pool).
+    /// </summary>
+    /// <remarks>
+    /// **基线 `CuttingPlanGenerationInput.existingPlans` 的对应物。** 定价阶段靠它做去重——
+    /// **不传的话，定价会把池里已有的方案再报一遍**，于是第一轮就"全部重复"。
+    ///
+    /// **这解释了 B338 之前观察到的 `reason=AllDuplicates iters=1 priced=0` 的另一半原因**：
+    /// 那一半是"定价器不读对偶价格"（B338 已修），这一半是"**定价器不知道池里有什么**"。
+    ///
+    /// **The counterpart of the baseline's `CuttingPlanGenerationInput.existingPlans`.** Pricing uses it for deduplication — **without it, pricing re-reports plans
+    /// already in the pool**, so the very first round is "all duplicates".
+    ///
+    /// **This is the other half of the `reason=AllDuplicates iters=1 priced=0` observation from before B338**: one half was "pricing ignored the dual prices" (fixed in
+    /// B338), this half is "**pricing does not know what the pool already holds**".
+    /// </remarks>
+    public IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>> ExistingPlans { get; init; }
+        = Array.Empty<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>>();
+
+    /// <summary>
+    /// dominance 接受覆盖函数列表 / Dominance acceptance override function list.
+    /// </summary>
+    /// <remarks>
+    /// **基线 `dominanceAcceptOverrides` 的对应物**，由 `ICsp1dGenerationStrategy.AcceptDominance` 投影而来。
+    ///
+    /// **语义是「全部通过」**：基线写作 `input.dominanceAcceptOverrides.all { it(plan, existing) }`——
+    /// **任何一个返回 false，候选就被拒**。空列表表示不额外过滤。
+    ///
+    /// **The counterpart of the baseline's `dominanceAcceptOverrides`**, projected from `ICsp1dGenerationStrategy.AcceptDominance`.
+    ///
+    /// **The semantics are "all must pass"**: the baseline writes `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **any false rejects the candidate**.
+    /// An empty list means no extra filtering.
+    /// </remarks>
+    /// <summary>
+    /// 候选过滤函数列表 / Candidate filter function list.
+    /// </summary>
+    /// <remarks>
+    /// **基线 `candidateFilters` 的对应物**，由 `ICsp1dGenerationStrategy.AcceptCandidate` 投影而来。
+    ///
+    /// **语义同样是「全部通过」**：基线写作 `candidateFilters.all { it(plan, input.existingPlans) }`。
+    /// 注意第二个参数是 **`input.existingPlans`**——同一个钩子在**初始池**（空）与**定价**（当前列池）
+    /// 两种上下文下行为不同，这正是它能表达"别跟已有方案撞"的原因。
+    ///
+    /// **The counterpart of the baseline's `candidateFilters`**, projected from `ICsp1dGenerationStrategy.AcceptCandidate`.
+    ///
+    /// **The semantics are also "all must pass"**: the baseline writes `candidateFilters.all { it(plan, input.existingPlans) }`. Note the second argument is
+    /// **`input.existingPlans`** — the same hook behaves differently in the **initial pool** (empty) and **pricing** (current column pool) contexts, which is exactly what
+    /// lets it express "do not collide with existing plans".
+    /// </remarks>
+    public IReadOnlyList<global::System.Func<
+        Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>,
+        IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>>,
+        bool>> CandidateFilters { get; init; }
+        = Array.Empty<global::System.Func<
+            Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>,
+            IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>>,
+            bool>>();
+
+    public IReadOnlyList<global::System.Func<
+        Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>,
+        IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>>,
+        bool>> DominanceAcceptOverrides { get; init; }
+        = Array.Empty<global::System.Func<
+            Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>,
+            IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>>,
+            bool>>();
 }

@@ -4,7 +4,13 @@ using Fuookami.Ospf.Core.Model.Basic;
 using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Symbol;
 using Fuookami.Ospf.Core.Variable;
+using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration;
+using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
+using Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
+using Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model;
 using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Quantities.Quantity;
+using Fuookami.Ospf.Quantities.Unit;
 using Fuookami.Ospf.Math.Symbol.Inequality;
 using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
@@ -47,8 +53,10 @@ public sealed class CuttingPattern {
 /// 列生成演示：一维下料问题（CSP1D）。
 /// Column generation demo: One-dimensional Cutting Stock Problem (CSP1D).
 ///
-/// CSP1D 框架尚未在 C# 端实现，此演示展示核心建模模式。
-/// The CSP1D framework is not yet implemented on the C# side; this demo shows the core modeling pattern.
+/// **初始切割模式由真实的 CSP1D 框架生成器产出**（`FullSumGenerator`），
+/// 不再是手写的 `floor(原料长度 / 产品宽度)`。
+/// The initial cutting patterns are produced by the **real CSP1D framework generator** (`FullSumGenerator`)
+/// rather than a hand-written `floor(raw length / product width)`.
 ///
 /// Column Generation Loop Pattern / 列生成循环模式:
 ///
@@ -193,14 +201,92 @@ public sealed class ColumnGenerationDemo {
         return profit - 1.0;
     }
 
+    /// <summary>
+    /// 用真实的 CSP1D 生成器产出初始切割模式 / Produce the initial cutting patterns with the real CSP1D generator.
+    /// </summary>
+    /// <remarks>
+    /// **B314 之前这里手写 `(int)(RawLength / Demands[d].Width)`**：每个需求一条"只用这一种产品装满"的模式。
+    /// 那其实是在**重算生成器该算的东西**，而且它绕过了整个框架——
+    /// `Framework.Csp1d` 的四个生成器当时是 `internal`，示例程序集根本拿不到（B313 才修好）。
+    ///
+    /// 现在改成调用 `FullSumGenerator`：它能产出**同一宽度多刀**与**多宽度混排**的模式，
+    /// 比手写版本更接近"装满原料"的意图，并且**真的让框架代码在一条真实路径上跑起来**。
+    ///
+    /// **Before B314 this hand-computed `(int)(RawLength / Demands[d].Width)`** — one "fill the raw length with this single product" pattern per demand.
+    /// That was **recomputing what the generator is for**, and it bypassed the framework entirely: the four `Framework.Csp1d` generators were `internal`
+    /// and unreachable from the example assembly at the time (fixed only in B313).
+    ///
+    /// It now calls `FullSumGenerator`, which produces patterns with **several cuts of one width** and **mixed widths** — closer to the intent of filling the raw
+    /// length, and it **actually exercises framework code on a real path**.
+    /// </remarks>
     private void GenerateInitialPatterns() {
-        // Generate initial single-item patterns: each demand gets its own pattern
-        for (int d = 0; d < Demands.Count; d++) {
+        var material = new Material<Flt64>(
+            id: "raw",
+            name: "raw-material",
+            widthRange: new WidthRange<Flt64>(
+                Width: new QuantityRange<Flt64>(
+                    LowerBound: Millimetres(RawLength),
+                    UpperBound: Millimetres(RawLength)
+                ),
+                Step: Millimetres(1.0)
+            )
+        );
+
+        var demands = new List<ProductDemand<Flt64>>();
+        foreach (CuttingDemand demand in Demands) {
+            var product = new Product<Flt64>(
+                id: DemandProductId(demand.Index),
+                name: DemandProductId(demand.Index),
+                width: new List<Quantity<Flt64>> { Millimetres(demand.Width) }
+            );
+            demands.Add(new ProductDemand<Flt64>(product, Millimetres(demand.Demand)));
+        }
+
+        var generator = new FullSumGenerator<Flt64>(GenerationConstraints<Flt64>.Unconstrained());
+        IReadOnlyList<CuttingPlan<Flt64>> plans = generator.Generate(new GenerationInput<Flt64> {
+            Materials = new List<Material<Flt64>> { material },
+            Demands = demands,
+        });
+
+        foreach (CuttingPlan<Flt64> plan in plans) {
             int[] quantities = new int[Demands.Count];
-            quantities[d] = (int)(RawLength / Demands[d].Width);
-            _patterns.Add(new CuttingPattern(d, quantities));
+            foreach (CuttingPlanSlice<Flt64> slice in plan.Slices) {
+                if (slice.Production is Product<Flt64> product
+                    && TryParseDemandIndex(product.Id, out int index)
+                    && index >= 0 && index < quantities.Length) {
+                    quantities[index] += (int)slice.Amount.ToULong();
+                }
+            }
+            if (quantities.Any(quantity => quantity > 0)) {
+                _patterns.Add(new CuttingPattern(_patterns.Count, quantities));
+            }
         }
     }
+
+    /// <summary>需求索引对应的产品标识 / Product identifier for a demand index.</summary>
+    /// <param name="index">需求索引 / Demand index.</param>
+    /// <returns>产品标识 / Product identifier.</returns>
+    private static string DemandProductId(int index) => $"demand-{index}";
+
+    /// <summary>从产品标识解析需求索引 / Parse a demand index back out of a product identifier.</summary>
+    /// <param name="productId">产品标识 / Product identifier.</param>
+    /// <param name="index">解析出的索引 / The parsed index.</param>
+    /// <returns>是否解析成功 / Whether parsing succeeded.</returns>
+    private static bool TryParseDemandIndex(string productId, out int index) {
+        const string prefix = "demand-";
+        if (productId.StartsWith(prefix, StringComparison.Ordinal)
+            && int.TryParse(productId[prefix.Length..], out index)) {
+            return true;
+        }
+        index = -1;
+        return false;
+    }
+
+    /// <summary>毫米量值 / Millimetre quantity.</summary>
+    /// <param name="value">数值 / Value.</param>
+    /// <returns>量值 / The quantity.</returns>
+    private static Quantity<Flt64> Millimetres(double value) =>
+        new(new Flt64(value), LengthUnits.Millimeter);
 
     private Result<Success, ErrorCode, Error<ErrorCode>> InitVariables() {
         // y[pattern] = number of times this pattern is used

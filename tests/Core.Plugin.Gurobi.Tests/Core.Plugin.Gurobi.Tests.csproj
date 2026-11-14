@@ -4,12 +4,22 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Gurobi.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GurobiManagedAssembly>$(GUROBI_HOME)/lib/gurobi100.netstandard20.dll</GurobiManagedAssembly>
+    <GurobiAvailable Condition="Exists('$(GurobiManagedAssembly)')">true</GurobiAvailable>
+    <DefineConstants Condition="'$(GurobiAvailable)' == 'true'">$(DefineConstants);GUROBI_AVAILABLE</DefineConstants>
+    <DefineConstants Condition="'$(RunGurobiIntegration)' == 'true' and '$(GurobiAvailable)' == 'true'">$(DefineConstants);GUROBI_INTEGRATION</DefineConstants>
   </PropertyGroup>
+  <Target Name="ValidateGurobiIntegrationSdk" BeforeTargets="CoreCompile" Condition="'$(RunGurobiIntegration)' == 'true' and '$(GurobiAvailable)' != 'true'">
+    <Error Text="Gurobi integration requires the Gurobi 10 SDK. / Gurobi 集成测试需要 Gurobi 10 SDK。" />
+  </Target>
   <!-- Pinned Gurobi 10.0.1 managed assembly — same as main project -->
-  <ItemGroup>
+  <ItemGroup Condition="'$(GurobiAvailable)' == 'true'">
     <Reference Include="Gurobi">
-      <HintPath>$(GUROBI_HOME)\lib\gurobi100.netstandard20.dll</HintPath>
+      <HintPath>$(GurobiManagedAssembly)</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(GurobiAvailable)' != 'true'">
+    <Compile Remove="GurobiBendersDecompositionSolverTest.cs;GurobiColumnGenerationSolverTest.cs;GurobiLinearCallbackTest.cs;GurobiQuadraticSolverTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />
@@ -19,5 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Gurobi\Core.Plugin.Gurobi.csproj" />
+    <ProjectReference Include="..\..\src\Framework\Framework.csproj" />
   </ItemGroup>
 </Project>

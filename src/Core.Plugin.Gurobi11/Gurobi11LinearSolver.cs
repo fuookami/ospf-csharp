@@ -7,6 +7,7 @@ using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Iis;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
@@ -14,51 +15,89 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using GurobiCallback = Fuookami.Ospf.Core.Plugin.Gurobi.GurobiLinearSolverCallBack;
+using GurobiIdentity = Fuookami.Ospf.Core.Plugin.Gurobi.GurobiBackendIdentity;
+using GurobiSolver = Fuookami.Ospf.Core.Plugin.Gurobi.GurobiLinearSolver;
+
 namespace Fuookami.Ospf.Core.Plugin.Gurobi11;
 
+/// <summary>
+/// Gurobi 11 线性求解器兼容门面。
+/// Gurobi 11 linear solver compatibility facade.
+/// </summary>
+/// <remarks>
+/// 委托同一 Gurobi 原生实现，工程在 Gurobi 11 与 10 托管程序集之间选择。
+/// Delegates to the shared Gurobi native implementation, whose project selects the Gurobi 11 or 10 assembly.
+/// </remarks>
 public sealed class Gurobi11LinearSolver : ILinearSolver {
-    public string Name => "gurobi11";
-    public SolverConfig Config { get; }
+    private readonly GurobiSolver _solver;
 
-    public Gurobi11LinearSolver(SolverConfig? config = null) {
-        Config = config ?? new VendorSolverConfig();
+    /// <summary>求解器名称 / Solver name.</summary>
+    public string Name => "gurobi11";
+
+    /// <summary>求解器配置 / Solver configuration.</summary>
+    public SolverConfig Config => _solver.Config;
+
+    /// <summary>创建 Gurobi 11 线性求解器 / Create a Gurobi 11 linear solver.</summary>
+    public Gurobi11LinearSolver(
+        SolverConfig? config = null,
+        GurobiCallback? callBack = null) {
+        _solver = new GurobiSolver(config, callBack, GurobiIdentity.Gurobi11);
     }
 
+    /// <inheritdoc/>
     public Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         ILinearTriadModelView model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default)
-        => Task.FromResult<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>>(
-            new Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeAsync(model, solvingStatusCallBack, cancellationToken);
 
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeReportAsync(model, solvingStatusCallBack, cancellationToken);
+
+    /// <inheritdoc/>
     public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         LinearTriadModel model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
         IisConfig? iisConfig = null,
-        CancellationToken cancellationToken = default)
-        => Task.FromResult<Result<SolverOutput, ErrorCode, Error<ErrorCode>>>(
-            new Failed<SolverOutput, ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeAsync(model, solvingStatusCallBack, iisConfig, cancellationToken);
 
+    /// <inheritdoc/>
     public Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
         ILinearTriadModelView model,
         ulong solutionAmount,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default)
-        => Task.FromResult<Result<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>>>(
-            new Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeAsync(model, solutionAmount, solvingStatusCallBack, cancellationToken);
 
-    public Task<LinearTriadModel> DumpAsync(LinearMechanismModel<Flt64> model, CancellationToken cancellationToken = default)
-        => throw new System.NotSupportedException();
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeReportAsync(model, solutionAmount, solvingStatusCallBack, cancellationToken);
 
+    /// <inheritdoc/>
+    public Task<Result<LinearTriadModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        LinearMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default) =>
+        _solver.DumpAsync(model, cancellationToken);
+
+    /// <inheritdoc/>
     public Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
         LinearMetaModel<Flt64> model,
-        RegistrationStatusCallBack? rcb,
-        MechanismModelDumpingStatusCallBack? dcb,
-        CancellationToken cancellationToken = default)
-        => Task.FromResult<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>>(
-            new Failed<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
+        RegistrationStatusCallBack? registrationStatusCallBack,
+        MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
+        CancellationToken cancellationToken = default) =>
+        _solver.DumpAsync(
+            model,
+            registrationStatusCallBack,
+            dumpingStatusCallBack,
+            cancellationToken);
 }

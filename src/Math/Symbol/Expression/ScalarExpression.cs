@@ -193,6 +193,48 @@ public interface IScalarFunctionRegistry<R> {
     R? Translate(string name, IReadOnlyList<R> arguments);
 }
 
+/// <summary>三元条件表达式 / A ternary conditional expression.</summary>
+/// <param name="Condition">条件，必须是布尔 / The condition, which must be boolean.</param>
+/// <param name="Then">条件成立时的值 / The value when the condition holds.</param>
+/// <param name="Else">条件不成立时的值 / The value when it does not.</param>
+/// <remarks>
+/// **两支都是标量表达式，条件单独是布尔**——**这个形状本身就是"条件不能是数值"的那条约束。**
+/// **把条件也放宽成标量之后，`1 ? 2 : 3` 就成了一条合法输入，而它没有任何意义。**
+///
+/// **Both branches are scalar expressions and the condition alone is boolean** — **the shape itself is the "a condition cannot be numeric" constraint.**
+/// **Widening the condition to a scalar would make `1 ? 2 : 3` valid input, and it means nothing.**
+/// </remarks>
+public sealed record ScalarConditional<T>(
+    BooleanExpression Condition,
+    ScalarExpression<T> Then,
+    ScalarExpression<T> Else) : ScalarExpression<T> {
+    /// <inheritdoc/>
+    public override string TypeName => "Conditional";
+
+    /// <inheritdoc/>
+    public override IReadOnlyList<ScalarExpression<T>> Children => [Then, Else];
+}
+/// <summary>把布尔表达式包成标量表达式 / Wrap a boolean expression as a scalar expression.</summary>
+/// <param name="Expr">被包的布尔表达式 / The wrapped boolean expression.</param>
+/// <remarks>
+/// **基线里这是 `ScalarBoolean`，而它在整个解析器里只有一个用途**：让比较/逻辑的结果能沿着标量那条链继续往上走，
+/// **到三元与 `if-then-else` 那里再被拆回布尔**（基线 `unwrapBoolean` / `extractBooleanCondition`）。
+///
+/// **这一层不能省**：没有它，"比较的结果"就没法当成"三元条件"传上去，
+/// **而标量链上每一层都只认 `ScalarExpression`。**
+///
+/// **In the baseline this is `ScalarBoolean`, and it has exactly one purpose**: letting a comparison or logical result travel up the scalar chain,
+/// **then be unwrapped back to a boolean at the ternary and `if-then-else` layers.**
+/// **The layer cannot be skipped**: without it a comparison result cannot be passed as a ternary condition,
+/// **and every layer of the scalar chain accepts only `ScalarExpression`.**
+/// </remarks>
+public sealed record ScalarBoolean<T>(BooleanExpression Expr) : ScalarExpression<T> {
+    /// <inheritdoc/>
+    public override string TypeName => "Boolean";
+
+    /// <inheritdoc/>
+    public override IReadOnlyList<ScalarExpression<T>> Children => [];
+}
 /// <summary>标量函数求值器 / Scalar function evaluator.</summary>
 public interface IScalarFunctionEvaluator {
     /// <summary>求值标量函数 / Evaluate scalar function.</summary>

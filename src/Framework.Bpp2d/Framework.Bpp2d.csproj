@@ -10,5 +10,10 @@
     <ProjectReference Include="..\Utils\Utils.csproj" />
     <ProjectReference Include="..\Math\Math.csproj" />
     <ProjectReference Include="..\Quantities\Quantities.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+    <!-- B934：二维内核要复用 `Framework.Bpp1d` 里的共享离散装载类型（`DiscreteLoadingProblem` / `LoadingGeometry`）。
+         / B934: the 2-D kernel reuses the shared discrete-loading types that live in Framework.Bpp1d. -->
+    <ProjectReference Include="..\Framework.Bpp1d\Framework.Bpp1d.csproj" />
   </ItemGroup>
 </Project>

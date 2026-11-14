@@ -321,19 +321,12 @@ public sealed class DefaultCsp1dSolutionAnalyzer<V> : ICsp1dSolutionAnalyzer<V> 
     /// <summary>
     /// 运行时安全转换 Quantity 值到 FltX / Runtime-safe conversion from Quantity value to FltX
     /// </summary>
-    private static FltX QuantityToFltX(Quantity<V> quantity) {
-        if (quantity.Value is FltX fx) {
-            return fx;
-        }
-
-        if (quantity.Value is Flt64 f64) {
-            return f64.ToFltX();
-        }
-
-        if (quantity.Value is Int64 i64) {
-            return i64.ToFlt64().ToFltX();
-        }
-
-        throw new System.NotSupportedException($"Unsupported quantity value type: {quantity.Value.GetType().Name}");
-    }
+    // **与渲染映射共用同一个转换**：两处各写各的 `is` 链，缺的类型还不一样，于是同一份解在两处一处能渲染一处不能。
+    // **Shares one conversion with the render mapper**: two separate `is` chains were missing different types, so the same solution rendered in one place and threw in the other.
+    // **`internal` 而非 `private`**：唯一的调用方是解渲染路径，而那条路径要建一整个 `Produce` 才走得到；
+    // 让判据直接调它，比在判据里手工拼一条渲染链短得多。
+    // **`internal` rather than `private`**: the only caller sits on the solution-rendering path, which needs a whole `Produce` to reach; letting the criterion call this directly is far shorter than
+    // assembling a rendering chain inside the test.
+    internal static FltX QuantityToFltX(Quantity<V> quantity)
+        => Fuookami.Ospf.Math.NumberConversions.ToFltXValue(quantity.Value);
 }

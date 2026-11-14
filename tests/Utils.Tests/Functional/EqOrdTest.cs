@@ -7,6 +7,14 @@ using Xunit;
 namespace Fuookami.Ospf.Utils.Tests.Functional;
 /// <summary>Eq/Ord 类型测试 / Eq/Ord type tests.</summary>
 public class EqOrdTest {
+    private sealed record ComparableValue(int Value) : IPartialEq<ComparableValue> {
+        public bool? PartialEq(ComparableValue rhs) => Value == rhs.Value;
+    }
+
+    [Fact]
+    public void PartialEqNullable_NullIsFalse() =>
+        new ComparableValue(1).PartialEqNullable(null).Should().BeFalse();
+
     [Fact]
     public void Order_Less_NegatesToGreater() {
         var less = new Order.Less();

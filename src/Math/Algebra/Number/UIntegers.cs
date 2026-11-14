@@ -485,6 +485,8 @@ public readonly struct UIntX : IUIntegerNumber<UIntX>, ICopyable<UIntX>, IEquata
     IArithmeticConstants<UIntX> IArithmetic<UIntX>.Constants => UIntXConstants.Instance;
     IRealNumberConstants<UIntX> IRealNumber<UIntX>.Constants => UIntXConstants.Instance;
     public UIntX Copy() => new(Value);
+    /// <summary>获取原始整数值 / Get the underlying integer value.</summary>
+    public BigInteger ToBigInteger() => Value;
     UIntX IInvariant<UIntX>.Value() => this;
     public UIntX Plus(UIntX rhs) => new(Value + rhs.Value);
     public UIntX Minus(UIntX rhs) => new(Value - rhs.Value);

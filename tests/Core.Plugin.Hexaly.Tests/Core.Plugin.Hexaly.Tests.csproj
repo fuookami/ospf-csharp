@@ -4,12 +4,22 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Hexaly.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <HexalyManagedAssembly>$(HEXALY_HOME)/bin/Hexaly.NET.dll</HexalyManagedAssembly>
+    <HexalyAvailable Condition="Exists('$(HexalyManagedAssembly)')">true</HexalyAvailable>
+    <DefineConstants Condition="'$(HexalyAvailable)' == 'true'">$(DefineConstants);HEXALY_AVAILABLE</DefineConstants>
+    <DefineConstants Condition="'$(RunHexalyIntegration)' == 'true' and '$(HexalyAvailable)' == 'true'">$(DefineConstants);HEXALY_INTEGRATION</DefineConstants>
   </PropertyGroup>
-  <ItemGroup Condition="Exists('D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll')">
+  <Target Name="ValidateHexalyIntegrationSdk" BeforeTargets="CoreCompile" Condition="'$(RunHexalyIntegration)' == 'true' and '$(HexalyAvailable)' != 'true'">
+    <Error Text="Hexaly integration requires HEXALY_HOME/bin/Hexaly.NET.dll. / Hexaly 集成测试需要 HEXALY_HOME/bin/Hexaly.NET.dll。" />
+  </Target>
+  <ItemGroup Condition="'$(HexalyAvailable)' == 'true'">
     <Reference Include="Hexaly.NET">
-      <HintPath>D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(HexalyManagedAssembly)</HintPath>
+      <Private>true</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(HexalyAvailable)' != 'true'">
+    <Compile Remove="HexalyContractTest.cs;HexalyIntegrationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />

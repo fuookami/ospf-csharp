@@ -41,7 +41,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service {
     public sealed class Csp1dShadowPriceLifecycle<V>
         where V : struct {
         private readonly V _domainValueSample;
-        private readonly IReadOnlyList<ICGPipeline<AbstractCsp1dShadowPriceArguments, IAbstractLinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>> _cgPipelines;
+        private readonly IReadOnlyList<ICGPipeline<AbstractCsp1dShadowPriceArguments, LinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>> _cgPipelines;
 
         /// <summary>
         /// 框架影子价格映射 / Framework shadow price map.
@@ -56,9 +56,9 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service {
         /// <param name="cgPipelines">列生成管线列表 / Column generation pipeline list.</param>
         public Csp1dShadowPriceLifecycle(
             V domainValueSample,
-            IReadOnlyList<ICGPipeline<AbstractCsp1dShadowPriceArguments, IAbstractLinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>>? cgPipelines = null) {
+            IReadOnlyList<ICGPipeline<AbstractCsp1dShadowPriceArguments, LinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>>? cgPipelines = null) {
             _domainValueSample = domainValueSample;
-            _cgPipelines = cgPipelines ?? Array.Empty<ICGPipeline<AbstractCsp1dShadowPriceArguments, IAbstractLinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>>();
+            _cgPipelines = cgPipelines ?? Array.Empty<ICGPipeline<AbstractCsp1dShadowPriceArguments, LinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>>>();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service {
         /// <param name="dualSolution">对偶解 / Dual solution.</param>
         /// <returns>领域影子价格映射 / Domain shadow price map.</returns>
         public Result<ShadowPriceMap<V>, ErrorCode, Error<ErrorCode>> ExtractFromDualSolution(
-            IAbstractLinearMetaModel<Flt64> model,
+            LinearMetaModel<Flt64> model,
             IReadOnlyDictionary<MathConstraint, Flt64> dualSolution) {
             if (_cgPipelines.Count > 0) {
                 var shadowPrices = new MetaDualSolution(
@@ -101,14 +101,31 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service {
             if (result is Ok<V, ErrorCode, Error<ErrorCode>> ok) {
                 return ok.Value;
             }
+
+            // **这个抛异常与基线等价，不是 C# 的偏离。**
+            //
+            // 基线写的是 `(convertSolverValue(...) as Ok).value`——`convertSolverValue` 返回 `Failed` 时，
+            // `as Ok` 得到 null，`.value` 立刻抛 `ClassCastException` / NPE。
+            // C# 抛 `InvalidOperationException` 只是**把同一个失败写得更明确**。
+            //
+            // 两者的共同限制：**只有 `Flt64` 与 `FltX` 能实例化 CSP1D**，
+            // `Int64` / `Flt32` 会在**运行期**炸（B393 实测确认），而不是在类型层面被挡住。
+            // 这是**基线设计本身的限制**，本仓保持同步、不单方面收紧泛型约束。
+            //
+            // **This throw is equivalent to the baseline, not a C# deviation.** The baseline writes `(convertSolverValue(...) as Ok).value` — when `convertSolverValue`
+            // returns `Failed`, `as Ok` yields null and `.value` throws immediately. C# throwing `InvalidOperationException` merely **states the same failure more
+            // clearly**. The shared limitation: **only `Flt64` and `FltX` can instantiate CSP1D**; `Int64` / `Flt32` **blow up at runtime** (measured in B393) instead of
+            // being rejected at the type level. That is **the baseline design's own limitation**; this repository stays in sync and does not tighten the generic constraint
+            // unilaterally.
             throw new InvalidOperationException(
-                $"Failed to convert solver value {value} to domain type {typeof(V).Name}.");
+                $"Failed to convert solver value {value} to domain type {typeof(V).Name}. " +
+                $"Only Flt64 and FltX are supported; Int64 and Flt32 fail at runtime (baseline parity).");
         }
 
         private Try ExtractShadowPrices(
-            IAbstractLinearMetaModel<Flt64> model,
+            LinearMetaModel<Flt64> model,
             MetaDualSolution shadowPrices) {
-            foreach (ICGPipeline<AbstractCsp1dShadowPriceArguments, IAbstractLinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>> pipeline in _cgPipelines) {
+            foreach (ICGPipeline<AbstractCsp1dShadowPriceArguments, LinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>> pipeline in _cgPipelines) {
                 Try ret = pipeline.Refresh(FrameworkShadowPriceMap, model, shadowPrices);
                 if (ret.IsFailed) {
                     return ret;

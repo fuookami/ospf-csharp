@@ -302,14 +302,20 @@ public static class PhysicalUnitOperators {
     public static PhysicalUnit Multiply(this PhysicalUnit lhs, PhysicalUnit rhs) {
         RequireLinear(lhs, "multiply");
         RequireLinear(rhs, "multiply");
-        return new AnonymousPhysicalUnit(lhs.Quantity * rhs.Quantity, new UnitConversionRule.Linear(lhs.Scale * rhs.Scale));
+        return new AnonymousPhysicalUnit(
+            lhs.Quantity * rhs.Quantity,
+            new UnitConversionRule.Linear(lhs.Scale * rhs.Scale),
+            domain: QuantityDomainOps.Multiply(lhs.Domain, rhs.Domain));
     }
 
     /// <summary>两个单位相除 / Divide two units.</summary>
     public static PhysicalUnit Divide(this PhysicalUnit lhs, PhysicalUnit rhs) {
         RequireLinear(lhs, "divide");
         RequireLinear(rhs, "divide");
-        return new AnonymousPhysicalUnit(lhs.Quantity / rhs.Quantity, new UnitConversionRule.Linear(lhs.Scale / rhs.Scale));
+        return new AnonymousPhysicalUnit(
+            lhs.Quantity / rhs.Quantity,
+            new UnitConversionRule.Linear(lhs.Scale / rhs.Scale),
+            domain: QuantityDomainOps.Divide(lhs.Domain, rhs.Domain));
     }
 
     /// <summary>单位的幂运算 / Power operation on unit.</summary>

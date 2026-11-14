@@ -55,5 +55,25 @@ public class TaskConflictConstraint<T, E, A> : IPipeline<object>
     bool IMetaConstraintGroup.Lazy => false;
 
     /// <inheritdoc/>
-    public Try Invoke(object model) => Results.Ok<Success>(Results.SuccessInstance);
+    /// <remarks>
+    /// 谓词版：对每个执行器、每对**无序**任务，谓词说"冲突"就加一行 `x[左, e] + x[右, e] &lt;= 1`。
+    ///
+    /// 省掉这一行**不会让任何解不可行**，只会让两个冲突的任务被排到同一台机器上——而目标函数通常照样给出一个
+    /// 看起来不错的成本。这是"约束缺失"里最难发现的一类：解合法、求解成功、计划不可执行。
+    ///
+    /// The predicate version: for every executor and every **unordered** task pair, a conflicting pair gets `x[left, e] + x[right, e] &lt;= 1`.
+    ///
+    /// Omitting this row **never makes a solution infeasible**; it merely lets two conflicting tasks land on one machine — and the objective usually still reports a
+    /// respectable cost. That is the hardest kind of missing constraint: a legal solution, a successful solve, an unexecutable plan.
+    /// </remarks>
+    public Try Invoke(object model) {
+        ArgumentNullException.ThrowIfNull(model);
+
+        if (model is not IAbstractLinearMetaModel<Flt64> linear) {
+            return Results.Failed<Success>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "任务冲突约束只能施加到线性元模型 / the conflict constraint can only be applied to a linear meta model"));
+        }
+        return TaskConflictRows.Add(linear, _executors, _tasks, _compilation, _conflict, _name);
+    }
 }

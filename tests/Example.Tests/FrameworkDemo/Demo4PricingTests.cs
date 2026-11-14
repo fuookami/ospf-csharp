@@ -296,7 +296,18 @@ public class Demo4PricingTests {
             new List<Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Task.Model.Aircraft>(),
             new List<FlightTask>());
 
-        var result = aggregation.AddColumns(0UL, Array.Empty<FlightTaskBunch>(), new object());
+        // 加列现在要**真的线性模型**，而且要**先注册**：`bunch_cost` 与三张聚合表由 `Register` 建出来，没有它们就无处累加。
+        // 这条判据因此成对：未注册 → 明确失败；注册后加空列表 → 成功且返回空。
+        // Column addition now needs a **real linear model** and a **prior registration**: `bunch_cost` and the three aggregate tables come from `Register`, and without them there is
+        // nowhere to accumulate. The criterion is therefore paired: unregistered → fails loudly; registered plus an empty list → succeeds and returns empty.
+        Fuookami.Ospf.Utils.Functional.Result<IReadOnlyList<FlightTaskBunch>, Fuookami.Ospf.Utils.Error.ErrorCode,
+            Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>> unregistered =
+            aggregation.AddColumns(0UL, Array.Empty<FlightTaskBunch>(), new Fuookami.Ospf.Core.Model.Mechanism.LinearMetaModel<Flt64>());
+        Assert.False(unregistered.IsOk);
+
+        Fuookami.Ospf.Core.Model.Mechanism.LinearMetaModel<Flt64> model = new();
+        Assert.True(aggregation.Register(model).IsOk);
+        var result = aggregation.AddColumns(0UL, Array.Empty<FlightTaskBunch>(), model);
         Assert.True(result.IsOk);
         var added = ((Fuookami.Ospf.Utils.Functional.Ok<IReadOnlyList<FlightTaskBunch>, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>)result).Value;
         Assert.Empty(added);

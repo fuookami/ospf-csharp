@@ -1,10 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>Fuookami.Ospf.Starters</RootNamespace>
-    <AssemblyName>Fuookami.Ospf.Starters</AssemblyName>
+    <RootNamespace>Fuookami.Ospf.Starters.Csp1d</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Starters.Csp1d</AssemblyName>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Framework.Csp1d/Framework.Csp1d.csproj" />
+    <ProjectReference Include="../../Framework/Framework.csproj" />
+    <ProjectReference Include="../../Core/Core.csproj" />
+    <ProjectReference Include="../../Math/Math.csproj" />
+    <ProjectReference Include="../../Utils/Utils.csproj" />
   </ItemGroup>
 </Project>

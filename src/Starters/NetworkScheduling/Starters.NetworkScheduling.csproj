@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Starters.NetworkScheduling</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Starters.NetworkScheduling</AssemblyName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Framework.NetworkScheduling/Framework.NetworkScheduling.csproj" />
+    <ProjectReference Include="../../Framework/Framework.csproj" />
+    <ProjectReference Include="../../Core/Core.csproj" />
+    <ProjectReference Include="../../Math/Math.csproj" />
+    <ProjectReference Include="../../Utils/Utils.csproj" />
+  </ItemGroup>
+</Project>

@@ -17,13 +17,15 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchGeneration;
 /// 批次生成域对象聚合。
 /// Aggregation of bunch generation domain objects.
 /// </summary>
-/// <param name="Graphs">路线图映射 / Route graphs.</param>
-/// <param name="Reverse">可反转任务对 / Reversible task pairs.</param>
-/// <param name="InitialFlightBunches">初始航班束 / Initial flight bunches.</param>
+/// <param name="graphs">路线图映射 / Route graphs.</param>
+/// <param name="reverse">可反转任务对 / Reversible task pairs.</param>
+/// <param name="initialFlightBunches">初始航班束 / Initial flight bunches.</param>
+/// <param name="routeGraphDiagnostics">路线图诊断，缺省为空表 / The route-graph diagnostics, empty when omitted.</param>
 public sealed class Aggregation(
     IReadOnlyDictionary<Aircraft, Graph> graphs,
     FlightTaskReverse reverse,
-    IReadOnlyList<FlightTaskBunch> initialFlightBunches
+    IReadOnlyList<FlightTaskBunch> initialFlightBunches,
+    IReadOnlyDictionary<Aircraft, RouteGraphDiagnostics>? routeGraphDiagnostics = null
 ) {
     /// <summary>路线图映射 / Route graphs.</summary>
     public IReadOnlyDictionary<Aircraft, Graph> Graphs { get; } = graphs;
@@ -33,6 +35,17 @@ public sealed class Aggregation(
 
     /// <summary>初始航班束 / Initial flight bunches.</summary>
     public IReadOnlyList<FlightTaskBunch> InitialFlightBunches { get; } = initialFlightBunches;
+
+    /// <summary>
+    /// 每架飞机的路线图诊断 / The route-graph diagnostics per aircraft.
+    /// </summary>
+    /// <remarks>
+    /// **缺省是空表，不是 `null`**：读它的人应当拿到"这轮没有诊断"，而不是空引用。基线也是 `emptyMap()`。
+    ///
+    /// **The default is an empty map, not `null`**: a reader should get "no diagnostics this round", not a null reference. The baseline uses `emptyMap()` too.
+    /// </remarks>
+    public IReadOnlyDictionary<Aircraft, RouteGraphDiagnostics> RouteGraphDiagnostics { get; } =
+        routeGraphDiagnostics ?? new Dictionary<Aircraft, RouteGraphDiagnostics>();
 }
 
 /// <summary>

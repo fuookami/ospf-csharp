@@ -1,6 +1,8 @@
 #nullable enable
 
 using Fuookami.Ospf.Core.Solver.Value;
+using Fuookami.Ospf.Core.Model.Intermediate;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
@@ -23,6 +25,20 @@ public abstract record SolverOutput;
 /// Unified solver output, containing common solving statistics.
 /// </summary>
 public abstract record UnifiedSolverOutput : SolverOutput {
+    /// <summary>初始化通用求解统计 / Initialize common solving statistics.</summary>
+    protected UnifiedSolverOutput(
+        ulong? iterations = null,
+        ulong? nodeCount = null,
+        Flt64? bestBound = null,
+        Flt64? mipGap = null,
+        TimeSpan? solveTime = null) {
+        Iterations = iterations;
+        NodeCount = nodeCount;
+        BestBound = bestBound;
+        MipGap = mipGap;
+        SolveTime = solveTime;
+    }
+
     /// <summary>迭代次数（可选）/ Iteration count (optional)</summary>
     public ulong? Iterations { get; init; }
     /// <summary>节点数（可选）/ Node count (optional)</summary>
@@ -70,7 +86,12 @@ public sealed record FeasibleSolverOutput<V>(
     V? ObjValueOrNull = null,
     V? PossibleBestObjValueOrNull = null,
     V? BestBoundValueOrNull = null)
-    : UnifiedSolverOutput
+    : UnifiedSolverOutput(
+        iterations: Iterations,
+        nodeCount: NodeCount,
+        bestBound: BestBound,
+        mipGap: MipGap,
+        solveTime: SolveTime)
       , ILinearSolverOutputMarker
       , IQuadraticSolverOutputMarker
     where V : struct, IRealNumber<V>, INumberField<V> {
@@ -118,38 +139,71 @@ public sealed record FeasibleSolverOutput<V>(
 /// <summary>
 /// 线性不可行求解器输出 / Linear infeasible solver output.
 /// </summary>
+/// <remarks>
+/// <see cref="Iis"/> 为旧接口保留的不可行子系统模型；<see cref="IisAvailable"/> 为 false 时它只是原模型快照，
+/// 此时结构化证据仍保留在 <see cref="Diagnostics"/> 中。
+/// <see cref="Iis"/> is the legacy-compatibility infeasible subsystem; when <see cref="IisAvailable"/> is false it is
+/// only an original-model snapshot and the structured evidence stays in <see cref="Diagnostics"/>.
+/// </remarks>
 #pragma warning disable CS8907 // Parameters shadow base UnifiedSolverOutput init properties by design
 public sealed record LinearInfeasibleSolverOutput(
     SolverStatus Status,
     ulong? Iterations = null,
     ulong? NodeCount = null,
-    TimeSpan? SolveTime = null)
-    : UnifiedSolverOutput
+    TimeSpan? SolveTime = null,
+    BasicLinearTriadModelView? Iis = null,
+    bool IisAvailable = false,
+    SolveDiagnostics<Flt64>? Diagnostics = null)
+    : UnifiedSolverOutput(
+        iterations: Iterations,
+        nodeCount: NodeCount,
+        solveTime: SolveTime)
       , ILinearSolverOutputMarker;
 #pragma warning restore CS8907
 
 /// <summary>
 /// 二次不可行求解器输出 / Quadratic infeasible solver output.
 /// </summary>
+/// <remarks>
+/// <see cref="Iis"/> 为旧接口保留的不可行子系统模型；<see cref="IisAvailable"/> 为 false 时它只是原模型快照，
+/// 此时结构化证据仍保留在 <see cref="Diagnostics"/> 中。
+/// <see cref="Iis"/> is the legacy-compatibility infeasible subsystem; when <see cref="IisAvailable"/> is false it is
+/// only an original-model snapshot and the structured evidence stays in <see cref="Diagnostics"/>.
+/// </remarks>
 #pragma warning disable CS8907 // Parameters shadow base UnifiedSolverOutput init properties by design
 public sealed record QuadraticInfeasibleSolverOutput(
     SolverStatus Status,
     ulong? Iterations = null,
     ulong? NodeCount = null,
-    TimeSpan? SolveTime = null)
-    : UnifiedSolverOutput
+    TimeSpan? SolveTime = null,
+    BasicQuadraticTetradModelView? Iis = null,
+    bool IisAvailable = false,
+    SolveDiagnostics<Flt64>? Diagnostics = null)
+    : UnifiedSolverOutput(
+        iterations: Iterations,
+        nodeCount: NodeCount,
+        solveTime: SolveTime)
       , IQuadraticSolverOutputMarker;
 #pragma warning restore CS8907
 
 // ===== SolverOutputWithIIS =====
 
+/// <summary>包含原始求解输出的包装 / Wrapper containing an original solver output.</summary>
+/// <remarks>输出应稳定且不能形成循环。 / The output must be stable and must not form cycles.</remarks>
+public interface ISolverOutputWrapper {
+    /// <summary>被包装的输出 / Wrapped output.</summary>
+    SolverOutput Output { get; }
+}
+
 /// <summary>
 /// 带 IIS 的求解器输出 / Solver output with IIS.
 /// </summary>
 /// <typeparam name="IIS">IIS 类型 / IIS type</typeparam>
+/// <param name="Output">原始输出 / Original output.</param>
+/// <param name="Iis">IIS 证据 / IIS evidence.</param>
 public sealed record SolverOutputWithIIS<IIS>(
     SolverOutput Output,
-    IIS? Iis);
+    IIS? Iis) : SolverOutput, ISolverOutputWrapper;
 
 // ===== Extension methods =====
 
@@ -161,12 +215,16 @@ public static class SolverOutputExtensions {
     public static SolverOutputWithIIS<IIS> WithIIS<IIS>(this SolverOutput output, IIS iis) =>
         new(output, iis);
 
-    /// <summary>移除 IIS / Remove IIS</summary>
+    /// <summary>包装输出而不附加 IIS / Wrap an output without adding IIS.</summary>
+    /// <remarks>不移除原始输出已有的证据，不能用于脱敏。 / Existing evidence in the original output is not removed; this is not a redaction operation.</remarks>
+    /// <param name="output">原始输出 / Original output.</param>
+    /// <returns>不附加 IIS 的包装 / Wrapper without additional IIS.</returns>
     public static SolverOutputWithoutIIS WithoutIIS(this SolverOutput output) =>
         new(output);
 }
 
 /// <summary>
-/// 无 IIS 的求解器输出包装 / Solver output wrapper without IIS.
+/// 不附加 IIS 的求解器输出包装 / Solver output wrapper without additional IIS.
 /// </summary>
-public sealed record SolverOutputWithoutIIS(SolverOutput Output);
+/// <param name="Output">原始输出 / Original output.</param>
+public sealed record SolverOutputWithoutIIS(SolverOutput Output) : SolverOutput, ISolverOutputWrapper;

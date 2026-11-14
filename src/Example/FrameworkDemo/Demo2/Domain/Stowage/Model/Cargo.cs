@@ -1,5 +1,6 @@
 #nullable enable
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Functional;
@@ -21,7 +22,7 @@ public enum CargoCode
 /// </summary>
 public sealed class CargoType
 {
-    private static readonly Dictionary<string, CargoType> Cache = new();
+    private static readonly ConcurrentDictionary<string, CargoType> Cache = new();
 
     /// <summary>货物代码 / Cargo code</summary>
     public CargoCode? Code { get; }
@@ -36,16 +37,14 @@ public sealed class CargoType
 
     /// <summary>从代码获取货物类型 / Get cargo type from code</summary>
     public static CargoType FromCode(CargoCode code) =>
-        Cache.TryGetValue(code.ToString(), out var ct) ? ct :
-        Cache[code.ToString()] = new CargoType(code, code.ToString());
+        Cache.GetOrAdd(code.ToString(), key => new CargoType(code, key));
 
     /// <summary>从名称获取货物类型 / Get cargo type from name</summary>
-    public static CargoType FromName(string name)
-    {
-        if (Cache.TryGetValue(name, out var ct)) return ct;
-        var code = System.Enum.TryParse<CargoCode>(name, out var parsed) ? parsed : (CargoCode?)null;
-        return Cache[name] = new CargoType(code, name);
-    }
+    public static CargoType FromName(string name) =>
+        Cache.GetOrAdd(name, key => {
+            CargoCode? code = System.Enum.TryParse<CargoCode>(key, out CargoCode parsed) ? parsed : (CargoCode?)null;
+            return new CargoType(code, key);
+        });
 }
 
 /// <summary>

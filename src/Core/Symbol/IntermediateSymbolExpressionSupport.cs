@@ -25,6 +25,7 @@ namespace Fuookami.Ospf.Core.Symbol;
 /// </summary>
 public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     internal MutableLinearPolynomial<Flt64> _utilsPolynomial;
+    private readonly UInt64 _identifier = IdentifierGenerator.Gen();
 
     /// <summary>组标识符（由 SymbolCombination 设置）/ Group identifier (set by SymbolCombination).</summary>
     internal UInt64? GroupIdentifier { get; set; }
@@ -32,7 +33,7 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     internal int? IndexInGroup { get; set; }
 
     /// <inheritdoc/>
-    public UInt64 Identifier => GroupIdentifier ?? IdentifierGenerator.Gen();
+    public UInt64 Identifier => GroupIdentifier ?? _identifier;
     /// <inheritdoc/>
     public int Index => IndexInGroup ?? 0;
 
@@ -70,7 +71,12 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     }
 
     /// <inheritdoc/>
-    public ExpressionRange<Flt64> Range => ExpressionRange<Flt64>.Create();
+    /// <remarks>
+    /// **实例持有而不是每次新建**：早先是 {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create(){/code}，每次访问都返回一个全新的空范围，于是 {code}symbol.Range.SetRange(...){/code} 设完就丢——基线的 `loadAmount[j].range.leq(mla)` 在 C# 里**根本无法表达**，而写上去的那行代码看起来完全正常。
+    /// **Instance-held rather than freshly created**: this used to be {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create(){/code}, returning a brand-new empty range on every access, so
+    /// {code}symbol.Range.SetRange(...){/code} was discarded immediately — the baseline's `loadAmount[j].range.leq(mla)` was **inexpressible** in C#, while the line that tried looked fine.
+    /// </remarks>
+    public ExpressionRange<Flt64> Range { get; } = ExpressionRange<Flt64>.Create();
 
     /// <inheritdoc/>
     public bool Discrete => false;
@@ -105,7 +111,12 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     public Flt64? Prepare(IReadOnlyDictionary<ISymbol, Flt64>? values, IAbstractTokenTable<Flt64> tokenTable, IFlt64ValueConverter<Flt64> converter) {
         Flt64 ret = _utilsPolynomial.Constant;
         foreach (LinearMonomial<Flt64> m in _utilsPolynomial.Monomials) {
-            Flt64? symVal = EvaluateSymbol(m.Symbol, values, tokenTable, false);
+            Flt64? symVal = EvaluateSymbol(
+                symbol: m.Symbol,
+                values: values,
+                tokenTable: values is null || values.Count == 0 ? tokenTable : null,
+                zeroIfNone: false
+            );
             if (symVal is null) {
                 return null;
             }
@@ -233,11 +244,12 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
 /// </summary>
 public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt64> {
     internal MutableQuadraticPolynomial<Flt64> _utilsPolynomial;
+    private readonly UInt64 _identifier = IdentifierGenerator.Gen();
 
     internal UInt64? GroupIdentifier { get; set; }
     internal int? IndexInGroup { get; set; }
 
-    public UInt64 Identifier => GroupIdentifier ?? IdentifierGenerator.Gen();
+    public UInt64 Identifier => GroupIdentifier ?? _identifier;
     public int Index => IndexInGroup ?? 0;
     public Category Category { get; }
     public Category OperationCategory => QuadraticCategory.Instance;
@@ -249,12 +261,12 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
     public QuadraticPolynomial<Flt64> Polynomial => _utilsPolynomial.ToQuadraticPolynomial();
 
     internal QuadraticFlattenData<Flt64> FlattenedMonomials =>
-        new(_utilsPolynomial.Monomials, _utilsPolynomial.Constant);
+        new(Polynomial.Monomials, _utilsPolynomial.Constant);
 
     public IReadOnlySet<IIntermediateSymbol> Dependencies {
         get {
             var deps = new HashSet<IIntermediateSymbol>();
-            foreach (QuadraticMonomial<Flt64> m in _utilsPolynomial.Monomials) {
+            foreach (QuadraticMonomial<Flt64> m in Polynomial.Monomials) {
                 if (m.Symbol1 is IIntermediateSymbol s1) {
                     deps.Add(s1);
                 }
@@ -267,7 +279,11 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
         }
     }
 
-    public ExpressionRange<Flt64> Range => ExpressionRange<Flt64>.Create();
+    /// <remarks>
+    /// 同 <see cref="LinearExpressionSymbol"/>：实例持有，否则对该符号设范围会被静默丢弃。
+    /// Same as <see cref="LinearExpressionSymbol"/>: instance-held, or a range set on this symbol is silently discarded.
+    /// </remarks>
+    public ExpressionRange<Flt64> Range { get; } = ExpressionRange<Flt64>.Create();
     public bool Discrete => false;
     public bool Cached => false;
 
@@ -294,14 +310,24 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
 
     public Flt64? Prepare(IReadOnlyDictionary<ISymbol, Flt64>? values, IAbstractTokenTable<Flt64> tokenTable, IFlt64ValueConverter<Flt64> converter) {
         Flt64 ret = _utilsPolynomial.Constant;
-        foreach (QuadraticMonomial<Flt64> m in _utilsPolynomial.Monomials) {
-            Flt64? s1Val = EvaluateSymbol(m.Symbol1, values, tokenTable, false);
+        foreach (QuadraticMonomial<Flt64> m in Polynomial.Monomials) {
+            Flt64? s1Val = EvaluateSymbol(
+                symbol: m.Symbol1,
+                values: values,
+                tokenTable: values is null || values.Count == 0 ? tokenTable : null,
+                zeroIfNone: false
+            );
             if (s1Val is null) {
                 return null;
             }
 
             Flt64? termVal = m.Symbol2 is not null
-                ? (EvaluateSymbol(m.Symbol2!, values, tokenTable, false) is { } s2 ? s1Val.Value * s2 : (Flt64?)null)
+                ? (EvaluateSymbol(
+                    symbol: m.Symbol2,
+                    values: values,
+                    tokenTable: values is null || values.Count == 0 ? tokenTable : null,
+                    zeroIfNone: false
+                ) is { } s2 ? s1Val.Value * s2 : (Flt64?)null)
                 : s1Val;
             if (termVal is null) {
                 return null;
@@ -321,7 +347,7 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
 
     public Flt64? Evaluate(IAbstractTokenTable<Flt64> tokenTable, IFlt64ValueConverter<Flt64> converter, bool zeroIfNone = false) {
         Flt64 ret = _utilsPolynomial.Constant;
-        foreach (QuadraticMonomial<Flt64> m in _utilsPolynomial.Monomials) {
+        foreach (QuadraticMonomial<Flt64> m in Polynomial.Monomials) {
             Flt64? s1Val = EvaluateSymbol(m.Symbol1, null, tokenTable, zeroIfNone);
             if (s1Val is null && !zeroIfNone) {
                 return null;
@@ -347,7 +373,7 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
 
     public Flt64? Evaluate(IReadOnlyList<Flt64> results, IAbstractTokenTable<Flt64> tokenTable, IFlt64ValueConverter<Flt64> converter, bool zeroIfNone = false) {
         Flt64 ret = _utilsPolynomial.Constant;
-        foreach (QuadraticMonomial<Flt64> m in _utilsPolynomial.Monomials) {
+        foreach (QuadraticMonomial<Flt64> m in Polynomial.Monomials) {
             Flt64? s1Val = EvaluateSymbolFromResults(m.Symbol1, results, tokenTable, zeroIfNone);
             if (s1Val is null && !zeroIfNone) {
                 return null;
@@ -377,7 +403,7 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
         }
 
         Flt64 ret = _utilsPolynomial.Constant;
-        foreach (QuadraticMonomial<Flt64> m in _utilsPolynomial.Monomials) {
+        foreach (QuadraticMonomial<Flt64> m in Polynomial.Monomials) {
             Flt64? s1Val = EvaluateSymbol(m.Symbol1, values, tokenTable, zeroIfNone);
             if (s1Val is null && !zeroIfNone) {
                 return null;
@@ -405,7 +431,7 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
 
     public string ToRawString(UInt64 unfold) {
         if (unfold != UInt64.Zero) {
-            IEnumerable<string> parts = _utilsPolynomial.Monomials
+            IEnumerable<string> parts = Polynomial.Monomials
                 .Where(m => m.Coefficient != Flt64.Zero)
                 .Select(m => {
                     string s1Str = m.Symbol1 switch {

@@ -13,6 +13,7 @@ using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 using Fuookami.Ospf.MultiArray;
+using Fuookami.Ospf.Quantities.Quantity;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 using System;
@@ -38,6 +39,7 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
     private readonly UIntVariable1 _planVars;
     private readonly List<CuttingPlan<V>> _allPlans;
     private readonly Dictionary<CuttingPlanCanonicalKey, int> _planKeyIndex;
+    private readonly HashSet<string> _planIds;
     private readonly List<List<IVariableItem>> _batchGroups = new();
     private readonly List<IVariableItem> _additionalVars = new();
 
@@ -120,9 +122,17 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
 
         // 构建 canonical key 索引 / Build canonical key index
         _planKeyIndex = new Dictionary<CuttingPlanCanonicalKey, int>();
+        // **基线按 `id` 与 `canonicalKey` **双键**去重**（`ProduceAggregation.kt:56`：
+        // `candidate.id !in registeredIds && candidate.canonicalKey() !in registeredKeys`）。
+        // C# 原本**只有键索引**，于是"同 id 不同内容"的两条方案会被同时接受。
+        //
+        // **The baseline dedupes by **two keys**, id and canonicalKey** (`ProduceAggregation.kt:56`). C# originally had **only the key index**, so two plans sharing an id but
+        // differing in content would both be accepted.
+        _planIds = new HashSet<string>();
         for (int i = 0; i < cuttingPlans.Count; i++) {
             var key = CuttingPlanCanonicalKey.From(cuttingPlans[i]);
             _planKeyIndex[key] = i;
+            _planIds.Add(cuttingPlans[i].Id);
         }
 
         // 创建需求贡献中间符号
@@ -165,8 +175,96 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
         }
         MachineCapacityQuantity = machineCapacitySymbols;
 
+        // **初始方案也必须填充中间符号。**
+        //
+        // 基线在 `register` 里先建 `PlanBatchTerms`，再用它填 `demandQuantity` /
+        // `materialQuantity` / `machineBatchQuantity` / `machineCapacityQuantity`；
+        // C# 原本**只建空符号**，于是第一轮 LP 的需求/物料约束**左边恒为零**——
+        // 求解器会认为"什么都不做就已满足全部需求"。
+        //
+        // **Initial plans must populate the intermediate symbols too.** The baseline builds `PlanBatchTerms` in `register` and fills `demandQuantity` /
+        // `materialQuantity` / `machineBatchQuantity` / `machineCapacityQuantity` from it; C# originally **only created empty symbols**, so the first LP's demand and
+        // material constraints had **an identically zero left side** — the solver would believe "doing nothing already satisfies every demand".
+        PopulateInitialSymbols(cuttingPlans, demands, materials, machines);
+
         MaterialUsage = Array.Empty<MaterialUsage<V>>();
         MachineUsage = Array.Empty<MachineCapacityUsage<V>>();
+    }
+
+    /// <summary>
+    /// 用初始方案填充需求/物料/设备中间符号 / Populate the demand, material and machine symbols from the initial plans.
+    /// </summary>
+    /// <remarks>
+    /// 与基线 `PlanBatchTerms` 的 `init` 逐条对应：
+    ///
+    /// - 每条方案对**它自己的物料**贡献一个系数为 `1` 的单项式；
+    /// - 每条方案对**它自己的设备**贡献一个系数为 `1` 的批次单项式；
+    /// - 需求贡献**只计入 `demands` 里出现过的（产品 id, 单位）组合**，且**同一方案内同一组合只计一次**；
+    /// - 设备产能**只在单位一致且消耗量严格大于零时**计入。
+    ///
+    /// 后面两条不是优化，是**基线写明的过滤条件**：不滤的话，一条以厘米计的贡献会被
+    /// 当成毫米计入（系数差 10 倍），而零消耗的单项式会让产能约束失去意义。
+    ///
+    /// Mirrors the baseline `PlanBatchTerms.init` clause by clause: one coefficient-1 monomial per plan for **its own material**; one batch monomial for **its own machine**;
+    /// demand contributions **only for (product id, unit) pairs present in `demands`, and only once per pair within a plan**; machine capacity **only when the unit matches
+    /// and the consumption is strictly positive**. The last two are not optimisations but **explicit baseline filters**: without them a centimetre contribution would count as
+    /// millimetres (a factor of 10) and zero-consumption monomials would make the capacity constraint meaningless.
+    /// </remarks>
+    private void PopulateInitialSymbols(
+        IReadOnlyList<CuttingPlan<V>> cuttingPlans,
+        IReadOnlyList<ProductDemand<V>> demands,
+        IReadOnlyList<Material<V>> materials,
+        IReadOnlyList<Machine<V>> machines) {
+        var wantedDemands = new HashSet<(string ProductId, object Unit)>();
+        for (int i = 0; i < demands.Count; i++) {
+            wantedDemands.Add((demands[i].Product.Id, demands[i].Quantity.Unit));
+        }
+
+        for (int planIndex = 0; planIndex < cuttingPlans.Count; planIndex++) {
+            CuttingPlan<V> plan = cuttingPlans[planIndex];
+            IVariableItem variable = _planVars[planIndex];
+
+            for (int matIndex = 0; matIndex < materials.Count; matIndex++) {
+                if (plan.Material.Id == materials[matIndex].Id) {
+                    ((LinearExpressionSymbol)MaterialQuantity[matIndex]).AsMutable()
+                        .AddMonomial(new LinearMonomial<Flt64>(Flt64.One, variable));
+                }
+            }
+
+            for (int machineIndex = 0; machineIndex < machines.Count; machineIndex++) {
+                if (plan.MachineId == machines[machineIndex].Id) {
+                    ((LinearExpressionSymbol)MachineBatchQuantity[machineIndex]).AsMutable()
+                        .AddMonomial(new LinearMonomial<Flt64>(Flt64.One, variable));
+                    if (plan.CapacityConsumption is not null) {
+                        Quantity<V> consumption = plan.CapacityConsumption;
+                        Quantity<V>? capacity = machines[machineIndex].Capacity;
+                        if (capacity is not null
+                            && consumption.Unit == capacity.Unit
+                            && consumption.Value.ToFlt64() > Flt64.Zero) {
+                            ((LinearExpressionSymbol)MachineCapacityQuantity[machineIndex]).AsMutable()
+                                .AddMonomial(new LinearMonomial<Flt64>(consumption.Value.ToFlt64(), variable));
+                        }
+                    }
+                }
+            }
+
+            var seen = new HashSet<(string ProductId, object Unit)>();
+            foreach (CuttingPlanDemandContribution<V> contribution in plan.DemandContributions) {
+                (string, object) key = (contribution.Product.Id, contribution.Quantity.Unit);
+                if (wantedDemands.Contains(key) && seen.Add(key)) {
+                    for (int demandIndex = 0; demandIndex < demands.Count; demandIndex++) {
+                        if (demands[demandIndex].Product.Id == contribution.Product.Id
+                            && demands[demandIndex].Quantity.Unit == contribution.Quantity.Unit) {
+                            ((LinearExpressionSymbol)DemandQuantity[demandIndex]).AsMutable()
+                                .AddMonomial(new LinearMonomial<Flt64>(
+                                    contribution.Quantity.Value.ToFlt64(),
+                                    variable));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -250,7 +348,9 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
         var uniquePlans = new List<CuttingPlan<V>>();
         foreach (CuttingPlan<V> plan in newPlans) {
             var key = CuttingPlanCanonicalKey.From(plan);
-            if (!_planKeyIndex.ContainsKey(key)) {
+            // **两个条件都要查**：基线是 `id 不在 AND 键不在`。
+            // **Both conditions must be checked**: the baseline is `id not in AND key not in`.
+            if (!_planIds.Contains(plan.Id) && !_planKeyIndex.ContainsKey(key)) {
                 uniquePlans.Add(plan);
             }
         }
@@ -268,6 +368,7 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
 
             var key = CuttingPlanCanonicalKey.From(plan);
             _planKeyIndex[key] = _allPlans.Count;
+            _planIds.Add(plan.Id);
             _allPlans.Add(plan);
         }
 

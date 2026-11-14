@@ -7,6 +7,7 @@ using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Iis;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
@@ -14,78 +15,85 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using GurobiCallback = Fuookami.Ospf.Core.Plugin.Gurobi.GurobiQuadraticSolverCallBack;
+using GurobiIdentity = Fuookami.Ospf.Core.Plugin.Gurobi.GurobiBackendIdentity;
+using GurobiSolver = Fuookami.Ospf.Core.Plugin.Gurobi.GurobiQuadraticSolver;
+
 namespace Fuookami.Ospf.Core.Plugin.Gurobi11;
 
 /// <summary>
-/// Gurobi 11 二次求解器（桩实现） / Gurobi 11 quadratic solver (structural stub).
-/// 运行时需加载 Gurobi 11 托管 DLL，否则返回 OREngineEnvironmentLost。
-/// Requires Gurobi 11 managed DLL at runtime; returns OREngineEnvironmentLost otherwise.
+/// Gurobi 11 二次求解器兼容门面。
+/// Gurobi 11 quadratic solver compatibility facade.
 /// </summary>
 public sealed class Gurobi11QuadraticSolver : IQuadraticSolver {
+    private readonly GurobiSolver _solver;
+
     /// <summary>求解器名称 / Solver name.</summary>
     public string Name => "gurobi11";
 
     /// <summary>求解器配置 / Solver configuration.</summary>
-    public SolverConfig Config { get; }
+    public SolverConfig Config => _solver.Config;
 
-    public Gurobi11QuadraticSolver(SolverConfig? config = null) {
-        Config = config ?? new VendorSolverConfig();
+    /// <summary>创建 Gurobi 11 二次求解器 / Create a Gurobi 11 quadratic solver.</summary>
+    public Gurobi11QuadraticSolver(
+        SolverConfig? config = null,
+        GurobiCallback? callBack = null) {
+        _solver = new GurobiSolver(config, callBack, GurobiIdentity.Gurobi11);
     }
 
-    /// <summary>
-    /// 求解二次模型 / Solve quadratic model.
-    /// </summary>
+    /// <inheritdoc/>
     public Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default) {
-        return Task.FromResult<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>>(
-            new Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
-    }
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeAsync(model, solvingStatusCallBack, cancellationToken);
 
-    /// <summary>
-    /// 求解二次模型并启用 IIS 诊断 / Solve quadratic model with IIS diagnostics.
-    /// </summary>
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeReportAsync(model, solvingStatusCallBack, cancellationToken);
+
+    /// <inheritdoc/>
     public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
         IQuadraticTetradModelView model,
         SolvingStatusCallBack? solvingStatusCallBack,
         IisConfig? iisConfig,
-        CancellationToken cancellationToken = default) {
-        return Task.FromResult<Result<SolverOutput, ErrorCode, Error<ErrorCode>>>(
-            new Failed<SolverOutput, ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
-    }
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeAsync(model, solvingStatusCallBack, iisConfig, cancellationToken);
 
-    /// <summary>
-    /// 求解二次模型获取多个解 / Solve quadratic model for multiple solutions.
-    /// </summary>
+    /// <inheritdoc/>
     public Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
         IQuadraticTetradModelView model,
         ulong solutionAmount,
         SolvingStatusCallBack? solvingStatusCallBack = null,
-        CancellationToken cancellationToken = default) {
-        return Task.FromResult<Result<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>>>(
-            new Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
-    }
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeAsync(model, solutionAmount, solvingStatusCallBack, cancellationToken);
 
-    /// <summary>
-    /// 转储二次机制模型为四元组模型 / Dump quadratic mechanism model to tetrad model.
-    /// </summary>
-    public Task<QuadraticTetradModel> DumpAsync(QuadraticMechanismModel<Flt64> model, CancellationToken cancellationToken = default)
-        => throw new System.NotSupportedException("Dump not supported by Gurobi11QuadraticSolver");
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        _solver.InvokeReportAsync(model, solutionAmount, solvingStatusCallBack, cancellationToken);
 
-    /// <summary>
-    /// 转储二次元模型为机制模型 / Dump quadratic meta model to mechanism model.
-    /// </summary>
+    /// <inheritdoc/>
+    public Task<Result<QuadraticTetradModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        QuadraticMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default) =>
+        _solver.DumpAsync(model, cancellationToken);
+
+    /// <inheritdoc/>
     public Task<Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
         QuadraticMetaModel<Flt64> model,
         RegistrationStatusCallBack? registrationStatusCallBack,
         MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
-        CancellationToken cancellationToken = default) {
-        return Task.FromResult<Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>>(
-            new Failed<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>(
-                new Err<ErrorCode>(ErrorCode.OREngineEnvironmentLost, "Gurobi11 managed DLL not loaded at runtime")));
-    }
+        CancellationToken cancellationToken = default) =>
+        _solver.DumpAsync(
+            model,
+            registrationStatusCallBack,
+            dumpingStatusCallBack,
+            cancellationToken);
 }

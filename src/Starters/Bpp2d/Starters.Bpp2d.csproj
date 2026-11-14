@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Starters.Bpp2d</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Starters.Bpp2d</AssemblyName>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../Framework.Bpp2d/Framework.Bpp2d.csproj" />
+    <ProjectReference Include="../../Framework/Framework.csproj" />
+    <ProjectReference Include="../../Core/Core.csproj" />
+    <ProjectReference Include="../../Math/Math.csproj" />
+    <ProjectReference Include="../../Utils/Utils.csproj" />
+  </ItemGroup>
+</Project>

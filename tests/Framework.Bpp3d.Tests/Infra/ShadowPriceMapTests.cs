@@ -33,6 +33,10 @@ public class ShadowPriceMapTests {
         Result<Success, ErrorCode, Error<ErrorCode>> result = map.Register(null!, new Flt64(1.0));
 
         result.IsFailed.Should().BeTrue();
+        // **按名字拒绝**（B844）：同一个映射里 `DataNotFound` 也能让 `IsFailed` 变绿，只断言"失败"等于什么都没断言。
+        // **Rejected by name** (B844): `DataNotFound` would also satisfy a bare `IsFailed`, so asserting only "failed" asserts nothing.
+        ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(ErrorCode.IllegalArgument);
+        ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Message.Should().Contain("null");
     }
 
     [Fact]
@@ -54,6 +58,7 @@ public class ShadowPriceMapTests {
         Result<Flt64, ErrorCode, Error<ErrorCode>> result = map.PriceOf(null!);
 
         result.IsFailed.Should().BeTrue();
+        ((Failed<Flt64, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(ErrorCode.IllegalArgument);
     }
 
     [Fact]
@@ -64,6 +69,9 @@ public class ShadowPriceMapTests {
         Result<Flt64, ErrorCode, Error<ErrorCode>> result = map.PriceOf(key);
 
         result.IsFailed.Should().BeTrue();
+        // **这个键不是 null，所以这里必须是 `DataNotFound`**（B844）：换成 `IllegalArgument` 说明守卫顺序被改了。
+        // **The key is not null, so this must be `DataNotFound`** (B844): an `IllegalArgument` here means the guard order changed.
+        ((Failed<Flt64, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(ErrorCode.DataNotFound);
     }
 
     [Fact]
@@ -104,6 +112,7 @@ public class ShadowPriceMapTests {
         Result<Success, ErrorCode, Error<ErrorCode>> result = map.RegisterRange(entries);
 
         result.IsFailed.Should().BeTrue();
+        ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(ErrorCode.IllegalArgument);
     }
 
     [Fact]

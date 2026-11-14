@@ -36,6 +36,9 @@ public static class UuidV7 {
     /// <summary>生成 UUIDv7 Guid / Generate UUIDv7 Guid.</summary>
     public static Guid GenerateGuid() {
         byte[] bytes = Generate();
-        return new Guid(bytes);
+        return new Guid(bytes, bigEndian: true);
     }
+
+    /// <summary>同步生成 UUIDv7 / Generate UUIDv7 synchronously.</summary>
+    public static byte[] GenerateSync() => Generate();
 }

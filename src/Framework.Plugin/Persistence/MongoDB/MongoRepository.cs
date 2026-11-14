@@ -1,5 +1,7 @@
 #nullable enable
 
+using Fuookami.Ospf.Framework.Persistence.Expression;
+using Fuookami.Ospf.Math.Symbol.Expression;
 using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 using MongoDB.Bson;
@@ -51,6 +53,69 @@ public abstract class MongoRepository<T> : IRepository<T> where T : class {
         catch (Exception ex) {
             return new Failed<T?, ErrorCode, Error<ErrorCode>>(
                 ErrorCode.DataNotFound, $"MongoDB FindById failed: {ex.Message}");
+        }
+    }
+
+    /// <summary>**按布尔表达式查询** / Query by a boolean expression.</summary>
+    /// <remarks>
+    /// **在此之前，这个仓库只会按 `_id` 查**：`FindByIdAsync` 用 `Filter.Eq("_id", …)`，
+    /// `FindAllAsync` 用 `Filter.Empty`。**四个 Mongo 翻译器（B1118—B1121，共 38 条判据）没有被任何生产路径调用过**——
+    /// **而"翻译器对了"与"查询能按条件跑"是两件事。**
+    ///
+    /// **Before this, the repository only queried by `_id`**: `FindByIdAsync` uses `Filter.Eq("_id", …)` and
+    /// `FindAllAsync` uses `Filter.Empty`. **The four Mongo translators (B1118—B1121, 38 criteria) were called by no
+    /// production path** — **and "the translator is right" is not the same as "a filtered query can run".**
+    /// </remarks>
+    /// <param name="predicate">布尔表达式 / Boolean expression.</param>
+    /// <param name="sortBy">排序，可选 / Sort order, optional.</param>
+    /// <param name="resolveFieldName">字段名解析器 / Field-name resolver.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    public virtual async Task<Result<IReadOnlyList<T>, ErrorCode, Error<ErrorCode>>> FindAsync(
+        BooleanExpression predicate,
+        SortBy? sortBy = null,
+        Func<string, string?>? resolveFieldName = null,
+        CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        // **翻译失败要原样返回失败，不能退化成"查全部"**：
+        // **退化成查全部会让一个写错的谓词返回整个集合，而调用方以为条件生效了。**
+        //
+        // **A failed translation is returned as a failure, never degraded to "fetch everything"**:
+        // **degrading returns the whole collection for a mistyped predicate while the caller believes it filtered.**
+        Result<BsonDocument?, ErrorCode, Error<ErrorCode>> translated =
+            MongoBooleanTranslator.Translate(predicate, resolveFieldName);
+        if (!translated.IsOk) {
+            return new Failed<IReadOnlyList<T>, ErrorCode, Error<ErrorCode>>(
+                ((Failed<BsonDocument?, ErrorCode, Error<ErrorCode>>)translated).Error);
+        }
+
+        Result<BsonDocument?, ErrorCode, Error<ErrorCode>> order =
+            MongoOrderByTranslator.Translate(sortBy, resolveFieldName);
+        if (!order.IsOk) {
+            return new Failed<IReadOnlyList<T>, ErrorCode, Error<ErrorCode>>(
+                ((Failed<BsonDocument?, ErrorCode, Error<ErrorCode>>)order).Error);
+        }
+
+        try {
+            FilterDefinition<T> filter = translated.Value is { ElementCount: > 0 }
+                ? new BsonDocumentFilterDefinition<T>(translated.Value)
+                : Builders<T>.Filter.Empty;
+            // **没有排序时不调 `Sort`**：`Builders<T>.Sort` 没有 `Empty`，
+            // **而传一个空 `BsonDocument` 会让 Mongo 收到 `$sort: {}`**——那是合法但无意义的阶段。
+            //
+            // **Skip `Sort` when there is no order**: `Builders<T>.Sort` has no `Empty`,
+            // **and passing an empty `BsonDocument` sends Mongo a `$sort: {}`** — legal but meaningless.
+            IFindFluent<T, T> query = Collection.Find(filter);
+            if (order.Value is not null) {
+                query = query.Sort(new BsonDocumentSortDefinition<T>(order.Value));
+            }
+
+            List<T> results = await query.ToListAsync(cancellationToken);
+            return Results.Ok<IReadOnlyList<T>>(results);
+        }
+        catch (Exception ex) {
+            return new Failed<IReadOnlyList<T>, ErrorCode, Error<ErrorCode>>(
+                ErrorCode.ApplicationFailed, $"MongoDB Find failed: {ex.Message}");
         }
     }
 

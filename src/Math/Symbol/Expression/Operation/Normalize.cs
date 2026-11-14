@@ -298,28 +298,58 @@ public static class StructuralKeyExtensions {
         System.Type type = expr.GetType();
         if (type.IsGenericType) {
             System.Type genDef = type.GetGenericTypeDefinition();
+            System.Type valueType = type.GetGenericArguments()[0];
             if (genDef == typeof(Comparison<>)) {
                 object op = type.GetProperty("Operator")!.GetValue(expr)!;
-                var left = (ScalarExpression<object?>)type.GetProperty("Left")!.GetValue(expr)!;
-                var right = (ScalarExpression<object?>)type.GetProperty("Right")!.GetValue(expr)!;
-                return $"Cmp:{op}:{left.StructuralKey()}:{right.StructuralKey()}";
+                object left = type.GetProperty("Left")!.GetValue(expr)!;
+                object right = type.GetProperty("Right")!.GetValue(expr)!;
+                return $"Cmp:{op}:{ScalarKey(left, valueType)}:{ScalarKey(right, valueType)}";
             }
             if (genDef == typeof(InExpression<>)) {
                 bool negated = (bool)type.GetProperty("Negated")!.GetValue(expr)!;
-                var value = (ScalarExpression<object?>)type.GetProperty("Value")!.GetValue(expr)!;
+                object value = type.GetProperty("Value")!.GetValue(expr)!;
                 var candidates = (System.Collections.IEnumerable)type.GetProperty("Candidates")!.GetValue(expr)!;
-                IEnumerable<string> cands = candidates.Cast<object>().Select(x => ((ScalarExpression<object?>)x).StructuralKey());
-                return $"In:{negated}:{value.StructuralKey()}:{string.Join(",", cands)}";
+                IEnumerable<string> cands = candidates.Cast<object>()
+                    .Select(x => ScalarKey(x, valueType));
+                return $"In:{negated}:{ScalarKey(value, valueType)}:{string.Join(",", cands)}";
             }
             if (genDef == typeof(PatternMatch<>)) {
                 object mode = type.GetProperty("Mode")!.GetValue(expr)!;
                 bool negated = (bool)type.GetProperty("Negated")!.GetValue(expr)!;
-                var value = (ScalarExpression<object?>)type.GetProperty("Value")!.GetValue(expr)!;
-                var pattern = (ScalarExpression<object?>)type.GetProperty("Pattern")!.GetValue(expr)!;
-                return $"Match:{mode}:{negated}:{value.StructuralKey()}:{pattern.StructuralKey()}";
+                object value = type.GetProperty("Value")!.GetValue(expr)!;
+                object pattern = type.GetProperty("Pattern")!.GetValue(expr)!;
+                return $"Match:{mode}:{negated}:{ScalarKey(value, valueType)}:{ScalarKey(pattern, valueType)}";
             }
         }
         return expr.TypeName;
+    }
+
+    /// <summary>
+    /// 按运行时值类型取标量表达式的结构键 / Get a scalar expression's structural key using its runtime value type.
+    /// </summary>
+    /// <remarks>
+    /// **这里必须走泛型分发，不能强转成 `ScalarExpression&lt;object?&gt;`**：`ScalarExpression&lt;T&gt;` 是不变泛型，
+    /// `(ScalarExpression&lt;object?&gt;)ScalarExpression&lt;double&gt;` **在运行期必抛 `InvalidCastException`**。
+    /// 该缺陷曾让任何含 `Comparison&lt;V&gt;` 的布尔表达式在规范化去重/排序时崩溃——**而它只在有比较项的配方上触发**，
+    /// 所以一直没被普通多项式测试发现。
+    ///
+    /// **Generic dispatch is required here; casting to `ScalarExpression&lt;object?&gt;` is wrong**: `ScalarExpression&lt;T&gt;` is an invariant generic, so
+    /// `(ScalarExpression&lt;object?&gt;)ScalarExpression&lt;double&gt;` **always throws `InvalidCastException` at run time**. That defect crashed normalization
+    /// (de-duplication and sorting) for any boolean expression containing a `Comparison&lt;V&gt;` — **and it only triggers on fixtures that have
+    /// comparisons**, which is why ordinary polynomial tests never caught it.
+    /// </remarks>
+    private static string ScalarKey(object expression, System.Type valueType) {
+        System.Reflection.MethodInfo? method = typeof(StructuralKeyExtensions)
+            .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+            .FirstOrDefault(candidate => candidate.Name == nameof(StructuralKey)
+                && candidate.IsGenericMethodDefinition
+                && candidate.GetParameters().Length == 1
+                && candidate.GetParameters()[0].ParameterType.IsGenericParameter);
+        if (method is null) {
+            return expression.GetType().Name;
+        }
+        object? key = method.MakeGenericMethod(valueType).Invoke(null, new[] { expression });
+        return key as string ?? expression.GetType().Name;
     }
 
     /// <summary>获取标量表达式的结构键 / Get structural key of scalar expression.</summary>

@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace Fuookami.Ospf.Utils.Serialization;
 /// <summary>时间单位 / Time span unit.</summary>
@@ -14,6 +15,21 @@ public enum TimeSpanUnit {
     Minutes,
     Hours,
     Days,
+}
+
+/// <summary>ISO 8601 Duration 序列化器 / ISO 8601 duration serializer.</summary>
+public sealed class DurationSerializer : JsonConverter<TimeSpan> {
+    public override TimeSpan Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options) =>
+        XmlConvert.ToTimeSpan(reader.GetString()!);
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        TimeSpan value,
+        JsonSerializerOptions options) =>
+        writer.WriteStringValue(XmlConvert.ToString(value));
 }
 
 /// <summary>离散 Duration 序列化器 / Discrete duration serializer.</summary>

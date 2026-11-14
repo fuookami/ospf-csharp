@@ -7,7 +7,6 @@ using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
 using Fuookami.Ospf.Core.Solver.Value;
-using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Symbol;
@@ -16,11 +15,8 @@ using Fuookami.Ospf.Utils.Functional;
 using Gurobi;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using SolverConfigGurobi = Fuookami.Ospf.Core.Solver.Config.GurobiSolverConfig;
 
 namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 
@@ -40,21 +36,26 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
     public SolverConfig Config { get; }
 
     private readonly GurobiLinearSolverCallBack? _callBack;
-    private readonly GurobiSolverConfig? _connectionConfig;
+    private readonly GurobiBackendIdentity _identity;
 
     /// <summary>
     /// 创建 Gurobi 列生成求解器 / Create Gurobi column generation solver.
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     /// <param name="callBack">回调管理器 / Callback manager.</param>
-    /// <param name="connectionConfig">远程连接配置 / Remote connection configuration.</param>
     public GurobiColumnGenerationSolver(
         SolverConfig? config = null,
-        GurobiLinearSolverCallBack? callBack = null,
-        GurobiSolverConfig? connectionConfig = null) {
-        Config = config ?? new SolverConfigGurobi();
+        GurobiLinearSolverCallBack? callBack = null)
+        : this(config, callBack, GurobiBackendIdentity.Gurobi) {
+    }
+
+    internal GurobiColumnGenerationSolver(
+        SolverConfig? config,
+        GurobiLinearSolverCallBack? callBack,
+        GurobiBackendIdentity identity) {
+        Config = config ?? new SolverConfig();
         _callBack = callBack;
-        _connectionConfig = connectionConfig;
+        _identity = identity;
     }
 
     /// <summary>
@@ -81,10 +82,6 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
             await SolveTriadModelAsync(mechanismModel, _callBack, solvingStatusCallBack);
-
-        if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-        }
 
         return solveResult;
     }
@@ -141,14 +138,24 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
 
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         GurobiLinearSolver solver = CreateSolver(_callBack);
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(_ => Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             Result<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> solveResult =
                 await solver.InvokeAsync(triadModel, amount, solvingStatusCallBack);
 
             if (solveResult is Ok<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Item1.Solution.Values);
+                return mechanismModel.ApplySolverSolution(
+                    matrix: triadModel,
+                    solution: ok.Value.Item1.Solution.Values
+                ).Bind(_ => solveResult);
             }
 
             return solveResult;
@@ -209,24 +216,39 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
             .AnalyzingSolution(async (_, _, _, grbConstrs) => {
                 for (int i = 0; i < grbConstrs.Count; i++) {
                     var pi = new Flt64(grbConstrs[i].Get(GRB.DoubleAttr.Pi));
-                    MathConstraint key = GetMathConstraintKey(i, constraintOriginMap);
+                    MathConstraint key = MathConstraintOrigins.ResolveOriginKey(i, constraintOriginMap);
                     dualSolution[key] = pi;
                 }
                 return Results.OkInstance;
             });
 
         GurobiLinearSolver solver = CreateSolver(lpCallBack);
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
-        LinearTriadModel relaxedModel = RelaxToLP(triadModel);
-
-        using (triadModel)
-        using (relaxedModel) {
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IColumnGenerationSolver.LpResult>(_ => Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        using (LinearTriadModel triadModel = triadOk.Value) {
+            Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> relaxation = triadModel.RelaxToContinuous();
+            if (!relaxation.IsOk) {
+                return relaxation.Bind<Framework.Solver.IColumnGenerationSolver.LpResult>(_ =>
+                    Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                        ErrorCode.OREngineModelingException,
+                        "松弛模型转换结果无效 / Invalid relaxation result")));
+            }
+            using LinearTriadModel relaxedModel = relaxation.Value;
             Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
                 await solver.InvokeAsync((ILinearTriadModelView)relaxedModel, solvingStatusCallBack);
 
             if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                return Results.Ok(new Framework.Solver.IColumnGenerationSolver.LpResult(ok.Value, dualSolution));
+                return mechanismModel.ApplySolverSolution(
+                    matrix: triadModel,
+                    solvedMatrix: relaxedModel,
+                    solution: ok.Value.Solution.Values
+                )
+                    .Map(_ => new Framework.Solver.IColumnGenerationSolver.LpResult(ok.Value, dualSolution));
             }
 
             if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
@@ -267,7 +289,7 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
     /// 创建 Gurobi 线性求解器 / Create Gurobi linear solver.
     /// </summary>
     private GurobiLinearSolver CreateSolver(GurobiLinearSolverCallBack? callBack) =>
-        new GurobiLinearSolver(Config, callBack?.Copy(), _connectionConfig);
+        new(Config, callBack?.Copy(), _identity);
 
     /// <summary>
     /// 转储元模型为机制模型 / Dump meta model to mechanism model.
@@ -287,10 +309,24 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
         GurobiLinearSolverCallBack? callBack,
         SolvingStatusCallBack? solvingStatusCallBack) {
         GurobiLinearSolver solver = CreateSolver(callBack);
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
-            return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
+            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> result =
+                await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
+            return result is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok
+                ? mechanismModel.ApplySolverSolution(
+                    matrix: triadModel,
+                    solution: ok.Value.Solution.Values
+                ).Bind(_ => result)
+                : result;
         }
     }
 
@@ -316,29 +352,6 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
     }
 
     /// <summary>
-    /// 将三元组模型松弛为 LP / Relax a triad model to LP (all variables become continuous).
-    /// </summary>
-    private static LinearTriadModel RelaxToLP(LinearTriadModel model) {
-        var relaxedVars = new List<ModelViewVariable>(model.Variables.Count);
-        foreach (ModelViewVariable v in model.Variables) {
-            relaxedVars.Add(new ModelViewVariable(
-                v.Index,
-                v.LowerBound,
-                v.UpperBound,
-                Continuous.Instance,
-                v.Name,
-                v.InitialResult,
-                v.Slack));
-        }
-
-        return new LinearTriadModel(
-            relaxedVars,
-            (LinearConstraintBatch)model.Constraints,
-            model.Objective,
-            model.Name);
-    }
-
-    /// <summary>
     /// 将模型转储结果传播为指定类型的错误结果 / Propagate model dump error to a target result type.
     /// </summary>
     private static Result<T, ErrorCode, Error<ErrorCode>> PropagateModelResult<T>(
@@ -352,32 +365,5 @@ public sealed class GurobiColumnGenerationSolver : Framework.Solver.IColumnGener
         return Results.Failed<T>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
     }
 
-    /// <summary>
-    /// 根据索引获取对偶解的 MathConstraint 键 / Get MathConstraint key for dual solution by index.
-    /// </summary>
-    private static MathConstraint GetMathConstraintKey(int index, MathConstraint?[] originMap) {
-        if (index >= 0 && index < originMap.Length && originMap[index] is { } mc) {
-            return mc;
-        }
-        return new FallbackMathConstraint(index);
-    }
 }
 
-/// <summary>
-/// 后备数学约束（用于对偶解映射中无 Origin 时的占位）。
-/// Fallback math constraint (placeholder when Origin is absent in dual mapping).
-/// </summary>
-internal sealed record FallbackMathConstraint(int Index) : MathConstraint {
-    /// <inheritdoc/>
-    public IMetaConstraintGroup? Group => null;
-    /// <inheritdoc/>
-    public bool Lazy => false;
-    /// <inheritdoc/>
-    public object? Args => null;
-    /// <inheritdoc/>
-    public int Priority => 0;
-    /// <inheritdoc/>
-    public string Name => $"__fallback_{Index}";
-    /// <inheritdoc/>
-    public string? DisplayName => null;
-}

@@ -7,6 +7,7 @@
 本包提供完整的甘特图调度建模与求解能力，包括：
 
 - **Framework.GanttScheduling** -- 甘特调度领域模型（任务、机器、工序、时间窗口、资源约束）
+- **Framework.NetworkScheduling** -- 资源受限路径搜索与航线生成（甘特调度依赖它）
 - **Framework** -- 调度框架（流程编排、启发式引擎、插件系统）
 - **Core** -- 调度模型核心
 - **Math** -- 数学规划基础
@@ -31,6 +32,7 @@ dotnet add package Fuookami.Ospf.Starters.GanttScheduling
 This package provides complete modeling and solving capabilities for Gantt-based scheduling, including:
 
 - **Framework.GanttScheduling** -- Gantt scheduling domain model (tasks, machines, operations, time windows, resource constraints)
+- **Framework.NetworkScheduling** -- Resource-constrained path search and route generation (a dependency of Gantt scheduling)
 - **Framework** -- Scheduling framework (workflow orchestration, heuristic engine, plugin system)
 - **Core** -- Scheduling model core
 - **Math** -- Mathematical programming foundations

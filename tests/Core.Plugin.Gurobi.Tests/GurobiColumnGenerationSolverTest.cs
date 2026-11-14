@@ -60,10 +60,10 @@ public class GurobiColumnGenerationSolverTest {
 
     [Fact]
     public void Solver_Should_Accept_Custom_Config() {
-        var config = new Fuookami.Ospf.Core.Solver.Config.GurobiSolverConfig {
-            Threads = 4,
-            TimeLimit = 60.0,
-            MipGap = 1e-6
+        var config = new Fuookami.Ospf.Core.Solver.Config.SolverConfig {
+            ThreadCount = 4UL,
+            TimeLimit = TimeSpan.FromSeconds(60),
+            Gap = new Flt64(1e-6)
         };
         var solver = new GurobiColumnGenerationSolver(config: config);
         solver.Config.Should().BeSameAs(config);

@@ -1,8 +1,6 @@
 #nullable enable
 
 using Fuookami.Ospf.Core.Variable;
-using Fuookami.Ospf.Math.Algebra.Number;
-using Hexaly.Optimizer;
 
 namespace Fuookami.Ospf.Core.Plugin.Hexaly;
 
@@ -40,25 +38,4 @@ public static class HexalyVariableExtensions {
         return HexalyVariableType.Continuous;
     }
 
-    /// <summary>
-    /// 创建 Hexaly 变量表达式 / Create Hexaly variable expression.
-    /// </summary>
-    /// <param name="type">Hexaly 变量类型 / Hexaly variable type.</param>
-    /// <param name="model">Hexaly 模型 / Hexaly model.</param>
-    /// <param name="lb">下界 / Lower bound.</param>
-    /// <param name="ub">上界 / Upper bound.</param>
-    /// <returns>Hexaly 变量表达式 / Hexaly variable expression.</returns>
-    public static HxExpression CreateVariable(this HexalyVariableType type, HxModel model, Flt64 lb, Flt64 ub) => type switch {
-        HexalyVariableType.Binary => model.Bool(),
-        HexalyVariableType.Integer => model.Int(lb.ToDouble().ToLong(), ub.ToDouble().ToLong()),
-        HexalyVariableType.Continuous => model.Float(lb.ToDouble(), ub.ToDouble()),
-        _ => model.Float(lb.ToDouble(), ub.ToDouble())
-    };
-}
-
-/// <summary>
-/// 辅助扩展：double 转 long / Helper: double to long conversion for Hexaly intVar.
-/// </summary>
-internal static class DoubleExtensions {
-    public static long ToLong(this double d) => checked((long)d);
 }

@@ -2,7 +2,19 @@
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Core.Plugin.Mindopt</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Mindopt</AssemblyName>
+    <MindoptManagedAssembly>$(MINDOPT_HOME)/win64-x86/lib/mindoptcs.dll</MindoptManagedAssembly>
+    <MindoptAvailable Condition="Exists('$(MindoptManagedAssembly)')">true</MindoptAvailable>
+    <DefineConstants Condition="'$(MindoptAvailable)' == 'true'">$(DefineConstants);MINDOPT_AVAILABLE</DefineConstants>
   </PropertyGroup>
+  <ItemGroup Condition="Exists('$(MindoptManagedAssembly)')">
+    <Reference Include="mindoptcs">
+      <HintPath>$(MindoptManagedAssembly)</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(MindoptAvailable)' != 'true'">
+    <Compile Remove="MindoptLinearSolver.cs;MindoptNativeSolver.cs;MindoptQuadraticSolver.cs;MindoptSolveCallback.cs" />
+  </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Mindopt.Tests" />
   </ItemGroup>

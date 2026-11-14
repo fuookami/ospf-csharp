@@ -65,6 +65,69 @@ public sealed record CuttingPlanCanonicalKey(
         ) {
     }
 
+    /// <summary>按**内容**比较两个 canonical key / Compare two canonical keys by **content**.</summary>
+    /// <remarks>
+    /// **record 的默认相等性对列表用的是引用比较**，所以两个**内容完全相同**的 canonical key 会被判为不等
+    /// ——**结构化去重因此完全失效**。
+    ///
+    /// B304 是在实现 NSame 生成器后由测试发现的：同一需求重复出现两次，产出**两条**方案，
+    /// 而内部键集合的 Add 两次都返回 true。
+    ///
+    /// **这个缺陷比"生成器是空壳"更隐蔽**：生成器一实现，去重看起来就"在工作"
+    /// （重复计数存在、逻辑存在），只是**永远不会命中**。
+    ///
+    /// **The record's default equality compares lists by reference**, so two canonical keys with **identical content** compare unequal — **structural
+    /// de-duplication therefore does nothing at all**.
+    ///
+    /// B304 found this through a test after implementing the NSame generator: the same demand appearing twice produced **two** plans, and the internal key
+    /// set's Add returned true both times.
+    ///
+    /// **This defect is more hidden than "the generator is a shell"**: once the generator is implemented, de-duplication *looks* like it works (the duplicate
+    /// counter is there, the logic is there) — it simply never hits.
+    /// </remarks>
+    /// <param name="other">另一个键 / The other key.</param>
+    /// <returns>内容是否相同 / Whether the contents are the same.</returns>
+    public bool Equals(CuttingPlanCanonicalKey? other) {
+        if (other is null) {
+            return false;
+        }
+        if (ReferenceEquals(this, other)) {
+            return true;
+        }
+        return string.Equals(MaterialId, other.MaterialId, StringComparison.Ordinal)
+            && string.Equals(MachineId, other.MachineId, StringComparison.Ordinal)
+            && string.Equals(CapacityConsumption, other.CapacityConsumption, StringComparison.Ordinal)
+            && SequenceEqual(Slices, other.Slices)
+            && SequenceEqual(DemandContributions, other.DemandContributions);
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode() {
+        var hash = new HashCode();
+        hash.Add(MaterialId, StringComparer.Ordinal);
+        hash.Add(MachineId, StringComparer.Ordinal);
+        hash.Add(CapacityConsumption, StringComparer.Ordinal);
+        foreach (CuttingPlanSliceCanonicalKey slice in Slices) {
+            hash.Add(slice);
+        }
+        foreach (CuttingPlanDemandContributionCanonicalKey contribution in DemandContributions) {
+            hash.Add(contribution);
+        }
+        return hash.ToHashCode();
+    }
+
+    private static bool SequenceEqual<T>(IReadOnlyList<T> left, IReadOnlyList<T> right) {
+        if (left.Count != right.Count) {
+            return false;
+        }
+        for (int index = 0; index < left.Count; ++index) {
+            if (!EqualityComparer<T>.Default.Equals(left[index], right[index])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /// <summary>
     /// 从切割方案构建 canonical key / Build canonical key from a cutting plan.
     /// </summary>

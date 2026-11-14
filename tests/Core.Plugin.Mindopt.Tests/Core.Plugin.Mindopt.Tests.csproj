@@ -4,7 +4,20 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Mindopt.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <MindoptManagedAssembly>$(MINDOPT_HOME)/win64-x86/lib/mindoptcs.dll</MindoptManagedAssembly>
+    <MindoptAvailable Condition="Exists('$(MindoptManagedAssembly)')">true</MindoptAvailable>
+    <DefineConstants Condition="'$(MindoptAvailable)' == 'true'">$(DefineConstants);MINDOPT_AVAILABLE</DefineConstants>
+    <DefineConstants Condition="'$(RunMindoptIntegration)' == 'true' and '$(MindoptAvailable)' == 'true'">$(DefineConstants);MINDOPT_INTEGRATION</DefineConstants>
   </PropertyGroup>
+  <Target Name="ValidateMindoptIntegrationSdk" BeforeTargets="CoreCompile" Condition="'$(RunMindoptIntegration)' == 'true' and '$(MindoptAvailable)' != 'true'">
+    <Error Text="MindOPT integration requires the MindOPT 2.3 managed SDK. / MindOPT 集成测试需要 MindOPT 2.3 托管 SDK。" />
+  </Target>
+  <ItemGroup Condition="Exists('$(MindoptManagedAssembly)')">
+    <Reference Include="mindoptcs">
+      <HintPath>$(MindoptManagedAssembly)</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />
     <PackageReference Include="xUnit.runner.visualstudio" />
@@ -13,5 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Mindopt\Core.Plugin.Mindopt.csproj" />
+    <Compile Include="..\Shared\RelaxationOwnershipTest.cs" Link="RelaxationOwnershipTest.cs" />
   </ItemGroup>
 </Project>

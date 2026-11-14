@@ -5,6 +5,7 @@ using Fuookami.Ospf.Core.Model.Intermediate;
 using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver.Iis;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
@@ -24,6 +25,78 @@ namespace Fuookami.Ospf.Core.Solver;
 public interface IAbstractLinearSolver {
     /// <summary>求解器名称 / Solver name</summary>
     string Name { get; }
+
+    /// <summary>
+    /// 后端能力描述符，供不可行诊断编排器过滤不可用的分析器。
+    /// Backend descriptor used by the infeasibility diagnostic orchestrator to filter unavailable analyzers.
+    /// </summary>
+    /// <remarks>默认不提供描述符，此时编排器只做分析器自身的能力声明检查。 / Absent by default, and then the orchestrator only checks each analyzer's own capability declaration.</remarks>
+    SolverDescriptor? Descriptor => null;
+
+    /// <summary>
+    /// 返回该后端可用的不可行诊断分析器，按声明顺序参与编排器选择。
+    /// Return the infeasibility diagnostic analyzers offered by this backend, in declaration order for the orchestrator.
+    /// </summary>
+    /// <remarks>默认没有后端分析器，旧入口因此不能物化 IIS。 / No backend analyzers by default, so legacy entries cannot materialize an IIS.</remarks>
+    /// <param name="config">诊断配置 / Diagnostic configuration.</param>
+    /// <returns>候选分析器 / Candidate analyzers.</returns>
+    IReadOnlyList<IInfeasibilityAnalyzer<ILinearTriadModelView>> DiagnosticAnalyzers(IisConfig config) =>
+        Array.Empty<IInfeasibilityAnalyzer<ILinearTriadModelView>>();
+
+    /// <summary>求解并保留后端终态 / Solve and retain the backend termination state.</summary>
+    /// <remarks>过渡期间，尚未迁移的后端返回不支持；此入口不保证后台执行。 / During migration, unported backends return unsupported; this entry does not guarantee background execution.</remarks>
+    /// <param name="model">线性矩阵模型 / Linear matrix model.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>报告或错误 / Report or error.</returns>
+    Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+            ErrorCode.Other,
+            "求解器尚未实现统一报告 / Solver does not yet implement unified reports")));
+
+    /// <summary>求解并保留解池与后端终态 / Solve and retain the solution pool and backend state.</summary>
+    /// <remarks>过渡期间，尚未迁移的后端返回不支持；此入口不保证后台执行。 / During migration, unported backends return unsupported; this entry does not guarantee background execution.</remarks>
+    /// <param name="model">线性矩阵模型 / Linear matrix model.</param>
+    /// <param name="solutionAmount">解池容量 / Solution pool capacity.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>报告或错误 / Report or error.</returns>
+    Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Results.Failed<SolveReport<Flt64>>(new Err<ErrorCode>(
+            ErrorCode.Other,
+            "求解器尚未实现统一报告解池 / Solver does not yet implement unified report pools")));
+
+    /// <summary>求解并安全转换报告数值 / Solve and safely convert report values.</summary>
+    /// <typeparam name="V">目标数值类型 / Target numeric type.</typeparam>
+    /// <param name="model">线性矩阵模型 / Linear matrix model.</param>
+    /// <param name="converter">数值转换器 / Numeric converter.</param>
+    /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
+    /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
+    /// <returns>转换后的报告或错误 / Converted report or error.</returns>
+    async Task<Result<SolveReport<V>, ErrorCode, Error<ErrorCode>>> SolveReportAsync<V>(
+        ILinearTriadModelView model,
+        IIntoValue<V> converter,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default)
+        where V : struct, IRealNumber<V>, INumberField<V> {
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> result = await InvokeReportAsync(
+            model: model,
+            solvingStatusCallBack: solvingStatusCallBack,
+            cancellationToken: cancellationToken);
+        return result switch {
+            Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> ok => ok.Value.ConvertTo(converter),
+            Failed<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> failed => Results.Failed<SolveReport<V>>(failed.Error),
+            Fatal<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> fatal => new Fatal<SolveReport<V>, ErrorCode, Error<ErrorCode>>(fatal.Errors),
+            _ => Results.Failed<SolveReport<V>>(new Err<ErrorCode>(ErrorCode.Other, "未知求解结果 / Unknown solve result")),
+        };
+    }
 
     // ===== Solver boundary (was Kotlin `suspend operator fun invoke`) =====
 
@@ -119,7 +192,9 @@ public interface IAbstractLinearSolver {
     // ===== Dump (was Kotlin `suspend fun dump`) =====
 
     /// <summary>转储线性机制模型为三元组模型 / Dump linear mechanism model to triad model</summary>
-    Task<LinearTriadModel> DumpAsync(LinearMechanismModel<Flt64> model, CancellationToken cancellationToken = default);
+    Task<Result<LinearTriadModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        LinearMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default);
 
     /// <summary>转储线性元模型为机制模型 / Dump linear meta model to mechanism model</summary>
     Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(

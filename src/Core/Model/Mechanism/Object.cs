@@ -26,7 +26,7 @@ public sealed class SingleObject : IObject {
 
     public SingleObject(ObjectCategory category, IReadOnlyList<object> subObjects) {
         Category = category;
-        SubObjects = subObjects;
+        SubObjects = Array.AsReadOnly(subObjects.ToArray());
     }
 
     /// <summary>

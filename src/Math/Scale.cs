@@ -13,6 +13,34 @@ namespace Fuookami.Ospf.Math;
 /// 科学计数法缩放因子 / Scientific scaling factor
 /// </summary>
 public sealed record Scale(IReadOnlyList<(ScaleBase Base, FltX Index)> Scales) {
+    /// <summary>
+    /// 按内容计算哈希 / Compute the hash by content.
+    /// </summary>
+    /// <returns>哈希值 / The hash code.</returns>
+    /// <remarks>
+    /// **record 的自动哈希对集合按引用算，而 `Scale` 是值语义**：同一个数值比例的两个 `Scale` 会
+    /// `Equals` 为真却哈希不同。这违反了 .NET 的哈希契约，后果是**任何以含单位值为键的字典都会查找失败**——
+    /// 表现为 `KeyNotFoundException`，看起来像"键没插进去"，其实是哈希不匹配。
+    ///
+    /// 所以这里按内容重算：比例项逐项折叠，用 `FltX` 的数值而不是它的哈希。
+    ///
+    /// **A record's generated hash treats collections by reference, while `Scale` has value semantics**: two `Scale` values with the same factor are `Equals` but hash
+    /// differently. That breaks the .NET hash contract, and the consequence is that **any dictionary keyed by a unit-carrying value fails to look up** — surfacing as a
+    /// `KeyNotFoundException` that looks like "the key was never inserted" when the hash simply did not match. So the hash is recomputed by content here, folding the
+    /// factors by their numeric value rather than by their own hash.
+    /// </remarks>
+    public override int GetHashCode() {
+        var hash = new HashCode();
+        if (Scales is not null) {
+            foreach ((ScaleBase baseValue, FltX index) in Scales) {
+                hash.Add(baseValue.LeftValue is { } left ? left.ToFlt64().ToDouble() : 0.0);
+                hash.Add(baseValue.IsRight ? 1.0 : 0.0);
+                hash.Add(index.ToFlt64().ToDouble());
+            }
+        }
+        return hash.ToHashCode();
+    }
+
     // Predefined scale constants
     /// <summary>阿托 (10^-18) / Atto</summary>
     public static readonly Scale Atto = Invoke(10, -18);

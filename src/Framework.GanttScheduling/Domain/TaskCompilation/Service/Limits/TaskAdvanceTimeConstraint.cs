@@ -92,7 +92,26 @@ public class TaskAdvanceTimeConstraint<E, A>
     bool IMetaConstraintGroup.Lazy => false;
 
     /// <inheritdoc/>
-    public Try Invoke(object model) => Results.Ok<Success>(Results.SuccessInstance);
+    /// <remarks>
+    /// 本批接线：对每个"该钉住"的任务加一行 `est {op} 计划开始`。哪些任务该钉见 `DeviationConstraintRows` 的注释——
+    /// 关键是**全局开关开着时才按任务开关过滤**：全局关着时任务本来就被钉在计划开始上，这行是冗余但无害的；
+    /// 全局开着时若不过滤，就会把"允许晚一点"的任务也钉死，那等于把延迟开关作废。
+    ///
+    /// Wired in this batch: one row `est {op} planned start` per task that must be pinned. Which tasks those are is documented on `DeviationConstraintRows` — the point is that
+    /// the **per-task switch only filters while the global switch is on**: with it off the task is pinned anyway (redundant but harmless), and with it on, not filtering would pin
+    /// even the tasks allowed to move, cancelling the delay switch outright.
+    /// </remarks>
+    public Try Invoke(object model) {
+        ArgumentNullException.ThrowIfNull(model);
+
+        if (model is not IAbstractLinearMetaModel<Flt64> linear) {
+            return Results.Failed<Success>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "偏移约束只能施加到线性元模型 / the deviation constraint can only be applied to a linear meta model"));
+        }
+        return DeviationConstraintRows.Add(
+            linear, _timeBoundary, _tasks, _taskTime, DeviationDirection.Advance, _name);
+    }
 
     /// <inheritdoc/>
     public ShadowPriceExtractor<IGanttSchedulingShadowPriceArguments<E, A>, GanttSchedulingShadowPriceMap<E, A>>? Extractor()
@@ -105,8 +124,25 @@ public class TaskAdvanceTimeConstraint<E, A>
         };
 
     /// <inheritdoc/>
+    /// <remarks>
+    /// 按**行上带的键类型**从对偶解里认回本管线的行。走约束分组的默认实现一行都找不到——`DeviationConstraintRows.Add` 用 `group: null` 加行。
+    /// **筛选条件必须是键类型**：两条偏移约束（提前 / 延后）同时存在，靠分组或名字都会串味。
+    ///
+    /// Recognises this pipeline's rows in the dual solution by **the key type carried on the row**. A group-based default finds none, since `DeviationConstraintRows.Add` adds rows with
+    /// `group: null`. **The filter must be the key type**: the two deviation constraints (advance and delay) coexist, and filtering by group or name would let their prices cross.
+    /// </remarks>
     public Try Refresh(
         GanttSchedulingShadowPriceMap<E, A> shadowPriceMap,
         object model,
-        MetaDualSolution shadowPrices) => Results.Ok<Success>(Results.SuccessInstance);
+        MetaDualSolution shadowPrices) {
+        ArgumentNullException.ThrowIfNull(shadowPriceMap);
+        ArgumentNullException.ThrowIfNull(shadowPrices);
+
+        foreach (KeyValuePair<MathConstraint, Flt64> pair in shadowPrices.Constraints) {
+            if (pair.Key.Args is TaskAdvanceTimeShadowPriceKey<E, A> key) {
+                shadowPriceMap.Put(new ShadowPrice(key, pair.Value));
+            }
+        }
+        return Results.Ok<Success>(Results.SuccessInstance);
+    }
 }

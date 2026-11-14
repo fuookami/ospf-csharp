@@ -122,7 +122,19 @@ public abstract class Resource<C, V> : ManualIndexed
         where A : IAssignmentPolicy<E>;
 
     /// <summary>初始数量的 solver 值 / Solver initial quantity.</summary>
-    public Flt64 SolverInitialQuantity() => new Flt64(Convert.ToDouble(InitialQuantityValue));
+    /// <summary>
+    /// 初始数量的求解器值 / The initial quantity as a solver value.
+    /// </summary>
+    /// <returns>初始数量 / The initial quantity.</returns>
+    /// <remarks>
+    /// **不能直接 `Convert.ToDouble`**：`Flt64` 不实现 `IConvertible`，`V` 是 `Flt64` 时那一步抛
+    /// `InvalidCastException`。`IAbstractResourceCapacity` 里的 `ToFlt64` 早就处理了这一支，这里照抄。
+    ///
+    /// **`Convert.ToDouble` cannot be used directly**: `Flt64` does not implement `IConvertible`, so the cast throws `InvalidCastException` whenever `V` is `Flt64`.
+    /// `ToFlt64` in `IAbstractResourceCapacity` already handles that case; this mirrors it.
+    /// </remarks>
+    public Flt64 SolverInitialQuantity() =>
+        InitialQuantityValue is Flt64 direct ? direct : new Flt64(Convert.ToDouble(InitialQuantityValue));
 }
 
 /// <summary>
@@ -184,6 +196,22 @@ public interface IResourceUsage<S, R, C, V>
 
     /// <summary>时间槽列表 / List of time slots.</summary>
     IReadOnlyList<S> TimeSlots { get; }
+
+    /// <summary>数量表 / The quantity table.</summary>
+    /// <remarks>
+    /// **注册之前是 `null`，不是空字典**：空字典读起来像"每个槽的数量都是零"，而零价格 \/ 零数量都会让列生成
+    /// 按一个不存在的量去算——那是"看起来跑过了"的标准形态。`null` 至少会在取用时立刻暴露。
+    ///
+    /// **`null` before registration, not an empty map**: an empty map reads as "every slot's quantity is zero", and a zero quantity makes column generation compute against a quantity that does
+    /// not exist — the standard shape of "it looked like it ran". `null` at least surfaces the moment someone reads it.
+    /// </remarks>
+    object? Quantity => null;
+
+    /// <summary>超量表 / The over-quantity table.</summary>
+    object? OverQuantity => null;
+
+    /// <summary>不足量表 / The less-quantity table.</summary>
+    object? LessQuantity => null;
 
     /// <summary>是否启用超量 / Whether over quantity is enabled.</summary>
     bool OverEnabled { get; }

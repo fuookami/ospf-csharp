@@ -128,6 +128,14 @@ public sealed class ColumnGenerationAlgorithm<V>
                 : new Bpp3dLayerGenerationRequest<V>(iterations, items.Cast<object>().ToList(), columns, lpResult.ShadowPrices, config.MaxColumnsPerIteration);
 
             IReadOnlyList<Bpp3dLayerGenerationResult<V>> candidates = await _layerGenerator.GenerateAsync(request);
+            // **请求带了评分就必须真的排序**：否则评分函数被构造出来、被传递、然后被丢弃。
+            // **A request that carries a scorer must actually rank**: otherwise the scorer is built, passed along, and then dropped.
+            if (request.ScoreByShadowPrice is { } scorer) {
+                candidates = candidates
+                    .Select(candidate => candidate with { Score = scorer(candidate.Layer, request) })
+                    .OrderByDescending(candidate => candidate.Score)
+                    .ToList();
+            }
             IReadOnlyList<Bpp3dLayerGenerationResult<V>> accepted = await _filterByReducedCost(refreshState, candidates.ToList());
             if (accepted.Count == 0) {
                 break;

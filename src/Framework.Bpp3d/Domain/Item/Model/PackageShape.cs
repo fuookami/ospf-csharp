@@ -4,6 +4,8 @@ using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Geometry;
 using Fuookami.Ospf.Quantities.Quantity;
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
 using System.Collections.Generic;
 
 namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
@@ -89,5 +91,94 @@ public sealed record PackingProgram(
             if (v.Amount.HasValue) total += v.Amount.Value;
         }
         return total;
+    }
+
+    /// <summary>
+    /// 创建外层包装程序 / Create an outer packing program.
+    /// </summary>
+    /// <param name="shape">外层包装形状 / The outer package shape.</param>
+    /// <param name="packages">子包装程序列表 / The child packing programs.</param>
+    /// <returns>外层包装程序或失败 / The outer packing program or a failure.</returns>
+    /// <remarks>
+    /// **外层自己不装材料，它的材料表是子包装的合并结果**：数量相加，重量按量纲安全相加。
+    /// **合并失败要向上报**：两个子包装的重量量纲不兼容时静默丢掉一侧，会让"总重"看起来正常却少了一块。
+    ///
+    /// **An outer program carries no material of its own; its map is the merge of its children**: amounts add and weights add dimension-safely. **A merge failure must
+    /// propagate**: silently dropping one side of an incompatible weight pair would make the total look plausible while missing a piece.
+    /// </remarks>
+    public static Result<PackingProgram, ErrorCode, Error<ErrorCode>> OuterPackage(
+        PackageShape shape,
+        IReadOnlyList<PackingProgram> packages) {
+        var materials = new Dictionary<string, PackingProgramMaterialValue>();
+        foreach (PackingProgram package in packages) {
+            if (package.Materials is null) {
+                continue;
+            }
+            foreach (KeyValuePair<string, PackingProgramMaterialValue> entry in package.Materials) {
+                materials.TryGetValue(entry.Key, out PackingProgramMaterialValue? existing);
+                Result<PackingProgramMaterialValue, ErrorCode, Error<ErrorCode>> merged =
+                    MergeMaterialValue(existing, entry.Value);
+                if (merged is Failed<PackingProgramMaterialValue, ErrorCode, Error<ErrorCode>> failed) {
+                    return Results.Failed<PackingProgram>(failed.Error);
+                }
+                if (merged is Fatal<PackingProgramMaterialValue, ErrorCode, Error<ErrorCode>> fatal) {
+                    return new Fatal<PackingProgram, ErrorCode, Error<ErrorCode>>(fatal.Errors);
+                }
+                materials[entry.Key] = ((Ok<PackingProgramMaterialValue, ErrorCode, Error<ErrorCode>>)merged).Value;
+            }
+        }
+        return Results.Ok(new PackingProgram(shape, null, packages, materials));
+    }
+
+    /// <summary>
+    /// 创建内层包装程序 / Create an inner packing program.
+    /// </summary>
+    /// <param name="shape">内层包装形状 / The inner package shape.</param>
+    /// <param name="materials">物料键到数量的映射 / The material key to amount map.</param>
+    /// <returns>内层包装程序 / The inner packing program.</returns>
+    public static PackingProgram InnerPackage(
+        PackageShape shape,
+        IReadOnlyDictionary<string, ulong> materials) {
+        var values = new Dictionary<string, PackingProgramMaterialValue>();
+        foreach (KeyValuePair<string, ulong> entry in materials) {
+            values[entry.Key] = new PackingProgramMaterialValue(entry.Value);
+        }
+        return new PackingProgram(shape, null, null, values);
+    }
+
+    /// <summary>
+    /// 合并两个材料贡献值 / Merge two material contribution values.
+    /// </summary>
+    /// <param name="lhs">已有值，可为空 / The existing value, possibly null.</param>
+    /// <param name="rhs">新值 / The new value.</param>
+    /// <returns>合并结果或失败 / The merged value or a failure.</returns>
+    /// <remarks>
+    /// **任一侧缺数量时取另一侧，而不是当成 0**：缺值是"没写"，不是"写了零"。
+    /// **重量相加失败必须报错**：`千克 + 米` 不是重量，静默取一侧会让总重凭空变化。
+    ///
+    /// **A missing amount takes the other side rather than counting as zero**: absent means "not stated", not "stated as zero". **A failed weight sum must surface**:
+    /// `kg + m` is not a weight, and silently taking one side makes the total change for no reason.
+    /// </remarks>
+    public static Result<PackingProgramMaterialValue, ErrorCode, Error<ErrorCode>> MergeMaterialValue(
+        PackingProgramMaterialValue? lhs,
+        PackingProgramMaterialValue rhs) {
+        ulong? amount = lhs?.Amount is null
+            ? rhs.Amount
+            : rhs.Amount is null ? lhs.Amount : lhs.Amount + rhs.Amount;
+
+        Quantity<FltX>? weight;
+        if (lhs?.Weight is null) {
+            weight = rhs.Weight;
+        } else if (rhs.Weight is null) {
+            weight = lhs.Weight;
+        } else if (QuantityOperators.Add<FltX>(lhs.Weight, rhs.Weight) is
+            Ok<Quantity<FltX>, ErrorCode, Error<ErrorCode>> sumOk) {
+            weight = sumOk.Value;
+        } else {
+            return Results.Failed<PackingProgramMaterialValue>(new Err<ErrorCode>(
+                ErrorCode.IllegalArgument,
+                "包装程序重量量纲不兼容 / Incompatible packing program weight dimensions"));
+        }
+        return Results.Ok(new PackingProgramMaterialValue(amount, weight));
     }
 }

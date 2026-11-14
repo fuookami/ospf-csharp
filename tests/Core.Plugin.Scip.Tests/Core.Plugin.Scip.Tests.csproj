@@ -4,6 +4,7 @@
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Scip.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DefineConstants Condition="'$(RunScipIntegration)' == 'true'">$(DefineConstants);SCIP_INTEGRATION</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />
@@ -13,5 +14,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Scip\Core.Plugin.Scip.csproj" />
+    <Compile Include="..\Shared\RelaxationOwnershipTest.cs" Link="RelaxationOwnershipTest.cs" />
   </ItemGroup>
 </Project>

@@ -373,8 +373,11 @@ internal static class Csp1dSolutionEnrichmentHelper {
             return UInt64.Zero;
         }
 
-        return new UInt64((ulong)(result.UnderProductions?.Count ?? 0))
-             + new UInt64((ulong)(result.OverProductions?.Count ?? 0));
+        // **不再需要 `?.Count ?? 0`**：B378 把两个字段改成了非空类型，
+        // "没有欠产"由空列表表达（B376/B377 的语义修正）。
+        // **`?.Count ?? 0` is no longer needed**: B378 made both fields non-null, with "no deficit" expressed by an empty list (the B376/B377 semantic fix).
+        return new UInt64((ulong)result.UnderProductions.Count)
+             + new UInt64((ulong)result.OverProductions.Count);
     }
 
     /// <summary>
@@ -402,7 +405,8 @@ internal static class Csp1dSolutionEnrichmentHelper {
             return UInt64.Zero;
         }
 
-        return new UInt64((ulong)(result.AssignedLengths?.Count ?? 0))
-             + new UInt64((ulong)(result.OverLengths?.Count ?? 0));
+        // 同上：字段已非空 / Same as above: the fields are non-null now.
+        return new UInt64((ulong)result.AssignedLengths.Count)
+             + new UInt64((ulong)result.OverLengths.Count);
     }
 }

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Framework.Csp2d.Tests</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Framework.Csp2d.Tests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!--
+      真实求解器集成测试的开关 / The switch for real-solver integration tests.
+      开启方式：dotnet test … -p:RunScipIntegration=true，**必须在 build 时带上**。
+      Enable with -p:RunScipIntegration=true, **passed to the build**.
+    -->
+    <DefineConstants Condition="'$(RunScipIntegration)' == 'true'">$(DefineConstants);SCIP_INTEGRATION</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xUnit" />
+    <PackageReference Include="xUnit.runner.visualstudio" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Framework.Csp2d\Framework.Csp2d.csproj" />
+    <ProjectReference Include="..\..\src\Core.Plugin.Scip\Core.Plugin.Scip.csproj" />
+  </ItemGroup>
+</Project>

@@ -146,5 +146,19 @@ internal sealed class GenerationWidthIndex<V> where V : struct, IComparable<V> {
         return index;
     }
 
-    internal static string CanonicalUnitKey(PhysicalUnit unit) => unit.Symbol ?? unit.Name ?? unit.ToString();
+    /// <summary>
+    /// 规范单位键 / Canonical unit key.
+    /// </summary>
+    /// <param name="unit">物理单位 / Physical unit.</param>
+    /// <returns>单位键 / The unit key.</returns>
+    /// <remarks>
+    /// **委托给 `GenerationQuantityMath.UnitKey`，不再各写一份。**
+    ///
+    /// 两个单位若被压成同一个键，"不可比"就会被错判成"可比"，`CrossContributionDominance.Dominates`
+    /// 于是**可能剪掉本来该保留的方案**（B316 在投影器上修过同样的坑）。
+    ///
+    /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** If two units collapse onto one key, "incomparable" is misread as
+    /// "comparable" and `CrossContributionDominance.Dominates` **can prune a plan that should have been kept** (B316 fixed the same trap on the projector).
+    /// </remarks>
+    internal static string CanonicalUnitKey(PhysicalUnit unit) => GenerationQuantityMath.UnitKey(unit);
 }

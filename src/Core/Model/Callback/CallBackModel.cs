@@ -198,7 +198,7 @@ public sealed class CallBackModel<V> : ICallBackModelInterface<V>
     public Try AddObjective(ObjectCategory category, Func<IReadOnlyList<V>, V> func, string? name = null) {
         _objectiveFunctions.Add((solution => {
             V v = func(solution);
-            return category == ObjectCategory ? v : default(V).Minus(v);
+            return category == ObjectCategory ? v : v.Negate();
         }, name ?? ""));
         return Results.Ok(Results.SuccessInstance);
     }

@@ -6,6 +6,7 @@ using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -44,8 +45,12 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public CoptBendersDecompositionSolver(SolverConfig? config = null) {
-        Config = config ?? new CoptSolverConfig();
+        Config = config ?? new SolverConfig();
     }
+
+    /// <inheritdoc/>
+    public Framework.Solver.IBendersDecompositionSolver WithTimeLimit(TimeSpan timeLimit) =>
+        new CoptBendersDecompositionSolver(Config with { TimeLimit = timeLimit });
 
     // ===== IBendersDecompositionSolver: Master problem =====
 
@@ -75,8 +80,7 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-            return Results.Ok<SolverOutput>(ok.Value);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Map<SolverOutput>(_ => ok.Value);
         }
 
         if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
@@ -88,6 +92,56 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
         }
 
         return Results.Failed<SolverOutput>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+    }
+
+    /// <summary>
+    /// 求解线性 Benders 主问题并保留统一报告。
+    /// Solve a linear Benders master problem while retaining the unified report.
+    /// </summary>
+    public async Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> SolveMasterReportAsync(
+        string name,
+        LinearMetaModel<Flt64> metaModel,
+        bool toLogModel = false,
+        RegistrationStatusCallBack? registrationStatusCallBack = null,
+        SolvingStatusCallBack? solvingStatusCallBack = null) {
+        Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismResult =
+            await DumpMechanismModelAsync(metaModel, registrationStatusCallBack);
+        if (mechanismResult is not Ok<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>> mechanismOk) {
+            return CoptDualSupport.Propagate<SolveReport<Flt64>, LinearMechanismModel<Flt64>>(
+                mechanismResult,
+                "COPT 主问题模型转储失败 / COPT master model dump failed");
+        }
+
+        using LinearMechanismModel<Flt64> mechanismModel = mechanismOk.Value;
+        CoptLinearSolver solver = CreateSolver();
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return CoptDualSupport.Propagate<SolveReport<Flt64>, LinearTriadModel>(
+                triadResult,
+                "COPT 主问题矩阵转换失败 / COPT master matrix conversion failed");
+        }
+
+        using LinearTriadModel triadModel = triadOk.Value;
+        Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportResult =
+            await solver.InvokeReportAsync(
+                model: triadModel,
+                solvingStatusCallBack: solvingStatusCallBack);
+        if (reportResult is not Ok<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> reportOk) {
+            return CoptDualSupport.Propagate<SolveReport<Flt64>, SolveReport<Flt64>>(
+                reportResult,
+                "COPT 主问题求解失败 / COPT master solve failed");
+        }
+        if (reportOk.Value.Solution is { } solution) {
+            Result<Success, ErrorCode, Error<ErrorCode>> applied =
+                mechanismModel.ApplySolverSolution(solution.Values.Values);
+            if (!applied.IsOk) {
+                return CoptDualSupport.Propagate<SolveReport<Flt64>, Success>(
+                    applied,
+                    "COPT 主问题解回填失败 / COPT master solution writeback failed");
+            }
+        }
+        return Results.Ok(reportOk.Value);
     }
 
     /// <summary>
@@ -124,8 +178,9 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
     /// <summary>
     /// 求解线性 Benders 子问题 / Solve linear Benders sub problem.
     ///
-    /// COPT 桩实现不支持对偶解和 Farkas 证明提取，返回空字典和 null cuts。
-    /// COPT stub does not support dual/Farkas extraction; returns empty dictionaries and null cuts.
+    /// 可行子问题返回 COPT 原生行对偶，不可行子问题返回原生 Farkas 乘子；cuts 仍由调用方生成。
+    /// Feasible sub-problems return COPT row duals and infeasible ones return native Farkas multipliers;
+    /// cuts remain the caller's responsibility.
     /// </summary>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
@@ -155,7 +210,7 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
         // Step 2: Build fixed variable index map (IVariableItem -> triad model column index)
         var fixedIndexMap = new Dictionary<int, Flt64>();
         foreach (KeyValuePair<IVariableItem, Flt64> kv in fixedVariables) {
-            int? colIndex = metaModel.Tokens.IndexOf(kv.Key);
+            int? colIndex = mechanismModel.Tokens.IndexOf(kv.Key);
             if (colIndex is { } ci) {
                 fixedIndexMap[ci] = kv.Value;
             }
@@ -163,43 +218,98 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
 
         // Step 3: Dump mechanism model to triad model, then fix and relax
         CoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ => Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
         LinearTriadModel subModel = FixAndRelaxToLP(triadModel, fixedIndexMap);
 
         using (triadModel)
         using (subModel) {
-            // Step 4: Solve the sub-problem (no dual/Farkas extraction for COPT stub)
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)subModel, solvingStatusCallBack);
+            MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
+            Result<CoptLinearOutcome, ErrorCode, Error<ErrorCode>> solved =
+                await solver.InvokeReportWithDualsAsync(
+                    model: subModel,
+                    solvingStatusCallBack: solvingStatusCallBack,
+                    requireFarkas: true);
+            if (solved is not Ok<CoptLinearOutcome, ErrorCode, Error<ErrorCode>> solvedOk) {
+                return CoptDualSupport.Propagate<
+                    Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                    CoptLinearOutcome>(
+                    solved,
+                    "COPT Benders 子问题求解失败 / COPT Benders sub-problem solving failed");
+            }
 
-            // Step 5: Build result
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                IReadOnlyDictionary<MathConstraint, Flt64> dualSolution = new Dictionary<MathConstraint, Flt64>();
+            CoptLinearOutcome outcome = solvedOk.Value;
+            if (outcome.Report.ProblemStatus == ProblemStatus.Feasible
+                && outcome.RowDuals is { } nativeDuals) {
+                Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> tidyDuals =
+                    subModel.TidyDualSolution(nativeDuals);
+                if (tidyDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+                    return CoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyList<Flt64>>(
+                        tidyDuals,
+                        "COPT 对偶值与子问题行数不一致 / COPT duals do not align with the sub-problem rows");
+                }
+                Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> report =
+                    Results.Ok(outcome.Report);
+                Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+                    CoptReportSupport.ToLegacy(report);
+                if (legacy is not Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> output) {
+                    return CoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        FeasibleSolverOutput<Flt64>>(
+                        legacy,
+                        "COPT Benders 子问题无可返回的可行解 / COPT Benders sub-problem has no feasible output");
+                }
+                IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+                    MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+                return mechanismModel.ApplySolverSolution(output.Value.Solution.Values)
+                    .Map<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(_ =>
+                        new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
+                            Result: output.Value,
+                            DualSolution: dualSolution,
+                            Cuts: null) {
+                            Report = outcome.Report,
+                        });
+            }
+
+            if (outcome.Report.ProblemStatus == ProblemStatus.Infeasible
+                && outcome.FarkasDuals is { } nativeFarkas) {
+                Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> tidyFarkas =
+                    subModel.TidyDualSolution(nativeFarkas);
+                if (tidyFarkas is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> farkasOk) {
+                    return CoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyList<Flt64>>(
+                        tidyFarkas,
+                        "COPT Farkas 值与子问题行数不一致 / COPT Farkas values do not align with the sub-problem rows");
+                }
+                Result<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkas =
+                    MathConstraintOrigins.ToFarkasSolution(farkasOk.Value, originMap, "COPT");
+                if (farkas is not Ok<IReadOnlyDictionary<MathConstraint, Flt64>, ErrorCode, Error<ErrorCode>> farkasResult) {
+                    return CoptDualSupport.Propagate<
+                        Framework.Solver.IBendersDecompositionSolver.LinearSubResult,
+                        IReadOnlyDictionary<MathConstraint, Flt64>>(
+                        farkas,
+                        "COPT Benders 子问题没有可用的 Farkas 证书 / COPT Benders sub-problem has no usable Farkas certificate");
+                }
                 return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                    new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResult(
-                        Result: ok.Value,
-                        DualSolution: dualSolution,
+                    new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
+                        FarkasDualSolution: farkasResult.Value,
                         Cuts: null));
             }
 
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                if (f.Error.Code == ErrorCode.ORModelInfeasible) {
-                    IReadOnlyDictionary<MathConstraint, Flt64> farkasSolution = new Dictionary<MathConstraint, Flt64>();
-                    return Results.Ok<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                        new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult(
-                            FarkasDualSolution: farkasSolution,
-                            Cuts: null));
-                }
-                return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(f.Error);
-            }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IBendersDecompositionSolver.LinearSubResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
-            }
-
             return Results.Failed<Framework.Solver.IBendersDecompositionSolver.LinearSubResult>(
-                new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+                new Err<ErrorCode>(
+                    ErrorCode.OREngineSolvingException,
+                    $"COPT Benders 子问题未给出可用对偶或 Farkas 证据：{outcome.Report.ProblemStatus} / " +
+                    $"COPT Benders sub-problem returned neither usable duals nor Farkas evidence: {outcome.Report.ProblemStatus}"));
         }
     }
 
@@ -258,7 +368,14 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         CoptLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
@@ -279,19 +396,25 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
             if (fixedVarMap.ContainsKey(v.Index)) {
                 // Fix variable: LB = UB = fixed value, relax to continuous
                 Flt64 fixedVal = fixedVarMap[v.Index];
-                vars.Add(new ModelViewVariable(
-                    v.Index, fixedVal, fixedVal,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
+                vars.Add(v.WithDomain(
+                    lowerBound: fixedVal,
+                    upperBound: fixedVal,
+                    type: Continuous.Instance));
             }
             else {
                 // Relax to continuous
-                vars.Add(new ModelViewVariable(
-                    v.Index, v.LowerBound, v.UpperBound,
-                    Continuous.Instance, v.Name, v.InitialResult, v.Slack));
+                vars.Add(v.WithDomain(
+                    lowerBound: v.LowerBound,
+                    upperBound: v.UpperBound,
+                    type: Continuous.Instance));
             }
         }
 
-        return new LinearTriadModel(vars, (LinearConstraintBatch)model.Constraints, model.Objective, model.Name);
+        return new LinearTriadModel(
+            variables: vars,
+            constraints: (LinearConstraintBatch)model.Constraints.Copy(),
+            objective: model.Objective,
+            name: model.Name);
     }
 
     /// <summary>
@@ -327,7 +450,9 @@ public sealed class CoptBendersDecompositionSolver : Framework.Solver.IBendersDe
                 new Framework.Solver.IBendersDecompositionSolver.LinearFeasibleResultOf<V>(
                     Result: ConvertFeasibleOutput<V>(feasible.Result),
                     DualSolution: feasible.DualSolution,
-                    Cuts: feasible.Cuts),
+                    Cuts: feasible.Cuts) {
+                    Report = feasible.Report,
+                },
             Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResult infeasible =>
                 new Framework.Solver.IBendersDecompositionSolver.LinearInfeasibleResultOf<V>(
                     FarkasDualSolution: infeasible.FarkasDualSolution,

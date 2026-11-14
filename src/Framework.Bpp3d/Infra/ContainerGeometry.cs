@@ -23,6 +23,27 @@ public interface IContainer3Geometry<V> where V : struct, IFloatingNumber<V> {
     Quantity<V> Depth { get; }
     /// <summary>体积 / Volume.</summary>
     Quantity<V> Volume { get; }
+
+    /// <summary>
+    /// 给定的包围尺寸能否放进这个容器 / Whether the given extents fit inside this container.
+    /// </summary>
+    /// <param name="unitWidth">待放入的宽度 / The width to fit.</param>
+    /// <param name="unitHeight">待放入的高度 / The height to fit.</param>
+    /// <param name="unitDepth">待放入的深度 / The depth to fit.</param>
+    /// <returns>是否放得下 / Whether it fits.</returns>
+    /// <remarks>
+    /// **量纲不符算"放不下"，不是"不知道"**：比较在量纲不同时返回 `null`，而 `== true` 把它归入 `false`。
+    /// 这是**保守**的选择——若把 `null` 当成"可能放得下"，一次单位配错就会让一个更大的货物混进小容器，
+    /// 而错误要到后续的几何校验才暴露，那时已经离配置处很远。
+    ///
+    /// **A dimension mismatch means "does not fit", not "unknown"**: the comparison returns `null` when the dimensions differ, and `== true` folds that into `false`.
+    /// This is the **conservative** choice — treating `null` as "might fit" would let an oversized item into a small container on any unit mix-up, and the error would
+    /// only surface in a later geometric check, far from where it was configured.
+    /// </remarks>
+    bool Enabled(Quantity<V> unitWidth, Quantity<V> unitHeight, Quantity<V> unitDepth) =>
+        unitWidth.LessThanOrEqual(Width) == true
+        && unitHeight.LessThanOrEqual(Height) == true
+        && unitDepth.LessThanOrEqual(Depth) == true;
 }
 
 /// <summary>

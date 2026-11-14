@@ -13,8 +13,25 @@ public sealed class Lexer {
     private int _position;
     private char? _current;
 
-    public Lexer(string input) {
+    /// <summary>词法模式 / The lexing mode.</summary>
+    /// <remarks>
+    /// **这个开关不是风格问题，是 `-2^2` 读成什么的问题。**
+    /// **布尔模式下 `-` 可作数字前缀**（`-1 &lt; x` 里那个负号是字面量的一部分），
+    /// **标量模式下不行**——**否则 `-2^2` 的词法结果是 `-2`、`^`、`2`，一元负号就再没有机会比幂更松，
+    /// 而 `-(2^2)` 与 `(-2)^2` 一个得 -4、一个得 4。**
+    /// </remarks>
+    public enum LexMode {
+        /// <summary>布尔表达式 / Boolean expressions.</summary>
+        Boolean,
+        /// <summary>标量表达式 / Scalar expressions.</summary>
+        Scalar,
+    }
+
+    private readonly LexMode _mode;
+
+    public Lexer(string input, LexMode mode = LexMode.Boolean) {
         _input = input;
+        _mode = mode;
         _position = 0;
         _current = input.Length > 0 ? input[0] : null;
     }
@@ -47,7 +64,11 @@ public sealed class Lexer {
         }
 
         // Number literals
-        if (char.IsDigit(_current.Value) || (_current == '-' && PeekChar(1) is { } nc && char.IsDigit(nc))) {
+        // **标量模式下只认数字开头**，见 `LexMode` 的注释。
+        // **In scalar mode only a digit starts a number**; see the `LexMode` comment.
+        bool startsNumber = char.IsDigit(_current.Value)
+            || (_mode == LexMode.Boolean && _current == '-' && PeekChar(1) is { } nc && char.IsDigit(nc));
+        if (startsNumber) {
             return ReadNumber(startPos);
         }
 
@@ -65,6 +86,16 @@ public sealed class Lexer {
             '!' => HandleExclamation(startPos),
             '<' => HandleLessThan(startPos),
             '>' => HandleGreaterThan(startPos),
+            '+' => AdvanceReturn(new Token(TokenType.Plus, "+", startPos)),
+            '-' => HandleMinus(startPos),
+            '*' => HandleStar(startPos),
+            '/' => AdvanceReturn(new Token(TokenType.Slash, "/", startPos)),
+            '%' => AdvanceReturn(new Token(TokenType.Percent, "%", startPos)),
+            '^' => AdvanceReturn(new Token(TokenType.Caret, "^", startPos)),
+            '?' => AdvanceReturn(new Token(TokenType.Question, "?", startPos)),
+            ':' => AdvanceReturn(new Token(TokenType.Colon, ":", startPos)),
+            '&' => HandleAmpersand(startPos),
+            '|' => HandlePipe(startPos),
             _ => AdvanceReturn(Token.Unknown(_current.Value.ToString(), startPos)),
         };
     }
@@ -72,6 +103,43 @@ public sealed class Lexer {
     private Token AdvanceReturn(Token token) {
         Advance();
         return token;
+    }
+
+    /// <summary>减号：紧贴数字时已由数字分支吃掉，走到这里是二元减 / Minus: next to a digit the number branch took it, so this is binary minus.</summary>
+    private Token HandleMinus(int startPos) => AdvanceReturn(new Token(TokenType.Minus, "-", startPos));
+
+    /// <summary>星号，连着第二个星号是 `**` / Star, and a second star makes `**`.</summary>
+    /// <remarks>
+    /// **`**` 必须整体成一个单元**：拆成两个 `Star` 之后，`2**3` 与 `2* *3` 在文法上就没区别了，
+    /// **而幂和连乘不是一回事。**
+    /// </remarks>
+    private Token HandleStar(int startPos) {
+        Advance();
+        if (_current == '*') {
+            return AdvanceReturn(new Token(TokenType.DoubleStar, "**", startPos));
+        }
+        return new Token(TokenType.Star, "*", startPos);
+    }
+
+    /// <summary>`&amp;&amp;` / Logical and.</summary>
+    /// <remarks>
+    /// **单个 `&amp;` 是 `Unknown`**：这门语言里没有按位与，**认下来会让它走到文法层才被拒，那时的报错位置已经不是真位置了。**
+    /// </remarks>
+    private Token HandleAmpersand(int startPos) {
+        Advance();
+        if (_current == '&') {
+            return AdvanceReturn(new Token(TokenType.AmpersandAmpersand, "&&", startPos));
+        }
+        return Token.Unknown("&", startPos);
+    }
+
+    /// <summary>`||` / Logical or.</summary>
+    private Token HandlePipe(int startPos) {
+        Advance();
+        if (_current == '|') {
+            return AdvanceReturn(new Token(TokenType.PipePipe, "||", startPos));
+        }
+        return Token.Unknown("|", startPos);
     }
 
     private Token HandleExclamation(int startPos) {
@@ -214,6 +282,12 @@ public sealed class Lexer {
             "null" => new Token(TokenType.Null, value, startPos),
             "true" => new Token(TokenType.True, value, startPos),
             "false" => new Token(TokenType.False, value, startPos),
+            // **四个条件关键字在基线里就在关键字表里，C# 侧此前漏了；补上之后 `if` 不能再当变量名。**
+            // **The four conditional keywords sit in the baseline keyword table; C# had missed them, and adding them means `if` can no longer be a variable name.**
+            "if" => new Token(TokenType.If, value, startPos),
+            "then" => new Token(TokenType.Then, value, startPos),
+            "else" => new Token(TokenType.Else, value, startPos),
+            "fi" => new Token(TokenType.Fi, value, startPos),
             _ => new Token(TokenType.Identifier, value, startPos),
         };
     }
@@ -223,4 +297,10 @@ public sealed class Lexer {
 public static class LexerExtensions {
     /// <summary>字符串转词法单元列表 / String to token list.</summary>
     public static IReadOnlyList<Token> Tokenize(this string input) => new Lexer(input).Tokenize();
+
+    /// <summary>按标量模式切词 / Tokenise in scalar mode.</summary>
+    /// <param name="input">输入文本 / The input text.</param>
+    /// <returns>词法单元 / The tokens.</returns>
+    public static IReadOnlyList<Token> TokenizeAsScalar(this string input) =>
+        new Lexer(input, Lexer.LexMode.Scalar).Tokenize();
 }

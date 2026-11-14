@@ -1,0 +1,200 @@
+#nullable enable
+#if !CPLEX_AVAILABLE
+
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Fuookami.Ospf.Utils.Error;
+using Fuookami.Ospf.Utils.Functional;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Core.Model.Basic;
+using Fuookami.Ospf.Core.Model.Intermediate;
+using Fuookami.Ospf.Core.Model.Mechanism;
+using Fuookami.Ospf.Core.Solver;
+using Fuookami.Ospf.Core.Solver.Config;
+using Fuookami.Ospf.Core.Solver.Iis;
+using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
+
+namespace Fuookami.Ospf.Core.Plugin.Cplex;
+
+/// <summary>
+/// 未加载 CPLEX SDK 时的线性入口 / Linear entry when the CPLEX SDK is unavailable.
+/// </summary>
+/// <remarks>
+/// 求解会返回准确的环境错误，模型转储仍可用于无 SDK 构建。/ Solving returns an accurate environment error; model dumping
+/// remains available in SDK-free builds.
+/// </remarks>
+public sealed class CplexLinearSolver : ILinearSolver {
+    /// <inheritdoc/>
+    public string Name => "cplex";
+
+    /// <inheritdoc/>
+    public SolverDescriptor? Descriptor => null;
+
+    /// <inheritdoc/>
+    public SolverConfig Config { get; }
+
+    /// <summary>
+    /// 创建线性入口 / Create the linear entry.
+    /// </summary>
+    /// <param name="config">求解器配置 / Solver configuration.</param>
+    public CplexLinearSolver(SolverConfig? config = null) {
+        Config = config ?? new SolverConfig();
+    }
+
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<SolveReport<Flt64>>());
+
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        ILinearTriadModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<SolveReport<Flt64>>());
+
+    /// <inheritdoc/>
+    public Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        ILinearTriadModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<FeasibleSolverOutput<Flt64>>());
+
+    internal Task<Result<CplexLinearOutcome, ErrorCode, Error<ErrorCode>>>
+        InvokeReportWithDualsAsync(
+            ILinearTriadModelView model,
+            SolvingStatusCallBack? solvingStatusCallBack = null,
+            CancellationToken cancellationToken = default,
+            bool requireFarkas = false) =>
+        Task.FromResult(Unavailable<CplexLinearOutcome>());
+
+    /// <inheritdoc/>
+    public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        LinearTriadModel model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        IisConfig? iisConfig = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<SolverOutput>());
+
+    /// <inheritdoc/>
+    public Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        ILinearTriadModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions)>());
+
+    /// <inheritdoc/>
+    public Task<Result<LinearTriadModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        LinearMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(model.ToLinearTriadModel(cancellationToken: cancellationToken));
+
+    /// <inheritdoc/>
+    public Task<Result<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        LinearMetaModel<Flt64> model,
+        RegistrationStatusCallBack? registrationStatusCallBack,
+        MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
+        CancellationToken cancellationToken = default) =>
+        LinearMechanismModel<Flt64>.InvokeAsync(
+            metaModel: model,
+            concurrent: Config.DumpMechanismModelConcurrent,
+            blocking: Config.DumpMechanismModelBlocking,
+            registrationStatusCallBack: registrationStatusCallBack,
+            dumpingStatusCallBack: dumpingStatusCallBack);
+
+    private static Result<T, ErrorCode, Error<ErrorCode>> Unavailable<T>() =>
+        Results.Failed<T>(new Err<ErrorCode>(
+            ErrorCode.OREngineEnvironmentLost,
+            "未找到 CPLEX 托管 SDK / The CPLEX managed SDK was not found"));
+}
+
+/// <summary>
+/// 未加载 CPLEX SDK 时的二次入口 / Quadratic entry when the CPLEX SDK is unavailable.
+/// </summary>
+public sealed class CplexQuadraticSolver : IQuadraticSolver {
+    /// <inheritdoc/>
+    public string Name => "cplex";
+
+    /// <summary>求解器描述符 / Solver descriptor.</summary>
+    public SolverDescriptor? Descriptor => null;
+
+    /// <inheritdoc/>
+    public SolverConfig Config { get; }
+
+    /// <summary>
+    /// 创建二次入口 / Create the quadratic entry.
+    /// </summary>
+    /// <param name="config">求解器配置 / Solver configuration.</param>
+    public CplexQuadraticSolver(SolverConfig? config = null) {
+        Config = config ?? new SolverConfig();
+    }
+
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<SolveReport<Flt64>>());
+
+    /// <inheritdoc/>
+    public Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeReportAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<SolveReport<Flt64>>());
+
+    /// <inheritdoc/>
+    public Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<FeasibleSolverOutput<Flt64>>());
+
+    /// <inheritdoc/>
+    public Task<Result<SolverOutput, ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        IQuadraticTetradModelView model,
+        SolvingStatusCallBack? solvingStatusCallBack,
+        IisConfig? iisConfig,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<SolverOutput>());
+
+    /// <inheritdoc/>
+    public Task<Result<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions), ErrorCode, Error<ErrorCode>>> InvokeAsync(
+        IQuadraticTetradModelView model,
+        ulong solutionAmount,
+        SolvingStatusCallBack? solvingStatusCallBack = null,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(Unavailable<(FeasibleSolverOutput<Flt64> Output, List<List<Flt64>> Solutions)>());
+
+    /// <inheritdoc/>
+    public Task<Result<QuadraticTetradModel, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        QuadraticMechanismModel<Flt64> model,
+        CancellationToken cancellationToken = default) =>
+        Task.FromResult(model.ToQuadraticTetradModel(cancellationToken: cancellationToken));
+
+    /// <inheritdoc/>
+    public Task<Result<QuadraticMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>> DumpAsync(
+        QuadraticMetaModel<Flt64> model,
+        RegistrationStatusCallBack? registrationStatusCallBack,
+        MechanismModelDumpingStatusCallBack? dumpingStatusCallBack,
+        CancellationToken cancellationToken = default) =>
+        QuadraticMechanismModel<Flt64>.InvokeAsync(
+            metaModel: model,
+            concurrent: Config.DumpMechanismModelConcurrent,
+            blocking: Config.DumpMechanismModelBlocking,
+            registrationStatusCallBack: registrationStatusCallBack,
+            dumpingStatusCallBack: dumpingStatusCallBack);
+
+    private static Result<T, ErrorCode, Error<ErrorCode>> Unavailable<T>() =>
+        Results.Failed<T>(new Err<ErrorCode>(
+            ErrorCode.OREngineEnvironmentLost,
+            "未找到 CPLEX 托管 SDK / The CPLEX managed SDK was not found"));
+}
+#endif

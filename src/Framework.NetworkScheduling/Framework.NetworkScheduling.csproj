@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Fuookami.Ospf.Framework.NetworkScheduling</RootNamespace>
+    <AssemblyName>Fuookami.Ospf.Framework.NetworkScheduling</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Framework.NetworkScheduling.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+    <ProjectReference Include="..\Math\Math.csproj" />
+    <ProjectReference Include="..\Quantities\Quantities.csproj" />
+    <ProjectReference Include="..\MultiArray\MultiArray.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+    <ProjectReference Include="..\Framework.GanttScheduling\Framework.GanttScheduling.csproj" />
+  </ItemGroup>
+</Project>

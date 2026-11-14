@@ -56,7 +56,18 @@ public sealed class BunchCompilationContext(Parameter? parameter = null)
         }
         _pipelineList = ok.Value;
 
-        // Register pipelines to model
+        // **先注册聚合，再施加管线**：管线的执行器编译约束要从编译结果里读 `executor_compilation` 那张表，
+        // 而那张表由聚合注册时建出来。反过来做的话，约束读到的是一张空表，于是"缺执行器编译表达式"——
+        // 之前聚合的 `Register` 是空壳，这张表根本不存在，所以顺序错了也看不出来。
+        //
+        // **Register the aggregation before applying the pipelines**: the pipelines' executor-compilation constraints read the `executor_compilation` table out of the compilation,
+        // and that table is built by the aggregation's registration. In the other order the constraint reads an empty table and reports "missing executor compilation expression" —
+        // this went unnoticed because the aggregation's `Register` used to be a stub, so the table did not exist at all.
+        Try aggregated = Aggregation.Register(model);
+        if (aggregated.IsFailed) {
+            return aggregated;
+        }
+
         foreach (var pipeline in _pipelineList) {
             pipeline.Register(model);
             Try ret = pipeline.Invoke(model);
@@ -65,7 +76,7 @@ public sealed class BunchCompilationContext(Parameter? parameter = null)
             }
         }
 
-        return Aggregation.Register(model);
+        return Results.Ok<Success>(Results.SuccessInstance);
     }
 
     /// <inheritdoc/>

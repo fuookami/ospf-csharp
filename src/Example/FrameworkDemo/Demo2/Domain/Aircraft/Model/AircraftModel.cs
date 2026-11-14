@@ -1,5 +1,9 @@
 #nullable enable
 
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Quantities.Quantity;
+using Fuookami.Ospf.Quantities.Unit;
+
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Model;
 
 /// <summary>
@@ -78,4 +82,56 @@ public sealed class AircraftModel
     public bool BallastNeeded => Type?.BallastNeeded() ?? false;
     /// <summary>是否偏好主甲板门空位 / Whether main deck door empty preferred</summary>
     public bool MainDeckDoorEmptyPrefer => Type?.MainDeckDoorEmptyPrefer() ?? false;
+
+    /// <summary>长度单位（英寸）/ Length unit (inch)</summary>
+    public static PhysicalUnit LengthUnit => LengthUnits.Inch;
+
+    /// <summary>重量单位（千克）/ Weight unit (kilogram)</summary>
+    public static PhysicalUnit WeightUnit => SIBaseUnits.Kilogram;
+
+    /// <summary>力单位（千克力）/ Force unit (kilogram-force)</summary>
+    public static PhysicalUnit ForceUnit => ForceUnits.KilogramForce;
+
+    /// <summary>力矩单位（千克力·英寸）/ Torque unit (kilogram-force inch)</summary>
+    /// <remarks>
+    /// 基线的 `torqueUnit = forceUnit * lengthUnit`。C# 的 `PhysicalUnit` 有 `Multiply`，所以这里照抄乘法而不是写死一个常量——
+    /// 写死会在换单位时静默不同步。
+    ///
+    /// The baseline's `torqueUnit = forceUnit * lengthUnit`. C#'s `PhysicalUnit` has `Multiply`, so this multiplies rather than hard-coding a constant: a constant silently
+    /// desynchronises when the units change.
+    /// </remarks>
+    public static PhysicalUnit TorqueUnit => ForceUnit.Multiply(LengthUnit);
+
+    /// <summary>面积单位 / The area unit</summary>
+    /// <remarks>
+    /// 由长度单位平方得来，所以 <see cref="PositionShape.Area"/>（长×宽，英寸²）与它同量纲，不需要再做单位换算。
+    ///
+    /// Squared from the length unit, so <see cref="PositionShape.Area"/> (length × width, square inch) shares its dimension and needs no conversion.
+    /// </remarks>
+    public static PhysicalUnit AreaUnit => LengthUnit.Pow(2);
+
+    /// <summary>表面密度单位 / The surface density unit</summary>
+    /// <remarks>
+    /// 重量 / 面积。**不是**体积密度：表面密度问的是"这块甲板单位面积上压了多少重量"，与货物占多高无关。
+    ///
+    /// Weight / area. **Not** a volumetric density: surface density asks how much weight sits on a unit of deck area, regardless of how tall the cargo is.
+    /// </remarks>
+    public static PhysicalUnit SurfaceDensityUnit => WeightUnit.Divide(AreaUnit);
+
+    /// <summary>
+    /// 由重量求重力 / Gravity force from a weight.
+    /// </summary>
+    /// <param name="weight">重量 / The weight.</param>
+    /// <returns>重力 / The gravity force.</returns>
+    /// <remarks>
+    /// 基线是 `weight * (Flt64.one * (forceUnit / weightUnit))`——先把"每单位重量的力"做成量纲，再乘重量。
+    /// 不能直接乘 9.80665：那是 `KilogramForce` 内部的比例，而这里要的是**量纲换算**，两者只是数值上巧合相等。
+    ///
+    /// The baseline is `weight * (Flt64.one * (forceUnit / weightUnit))` — build the force-per-weight dimension first, then multiply. Multiplying by 9.80665 directly would
+    /// coincide numerically here but conflate a unit ratio with a conversion factor.
+    /// </remarks>
+    public static Quantity<Flt64> Gravity(Quantity<Flt64> weight) {
+        var forcePerWeight = new Quantity<Flt64>(Flt64.One, ForceUnit.Divide(WeightUnit));
+        return weight.Multiply(forcePerWeight);
+    }
 }

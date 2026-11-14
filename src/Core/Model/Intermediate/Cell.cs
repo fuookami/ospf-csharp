@@ -1,13 +1,13 @@
 #nullable enable
 
-using Fuookami.Ospf.Core.Token;
-using Fuookami.Ospf.Core.Variable;
-using Fuookami.Ospf.Math.Algebra.Concept;
-using Fuookami.Ospf.Math.Algebra.Number;
 using System;
 using System.Collections.Generic;
-
+using Fuookami.Ospf.Math.Algebra.Concept;
+using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Core.Token;
+using Fuookami.Ospf.Core.Variable;
 namespace Fuookami.Ospf.Core.Model.Intermediate;
+
 /// <summary>通用单元格接口 / Generic cell interface</summary>
 public interface ICell<V> where V : struct, IRealNumber<V> {
     /// <summary>使用当前缓存结果求值 / Evaluate using current cached results</summary>
@@ -32,72 +32,77 @@ public interface IQuadraticCell<V> : ICell<V> where V : struct, IRealNumber<V> {
     V Coefficient { get; }
     /// <summary>第一个 Token / First token</summary>
     Token<V> Token1 { get; }
-    /// <summary>第二个 Token（可选，null 表示平方项）/ Second token (optional; null means squared term)</summary>
+    /// <summary>第二个 Token（可选，null 表示线性项）/ Second token (optional; null means a linear term)</summary>
     Token<V>? Token2 { get; }
 }
 
 /// <summary>线性单元格实现 / Linear cell implementation</summary>
 public sealed class LinearCellImpl<V> : ILinearCell<V>
     where V : struct, IRealNumber<V>, INumberField<V> {
-    private readonly IFlt64ValueConverter<V>? _converter;
-    private readonly Flt64 _coefficientFlt64;
     private readonly IAbstractTokenTable<V> _tokenTable;
 
     /// <inheritdoc/>
-    public V Coefficient => _converter is not null ? _converter.IntoValue(_coefficientFlt64) : (V)(object)_coefficientFlt64;
+    public V Coefficient { get; }
     /// <inheritdoc/>
     public Token<V> Token { get; }
 
-    public LinearCellImpl(IAbstractTokenTable<V> tokenTable, Flt64 coefficient, Token<V> token, IFlt64ValueConverter<V>? converter = null) {
+    /// <summary>创建保留原生系数的线性单元格 / Create a linear cell retaining its native coefficient.</summary>
+    /// <param name="tokenTable">令牌表 / Token table.</param>
+    /// <param name="coefficient">原生数值系数 / Native numeric coefficient.</param>
+    /// <param name="token">变量令牌 / Variable token.</param>
+    public LinearCellImpl(
+        IAbstractTokenTable<V> tokenTable,
+        V coefficient,
+        Token<V> token) {
         _tokenTable = tokenTable;
-        _coefficientFlt64 = coefficient;
+        Coefficient = coefficient;
         Token = token;
-        _converter = converter;
     }
 
     /// <inheritdoc/>
-    public V? Evaluate() => Token.Result is { } r ? Coefficient.Times(r) : default;
+    public V? Evaluate() => Token.Result is { } r ? Coefficient.Times(r) : (V?)null;
 
     /// <inheritdoc/>
     public V? Evaluate(IReadOnlyList<V> solution) {
         int? idx = _tokenTable.IndexOf(Token);
-        return idx is { } i && i < solution.Count ? Coefficient.Times(solution[i]) : default;
+        return idx is { } i && i >= 0 && i < solution.Count ? Coefficient.Times(solution[i]) : (V?)null;
     }
 
     /// <inheritdoc/>
     public V? Evaluate(IReadOnlyDictionary<VariableItemKey, V> solution) =>
-        solution.TryGetValue(Token.Key, out V v) ? Coefficient.Times(v) : default;
+        solution.TryGetValue(Token.Key, out V v) ? Coefficient.Times(v) : (V?)null;
 
     /// <inheritdoc/>
     public override string ToString() =>
-        _coefficientFlt64 == Flt64.One ? Token.Name : $"{_coefficientFlt64} * {Token.Name}";
+        Coefficient.Eq(NumericConstantsRegistry.For<V>().One) ? Token.Name : $"{Coefficient} * {Token.Name}";
 }
 
 /// <summary>二次单元格实现 / Quadratic cell implementation</summary>
 public sealed class QuadraticCellImpl<V> : IQuadraticCell<V>
     where V : struct, IRealNumber<V>, INumberField<V> {
-    private readonly IFlt64ValueConverter<V>? _converter;
-    private readonly Flt64 _coefficientFlt64;
     private readonly IAbstractTokenTable<V> _tokenTable;
 
     /// <inheritdoc/>
-    public V Coefficient => _converter is not null ? _converter.IntoValue(_coefficientFlt64) : (V)(object)_coefficientFlt64;
+    public V Coefficient { get; }
     /// <inheritdoc/>
     public Token<V> Token1 { get; }
     /// <inheritdoc/>
     public Token<V>? Token2 { get; }
 
+    /// <summary>创建保留原生系数的二次单元格 / Create a quadratic cell retaining its native coefficient.</summary>
+    /// <param name="tokenTable">令牌表 / Token table.</param>
+    /// <param name="coefficient">原生数值系数 / Native numeric coefficient.</param>
+    /// <param name="token1">首个变量令牌 / First variable token.</param>
+    /// <param name="token2">可选第二变量令牌 / Optional second variable token.</param>
     public QuadraticCellImpl(
         IAbstractTokenTable<V> tokenTable,
-        Flt64 coefficient,
+        V coefficient,
         Token<V> token1,
-        Token<V>? token2 = null,
-        IFlt64ValueConverter<V>? converter = null) {
+        Token<V>? token2 = null) {
         _tokenTable = tokenTable;
-        _coefficientFlt64 = coefficient;
+        Coefficient = coefficient;
         Token1 = token1;
         Token2 = token2;
-        _converter = converter;
     }
 
     /// <inheritdoc/>
@@ -112,13 +117,13 @@ public sealed class QuadraticCellImpl<V> : IQuadraticCell<V>
         }
 
         V? r2 = Token2.Result;
-        return r2 is not null ? Coefficient.Times(r1.Value).Times(r2.Value) : default;
+        return r2 is not null ? Coefficient.Times(r1.Value).Times(r2.Value) : (V?)null;
     }
 
     /// <inheritdoc/>
     public V? Evaluate(IReadOnlyList<V> solution) {
         int? idx1 = _tokenTable.IndexOf(Token1);
-        if (idx1 is null || idx1.Value >= solution.Count) {
+        if (idx1 is null || idx1.Value < 0 || idx1.Value >= solution.Count) {
             return default;
         }
 
@@ -127,9 +132,9 @@ public sealed class QuadraticCellImpl<V> : IQuadraticCell<V>
         }
 
         int? idx2 = _tokenTable.IndexOf(Token2);
-        return idx2 is { } i2 && i2 < solution.Count
+        return idx2 is { } i2 && i2 >= 0 && i2 < solution.Count
             ? Coefficient.Times(solution[idx1.Value]).Times(solution[i2])
-            : default;
+            : (V?)null;
     }
 
     /// <inheritdoc/>
@@ -142,17 +147,17 @@ public sealed class QuadraticCellImpl<V> : IQuadraticCell<V>
             return Coefficient.Times(v1);
         }
 
-        return solution.TryGetValue(Token2.Key, out V v2) ? Coefficient.Times(v1).Times(v2) : default;
+        return solution.TryGetValue(Token2.Key, out V v2) ? Coefficient.Times(v1).Times(v2) : (V?)null;
     }
 
     /// <inheritdoc/>
     public override string ToString() {
         if (Token2 is null) {
-            return _coefficientFlt64 == Flt64.One ? Token1.Name : $"{_coefficientFlt64} * {Token1.Name}";
+            return Coefficient.Eq(NumericConstantsRegistry.For<V>().One) ? Token1.Name : $"{Coefficient} * {Token1.Name}";
         }
 
-        return _coefficientFlt64 == Flt64.One
+        return Coefficient.Eq(NumericConstantsRegistry.For<V>().One)
             ? $"{Token1.Name} * {Token2.Name}"
-            : $"{_coefficientFlt64} * {Token1.Name} * {Token2.Name}";
+            : $"{Coefficient} * {Token1.Name} * {Token2.Name}";
     }
 }

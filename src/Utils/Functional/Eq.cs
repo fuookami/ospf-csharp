@@ -18,9 +18,9 @@ public interface IEq<in TSelf> : IPartialEq<TSelf> {
 
 /// <summary>Eq 扩展方法 / Eq extension methods.</summary>
 public static class EqExtensions {
-    /// <summary>安全相等比较（处理 null）/ Safe equality comparison (handles null).</summary>
+    /// <summary>非空值与可空值的部分相等比较 / Partial equality against a nullable value.</summary>
     public static bool? PartialEqNullable<T>(this T lhs, T? rhs)
-        where T : IPartialEq<T> => rhs is null ? null : lhs.PartialEq(rhs);
+        where T : IPartialEq<T> => rhs is null ? false : lhs.PartialEq(rhs);
 
     /// <summary>安全相等（处理 null）/ Safe equality (handles null).</summary>
     public static bool EqNullable<T>(this T lhs, T? rhs)

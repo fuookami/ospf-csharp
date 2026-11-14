@@ -2,18 +2,23 @@
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Core.Plugin.Hexaly</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Core.Plugin.Hexaly</AssemblyName>
+    <HexalyManagedAssembly>$(HEXALY_HOME)/bin/Hexaly.NET.dll</HexalyManagedAssembly>
+    <HexalyAvailable Condition="Exists('$(HexalyManagedAssembly)')">true</HexalyAvailable>
+    <DefineConstants Condition="'$(HexalyAvailable)' == 'true'">$(DefineConstants);HEXALY_AVAILABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Hexaly.Tests" />
   </ItemGroup>
-  <!-- Hexaly 13.0 managed assembly.
-       Native runtime: hexaly130.dll on PATH or next to managed DLL.
-       HEXALY_HOME=D:\environment\solvers\hexaly_13_0 -->
-  <ItemGroup Condition="Exists('D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll')">
+  <!-- Native runtime: hexaly130.dll on PATH or next to the managed DLL. -->
+  <ItemGroup Condition="'$(HexalyAvailable)' == 'true'">
+    <Compile Remove="HexalyUnavailable.cs" />
     <Reference Include="Hexaly.NET">
-      <HintPath>D:\environment\solvers\hexaly_13_0\bin\Hexaly.NET.dll</HintPath>
-      <Private>false</Private>
+      <HintPath>$(HexalyManagedAssembly)</HintPath>
+      <Private>true</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(HexalyAvailable)' != 'true'">
+    <Compile Remove="HexalyColumnGenerationSolver.cs;HexalyLinearSolver.cs;HexalyNativeSolver.cs;HexalyQuadraticSolver.cs;HexalyReportSupport.cs;HexalySnapshot.cs;HexalySolverCallBack.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />

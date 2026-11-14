@@ -2,11 +2,29 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>Fuookami.Ospf.Benchmark</RootNamespace>
+    <!--
+      基准工程**不发布**（B847）：`dotnet pack` 默认会把它打成一个 `Benchmark.1.1.2.nupkg`——
+      **没有 `Fuookami.Ospf.` 前缀**，和其余 33 个包的命名规则不一致。一个跑基准控制台程序也不是谁该依赖的库。
+      判据 `PackagingMetadataTests` 会挡住"又冒出一个不带前缀的包"。
+
+      The benchmark project is **not published** (B847): `dotnet pack` turns it into `Benchmark.1.1.2.nupkg` by default — **without the `Fuookami.Ospf.` prefix** the
+      other 33 packages follow. A benchmark console app is not a dependency, and a criterion blocks a stray unprefixed package from reappearing.
+    -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Fuookami.Ospf.Benchmark.Tests" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />
     <ProjectReference Include="..\Math\Math.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Framework\Framework.csproj" />
+    <ProjectReference Include="..\Framework.NetworkScheduling\Framework.NetworkScheduling.csproj" />
+    <ProjectReference Include="..\Framework.Bpp3d\Framework.Bpp3d.csproj" />
+    <!-- B952：两个缺失的基准要跑 CSP1D 与 BPP1D 的真实入口 -->
+    <ProjectReference Include="..\Framework.Csp1d\Framework.Csp1d.csproj" />
+    <ProjectReference Include="..\Framework.Bpp1d\Framework.Bpp1d.csproj" />
     <ProjectReference Include="..\MultiArray\MultiArray.csproj" />
   </ItemGroup>
   <ItemGroup>

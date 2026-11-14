@@ -6,6 +6,7 @@ using Fuookami.Ospf.Core.Model.Mechanism;
 using Fuookami.Ospf.Core.Solver;
 using Fuookami.Ospf.Core.Solver.Config;
 using Fuookami.Ospf.Core.Solver.Output;
+using Fuookami.Ospf.Core.Solver.Report;
 using Fuookami.Ospf.Core.Solver.Value;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -18,29 +19,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using FrameworkSolveOptions = Fuookami.Ospf.Framework.Solver.FrameworkSolveOptions;
+
 namespace Fuookami.Ospf.Core.Plugin.Cplex;
 
 /// <summary>
-/// CPLEX 列生成求解器实现。
-/// CPLEX column generation solver implementation.
+/// Cplex 列生成求解器实现。
+/// Cplex column generation solver implementation.
 ///
-/// 使用 CPLEX 求解器实现列生成策略，支持 MILP 求解、多解求解和 LP 松弛求解（对偶解返回空字典）。
-/// Implements column generation strategy using CPLEX solver, supporting MILP solving,
-/// multi-solution solving, and LP relaxation solving (dual solution returns empty dictionary).
+/// 使用 Cplex 求解器实现列生成策略，支持 MILP 求解、多解求解和 LP 松弛求解。
+/// 运行时需加载 Cplex 托管 DLL，否则返回 OREngineEnvironmentLost。
+/// Implements column generation strategy using Cplex solver, supporting MILP solving,
+/// multi-solution solving, and LP relaxation solving.
+/// Requires Cplex managed DLL at runtime; returns OREngineEnvironmentLost otherwise.
 /// </summary>
 public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenerationSolver {
     /// <summary>求解器名称 / Solver name.</summary>
-    public string Name => "cplex";
+    public string Name => "Cplex";
 
     /// <summary>求解器配置 / Solver configuration.</summary>
     public SolverConfig Config { get; }
 
     /// <summary>
-    /// 创建 CPLEX 列生成求解器 / Create CPLEX column generation solver.
+    /// 创建 Cplex 列生成求解器 / Create Cplex column generation solver.
     /// </summary>
     /// <param name="config">求解器配置 / Solver configuration.</param>
     public CplexColumnGenerationSolver(SolverConfig? config = null) {
-        Config = config ?? new CplexSolverConfig();
+        Config = config ?? new SolverConfig();
     }
 
     /// <summary>
@@ -69,7 +74,7 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
             await SolveTriadModelAsync(mechanismModel, solvingStatusCallBack);
 
         if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-            metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
+            return mechanismModel.ApplySolverSolution(ok.Value.Solution.Values).Bind(_ => solveResult);
         }
 
         return solveResult;
@@ -80,7 +85,7 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
     /// </summary>
     public async Task<Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>>> SolveMILPAsync(
         LinearMetaModel<Flt64> metaModel,
-        Framework.Solver.FrameworkSolveOptions options) {
+        FrameworkSolveOptions options) {
         ulong? solutionAmount = options.SolutionAmount;
         if (solutionAmount is null) {
             return await SolveMILPAsync(
@@ -127,14 +132,21 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
 
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         CplexLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(_ => Results.Failed<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>)>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             Result<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> solveResult =
                 await solver.InvokeAsync(triadModel, amount, solvingStatusCallBack);
 
             if (solveResult is Ok<(FeasibleSolverOutput<Flt64>, List<List<Flt64>>), ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Item1.Solution.Values);
+                return mechanismModel.ApplySolverSolution(ok.Value.Item1.Solution.Values).Bind(_ => solveResult);
             }
 
             return solveResult;
@@ -159,15 +171,17 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
     }
 
     /// <summary>
-    /// 求解 LP 松弛问题（对偶解返回空字典，CPLEX stub 无法提取对偶）。
-    /// Solve LP relaxation problem (dual solution returns empty dictionary; CPLEX stub cannot extract duals).
+    /// 求解 LP 松弛问题 / Solve LP relaxation problem.
+    ///
+    /// LP 松弛使用 Cplex 原生逐行对偶并按机制约束身份返回。
+    /// The LP relaxation returns native Cplex row duals keyed by mechanism-constraint identity.
     /// </summary>
     /// <param name="name">模型名称 / Model name.</param>
     /// <param name="metaModel">线性元模型 / Linear meta model.</param>
     /// <param name="toLogModel">是否记录模型日志 / Whether to log model.</param>
     /// <param name="registrationStatusCallBack">注册状态回调 / Registration status callback.</param>
     /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
-    /// <returns>LP 求解结果（含空对偶解）/ LP solving result with empty dual solution.</returns>
+    /// <returns>LP 求解结果（含逐行对偶）/ LP solving result with row duals.</returns>
     public async Task<Result<Framework.Solver.IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>>> SolveLPAsync(
         string name,
         LinearMetaModel<Flt64> metaModel,
@@ -182,29 +196,58 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
 
         using LinearMechanismModel<Flt64> mechanismModel = mechanismResult.Value;
         CplexLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<Framework.Solver.IColumnGenerationSolver.LpResult>(_ => Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
         LinearTriadModel relaxedModel = RelaxToLP(triadModel);
 
         using (triadModel)
         using (relaxedModel) {
-            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult =
-                await solver.InvokeAsync((ILinearTriadModelView)relaxedModel, solvingStatusCallBack);
-
-            if (solveResult is Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> ok) {
-                metaModel.Tokens.SetSolution(ok.Value.Solution.Values);
-                var dualSolution = new Dictionary<MathConstraint, Flt64>();
-                return Results.Ok(new Framework.Solver.IColumnGenerationSolver.LpResult(ok.Value, dualSolution));
+            MathConstraint?[] originMap = MathConstraintOrigins.OriginMap(mechanismModel);
+            Result<CplexLinearOutcome, ErrorCode, Error<ErrorCode>> solved =
+                await solver.InvokeReportWithDualsAsync(
+                    model: relaxedModel,
+                    solvingStatusCallBack: solvingStatusCallBack);
+            if (solved is not Ok<CplexLinearOutcome, ErrorCode, Error<ErrorCode>> solvedOk) {
+                return CplexDualSupport.Propagate<Framework.Solver.IColumnGenerationSolver.LpResult, CplexLinearOutcome>(
+                    solved,
+                    "Cplex LP 求解失败 / Cplex LP solving failed");
+            }
+            if (solvedOk.Value.Report.ProblemStatus != ProblemStatus.Feasible
+                || solvedOk.Value.RowDuals is null) {
+                return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(
+                    ErrorCode.Other,
+                    "Cplex LP 未找到可用于定价的 incumbent 或对偶 / " +
+                    $"Cplex LP produced no pricing incumbent or duals (problemStatus={solvedOk.Value.Report.ProblemStatus})"));
             }
 
-            if (solveResult is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> f) {
-                return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(f.Error);
+            Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> rowDuals =
+                relaxedModel.TidyDualSolution(solvedOk.Value.RowDuals);
+            if (rowDuals is not Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> dualsOk) {
+                return CplexDualSupport.Propagate<Framework.Solver.IColumnGenerationSolver.LpResult, IReadOnlyList<Flt64>>(
+                    rowDuals,
+                    "Cplex 对偶值与 LP 行数不一致 / Cplex duals do not align with the LP rows");
             }
-
-            if (solveResult is Fatal<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> fat) {
-                return new Fatal<Framework.Solver.IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>>(fat.Errors);
+            Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>> report =
+                Results.Ok(solvedOk.Value.Report);
+            Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> legacy =
+                CplexReportSupport.ToLegacy(report);
+            if (legacy is not Ok<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> output) {
+                return CplexDualSupport.Propagate<
+                    Framework.Solver.IColumnGenerationSolver.LpResult,
+                    FeasibleSolverOutput<Flt64>>(
+                    legacy,
+                    "Cplex LP 没有可返回的可行解 / Cplex LP has no feasible output");
             }
-
-            return Results.Failed<Framework.Solver.IColumnGenerationSolver.LpResult>(new Err<ErrorCode>(ErrorCode.OREngineSolvingException));
+            IReadOnlyDictionary<MathConstraint, Flt64> dualSolution =
+                MathConstraintOrigins.ToDualSolution(dualsOk.Value, originMap);
+            return mechanismModel.ApplySolverSolution(output.Value.Solution.Values)
+                .Map(_ => new Framework.Solver.IColumnGenerationSolver.LpResult(output.Value, dualSolution));
         }
     }
 
@@ -231,7 +274,7 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
     // ===== Private helpers =====
 
     /// <summary>
-    /// 创建 CPLEX 线性求解器 / Create CPLEX linear solver.
+    /// 创建 Cplex 线性求解器 / Create Cplex linear solver.
     /// </summary>
     private CplexLinearSolver CreateSolver() =>
         new CplexLinearSolver(Config);
@@ -253,7 +296,14 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
         LinearMechanismModel<Flt64> mechanismModel,
         SolvingStatusCallBack? solvingStatusCallBack) {
         CplexLinearSolver solver = CreateSolver();
-        LinearTriadModel triadModel = await solver.DumpAsync(mechanismModel);
+        Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadResult =
+            await solver.DumpAsync(mechanismModel);
+        if (triadResult is not Ok<LinearTriadModel, ErrorCode, Error<ErrorCode>> triadOk) {
+            return triadResult.Bind<FeasibleSolverOutput<Flt64>>(_ => Results.Failed<FeasibleSolverOutput<Flt64>>(new Err<ErrorCode>(
+                ErrorCode.OREngineModelingException,
+                "线性模型转换结果无效 / Invalid linear model conversion result")));
+        }
+        LinearTriadModel triadModel = triadOk.Value;
 
         using (triadModel) {
             return await solver.InvokeAsync((ILinearTriadModelView)triadModel, solvingStatusCallBack);
@@ -287,21 +337,17 @@ public sealed class CplexColumnGenerationSolver : Framework.Solver.IColumnGenera
     private static LinearTriadModel RelaxToLP(LinearTriadModel model) {
         var relaxedVars = new List<ModelViewVariable>(model.Variables.Count);
         foreach (ModelViewVariable v in model.Variables) {
-            relaxedVars.Add(new ModelViewVariable(
-                v.Index,
-                v.LowerBound,
-                v.UpperBound,
-                Continuous.Instance,
-                v.Name,
-                v.InitialResult,
-                v.Slack));
+            relaxedVars.Add(v.WithDomain(
+                lowerBound: v.LowerBound,
+                upperBound: v.UpperBound,
+                type: Continuous.Instance));
         }
 
         return new LinearTriadModel(
-            relaxedVars,
-            (LinearConstraintBatch)model.Constraints,
-            model.Objective,
-            model.Name);
+            variables: relaxedVars,
+            constraints: (LinearConstraintBatch)model.Constraints.Copy(),
+            objective: model.Objective,
+            name: model.Name);
     }
 
     /// <summary>

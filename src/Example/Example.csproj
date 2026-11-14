@@ -2,9 +2,23 @@
   <PropertyGroup>
     <RootNamespace>Fuookami.Ospf.Example</RootNamespace>
     <AssemblyName>Fuookami.Ospf.Example</AssemblyName>
+    <!--
+      示例工程**不发布**（B847）：它演示怎么用框架，**不是谁该依赖的库**。
+      基线里示例同样是一个可执行模块，而不是制品。
+
+      The example project is **not published** (B847): it demonstrates how to use the framework and **is not a library anyone should depend on**. In the baseline the
+      example is likewise an executable module, not an artifact.
+    -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Fuookami.Ospf.Example.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Demo5 的双语文档随程序集复制，便于测试断言它没有悄悄消失。 -->
+    <!-- Demo5's bilingual docs are copied to the output so a test can assert they do not silently disappear. -->
+    <None Include="FrameworkDemo\Demo5\README.md" Link="Demo5Docs\README.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="FrameworkDemo\Demo5\README_ch.md" Link="Demo5Docs\README_ch.md" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />
@@ -14,8 +28,14 @@
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Framework\Framework.csproj" />
     <ProjectReference Include="..\Framework.Bpp3d\Framework.Bpp3d.csproj" />
+    <ProjectReference Include="..\Framework.Bpp1d\Framework.Bpp1d.csproj" />
+    <!-- B934：Demo2 按机型分流，宽体要走二维内核。 / B934: Demo2 dispatches by aircraft type, and wide bodies need the 2-D kernel. -->
+    <ProjectReference Include="..\Framework.Bpp2d\Framework.Bpp2d.csproj" />
     <ProjectReference Include="..\Framework.Csp1d\Framework.Csp1d.csproj" />
     <ProjectReference Include="..\Framework.GanttScheduling\Framework.GanttScheduling.csproj" />
+    <ProjectReference Include="..\Framework.NetworkScheduling\Framework.NetworkScheduling.csproj" />
     <ProjectReference Include="..\Core.Plugin.Heuristic\Core.Plugin.Heuristic.csproj" />
+    <ProjectReference Include="..\Core.Plugin.Gurobi\Core.Plugin.Gurobi.csproj" />
+    <ProjectReference Include="..\Core.Plugin.Scip\Core.Plugin.Scip.csproj" />
   </ItemGroup>
 </Project>

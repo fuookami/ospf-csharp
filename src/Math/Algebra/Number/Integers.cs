@@ -521,6 +521,8 @@ public readonly struct IntX : IIntegerNumber<IntX>, ICopyable<IntX>, IEquatable<
     IArithmeticConstants<IntX> IArithmetic<IntX>.Constants => IntXConstants.Instance;
     IRealNumberConstants<IntX> IRealNumber<IntX>.Constants => IntXConstants.Instance;
     public IntX Copy() => new(Value);
+    /// <summary>获取原始整数值 / Get the underlying integer value.</summary>
+    public BigInteger ToBigInteger() => Value;
     IntX IInvariant<IntX>.Value() => this;
     public IntX Plus(IntX rhs) => new(Value + rhs.Value);
     public IntX Minus(IntX rhs) => new(Value - rhs.Value);

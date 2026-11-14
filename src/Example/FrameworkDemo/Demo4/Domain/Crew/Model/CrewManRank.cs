@@ -1,7 +1,9 @@
 #nullable enable
 
-using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using Fuookami.Ospf.Example.FrameworkDemo.Demo4.Infrastructure;
 
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Crew.Model;
 
@@ -54,10 +56,10 @@ public sealed record CrewManRank(
     CrewManRankClass? Cls = null,
     string? DisplayName = null
 ) {
-    private static readonly Dictionary<CrewManRankNo, CrewManRank> Pool = new();
+    private static readonly ConcurrentDictionary<CrewManRankNo, CrewManRank> Pool = new();
 
-    /// <summary>所有已注册的职级 / All registered ranks.</summary>
-    public static IReadOnlyCollection<CrewManRank> Values => Pool.Values;
+    /// <summary>已注册职级的快照 / Snapshot of registered ranks.</summary>
+    public static IReadOnlyCollection<CrewManRank> Values => Pool.Values.ToArray();
 
     /// <summary>
     /// 通过类别从池中获取职级。

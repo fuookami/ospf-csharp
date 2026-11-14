@@ -45,9 +45,105 @@ public class TestTask : IAbstractTask<TestExecutor, TestAssignmentPolicy> {
     public string Id { get; }
     public string Name { get; }
     public TestAssignmentPolicy? AssignmentPolicy { get; set; }
-    public TimeRange? Time { get; }
+
+    /// <summary>任务时间窗 / The task's time window.</summary>
+    /// <remarks>
+    /// 构造时可给，之后也可设。完工时间的判据需要**不同任务在不同时刻结束**——全部相同就分不出
+    /// "取了最大值"和"取了任意一个"。
+    ///
+    /// Settable at construction and afterwards. The makespan criteria need **tasks ending at different times** — with all equal there is no telling "took the maximum" from
+    /// "took any one of them".
+    /// </remarks>
+    public TimeRange? Time { get; set; }
+    /// <summary>分配的执行者 / The assigned executor.</summary>
+    /// <remarks>
+    /// 默认 `null`（与接口默认一致）。迭代加列的判据需要它能被设上——**列的执行器是跨轮冲突与 `xor` 约束的依据**，
+    /// 没有它就没法判"这一列属于哪个执行器"。
+    ///
+    /// Defaults to `null` (matching the interface default). The iterative add-columns criteria need it settable — **a column's executor drives the cross-round conflicts and the
+    /// `xor` constraints**, and without it there is no way to tell which executor a column belongs to.
+    /// </remarks>
+    public TestExecutor? Executor { get; set; }
+
+    /// <summary>可用执行器 / The enabled executors.</summary>
+    /// <remarks>
+    /// 接口默认返回**空集**，而空集会把每个组合都固定为 0——于是 `taskCompilation == 1` 立刻不可行。
+    /// 默认保持空集（既有判据依赖"空集 = 全禁止"），需要可行的判据自己填上。
+    ///
+    /// The interface default is an **empty** set, and an empty set pins every combination to 0 — which makes `taskCompilation == 1` immediately infeasible. The default stays empty
+    /// (existing criteria rely on "empty = all forbidden"); criteria that need feasibility fill it in themselves.
+    /// </remarks>
+    public ISet<TestExecutor> EnabledExecutorSet { get; } = new HashSet<TestExecutor>();
+
+    /// <inheritdoc/>
+    public ISet<TestExecutor> EnabledExecutors => EnabledExecutorSet;
+
+    /// <summary>是否允许取消 / Whether the task may be cancelled.</summary>
+    /// <remarks>
+    /// 接口默认 `false`，与"默认不可取消"一致。取消成本判据需要它能被设上：不允许取消的任务 `y == 0`，
+    /// 计不进取消成本——这条分支没有可点的开关就永远测不到。
+    ///
+    /// The interface defaults to `false`, matching "not cancellable by default". The cancellation-cost criteria need it settable: a task that cannot cancel has `y == 0` and cannot
+    /// be charged, and that branch is unreachable without a switch.
+    /// </remarks>
+    public bool CancelEnabled { get; set; }
+
+    /// <summary>是否允许提前 / Whether advance is enabled.</summary>
+    /// <remarks>
+    /// 接口默认 `false`。开始时间变量的判据需要它能被设上：**不允许提前时 `est` 被钉在时间窗开始**，
+    /// 允许时下界才放开——两种情况下 `est` 的边界完全不同，没有开关就测不到"放开"那一半。
+    ///
+    /// The interface defaults to `false`. The start-time-variable criteria need it settable: **with advance disabled `est` is pinned to the window start**, and only when advance is
+    /// allowed does the lower bound relax — the two cases give completely different bounds, and without the switch the "relaxed" half is unreachable.
+    /// </remarks>
+    public bool AdvanceEnabled { get; set; }
+
+    /// <summary>是否允许延迟 / Whether delay is enabled.</summary>
+    /// <remarks>同上，作用于 `est` 的上界 / Same as above, acting on the upper bound of `est`.</remarks>
+    public bool DelayEnabled { get; set; }
+
+    /// <summary>最晚结束时间 / The last allowed end time.</summary>
+    /// <remarks>
+    /// 接口默认 `null`。准时判据需要它能被设上：`on_last_end_time` 只在**任务允许延迟且给了最晚结束时间**时才是一个真指示，
+    /// 否则是常量零——没有这个开关那条分支永远测不到。
+    ///
+    /// The interface defaults to `null`. The on-time criteria need it settable: `on_last_end_time` is a real indicator only when **the task may delay and a last end time is
+    /// given**, otherwise constant zero — without this switch that branch is unreachable.
+    /// </remarks>
+    public DateTimeOffset? LastEndTime { get; set; }
+
+    /// <summary>最大允许延迟 / The maximum allowed delay.</summary>
+    /// <remarks>
+    /// 接口默认 `null`（= 没有上限）。超最大延迟的判据需要它可设：没有上限就没有"超限"，而那正是要测的一条分支。
+    ///
+    /// The interface defaults to `null` (= no limit). The over-max delay criteria need it settable: without a limit there is no violation, and that is exactly one branch to pin.
+    /// </remarks>
+    public TimeSpan? MaxDelay { get; set; }
+
+    /// <summary>最大允许提前 / The maximum allowed advance.</summary>
+    /// <remarks>同上，作用于 `over_max_advance_time` / Same as above, acting on `over_max_advance_time`.</remarks>
+    public TimeSpan? MaxAdvance { get; set; }
+
+    /// <summary>最早结束时间 / The earliest allowed end time.</summary>
+    /// <remarks>同上，作用于 `on_earliest_end_time` / Same as above, acting on `on_earliest_end_time`.</remarks>
+    public DateTimeOffset? EarliestEndTime { get; set; }
+
+    /// <summary>排定时间 / The scheduled time.</summary>
+    /// <remarks>
+    /// 接口默认 `null`。延迟/提前两条目标都要求**有排定时间**（偏移量相对什么？），所以这个开关必须能设，
+    /// 否则"没有基准就被排除"这条判据永远测不到。
+    ///
+    /// The interface defaults to `null`. Both the delay and advance objectives require **a scheduled time** (deviation relative to what?), so this must be settable — otherwise
+    /// "no reference means excluded" is unreachable.
+    /// </remarks>
+    public TimeRange? ScheduledTime { get; set; }
+
     public int Index { get; private set; }
     public void SetIndexed() => Index = ManualIndexed.Impl.NextIndex(GetType());
+
+    // 报错信息里要能认出是哪个任务；默认的 `ToString` 只给类型名，等于什么都没说。
+    // Error messages must identify which task; the default `ToString` yields only the type name, which says nothing.
+    public override string ToString() => Id;
     public bool? PartialEq(IAbstractTask<TestExecutor, TestAssignmentPolicy> rhs) {
         if (ReferenceEquals(this, rhs)) {
             return true;
@@ -265,15 +361,24 @@ public class BunchCompilationTests {
     }
 
     [Fact]
-    public void BunchCompilation_Register_ShouldSucceed() {
+    public void BunchCompilation_Register_ShouldRejectANonModelAndBuildTheColumnsOnAModel() {
         var tasks = new List<TestTask> { new("T1", "Task1") };
         var executors = new List<TestExecutor> { new("E1", "Executor1") };
         var compilation = new BunchCompilation<TestTaskBunch, TestTask, TestExecutor, TestAssignmentPolicy>(
             tasks, executors);
 
+        // 这条判据原来是"注册到 `new object()` 也返回 Ok"——那正是本批删掉的静默成功。
+        // 接线之后它的意义变成:非模型仍然失败,注册到模型才建列。
+        // This criterion used to be "registering a `new object()` also returns Ok" — exactly the silent success removed in this batch. Once wired it means: a non-model still
+        // fails, and only registering on a model builds the columns.
         Result<Success, ErrorCode, Error<ErrorCode>> result = compilation.Register(new object());
+        result.IsOk.Should().BeFalse("a non-model must be rejected");
 
-        result.IsOk.Should().BeTrue();
+        var model = new Fuookami.Ospf.Core.Model.Mechanism.LinearMetaModel<Flt64>();
+        compilation.Register(model).IsOk.Should().BeTrue();
+        compilation.Cancellation.Should().ContainKey((Fuookami.Ospf.Framework.GanttScheduling.Domain.Task.Model.IAbstractTask<TestExecutor, TestAssignmentPolicy>)tasks[0]);
+        compilation.TaskCompilationTable.Should().NotBeEmpty("`task_compilation_t = y[t]` is what the deviation masks read");
+        compilation.ExecutorCompilation.Should().ContainKey(executors[0]);
     }
 }
 

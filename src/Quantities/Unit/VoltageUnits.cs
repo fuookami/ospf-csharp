@@ -19,6 +19,10 @@ public static class VoltageUnits {
     /// <summary>微伏 / Microvolt.</summary>
     public static readonly PhysicalUnit Microvolt = new DerivedUnit(Volt.ScaleMultiply(Scale.Micro), "microvolt", "uV");
 
+    /// <summary>**兆伏（10⁶ V）** / Megavolt.</summary>
+    public static readonly PhysicalUnit Megavolt =
+        new DerivedUnit(Volt.ScaleMultiply(Scale.Mega), "megavolt", "MV");
+
     private sealed class DerivedUnit : PhysicalUnit {
         private readonly PhysicalUnit _inner;
         private readonly string _name;

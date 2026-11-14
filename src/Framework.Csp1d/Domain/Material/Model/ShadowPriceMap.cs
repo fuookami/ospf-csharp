@@ -169,9 +169,28 @@ public sealed class ShadowPriceMap<V> where V : struct {
     /// 查询影子价格 / Get shadow price by key
     /// </summary>
     /// <param name="key">影子价格键 / Shadow price key.</param>
-    /// <returns>对应影子价格 / Matched shadow price.</returns>
+    /// <returns>对应影子价格；**键不存在时返回 null** / Matched shadow price; **null when the key is absent**.</returns>
+    /// <remarks>
+    /// **这里原先返回 `default`**，对 `struct V` 来说 `default` 转成 `V?` **不是 null**，
+    /// 而是一个 **`HasValue == true`、值为零** 的可空值。于是**"查不到"与"价格为零"完全无法区分**——
+    /// 返回类型写着 `V?`，实际**永远不会是 null**。
+    ///
+    /// 后果很具体：定价代码里 `if (shadowPrice is null) continue;` 这个分支**是死代码**，
+    /// 缺失的对偶价格只能靠"零不正"这一步被挡掉。定价恰好只接受正价格，所以**看起来是对的**；
+    /// 但任何需要区分"没有这条对偶价格"与"对偶价格为零"的调用方**都做不到**。
+    ///
+    /// 修法是显式 `(V?)null`——**让返回类型说的和做的一致**。
+    ///
+    /// **This used to return `default`**, and for `struct V` a `default` converted to `V?` **is not null** — it is a nullable with **`HasValue == true` and value
+    /// zero**. So **"not found" and "price is zero" were completely indistinguishable** — the return type said `V?` while it could **never actually be null**.
+    ///
+    /// The consequence is concrete: in the pricing code, `if (shadowPrice is null) continue;` **was dead**, and a missing dual was only stopped by "zero is not
+    /// positive". Pricing only accepts positive prices, so it **looked right**; but any caller needing to tell "no dual price" from "dual price of zero" **could not**.
+    ///
+    /// The fix is an explicit `(V?)null` — **making the return type honest**.
+    /// </remarks>
     public V? this[Csp1dShadowPriceKey key] =>
-        _values.TryGetValue(key, out V value) ? value : default;
+        _values.TryGetValue(key, out V value) ? value : (V?)null;
 }
 
 /// <summary>

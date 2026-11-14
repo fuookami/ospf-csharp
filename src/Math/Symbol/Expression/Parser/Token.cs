@@ -11,8 +11,12 @@ public enum TokenType {
     And, Or, Not, In, Is, Like, Contains, Prefix, Suffix, Regex, Exact,
     // Comparison operators
     Eq, Ne, Lt, Le, Gt, Ge,
+    // Conditional keywords
+    If, Then, Else, Fi,
+    // Arithmetic operators
+    Plus, Minus, Star, Slash, Percent, Caret, DoubleStar,
     // Other symbols
-    LParen, RParen, Comma,
+    Question, Colon, AmpersandAmpersand, PipePipe, Bang, LParen, RParen, Comma,
     // Special
     Eof, Unknown,
 }

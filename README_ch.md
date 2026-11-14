@@ -30,10 +30,14 @@ ospf-csharp 是 [ospf](https://github.com/fuookami/ospf) 的 C# / .NET 10 实现
 | `Fuookami.Ospf.Core.Plugin.Gurobi` | Gurobi 求解器适配器（原生回调支持） | ✅ 完成 |
 | `Fuookami.Ospf.Framework.Plugin` | 持久化（MongoDB/SQLite/MySQL/Redis）、Kafka、Roslyn 源生成器 | ✅ 完成 |
 | `Fuookami.Ospf.Example` | 核心演示（17 个）+ 框架演示（9 个） | ✅ 完成 |
-| `Fuookami.Ospf.Benchmark` | BenchmarkDotNet 基准测试（17 个基准） | ✅ 完成 |
+| `Fuookami.Ospf.Benchmark` | BenchmarkDotNet 基准测试（12 个基准类、54 个基准） | ✅ 完成 |
 | `Fuookami.Ospf.Starters.*` | NuGet 元包（Core、Bpp3d、Csp1d、Framework、GanttScheduling） | ✅ 完成 |
 
+表中状态为 2026 年 6 月的迁移快照；相对固定 Kotlin 基线的当前同步状态以 [docs/kotlin-sync-status.md](docs/kotlin-sync-status.md) 为准。
+
 ## 架构
+
+当前 Kotlin 同步基线与能力状态见 [docs/kotlin-sync-status.md](docs/kotlin-sync-status.md)。
 
 框架采用分层架构：
 
@@ -80,9 +84,74 @@ dotnet test ospf-csharp.sln --no-build -c Debug
 
 ## 基准测试
 
+`src/Benchmark` 是一套 BenchmarkDotNet 基准：**12 个基准类、54 个基准方法**，覆盖多维数组访问、核心热路径、
+数学准备、符号归一化、索引构建、堆垛/网络准备，以及列生成与约束规划示例负载。
+
 ```bash
-dotnet run -c Release --project src/Benchmark -- --filter '*'
+dotnet run -c Release --project src/Benchmark -- \
+  --filter '*' --dataset small --format json --result results/current-small.json
 ```
+
+运行入口是 `BenchmarkRunOptions`：它解析参数后转发给 `BenchmarkSwitcher`，参数非法时**以退出码 `2` 结束**、
+不会开始跑基准：
+
+| 参数 | 含义 |
+| --- | --- |
+| `--filter <正则>` | BenchmarkDotNet 名称过滤（默认 `.*`） |
+| `--dataset <名称>` | 数据集标签，进入结果文件名与趋势报告 |
+| `--format <json\|csv\|markdown\|html>` | 结果格式（默认 `json`） |
+| `--result <路径>` | 结果文件，默认 `results/<dataset>-<format>` |
+| `--forks`、`--warmup`、`--iterations` | 作业次数，均默认 `1` |
+
+**规模由基准类固定**：`[Params]` 是编译期常量，`--dataset` 只影响输出命名，不改变负载。
+说成"能改规模"就是没有实测支撑的性能主张，本仓库不作这种主张。
+
+### 基准趋势对比
+
+`scripts/compare-benchmark-results.ps1` 对比两个 BenchmarkDotNet JSON 结果并产出 Markdown 趋势报告
+（差值、样本数、单位变化、新增/消失的基准）：
+
+```powershell
+pwsh -File scripts/compare-benchmark-results.ps1 `
+  -Baseline results/baseline-small.json `
+  -Current results/current-small.json
+```
+
+按 `baseline-<dataset>.json` / `current-<dataset>.json` 命名时，报告默认写到当前文件同目录的
+`trend-<dataset>.md`；目录模式（`-ResultsDir [-Dataset]`）自动配对。报告**只报告不设门槛**：
+基准分数对机器敏感，因此没有性能硬门槛。
+
+脚本自身的自检：
+
+```powershell
+pwsh -File scripts/test-compare-benchmark-results.ps1
+```
+
+## 验证
+
+```bash
+# 全方案 Release 强制重建
+dotnet build ospf-csharp.sln -c Release -t:Rebuild
+
+# 默认全量测试
+dotnet test ospf-csharp.sln -c Release --no-build
+```
+
+最近一次实测门禁（`7450 passed` / `1` 项既有 Delaunay skip / `0 failed` / `0` 错误 / `1454` 行警告）
+记录在 [docs/kotlin-sync-status.md](docs/kotlin-sync-status.md) 中，并附逐批证据。
+**这些数字是最近一次已验证批次的快照，不是工作树的永久属性。**
+
+## 对齐程度与已知缺口
+
+本仓库**不**作以下主张：
+
+- **没有性能主张。** 基准套件证明的是"夹具确实走到了目标代码路径"，不证明加速；移植的夹具从不断言耗时。
+- **没有通用互通主张。** 跨语言验证只做过三处：`SerializedSolution`、`RemoteTaskSubmitRequest`、
+  `configuration` / `sha256` 摘要。
+- **没有"文件数对齐"主张。** 模块存在不等于能力存在；以能力矩阵为准，不以项目清单为准。
+- 已知缺口（持续维护在 `docs/kotlin-sync-status.md` 与 `logs/kotlin-sync-plan.md` 的逐批小节里）包括：
+  本仓库**根本没有 `Framework.Bpp1d` 项目**，故 `PatternColumnBenchmark` 无法移植；`Infra.Item.Weight`
+  只透传不参与任何约束；基线的 PWL 诊断与形状 DTO 缓存未移植；Demo5 各模块 README 与迁移指南仍缺。
 
 ## 许可证
 

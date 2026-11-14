@@ -11,5 +11,6 @@
     <ProjectReference Include="..\Math\Math.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Framework\Framework.csproj" />
+    <ProjectReference Include="..\Core.Plugin.Gurobi\Core.Plugin.Gurobi.csproj" />
   </ItemGroup>
 </Project>

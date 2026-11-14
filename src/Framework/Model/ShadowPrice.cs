@@ -43,11 +43,29 @@ public delegate Flt64 ShadowPriceExtractor<Args, TMap>(TMap map, Args arg)
     where TMap : AbstractShadowPriceMap<Args, TMap>;
 
 /// <summary>
+/// 影子价格接收器 / A shadow-price sink.
+/// </summary>
+/// <remarks>
+/// `AbstractShadowPriceMap` 的第二个类型参数是自类型（CRTP），**调用方拿不到 `Args` / `TSelf` 时就无法命名映射类型**——
+/// 产量 / 消耗量的 `Refresh(object, object)` 正是这种情况（它的泛型参数只有材料类型）。这个非泛型接口让"往里写一条价格"不必知道那两个参数。
+///
+/// **只有一个成员、只有一个真实调用方**（`ProduceSlackHelper.RefreshTable`），不是预留的抽象。
+///
+/// The second type argument of `AbstractShadowPriceMap` is a self type (CRTP), so **a caller that does not know `Args`/`TSelf` cannot name the map type** — exactly the case for the
+/// produce/consumption `Refresh(object, object)`, whose generic parameter is only the material type. This non-generic interface lets "write one price into it" work without knowing those two.
+/// **One member, one real caller** (`ProduceSlackHelper.RefreshTable`), not a speculative abstraction.
+/// </remarks>
+public interface IShadowPriceSink {
+    /// <summary>放置或累加一条影子价格 / Put or accumulate one shadow price.</summary>
+    void PutOrAdd(ShadowPrice price);
+}
+
+/// <summary>
 /// 抽象影子价格映射 / Abstract shadow price map.
 /// </summary>
 /// <typeparam name="Args">参数类型 / Argument type</typeparam>
 /// <typeparam name="TSelf">映射自身类型 / Map self type</typeparam>
-public abstract class AbstractShadowPriceMap<Args, TSelf>
+public abstract class AbstractShadowPriceMap<Args, TSelf> : IShadowPriceSink
     where Args : class
     where TSelf : AbstractShadowPriceMap<Args, TSelf> {
     private readonly Dictionary<ShadowPriceKey, ShadowPrice> _map = new();
