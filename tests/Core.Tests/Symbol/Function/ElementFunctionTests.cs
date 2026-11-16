@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **最容易漏的是下标等式**：**没有它 `selector` 可以是任何 one-hot 组合，
 /// 而结果只是"某个表项的值"——模型仍然可行、目标值仍然合理，只是答案与输入无关。**
 ///
-/// B1154 adds `ElementFunction`.
+/// adds
 ///
 /// **The encoding has three parts**: one-hot, a masking group per entry, and two equalities (index and result).
 ///

@@ -16,9 +16,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 辅助列重建：零点约定与"解里不该有它" / The zero convention and "the solution must not contain it".
 /// </summary>
 /// <remarks>
-/// B1209 按基线 `NativePiecewiseReport.kt` 的 `selectorValues` 与 `absHelperValues` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `selectorValues` 与 `absHelperValues`。
 ///
-/// B1209 adds the baseline's `selectorValues` and `absHelperValues`.
+/// adds
 /// </remarks>
 public class NativeHelperReconstructionTests
 {

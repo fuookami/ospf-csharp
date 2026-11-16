@@ -37,7 +37,7 @@ public class OnnxLoweringContextTests
 
     /// <summary>**子图的中间结果不会泄漏到外层** / A subgraph's intermediate does not escape.</summary>
     /// <remarks>
-    /// **这条是这一批存在的理由：** **若子图写到外层，** **外层之后每次按名字查找都可能命中一个本不存在的张量，** **而那种错在数值上表现为"某一项莫名多出来"。**
+    /// **这条存在的理由：** **若子图写到外层，** **外层之后每次按名字查找都可能命中一个本不存在的张量，** **而那种错在数值上表现为"某一项莫名多出来"。**
     ///
     /// **This is why the batch exists: if a subgraph wrote outward, every later lookup outside could hit a tensor that does not exist there, and that shows up numerically as
     /// "one term appeared out of nowhere".**

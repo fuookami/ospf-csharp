@@ -81,7 +81,7 @@ public class ArchivedGateScriptsTests
 
     /// <summary>**归档目标必须是"批次号 = 脚本号 − 2"** / The archive target is the script number minus two.</summary>
     /// <remarks>
-    /// **门禁脚本叫 `gNNNN`，归档叫 `p8-batch(NNNN−2)`**（B1058 起脚本与批次号差 2）。
+ /// **门禁脚本叫 `gNNNN`，归档叫 `p8-batch(NNNN−2)`**。
     /// **这个偏移量是约定，而约定只在不被写错时成立。**
     ///
     /// **The gate script is `gNNNN` and the archive is `p8-batch(NNNN−2)`** (since B1058 the two differ by two). **The offset is a convention, and a convention holds only while nobody mistypes it.**
@@ -106,13 +106,13 @@ public class ArchivedGateScriptsTests
     /// <summary>**每个跑完的归档脚本都要有对应的归档日志** / Every finished script has to have its archives.</summary>
     /// <remarks>
     /// **脚本留着而日志不在，说明那一批的"跑过了"没有任何证据**；
-    /// **日志留着而脚本不在，说明这些数字怎么算出来的已经不可复核**（B1058 的发现）。
+ /// **日志留着而脚本不在，说明这些数字怎么算出来的已经不可复核**。
     ///
     /// **最新那一份必须跳过，否则这条判据会否证它自己**：它要求脚本留下日志，
     /// **而那些日志正是这次运行最后才写出来的。** 第一版没有跳过，
     /// **于是在 `g1072` 自己的运行里红了**——**一条判据在自己的运行中必然为假，那不是发现，是设计错误。**
     ///
-    /// **A script with no logs means that batch's "it ran" has no evidence**; **logs with no script mean how those numbers were produced is no longer checkable** (B1058's finding).
+ /// **A script with no logs means that batch's "it ran" has no evidence**; **logs with no script mean how those numbers were produced is no longer checkable** .
     /// **The newest one has to be skipped, or this criterion refutes itself**: it demands logs that **that very run writes at the end.** The first version did not skip it, **so it went red inside `g1072`'s own run** — **a criterion that is necessarily false while its own run is in flight is a design error, not a finding.**
     /// </remarks>
     [Fact]

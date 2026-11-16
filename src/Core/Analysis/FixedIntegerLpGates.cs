@@ -147,7 +147,7 @@ public static class FixedIntegerLpGates
     /// <param name="originalIds">允许出现的原始约束 / The admissible original constraints.</param>
     /// <returns>原始约束到区间的映射 / A map from original constraint to range.</returns>
     /// <remarks>
-    /// **直接转发到 `ProvenanceDualMapping.MapRanges`**，因为规则完全一样（B1020 已搬）。
+ /// **直接转发到 `ProvenanceDualMapping.MapRanges`**，因为规则完全一样。
     /// **这里单开一个名字，是为了让 `solveTriad` 的读法贴近基线**：基线在那一行写的就是
     /// "多行 lowering 不得冒充单个约束的范围"。
     ///

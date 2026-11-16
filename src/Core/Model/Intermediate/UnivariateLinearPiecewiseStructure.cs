@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 结构节点拥有的连续约束区域 / A contiguous constraint region owned by a structure node.
 /// </summary>
 /// <remarks>
-/// B1191 按基线 `FunctionExpansion.kt` 的 `DeferredFunctionConstraintRegion` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `DeferredFunctionConstraintRegion`。
 ///
 /// **`LastConstraintIndex` 是<b>排他</b>索引，而这一点决定了所有用它做的算术。**
 ///
@@ -67,7 +67,7 @@ public sealed record DeferredFunctionConstraintRegion(
 /// 为延迟自动 Big-M 快照捕获有限输入范围 / Capture a finite input range for a deferred automatic Big-M snapshot.
 /// </summary>
 /// <remarks>
-/// B1191 按基线 `DeferredFunctionFallback.kt` 的 `capturePwlInputBounds` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `capturePwlInputBounds`。
 ///
 /// **三层校验，顺序不能换：**
 ///
@@ -144,7 +144,7 @@ public static class PiecewiseInputBounds
 /// 所以那个分岔必须在最前面。** **把它放到后面，一个带显式 M 而缺转换器的快照会被判为非法——
 /// 而它其实是合法的。**
 ///
-/// B1191 adds the `ValidateFallbackInputBounds` part of the baseline's `UnivariateLinearPiecewiseStructure`;
+/// adds
 /// **row generation and selector constraints are left to later batches.**
 ///
 /// **The first thing the check does is look at `ExplicitM`:**

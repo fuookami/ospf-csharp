@@ -16,14 +16,14 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 接收 fallback 约束并支持事务回滚的目标 / A target that accepts fallback rows and supports rollback.
 /// </summary>
 /// <remarks>
-/// B1200 按基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackTarget` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackTarget`。
 ///
 /// **`Append` 与 `Rollback` 返回的都是"可能失败"，而这不是形式主义：**
 /// **目标可能是一个已经写完的模型层（追加会被拒绝）、
 /// 也可能是一个固定容量的缓冲区（追加会溢出）。**
 /// **驱动必须能处理这些失败，所以它们不能是 `void`。**
 ///
-/// **B1200, following the baseline's `DeferredFunctionFallbackTarget`.**
+/// **Aligned with the baseline's `DeferredFunctionFallbackTarget`.**
 ///
 /// **Both `Append` and `Rollback` report possible failure, and that is not formalism**: **the target may be a finished model
 /// layer that refuses appends, or a fixed-capacity buffer that overflows.** **The driver must handle those, so neither can
@@ -45,19 +45,19 @@ public interface IDeferredFunctionFallbackTarget
     /// **记下一段刚追加出来的区域** / Record one slice that was just appended.
     /// </summary>
     /// <remarks>
-    /// B1239 加这个成员，理由是<b>驱动返回的区域列表没人接</b>：
+    /// 这个成员存在的理由，是<b>驱动返回的区域列表没有消费者</b>：
     ///
     /// **驱动把它们放进返回值，而返回值此前唯一的消费者是测试。**
     /// **于是"某个结构已经物化过"这个事实只存在于一个即将被丢弃的列表里，
-    /// 而 `DeferredFunctionConstraintRegions` 永远是空的——B1238 刚补的第三个过滤条件因此永远不会生效。**
+    /// 而 `DeferredFunctionConstraintRegions` 永远是空的——**第三个过滤条件因此永远不会生效。**
     ///
     /// **"过滤条件依赖的数据永远为空"是一种<b>看起来对</b>的错误：** **过滤逻辑正确、判据通过
     /// （因为判据自己造了那个非空集合），而真实路径上集合一直是空的。**
     ///
-    /// **B1239 adds this member because <b>nobody consumed the driver's returned region list</b>: the driver put the
+    /// **This member exists because <b>nothing consumed the driver's returned region list</b>: the driver put the
     /// regions in its return value, and the only consumer of that value was tests.** **So "this structure was already
     /// materialised" lived in a soon-to-be-discarded list while `DeferredFunctionConstraintRegions` stayed empty — and the
-    /// third filter condition B1238 just added could therefore never fire.**
+    /// third filter condition could therefore never fire.**
     ///
     /// **"The data a filter depends on is permanently empty" is a <b>plausible-looking</b> defect: the filtering logic is
     /// right and the criteria pass (because they build that non-empty set themselves) while on the real path the set is
@@ -72,7 +72,7 @@ public interface IDeferredFunctionFallbackTarget
 /// 事务化物化一组延迟函数 fallback / Materialize a group of deferred-function fallbacks transactionally.
 /// </summary>
 /// <remarks>
-/// B1200 按基线 `DeferredFunctionFallback.kt` 的 `materializeDeferredFunctionFallbacks` 与 `rollbackErrors` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `materializeDeferredFunctionFallbacks` 与 `rollbackErrors`。
 ///
 /// **整个循环是一个事务：任一结构失败就回滚到<b>开始时的行数</b>，而不是回滚一步。**
 ///
@@ -120,27 +120,27 @@ public interface IDeferredFunctionFallbackTarget
 /// The adapter that connects `LinearMechanismModel` to the materialisation driver.
 /// </summary>
 /// <remarks>
-/// B1235 按基线 `MechanismFunctionFallbackTarget.kt` 补。
+/// 对齐基线 `MechanismFunctionFallbackTarget.kt`。
 ///
-/// **这一批补的不是能力，而是<b>接线</b>。** **B1200 已经把驱动、事务、回滚、五个 materializer 全都写好了，
+/// **这里缺的不是能力，而是<b>接线</b>。** **驱动、事务、回滚、五个 materializer 都已经写好了，
 /// 而它们此前只在测试里被调用过——产品代码零调用。**
 ///
 /// **"能力齐备但没有调用方"是一种不会报错的缺口：** **代码全部编译、判据全部绿，
 /// 因为判据直接调那个能力；而真实路径从来不经过它。**
 ///
-/// **它和 B1232 的"读得有、写不出"是同一族，但方向相反：** **那里是缺一个实现，
+/// **它与"读得有、写不出"是同一族、方向相反：** **那里缺的是一个实现，
 /// 这里是实现齐全而<b>没有入口</b>。** **后者的判据必须是"谁调用了它"，而不是"它对不对"。**
 ///
-/// **B1235 follows the baseline's `MechanismFunctionFallbackTarget.kt`.**
+/// **Aligned with the baseline's `MechanismFunctionFallbackTarget.kt`.**
 ///
-/// **What this batch adds is not a capability but <b>the wiring</b>.** **B1200 had already written the driver, the
+/// **What is missing here is not a capability but <b>the wiring</b>.** **The driver, the
 /// transaction, the rollback and five materializers — and they were called only from tests, never from product
 /// code.**
 ///
 /// **"Everything implemented, nothing calls it" is a gap that cannot report itself: it all compiles and the criteria are
 /// green, because the criteria call the capability directly, while the real path never reaches it.**
 ///
-/// **Same family as B1232's "readable but unwritable", opposite direction: there an implementation was missing; here it
+/// **Same family as "readable but unwritable", opposite direction: there an implementation was missing; here it
 /// is complete and has <b>no caller</b>.** **The criterion for the latter has to ask "who calls it", not "is it
 /// correct".**
 /// </remarks>
@@ -207,7 +207,7 @@ public sealed class LinearMechanismFallbackTarget : IDeferredFunctionFallbackTar
 /// **延迟物化的入口判定** / The entry decision for deferred materialisation.
 /// </summary>
 /// <remarks>
-/// B1236 按基线 `materializeMechanismFunctionFallbacks` 的<b>第一个守卫</b>补。
+/// 对齐基线 `materializeMechanismFunctionFallbacks` 的<b>第一个守卫</b>。
 ///
 /// **基线那个函数有四段，本批只做第一段，理由写明：**
 ///
@@ -224,9 +224,9 @@ public sealed class LinearMechanismFallbackTarget : IDeferredFunctionFallbackTar
 /// **"把能单独成立的一段先做出来"不是拆碎了交付，而是<b>让后面那两段的缺口保持清晰</b>：
 /// 现在缺的是两个集合，而不是"整个函数"。**
 ///
-/// **B1236 follows the <b>first guard</b> of the baseline's `materializeMechanismFunctionFallbacks`.**
+/// **Follows the <b>first guard</b> of the baseline's `materializeMechanismFunctionFallbacks`.**
 ///
-/// **That function has four parts and this batch does one, for a stated reason: the first is the only part that needs
+/// **That function has four parts and only the first is here, for a stated reason: it is the only part that needs
 /// exactly one read-only property. So it can stand and be measured on its own, without first giving the model those two
 /// collections.**
 ///
@@ -265,29 +265,29 @@ public static class DeferredFunctionMaterializationGate
     /// **挑出真正需要物化的结构** / Pick the structures that genuinely need materialising.
     /// </summary>
     /// <remarks>
-    /// B1237 按基线 `materializeMechanismFunctionFallbacks` 的<b>第二段</b>补了前两个条件；
-    /// B1238 补上第三个，并<b>删掉了那个临时开关</b>。
+    /// 按基线 `materializeMechanismFunctionFallbacks` 的<b>第二段</b>，前两个条件在此处判定；
+    /// 第三个条件同样在此处判定，<b>不存在临时开关</b>。
     ///
     /// **三个条件现在都在：**
     ///
     /// | 条件 | 依赖 | 批次 |
     /// | --- | --- | --- |
-    /// | `supportsDeferredFallback()` | 结构自身 | B1237 |
-    /// | 结果键不在 `nativeFunctionKeys` 里 | 调用方参数 | B1237 |
-    /// | 结果键不在已绑定区域里 | `DeferredFunctionConstraintRegions` | **B1238** |
+    /// | `supportsDeferredFallback()` | 结构自身 | — |
+    /// | 结果键不在 `nativeFunctionKeys` 里 | 调用方参数 | — |
+    /// | 结果键不在已绑定区域里 | `DeferredFunctionConstraintRegions` | — |
     ///
-    /// **开关为什么要删：** **它是 B1237 的交付之一，而它的用途是"让缺口在被使用的那一刻出现"。**
+    /// **为什么不留开关：** **开关的用途是"让缺口在被使用的那一刻出现"，而缺口一旦补上，它只剩两个状态里多余的一个。**
     /// **缺口补上之后，开关如果留着，就变成了一个<b>可以合法地物化两次</b>的入口——
     /// 那比没有开关更糟，因为它让错误看起来是被允许的。**
     ///
     /// **所以"临时开关"这个做法有一个必须履行的后半部分：补上之后把它删掉。**
     /// **只做前半部分的临时开关会沉淀成永久缺陷。**
     ///
-    /// **B1237 added the first two conditions; B1238 adds the third and <b>removes the temporary switch</b>.**
+    /// **The first two conditions and the third are all decided here, and <b>there is no temporary switch</b>.**
     ///
     /// **All three conditions are now present.**
     ///
-    /// **Why the switch had to go: it was one of B1237's deliveries and its purpose was "make the gap appear at the moment
+    /// **Why the switch does not stay: its purpose was "make the gap appear at the moment
     /// it is used".** **Once the gap is closed, keeping the switch turns it into an entry point where materialising twice is
     /// <b>legal</b> — worse than no switch, because it makes the error look permitted.**
     ///
@@ -341,12 +341,12 @@ public static class DeferredFunctionMaterializationGate
 /// **延迟函数物化的整体入口** / The whole entry point for deferred-function materialisation.
 /// </summary>
 /// <remarks>
-/// B1239 按基线 `materializeMechanismFunctionFallbacks` 补完最后两段（第三段的逐结构校验、第四段的复制并物化）。
+/// 对齐基线 `materializeMechanismFunctionFallbacks` 剩余的两段（第三段的逐结构校验、第四段的复制并物化）。
 ///
 /// **四段现在全在，而且它们在一个函数里：**
 ///
-/// 1. **`Eager` 直接返回原模型**（B1236）
-/// 2. **过滤待处理结构**（B1237 两个条件 + B1238 第三个）
+/// 1. **`Eager` 直接返回原模型**
+/// 2. **过滤待处理结构**（三个条件）
 /// 3. **逐结构校验输入边界**（本批）
 /// 4. **复制模型、搬区域记录、调用驱动**（本批）
 ///
@@ -355,14 +355,14 @@ public static class DeferredFunctionMaterializationGate
 /// 而范围失效时 `bigM` 就不再成立。** **别的结构没有这个依赖，校验它们是在检查一件不存在的事。**
 ///
 /// **第四段先复制再物化，而不是原地改：** **基线的注释写着"保留源模型"。**
-/// **而"保留"在这里有两层意思：** **失败时源模型不被污染（B1200 的事务解决了这个），
+/// **而"保留"在这里有两层意思：** **失败时源模型不被污染（由事务保证），
 /// 以及成功时源模型也不被改（这一点只能靠复制）。**
 /// **两者都要，所以复制是必需的，不是优化。**
 ///
-/// **B1239 completes the last two of the baseline's four parts.** **All four now live in one function: return the model
-/// unchanged when `Eager` (B1236); filter the pending structures (B1237's two conditions plus B1238's third); validate
-/// each structure's input bounds (this batch); copy the model, carry over the region records and call the driver (this
-/// batch).**
+/// **The baseline's four parts all live in one function: return the model
+/// unchanged when `Eager`; filter the pending structures (three conditions); validate
+/// each structure's input bounds; copy the model, carry over the region records and call the driver)
+/// **
 ///
 /// **The third part touches only two structure kinds: `UnivariateLinearPiecewiseStructure` and `MaxStructure` need the
 /// bounds check, everything else is `ok`.** **That is not an omission — only those two use the input range captured at
@@ -370,7 +370,7 @@ public static class DeferredFunctionMaterializationGate
 /// validating them would be checking something that does not exist.**
 ///
 /// **The fourth part copies before materialising rather than mutating in place: the baseline's comment says "preserving
-/// the source".** **That means two things here — a failure must not pollute the source (B1200's transaction covers it) and
+/// the source".** **That means two things here — a failure must not pollute the source (the transaction covers it) and
 /// a success must not change it either (only copying covers that).** **Both are needed, so the copy is required, not an
 /// optimisation.**
 /// </remarks>
@@ -378,7 +378,7 @@ public static class DeferredFunctionMaterializationGate
 /// **求解入口处的延迟物化判定** / The deferred-materialisation decision at the solve entry.
 /// </summary>
 /// <remarks>
-/// B1240 按基线 `CoptLinearSolver.kt` 的入口判断补：**两个策略，任一为 `Eager` 就走常规求解。**
+/// 对齐基线 `CoptLinearSolver.kt` 的入口判断：**两个策略，任一为 `Eager` 就走常规求解。**
 ///
 /// **为什么要把这个判断单独拿出来做成函数，而不是写进求解器：**
 /// **它是"两个开关里更保守的那个说了算"这条语义的唯一实现点。**
@@ -387,7 +387,7 @@ public static class DeferredFunctionMaterializationGate
 /// **而写反的后果是<b>不可见</b>的：** **配置说"立刻展开"、模型说"可以延迟"，如果实现写成"任一是非 Eager 就延迟"，
 /// 那么"全局关掉延迟"这个动作在个别模型上就失效了，而求解仍然成功，只是走了另一条路径。**
 ///
-/// **B1240 follows the baseline's `CoptLinearSolver.kt` entry check: two policies, and if <b>either</b> is `Eager` the
+/// **Follows the baseline's `CoptLinearSolver.kt` entry check: two policies, and if <b>either</b> is `Eager` the
 /// ordinary solve runs.**
 ///
 /// **Why this is a separate function rather than inline in the solver: it is the single point implementing "the more
@@ -505,10 +505,10 @@ public static class DeferredFunctionMaterialization
             return new Fatal<LinearMechanismModel<Flt64>, ErrorCode, Error<ErrorCode>>(fatal.Errors);
         }
 
-        // **区域由驱动通过 `target.RecordRegion` 记到模型上（B1239 新增的那个成员），这里不再重复记一遍。
+        // **区域由驱动通过 `target.RecordRegion` 记到模型上，这里不再重复记一遍。
         // 记两遍会让 `DeferredFunctionConstraintRegions` 里出现重复条目，
         // 而重复条目会让"已物化"的判断看起来正确、实际上把行号算了两遍。**
-        // **The driver records regions onto the model through `target.RecordRegion` (the member B1239 added); they are not
+        // **The driver records regions onto the model through `target.RecordRegion`; they are not
         // recorded again here. Doing it twice would duplicate entries, and a duplicate entry would make the "already
         // materialised" check look right while counting the rows twice.**
         return Results.Ok(copy);

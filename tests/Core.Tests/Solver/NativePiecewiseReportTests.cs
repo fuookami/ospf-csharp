@@ -15,9 +15,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 分段选择：端点容差、内部归属、夹紧后的返回值 / Endpoint tolerance, interior ownership, clamped value.
 /// </summary>
 /// <remarks>
-/// B1202 按基线 `NativePiecewiseReport.kt` 的 `selectSegment` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `selectSegment`。
 ///
-/// B1202 adds the baseline's `selectSegment`.
+/// adds
 /// </remarks>
 public class NativePiecewiseReportTests
 {

@@ -17,9 +17,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 解向量投影：检查是一道闸门，不是一次转换 / The check is a gate, not a transform.
 /// </summary>
 /// <remarks>
-/// B1207 按基线 `NativePiecewiseReport.kt` 的 `valuesByKey` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `valuesByKey`。
 ///
-/// B1207 adds the baseline's `valuesByKey`.
+/// adds
 /// </remarks>
 public class NativeSolutionProjectionTests
 {

@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次掩码函数：<c>mask · p(x)</c> / A quadratic masking function.
 /// </summary>
 /// <remarks>
-/// B1176 按基线 `QuadraticMasking.kt` 的 `QuadraticMaskingFunction` 补。
+/// 对齐基线 `QuadraticMasking.kt` 的 `QuadraticMaskingFunction`。
 ///
 /// **与仓库里其他二次函数一样只支持 `Flt64`**：**桥接本身就是 `Flt64` 的**
 /// （`QuadraticBridging.Bridge` 收 `QuadraticPolynomial&lt;Flt64&gt;`），

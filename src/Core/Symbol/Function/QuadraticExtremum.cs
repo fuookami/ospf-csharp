@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **这看起来像补丁，但它让 `MaxFunction` 不必处理空表**，
 /// **而代价是"空输入"与"输入一个常数 0"无法区分。**
 ///
-/// B1162 adds the three quadratic extremum adapters from the baseline.
+/// adds
 ///
 /// **They share the shape of B1161's `QuadraticIf` family**: **bridge each quadratic polynomial to a real variable and
 /// hand them to the existing linear `Max`/`MaxMin`/`MinMax`.**
@@ -171,7 +171,7 @@ internal static class QuadraticExtremumBridging
 /// 二次输入的 <c>max</c>：桥接后交给线性 `MaxFunction` / A quadratic-input `max`, bridged.
 /// </summary>
 /// <remarks>
-/// B1162 按基线 `QuadraticMax.kt` 补。**不含任何极值编码。**
+/// 对齐基线 `QuadraticMax.kt`。
 ///
 /// B1162, following the baseline's `QuadraticMax.kt`. **No extremum encoding here.**
 /// </remarks>
@@ -265,7 +265,7 @@ public sealed class QuadraticMaxFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// 二次输入的 <c>max min</c>：桥接后交给线性 `MaxMinFunction` / A quadratic-input `max min`, bridged.
 /// </summary>
 /// <remarks>
-/// B1162 按基线 `QuadraticMaxMin.kt` 补。
+/// 对齐基线 `QuadraticMaxMin.kt`。
 ///
 /// B1162, following the baseline's `QuadraticMaxMin.kt`.
 /// </remarks>
@@ -359,7 +359,7 @@ public sealed class QuadraticMaxMinFunction : IMathFunctionSymbol<Flt64>, IHasRe
 /// 二次输入的 <c>min max</c>：桥接后交给线性 `MinMaxFunction` / A quadratic-input `min max`, bridged.
 /// </summary>
 /// <remarks>
-/// B1162 按基线 `QuadraticMinMax.kt` 补。
+/// 对齐基线 `QuadraticMinMax.kt`。
 ///
 /// **`max min` 与 `min max` 不是同一个量**：**前者是先取最小再取最大，后者相反。**
 /// **两者的判据必须给出<b>不同</b>的期望值，否则"写反了"测不出来。**

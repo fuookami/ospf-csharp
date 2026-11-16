@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 归一化后的离散条件线性化数据 / Normalized linearization data for a discrete condition.
 /// </summary>
 /// <remarks>
-/// B1171 按基线 `DiscreteCondition.kt` 的 `DiscreteConditionLinearization` 补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `DiscreteConditionLinearization`。
 ///
 /// **五个字段各管一件事，其中两个是"分支是否可能"**：
 ///
@@ -57,7 +57,7 @@ public sealed record DiscreteConditionLinearization(
 /// 条件值的界能否直接定出真假 / Whether the bounds already settle the truth value.
 /// </summary>
 /// <remarks>
-/// B1171 按基线 `DiscreteCondition.kt` 的 `boundsAvoidDiscreteConditionGap` 补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `boundsAvoidDiscreteConditionGap`。
 ///
 /// **它回答的是"还要不要生成指示约束"**：**界已经把答案定死时，指示变量没有意义——
 /// 直接给真值，省掉一个二元变量与两条行。**

@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **合取需要<b>三</b>行而不是两行。**
 ///
-/// B1186 adds the baseline's `IndicatorStructure` with its `ConjoinedIndicator` and `DifferenceIndicator`.
+/// adds
 ///
 /// **A conjunction needs <b>three</b> link rows, not two.**
 /// </remarks>

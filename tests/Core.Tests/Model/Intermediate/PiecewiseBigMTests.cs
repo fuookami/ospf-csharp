@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 分段 Big-M：可修复的修复，不可修复的拒绝 / Repair what can be repaired, reject what cannot.
 /// </summary>
 /// <remarks>
-/// B1192 按基线 `DeferredFunctionFallback.kt` 的 `resolvePwlBigM` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `resolvePwlBigM`。
 ///
 /// **同一个非正值，自动路径修复、显式路径拒绝。**
 ///
-/// B1192 adds the baseline's `resolvePwlBigM`.
+/// adds
 ///
 /// **The same non-positive value is repaired on the automatic path and rejected on the explicit one.**
 /// </remarks>

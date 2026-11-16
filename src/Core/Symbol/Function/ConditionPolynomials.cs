@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`NaN` 尤其危险**：**`NaN ≥ 0` 与 `NaN ≤ 0` 都是 `false`，
 /// 于是"这个界有效"的判据静默通过，而求解器拿到一条无意义的行。**
 ///
-/// B1166 adds the three private helpers from the baseline's `DiscreteCondition.kt`.
+/// adds
 ///
 /// **Why these checks deserve their own home**: **they all stop one class of problem — a coefficient that "looks
 /// like a number but is `NaN` or `inf`".** **Such a coefficient does not fail construction; it makes the constraint

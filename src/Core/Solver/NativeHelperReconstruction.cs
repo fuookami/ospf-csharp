@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 重建被省略的辅助列 / Reconstruct the omitted helper columns.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1209 按基线 `NativePiecewiseReport.kt` 的 `selectorValues` 与 `absHelperValues` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `selectorValues` 与 `absHelperValues`。
 ///
 /// **两个函数做的事看起来一样：从解里算出那些<b>不在解里</b>的列。**
 /// **但它们的严格程度差得很远，而那个差别有理由。**

@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **所以 `NewtonMeter` 与 `Joule` 可以互换而编译器一句话都不说**——
 /// **这是 SI 的设计取舍，不是缺陷，但意味着"数值全对、语义全丢"是可能的。**
 ///
-/// B1128 adds `Momentum`, `Torque` and `SurfaceDensity`, five units in all.
+/// adds
 ///
 /// **Torque is the one worth pinning here**: **torque and energy share a dimension in SI** (both `kg·m²/s²`),
 /// **so `NewtonMeter` and `Joule` are interchangeable and the compiler says nothing** —

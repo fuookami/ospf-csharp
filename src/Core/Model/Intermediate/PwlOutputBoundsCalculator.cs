@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 分段线性函数的输出范围 / A piecewise-linear function's output range.
 /// </summary>
 /// <remarks>
-/// B1193 按基线 `DeferredFunctionFallback.kt` 的 `PwlOutputBounds` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `PwlOutputBounds`。
 /// **B1193, following the baseline's `PwlOutputBounds`.**
 /// </remarks>
 /// <param name="Lower">输出下界 / Output lower bound.</param>
@@ -25,7 +25,7 @@ public sealed record PwlOutputBounds(Flt64 Lower, Flt64 Upper);
 /// 计算分段线性函数的输出范围 / Compute a piecewise-linear function's output range.
 /// </summary>
 /// <remarks>
-/// B1193 按基线 `DeferredFunctionFallback.kt` 的 `calculatePwlOutputBounds` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `calculatePwlOutputBounds`。
 ///
 /// **只在本段的两个端点取值，不取内部 —— 而这只对<b>线性</b>分段成立。**
 ///

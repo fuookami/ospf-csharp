@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// **每一对都只差一个词，而量差 10%—20%——写错了不会报错，只会让"3 吨"变成别的重量。**
 ///
-/// B1137 adds 30 units across Time (2), Mass (12) and Volume (16) from the baseline's Time.kt, Mass.kt and Volume.kt.
+/// adds
 ///
 /// The risk here is "same name, different size":
 /// long ton 2240 lb / short ton 2000 lb / metric ton 1000 kg;

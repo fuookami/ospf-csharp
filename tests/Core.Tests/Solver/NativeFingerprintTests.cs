@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 全种类指纹：快路径与阶梯 / The fast path and the ladder.
 /// </summary>
 /// <remarks>
-/// B1214 按基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint`。
 ///
-/// B1214 adds the baseline's `nativeFingerprint`.
+/// adds
 /// </remarks>
 public class NativeFingerprintTests
 {

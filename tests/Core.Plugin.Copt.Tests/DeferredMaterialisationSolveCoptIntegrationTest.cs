@@ -74,7 +74,7 @@ public class DeferredMaterialisationSolveCoptIntegrationTest
         Assert.True(parent.Add(x).IsOk);
         Assert.True(parent.Add(y).IsOk);
         // **物化产出的约束引用了这三个辅助变量，它们必须在 token 表里，
-        // 否则 `AddConstraint` 解析不到（B1239 踩过）。**
+ // 否则 `AddConstraint` 解析不到。**
         // **The materialised rows reference these three helpers, so they must be in the token table or `AddConstraint`
         // cannot resolve them — B1239 hit exactly that.**
         Assert.True(parent.Add(positive).IsOk);
@@ -113,8 +113,8 @@ public class DeferredMaterialisationSolveCoptIntegrationTest
         Assert.True(built.IsOk, built.ToString());
         using LinearMechanismModel<Flt64> model = built.Value;
 
-        // **物化发生在转换里面（B1241 的接线），所以这一步之后三元模型才带上 fallback 行。**
-        // **Materialisation happens inside the conversion (B1241's wiring), so only after this does the triad model carry
+ // **物化发生在转换里面，所以这一步之后三元模型才带上 fallback 行。**
+ // **Materialisation happens inside the conversion , so only after this does the triad model carry
         // the fallback rows.**
         Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> converted = model.ToLinearTriadModel();
         Assert.True(converted.IsOk, converted.ToString());

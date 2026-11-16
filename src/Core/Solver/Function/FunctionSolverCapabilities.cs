@@ -9,13 +9,13 @@ namespace Fuookami.Ospf.Core.Solver.Function;
 /// 插件可探测的原生数学接口 / Native mathematical interfaces detectable by plugins.
 /// </summary>
 /// <remarks>
-/// **与基线 `FunctionExpansion.kt:409` 的 `enum class FunctionNativeCapability` 的关系需要说准确（B1268 更正）：**
+/// **与基线 `FunctionExpansion.kt:409` 的 `enum class FunctionNativeCapability` 的关系需要说准确：**
 /// **基线那个枚举有 15 个成员——9 个是<b>能力</b>，6 个是<b>位置修饰</b>**
 /// **（`ObjectiveOnly`／`ConstraintOnly`／`ObjectiveAndConstraint`／`Nested`／`External`／`Unused`）。**
 /// **本枚举只有那 9 个能力；6 个修饰在 `FunctionUsageLocation` 里，那是合理的拆分。**
 /// **所以下面这句话原来是"逐一对应，成员名与顺序一致"，而那会让下一个读者去核一个<b>永远不会相等的集合</b>。**
 ///
-/// **The relation to the baseline's `enum class FunctionNativeCapability` must be stated exactly (B1268): the baseline enum
+/// **The relation to the baseline's `enum class FunctionNativeCapability` must be stated exactly : the baseline enum
 /// has 15 members — 9 <b>capabilities</b> and 6 <b>positional qualifiers</b> — while this one holds only the 9, with the
 /// qualifiers living in `FunctionUsageLocation`.** **That split is reasonable; what was wrong was claiming the member sets
 /// match one-to-one, which invites a reader to verify a set that can never be equal.**

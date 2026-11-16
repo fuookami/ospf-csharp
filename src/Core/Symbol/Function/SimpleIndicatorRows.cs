@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 简单不等式与非负检测的指示行 / Indicator rows for a simple inequality and for non-negativity.
 /// </summary>
 /// <remarks>
-/// B1181 按基线 `BigM.kt` 的 `simpleIndicatorConstraints`（LE/GE 分支）与 `nonnegativeIndicatorConstraints` 补。
+/// 对齐基线 `BigM.kt` 的 `simpleIndicatorConstraints`（LE/GE 分支）与 `nonnegativeIndicatorConstraints`。
 ///
 /// **`simpleIndicatorConstraints` 先做<b>差分</b>：`diff = lhs − rhs`。**
 /// **之后所有行都只针对 `diff`，与原来的两侧无关。**
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`nonnegativeIndicatorConstraints` 是"非负检测"，方向与正向指示相反**：
 /// **指示 = 1 时 `poly ≥ 0`（允许等于零），指示 = 0 时 `poly ≤ −tolerance`（严格负）。**
 ///
-/// B1181 adds the baseline's `simpleIndicatorConstraints` (LE/GE branches) and `nonnegativeIndicatorConstraints`.
+/// adds
 ///
 /// **`simpleIndicatorConstraints` takes the <b>difference</b> first: `diff = lhs − rhs`.**
 /// **Every row then works on `diff` alone.**

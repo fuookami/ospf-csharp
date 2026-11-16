@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Relation-indicator rows, derived from the condition's own bounds — **no big-M needed**.
 /// </summary>
 /// <remarks>
-/// B1184 按基线 `Conditional.kt` 的 `relationIndicatorConstraints` 补。
+/// 对齐基线 `Conditional.kt` 的 `relationIndicatorConstraints`。
 ///
 /// **这是本方向第一个<b>不用 big-M</b> 的指示编码，而这不是巧合**：
 /// **当条件本身有一个已知范围 `[qLower, qUpper]` 时，松弛量可以<b>精确算出</b>——

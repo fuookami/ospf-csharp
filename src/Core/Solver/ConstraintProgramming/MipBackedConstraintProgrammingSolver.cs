@@ -55,7 +55,7 @@ namespace Fuookami.Ospf.Core.Solver.ConstraintProgramming;
 ///
 /// **One explicit refusal: `CollectConflict` is <b>refused</b>, not silently ignored** — a MIP backend cannot produce native
 /// conflict evidence, and ignoring it makes the failure read as "CP output has no structured conflict evidence", which
-/// sounds like the solver's fault (B1261's lesson). **Refusing at the door lets the message name the real cause.**
+/// sounds like the solver's fault . **Refusing at the door lets the message name the real cause.**
 ///
 /// **Two limitations, stated plainly: the output carries no `SolveReport` (the linear report is `SolveReport&lt;Flt64&gt;` and CP
 /// wants `SolveReport&lt;Int64&gt;`; that per-field translation lives in SCIP's `toConstraintProgrammingReport` and is not done

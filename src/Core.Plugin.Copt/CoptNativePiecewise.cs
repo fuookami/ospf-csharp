@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// COPT 原生分段线性写入 / Native piecewise-linear writing for COPT.
 /// </summary>
 /// <remarks>
-/// B1232 按基线 `CoptNativePiecewise.kt` 的 `validateCoptNativePiecewiseData` 与 `addCoptNativePiecewise` 补。
+/// 对齐基线 `CoptNativePiecewise.kt` 的 `validateCoptNativePiecewiseData` 与 `addCoptNativePiecewise`。
 ///
 /// **这一批补的是<b>写侧</b>：把 `x/y` 断点翻译成 COPT 模型里的 λ 变量组、三条行与一条 SOS2。**
 /// **读侧（报告里的求值与指纹）B1211—B1214 早就有了。**
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 ///
 /// **这也是为什么它不报错：** **读侧全绿，因为它读的是自己的数据；写侧缺失不产生任何信号。**
 ///
-/// **B1232 follows the baseline's `validateCoptNativePiecewiseData` and `addCoptNativePiecewise`.**
+/// **follows the baseline's `validateCoptNativePiecewiseData` and `addCoptNativePiecewise`.**
 ///
 /// **This batch adds the <b>write</b> side: turning `x/y` breakpoints into COPT λ variables, three rows and one
 /// SOS2 per structure.** **The read side (report evaluation and fingerprints) has existed since B1211–B1214.**

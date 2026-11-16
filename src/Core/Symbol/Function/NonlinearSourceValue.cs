@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 真实函数基准值：逼近误差的对照物 / The true function's value: what the approximation is measured against.
 /// </summary>
 /// <remarks>
-/// B1165 按基线 `NonlinearPiecewise.kt` 基类的 `originalValueFlt64` / `originalValue` 补。
+/// 对齐基线 `NonlinearPiecewise.kt` 基类的 `originalValueFlt64` / `originalValue`。
 ///
 /// **为什么需要它**：**四个分段逼近函数（`exp`/`ln`/`1/x`/`x^p`）都只返回<b>逼近值</b>。**
 /// **没有真实值，就<b>无法测出逼近误差</b>——**
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 于是"误差过大"的判据<b>静默通过</b>。**
 /// **漏掉 ② 会让 `ln` 在负值处给出 `NaN`、`1/x` 在零附近给出 `inf`，同样静默。**
 ///
-/// B1165 adds the baseline's `originalValueFlt64` / `originalValue`.
+/// adds
 ///
 /// **Why it is needed**: **all four piecewise functions (`exp`/`ln`/`1/x`/`x^p`) return only the <b>approximation</b>.**
 /// **Without the true value the approximation error <b>cannot be measured</b>** —

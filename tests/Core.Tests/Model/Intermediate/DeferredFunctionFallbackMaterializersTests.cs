@@ -19,11 +19,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 物化层：三种失败必须分开 / The three failures must stay apart.
 /// </summary>
 /// <remarks>
-/// B1196 按基线 `DeferredFunctionFallback.kt` 的六个物化器补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的六个物化器。
 ///
 /// **"用错物化器"与"能力还没有"是两件事，修法完全不同。**
 ///
-/// B1196 adds the baseline's six materializers.
+/// adds
 ///
 /// **"Wrong materializer" and "capability absent" are different things with different fixes.**
 /// </remarks>
@@ -104,7 +104,7 @@ public class DeferredFunctionFallbackMaterializersTests
     ///
     /// **The layer's completeness is decided by <b>row generation</b>, not by the dispatch table.**
     ///
-    /// **The criterion walks every structure; all seven materialize (B1199).**
+ /// **The criterion walks every structure; all seven materialize .**
     ///
     /// **After B1197 fills ABS's row generation the split goes from 4/3 to 5/2.**
     ///

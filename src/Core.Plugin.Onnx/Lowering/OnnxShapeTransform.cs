@@ -50,6 +50,10 @@ public static class OnnxShapeTransform
 
     /// <summary>
     /// **按位置消费张量的算子** / The operators that consume a tensor positionally.
+    /// **其中 `Conv`／`MaxPool`／`AveragePool` 只用于判断"下游会不会按位置读"，本身并未实现；** '
+    /// **基线 `dee897d2` 也没有实现它们。**
+    ///
+    /// **Of these, Conv, MaxPool and AveragePool serve only to decide whether a downstream reads positionally; they are not implemented here, and the baseline does not implement them either.**
     /// </summary>
     /// <remarks>
     /// **重排只有在被这些算子读到的时候才是可见的：** **它们按"第几个元素"取值，** **而逐元素的加法、激活、`Reshape` 都不看位置。**

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 非折叠蕴含：前置成立时，把输入压进给定区间 / A non-folded implication: gate the input into an interval.
 /// </summary>
 /// <remarks>
-/// B1166 按基线 `ImpliedCondition.kt` 补。
+/// 对齐基线 `ImpliedCondition.kt`。
 ///
 /// **语义**：**`antecedent = 1` 时要求 `input ∈ [bounds.lower, bounds.upper]`；
 /// `antecedent = 0` 时这两条行不起作用。**

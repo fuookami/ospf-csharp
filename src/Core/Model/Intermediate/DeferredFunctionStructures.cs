@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 函数展开策略，默认 <see cref="Eager"/> / Function expansion policy, defaulting to eager.
 /// </summary>
 /// <remarks>
-/// B1187 按基线 `FunctionExpansion.kt` 的 `FunctionExpansionPolicy` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `FunctionExpansionPolicy`。
 ///
 /// **三个值的区别只在"什么时候决定走原生接口"：**
 ///
@@ -57,7 +57,7 @@ public enum FunctionExpansionPolicy
 /// <see cref="DeferredFunctionStructure"/> 的分派表 / The dispatch table over <see cref="DeferredFunctionStructure"/>.
 /// </summary>
 /// <remarks>
-/// B1187 按基线 `FunctionExpansion.kt` 中五个 `DeferredFunctionStructure` 扩展函数补。
+/// 对齐基线 `FunctionExpansion.kt` 中五个 `DeferredFunctionStructure` 扩展函数。
 ///
 /// **这五个函数是"标记接口"付出代价的地方**：**接口本身没有成员（B1180 已说明理由：
 /// 它只做类型层面的集合划分），于是<b>所有具体信息都要靠一次类型分派取出来</b>。**
@@ -430,7 +430,7 @@ public static class DeferredFunctionStructures
     //
     // **所以这条路在符号那一侧就断了：不是投影没写，是符号没保留物化需要的东西。**
     // 补它要先在 `XorFunction` 里把二元输入存下来，那是另一件事（会牵动 XOR 的急切约束生成）。
-    // **而 XOR 在 n ≥ 3 时本身还有一条基线缺陷（B1195 记录过），所以这一处不急着动。**
+ // **而 XOR 在 n ≥ 3 时本身还有一条基线缺陷，所以这一处不急着动。**
     //
     // **`Xor` has no projection, and that is a finding rather than an omission: `XorFunction` stores only
     // `Polynomials`, `ResultVar`, `IndicatorVars`, `SideVars`, `Tolerance` and `StrictBoundary`, while

@@ -78,7 +78,7 @@ internal static class DistanceTerms {
 /// L1 距离（各分量绝对差之和）/ The L1 distance, the sum of absolute component differences.
 /// </summary>
 /// <remarks>
-/// B1149 按基线 `CompositeFunctions.kt` 的 `L1DistanceFunction` 补。
+/// 对齐基线 `CompositeFunctions.kt` 的 `L1DistanceFunction`。
 ///
 /// <c>Σ |left_i − right_i|</c>。
 ///
@@ -222,7 +222,7 @@ public sealed class L1DistanceFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// L∞ 距离（各分量绝对差的最大值）/ The L∞ distance, the largest absolute component difference.
 /// </summary>
 /// <remarks>
-/// B1149 按基线 `CompositeFunctions.kt` 的 `LInfinityDistanceFunction` 补。
+/// 对齐基线 `CompositeFunctions.kt` 的 `LInfinityDistanceFunction`。
 ///
 /// <c>max_i |left_i − right_i|</c>。
 ///

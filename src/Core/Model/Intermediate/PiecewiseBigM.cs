@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 分段线性函数的 Big-M 解析 / Resolve a piecewise function's Big-M.
 /// </summary>
 /// <remarks>
-/// B1192 按基线 `DeferredFunctionFallback.kt` 的 `resolvePwlBigM` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `resolvePwlBigM`。
 ///
 /// **同一个非正候选值，在两条路径上得到相反的结果：**
 ///

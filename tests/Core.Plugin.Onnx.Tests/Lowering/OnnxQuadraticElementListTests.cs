@@ -65,10 +65,10 @@ public class OnnxQuadraticElementListTests
 
     /// <summary>**二次域的批量维按 numpy 广播逐批相乘，不相容时拒绝** / Batch dimensions broadcast and multiply per batch; incompatible ones are refused.</summary>
     /// <remarks>
-    /// **迁移（B1388）：** **原来这一条断言"二次域只做二维"，** **而批量维接上之后它会让一个能算的情形看起来仍然不行。** '
-    /// **迁移后它同时钉两件事：** **`[2,1,2]·[2,2,1]` 广播成 `[2,2,1,1]`（四个元素），** **而 `[3,…]` 的批量维拒绝。**
+    /// **** **原来这一条断言"二次域只做二维"，** **而批量维接上之后它会让一个能算的情形看起来仍然不行。** '
+    /// **它同时钉两件事：** **`[2,1,2]·[2,2,1]` 广播成 `[2,2,1,1]`（四个元素），** **而 `[3,…]` 的批量维拒绝。**
     ///
-    /// **Migrated (B1388): the criterion used to assert "the second-degree domain is 2-D only", which after batch support would keep a working case looking unsupported.** It now pins two
+    /// **the criterion used to assert "the second-degree domain is 2-D only", which after batch support would keep a working case looking unsupported.** It now pins two
     /// things: **[2,1,2]·[2,2,1] broadcasts to [2,2,1,1] with four elements, and a batch of 3 against 2 is refused.**
     /// </remarks>
     [Fact]
@@ -78,8 +78,8 @@ public class OnnxQuadraticElementListTests
 
         OnnxQuadraticElementList product = OnnxQuadraticElementList.MatMul(left, right).Value!;
 
-        // `[2,1,2]` 的批量维是 `[2]`（末两维是矩阵），不是 `[2,1]`——**我第一版把形状读错了，判据当场红。**
-        // In [2,1,2] the batch is [2] with the last two dimensions forming the matrix, not [2,1] — **my first version misread the shape and the criterion said so.**
+        // `[2,1,2]` 的批量维是 `[2]`（末两维是矩阵），不是 `[2,1]`——
+        // In [2,1,2] the batch is [2] with the last two dimensions forming the matrix, not [2,1] — 
         product.Shape.Should().Equal(new[] { 2, 1, 1 }, "both sides carry a batch of 2, and the matrix corners are 1×1");
         product.Count.Should().Be(2);
         foreach (QuadraticPolynomial<Flt64> element in product.Elements) {

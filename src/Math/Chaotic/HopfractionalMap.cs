@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Hopfractional 映射（一维，分数阶 Hopf 型）/ The Hopfractional map.
 /// </summary>
 /// <remarks>
-/// B1147 按基线 `HopfractionalMap.kt` 补。
+/// 对齐基线 `HopfractionalMap.kt`。
 ///
 /// <c>x' = p·x·(1 + (k·x)^q) / (1 + (s·x)^q)</c>。
 ///

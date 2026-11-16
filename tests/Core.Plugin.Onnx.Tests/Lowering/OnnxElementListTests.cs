@@ -373,10 +373,10 @@ public class OnnxElementListTests
 
         scalar.MatMul(matrix).IsOk.Should().BeFalse("rank 0 cannot take part");
         matrix.MatMul(scalar).IsOk.Should().BeFalse();
-        // 迁移（B1381）：批量维现在支持了，**所以这条从"批量维被拒绝"改成"不相容的批量维被拒绝"**——
+        // 批量维现在支持了，**所以这条从"批量维被拒绝"改成"不相容的批量维被拒绝"**——
         // 原来的断言会让一个已经能算的情形看起来仍然不行。
         //
-        // Migrated (B1381): batch dimensions are supported now, **so this moves from "batch is refused" to "an incompatible batch is refused"** — the old assertion would have kept a
+        // batch dimensions are supported now, **so this moves from "batch is refused" to "an incompatible batch is refused"** — the old assertion would have kept a
         // working case looking unsupported.
         matrix.MatMul(OnnxElementList.Create(new[] { 3, 2, 2 }, Constants(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)).Value!)
             .IsOk.Should().BeFalse("1 broadcasts against 3 only when one of them is 1");

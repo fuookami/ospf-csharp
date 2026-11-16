@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 逼近误差只能在断点<b>之间</b>测出来 / The approximation error is only visible between breakpoints.
 /// </summary>
 /// <remarks>
-/// B1165 按基线 `NonlinearPiecewise.kt` 基类的 `originalValue` / `originalValueFlt64` 补。
+/// 对齐基线 `NonlinearPiecewise.kt` 基类的 `originalValue` / `originalValueFlt64`。
 ///
 /// **线性插值在每个断点处与真实函数完全重合，所以"抽查断点"永远测不出段数不足。**
 /// **这条判据就是那个陷阱的可执行版本。**
 ///
-/// B1165 adds the baseline's `originalValue`. **Linear interpolation coincides exactly with the true function at every
+/// adds
 /// breakpoint, so "spot-check the breakpoints" can never reveal too few segments.** **This criterion is the executable
 /// form of that trap.**
 /// </remarks>

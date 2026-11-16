@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 延迟函数 fallback 的物化器 / A deferred-function fallback materializer.
 /// </summary>
 /// <remarks>
-/// B1196 按基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackMaterializer` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackMaterializer`。
 ///
 /// **B1196, following the baseline's `DeferredFunctionFallbackMaterializer`.**
 /// </remarks>
@@ -28,7 +28,7 @@ public interface IDeferredFunctionFallbackMaterializer
 /// 延迟函数 fallback 的物化器集合 / The deferred-function fallback materializers.
 /// </summary>
 /// <remarks>
-/// B1196 按基线 `DeferredFunctionFallback.kt` 的六个物化器补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的六个物化器。
 ///
 /// **失败有三种，而它们必须被分开：**
 ///
@@ -52,14 +52,14 @@ public interface IDeferredFunctionFallbackMaterializer
 /// | `BinaryLogicStructure` | **能** |
 /// | `IndicatorStructure` | **能** |
 /// | `MaskingStructure` | **能** |
-/// | `UnivariateLinearPiecewiseStructure` | **能（B1199 补了行生成）** |
-/// | `AbsStructure` | **能（B1197 补了行生成）** |
-/// | `MaxStructure` | **能（B1198 补了行生成）** |
+/// | `UnivariateLinearPiecewiseStructure` | **能** |
+/// | `AbsStructure` | **能** |
+/// | `MaxStructure` | **能** |
 ///
 /// **物化层的完整性<b>由行生成决定，而不是由分派表决定</b>。
 /// 这句话值得写下来：分派表全绿而三个结构物化不了，是一个看起来完整、实际空着三格的层。**
 ///
-/// B1196 adds the baseline's six materializers.
+/// adds
 ///
 /// **There are three failures, and they must stay apart:**
 ///

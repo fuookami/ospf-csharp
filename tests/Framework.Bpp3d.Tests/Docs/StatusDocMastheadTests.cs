@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// | 标题 | `## Current Phase (as of Batch 265)` | **差 1025 批** |
 /// | 正文 | `P9 is in progress (Batches 242–918)` | **差 372 批** |
 ///
-/// **而同一份文档的 `上次更新 Batch N` 一直是准的**（B1281 给它做过判据）。
+/// **而同一份文档的 `上次更新 Batch N` 一直是准的**。
 ///
 /// ### 为什么这次特别值得记
 ///

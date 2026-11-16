@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// 同步 Kotlin `dee897d2` 的 `OnnxTensorExpr`。**这是清单第 2、3 项共同缺的那一层：** '
 /// **既有实现每个名字只有一个标量表达式，于是 `Transpose` 的重排无处可写、`Scan` 的运行期切片无处可切。**
 ///
-/// **这一批只做这一层本体，不接线：** **`Transpose` 按坐标重排、`SliceLeading` 沿首维切片，两者都是纯函数，**
-/// **可以直接用"某位置的元素是不是原来那一个"钉住。** **接线要改求值器的每个调用点，那属于下一批——**
+/// **这一层只做本体，不接线：** **`Transpose` 按坐标重排、`SliceLeading` 沿首维切片，两者都是纯函数，**
+/// **可以直接用"某位置的元素是不是原来那一个"钉住。** **接线要改求值器的每个调用点——**
 /// **先把"重排算得对"这件事独立验证，接线时才有可对照的东西。**
 ///
 /// Syncs `OnnxTensorExpr`. **This is the layer the checklist's items 2 and 3 both lack:** **the existing implementation holds one scalar expression per name, so a Transpose has
@@ -258,7 +258,7 @@ public sealed class OnnxElementList
     /// <remarks>
     /// **秩 1 按 `(1,K)`／`(K,1)` 参与计算，末了把那一维压掉**（与基线同一个处理）；**秩 0 拒绝。**
     ///
-    /// **这一批只做"至少一侧是常量"的线性情形。** **两侧都含变量时每个元素是二次的，而这一层只装一次多项式——**
+    /// **这里只处理"至少一侧是常量"的线性情形。** **两侧都含变量时每个元素是二次的，而这一层只装一次多项式——**
     /// **基线能算是因为它有 `OnnxDegreeMode`，C# 侧的二次路径是独立的（`OnnxQuadraticProduct`）。** '
     /// **所以这里明确拒绝并点名原因，** **而不是把二次的乘积静默塞进一次多项式。**
     ///

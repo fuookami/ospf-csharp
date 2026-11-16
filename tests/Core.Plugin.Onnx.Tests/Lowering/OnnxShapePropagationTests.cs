@@ -40,9 +40,9 @@ public class OnnxShapePropagationTests
 
     /// <summary>**没有声明形状的输出也能推出元素个数** / An output that declares nothing still gets an element count.</summary>
     /// <remarks>
-    /// **这一条就是 B1370／B1371 那处上限的关闭证据：** **输出什么都不声明，仿射链此前只能把它当成一个数。**
+    /// **这一条钉的是多元素输出的那处限制已被关闭：** **输出什么都不声明，仿射链此前只能把它当成一个数。**
     ///
-    /// **This closes the ceiling recorded in B1370/B1371: the output declares nothing, and the affine chain previously had no choice but to treat it as one number.**
+    /// **This covers the limit on multi-element outputs: the output declares nothing, and the affine chain previously had no choice but to treat it as one number.**
     /// </remarks>
     [Fact]
     public void AnUndeclaredOutput_ShouldStillBeInferred() {

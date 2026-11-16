@@ -411,7 +411,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // **基线 `tidyDualSolution` 返回 `Map&lt;Constraint, Flt64>`：对偶模型走 `dualOrigin`，普通模型走
     // `constraints.origins`。**
     //
-    // **C# 的视图不持有约束对象引用（B1222 已记录过这条表示差异），所以能给的 key 是
+ // **C# 的视图不持有约束对象引用，所以能给的 key 是
     // `ConstraintId`——而在<b>有</b> `ConstraintId` 的情况下，它就是基线那把 key 的身份层内容：
     // 基线用一个对象引用表达"哪一行"，C# 用一个身份字符串表达同一件事。**
     //

@@ -15,11 +15,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 归一化：真假分支之间必须有正间隔 / The branches must be separated by a positive gap.
 /// </summary>
 /// <remarks>
-/// B1173 按基线 `Conditional.kt` 的 `normalizedCondition` / `validateConditionBounds` 补。
+/// 对齐基线 `Conditional.kt` 的 `normalizedCondition` / `validateConditionBounds`。
 ///
 /// **"归一化"是把四种关系折算成"严格真"的形态。**
 ///
-/// B1173 adds the baseline's `normalizedCondition` / `validateConditionBounds`.
+/// adds
 ///
 /// **Normalising folds the four relations into a "strictly true" shape.**
 /// </remarks>

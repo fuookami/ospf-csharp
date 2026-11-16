@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Wang–Chen 吸引子（四维）/ The Wang–Chen four-dimensional attractor.
 /// </summary>
 /// <remarks>
-/// B1146 按基线 `WangChenAttractor.kt` 补。
+/// 对齐基线 `WangChenAttractor.kt`。
 ///
 /// <c>dx = α(y−x)</c>，<c>dy = βx − γxz + w</c>，<c>dz = xy − δz</c>，<c>dw = −yz</c>。
 ///

@@ -22,11 +22,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 掩码结构："我用到了"与"这个列归我" / "I use it" and "it is mine" differ.
 /// </summary>
 /// <remarks>
-/// B1194 按基线 `MaskingStructure.kt` 的 `MaskingStructure` 补。
+/// 对齐基线 `MaskingStructure.kt` 的 `MaskingStructure`。
 ///
 /// **mask 列可能共享，而共享决定了谁保留它。**
 ///
-/// B1194 adds the baseline's `MaskingStructure`.
+/// adds
 ///
 /// **The mask column may be shared, and sharing decides who retains it.**
 /// </remarks>

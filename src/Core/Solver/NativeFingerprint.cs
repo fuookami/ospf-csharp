@@ -566,7 +566,7 @@ public static class NativeFingerprint
     /// &lt;remarks>
     /// **基线的字符串插值给出 Kotlin 的 `true` / `false`，与 .NET 的 `True` / `False` <b>大小写不同</b>。**
     /// **这里用<b>小写</b>以贴合基线的文本形状——但因为指纹文本本就不保证跨语言一致
-    /// （B1213 已记录），这一处选择只影响本侧的自洽性。**
+ ///，这一处选择只影响本侧的自洽性。**
     ///
     /// **The baseline's interpolation yields Kotlin's `true`/`false`, differing in <b>case</b> from .NET's
     /// `True`/`False`.** **Lowercase is used here to match the baseline's text shape — but since the fingerprint text is

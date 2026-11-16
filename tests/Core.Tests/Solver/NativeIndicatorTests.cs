@@ -22,9 +22,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 指示结构：保留列集合必须在递归之前完整 / The retained set must be complete before recursing.
 /// </summary>
 /// <remarks>
-/// B1216 按基线 `NativeIndicator.kt` 的 `prepareNativeIndicator` / `prepareIndicator` 补。
+/// 对齐基线 `NativeIndicator.kt` 的 `prepareNativeIndicator` / `prepareIndicator`。
 ///
-/// B1216 adds the baseline's indicator preparation.
+/// adds
 /// </remarks>
 public class NativeIndicatorTests
 {

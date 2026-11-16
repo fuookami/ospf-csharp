@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 零值指示：偏离有两个方向，所以需要第二个二值 / Deviation has two directions, so a second binary is needed.
 /// </summary>
 /// <remarks>
-/// B1182 按基线 `BigM.kt` 的 `zeroIndicatorConstraints` 与 `safeZeroIndicatorConstraints` 补。
+/// 对齐基线 `BigM.kt` 的 `zeroIndicatorConstraints` 与 `safeZeroIndicatorConstraints`。
 ///
 /// **一个二值指示只能表达"是或不是"，说不清"往哪边偏"。**
 ///
-/// B1182 adds the baseline's `zeroIndicatorConstraints` and `safeZeroIndicatorConstraints`.
+/// adds
 ///
 /// **One binary indicator says "is or is not" but not "which way".**
 /// </remarks>

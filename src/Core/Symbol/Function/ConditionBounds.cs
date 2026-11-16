@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一个区间的上下界 / The lower and upper bound of an interval.
 /// </summary>
 /// <remarks>
-/// B1152 按基线 `Conditional.kt` 补。
+/// 对齐基线 `Conditional.kt`。
 ///
 /// **它是 `SelectFunction` / `ElementFunction` / `McCormickEnvelopeFunction` 三者共同的入参类型**，
 /// **所以先补它，并在同一批里接上一个真实消费者（`McCormickEnvelopeFunction`）**——

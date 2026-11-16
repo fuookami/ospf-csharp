@@ -46,10 +46,10 @@ public class OnnxElementWiringTests
             Graph(new[] { Node("Transpose", new[] { "x" }, "out", PermAttribute(new long[] { 1, 0 })) }, "out"),
             context);
 
-        // 迁移（B1370）：多元素图输出按列表语义要拒绝——**"整张图交出一个多项式"对六元素输出本来就不成立。**
+        // 多元素图输出按列表语义要拒绝——**"整张图交出一个多项式"对六元素输出本来就不成立。**
         // **中间绑定仍留在上下文里，所以重排是不是真发生了可以直接读，不必依赖图输出。**
         //
-        // Migrated (B1370): a multi-element graph output is refused under list semantics — "the graph yields one polynomial" never held for six elements. The intermediate binding stays
+        // a multi-element graph output is refused under list semantics — "the graph yields one polynomial" never held for six elements. The intermediate binding stays
         // in the context, so the permutation is read directly instead of through the output.
         result.IsOk.Should().BeFalse("the output holds six elements and element-indexed selection is not wired yet");
         context.TryGet("out", out OnnxLoweringContext.Binding produced).Should().BeTrue(

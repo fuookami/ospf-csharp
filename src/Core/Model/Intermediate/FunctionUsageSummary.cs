@@ -4,7 +4,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 
 /// <summary>原生接口需要区分的输入形状 / Input shapes distinguished by native interfaces.</summary>
 /// <remarks>
-/// B1179 按基线 `FunctionExpansion.kt` 的 `FunctionInputShape` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `FunctionInputShape`。
 ///
 /// **`Unknown` 不是"其他"，而是"还不知道"**——**它与 `LinearExpression` 的区别决定了
 /// 原生展开能不能被允许：`Unknown` 一律走保守路径。**
@@ -27,7 +27,7 @@ public enum FunctionInputShape {
 
 /// <summary>分段连接处的连续性 / Continuity at segment boundaries.</summary>
 /// <remarks>
-/// B1179 按基线 `PiecewiseContinuity` 补。
+/// 对齐基线 `PiecewiseContinuity`。
 ///
 /// **`Discontinuous` 与 `Unknown` 是两件事**：**前者是"知道有断点"，后者是"没查过"。**
 /// **把后者当后者处理会拒绝本可展开的函数；把前者当后者处理会生成一条断点处的错误行。**
@@ -49,7 +49,7 @@ public enum PiecewiseContinuity {
 
 /// <summary>函数结果的使用位置 / Where a function result is used.</summary>
 /// <remarks>
-/// B1179 按基线 `FunctionUsageLocation` 补。
+/// 对齐基线 `FunctionUsageLocation`。
 ///
 /// **`Nested` 与 `External` 排在 `ObjectiveAndConstraint` <b>之前</b>，顺序是有意义的**：
 /// **一个既出现在目标又出现在约束、同时被别的结构引用的函数，
@@ -83,7 +83,7 @@ public enum FunctionUsageLocation {
 /// 原生展开所需的使用语境 / The usage context native lowering needs.
 /// </summary>
 /// <remarks>
-/// B1179 按基线 `FunctionExpansion.kt` 的 `FunctionUsageSummary` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `FunctionUsageSummary`。
 ///
 /// **四个布尔是"收集到的事实"，三个派生属性是"据此做的决定"。**
 /// **分开它们是有意的：** **事实由调用方填，决定由这里算——

@@ -49,7 +49,7 @@ public record SolverConfig {
     /// **函数符号展开策略** / The function-symbol expansion policy.
     /// </summary>
     /// <remarks>
-    /// B1240 按基线 `CoptLinearSolver.kt` 的判断补。**基线在求解入口读<b>两个</b>策略：
+    /// 对齐基线 `CoptLinearSolver.kt` 的判断。
     /// 配置上的与模型上的；<b>任意一个是 `EAGER`，就直接走常规求解</b>，不做延迟物化。**
     ///
     /// **"任一为 Eager 就短路"不是偷懒，而是"两个开关里更保守的那个说了算"：**
@@ -62,7 +62,7 @@ public record SolverConfig {
     /// **接线需要一条从 `ILinearTriadModelView` 拿到策略的通路，而那个接口目前没有这个成员。**
     /// **这一点写在这里而不是留白，因为它决定了下一批的起点。**
     ///
-    /// **B1240 follows the baseline's `CoptLinearSolver.kt`: the baseline reads <b>two</b> policies at the solve entry, one
+    /// **follows the baseline's `CoptLinearSolver.kt`: the baseline reads <b>two</b> policies at the solve entry, one
     /// from the config and one from the model, and if <b>either</b> is `EAGER` it takes the ordinary solve with no deferred
     /// materialisation.**
     ///

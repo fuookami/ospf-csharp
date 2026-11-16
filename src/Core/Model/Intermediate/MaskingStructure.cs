@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 由现有二值 mask 门控的数值结果 / A numeric result gated by an existing binary mask.
 /// </summary>
 /// <remarks>
-/// B1194 按基线 `MaskingStructure.kt` 的 `MaskingStructure` 补。
+/// 对齐基线 `MaskingStructure.kt` 的 `MaskingStructure`。
 ///
 /// **mask 列可能是<b>共享</b>的，而共享决定了谁保留它。**
 ///

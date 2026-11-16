@@ -15,12 +15,12 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// 一个模型里出现两个命名空间，指纹就不唯一 / Two namespaces in one model make the fingerprint ambiguous.
 /// </summary>
 /// <remarks>
-/// B1175 按基线 `solver/report/NormalizedModel.kt` 的六个记录与 `validateNormalizedIdentityMetadata` 补。
+/// 对齐基线 `solver/report/NormalizedModel.kt` 的六个记录与 `validateNormalizedIdentityMetadata`。
 ///
 /// **这一族记录存在的理由是稳定指纹**：**同一个模型重建两次，元素顺序可能不同，而指纹必须相同。**
 /// **所以所有数值以字符串保存——`double` 一旦参与往返，"同一个数"会因为格式化差异变成两个指纹。**
 ///
-/// B1175 adds the baseline's six records and its identity-metadata validation.
+/// adds
 ///
 /// **The family exists for a stable fingerprint**: **rebuilt twice, the same model may order its elements differently
 /// while the fingerprint must not change.** **Numbers are therefore strings — once a `double` round-trips, "the same

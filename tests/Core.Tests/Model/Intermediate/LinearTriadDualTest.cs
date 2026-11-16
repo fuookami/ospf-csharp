@@ -605,7 +605,7 @@ public class LinearTriadDualTest {
     /// **对偶列断言：无来源、<b>无派生身份</b>** / Dual-column assertions: no origin, <b>no derived identity</b>.
     /// </summary>
     /// <remarks>
-    /// **`Dual()` 路径不带派生身份（基线也不带），而 `FarkasDual()` 路径带（B1223 补的）。**
+ /// **`Dual` 路径不带派生身份（基线也不带），而 `FarkasDual` 路径带。**
     /// **所以这条断言只能用在对偶列上——它此前被 Farkas 断言复用，B1223 让 Farkas 列有了身份之后那两处就红了。**
     ///
     /// **这正是"判据前提被有意改变"的典型情形：** **红的原因是实现按基线前进，

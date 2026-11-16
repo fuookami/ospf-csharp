@@ -60,8 +60,8 @@ public class DeferredProjectionBlockersTests
         anyIndicatorFunction.Should().BeFalse(
             "if an IndicatorFunction appears, this criterion must be flipped — the blocker is that no source exists");
 
-        // **不用 `Select`：本仓的 `Result` 扩展也定义了一个（B1253 撞过一次）。**
-        // **Not `Select`: this repo's `Result` extensions define one too (B1253 hit it).**
+ // **不用 `Select`：本仓的 `Result` 扩展也定义了一个。**
+ // **Not `Select`: this repo's `Result` extensions define one too .**
         string[] files = Directory.GetFiles(
             System.IO.Path.Combine(root, "src/Core/Symbol/Function"), "*ndicator*.cs", SearchOption.AllDirectories);
         var indicators = new System.Collections.Generic.List<string>(files.Length);

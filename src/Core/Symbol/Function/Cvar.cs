@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 离散情景的 CVaR（条件风险价值）/ Conditional value at risk over discrete scenarios.
 /// </summary>
 /// <remarks>
-/// B1136 按基线 Cvar.kt 的 CvarFunction 补。
+/// 对齐基线 Cvar.kt 的 CvarFunction。
 ///
 /// 定义是 <c>min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ]</c>，
 /// 也就是“在最坏的 (1-alpha) 尾部上的平均损失”。

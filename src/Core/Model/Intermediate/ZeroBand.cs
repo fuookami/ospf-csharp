@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 零带：容差，以及"当前落在哪一侧"的那个变量 / A zero band: a tolerance and the variable saying which side we are on.
 /// </summary>
 /// <remarks>
-/// B1151 按基线 `model/intermediate/ZeroBand.kt` 补。
+/// 对齐基线 `model/intermediate/ZeroBand.kt`。
 ///
 /// **它是一个纯数据载体，不做校验**——与基线一致。
 /// **"负容差要拒绝"这条校验放在使用点**（`DeadZoneFunction` 已经在自己的构造函数里拒绝负的 `delta`），

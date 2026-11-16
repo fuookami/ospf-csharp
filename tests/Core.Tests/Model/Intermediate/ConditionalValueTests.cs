@@ -22,11 +22,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 条件结果的四条行把结果夹成 0 或输入 / Four rows pin the result to zero or the input.
 /// </summary>
 /// <remarks>
-/// B1178 按基线 `model/intermediate/ConditionalValue.kt` 补。
+/// 对齐基线 `model/intermediate/ConditionalValue.kt`。
 ///
 /// **指示 = 0 时 `_zero_*` 两条把 `result` 夹成 0；指示 = 1 时 `_then_*` 两条把它夹成 `input`。**
 ///
-/// B1178 adds the baseline's `ConditionalValue`.
+/// adds
 ///
 /// **At indicator 0 the two `_zero_*` rows pin `result` to zero; at indicator 1 the two `_then_*` pin it to `input`.**
 /// </remarks>

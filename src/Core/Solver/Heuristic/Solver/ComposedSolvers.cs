@@ -16,11 +16,11 @@ using Fuookami.Ospf.Math.Algebra.Number;
 namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 
 /// <remarks>
-/// **本类是基线启发式插件的直接对应物（B1271）：** **基线 `GA.kt`／`HS.kt` 等文件里各只有一个工厂函数，
+/// **本类是基线启发式插件的直接对应物：** **基线 `GA.kt`／`HS.kt` 等文件里各只有一个工厂函数，
 /// 没有类——所以"基线对应物"是这里的 35 个入口，而不是 `Core.Plugin.Heuristic` 里的 `HeuristicAlgorithm` 子类**
 /// （后者是 C# 侧的等价算法封装面，同样保留、且每个都被测试构造）。
 ///
-/// **This class is the baseline's direct counterpart (B1271): each baseline file such as `GA.kt` / `HS.kt` holds a single
+/// **This class is the baseline's direct counterpart : each baseline file such as `GA.kt` / `HS.kt` holds a single
 /// factory function and no classes, so the baseline counterpart is these 35 entry points rather than the `HeuristicAlgorithm`
 /// subclasses in `Core.Plugin.Heuristic`** (those are C#'s equivalent algorithm surface, also kept, and each is constructed by a
 /// test).

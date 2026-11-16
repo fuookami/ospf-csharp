@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// 不是"我们写进去的那条约束有没有被求解器采纳"。**
 /// **两者相差一次真跑，而这一批不声称跨过它。**
 ///
-/// **B1234 follows the baseline's 30-line `CoptFunctionCapabilities.kt`, the same family as `GurobiFunctionCapabilities`
+/// **follows the baseline's 30-line `CoptFunctionCapabilities.kt`, the same family as `GurobiFunctionCapabilities`
 /// since B855.**
 ///
 /// **The real motive is not "add a probe function" but to put the distinction B1232/B1233 left behind somewhere the user

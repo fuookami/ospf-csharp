@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **指示 = 0 时，上界行只说"不超过 0"、下界行只说"不小于 0"——单独任何一行都只是半边。**
 ///
-/// B1190 adds the baseline's `SemiStructure` and `DeferredFunctionFallbackConstraints`.
+/// adds
 ///
 /// **At indicator 0 the upper row says only "≤ 0" and the lower only "≥ 0" — either alone is half.**
 /// </remarks>

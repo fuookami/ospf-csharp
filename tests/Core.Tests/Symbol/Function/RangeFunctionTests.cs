@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 极差是 `max − min`，不是"两两之差的最大值" / The range is `max - min`.
 /// </summary>
 /// <remarks>
-/// B1167 按基线 `CompositeFunctions.kt` 的 `RangeFunction` 补。
+/// 对齐基线 `CompositeFunctions.kt` 的 `RangeFunction`。
 ///
 /// **两者在只有两个输入时相同，三个及以上时才分得开。**
 ///
-/// B1167 adds the baseline's `RangeFunction`.
+/// adds
 ///
 /// **The two agree for two inputs and only separate from three upward.**
 /// </remarks>

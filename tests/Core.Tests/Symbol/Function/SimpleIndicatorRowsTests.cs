@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 简单指示行：先做差分，违反侧用松弛后的 M / Difference first, relaxed M on the violated side.
 /// </summary>
 /// <remarks>
-/// B1181 按基线 `BigM.kt` 的 `simpleIndicatorConstraints`（LE/GE）与 `nonnegativeIndicatorConstraints` 补。
+/// 对齐基线 `BigM.kt` 的 `simpleIndicatorConstraints`（LE/GE）与 `nonnegativeIndicatorConstraints`。
 ///
 /// **`diff = lhs − rhs`，之后所有行只针对 `diff`。**
 ///
-/// B1181 adds the baseline's `simpleIndicatorConstraints` (LE/GE) and `nonnegativeIndicatorConstraints`.
+/// adds
 ///
 /// **`diff = lhs − rhs`, and every row then works on `diff` alone.**
 /// </remarks>

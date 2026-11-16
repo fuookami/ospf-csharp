@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// native 结构的约束求值 / Constraint evaluation for the native structures.
 /// </summary>
 /// <remarks>
-/// B1211 按基线 `NativePiecewiseReport.kt` 的 `absEvaluations` 与 `maxEvaluations` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `absEvaluations` 与 `maxEvaluations`。
 ///
 /// **两个求值器之间有两处不对称，都照抄基线并在判据里钉住。**
 ///

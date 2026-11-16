@@ -29,13 +29,13 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// - **`QuadraticSlackFunction`**：**`max(l − r, 0) + max(r − l, 0)`，也就是 `|l − r|`。**
 /// - **`QuadraticSlackRangeFunction`**：**`max(lower − x, 0) + max(x − upper, 0)`，区间总违背量。**
 ///
-/// **后两者都由两个 `QuadraticPositivePartFunction`（B1163）拼成，没有自己的极值编码。**
+/// **后两者都由两个 `QuadraticPositivePartFunction`拼成，没有自己的极值编码。**
 ///
 /// **最容易写错的是"只取一侧"**：**`|l − r|` 只留 `max(l − r, 0)` 会在 `l &lt; r` 时给 0；
 /// 区间违背量只留一侧会在另一半给 0。** **两者都不报错，只是在半个定义域上悄悄变成 0。**
 ///
-/// B1164 adds the three classes from the baseline. **All three turn "how far off" into a non-negative quantity.**
-/// **The last two are assembled from two `QuadraticPositivePartFunction`s (B1163) and hold no extremum encoding.**
+/// adds
+/// **The last two are assembled from two `QuadraticPositivePartFunction`s and hold no extremum encoding.**
 ///
 /// **The easy mistake is keeping only one side**: **using `max(l − r, 0)` alone gives zero when `l &lt; r`, and a
 /// one-sided range violation gives zero on the other half.** **Neither throws — each silently becomes zero over half
@@ -141,7 +141,7 @@ internal static class QuadraticSlackSupport
 /// 二次不等式判定：桥接后交给 `InequalityFunction`，返回 0/1 / A quadratic inequality, bridged, yielding 0 or 1.
 /// </summary>
 /// <remarks>
-/// B1164 按基线 `QuadraticInequality.kt` 补。
+/// 对齐基线 `QuadraticInequality.kt`。
 ///
 /// **第八个"桥接后委托"。** **与前面七个不同的是：委托目标返回的是<b>真值</b>（0 或 1），不是一个多项式值。**
 ///
@@ -250,10 +250,10 @@ public sealed class QuadraticInequalityFunction : IMathFunctionSymbol<Flt64>, IH
 /// 两个多项式之间差了多少：<c>|l − r|</c> / How far apart two polynomials are.
 /// </summary>
 /// <remarks>
-/// B1164 按基线 `QuadraticSlack.kt` 补。
+/// 对齐基线 `QuadraticSlack.kt`。
 ///
 /// **`max(l − r, 0) + max(r − l, 0)`，也就是 `|l − r|`。**
-/// **两个正部分别由 `QuadraticPositivePartFunction` 承担（B1163），本类只是把它们加起来。**
+/// **两个正部分别由 `QuadraticPositivePartFunction` 承担，本类只是把它们加起来。**
 ///
 /// **"松弛"这个名字容易读成"有符号的差"，而它是<b>无符号</b>的。**
 /// **只留 `max(l − r, 0)` 会在 `l &lt; r` 时给 0，而正确值是 `r − l`——
@@ -262,7 +262,7 @@ public sealed class QuadraticInequalityFunction : IMathFunctionSymbol<Flt64>, IH
 /// B1164, following the baseline's `QuadraticSlack.kt`.
 ///
 /// **`max(l − r, 0) + max(r − l, 0)`, that is `|l − r|`.**
-/// **Each positive part comes from `QuadraticPositivePartFunction` (B1163); this class only adds them.**
+/// **Each positive part comes from `QuadraticPositivePartFunction` ; this class only adds them.**
 ///
 /// **The name "slack" reads like a signed difference, but it is <b>unsigned</b>.**
 /// **Keeping only `max(l − r, 0)` gives zero when `l &lt; r` while the correct value is `r − l` — identically zero over
@@ -352,7 +352,7 @@ public sealed class QuadraticSlackFunction : IMathFunctionSymbol<Flt64>, IHasRes
 /// 超出区间的总量：<c>max(lower − x, 0) + max(x − upper, 0)</c> / The total distance outside an interval.
 /// </summary>
 /// <remarks>
-/// B1164 按基线 `QuadraticSlackRange.kt` 补。
+/// 对齐基线 `QuadraticSlackRange.kt`。
 ///
 /// **区间内为 0，低于下界为 `lower − x`，高于上界为 `x − upper`。**
 /// **两侧都要算：只留一侧会在另一半恒为 0。**

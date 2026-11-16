@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 原生绝对值关系的数据 / Data for a native absolute-value relation.
 /// </summary>
 /// <remarks>
-/// B1201 按基线 `NativeAbs.kt` 的 `NativeAbsData` 补。
+/// 对齐基线 `NativeAbs.kt` 的 `NativeAbsData`。
 /// **B1201, following the baseline's `NativeAbsData`.**
 /// </remarks>
 /// <param name="InputKey">输入变量键 / Input variable key.</param>
@@ -34,7 +34,7 @@ public sealed record NativeAbsData(
 /// 校验并转换绝对值 primitive / Validate and convert an absolute-value primitive.
 /// </summary>
 /// <remarks>
-/// B1201 按基线 `NativeAbs.kt` 的 `prepareNativeAbs` 补。
+/// 对齐基线 `NativeAbs.kt` 的 `prepareNativeAbs`。
 ///
 /// **"`1·x + 0`" 被检查<b>两次</b>，而这<b>不是</b>重复：**
 ///

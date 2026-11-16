@@ -124,7 +124,7 @@ public sealed class VacuousFailureAssertionBudgetTests
     /// <summary>**接口继承型断言的总数只减不增** / The stock of interface-inheritance assertions may only shrink.</summary>
     /// <remarks>
     /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should().BeTrue()` 永远不会单独变红。**
-    /// 实测（B1107）：把 `IFloatingNumber&lt;Flt64&gt;` 从 `Flt64` 的基接口列表里删掉，
+ /// 实测：把 `IFloatingNumber&lt;Flt64&gt;` 从 `Flt64` 的基接口列表里删掉，
     /// **`tests/Math.Tests` 立刻产生 1734 个编译错误**——**只要代码能编译，这条断言必然为真。**
     ///
     /// **它们本身没有害处**（作为"这个类型声称实现了什么"的清单很有用），
@@ -134,7 +134,7 @@ public sealed class VacuousFailureAssertionBudgetTests
     /// **所以口径和裸 `IsFailed` 一样**：钉在下面的常量上，**新加的会让它红**，逼作者去写行为判据。
     ///
     /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should().BeTrue()` can never go red on its own.**
-    /// Measured (B1107): removing `IFloatingNumber&lt;Flt64&gt;` from the base-interface list of `Flt64`
+ /// Measured : removing `IFloatingNumber&lt;Flt64&gt;` from the base-interface list of `Flt64`
     /// **produces 1734 compile errors in `tests/Math.Tests` at once** — **if the code compiles, the assertion is necessarily true.**
     ///
     /// **They are harmless in themselves** (an inventory of what a type claims is useful);

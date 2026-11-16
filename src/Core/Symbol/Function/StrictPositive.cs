@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一条严格正条件 <c>polynomial &gt; 0</c> / One strictly positive condition.
 /// </summary>
 /// <remarks>
-/// B1168 按基线 `DiscreteCondition.kt` 的 `StrictPositiveCondition` 补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `StrictPositiveCondition`。
 ///
 /// **它只是一个包装**：**`polynomial &gt; 0` 这件事全靠调用方按约定解释**，
 /// **记录本身不做任何检查。** **这正是它的用处——把一个"约定"变成类型。**
@@ -36,7 +36,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// 把离散条件转成严格正形式 <c>q &gt; 0</c> / Turn a discrete condition into a strictly positive one.
 /// </summary>
 /// <remarks>
-/// B1168 按基线 `DiscreteCondition.kt` 的 `toStrictPositiveCondition` 两个重载补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `toStrictPositiveCondition` 两个重载。
 ///
 /// **变换规则**：
 ///

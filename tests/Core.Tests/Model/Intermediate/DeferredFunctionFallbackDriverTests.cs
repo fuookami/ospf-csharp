@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 事务化驱动：三种失败结局 / Three failure outcomes.
 /// </summary>
 /// <remarks>
-/// B1200 按基线 `DeferredFunctionFallback.kt` 的 `materializeDeferredFunctionFallbacks` 与 `rollbackErrors` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `materializeDeferredFunctionFallbacks` 与 `rollbackErrors`。
 ///
 /// **回滚目标是"循环开始前的行数"，不是"上一个结构之前"。**
 ///
-/// B1200 adds the baseline's `materializeDeferredFunctionFallbacks` and `rollbackErrors`.
+/// adds
 ///
 /// **The rollback target is the row count before the loop, not before the previous structure.**
 /// </remarks>

@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **两者都靠一个比较网络把输入降序排列**（每对比较 = 一个 `MaxFunction` + 一个 `MinFunction`），
 /// **所以"第 k 大"就是"排序后第 k 个"。**
 ///
-/// B1150 adds the two order statistics from the baseline.
+/// adds
 ///
 /// **Both sort the inputs descending through a comparison network** (each comparison is one `MaxFunction` plus one
 /// `MinFunction`), **so "the k-th largest" is "the k-th after sorting".**

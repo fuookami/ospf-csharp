@@ -83,7 +83,7 @@ public class PwlLayerClaimsTests
         //
         // **这条判据此前断言"Copt / Cplex 都没有 Piecewise 文件"。**
         // **判断哪一侧是基线的依据：** **基线 `CoptNativePiecewise.kt` 有 209 行，
-        // 而 C# 的读侧（B1211—B1214）早已存在——所以缺的是写侧；写侧补上之后"没有文件"就不再成立。**
+ // 而 C# 的读侧早已存在——所以缺的是写侧；写侧补上之后"没有文件"就不再成立。**
         //
         // **改法：Copt 必须<b>有</b>写入器（否则缺口回来了），Cplex 仍然<b>没有</b>（那一侧还没做）。**
         // **两侧都保留断言，只是方向不同——因为能力矩阵现在对它们说的是不同的话。**
@@ -91,7 +91,7 @@ public class PwlLayerClaimsTests
         // **B1232: Copt now <b>has</b> a native piecewise file.**
         //
         // **How the baseline side was decided: the baseline `CoptNativePiecewise.kt` is 209 lines and C#'s read side
-        // (B1211–B1214) already existed — so the write side was the gap.**
+ // already existed — so the write side was the gap.**
         //
         // **后来 B1233 也补上了 Cplex 的写侧，于是这一条现在断言<b>两者都有</b>。**
         // **判据的方向跟着缺口走：缺口在哪一侧，断言就指向哪一侧；缺口消失，断言改成"必须有"。**

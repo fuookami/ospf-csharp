@@ -15,12 +15,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 固定变量等式：一行，但方向与元都容易反 / One row, but direction and identities are easy to flip.
 /// </summary>
 /// <remarks>
-/// B1169 按基线 `DiscreteCondition.kt` 的 `fixedVariableEquality` 补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `fixedVariableEquality`。
 ///
 /// **`EQ` 是对称的**，**所以"左右写反"在数值上完全测不出来**——
 /// **只有系数与常数项的位置能分开。**
 ///
-/// B1169 adds the baseline's `fixedVariableEquality`.
+/// adds
 ///
 /// **`EQ` is symmetric**, **so "sides swapped" is numerically undetectable** — **only the positions of the coefficient
 /// and the constant tell them apart.**

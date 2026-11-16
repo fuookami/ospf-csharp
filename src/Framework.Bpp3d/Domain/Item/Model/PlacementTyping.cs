@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// B1311 更正一个语义分歧： 这里原来的 `TopItemPlacements` 取的是"全局最高一层的所有放置"，
 /// 而基线取的是"没有任何底面重叠且更高的放置压在它上面的放置"。 两者在一高一低的货堆上给出不同答案：
 /// 基线两件都算顶层（谁也不压谁），旧实现只返回高的那件——于是矮的那件被当成"被压住的"，而它上面其实什么都没有。
-/// 旧实现全仓零调用方（B1311 实测），所以这次直接按基线替换，而不是并存两个同名不同义的方法。
+/// 旧实现全仓零调用方，所以这次直接按基线替换，而不是并存两个同名不同义的方法。
 ///
 /// Corresponds to three baseline files. B1311 corrects a semantic divergence: the old `TopItemPlacements` returned "every placement on the globally
 /// highest layer" while the baseline returns "every placement that no overlapping placement sits above". The two disagree on an uneven stack: the

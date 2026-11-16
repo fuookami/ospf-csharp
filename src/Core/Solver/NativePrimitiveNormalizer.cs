@@ -43,7 +43,7 @@ public sealed record NormalizedAbs(
 ///
 /// | 层 | 检查 | 范围 |
 /// | --- | --- | --- |
-/// | **primitive**（B1201/B1203） | **一个结构内部五键（PWL 是结果+选择）互不相同** | **单个结构** |
+/// | **primitive** | **一个结构内部五键（PWL 是结果+选择）互不相同** | **单个结构** |
 /// | **归一化**（本批） | **结果键在<b>整个列表</b>里唯一** | **跨结构** |
 ///
 /// **所以两者都不能省：** **一个结构自己没问题，仍然可能和另一个结构抢同一列。**
@@ -65,7 +65,7 @@ public sealed record NormalizedAbs(
 ///
 /// | Level | Check | Scope |
 /// | --- | --- | --- |
-/// | **primitive** (B1201/B1203) | **five keys of one structure are pairwise distinct** | **a single structure** |
+/// | **primitive** | **five keys of one structure are pairwise distinct** | **a single structure** |
 /// | **normalization** (this batch) | **the result key is unique <b>across the whole list</b>** | **across structures** |
 ///
 /// **Neither can be dropped: a structure that is fine on its own can still fight another one for the same column.**

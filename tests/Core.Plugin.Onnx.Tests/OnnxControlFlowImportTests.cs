@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests;
 /// **带 `If` 的模型从字节一路走到多项式** / A model with an If walks from bytes all the way to a polynomial.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxLowering` 编排形态。**这一批把三个已经各自验证过的部分拼成一条路：** '
+/// 同步 Kotlin `dee897d2` 的 `OnnxLowering` 编排形态。**这一层把三个各自验证过的部分拼成一条路：** '
 /// **解析子图属性 → 导入器识别控制流 → 求值器递归走分支体。**
 ///
 /// **"端到端"该有的意思就在这里：** **不是"每部分都有一条判据"，而是"一个真实模型能从头走通，且结果与手算一致"。**
@@ -236,11 +236,11 @@ public class OnnxControlFlowImportTests
                 mode: OnnxImportMode.Linear,
                 inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }));
 
-        // 迁移（B1370）：列表语义下，一个六元素输入没有逐元素符号就不该被当成一个数——**形状写着 6、绑定里只有一个符号，
+        // 列表语义下，一个六元素输入没有逐元素符号就不该被当成一个数——**形状写着 6、绑定里只有一个符号，
         // 那是一个自相矛盾的绑定。** 导入器还没按调用方给的符号列表建输入（基线的 inputBindings），所以这里断言拒绝及其理由；
-        // **等下一批把 importBindings 接上，这一条要改回"导入成功且元素逐个对上"。**
+        // **接上 importBindings 之后，这一条要改回"导入成功且元素逐个对上"。**
         //
-        // Migrated (B1370): under list semantics a six-element input with no per-element symbols must not be treated as one number — a shape of 6 with one symbol in the binding is
+        // under list semantics a six-element input with no per-element symbols must not be treated as one number — a shape of 6 with one symbol in the binding is
         // self-contradictory. The importer does not build inputs from caller-supplied symbols (the baseline's inputBindings) yet, so this asserts the refusal and its reason; **when
         // the next batch wires inputBindings, this criterion goes back to "imports, and the elements line up one by one".**
         imported.IsOk.Should().BeFalse("a six-element input needs six symbols before a reshape means anything");
@@ -264,7 +264,7 @@ public class OnnxControlFlowImportTests
 
     /// <summary>**重排落到按位置读的算子上时被拒绝** / A permutation landing on a positional reader is refused.</summary>
     /// <remarks>
-    /// **这一批把第 ⑦ 批的"一律拒绝"收窄成"只在会被看见时拒绝"：** **逐元素消费不看位置，重排是空操作；'
+    /// **收窄后的规则是"只在会被看见时拒绝"：** **逐元素消费不看位置，重排是空操作；'
     /// **`MatMul`／`Concat` 这类按位置读，重排就必须真发生——而这一层写不下来。**
     ///
     /// **This narrows batch ⑦'s blanket refusal to "only when it is visible": an elementwise consumer does not look at position, so the permutation is a no-op; MatMul and Concat
@@ -292,12 +292,11 @@ public class OnnxControlFlowImportTests
 
     /// <summary>**只被逐元素消费的重排不再被拒绝，而多元素图输出仍明确拒绝** / A reorder consumed elementwise is no longer refused, and a multi-element graph output still is.</summary>
     /// <remarks>
-    /// **这一条是从"系数与没有那一步时相同"迁移过来的：** **迁移的理由是列表语义（B1370）——** '
-    /// **多元素张量不再被压成一个标量表达式，于是"整张图给出一个多项式"这件事对一个多元素输出本来就不成立。** '
-    /// **迁移后它仍然有牙：** **中间绑定的元素必须真的换过位置，而不是只断言"图失败了"。**
+    /// **多元素张量不压成一个标量表达式，** **所以"整张图给出一个多项式"对一个多元素输出本来就不成立。** '
+    /// **判据的落点是中间绑定的元素必须真的换过位置，而不是只断言"图失败了"。**
     ///
-    /// **This is migrated from "the coefficients equal those without the step": the reason is list semantics (B1370) — a multi-element tensor is no longer collapsed into one scalar
-    /// expression, so "the whole graph yields one polynomial" never held for a multi-element output.** **It keeps its teeth: the intermediate binding's elements really have to be
+    /// **A multi-element tensor is not collapsed into one scalar expression, so "the whole graph yields one polynomial" never held for a multi-element output.** **The criterion lands on the
+    /// intermediate binding really having permuted elements, not merely "the graph failed":
     /// permuted rather than merely "the graph failed".**
     /// </remarks>
     [Fact]
@@ -376,10 +375,10 @@ public class OnnxControlFlowImportTests
 
     /// <summary>**旧入口对多元素输出仍然拒绝，即使输出没有声明形状** / The old entry still refuses a multi-element output even when the output declares no shape.</summary>
     /// <remarks>
-    /// **这一条是 B1372 的证据：** **上一批它只能测"声明了形状"的情形，因为仿射链不看形状就无从得知元素个数。** '
+    /// **这一条钉的是：** **先前只能测"声明了形状"的情形，因为仿射链不看形状就无从得知元素个数。** '
     /// **形状传播接上之后，`x[3] + y[3]` 的输出被推出是三个元素——** **于是这条判据恢复成原来的宽度，而不是留着收窄的版本当纪念。**
     ///
-    /// **This is the evidence for B1372: last batch it could only test the declared case, because the affine chain had no way to know the element count without a declared shape.**
+    /// **This pins that: earlier it could only test the declared case, because the affine chain had no way to know the element count without a declared shape.**
     /// **With shape propagation the output of x[3] + y[3] is inferred as three elements — so this criterion goes back to its original width instead of keeping the narrower version as a
     /// souvenir.**
     /// </remarks>
@@ -552,7 +551,7 @@ public class OnnxControlFlowImportTests
     /// <summary>**同一个模型：Linear 模式拒绝、Quadratic 模式导入** / The same model is refused in Linear mode and imports in Quadratic mode.</summary>
     /// <remarks>
     /// **两种模式各说各话，但都说真话：** **Linear 模式的拒绝消息点名 `OnnxImportMode.Quadratic`，** **而 Quadratic 模式交回二次项。** '
-    /// **若 Linear 模式悄悄给出一次结果，模型照常求解而二次项不见了——** **那是这一批要消灭的错法。**
+    /// **若 Linear 模式悄悄给出一次结果，模型照常求解而二次项不见了——** **那是这条判据要防的错法。**
     ///
     /// **The two modes each say their own thing and both say the truth: the linear refusal names OnnxImportMode.Quadratic, and quadratic mode hands back the second-degree terms.** If linear mode
     /// quietly produced a first-degree result, the model would still solve with the quadratic terms gone — **the failure this batch exists to remove.**

@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **蕴含与合取的唯一区别就在"前置为假时"**：**如果那时约束仍然生效，
 /// 它就不是蕴含，而是合取——而两者在"前置为真"的点上完全一样。**
 ///
-/// B1166 adds the baseline's non-folded implication.
+/// adds
 ///
 /// **The only difference between an implication and a conjunction is the false-antecedent case**: **if the constraint
 /// still bites there, it is a conjunction, not an implication — and the two agree completely wherever the antecedent

@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Iis;
 /// `IConstraintProgrammingSolver`、`ConstraintProgrammingInfeasibleOutput`、`SolveDiagnostics.InfeasibilityEvidence`、
 /// `CollectConflict`／`ShrinkConflict` 全都在。**
 ///
-/// B1261 adds the analyzer from the baseline. **Checking dependencies first, as B1260 taught, showed "only an adapter is
+/// adds
 /// missing" again.**
 /// </remarks>
 public class ConstraintProgrammingConflictAnalyzerTests

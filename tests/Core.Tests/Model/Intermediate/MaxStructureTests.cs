@@ -22,11 +22,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// MAX 结构的范围证明：收缩可以，扩大不行 / Shrinking is fine, growing is not.
 /// </summary>
 /// <remarks>
-/// B1189 按基线 `FunctionExpansion.kt` 的 `MaxStructure` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `MaxStructure`。
 ///
 /// **这个方向不对称，所以判据必须两个方向都测。**
 ///
-/// B1189 adds the baseline's `MaxStructure`.
+/// adds
 ///
 /// **The direction is asymmetric, so a criterion must test both sides.**
 /// </remarks>

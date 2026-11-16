@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// 所以“抽查几个断点”永远看不出段数不够，而那是这一批最容易写错的判据。
 ///
-/// B1132 adds ExpFunction. It is not “the exponential” but “a piecewise-linear approximation of it” —
+/// adds
 /// and that distinction settles two things: ① the error is exactly zero at the breakpoints;
 /// ② there is error in between, larger with fewer segments.
 ///

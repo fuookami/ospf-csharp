@@ -20,14 +20,14 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 二值逻辑：真值表是唯一的判据 / The truth table is the only criterion.
 /// </summary>
 /// <remarks>
-/// B1195 按基线 `BinaryLogicStructure.kt` 的 `BinaryLogicStructure` 与 `BinaryLogicOperation` 补。
+/// 对齐基线 `BinaryLogicStructure.kt` 的 `BinaryLogicStructure` 与 `BinaryLogicOperation`。
 ///
 /// **四种编码的行数公式不同，方向也不同。真正的判据是：<b>把每个二值赋值代进去，
 /// 可行的恰好是该运算的那些</b>。**
 ///
 /// **只数行数证明不了任何东西——一个行数完全正确而符号写反的实现，行数判据全绿。**
 ///
-/// B1195 adds the baseline's `BinaryLogicStructure` and `BinaryLogicOperation`.
+/// adds
 ///
 /// **The four encodings differ in row count and direction. The real criterion is: <b>substitute every binary assignment;
 /// exactly the operation's assignments are feasible</b>.**

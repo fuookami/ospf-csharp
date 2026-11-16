@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// **写出来的东西完全一样**（λ 组、`Σλ=1`、`x`／`y` 两条 linking、`SOS2`），
 /// **而校验比 COPT 多两条。这不是疏忽，是<b>后端之间真实的差别</b>：**
 ///
-/// | 校验 | COPT（B1232） | CPLEX（本批） |
+/// | 校验 | COPT | CPLEX（本批） |
 /// | --- | --- | --- |
 /// | 断点数 ≥ 2 且与函数值等长 | ✅ | ✅ |
 /// | 输入／结果键不同、结果键不重复 | ✅ | ✅ |
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 ///
 /// **所以合并这两个写入器是错的：它们的<b>形状</b>一样，<b>防御</b>不一样。**
 ///
-/// B1233 adds the write side following the baseline's 135-line `CplexNativePiecewise.kt`, shaped like B1232's COPT.
+/// adds
 ///
 /// **What gets written is identical (λ group, `Σλ=1`, `x`/`y` linking rows, `SOS2`), while validation carries two more
 /// checks than COPT. That is not an oversight but a <b>real difference between the backends</b>.**

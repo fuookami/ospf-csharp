@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Solver.Report;
 /// 本仓一个文件都没有。** **而它依赖的 `SolveReport`／`SolveIssue`／`SolveIssueCategory`／
 /// `AuditFingerprint`／`SolverProvenance` 全都在——所以缺的是这一层编排，不是底座。**
 ///
-/// **B1257 adds it from the baseline's `SolveExperimentCase`.** **The whole block was absent here: the baseline has
+/// **adds it from the baseline's `SolveExperimentCase`.**The whole block was absent here: the baseline has
 /// `SolveExperiment*`/`BatchSolveExperiment*` and this repo had no file for either.** **Every dependency
 /// (`SolveReport`, `SolveIssue`, `SolveIssueCategory`, `AuditFingerprint`, `SolverProvenance`) already exists — what was
 /// missing is this orchestration layer, not the foundation.**
@@ -124,7 +124,7 @@ public sealed record GeneratedMilpSampleMetadata<V>(
 /// **它意味着这个类型只能拿来<b>看</b>，不能拿来<b>指挥</b>下一次求解——
 /// 而一旦它被读进配置，那条边界就没了。**
 ///
-/// **本仓没有任何地方消费它（B1257 只把它定义出来），所以这条约束现在是靠"没有消费者"成立的。
+/// **本仓没有任何地方消费它，所以这条约束现在是靠"没有消费者"成立的。
 /// 而在有消费者那一天，必须先回答"它能不能影响配置"这个问题。**
 ///
 /// **"Carrying no production solve controls" is a constraint the baseline states on the type, not an accident.** **It
@@ -158,7 +158,7 @@ public sealed record OfflineSolveObservation<V>(
 /// 纯输入输出的批量实验运行器 / A pure input-output batch experiment runner.
 /// </summary>
 /// <remarks>
-/// B1257 按基线 `BatchSolveExperimentRunner` 补。
+/// 对齐基线 `BatchSolveExperimentRunner`。
 ///
 /// **两条确定性保证是这一块的全部价值，而它们都写在签名之外的约定里：**
 ///
@@ -171,7 +171,7 @@ public sealed record OfflineSolveObservation<V>(
 /// **失败不抛：** **一个场景失败会变成一条带 `SolveIssue` 的结果，
 /// 其余场景继续跑完。** **批量实验里"一个坏样本中断整批"是最坏的行为。**
 ///
-/// B1257 adds it from the baseline's `BatchSolveExperimentRunner`.
+/// adds
 ///
 /// **Two determinism guarantees are the whole point of this layer, and both live in conventions outside the signature: cases
 /// are scheduled <b>after sorting by `Id`</b>, and results are returned <b>after sorting by `Id`</b>.**

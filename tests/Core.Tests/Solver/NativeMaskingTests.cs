@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// B1215 按基线 `NativeIndicator.kt` 的 `prepareConditionalValue` 与
 /// `NativeMasking.kt` 的 `prepareNativeMasking` 补。
 ///
-/// B1215 adds the baseline's conditional-value and masking preparation.
+/// adds
 /// </remarks>
 public class NativeMaskingTests
 {

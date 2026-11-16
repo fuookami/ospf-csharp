@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **把配对弄错会得到一个不含 `x·y` 的多面体——松弛"合法"但无效，而求解器不会报错，
 /// 它只会返回一个更好的目标值。**
 ///
-/// B1152 adds `ConditionBounds` and the McCormick envelope.
+/// adds
 ///
 /// **The two `≥` rows use the same-corner pairing (`(xL,yL)` and `(xU,yU)`) and the two `≤` rows use the cross pairing
 /// (`(xU,yL)` and `(xL,yU)`).**

@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 按列号把解向量摊回变量键 / Spread a solution vector back onto variable keys.
 /// </summary>
 /// <remarks>
-/// B1207 按基线 `NativePiecewiseReport.kt` 的 `valuesByKey` 与 `finiteSolverDouble` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `valuesByKey` 与 `finiteSolverDouble`。
 /// **`nativeColumns` 依赖 `LinearTriadModel` 的 `origin` 与 token 概念，
 /// 而 C# 侧的 `ModelViewVariable` 没有 `Origin`，所以那一格留到后续批次。**
 ///

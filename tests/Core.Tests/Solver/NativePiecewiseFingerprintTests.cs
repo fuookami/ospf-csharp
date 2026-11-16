@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// PWL 指纹：描述的是集合，不是列表 / It describes a set, not a list.
 /// </summary>
 /// <remarks>
-/// B1213 按基线 `NativePiecewiseReport.kt` 的 `piecewiseFingerprint` 与 `numberListText` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseFingerprint` 与 `numberListText`。
 ///
-/// B1213 adds the baseline's `piecewiseFingerprint` and `numberListText`.
+/// adds
 /// </remarks>
 public class NativePiecewiseFingerprintTests
 {

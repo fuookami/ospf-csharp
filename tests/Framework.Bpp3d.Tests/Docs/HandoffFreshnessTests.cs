@@ -23,7 +23,7 @@ public class HandoffFreshnessTests {
     /// **交接状态表的数字不能比计划本身旧** / The hand-off table must not be older than the plan itself.
     /// </summary>
     /// <remarks>
-    /// **B1284 收口时看到 `### 下一批（B1284）的唯一入口` 下面那张表：**
+ /// **B1284 收口时看到 `### 下一批的唯一入口` 下面那张表：**
     /// **写着"状态文档 `上次更新 Batch 1274`，集成 11425、默认 11261"、"文档判据 229 条"、
     /// "最近归档日志 `p8-batch1275-*`"——<b>而实际已经是 1283 / 11450 / 11286 / 236</b>。**
     ///
@@ -39,7 +39,7 @@ public class HandoffFreshnessTests {
     /// **其余数字（集成／默认／警告）不在此列：** **它们由门禁产生，改文档时手抄一次就够了，
     /// 而<b>批次号是"这一节属于哪一批"的唯一标识**，错一次就整节失效。**
     ///
-    /// **B1284 saw the table under `### 下一批（B1284）的唯一入口` still saying "status doc: Batch 1274, integration 11425,
+ /// **B1284 saw the table under `### 下一批的唯一入口` still saying "status doc: Batch 1274, integration 11425,
     /// default 11261", "docs criteria 229" and "latest archive p8-batch1275-*" while reality was 1283 / 11450 / 11286 / 236.**
     /// **That section is the only entry point for a hand-off and the first thing the next person reads, and it had fallen nine
     /// batches behind — while calling itself the table B1274 brought up to date.** **The criterion checks only the two cells a machine
@@ -143,7 +143,7 @@ public class HandoffFreshnessTests {
         // **只认行首的 `### 下一批（BNNNN）` 标题，不认正文里的引用。**
         //
         // **B1274 踩到的正是这个：** **B1273 的事故叙述里三次引用了
-        // `### 下一批（B1273）的唯一入口` 这句话（那时它是真的标题），
+ // `### 下一批的唯一入口` 这句话（那时它是真的标题），
         // 于是判据把三处引用都当成了指针，报"指针指向 B1273 而最新是 B1274"。**
         //
         // **而那段叙述里<b>必须**能引用旧标题——否则没法说清自己删掉了什么。**
@@ -155,7 +155,7 @@ public class HandoffFreshnessTests {
         // the old heading, or it cannot say what it deleted — and a criterion that mistakes a quotation for an assertion forces
         // history to be rewritten.**
         // **再收紧一层：标题后面必须紧跟 `的唯一入口`，因为被引述的那句是
-        // `### 下一批（B1273）的唯一入口` 这一节里……
+ // `### 下一批的唯一入口` 这一节里……
         // 也就是说引述句在标题后多了一个反引号。**
         //
         // **Tightened once more: the heading must be followed directly by 的唯一入口, because the quoted line continues with a

@@ -16,9 +16,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 跨结构键检查：登记范围与引用范围不同 / The claim range and the reference range differ.
 /// </summary>
 /// <remarks>
-/// B1206 按基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText`。
 ///
-/// B1206 adds the baseline's `validateCombinedStructureKeys` and `keyText`.
+/// adds
 /// </remarks>
 public class NativeCombinedKeyValidatorTests
 {

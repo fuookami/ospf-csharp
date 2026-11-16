@@ -17,11 +17,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 全局约束的门面：三个入口的校验强度不一样 / The three entry points validate unequally.
 /// </summary>
 /// <remarks>
-/// B1177 按基线 `GlobalConstraintFunctions.kt` 补。
+/// 对齐基线 `GlobalConstraintFunctions.kt`。
 ///
 /// **这是一个纯门面，所以它的价值不在逻辑，而在"哪里做校验"。**
 ///
-/// B1177 adds the baseline's `GlobalConstraintFunctions`.
+/// adds
 ///
 /// **A pure façade, so its value is not logic but where validation happens.**
 /// </remarks>

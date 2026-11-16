@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 延迟函数 fallback 生成的求解器无关约束 / Solver-neutral constraints from a deferred-function fallback.
 /// </summary>
 /// <remarks>
-/// B1190 按基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackConstraints` 补。
+/// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackConstraints`。
 ///
 /// **一个包装而不是直接返回列表**：**它标记"这些行的来源是 fallback 路径，不是结构的原生展开"。
 /// 调用方据此决定要不要做等价列与保留列的登记——两者的处理不同。**
@@ -35,7 +35,7 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// 半连续变量的结构 / Semi-continuous variable structure.
 /// </summary>
 /// <remarks>
-/// B1190 按基线 `FunctionExpansion.kt` 的 `SemiStructure` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `SemiStructure`。
 ///
 /// **半连续的意思是"要么是 0，要么落在 `[L, U]` 里"。**
 /// **两条行，而<b>它们只在成对时才强制 0</b>：**

@@ -20,9 +20,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 原生 MAX primitive：Big-M 覆盖、自引用与仿射界 / Big-M coverage, self-reference, affine bounds.
 /// </summary>
 /// <remarks>
-/// B1205 按基线 `NativeMax.kt` 的 `NativeMaxData` / `NativeMaxInputData` / `prepareNativeMax` 补。
+/// 对齐基线 `NativeMax.kt` 的 `NativeMaxData` / `NativeMaxInputData` / `prepareNativeMax`。
 ///
-/// B1205 adds the baseline's MAX primitive.
+/// adds
 /// </remarks>
 public class NativeMaxTests
 {

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 按下标取表项：<c>index = lowerIndex + i ? values[i]</c> / Table lookup by integer index.
 /// </summary>
 /// <remarks>
-/// B1154 按基线 `Element.kt` 的 `ElementFunction` 补。
+/// 对齐基线 `Element.kt` 的 `ElementFunction`。
 ///
 /// **编码是三段**：
 /// ① **一个 one-hot 的 `Σ selector_i = 1`**；

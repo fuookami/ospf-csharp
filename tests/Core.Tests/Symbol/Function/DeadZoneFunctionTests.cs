@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 这个形状有三处容易写错，而三处都不会报错：
 /// ① 死区之内返回的是 |x| 而不是 0；② 负的一侧忘了取绝对值；③ delta 为负时死区“消失”而没人发现。
 ///
-/// B1133 adds DeadZoneFunction from the baseline, shaped as max(|x| - delta, 0).
+/// adds
 ///
 /// Three things are easy to get wrong here, and none of them throws:
 /// ① returning |x| instead of 0 inside the band; ② forgetting the absolute value on the negative side;

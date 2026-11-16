@@ -7,9 +7,9 @@ Baseline:
 - Plan: `logs/kotlin-sync-plan.md` (local only, ignored by git)
 - Package version: `1.1.2`（跟基线根的 `pom.xml` 走，不是本仓自定的；判据 `PackagingMetadataTests` 钉住两边一致）
 
-## Current Phase (as of Batch 1388)
+## Current Phase (as of Batch 1392)
 
-**The sync is not complete.** Phases P4 through P8 are closed; **P9 is in progress** (Batches 242–1388).
+**The sync is not complete.** Phases P4 through P8 are closed; **P9 is in progress** (Batches 242–1392).
 The resumable inventory (what is left, the known gaps, and the batch procedure) lives in the handoff
 section at the top of `logs/kotlin-sync-plan.md` (`## 零、截至轮次上限的交接状态`).
 
@@ -7082,7 +7082,7 @@ dotnet build ospf-csharp.sln -c Release --no-restore -t:Rebuild --nologo
 dotnet test  ospf-csharp.sln -c Release --no-build --no-restore
 ```
 
-实测结果（**每次收口后在此更新**；上次更新 Batch 1388）：
+实测结果（**每次收口后在此更新**；上次更新 Batch 1392）：
 
 | Gate | Result |
 |---|---|

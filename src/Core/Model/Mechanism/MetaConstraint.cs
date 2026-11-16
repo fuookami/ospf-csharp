@@ -108,34 +108,18 @@ public interface MathConstraint {
 
 /// <summary>机制模型约束到求解器约束的映射与对偶整理 / Mechanism constraint mapping and dual tidy helpers.</summary>
 /// <remarks>
-/// **B1228 把四个后端各自的 `OriginMap` 与 `ToDualSolution` 合并到这里，与 B1226／B1227 同一动机。**
+/// **`OriginMap` 与 `ToDualSolution` 在四个后端（COPT／CPLEX／Mindopt／SCIP）里逐字相同，
+/// 连类型签名都相同：全部是 `LinearMechanismModel&lt;Flt64>` 与 `IConstraint&lt;Flt64, LinearCategory>`。**
+/// **既然泛型特化<b>完全相同</b>，它们就只该有一份实现，所以集中到这里。**
 ///
-/// **它们此前在 COPT／CPLEX／Mindopt／SCIP 里逐字相同——而这一次连类型签名都相同：
-/// 全部是 `LinearMechanismModel&lt;Flt64>` 与 `IConstraint&lt;Flt64, LinearCategory>`。**
-///
-/// **B1227 只合了一个纯函数，理由是"其余部分依赖各自的泛型特化"。这一批核对下来，
-/// 那两个函数依赖的泛型特化其实<b>完全相同</b>——四个插件都用同一个 `LinearMechanismModel&lt;Flt64>`。**
-/// **所以上一批那个理由对 `Key` 成立、对这两个函数不成立。**
-///
-/// **这是"先算清半径再动手"的正面例子：** **B1227 在不确定时选择了不合并，
-/// 本批在核对之后才合并——而不是反过来（先合并，再发现类型对不上）。**
-///
-/// **B1228 merges four backends' `OriginMap` and `ToDualSolution` here, the same motive as B1226/B1227.**
-///
-/// **They were byte-identical across COPT/CPLEX/Mindopt/SCIP — and this time even the type signatures matched: all
-/// `LinearMechanismModel&lt;Flt64>` and `IConstraint&lt;Flt64, LinearCategory>`.**
-///
-/// **B1227 merged only a pure function, reasoning that "the rest depends on each backend's generic specialisation". This
-/// batch's check shows those two functions depend on the <b>same</b> specialisation — all four plugins use one
-/// `LinearMechanismModel&lt;Flt64>`.** **So the earlier reason held for `Key` but not for these two.**
-///
-/// **A good example of "measure the radius before moving": B1227 declined to merge when unsure, and this batch merged
-/// after checking — rather than the reverse (merge first, discover the types do not line up).**
+/// **`OriginMap` and `ToDualSolution` are byte-identical across the four backends (COPT, CPLEX, Mindopt, SCIP), down to the
+/// signatures: all `LinearMechanismModel&lt;Flt64>` and `IConstraint&lt;Flt64, LinearCategory>`.** **Since the generic
+/// specialisation is <b>the same</b>, they can only have one implementation, and it lives here.**
 /// </remarks>
 public static class MathConstraintOrigins {
 /// <summary>行号到来源约束的键解析 / Resolve a row index to its originating constraint key.</summary>
 /// <remarks>
-/// **B1227 把四个后端各自的同一份实现合并到这里，与 B1226 的 `FallbackMathConstraint` 同源。**
+/// **四个后端各自的同一份 `Key` 实现集中到这里。**
 ///
 /// **它们此前逐字相同（五行的三元表达式），分散在 COPT／CPLEX／Mindopt 的 `XxxDualSupport` 里，
 /// 以及 SCIP 的 `ScipLpDualSupport` 里。**
@@ -149,7 +133,7 @@ public static class MathConstraintOrigins {
 /// 而每种位置都有答案（有来源就用来源，没有就造一个可识别的占位键）。**
 /// **一个永远有答案的查询，用 `Result` 包装只会让四个调用方各写一遍解包。**
 ///
-/// **B1227 merges four byte-identical copies here, the same move as B1226's `FallbackMathConstraint`.**
+/// **Four byte-identical `Key` implementations live here instead of in each backend.**
 ///
 /// **They were identical five-line ternary expressions spread across COPT/CPLEX/Mindopt's `XxxDualSupport` and SCIP's
 /// `ScipLpDualSupport`.**
@@ -219,7 +203,7 @@ public static MathConstraint ResolveOriginKey(int index, MathConstraint?[] origi
 
     /// <summary>筛选非零 Farkas 乘子 / Keep the non-zero Farkas multipliers.</summary>
     /// <remarks>
-    /// **B1229 把四个后端的同一份实现合并到这里，与 B1226／B1227／B1228 同一动机。**
+    /// **四个后端的同一份实现集中在这里。**
     ///
     /// **与 `ToDualSolution` 的差别只有两点，而这两点都不是"开关"：**
     ///
@@ -235,7 +219,7 @@ public static MathConstraint ResolveOriginKey(int index, MathConstraint?[] origi
     /// **`backendName` 是唯一按后端变化的部分：** **它出现在错误消息里，
     /// 而错误消息是给用户看的东西——"哪个后端没给出证书"是这条消息存在的全部理由。**
     ///
-    /// **B1229 merges four backends' copy here, the same motive as B1226–B1228.**
+    /// **Four backends share this one implementation.**
     ///
     /// **It differs from `ToDualSolution` in exactly two ways, neither of them a switch:**
     ///
@@ -285,7 +269,7 @@ public static MathConstraint ResolveOriginKey(int index, MathConstraint?[] origi
 /// 缺源约束的占位键 / A placeholder key for a row with no originating constraint.
 /// </summary>
 /// <remarks>
-/// **B1226 把六个后端各自的同一份实现合并到这里。**
+/// **六个后端各自的同一份实现集中在这里。**
 ///
 /// **此前 `CoptFallbackMathConstraint`、`CplexFallbackMathConstraint`、`MindoptFallbackMathConstraint`、
 /// `HexalyFallbackMathConstraint`、`FallbackMathConstraint`（SCIP）、`FallbackMathConstraint`（Gurobi）
@@ -302,7 +286,7 @@ public static MathConstraint ResolveOriginKey(int index, MathConstraint?[] origi
 /// **合并的收益不是行数，而是"只有一个地方定义这个约定"：** **六份里的任何一份单独变动，
 /// 都会让六个后端在这一点上悄悄分叉。**
 ///
-/// **B1226 merges six byte-identical per-backend implementations here.** **Four of the six used four different name
+/// **Six byte-identical per-backend implementations live here instead of in each backend.** **Four of the six used four different name
 /// prefixes, so "they are actually the same" was invisible when reading.**
 ///
 /// **Its reason to exist is real: the dual/Farkas tidy step builds a dictionary keyed by originating constraint, and

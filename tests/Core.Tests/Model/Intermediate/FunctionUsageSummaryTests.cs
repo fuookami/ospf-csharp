@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **四个布尔是事实，三个派生属性是决定——分开它们让"何时保留结果变量"只有一处规则。**
 ///
-/// B1179 adds the baseline's `FunctionUsageSummary` and its three companions.
+/// adds
 ///
 /// **Four booleans are facts, three derived members are decisions — keeping them apart puts "when to retain the result
 /// variable" in one place.**

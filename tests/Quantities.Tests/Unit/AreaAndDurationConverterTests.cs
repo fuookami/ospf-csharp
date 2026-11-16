@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **`IntX` 能表示负数，所以截断即可；`UIntX` 不能，所以负数必须拒绝。**
 /// **把 -5 秒变成 0 秒会让"早于基准点"的信息悄悄消失，而调用方看到的是一个合法的 0。**
 ///
-/// B1144 adds four area units and two duration converters.
+/// adds
 ///
 /// **The two types must treat a negative duration differently**:
 /// **`IntX` can hold negatives, so truncation suffices; `UIntX` cannot, so negatives must be rejected.**

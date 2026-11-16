@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// `UnivariateLinearPiecewiseStructure`（限 `ValidateFallbackInputBounds`）与
 /// `DeferredFunctionFallback.kt` 的 `capturePwlInputBounds` 补。
 ///
-/// B1191 adds the baseline's `DeferredFunctionConstraintRegion`, the `ValidateFallbackInputBounds` part of
+/// adds
 /// `UnivariateLinearPiecewiseStructure`, and `capturePwlInputBounds`.
 /// </remarks>
 public class UnivariateLinearPiecewiseStructureTests

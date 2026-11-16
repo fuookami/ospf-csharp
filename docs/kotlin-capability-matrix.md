@@ -2742,6 +2742,7 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 - **形状算子：** `OnnxShapeTransform`（`Reshape`／`Flatten`／`Squeeze`／`Unsqueeze` 顺序保持、可落地；**`Transpose` 因重排无处可写而在多元素张量上拒绝**；`Concat` 同样需要逐元素表示）。
 - **端到端：** 带 `If` 的模型从字节 → 解析 → 前置检查 → 求值 → 多项式，条件真/假各走一条、与手算一致；**导入器对含控制流的图自动转入求值路径**；`If`／`Loop`／`Scan` 均可从字节走到多项式，求值路径按符号合并同名项（`x + x` 不会变成两列）。
 - **函数符号登记顺序：** **`OnnxModelAttachment` 先登记函数符号、再展平**，**因为展平之后符号已经变成多项式的项，再登记就找不回对应关系。** 这条顺序对逐元素展开同样成立。
+- **覆盖范围之外的算子：** `Conv`／`MaxPool`／`AveragePool` **基线也没有**（降阶分派与全模块搜索都无实现），**所以不是移植缺口；`PositionalConsumers` 里列出它们只为判断"下游是否按位置读"。**
 - **二次域批量维（B1388）：** `MatMul` 的批量前缀按 `BroadcastShape` 广播、**展开下标与一次域共用一份**、逐批量相乘。
 - **二次域到求解器（B1387）：** ONNX 二次域产出的多项式**挂进 `QuadraticMetaModel` 并用 Gurobi 求解**；**变量必须取自导入结果**（`RealVar("x")` 两次是不同实例，元模型表里只有一个）。
 - **二次域 `Mul`（B1386）：** 两侧含变量时按位置进入 `OnnxQuadraticProduct`；**"逐元素还是矩阵乘"由元素个数与内容决定，而不是形状。**
@@ -2795,6 +2796,7 @@ symbols are already terms of a polynomial and registering them afterwards cannot
 | # | 未移植项 | 为什么没做 | 升级路径 | 影响 |
 | --- | --- | --- | --- | --- |
 | 1 | ~~其余激活的符号输入（`Sigmoid`／`Tanh`／`Softplus`／`Elu`）~~ **已补做（B1361）** | — | 按基线的 `approximated`（`OnnxPiecewiseApproximation` + `UnivariateLinearPiecewiseFunction`）走分段线性：界从变量自己取、`>1e6` 视作缺失、`lower == upper` 塌缩成常数、断点均匀且在断点上精确插值 | **已支持**：分段 `Sigmoid` 在 Gurobi 上求解，最小值 `sigmoid(-5) ≈ 0.0067` |
+| 3 | **覆盖范围之外：`Conv` / `MaxPool` / `AveragePool`** | **基线 `dee897d2` 的降阶分派里没有这三个算子，** 整个 ONNX 模块搜 `Conv`／`Pool` 只命中 `Convert` 一词。**所以这不是 C# 的缺口，而是两侧都不覆盖的算子范围** | **没有升级路径可写：** **两侧都不覆盖，补它等于扩展基线范围而不是移植** | **不在移植范围内**：把它当作待补项会去实现基线本身没有的东西 |
 | 2 | ~~二次域的批量维~~ **已补做（B1388）** | — | **与一次域同一套广播：** **下标数学共用 `ExpandIndices`，两个域各自用自己的元素去取；** **不相容的批量维仍然拒绝** | **已支持**：`[2,1,2]·[2,2,1]` 得 `[2,1,1]`（每批量两个二次项），批量 3 对 2 被拒 |
 | 2 | **非目标：逐名对齐**（`OnnxCallbackAdapter` 377 行／`OnnxFunctionalModel` 等模型对象） | **C# 侧并不存在与 Kotlin 一一对应的模型对象：** 职责由 `OnnxModelAttachment` ＋ `OnnxAffineModelBuilder` 承担，**逐名对齐只会造出空壳。** 要做的是能力对齐，而能力已对齐 | **不需要补：** **能力已对齐，逐名对齐没有可补的东西；** 若将来 C# 侧真的引入对应对象，那时再谈名字 | **没有人会去找不存在的对象，也不会有人为了对齐名字而造空壳** |
 | 3 | ~~`Scan` 运行期切片~~ **已支持（B1367／B1368）** | — | 长度取首维、每轮 `SliceLeading`，**求值器在扫描输入带元素列表时直接用它** | **已支持**：三片 `x0`／`x1`／`x2` 得 `x0 + x1 + x2`；**导入器路径仍要求常量扫描输入**（因为导入器还构造不出元素列表，与第 2 项同一层） |

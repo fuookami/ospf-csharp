@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一组多项式的极差：<c>max − min</c> / The range of several polynomials: `max - min`.
 /// </summary>
 /// <remarks>
-/// B1167 按基线 `CompositeFunctions.kt` 的 `RangeFunction` 补。
+/// 对齐基线 `CompositeFunctions.kt` 的 `RangeFunction`。
 ///
 /// **极差不是"两两之差的最大值"**，**而是 `max(inputs) − min(inputs)`。**
 /// **两者在只有两个输入时相同，在三个及以上时不同**：

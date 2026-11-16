@@ -25,12 +25,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 二次掩码：桥接等式必须真的进模型 / The bridge equality must reach the model.
 /// </summary>
 /// <remarks>
-/// B1176 按基线 `QuadraticMasking.kt` 的 `QuadraticMaskingFunction` 补。
+/// 对齐基线 `QuadraticMasking.kt` 的 `QuadraticMaskingFunction`。
 ///
 /// **结构是"先桥接、再掩码"**：**`MaskingFunction` 只接受线性输入，
 /// 二次项必须先被一个桥接变量取代。**
 ///
-/// B1176 adds the baseline's `QuadraticMaskingFunction`.
+/// adds
 ///
 /// **Bridge first, then mask**: **`MaskingFunction` takes linear input only, so the quadratic terms must first be
 /// replaced by a bridge variable.**
@@ -69,7 +69,7 @@ public class QuadraticMaskingFunctionTests
         // **下界是 `−100` 而不是 `0`，因为 `QuadraticBounds.Of` 用四角取最值——
         // 而四角里包含 `(10)·(−10) = −100`。**
         //
-        // **"平方非负"这件事它测不出来**（B1163 已记录过同一限制）。
+ // **"平方非负"这件事它测不出来**。
         // **后果是桥接变量的界比实际宽一倍：能跑、不报错，只是松弛略松。
         // 记在这里，而不是假装下界是 0。**
         //

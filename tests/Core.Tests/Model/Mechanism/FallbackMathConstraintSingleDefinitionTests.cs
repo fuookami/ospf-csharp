@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 /// **这是少见的"结构判据"而不是"行为判据"，而它在这件事上是唯一有效的形状：**
 /// **行为判据在六份实现上都是绿的，因为六份都正确。**
 ///
-/// B1226 merges six per-backend `FallbackMathConstraint` copies into `Core`.
+/// merges
 ///
 /// **The six were <b>byte-identical</b>, and four used four different class-name prefixes, while the remaining two
 /// shared a name across different namespaces.**

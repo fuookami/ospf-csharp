@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// ABS 辅助变量在后续模型限制之前捕获的范围 / An ABS helper's range captured before later model restrictions.
 /// </summary>
 /// <remarks>
-/// B1188 按基线 `FunctionExpansion.kt` 的 `AbsHelperBoundsSnapshot` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `AbsHelperBoundsSnapshot`。
 ///
 /// **两个字段都可空，而"可空"是这里的全部信息量**：
 /// **`null` 表示"当时没有已知界"，不是"界是零"。**
@@ -39,7 +39,7 @@ public sealed record AbsHelperBoundsSnapshot(Flt64? Lower, Flt64? Upper);
 /// ABS 函数的结构与 fallback 证明快照 / Absolute-value structure and fallback proof snapshot.
 /// </summary>
 /// <remarks>
-/// B1188 按基线 `FunctionExpansion.kt` 的 `AbsStructure` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `AbsStructure`。
 ///
 /// **`|x|` 需要三个辅助列，而不是一个**：
 ///

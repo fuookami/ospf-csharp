@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **编码的关键是"被屏蔽的差"**：令 <c>d = then − otherwise</c>、辅助变量 <c>z = mask · d</c>，
 /// 于是 <c>result = otherwise + z</c>——**一条等式就够，不需要两条分支不等式。**
 ///
-/// B1153 adds `SelectFunction`.
+/// adds
 ///
 /// **The encoding turns on "the masked difference"**: `d = then − otherwise` and an auxiliary `z = mask · d`, so
 /// `result = otherwise + z` — **one equality suffices.**

@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **三者与 B1161 的 `QuadraticIf` 系列同形**：**桥接每个二次多项式，再交给已有的线性极值函数。**
 /// **极值编码本身没有任何新增。**
 ///
-/// B1162 adds the three quadratic extremum adapters.
+/// adds
 ///
 /// **Same shape as B1161's `QuadraticIf` family**: **bridge each quadratic polynomial and hand them to the existing
 /// linear extremum functions.** **No extremum encoding is new.**

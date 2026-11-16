@@ -14,9 +14,9 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Proto;
 /// </summary>
 /// <remarks>
 /// 同步 Kotlin `dee897d2` 的 `ir_version` 处理：**结论是不按版本分支，** **理由是 protobuf 的字段号一旦发布不可改，新版本只追加字段。**
-/// **这一批把"我们依赖哪些字段号"写成表，并用一个真实模型证明它——** **表里的号若与代码不符，这个模型就读不出来。**
+/// **这里把"我们依赖哪些字段号"写成表，并用一个真实模型证明它——** **表里的号若与代码不符，这个模型就读不出来。**
 ///
-/// Syncs the `ir_version` handling: **no version branch, because protobuf field numbers are immutable once published and a new version only appends fields.** This batch writes down
+/// Syncs the `ir_version` handling: **no version branch, because protobuf field numbers are immutable once published and a new version only appends fields.** This layer writes down
 /// **which field numbers the plugin relies on** and proves it with a real model — **a table that disagrees with the code cannot parse that model.**
 /// </remarks>
 public class OnnxSchemaVersionTests
@@ -89,7 +89,7 @@ public class OnnxSchemaVersionTests
         OnnxSchemaVersion.FieldNumbers.Should().Contain(field => field.Message == "AttributeProto" && field.Number == 6,
             "the subgraph attribute is the one whose omission once made control flow unreachable");
         OnnxSchemaVersion.FieldNumbers.Should().Contain(field => field.Message == "TensorProto" && field.Number == 4,
-            "float_data at 4 rather than 5 cost a debugging round in an earlier batch");
+            "float_data is field 4, not 5: reading the wrong number yields an empty initialiser instead of an error");
     }
 
     // ---- 手工编码的最小模型：字段号一律取自 OnnxSchemaVersion.FieldNumbers ----

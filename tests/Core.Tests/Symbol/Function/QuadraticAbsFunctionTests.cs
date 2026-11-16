@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **正部的编码是 `max(p, 0) = −min(−p, 0)`**：**外层那个取负就是"正部"与"负部"的全部差别。**
 ///
-/// B1163 adds the two classes from the baseline.
+/// adds
 ///
 /// **The positive part is encoded as `max(p, 0) = −min(−p, 0)`**: **the outer negation is the whole difference between
 /// the positive and negative parts.**

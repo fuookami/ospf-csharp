@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 正向指示：两侧的 Big-M 不是同一个数 / The two sides use different Big-M values.
 /// </summary>
 /// <remarks>
-/// B1180 按基线 `BigM.kt` 的 `positiveIndicatorConstraints` 与 `relaxBigM` 补。
+/// 对齐基线 `BigM.kt` 的 `positiveIndicatorConstraints` 与 `relaxBigM`。
 ///
 /// **下界行用 `bigM + |tol|`，上界行用 `bigM`；这个差别只在指示 = 0 时显现。**
 ///
-/// B1180 adds the baseline's `positiveIndicatorConstraints` and `relaxBigM`.
+/// adds
 ///
 /// **The lower row uses `bigM + |tol|` and the upper row `bigM`; the difference shows only at indicator 0.**
 /// </remarks>

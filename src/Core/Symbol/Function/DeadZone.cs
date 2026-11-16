@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 死区函数：`max(|x| - delta, 0)` / Dead zone: `max(|x| - delta, 0)`.
 /// </summary>
 /// <remarks>
-/// B1133 按基线 CompositeFunctions.kt 的 DeadZoneFunction 补。
+/// 对齐基线 CompositeFunctions.kt 的 DeadZoneFunction。
 ///
 /// 它表示“在 ±delta 之内没有反应，超出之后按超出量线性增长”——
 /// 机械间隙、传感器死区、控制器的容差带都是这个形状。

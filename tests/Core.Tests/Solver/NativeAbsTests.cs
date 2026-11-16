@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 原生绝对值 primitive：两层检查与严格上界 / Two layers of checking, one strict bound.
 /// </summary>
 /// <remarks>
-/// B1201 按基线 `NativeAbs.kt` 的 `NativeAbsData` 与 `prepareNativeAbs` 补。
+/// 对齐基线 `NativeAbs.kt` 的 `NativeAbsData` 与 `prepareNativeAbs`。
 ///
-/// B1201 adds the baseline's `NativeAbsData` and `prepareNativeAbs`.
+/// adds
 /// </remarks>
 public class NativeAbsTests
 {

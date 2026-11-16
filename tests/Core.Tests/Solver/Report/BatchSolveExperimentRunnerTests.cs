@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// **输入顺序打乱 → 结果仍按 `Id` 排序；并发 > 1 → 报告顺序与并发无关。**
 /// **所以判据必须真的打乱输入并真的并发跑。**
 ///
-/// B1257 adds this orchestration layer, which was wholly missing, from the baseline's `OfflineExperiment.kt`.
+/// adds
 ///
 /// **Its value is two determinism guarantees, and neither can be confirmed by reading:** **shuffle the input and the results
 /// still come back ordered by `Id`; run at concurrency &gt; 1 and the report order is unaffected.**

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// MAX 的一个仿射输入 / An affine input to MAX.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1205 按基线 `NativeMax.kt` 的 `NativeMaxInputData` 补。
+/// 对齐基线 `NativeMax.kt` 的 `NativeMaxInputData`。
 /// **`Terms` 是按变量键合并后的非零系数。**
 ///
 /// **B1205, following the baseline's `NativeMaxInputData`.** **`Terms` holds nonzero coefficients combined by variable
@@ -49,7 +49,7 @@ public sealed record NativeMaxData(
 /// 校验 MAX 数据及原 Big-M 对输入域的覆盖 / Validate MAX data and the original Big-Ms' coverage of the input domain.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1205 按基线 `NativeMax.kt` 的 `prepareNativeMax` 补。
+/// 对齐基线 `NativeMax.kt` 的 `prepareNativeMax`。
 ///
 /// **这一层最要紧的一条是 Big-M 的<b>覆盖</b>检查：**
 ///

@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// ② Sprott 声明了参数 `b` 但公式里从未用它；
 /// ③ Wang–Chen 的 `dw` 里没有 `w`。
 ///
-/// B1146 adds `SinaiMap`, `SprottAttractor` and `WangChenAttractor` with their iterators.
+/// adds
 ///
 /// **Each map has its own trap, and none throws**:
 /// ① Sinai's `mod 1` is the fractional part — **an absolute value folds the torus's left side onto its right**;

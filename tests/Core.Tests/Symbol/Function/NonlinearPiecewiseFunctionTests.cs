@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **如果不拦，`ln(0)` 给出 `-∞`、`1/0` 给出 `±∞`、`(-1)^0.5` 给出 `NaN`，
 /// 而这些值会一路塞进分段线性函数里——分段函数不拒绝它们，于是整条约束悄悄失效。**
 ///
-/// B1148 adds the three functions from the baseline's `NonlinearPiecewise.kt`.
+/// adds
 ///
 /// **Where each source fails**:
 /// | Function | Fails when |

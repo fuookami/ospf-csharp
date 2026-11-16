@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **一处同名不同值**：基线的 `Horsepower` 是 735 W（公制），本仓的是 745.69987 W（机械），
 /// **同一个 `hp` 符号，差 1.4%。**
 ///
-/// B1143 adds plane angle (4 plus 2 aliases), force (2) and power (4).
+/// adds
 ///
 /// **Two baseline problems**:
 /// ① the baseline writes `RightAngle = Radian / 4.0`, **while a right angle is pi/2** — correct is `RoundAngle / 4`;

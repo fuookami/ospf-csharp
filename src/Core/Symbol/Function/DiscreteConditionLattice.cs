@@ -46,7 +46,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **所以两处检查都必需：`spacing ≥ δ` 挡"格点太密"，余数距离挡"格点位置不对齐"。**
 ///
-/// B1172 adds the baseline's four lattice helpers.
+/// adds
 ///
 /// **The immediate reason for this batch is a gap already found**: **B1168's `ProveShift` only checked
 /// "spacing ≥ δ", while the baseline also checks "the distance from the constant to the nearest lattice point

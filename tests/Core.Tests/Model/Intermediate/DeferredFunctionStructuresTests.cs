@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 标记接口的分派表：漏加分支不会编译失败 / A missing dispatch branch does not fail the build.
 /// </summary>
 /// <remarks>
-/// B1187 按基线 `FunctionExpansion.kt` 的五个 `DeferredFunctionStructure` 扩展函数与 `FunctionExpansionPolicy` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的五个 `DeferredFunctionStructure` 扩展函数与 `FunctionExpansionPolicy`。
 ///
 /// **标记接口没有成员，所以所有具体信息都要靠类型分派取出来——代价就在这里。**
 ///
-/// B1187 adds the baseline's five `DeferredFunctionStructure` extensions and `FunctionExpansionPolicy`.
+/// adds
 ///
 /// **The marker has no members, so every concrete fact comes out of a type dispatch — and that is where the cost is.**
 /// </remarks>

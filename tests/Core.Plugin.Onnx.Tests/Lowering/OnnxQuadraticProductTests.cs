@@ -26,7 +26,7 @@ public class OnnxQuadraticProductTests
 {
     /// <summary>**`(x+y)(x−y)` 的交叉项互相抵消** / The cross terms of (x+y)(x−y) cancel.</summary>
     /// <remarks>
-    /// **这条是这一批存在的理由：** **展开出 `x²`、`−y²` 与 `xy`、`−xy` 四项，后两项必须是同一格才能抵消。** '
+    /// **这条存在的理由：** **展开出 `x²`、`−y²` 与 `xy`、`−xy` 四项，后两项必须是同一格才能抵消。** '
     /// **按有序对做键，结果里会留下一项 `xy`——** **而求解器会用它去凑一个"更优"的点，那个点根本不满足原来的问题。**
     ///
     /// **This is why the batch exists: the expansion gives x², −y² and xy, −xy, and the last two have to land in the same cell to cancel.** **Keyed by an ordered pair, an xy

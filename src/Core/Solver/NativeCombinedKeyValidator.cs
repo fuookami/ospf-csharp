@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 跨三类 native 结构的键冲突检查 / Cross-structure key-conflict checking over the three native kinds.
 /// </summary>
 /// <remarks>
-/// B1206 按基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText`。
 ///
 /// **这是唯一一处同时看 PWL、ABS、MAX 三类结构的检查，而它做的是<b>两件不同的事</b>：**
 ///

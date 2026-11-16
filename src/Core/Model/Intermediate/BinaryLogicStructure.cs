@@ -35,7 +35,7 @@ public enum BinaryLogicOperation
 /// 纯二值逻辑函数的延迟快照 / A deferred snapshot of a pure binary logic function.
 /// </summary>
 /// <remarks>
-/// B1195 按基线 `BinaryLogicStructure.kt` 的 `BinaryLogicStructure` 与 `BinaryLogicOperation` 补。
+/// 对齐基线 `BinaryLogicStructure.kt` 的 `BinaryLogicStructure` 与 `BinaryLogicOperation`。
 ///
 /// **四种运算的编码方向各不相同，而每一种的"哪一侧是松的"都要单独看：**
 ///

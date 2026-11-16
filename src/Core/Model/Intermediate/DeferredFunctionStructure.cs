@@ -6,7 +6,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 可延迟展开的结构节点 / A structure node whose expansion may be deferred.
 /// </summary>
 /// <remarks>
-/// B1180 按基线 `FunctionExpansion.kt` 的 `DeferredFunctionStructure` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `DeferredFunctionStructure`。
 ///
 /// **这是一个<b>纯标记接口</b>，没有任何成员。**
 ///

@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// The CVaR epigraph: `θ + Σ pᵢ·uᵢ/(1−α)` with `uᵢ ≥ max(0, Lᵢ − θ)`.
 /// </summary>
 /// <remarks>
-/// B1160 按基线 `Cvar.kt` 的 `CvarEpigraphFunction` 补。
+/// 对齐基线 `Cvar.kt` 的 `CvarEpigraphFunction`。
 ///
 /// **与 `CvarFunction` 的区别就是这一批的全部内容**：
 ///

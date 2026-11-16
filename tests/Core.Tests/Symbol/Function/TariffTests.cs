@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **全量折扣在断点处跳降（990 → 500），累进只涨了 5。**
 ///
-/// B1155 adds both pricing functions from the baseline's `Tariff.kt`.
+/// adds
 ///
 /// **They agree exactly on the first segment** — **so a criterion that only tests small values cannot separate them.**
 /// **Separating them requires crossing a breakpoint**:

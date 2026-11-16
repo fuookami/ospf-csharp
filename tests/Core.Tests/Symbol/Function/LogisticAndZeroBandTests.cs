@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **中点搞错，曲线整体平移；陡度搞错，曲线整体变平或反号——两者都不报错。**
 /// **而"值都在 0 与 1 之间"这条对任何 sigmoid 形态的实现都成立，分不开它们。**
 ///
-/// B1151 adds the logistic approximation and `ZeroBand`.
+/// adds
 ///
 /// **A wrong midpoint shifts the curve; a wrong steepness flattens or mirrors it — neither throws.**
 /// **And "values lie between 0 and 1" holds for any sigmoid-shaped implementation, so it separates nothing.**

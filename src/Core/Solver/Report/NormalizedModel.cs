@@ -107,7 +107,7 @@ public sealed record NormalizedObjective(
 /// 归一化数学模型 / A normalized mathematical model.
 /// </summary>
 /// <remarks>
-/// B1175 按基线 `solver/report/NormalizedModel.kt` 的六个记录与 `validateNormalizedIdentityMetadata` 补。
+/// 对齐基线 `solver/report/NormalizedModel.kt` 的六个记录与 `validateNormalizedIdentityMetadata`。
 ///
 /// **这一族记录的存在理由是"稳定指纹"**：**同一个模型重建两次，
 /// 变量、约束、目标的<b>顺序可能不同</b>，而指纹必须相同。**
@@ -189,7 +189,7 @@ public sealed class NormalizedMathematicalModel
 /// 归一化模型的标识一致性校验 / Identity consistency for a normalized model.
 /// </summary>
 /// <remarks>
-/// B1175 按基线 `validateNormalizedIdentityMetadata` 补。
+/// 对齐基线 `validateNormalizedIdentityMetadata`。
 ///
 /// **它挡的是"同一个模型里出现两个命名空间"**。
 ///

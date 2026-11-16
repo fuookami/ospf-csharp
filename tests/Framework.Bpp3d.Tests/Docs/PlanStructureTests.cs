@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// <remarks>
 /// **这两条判据是 B1273 事故的直接产物。**
 ///
-/// **事故：** **为了替换 `### 下一批（B1273）的唯一入口` 里一段过期正文，
+/// **事故：** **为了替换 `### 下一批的唯一入口` 里一段过期正文，
 /// 我用了一个"从这个标题到下一个 `## `"的切片替换——而下一个 `## ` 在文件很后面，
 /// 于是那一次替换删掉了约 20972 行，包含第 891—1272 批的全部 382 条条目
 /// 与 `0.2`／`0.3`／`0.4` 三个小节。**
@@ -57,7 +57,7 @@ public class PlanStructureTests
     /// <remarks>
     /// **这一条<b>不</b>去断言"没有缺口**——因为缺口确实存在，而假装没有比承认更糟。</b>
     ///
-    /// **`PhaseRangeTests.TheBatchNumbers_ShouldBeGloballyContiguous`（B1007 就立下的）已经在断言全局连续，
+ /// **`PhaseRangeTests.TheBatchNumbers_ShouldBeGloballyContiguous`已经在断言全局连续，
     /// 它现在红着，而那是对的：** **断号即丢失，这是那条判据的原意。**
     ///
     /// **本批没有放宽那条判据，也没有伪造条目去糊住它。**
@@ -108,7 +108,7 @@ public class PlanStructureTests
     /// </summary>
     /// <remarks>
     /// **这四个小节分别回答：交接清单、判据弱点与红线、门禁怎么跑、事故记录。**
-    /// **两次误删都发生在它们身上（B1273 一次删掉三个），所以逐个断言。**
+ /// **两次误删都发生在它们身上，所以逐个断言。**
     ///
     /// **The four answer, respectively: the hand-off checklist, criteria weaknesses and red lines, how to run the gate, and the
     /// incident record.** **Both deletions hit them (B1273 took three at once), so each is asserted individually.**

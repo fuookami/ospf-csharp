@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// The cargo attribute model B1305 filled in: all twelve types exist and no algorithm changed.
 /// </summary>
 /// <remarks>
-/// 复审（B1297）发现基线 `PackageAttribute.kt` 的十二个类型在 C# 侧一个都没有，而三份文档也从未提到它们。
+/// 复审发现基线 `PackageAttribute.kt` 的十二个类型在 C# 侧一个都没有，而三份文档也从未提到它们。
 /// 这一批补齐后要钉住两件事：
 ///
 /// ① 十二个类型真的都在（反射列名，而不是"我以为我写了"）；② 生产代码里没有任何人构造它们——

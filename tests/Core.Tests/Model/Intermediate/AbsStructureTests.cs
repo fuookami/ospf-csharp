@@ -22,11 +22,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// A bare variable is "one monomial, coefficient one, constant zero".
 /// </summary>
 /// <remarks>
-/// B1188 按基线 `FunctionExpansion.kt` 的 `AbsStructure` 与 `AbsHelperBoundsSnapshot` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `AbsStructure` 与 `AbsHelperBoundsSnapshot`。
 ///
 /// **三条中少任何一条都必须返回 `null`，不能"尽力而为"。**
 ///
-/// B1188 adds the baseline's `AbsStructure` and `AbsHelperBoundsSnapshot`.
+/// adds
 ///
 /// **Missing any of the three must yield `null`, never a best effort.**
 /// </remarks>

@@ -102,7 +102,7 @@ public class AlgorithmClassesShouldBeTestedTests
     /// **这一条是这一批唯一无法在仓内验证的断言——它说的是基线。**
     /// **所以它在这里的写法是<b>记录**而不是断言：断言它会让门禁依赖 `../ospf-kotlin` 的存在。**
     ///
-    /// **记录的内容（B1271 实测）：** **基线 `GA.kt` 只有一个 `fun islandGenetic(...)`，
+ /// **记录的内容：** **基线 `GA.kt` 只有一个 `fun islandGenetic(...)`，
     /// `HS.kt` 只有一个 `fun harmonySearch(...)`——<b>没有类**。**
     ///
     /// **所以本仓这 6 个类<b>不是移植来的**，是 C# 侧等价的算法封装面；

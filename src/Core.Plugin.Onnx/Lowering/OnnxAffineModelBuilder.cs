@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **把一条仿射多项式装成一个可求解的线性模型** / Assemble an affine polynomial into a solvable linear model.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxFunctionalModel` 里"仿射目标 → 线性模型"那一小段。**这一批的产出是"能力可用"的第一份硬证据：**
+/// 同步 Kotlin `dee897d2` 的 `OnnxFunctionalModel` 里"仿射目标 → 线性模型"那一小段。**这一层的产出是"能力可用"的第一份硬证据：**
 /// **一个 ONNX 图经这里之后，真的能被求解器解出来，并与手算对照。**
 ///
-/// **覆盖范围明确有限：** **只有仿射链。** **激活与形状算子需要函数符号与模型机制，** **不在这一批里，也不假装在。**
+/// **覆盖范围明确有限：** **只有仿射链。** **激活与形状算子需要函数符号与模型机制，** **不在这一层里，也不假装在。**
 ///
 /// Syncs the "affine objective → linear model" fragment of `OnnxFunctionalModel`. **The output of this batch is the first hard evidence that the capability works: a graph
 /// passing through here is actually solved and compared against hand arithmetic.**

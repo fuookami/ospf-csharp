@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 条件结果：指示列为 1 时取输入，否则为 0 / Value equals the input on indicator one, otherwise zero.
 /// </summary>
 /// <remarks>
-/// B1178 按基线 `model/intermediate/ConditionalValue.kt` 补。
+/// 对齐基线 `model/intermediate/ConditionalValue.kt`。
 ///
 /// **四条约束是"两个分支各两条"，而两个分支的方向相反**：
 ///

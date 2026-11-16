@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// Relation indicators derive both rows from the condition's own bounds, with no big-M.
 /// </summary>
 /// <remarks>
-/// B1184 按基线 `Conditional.kt` 的 `relationIndicatorConstraints` 补。
+/// 对齐基线 `Conditional.kt` 的 `relationIndicatorConstraints`。
 ///
 /// **归一化后的语义要先说清**：**`relation` 是相对<b>零</b>的，`bounds` 只是 `q` 的取值范围。**
 ///
@@ -44,7 +44,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **"参数位置对了、值传错了"是这个 helper 形状的代价：
 /// 三个同类型参数排在一起，编译器帮不上忙。**
 ///
-/// B1184 adds the baseline's `relationIndicatorConstraints`.
+/// adds
 ///
 /// **The normalized semantics come first: `relation` is relative to <b>zero</b>, and `bounds` is only `q`'s range.**
 ///

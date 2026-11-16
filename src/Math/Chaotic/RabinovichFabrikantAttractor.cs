@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Rabinovich–Fabrikant 吸引子（三维）/ The Rabinovich–Fabrikant attractor.
 /// </summary>
 /// <remarks>
-/// B1147 按基线 `RabinovichFabrikantAttractor.kt` 补。
+/// 对齐基线 `RabinovichFabrikantAttractor.kt`。
 ///
 /// <c>dx = γ(y − x + xz)</c>，<c>dy = αx − y + xz</c>，<c>dz = −xy − z</c>。
 ///

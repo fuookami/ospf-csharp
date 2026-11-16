@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **在一个作用域里逐节点求值一张图** / Evaluate a graph node by node inside a scope.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的子图体递归降阶的第一刀。**这一批只覆盖"逐元素仿射"那几个算子（`Identity`／`Cast`／`Add`／`Sub`／`Neg`／`Mul` 常数），**
+/// 同步 Kotlin `dee897d2` 的子图体递归降阶的第一刀。**这一层只覆盖"逐元素仿射"那几个算子（`Identity`／`Cast`／`Add`／`Sub`／`Neg`／`Mul` 常数），**
 /// **但它引入了前面所有批次都没有的东西：**图是被逐节点走过去的，中间结果留在上下文里**。**
 ///
 /// **这就是子图展开能成立的形式：** **`If` 选中一个分支体之后，把外层可见的张量作为种子灌进上下文，** **再对分支体调用这里——** **于是"子图"不再是一个特殊概念。**
 ///
-/// Syncs the first cut of the recursive body lowering. **It covers only the elementwise affine operators, but it brings something no earlier batch had: the graph is
+/// Syncs the first cut of the recursive body lowering. **It covers only the elementwise affine operators, but it brings something no earlier layer had: the graph is
 /// walked node by node and the intermediates stay in the context.**
 ///
 /// **That is the shape subgraph unrolling needs: after `If` picks a branch body, the visible outer tensors seed the context and this runs over the body — so "a subgraph"
@@ -530,7 +530,7 @@ public static class OnnxGraphEvaluator
 
         // 顺序敏感的算子在多元素张量上无法落地：形状能算，而重排无处可写。
         // 但只有当这个重排**落到一个按位置读的算子**上时才可见——否则逐元素消费不看位置，重排是空操作。
-        // 若绑定带逐元素列表，重排就真的发生（B1368），此时不再需要拒绝。
+        // 若绑定带逐元素列表，重排就真的发生，此时不再需要拒绝。
         //
         // An order-sensitive operator cannot land on a multi-element tensor here: the shape computes and the permutation has nowhere to go. But that is only visible when the
         // permutation reaches a positional reader — an elementwise consumer does not look at position, and then the permutation is a no-op.
@@ -742,7 +742,7 @@ public static class OnnxGraphEvaluator
     /// <param name="context">上下文 / The context.</param>
     /// <returns>失败原因，或 `null` / the failure reason, or null.</returns>
     /// <remarks>
-    /// **多输出是这一批的目的：** **`Split` 的每一段都要绑，** **否则"形状对、元素对、而后面读不到"这种半成品会被当成成功。**
+    /// **多输出的目的：** **`Split` 的每一段都要绑，** **否则"形状对、元素对、而后面读不到"这种半成品会被当成成功。**
     ///
     /// **Each piece has to be bound: otherwise a half-done job — right shape, right elements, unreadable afterwards — passes as success.**
     /// </remarks>
@@ -1091,7 +1091,7 @@ public static class OnnxGraphEvaluator
         if (body is null) {
             return "'Scan' 缺少循环体 / the scan has no body";
         }
-        // 扫描输入带逐元素列表时，运行期切片就能真发生：长度取首维、每轮切一片（B1367 的入口）。
+        // 扫描输入带逐元素列表时，运行期切片就能真发生：长度取首维、每轮切一片。
         // When the scan input carries an element list, runtime slicing can really happen: the length is the leading dimension and each round cuts one slice.
         if (node.Inputs.Count > 0 && context.TryGet(node.Inputs[^1], out OnnxLoweringContext.Binding scanBound) && scanBound.HasElements) {
             var elementStates = new List<OnnxLoweringContext.Binding>(stateCountFor(body));

@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 ///
 /// **两个失效参数**：Windmi 的 `g`、Hopfractional 迭代器的 `iterations`。
 ///
-/// B1147 adds the three remaining maps with their iterators.
+/// adds
 ///
 /// **Three traps, none of which throws**:
 /// ① Rabinovich–Fabrikant's `γ` multiplies only the first equation, **while both carry an `xz` term**;

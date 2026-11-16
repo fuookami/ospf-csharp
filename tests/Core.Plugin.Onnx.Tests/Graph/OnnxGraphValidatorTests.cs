@@ -22,7 +22,7 @@ public class OnnxGraphValidatorTests
 {
     /// <summary>**次序错乱被拒绝，而不是被排好** / A mis-ordered graph is refused, not sorted.</summary>
     /// <remarks>
-    /// **这个用例是这一批的核心：** **`y` 先于 `x` 被用到，正确做法是报错；** **若实现悄悄做拓扑排序，模型会"跑通"，**
+    /// **这个用例是核心：** **`y` 先于 `x` 被用到，正确做法是报错；** **若实现悄悄做拓扑排序，模型会"跑通"，**
     /// **而它的语义已经与导出者写下的不同。**
     ///
     /// **This is the core case of the batch: `y` is used before it exists and the right response is an error. An implementation that silently topological-sorts would

@@ -71,7 +71,7 @@ public sealed class ModelViewVariable : ICopyable<ModelViewVariable> {
     /// 对偶约束来源：这个变量是第几行约束的对偶，以及那一行的关系 / The dual constraint origin.
     /// </summary>
     /// <remarks>
-    /// B1222 按基线 `ModelView.kt` 的 `dualOrigin: Constraint&lt;Flt64, *&gt;?` 补。
+    /// 对齐基线 `ModelView.kt` 的 `dualOrigin: Constraint&lt;Flt64, *&gt;?`。
     /// **基线的类型是"那个约束对象本身"，C# 的类型是"行号 + 关系"。这不是简化，而是两侧模型表示的差异：
     /// Kotlin 的 `ModelView` 持有 `Constraint` 对象引用，C# 的 `ModelViewVariable` 只持有索引与关系，
     /// 因为 C# 的 `ModelView` 是按列/行组织的扁平结构。在这里引入一个约束对象引用会双向绑定视图与模型，

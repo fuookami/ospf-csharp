@@ -17,9 +17,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// native 求值：两处照抄下来的不对称 / Two asymmetries copied from the baseline.
 /// </summary>
 /// <remarks>
-/// B1211 按基线 `NativePiecewiseReport.kt` 的 `absEvaluations` 与 `maxEvaluations` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `absEvaluations` 与 `maxEvaluations`。
 ///
-/// B1211 adds the baseline's two evaluators.
+/// adds
 /// </remarks>
 public class NativeConstraintEvaluationsTests
 {

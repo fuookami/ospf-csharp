@@ -77,14 +77,14 @@ public class DeferredStructureSolveCoverageCoptIntegrationTest
     /// </summary>
     /// <remarks>
     /// **B1255 加这条判据，因为 `Minimum` 这个属性此前<b>没有任何地方读它</b>：**
-    /// **声明了、投影也在填（B1252），而生成逻辑无论方向都产 MAX 行。**
+ /// **声明了、投影也在填，而生成逻辑无论方向都产 MAX 行。**
     /// **于是 `min` 会被当成 MAX 物化——模型合法、能解，只是答案是最大值。**
     ///
     /// **只做结构判据是抓不到它的：** **两组行都"存在"，只是符号反了。**
     /// **所以这一条必须是真实求解：固定 x₁ = 1、x₂ = 3，最小化 y，正确答案是 1；
     /// 若按 MAX 物化，y 会被压到 3。**
     ///
-    /// **B1255 adds this because `Minimum` was <b>read by nothing</b> — declared, filled by the projection (B1252), and the
+ /// **adds this because `Minimum` was <b>read by nothing</b> — declared, filled by the projection , and the
     /// generation produced MAX rows either way.** **So a min materialised as a MAX: legal, solvable, answering with the
     /// maximum.**
     ///

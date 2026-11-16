@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 双线性项 <c>x·y</c> 的 McCormick 包络 / The McCormick envelope of the bilinear term `x·y`.
 /// </summary>
 /// <remarks>
-/// B1152 按基线 `McCormickEnvelope.kt` 补。
+/// 对齐基线 `McCormickEnvelope.kt`。
 ///
 /// 给定 <c>x ∈ [xL, xU]</c>、<c>y ∈ [yL, yU]</c>，用一个辅助变量 <c>w</c> 夹住 <c>x·y</c>：
 ///

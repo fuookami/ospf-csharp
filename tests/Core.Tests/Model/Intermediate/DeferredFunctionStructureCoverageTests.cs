@@ -124,7 +124,7 @@ public class DeferredFunctionStructureCoverageTests
     /// </summary>
     /// <remarks>
     /// **B1255 的起点是一个具体缺陷：** **`MaxStructure.Minimum` 这个属性<b>没有任何地方读它</b>——
-    /// 声明了、`MaxFunction` 的投影也在填（B1252），而生成逻辑无论方向都产 MAX 行。**
+ /// 声明了、`MaxFunction` 的投影也在填，而生成逻辑无论方向都产 MAX 行。**
     /// **于是 `min` 被当成 MAX 物化：模型合法、能解，只是答案是最大值。**
     ///
     /// **这条判据是<b>不用求解器</b>的那半边，另一半是 `MinRows_ShouldPinTheAnswer`（真实求解，
@@ -137,7 +137,7 @@ public class DeferredFunctionStructureCoverageTests
     /// **B1255 第一版就是"全翻"，于是未选中的输入变成 `result ≥ input + M`，模型直接无解。**
     ///
     /// **B1255 starts from a concrete defect: `MaxStructure.Minimum` was <b>read by nothing</b> — declared, filled by the
-    /// `MaxFunction` projection (B1252), and the generation produced MAX rows either way.** **So a `min` materialised as a
+ /// `MaxFunction` projection , and the generation produced MAX rows either way.** **So a `min` materialised as a
     /// MAX: legal, solvable, answering with the maximum.**
     ///
     /// **This criterion is the <b>solver-free</b> half; the other half is `MinRows_ShouldPinTheAnswer` (a real solve, once

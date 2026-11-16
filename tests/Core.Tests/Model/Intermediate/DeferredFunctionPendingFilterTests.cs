@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// **这一段只实现了三个条件中的两个，第三个依赖仍缺的 `DeferredFunctionConstraintRegions`。**
 /// **而"缺一个条件"的正确写法与"缺三个条件"不同：** **前者要给一个能被看到的开关。**
 ///
-/// B1237 adds the second of the three missing pieces, plus the second of the baseline's four parts.
+/// adds
 ///
 /// **Two of its three conditions are implemented; the third needs the still-missing
 /// `DeferredFunctionConstraintRegions`.** **And "one condition missing" must be written differently from "three

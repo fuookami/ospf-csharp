@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **0.76 米的汞柱恰好压出一个标准大气压，所以要从大气压"除"回 0.76 米（133322.37 Pa），不是乘。**
 /// 本仓按注释与物理事实实现，并让 mmHg 由 mHg 派生，使"千分之一"成为恒等式。
 ///
-/// B1140 adds five pressure units from the baseline.
+/// adds
 ///
 /// **`MeterMercury` is not copied from the baseline, because the baseline formula contradicts its own comment**:
 /// the baseline writes "standard atmosphere times 0.76", yielding 77007 Pa and so mmHg = 77.007 Pa,

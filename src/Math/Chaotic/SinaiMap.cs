@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Sinai 映射（二维，环面上的加法 + 余弦扰动）/ The Sinai map on the torus.
 /// </summary>
 /// <remarks>
-/// B1146 按基线 `SinaiMap.kt` 补。
+/// 对齐基线 `SinaiMap.kt`。
 ///
 /// <c>x' = (x + y + r·cos(2πx)) mod 1</c>，<c>y' = (y + r·cos(2πx)) mod 1</c>。
 ///

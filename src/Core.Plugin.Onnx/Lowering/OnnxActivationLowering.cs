@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **它们在 LP 里都不是"一个函数调用"，而是一组约束加一个结果变量：** **`Relu(x)` 在本插件里是一条正部函数的曲线，`
 /// **而把这些写成"直接代公式"会得到一条非线性的目标——** **求解器要么拒绝，要么在不该松弛的地方松弛。**
 ///
-/// **这一批只做**代数化简**那一步（哪些情形可以化简成纯仿射、哪些必须交给函数符号），不做约束生成：**
+/// **这一层只做**代数化简**那一步（哪些情形可以化简成纯仿射、哪些必须交给函数符号），不做约束生成：**
 /// **化简判错会让模型少加约束（结果本该被钉住却自由），而少加的约束永远不会报错。**
 ///
 /// Syncs the "exact" half of `OnnxActivation`. **In an LP these are not function calls but a set of constraints plus a result variable: Relu is a positive-part curve,

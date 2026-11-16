@@ -200,7 +200,7 @@ public class RemotePortingClaimTests
     /// 1. **两个回调类都存在**（`CplexSolveCallback` 与 `CplexContinuousCallback`）
     /// 2. **它们被 `model.Use(...)` 真正接线**（存在而未接线等于没做）
     ///
-    /// **"有实现"与"被用上"是两件事（B1122 记过同一条），所以这里查文件内容里的 `model.Use`，而不是只查文件存在。**
+ /// **"有实现"与"被用上"是两件事，所以这里查文件内容里的 `model.Use`，而不是只查文件存在。**
     ///
     /// **B1220's verification has two parts, neither optional:**
     ///

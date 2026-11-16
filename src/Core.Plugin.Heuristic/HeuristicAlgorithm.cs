@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic;
 /// </summary>
 /// <remarks>
 /// <para>
-/// **两套并存的面，必须说清谁对应基线（B1271）：**
+/// **两套并存的面，必须说清谁对应基线：**
 /// **基线的 `ospf-kotlin-core-plugin-heuristic` 里没有任何类——`GA.kt` 只有一个 `fun islandGenetic(...)`，
 /// `HS.kt` 只有一个 `fun harmonySearch(...)`。**
 /// </para>

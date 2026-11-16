@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **只取一侧会在半个定义域上恒为 0，且不报错。**
 ///
-/// B1164 adds the three classes from the baseline.
+/// adds
 ///
 /// **Keeping one side makes the value identically zero over half the domain, silently.**
 /// </remarks>

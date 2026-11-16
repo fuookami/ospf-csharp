@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// `p ≥ 0` 平移成 `p + δ &gt; 0`，而这需要格点证明 / The shift needs a lattice proof.
 /// </summary>
 /// <remarks>
-/// B1168 按基线 `DiscreteCondition.kt` 的 `StrictPositiveCondition` 与 `toStrictPositiveCondition` 补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `StrictPositiveCondition` 与 `toStrictPositiveCondition`。
 ///
 /// **`p ≥ 0` 与 `p &gt; 0` 不是同一个条件**，**`p + δ &gt; 0` 等价于 `p &gt; −δ`。**
 /// **两者只在 `p` 落在步长 `δ` 的格点上时相同。**
 ///
-/// B1168 adds the baseline's `StrictPositiveCondition` and `toStrictPositiveCondition`.
+/// adds
 ///
 /// **`p ≥ 0` and `p &gt; 0` are not the same condition**, and **`p + δ &gt; 0` is equivalent to `p &gt; −δ`.** **They agree
 /// only when `p` sits on a lattice of spacing `δ`.**

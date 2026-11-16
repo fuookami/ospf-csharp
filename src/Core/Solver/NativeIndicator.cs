@@ -75,7 +75,7 @@ public sealed record NativeIndicatorData(
 /// 指示结构的原生准备 / Native preparation of an indicator structure.
 /// </summary>
 /// <remarks>
-/// B1216 按基线 `NativeIndicator.kt` 的 `prepareNativeIndicator` / `prepareIndicator` 补。
+/// 对齐基线 `NativeIndicator.kt` 的 `prepareNativeIndicator` / `prepareIndicator`。
 ///
 /// **这一格的核心是一张<b>保留列集合</b>，而它必须在递归<b>之前</b>算出来。**
 ///

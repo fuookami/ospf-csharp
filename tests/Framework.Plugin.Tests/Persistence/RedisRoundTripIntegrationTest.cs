@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 ///
 /// **This did not exist before, and the reason was a misclassification.** **The matrix and the acceptance table recorded Redis as
 /// "limited by the environment", while B1297 measured `127.0.0.1:6379` open, `PING` answering `+PONG`, and no password required.**
-/// **So the environment was there; what was missing was a test that actually connects.** **B1298 adds that test: it starts the client
+/// **So the environment was there; what was missing was a test that actually connects.**adds that test: it starts the client
 /// through the production entry point `RedisRegistry.Init(config)` (the constructor is `internal`), round-trips all five value shapes, and
 /// deletes the keys it wrote.**
 /// </remarks>

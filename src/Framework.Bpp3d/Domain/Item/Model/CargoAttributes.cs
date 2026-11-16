@@ -17,14 +17,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 货物属性模型：堆叠、悬挂、变形、重量 / The cargo attribute model: stacking, hanging, deformation, weight.
 /// </summary>
 /// <remarks>
-/// B1305 补齐基线 `PackageAttribute.kt` 里的 12 个类型。 复审（B1297）发现它们在 C# 侧一个都没有，
+/// B1305 补齐基线 `PackageAttribute.kt` 里的 12 个类型。 复审发现它们在 C# 侧一个都没有，
 /// 而三份文档也从未提到 `PackageAttribute`——所以这不是"待办"，是"从未被记录"。
 ///
 /// 一句话说明这次补齐的边界： 这些类型在基线里只被 `PackageAttribute.kt` 自身读取，没有任何生产判定依赖它们
 /// （B1297 实测：`MaterialPacker.kt` 只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
 /// 判据 `CargoAttributeModelTests` 钉住这一点：十二个类型都在，而 `src/` 里没有生产代码构造它们。
 ///
-/// B1305 fills in the twelve types from the baseline's `PackageAttribute.kt`. The review (B1297) found none of them on the C# side, and none of
+/// B1305 fills in the twelve types from the baseline's `PackageAttribute.kt`. The review found none of them on the C# side, and none of
 /// the three documents ever mentioned `PackageAttribute` — so this is not "pending", it was never recorded. One sentence on the boundary: in the
 /// baseline these types are read only inside `PackageAttribute.kt` itself and no production decision depends on them (B1297 measured that
 /// `MaterialPacker.kt` merely stamps default values while constructing an attribute). So porting them changes no algorithm, and a criterion pins

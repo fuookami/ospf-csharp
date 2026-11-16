@@ -80,7 +80,7 @@ internal static class NonlinearSampling {
 /// 自然对数的分段线性近似 / Piecewise-linear approximation of the natural logarithm.
 /// </summary>
 /// <remarks>
-/// B1148 按基线 `NonlinearPiecewise.kt` 的 `LogFunction` 补。
+/// 对齐基线 `NonlinearPiecewise.kt` 的 `LogFunction`。
 ///
 /// **`ln` 在 0 处没有定义、在负值处是复数**——**所以区间必须严格在 0 的右侧。**
 /// **这条护栏不是"更严格"，而是"把 NaN 变成一次明确的拒绝"。**
@@ -206,7 +206,7 @@ public sealed class LogFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynomia
 /// 倒数的分段线性近似 / Piecewise-linear approximation of the reciprocal.
 /// </summary>
 /// <remarks>
-/// B1148 按基线 `NonlinearPiecewise.kt` 的 `ReciprocalFunction` 补。
+/// 对齐基线 `NonlinearPiecewise.kt` 的 `ReciprocalFunction`。
 ///
 /// **`1/x` 在 0 处发散**——**分段线性在奇点附近会给出越来越大的斜率，而跨过奇点的采样会得到一正一负两个巨大值，
 /// 于是分段函数"看起来构造成功"但完全错误。**
@@ -334,7 +334,7 @@ public sealed class ReciprocalFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// 幂函数的分段线性近似 / Piecewise-linear approximation of a power.
 /// </summary>
 /// <remarks>
-/// B1148 按基线 `NonlinearPiecewise.kt` 的 `PowerFunction` 补。
+/// 对齐基线 `NonlinearPiecewise.kt` 的 `PowerFunction`。
 ///
 /// **`x^e` 有两处会非有限，而两处条件不同**：
 /// ① **`e &lt; 0` 且区间含 0** → `1/0`；

@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 原生 PWL primitive：严格递增、连续性与 y 点推导 / Strict increase, continuity, y-point derivation.
 /// </summary>
 /// <remarks>
-/// B1203 按基线 `NativePiecewise.kt` 的 `NativePiecewiseData` 与 `prepareNativePiecewise` 补。
+/// 对齐基线 `NativePiecewise.kt` 的 `NativePiecewiseData` 与 `prepareNativePiecewise`。
 ///
-/// B1203 adds the baseline's `NativePiecewiseData` and `prepareNativePiecewise`.
+/// adds
 /// </remarks>
 public class NativePiecewiseTests
 {

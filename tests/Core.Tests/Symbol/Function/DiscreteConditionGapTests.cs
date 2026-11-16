@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **折叠回答的是"还要不要生成指示约束"**：**界已定死时指示变量没有意义。**
 ///
-/// B1171 adds the baseline's `boundsAvoidDiscreteConditionGap` and `DiscreteConditionLinearization`.
+/// adds
 ///
 /// **Folding answers "do we still need indicator constraints"**: **when the bounds settle it, an indicator is
 /// pointless.**

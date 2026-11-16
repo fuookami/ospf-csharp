@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// **给模型加这三样状态并改求解路径，是一次比这一批大得多的改动。**
 /// **所以本批交付"适配器 + 截断原语"，并把剩余部分记成缺口。**
 ///
-/// B1235 adds <b>half the wiring</b>: an implementation of `IDeferredFunctionFallbackTarget` over `LinearMechanismModel`.
+/// adds
 ///
 /// **Before this, that interface had <b>no implementation at all</b> — the driver was called only from tests.**
 ///

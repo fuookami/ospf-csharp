@@ -143,7 +143,7 @@ public abstract class BasicMechanismModel<V>
     /// **把来源快照复制到副本上** / Carry the source snapshot over to a copy.
     /// </summary>
     /// <remarks>
-    /// B1241 加这个成员，因为发现了一件<b>会让整条接线必然失败</b>的事：
+    /// 这个成员存在的理由，是一件<b>会让整条接线必然失败</b>的事：
     ///
     /// **`_sourceSnapshot` 只在 `InvokeAsync` 里赋值，而 `DeferredFunctionMaterialization.Materialize`
     /// 用 `new LinearMechanismModel(&lt;V&gt;)` 构造副本——副本没有快照。**
@@ -157,7 +157,7 @@ public abstract class BasicMechanismModel<V>
     ///
     /// **判据能抓到它，靠的不是"测了物化"或"测了转换"，而是<b>测了物化之后再转换</b>。**
     ///
-    /// **B1241 adds this because of something that would have made the whole wiring fail every time:
+    /// **This exists because of something that would make the whole wiring fail every time:
     /// `_sourceSnapshot` is assigned only inside `InvokeAsync`, while `DeferredFunctionMaterialization.Materialize` builds
     /// its copy with `new LinearMechanismModel(&lt;V&gt;)` — and the copy has no snapshot.**
     ///
@@ -282,7 +282,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **函数符号展开策略** / The function-symbol expansion policy.
     /// </summary>
     /// <remarks>
-    /// B1236 按基线 `LinearTriadModel.kt` 补。**基线的默认值是 `EAGER`，这里同样是 `Eager`。**
+    /// 对齐基线 `LinearTriadModel.kt`。**基线的默认值是 `EAGER`，这里同样是 `Eager`。**
     ///
     /// **这个属性是三样缺失状态里唯一<b>不依赖求解路径</b>的一样：**
     /// **它只被读、不被写，而"该不该现在展开"这个判断可以在任何求解器都不在场时完成。**
@@ -293,7 +293,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **默认值不是随手定的：** **`Eager` 是"什么都不延迟"，也就是<b>最保守</b>的那一档——
     /// 一个没配置过的模型不会突然走上延迟物化那条更复杂的路径。**
     ///
-    /// **B1236 follows the baseline's `LinearTriadModel.kt`. Its default is `EAGER`, and so is this one.**
+    /// **Follows the baseline's `LinearTriadModel.kt`. Its default is `EAGER`, and so is this one.**
     ///
     /// **Of the three missing pieces this is the only one that <b>does not depend on the solve path</b>: it is only read,
     /// never written, and "should this expand now" can be answered with no solver present.**
@@ -311,7 +311,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **延迟函数结构快照** / Snapshots of the deferred function structures.
     /// </summary>
     /// <remarks>
-    /// B1237 按基线 `LinearTriadModel.kt` 补。**基线是只读 `List`，默认 `emptyList()`，走构造函数。**
+    /// 对齐基线 `LinearTriadModel.kt`。**基线是只读 `List`，默认 `emptyList()`，走构造函数。**
     ///
     /// **这是三样缺失状态里的第二样，而它是两样集合里较简单的一个：** **只增不删、只在构造时给定、之后只被读。**
     /// **`DeferredFunctionConstraintRegions` 依赖它（每条区域记录指回一个结构），所以顺序是先它。**
@@ -324,7 +324,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// 空集合表示"提供了，是空的"。构造参数允许 `null` 是为了让旧调用点不必改，
     /// 而属性永远返回非 `null`——** **读的一方不该被迫区分这两件事。**
     ///
-    /// **B1237 follows the baseline's `LinearTriadModel.kt`: a read-only list, defaulting to empty, supplied through the
+    /// **Follows the baseline's `LinearTriadModel.kt`: a read-only list, defaulting to empty, supplied through the
     /// constructor.**
     ///
     /// **This is the second of the three missing pieces and the simpler of the two collections: append-only, set once at
@@ -347,21 +347,21 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **已经物化过的延迟函数约束区域** / The deferred-function constraint regions already materialised.
     /// </summary>
     /// <remarks>
-    /// B1238 按基线 `LinearTriadModel.kt` 补，这是三样缺失状态里的最后一样。
+    /// 对齐基线 `LinearTriadModel.kt`，这是三样缺失状态里的最后一样。
     ///
     /// **它存在是为了回答一个问题：** **"这个结构是不是已经物化过了？"**
     ///
-    /// **而那正是 B1237 缺的第三个过滤条件。** **缺了它，同一个结构会被物化<b>两次</b>——
+    /// **而那正是第三个过滤条件。** **缺了它，同一个结构会被物化<b>两次</b>——
     /// 一次在区域里、一次在新的一批里——于是模型里出现两条描述同一个 `y` 的约束，
     /// 而求解器不会报错，只会给出一个"两条都满足"的解。**
     ///
     /// **区域记录用<b>行号</b>（`FirstConstraintIndex` + `ConstraintCount`）而不只是结构引用：
     /// 因为它同时要回答"这些约束在模型的哪一段"。** **只记结构能回答"做过了"，记不下"做在哪"。**
     ///
-    /// **B1238 follows the baseline's `LinearTriadModel.kt`; this is the last of the three missing pieces.**
+    /// **Follows the baseline's `LinearTriadModel.kt`; this is the last of the three missing pieces.**
     ///
     /// **It exists to answer one question: "has this structure already been materialised?" — which is exactly the third
-    /// filter condition B1237 lacked.** **Without it one structure is materialised <b>twice</b>, once through its region
+    /// third filter condition.** **Without it one structure is materialised <b>twice</b>, once through its region
     /// and once in a later batch, leaving two constraint sets describing the same `y`; the solver does not complain and
     /// returns a solution satisfying both.**
     ///
@@ -380,7 +380,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// 两者一旦不一致，区域就会指向一段不存在的行。**
     ///
     /// **所以这个方法的调用点必须与截断保持在同一层事务里：
-    /// 回滚行数的同时把区域记录也回滚掉。** **B1235 的截断原语目前只截行、不截区域，
+    /// 回滚行数的同时把区域记录也回滚掉。** **截断原语只截行、不截区域，
     /// 而现在的调用方（`LinearMechanismFallbackTarget`）不会在区域记录非空之后回滚——
     /// 这一点写在这里，因为它是一个真实的限制。**
     ///
@@ -388,7 +388,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// the two disagree the region points at rows that no longer exist.**
     ///
     /// **So the caller must keep this in the same transaction as truncation: roll back the region records together with the
-    /// row count.** **B1235's truncation primitive currently truncates rows only, and the present caller never rolls back
+    /// row count.** **The truncation primitive truncates rows only, and the present caller never rolls back
     /// after the region list is non-empty — stated here because it is a real limitation.**
     /// </remarks>
     /// <param name="region">要记下的区域 / The region to record.</param>
@@ -401,7 +401,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **把约束行截断到指定行数** / Truncate the constraint rows to the given count.
     /// </summary>
     /// <remarks>
-    /// B1235 为延迟函数 fallback 的事务回滚提供原语。
+    /// 延迟函数 fallback 的事务回滚原语。
     ///
     /// **为什么回滚需要模型自己的一个方法，而不是让适配器直接改 `_constraints`：**
     /// **"截断到一个行数"是一件只有模型知道怎么做对的事** ——
@@ -411,7 +411,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **这里只截断 `_constraints`，因为目前的调用方（`LinearMechanismFallbackTarget`）只在
     /// fallback 物化期间追加约束、不追加依赖——但这一点写在这里，而不是隐含。**
     ///
-    /// **B1235 supplies this primitive for the deferred-function fallback rollback.**
+    /// **The rollback primitive for the deferred-function fallback.**
     ///
     /// **Why rollback needs a method on the model rather than the adapter reaching into `_constraints`: "truncate to a row
     /// count" is a thing only the model can do correctly — the same model carries `_dependencies`, the symbol table and the
@@ -487,7 +487,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// Build a mechanism model, deciding the deferred-expansion policy and the deferred-structure snapshots.
     /// </summary>
     /// <remarks>
-    /// B1242 给这条唯一的生产构建路径补上两个参数。**在此之前，六批做的延迟物化链<b>没有任何生产模型能走上</b>：
+    /// 这两个参数属于这条唯一的生产构建路径。**没有它们，延迟物化链<b>没有任何生产模型能走上</b>：
     /// 构造点不传策略也不传结构，于是每个模型都是 `Eager`、都没有待展开的东西。**
     ///
     /// **默认值仍是 `Eager` 与 `null`，这一点是有意的：** **调用方不显式要延迟展开，就不该得到它。
@@ -496,7 +496,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **而这正是缺口判据的价值：** **它逼着补的人回来把"还没有"改成"现在有了"，
     /// 于是文档与代码不会分家。**
     ///
-    /// **B1242 adds these two parameters to the single production build path. Before it, the six batches of
+    /// **These two parameters belong to the single production build path. Without them the
     /// deferred-materialisation work <b>could not be reached by any production model</b>.** **The defaults stay `Eager`
     /// and `null` on purpose: a caller that does not ask for deferred expansion must not get it.**
     ///
@@ -612,7 +612,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
 
             // **延迟策略下，从函数符号自己派生结构快照，并让那些符号跳过急切注册。**
             //
-            // **B1251 加这一段，理由是 B1250 留下的那个缺口：投影有了、没人调用。
+            // **这一段存在的理由，是那个"投影有了、没人调用"的缺口。
             // 而直接接上会得到两套行——`AbsFunction` 注册时会同时生成自己的急切约束。**
             //
             // **所以派生与跳过必须一起做：** **派生了哪些，就必须跳过哪些。**
@@ -621,13 +621,13 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
             // **只在调用方没有显式传结构时自动派生：** **显式传入永远赢——
             // 调用方比构建路径更知道这个模型要什么。**
             //
-            // **只处理 `Abs`：** **七种结构里只有 `AbsFunction` 的投影已经写出来（B1250）。
+            // **只处理 `Abs`：** **七种结构里只有 `AbsFunction` 的投影已经写出来。
             // 其余六种会走急切注册，行为与今天完全一样。**
             //
             // **Under a deferred policy, derive structure snapshots from the function symbols themselves and let those
             // symbols skip eager registration.**
             //
-            // **B1251 adds this because of the gap B1250 left: the projection exists and nobody calls it — while wiring it
+            // **This exists because of the gap where the projection exists and nobody calls it — while wiring it
             // alone would produce two row sets, since `AbsFunction` also registers its own eager constraints.**
             //
             // **So deriving and skipping must happen together, and they share one set so the two cannot disagree.**
@@ -635,7 +635,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
             // **Auto-derivation only when the caller passed nothing: an explicit argument always wins, because the caller
             // knows this model better than the build path does.**
             //
-            // **Only `Abs` for now: of the seven structures only `AbsFunction` has a projection (B1250); the other six
+            // **Only `Abs` for now: of the seven structures only `AbsFunction` has a projection; the other six
             // register eagerly, exactly as they do today.**
             IReadOnlyList<DeferredFunctionStructure> effectiveStructures =
                 deferredFunctionStructures ?? Array.Empty<DeferredFunctionStructure>();
@@ -780,7 +780,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// Project a function symbol into a deferred structure; `false` when there is no projection for it.
     /// </summary>
     /// <remarks>
-    /// **B1252 把这个分派集中到一处。** **在此之前构建路径里写的是
+    /// **这个分派集中在一处。** **构建路径不再各写一遍
     /// `adapter.Function is AbsFunction(&lt;Flt64&gt;) abs`，加第二种就要再写一个 `if`。**
     ///
     /// **现在它是一个 `switch`，而<b>加一种结构就是加一个分支</b>——并且返回 `false` 的那些
@@ -790,13 +790,13 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// 不在列表里的（`BivariateLinearPiecewise`、`BinaryLogic`、`Indicator`、`Masking`）
     /// 仍然只走急切注册。**
     ///
-    /// **B1252 centralises the dispatch here.** **Before it the build path read
+    /// **The dispatch lives in one place.** **The build path no longer repeats
     /// `adapter.Function is AbsFunction(&lt;Flt64&gt;) abs`, and a second kind meant another `if`.**
     ///
     /// **Now it is a `switch`, so <b>adding a kind is adding a branch</b> — and the `false` cases keep going through eager
     /// registration, so "no projection" and "projected and skipped" are two clearly separate paths.**
     ///
-    /// **It is also the remaining gap list, and B1254 established why each absent kind is absent — none of them is
+    /// **It is also the remaining gap list, and each absent kind is absent for a recorded reason — none of them is
     /// "not written yet":**
     ///
     /// | 没有分支的种类 | 断在哪一侧 | 具体原因 |
@@ -809,7 +809,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **前两种是"符号没保留物化需要的东西"，后两种是"前提捕获了却拿不到"与"没有源"。**
     /// **四者都不是写一个投影就能解决的，所以它们不在这里的分支里，也不该在这里。**
     ///
-    /// **It is also the remaining gap list, and B1254 established why each absent kind is absent — none of them is "not
+    /// **It is also the remaining gap list, and each absent kind is absent for a recorded reason — none of them is "not
     /// written yet": two are "the symbol does not keep what materialisation needs", one captured the precondition but
     /// cannot hand it back, and one has no symbol to project at all.**
     ///
@@ -854,14 +854,14 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// Register the function symbols' eager constraints, skipping those handed to deferred materialisation.
     /// </summary>
     /// <remarks>
-    /// **B1251 加 `deferredSymbols` 这个参数。**
+    /// **`deferredSymbols` 这个参数的作用。**
     ///
     /// **没有它，接上投影就会得到两套行：** **`AbsFunction` 既注册急切约束、又被投影成结构，
     /// 于是同一个 `abs` 被描述两次——而求解仍然成功，只是模型多了一段。**
     ///
     /// **这个参数默认是空集合，所以所有既有调用点的行为一个字都没变。**
     ///
-    /// **B1251 adds the `deferredSymbols` parameter.**
+    /// **What the `deferredSymbols` parameter is for.**
     ///
     /// **Without it, wiring the projection yields two row sets: `AbsFunction` both registers eagerly and is projected into a
     /// structure, so one `abs` is described twice — and the solve still succeeds, merely with an extra slice.**

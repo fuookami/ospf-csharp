@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 全局约束函数的统一入口 / One entry point for the global constraint functions.
 /// </summary>
 /// <remarks>
-/// B1177 按基线 `GlobalConstraintFunctions.kt` 补。
+/// 对齐基线 `GlobalConstraintFunctions.kt`。
 ///
 /// **这是一个<b>纯外观</b>：每一个方法都只是把调用转给已存在的实现。**
 /// **所以它的价值不在逻辑，而在"顺序"与"校验点"。**

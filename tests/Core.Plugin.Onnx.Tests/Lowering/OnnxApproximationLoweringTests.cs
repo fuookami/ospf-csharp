@@ -15,10 +15,10 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **四个近似算子的降阶：三条契约** / Lowering the four approximated operators: three contracts.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation` 近似那一半，把 B1320 的切分策略接到 C# 的 `UnivariateLinearPiecewiseFunction`。
+/// 同步 Kotlin `dee897d2` 的 `OnnxActivation` 近似那一半，把切分策略接到 C# 的 `UnivariateLinearPiecewiseFunction`。
 /// **三条契约每条漏掉都只会在求解阶段表现为"结果不对"**——**断点严格递增、段数等于断点数减一、边界真的有限。**
 ///
-/// Syncs the approximated half of `OnnxActivation`, wiring the B1320 segmentation into `UnivariateLinearPiecewiseFunction`. **Each contract, when missed, shows up
+/// Syncs the approximated half of `OnnxActivation`, wiring the segmentation into `UnivariateLinearPiecewiseFunction`. **Each contract, when missed, shows up
 /// only as "the answer is wrong" after solving: breakpoints strictly increasing, segments equal to breakpoints minus one, bounds actually finite.**
 /// </remarks>
 public class OnnxApproximationLoweringTests

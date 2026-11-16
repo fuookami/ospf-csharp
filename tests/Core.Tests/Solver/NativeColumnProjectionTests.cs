@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 列对齐：错位是静默的，所以必须显式抓 / Misalignment is silent, so it must be caught explicitly.
 /// </summary>
 /// <remarks>
-/// B1208 按基线 `NativePiecewiseReport.kt` 的 `nativeColumns` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeColumns`。
 ///
-/// B1208 adds the baseline's `nativeColumns`.
+/// adds
 /// </remarks>
 public class NativeColumnProjectionTests
 {

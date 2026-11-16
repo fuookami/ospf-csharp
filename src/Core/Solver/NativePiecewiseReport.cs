@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 分段选择结果 / The result of selecting a segment.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1202 按基线 `NativePiecewiseReport.kt` 的 `SegmentSelection` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `SegmentSelection`。
 /// **注意 `Input` 是<b>夹紧之后</b>的值，不是调用方传进来的那个。**
 ///
 /// **B1202, following the baseline's `SegmentSelection`.** **Note that `Input` is the <b>clamped</b> value, not the one

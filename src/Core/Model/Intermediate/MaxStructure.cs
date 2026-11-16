@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// MAX 函数的结构与 fallback 快照 / Maximum structure and fallback snapshot.
 /// </summary>
 /// <remarks>
-/// B1189 按基线 `FunctionExpansion.kt` 的 `MaxStructure` 补。
+/// 对齐基线 `FunctionExpansion.kt` 的 `MaxStructure`。
 ///
 /// **`max` 需要每个候选一个选择列，而不是一个：**
 /// **`SelectorVariables` 与 `Inputs` 一一对应，`BigMValues` 也是。**
@@ -218,7 +218,7 @@ public sealed record MaxStructure(
             }
 
             foreach (Flt64 bigM in BigMValues) {
-                // **`BigMValues` 属性遮蔽了同名静态类（B1189 的同类问题），要全限定。**
+ // **`BigMValues` 属性遮蔽了同名静态类，要全限定。**
                 // **The `BigMValues` property shadows the static class of the same name, so qualify it.**
                 if (!global::Fuookami.Ospf.Core.Symbol.Function.BigMValues.IsUsable(bigM) ||
                     bigM.CompareTo(Flt64.Zero) < 0) {
@@ -233,7 +233,7 @@ public sealed record MaxStructure(
             // **方向：`Minimum` 时把整组行<b>整体取负</b>。**
             //
             // **B1255 才发现 `Minimum` 这个属性此前<b>没有任何地方读它</b>——**
-            // **声明了、投影也在填（B1252），而生成逻辑无论方向都产 MAX 行。**
+ // **声明了、投影也在填，而生成逻辑无论方向都产 MAX 行。**
             // **于是 `MinStructure` 会被当成 MAX 物化：模型合法、能解，只是答案是最大值。**
             //
             // **为什么"整体取负"是对的而不是"另写一套 MIN 行"：**
@@ -249,7 +249,7 @@ public sealed record MaxStructure(
             // **Direction: when `Minimum`, negate the whole row set.**
             //
             // **B1255 found that `Minimum` was <b>read by nothing</b> — it was declared, the projection even filled it in
-            // (B1252), and the generation produced MAX rows either way.** **So a min would materialise as a MAX: legal,
+ // , and the generation produced MAX rows either way.** **So a min would materialise as a MAX: legal,
             // solvable, merely answering with the maximum.**
             //
             // **Negating the whole set is right rather than writing a second set: MAX's two families are

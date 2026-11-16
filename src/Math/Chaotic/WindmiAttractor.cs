@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Windmi 吸引子（三维，七个参数）/ The Windmi attractor.
 /// </summary>
 /// <remarks>
-/// B1147 按基线 `WindmiAttractor.kt` 补。
+/// 对齐基线 `WindmiAttractor.kt`。
 ///
 /// <c>dx = a(y−x) + d·xz</c>，<c>dy = bx − xz + fy</c>，<c>dz = cz + xy − e·x²</c>。
 ///

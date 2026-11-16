@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 把变量钉在一个值上：<c>variable = value</c> / Pin a variable to a value.
 /// </summary>
 /// <remarks>
-/// B1169 按基线 `DiscreteCondition.kt` 的 `fixedVariableEquality` 补。
+/// 对齐基线 `DiscreteCondition.kt` 的 `fixedVariableEquality`。
 ///
 /// **它只有一行，但有两个容易漏的地方**：
 ///

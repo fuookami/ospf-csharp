@@ -58,7 +58,7 @@ public class FixedIntegerLpBlockerTests
 
     /// <summary>**只有降阶适配器实现了后端接口** / Only the lowering adapter implements the backend interface.</summary>
     /// <remarks>
-    /// `IFixedIntegerLpBackend` 有两个基线实现：降阶适配器（B1066 已搬）**与求解器直连那个（搬不了）**。
+ /// `IFixedIntegerLpBackend` 有两个基线实现：降阶适配器**与求解器直连那个（搬不了）**。
     ///
     /// **数清楚"现在有几个实现"比写"还剩一个"可靠**——**"还剩一个"不会告诉你已经变成了两个。**
     ///

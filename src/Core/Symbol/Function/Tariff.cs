@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 累进费率：每段用各自的边际费率，费用<b>连续</b> / An incremental tariff: a marginal rate per segment, and the cost is continuous.
 /// </summary>
 /// <remarks>
-/// B1155 按基线 `Tariff.kt` 的 `IncrementalTariff` 补。
+/// 对齐基线 `Tariff.kt` 的 `IncrementalTariff`。
 ///
 /// <c>cost(b₀) = baseCost</c>，然后 <c>cost(bᵢ₊₁) = cost(bᵢ) + rateᵢ · (bᵢ₊₁ − bᵢ)</c>。
 /// **在断点处是连续的**——**这就是"累进"的含义：越过一个断点，只有断点之后的那部分享受新费率。**
@@ -120,7 +120,7 @@ public static class IncrementalTariff
 /// 全量折扣：<b>整批数量</b>适用同一档位的单价 / An all-units discount: one unit price for the whole quantity.
 /// </summary>
 /// <remarks>
-/// B1155 按基线 `Tariff.kt` 的 `AllUnitsDiscountFunction` 补。
+/// 对齐基线 `Tariff.kt` 的 `AllUnitsDiscountFunction`。
 ///
 /// <c>cost = quantity · rate(tier)</c>——**单价按整批数量选，所以费用对数量是线性的，但斜率在断点处改变。**
 ///

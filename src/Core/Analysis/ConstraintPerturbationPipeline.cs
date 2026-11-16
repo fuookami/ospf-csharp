@@ -203,8 +203,8 @@ public static class ConstraintPerturbationPipeline
         // ponytail: sync-over-async — safe on hosts without a SynchronizationContext (tests, servers);
         // if a UI host ever calls this, add an async sweep (same rules, the probe just returns a Task).
         //
-        // **固定 delta 扫描**：首个有效就停，`Unknown` 既不记也不停（B1009）。
-        // **The fixed-delta sweep**: it stops at the first effective one, and `Unknown` neither records nor stops (B1009).
+ // **固定 delta 扫描**：首个有效就停，`Unknown` 既不记也不停。
+ // **The fixed-delta sweep**: it stops at the first effective one, and `Unknown` neither records nor stops .
         ConstraintPerturbationSupport.DeltaSweepResult sweep = ConstraintPerturbationSupport.RunDeltas(
             ConstraintPerturbationSupport.RequestedDeltas(policy),
             delta => RunDeltaAsync(delta).GetAwaiter().GetResult());

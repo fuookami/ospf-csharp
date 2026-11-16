@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Sprott 吸引子（三维离散 / 显式欧拉）/ The Sprott attractor.
 /// </summary>
 /// <remarks>
-/// B1146 按基线 `SprottAttractor.kt` 补。
+/// 对齐基线 `SprottAttractor.kt`。
 ///
 /// <c>dx = a(y−x)</c>，<c>dy = y(c−x) − y</c>，<c>dz = xy − cz</c>，然后 <c>x += h·dx</c>。
 ///

@@ -32,8 +32,8 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 ///
 /// | 批次 | 不移植的理由 |
 /// | --- | --- |
-/// | B1258 | 基类的三条内容在本仓<b>要么已有、要么不可观测、要么是空检查</b> |
-/// | **B1259** | **功能可以造出来，只是<b>没有使用者</b>** |
+/// | — | 基类的三条内容在本仓<b>要么已有、要么不可观测、要么是空检查</b> |
+/// | — | **功能可以造出来，只是<b>没有使用者</b>** |
 ///
 /// **还有一层更精确的理由：** **那十个重载的<b>返回类型是 typealias</b>
 /// （`typealias QuadraticExpressionSymbols1<V> = SymbolCombination<QuadraticExpressionSymbol<V>, Shape1>`），

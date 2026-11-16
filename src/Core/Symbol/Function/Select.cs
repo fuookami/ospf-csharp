@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二值选择：<c>mask = 1 ? then : otherwise</c> / A binary select: `mask = 1 ? then : otherwise`.
 /// </summary>
 /// <remarks>
-/// B1153 按基线 `Select.kt` 的 `SelectFunction` 补。
+/// 对齐基线 `Select.kt` 的 `SelectFunction`。
 ///
 /// **编码的关键是"被屏蔽的差"**：令 <c>d = then − otherwise</c>，辅助变量 <c>z = mask · d</c>。
 /// 于是 <c>result = otherwise + z</c>——**一条等式就够了，不需要两条分支不等式。**

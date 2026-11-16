@@ -116,7 +116,7 @@ internal sealed class DescendingOrder<V> where V : struct, IRealNumber<V>, INumb
 /// 第 k 大（从 0 开始）/ The k-th largest, zero-based.
 /// </summary>
 /// <remarks>
-/// B1150 按基线 `OrderStatistic.kt` 的 `KthLargestFunction` 补。
+/// 对齐基线 `OrderStatistic.kt` 的 `KthLargestFunction`。
 ///
 /// **`k` 从 0 开始**：**`k = 0` 是最大值，`k = n − 1` 是最小值。**
 /// **从 1 开始的约定会让 `k = 0` 与 `k = n` 都越界，而越界检查的边界会差一位。**
@@ -258,7 +258,7 @@ public sealed class KthLargestFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// 前 k 大之和 / The sum of the k largest.
 /// </summary>
 /// <remarks>
-/// B1150 按基线 `OrderStatistic.kt` 的 `TopKSumFunction` 补。
+/// 对齐基线 `OrderStatistic.kt` 的 `TopKSumFunction`。
 ///
 /// **`k = 0` 时结果是常数 0、`k = n` 时是全部之和——两者都跳过排序**，
 /// **于是省掉 n(n−1) 个函数。这是基线就有的优化，不是本仓加的。**

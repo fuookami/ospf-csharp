@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// **"两个后端都支持 SOS2"这句话是对的，而"它们用同一个方法支持 SOS2"是错的——
 /// 判据要能分开这两句话，否则"合写一个探测函数"会让其中一侧永远返回 `false`。**
 ///
-/// B1234 follows the baseline's 44-line `CplexFunctionCapabilities.kt`, the same family as this batch's
+/// follows
 /// `CoptFunctionCapabilities`.
 ///
 /// **CPLEX's probe differs from COPT's in one <b>substantive</b> way, and it is not a typo:** **the method name is

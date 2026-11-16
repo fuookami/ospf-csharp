@@ -180,7 +180,7 @@ internal static class QuadraticBridging
 /// 二次条件的 <c>If</c>：桥接后交给线性 `IfFunction` / A quadratic-condition `If`, bridged into the linear one.
 /// </summary>
 /// <remarks>
-/// B1161 按基线 `QuadraticIf.kt` 补。
+/// 对齐基线 `QuadraticIf.kt`。
 ///
 /// **本类不含任何分支编码**：**它只加一个桥接变量与一条等式，然后把桥接变量交给 `IfFunction`。**
 /// **判据必须验证这一点**：**辅助变量 = 桥接变量 + `IfFunction` 自己的辅助变量**，
@@ -306,7 +306,7 @@ public sealed class QuadraticIfFunction : IMathFunctionSymbol<Flt64>, IHasResult
 /// 二次条件的 <c>IfThen</c>：桥接后交给线性 `IfThenFunction` / A quadratic-condition `IfThen`, bridged.
 /// </summary>
 /// <remarks>
-/// B1161 按基线 `QuadraticIfThen.kt` 补。**两个多项式各自一个桥接变量。**
+/// 对齐基线 `QuadraticIfThen.kt`。
 ///
 /// B1161, following the baseline's `QuadraticIfThen.kt`. **One bridge per polynomial.**
 /// </remarks>
@@ -438,7 +438,7 @@ public sealed class QuadraticIfThenFunction : IMathFunctionSymbol<Flt64>, IHasRe
 /// 二次输入的区间判断 <c>IfIn</c>：桥接后交给线性 `IfInFunction` / A quadratic-input `IfIn`, bridged.
 /// </summary>
 /// <remarks>
-/// B1161 按基线 `QuadraticIfIn.kt` 补。**一个桥接变量。**
+/// 对齐基线 `QuadraticIfIn.kt`。
 ///
 /// **本类与 `QuadraticInStepRangeFunction` 的区别**：
 /// **后者的容差带返回 `null`（"不知道"），而本类在对 `lower`/`upper` 的判断上不做容差——

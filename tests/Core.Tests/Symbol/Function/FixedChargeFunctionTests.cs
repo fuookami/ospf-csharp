@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 它和普通线性成本只差一个激活项，而少了那一项模型会说“不启用也免费”——
 /// 目标函数看起来完全正常，只是每个设施都不开。
 ///
-/// B1134 adds FixedChargeFunction from the baseline, shaped as
+/// adds
 /// cost = fixedCost · active + unitCost · activity with a binary active.
 ///
 /// It differs from an ordinary linear cost by the activation term alone, and without that term the model says

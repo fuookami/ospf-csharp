@@ -131,7 +131,7 @@ public class DeferredFunctionMaterializationTests
     /// **这一条是本批发现的那个缺陷的判据。**
     ///
     /// **它跑的是<b>完整入口</b>，而不是直接调驱动：** **因为缺陷恰恰在"驱动返回的东西没人接"这两层之间，
-    /// 只测驱动的那条判据（B1200 的）一直是绿的。**
+ /// 只测驱动的那条判据一直是绿的。**
     ///
     /// **所以测"每一层都对"无法发现"层与层之间没接上"——
     /// 需要一条判据从用户入口进去、在另一头断言。**
@@ -139,7 +139,7 @@ public class DeferredFunctionMaterializationTests
     /// **This criterion is for the defect this batch found.**
     ///
     /// **It runs the <b>full entry point</b> rather than calling the driver directly: the defect sat precisely between the
-    /// driver's return value and its absent consumer, while the driver-level criterion (B1200's) stayed green.**
+ /// driver's return value and its absent consumer, while the driver-level criterion stayed green.**
     ///
     /// **So testing "each layer is right" cannot find "the layers are not joined" — that needs a criterion entering at the
     /// user's door and asserting at the other end.**

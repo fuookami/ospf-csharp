@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **`|a − b|` 与 `|a| − |b|` 在 `a`、`b` 符号相反时符号相反**——
 /// **而"距离非负"这条不足以分开两者**（某些输入下两者都非负）。
 ///
-/// B1149 adds the two distance functions from the baseline's `CompositeFunctions.kt`.
+/// adds
 ///
 /// **They differ only in the last step (sum versus maximum), so "subtract pairwise, then absolute" is shared.**
 ///

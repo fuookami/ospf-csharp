@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **三者都只做一件事**：**把二次多项式桥接成一个实变量，再交给已有的线性 `If*` 函数。**
 /// **分支编码本身没有任何新增。**
 ///
-/// B1161 adds the three quadratic-condition adapters.
+/// adds
 ///
 /// **All three do one thing**: **bridge a quadratic polynomial to a real variable and hand it to the existing linear
 /// `If*` functions.** **No branch encoding is new.**

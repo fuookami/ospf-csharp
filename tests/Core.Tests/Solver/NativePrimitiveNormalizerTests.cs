@@ -20,9 +20,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 归一化：跨结构与结构内的两层唯一性 / Two levels of uniqueness, within and across structures.
 /// </summary>
 /// <remarks>
-/// B1204 按基线 `NativePiecewiseReport.kt` 的 `normalizePiecewiseStructures` 与 `normalizeAbsStructures` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `normalizePiecewiseStructures` 与 `normalizeAbsStructures`。
 ///
-/// B1204 adds the baseline's two normalizers.
+/// adds
 /// </remarks>
 public class NativePrimitiveNormalizerTests
 {

@@ -78,7 +78,7 @@ public class SymbolicParsingGapTests
     /// <remarks>
     /// **这条判据换过三次对象，每次都是因为我把缺口的位置认错了。**
     ///
-    /// 1. 一开始钉"整条表达式解析栈不在"——**那是我读错了文件名差集（B1091），栈一直在。**
+ /// 1. 一开始钉"整条表达式解析栈不在"——**那是我读错了文件名差集，栈一直在。**
     /// 2. 然后钉"三元与 `if-then-else` 不在"——**B1093/B1094 搬完之后它就该红，而我靠手工收窄才让它继续绿。**
     /// 3. 最后钉"标量解析器里没有 `PatternMatch`"——**而模式匹配根本不在 `ScalarParser.kt` 里，它在布尔侧 `Parser.kt`，
     ///    C# 的 `Parser.cs` 早就实现了。我钉的是一个不存在的缺口。**
@@ -87,7 +87,7 @@ public class SymbolicParsingGapTests
     /// **这条不会因为"某块搬完了"而需要收窄，因为它钉的是结构，不是进度。**
     ///
     /// **This criterion has changed its target three times, each time because I mislocated the gap.**
-    /// **1. It first pinned "the whole expression stack is absent" — my misreading of a filename diff (B1091); the stack was there.**
+ /// **1. It first pinned "the whole expression stack is absent" — my misreading of a filename diff ; the stack was there.**
     /// **2. Then it pinned "ternaries and `if-then-else` are absent" — which should have gone red once B1093/B1094 landed, and stayed green only because I narrowed it by hand.**
     /// **3. Finally it pinned "no `PatternMatch` in the scalar parser" — but pattern matching is not in `ScalarParser.kt` at all; it lives in the boolean `Parser.kt`,
     ///    which C# has had all along. I was pinning a gap that did not exist.**

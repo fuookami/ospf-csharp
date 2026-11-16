@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **② `GigawattHour` 用 `Scale.mega`（基准是 10³ Wh），名字是 giga 而 Scale 看着像错的；**
 /// **③ `Erg` 是 1e-7 J，数量级最容易写错。**
 ///
-/// B1139 adds ten energy units from the baseline. All are fixed multiples of the joule,
+/// adds
 /// **so the risk is semantic rather than formulaic**:
 /// **① `WattHour` is a thousandth of `KilowattHour`, and the direction flips easily;**
 /// **② `GigawattHour` uses `Scale.mega` (base 10³ Wh): the name says giga while that Scale looks wrong;**

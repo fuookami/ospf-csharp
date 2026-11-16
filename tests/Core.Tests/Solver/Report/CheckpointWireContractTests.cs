@@ -185,7 +185,7 @@ public class CheckpointWireContractTests
         // **变异做过两种，"改类型"那条构造不出来。**
         //
         // 1. **改类型**：`Origin` 是位置参数，改成枚举或加默认值 → **26 个编译错误**，构造不出来。
-        // 2. **运行时规范化**（B1113 实测）：给 `Origin` 挂一个 `JsonConverter`，只放行 C# 枚举能产出的七个词，
+ // 2. **运行时规范化**：给 `Origin` 挂一个 `JsonConverter`，只放行 C# 枚举能产出的七个词，
         //    **`"backend"` 立刻被改写成 `"user"`，这条判据红**（报错原文：`Expected json ... to contain ""backend""`）。
         //
         // **第二种才是真实风险**：有人为了"类型安全"给这个字段加转换器，

@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 现在缺的是两个集合（`DeferredFunctionStructures`、`DeferredFunctionConstraintRegions`），
 /// 而不是"整个函数"。**
 ///
-/// B1236 adds `FunctionExpansionPolicy` and its first guard.
+/// adds
 ///
 /// **Only the first of the baseline's four parts is done, because it is the only one that needs a single read-only
 /// property.** **Doing the part that stands alone first keeps the <b>remaining gap sharp</b>: what is missing is two

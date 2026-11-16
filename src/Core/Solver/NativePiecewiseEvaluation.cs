@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// PWL 求值与 ABS 列校验 / PWL evaluation and ABS column validation.
 /// </summary>
 /// <remarks>
-/// B1212 按基线 `NativePiecewiseReport.kt` 的 `piecewiseEvaluations` 与 `validateNativeAbsColumns` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseEvaluations` 与 `validateNativeAbsColumns`。
 ///
 /// **插值用的是<b>夹紧之后</b>的输入。**
 ///

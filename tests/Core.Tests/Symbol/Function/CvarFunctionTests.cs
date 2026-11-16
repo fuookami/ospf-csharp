@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 在离散分布上，**CVaR 介于 VaR 与最坏情况之间**，而这条不等式是这一批唯一能同时否掉
 /// “写成平均值”和“写成分位点”的判据。
 ///
-/// B1136 adds CvarFunction from the baseline.
+/// adds
 /// Defined as min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ].
 ///
 /// Three quantities get confused: **the mean** (all scenarios), **VaR** (a quantile) and **CVaR** (the tail average).

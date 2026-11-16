@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// PWL 结构的审计指纹 / Audit fingerprint over the PWL structures.
 /// </summary>
 /// <remarks>
-/// B1213 按基线 `NativePiecewiseReport.kt` 的 `piecewiseFingerprint` 与 `numberListText` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseFingerprint` 与 `numberListText`。
 /// **`nativeFingerprint` 还需要 `NativeIndicatorData` 与 `NativeMaskingData`，留到后续批次。**
 ///
 /// **两处行为值得单独点出来，因为它们都<b>不是</b>"把所有的东西拼起来再哈希"那么简单：**

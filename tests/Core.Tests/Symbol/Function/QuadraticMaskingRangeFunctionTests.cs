@@ -89,11 +89,11 @@ public class QuadraticMaskingRangeFunctionTests
     /// <remarks>
     /// **这条是这一批的核心**：**几行里 1、2 在 `z = 0` 时给 `y = p`，而 `y` 本该是 0——
     /// 只有 3、4 把它钉住。**
-    /// **而"构造出第 3、4 行"与"它们被交给模型"是两件事**（B1157 的教训）。
+ /// **而"构造出第 3、4 行"与"它们被交给模型"是两件事**。
     ///
     /// **This is the point of the batch**: **rows 1 and 2 give `y = p` at `z = 0` while `y` should be zero — only 3
     /// and 4 pin it.**
-    /// **And "rows 3 and 4 are built" is not "they reach the model" (B1157's lesson).**
+ /// **And "rows 3 and 4 are built" is not "they reach the model" .**
     /// </remarks>
     [Fact]
     public async Task TheRegisterConstraints_ShouldWriteAllFourRows()

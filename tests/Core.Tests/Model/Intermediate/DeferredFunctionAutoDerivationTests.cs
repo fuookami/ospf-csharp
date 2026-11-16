@@ -145,7 +145,7 @@ public class DeferredFunctionAutoDerivationTests
     private static LinearMetaModel<Flt64> AbsMetaModel() {
         var x = new RealVar("auto-x");
         var parent = new LinearMetaModel<Flt64>();
-        // **不写裸 `IsOk` 断言：质量预算只挡增长（B1235／B1239 各踩过一次）。**
+ // **不写裸 `IsOk` 断言：质量预算只挡增长。**
         // **No bare success assertions: the quality budget only blocks growth.**
         bool addedVariable = parent.Add(x).IsOk;
         addedVariable.Should().BeTrue();

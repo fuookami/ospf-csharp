@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 值还原：五路查找的顺序就是语义 / The five-way lookup order is the semantics.
 /// </summary>
 /// <remarks>
-/// B1210 按基线 `NativePiecewiseReport.kt` 的 `restoreValues` 与 `maxInputValues` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `restoreValues` 与 `maxInputValues`。
 ///
-/// B1210 adds the baseline's `restoreValues` and `maxInputValues`.
+/// adds
 /// </remarks>
 public class NativeValueRestorationTests
 {

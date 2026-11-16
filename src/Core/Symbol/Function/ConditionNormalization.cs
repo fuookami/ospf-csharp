@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 归一化后的条件范围 / A normalized condition range.
 /// </summary>
 /// <remarks>
-/// B1173 按基线 `Conditional.kt` 的 `NormalizedCondition` 与 `normalizedCondition` 补。
+/// 对齐基线 `Conditional.kt` 的 `NormalizedCondition` 与 `normalizedCondition`。
 ///
 /// **"归一化"在这里的意思是：把四种关系都折算成"<b>严格真</b>"的形态。**
 /// **`LT`/`LE` 先把多项式取负，于是"负侧"变成"正侧"；**

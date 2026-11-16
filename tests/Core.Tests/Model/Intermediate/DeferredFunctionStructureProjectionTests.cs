@@ -43,7 +43,7 @@ public class DeferredFunctionStructureProjectionTests
     /// **理由很具体：** **`AbsFunction` 在构造时就把 `ResultVar`/`PositiveVar`/`NegativeVar`/`SignVar`
     /// 建好、设好范围、注册进了大 M 推导。** **如果投影<b>新造</b>一套变量，
     /// 那么物化出来的行会引用一套从未出现在模型里的变量——**
-    /// **而 `AddConstraint` 会因此报 "variable ... is not registered"（B1239 踩过的那种）。**
+ /// **而 `AddConstraint` 会因此报 "variable ... is not registered"。**
     ///
     /// **"相等的变量"与"同一个变量"在值语义下无法区分，而在注册表里差别是决定性的。**
     ///

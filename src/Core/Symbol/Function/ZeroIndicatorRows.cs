@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Zero-detection indicator rows.
 /// </summary>
 /// <remarks>
-/// B1182 按基线 `BigM.kt` 的 `zeroIndicatorConstraints`、`safeZeroIndicatorConstraints` 补。
+/// 对齐基线 `BigM.kt` 的 `zeroIndicatorConstraints`、`safeZeroIndicatorConstraints`。
 ///
 /// **四条行，而<b>第二条变量（`sideVar`）只在"偏离"那一侧出现</b>**：
 ///

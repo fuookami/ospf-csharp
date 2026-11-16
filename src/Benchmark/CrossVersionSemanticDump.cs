@@ -319,7 +319,7 @@ public static class CrossVersionSemanticDump
             : throw new InvalidOperationException("转储可达集必须可算 / the dump reachability must compute: " + result);
     }
 
-    // ==================== Projection (B1309) ====================
+ // ==================== Projection ====================
 
     /// <summary>
     /// 投影段：快照、定价、主问题登记 / The projection section: snapshot, pricing, master registration.
@@ -450,7 +450,7 @@ public static class CrossVersionSemanticDump
         }
     }
 
-    // ==================== Generation (B1309) ====================
+ // ==================== Generation ====================
 
     /// <summary>
     /// 生成段：三个场景、三个生成器，方案数、终止原因与规范键顺序 /

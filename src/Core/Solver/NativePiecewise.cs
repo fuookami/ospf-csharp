@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 原生 PWL 所需的已转换 primitive 数据 / Converted primitive data required by native PWL.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1203 按基线 `NativePiecewise.kt` 的 `NativePiecewiseData` 补。
+/// 对齐基线 `NativePiecewise.kt` 的 `NativePiecewiseData`。
 /// **B1203, following the baseline's `NativePiecewiseData`.**
 /// &lt;/remarks>
 public sealed record NativePiecewiseData(
@@ -30,7 +30,7 @@ public sealed record NativePiecewiseData(
 /// Validate a PWL structure and convert it into solver-independent primitive data.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1203 按基线 `NativePiecewise.kt` 的 `prepareNativePiecewise` 补。
+/// 对齐基线 `NativePiecewise.kt` 的 `prepareNativePiecewise`。
 ///
 /// **这一层<b>不</b>碰求解器边界与 fallback 选择变量的使用情况**（基线注释明说"有意不处理"）。
 /// **它只回答一个问题：这个结构能不能被翻译成一组 `x/y` 断点。**

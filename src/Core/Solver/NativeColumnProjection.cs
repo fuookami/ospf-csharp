@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 把模型的变量列与 token 列对齐成"键 → 列号" / Align a model's variable columns with its token columns into key → column.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1208 按基线 `NativePiecewiseReport.kt` 的 `nativeColumns` 补。
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeColumns`。
 ///
 /// **基线的签名是 `nativeColumns(model: LinearTriadModel)`，但函数体只用到两个东西：
 /// `model.variables` 与 `model.tokensInSolver`。**

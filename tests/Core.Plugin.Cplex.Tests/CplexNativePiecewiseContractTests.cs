@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 ///
 /// **所以这两条判据同时在验两件事：CPLEX 的防御到位，以及"合并两个写入器"这个念头是错的。**
 ///
-/// B1233 adds the write side, shaped like B1232's COPT.
+/// adds
 ///
 /// **The criteria here focus not on "the SOS2 is written" (B1232 pinned that, and the shape matches) but on the <b>two
 /// CPLEX-specific checks</b>: non-finite values and strictly increasing breakpoints.**

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 互补约束 <c>x ⊥ y</c>：两者至多一个为正 / Complementarity `x ⊥ y`: at most one of them is positive.
 /// </summary>
 /// <remarks>
-/// B1156 按基线 `Complementarity.kt` 的 `ComplementarityFunction` 补。
+/// 对齐基线 `Complementarity.kt` 的 `ComplementarityFunction`。
 ///
 /// **六条约束，一个二值变量 `s`**：
 ///

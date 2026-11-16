@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 逻辑斯谛（sigmoid）的分段线性近似 / Piecewise-linear approximation of the logistic curve.
 /// </summary>
 /// <remarks>
-/// B1151 按基线 `NonlinearPiecewise.kt` 的 `LogisticApproximationFunction` 补。
+/// 对齐基线 `NonlinearPiecewise.kt` 的 `LogisticApproximationFunction`。
 ///
 /// <c>σ(z) = 1 / (1 + e^(−z))</c>，其中 <c>z = k(x − m)</c>（`k` 是陡度、`m` 是中点）。
 ///

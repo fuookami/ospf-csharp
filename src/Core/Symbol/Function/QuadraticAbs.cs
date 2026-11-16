@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次输入的绝对值：桥接后交给线性 `AbsFunction` / A quadratic-input absolute value, bridged.
 /// </summary>
 /// <remarks>
-/// B1163 按基线 `QuadraticAbs.kt` 补。
+/// 对齐基线 `QuadraticAbs.kt`。
 ///
 /// **与 B1161、B1162 的六个类同形**：**桥接，然后委托。绝对值编码本身没有任何新增。**
 ///
@@ -125,7 +125,7 @@ public sealed class QuadraticAbsFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// 二次输入的正部 <c>max(p, 0)</c> / The positive part of a quadratic input.
 /// </summary>
 /// <remarks>
-/// B1163 按基线 `QuadraticPositivePart.kt` 补。
+/// 对齐基线 `QuadraticPositivePart.kt`。
 ///
 /// **基线用的恒等式是 `max(p, 0) = −min(−p, 0)`，而 `min` 用 `exact = true` 的 `QuadraticMinFunction` 实现。**
 /// **所以本类没有自己的极值编码**：**它构造一个 `−p` 与 `0` 的 `QuadraticMinFunction`，
