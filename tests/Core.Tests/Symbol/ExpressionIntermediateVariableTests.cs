@@ -4,7 +4,6 @@ using FluentAssertions;
 using Fuookami.Ospf.Core.Symbol;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Number;
-using Fuookami.Ospf.Math.Symbol.Inequality;
 using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 using Xunit;
@@ -64,45 +63,6 @@ public class ExpressionIntermediateVariableTests
 
         first.IntermediateVariable.Should().NotBeSameAs(second.IntermediateVariable);
         first.IntermediateVariable!.Name.Should().NotBe(second.IntermediateVariable!.Name);
-    }
-
-    /// <summary>**线性符号的等式：左边只有辅助变量，右边是定义式** / The linear equality has the auxiliary alone on the left.</summary>
-    [Fact]
-    public void TheLinearRealizationConstraint_ShouldPinTheAuxiliary() {
-        LinearExpressionSymbol symbol = Expression("expr", realizeThroughVariable: true);
-
-        symbol.RealizationConstraint().Should().NotBeNull("the switch promises an equality to pin the auxiliary");
-        LinearExpressionSymbol off = Expression("plain");
-        off.RealizationConstraint().Should().BeNull("without the switch there is no auxiliary to pin");
-    }
-
-    /// <summary>**二次符号也有等式，且左侧是二次多项式** / The quadratic symbol gets an equality with a quadratic left-hand side.</summary>
-    /// <remarks>
-    /// **B1315 只做到"开关 + 辅助变量 + 展平叶子"，二次等式当时留空。** **这里补上，并把"左侧必须是二次多项式"这件事写进判据：**
-    /// **把辅助变量塞进线性多项式会让这条等式在二次模型里被当成阶数不一致而走另一条路径，而那条路径不报错。**
-    ///
-    /// **B1315 stopped at "switch + auxiliary + leaf when flattening" and left the quadratic equality out. It is added here, and the criterion states that the left-hand
-    /// side has to be a quadratic polynomial: pushing the auxiliary into a linear one would look degree-mismatched in a quadratic model and take another path, silently.**
-    /// </remarks>
-    [Fact]
-    public void TheQuadraticRealizationConstraint_ShouldExist() {
-        RealVar x = new("x");
-        var polynomial = new MutableQuadraticPolynomial<Flt64>(
-            monomials: new[] { QuadraticMonomial<Flt64>.Quadratic(Flt64.One, x, x) },
-            constant: Flt64.Zero);
-        var symbol = new QuadraticExpressionSymbol(polynomial, name: "qexpr") {
-            UseIntermediateVariable = true,
-        };
-
-        QuadraticInequalityOf<Flt64>? constraint = symbol.RealizationConstraint();
-        constraint.Should().NotBeNull("the quadratic symbol carries the same switch and owes the same equality");
-        constraint!.Comparison.Should().Be(Comparison.EQ, "a realization constraint is an equality");
-        constraint.Lhs.Monomials.Should().Contain(
-            monomial => ReferenceEquals(monomial.Symbol1, symbol.IntermediateVariable),
-            "the auxiliary has to be the left-hand side, or the equality pins nothing");
-
-        var off = new QuadraticExpressionSymbol(polynomial, name: "plain_q");
-        off.RealizationConstraint().Should().BeNull();
     }
 
     private static LinearExpressionSymbol Expression(string name, bool realizeThroughVariable = false) {

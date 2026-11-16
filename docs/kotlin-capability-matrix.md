@@ -2718,18 +2718,8 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 - **但该包不含 ONNX 模型协议类型**（`Onnx.*` 类型数 = 0），NuGet 上也没有 `Onnx`／`Onnx.Protobuf` 这类包。
 - **所以"两个依赖"实际是三个：** `Microsoft.ML.OnnxRuntime`（推理）+ `Google.Protobuf` + 自己用 `onnx.proto` 生成的模型类。
 
-**已落地（`src/Core.Plugin.Onnx`，16 批）：**
+**已落地（`src/Core.Plugin.Onnx`）：** `OnnxDataType`（14 类型 + 分类／字节宽度／反查）、`OnnxError`（13 个变体，带节点／张量／形状上下文）、`OnnxTensorConstant`（形状／双载荷／按 dtype 读取／长度一致性）、`ProtoReader`（手写线格式读取器，替代三万余行生成代码）、`OnnxModelParser`（模型结构解析，每个字段号都由独立编码的判据钉死）。
+**判据 9 条**，钉的是"编号与规范一致""未知编号返回 null 而不是猜""未知维度渲染成 `?` 而不是 0""错误带得上定位信息"。
 
-- **数据层：** `OnnxDataType`（14 类型）、`OnnxError`（13 变体）、`OnnxTensorConstant`、`ProtoReader`（手写线格式读取器）、`OnnxModelParser`（模型结构，字段号逐条判据）；
-- **语义层：** `OnnxPiecewiseApproximation`（切分策略）、`OnnxActivationSemantics`（八算子语义与默认值）、`OnnxShape`／`OnnxShapeOperators`（形状算术与六个算子）、`OnnxGraphValidator`（拓扑序与可用性）、`OnnxConstantFolding`、`OnnxOutputSelection`、`OnnxImportOptions`；
-- **`2e72a17c` 的中间变量实现：** 线性与二次表达式符号都有开关、辅助变量、令牌注册与 `RealizationConstraint()`（二次版左侧为二次多项式）。
-- **降阶层：** `OnnxOperatorRegistry`（算子表与前置检查）、`OnnxActivationLowering`（精确算子化简）、`OnnxApproximationLowering`（近似算子切分与符号）、`OnnxInputBounds`（界判定）、`OnnxAffineChain`（仿射链求值）、`OnnxAffineModelBuilder`（仿射 → 线性模型）；
-- **端到端：** 一个 ONNX 图经仿射链组装成线性模型后**真的被求解器解出**，最优值与手算一致（`OnnxAffineEndpointGurobiIntegrationTest`）。
-
-**判据 131 条**（ONNX 测试工程）**+ 2 条端到端求解判据**，覆盖"不抛异常却会读错/算错"的那一类错误。
-
-**明确未落地（不是"没找到"，是没做）：**
-
-- **模型层接线：** 把输入界真正注册到变量、把降阶结果挂进 `MechanismModel`——**跨层，需要模型机制**；
-- **子图**（`OnnxSubgraph` 586 行）与**推理**（`OnnxInference` 472 行）：后者需要真实 `.onnx` 文件与 `InferenceSession`；
-- **形状与归约算子接进模型：** 目前只做形状推导，不改写模型形状。
+**未落地：** 图解析（`OnnxGraphParser`／`OnnxAttribute`／`OnnxTensorConstant`）需要模型 proto 生成类；
+推理（`OnnxInference`）与降阶（`OnnxLowering`）需要 `InferenceSession`。

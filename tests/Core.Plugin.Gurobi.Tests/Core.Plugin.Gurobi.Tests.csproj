@@ -30,6 +30,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core.Plugin.Gurobi\Core.Plugin.Gurobi.csproj" />
     <ProjectReference Include="..\..\src\Framework\Framework.csproj" />
-    <ProjectReference Include="..\..\src\Core.Plugin.Onnx\Core.Plugin.Onnx.csproj" />
   </ItemGroup>
 </Project>
