@@ -33,7 +33,7 @@ public static class OnnxGraphEvaluator
 {
     /// <summary>本批支持的算子 / The operators this batch supports.</summary>
     public static readonly IReadOnlySet<string> Supported = new HashSet<string>(StringComparer.Ordinal) {
-        "Identity", "Cast", "Add", "Sub", "Neg", "Mul", "Concat", "Split", "Gather",
+        "Identity", "Cast", "Add", "Sub", "Neg", "Mul", "Concat", "Split", "Gather", "MatMul", "Gemm", "ReduceSum",
         // 激活算子只在输入是常量时折叠：符号输入需要函数符号（分段线性 / 正部），那要挂进模型，
         // 不是这一层能做的。把这条边界写成显式的拒绝，比让它悄悄返回输入安全得多。
         //
@@ -68,6 +68,7 @@ public static class OnnxGraphEvaluator
     /// <param name="constants">常量名到标量值的映射 / The mapping from constant names to scalar values.</param>
     /// <param name="constantArrays">常量名到数组值的映射（`Scan` 用）/ The mapping from constant names to arrays, used by Scan.</param>
     /// <param name="allowMultiElementOutput">是否允许逐元素输出（调用方已给出每元素符号）/ whether a per-element output is allowed because the caller supplies per-element symbols.</param>
+    /// <param name="quadraticMode">是否按二次域求值（对齐基线的 `OnnxDegreeMode`）/ whether to evaluate in the second-degree domain, as the baseline OnnxDegreeMode does.</param>
     /// <param name="constantIntArrays">常量名到整数数组的映射（`Reshape` 的目标形状用）/ The mapping from constant names to integer arrays, used by Reshape targets.</param>
     /// <returns>求值结果 / The result.</returns>
     /// <remarks>
@@ -83,7 +84,8 @@ public static class OnnxGraphEvaluator
         IReadOnlyDictionary<string, double>? constants = null,
         IReadOnlyDictionary<string, IReadOnlyList<double>>? constantArrays = null,
         IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays = null,
-        bool allowMultiElementOutput = false) {
+        bool allowMultiElementOutput = false,
+        bool quadraticMode = false) {
         // 消费者表：判断一个重排有没有落到按位置读的算子上，只看直接消费者是不够的。
         // The consumer map: deciding whether a permutation reaches a positional reader cannot stop at the direct consumer.
         IReadOnlyDictionary<string, IReadOnlyList<OnnxNode>> consumers = Consumers(graph);
@@ -112,6 +114,29 @@ public static class OnnxGraphEvaluator
             //
             // A Gather index has to be a static constant: **a variable index means "a different position each time", which is not something this layer can unroll, and treating it as
             // "take the first" would let the model solve with a different answer.**
+            // `MatMul`／`Gemm` 都带属性（`transA`／`alpha`／…），**所以走各自的求值路径而不是通用 case。**
+            // Both carry attributes (transA, alpha, …), **so each gets its own evaluation path instead of a generic case.**
+            if (node.OpType == "ReduceSum") {
+                string? reduceFailure = EvaluateReduceSum(node, context, constantIntArrays);
+                if (reduceFailure is not null) {
+                    return new Result(null, reduceFailure, node.Name);
+                }
+                continue;
+            }
+            if (node.OpType == "MatMul") {
+                string? matMulFailure = EvaluateMatMul(node, context, quadraticMode);
+                if (matMulFailure is not null) {
+                    return new Result(null, matMulFailure, node.Name);
+                }
+                continue;
+            }
+            if (node.OpType == "Gemm") {
+                string? gemmFailure = EvaluateGemm(node, context, quadraticMode);
+                if (gemmFailure is not null) {
+                    return new Result(null, gemmFailure, node.Name);
+                }
+                continue;
+            }
             if (node.OpType == "Gather") {
                 string? gatherFailure = EvaluateGather(node, context, constantIntArrays);
                 if (gatherFailure is not null) {
@@ -170,7 +195,20 @@ public static class OnnxGraphEvaluator
                 return new Result(null, "节点输出不是单个 / the node does not produce exactly one output", node.Name);
             }
 
-            OnnxLoweringContext.Binding? produced = Compute(node, operands, out string? computeFailure);
+            // 二次域的绑定不能喂给一次域算子：**它的 `Expression` 只是个占位，** **照它算会得到"少掉二次项"的结果而模型照常求解。**
+            //
+            // A second-degree binding cannot feed a first-degree operator: **its Expression is only a placeholder, and computing from it would drop the quadratic terms while the model still
+            // solves.**
+            foreach (OnnxLoweringContext.Binding operand in operands) {
+                if (operand.HasQuadraticElements && node.OpType is not ("MatMul" or "Gemm" or "ReduceSum" or "Mul")) {
+                    return new Result(
+                        null,
+                        "算子 '" + node.OpType + "' 只装一次多项式，而输入 '" + node.Inputs[0] + "' 在二次域里 / the operator only holds first-degree forms while an input is in the second-degree domain",
+                        node.Name);
+                }
+            }
+
+            OnnxLoweringContext.Binding? produced = Compute(node, operands, out string? computeFailure, quadraticMode);
             if (produced is null) {
                 return new Result(null, computeFailure, node.Name);
             }
@@ -179,7 +217,8 @@ public static class OnnxGraphEvaluator
             //
             // The element list has to be written together with the binding: **dropping it collapses an elementwise result back into one scalar expression**, and every consumer then
             // believes the tensor is one number — exactly what list semantics exist to fix.
-            if (!context.TryRebind(node.Outputs[0], produced.Expression, produced.Shape, out string? bindFailure, produced.Elements)) {
+            if (!context.TryRebind(
+                node.Outputs[0], produced.Expression, produced.Shape, out string? bindFailure, produced.Elements, produced.QuadraticElements)) {
                 return new Result(null, bindFailure, node.Name);
             }
         }
@@ -189,10 +228,18 @@ public static class OnnxGraphEvaluator
             if (!context.TryGet(output.Name, out OnnxLoweringContext.Binding binding)) {
                 return new Result(null, "图输出 '" + output.Name + "' 没有被任何节点产出 / the graph output is not produced by anything");
             }
-            if (!allowMultiElementOutput && binding.HasElements && binding.Elements!.Count > 1) {
+            // 二次域的绑定也要查：**它的 `Expression` 只是占位，** **放它出去等于把一个多元素输出当成一个数——**
+            // **与一次域的情况同一个洞，只是藏得更深。**
+            //
+            // Second-degree bindings are checked too: **their Expression is only a placeholder, and letting one out treats a multi-element output as one number —** the same hole as in the
+            // first-degree domain, only deeper.
+            int producedElements = binding.HasElements
+                ? binding.Elements!.Count
+                : binding.HasQuadraticElements ? binding.QuadraticElements!.Count : 1;
+            if (!allowMultiElementOutput && producedElements > 1) {
                 return new Result(
                     null,
-                    "图输出 '" + output.Name + "' 有 " + binding.Elements.Count
+                    "图输出 '" + output.Name + "' 有 " + producedElements
                     + " 个元素，而按元素取输出（对齐基线的 elementIndex）还没接 / the graph output holds several elements while element-indexed output selection is not wired yet",
                     null);
             }
@@ -204,7 +251,8 @@ public static class OnnxGraphEvaluator
     private static OnnxLoweringContext.Binding? Compute(
         OnnxNode node,
         IReadOnlyList<OnnxLoweringContext.Binding> operands,
-        out string? failure) {
+        out string? failure,
+        bool quadraticMode = false) {
         // 节点本身要进来：**`Concat` 的轴写在属性上，** **而"只看算子名"的签名拿不到它——** '
         // **先前的算子都只靠名字，所以这一点一直没暴露。**
         //
@@ -322,8 +370,43 @@ public static class OnnxGraphEvaluator
                 bool leftConstant = operands[0].Expression.Monomials.Count == 0;
                 bool rightConstant = operands[1].Expression.Monomials.Count == 0;
                 if (!leftConstant && !rightConstant) {
-                    failure = "'Mul' 的两个输入都不是常量，那是二次 / neither Mul input is constant, which would be quadratic";
-                    return null;
+                    // 两侧含变量：**逐元素相乘，结果进二次域。** **注意这是<b>逐元素**，不是矩阵乘——**
+                    // **两者在形状上可以一样，而数值上差一整维求和。**
+                    //
+                    // Variables on both sides: **an elementwise product that lands in the second-degree domain.** **Note this is elementwise, not a matrix product — the two can share a shape
+                    // while differing by an entire inner sum.**
+                    if (!quadraticMode) {
+                        failure = "'Mul' 的两个输入都不是常量，乘积是二次的，而当前导入模式是一次 / neither Mul input is constant, the product is quadratic, and the import mode is linear"
+                                  + "（用 OnnxImportMode.Quadratic 导入 / import with OnnxImportMode.Quadratic）";
+                        return null;
+                    }
+                    if (operands[0].Elements is not OnnxElementList leftList || operands[1].Elements is not OnnxElementList rightList) {
+                        failure = "'Mul' 的二次情形需要两侧的逐元素列表 / the quadratic Mul needs element lists on both sides";
+                        return null;
+                    }
+                    if (leftList.Count != rightList.Count) {
+                        failure = "'Mul' 的两个输入元素个数不同：" + leftList.Count + " 与 " + rightList.Count
+                                  + " / the operands hold different element counts"
+                                  + "（逐元素相乘要求同形 / an elementwise product needs equal shapes）";
+                        return null;
+                    }
+                    var products = new List<QuadraticPolynomial<Flt64>>(leftList.Count);
+                    for (int index = 0; index < leftList.Count; ++index) {
+                        OnnxQuadraticProduct.Result term = OnnxQuadraticProduct.Multiply(
+                            leftList.Elements[index], rightList.Elements[index]);
+                        if (term.Polynomial is not QuadraticPolynomial<Flt64> polynomial) {
+                            failure = term.Failure;
+                            return null;
+                        }
+                        products.Add(polynomial);
+                    }
+                    OnnxQuadraticElementList.Result built = OnnxQuadraticElementList.Create(leftList.Shape, products);
+                    if (built.Value is not OnnxQuadraticElementList quadraticList) {
+                        failure = built.Failure;
+                        return null;
+                    }
+                    failure = null;
+                    return new OnnxLoweringContext.Binding(leftList.Elements[0], quadraticList.Shape) { QuadraticElements = quadraticList };
                 }
                 OnnxLoweringContext.Binding scaled = leftConstant
                     ? Scale(operands[1], operands[0].Expression.Constant)
@@ -692,6 +775,161 @@ public static class OnnxGraphEvaluator
             }
         }
         return null;
+    }
+
+    /// <summary>求值一个 `ReduceSum` / Evaluate a ReduceSum.</summary>
+    /// <remarks>
+    /// **轴可以从属性来，也可以从第二个输入（常量整数数组）来：** **基线两条都认，** **而"只认其中一条"会让一半的真实模型导不进来。**
+    ///
+    /// **`keepdims` 默认是 1（保留），与基线的 `attributes.int("keepdims", 1L)` 一致。**
+    ///
+    /// **The axes may come from the attribute or from the second input (a constant integer array): the baseline accepts both, and accepting only one would lock out half of the real models.**
+    /// **keepdims defaults to 1, matching the baseline's attributes.int("keepdims", 1L).**
+    /// </remarks>
+    private static string? EvaluateReduceSum(
+        OnnxNode node,
+        OnnxLoweringContext context,
+        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays) {
+        if (node.Inputs.Count == 0 || !context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding input)) {
+            return "'ReduceSum' 的输入不在上下文里 / the ReduceSum input is not in the context";
+        }
+        if (input.Elements is not OnnxElementList list) {
+            return "'ReduceSum' 的输入缺少逐元素列表 / the input has no element list"
+                   + "（对齐基线的 inputBindings / sync the baseline inputBindings）";
+        }
+        IReadOnlyList<int>? axes = null;
+        if (node.Inputs.Count > 1 && node.Inputs[1].Length > 0 && constantIntArrays is not null
+            && constantIntArrays.TryGetValue(node.Inputs[1], out IReadOnlyList<long>? fromInput))
+        {
+            axes = ToInts(fromInput);
+        }
+        bool keepDims = true;
+        foreach (OnnxAttribute attribute in node.Attributes) {
+            if (attribute.Name == "axes" && attribute.Integers is { Count: > 0 } fromAttribute) {
+                axes = ToInts(fromAttribute);
+            }
+            if (attribute.Name == "keepdims" && attribute.Integer is long flag) {
+                keepDims = flag != 0;
+            }
+        }
+        OnnxElementList.Result reduced = list.ReduceSum(axes, keepDims);
+        if (reduced.Value is not OnnxElementList reducedList) {
+            return reduced.Failure;
+        }
+        return context.TryRebind(node.Outputs[0], Provision(reducedList), reducedList.Shape, out string? bindFailure, reducedList)
+            ? null
+            : bindFailure;
+    }
+
+    /// <summary>求值一个 `MatMul` / Evaluate a MatMul.</summary>
+    private static string? EvaluateMatMul(OnnxNode node, OnnxLoweringContext context, bool quadraticMode) {
+        if (node.Inputs.Count != 2) {
+            return "'MatMul' 需要恰好两个输入 / MatMul needs exactly two inputs";
+        }
+        if (!context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding left)
+            || !context.TryGet(node.Inputs[1], out OnnxLoweringContext.Binding right)) {
+            return "'MatMul' 的输入不在上下文里 / a MatMul input is not in the context";
+        }
+        if (left.Elements is not OnnxElementList leftList || right.Elements is not OnnxElementList rightList) {
+            return "'MatMul' 的输入缺少逐元素列表 / a MatMul input has no element list"
+                   + "（对齐基线的 inputBindings / sync the baseline inputBindings）";
+        }
+        // 两侧都含变量时：** Quadratic 模式下按二次域算，** **否则沿用一次域的拒绝（消息里点明 Quadratic 模式）。**
+        //
+        // With variables on both sides: **Quadratic mode computes in the second-degree domain, and otherwise the first-degree refusal stands, naming Quadratic mode in the message.**
+        if (!OnnxQuadraticProduct.IsConstant(left.Expression) && !OnnxQuadraticProduct.IsConstant(right.Expression)) {
+            if (!quadraticMode) {
+                return "'MatMul' 的两侧都含变量，乘积是二次的，而当前导入模式是一次 / both operands carry variables, the product is quadratic, and the import mode is linear"
+                       + "（用 OnnxImportMode.Quadratic 导入 / import with OnnxImportMode.Quadratic）";
+            }
+            OnnxQuadraticElementList.Result quadratic = OnnxQuadraticElementList.MatMul(leftList, rightList);
+            if (quadratic.Value is not OnnxQuadraticElementList quadraticList) {
+                return quadratic.Failure;
+            }
+            return context.TryRebind(
+                node.Outputs[0], left.Expression, quadraticList.Shape, out string? quadraticFailure, null, quadraticList)
+                ? null
+                : quadraticFailure;
+        }
+
+        OnnxElementList.Result product = leftList.MatMul(rightList);
+        if (product.Value is not OnnxElementList productList) {
+            return product.Failure;
+        }
+        return context.TryRebind(node.Outputs[0], Provision(productList), productList.Shape, out string? bindFailure, productList)
+            ? null
+            : bindFailure;
+    }
+
+    /// <summary>求值一个 `Gemm` / Evaluate a Gemm.</summary>
+    private static string? EvaluateGemm(OnnxNode node, OnnxLoweringContext context, bool quadraticMode) {
+        if (node.Inputs.Count < 2) {
+            return "'Gemm' 至少需要两个输入 / Gemm needs at least two inputs";
+        }
+        if (!context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding left)
+            || !context.TryGet(node.Inputs[1], out OnnxLoweringContext.Binding right)) {
+            return "'Gemm' 的输入不在上下文里 / a Gemm input is not in the context";
+        }
+        if (left.Elements is not OnnxElementList leftList || right.Elements is not OnnxElementList rightList) {
+            return "'Gemm' 的输入缺少逐元素列表 / a Gemm input has no element list"
+                   + "（对齐基线的 inputBindings / sync the baseline inputBindings）";
+        }
+        OnnxElementList? biasList = null;
+        if (node.Inputs.Count > 2 && node.Inputs[2].Length > 0
+            && context.TryGet(node.Inputs[2], out OnnxLoweringContext.Binding bias))
+        {
+            biasList = bias.Elements;
+            if (biasList is null) {
+                return "'Gemm' 的偏置 '" + node.Inputs[2] + "' 缺少逐元素列表 / the bias has no element list";
+            }
+        }
+        bool transA = false;
+        bool transB = false;
+        double alpha = 1.0;
+        double beta = 1.0;
+        foreach (OnnxAttribute attribute in node.Attributes) {
+            switch (attribute.Name) {
+                case "transA":
+                    transA = attribute.Integer is long ta && ta != 0;
+                    break;
+                case "transB":
+                    transB = attribute.Integer is long tb && tb != 0;
+                    break;
+                case "alpha":
+                    alpha = attribute.Float ?? 1.0;
+                    break;
+                case "beta":
+                    beta = attribute.Float ?? 1.0;
+                    break;
+            }
+        }
+        // 两侧都含变量时走二次域：**与 `MatMul` 同一条分界，** **一次域那边会拒绝并点明 Quadratic 模式。**
+        //
+        // With variables on both sides this goes to the second-degree domain: **the same dividing line as MatMul**, and the first-degree side refuses naming Quadratic mode.
+        if (!OnnxQuadraticProduct.IsConstant(left.Expression) && !OnnxQuadraticProduct.IsConstant(right.Expression)) {
+            if (!quadraticMode) {
+                return "'Gemm' 的两侧都含变量，乘积是二次的，而当前导入模式是一次 / both operands carry variables, the product is quadratic, and the import mode is linear"
+                       + "（用 OnnxImportMode.Quadratic 导入 / import with OnnxImportMode.Quadratic）";
+            }
+            OnnxQuadraticElementList? quadraticBias = biasList is null ? null : OnnxQuadraticElementList.FromLinear(biasList);
+            OnnxQuadraticElementList.Result quadratic = OnnxQuadraticElementList.Gemm(
+                leftList, rightList, quadraticBias, transA, transB, alpha, beta);
+            if (quadratic.Value is not OnnxQuadraticElementList quadraticList) {
+                return quadratic.Failure;
+            }
+            return context.TryRebind(
+                node.Outputs[0], left.Expression, quadraticList.Shape, out string? quadraticFailure, null, quadraticList)
+                ? null
+                : quadraticFailure;
+        }
+
+        OnnxElementList.Result product = leftList.Gemm(rightList, biasList, transA, transB, alpha, beta);
+        if (product.Value is not OnnxElementList productList) {
+            return product.Failure;
+        }
+        return context.TryRebind(node.Outputs[0], Provision(productList), productList.Shape, out string? bindFailure, productList)
+            ? null
+            : bindFailure;
     }
 
     private static long ElementsOf(IReadOnlyList<int> shape) {

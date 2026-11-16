@@ -48,6 +48,21 @@ public sealed class OnnxLoweringContext
 
         /// <summary>是否带逐元素列表 / Whether an element list is attached.</summary>
         public bool HasElements => Elements is not null;
+
+        /// <summary>
+        /// 二次域的元素列表（可选）/ The second-degree element list, when one exists.
+        /// </summary>
+        /// <remarks>
+        /// **两个域互斥：** **一个绑定要么装一次、要么装二次，** **不会同时有两种——** **否则"这个张量现在是几次"就没有答案，** '
+        /// **而下游只能猜。**
+        ///
+        /// **The two domains are exclusive: a binding holds either first-degree or second-degree forms, never both — otherwise "what degree is this tensor now" has no answer and every
+        /// downstream has to guess.**
+        /// </remarks>
+        public OnnxQuadraticElementList? QuadraticElements { get; init; }
+
+        /// <summary>是否带二次域列表 / Whether a second-degree list is attached.</summary>
+        public bool HasQuadraticElements => QuadraticElements is not null;
     }
 
     private readonly List<Dictionary<string, Binding>> _scopes = new() { new Dictionary<string, Binding>(StringComparer.Ordinal) };
@@ -63,6 +78,7 @@ public sealed class OnnxLoweringContext
     /// <param name="shape">形状 / The shape.</param>
     /// <param name="failure">失败原因 / The failure reason.</param>
     /// <param name="elements">逐元素列表（可选）/ The per-element list, when one exists.</param>
+    /// <param name="quadraticElements">二次域列表（可选，与前者互斥）/ The second-degree list when one exists, exclusive with the former.</param>
     /// <returns>是否绑定成功 / Whether the binding was made.</returns>
     /// <remarks>
     /// **同一作用域内重名直接拒绝：** **ONNX 的输出名在同一层是唯一的，** **重名意味着模型非法或我们读错了某个字段——**
@@ -76,7 +92,8 @@ public sealed class OnnxLoweringContext
         LinearPolynomial<Flt64> expression,
         IReadOnlyList<int> shape,
         out string? failure,
-        OnnxElementList? elements = null) {
+        OnnxElementList? elements = null,
+        OnnxQuadraticElementList? quadraticElements = null) {
         if (string.IsNullOrEmpty(name)) {
             failure = "绑定缺少名字 / a binding has no name";
             return false;
@@ -86,7 +103,7 @@ public sealed class OnnxLoweringContext
             failure = "名字 '" + name + "' 在同一个作用域内被重复定义 / the name is defined twice in one scope";
             return false;
         }
-        current[name] = new Binding(expression, shape ?? Array.Empty<int>()) { Elements = elements };
+        current[name] = new Binding(expression, shape ?? Array.Empty<int>()) { Elements = elements, QuadraticElements = quadraticElements };
         failure = null;
         return true;
     }
@@ -99,6 +116,7 @@ public sealed class OnnxLoweringContext
     /// <param name="shape">形状 / The shape.</param>
     /// <param name="failure">失败原因 / The failure reason.</param>
     /// <param name="elements">逐元素列表（可选）/ The per-element list, when one exists.</param>
+    /// <param name="quadraticElements">二次域列表（可选，与前者互斥）/ The second-degree list when one exists, exclusive with the former.</param>
     /// <returns>是否绑定成功 / Whether the binding was made.</returns>
     /// <remarks>
     /// **与 `TryBind` 的分工是语义上的，不是宽松程度上的：** **`TryBind` 用于"声明一个名字"，重名说明模型非法；** '
@@ -114,14 +132,15 @@ public sealed class OnnxLoweringContext
         LinearPolynomial<Flt64> expression,
         IReadOnlyList<int> shape,
         out string? failure,
-        OnnxElementList? elements = null) {
+        OnnxElementList? elements = null,
+        OnnxQuadraticElementList? quadraticElements = null) {
         if (string.IsNullOrEmpty(name)) {
             failure = "绑定缺少名字 / a binding has no name";
             return false;
         }
         // 覆盖发生在当前作用域：外层同名不会被改，于是"体里就地更新"不会污染外层。
         // The overwrite happens in the current scope: an outer name of the same is untouched, so an in-place update inside a body cannot pollute the enclosing scope.
-        _scopes[^1][name] = new Binding(expression, shape ?? Array.Empty<int>()) { Elements = elements };
+        _scopes[^1][name] = new Binding(expression, shape ?? Array.Empty<int>()) { Elements = elements, QuadraticElements = quadraticElements };
         failure = null;
         return true;
     }

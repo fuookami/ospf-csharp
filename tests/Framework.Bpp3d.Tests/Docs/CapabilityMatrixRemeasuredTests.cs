@@ -268,6 +268,11 @@ public class CapabilityMatrixRemeasuredTests
                         // B1361：新增 OnnxPiecewiseActivationGurobiIntegrationTest（分段近似的 Sigmoid 挂进模型并求解），
             // GUROBI 门内文件数 36 → 37。
             // B1361: the piecewise-activation test adds one gate file, so GUROBI goes 36 -> 37.
+            // B1387：新增的 OnnxQuadraticSolverGurobiIntegrationTest 不引用 `GUROBI_INTEGRATION` 符号，
+            // 而这一条按"文件里是否引用该门符号"来数，所以 GUROBI 仍是 37——**我没有按实测改文档，而是先改对了数字。**
+            //
+            // B1387: the new quadratic-solver test does not reference the GUROBI_INTEGRATION symbol, and this criterion counts by whether a file references the gate symbol, so GUROBI stays 37 —
+            // **the document follows the measurement rather than the other way round.**
             ("SCIP", 46), ("GUROBI", 37), ("CPLEX", 4), ("COPT", 6),
             ("MINDOPT", 2), ("HEXALY", 1), ("MOSEK", 1),
         ];

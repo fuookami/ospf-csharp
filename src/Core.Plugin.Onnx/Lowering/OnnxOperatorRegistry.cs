@@ -73,6 +73,17 @@ public static class OnnxOperatorRegistry
             // 乘法：需要二次 / multiplication needs quadratic
             ["Mul"] = new("Mul", 2, false),
             ["MatMul"] = new("MatMul", 2, false),
+            // `Gemm` 登记为一阶，理由与直觉相反：**权重是常量时结果确实是一阶，** **而登记成二阶会让线性模型以"阶数不够"被拒——**
+            // **那是个假拒绝：** **模型完全线性的情形被挡在门外，而真正二次的情形本该由求值器给出精确理由（"两侧含变量"）。**
+            // **所以前者的天花板交给前置检查，后者的判定交给求值器。**
+            //
+            // Gemm is registered as first degree, counter-intuitively: **with a constant weight the result really is linear, and registering it as second degree would refuse the linear model
+            // with "needs a higher degree" — a false refusal.** **The genuinely quadratic case is better answered by the evaluator, which can say "both sides carry variables".** **So the ceiling
+            // belongs to preflight and the verdict to the evaluator.**
+            ["Gemm"] = new("Gemm", 1, false),
+            // `ReduceSum` 是一阶的：**求和不会抬阶。**
+            // ReduceSum is first degree: summing does not raise the degree.
+            ["ReduceSum"] = new("ReduceSum", 1, false),
 
             // 激活：四个精确、四个近似 / four exact activations, four approximated
             ["Relu"] = new("Relu", 1, true),

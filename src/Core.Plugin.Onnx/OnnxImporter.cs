@@ -44,13 +44,15 @@ public static class OnnxImporter
     /// <param name="Failure">失败原因 / The failure reason.</param>
     /// <param name="OutputElements">多元素输出的逐元素表达式 / The per-element expressions of a multi-element output.</param>
     /// <param name="OutputShape">多元素输出的形状 / The shape of a multi-element output.</param>
+    /// <param name="OutputQuadraticElements">二次模式下的逐元素输出；与 `OutputElements` 互斥 / the per-element output in quadratic mode, exclusive with OutputElements.</param>
     public sealed record Imported(
         LinearPolynomial<Flt64>? Polynomial,
         IReadOnlyDictionary<string, RealVar>? Variables,
         string? Stage,
         string? Failure,
         IReadOnlyList<LinearPolynomial<Flt64>>? OutputElements = null,
-        IReadOnlyList<int>? OutputShape = null)
+        IReadOnlyList<int>? OutputShape = null,
+        IReadOnlyList<QuadraticPolynomial<Flt64>>? OutputQuadraticElements = null)
     {
         /// <summary>是否成功 / Whether it succeeded.</summary>
         public bool IsOk => Failure is null;
@@ -204,7 +206,31 @@ public static class OnnxImporter
         // Caller-supplied element symbols force the node-by-node evaluator: **the affine chain looks at nodes and not shapes, so it treats a tensor as one number, and the
         // per-element symbols would silently do nothing while the import still succeeded.**
         if (NeedsEvaluator(graph) || bindings.Count > 0) {
-            return ImportThroughEvaluator(graph, variables, bounds.Resolved, bindings);
+            return ImportThroughEvaluator(graph, variables, bounds.Resolved, bindings, options.Mode != OnnxImportMode.Linear);
+        }
+
+        // 默认入口没有符号列表可用：**多元素输入在仿射链里只能被当成一个数，** **而"当成一个数"在导入时看不出来，只在最优值上错。**
+        // **规则只放在这里，是因为它描述的正是仿射链的局限：** **形状算子与控制流那条路径有自己的拒绝（缺元素列表、多元素输出），** '
+        // **在这里再拦一次只会把那些更有信息量的消息换成一句笼统的。**
+        //
+        // The default entry has no symbol lists: **a multi-element input can only be treated as one number in the affine chain, and that mistake is invisible at import and wrong only in
+        // the optimum.** **The rule lives here because it describes the affine chain's limitation: the shape-operator and control-flow path has its own refusals (missing element lists,
+        // multi-element outputs), and stopping it here would replace those more informative messages with a generic one.**
+        foreach (OnnxValueInfo input in graph.Inputs) {
+            if (initializerNames.Contains(input.Name)) {
+                continue;
+            }
+            long elements = 1;
+            foreach (OnnxDimension dimension in input.Shape) {
+                elements *= System.Math.Max(dimension.Value ?? 1, 1);
+            }
+            if (input.ElementType != 0 && elements > 1) {
+                return new Imported(
+                    null, variables, "bindings",
+                    "输入 '" + input.Name + "' 有 " + elements + " 个元素，而仿射链没有逐元素表示 / the input holds "
+                    + elements + " elements and the affine chain has no per-element representation"
+                    + "（用 `Import(bytes, options, inputBindings)` 给出每元素符号，对齐基线的 inputBindings / supply one symbol per element）");
+            }
         }
 
         // 仿射链没有逐元素表示，所以多元素输出在这里无法表达：**此前它会被静默压成一个标量多项式，**
@@ -354,7 +380,8 @@ public static class OnnxImporter
         OnnxGraph graph,
         Dictionary<string, RealVar> variables,
         IReadOnlyDictionary<string, OnnxBounds> bounds,
-        IReadOnlyDictionary<string, IReadOnlyList<RealVar>>? bindings = null) {
+        IReadOnlyDictionary<string, IReadOnlyList<RealVar>>? bindings = null,
+        bool quadraticMode = false) {
         var context = new OnnxLoweringContext();
         // 被 `Scan` 当作扫描输入的多元素输入，展开成逐位置变量：**这是唯一需要元素列表的地方，**
         // 因而也只对它们展开——其余输入仍按"一个名字一个变量"，既有模型的行为一点不变。
@@ -437,8 +464,36 @@ public static class OnnxImporter
             }
         }
 
+        // 常量张量也要有逐元素列表：**`MatMul`／`Gemm` 的一侧是权重，而权重是 `initializer`。** '
+        // **只把它们当"一个数"存着，矩阵乘就没有第二维可用——** **算法写好了也接不上。**
+        //
+        // Constant tensors need element lists too: **one side of MatMul/Gemm is the weights, and the weights are initializers.** **Keeping them as "one number" leaves matrix multiplication
+        // without a second dimension — the algorithm exists and still cannot connect.**
+        foreach (OnnxTensor initializer in graph.Initializers) {
+            if (initializer.Name is null || initializer.Dims.Count == 0) {
+                continue;
+            }
+            var shape = new List<int>(initializer.Dims.Count);
+            long total = 1;
+            foreach (long dimension in initializer.Dims) {
+                shape.Add((int)dimension);
+                total *= System.Math.Max(dimension, 1);
+            }
+            var elements = new List<LinearPolynomial<Flt64>>((int)total);
+            for (long index = 0; index < total; ++index) {
+                double value = index < initializer.FloatData.Count ? initializer.FloatData[(int)index] : 0.0;
+                elements.Add(new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), new Flt64(value)));
+            }
+            OnnxElementList.Result built = OnnxElementList.Create(shape, elements);
+            if (built.Value is OnnxElementList constantsList) {
+                context.TryBind(initializer.Name, elements[0], shape, out _, constantsList);
+            }
+        }
+
         OnnxGraphEvaluator.Result evaluated = OnnxGraphEvaluator.Evaluate(
-            graph, context, constants, arrays, intArrays, allowMultiElementOutput: bindings is not null);
+            graph, context, constants, arrays, intArrays,
+            allowMultiElementOutput: bindings is not null,
+            quadraticMode: quadraticMode);
         if (!evaluated.IsOk) {
             return new Imported(
                 null,
@@ -450,6 +505,14 @@ public static class OnnxImporter
             return new Imported(null, variables, "evaluate", "图没有输出 / the graph declares no output");
         }
         OnnxLoweringContext.Binding produced = evaluated.Outputs![graph.Outputs[0].Name];
+        if (produced.QuadraticElements is OnnxQuadraticElementList quadratic)
+        {
+            var quadraticValues = new List<QuadraticPolynomial<Flt64>>(quadratic.Count);
+            foreach (QuadraticPolynomial<Flt64> element in quadratic.Elements) {
+                quadraticValues.Add(element);
+            }
+            return new Imported(null, variables, null, null, null, quadratic.Shape, quadraticValues);
+        }
         if (produced.Elements is OnnxElementList producedElements && producedElements.Count > 1) {
             var values = new List<LinearPolynomial<Flt64>>(producedElements.Count);
             foreach (LinearPolynomial<Flt64> element in producedElements.Elements) {

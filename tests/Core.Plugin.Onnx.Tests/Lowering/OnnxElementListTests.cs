@@ -1,6 +1,7 @@
 #nullable enable
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using FluentAssertions;
 using Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
@@ -298,6 +299,299 @@ public class OnnxElementListTests
         beyond.Failure.Should().Contain("4").And.Contain("轴长度");
         built.Gather(new[] { -5 }, 0).IsOk.Should().BeFalse();
         built.Gather(new[] { 0 }, 1).IsOk.Should().BeFalse("the axis is out of range for rank 1");
+    }
+
+    /// <summary>**常量矩阵相乘，逐位置乘加** / Constant matrices multiply with the per-position multiply-add.</summary>
+    /// <remarks>
+    /// **手算的数：** **`[[1,2,3],[4,5,6]] · [[7,8],[9,10],[11,12]] = [[58,64],[139,154]]`。** '
+    /// **用真数而不是符号，是因为两侧都含变量时乘积是二次的，而这一层只装一次多项式——** '
+    /// **那种情形要按"拒绝"来测，不是按"算出来"来测。**
+    ///
+    /// **Hand-computed: [[1,2,3],[4,5,6]] · [[7,8],[9,10],[11,12]] = [[58,64],[139,154]].** Real numbers rather than symbols because a product of two symbolic operands is quadratic
+    /// while this layer holds linear polynomials — that case is tested as a refusal, not as a result.**
+    /// </remarks>
+    [Fact]
+    public void MatMulOfConstants_ShouldMultiplyAndAdd() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 3 }, Constants(1, 2, 3, 4, 5, 6)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 3, 2 }, Constants(7, 8, 9, 10, 11, 12)).Value!;
+
+        OnnxElementList product = left.MatMul(right).Value!;
+
+        product.Shape.Should().Equal(new[] { 2, 2 });
+        ConstantsOf(product).Should().Equal(new[] { 58.0, 64.0, 139.0, 154.0 });
+    }
+
+    /// <summary>**秩 1 操作数按 `(1,K)`／`(K,1)` 参与，末了把那一维压掉** / Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed out.</summary>
+    [Fact]
+    public void RankOneOperands_ShouldBePromotedThenSqueezed() {
+        OnnxElementList vector = OnnxElementList.Create(new[] { 3 }, Constants(1, 2, 3)).Value!;
+        OnnxElementList matrix = OnnxElementList.Create(new[] { 3, 2 }, Constants(1, 0, 0, 1, 1, 1)).Value!;
+
+        OnnxElementList product = vector.MatMul(matrix).Value!;
+
+        product.Shape.Should().Equal(new[] { 2 });
+        ConstantsOf(product).Should().Equal(new[] { 4.0, 5.0 });
+    }
+
+    /// <summary>**内维不一致被拒绝，两个数都出现** / Differing inner dimensions are refused, with both numbers named.</summary>
+    [Fact]
+    public void DifferingInnerDimensions_ShouldBeRefused() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 3 }, Constants(1, 2, 3, 4, 5, 6)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 2, 3, 4)).Value!;
+
+        OnnxElementList.Result product = left.MatMul(right);
+
+        product.IsOk.Should().BeFalse("3 does not match 2");
+        product.Failure.Should().Contain("3").And.Contain("2");
+    }
+
+    /// <summary>**两侧都含变量时拒绝，并点名二次与二次路径** / A symbolic product is refused, naming the degree and the quadratic path.</summary>
+    /// <remarks>
+    /// **基线能算是因为它有 `OnnxDegreeMode`；** **C# 侧的二次路径是 `OnnxQuadraticProduct`。** '
+    /// **静默把二次的乘积塞进一次多项式，会让结果少掉交叉项而模型照常求解。**
+    ///
+    /// **The baseline manages through OnnxDegreeMode; the C# quadratic path is OnnxQuadraticProduct.** **Quietly stuffing a quadratic product into a linear polynomial drops the cross terms
+    /// while the model still solves.**
+    /// </remarks>
+    [Fact]
+    public void ASymbolicProduct_ShouldBeRefused() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 1, 2 }, Labels(2)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 1 }, Labels(2, "f0", "f1")).Value!;
+
+        OnnxElementList.Result product = left.MatMul(right);
+
+        product.IsOk.Should().BeFalse();
+        product.Failure.Should().Contain("二次").And.Contain("OnnxQuadraticProduct");
+    }
+
+    /// <summary>**秩 0 与批量维被拒绝** / Rank 0 and batch dimensions are refused.</summary>
+    [Fact]
+    public void UnsupportedShapes_ShouldBeRefused() {
+        OnnxElementList scalar = OnnxElementList.Create(Array.Empty<int>(), Constants(1)).Value!;
+        OnnxElementList matrix = OnnxElementList.Create(new[] { 1, 1 }, Constants(1)).Value!;
+        OnnxElementList batched = OnnxElementList.Create(new[] { 2, 2, 2 }, Constants(1, 2, 3, 4, 5, 6, 7, 8)).Value!;
+
+        scalar.MatMul(matrix).IsOk.Should().BeFalse("rank 0 cannot take part");
+        matrix.MatMul(scalar).IsOk.Should().BeFalse();
+        // 迁移（B1381）：批量维现在支持了，**所以这条从"批量维被拒绝"改成"不相容的批量维被拒绝"**——
+        // 原来的断言会让一个已经能算的情形看起来仍然不行。
+        //
+        // Migrated (B1381): batch dimensions are supported now, **so this moves from "batch is refused" to "an incompatible batch is refused"** — the old assertion would have kept a
+        // working case looking unsupported.
+        matrix.MatMul(OnnxElementList.Create(new[] { 3, 2, 2 }, Constants(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)).Value!)
+            .IsOk.Should().BeFalse("1 broadcasts against 3 only when one of them is 1");
+        batched.MatMul(OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 0, 0, 1)).Value!)
+            .Value.Should().NotBeNull("a [2,2] identity broadcasts over the [2,2,2] batch dimension");
+    }
+
+    /// <summary>**`alpha` 缩放乘积** / alpha scales the product.</summary>
+    /// <remarks>
+    /// **手算：** **`[[1,2],[3,4]] · [[5,6],[7,8]] = [[19,22],[43,50]]`，`alpha = 2` 得 `[[38,44],[86,100]]`。**
+    ///
+    /// **Hand-computed: [[1,2],[3,4]] · [[5,6],[7,8]] = [[19,22],[43,50]]; with alpha = 2 that is [[38,44],[86,100]].**
+    /// </remarks>
+    [Fact]
+    public void GemmWithAlpha_ShouldScaleTheProduct() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 2, 3, 4)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2 }, Constants(5, 6, 7, 8)).Value!;
+
+        OnnxElementList product = left.Gemm(right, null, transA: false, transB: false, alpha: 2.0, beta: 1.0).Value!;
+
+        ConstantsOf(product).Should().Equal(new[] { 38.0, 44.0, 86.0, 100.0 });
+    }
+
+    /// <summary>**`transA` 只改索引，不改值** / transA only changes the indexing, not the numbers.</summary>
+    /// <remarks>
+    /// **A 存成转置后的样子（`[[1,3],[2,4]]` 其实是 `[[1,2],[3,4]]` 的转置），`transA` 之后应当仍是 `[[19,22],[43,50]]`。** '
+    /// **若转置写成"形状换了、下标没换"，会得到 `[[19,22],[43,43]]` 之类的不对称错值，而形状完全一样。**
+    ///
+    /// **A is stored transposed ([[1,3],[2,4]] is the transpose of [[1,2],[3,4]]), so after transA the result has to stay [[19,22],[43,50]].** A transpose implemented as "the shape swaps and
+    /// the indices do not" yields asymmetric wrong numbers with an identical shape.
+    /// </remarks>
+    [Fact]
+    public void GemmWithTransA_ShouldOnlyChangeIndexing() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 3, 2, 4)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2 }, Constants(5, 6, 7, 8)).Value!;
+
+        OnnxElementList product = left.Gemm(right, null, transA: true, transB: false, alpha: 1.0, beta: 1.0).Value!;
+
+        ConstantsOf(product).Should().Equal(new[] { 19.0, 22.0, 43.0, 50.0 });
+    }
+
+    /// <summary>**`transB` 同理** / transB behaves the same way.</summary>
+    [Fact]
+    public void GemmWithTransB_ShouldOnlyChangeIndexing() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 2, 3, 4)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2 }, Constants(5, 7, 6, 8)).Value!;
+
+        OnnxElementList product = left.Gemm(right, null, transA: false, transB: true, alpha: 1.0, beta: 1.0).Value!;
+
+        ConstantsOf(product).Should().Equal(new[] { 19.0, 22.0, 43.0, 50.0 });
+    }
+
+    /// <summary>**`beta` 缩放偏置，再逐元素相加** / beta scales the bias before it is added.</summary>
+    [Fact]
+    public void GemmWithBias_ShouldAddBetaTimesBias() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 2, 3, 4)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2 }, Constants(5, 6, 7, 8)).Value!;
+        OnnxElementList bias = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 1, 1, 1)).Value!;
+
+        OnnxElementList product = left.Gemm(right, bias, false, false, alpha: 1.0, beta: 2.0).Value!;
+
+        ConstantsOf(product).Should().Equal(new[] { 21.0, 24.0, 45.0, 52.0 });
+    }
+
+    /// <summary>**`[N]` 偏置按行广播** / An [N] bias broadcasts over rows.</summary>
+    /// <remarks>
+    /// **这是 ONNX 允许的两种偏置形态之一；** **若按"整块加上去"处理，第二行的偏置会错用第一行的值，而形状完全一样。**
+    ///
+    /// **This is one of the two bias forms ONNX allows; treating it as a flat block would make the second row use the first row's bias while the shapes stay identical.**
+    /// </remarks>
+    [Fact]
+    public void GemmWithRowBias_ShouldBroadcast() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 2, 3, 4)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2 }, Constants(5, 6, 7, 8)).Value!;
+        OnnxElementList bias = OnnxElementList.Create(new[] { 2 }, Constants(1, 10)).Value!;
+
+        OnnxElementList product = left.Gemm(right, bias, false, false, alpha: 1.0, beta: 1.0).Value!;
+
+        ConstantsOf(product).Should().Equal(new[] { 20.0, 32.0, 44.0, 60.0 });
+    }
+
+    /// <summary>**非二维输入与不相容的偏置被拒绝** / Non-2-D inputs and an incompatible bias are refused.</summary>
+    [Fact]
+    public void BadGemmShapes_ShouldBeRefused() {
+        OnnxElementList vector = OnnxElementList.Create(new[] { 2 }, Constants(1, 2)).Value!;
+        OnnxElementList matrix = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 2, 3, 4)).Value!;
+        OnnxElementList wrongBias = OnnxElementList.Create(new[] { 3 }, Constants(1, 2, 3)).Value!;
+
+        vector.Gemm(matrix, null, false, false, 1.0, 1.0).IsOk.Should().BeFalse("Gemm is 2-D only");
+        matrix.Gemm(wrongBias, null, false, false, 1.0, 1.0).IsOk.Should().BeFalse("a [3] bias cannot meet a [2,2] result");
+    }
+
+    /// <summary>**`Gemm` 沿用 `MatMul` 的二次拒绝** / Gemm inherits MatMul's quadratic refusal.</summary>
+    [Fact]
+    public void ASymbolicGemm_ShouldBeRefused() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 1, 2 }, Labels(2)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 1 }, Labels(2, "f0", "f1")).Value!;
+
+        OnnxElementList.Result product = left.Gemm(right, null, false, false, 1.0, 1.0);
+
+        product.IsOk.Should().BeFalse("a symbolic product is quadratic");
+        product.Failure.Should().Contain("二次");
+    }
+
+    /// <summary>**空轴表示全部归约** / An empty axes list reduces everything.</summary>
+    /// <remarks>
+    /// **`keepdims = true` 时形状是 `[1,1]`，** **而元素个数与"标量"一样都是 1——** '
+    /// **所以判据同时断言形状与内容，** **否则"归约了没有"在数值上看不出来。**
+    ///
+    /// **With keepdims = true the shape is [1,1], while the element count is one as for a scalar —** so the criterion asserts the shape and the content together, or "did it reduce" is
+    /// invisible numerically.
+    /// </remarks>
+    [Fact]
+    public void ReduceSumOverAllAxes_ShouldKeepTheShapeWhenAsked() {
+        OnnxElementList built = OnnxElementList.Create(new[] { 2, 3 }, Constants(1, 2, 3, 4, 5, 6)).Value!;
+
+        OnnxElementList kept = built.ReduceSum(null, keepDims: true).Value!;
+        OnnxElementList dropped = built.ReduceSum(null, keepDims: false).Value!;
+
+        kept.Shape.Should().Equal(new[] { 1, 1 });
+        ConstantsOf(kept).Should().Equal(new[] { 21.0 });
+        dropped.Shape.Should().BeEmpty("keepdims = false leaves a scalar");
+        ConstantsOf(dropped).Should().Equal(new[] { 21.0 }, "both forms hold the same number");
+    }
+
+    /// <summary>**沿一个轴归约，剩下的维度保留** / Reducing one axis keeps the other dimensions.</summary>
+    [Fact]
+    public void ReduceSumAlongOneAxis_ShouldKeepTheRest() {
+        OnnxElementList built = OnnxElementList.Create(new[] { 2, 3 }, Constants(1, 2, 3, 4, 5, 6)).Value!;
+
+        OnnxElementList rows = built.ReduceSum(new[] { 1 }, keepDims: false).Value!;
+
+        rows.Shape.Should().Equal(new[] { 2 });
+        ConstantsOf(rows).Should().Equal(new[] { 6.0, 15.0 });
+    }
+
+    /// <summary>**负轴归一，与正轴同一个结果** / A negative axis normalises to the same result.</summary>
+    [Fact]
+    public void ANegativeAxis_ShouldMatchItsPositiveTwin() {
+        OnnxElementList built = OnnxElementList.Create(new[] { 2, 3 }, Constants(1, 2, 3, 4, 5, 6)).Value!;
+
+        ConstantsOf(built.ReduceSum(new[] { -1 }, keepDims: false).Value!)
+            .Should().Equal(ConstantsOf(built.ReduceSum(new[] { 1 }, keepDims: false).Value!));
+    }
+
+    /// <summary>**符号元素求和保留变量** / Summing symbolic elements keeps the variables.</summary>
+    /// <remarks>
+    /// **符号求和是这一层的常态：** **若归约被实现成"只取第一个"或"只看常数项"，结果会是个常数，** ' **而形状完全一样。**
+    ///
+    /// **Summing symbols is the normal case here: a reduction implemented as "take the first" or "only the constants" yields a plain constant with an identical shape.**
+    /// </remarks>
+    [Fact]
+    public void ReduceSumOfSymbols_ShouldKeepTheVariables() {
+        OnnxElementList built = OnnxElementList.Create(new[] { 2 }, Labels(2)).Value!;
+
+        OnnxElementList sum = built.ReduceSum(new[] { 0 }, keepDims: false).Value!;
+
+        sum.Elements[0].Monomials.Should().HaveCount(2);
+        sum.Elements[0].Monomials.Select(monomial => monomial.Symbol.Name).Should().BeEquivalentTo(new[] { "e0", "e1" });
+    }
+
+    /// <summary>**越界轴被拒绝，消息里两个数都出现** / An out-of-range axis is refused, with both numbers named.</summary>
+    [Fact]
+    public void AnOutOfRangeAxis_ShouldBeRefused() {
+        OnnxElementList built = OnnxElementList.Create(new[] { 2, 3 }, Constants(1, 2, 3, 4, 5, 6)).Value!;
+
+        OnnxElementList.Result reduced = built.ReduceSum(new[] { 2 }, keepDims: true);
+
+        reduced.IsOk.Should().BeFalse("the rank is 2, so axis 2 does not exist");
+        reduced.Failure.Should().Contain("2").And.Contain("秩");
+    }
+
+    /// <summary>**批量维逐批量相乘** / Batch dimensions multiply batch by batch.</summary>
+    /// <remarks>
+    /// **手算：** **第一批 `A₀ · I = A₀`，第二批 `A₁ · 2I = 2A₁`。** '
+    /// **若批量维被当成普通维度，第一批判据就会错位——** **而形状完全对得上。**
+    ///
+    /// **Hand-computed: batch 0 is A₀ · I = A₀ and batch 1 is A₁ · 2I = 2A₁.** **Treated as an ordinary dimension, the first batch would misalign while the shape still matches.**
+    /// </remarks>
+    [Fact]
+    public void MatMulWithBatches_ShouldMultiplyPerBatch() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2, 2 }, Constants(1, 2, 3, 4, 5, 6, 7, 8)).Value!;
+        OnnxElementList right = OnnxElementList.Create(new[] { 2, 2, 2 }, Constants(1, 0, 0, 1, 2, 0, 0, 2)).Value!;
+
+        OnnxElementList product = left.MatMul(right).Value!;
+
+        product.Shape.Should().Equal(new[] { 2, 2, 2 });
+        ConstantsOf(product).Should().Equal(new[] { 1.0, 2.0, 3.0, 4.0, 10.0, 12.0, 14.0, 16.0 });
+    }
+
+    /// <summary>**没有批量维的一侧被整块复制** / A side without batch dimensions is copied whole.</summary>
+    [Fact]
+    public void MatMulWithABroadcastBatch_ShouldCopyTheSmallerSide() {
+        OnnxElementList left = OnnxElementList.Create(new[] { 2, 2, 2 }, Constants(1, 2, 3, 4, 5, 6, 7, 8)).Value!;
+        OnnxElementList identity = OnnxElementList.Create(new[] { 2, 2 }, Constants(1, 0, 0, 1)).Value!;
+
+        OnnxElementList product = left.MatMul(identity).Value!;
+
+        product.Shape.Should().Equal(new[] { 2, 2, 2 });
+        ConstantsOf(product).Should().Equal(new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 },
+            "an identity right side leaves every batch alone");
+    }
+
+    private static IReadOnlyList<LinearPolynomial<Flt64>> Constants(params double[] values) {
+        var elements = new List<LinearPolynomial<Flt64>>(values.Length);
+        foreach (double value in values) {
+            elements.Add(new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), new Flt64(value)));
+        }
+        return elements;
+    }
+
+    private static IEnumerable<double> ConstantsOf(OnnxElementList list) {
+        foreach (LinearPolynomial<Flt64> element in list.Elements) {
+            yield return element.Constant.ToDouble();
+        }
     }
 
     private static string LabelAt(OnnxElementList list, int row, int column) {

@@ -279,6 +279,64 @@ public class OnnxElementwiseTests
     private static OnnxNode Node(string opType, string[] inputs, string firstOutput, string secondOutput) =>
         new(opType, "n_" + opType, inputs, new[] { firstOutput, secondOutput }, Array.Empty<OnnxAttribute>());
 
+    /// <summary>**两侧含变量的 `Mul` 是逐元素相乘，不是矩阵乘** / Mul with variables on both sides multiplies element by element, not as a matrix product.</summary>
+    /// <remarks>
+    /// **这条判据防的是"把逐元素写成了矩阵乘"：** **`[x0,x1]·[w0,w1]` 逐元素得 `[x0·w0, x1·w1]`（两项），** '
+    /// **而矩阵乘会得到一个求和（一项）。** **两者形状可以一样，只在元素个数与内容上不同。**
+    ///
+    /// **This criterion guards against writing the elementwise product as a matrix product: [x0,x1]·[w0,w1] elementwise gives [x0·w0, x1·w1] (two terms),** while a matrix product gives one
+    /// summed term. **The shapes can agree, and only the element count and content differ.**
+    /// </remarks>
+    [Fact]
+    public void MultiplyingTwoTensors_ShouldBeElementwise() {
+        var context = new OnnxLoweringContext();
+        BindTensor(context, "a", new[] { 2 }, "a0", "a1");
+        BindTensor(context, "b", new[] { 2 }, "b0", "b1");
+
+        OnnxGraphEvaluator.Result result = OnnxGraphEvaluator.Evaluate(
+            Graph(new[] { Node("Mul", new[] { "a", "b" }, "out") }, "out"),
+            context,
+            quadraticMode: true);
+
+        result.IsOk.Should().BeFalse("the output is multi-element");
+        context.TryGet("out", out OnnxLoweringContext.Binding product).Should().BeTrue("the node ran");
+        product.QuadraticElements.Should().NotBeNull();
+        product.QuadraticElements!.Count.Should().Be(2, "elementwise means one product per position, not one sum");
+        product.QuadraticElements.Elements[0].Monomials.Should().HaveCount(1);
+        product.QuadraticElements.Elements[1].Monomials.Should().HaveCount(1);
+    }
+
+    /// <summary>**一次模式下两侧含变量的 `Mul` 被拒绝，并点名 Quadratic** / In linear mode a two-variable Mul is refused, naming Quadratic.</summary>
+    [Fact]
+    public void MultiplyingTwoTensorsInLinearMode_ShouldBeRefused() {
+        var context = new OnnxLoweringContext();
+        BindTensor(context, "a", new[] { 2 }, "a0", "a1");
+        BindTensor(context, "b", new[] { 2 }, "b0", "b1");
+
+        OnnxGraphEvaluator.Result result = OnnxGraphEvaluator.Evaluate(
+            Graph(new[] { Node("Mul", new[] { "a", "b" }, "out") }, "out"),
+            context);
+
+        result.IsOk.Should().BeFalse();
+        result.Failure.Should().Contain("二次").And.Contain("Quadratic");
+    }
+
+    /// <summary>**元素个数不同时拒绝** / Different element counts are refused.</summary>
+    [Fact]
+    public void MultiplyingDifferentCounts_ShouldBeRefused() {
+        var context = new OnnxLoweringContext();
+        BindTensor(context, "a", new[] { 2 }, "a0", "a1");
+        BindTensor(context, "b", new[] { 3 }, "b0", "b1", "b2");
+
+        OnnxGraphEvaluator.Result result = OnnxGraphEvaluator.Evaluate(
+            Graph(new[] { Node("Mul", new[] { "a", "b" }, "out") }, "out"),
+            context,
+            quadraticMode: true);
+
+        result.IsOk.Should().BeFalse("two cannot pair with three");
+        result.Failure.Should().Contain("2").And.Contain("3");
+    }
+
     private static OnnxLoweringContext.Binding EvaluateThenRead(
         OnnxLoweringContext context,
         OnnxNode[] nodes,

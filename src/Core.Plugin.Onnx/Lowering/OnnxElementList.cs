@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 
 namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
@@ -247,6 +248,427 @@ public sealed class OnnxElementList
             }
         }
         return new Result(new OnnxElementList(target, elements), null);
+    }
+
+    /// <summary>
+    /// 矩阵乘 / Matrix multiplication. 对齐基线 `lowerMatMul` 的线性部分。
+    /// </summary>
+    /// <param name="right">右操作数 / The right operand.</param>
+    /// <returns>结果 / The product.</returns>
+    /// <remarks>
+    /// **秩 1 按 `(1,K)`／`(K,1)` 参与计算，末了把那一维压掉**（与基线同一个处理）；**秩 0 拒绝。**
+    ///
+    /// **这一批只做"至少一侧是常量"的线性情形。** **两侧都含变量时每个元素是二次的，而这一层只装一次多项式——**
+    /// **基线能算是因为它有 `OnnxDegreeMode`，C# 侧的二次路径是独立的（`OnnxQuadraticProduct`）。** '
+    /// **所以这里明确拒绝并点名原因，** **而不是把二次的乘积静默塞进一次多项式。**
+    ///
+    /// **批量维（秩 > 2）也明确拒绝：** **基线按 numpy 规则广播它，而这一层还没做——** **把批量维当普通维度算会让索引整体错位。**
+    ///
+    /// **Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed at the end, as in the baseline; rank 0 is refused.**
+    ///
+    /// **This batch covers the linear case where at least one side is constant.** **With variables on both sides each element becomes quadratic while this layer holds linear polynomials —
+    /// the baseline can do it because it has OnnxDegreeMode, and the quadratic path on the C# side is separate (OnnxQuadraticProduct).** **So it is refused with the reason named, rather than
+    /// quietly stuffing a quadratic product into a linear polynomial.**
+    ///
+    /// **Batch dimensions (rank > 2) are refused too: the baseline broadcasts them under numpy rules and this layer does not — treating a batch dimension as an ordinary one misaligns every
+    /// index.**
+    /// </remarks>
+    public Result MatMul(OnnxElementList right) {
+        if (right is null) {
+            return new Result(null, "MatMul 的右操作数为空 / the right operand is null");
+        }
+        var leftShape = new List<int>(_shape);
+        if (leftShape.Count == 1) {
+            leftShape = new List<int> { 1, leftShape[0] };
+        }
+        var rightShape = new List<int>(right._shape);
+        if (rightShape.Count == 1) {
+            rightShape = new List<int> { rightShape[0], 1 };
+        }
+        if (leftShape.Count < 2 || rightShape.Count < 2) {
+            return new Result(null, "MatMul 操作数秩不得为 0 / MatMul operands must not be rank 0");
+        }
+
+        int rows = leftShape[^2];
+        int inner = leftShape[^1];
+        int rightInner = rightShape[^2];
+        int columns = rightShape[^1];
+        var leftBatch = new List<int>();
+        for (int dimension = 0; dimension < leftShape.Count - 2; ++dimension) {
+            leftBatch.Add(leftShape[dimension]);
+        }
+        var rightBatch = new List<int>();
+        for (int dimension = 0; dimension < rightShape.Count - 2; ++dimension) {
+            rightBatch.Add(rightShape[dimension]);
+        }
+        IReadOnlyList<int>? batchShape = OnnxShape.BroadcastShape(leftBatch, rightBatch, out string? batchFailure);
+        if (batchShape is null) {
+            return new Result(null, "MatMul 批量维不相容：" + batchFailure + " / incompatible batch dimensions");
+        }
+        long batchCount = 1;
+        foreach (int dimension in batchShape) {
+            batchCount *= System.Math.Max(dimension, 1);
+        }
+        var leftTarget = new List<int>(batchShape) { rows, inner };
+        var rightTarget = new List<int>(batchShape) { rightInner, columns };
+        ExpandTo(this, leftTarget, out OnnxElementList? leftFull);
+        ExpandTo(right, rightTarget, out OnnxElementList? rightFull);
+        if (leftFull is null || rightFull is null) {
+            return new Result(null, "MatMul 的批量维无法展开 / the batch dimensions cannot be expanded");
+        }
+
+        if (inner != rightInner) {
+            return new Result(null, "MatMul 内维不一致：" + inner + " 与 " + rightInner + " / MatMul inner dimensions differ");
+        }
+        // **两侧**都含变量才升到二次：**一侧是常量权重时乘积仍是一次，而那才是全连接层的常态。**
+        // **原先把判定写成"任一侧含变量就拒绝"，混合情形被一律挡下——** **恒等权重的 `Gemm` 判据一接上就把这个反了的条件抓了出来。**
+        //
+        // **Only when both sides carry variables does the product reach degree two: with a constant weight it stays linear, which is the normal shape of a fully connected layer.** The check
+        // used to be "either side symbolic is refused", which blocked every mixed case — the identity-weight Gemm criterion caught the inverted condition as soon as it was wired.
+        if (!IsConstant(this) && !IsConstant(right)) {
+            return new Result(
+                null,
+                "MatMul 两侧都含变量时结果是二次的，而这一层只装一次多项式 / a product of two symbolic operands is quadratic while this layer holds linear polynomials"
+                + "（基线用 OnnxDegreeMode 处理，C# 侧二次路径是 OnnxQuadraticProduct / the baseline does it through OnnxDegreeMode；the quadratic path here is OnnxQuadraticProduct）");
+        }
+
+        // 混合情形下必须"把一个元素乘上另一侧的常数"，**而不是只取两边的常数项——** '
+        // **只取常数项会把符号项整个丢掉，而结果看起来只是个常数。** **这就是恒等权重那一批里输出只剩 "1" 的原因。**
+        //
+        // In the mixed case one element has to be multiplied by the other side's constant, **not both sides' constant terms taken —** that drops every symbolic term and leaves what looks
+        // like a plain constant. **That is why the identity-weight batch produced just "1".**
+        bool rightIsConstant = IsConstant(rightFull);
+        long leftBatchSize = rows * inner;
+        long rightBatchSize = rightInner * columns;
+        var elements = new List<LinearPolynomial<Flt64>>((int)(batchCount * rows * columns));
+        for (long batch = 0; batch < batchCount; ++batch) {
+            long leftOffset = batch * leftBatchSize;
+            long rightOffset = batch * rightBatchSize;
+            for (int row = 0; row < rows; ++row) {
+                for (int column = 0; column < columns; ++column) {
+                    var sum = new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), Flt64.Zero);
+                    for (int position = 0; position < inner; ++position) {
+                        LinearPolynomial<Flt64> lhsElement = leftFull._elements[(int)(leftOffset + row * inner + position)];
+                        LinearPolynomial<Flt64> rhsElement = rightFull._elements[(int)(rightOffset + position * columns + column)];
+                        sum = rightIsConstant
+                            ? sum + (lhsElement * new Flt64(rhsElement.Constant.ToDouble()))
+                            : sum + (rhsElement * new Flt64(lhsElement.Constant.ToDouble()));
+                    }
+                    elements.Add(WithoutZeroTerms(sum));
+                }
+            }
+        }
+
+        var target = new List<int>(batchShape);
+        if (_shape.Count != 1) {
+            target.Add(rows);
+        }
+        if (right._shape.Count != 1) {
+            target.Add(columns);
+        }
+        if (target.Count == 0) {
+            target.Add(1);
+        }
+        return Create(target, elements);
+    }
+
+    /// <summary>
+    /// 通用矩阵乘 / General matrix multiplication. 对齐基线 `lowerGemm`。
+    /// </summary>
+    /// <param name="right">右操作数 / The right operand.</param>
+    /// <param name="bias">偏置 `C`，可空 / The bias C, nullable.</param>
+    /// <param name="transA">是否转置左操作数 / Whether to transpose the left operand.</param>
+    /// <param name="transB">是否转置右操作数 / Whether to transpose the right operand.</param>
+    /// <param name="alpha">乘积的缩放 / The scale on the product.</param>
+    /// <param name="beta">偏置的缩放 / The scale on the bias.</param>
+    /// <returns>结果 / The result.</returns>
+    /// <remarks>
+    /// **顺序与基线一致：** **先按 `transA`／`transB` 转置，再乘，再乘 `alpha`，再把 `beta·C` 逐元素加上。** '
+    /// **顺序换了会得到不同的数，而每一步单独看都对。**
+    ///
+    /// **只支持二维输入：** **基线的 `Gemm` 也只支持二维（它当场拒绝更高秩），** **而"秩 1 也当向量处理"是 `MatMul` 的规则，不是 `Gemm` 的。**
+    ///
+    /// **偏置 `C` 可以是 `[M,N]` 或 `[N]`：** **后者按行广播——** **这是 ONNX 允许的两种形态；** **其余形状拒绝，** '
+    /// **因为"形状差不多"的偏置会让某一列静默加上别的列的值。**
+    ///
+    /// **The order matches the baseline: transpose by transA/transB, multiply, scale by alpha, then add beta·C elementwise.** **Any other order yields different numbers while every step looks right on its
+    /// own.**
+    ///
+    /// **Two-dimensional inputs only: the baseline's Gemm refuses higher rank outright, and "rank 1 behaves as a vector" is MatMul's rule, not Gemm's.**
+    ///
+    /// **The bias may be [M,N] or [N]; the latter broadcasts over rows — the two forms ONNX allows.** **Other shapes are refused, because a roughly-shaped bias silently adds one column's values to
+    /// another.**
+    /// </remarks>
+    public Result Gemm(
+        OnnxElementList right,
+        OnnxElementList? bias,
+        bool transA,
+        bool transB,
+        double alpha,
+        double beta) {
+        if (right is null) {
+            return new Result(null, "Gemm 的右操作数为空 / the right operand is null");
+        }
+        if (_shape.Count != 2 || right._shape.Count != 2) {
+            return new Result(
+                null,
+                "Gemm 只支持二维输入，实际为 [" + string.Join(",", _shape) + "] 与 [" + string.Join(",", right._shape) + "] / Gemm supports 2-D inputs only");
+        }
+        OnnxElementList left = transA ? Transpose2D(this) : this;
+        OnnxElementList product = transB ? Transpose2D(right) : right;
+        Result multiplied = left.MatMul(product);
+        if (multiplied.Value is not OnnxElementList multipliedList) {
+            return new Result(null, multiplied.Failure);
+        }
+        OnnxElementList scaled = Scale(multipliedList, alpha);
+        if (bias is null) {
+            return new Result(scaled, null);
+        }
+        OnnxElementList scaledBias = Scale(bias, beta);
+        return Add(scaled, scaledBias);
+    }
+
+    /// <summary>二维转置，与基线 `transpose2d` 同一个循环顺序 / A 2-D transpose with the baseline's loop order.</summary>
+    public static OnnxElementList Transpose2D(OnnxElementList tensor) {
+        int rows = tensor._shape[0];
+        int columns = tensor._shape[1];
+        var elements = new List<LinearPolynomial<Flt64>>(rows * columns);
+        for (int column = 0; column < columns; ++column) {
+            for (int row = 0; row < rows; ++row) {
+                elements.Add(tensor._elements[row * columns + column]);
+            }
+        }
+        return new OnnxElementList(new[] { columns, rows }, elements);
+    }
+
+    private static OnnxElementList Scale(OnnxElementList tensor, double factor) {
+        var elements = new List<LinearPolynomial<Flt64>>(tensor.Count);
+        foreach (LinearPolynomial<Flt64> element in tensor._elements) {
+            elements.Add(element * new Flt64(factor));
+        }
+        return new OnnxElementList(tensor._shape, elements);
+    }
+
+    /// <summary>逐元素相加，`[N]` 偏置按行广播 / Elementwise addition, with an [N] bias broadcast over rows.</summary>
+    private static Result Add(OnnxElementList left, OnnxElementList right) {
+        if (left.Count == right.Count && left._shape.Count == right._shape.Count) {
+            var same = new List<LinearPolynomial<Flt64>>(left.Count);
+            for (int index = 0; index < left.Count; ++index) {
+                same.Add(left._elements[index] + right._elements[index]);
+            }
+            var copy = new List<int>(left._shape);
+            return new Result(new OnnxElementList(copy, same), null);
+        }
+        if (left._shape.Count == 2 && right._shape.Count == 1 && right._shape[0] == left._shape[1]) {
+            int rows = left._shape[0];
+            int columns = left._shape[1];
+            var broadcast = new List<LinearPolynomial<Flt64>>(left.Count);
+            for (int row = 0; row < rows; ++row) {
+                for (int column = 0; column < columns; ++column) {
+                    broadcast.Add(left._elements[row * columns + column] + right._elements[column]);
+                }
+            }
+            return new Result(new OnnxElementList(new[] { rows, columns }, broadcast), null);
+        }
+        return new Result(
+            null,
+            "Gemm 的偏置形状 [" + string.Join(",", right._shape) + "] 与结果 [" + string.Join(",", left._shape)
+            + "] 不相容 / the bias shape is incompatible with the result");
+    }
+
+    /// <summary>
+    /// 沿轴求和 / Sum along axes. 对齐基线 `lowerReduceSum`。
+    /// </summary>
+    /// <param name="axes">要归约的轴；为空表示全部 / the axes to reduce, empty meaning all.</param>
+    /// <param name="keepDims">是否保留被归约的维度（长度为 1）/ whether the reduced dimensions stay, of length one.</param>
+    /// <returns>结果 / The result.</returns>
+    /// <remarks>
+    /// **累加按"源坐标映射到目标坐标"分组，** **与基线同一个做法：** **每个位置算出它落到目标的哪个下标，落到同一个下标的加在一起。**
+    ///
+    /// **`keepdims` 不是装饰：** **`true` 时形状是 `[1,1]`，`false` 时是空形状（标量）——** '
+    /// **两者元素个数都是 1，而下游按形状判断的东西完全不同。**
+    ///
+    /// **轴为空表示"全部归约"；** **负数轴按秩归一，越界拒绝。**
+    ///
+    /// **The accumulation groups by "source coordinate maps to which target coordinate", the same way the baseline does: each position works out the target index it falls into and positions
+    /// sharing one index are added together.**
+    ///
+    /// **keepdims is not decoration: with true the shape is [1,1] and with false it is empty (a scalar) — both hold one element, and what a downstream reads off the shape differs
+    /// entirely.**
+    ///
+    /// **An empty axes list means "reduce everything"; negatives are normalised by the rank and out-of-range axes are refused.**
+    /// </remarks>
+    public Result ReduceSum(IReadOnlyList<int>? axes, bool keepDims) {
+        int rank = _shape.Count;
+        var normalized = new List<int>();
+        if (axes is null || axes.Count == 0) {
+            for (int dimension = 0; dimension < rank; ++dimension) {
+                normalized.Add(dimension);
+            }
+        }
+        else {
+            foreach (int axis in axes) {
+                int converted = axis < 0 ? axis + rank : axis;
+                if (converted < 0 || converted >= rank) {
+                    return new Result(null, "ReduceSum 轴 " + axis + " 超出秩 " + rank + " 的范围 / the axis is out of range for the rank");
+                }
+                if (!normalized.Contains(converted)) {
+                    normalized.Add(converted);
+                }
+            }
+        }
+
+        var targetShape = new List<int>();
+        for (int dimension = 0; dimension < rank; ++dimension) {
+            if (!normalized.Contains(dimension)) {
+                targetShape.Add(_shape[dimension]);
+            }
+        }
+        int[] sourceStrides = Strides(_shape);
+        int[] targetStrides = Strides(targetShape);
+        var slots = new Dictionary<int, int>();
+        var accumulator = new List<LinearPolynomial<Flt64>>();
+        var coordinate = new int[rank];
+        int targetRank = targetShape.Count;
+        var targetCoordinate = new int[targetRank];
+        for (int index = 0; index < Count; ++index) {
+            int remainder = index;
+            for (int dimension = 0; dimension < rank; ++dimension) {
+                coordinate[dimension] = remainder / System.Math.Max(sourceStrides[dimension], 1);
+                remainder %= System.Math.Max(sourceStrides[dimension], 1);
+            }
+            int targetIndex = 0;
+            int cursor = 0;
+            for (int dimension = 0; dimension < rank; ++dimension) {
+                if (normalized.Contains(dimension)) {
+                    continue;
+                }
+                targetCoordinate[cursor] = coordinate[dimension];
+                targetIndex += coordinate[dimension] * System.Math.Max(targetStrides[cursor], 1);
+                ++cursor;
+            }
+            if (!slots.TryGetValue(targetIndex, out int slot)) {
+                slot = accumulator.Count;
+                slots[targetIndex] = slot;
+                accumulator.Add(_elements[index]);
+            }
+            else {
+                accumulator[slot] = WithoutZeroTerms(accumulator[slot] + _elements[index]);
+            }
+        }
+
+        var finalShape = new List<int>();
+        if (keepDims) {
+            for (int dimension = 0; dimension < rank; ++dimension) {
+                finalShape.Add(normalized.Contains(dimension) ? 1 : _shape[dimension]);
+            }
+        }
+        else {
+            finalShape.AddRange(targetShape);
+        }
+        return Create(finalShape, accumulator);
+    }
+
+    /// <summary>
+    /// 去掉系数为零的项 / Drop monomials whose coefficient is zero.
+    /// </summary>
+    /// <remarks>
+    /// **零系数项不是错的，但它会让模型多出一列"系数恒为零"的变量：** **求解器看得见它，而它在每条约束里都不起作用——** '
+    /// **这类列会让"变量数"这个指标失去意义，也会让下游的化简多做一遍无用功。**
+    ///
+    /// **A zero-coefficient term is not wrong, but it adds a column whose coefficient is always zero: the solver sees it and it does nothing in any constraint —** such columns make
+    /// "variable count" meaningless and give any downstream simplification useless work.
+    /// </remarks>
+    private static LinearPolynomial<Flt64> WithoutZeroTerms(LinearPolynomial<Flt64> polynomial) {
+        var kept = new List<LinearMonomial<Flt64>>(polynomial.Monomials.Count);
+        foreach (LinearMonomial<Flt64> monomial in polynomial.Monomials) {
+            if (monomial.Coefficient.ToDouble() != 0.0) {
+                kept.Add(monomial);
+            }
+        }
+        return new LinearPolynomial<Flt64>(kept, polynomial.Constant);
+    }
+
+    /// <summary>
+    /// 按 numpy 规则把元素展开到目标形状 / Expand the elements to a target shape under numpy rules.
+    /// </summary>
+    /// <remarks>
+    /// **从右往左对齐：** **源维为 1、或源没有这一维时按目标长度重复，** **其余必须相等。** '
+    /// **"源没有这一维"按重复处理而不是拒绝——** **批量维广播的常见形态正是 `[2,2]` 对 `[3,2,2]`。**
+    ///
+    /// **Align from the right: a source dimension of 1, or one the source does not have, repeats to the target length, and everything else has to match.** **"The source lacks this
+    /// dimension" means repeat rather than refuse — the normal shape of batch broadcasting is [2,2] against [3,2,2].**
+    /// </remarks>
+    /// <summary>
+    /// 按 numpy 规则算出"目标每个下标读源里哪个下标" / The source index each target index reads, under numpy rules.
+    /// </summary>
+    /// <param name="source">源形状 / The source shape.</param>
+    /// <param name="target">目标形状 / The target shape.</param>
+    /// <returns>下标映射，或 `null` 表示不相容 / the index map, or null when incompatible.</returns>
+    /// <remarks>
+    /// **下标数学只写一份：** **一次域与二次域的展开规则完全一样，** **差的只是"拿这套下标去取哪一种元素"。** '
+    /// **所以这里返回下标，两个域各自用自己的元素去取——** **而不是把同一段循环抄两遍。**
+    ///
+    /// **The index arithmetic is written once: the expansion rules are identical in the two domains and the only difference is which elements the indices are used to pick.** So this returns
+    /// indices and each domain reads its own elements — **rather than copying the same loop twice.**
+    /// </remarks>
+    internal static int[]? ExpandIndices(IReadOnlyList<int> source, IReadOnlyList<int> target) {
+        if (target.Count < source.Count) {
+            return null;
+        }
+        int offset = target.Count - source.Count;
+        for (int dimension = 0; dimension < source.Count; ++dimension) {
+            int wanted = target[offset + dimension];
+            int given = source[dimension];
+            if (given != wanted && given != 1) {
+                return null;
+            }
+        }
+        long total = 1;
+        foreach (int dimension in target) {
+            total *= System.Math.Max(dimension, 1);
+        }
+        int[] targetStrides = Strides(target);
+        int[] sourceStrides = Strides(source);
+        var indices = new int[total];
+        var coordinate = new int[target.Count];
+        for (long index = 0; index < total; ++index) {
+            long remainder = index;
+            for (int dimension = 0; dimension < target.Count; ++dimension) {
+                coordinate[dimension] = (int)(remainder / System.Math.Max(targetStrides[dimension], 1));
+                remainder %= System.Math.Max(targetStrides[dimension], 1);
+            }
+            int sourceIndex = 0;
+            for (int dimension = 0; dimension < source.Count; ++dimension) {
+                int position = offset + dimension;
+                int taken = source[dimension] == 1 ? 0 : coordinate[position];
+                sourceIndex += taken * System.Math.Max(sourceStrides[dimension], 1);
+            }
+            indices[index] = sourceIndex;
+        }
+        return indices;
+    }
+
+    private static void ExpandTo(OnnxElementList source, IReadOnlyList<int> target, out OnnxElementList? expanded) {
+        expanded = null;
+        int[]? indices = ExpandIndices(source._shape, target);
+        if (indices is null) {
+            return;
+        }
+        var result = new List<LinearPolynomial<Flt64>>(indices.Length);
+        foreach (int index in indices) {
+            result.Add(source._elements[index]);
+        }
+        expanded = new OnnxElementList(new List<int>(target), result);
+    }
+
+    private static bool IsConstant(OnnxElementList list) {
+        foreach (LinearPolynomial<Flt64> element in list._elements) {
+            if (element.Monomials.Count != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /// <summary>

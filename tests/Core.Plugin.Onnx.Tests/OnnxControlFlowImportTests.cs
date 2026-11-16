@@ -1,5 +1,9 @@
 #nullable enable
 
+// IDE0007 与 IDE0008 会在同一个泛型局部上互相要求；按仓库既有做法文件级关闭并写理由。
+// IDE0007 and IDE0008 demand opposite things on the same generic local; disabled at file scope per repository practice.
+#pragma warning disable IDE0007, IDE0008
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -394,6 +398,259 @@ public class OnnxControlFlowImportTests
         imported.Failure.Should().Contain("元素");
     }
 
+    /// <summary>**含 `Gemm` 的模型终于能导入了** / A model with a Gemm finally imports.</summary>
+    /// <remarks>
+    /// **这是"全连接层能导入"这件事本身：** **权重与偏置是 `initializer`，** **被绑成逐元素常量列表之后，** '
+    /// **`Gemm` 才有第二维可用。** **`W` 是单位矩阵、`B = [1,2]`，所以结果是 `[x0+1, x1+2]`——** '
+    /// **恒等权重让"乘对了没有"在数值上一目了然。**
+    ///
+    /// **This is "a fully connected layer imports" itself: weights and bias are initializers, and only after they are bound as per-element constant lists does Gemm have a second dimension
+    /// to work with.** **W is the identity and B is [1,2], so the result is [x0+1, x1+2] — the identity weights make "did the multiplication work" plain to see.**
+    /// </remarks>
+    [Fact]
+    public void AGemmModel_ShouldImportAndMultiply() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            GemmModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0"), new RealVar("x1") },
+            });
+
+        OnnxModel parsed = OnnxModelParser.Parse(GemmModelBytes());
+        parsed.Graph!.Initializers.Should().HaveCount(2, "the same bytes carry W and B");
+        parsed.Graph.Initializers[0].FloatData.Should().HaveCount(4, "W is a 2x2 matrix");
+
+        imported.IsOk.Should().BeTrue(imported.Failure);
+        imported.OutputShape.Should().Equal(new[] { 1, 2 });
+        Expression(imported.Output(0)).Should().Be("x0+1", "the identity weight passes x0 through, and the bias adds one");
+        Expression(imported.Output(1)).Should().Be("x1+2");
+    }
+
+    /// <summary>**权重也是图输入时被拒绝（二次）** / A symbolic weight is refused as quadratic.</summary>
+    /// <remarks>
+    /// **权重不是常量时乘积是二次的，而这一层只装一次多项式。** **放过去会得到"少掉交叉项"的结果，而模型照常求解。**
+    ///
+    /// **A non-constant weight makes the product quadratic while this layer holds linear polynomials.** Letting it through yields a result missing the cross terms while the model still
+    /// solves.
+    /// </remarks>
+    [Fact]
+    public void ASymbolicWeight_ShouldBeRefused() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            GemmWithSymbolicWeightModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["w"] = new OnnxBounds(-1.0, 1.0),
+                }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0"), new RealVar("x1") },
+                ["w"] = new[] { new RealVar("w00"), new RealVar("w10") },
+            });
+
+        imported.IsOk.Should().BeFalse("a symbolic product is quadratic");
+        imported.Stage.Should().Be("evaluate");
+        imported.Failure.Should().Contain("二次");
+    }
+
+    /// <summary>**含 `ReduceSum` 的模型能导入，归约到标量** / A model with a ReduceSum imports, reducing to a scalar.</summary>
+    /// <remarks>
+    /// **这是"归约"与"求和"在形状上的区别：** **`keepdims = 0` 且轴为空时结果是标量，** '
+    /// **所以它作为一个多项式交出来——** **而不是"一个只有一个元素的小张量"。**
+    ///
+    /// **This is the shape difference between a reduction and a sum: with keepdims = 0 and no axes the result is a scalar, so it comes back as one polynomial —** not as "a tiny tensor holding
+    /// one element".**
+    /// </remarks>
+    [Fact]
+    public void AReduceSumModel_ShouldImportToAScalar() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            ReduceSumModelBytes(axes: new long[] { 0, 1 }, keepdims: 0),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] {
+                    new RealVar("x0"), new RealVar("x1"), new RealVar("x2"),
+                    new RealVar("x3"), new RealVar("x4"), new RealVar("x5"),
+                },
+            });
+
+        imported.IsOk.Should().BeTrue(imported.Failure);
+        imported.Polynomial.Should().NotBeNull("a scalar output comes back as one polynomial");
+        imported.Polynomial!.Monomials.Should().HaveCount(6, "all six elements are summed");
+        foreach (var monomial in imported.Polynomial.Monomials) {
+            monomial.Coefficient.ToDouble().Should().Be(1.0, "each element enters exactly once");
+        }
+    }
+
+    /// <summary>**越界的轴被拒绝，且消息里点名秩** / An out-of-range axis is refused, naming the rank.</summary>
+    [Fact]
+    public void AReduceSumWithABadAxis_ShouldBeRefused() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            ReduceSumModelBytes(axes: new long[] { 5 }, keepdims: 1),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] {
+                    new RealVar("x0"), new RealVar("x1"), new RealVar("x2"),
+                    new RealVar("x3"), new RealVar("x4"), new RealVar("x5"),
+                },
+            });
+
+        imported.IsOk.Should().BeFalse("axis 5 does not exist on a rank-2 tensor");
+        imported.Failure.Should().Contain("秩");
+    }
+
+    /// <summary>**纯仿射图里的多元素输入被默认入口拒绝，消息指向 `inputBindings`** / A multi-element input in a pure affine graph is refused by the default entry, pointing at inputBindings.</summary>
+    /// <remarks>
+    /// **规则只落在仿射链上，因为它描述的正是仿射链的局限：** **形状算子与控制流那条路径有自己的拒绝（缺元素列表、多元素输出），** '
+    /// **在那里再拦一次只会把更有信息量的消息换成一句笼统的。** **这一条钉的是"拒绝发生在 bindings 阶段且点名 `inputBindings`"。**
+    ///
+    /// **The rule lands on the affine chain only, because it describes that chain's limitation: the shape-operator and control-flow path has its own refusals (missing element lists,
+    /// multi-element outputs), and stopping it there would replace a more informative message with a generic one.** **This criterion pins "the refusal happens at the bindings stage and
+    /// names inputBindings".**
+    /// </remarks>
+    [Fact]
+    public void AMultiElementAffineInput_ShouldBeRefusedAtBindings() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            WideAddModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["y"] = new OnnxBounds(-1.0, 1.0),
+                }));
+
+        imported.IsOk.Should().BeFalse();
+        imported.Stage.Should().Be("bindings");
+        imported.Failure.Should().Contain("inputBindings");
+    }
+
+    /// <summary>**同一个模型给了符号列表就能导入** / The same model imports once the symbols are supplied.</summary>
+    [Fact]
+    public void AMultiElementAffineInput_ShouldImportWithBindings() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            WideAddModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["y"] = new OnnxBounds(-1.0, 1.0),
+                }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0"), new RealVar("x1"), new RealVar("x2") },
+                ["y"] = new[] { new RealVar("y0"), new RealVar("y1"), new RealVar("y2") },
+            });
+
+        imported.IsOk.Should().BeTrue(imported.Failure);
+        imported.OutputElements.Should().HaveCount(3, "the same graph, given symbols, keeps its elements");
+    }
+
+    /// <summary>**同一个模型：Linear 模式拒绝、Quadratic 模式导入** / The same model is refused in Linear mode and imports in Quadratic mode.</summary>
+    /// <remarks>
+    /// **两种模式各说各话，但都说真话：** **Linear 模式的拒绝消息点名 `OnnxImportMode.Quadratic`，** **而 Quadratic 模式交回二次项。** '
+    /// **若 Linear 模式悄悄给出一次结果，模型照常求解而二次项不见了——** **那是这一批要消灭的错法。**
+    ///
+    /// **The two modes each say their own thing and both say the truth: the linear refusal names OnnxImportMode.Quadratic, and quadratic mode hands back the second-degree terms.** If linear mode
+    /// quietly produced a first-degree result, the model would still solve with the quadratic terms gone — **the failure this batch exists to remove.**
+    /// </remarks>
+    [Fact]
+    public void AMatMulBetweenTwoSymbols_ShouldNeedQuadraticMode() {
+        OnnxImporter.Imported linear = OnnxImporter.Import(
+            SymbolicMatMulModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["w"] = new OnnxBounds(-1.0, 1.0),
+                }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0"), new RealVar("x1") },
+                ["w"] = new[] { new RealVar("w0"), new RealVar("w1") },
+            });
+
+        // 拒绝发生在 `operators` 阶段：** `MatMul` 登记为二阶，前置检查按阶数先拒——** '
+        // **消息说的是"需要 2 阶而模式只允许 1 阶"，那正是"该换 Quadratic 模式"的意思。**
+        //
+        // The refusal happens at the operators stage: **MatMul is registered as second degree and preflight refuses on degree first —** the message says "needs degree 2 while the mode allows 1",
+        // which is exactly "switch to Quadratic mode".
+        linear.IsOk.Should().BeFalse();
+        linear.Stage.Should().Be("operators");
+        linear.Failure.Should().Contain("阶");
+
+        OnnxImporter.Imported quadratic = OnnxImporter.Import(
+            SymbolicMatMulModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Quadratic,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["w"] = new OnnxBounds(-1.0, 1.0),
+                }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0"), new RealVar("x1") },
+                ["w"] = new[] { new RealVar("w0"), new RealVar("w1") },
+            });
+
+        quadratic.IsOk.Should().BeTrue(quadratic.Failure);
+        quadratic.OutputQuadraticElements.Should().HaveCount(1, "a [1,2] times a [2,1] is one element");
+        quadratic.OutputQuadraticElements![0].Monomials.Should().HaveCount(2, "x0·w0 and x1·w1");
+        quadratic.Polynomial.Should().BeNull("a quadratic result has no single linear form");
+    }
+
+    /// <summary>**二次域的绑定不能喂给一次域算子** / A second-degree binding cannot feed a first-degree operator.</summary>
+    [Fact]
+    public void AQuadraticIntoALinearOperator_ShouldBeRefused() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            SymbolicMatMulThenNegModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Quadratic,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["w"] = new OnnxBounds(-1.0, 1.0),
+                }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0"), new RealVar("x1") },
+                ["w"] = new[] { new RealVar("w0"), new RealVar("w1") },
+            });
+
+        imported.IsOk.Should().BeFalse("Neg only holds first-degree forms");
+        imported.Stage.Should().Be("evaluate");
+        imported.Failure.Should().Contain("二次域");
+    }
+
+    /// <summary>**两侧含变量的 `Gemm` 在 Quadratic 模式下导入** / A Gemm with variables on both sides imports in Quadratic mode.</summary>
+    /// <remarks>
+    /// **这是"带符号权重与符号偏置的全连接层"能导入这件事本身：** **`Gemm(x, w, c)` 得 `w·x + c`，** '
+    /// **其中 `w·x` 是二次项、`c` 是一次项——** **两者在二次域里共存，而一次域里根本没有它们的和的位置。**
+    ///
+    /// **This is "a fully connected layer with symbolic weights and a symbolic bias" importing itself: Gemm(x, w, c) gives w·x + c, where w·x is quadratic and c linear —** they coexist in the
+    /// second-degree domain, and the first-degree domain has no room for their sum.
+    /// </remarks>
+    [Fact]
+    public void ASymbolicGemm_ShouldImportInQuadraticMode() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            SymbolicGemmModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Quadratic,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["w"] = new OnnxBounds(-1.0, 1.0),
+                    ["c"] = new OnnxBounds(-1.0, 1.0),
+                }),
+            new Dictionary<string, IReadOnlyList<RealVar>> {
+                ["x"] = new[] { new RealVar("x0") },
+                ["w"] = new[] { new RealVar("w0") },
+                ["c"] = new[] { new RealVar("c0") },
+            });
+
+        imported.IsOk.Should().BeTrue(imported.Failure);
+        imported.OutputQuadraticElements.Should().HaveCount(1);
+        imported.OutputQuadraticElements![0].Monomials.Should().HaveCount(2, "w0·x0 plus the linear c0");
+    }
+
     // ---- 手工编码的模型 ----
 
     private static OnnxImporter.Imported ImportModel(float condition, bool conditionIsInitializer = true, int elseOutputs = 1) {
@@ -658,6 +915,118 @@ public class OnnxControlFlowImportTests
             BytesField(11, ValueInfo2("x", 3)),
             BytesField(11, ValueInfo2("y", 3)),
             BytesField(12, ValueInfo("out")))));
+
+    // `W` 是单位矩阵、`B = [1,2]`；结果应为 [x0+1, x1+2]。
+    private static byte[] GemmModelBytes() => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("Gemm", new[] { "x", "W", "B" }, "y"),
+            StringField(2, "g"),
+            BytesField(5, TensorBytes("W", new long[] { 2, 2 }, new[] { 1f, 0f, 0f, 1f })),
+            BytesField(5, TensorBytes("B", new long[] { 2 }, new[] { 1f, 2f })),
+            BytesField(11, ValueInfo2("x", 1, 2)),
+            BytesField(12, ValueInfo2("y", 1, 2)))));
+
+    // 权重是图输入：乘积二次，必须拒绝。
+    private static byte[] GemmWithSymbolicWeightModelBytes() => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("Gemm", new[] { "x", "w" }, "y"),
+            StringField(2, "g"),
+            BytesField(11, ValueInfo2("x", 1, 2)),
+            BytesField(11, ValueInfo2("w", 2, 1)),
+            BytesField(12, ValueInfo2("y", 1, 1)))));
+
+    private static byte[] ReduceSumModelBytes(long[] axes, long keepdims) => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("ReduceSum", new[] { "x" }, "y", BytesField(5, IntsAttribute("axes", axes)), BytesField(5, IntAttribute("keepdims", keepdims))),
+            StringField(2, "g"),
+            BytesField(11, ValueInfo2("x", 2, 3)),
+            BytesField(12, ValueInfo("y")))));
+
+    private static byte[] IntsAttribute(string name, long[] values) =>
+        Concat(StringField(1, name), PackedVarintField(8, values), VarintField(20, 7));
+
+    private static byte[] IntAttribute(string name, long value) =>
+        Concat(StringField(1, name), VarintField(3, value), VarintField(20, 2));
+
+    // x[1,2] · w[2,1]，两侧都是符号。
+    private static byte[] SymbolicMatMulModelBytes() => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("MatMul", new[] { "x", "w" }, "y"),
+            StringField(2, "g"),
+            BytesField(11, ValueInfo2("x", 1, 2)),
+            BytesField(11, ValueInfo2("w", 2, 1)),
+            BytesField(12, ValueInfo2("y", 1, 1)))));
+
+    // 同上，但结果再过一个一次域算子 `Neg`。
+    private static byte[] SymbolicMatMulThenNegModelBytes() => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("MatMul", new[] { "x", "w" }, "t"),
+            Node("Neg", new[] { "t" }, "y"),
+            StringField(2, "g"),
+            BytesField(11, ValueInfo2("x", 1, 2)),
+            BytesField(11, ValueInfo2("w", 2, 1)),
+            BytesField(12, ValueInfo2("y", 1, 1)))));
+
+    // x[1,1] · w[1,1] + c[1,1]，三者都是符号。
+    private static byte[] SymbolicGemmModelBytes() => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("Gemm", new[] { "x", "w", "c" }, "y"),
+            StringField(2, "g"),
+            BytesField(11, ValueInfo2("x", 1, 1)),
+            BytesField(11, ValueInfo2("w", 1, 1)),
+            BytesField(11, ValueInfo2("c", 1, 1)),
+            BytesField(12, ValueInfo2("y", 1, 1)))));
+
+    private static byte[] TensorBytes(string name, long[] dims, float[] values) {
+        var parts = new List<byte[]> {
+            PackedVarintField(1, dims),
+            VarintField(2, 1),
+            PackedFloatField(4, values),
+            StringField(8, name),
+        };
+        return Concat(parts.ToArray());
+    }
+
+    private static byte[] PackedVarintField(int field, long[] values) {
+        var payload = new List<byte>();
+        foreach (long value in values) {
+            payload.AddRange(Varint((ulong)value));
+        }
+        return BytesField(field, payload.ToArray());
+    }
+
+    private static byte[] PackedFloatField(int field, float[] values) {
+        var payload = new List<byte>();
+        foreach (float value in values) {
+            payload.AddRange(BitConverter.GetBytes(value));
+        }
+        return BytesField(field, payload.ToArray());
+    }
+
+    private static string Expression(Fuookami.Ospf.Math.Symbol.Polynomial.LinearPolynomial<Flt64> polynomial) {
+        var parts = new List<string>();
+        foreach (var monomial in polynomial.Monomials) {
+            double coefficient = monomial.Coefficient.ToDouble();
+            parts.Add(coefficient == 1.0 ? monomial.Symbol.Name : coefficient + monomial.Symbol.Name);
+        }
+        double constant = polynomial.Constant.ToDouble();
+        if (constant != 0.0) {
+            parts.Add(constant.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        }
+        return string.Join("+", parts);
+    }
 
     private static byte[] PlainModelBytes() => Concat(
         VarintField(1, 8),
