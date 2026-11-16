@@ -47,28 +47,6 @@ public sealed class PackagingMetadataTests
     }
 
     /// <summary>
-    /// **版本号与能力文档一致** / The version matches the capability document.
-    /// </summary>
-    /// <remarks>
-    /// 版本号跟能力文档走，不跟本仓的心情走。文档里记着它跟到哪一版，这里要求两边**同一个数**。
-    ///
-    /// The version follows the capability document, not this repo's mood. The document records the version it tracks, and this criterion requires the **same number**
-    /// in both places.
-    /// </remarks>
-    [Fact]
-    public void TheVersion_ShouldMatchTheBaselineRecordedInTheCapabilityDocument() {
-        string props = ReadRepositoryFile("Directory.Build.props");
-        Match declared = Regex.Match(props, "<Version>([^<]+)</Version>");
-        declared.Success.Should().BeTrue("the version must be declared explicitly, not left to the 1.0.0 default");
-
-        string status = ReadRepositoryFile(Path.Combine("docs", "kotlin-capability-matrix.md"));
-
-        status.Should().Contain(declared.Groups[1].Value,
-            "the capability document records which baseline version this port tracks; a version that appears in only one of the two places is a lie in the other");
-    }
-
-
-    /// <summary>
     /// **可执行工程不发布** / The executable projects are not published.
     /// </summary>
     /// <remarks>
@@ -136,7 +114,6 @@ public sealed class PackagingMetadataTests
 
         offenders.Should().BeEmpty("a published package must carry the product prefix; otherwise it is indistinguishable from a scratch artifact");
     }
-
 
     /// <summary>
     /// **不许有 prerelease 依赖** / No prerelease dependencies.

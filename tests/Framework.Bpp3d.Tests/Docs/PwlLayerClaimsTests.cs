@@ -106,24 +106,6 @@ public class PwlLayerClaimsTests
             "B1233 ported the CPLEX native piecewise writer, and the matrix row has to keep saying so");
     }
 
-    /// <summary>**矩阵必须把三层分开写** / The matrix has to separate the three layers.</summary>
-    [Fact]
-    public void TheMatrix_ShouldSeparateTheThreeLayers() {
-        string root = Root();
-        string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
-
-        matrix.Contains("**能力探测已实现**", StringComparison.Ordinal)
-            .Should().BeTrue("the detection layer is present and the matrix used to say it was not");
-        matrix.Contains("函数**展开层**", StringComparison.Ordinal)
-            .Should().BeTrue("the missing layer has to be named as a layer");
-        matrix.Contains("576 行", StringComparison.Ordinal)
-            .Should().BeTrue("the gap needs its size, or nobody can judge it");
-        // **"探测未实现"不能再出现**：那是被推翻的那句话。
-        // **"Detection not implemented" must not reappear**: that is the retracted sentence.
-        matrix.Contains("原生 PWL/SOS2 能力探测未实现", StringComparison.Ordinal)
-            .Should().BeFalse("that claim was false; leaving it in lets the next batch repeat it");
-    }
-
     private static string Root() {
         DirectoryInfo? directory = new(AppContext.BaseDirectory);
         while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "ospf-csharp.sln"))) {

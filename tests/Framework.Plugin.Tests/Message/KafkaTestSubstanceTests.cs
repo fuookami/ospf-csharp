@@ -93,34 +93,6 @@ public class KafkaTestSubstanceTests
             + "so that it gets rewritten into a behavioural one");
     }
 
-    /// <summary>
-    /// **矩阵那一行必须同时说出这两层** / The matrix row must name both layers.
-    /// </summary>
-    /// <remarks>
-    /// **"没有 broker 往返测试"与"8 条判据全是成员存在性检查"是两层不同的缺口，
-    /// 而后者才是让前者看起来已经补上的原因。**
-    ///
-    /// **这一条同时钉住矩阵、测试文件与判据三者的对应关系——
-    /// 因为一旦三者只剩两者，读者就无法判断自己看到的绿灯意味着什么。**
-    ///
-    /// **"No broker round trip" and "all 8 criteria are existence checks" are two different gaps, and the second is what makes
-    /// the first look covered.** **This pins the correspondence among the matrix, the test file and the criterion — with only
-    /// two of the three, a reader cannot tell what a green light means.**
-    /// </remarks>
-    [Fact]
-    public void TheMatrixRow_ShouldNameBothLayers() {
-        string row = File
-            .ReadAllLines(System.IO.Path.Combine(RepositoryRoot(), "docs/kotlin-capability-matrix.md"))
-            .First(static line => line.StartsWith("| 消息插件（Kafka）", StringComparison.Ordinal));
-
-        row.Should().Contain(
-            "没有真实 broker 往返测试",
-            "the known gap must stay stated");
-        row.Should().Contain(
-            "成员存在性",
-            "and the worse gap — that the existing 8 criteria prove nothing about behaviour — must be stated too");
-    }
-
     private static string RepositoryRoot() {
         DirectoryInfo? current = new(AppContext.BaseDirectory);
         while (current is not null) {

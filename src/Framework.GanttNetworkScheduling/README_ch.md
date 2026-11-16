@@ -39,7 +39,7 @@ Framework.NetworkScheduling.csproj → Framework.GanttScheduling.csproj
 
 Demo4 的 `FlightTaskBunchGenerator` **没有**用这个桥接——它跑自己那 248 行标签搜索。
 这是有意的结构选择，不是漏调用；它无法验证结果一致，所以只记录、不重写。
-见 `docs/kotlin-capability-matrix.md`。
+
 
 ## 验证
 

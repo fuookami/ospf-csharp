@@ -33,11 +33,11 @@ It belongs to the [ospf](https://github.com/fuookami/ospf) family and keeps the 
 | `Fuookami.Ospf.Benchmark` | BenchmarkDotNet benchmarks (54 benchmarks in 12 classes) | ✅ Complete |
 | `Fuookami.Ospf.Starters.*` | NuGet metapackages (Core, Bpp3d, Csp1d, Framework, GanttScheduling) | ✅ Complete |
 
-The status column is a snapshot; what this repository provides today is tracked in [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md).
+The status column says what each module provides today; the tests in `tests/` pin the behaviour.
 
 ## Architecture
 
-Current capability status is tracked in [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md).
+Each module README says what that module provides and where it deliberately differs.
 
 The framework follows a layered architecture:
 
@@ -113,28 +113,6 @@ The run entry point is `BenchmarkRunOptions`, which parses the arguments and for
 `--dataset` only labels the output, it does not change the workload. Saying otherwise would be a false
 performance claim, and this repository does not make one.
 
-### Benchmark trend comparison
-
-`scripts/compare-benchmark-results.ps1` compares two BenchmarkDotNet JSON files and writes a Markdown
-trend report (delta, sample counts, unit changes, benchmarks that appeared or disappeared):
-
-```powershell
-pwsh -File scripts/compare-benchmark-results.ps1 `
-  -Baseline results/baseline-small.json `
-  -Current results/current-small.json
-```
-
-With the `baseline-<dataset>.json` / `current-<dataset>.json` naming the report is written to
-`trend-<dataset>.md` next to the current file; directory mode (`-ResultsDir [-Dataset]`) pairs the files
-automatically. The report is **report-only**: benchmark scores are machine-sensitive, so there is no
-performance gate.
-
-Self-check for the script itself:
-
-```powershell
-pwsh -File scripts/test-compare-benchmark-results.ps1
-```
-
 ## Verification
 
 ```bash
@@ -159,7 +137,7 @@ What this repository does **not** claim:
   `SerializedSolution`, `RemoteTaskSubmitRequest`, and the `configuration` / `sha256` digest.
 - **No "file count parity" claim.** A module existing is not the same as its capabilities existing; the
   capability map is the authority, not the project list.
-- Known gaps (listed in `docs/kotlin-capability-matrix.md`) include: `Framework.Bpp1d` is present but
+- Known gaps include: `Framework.Bpp1d` is present but
   `PatternColumnBenchmark` has no implementation here; `Infra.Item.Weight` is carried but takes part in no
   constraint; PWL diagnostics and the shape-DTO cache are not implemented; Demo5 module READMEs are still missing.
 

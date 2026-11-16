@@ -31,7 +31,7 @@ public class RemoteFixtureProvenanceTests {
     /// <summary>四份 fixture 的固定哈希 / The pinned hashes of the four fixtures.</summary>
     /// <remarks>
     /// 实测来源：`git -C D:/workspace/ospf/ospf-kotlin cat-file -p 12fdb587:ospf-kotlin-framework/src/test/resources/fixtures/<name>`
-    /// 与本地文件逐字节比对（`python logs/b951-fixtures.py`）。**四个都 SAME。**
+    /// 与本地文件逐字节比对。**四个都 SAME。**
     ///
     /// Measured by comparing `git cat-file` output at `12fdb587` against the local files; **all four are identical.**
     /// </remarks>

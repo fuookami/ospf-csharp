@@ -71,51 +71,6 @@ public class CrossLanguageFixtureCorpusTests
         new FileInfo(path).Length.Should().Be(1555, "row 4.8 states 1555 bytes; a different length means the fixture changed and the row is stale");
     }
 
-    /// <summary>**矩阵写的是六份，不是三处** / The matrix says six fixtures, not three pieces.</summary>
-    [Fact]
-    public void TheMatrix_ShouldCountTheFixturesCorrectly() {
-        string root = Root();
-        string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
-
-        matrix.Contains("六份夹具逐字节相同", StringComparison.Ordinal)
-            .Should().BeTrue("the heading has to state what was measured, not the smaller subset somebody remembered");
-        // **只看标题行**：更正说明里引用了旧标题，全表查会把它当成"还在"。
-        // **Check the heading line only**: the correction note quotes the old heading, and a whole-file search would read that as "still there".
-        string heading = matrix.Split('\n')
-            .FirstOrDefault(line => line.StartsWith("## 七、", StringComparison.Ordinal))
-            ?? throw new InvalidOperationException("section seven heading not found");
-        heading.Contains("只有这三处实测", StringComparison.Ordinal)
-            .Should().BeFalse("that heading understated the evidence; B958 replaced it");
-        // **两份新增钉的哈希要在表里**：只写"六份"而不列，下一个人还得再数一遍。
-        // **Both new hashes have to be in the table**: saying "six" without listing them makes the next reader count again.
-        matrix.Contains("8c252e592cfa26cb", StringComparison.Ordinal).Should().BeTrue("the checkpoint envelope's hash is now pinned");
-        matrix.Contains("6eaffdfbdbbb8521", StringComparison.Ordinal).Should().BeTrue("and the wire contract table's too");
-    }
-
-    /// <summary>**缺的那两个文件仍然写着缺** / The two absent files are still stated as absent.</summary>
-    /// <remarks>
-    /// 第七节现在六份里有两份是 ✅ 新增的，容易让人以为"analysis 那两块也补上了"。
-    /// **`analysis-contract.tsv` 与 `analysis-cases.tsv` 不在那六份里**——它们根本不存在。
-    ///
-    /// Section seven now has two newly ✅ rows, which easily reads as "the analysis pieces were filled in too". **`analysis-contract.tsv` and `analysis-cases.tsv` are not
-    /// among the six** — they do not exist at all.
-    /// </remarks>
-    [Fact]
-    public void TheAnalysisContract_ShouldStillBeNamedAsMissing() {
-        string root = Root();
-        string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
-
-        string section = matrix.Substring(matrix.IndexOf("## 七、", StringComparison.Ordinal));
-        section.Should().Contain("analysis-contract.tsv", "the missing contract stays visible next to the six that are present");
-        section.Should().Contain("本仓连文件都没有", "and it is stated as absent, not as partial");
-
-        // **而它确实不在**：文档说缺，文件就得真缺。
-        // **And it really is absent**: if the document says missing, missing it must be.
-        string fixtures = Path.Combine(root, "tests", "Core.Tests", "Fixtures", "analysis-fixtures");
-        File.Exists(Path.Combine(fixtures, "analysis-contract.tsv")).Should().BeFalse();
-        File.Exists(Path.Combine(fixtures, "analysis-cases.tsv")).Should().BeFalse();
-    }
-
     private static string FileHashPrefix(string path) {
         using FileStream stream = File.OpenRead(path);
         byte[] hash = SHA256.HashData(stream);

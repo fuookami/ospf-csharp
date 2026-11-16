@@ -31,7 +31,7 @@ public class MySqlRoundTripIntegrationTest
 {
     private static string ConnectionString =>
         Environment.GetEnvironmentVariable("OSPF_TEST_MYSQL_CONN")
-        ?? throw new InvalidOperationException("OSPF_TEST_MYSQL_CONN is not set; see the run instruction in logs/kotlin-sync-plan.md");
+        ?? throw new InvalidOperationException("OSPF_TEST_MYSQL_CONN is not set; export it to run the MySQL round-trip test");
 
     /// <summary>入口能连上：真实执行一次 `SELECT 1` / The entry point connects: it really runs `SELECT 1`.</summary>
     [Fact]

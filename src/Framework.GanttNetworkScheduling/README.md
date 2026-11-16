@@ -40,7 +40,7 @@ read a search that **might still have better columns** as "definitely none".
 
 Demo4's `FlightTaskBunchGenerator` does **not** use this bridge — it runs its own 248-line label search.
 That is a deliberate structural choice, not a missing call, and it cannot be verified for result
-equivalence, so it is recorded rather than rewritten. See `docs/kotlin-capability-matrix.md`.
+equivalence, so it is recorded rather than rewritten.
 
 ## Verification
 

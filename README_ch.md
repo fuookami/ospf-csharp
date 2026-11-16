@@ -33,11 +33,11 @@ ospf-csharp 是 [ospf](https://github.com/fuookami/ospf) 的 C# / .NET 10 实现
 | `Fuookami.Ospf.Benchmark` | BenchmarkDotNet 基准测试（12 个基准类、54 个基准） | ✅ 完成 |
 | `Fuookami.Ospf.Starters.*` | NuGet 元包（Core、Bpp3d、Csp1d、Framework、GanttScheduling） | ✅ 完成 |
 
-表中状态是一份快照；本仓当前提供什么，以 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md) 为准。
+表中的状态就是各模块今天提供的东西；行为由 `tests/` 里的判据钉住。
 
 ## 架构
 
-当前能力状态见 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md)。
+各模块 README 说明该模块提供什么、在哪里有意不同。
 
 框架采用分层架构：
 
@@ -106,27 +106,6 @@ dotnet run -c Release --project src/Benchmark -- \
 **规模由基准类固定**：`[Params]` 是编译期常量，`--dataset` 只影响输出命名，不改变负载。
 说成"能改规模"就是没有实测支撑的性能主张，本仓库不作这种主张。
 
-### 基准趋势对比
-
-`scripts/compare-benchmark-results.ps1` 对比两个 BenchmarkDotNet JSON 结果并产出 Markdown 趋势报告
-（差值、样本数、单位变化、新增/消失的基准）：
-
-```powershell
-pwsh -File scripts/compare-benchmark-results.ps1 `
-  -Baseline results/baseline-small.json `
-  -Current results/current-small.json
-```
-
-按 `baseline-<dataset>.json` / `current-<dataset>.json` 命名时，报告默认写到当前文件同目录的
-`trend-<dataset>.md`；目录模式（`-ResultsDir [-Dataset]`）自动配对。报告**只报告不设门槛**：
-基准分数对机器敏感，因此没有性能硬门槛。
-
-脚本自身的自检：
-
-```powershell
-pwsh -File scripts/test-compare-benchmark-results.ps1
-```
-
 ## 验证
 
 ```bash
@@ -149,7 +128,7 @@ dotnet test ospf-csharp.sln -c Release --no-build
 - **没有通用互通主张。** 跨语言验证只做过三处：`SerializedSolution`、`RemoteTaskSubmitRequest`、
   `configuration` / `sha256` 摘要。
 - **没有"文件数对齐"主张。** 模块存在不等于能力存在；以能力矩阵为准，不以项目清单为准。
-- 已知缺口（列在 `docs/kotlin-capability-matrix.md` 里）包括：
+- 已知缺口包括：
   本仓库**根本没有 `Framework.Bpp1d` 项目**，故 `PatternColumnBenchmark` 没有对应实现；`Infra.Item.Weight`
   只透传不参与任何约束；PWL 诊断与形状 DTO 缓存未实现；Demo5 各模块 README 仍缺。
 

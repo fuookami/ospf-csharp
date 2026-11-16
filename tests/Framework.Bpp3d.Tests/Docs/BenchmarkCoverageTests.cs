@@ -23,51 +23,6 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// </remarks>
 public class BenchmarkCoverageTests
 {
-    /// <summary>15 个工作负载，本仓一个都不能少 / All 15 reference workloads must exist here.</summary>
-    /// <remarks>
-    /// 名字取自参考清单（去扩展名），本仓的类名与之一致——**这本身就是一种对照**：改了名字就该有人问为什么。
-    ///
-    /// The names come from the reference list (extension stripped) and this repo's classes match them — **that is itself a check**: a rename should raise a question.
-    /// </remarks>
-    /// <summary>
-    /// **还没实现的 5 个新工作负载必须被点名声明** / No workload from 19c72455 may remain unimplemented.
-    /// </summary>
-    /// <remarks>
-    /// **`19c72455` 的 6 个新基准已经全部实现；`CrossVersionSemanticDump` 的三段（`PRJ`／`GEN`／`TRUNC`）仍是待办，必须写在能力矩阵里。**
-    /// **"没有数"与"数过了但还没实现"是两件事：后者会在下一个人读到它时被安排，前者只会被当成不存在。**
-    ///
-    /// **判据只读文档，不要求代码在场**——所以它不会因为"还没实现"而红，只会因为"没写下来"而红。
-    ///
-    /// **Of the six new benchmarks in `19c72455` one is implemented; the other five must be named in the capability matrix.** **"Never
-    /// counted" and "counted but not implemented" are different states: the second gets scheduled when someone reads it, the first is simply
-    /// absent.** **The criterion reads the document only, so it reddens for "not written down", never for "not implemented yet".**
-    /// </remarks>
-    [Fact]
-    public void TheUnportedNewWorkloads_ShouldBeNamedInTheMatrix() {
-        string root = Root();
-        string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
-
-        // **6 个新工作负载已经全部有文件了，所以"未实现清单"必须为空。** **矩阵仍要写明
-        // `CrossVersionSemanticDump` 的三段是待办（`PRJ`／`GEN`／`TRUNC`）——**"基准文件在"与
-        // "转储段全在"是两件事，混起来就是这里差点犯的错。**
-        //
-        // **all six new workloads now have files, so the unimplemented list must be empty.** **The matrix still has to name the three deferred
-        // sections of `CrossVersionSemanticDump` — "the benchmark file exists" and "every dump section exists" are different claims, and conflating
-        // them is exactly the mistake nearly made.**
-        string[] unported = System.Array.Empty<string>();
-        unported.Should().BeEmpty("all six workloads from 19c72455 now have a benchmark file");
-
-        // **六段全部齐备，矩阵也写清了每一段靠哪个入口。** **这里仍然点名三段——**因为一个"六段齐备"的结论
-        // 必须能说出那三段的名字，否则它和"我数了一下"没有区别。**
-        //
-        // **all six sections are in, and the matrix states the entry point behind each.** **The three are still named here because a "six sections
-        // complete" claim has to be able to name them, otherwise it is indistinguishable from "I counted".**
-        matrix.Should().Contain(
-            "PRJ",
-            "each dump section must be named in the matrix; a conclusion that all six are complete has to be able to list them");
-        matrix.Should().Contain("GEN", "the generation section must be named");
-        matrix.Should().Contain("TRUNC", "the truncated-load section must be named");
-    }
 
     [Fact]
     public void EveryBaselineWorkload_ShouldExistHere() {

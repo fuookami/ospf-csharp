@@ -28,7 +28,7 @@ Demo4 未注册束成本管线。**这些记录没有重新核实过**，因此�
 因为 `Framework.NetworkScheduling` 本来就引用本模块。
 
 Demo4 的 `FlightTaskBunchGenerator` 用的是自己手写的标签搜索，不是共享的路径搜索内核。
-这是**有意的结构选择，不是漏调用**——见 `docs/kotlin-capability-matrix.md`。
+这是**有意的结构选择，不是漏调用**。
 
 ## 验证
 

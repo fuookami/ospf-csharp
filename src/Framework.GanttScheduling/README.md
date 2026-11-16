@@ -32,7 +32,7 @@ The `Framework.GanttNetworkScheduling` bridge is a separate project, because
 
 Demo4's `FlightTaskBunchGenerator` runs its own hand-written label search rather than the shared path
 search kernel. That is a **deliberate structural choice, not a missing call** — see
-`docs/kotlin-capability-matrix.md`.
+
 
 ## Verification
 

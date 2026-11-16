@@ -49,20 +49,6 @@ public class NameBasedGapMethodTests
         }
     }
 
-    /// <summary>**矩阵把误报率写出来了** / The matrix states the false-positive rate.</summary>
-    [Fact]
-    public void TheMatrix_ShouldStateTheFalsePositiveRate() {
-        string root = Root();
-        string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
-
-        matrix.Contains("98.9%", StringComparison.Ordinal)
-            .Should().BeTrue("a measured rate is what turns 觉得不可靠 into 一条判据");
-        matrix.Contains("名字对不上", StringComparison.Ordinal)
-            .Should().BeTrue("the sentence that names the mistake has to be there");
-        matrix.Contains("91 个", StringComparison.Ordinal)
-            .Should().BeTrue("and the raw count, so the rate can be recomputed");
-    }
-
     /// <summary>**补上的那个入口真的在，且真的是后序** / The one real gap is filled, in post-order.</summary>
     /// <remarks>
     /// 判据落在**源码里有这个文件**，语义落在 `ExpressionTransformTests` 的六条——**文档不该替测试下语义结论**。

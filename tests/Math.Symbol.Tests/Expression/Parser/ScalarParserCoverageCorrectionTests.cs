@@ -85,35 +85,6 @@ public class ScalarParserCoverageCorrectionTests
             .Should().BeNull("the OrNull entry point returns null on invalid input, as its name promises");
     }
 
-    /// <summary>
-    /// **那一格现在说的是实话** / That cell now tells the truth.
-    /// </summary>
-    /// <remarks>
-    /// **这条钉住矩阵：那一行必须写上"已实现"与三个入口，而不是"无"。**
-    /// **同时它必须在路径上也正确——因为把路径写错正是这次错误的来源。**
-    ///
-    /// **This pins the matrix: the row must say "implemented" with the three entry points instead of "none", and it must be right
-    /// about the path, since the wrong path is precisely where this error came from.**
-    /// </remarks>
-    [Fact]
-    public void TheMatrixCell_ShouldSayPortedWithTheRealPath() {
-        string matrix = File.ReadAllText(System.IO.Path.Combine(
-            RepositoryRoot(), "docs/kotlin-capability-matrix.md"));
-
-        // **判据钉的是"矩阵指得出实现文件在哪"，不是"矩阵抄了路径"。** '
-        // **能力要自解释：读者从矩阵就该找到本仓的实现，而不是先去另一个仓库里找对照。**
-        //
- // **The criterion pins "the matrix points at the implementation", not "the matrix copies the path".** A capability has to explain itself: a reader should reach this
-        // repo's implementation from the matrix without first looking something up elsewhere.
-        matrix.Should().Contain(
-            "src/Math/Symbol/Expression/Parser/ScalarExpressionParser.cs",
-            "the matrix has to name the file that implements the parser, so the cell is checkable on its own");
-
-        matrix.Should().NotContain(
-            "| `symbol/parse/ScalarParser.kt` |",
-            "a path that never existed invites the same 'not found, therefore absent' error");
-    }
-
     private static string RepositoryRoot() {
         DirectoryInfo? current = new(AppContext.BaseDirectory);
         while (current is not null) {

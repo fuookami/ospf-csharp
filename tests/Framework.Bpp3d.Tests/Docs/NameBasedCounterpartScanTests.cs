@@ -89,30 +89,6 @@ public class NameBasedCounterpartScanTests
         }
     }
 
-    /// <summary>
-    /// **扫描器给出的三个数字，都不该被引用** / None of the scan's three numbers should be cited.
-    /// </summary>
-    /// <remarks>
-    /// **这条不判断"133 对不对"，而是断言<b>矩阵与计划里不出现这三个当作结论的数字**。
-    ///
-    /// **它们唯一合法的位置是作为"方法失败的三次记录"出现，而那已经在</b><see cref="NameBasedCounterpartScanTests"/>
-    /// 的注释里。**
-    ///
-    /// **This does not judge whether 133 is right; it asserts the matrix and plan do not carry the three numbers <b>as
-    /// conclusions</b>. Their only legitimate place is as "three failures of one method", which is the remarks above.**
-    /// </remarks>
-    [Fact]
-    public void TheThreeNumbers_ShouldNotAppearAsConclusions() {
-        string root = RepositoryRoot();
-        string matrix = File.ReadAllText(System.IO.Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
-
-        foreach (string claim in new[] { "110 个类型缺", "155 个类型缺", "133 个类型缺" }) {
-            matrix.Should().NotContain(
-                claim,
-                "a name-matched count is not a count of missing capabilities; see this class's remarks");
-        }
-    }
-
     private static string RepositoryRoot() {
         DirectoryInfo? current = new(AppContext.BaseDirectory);
         while (current is not null) {
