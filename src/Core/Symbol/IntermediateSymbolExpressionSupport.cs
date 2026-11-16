@@ -7,6 +7,7 @@ using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Algebra.ValueRange;
 using Fuookami.Ospf.Math.Symbol;
+using Fuookami.Ospf.Math.Symbol.Inequality;
 using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 using Fuookami.Ospf.Utils.Error;
@@ -84,6 +85,50 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     /// <inheritdoc/>
     public bool Cached => false;
 
+    /// <summary>
+    /// 是否以中间变量实现（默认否）/ Whether the symbol is realized through an intermediate variable (default false).
+    /// </summary>
+    /// <remarks>
+    /// B1315 同步 Kotlin 2e72a17c：开启后，约束与目标引用一个辅助变量，另加一条 `aux == 定义式` 的等式约束，
+    /// 而不是把定义表达式原地展开到每处使用。须在符号加入模型之前设置。
+    ///
+    /// B1315 syncs Kotlin 2e72a17c: with this on, constraints and objectives reference an auxiliary variable plus one `aux == definition` equality instead of
+    /// inlining the definition at every use site. Set it before the symbol is added to a model.
+    /// </remarks>
+    public bool UseIntermediateVariable { get; set; }
+
+    /// <summary>辅助变量（惰性创建，跨转储稳定）/ The auxiliary variable, created lazily and stable across dumps.</summary>
+    /// <remarks>
+    /// ponytail: 辅助变量恒为连续变量，靠等式钉住取值；需要更紧的松弛时按 Category 改用整型变量。
+    /// ponytail: the auxiliary stays continuous and the equality pins its value; switch to an integer variable per Category for a tighter relaxation.
+    /// </remarks>
+    private readonly Lazy<RealVar> _realizationVariable;
+
+    /// <inheritdoc/>
+    public Fuookami.Ospf.Core.Variable.IVariableItem? IntermediateVariable =>
+        UseIntermediateVariable ? _realizationVariable.Value : null;
+    /// <summary>
+    /// `aux == 定义式` 的等式约束；未开启中间变量实现时为 null /
+    /// The `aux == definition` equality, or null when the switch is off.
+    /// </summary>
+    /// <remarks>
+    /// 返回约束而不是直接往模型里加：C# 模型没有"按符号类型注册其自身约束"的分派点（Kotlin 在 MechanismModel 里有），
+    /// 与其新造一条隐式副作用，不如把这一步显式交给调用方。
+    ///
+    /// A constraint is returned rather than added: the C# model has no dispatch point registering a symbol's own constraints (Kotlin has one inside
+    /// MechanismModel), and inventing an implicit side effect is worse than handing the step to the caller.
+    /// </remarks>
+    /// <returns>等式约束或 null / The equality constraint, or null.</returns>
+    public LinearInequality<Flt64>? RealizationConstraint() {
+        if (!UseIntermediateVariable) {
+            return null;
+        }
+        var lhs = new LinearPolynomial<Flt64>(
+            new[] { new LinearMonomial<Flt64>(Flt64.One, _realizationVariable.Value) },
+            Flt64.Zero);
+        return new LinearInequality<Flt64>(lhs, Polynomial, Comparison.EQ, Name: Name + "__realization");
+    }
+
     public LinearExpressionSymbol(
         MutableLinearPolynomial<Flt64> polynomial,
         Category? category = null,
@@ -91,6 +136,8 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
         string name = "",
         string? displayName = null) {
         _utilsPolynomial = polynomial;
+        _realizationVariable = new Lazy<RealVar>(() =>
+            new RealVar((string.IsNullOrEmpty(name) ? "expr" : name) + "__realization"));
         Category = category ?? LinearCategory.Instance;
         Parent = parent;
         Name = name;
@@ -287,6 +334,42 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
     public bool Discrete => false;
     public bool Cached => false;
 
+    /// <summary>是否以中间变量实现（默认否）/ Whether the symbol is realized through an intermediate variable (default false).</summary>
+    /// <remarks>
+    /// B1315 同步 Kotlin 2e72a17c，与 LinearExpressionSymbol 的同名开关一致；开启后用 RealizationConstraint 取回等式加入模型。
+    /// B1315 syncs Kotlin 2e72a17c, matching the switch on LinearExpressionSymbol; when on, take the equality from RealizationConstraint.
+    /// </remarks>
+    public bool UseIntermediateVariable { get; set; }
+
+    /// <summary>辅助变量（惰性创建，跨转储稳定）/ The auxiliary variable, created lazily and stable across dumps.</summary>
+    private readonly Lazy<RealVar> _realizationVariable;
+
+    /// <inheritdoc/>
+    public Fuookami.Ospf.Core.Variable.IVariableItem? IntermediateVariable =>
+        UseIntermediateVariable ? _realizationVariable.Value : null;
+
+    /// <summary>
+    /// `aux == 定义式` 的二次等式约束；未开启中间变量实现时为 null /
+    /// The quadratic `aux == definition` equality, or null when the switch is off.
+    /// </summary>
+    /// <remarks>
+    /// **与线性版同构，但左侧必须是二次多项式：** **把辅助变量包成 `QuadraticMonomial.Linear` 而不是直接塞进线性多项式，**
+    /// **否则这条等式在二次模型里会被当成"阶数不一致"而静默走另一条路径。**
+    ///
+    /// ** homologous to the linear version, with a quadratic left-hand side: the auxiliary is wrapped as `QuadraticMonomial.Linear` rather than pushed into a linear
+    /// polynomial, or the equality would look degree-mismatched in a quadratic model and silently take another path.**
+    /// </remarks>
+    /// <returns>二次等式约束或 null / The quadratic equality, or null.</returns>
+    public QuadraticInequalityOf<Flt64>? RealizationConstraint() {
+        if (!UseIntermediateVariable) {
+            return null;
+        }
+        var lhs = new QuadraticPolynomial<Flt64>(
+            new[] { QuadraticMonomial<Flt64>.Linear(Flt64.One, _realizationVariable.Value) },
+            Flt64.Zero);
+        return new QuadraticInequalityOf<Flt64>(lhs, Polynomial, Comparison.EQ, Name + "__realization");
+    }
+
     public QuadraticExpressionSymbol(
         MutableQuadraticPolynomial<Flt64> polynomial,
         Category? category = null,
@@ -294,6 +377,8 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
         string name = "",
         string? displayName = null) {
         _utilsPolynomial = polynomial;
+        _realizationVariable = new Lazy<RealVar>(() =>
+            new RealVar((string.IsNullOrEmpty(name) ? "expr" : name) + "__realization"));
         Category = category ?? QuadraticCategory.Instance;
         Parent = parent;
         Name = name;

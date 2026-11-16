@@ -29,6 +29,20 @@ public interface IIntermediateSymbol : ISymbol {
     new string? DisplayName { get; set; }
     /// <summary>全局唯一标识符 / Globally unique identifier.</summary>
     UInt64 Identifier { get; }
+
+    /// <summary>
+    /// 以中间变量实现本符号时使用的辅助变量；否则为 null /
+    /// The auxiliary variable realizing this symbol, or null when it is inlined.
+    /// </summary>
+    /// <remarks>
+    /// B1315 同步 Kotlin 2e72a17c：基线用 `val intermediateVariable: AbstractVariableItem（无泛型参数）? get() = null`
+    /// 给默认实现。C# 用默认接口成员等价地做到，**不必改几十个实现类**。
+    /// 非 null 时，约束与目标应引用该变量，而不是把符号定义原地展开。
+    ///
+    /// B1315 syncs Kotlin 2e72a17c, where the baseline gives a default `null`. C# gets the same effect with a default interface member and does not have to
+    /// touch dozens of implementers. When non-null, constraints and objectives reference this variable instead of inlining the definition.
+    /// </remarks>
+    Fuookami.Ospf.Core.Variable.IVariableItem? IntermediateVariable => null;
     /// <summary>在所属组合中的索引 / Index within owning combination.</summary>
     int Index { get; }
     /// <summary>父符号 / Parent symbol.</summary>
