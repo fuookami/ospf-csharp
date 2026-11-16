@@ -75,7 +75,7 @@ public record SolverConfig {
     ///
  /// ** adds the config item only; no solve entry reads it yet — wiring needs a path from
     /// `ILinearTriadModelView` to the policy, and that interface has no such member.** **Recorded here rather than left
-    /// blank, because it determines where the next batch starts.**
+    /// blank, because it determines where the next step starts.**
     /// </remarks>
     public FunctionExpansionPolicy FunctionExpansionPolicy { get; init; } = FunctionExpansionPolicy.Eager;
 

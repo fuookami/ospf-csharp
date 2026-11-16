@@ -9,19 +9,17 @@ Baseline: `ospf-kotlin-framework-bpp3d` at Kotlin `12fdb587`.
 
 ## Layout
 
-The baseline splits BPP3D into eight sub-modules. **This project does not mirror that split** —
-it has four directories, and the mapping is not one-to-one:
+Four directories, split by layer rather than by problem family:
 
-| Directory | Contains | Roughly corresponds to |
-| --- | --- | --- |
-| `Infra/` | Geometry primitives, placement types, renderer DTOs, shadow-price keys, solver-value adapters | `bpp3d-infrastructure` |
-| `Domain/` | Item/bin/layer models, layer assignment, layer generation, packing, block loading, BLA | `bpp3d-domain-*-context` (all six) |
-| `Application/` | Column-generation orchestration, configs, executors, solution enrichment | `bpp3d-application` |
-| `Framework.Bpp3d.csproj` | The single assembly | — |
+| Directory | Contains |
+| --- | --- |
+| `Infra/` | Geometry primitives, placement types, renderer DTOs, shadow-price keys, solver-value adapters |
+| `Domain/` | Item/bin/layer models, layer assignment, layer generation, packing, block loading, BLA |
+| `Application/` | Column-generation orchestration, configs, executors, solution enrichment |
+| `Framework.Bpp3d.csproj` | The single assembly |
 
-**Do not read the baseline's eight READMEs as a checklist against these four directories.** The split is
-different on purpose: C# keeps the domain contexts in one assembly so their types can reference each other
-without a project-per-context fan-out.
+The split is by layer on purpose: every domain context lives in one assembly, so their types can reference
+each other without a project-per-context fan-out.
 
 ## What is actually implemented
 
@@ -39,18 +37,18 @@ without a project-per-context fan-out.
 
 ## Three honest caveats
 
-**1. Constraints are pre-checks, not model constraints.** `BinCapacityConstraint` and `BinDepthConstraint`
-reject illegal data *before* the solver runs. The baseline adds a linear row to the `MetaModel` so the
-constraint participates in optimisation. Both refuse an overweight bin; they differ **in the optimisation
-result**. Do not describe them as equivalent.
+**1. Capacity constraints are pre-checks, not model constraints.** `BinCapacityConstraint` and
+`BinDepthConstraint` reject illegal data *before* the solver runs, so they never enter the `MetaModel` and
+never change the optimisation result. An overweight bin is refused either way; a model that expects the
+constraint to shape the packing has to add the row itself.
 
 **2. The shadow-price score counts items, not weight.** `Bpp3dShadowPriceScoring.ContributionOf` adds 1 per
-matching item. The baseline weights the contribution by the concrete `Bpp3dDemandValue` (amount value, or
-weight value). Weight-type demand therefore scores differently here.
+matching item, whatever the `Bpp3dDemandValue` carries. Weight-type demand therefore scores by headcount,
+not by kilogram.
 
-**3. No PWL volume path.** The baseline's `toSchema` uses `actualRadiusSquared` on the PWL path to remove
-approximation error. This project has no PWL volume path, and `SelectedRadiusOf` has no notion of "several
-results sharing a key are ambiguous, drop them".
+**3. There is no PWL volume path.** Piecewise-linear volume is not modelled, so `SelectedRadiusOf` has no
+notion of "several results sharing a key are ambiguous, drop them": a key collision yields one of the
+candidates, not a refusal.
 
 ## Verification
 

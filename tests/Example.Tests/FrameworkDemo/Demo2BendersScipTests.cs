@@ -138,7 +138,7 @@ public sealed class Demo2BendersScipTests
         //
         // **Measured : `benders_bindings=11;stage_variables=15`** — the binding channel **is open**, ruling out "the sub never receives the decisions". A **new
         // contradiction** surfaces at the same time: the single model has **11 rows**, the split reports **14 + 19 = 33** — three times the model, so "partition" is not a
-        // partition in the row sense; parts of the rows are copied or rebuilt. That is what the next batch measures.
+        // partition in the row sense; parts of the rows are copied or rebuilt. That is what the next step measures.
         // **实测：子问题的 19 行里没有一行与 `assignment_` 有关**——全是 `empty_between_cargo_*` 的线性化行，加 6 条变量界。
         // 于是"装载约束留在子问题"这句也要再更正：**装载约束不在子问题，也不在主问题里以"必须装载"的形式存在**——
         // 主问题只有形如 `assignment ≤ …` 的上界行，**零分配天然满足**。这才是"零分配可行"的原因。
@@ -222,7 +222,7 @@ public sealed class Demo2BendersScipTests
         //
         // **Measured : required cargo makes the master**proven infeasible**.** This is the first defect-level signal — but it may also be **a fixture that cannot fit**:
         // `LoadingAggregation` **drops the whole assignment column** when one item outweighs a position's capacity, so a required cargo that fits nowhere has an **unsatisfiable**
-        // `EQ` row. The two readings must be separated, and the next batch measures capacity first.
+        // `EQ` row. The two readings must be separated, and the next step measures capacity first.
         response.Succeed.Should().BeFalse();
         response.Assignments.Should().BeNull("a failing run must never carry assignments");
         // 已定性**：同一份请求走直连 MILP 也 `ORModelInfeasible` ⇒ **夹具装不下**，不是主问题缺陷（见 `TheRequiredSample_ShouldSayWhetherItFitsAtAll`）。
@@ -303,7 +303,7 @@ public sealed class Demo2BendersScipTests
         //
         // **Measured : relaxing each of the seven bounds one at a time makes **none** of them feasible** (all `DirectSolveFailed`). So the blocker is **not any bound**
         // but **structural**: two positions against three cargo, two of which carry `RequiresSeparation: true`. **Pin the negative result** — its whole value is "the bounds are
-        // not the cause", narrowing the next batch from seven fields to "positions and separation".
+        // not the cause", narrowing the next step from seven fields to "positions and separation".
         results.Should().HaveCount(relaxations.Length, "every relaxation must be measured, not skipped");
         results.Should().OnlyContain(result => !result.EndsWith("=Optimal", System.StringComparison.Ordinal),
             "measured: no single bound unblocks the required sample; the blocker is structural");

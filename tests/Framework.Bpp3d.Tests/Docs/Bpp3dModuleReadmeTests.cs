@@ -50,20 +50,20 @@ public sealed class Bpp3dModuleReadmeTests {
         ReadReadme("README_ch.md").Should().Contain("(README.md)");
     }
 
-    /// <summary>**必须说明目录拆分不是一一对应** / It must say the layout is not one-to-one.</summary>
+    /// <summary>**必须说明目录是按层拆的** / It must say the layout splits by layer.</summary>
     [Fact]
     public void ModuleReadme_ShouldStateTheLayoutIsNotOneToOne()
     {
-        ReadReadme("README.md").Should().Contain("does not mirror that split");
-        ReadReadme("README_ch.md").Should().Contain("不照搬这个拆分");
+        ReadReadme("README.md").Should().Contain("split by layer rather than by problem family");
+        ReadReadme("README_ch.md").Should().Contain("按层拆而不是按问题域拆");
     }
 
     /// <summary>**必须说明约束是前置校验** / It must state the constraints are pre-checks.</summary>
     [Fact]
     public void ModuleReadme_ShouldStateConstraintsArePreChecks()
     {
-        ReadReadme("README.md").Should().Contain("Constraints are pre-checks, not model constraints");
-        ReadReadme("README_ch.md").Should().Contain("约束是前置校验，不是模型约束");
+        ReadReadme("README.md").Should().Contain("Capacity constraints are pre-checks, not model constraints");
+        ReadReadme("README_ch.md").Should().Contain("容量约束是前置校验，不是模型约束");
     }
 
     /// <summary>**必须说明评分按件数而非重量** / It must state the score counts items, not weight.</summary>
@@ -80,7 +80,7 @@ public sealed class Bpp3dModuleReadmeTests {
     [Fact]
     public void ModuleReadme_ShouldStateTheMissingPwlPath()
     {
-        ReadReadme("README.md").Should().Contain("**3. No PWL volume path.**");
+        ReadReadme("README.md").Should().Contain("**3. There is no PWL volume path.**");
         ReadReadme("README_ch.md").Should().Contain("**3. 没有 PWL 体积路径。**");
     }
 

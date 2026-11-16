@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// **接线需要一条从 `ILinearTriadModelView` 拿到策略的通路，而那个接口只有两个成员
 /// （继承自 `IModelView`），没有策略。而求解入口拿到的是视图，不是模型。**
 ///
-/// ** does <b>not</b> wire `Materialize` into a solver — stated plainly because it is where the next batch
+/// ** does <b>not</b> wire `Materialize` into a solver — stated plainly because it is where the next step
 /// starts: wiring needs a path from `ILinearTriadModelView` to the policy, and that interface (inheriting `IModelView`)
 /// carries no policy. The solve entry receives a view, not a model.**
 /// </remarks>

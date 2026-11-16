@@ -1,7 +1,7 @@
 #nullable enable
 
 namespace Fuookami.Ospf.Math.Symbol.Parse;
-/// <summary>解析问题类型 / Parse issue type (forward-declared; phase 13 owns full module).</summary>
+/// <summary>解析问题类型 / Parse issue type (forward-declared; a later phase owns full module).</summary>
 public enum ParseIssueType {
     /// <summary>语法错误 / Syntax error</summary>
     Syntax,
@@ -11,7 +11,7 @@ public enum ParseIssueType {
 
 /// <summary>
 /// 解析问题 / Parse issue.
-/// Kotlin symbol/parse/ParseIssue.kt — ported in full by phase 13.
+/// Kotlin symbol/parse/ParseIssue.kt — ported in full by a later phase.
 /// </summary>
 public sealed record ParseIssue(
     ParseIssueType Type,

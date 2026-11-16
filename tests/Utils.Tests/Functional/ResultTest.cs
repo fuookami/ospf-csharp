@@ -134,6 +134,6 @@ public class ResultTest {
         captured.Should().Be(ErrorCode.DataNotFound);
     }
 
-    // Note: BindAsync/MapAsync extension method tests deferred to Phase 3
+    // Note: BindAsync/MapAsync extension method tests are deferred
     // (async extension methods require further investigation on.NET 10)
 }

@@ -324,7 +324,7 @@ public sealed class Envelope : IEnvelope
 /// <remarks>
 /// 骨架留给后续。**此前这里对任何输入都返回 `Ok`**，那等于告诉调用方"包络已加进模型"而实际上一行都没有——现在改成明确失败，至少不会假装成功。
 ///
-/// Kept as a skeleton for the next batch. **It used to return `Ok` for any input**, telling the caller the envelope was added while the model held nothing; it now fails explicitly
+/// Kept as a skeleton for the next step. **It used to return `Ok` for any input**, telling the caller the envelope was added while the model held nothing; it now fails explicitly
 /// rather than pretending.
 /// </remarks>
 /// <summary>

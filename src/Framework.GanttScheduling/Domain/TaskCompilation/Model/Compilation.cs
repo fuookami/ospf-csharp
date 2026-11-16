@@ -1383,7 +1383,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     /// <param name="fixedTasks">固定保留的任务 / Tasks pinned for good.</param>
     /// <param name="keptTasks">本轮要求保留的任务 / Tasks to keep this round.</param>
     /// <param name="model">元模型 / The meta model.</param>
-    /// <returns>下一轮的约简成本上限 / The next round's reduced-cost cutoff.</returns>
+    /// <returns>下一轮的约简成本上限 / the next round's reduced-cost cutoff.</returns>
     /// <remarks>
     /// 基线 `IterativeAggregation.removeColumns` 的形状：
     ///

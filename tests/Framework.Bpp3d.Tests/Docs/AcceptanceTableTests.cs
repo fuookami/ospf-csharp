@@ -39,8 +39,4 @@ public sealed class AcceptanceTableTests {
         throw new DirectoryNotFoundException("ospf-csharp.sln not found from the test output directory");
     }
 
-    private static string ReadTable() =>
-        DocsFile.ReadAllText(Path.Combine(RepoRoot(), "docs", "kotlin-sync-acceptance.md"))
-            .Replace("\r\n", "\n", StringComparison.Ordinal);
-
 }

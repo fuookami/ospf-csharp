@@ -59,7 +59,7 @@ public static class IterativeColumnPruning {
     /// <param name="remainingAmount">剩余列数 / The remaining column count.</param>
     /// <param name="maximumColumnAmount">列数上限 / The column count ceiling.</param>
     /// <param name="maximumReducedCost">当前最大约简成本 / The current maximum reduced cost.</param>
-    /// <returns>下一轮的最大约简成本 / The next round's maximum reduced cost.</returns>
+    /// <returns>下一轮的最大约简成本 / the next round's maximum reduced cost.</returns>
     /// <remarks>
     /// 只在**列数仍超上限时**衰减，否则原样返回。衰减本身复用 `BunchCompilation` 里已落地的
     /// `NextReducedCostCutoff`——基线的同一段逻辑在 `IterativeAggregation` 里有一份私有拷贝，

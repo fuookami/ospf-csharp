@@ -35,7 +35,7 @@ public sealed record SelectionContext(
 /// <param name="Before">动作前上下文 / The context before the action.</param>
 /// <param name="After">动作后上下文 / The context after the action.</param>
 /// <param name="Available">可选动作 / The available actions.</param>
-/// <param name="NextAvailable">下一轮可选动作 / The next round's available actions.</param>
+/// <param name="NextAvailable">下一轮可选动作 / the next round's available actions.</param>
 /// <param name="Reward">奖励 / The reward.</param>
 /// <param name="Evaluations">评估次数 / The evaluation count.</param>
 /// <param name="Terminal">是否终局 / Whether it is terminal.</param>

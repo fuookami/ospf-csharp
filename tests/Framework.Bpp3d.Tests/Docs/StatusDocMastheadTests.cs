@@ -16,10 +16,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// | 位置 | 原文 | 差多少批 |
 /// | --- | --- | --- |
-/// | 标题 | `## Current Phase (as of earlier)` | **差 1025 批** |
-/// | 正文 | `P9 is in progress (Batches 242–918)` | **差 372 批** |
+/// | 标题 | `## Current Phase` 标注的日期 | **差 1025 批** |
+/// | 正文 | `P9 is in progress` 标注的批次区间 | **差 372 批** |
 ///
-/// **而同一份文档的 `上次更新 Batch N` 一直是准的**。
+/// **而同一份文档的"上次更新"标注一直是准的**。
 ///
 /// ### 为什么这次特别值得记
 ///
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **抬头是读者第一眼看到的东西，而它恰恰是最不受任何判据保护的。**
 ///
 /// **The status document's first screen once said it was about batches stale) and
-/// `P9 is in progress (Batches 242–918)` (372 stale) — while the same document's `上次更新 Batch N` marker was accurate all
+/// `P9 is in progress` with a batch range (372 stale) — while the same document's `上次更新 Batch N` marker was accurate all
 /// along (a criterion covers it).** **the earlier disease was a silently no-op `replace`; the earlier was a hand-off table nine
 /// batches behind.** **Both fixed numbers that <b>referenced</b> the status — and neither looked at the status document's own first
 /// screen.** **So the lesson is not "another stale number" but: we kept fixing references and never the masthead, which is the first

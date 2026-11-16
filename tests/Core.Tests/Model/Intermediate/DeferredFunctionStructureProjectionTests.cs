@@ -125,7 +125,7 @@ public class DeferredFunctionStructureProjectionTests
     /// yet" as three executable facts (no projection call in the build path, the projection exists, `RegisterFunctionConstraints`
     /// is still there), so whoever edits it must confront the third.**
     ///
-    /// **Had it merely said "wire it next batch", this round would have had no "skip" half — and without the skip the model
+    /// **Had it merely said "wire it next step", this round would have had no "skip" half — and without the skip the model
     /// carries two row sets describing the same `abs`, and still solves.**
     /// </remarks>
     [Fact]

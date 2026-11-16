@@ -3152,7 +3152,7 @@ public class RemoteWireContractTest {
     /// land on the classification. Note this case does **not** cover out-of-domain rejection — the fixture's
     /// `IntVar` spans the whole integer domain, so no value is out of domain. That branch exists in the
     /// implementation but needs a restricted-domain variable to actually trigger; the fixture is deferred to
-    /// the next batch.
+    /// the next step.
     /// </summary>
     [Fact]
     public void Classify_ShouldMaterializeFeasibleSolution() {

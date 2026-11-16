@@ -519,7 +519,7 @@ public sealed class FullLoadApplication
             //
             // **tried this and measurement rejected it**: declaring a stage table meant the **model never reached the solver** (`MasterCalls == 0`, two criteria red at
             // once). already measured that declaring stages **does not narrow the recourse**, so the declaration added risk without benefit; it is reverted. Wiring it needs
-            // the answer to "how does the partitioner react to a declaration that disagrees with its row rule" — next batch.
+            // the answer to "how does the partitioner react to a declaration that disagrees with its row rule" — next step.
             if (partitioned is not Ok<LinearBendersModels, ErrorCode, Error<ErrorCode>> partitionedOk) {
                 notes.Add($"benders_partition_failed: {partitioned}");
                 return ResponseDTO.NoSolution("BendersPartitionFailed", notes);

@@ -232,7 +232,7 @@ public class Csp1dProgressWiringTests {
     /// 基线 `:753` 把 `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
     ///
     /// **曾说这条"观测不到"，理由是"`Register` 阶段就失败、走不到求解器"——那个结论是错的。**
-    /// 我当时只是读代码推断，没有实际跑到那里。实测：完整 CSP1D 流程**确实到达最终 MILP**，
+    /// 最初只是读代码推断，没有实际跑到那里。实测：完整 CSP1D 流程**确实到达最终 MILP**，
     /// 快照里有 `REGISTRATION/-/100/99` 与 `MILP/incumbent/99/99`。
     ///
     /// 判据失败的真正原因是**当时 `MockColumnGenerationSolver` 覆盖了带 options 的重载、

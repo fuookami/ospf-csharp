@@ -88,7 +88,7 @@ public sealed class Demo2SingleModelSolveTests
         //
         // **fixed the bounds violation** (values now follow each variable's lower bound) and the next blocker is **constraint feasibility**:
         // "merged solution violates constraint". **Inventing a feasible point is much harder than inventing legal values.** This will not be papered over by "tuning the
-        // script once more": the next batch uses a **real solver** (the SCIP integration switch) for the convergence run.
+        // script once more": the next step uses a **real solver** (the SCIP integration switch) for the convergence run.
         notes.Should().Contain(note => note.Contains("合并解违反约束", System.StringComparison.Ordinal),
             "the note must carry the algorithm's own reason, so the next reader never guesses");
         response.Succeed.Should().BeFalse();

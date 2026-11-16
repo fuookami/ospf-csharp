@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **The "Summary of what is left in P9" and found its first bullet saying "Still missing: the other modules'
 /// READMEs, a migration guide, and the capability matrix" — all three exist.** **And the same document, three bullets down,
 /// already states the lesson: "a stale 'cannot' is more expensive than a stale 'done', because it stops the work" — while its own
-/// first bullet was exactly such a stale cannot.** **Not a coincidence: a "done" gets carried away by the next batch's entry, while a
+/// first bullet was exactly such a stale cannot.** **Not a coincidence: a "done" gets carried away by the next step's entry, while a
 /// "missing" never gets struck out — so the list only grows, and the first thing a reader does with it is the work again.**
 /// </remarks>
 public class StatusDocLeftoverTests

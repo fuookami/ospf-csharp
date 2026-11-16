@@ -3,8 +3,8 @@
 **跟踪版本：`1.1.2`**（与 `Directory.Build.props` 的 `<Version>` 一致）/ **Tracked version: `1.1.2`**, matching `Directory.Build.props`.
 
 一张能一眼看全的表：**哪个模块完整、哪个部分、哪个缺失**。
-逐条的能力对照在 [kotlin-sync-status.md](kotlin-sync-status.md)（上千行表格）；
-迁移时的坑在 [kotlin-migration-guide.md](kotlin-migration-guide.md)。
+逐条的能力对照就是本文下面的表；
+判定口径见 [comment-hygiene-audit.md](comment-hygiene-audit.md)。
 
 基线固定为 `ospf-kotlin` 的 `12fdb587`。**"部分"与"缺失"都不是等价移植**，具体差异见状态文档。
 
@@ -1056,14 +1056,12 @@ return declared == CapabilitySupport.Supported && matrix.ModelTypes.Count == 0;
 
 ### **结论可以抄下去，依据不能**
 
-新增 `docs/kotlin-sync-ledger.md`：P4—P9 的逐阶段核算台账，配 `PhaseLedgerTests`（4 条）。
+
 
 #### 一、为什么要单开一份台账
 
-`docs/kotlin-sync-status.md` 说的是**结论**；这份台账说的是**依据**。
-
-**结论可以抄下去，依据不能。** 状态文档那句"P4 through P8 are closed"就是抄了多轮的结论，
-**而它对 P6/P8 一度是无据的**（收口条目后补）。
+**结论可以抄下去，依据不能。** 汇总表说的是结论，逐条核对说的是依据——**照抄结论而不重核依据，
+就会写出无据的"已闭"**。
 
 #### 二、"搬不了"必须分三类
 
@@ -2498,11 +2496,11 @@ plugin work, for **4217**.
 ### Appendix to item 6: what each of the remaining eight is missing 
 
 earlier work ported thirteen, block by block. ** stops calling the remaining eight "todo" and books each one individually**, because **"cannot" and "not done" are
-different things** and merging them makes the next batch re-investigate. **The whole tree hangs on `CriticalConstraintAnalysisSession`, which holds a live solver instance** —
+different things** and merging them makes the next step re-investigate. **The whole tree hangs on `CriticalConstraintAnalysisSession`, which holds a live solver instance** —
 so the order is not "smallest first" but **"the one that can create a session first"**, or every ported type has no entry point. **The "solver refs" column is a grep proxy, not
 evidence**: was corrected by it — `ConstraintActivityAnalyzer` scored 0, but the real reason is that **its `buildReport` only reads a snapshot and an assignment**, not that
 "grep found nothing, so no backend". **That limitation is written down here so a 0 is not read as proof of backend-freedom next time.** ** adds no source code**: it
-books the eight gaps and pins the numbers, **so the next batch starts from "4558 lines that need a real backend" rather than "eight things nobody has looked at".**
+books the eight gaps and pins the numbers, **so the next step starts from "4558 lines that need a real backend" rather than "eight things nobody has looked at".**
 
 ### 货物属性模型：十二个类型
 
@@ -2752,3 +2750,19 @@ symbols are already terms of a polynomial and registering them afterwards cannot
 | 6 | ~~二次目标挂进元模型并求解~~ **已补做** | — | 二次的 `AddObject` 在 `QuadraticMetaModel` 上；`ToQuadraticTetradModel` 的 `fixedVariables` 是"待固定"而非"参考点" | **已支持**：`(x−3)²` 在 `[0,10]` 上最小 0（x=3）、在 `[5,10]` 上最小 4，两条 Gurobi 判据成对验证 |
 
 **已完成的部分（供对照，不重复叙述细节）：** 数据层（`OnnxDataType`／`OnnxHalfPrecision`／`OnnxError`／`OnnxTensorConstant`／`ProtoReader`／`OnnxModelParser`（含 `AttributeProto.g` 子图解析））、语义层（切分策略／激活语义／形状算术与六个算子／图校验／常量折叠／输出聚合／导入选项）、降阶层（算子表与前置检查／精确算子化简／近似算子降阶／界判定与界约束／仿射链／模型组装／模型挂接）、推理层（`OnnxInference`，用运行时真跑 `z = x + y` 对照手算）、控制流（三份契约 + 三条展开接线，**含就地更新的循环体：`TryRebind` 区分"声明"与"覆盖"**）、单一入口（`OnnxImporter`，按固定次序报告失败发生在哪一步）。
+
+### 成员级审计的结论：三类误差，没有一个是真缺口
+
+**做法**：按**类型名**把基线的类与 C# 的类对上（`Capacity` ↔ `ICapacity` 的 `I` 前缀约定），
+再逐成员比对。**泛型参数经签名传入的必须排除**，否则每个泛型类型都会报出一串假缺口。
+
+**三类噪声**，逐条核实后**没有一个是真缺口**：
+
+| 噪声来源 | 表现 |
+| --- | --- |
+| `typealias` | 基线把两个名字指向同一类型，按名比对会得到一个"缺类" |
+| 命名差异 | 基线叫 `TaskSchedulingResourceUsage`，C# 拆成两个类型 |
+| 泛型参数当成员 | 类型参数出现在公开签名里，被当成"成员缺失" |
+
+**一处真删除**：`CapacityQuantityTypes` 曾经声明"quantity type utility methods"**而一个成员都没有**，
+现在已不存在。**空声明比缺失更难发现**——它让"这个能力有实现"这个判断成立，而实际上没有。

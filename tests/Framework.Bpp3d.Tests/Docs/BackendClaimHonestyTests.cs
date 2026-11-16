@@ -30,18 +30,4 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// </remarks>
 public class BackendClaimHonestyTests
 {
-    private const string LedgerPath = "docs/kotlin-sync-ledger.md";
-
-    private static string Ledger() {
-        DirectoryInfo? directory = new(AppContext.BaseDirectory);
-        while (directory is not null
-            && !File.Exists(Path.Combine(directory.FullName, "ospf-csharp.sln"))) {
-            directory = directory.Parent;
-        }
-        if (directory is null) {
-            throw new InvalidOperationException("repository root not found");
-        }
-        return File.ReadAllText(Path.Combine(directory.FullName, LedgerPath));
-    }
-
 }

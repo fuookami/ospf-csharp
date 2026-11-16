@@ -33,11 +33,11 @@ ospf-csharp 是 [ospf](https://github.com/fuookami/ospf) 的 C# / .NET 10 实现
 | `Fuookami.Ospf.Benchmark` | BenchmarkDotNet 基准测试（12 个基准类、54 个基准） | ✅ 完成 |
 | `Fuookami.Ospf.Starters.*` | NuGet 元包（Core、Bpp3d、Csp1d、Framework、GanttScheduling） | ✅ 完成 |
 
-表中状态为 2026 年 6 月的迁移快照；相对固定 Kotlin 基线的当前同步状态以 [docs/kotlin-sync-status.md](docs/kotlin-sync-status.md) 为准。
+表中状态为 2026 年 6 月的迁移快照；相对固定 Kotlin 基线的当前同步状态以 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md) 为准。
 
 ## 架构
 
-当前 Kotlin 同步基线与能力状态见 [docs/kotlin-sync-status.md](docs/kotlin-sync-status.md)。
+当前 Kotlin 同步基线与能力状态见 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md)。
 
 框架采用分层架构：
 
@@ -138,7 +138,7 @@ dotnet test ospf-csharp.sln -c Release --no-build
 ```
 
 最近一次实测门禁（`7450 passed` / `1` 项既有 Delaunay skip / `0 failed` / `0` 错误 / `1454` 行警告）
-记录在 [docs/kotlin-sync-status.md](docs/kotlin-sync-status.md) 中，并附逐批证据。
+见 `logs/` 下最近一次门禁的归档。
 **这些数字是最近一次已验证批次的快照，不是工作树的永久属性。**
 
 ## 对齐程度与已知缺口
@@ -149,7 +149,7 @@ dotnet test ospf-csharp.sln -c Release --no-build
 - **没有通用互通主张。** 跨语言验证只做过三处：`SerializedSolution`、`RemoteTaskSubmitRequest`、
   `configuration` / `sha256` 摘要。
 - **没有"文件数对齐"主张。** 模块存在不等于能力存在；以能力矩阵为准，不以项目清单为准。
-- 已知缺口（持续维护在 `docs/kotlin-sync-status.md` 与 `logs/kotlin-sync-plan.md` 的逐批小节里）包括：
+- 已知缺口（列在 `docs/kotlin-capability-matrix.md` 里）包括：
   本仓库**根本没有 `Framework.Bpp1d` 项目**，故 `PatternColumnBenchmark` 无法移植；`Infra.Item.Weight`
   只透传不参与任何约束；基线的 PWL 诊断与形状 DTO 缓存未移植；Demo5 各模块 README 与迁移指南仍缺。
 

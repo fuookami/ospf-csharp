@@ -282,7 +282,7 @@ public class PolynomialDegreeEntryPointTests
     /// <remarks>
     /// **`x*y` 里每个变量只出现一次，而它的总度数是 2，所以它不是线性的。**
     /// **这条判据是我自己先写错的地方**：第一版把它断言成"线性"，
-    /// 注释里还留着"这值得问一下"——**那说明我当时就知道自己没把握，却还是先写了断言。**
+    /// 注释里还留着"这值得问一下"——**那说明写的时候就知道自己没把握，却还是先写了断言。**
     ///
     /// **In `x*y` each variable appears once and its total degree is two, so it is not linear.**
     /// **This is the criterion I got wrong first**: the initial version asserted "linear", and its comment still said "the question worth asking" —

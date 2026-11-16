@@ -161,7 +161,7 @@ public sealed class CapabilityMatrixTests {
         // **Partition column generation must be ✅ with the real-backend measurement**: it is the output of.
         matrix.Should().Contain("| **分区列生成分派** | ✅ | 分区配置 + 分派 + 目标展平");
         // **旧结论必须明说作废**，否则它会被后续原样抄回去。
-        // **The old conclusion must be marked void**, or the next batch copies it straight back.
+        // **The old conclusion must be marked void**, or the next step copies it straight back.
         matrix.Should().Contain("**整张旧表已撤回**");
         matrix.Should().NotContain("**没有任何生产调用方**",
             "the measurement shows production references everywhere; this sentence is no longer true");
@@ -293,7 +293,7 @@ public sealed class CapabilityMatrixTests {
     /// 留着"不存在"会让人去重做已完成的模块——与 按工程名误判是同一类伤害。
     ///
     /// **The contradiction measured**: `docs/kotlin-sync-status.md` says **P4-P8 are closed**, while **the same conclusions** in the capability matrix still
-    /// read `Gap: … pending`, "next batch P6/P7/P8" and "**the project does not exist**". Two documents **contradicting each other**, and **nothing failed because of
+    /// read `Gap: … pending`, "next step P6/P7/P8" and "**the project does not exist**". Two documents **contradicting each other**, and **nothing failed because of
     /// it**. Worse, that content was **stale**: `Framework.Csp2d` (21 sources), `Framework.NetworkScheduling` (75), `Core.Plugin.Heuristic` (29) and
     /// `Framework.Bpp1d` (25) all exist with **0 real gaps**. Leaving "does not exist" sends people to redo finished modules — the same damage as.
     /// </remarks>
@@ -358,7 +358,7 @@ public sealed class CapabilityMatrixTests {
         matrix.Should().NotContain("所有求解器插件只验证了",
             "that wording turned 'verified' into 'verifiable'; every plugin has a real-backend gate");
         // **"不能在这个环境里补完"必须写明理由**：否则后续会去试。
-        // **"cannot be completed here" must state why**, or the next batch tries it.
+        // **"cannot be completed here" must state why**, or the next step tries it.
         matrix.Should().Contain("**写一个\"假后端\"来验证真后端行为等于什么都没验证**");
     }
 }

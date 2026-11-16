@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// constructor parameter is not a member" defects were fixed along the way — `PassengerCapacity`'s cabin table and `CargoCapacity`'s value were both **unreachable from outside**.
 ///
 /// **Ceiling**: the criteria cover only the switches and the presence of the tables; no real task instance walks `AddColumns` yet, because building one needs `FlightLeg` and a whole
-/// input stack — that is the next batch. Upgrade path: once a task fixture exists, add "zero-capacity bunches stay out" and "column variables follow the deduplicated order".
+/// input stack — that is the next step. Upgrade path: once a task fixture exists, add "zero-capacity bunches stay out" and "column variables follow the deduplicated order".
 /// </remarks>
 public class Demo4FlightCapacityTests {
     private static BunchCompilation<FlightTaskBunch, FlightTask, Aircraft, FlightTaskAssignment> Compilation() =>

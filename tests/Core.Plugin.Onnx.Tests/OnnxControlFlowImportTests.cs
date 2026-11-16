@@ -242,7 +242,7 @@ public class OnnxControlFlowImportTests
         //
         // under list semantics a six-element input with no per-element symbols must not be treated as one number — a shape of 6 with one symbol in the binding is
         // self-contradictory. The importer does not build inputs from caller-supplied symbols (the baseline's inputBindings) yet, so this asserts the refusal and its reason; **when
-        // the next batch wires inputBindings, this criterion goes back to "imports, and the elements line up one by one".**
+        // the next step wires inputBindings, this criterion goes back to "imports, and the elements line up one by one".**
         imported.IsOk.Should().BeFalse("a six-element input needs six symbols before a reshape means anything");
         imported.Stage.Should().Be("evaluate");
         imported.Failure.Should().Contain("逐元素列表");

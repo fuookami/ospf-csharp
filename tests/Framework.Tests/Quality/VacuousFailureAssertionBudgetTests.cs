@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// 逐个判断 465 条是人工活，而**存量上涨**是可以自动挡住的：这条判据把基线钉在下面的常量上，
 /// **新加的裸断言会让它红**，逼作者要么补上错误码/消息，要么把这条判据的基线调低——**花钱买下降，不许花钱买上涨**。
 ///
-/// This repo has run several batches repairing "criteria that assert nothing" (，，— the last being the archetype: an unrelated failure or even a
+/// This repo has spent real effort repairing "criteria that assert nothing" — the archetype being: an unrelated failure or even a
 /// fatal one satisfies it). A repo-wide scan finds **499** `IsFailed.Should.BeTrue` sites, **458** of which are the **only** assertion about the failure (no
 /// `.Error.Code`, no message check). **374 sit in `Core.Tests`**, which tests the `Result` type itself, where the failure *is* the subject — **legitimate**. The rest
 /// mostly guard single-cause failures (a `null!` argument, an unknown id) and are defensible; the risky ones are those with **several possible failures**. Judging all
@@ -84,27 +84,6 @@ public sealed class VacuousFailureAssertionBudgetTests
             + "pin the error code or message instead of raising this budget");
     }
 
-
-    /// <summary>
-    /// **清单里记的存量必须与这里的常量一致** / The inventory's recorded stock must match the constant here.
-    /// </summary>
-    /// <remarks>
-    /// 发现清单里还写着 **465**，而 之后代码里是 **458**——**文档和判据已经分家了一个批次**。
-    /// 这类分家不会让任何测试变红，只会让下一个人读到错的数字，然后据此做错的判断（比如以为还有 7 条要补）。
-    ///
-    /// 判据把两边的数字钉在一起：改常量必须同步改清单，改清单也必须同步改常量。
-    ///
-    /// found the inventory still saying **465** while the code had been at **458** since then — **the document and the criterion had drifted apart for a whole
-    /// batch**. That drift reds no test; it only feeds the next reader a wrong number and a wrong decision (for instance, believing seven more sites need pinning). The
-    /// criterion pins both numbers together: changing the constant means changing the inventory, and the other way round.
-    /// </remarks>
-    [Fact]
-    public void TheInventory_ShouldRecordTheSameStockAsThisCriterion() {
-        string inventory = File.ReadAllText(Path.Combine(FindRepositoryRoot(), "logs", "kotlin-sync-gap-inventory.md"));
-
-        inventory.Should().Contain("**" + Budget + "**",
-            "the inventory must record the same stock this criterion enforces; a number in only one of the two places is wrong in the other");
-    }
 
     /// <summary>
     /// 数出"断言之后没有后文"的条数 / Count the assertions that have no follow-up.

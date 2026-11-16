@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// nowhere to write the permutation and a Scan runtime slice has nowhere to be cut.**
 ///
 /// ** builds the layer itself without wiring it: Transpose permutes by coordinate and SliceLeading cuts along the leading axis, both pure functions, and both can be pinned
-/// directly by "is the element at this position the same one as before".** **Wiring touches every call site of the evaluator, which is the next batch — verifying that the
+/// directly by "is the element at this position the same one as before".** **Wiring touches every call site of the evaluator, which is the next step — verifying that the
 /// permutation is computed correctly first gives the wiring something to compare against.**
 /// </remarks>
 public sealed class OnnxElementList
