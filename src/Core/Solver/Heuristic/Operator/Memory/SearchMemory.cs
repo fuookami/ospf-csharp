@@ -1,5 +1,4 @@
 // 搜索记忆与接受策略 / Search memory and acceptance policies.
-//（4765 B）对应。
 // , (4164 B) and
 // (4765 B).
 

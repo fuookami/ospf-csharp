@@ -298,7 +298,7 @@ public class DiscreteLoadingContextTests {
     /// 错误的原因变绿**：它是失败了，但失败在"缺值"而不是"非二元"。
     /// 这是"判据通过但没证明要证明的事"的又一例。
     ///
-    /// **Zero everything first, then override in the specific case.** The code requires **every** assignment/occupancy/layout variable to carry a value;
+ /// **Zero everything first, then override in the specific case.** This implementation requires **every** assignment/occupancy/layout variable to carry a value;
     /// without zeroing, an unassigned variable makes extraction fail with `DataNotFound`, so **the "non-binary value rejected" criterion goes green for the wrong
     /// reason**: it did fail, but on "missing value" rather than "non-binary". Another case of "the criterion passes without proving what it claims".
     /// </remarks>

@@ -98,11 +98,11 @@ public sealed class SearchRegistryTests {
     /// 本测试把这条差异钉住，避免后来者以为两者等价而把某个更新算子当成可重建的。
     ///
     /// **There is an easily misjudged fact here that must be recorded**: `Entry.Stateless` (the `stateless` flag passed at registration) **does not
-    /// feed the recoverable set**. The code's `statelessComponents` has exactly two sources — a hard-coded list at construction, plus entries
+ /// feed the recoverable set**. Its `statelessComponents` has exactly two sources — a hard-coded list at construction, plus entries
     /// appended by `registerFeatures/Reward/Acceptance/Exchange/Allocator(stateless = true)`. `registerUpdate(stateless = true)` **does not append**.
     ///
     /// In other words, **"declared stateless at registration" and "can be rebuilt in place after a restore" are not the same thing** here
-    /// (nor in the code). This test pins that difference so a later reader does not assume equivalence and treat an update operator as
+ /// (nor in the implementation). This test pins that difference so a later reader does not assume equivalence and treat an update operator as
     /// recoverable.
     /// </remarks>
     [Fact]
@@ -207,7 +207,7 @@ public sealed class SearchRegistryTests {
         registry.Selection(Spec("epsilon-greedy", ("epsilonn", 0.2)), actions, true).Should()
             .BeOfType<Failed<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
         // **"回退"不是兜底**：表格策略自己只认那七个名字，其它名字一律失败。
-        // **The "fallback" is not a catch-all**: the tabular policy only recognises those seven names; everything else fails (as in the code).
+ // **The "fallback" is not a catch-all**: the tabular policy only recognises those seven names; everything else fails (.
         registry.Selection(Spec("my-selector"), actions, true).Should()
             .BeOfType<Failed<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
         registry.Selection(new ComponentSpec("q-learning", new JsonObject(), 2), actions, true).Should()

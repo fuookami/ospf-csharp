@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **一个"长得像资源、但不是资源"的类，比完全没有这个类更难发现。**
 ///
 /// Demo4's `Flow` used to be a **plain class**: it had `Id`/`Airport`/`Scene`/`Capacities` but did not derive from `ConnectionResource`, so **it could not serve as a resource** and could not
-/// be wired into `BunchSchedulingConnectionResourceUsage`. In the code it is a `ConnectionResource&lt;FlowControl, FltX&gt;`, and its capacity type `FlowControl` must itself be an
+/// be wired into `BunchSchedulingConnectionResourceUsage`. In the implementation it is a `ConnectionResource&lt;FlowControl, FltX&gt;`, and its capacity type `FlowControl` must itself be an
 /// `AbstractResourceCapacity` — with either piece missing the chain breaks. **A class that looks like a resource without being one is harder to spot than a missing class.**
 /// </remarks>
 public class Demo4FlowResourceTests {

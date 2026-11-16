@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **因为 1 U = 1 µmol/min，而 1 katal = 1 mol/s**——
 /// **换算里同时有 10⁻⁶（微）与 60（分转秒），合起来就是 6×10⁷。**
 ///
-/// **Created from the code, four units.**
+/// **Created, four units.**
 ///
 /// **`EnzymeUnit` is the only non-decimal unit here**: **it is `Katal / 60000000`**,
 /// **because 1 U = 1 µmol/min while 1 katal = 1 mol/s** —

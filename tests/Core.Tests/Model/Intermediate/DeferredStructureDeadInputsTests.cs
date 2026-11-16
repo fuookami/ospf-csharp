@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟结构上那些<b>没有生产者</b>的输入字段 / The structure inputs that have <b>no producer</b>.
 /// </summary>
 /// <remarks>
-/// 这里做的是此前结尾提到的那件事：查"搬过去了但没人读"的字段。
+/// 这里做的是此前结尾提到的那件事：查"实现出来了但没人读"的字段。
 ///
 /// **结果比预期更糟一档：** **不是"没人读"，而是<b>没人写</b>。**
 ///

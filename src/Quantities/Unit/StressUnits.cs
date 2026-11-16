@@ -12,13 +12,13 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **按新建，7 个单位。**
 ///
 /// **应力与压强在 SI 里同量纲**（`N/m²`），**而本仓 `PressureUnits` 已有 `Pascal` 等**——
-/// **`Stress` 与 `Pressure` 是两套独立单位文件，本仓照做，不合并**：
+/// **`Stress` 与 `Pressure` 是两套独立单位文件，本仓照此，不合并**：
 /// **合并会让"管道的许用应力"与"管道内压"共用同一个类型，而它们在工程上是两件事。**
 ///
-/// **Created from the code, seven units.**
+/// **Created, seven units.**
 ///
 /// **Stress and pressure share a dimension in SI** (`N/m²`), **and this repo's `PressureUnits` already has `Pascal`** —
-/// **the code keeps `Stress` and `Pressure` as separate files and this repo follows suit rather than merging them**.
+/// **this implementation keeps `Stress` and `Pressure` as separate files and this repo follows suit rather than merging them**.
 /// **merging would make "a pipe's allowable stress" and "a pipe's internal pressure" the same type, and in engineering
 /// they are two different things.**
 /// </remarks>

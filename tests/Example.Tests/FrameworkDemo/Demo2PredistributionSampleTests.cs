@@ -61,7 +61,7 @@ public sealed class Demo2PredistributionSampleTests
     ///
     /// **行数因此不是这条判据的锚点**（接不接余度都是 54），锚点必须是整串形状。
     ///
-    /// The code's register list is "full load's seven + redundancy", **eight**. The port took three wrong turns: four domains formerly (`rows49`, SCIP called it infeasible,
+ /// Its register list is "full load's seven + redundancy", **eight**. The port took three wrong turns: four domains formerly (`rows49`, SCIP called it infeasible,
     /// because **a missing domain never errors**); seven domains at (`rows52`), where found the missing two rows were `StowageContext.Init` not receiving the mode;
     /// and，where redundancy was written (799 lines) but **never had a consumer**, so "seven" was really seven plus nothing. Wired up it is
     /// `rows54,symbols82,objective10` — **the row count does not move, six symbols and two objectives join**, because redundancy's two pipelines add **objectives**, not

@@ -170,12 +170,12 @@ public sealed class Load
     /// <remarks>
     /// 两条的规矩：**同一舱位只建一个符号**，**顺序保留**（调用方的顺序与重复项沿用，因为{code}List&lt;Int&gt;{/code} 而不是 {code}Set{/code}）。
     ///
-    /// `if (!amounts.containsKey(position))` 守卫**没有搬过来**：C# 的字典索引赋值本来就按 key 覆盖，去掉守卫后重复下标得到的仍是同一个
-    /// key 下的同一个值，差别只是少构造一次——那是个不可观测的差异，没有判据能钉住它，也就不该留一行只能靠"照做"来自证合理的代码。
+    /// `if (!amounts.containsKey(position))` 守卫**没有实现出来**：C# 的字典索引赋值本来就按 key 覆盖，去掉守卫后重复下标得到的仍是同一个
+    /// key 下的同一个值，差别只是少构造一次——那是个不可观测的差异，没有判据能钉住它，也就不该留一行只能靠"如此"来自证合理的代码。
     ///
-    /// Two rules carried over: **one symbol per position** and **order preserved** (the caller's order and duplicates kept, because the code takes a {code}List&lt;Int&gt;{/code}, not a {code}Set{/code}).
-    /// The code's `if (!amounts.containsKey(position))` guard was **not** carried over: a C# dictionary assignment already replaces by key, so a repeated index lands on the same
-    /// key with the same value either way — the only difference is one fewer construction, which is unobservable, so leaving a line justified solely by "the code has it" would
+ /// Two rules carried over: **one symbol per position** and **order preserved** (the caller's order and duplicates kept, because the implementation takes a {code}List&lt;Int&gt;{/code}, not a {code}Set{/code}).
+ /// Its `if (!amounts.containsKey(position))` guard was **not** carried over: a C# dictionary assignment already replaces by key, so a repeated index lands on the same
+ /// key with the same value either way — the only difference is one fewer construction, which is unobservable, so leaving a line justified solely by "this implementation has it" would
     /// be worse than dropping it.
     /// </remarks>
     public IReadOnlyDictionary<int, LinearExpressionSymbol> LoadAmountsOf(
@@ -289,8 +289,8 @@ public sealed class Load
     /// 尚未落地 / Not landed yet：`predicate_load_weight_slack`、`estimateLoadWeight`/`actualLoadWeight`/`estimateLoaded`/`actualLoaded`、
     /// `loadEstimateLongitudinalTorque`/`loadActualLongitudinalTorque`/`loadLateralTorque`/`loadCLIM`/`loadIndex`。
     ///
-    /// Order follows the code: **variables first**, **then** `load_amount` (needs `stowage`), **last** `full` (needs `load_amount`). `Load` is downstream of `Stowage` and
-    /// does not build the matrix. One deliberate divergence: the code creates zero-range variables for positions that do not need the status **and still adds them**; C# only adds
+ /// Order follows the implementation: **variables first**, **then** `load_amount` (needs `stowage`), **last** `full` (needs `load_amount`). `Load` is downstream of `Stowage` and
+ /// does not build the matrix. One deliberate divergence: the implementation creates zero-range variables for positions that do not need the status **and still adds them**; C# only adds
     /// the needed ones — a zero-range variable contributes nothing and merely inflates the model.
     /// </remarks>
     public Try Register(LinearMetaModel<Flt64> model) {
@@ -298,7 +298,7 @@ public sealed class Load
         // **同一个模型上重复注册是空操作**：符号对象已经建好并进去了，再建一遍会撞名字、还会让旧引用失效。
         // 模型允许重复 `add`，所以这里也必须允许——**否则"配载 + 装载效能"这种正常组合根本跑不起来**。
         // **Re-registering into the same model is a no-op**: the symbols are already built and in, and rebuilding them collides on names and invalidates old references.
-        // The code tolerates a repeated `add`, so this must too — **otherwise a normal "stowage + loading effectiveness" combination cannot run at all**.
+ // The implementation tolerates a repeated `add`, so this must too — **otherwise a normal "stowage + loading effectiveness" combination cannot run at all**.
         if (_registeredIn is not null && ReferenceEquals(_registeredIn, model)) {
             return Results.Ok<Success>(Results.SuccessInstance);
         }
@@ -306,7 +306,7 @@ public sealed class Load
         // `y`/`z` **无条件构建**：它们不在任何 `if` 里，`if (withMultiLoadingSchema)` 只包 `estimateLoadWeight`。
         // 曾把它们包进守卫（判断错了），结果是"谓词重量松弛"在单方案下拿不到 `y`——而段松弛同样不看方案。
         // **无条件**还有一层原因：`y`/`z` 的范围按舱位状态钉过零，单方案下它们本来就是常数零，不会虚增求解规模。
-        // `y`/`z` are **built unconditionally**: in the code they sit inside no `if` at all, and `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly
+ // `y`/`z` are **built unconditionally**: in the implementation they sit inside no `if` at all, and `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly
         // put them under the guard, which left the predicate weight slack without a `y` under the single schema — and that slack does not depend on the schema either.
         // `y`/`z` also have their ranges pinned to zero per position status, so under the single schema they are constants that inflate nothing.
         {
@@ -354,7 +354,7 @@ public sealed class Load
                 name: "load_amount_" + _positions[j].Name);
             // 装载量加了上界 `range.leq(mla)`：件数上限是**舱位规格**，不是靠 `stowage` 的二元变量碰巧凑出来的。
             // 少了这一行，一个 3 槽位舱位里装 5 件在模型层面完全合法——二元变量各自为 1，加起来就是 5。
-            // The code bounds the amount by `range.leq(mla)`: the piece limit is a **position specification**, not something the binary `stowage` variables happen to imply.
+ // The implementation bounds the amount by `range.leq(mla)`: the piece limit is a **position specification**, not something the binary `stowage` variables happen to imply.
             // Without it a 3-slot position holding 5 pieces is perfectly legal in the model — five binaries set to one and the sum is five.
             Result<ValueRange<Flt64>, ErrorCode, Error<ErrorCode>> amountRange =
                 ValueRange<Flt64>.Of(Flt64.Zero, new Flt64(_positions[j].Mla));
@@ -679,7 +679,7 @@ public sealed class Load
         // **无条件**（不在任何 `if` 里）： 曾把它包进 `if (WithMultiLoadingSchema)`，于是单方案下 `load_amount` 的容量
         // 联动整段消失——而单方案恰恰是最常用的那种。
         // Link the y/z weight **into the kernel's capacity row**: without it the slack is hundreds of kilograms the capacity row never sees.
-        // **Unconditionally** (the code has no `if` here): wrapped this in `if (WithMultiLoadingSchema)`, so under the single schema the whole capacity link vanished — and the
+ // **Unconditionally** (this implementation has no `if` here): wrapped this in `if (WithMultiLoadingSchema)`, so under the single schema the whole capacity link vanished — and the
         // single schema is the common case.
         if (Y is not null && Z is not null) {
             for (int j = 0; j < _positions.Count; ++j) {
@@ -750,7 +750,7 @@ public sealed class Load
     /// 最后换算到 `torqueUnit`。顺序反了（先换算再乘）会拿"力/质量"去对"力×长度"做量纲检查，直接失败。
     /// `item.weight` 是带单位的量；C# 的 `Item.Weight` 是无单位 `double`，这里按 `weightUnit`（千克）解读，与 `y`/`z` 一致。
     ///
-    /// The code is `gravity(Quantity(one, weightUnit)) * longitudinalArm` — turn one kilogram into a force **first**, then multiply by the arm quantity (inches) to get a
+ /// This implementation is `gravity(Quantity(one, weightUnit)) * longitudinalArm` — turn one kilogram into a force **first**, then multiply by the arm quantity (inches) to get a
     /// torque, and finally convert to `torqueUnit`. Doing it the other way round asks the dimensionality check to accept force/mass against force×length, which fails. The
     /// `item.weight` is a unit-carrying quantity; C#'s `Item.Weight` is a bare `double`, interpreted here as `weightUnit` (kilograms), consistent with `y`/`z`.
     /// </remarks>

@@ -131,7 +131,7 @@ public class Demo4PassengerAmountTests {
 
         // **取消项出现在每一个舱位的表达式里**——这是写法：取消与舱位无关，所以每个分档都要减。
         // 只看"这一档没人"会以为这里该是零项，其实永远有一项取消。
-        // **The cancellation term appears in every cabin's expression** — that is what the code does: cancelling is cabin-independent, so every split subtracts it. Reading "nobody is in
+ // **The cancellation term appears in every cabin's expression** — that is what this implementation does: cancelling is cabin-independent, so every split subtracts it. Reading "nobody is in
         // this cabin" as "no terms here" is wrong; the cancellation term is always present.
         LinearExpressionSymbol business = context.Amount.Amounts[context.Flights[0]][Business];
         business.Polynomial.Constant.ToDouble().Should().Be(0.0, "nobody starts in the business cabin");

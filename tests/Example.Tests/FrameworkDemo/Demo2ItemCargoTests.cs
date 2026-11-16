@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 两点成对：一个带 `AOG`+`MAT` 双标签的货**两个都命中** / 一个只带 `CARGOMAT` 的货**两个都不命中**。
 ///
-/// The code bundled "cargo-class set + priority" into a `data class ItemCargo` with three `contains` overloads. This implementation splits it into `Item.Cargos` (a set) and
+/// The implementation bundled "cargo-class set + priority" into a `data class ItemCargo` with three `contains` overloads. This implementation splits it into `Item.Cargos` (a set) and
 /// `Item.Priority`, keeping only `Item.Contains(CargoCode)` — **nothing lost, only no longer bundled**, which is why it stays out of the inventory.
 ///
 /// But "nothing lost" needs a test behind it: its `enabled` repeatedly asks "is this item AOG **or** MAT", and **one item can be both** (the

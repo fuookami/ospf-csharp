@@ -21,21 +21,21 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 /// **三条 `Execute` 收在这个门面后面**（`Demo2ApplicationService.solve`），本仓的 只把三条路径分别接了线——
 /// 三条各自能跑，**合起来却没有统一入口**。调用方按 `StowageMode` 分派，不该自己 `switch` 三个应用类。
 ///
-/// **这里只做分派**，不搬编排：心跳、列生成、Benders 质量守卫、`render` 都不在这里。
-/// 份是**一个 130 行的编排器**，硬把它的空壳搬过来只会得到"每个方法都返回未实现"的空架子——**空壳是最糟的缺口**。
+/// **这里只做分派**，不实现编排：心跳、列生成、Benders 质量守卫、`render` 都不在这里。
+/// 份是**一个 130 行的编排器**，硬把它的空壳实现出来只会得到"每个方法都返回未实现"的空架子——**空壳是最糟的缺口**。
 /// 分派先站住，其余逐条补，补一条加一条判据。
 ///
-/// "分区列生成与 Benders 不能同时启用"这条校验**搬不了**：本仓的 `SolvePolicy` 没有 `PartitionColumnGeneration`
+/// "分区列生成与 Benders 不能同时启用"这条校验**实现不了**：本仓的 `SolvePolicy` 没有 `PartitionColumnGeneration`
 /// 字段（这是 `infrastructure/dto` 整域缺口的一部分）。**校验依赖的输入都不存在，写一个假校验只会骗人。**
 ///
-/// **The code puts all three `Execute` paths behind this facade** (`Demo2ApplicationService.solve`); and wired them separately — each runs,
+/// **The implementation puts all three `Execute` paths behind this facade** (`Demo2ApplicationService.solve`); and wired them separately — each runs,
 /// **but together they have no single entry point**. Callers dispatch on `StowageMode` instead of switching over three application classes themselves.
 ///
 /// **The facade only dispatches**; it does not move the orchestration. Heartbeats, column generation, the Benders quality guard and `render` stay
 /// out. The full orchestration is **a 130-line method**, and dragging its shell over here would only produce an empty frame where every method returns
 /// "not implemented" — **an empty shell is the worst kind of gap**. Dispatch first; the rest lands item by item, one criterion each.
 ///
-/// The code's "partition column generation and Benders cannot both be enabled" check **cannot move**: this implementation's `SolvePolicy` has no
+/// Its "partition column generation and Benders cannot both be enabled" check **cannot move**: this implementation's `SolvePolicy` has no
 /// `PartitionColumnGeneration` field (part of the whole-domain `infrastructure/dto` gap). **The input the check needs does not exist, and writing a fake check
 /// would only lie.**
 /// </remarks>
@@ -72,8 +72,8 @@ public static class Demo2ApplicationService {
         // **心跳回调不是装饰**：它把"还在跑"与"已经结束"分开报，长跑求解没有它，调用方只能等或者超时。
         // 这里在分派前后各发一次：开跑前一次 `RunningHeartBeat`，收尾一次 `FinnishHeartBeat`。
         //
-        // **The heartbeat callbacks are not decoration**: the code uses them to report "still running" separately from "finished", and without them a caller of
-        // a long solve can only wait or time out. One is emitted before dispatch and one at the end, **matching the code**.
+ // **The heartbeat callbacks are not decoration**: this implementation uses them to report "still running" separately from "finished", and without them a caller of
+ // a long solve can only wait or time out. One is emitted before dispatch and one at the end, **.
         DateTime start = DateTime.UtcNow;
         running?.Invoke(new RunningHeartBeatDTO(
             request.Id,
@@ -85,7 +85,7 @@ public static class Demo2ApplicationService {
         // 位置（`Demo2ApplicationService.solve` 在心跳之前校验）。
         //
         // **Both policy checks run before dispatch**: they are "the request contradicts itself", independent of which loading path is taken. The position matches
-        // the code, which checks before the running heartbeat.
+ // the implementation, which checks before the running heartbeat.
         // **机型守卫在策略校验之前**：顺序就是 `supportedAircraft` → 策略互斥 → 心跳。顺序不是装饰——
         // 机型不支持时"策略互斥"这件事根本轮不到讨论，先报会让人去改策略，改完还是不支持。
         //
@@ -113,7 +113,7 @@ public static class Demo2ApplicationService {
         if (policy.PartitionColumnGeneration && policy.PreferBenders)
         {
             // 原话沿用：这不是"不支持"，是"两种策略互斥"。
-            // The code's own wording: this is not "unsupported", the two strategies are mutually exclusive.
+ // Its own wording: this is not "unsupported", the two strategies are mutually exclusive.
             (ResponseDTO Response, RenderDTO? Render) conflict = (
                 ResponseDTO.NoSolution(
                     "PolicyConflict",
@@ -219,8 +219,8 @@ public static class Demo2ApplicationService {
     /// 错误码在 `Execute` 里就被折成字符串了。所以这里只能按字符串反推，认不出来的统一报 `ApplicationFailed`。
     /// 要恢复无损，得让 `ResponseDTO` 带上错误码本身（那是 `infrastructure/dto` 整域缺口的一部分）。
     ///
-    /// **This is a lossy mapping and must be said out loud**: the code holds an `Error&lt;ErrorCode&gt;` on the failure path, while this implementation's `ResponseDTO` carries
-    /// only a status **string** — the code is flattened inside `Execute`. So it is reverse-engineered here, and anything unrecognised reports `ApplicationFailed`.
+ /// **This is a lossy mapping and must be said out loud**: the implementation holds an `Error&lt;ErrorCode&gt;` on the failure path, while this implementation's `ResponseDTO` carries
+ /// only a status **string** — this implementation is flattened inside `Execute`. So it is reverse-engineered here, and anything unrecognised reports `ApplicationFailed`.
     /// Restoring losslessness means putting the error code on `ResponseDTO` itself (part of the whole-domain `infrastructure/dto` gap).
     /// </remarks>
     private static ErrorCode CodeOf(string? status) => status switch {
@@ -231,9 +231,9 @@ public static class Demo2ApplicationService {
         // 而搜不到它们——全部产出点已改回三个状态。**
         // **留着旧名字的映射会让"没人产出的字符串"看起来像一条真实分支。**
         //
-        // **The code `fail` produces exactly three statuses**: `ORModelInfeasible` → `"Infeasible"`,
+ // **The implementation `fail` produces exactly three statuses**: `ORModelInfeasible` → `"Infeasible"`,
         // `OREngineSolvingException` → `"NotConverged"`, **everything else → `"Error"`**.
-        // **This implementation once invented `DirectSolveFailed`/`DomainRegisterFailed`/`ModelBuildFailed`, which appear nowhere in the code —
+ // **This implementation once invented `DirectSolveFailed`/`DomainRegisterFailed`/`ModelBuildFailed`, which appear nowhere in the implementation —
         // Every producer now uses its three.** **Keeping the old names would make strings nobody emits look like real branches.**
         "NotConverged" => ErrorCode.OREngineSolvingException,
         _ => ErrorCode.ApplicationFailed,

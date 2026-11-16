@@ -14,9 +14,9 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **`Steradian` 在是 `PhysicalUnit` 而不是 `DerivedPhysicalUnit(...)`**——
 /// **它是 SI 导出单位，但相对 SI 基准的因子恰好是 1，所以没有"导出"这一步。**
 ///
-/// **Created from the code.**
+/// **Created.**
 ///
-/// **`Steradian` is `PhysicalUnit` in the code rather than `DerivedPhysicalUnit(...)`** —
+/// **`Steradian` is `PhysicalUnit` in the implementation rather than `DerivedPhysicalUnit(...)`** —
 /// **it is an SI derived unit whose factor against the SI base is exactly 1, so there is nothing to derive.**
 /// </remarks>
 public static class SolidAngleUnits

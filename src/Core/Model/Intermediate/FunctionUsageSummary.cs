@@ -113,7 +113,7 @@ public enum FunctionUsageLocation {
 ///
 /// **`(InObjective &amp;&amp; InConstraint)` inside `RequiresResultVariable` is <b>redundant</b>**.
 /// **`InConstraint` already covers it.**
-/// **The code keeps it because it writes that specific case into the expression, so a reader need not go back and
+/// **This implementation keeps it because it writes that specific case into the expression, so a reader need not go back and
 /// check whether `InConstraint` subsumes it.** **That redundancy is not a mistake, but it must be marked, or the next
 /// reader will think a condition is missing.**
 ///

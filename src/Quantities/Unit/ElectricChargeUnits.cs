@@ -23,9 +23,9 @@ public static class ElectricChargeUnits {
     // **法拉系列不在这个文件里**：**它写在这里，却声明 `Capacitance` 量纲。**
     // **跟着文件名会建成电荷单位——所以它们在 `CapacitanceUnits`。**
     //
-    // The six below were added from the code ElectricCharge.kt.
+ // The six below were added ElectricCharge.kt.
     //
-    // **The farad family is not here**: **the code writes it in this file while declaring `Capacitance`.**
+ // **The farad family is not here**: **this implementation writes it in this file while declaring `Capacitance`.**
     // **Following the file name would build charge units, so they live in `CapacitanceUnits`.**
 
     /// <summary>千库（10³ C）/ Kilocoulomb.</summary>

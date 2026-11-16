@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// **两个吸引子回到标准式** / Two attractors back to their standard forms.
 /// </summary>
 /// <remarks>
-/// （其内部编号 ）。C# 侧把**修复前**的公式原样搬了过来，于是同一个错误在这里又活了一轮——
+/// （其内部编号 ）。C# 侧把**修复前**的公式原样实现了过来，于是同一个错误在这里又活了一轮——
 /// 五个偏离点全在：Aizawa 的 `dx` 减的是完整 `dy`、`dz` 的线性项用 `alpha*x`、输出把 `dz`/`dy` 置换；
 /// Wimol-Banlue 用 `tan` 而不是 `tanh`、用 `|x|` 而不是 `|y|`。
 ///
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 ///
 /// Syncs Kotlin `966cafbc` (its internal id ). The C# side had copied the **pre-fix** formulas, so the same error lived on here: all five deviations
 /// were present. **The criteria do not restate the implementation: they recompute the standard form inside the test and compare it with one step of the
-/// implementation.** A criterion that restates the implementation only proves "the code did not change", not "the formula is right" — and the latter is what
+/// implementation.** A criterion that restates the implementation only proves "the implementation did not change", not "the formula is right" — and the latter is what
 /// is about.
 /// </remarks>
 public class AttractorFormulaSyncTests

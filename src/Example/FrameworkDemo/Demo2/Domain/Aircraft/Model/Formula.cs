@@ -79,7 +79,7 @@ public sealed class Formula
     /// **重量为零时无定义**。`arm` 用浮点除直接算，重量为 0 会得到 `Infinity` 并悄悄污染力矩约束；这里返回 `NaN` 交给调用方判断，
     /// 因为在力矩语境下"无重量的物体的力臂"本来就没有意义。
     ///
-    /// The inverse of <see cref="IndexFromWeight"/>: `arm = index × k / weight + standardDatum`. **Undefined for zero weight** — the code divides in floating point and
+ /// The inverse of <see cref="IndexFromWeight"/>: `arm = index × k / weight + standardDatum`. **Undefined for zero weight** — the implementation divides in floating point and
     /// lets `Infinity` quietly poison the torque constraints; this returns `NaN` for the caller to notice, because "the arm of a weightless object" has no meaning in a torque
     /// context.
     /// </remarks>

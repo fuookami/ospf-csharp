@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Math.Symbol.Tests.Expression.Parser;
 ///
 /// **三次都是同一件事：<b>一个抽样动作的失败，被当成了关于世界的事实**。</b>
 ///
-/// **The matrix's line 53 says (713 lines) has <b>no</b> coverage. Measured: the code file has
+/// **The matrix's line 53 says (713 lines) has <b>no</b> coverage. Measured: the file has
 /// <b>three</b> entry points (`parse`, `parseScalarExpression`, `parseScalarExpressionOrNull`), this repo's
 /// `ScalarExpressionParser.cs` (546 lines) has <b>all three</b>, and there are <b>25</b> behavioural tests.**
 ///
@@ -89,7 +89,7 @@ public class ScalarParserCoverageCorrectionTests
     /// **那一格现在说的是实话** / That cell now tells the truth.
     /// </summary>
     /// <remarks>
-    /// **这条钉住矩阵：那一行必须写上"已搬"与三个入口，而不是"无"。**
+    /// **这条钉住矩阵：那一行必须写上"已实现"与三个入口，而不是"无"。**
     /// **同时它必须在路径上也正确——因为把路径写错正是这次错误的来源。**
     ///
     /// **This pins the matrix: the row must say "implemented" with the three entry points instead of "none", and it must be right
@@ -103,7 +103,7 @@ public class ScalarParserCoverageCorrectionTests
         // **判据钉的是"矩阵指得出实现文件在哪"，不是"矩阵抄了路径"。** '
         // **能力要自解释：读者从矩阵就该找到本仓的实现，而不是先去另一个仓库里找对照。**
         //
-        // **The criterion pins "the matrix points at the implementation", not "the matrix copies the code path".** A capability has to explain itself: a reader should reach this
+ // **The criterion pins "the matrix points at the implementation", not "the matrix copies the path".** A capability has to explain itself: a reader should reach this
         // repo's implementation from the matrix without first looking something up elsewhere.
         matrix.Should().Contain(
             "src/Math/Symbol/Expression/Parser/ScalarExpressionParser.cs",

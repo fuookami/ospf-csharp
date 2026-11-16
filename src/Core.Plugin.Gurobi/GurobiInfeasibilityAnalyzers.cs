@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// 补的是（518 行）里的 Farkas 那一条**。
 /// 个文件有三个类：`GurobiNativeIISAnalyzer`（纯 IIS）、`GurobiFarkasAnalyzer`（这里）、
 /// `GurobiQuadraticNativeIISAnalyzer`（二次 IIS）。**两次 IIS 都需要 `ComputeIIS` 的隔离实例，
-/// 这里没搬，也没写空跑版本。**
+/// 这里没实现，也没写空跑版本。**
 ///
 /// Mirrors `ScipFarkasInfeasibilityAnalyzer`: the diagnosis replays the model on its own Gurobi instance and rejects integer columns, because an LP certificate cannot prove a
 /// mixed-integer model infeasible. **The Farkas member is implemented here**. It has three classes — a native IIS one,

@@ -65,7 +65,7 @@ public class SolverErrorNormalizationTests {
     /// 判据同时断言三件事：编码是 `Unknown`、**原文里还能看到原始编码**、消息里点明了是哪种降级。
     /// 只断言第一件的话，一个把所有信息都扔掉的实现照样通过。
     ///
-    /// The criterion asserts three things: the code is `Unknown`, **the original code still appears in the text**, and the message names the degradation. Asserting only the
+ /// The criterion asserts three things: this implementation is `Unknown`, **the original code still appears in the text**, and the message names the degradation. Asserting only the
     /// first would let an implementation that throws all detail away pass.
     /// </remarks>
     [Fact]

@@ -56,7 +56,7 @@ public sealed record MultiObjectiveResult<V>(
 /// 所以由调用方构造 `ConstrainedSearch` 传进来。**不传时退回纯拥挤距离**，与接线前的行为一致。
 /// **接线前那一版有个真实后果**：不可行个体照样能靠拥挤距离活下来，而这种情况**没有任何判据会红**——
 /// 因为"没有可行性概念"的种群看起来同样"多样"。所以判据必须能证明处理器**真的被调用**，而不是只看结果个数。
-/// **"Select survivors by constraint group" comes in through the `constraints` constructor argument** . The code's `constraintSurvivors` asks the model for
+/// **"Select survivors by constraint group" comes in through the `constraints` constructor argument** . Its `constraintSurvivors` asks the model for
 /// a constraint handler and, if present, selects per feasibility group or takes the top `amount` by stochastic ranking; this implementation keeps the handler next to the
 /// problem rather than on the model (an established shape difference, see `SearchConstraints`), so the caller builds a `ConstrainedSearch` and passes it in.
 /// **Without it the runner falls back to crowding distance**, matching the pre-wiring behaviour.
@@ -197,7 +197,7 @@ public class Nsga2Runner<V>
         // 只接 `Advance` 会有个隐蔽的后果——**外部导入的种群按拥挤距离筛，而内部每一代按可行性筛**，
         // 两处规则不同却都不报错，症状只会表现为"导入之后收敛变差"。
         //
-        // **The import entry and the advance entry take the same selection path**: the code `selectImported` calls `constraintSurvivors` too. Wiring
+ // **The import entry and the advance entry take the same selection path**: the implementation `selectImported` calls `constraintSurvivors` too. Wiring
         // only `Advance` has a quiet consequence — **imported populations are filtered by crowding distance while each internal generation is filtered by
         // feasibility**, and two different rules that never complain look exactly like "convergence got worse after importing".
         return Constraints is null

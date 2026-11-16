@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service;
 /// 与批次汇编那一份生成器一样，系数不从某个全局 `Parameter` 里摸，而是逐个传进来：
 /// **一个供 6 条管线共用的全局系数表，改一处影响全部，排查时说不清是谁的代价**。
 ///
-/// The code's puts **three constraints first and three objectives after**, in a fixed order.
+/// Its puts **three constraints first and three objectives after**, in a fixed order.
 ///
 /// The order carries meaning here: constraints before objectives is what makes the solver "minimise inside the feasible region"; reversing it raises nothing and merely leaves column
 /// generation's pricing without usable dual information — **the "it solved but nothing moves" shape**.

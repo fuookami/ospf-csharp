@@ -342,7 +342,7 @@ public sealed class AdaptiveAcceptanceTests {
     /// <summary>**多目标下延迟接受一律拒绝** / Late acceptance rejects outright in multi-objective search.</summary>
     /// <remarks>
     /// 用一个个体充当基准会让接受判据取决于工作集的排列顺序，**而策略看起来仍在正常工作**。
-    /// Using one individual as the code makes acceptance depend on the working-set order **while the policy still looks like it
+ /// Using one individual as the implementation makes acceptance depend on the working-set order **while the policy still looks like it
     /// works**.
     /// </remarks>
     [Fact]

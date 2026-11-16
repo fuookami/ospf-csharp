@@ -92,7 +92,7 @@ public class ConditionNormalizationTests
     /// **At `δ = 0`, `TrueLower = FalseUpper = 0`, so "is this point true or false" has no answer — while the model
     /// stays feasible, because both sides of the indicator rows can be satisfied.**
     ///
-    /// **The code errors. The criterion must verify <b>that</b> error rather than merely "it failed"** —
+ /// **The implementation errors. The criterion must verify <b>that</b> error rather than merely "it failed"** —
     /// **because the positive-gap rule is what fires here, not some earlier check.**
     /// </remarks>
     [Fact]
@@ -224,7 +224,7 @@ public class ConditionNormalizationTests
     ///
     /// **取范围 `[0.2, 0.8]`、`δ = 1`：真分支要 `q ≥ 1`（不满足），假分支要 `q ≤ 0`（不满足）。**
     ///
-    /// **The code errors rather than returning "both false"** — **the latter would read as "the condition is always
+ /// **The implementation errors rather than returning "both false"** — **the latter would read as "the condition is always
     /// false" while the range is simply illegal.**
     ///
     /// **The case takes care to build**: **under `GT` the true branch is `q ≥ 1` and the false branch `q ≤ 0`, while

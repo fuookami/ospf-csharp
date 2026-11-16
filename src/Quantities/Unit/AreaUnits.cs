@@ -22,7 +22,7 @@ public static class AreaUnits {
     // **以下四个补齐**： 有 `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`，
     // **而 `Stress` 量纲（psi/psf）正需要前两个**——**不补它们，英制压力单位就建不出来。**
     //
-    // **The four below were added**: its has `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`,
+    // **The four below were added**: it has `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`,
     // **and the `Stress` dimension (psi/psf) needs the first two** — **without them the imperial pressure units cannot exist.**
     /// <summary>平方英寸 / Square inch.</summary>
     public static readonly PhysicalUnit SquareInch = new DerivedUnit(SquareMeter.ScaleMultiply(Scale.Invoke(0.00064516)), "square inch", "in2");

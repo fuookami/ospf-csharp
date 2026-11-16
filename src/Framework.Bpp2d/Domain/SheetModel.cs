@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 相等性由**类型编码 + 是否主板材 + 宽高 + 最大承重**共同决定：同尺寸但不同编码的板材是两种板材，若不带编码比较，
 /// 多板材类型的排样结果会被错误去重。
 /// Equality is decided by **type code + main flag + width/height + maximum load**: sheets of equal size but different
-/// codes are different sheet types, and comparing without the code would wrongly deduplicate results across sheet types.
+/// codes are different sheet types, and comparing without the implementation would wrongly deduplicate results across sheet types.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 public class SheetType<V> : ISheet2Geometry<V> where V : struct, IFloatingNumber<V> {
@@ -152,7 +152,7 @@ public class SheetType<V> : ISheet2Geometry<V> where V : struct, IFloatingNumber
 /// <remarks>
 /// 相等性**必须包含板材类型编码**：同一排布放在不同板材上是不同的列，不带编码会让多板材类型被错误去重。
 /// Equality **must include the sheet type code**: the same layout on different sheets is a different column, and
-/// leaving the code out deduplicates across sheet types incorrectly.
+/// leaving the implementation out deduplicates across sheet types incorrectly.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 public class Layer<V> : IComparable<Layer<V>> where V : struct, IFloatingNumber<V> {

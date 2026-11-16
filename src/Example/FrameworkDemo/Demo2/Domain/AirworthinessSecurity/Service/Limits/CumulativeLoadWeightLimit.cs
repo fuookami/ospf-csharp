@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 3. **没有救生筏常数项**。累积载荷只看货，不像区域载荷那样含救生筏——这是分工，不是遗漏。
 ///
 /// one row per checkpoint, `Σ (overlap ratio × estimated load weight) ≤ checkpoint maximum`, named `{name}_{zone}_{arm}`. Three easy mistakes:
-/// (1) **a checkpoint with no available position is skipped**, not failed — same shape as the zone bound; (2) **the arm uses the invariant culture** — the code splices
+/// (1) **a checkpoint with no available position is skipped**, not failed — same shape as the zone bound; (2) **the arm uses the invariant culture** — the implementation splices
 /// `toArm.value` into the name, and the current culture would make the decimal separator machine-dependent (`900.5` vs `900,5`), so the same data yields different constraint names
 /// on two machines and reports cannot be compared; (3) **there is no liferaft constant** — cumulative load counts cargo only, unlike the zone bound; that is its
 /// division of labour, not an omission.

@@ -96,7 +96,7 @@ public class Demo2InfrastructureTests
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B737).Should().BeTrue();
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B757).Should().BeTrue();
         // **/ 在是支持的**：排除 `Unknown`。
-        // **/ are supported in the code** : only `Unknown` is excluded.
+ // **/ are supported in the implementation** : only `Unknown` is excluded.
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B767).Should().BeTrue();
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B747).Should().BeTrue();
         BendersStrategy.SupportedAircraft(AircraftTypeInput.Unknown).Should().BeFalse();

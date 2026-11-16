@@ -701,7 +701,7 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
     /// </param>
     /// <returns>LP 主问题；注册失败时返回 null / The LP master; null when registration fails.</returns>
     /// <remarks>
-    /// **可行性阶段额外做两件事**（照做 `buildLpMaster(..., feasibilityPhase = true)`）：
+    /// **可行性阶段额外做两件事**（如此 `buildLpMaster(..., feasibilityPhase = true)`）：
     ///
     /// 1. `context.FeasibilityPhase` —— 让 LP 模式下**也构建 yield 聚合**（`_mode == MILP || _feasibilityPhase`）。
     /// 2. 用一个**只惩罚欠产、超产惩罚为零**的 `YieldModelingConfig`——这样目标函数就退化成
@@ -801,7 +801,7 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
     /// **也拿不到依据**。
     ///
     /// **Why the error code must be kept**: the two-phase feasibility only triggers on **the specific "model infeasible" code**. The original returned `null` on any
-    /// failure, **discarding the code** — so even a caller wanting to tell "infeasible" from "some other failure" **had no basis**.
+ /// failure, **discarding the implementation** — so even a caller wanting to tell "infeasible" from "some other failure" **had no basis**.
     /// </remarks>
     private async Task<(Csp1dMilpSolver.LpResult<V>? Result, ErrorCode? ErrorCode)> SolveLpMasterAsync(
         LpMaster master,

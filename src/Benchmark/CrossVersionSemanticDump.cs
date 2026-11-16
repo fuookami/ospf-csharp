@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// 逐行对比：网络可达与强连通分量、反向视图一致性、token 索引、素性缓存——每行都是"生产入口算出来的确定值"。
 ///
 /// 这里只转储三段：`NET`（网络）、`TOK`（token）、`PRM`（素性）。 其余三段是待办，
-/// 不是"没有"——`Pending` 常量逐个写明为什么还没搬，并由判据 `CrossVersionSemanticDumpTests` 钉住
+/// 不是"没有"——`Pending` 常量逐个写明为什么还没实现，并由判据 `CrossVersionSemanticDumpTests` 钉住
 /// "待办清单必须与已实现段不重叠、且每段都写了理由"。
 ///
 /// 一个必须写明的可比性限制： `orderDigest`／`sortedDigest` 用的是 Kotlin 的 `String.hashCode`，
@@ -66,7 +66,7 @@ public static class CrossVersionSemanticDump
     /// A criterion requires this list to never overlap the implemented sections. Every entry carries a reason: "not done yet" on its own hangs
     /// forever, while "the missing entry is X" can be scheduled.
     /// </remarks>
-    // **三段补齐之后这份清单是空的。** **它保留下来，是因为"清单为空"本身是一个可断言的结论：**
+    // **这份清单是空的。** **它保留下来，是因为"清单为空"本身是一个可断言的结论：**
     // **判据要求它与 `Implemented` 不重叠，一旦再有人把某段退回去，必须同时把理由写进这里，而不是悄悄少几行。**
     //
     // **with the last three sections implemented this list is empty.** **It stays because "the list is empty" is itself an assertable conclusion: a
@@ -467,7 +467,7 @@ public static class CrossVersionSemanticDump
     ///
     /// The pending reason used to be "`canonicalKey` is a service-layer thing the benchmark cannot reach". Measured: `CuttingPlanCanonicalKey.From(plan)`
     /// lives in `Domain/CuttingPlanGeneration/model/` and `CuttingPlan&lt;V&gt;` implements `ICuttingPlanForCanonicalKey` directly — what was unreachable was
-    /// the service-layer wrapper, not the key. The third time for this same defect. Two deliberate divergences from the code are stated here:
+ /// the service-layer wrapper, not the key. The third time for this same defect. Two deliberate divergences are stated here:
     /// its `hashCode` is a JVM string hash that cannot be compared across languages, so this uses the sorted raw join of canonical-key text
     /// (the same choice as `NET`/`TOK`/`PRM`), and the order-sensitive digest is likewise a same-language comparison only.
     /// </remarks>
@@ -620,7 +620,7 @@ public static class CrossVersionSemanticDump
         }
     }
 
-    /// <summary>数值渲染成的文本（整数值不带小数点）/ Render a number the way the code does (integers without a decimal point).</summary>
+ /// <summary>数值渲染成的文本（整数值不带小数点）/ Render a number the way this implementation does (integers without a decimal point).</summary>
     /// <param name="value">数值 / The number.</param>
     /// <returns>文本 / The text.</returns>
     private static string Num(object? value) => value switch {

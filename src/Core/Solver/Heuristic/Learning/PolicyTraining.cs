@@ -8,7 +8,7 @@
 // **未实现的部分**：`train` / `PolicyEvaluator.evaluate` / `compare` —— 三者都要 `HyperHeuristicSolver.open(...)`，
 // 而该文件在有 47241 B，尚未实现。`PolicyTrainer` 里**能独立成立的那一半**先落地并压满测试。
 // **Not implemented**: `train` / `PolicyEvaluator.evaluate` / `compare` — all three need `HyperHeuristicSolver.open(...)`, and that file is 47241 B in
-// the code and not yet implemented. The **half of `PolicyTrainer` that stands on its own** lands first, with tests.
+// the implementation and not yet implemented. The **half of `PolicyTrainer` that stands on its own** lands first, with tests.
 
 using System;
 using System.Collections.Generic;

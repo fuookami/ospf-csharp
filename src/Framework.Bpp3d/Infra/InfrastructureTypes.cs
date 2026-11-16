@@ -59,7 +59,7 @@ public sealed record BatchNo(string Value);
 /// 所以两个独立类型隔开——这里保持同样的区分。
 ///
 /// The difference from `QuantityPoint3` is **semantics**: a point is a location, a vector is a displacement. They share their fields, but adding two points is not a
-/// geometric operation, so the code keeps two distinct types — the same distinction is kept here.
+/// geometric operation, so this implementation keeps two distinct types — the same distinction is kept here.
 /// </remarks>
 public sealed record QuantityVector3<V>(Quantity<V> X, Quantity<V> Y, Quantity<V> Z)
     where V : struct, IFloatingNumber<V> {

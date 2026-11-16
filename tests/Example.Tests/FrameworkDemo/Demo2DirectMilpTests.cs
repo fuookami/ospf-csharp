@@ -95,7 +95,7 @@ public sealed class Demo2DirectMilpTests {
         // 把拒绝点提前到装配阶段**：那道守卫就在 `AggregationInitializer` 里。
         // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物，不是设计行为。
         //
-        // **moves the refusal to assembly**: the code keeps that guard in `AggregationInitializer`. The old `DomainRegisterFailed` pinned a local
+ // **moves the refusal to assembly**: this implementation keeps that guard in `AggregationInitializer`. The old `DomainRegisterFailed` pinned a local
         // deviation (the guard sat a step late), not its behaviour.
         response.Status.Should().Be("InitFailed",
             "the missing specification is refused where the baseline refuses it: during assembly");

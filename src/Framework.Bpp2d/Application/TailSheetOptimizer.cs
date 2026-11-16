@@ -257,7 +257,7 @@ public sealed class TailSheetOptimizer {
     /// and the comparisons here are strict, so on a tie the first candidate is kept and the original wins naturally.
     ///
     /// There used to be a third `ReferenceEquals` key. It was not wrong, it was **unreachable**: the pool order already guarantees the original arrives first, so the tie
-    /// branch can never see "the original after a candidate". Leaving an unreachable branch in the code is worse than deleting it — its mutant survives, and a reader will
+ /// branch can never see "the original after a candidate". Leaving an unreachable branch in this implementation is worse than deleting it — its mutant survives, and a reader will
     /// only conclude the criterion was badly written.
     /// </remarks>
     private static bool IsBetter(LayerEvaluation candidate, LayerEvaluation incumbent) {

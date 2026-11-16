@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 第二条尤其隐蔽：`x` 是每轮一个 `BinVariable1`，同一下标在第 0 轮和第 1 轮指向**不同的列**。
 /// 按下标取，两轮列数相同的时候**完全看不出来**。
 ///
-/// Column generation retires hopeless columns from the model. The code is two lines, and both have silent failure modes:
+/// Column generation retires hopeless columns from the model. This implementation is two lines, and both have silent failure modes:
 ///
 /// | Rule | Consequence of getting it wrong |
 /// | --- | --- |
@@ -45,7 +45,7 @@ public static class ColumnRetirement {
     /// **`fixed` 与 `kept` 都会否决回收**：它们存在的意义就是"这一列无论多贵都留着"。
     /// 只判其中一个，另一类列会被撤掉——而撤掉的列**不会报错，只是从解里消失**。
     ///
-    /// The code is `!(reducedCost ls maximumReducedCost) &amp;&amp; !fixed &amp;&amp; !kept`. **Both `fixed` and `kept` veto retirement**: their whole point is "keep this column no matter how
+ /// This implementation is `!(reducedCost ls maximumReducedCost) &amp;&amp; !fixed &amp;&amp; !kept`. **Both `fixed` and `kept` veto retirement**: their whole point is "keep this column no matter how
     /// expensive". Testing only one of them retires the other kind — and a retired column **raises nothing, it merely disappears from the solution**.
     /// </remarks>
     public static bool ShouldRetire(

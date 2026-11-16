@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Model;
 /// **只有全都不表态时才回退默认逻辑**。若实现把 `null` 当成 `false`，
 /// 一条"只管某类方案"的判据会把**其余所有方案**都判成不改善——**列生成立刻枯竭**。
 ///
-/// **These three extension points copy the code `Csp1dPricingInput`** (signatures above).
+/// **These three extension points copy the implementation `Csp1dPricingInput`** (signatures above).
 ///
 /// **The three-valued semantics of `isImprovingJudges` is the crux**: `null` means "this judge abstains", so the next one is asked; **only when all abstain does the
 /// default logic apply**. Treating `null` as `false` would make a judge that only handles one kind of plan **reject every other plan** — **column generation would dry

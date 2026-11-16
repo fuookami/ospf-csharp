@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// "cargo x position". On a length coincidence it "succeeds" at reading a **misaligned** plan; otherwise it reads an empty one. 
 /// drops the final `BuildAssignments(request, result.Solution)`: the objective and status are still reported, **assignments stay empty with a stated reason**
 /// (`benders_assignments=not_decoded:master_solution_length=N`). Only when demo2 moves to the framework `DiscreteLoadingApplicationService` ( established that
-/// as the code path) does the framework merge and decode assignments by variable identity.
+/// as the path) does the framework merge and decode assignments by variable identity.
 /// </remarks>
 public sealed class Demo2BendersAssignmentFabricationTests
 {

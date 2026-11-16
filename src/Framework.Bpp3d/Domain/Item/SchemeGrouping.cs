@@ -35,7 +35,7 @@ public static class SchemeGrouping {
     /// Two rules:
     /// 1. **Sort by ascending weight before grouping** — each group is therefore internally ordered with heavier items last.
     /// Layer generation taking items in order puts light items on top and heavy ones at the bottom.
-    /// 2. **Same pattern joins the same group, groups follow first-appearance order.** The code uses an insertion-ordered
+ /// 2. **Same pattern joins the same group, groups follow first-appearance order.** This implementation uses an insertion-ordered
     /// list, so "first appearance" is the position of the first item of that pattern after sorting.
     /// </remarks>
     /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
@@ -69,7 +69,7 @@ public static class SchemeGrouping {
     /// 用字符串签名而不是直接以 `PackageAttribute` 作字典键——已有三次"深值对象做字典键"失效的先例。
     ///
     /// **A pattern is determined jointly by batch number, warehouse and package attribute**, and any difference means a
-    /// different pattern. This is the C# equivalent of its `ItemPattern`: the code has a dedicated record
+ /// different pattern. This is the C# equivalent of its `ItemPattern`: this implementation has a dedicated record
     /// while C#'s `Item&lt;V&gt;` is flat, so the same fields are combined into a key here. A string signature is used instead of
     /// keying directly on `PackageAttribute` — this session has already seen three failures from deep value objects as
     /// dictionary keys.

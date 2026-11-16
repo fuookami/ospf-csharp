@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 ///
 /// Puts the imprecise assignment's **area symbol** into the objective with a coefficient. Three shape constraints of this
 /// repository: **`LinearMetaModel` has no `Minimize`** (recorded at `src/Example/FrameworkDemo/Demo2/.../SoftSecurityLimits.cs:100`), so objectives go through `AddObject(ObjectCategory.Minimum,
-/// …)`; **area is a symbol rather than a number**, and the code scales each term of `assignment.area.toLinearPolynomial` while this repository's `AreaSymbol` is a
+/// …)`; **area is a symbol rather than a number**, and the implementation scales each term of `assignment.area.toLinearPolynomial` while this repository's `AreaSymbol` is a
 /// `LinearExpressionSymbol` placed straight into the objective, since expanding it and rescaling the terms would drop the constant; and **the coefficient multiplies even when it is one**, so
 /// callers using a tie-break weight such as 1e-6 take the same path.
 /// </remarks>

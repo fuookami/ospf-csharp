@@ -304,11 +304,11 @@ public class SolveMilpProgressWiringTests {
     /// `solveMILP` 的**两个重载**里各接一次线（第 156、158 行与第 166、168 行）。
     /// C# 的实现把 `registration` / `solving` 算在分支**之前**，所以两个分支共用包装后的回调——
     /// **这个结构本身正确，但它依赖"分支之前"这个位置**。若有人把包装移进非池分支，
-    /// 池分支就会退回未包装的回调，而**非池分支的判据全部照旧通过**。
+    /// 池分支就会退回未包装的回调，而**非池分支的判据全部不变通过**。
     ///
     /// 这条判据专门走**池分支**（`SolutionAmount` 非 null）。
     ///
-    /// The code wires **both** `solveMILP` overloads (lines 156/158 and 166/168). The C# implementation computes `registration` / `solving` **before** the branch,
+ /// The implementation wires **both** `solveMILP` overloads (lines 156/158 and 166/168). The C# implementation computes `registration` / `solving` **before** the branch,
     /// so both branches share the wrapped callbacks — **that structure is correct, but it depends on being "before the branch"**. If someone moved the wrapping into
     /// the non-pool branch only, the pool branch would fall back to unwrapped callbacks while **every non-pool criterion still passed**.
     ///
@@ -337,7 +337,7 @@ public class SolveMilpProgressWiringTests {
     /// **判据要求恰好两条**，不是"至少一条"：若实现只上报了开始或只上报了结束，
     /// "至少一条"会通过，而**进度条会停在 0 或停在 100**。
     ///
-    /// The code's `solveLP(metaModel, options)` reports `(MasterLP, 0, 30)` before the solve and once more on success. The C# side **had no such overload**, so
+ /// Its `solveLP(metaModel, options)` reports `(MasterLP, 0, 30)` before the solve and once more on success. The C# side **had no such overload**, so
     /// the master-problem stage **produced no snapshot at all**.
     ///
     /// **The criterion demands exactly two**, not "at least one": if the implementation reported only the start or only the end, "at least one" would pass while

@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// 对应的 `RelatedVariable`。**两个边界都可空是核心语义**：
 /// IIS 只保留"导致不可行"的那些边界，其余边界要被丢弃。
 ///
-/// Mirrors `RelatedVariable` in the code. **Both bounds being nullable is the core semantics**: an IIS keeps only the bounds that cause infeasibility and drops the
+/// Mirrors `RelatedVariable` in the implementation. **Both bounds being nullable is the core semantics**: an IIS keeps only the bounds that cause infeasibility and drops the
 /// rest.
 /// </remarks>
 internal sealed record IisRelatedVariable(
@@ -39,7 +39,7 @@ internal sealed record IisRelatedVariable(
 /// （只要变量列表与松弛行号），所以这里**提取到共享位置**，让二次侧直接复用，
 /// 而不是复制一份。
 ///
-/// These functions **never call a solver** — they only read and write model shape — so they **can be fully verified without an SDK**. In the code they are the
+/// These functions **never call a solver** — they only read and write model shape — so they **can be fully verified without an SDK**. In the implementation they are the
 /// infrastructure the elastic and deletion filters build on: resolve related rows and variables, then hand the submodel to the solver. **`RelatedRows` used to live in
 /// `LinearLegacyIisCompute`, but neither its signature nor its body is linear-specific** (it only needs a variable list and slack row indices), so
 /// **extracts it to a shared location** for the quadratic side to reuse instead of copying it.
@@ -86,7 +86,7 @@ internal static class IisStructuralSupport {
     /// 同一变量被多次标记时**取或**（`MarkBound` 的累积语义），所以"既是边界又是系数"时边界会保留。
     /// 最终 `LowerBound`/`UpperBound` 为 `null` 表示**该侧边界不属于 IIS**。
     ///
-    /// **Marking rules (matching the code line by line)**: table above. Repeated marks on one variable **OR together** (the accumulation in `MarkBound`), so a
+ /// **Marking rules (. Repeated marks on one variable **OR together** (the accumulation in `MarkBound`), so a
     /// variable that is both a bound and a coefficient keeps its bound. A `null` bound in the result means **that side is not part of the IIS**.
     /// </remarks>
     public static List<IisRelatedVariable> RelatedVariables(

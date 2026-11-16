@@ -31,7 +31,7 @@ public static class MongoOrderByTranslator
     /// **空排序返回 `null` 而不是空文档**：条件就是 `if (sortBy == null || sortBy.isEmpty) return Ok(null)`。
     /// **空 `$sort: {}` 在 Mongo 里是合法但无意义的阶段**，而返回 `null` 让调用方整个省掉这个阶段。
     ///
-    /// **An empty sort returns `null`, not an empty document**: the code reads
+ /// **An empty sort returns `null`, not an empty document**: this implementation reads
     /// `if (sortBy == null || sortBy.isEmpty) return Ok(null)`.
     /// **An empty `$sort: {}` is legal but meaningless in Mongo**, while `null` lets the caller drop the stage entirely.
     /// </remarks>
@@ -66,7 +66,7 @@ public static class MongoOrderByTranslator
             // **这里也不看，但要说出来**——静默忽略一个调用方明确设置的选项，
             // **比不支持更糟：调用方以为它生效了。**
             //
-            // **`Nulls` does not exist in the code**: the C# `SortItem` carries an extra `NullsOrder? Nulls`,
+ // **`Nulls` does not exist in the implementation**: the C# `SortItem` carries an extra `NullsOrder? Nulls`,
             // **and its `MongoOrderByTranslator` never looks at it.**
             // **Neither does this, but it says so** — silently ignoring an option the caller explicitly set
             // **is worse than not supporting it: the caller believes it took effect.**

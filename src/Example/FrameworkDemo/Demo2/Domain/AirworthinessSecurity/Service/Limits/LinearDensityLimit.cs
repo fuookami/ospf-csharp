@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// cap is not just area-versus-length but **what is summed**: surface density is one row per position, linear density is **one row per cross-section**, and a line usually covers
 /// several positions — dropping one understates the weight on that section while the constraint still looks satisfied. Three details: (1) **skip only when the whole line is
 /// unavailable** (`none { available }` is a whole-line guard, not a per-position filter), so an unavailable position's density still joins the sum when a neighbour on the same
-/// line is available — different from the surface cap, and copied as-is with its consequence recorded below; (2) **the indices come straight from the line** — the code
+/// line is available — different from the surface cap, and copied as-is with its consequence recorded below; (2) **the indices come straight from the line** — the implementation
 /// back-looks them up by **value equality**, which picks the wrong one for two identical positions, a whole class of error C# avoids by carrying indices from the cut;
 /// (3) **the name carries the arm value**, otherwise every row is indistinguishable in the solver log.
 /// </remarks>

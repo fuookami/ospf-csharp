@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// <remarks>
 /// **六条校验** + **四项派生**。
 ///
-/// 六条校验，顺序照做：拖车名非空 → 拖车名唯一 → 顺序在 `0..255` → 同车内货物不重复 →
+/// 六条校验，顺序如此：拖车名非空 → 拖车名唯一 → 顺序在 `0..255` → 同车内货物不重复 →
 /// 每件货最多属于一辆车 → 拖车引用的货物必须存在。
 ///
 /// 四项派生：
@@ -82,7 +82,7 @@ internal static class AggregationInitializer
     /// `mapIndexed { index, cargo -> cargo.source to index }.groupBy(...)`：**保序**、**容许重复来源**，
     /// 组内下标按请求顺序。用 `Dictionary` 的插入序来实现，不要换成排序。
     ///
-    /// The code's `mapIndexed(...).groupBy(...)`: **order-preserving** and **tolerant of repeated sources**, with indices inside a group following request order. Implemented via
+ /// Its `mapIndexed(...).groupBy(...)`: **order-preserving** and **tolerant of repeated sources**, with indices inside a group following request order. Implemented via
     /// `Dictionary` insertion order; do not replace with a sort.
     /// </remarks>
     /// <param name="input">请求 DTO / The request DTO.</param>

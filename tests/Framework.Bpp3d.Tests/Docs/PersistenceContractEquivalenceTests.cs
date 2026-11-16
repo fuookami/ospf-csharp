@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **The matrix says "whether they are equivalent <B>has not been checked item by item</b>". The contract layer was then checked: the
 /// three expression repositories expose `{find, count, exists, update, delete}` and no insert, and `ExpressionRepository`
 /// exposes exactly those five.** **So what holds is precise: five operations map one-to-one, no more and no less; and what differs is
-/// equally precise: the code uses four dialect backends for one job while this repository uses one stack (EF Core) — a different
+/// equally precise: this implementation uses four dialect backends for one job while this repository uses one stack (EF Core) — a different
 /// road, not a missing operation.** **The criterion pins the five methods: removing one loses a capability and nothing else would
 /// redden.**
 /// </remarks>

@@ -136,7 +136,7 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// 换型指示整片消失，而解依旧可行。
     ///
     /// `frontOf[from, to] = 1` exactly when `est[from]` is **not later than** `est[to]`. "Not later" rather than "earlier" is the point: with ties both sides are 1, so
-    /// `not_between` treats a degenerate "all three start together" schedule as mutually sandwiched — as in the code. Writing `&lt;=` as `&lt;` makes both sides 0 on a tie,
+ /// `not_between` treats a degenerate "all three start together" schedule as mutually sandwiched —. Writing `&lt;=` as `&lt;` makes both sides 0 on a tie,
     /// the indicators vanish wholesale, and the solution stays feasible.
     /// </remarks>
     public IReadOnlyDictionary<(T From, T To), object>? FrontOfTable { get; private set; }
@@ -238,7 +238,7 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// <item>否则 → `AND(分配[执行器, from], 分配[执行器, to])`。</item>
     /// </list>
     ///
-    /// Three cases: `from == to` → **constant zero** (the code returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it — no contradiction:
+ /// Three cases: `from == to` → **constant zero** (this implementation returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it — no contradiction:
     /// the diagonal takes part in the sum, its value is just zero); `from` does not immediately precede `to` in the plan → constant zero ("immediately" means `from` starts
     /// strictly earlier than `to` and no third task starts strictly in between); otherwise → `AND(assignment[executor, from], assignment[executor, to])`.
     /// </remarks>
@@ -389,14 +389,14 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// `frontOf[from, to] = 1` 当且仅当 `est[from]` 不晚于 `est[to]`。它写成 `IfFunction` 包住一条不等式，
     /// 于是"谁在前"变成一个**决策变量**而不是一个静态判断——这正是允许提前/延迟之后必须做的事。
     ///
-    /// `frontOf[from, to] = 1` exactly when `est[from]` is not later than `est[to]`. The code wraps an inequality in an `IfFunction`, turning "who comes first" into a
+ /// `frontOf[from, to] = 1` exactly when `est[from]` is not later than `est[to]`. The implementation wraps an inequality in an `IfFunction`, turning "who comes first" into a
     /// **decision variable** rather than a static test — exactly what advance/delay makes necessary.
     ///
     /// **这里 ceiling**：`estimateStartTime[task1].range.range!!` 当左侧值域传给约束输入，而 C# 里
     /// `LinearExpressionSymbol.Range` 的写入**读不回来**（既有 ceiling），所以这里只能传全域。后果是 `IfFunction`
     /// 少一层收紧，不影响正确性，只影响松弛强度。
     ///
-    /// **Ceiling**: the code passes `estimateStartTime[task1].range.range!!` as the left-hand range, but in C# the writes to `LinearExpressionSymbol.Range` **cannot be read
+ /// **Ceiling**: the implementation passes `estimateStartTime[task1].range.range!!` as the left-hand range, but in C# the writes to `LinearExpressionSymbol.Range` **cannot be read
     /// back** (an existing ceiling), so the full range is passed. The `IfFunction` loses one layer of tightening — no effect on correctness, only on relaxation strength.
     /// </remarks>
     private Try BuildFrontOf(IAbstractLinearMetaModel<Flt64> linear) {

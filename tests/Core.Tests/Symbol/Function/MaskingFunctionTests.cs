@@ -188,7 +188,7 @@ public class MaskingFunctionTests {
     /// 而那条路会让 `mask = 1` 时的 `y = x` 约束在 `y` 超出 `bigM` 时**不可行**——
     /// 报出来是"无解"，看起来像排不下而不是掩码写错。
     ///
-    /// The code order is `bounds?.upper ?: bigM` — **finite range first**. The criterion gives the input an explicit `[-3, 3]`, so even with `bigM = 5` the bounds must shrink to 3.
+ /// The implementation order is `bounds?.upper ?: bigM` — **finite range first**. The criterion gives the input an explicit `[-3, 3]`, so even with `bigM = 5` the bounds must shrink to 3.
     /// Testing only "1e6 when no bigM is passed" would let "always use bigM" pass, and that path makes "y = x when mask = 1" **infeasible** once `y` exceeds `bigM` — reported as
     /// "no solution", looking like an unschedulable plan rather than a wrong mask.
     /// </remarks>

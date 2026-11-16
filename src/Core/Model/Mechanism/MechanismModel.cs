@@ -501,7 +501,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// and `null` on purpose: a caller that does not ask for deferred expansion must not get it.**
     ///
     /// **And that is the value of a gap criterion: it forces the closer to come back and rewrite "not yet" into "now", so
-    /// the documents and the code cannot drift apart.**
+ /// the documents and the implementation cannot drift apart.**
     /// </remarks>
     internal static async Task<Result<LinearMechanismModel<V>, ErrorCode, Error<ErrorCode>>> InvokeBeforeCommitAsync(
         LinearMetaModel<V> metaModel,

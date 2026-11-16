@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// `InfeasibilityEvidence` 上的字段来选择信不信</b>。把它们报成同一档会让"机器验证过的冲突"
 /// 与"松弛过滤的猜测"在矩阵上无法区分。**
 ///
-/// **adds it from the code.**
+/// **adds it.**
 /// **Following the earlier habit of checking dependencies first, this is again "only an
 /// adapter is missing": `IConstraintProgrammingSolver`, `ConstraintProgrammingInfeasibleOutput`,
 /// `ConstraintProgrammingConflict`, `SolveDiagnostics.InfeasibilityEvidence` and both `CollectConflict`/`ShrinkConflict`

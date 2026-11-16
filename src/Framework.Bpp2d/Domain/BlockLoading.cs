@@ -1,5 +1,4 @@
 // 空间区域、块与旋转校验 / Space region, block and rotation guard.
-//（37 行）对应。
 // And.
 
 using System;

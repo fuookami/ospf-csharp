@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// <c>σ(z) = 1 / (1 + e^(−z))</c> with <c>z = k(x − m)</c> (`k` the steepness, `m` the midpoint).
 ///
-/// **The code writes the source in two branches**.
+/// **This implementation writes the source in two branches**.
 /// ```
 /// z >= 0 ? 1 / (1 + exp(-z)) : exp(z) / (1 + exp(z))
 /// ```

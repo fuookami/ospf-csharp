@@ -104,7 +104,7 @@ public enum QuadraticIisEvidenceSource {
 /// 所以这里**只建立入口**，让"二次 IIS 未实现"从一个**文档记录**变成一个
 /// **可编译、可断言、可被后续批次填充**的结构。
 ///
-/// **This class deliberately does not implement the algorithm.** The code's `computeLegacyIIS` runs the six steps above, and **every one needs a real quadratic
+/// **This class deliberately does not implement the algorithm.** Its `computeLegacyIIS` runs the six steps above, and **every one needs a real quadratic
 /// solver** (`performElasticFiltering` repeatedly solves feasibility) — which this environment lacks (measured). So **only establishes the entry
 /// point**, turning "quadratic IIS is unimplemented" from a **doc note** into a **compilable, assertable structure that later batches can fill in**.
 /// </remarks>
@@ -319,7 +319,7 @@ public static class QuadraticLegacyIisCompute {
     /// **one by one** push a candidate slack's **upper bound to `0`** (i.e. "turn that relaxation off") and re-solve
     /// (see the table above for the two outcomes). When the loop ends, the active set is the **minimal relaxed set** — each member is evidence for the IIS.
     ///
-    /// **One difference from the code**: the code mutates `candidate._upperBound` and re-solves in place; here **each probe rebuilds the model**
+ /// **One difference**: the implementation mutates `candidate._upperBound` and re-solves in place; here **each probe rebuilds the model**
     /// (`UpperBound` is read-only), so a `closed` set explicitly records which columns are currently off, equivalent to its in-place mutation.
     /// </remarks>
     public static async Task<Result<IReadOnlyList<int>, ErrorCode, Error<ErrorCode>>> PerformDeletionFilteringAsync(
@@ -494,7 +494,7 @@ public static class QuadraticLegacyIisCompute {
     /// 不存在不可行子系统。同样情形下也返回空集。
     ///
     /// **Before this always returned `Failed`** because neither filter was implemented. Both are now in place, so this wires the full flow (table above). **An empty
-    /// `OriginRows` when the elastic filter succeeds is expected**: it means the original model was feasible, so there is no infeasible subsystem — the code returns
+ /// `OriginRows` when the elastic filter succeeds is expected**: it means the original model was feasible, so there is no infeasible subsystem — this implementation returns
     /// an empty set in that case too.
     /// </remarks>
     public static async Task<Result<QuadraticIisModel, ErrorCode, Error<ErrorCode>>> ComputeLegacyIISAsync(

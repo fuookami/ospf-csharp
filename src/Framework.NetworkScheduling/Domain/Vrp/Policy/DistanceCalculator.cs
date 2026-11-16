@@ -130,7 +130,7 @@ public class EuclideanDistanceCalculator<V>(PhysicalUnit distanceUnit) : IDistan
 /// **与一处实现差异**：`V.roundTo(1)`，而 C# 的 `IFloatingNumber&lt;TSelf&gt;` 接口不暴露取整能力（`RoundTo`
 /// 只存在于 `Flt32`／`Flt64`／`FltX` 的具体类型上）。因此本实现把取整作为构造参数传入。语义不变，只是把"如何取整"交给
 /// 调用方显式提供，`ForFlt64`／`ForFltX` 两个工厂给出常用实现。
-/// **One implementation divergence from the code**: the code calls `V.roundTo(1)`, but C#'s
+/// **One implementation divergence**: the implementation calls `V.roundTo(1)`, but C#'s
 /// `IFloatingNumber&lt;TSelf&gt;` does not expose rounding (`RoundTo` lives only on the concrete `Flt32`／`Flt64`／`FltX` types).
 /// This implementation therefore takes rounding as a constructor argument. Semantics are unchanged; only "how to round" is made
 /// explicit, with `ForFlt64`／`ForFltX` factories supplying the common cases.

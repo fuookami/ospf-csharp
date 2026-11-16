@@ -59,7 +59,7 @@ public sealed class RelationalQueryCompilerContractTest {
 
     /// <summary>
     /// 未显式给默认投影时回落到字段映射的键——这是行为，改了会让无投影查询的类型静默变化。
-    /// Without an explicit default projection it falls back to the column-map keys, matching the code;
+ /// Without an explicit default projection it falls back to the column-map keys;
     /// changing that would silently alter the shape of a projection-less query.
     /// </summary>
     [Fact]

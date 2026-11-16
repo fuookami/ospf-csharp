@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **`Status` and `Outcome` must both be `Unknown`.** Changing only one produces a self-contradictory observation: the status says "unknown" while the outcome says "no effect" — **and "no effect" is
 /// a conclusion.**
 ///
-/// **The code writes this as a factory filling three fields and defaulting the rest:**
+/// **This implementation writes this as a factory filling three fields and defaulting the rest:**
 /// </remarks>
 public static class PerturbationObservationFactory {
     /// <summary>

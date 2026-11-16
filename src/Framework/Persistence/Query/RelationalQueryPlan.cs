@@ -31,7 +31,7 @@ public sealed record RelationalQueryValidationError(string Field, string Message
 /// **这里刻意未实现**（同名能力，按依赖顺序排在后续批次）：
 /// <list type="bullet">
 /// <item>树级表达式循环检测：C# 表达式节点是不可变记录、只能自底向上构造，结构上无法成环，因此没有对应
-/// 实现——照搬过来会是不可达代码。详见 <see cref="RelationalQueryExpressionFreezer"/>。</item>
+/// 实现——如此过来会是不可达代码。详见 <see cref="RelationalQueryExpressionFreezer"/>。</item>
 /// <item>不可复制 payload 的结构化拒绝：当前对未知 payload 类型原样保留而不是报错。</item>
 /// <item>Join 图关联校验（关联条件必须把被 Join 的数据源与已绑定的数据源关联起来）。</item>
 /// <item><c>canonical</c> / <c>canonicalHash</c> / <c>hash</c>。</item>
@@ -208,7 +208,7 @@ public sealed class RelationalQueryPlan {
     /// Source naming must be unambiguous (no name equal to any alias, no duplicates), conditions must reference
     /// already bound sources, and a column-to-column correlation between the joined side and a bound side must
     /// **actually exist** — otherwise the join degrades into a cross product and the row count silently inflates.
-    /// The semantics match the code: `AND` needs any branch, `OR` needs every branch, `NOT` recurses, and a
+ /// The semantics match the implementation: `AND` needs any branch, `OR` needs every branch, `NOT` recurses, and a
     /// boolean constant in the condition is rejected outright (a `WHERE true` join is a cross product).
     /// </remarks>
     /// <returns>校验结果 / Validation result.</returns>

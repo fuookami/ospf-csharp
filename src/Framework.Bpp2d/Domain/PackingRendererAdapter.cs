@@ -1,5 +1,4 @@
 // 渲染 DTO 与装箱渲染适配 / Render DTOs and the packing render adapter.
-//（147 行）对应。
 // And.
 //
 // 面向外部渲染器的 DTO 一律使用 `double` 而非量纲类型：**跨界即降维**，渲染器不关心单位语义，只关心数值。

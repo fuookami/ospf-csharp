@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Math.Symbol;
 /// 而**写成 `new NamedSymbol("x", "x")` 与写成 `new NamedSymbol("x")` 在序列化上不是一回事**——
 /// 前者把显示名写实了，后者留在"没指定"。
 ///
-/// **The code has `DefaultSymbol(name, displayName?)`, and C# had no name-identified symbol at all** — only `PathSymbol`.
+/// **This implementation has `DefaultSymbol(name, displayName?)`, and C# had no name-identified symbol at all** — only `PathSymbol`.
 /// **So `SymbolOfSerializedIdentifier` threw for every identifier without a `path:` prefix**, and every identifier a polynomial parse produces is exactly that (`x`, `y`, `z_1`).
 /// **Name and display name are separate because the latter may be absent**: an `x` with no display name is just itself, and **`new NamedSymbol("x", "x")` and `new NamedSymbol("x")` are not the same thing once serialized**
 /// — the first pins the display name, the second leaves it unspecified.

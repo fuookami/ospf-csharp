@@ -10,7 +10,7 @@
 
 ospf-csharp 是 [ospf](https://github.com/fuookami/ospf) 的 C# / .NET 10 实现版本——一个用于数学规划（LP/MILP/QP）、列生成、分支定界和元启发式算法的优化求解器包框架。
 
-本项目是从 [ospf-kotlin](https://github.com/fuookami/ospf-kotlin)（Kotlin/JVM）的 1:1 迁移，在 Kotlin 内部 DSL 特性无法直接转换的地方采用惯用 C# 设计。[ospf-rust](https://github.com/fuookami/ospf-rust) 版本作为次要参考。
+它属于 [ospf](https://github.com/fuookami/ospf) 家族，能力面与之一致，在 Kotlin 内部 DSL 特性无法直接转换的地方采用惯用 C# 设计。[ospf-rust](https://github.com/fuookami/ospf-rust) 版本作为次要参考。
 
 ## 模块文档
 

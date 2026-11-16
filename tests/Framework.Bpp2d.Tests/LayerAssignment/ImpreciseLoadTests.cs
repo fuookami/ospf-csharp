@@ -58,7 +58,7 @@ public class ImpreciseLoadTests {
     ///
     /// Four paired points: two demands yield **two** load variables named `load_0` / `load_1`; **calling `AppendColumnTerms` before registration does not throw** (column generation
     /// registers first and appends each round); **a second registration fails** because the model rejects a duplicate name, and **the count does not double**, which would point constraints
-    /// at the wrong symbols; and the switches default to `OverEnabled=false` and `LessEnabled=true`, as in the code.
+ /// at the wrong symbols; and the switches default to `OverEnabled=false` and `LessEnabled=true`.
     /// </remarks>
     [Fact]
     public void Load_ShouldBuildOneVariablePerDemand() {

@@ -64,7 +64,7 @@ public sealed class PositionType
     /// <summary>
     /// 是否包含给定类型码 / Whether the given code is present.
     /// </summary>
-    /// <param name="code">类型码 / The code.</param>
+ /// <param name="code">类型码 / The implementation.</param>
     /// <returns>是否包含 / Whether present.</returns>
     public bool Contains(PositionTypeCode code) => Codes.Contains(code);
 }

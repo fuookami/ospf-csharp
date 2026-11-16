@@ -79,7 +79,7 @@ public sealed record BranchAndPriceResult<V>(
 /// means the deduplication invariant broke or parallel arcs made edge aggregation ambiguous, so any "optimum" reached by branching on
 /// would be meaningless.
 /// **与偏离**：C# 侧没有 `SolverProgressContext`，进度上报被省略；这不是能力缺口，而是本仓未实现进度上下文。
-/// **Divergence from the code**: there is no `SolverProgressContext` on the C# side, so progress reporting is omitted. That is
+/// **Divergence**: there is no `SolverProgressContext` on the C# side, so progress reporting is omitted. That is
 /// not a capability gap but an unimplemented progress context in this repository.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
@@ -572,7 +572,7 @@ public sealed class BranchAndPriceAlgorithm<V> where V : struct, IFloatingNumber
             Result<Flt64, ErrorCode, Error<ErrorCode>> cost =
                 _policy.ValueAdapter.Normalize(route.Cost, _instance.Units.CostUnit);
             // 单条路线换算失败按零计——这，但总成本因此只是一个下估计。
-            // A failed per-route conversion counts as zero, matching the code, so the total is only a lower estimate.
+ // A failed per-route conversion counts as zero.
             total = total.Plus(cost.IsOk ? ((Ok<Flt64, ErrorCode, Error<ErrorCode>>)cost).Value : Flt64.Zero);
         }
         return total;

@@ -123,7 +123,7 @@ public sealed class UInt64DurationConverter : IDurationConverter<UInt64> {
 ///
 /// **`IntX` is integral, so the sub-second part of a `TimeSpan` is truncated.**
 /// **That is not lost precision but the type semantics: an integer-seconds quantity carries no fraction when
-/// converted.** **The code truncates with `value.toLong` too, so the behaviour matches.**
+/// converted.** **The implementation truncates with `value.toLong` too, so the behaviour matches.**
 /// </remarks>
 public sealed class IntXDurationConverter : IDurationConverter<IntX> {
     public static readonly IntXDurationConverter Instance = new();

@@ -145,7 +145,7 @@ public sealed class DomainPipelineContext
         }
 
                 // 余度只在预配载下初始化，与`PredistributionPipelineContext.init` 一致。
-        // Redundancy is initialised under predistribution only, matching the code.
+ // Redundancy is initialised under predistribution only.
         if (stowageMode == StowageMode.Predistribution)
         {
             Try r9 = RedundancyContext.Init(StowageContext, request);
@@ -156,7 +156,7 @@ public sealed class DomainPipelineContext
         }
 
         // 建议打板独有的两域：它们替换掉软安全、重心优化、装卸效率。
-        // The two weight-recommendation-only domains : the code swaps them in for soft security, mac optimization and loading effectiveness.
+ // The two weight-recommendation-only domains : the implementation swaps them in for soft security, mac optimization and loading effectiveness.
         if (stowageMode == StowageMode.WeightRecommendation)
         {
             Try r10 = RecommendedWeightEqualizationContext.Init(AircraftContext, StowageContext, request);

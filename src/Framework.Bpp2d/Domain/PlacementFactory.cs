@@ -135,7 +135,7 @@ public sealed class ItemMerger<V> where V : struct, IFloatingNumber<V> {
     /// 合并键相同的物品累加件数，代表物品取**第一个出现**的实例——因此顺序决定合并后哪个物品编号留在结果里，
     /// 这里用有序字典保留首次出现顺序。
     /// Items sharing a merge key accumulate amounts and the representative is the **first occurrence**, so ordering decides
-    /// which item id survives; an insertion-ordered dictionary preserves first-appearance order, matching the code.
+ /// which item id survives; an insertion-ordered dictionary preserves first-appearance order.
     /// </remarks>
     /// <param name="items">物品与件数 / Items and their amounts.</param>
     /// <returns>合并后的物品与件数 / Merged items and amounts.</returns>

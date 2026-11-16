@@ -157,7 +157,7 @@ public class TaskCompilationConstraint<E, A>
             }
 
             // **符号要包成单项式**：`LinearExpressionSymbol` 本身就是变量，展开它的多项式是空的（踩过同一个坑）。
-            // **Wrap the symbol in a monomial**: a `LinearExpressionSymbol` *is* a variable and its polynomial is empty (the the same trap).
+            // **Wrap the symbol in a monomial**: a `LinearExpressionSymbol` *is* a variable and its polynomial is empty (the same trap).
             string rowName = _name + "_" + task.Id;
             Try added = linear.AddConstraint(
                 new Fuookami.Ospf.Math.Symbol.Inequality.LinearInequality<Flt64>(

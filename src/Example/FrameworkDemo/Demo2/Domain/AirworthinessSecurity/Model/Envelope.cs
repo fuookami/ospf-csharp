@@ -123,7 +123,7 @@ public sealed class EnvelopeSide
     /// 代价是"单位写错"在类型层面拦不住——它会表现为一个荒谬的指数值，而不是一条错误消息。
     ///
     /// Four branches: no points → 0; at or below the first → the first; at or above the last → the last; otherwise **linear interpolation** between neighbours (equal weights take
-    /// the upper point, avoiding division by zero). The code's unit-incompatibility branches **do not exist** in C# here: every quantity is a `double` in kilogram and the torque
+ /// the upper point, avoiding division by zero). Its unit-incompatibility branches **do not exist** in C# here: every quantity is a `double` in kilogram and the torque
     /// unit, so no type could carry a wrong unit. That is a deliberate simplification and it costs the compiler's ability to catch a wrong unit — a wrong unit now shows up as an
     /// absurd index value rather than an error message.
     /// </remarks>
@@ -344,15 +344,15 @@ public sealed class Envelope : IEnvelope
 ///
 /// **一处有意简化（`ponytail:`）**：对非分段符号本可先试"多项式本身的有限界"，更紧；但那个助手是
 /// `Core` 的 internal（`BigMValues.FiniteBounds`），示例域拿不到，所以常数符号直接用 `[值, 值]`、其余一律退回断点范围。
-/// 升级路径：把 `FiniteBounds` 提为公开（或搬到 `Math`），再先试紧界。
+/// 升级路径：把 `FiniteBounds` 提为公开（或实现到 `Math`），再先试紧界。
 ///
 /// **The undetermined branch synthesises the switch**: `min = second + switch·(first − second)`, likewise `max`; the switch is an `IfThenFunction` that needs a 0/1 condition symbol
 /// and two sets of bounds (the condition's range, the difference's range). A too-wide bound only weakens the Big-M relaxation, **a too-narrow one cuts off feasible solutions**, so
 /// whenever a usable finite bound cannot be obtained this falls back to **the point range** (a superset that certainly contains the true values).
 ///
-/// **One deliberate simplification (`ponytail:`)**: for non-piecewise symbols the code first tries the polynomial's own finite bounds, which are tighter. That helper is `Core`'s
+/// **One deliberate simplification (`ponytail:`)**: for non-piecewise symbols the implementation first tries the polynomial's own finite bounds, which are tighter. That helper is `Core`'s
 /// internal `BigMValues.FiniteBounds`, unreachable from an example domain, so constant symbols use `[value, value]` and everything else falls back to the point range. Upgrade path: make
-/// `FiniteBounds` public (or move it to `Math`) and prefer the tight bounds as the code does.
+/// `FiniteBounds` public (or move it to `Math`) and prefer the tight bounds as this implementation does.
 /// </remarks>
 public sealed class ConditionalEnvelope : IEnvelope
 {

@@ -91,7 +91,7 @@ public class CapacityBatchDurationTests {
     /// 两点成对：`Discrete = false` 且给了 4 小时批次 → 系数仍是 1（代码写明"仅离散型有效"）/
     /// `Discrete = true` 且同样的批次 → 0.5。**同一个批次时长，两种动作给出不同系数**，才算真的按规则分流。
     ///
-    /// Two paired points: `Discrete = false` with a 4-hour batch still yields 1 (the code says "only for discrete actions"); `Discrete = true` with the same batch yields 0.5.
+ /// Two paired points: `Discrete = false` with a 4-hour batch still yields 1 (the implementation says "only for discrete actions"); `Discrete = true` with the same batch yields 0.5.
     /// **The same batch duration producing two different coefficients** is what proves the rule is really branched.
     /// </remarks>
     [Fact]

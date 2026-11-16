@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 意思是"偏移不许超过最大允许量"，即 `delayTime ≤ maxDelay`——`over_max_*` 是它的**违反量**。
 ///
 /// Both constraints emit **the same row**: `deviation ≤ maximum`, named `{prefix}_{task}`. The row constrains the **deviation** itself, not `over_max_*`: `over_max_*` is
-/// "by how much the limit was exceeded", and bounding that is a different statement. The code means "the deviation must not exceed the maximum", i.e.
+/// "by how much the limit was exceeded", and bounding that is a different statement. The implementation means "the deviation must not exceed the maximum", i.e.
 /// `delayTime ≤ maxDelay`; `over_max_*` is its violation amount.
 /// </remarks>
 public static class OverMaxConstraintRows {

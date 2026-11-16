@@ -51,7 +51,7 @@ public static class CoptFunctionCapabilities
     /// **理由：这里的判断决定"我们的 PWL 写入会不会在运行时抛 `MissingMethodException`"，
     /// 而一个同名但签名不同的方法会让那个判断出错。**
     ///
-    /// **One capability only: `AddSos(Var[], double[], int)` returning `Sos`.** **The code is <b>stricter</b> here than
+ /// **One capability only: `AddSos(Var[], double[], int)` returning `Sos`.** **This implementation is <b>stricter</b> here than
     /// on the Gurobi side: it checks return and parameter types, while `GurobiFunctionCapabilities` checks names only (the
     /// `ponytail:` ceiling there).**
     ///
@@ -78,7 +78,7 @@ public static class CoptFunctionCapabilities
         if (HasSos2Creator(modelType))
         {
             // **一个方法同时支撑 SOS1 与 SOS2：`addSos` 的 type 参数决定 1 还是 2。**
-            // **One method backs SOS1 and SOS2 alike (matching the code): the type argument picks 1 or 2.**
+ // **One method backs SOS1 and SOS2 alike (.**
             supported.Add(FunctionNativeCapability.Sos1);
             supported.Add(FunctionNativeCapability.Sos2);
             // **PWL 的约束侧依赖 SOS2，所以这里一并声明。**
@@ -101,7 +101,7 @@ public static class CoptFunctionCapabilities
     /// **`AddSos` 有三个重载（`SosBuilder`、`Var[]`、`VarArray`），只按名字会命中任意一个。**
     ///
     /// `HasMethod`.
-    /// `HasMethod` and why the code chose it.
+ /// `HasMethod` and why the implementation chose it.
     ///
     /// **The three parameter types come from the SDK's own types rather than a hard-coded `typeof(Array)`: `AddSos` has
     /// three overloads (`SosBuilder`, `Var[]`, `VarArray`), and matching by name alone would hit any of them.**

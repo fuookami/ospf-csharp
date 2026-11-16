@@ -155,7 +155,7 @@ public class GenerationCollectorQuantityCacheTests {
     /// 这里每次剪枝只递增 1，所以默认参数必须是 1。若写成 0，**每次调用都"成功"但计数不动**，
     /// 而调用方看起来完全正常。
     ///
-    /// The code increments by one per prune, so the default must be 1. If it were 0, **every call would "succeed" while the count never moves**, and the
+ /// The implementation increments by one per prune, so the default must be 1. If it were 0, **every call would "succeed" while the count never moves**, and the
     /// caller would look perfectly normal.
     /// </remarks>
     [Fact]

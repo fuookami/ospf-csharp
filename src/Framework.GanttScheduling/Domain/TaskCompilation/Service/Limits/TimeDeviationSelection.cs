@@ -50,7 +50,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// The third is the easiest to skip: it looks like a redundant validation but is really the **precondition for the definition**. A task may declare "advancing allowed" before a
 /// scheduled time exists (say it sits in an undecided shift), and then its deviation is not a number.
 ///
-/// The code **excludes** that case rather than treating it as zero: zero would let "deviated, but there is no reference" through quietly, when the honest conclusion is "this
+/// The implementation **excludes** that case rather than treating it as zero: zero would let "deviated, but there is no reference" through quietly, when the honest conclusion is "this
 /// task's deviation is not knowable yet".
 ///
 /// The two switches are **independent**: a task may allow both directions, or only one. Using `advanceEnabled` for the delay objective yields a **plausible-looking** task set

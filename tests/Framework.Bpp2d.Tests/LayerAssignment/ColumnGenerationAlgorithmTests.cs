@@ -103,7 +103,7 @@ public class ColumnGenerationAlgorithmTests {
     /// 4. 目标值被逐轮记下来，不是只留最后一个。
     ///
     /// Four paired points: **one column on the first round then nothing** gives `IterationCount` 1 without the limit flag; **`LpSolvedTimes` is 2**, since the second round still solved an LP
-    /// before concluding there were no candidates; **repeating the same candidate is not "no new columns"**, which runs to the limit, because the code stops only on an **empty** candidate
+ /// before concluding there were no candidates; **repeating the same candidate is not "no new columns"**, which runs to the limit, because the implementation stops only on an **empty** candidate
     /// set and keeps going when deduplication merely leaves the count unchanged; and objectives are recorded per round rather than keeping only the last one.
     /// </remarks>
     [Fact]

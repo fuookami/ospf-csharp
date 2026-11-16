@@ -137,7 +137,7 @@ public sealed class ClampFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynom
         // **反过来（先上界再下界）在 `lower > upper` 时结果不同**——**虽然构造器已经拒绝那种输入，
         // 但顺序本身是这个函数定义的一部分，不该依赖前置检查才对。**
         //
-        // **The order must not be reversed**: lower first, then upper, matching the code.
+ // **The order must not be reversed**: lower first, then upper.
         // **Reversing it gives a different answer when `lower > upper`** — **the constructor rejects that input,
         // but the order is part of the definition and should not rely on the guard.**
         V clamped = value.CompareTo(Lower) < 0

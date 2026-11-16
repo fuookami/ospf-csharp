@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 ///
 /// 两者在 0/1 世界里读起来一样，所以判据必须钉住**类型**与**多项式成分**，不能只数条数。
 ///
-/// The code `Compilation` has both `x: BinVariable2` and `taskAssignment: LinearIntermediateSymbols2`. Hanging both on one name makes every "get the assignment column for a task"
+/// The implementation `Compilation` has both `x: BinVariable2` and `taskAssignment: LinearIntermediateSymbols2`. Hanging both on one name makes every "get the assignment column for a task"
 /// caller part ways under **cross-round aggregation** — the real variable does not exist for that round, while the intermediate symbol is `Σ x`.
 ///
 /// The two read alike in a 0/1 world, so the criteria must pin the **type** and the **polynomial make-up**, not just the entry count.

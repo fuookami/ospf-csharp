@@ -73,7 +73,7 @@ internal sealed class PipelineListGenerator
         }
 
         // 3：`flight.reweighNeeded` 为真时才加。个站点集合是空的，所以实际永不触发。
-        // 3: only when `flight.reweighNeeded`. That station set is empty in the code, so it never fires in practice.
+ // 3: only when `flight.reweighNeeded`. That station set is empty in the implementation, so it never fires in practice.
         if (_aggregation.Flight is { } flight && flight.ReweighNeeded(stowageMode))
         {
             pipelines.Add(new ItemReweighNeededLimit(

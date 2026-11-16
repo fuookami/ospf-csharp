@@ -29,8 +29,8 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Domain.Produce;
 /// **但同一条语句里还有第二个条件**：`candidate.id !in registeredIds`。C# 原本**只有键索引**，
 /// 于是"同 id、不同内容"的两条方案会被**同时接受**——这才是真缺口。
 ///
-/// **the earlier ledger entry** said "`ProduceAggregation._planKeyIndex` still uses the default key". Checking the code showed **that half was wrong**: the code
-/// uses exactly **`candidate.canonicalKey` (the default key)**, so C# matches the code there and it is not a gap.
+/// **the earlier ledger entry** said "`ProduceAggregation._planKeyIndex` still uses the default key". Checking the implementation showed **that half was wrong**: the implementation
+/// uses exactly **`candidate.canonicalKey` (the default key)**, so C# matches the implementation there and it is not a gap.
 ///
 /// **But that same statement has a second condition**: `candidate.id !in registeredIds`. C# originally had **only the key index**, so two plans sharing an id but differing
 /// in content would **both be accepted** — that was the real gap.

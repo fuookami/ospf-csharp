@@ -212,7 +212,7 @@ public static class IslandMigrationSupport {
     /// </remarks>
     /// **比较的是 `fitness` 而不是 `objective`**：`compareStrictly(model, fitness, ...)`，因为目标值类型是任意的，
     /// 而适应度是标量。比较目标值需要目标值类型自带序，而它并没有。
-    /// **The comparison uses `fitness`, not `objective`**: the code uses `compareStrictly(model, fitness, ...)` because the objective
+ /// **The comparison uses `fitness`, not `objective`**: this implementation uses `compareStrictly(model, fitness, ...)` because the objective
     /// type is arbitrary while fitness is a scalar. Comparing objectives would require the objective type to be ordered, which it is not.
     /// <typeparam name="T">个体类型 / The individual type.</typeparam>
     /// <param name="island">岛屿 / The island.</param>

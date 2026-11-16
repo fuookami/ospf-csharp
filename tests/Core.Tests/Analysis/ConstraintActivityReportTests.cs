@@ -90,7 +90,7 @@ public class ConstraintActivityReportTests {
     /// <remarks>
     /// 变量边界留在 `activities` 里、但不进组计数。混进去会让"这个组里有 2 条"变成"2 条约束 + 1 个变量边界"——**而后者的 2 没人能解释。**
     ///
-    /// The code keeps variable bounds in `activities` but out of the group counts. Mixing them turns "two in this group" into "two constraints and one variable bound" —
+ /// This implementation keeps variable bounds in `activities` but out of the group counts. Mixing them turns "two in this group" into "two constraints and one variable bound" —
     /// **and nobody can explain the two.**
     /// </remarks>
     [Fact]

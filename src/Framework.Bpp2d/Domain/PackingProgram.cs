@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// <remarks>
 /// `Amount` 在是**构造时算好的值**而非属性：程序一旦建成就不可变，件数不该随访问而重算，也不该因为
 /// `PerRowAmount` 被改而与实际排布脱节。
-/// In the code `Amount` is **computed once at construction** rather than a property: a program is immutable once built,
+/// In the implementation `Amount` is **computed once at construction** rather than a property: a program is immutable once built,
 /// its amount should not be recomputed on each access, nor drift from the real layout if `PerRowAmount` changed.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>

@@ -32,7 +32,7 @@ public sealed record FrameworkSolveOptions {
     ///
     /// 这条是"有地方接 ≠ 已经接上"的最后一环：适配器是工具，**得有人拿它去包装**。
     ///
-    /// **The code's obtains it from `options.progressContext` and uses the adapters to wrap callbacks.** implemented the adapters,
+ /// **Its obtains it from `options.progressContext` and uses the adapters to wrap callbacks.** implemented the adapters,
     /// but the C# options **had no such field**, so the adapters **had nowhere to hook in**.
     ///
     /// This is the last link of "somewhere to hook ≠ hooked up": adapters are tools, and **someone has to use them to wrap**.

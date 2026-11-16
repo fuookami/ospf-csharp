@@ -132,7 +132,7 @@ public sealed class TabularSelectionPolicyTests {
 
     /// <summary>**快照与恢复按动作名对齐，而不是按下标** / Snapshots align by action name, not by index.</summary>
     /// <remarks>
-    /// 快照里的 `actions` 顺序是"当时配置的顺序"，恢复时可能已重排。按下标恢复会把 A 的计数搬到 B 上，
+    /// 快照里的 `actions` 顺序是"当时配置的顺序"，恢复时可能已重排。按下标恢复会把 A 的计数实现到 B 上，
     /// **每个动作的数值都仍然合理**，只是整体错位。
     /// The snapshot's `actions` order is the order configured then, while the restoring side may have reordered. Restoring by index moves
     /// A's counts onto B, and **every action's number still looks plausible**, only misattributed.

@@ -76,7 +76,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 ///
 /// **`Flt64`-only, like the other condition structures here**: **the numeric usability check
 /// (`ConditionPolynomials.IsUsable`) is itself `Flt64`, and a `V` version could only round-trip through `ToString` —
-/// which loses precision silently.** **The code's genericity comes from its own converter system, which has no
+/// which loses precision silently.** **Its genericity comes from its own converter system, which has no
 /// counterpart here, so this does not pretend to have one.**
 /// </remarks>
 /// <param name="Input">真分支输入 / The true-branch input.</param>

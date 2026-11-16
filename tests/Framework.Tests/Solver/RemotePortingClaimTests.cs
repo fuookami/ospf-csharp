@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// contradicting the same paragraph's "already done" and contradicting the source, since all three exist.
 ///
 /// **A stale sentence lived a long time and <b>no behavioural criterion could ever find it</b>: every test was green
-/// because the code was right; what was wrong was the description of the code.**
+/// because the implementation was right; what was wrong was the description of the implementation.**
 ///
 /// **So the criterion here is not "the behaviour is right" but "the description agrees with the
 /// file system".**
@@ -83,7 +83,7 @@ public class RemotePortingClaimTests
     /// **`QuadraticLegacyIisCompute`'s header comment still said "skeleton only, nothing there" while the file has 612
     /// lines.**
     ///
-    /// **<b>Three</b> stale conclusions failed the same way: the code was finished and the
+ /// **<b>Three</b> stale conclusions failed the same way: the implementation was finished and the
     /// description stopped at the day the work was scheduled.**
     /// </remarks>
     [Theory]

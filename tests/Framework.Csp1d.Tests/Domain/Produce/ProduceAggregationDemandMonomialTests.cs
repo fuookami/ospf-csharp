@@ -126,7 +126,7 @@ public class ProduceAggregationDemandMonomialTests {
     /// 后果是**第一轮 LP 的需求与物料约束左边恒为零**——求解器会认为"什么都不做就已满足全部需求"。
     ///
     /// **The gap recorded** ("initial plans' contribution monomials are still unregistered") also wrongly assumed "its `addInitialPlans` only registers
-    /// ids/keys, so both sides agree". **That was wrong.** The code's `register` builds `PlanBatchTerms` **after** `addInitialPlans` and fills the
+ /// ids/keys, so both sides agree". **That was wrong.** Its `register` builds `PlanBatchTerms` **after** `addInitialPlans` and fills the
     /// four symbol families from it. C# **has no such class at all** (`grep PlanBatchTerms` finds nothing) and its constructor only creates empty symbols.
     ///
     /// The consequence: **the first LP's demand and material constraints have an identically zero left side** — the solver believes doing nothing already satisfies every demand.
@@ -163,7 +163,7 @@ public class ProduceAggregationDemandMonomialTests {
     /// `seen` 集合就是干这个的。少了它，一条方案里写两次同样的贡献，
     /// **需求约束的系数会翻倍**——解看起来更"够"，实际不够。
     ///
-    /// The code's `seen` set does exactly this. Without it, writing the same contribution twice in one plan **doubles the demand coefficient** — the solution looks
+ /// Its `seen` set does exactly this. Without it, writing the same contribution twice in one plan **doubles the demand coefficient** — the solution looks
     /// better satisfied than it is.
     /// </remarks>
     [Fact]
@@ -201,7 +201,7 @@ public class ProduceAggregationDemandMonomialTests {
     /// 若实现只比较产品 id，一条**以厘米为单位**的贡献会被当成**毫米**的贡献计入，
     /// **系数差 10 倍而毫无提示**。这条判据钉住那个单位比较。
     ///
-    /// The code requires both: `contribution.product.id == demand.product.id && contribution.quantity.unit == demand.quantity.unit`. If the implementation compared only
+ /// This implementation requires both: `contribution.product.id == demand.product.id && contribution.quantity.unit == demand.quantity.unit`. If the implementation compared only
     /// the product id, a contribution in **centimetres** would count as one in **millimetres** — **a factor of 10 with no warning**. This pins the unit comparison.
     /// </remarks>
     [Fact]

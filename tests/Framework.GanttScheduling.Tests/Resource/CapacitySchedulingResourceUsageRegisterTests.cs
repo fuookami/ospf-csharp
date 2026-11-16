@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 /// C# 侧还没有那个变量：`IterativeCapacityCompilation.LocateColumnDecision` 返回的是 `new object` 占位，不是符号。
 /// 没有变量就没法填表；返回 `Ok` 等于告诉每个调用方"已经接好了"，而表里什么都没有、容量永远不紧、模型照样可解。
 ///
-/// The code's `register` does one thing: add the `quantity` table its subclass already filled, and that table holds
+/// Its `register` does one thing: add the `quantity` table its subclass already filled, and that table holds
 /// `sum over actions of usedBy(action, slot.time) times x(action, slot)` — **it needs decision variables**. The C# side does not have them:
 /// `IterativeCapacityCompilation.LocateColumnDecision` returns a `new object` placeholder rather than a symbol. Without variables the table cannot be filled, and returning `Ok` would tell every
 /// caller it is wired while the table holds nothing, capacity is never tight and the model stays solvable.
@@ -107,7 +107,7 @@ public class CapacitySchedulingResourceUsageRegisterTests {
     /// 这条映射没实现，而**不再**声称决策变量缺失。
     ///
     /// **changes the wording**: the decision variables themselves exist (`CapacityDecisionVariables` from，`CapacityOrderVariables` from ) while the old message claimed they
-    /// were not wired — **a stale true-sounding sentence is worse than a vague one**, because it sends the next reader hunting for something already built. Two points are pinned: the code
+ /// were not wired — **a stale true-sounding sentence is worse than a vague one**, because it sends the next reader hunting for something already built. Two points are pinned: the implementation
     /// stays `ApplicationError` (an upstream input is missing) and the message names the unimplemented **overlap conversion between action slots and resource slots** while **no longer**
     /// claiming the decision variables are absent.
     /// </remarks>

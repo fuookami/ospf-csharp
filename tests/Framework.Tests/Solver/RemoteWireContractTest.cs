@@ -1692,7 +1692,7 @@ public class RemoteWireContractTest {
     /// <c>valueOf(name)</c> 直接比较、不做大小写转换。本测试钉住这一点，并覆盖
     /// <c>NativeIis</c>／<c>NativeIIS</c> 这一个拼写差异。
     /// Infeasibility-evidence wire names are the **raw enum member names** (PascalCase), not
-    /// SCREAMING_SNAKE — the code compares with <c>valueOf(name)</c> and never changes case. This test
+ /// SCREAMING_SNAKE — the implementation compares with <c>valueOf(name)</c> and never changes case. This test
     /// pins that, including the single <c>NativeIis</c>/<c>NativeIIS</c> spelling divergence.
     /// </summary>
     [Fact]
@@ -1986,7 +1986,7 @@ public class RemoteWireContractTest {
     /// <summary>
     /// <c>storage.put(path, bytes, metadata)</c> 会把 <c>taskId</c>／<c>sliceId</c>／<c>tenantId</c>
     /// 写成对象元数据。本测试确认 C# 侧不再只传 content type。
-    /// The code's <c>storage.put(path, bytes, metadata)</c> writes taskId/sliceId/tenantId as object
+ /// Its <c>storage.put(path, bytes, metadata)</c> writes taskId/sliceId/tenantId as object
     /// metadata. This test confirms the C# side no longer passes only a content type.
     /// </summary>
     [Fact]
@@ -2023,7 +2023,7 @@ public class RemoteWireContractTest {
     /// 否则重试会被服务端当成新任务。没有"异步重放"或"恰好一次归并"这一层能力，幂等性就落在
     /// 这个 ID 上。
     /// <c>requestId</c> is an **idempotent request ID**: the same (tenant, task, slice) must
-    /// yield the same value on every submit, otherwise a retry reads as a new task. The code has no
+ /// yield the same value on every submit, otherwise a retry reads as a new task. This implementation has no
     /// "async replay" or "exactly-once merge" layer — idempotence rests on this ID.
     /// </summary>
     [Fact]
@@ -2065,7 +2065,7 @@ public class RemoteWireContractTest {
 
     /// <summary>
     /// 取消是幂等的：只有首次请求会真正中断后端，后续请求直接成功返回。
-    /// The code cancels idempotently: only the first request actually interrupts the backend and later
+ /// The implementation cancels idempotently: only the first request actually interrupts the backend and later
     /// requests simply succeed.
     /// </summary>
     [Fact]
@@ -2092,7 +2092,7 @@ public class RemoteWireContractTest {
     /// <summary>
     /// 约定是：**已取消时注册的监听器立即执行**。这条不能反过来——否则一个在取消请求之后才
     /// 注册的后端永远不会被中断，求解资源就漏了。
-    /// The code states explicitly that a listener **registered after cancellation runs immediately**.
+ /// The implementation states explicitly that a listener **registered after cancellation runs immediately**.
     /// This must not be inverted — otherwise a backend registered after the cancel request would never be
     /// interrupted and its resources would leak.
     /// </summary>
@@ -2135,7 +2135,7 @@ public class RemoteWireContractTest {
     /// <summary>
     /// <c>CheckpointMetadata</c> 用 <c>ref</c> 与 <c>createdAtEpochMs</c>；C# 此前写成
     /// <c>objectRef</c> 与 <c>createdAt</c>，两端读不到对方字段。
-    /// The code's <c>CheckpointMetadata</c> uses <c>ref</c> and <c>createdAtEpochMs</c>; C# previously
+ /// Its <c>CheckpointMetadata</c> uses <c>ref</c> and <c>createdAtEpochMs</c>; C# previously
     /// used <c>objectRef</c> and <c>createdAt</c>, so neither side could read the other's fields.
     /// </summary>
     [Fact]
@@ -2175,7 +2175,7 @@ public class RemoteWireContractTest {
     /// <summary>
     /// <c>RemoteConstraintProgrammingClient.solve</c> 把 CP snapshot 编码为
     /// <c>ospf-cp-snapshot-json</c> 原始模型数据，并带上 <c>targetType=cp</c> 与规模估计。
-    /// The code's <c>RemoteConstraintProgrammingClient.solve</c> encodes the CP snapshot as
+ /// Its <c>RemoteConstraintProgrammingClient.solve</c> encodes the CP snapshot as
     /// <c>ospf-cp-snapshot-json</c> raw model data with <c>targetType=cp</c> and size estimates.
     /// </summary>
     [Fact]

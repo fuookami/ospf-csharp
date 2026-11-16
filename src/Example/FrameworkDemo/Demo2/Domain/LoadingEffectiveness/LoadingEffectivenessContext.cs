@@ -130,7 +130,7 @@ public sealed class LoadingEffectivenessContext
     /// 子问题在这里**没有额外约束**（`loading_effectiveness` 的目标全在主问题），所以返回成功是**如实**的，
     /// 不是占位壳。
     ///
-    /// The code adds **no extra constraints** to the sub-problem here (every `loading_effectiveness` objective lives in the master problem), so returning success is **accurate**
+ /// This implementation adds **no extra constraints** to the sub-problem here (every `loading_effectiveness` objective lives in the master problem), so returning success is **accurate**
     /// rather than a placeholder shell.
     /// </remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model) =>

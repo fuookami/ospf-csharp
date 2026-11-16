@@ -49,7 +49,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`Flt64`-only, like every other quadratic function here**: **the bridge itself is `Flt64`**
 /// (`QuadraticBridging.Bridge` takes `QuadraticPolynomial&lt;Flt64&gt;`), and **making the outer layer generic would only
 /// buy a `V → Flt64` string conversion — one that silently loses precision when `V` is fixed-point or
-/// high-precision.** **The code's genericity comes from its own converter system, which has no counterpart here —
+/// high-precision.** **Its genericity comes from its own converter system, which has no counterpart here —
 /// so this does not pretend to have one.**
 ///
 /// **The structure is "bridge first, then mask"**: **the quadratic input `p` is replaced by a bridge variable `y`

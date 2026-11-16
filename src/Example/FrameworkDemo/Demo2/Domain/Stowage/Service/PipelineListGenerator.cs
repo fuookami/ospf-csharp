@@ -139,7 +139,7 @@ internal static class PipelineListGenerator
     // `aggregation.neighbours[type]!!`——缺失时抛 `NullPointerException`。这里返回空表：邻接缺失意味着
     // **那一族约束不存在**，而空邻接表的管线本来就一行都不加，语义与"没有邻接"一致，比让调用方收一个异常更有用。
     //
-    // The code uses `aggregation.neighbours[type]!!`, throwing on absence. This returns an empty list: a missing adjacency means **that family of constraints does not exist**,
+ // This implementation uses `aggregation.neighbours[type]!!`, throwing on absence. This returns an empty list: a missing adjacency means **that family of constraints does not exist**,
     // and a pipeline over an empty list adds nothing anyway, which matches "no adjacency" better than handing the caller an exception.
     private static IReadOnlyList<Neighbour> NeighboursOf(StowageAggregation aggregation, NeighbourType type) =>
         aggregation.Neighbours.TryGetValue(type, out IReadOnlyList<Neighbour>? list)

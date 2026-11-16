@@ -101,7 +101,7 @@ public static class Bpp1dDiscreteLoading {
         // **Direction is irrelevant here, and the "translate backwards" mutant survived the criteria**: the business `PositionConflict` is semantically an **unordered
         // pair** (`First`/`Second` are merely member names), `ConflictIndex` registers **both directions** when building its graph, and `validate` only forbids
         // `First == Second`. `(A,B)` and `(B,A)` are therefore **fully equivalent downstream** — **a genuine equivalent mutant, not a weak criterion.** The geometry
-        // sweep's own order is kept, matching the code.
+ // sweep's own order is kept.
         foreach (Fuookami.Ospf.Framework.Bpp.Infrastructure.PositionConflict conflict in geometryConflicts) {
             merged.Add(new PositionConflict(conflict.Earlier, conflict.Later));
         }

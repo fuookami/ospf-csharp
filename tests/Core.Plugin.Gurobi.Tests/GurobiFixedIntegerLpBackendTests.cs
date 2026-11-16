@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **所以判据测的是<b>串联关系**，不是"这个类做了什么"。**
 ///
 /// **This connects the Gurobi fixed-integer LP backend.** **It must not implement solving itself:
-/// the code says the backend-neutral layer is reused and Gurobi adds only a ranging hook, with both backends sharing one
+/// the implementation says the backend-neutral layer is reused and Gurobi adds only a ranging hook, with both backends sharing one
 /// tested path.** **So the criteria test the <em>composition</em>, not "what this class does".**
 /// </remarks>
 public class GurobiFixedIntegerLpBackendTests

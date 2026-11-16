@@ -25,7 +25,7 @@ internal static class RelationalQueryIdentifier {
     /// 都是畸形标识符而不是"可以忽略的错误"）；每段用方言引号包裹并**把引号本身加倍**——不加倍的话，标识符里
     /// 的一个引号就能闭合引用串、把后续内容变成 SQL。
     ///
-    /// Rules match the code: trim; reject empty or NUL-containing input; split on <c>.</c> and reject **any empty
+ /// Rules match the implementation: trim; reject empty or NUL-containing input; split on <c>.</c> and reject **any empty
     /// segment** (`a..b`, `.a`, `a.` are malformed identifiers, not "harmless mistakes"); wrap each segment in the
     /// dialect quote and **double the quote character inside** — without doubling, a single quote inside an
     /// identifier closes the quoted string and turns the remainder into SQL.

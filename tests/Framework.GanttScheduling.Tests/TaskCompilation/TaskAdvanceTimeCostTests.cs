@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 而"提不出系数"在是 `infinity`——即该任务的提前时间**不可定价**。静默取 `1` 会把"禁止提前"变成
 /// "每单位罚 1"，于是本该被拒绝的排程被轻松接受。
 ///
-/// The code charges linearly at a zero threshold and introduces a slack variable otherwise. A zero threshold merely saves one variable, it does not swap semantics: if the two
+/// The implementation charges linearly at a zero threshold and introduces a slack variable otherwise. A zero threshold merely saves one variable, it does not swap semantics: if the two
 /// diverge slightly, "configured a threshold" and "no threshold" produce different solutions, invisible at the configuration level. And "no coefficient" is `infinity` upstream —
 /// the advance **cannot be priced**. Defaulting to `1` turns "advance prohibited" into "penalty 1 per unit", letting a schedule that should be rejected be accepted cheaply.
 /// </remarks>

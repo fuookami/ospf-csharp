@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 也就是说**行为是对的，而模型内容是脏的**——脏到任何"按符号表遍历模型"的下游
 /// （导出、审计、二次求解）都会看到悬空引用。
 ///
-/// 照做就**不能**顺手清理：`removeColumns` 不调 `RemoveObjectiveTerms`，
+/// 如此就**不能**顺手清理：`removeColumns` 不调 `RemoveObjectiveTerms`，
 /// 加了会改变解的行为（乃至求解器看到的模型）。所以这里提供的是**观测**，
 /// 不是修复——让这份偏离被看见、被断言，而不是变成一条静默的 ceiling。
 ///

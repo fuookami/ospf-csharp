@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **没有**软安全、重心优化、装卸效率。本仓以前只注册前三个加载荷最大化，`Init` 里还留着
 /// `// TODO: RecommendedWeightEqualizationContext`，于是"建议打板"其实只是"最大化载荷"。
 ///
-/// The code's `WeightRecommendationPipelineContext` registers stowage, mac, airworthiness, **express effectiveness**, **recommended-weight equalization** and
+/// Its `WeightRecommendationPipelineContext` registers stowage, mac, airworthiness, **express effectiveness**, **recommended-weight equalization** and
 /// payload maximization — **no** soft security, mac optimization or loading effectiveness. This implementation used to register the first three plus payload maximization and left
 /// `// TODO: RecommendedWeightEqualizationContext` in `Init`, so "weight recommendation" was really just "maximise payload".
 /// </remarks>
@@ -131,7 +131,7 @@ public sealed class Demo2WeightRecommendationPipelineTests
     public void TheApplicationPath_ShouldMatchThePipelinePath(StowageMode mode) {
         RequestDTO request = AircraftLoadingDemo.CreatePredistributionSampleRequest();
 
-        // **这条判据搬到了默认层**：`direct_model=...` 那一行备注是在**求解之前**写进 notes 的，
+        // **这条判据实现到了默认层**：`direct_model=...` 那一行备注是在**求解之前**写进 notes 的，
         // 所以形状根本不需要求解成功——不开启 SCIP 集成时求解会失败，但备注已经在了。**默认全量测试因此也覆盖它。**
         //
         // **This criterion moved to the default layer**: the `direct_model=...` note is written **before** solving, so the shape does not need a successful solve —

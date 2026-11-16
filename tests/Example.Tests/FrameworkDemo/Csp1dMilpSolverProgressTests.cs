@@ -99,7 +99,7 @@ public class Csp1dMilpSolverProgressTests {
     /// **这是第三次撞上"单调化掩盖了判据想测的东西"**`、 的取消检查点、 的带下界）。
     /// 每次的表现都是"判据绿/红得莫名其妙"，每次都要回到"谁先把这个值改了"。
     ///
-    /// The code's passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
+ /// Its passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
     ///
     /// **The criterion uses the registration callback (in-stage 100 → banded 99)**, for an empirically found reason: the solving callback's in-stage 99 would band to 98,
     /// **but the registration callback reports first and already reaches 99 in the band**, so `AcceptMonotonic` **lifts the later 98 back to 99** — **the solving one cannot

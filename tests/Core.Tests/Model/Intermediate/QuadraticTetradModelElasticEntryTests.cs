@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 只断言"返回非空模型"是不够的——返回 `this` 也能通过。所以判据必须落在
 /// **弹性模型特有的痕迹**上：约束数与变量数都因松弛列而增加。
 ///
-/// **In the code `buildElasticModel` is an extension function called by `QuadraticTetradModel.elastic`.** The C# side originally had only the static
+/// **In the implementation `buildElasticModel` is an extension function called by `QuadraticTetradModel.elastic`.** The C# side originally had only the static
 /// `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)` and **the model had no `Elastic`** — its public entry point did not exist in C#.
 ///
 /// adds the entry point. **The criterion must distinguish "entry added" from "entry added as a shell"**: asserting only "returns a non-null model" is not
@@ -136,7 +136,7 @@ public class QuadraticTetradModelElasticEntryTests {
     /// variable counts**, and neither depends on the penalty — changing `Flt64.One` to `new Flt64(7.0)` leaves both counts identical and that criterion stays
     /// green. **The criterion's coverage was narrower than the thing it meant to guard.**
     ///
-    /// This one looks at the slack coefficients in the objective: `Elastic` must use `1.0`, matching the code.
+ /// This one looks at the slack coefficients in the objective: `Elastic` must use `1.0`.
     /// </remarks>
     [Fact]
     public void Elastic_ShouldUseUnitPenaltyForSlackColumns() {
@@ -161,7 +161,7 @@ public class QuadraticTetradModelElasticEntryTests {
     /// `ConstraintSource.Elastic` 在存在。
     /// 若 `Elastic` 只是复制了原约束、**没有改来源标记**，下游就无法区分哪些行是松弛行。
     ///
-    /// `ConstraintSource.Elastic` exists in the code ( verified the enum matches item by item). If `Elastic` merely copied the original constraints
+ /// `ConstraintSource.Elastic` exists in the implementation ( verified the enum matches item by item). If `Elastic` merely copied the original constraints
     /// **without changing the source mark**, downstream cannot tell which rows are slack rows.
     /// </remarks>
     [Fact]

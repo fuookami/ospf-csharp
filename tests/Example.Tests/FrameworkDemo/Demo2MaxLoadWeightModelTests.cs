@@ -233,7 +233,7 @@ public class Demo2MaxLoadWeightModelTests {
     /// 把 `ComputedTotalWeight` 换成"从符号里取常数"就会在这一支里拿到零，从而永远走"取最大值"。
     ///
     /// Segment lookup needs a **number**; `estimate_total_weight_zerofuel` is an expression over decisions, and substituting it into the piecewise spec yields a nonlinear
-    /// expression. The code reads `totalWeight.computedTotalWeight[FlightPhase.ZeroFuel]` — a `Quantity?`, not a symbol. This criterion pins the source: swapping it for
+ /// expression. This implementation reads `totalWeight.computedTotalWeight[FlightPhase.ZeroFuel]` — a `Quantity?`, not a symbol. This criterion pins the source: swapping it for
     /// "the constant of the symbol" would read zero here and always take the maximum.
     /// </remarks>
     [Fact]

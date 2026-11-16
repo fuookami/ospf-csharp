@@ -88,7 +88,7 @@ public sealed class TotalWeight
     /// "加燃油"只对 `TakeOff`／`Landing` 成立，`ZeroFuel` 什么都不加——这正是"零油重"的定义。写成"总是加燃油"
     /// 会让零油重凭空重出一次起飞油量，而它同时是 `MaxLoadWeight` 分段线性规格的输入。
     ///
-    /// The code adds fuel only for `TakeOff` / `Landing` and nothing for `ZeroFuel` — that IS the definition of zero fuel. Adding fuel unconditionally would make zero-fuel
+ /// This implementation adds fuel only for `TakeOff` / `Landing` and nothing for `ZeroFuel` — that IS the definition of zero fuel. Adding fuel unconditionally would make zero-fuel
     /// weight carry a take-off fuel load out of nowhere, and that figure is also the input to `MaxLoadWeight`'s piecewise specification.
     /// </remarks>
     public LinearPolynomial<Flt64> TotalWeightPolynomial(FlightPhase phase, LinearPolynomial<Flt64> payloadPolynomial) {

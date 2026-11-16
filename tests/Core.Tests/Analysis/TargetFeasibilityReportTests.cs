@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// </summary>
 /// <remarks>
 /// **只实现报告，不实现分析器**：分析器那一侧有真正的 `solver.solve(model, options)`，
-/// 之前还有重建可变模型的 builder。**那部分需要真实 CP 后端，没搬也没空跑。**
+/// 之前还有重建可变模型的 builder。**那部分需要真实 CP 后端，没实现也没空跑。**
 ///
 /// 判据钉的是**四个状态不许互相冒充**：`Reachable` / `Unreachable` 是结论，
 /// `Unknown` / `Unsupported` 是"没结论"的两种原因。

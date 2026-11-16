@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 3. **`maxCLIM` 的符号要先注册**。它是关于起飞总重的线性式，没注册时两行都加不了。
 ///
 /// two rows, `clim − maxCLIM ≤ 0` (`_ub`) and `clim + maxCLIM ≥ 0` (`_lb`), both compared against zero. Three easy mistakes: (1) **the right side is 0, not
-/// `maxCLIM`** — the code moves `maxCLIM` to the left and flips its sign; writing `clim ≤ maxCLIM` and `clim ≥ maxCLIM` collapses the feasible region to a point and the solver
+/// `maxCLIM`** — the implementation moves `maxCLIM` to the left and flips its sign; writing `clim ≤ maxCLIM` and `clim ≥ maxCLIM` collapses the feasible region to a point and the solver
 /// reports "infeasible", which reads like a data problem; (2) **the second row is `clim + maxCLIM ≥ 0`, not `−`** — CLIM is a margin either side of the centreline, so the centre of
 /// gravity may sit `maxCLIM` to the left or to the right; (3) **the `maxCLIM` symbol must be registered first**.
 /// </remarks>

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **不给参数时退回全部基准 + `small` + 单轮**。
 ///
 /// The positional arguments are: inclusion regex, dataset label, fork count, warmup iterations, measurement iterations, result format, result file.
-/// **With no arguments it falls back to all benchmarks + `small` + a single round**, matching the code defaults.
+/// **With no arguments it falls back to all benchmarks + `small` + a single round**.
 /// </remarks>
 public static class Program {
     /// <summary>入口 / Entry point.</summary>

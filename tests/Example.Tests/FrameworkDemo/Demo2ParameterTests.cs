@@ -31,7 +31,7 @@ public sealed class Demo2ParameterTests
     [Fact]
     public void ResolvedParameter_ShouldLeaveUnmappedParametersAtTheirDefaults() {
         // **只映射那两个**：别的参数留在默认值，是因为没从请求里取它们。
-        // **Only the two the code maps are mapped**: the rest stay default because the code does not read them from the request either.
+ // **Only the two this implementation maps are mapped**: the rest stay default because this implementation does not read them from the request either.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest() with {
             WeightRecommendationObjective = new WeightRecommendationObjectiveConfig(BalancePriority: 2.5, PayloadPriority: 7.5),
         };

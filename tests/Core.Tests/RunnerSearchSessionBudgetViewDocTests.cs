@@ -1,4 +1,4 @@
-// 评估会话的预算视图：说明与代码一致/ The evaluation session's budget views: remarks match the code.
+// 评估会话的预算视图：说明与代码一致/ The evaluation session's budget views: remarks match the implementation.
 
 using System;
 using System.IO;
@@ -41,7 +41,7 @@ public class RunnerSearchSessionBudgetViewDocTests {
     }
 
     /// <summary>
-    /// **说明写出"消费者在哪"与"本实现为什么不补"** / The remarks name both the code consumers and why nothing is added here.
+ /// **说明写出"消费者在哪"与"本实现为什么不补"** / The remarks name both the implementation consumers and why nothing is added here.
     /// </summary>
     /// <remarks>
     /// 四点成对：点名 `FitnessEvaluator` / 点名 `LocalSearchUpdates` / 点名 `SearchBudget` / **不再出现"尚未有消费者"**。

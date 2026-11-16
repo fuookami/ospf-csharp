@@ -1,4 +1,4 @@
-// 分区列生成：文档与代码一致/ Partition CG: the docs match the code.
+// 分区列生成：文档与代码一致/ Partition CG: the docs match the implementation.
 
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Docs;
 
 /// <summary>
-/// **分区列生成的文档与代码一致** / The partition-CG docs match the code.
+/// **分区列生成的文档与代码一致** / The partition-CG docs match the implementation.
 /// </summary>
 /// <remarks>
 /// 两份 XML 注释原来说"最终整数主问题未实现""定价与主问题注册未实现"，而代码里这两半都在——`FinalAsync` 建整数主问题、
@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Docs;
 /// 撒谎的注释比没有注释更坏：下一个人会照着它去"补一个已经存在的东西"，或者据此判断这条链不可用。所以这里把"注释不许
 /// 说某件事没做"和"代码里那件事真的在"同时钉住——**两边一起钉，注释才回不去**。
 ///
-/// Two XML comments used to claim "the final integer master is not implemented" and "the pricing and master-registration half is not implemented", while both halves exist in the code: `FinalAsync`
+/// Two XML comments used to claim "the final integer master is not implemented" and "the pricing and master-registration half is not implemented", while both halves exist in the implementation: `FinalAsync`
 /// builds the integer master, solves, and closes out through the full-model re-check, and `PartitionLoadingContext` has `MasterAsync` / `PricingRequestAsync` /
 /// `RefreshShadowPriceAsync`. Behavioural criteria have long covered them (`PartitionColumnGenerationServiceTests`) — **only the comments were lying**.
 ///
 /// A lying comment is worse than none: the next reader either "adds back something that already exists" or concludes the chain is unusable. So this pins both sides — the comments
-/// may not claim a thing is missing, and the code must really contain it — **pin both, and the comments cannot drift back**.
+/// may not claim a thing is missing, and the implementation must really contain it — **pin both, and the comments cannot drift back**.
 /// </remarks>
 public class PartitionColumnGenerationDocTests {
     private static string RepoRoot() {
@@ -51,8 +51,8 @@ public class PartitionColumnGenerationDocTests {
     /// 三点成对：注释里出现"整条链是打通的" / **不再出现"未实现"** / 代码里出现 `integer: true`（整数主问题的唯一入口）。
     /// 只改注释不钉代码，下一次有人删掉 `FinalAsync` 就没人发现；只钉代码不管注释，谎言会写回去。
     ///
-    /// Three paired points: the remarks say the chain is wired; **"未实现" is gone**; and the code contains `integer: true` (the one entry to the integer master). Fixing only the comment
-    /// leaves a deleted `FinalAsync` unnoticed; pinning only the code lets the lie be written back.
+ /// Three paired points: the remarks say the chain is wired; **"未实现" is gone**; and the implementation contains `integer: true` (the one entry to the integer master). Fixing only the comment
+ /// leaves a deleted `FinalAsync` unnoticed; pinning only the implementation lets the lie be written back.
     /// </remarks>
     [Fact]
     public void ServiceRemarks_ShouldNotClaimAMissingFinalMaster() {
@@ -70,7 +70,7 @@ public class PartitionColumnGenerationDocTests {
     /// <remarks>
     /// 四点成对：注释里点名四个成员都在 / 注释里不再说"未实现" / 代码里 `MasterAsync` / 代码里 `PricingRequestAsync`。
     ///
-    /// Four paired points: the remarks name all four members as present; "未实现" is gone from the remarks; and the code holds `MasterAsync` and `PricingRequestAsync`.
+ /// Four paired points: the remarks name all four members as present; "未实现" is gone from the remarks; and the implementation holds `MasterAsync` and `PricingRequestAsync`.
     /// </remarks>
     [Fact]
     public void ContextRemarks_ShouldNotClaimAMissingPricingHalf() {

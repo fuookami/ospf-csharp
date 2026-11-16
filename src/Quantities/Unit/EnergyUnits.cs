@@ -33,7 +33,7 @@ public static class EnergyUnits {
     // **因为它是 `KilowattHour × Scale.mega`，也就是 10³ Wh × 10⁶ = 10⁹ Wh，名字对但那个 Scale 看着像错的；**
     // **③ `Erg` 是 1e-7 J，比所有其他单位小得多，数量级最容易写错。**
     //
-    // The ten below were added from the code Energy.kt.
+ // The ten below were added Energy.kt.
     //
     // **All are fixed multiples of the joule, so the risk is not the formula but three semantic points:**
     // **① `WattHour` is a thousandth of `KilowattHour`**, not the other way round;

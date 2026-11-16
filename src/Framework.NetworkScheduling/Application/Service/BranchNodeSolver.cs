@@ -85,7 +85,7 @@ public sealed record NodeSolveResult<V>(
 /// **与有意偏离**：C# 的 `IColumnGenerationSolver.SolveLPAsync` 只返回可行解，无法表达"不可行证书"或非最优状态，
 /// 因此的 `LPResultWithStatus.Infeasible` 与 `status != Optimal` 分支在这里统一落到失败路径。调用方拿到的失败结果
 /// 携带原始求解错误，不会被伪装成"节点不可行"。
-/// **Deliberate divergence from the code**: C#'s `IColumnGenerationSolver.SolveLPAsync` returns only a feasible output and
+/// **Deliberate divergence**: C#'s `IColumnGenerationSolver.SolveLPAsync` returns only a feasible output and
 /// cannot express an infeasibility certificate or a non-optimal status, so its `LPResultWithStatus.Infeasible` and
 /// `status != Optimal` branches collapse onto the failure path here. The caller receives the original solver error, never a
 /// disguised "node infeasible".

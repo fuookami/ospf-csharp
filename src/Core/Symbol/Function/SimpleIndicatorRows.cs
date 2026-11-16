@@ -136,7 +136,7 @@ public static class SimpleIndicatorRows
             // **临建的列<b>必须被调用方登记</b>，否则它是自由的，方向就成了任意值。**
             //
             // **`EQ` goes through the zero band: "deviates from zero" has two directions, so it needs a direction
-            // column.** **When the caller supplies none, one is created — as the code does.** **A created column
+ // column.** **When the caller supplies none, one is created — as this implementation does.** **A created column
             // <b>must be registered by the caller</b>, or it is free and the direction is arbitrary.**
             case Comparison.EQ:
                 IVariableItem side = sideVar ?? new BinVar($"{namePrefix}_side");

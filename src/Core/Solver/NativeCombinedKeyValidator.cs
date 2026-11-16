@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **失败消息只给出<b>重复的那个键</b>，不给出<b>谁先占用了它</b>。**
 /// **这是一个真实的诊断缺口：看到 `key is duplicated` 之后，调用方还得自己去找是哪两个结构。**
-/// **这里照做不改消息格式，但把它记下来。**
+/// **这里不改消息格式，但把它记下来。**
 ///
 /// **This is the only check that looks at all three kinds at once, and it does <b>two different things</b>:**
 ///

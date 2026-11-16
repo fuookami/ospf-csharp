@@ -97,7 +97,7 @@ public class ExistenceOnlyTestHabitTests
     /// **所以"Redis 有客户端"这句话是对的，而"Redis 可用"这句话没有依据：
     /// 从来没有任何一段代码创建过它，也从来没有任何一次真实往返。**
     ///
-    /// **This is the fourth appearance of the same shape: the code is written, the wiring is not, and the
+ /// **This is the fourth appearance of the same shape: this implementation is written, the wiring is not, and the
     /// matrix row does not say so.** **`RedisClient.cs` is 203 lines, mentioned by three test files, none of which constructs
     /// it.** **So "Redis has a client" is true and "Redis works" has no basis: no code has ever created one and there has never
     /// been a real round trip.**

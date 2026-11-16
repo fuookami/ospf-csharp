@@ -1,5 +1,4 @@
 // 空间切分搜索与块装载上下文 / Space-splitting search and the block-loading context.
-// （131 行）对应。
 // And.
 //
 // 至此 `block_loading` 域在 C# 侧闭合（模型、旋转守卫、简单/复杂块、两种空间切分、装配上下文）。后续可把三个块装载

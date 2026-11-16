@@ -25,7 +25,7 @@ public static class MassUnits {
     // **长吨 2240 磅、短吨 2000 磅、公吨 1000 千克**；
     // **常衡盎司 1/16 磅、金衡盎司 1/12 磅**——**金衡盎司更重，而名字只差一个词。**
     //
-    // The twelve below were added from the code Mass.kt.
+ // The twelve below were added Mass.kt.
     //
     // **This group carries three tons and two ounces, all different:**
     // **long ton 2240 lb, short ton 2000 lb, metric ton 1000 kg**;

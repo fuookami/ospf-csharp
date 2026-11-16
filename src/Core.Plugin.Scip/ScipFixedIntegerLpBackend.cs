@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Core.Plugin.Scip;
 /// **两者都写成公开常量而不是注释，理由与 Gurobi 那一批相同：**
 /// **注释只能被读，常量能被判断。**
 ///
-/// **This is the counterpart of `scipFixedIntegerLpBackend`.** **The code's SCIP file carries its own
+/// **This is the counterpart of `scipFixedIntegerLpBackend`.** **Its SCIP file carries its own
 /// `ScipFixedIntegerLpBackend` class which writes the "lower → dump → solve → duals" chain a second time.** **This repo does not
 /// copy that duplication: the chain is already extracted into a backend-neutral layer, and `ScipLinearSolver` and
 /// `GurobiLinearSolver` implement the same `IAbstractLinearSolver`.** **So the two plugin factories are now &lt;b&gt;the same

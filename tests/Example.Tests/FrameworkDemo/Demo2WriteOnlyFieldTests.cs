@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 这里把两处只写字段的结论钉在源码文本上：**结论消失或措辞被删掉时会变红**，逼着下一个人重新做一次同样的调查，
 /// 而不是把"看起来没用到"当成"可以接一条规则上去"。
 ///
-/// This implementation has been bitten twice by "an input with no reader": recorded `weightUnit` as a gap (the code does not read it either), and found that the two
+/// This implementation has been bitten twice by "an input with no reader": recorded `weightUnit` as a gap (this implementation does not read it either), and found that the two
 /// recommendation priorities really were dropped. Both say the same thing: **whether a field has a reader has to be checkable and written down**. This pins the two
 /// write-only conclusions to the source text: **removing them turns it red**, forcing the next person to redo the investigation instead of reading "looks unused" as
 /// "safe to attach a rule to".
@@ -51,15 +51,15 @@ public sealed class Demo2WriteOnlyFieldTests
     ///
     /// 现在它钉**真正该钉的东西**：字段在、**且真的被用上**。只加字段不接消费方仍然是"只写"，这条会红。
     ///
-    /// **flipped this criterion's conclusion, because its premise was wrong.** It claimed the code never reads `request.weightUnit` and therefore pinned
-    /// "the field must not exist". Reading the code shows it does read it, and that the default is `Kilogram` — **a criterion pinning a wrong fact is worse than
+ /// **flipped this criterion's conclusion, because its premise was wrong.** It claimed the implementation never reads `request.weightUnit` and therefore pinned
+ /// "the field must not exist". Reading the implementation shows it does read it, and that the default is `Kilogram` — **a criterion pinning a wrong fact is worse than
     /// none** (the same lesson recorded). It now pins **what deserves pinning**: the field exists **and is actually used**. Adding it without a consumer is
     /// still write-only, and this reddens.
     /// </remarks>
     [Fact]
     public void TheWeightUnit_ShouldExistAndHaveAReader() {
         // **字段在**（，默认 `Kilogram`）。
-        // **The field exists** (the code has it, defaulting to `Kilogram`).
+ // **The field exists** (this implementation has it, defaulting to `Kilogram`).
         typeof(RequestDTO).GetProperties().Select(property => property.Name)
             .Should().Contain("WeightUnit", "the baseline reads request.weightUnit for the position capacity");
         typeof(RequestDTO).Assembly.GetTypes().Select(type => type.Name)

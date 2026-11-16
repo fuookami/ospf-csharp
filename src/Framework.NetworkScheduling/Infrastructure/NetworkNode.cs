@@ -1,12 +1,11 @@
 // 网络调度基础设施：节点、代价与错误 / Network-scheduling infrastructure: nodes, costs and errors.
 // 与`network-scheduling-infrastructure` 的（9 行）、（19 行）、
-//（43 行）对应。
 // , and.
 //
 // **这是 P7 的骨架批次**：`network-scheduling` 在是 12 个模块、118 个源文件的独立框架，C# 侧此前**完全没有对应项目**。
 // 这里建立项目、接入解决方案，并实现依赖已闭合的最小一层；其余模块（flow／design／allocation／vrp／resilience／route…）
 // 逐批推进。不宣称任何跨语言互通或性能结论——这里只有单元测试。
-// **This is P7's skeleton batch**: in the code `network-scheduling` is a standalone framework of 12 modules and 118
+// **This is P7's skeleton batch**: in the implementation `network-scheduling` is a standalone framework of 12 modules and 118
 // source files, and the C# side had **no corresponding project at all**. creates the project, wires it into
 // the solution and ports the smallest dependency-closed layer; the remaining modules (flow / design / allocation / vrp /
 // resilience / route ...) follow batch by batch. No cross-language interoperability or performance claim is made — this
@@ -111,7 +110,7 @@ public sealed class NetworkNode<V>(NetworkNodeId Id, IReadOnlyDictionary<string,
     /// </summary>
     /// <remarks>
     /// 构造时**复制一份**：调用方后续修改传入的字典不会悄悄改掉节点属性，节点因此是值稳定的。
-    /// **Copied at construction**, matching the code: later mutation of the caller's dictionary cannot silently change
+ /// **Copied at construction**
     /// the node's attributes, so the node is value-stable.
     /// </remarks>
     public IReadOnlyDictionary<string, Quantity<V>> Attributes { get; } =

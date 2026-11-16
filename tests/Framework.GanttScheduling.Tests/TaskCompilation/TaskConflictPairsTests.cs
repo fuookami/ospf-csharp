@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 ///
 /// 判据必须能分开"每对一次"与"两个方向各一次"——后者不会出错，但会让模型白长一截。
 ///
-/// The code's conflict family has two almost identical double loops differing in one line. Writing it twice and forgetting one copy means **a missed pair**, and a missed
+/// Its conflict family has two almost identical double loops differing in one line. Writing it twice and forgetting one copy means **a missed pair**, and a missed
 /// pair is double booking: two tasks on one executor over overlapping intervals, capacity counted twice where only one exists. The criteria must tell "once per pair" from "once
 /// per direction" — the latter is not wrong, but wastes model size.
 /// </remarks>

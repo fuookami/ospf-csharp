@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// `GramPerCubicCentimeter`（水正好 1）——**它们描述同一杯水，而数值差 1000 倍**，
 /// **因为前者用 SI 基本单位、后者用 CGS 惯例。**
 ///
-/// **Created from the code.** All four are `mass / volume`.
+/// **Created.** All four are `mass / volume`.
 ///
 /// **One pair differs by three orders of magnitude**: `KilogramPerCubicMeter` (water is about 1000) and
 /// `GramPerCubicCentimeter` (water is exactly 1) — **they describe the same glass of water with values 1000 apart**,

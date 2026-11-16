@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **关键约束分析的框架齐了，两个后端的 6 个函数一个都没搬** /
+/// **关键约束分析的框架齐了，两个后端的 6 个函数一个都没实现** /
 /// Critical-constraint analysis has its framework, and none of the two backends' six functions.
 /// </summary>
 /// <remarks>

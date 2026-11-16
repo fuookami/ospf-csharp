@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **Flipped, it is numerically identical under `EQ`, but the name and the coefficient signs change** —
 /// **and `EQ` is symmetric, so this is an error that "changes nothing measurable".**
 ///
-/// **This function <b>performs no</b> usability check**: **neither does the code.**
+/// **This function <b>performs no</b> usability check**: **neither does the implementation.**
 /// **It only builds a row; the checking is the caller's.** **That has to be said, or a reader would assume the gate is
 /// here.**
 /// </remarks>

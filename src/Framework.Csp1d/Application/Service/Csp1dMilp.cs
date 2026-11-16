@@ -445,7 +445,7 @@ public sealed class ReducedCostPricingGenerator<V>
     /// round produced the initial plans, and **the first round was necessarily all duplicates and terminated with `AllDuplicates`**. The name and the behaviour
     /// disagreed while the flow still "ran".
     ///
-    /// It now follows the code `SimplePricingGenerator` (steps above).
+ /// It now follows the implementation `SimplePricingGenerator` (steps above).
     ///
     /// **Step 3 is the entire point of pricing**: a non-positive dual price means the demand is **not worth adding a column for** under the current LP solution.
     /// Skipping that check is the same as "report the initial plans again every round".
@@ -475,11 +475,11 @@ public sealed class ReducedCostPricingGenerator<V>
         // **Deduplication must precede truncation**: truncating first wastes slots on duplicates — with a limit of 2 and candidates `[A, A, B]`, truncation leaves `[A, A]`
         // and deduping then yields **only 1**. Pinned by `Csp1dPricingOrderTests` .
         //
-        // **Only dedupe within the candidates; do not filter plans already in the pool**: the code puts that filter in `deduplicatePlans` (**the column-generation
+ // **Only dedupe within the candidates; do not filter plans already in the pool**: the implementation puts that filter in `deduplicatePlans` (**the column-generation
         // side**). Doing it here would empty the first round (C#'s enumerator shares the initial pool's generator) ⇒ 0 reported ⇒ `PricingConverged`; leaving it downstream
-        // ⇒ N reported, 0 after dedup ⇒ `AllDuplicates` (the code behaviour,). **That is the earlier conclusion.**
+ // ⇒ N reported, 0 after dedup ⇒ `AllDuplicates` (the implementation behaviour,). **That is the earlier conclusion.**
         //
-        // **This paragraph used to claim "dedupe, then filter the pool, then truncate"** while the code only deduped — a comment describing behaviour the code no longer
+ // **This paragraph used to claim "dedupe, then filter the pool, then truncate"** while the implementation only deduped — a comment describing behaviour the implementation no longer
         // had. Corrected.
         //
         var seenKeys = new HashSet<CuttingPlanCanonicalKey>();
@@ -513,7 +513,7 @@ public sealed class ReducedCostPricingGenerator<V>
         // 上限截断时，**排序决定了哪几条被留下**——不排序就会留下枚举顺序里的前几条，
         // 而那几条可能恰恰是最差的。
         //
-        // **The code sorts first, then takes the limit** — it does not take the limit in enumeration order. When the limit truncates, **the sort decides which
+ // **The implementation sorts first, then takes the limit** — it does not take the limit in enumeration order. When the limit truncates, **the sort decides which
         // columns survive**; without it you keep the first few in enumeration order, which may be exactly the worst ones.
         candidates.Sort(CompareByScore);
         var pricedPlans = new List<CuttingPlan<V>>();
@@ -592,7 +592,7 @@ public sealed class ReducedCostPricingGenerator<V>
     /// **四项齐全**。
     ///
  /// **Only the demand term was implemented at first**, on the grounds that those three keys had "only producers, no consumers". With the consumers added —
-    /// **all four terms are now present**, matching the code term by term.
+ /// **all four terms are now present**.
     /// </remarks>
     internal static double ComputeDualBenefitForTest(CuttingPlan<V> plan, ShadowPriceMap<V> shadowPrices) {
         V benefit = ComputeDualBenefit(plan, shadowPrices);
@@ -661,7 +661,7 @@ public sealed class ReducedCostPricingGenerator<V>
     /// **每一项都有前置条件**，逐个 `if` 判断的。这里**沿用这些前置条件**——
     /// 漏掉 `isPositive` 那类守卫会让"零宽余料也加惩罚"，从而把成本抬高、把该出列的列挡掉。
     ///
-    /// The code formula is above (base cost `1`, i.e. "one use of the plan"). **Every term has preconditions**, checked one `if` at a time in the code; those
+ /// The implementation formula is above (base cost `1`, i.e. "one use of the plan"). **Every term has preconditions**, checked one `if` at a time in the implementation; those
     /// are copied here — **dropping an `isPositive` guard makes a zero-width remainder add a penalty**, raising the cost and blocking columns that should emit.
     /// </remarks>
     private static TC ComputeObjectiveCost<TC>(
@@ -719,7 +719,7 @@ public sealed class ReducedCostPricingGenerator<V>
     ///
     /// **默认判据严格大于**：等于时不出列（`Order.Greater` 才 `true`，`Order.Equal` 落 `else`）。
     ///
-    /// **Custom judges are asked first; only when all abstain does the default apply** — exactly the code order (snippet above).
+ /// **Custom judges are asked first; only when all abstain does the default apply** — exactly the implementation order (snippet above).
     ///
     /// **The three-valued semantics is the whole crux**: `null` means "this judge abstains" and **the next one is asked**. Treating `null` as `false` would make a judge
     /// that only handles one kind of plan **reject every other plan**, so **column generation dries up immediately** — and the symptom is "converged quickly",
@@ -759,7 +759,7 @@ public sealed class ReducedCostPricingGenerator<V>
     /// `ponytail: 非 Flt64 时跳过正负过滤；若将来出现别的数值类型，改为给 V 加 IComparable 约束。`
     ///
     /// **`N` is only constrained to `struct`**, so there is no generic comparison. `Flt64` is compared exactly (it is the type actually used); other types are
-    /// **treated as accepted when present** — a **known divergence** from the code, which uses `RealNumber.isPositive` and works for all numeric types.
+ /// **treated as accepted when present** — a **known divergence**, which uses `RealNumber.isPositive` and works for all numeric types.
     /// </remarks>
     private static bool IsPositiveShadowPrice<N>(N price) where N : struct {
         if (typeof(N) == typeof(Flt64)) {

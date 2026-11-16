@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// <remarks>
 /// 判据的重点：**三条条件管线各自的条件**、**`reweighNeeded` 恒假**这个怪癖、以及**七条无法构建的管线被显式列出**。
 ///
-/// The criteria focus on **each conditional pipeline's condition**, the code quirk that **`reweighNeeded` is always false**, and **the seven unbuildable pipelines being listed
+/// The criteria focus on **each conditional pipeline's condition**, the implementation quirk that **`reweighNeeded` is always false**, and **the seven unbuildable pipelines being listed
 /// explicitly**.
 /// </remarks>
 public class Demo2LoadingEffectivenessPipelineTests {
@@ -114,7 +114,7 @@ public class Demo2LoadingEffectivenessPipelineTests {
     /// 2. 其余两种模式恒 `false`（写死）。
     /// 3. 配置入口**保留着**：静态集合是空的但可变，不是把 `false` 硬编码进判定。
     ///
-    /// Three paired points: under predistribution it is **also false**, because the empty set never contains anything, so `ItemReweighNeededLimit` **never fires** in the code; the
+ /// Three paired points: under predistribution it is **also false**, because the empty set never contains anything, so `ItemReweighNeededLimit` **never fires** in the implementation; the
     /// other two modes are hard-coded false; and **the knob is kept** — the static set is empty but mutable, rather than `false` being hard-coded into the test.
     /// </remarks>
     [Fact]

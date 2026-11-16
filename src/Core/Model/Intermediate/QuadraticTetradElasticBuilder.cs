@@ -75,7 +75,7 @@ internal static class QuadraticTetradElasticBuilder {
     /// **The original variables' bounds become ±∞**, with the bound constraints expressed by the new elastic rows instead — that is the substance of
     /// "elastic": exceeding a bound is no longer infeasible, merely costly.
     ///
-    /// `elasticPenalty` is used as the objective coefficient of the slack columns; the code uses `Flt64.one`, parameterised here so the weight can be tuned.
+ /// `elasticPenalty` is used as the objective coefficient of the slack columns; this implementation uses `Flt64.one`, parameterised here so the weight can be tuned.
     /// </remarks>
     public static QuadraticTetradModel BuildElasticModel(
         BasicQuadraticTetradModel model,

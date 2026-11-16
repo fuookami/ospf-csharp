@@ -25,7 +25,7 @@ public static class PressureUnits {
     // 以下 5 个一并补上：
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar。
     //
-    // **其中 MeterMercury 不能照做，因为公式与它自己的注释矛盾。**
+    // **其中 MeterMercury 不能照此，因为公式与它自己的注释矛盾。**
     // 自然的写法是 `StandardAtmosphericPressure * 0.76`，
     // **但 0.76 米汞柱恰好等于一个标准大气压——所以要从大气压"除"回 0.76 米，不是乘。**
     // 那样会得到 77007 Pa，于是 mmHg = 77.007 Pa，**与 1 mmHg ≈ 133.322 Pa 对不上。**
@@ -55,8 +55,8 @@ public static class PressureUnits {
     /// **与 `Atmosphere` 数值相同而名字不同**：这个名字，本仓原来用 `Atmosphere`。
     /// **两个都保留，因为汞柱单位的推导要读起来像公式。**
     ///
-    /// **Same value as `Atmosphere`, different name**: the code uses this one, this repo used `Atmosphere`.
-    /// **Both stay, so the mercury derivations read like the code formula.**
+ /// **Same value as `Atmosphere`, different name**: this implementation uses this one, this repo used `Atmosphere`.
+ /// **Both stay, so the mercury derivations read like the implementation formula.**
     /// </remarks>
     public static readonly PhysicalUnit StandardAtmosphericPressure =
         new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(101325)), "standard atmosphere", "atm");

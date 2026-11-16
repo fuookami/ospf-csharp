@@ -50,7 +50,7 @@ public sealed record LoadingRectangle<V>(string Id, string SpaceId, Box2Geometry
 /// has only ever used the 1-D kernel because "Bpp2d has no `Context` factory" — a real gap recorded in that file's remarks. **With this in place, 2-D loading stops
 /// being a slogan.** Two deliberate differences, both because its line cannot be honoured or is ambiguous: the intersection test **reuses**
 /// `Box2Geometry.Overlapped` (whose C# counterpart delegates to `QuantityBox2.Overlapped`) rather than growing a second algorithm for the same semantics, and
-/// **`validate` is not called again** since this implementation's `DiscreteLoadingContext` constructor already validates — the code calls it because its constructor does
+/// **`validate` is not called again** since this implementation's `DiscreteLoadingContext` constructor already validates — the implementation calls it because its constructor does
 /// not. **Copying a redundant check does not make things safer; it only creates a second failure point.**
 /// </remarks>
 public static class Bpp2dDiscreteLoading

@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// <remarks>
 /// **校验在前、构造在后**，任何一条校验失败都不构造聚合。
 ///
-/// 校验顺序照做（八条），因为消息与判定必须一一对应：
+/// 校验顺序（八条），因为消息与判定必须一一对应：
 ///
 /// | # | 校验 | 为什么不能省 |
 /// | --- | --- | --- |
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// 拆成六条消息会改变既有行为，而调用方只区分成功与失败。
 ///
 /// **validation first, construction second**, and no aggregation is built when any check fails. The eight checks keep a fixed order, because
-/// their messages and predicates pair up one to one (tabulated above). **Check 8 is a compound condition** the code writes as a single disjunction — space table size mismatch,
+/// their messages and predicates pair up one to one (tabulated above). **Check 8 is a compound condition** this implementation writes as a single disjunction — space table size mismatch,
 /// a blank space id, a position's `spaceId` missing from the table, a blank `partitionId`, an out-of-range `loadingOrder`, or a duplicate loading order — with six situations
 /// sharing one message. Keeping that merge is deliberate: splitting it into six messages would change behaviour, and callers only distinguish success from failure.
 /// </remarks>
@@ -220,7 +220,7 @@ internal static class AggregationInitializer
         }
 
         // **物理邻接按"物理空间"分组**，不是按甲板：`spacesByPosition` 把同 `spaceId` 的舱位连起来。
-        // **Physical adjacency groups by physical space**, not by deck: the code uses `spacesByPosition` to chain positions sharing a `spaceId`.
+ // **Physical adjacency groups by physical space**, not by deck: this implementation uses `spacesByPosition` to chain positions sharing a `spaceId`.
         var spaceByPosition = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (PositionInput position in input.Positions)
         {

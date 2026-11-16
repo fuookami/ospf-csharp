@@ -60,7 +60,7 @@ public class MipBackedConstraintProgrammingGurobiIntegrationTest
     /// **The first version of this criterion was wrong, and the way it was wrong is worth recording: it used `x &lt;= 3` and
     /// asserted `x == 3`, went red reporting `x = 0`, and I briefly believed "the constraint is silently dropped". In fact
     /// `x = 0, y = 7` is a perfectly legal solution — it satisfies both `x + y = 7` and `x &lt;= 3`, and with no objective any
-    /// feasible point is a correct answer.** **So the red was <b>my assertion</b>, not the code, and the criterion had failed to
+ /// feasible point is a correct answer.** **So the red was <b>my assertion</b>, not the implementation, and the criterion had failed to
     /// state that it needs uniqueness.** **Making the bound an equality is what finally tests the intended thing: "the
     /// constraint reached the model" can only be proven by a specific value when the solution must be unique.**
     /// </remarks>

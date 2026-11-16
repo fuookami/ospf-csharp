@@ -43,7 +43,7 @@ public static class TaskOnTimeReward {
     /// 只有阈值非零才引入封顶松弛。把它读成"奖励为 0"会让这条管线在默认参数下**什么都不做**，
     /// 而对象看上去还在最大化准时——目标是空的，求解器自然给出任意解。
     ///
-    /// **A zero threshold means "uncapped", not "no reward"**. The code maximises linearly at a zero threshold and only introduces a capping slack when the threshold is
+ /// **A zero threshold means "uncapped", not "no reward"**. The implementation maximises linearly at a zero threshold and only introduces a capping slack when the threshold is
     /// non-zero. Reading it as "reward is zero" makes this pipeline **do nothing** at its default arguments while the caller believes on-time is still being maximised — the
     /// objective is empty, so the solver returns an arbitrary solution.
     /// </remarks>

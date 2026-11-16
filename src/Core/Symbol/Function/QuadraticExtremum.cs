@@ -49,7 +49,7 @@ internal static class QuadraticExtremumBridging
     /// **`bridges` 与 `rows` 在空表时长度都为 1**——
     /// **因为补进去的那个零多项式也要有个桥接变量，否则委托出去的线性函数读的是一个不存在的符号。**
     ///
-    /// **An empty list gets one zero polynomial, matching the code.**
+ /// **An empty list gets one zero polynomial.**
     /// **`bridges` and `rows` both have length one then** — **because the substituted zero needs a bridge too, or the
     /// delegated linear function would read a symbol that does not exist.**
     /// </remarks>

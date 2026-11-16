@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **所以折算层必须有判据，否则"读到数了"和"读到区间了"永远分不清。**
 ///
 /// **This pins the sentinel-to-range mapping.** **Those attributes have two traps, neither of which
-/// throws and both of which yield plausible-looking numbers: presolve-on returns sentinels (the code measured c1 yielding 4
+/// throws and both of which yield plausible-looking numbers: presolve-on returns sentinels (the implementation measured c1 yielding 4
 /// instead of 0), and an unbounded side returns `±inf`, which behaves like a finite number in a min/max.** **So the folding layer
 /// needs criteria, or "read a number" and "read a range" can never be told apart.**
 /// </remarks>

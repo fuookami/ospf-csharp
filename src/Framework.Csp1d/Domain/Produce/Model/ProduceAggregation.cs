@@ -182,7 +182,7 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
         // C# 原本**只建空符号**，于是第一轮 LP 的需求/物料约束**左边恒为零**——
         // 求解器会认为"什么都不做就已满足全部需求"。
         //
-        // **Initial plans must populate the intermediate symbols too.** The code builds `PlanBatchTerms` in `register` and fills `demandQuantity` /
+ // **Initial plans must populate the intermediate symbols too.** This implementation builds `PlanBatchTerms` in `register` and fills `demandQuantity` /
         // `materialQuantity` / `machineBatchQuantity` / `machineCapacityQuantity` from it; C# originally **only created empty symbols**, so the first LP's demand and
         // material constraints had **an identically zero left side** — the solver would believe "doing nothing already satisfies every demand".
         PopulateInitialSymbols(cuttingPlans, demands, materials, machines);
@@ -349,7 +349,7 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
         foreach (CuttingPlan<V> plan in newPlans) {
             var key = CuttingPlanCanonicalKey.From(plan);
             // **两个条件都要查**：`id 不在 AND 键不在`。
-            // **Both conditions must be checked**: the code is `id not in AND key not in`.
+ // **Both conditions must be checked**: this implementation is `id not in AND key not in`.
             if (!_planIds.Contains(plan.Id) && !_planKeyIndex.ContainsKey(key)) {
                 uniquePlans.Add(plan);
             }

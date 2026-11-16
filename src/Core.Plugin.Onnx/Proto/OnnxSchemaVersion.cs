@@ -41,7 +41,7 @@ public static class OnnxSchemaVersion
     /// <remarks>
     /// **这张表是判据的对照物：** **表里的号与代码里 `case` 的号必须一致，** **否则"我们依赖哪些字段"这句话就只是注释。**
     ///
-    /// **This table is what the criteria check against: the numbers here must match the `case` labels in the code, or "these are the fields we rely on" stays a comment.**
+ /// **This table is what the criteria check against: the numbers here must match the `case` labels in the implementation, or "these are the fields we rely on" stays a comment.**
     /// </remarks>
     public static readonly IReadOnlyList<FieldNumber> FieldNumbers = new[] {
         new FieldNumber("ModelProto", 1, "ir_version"),

@@ -158,7 +158,7 @@ public class CapacityOrderSolutionExtractionTests {
     /// 两点成对：`CapacityCompilation` 与 `IterativeCapacityCompilation` 的 `ExtractSolution` 都是 `Failed` /
     /// 错误码是 `ApplicationError`（缺的是能力，不是参数）。它们第一版都返回 `Ok` 加空表。
     ///
-    /// Two paired points: `CapacityCompilation` and `IterativeCapacityCompilation` both return `Failed`; the code is `ApplicationError`, since a capability is missing rather than an
+ /// Two paired points: `CapacityCompilation` and `IterativeCapacityCompilation` both return `Failed`; this implementation is `ApplicationError`, since a capability is missing rather than an
     /// argument. Both returned `Ok` with an empty table in the first version.
     /// </remarks>
     [Fact]

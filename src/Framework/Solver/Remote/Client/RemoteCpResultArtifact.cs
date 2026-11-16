@@ -80,7 +80,7 @@ public static class RemoteCpResultArtifact {
     /// 因此这里只做与格式无关的校验：结构完善性、v2 标记与 schema 版本冲突、以及工件声明的摘要与原始结果
     /// 声明的摘要一致。**摘要复算在跨语言实测完成前不作为能力宣称。**
     ///
-    /// The skeleton matches the code: no <c>resultRef</c> yields <c>null</c> rather than an error, since
+ /// The skeleton matches the implementation: no <c>resultRef</c> yields <c>null</c> rather than an error, since
     /// a legacy backend may not emit one; a reference without configured storage, a missing object and a
     /// failed read each produce a structured error instead of being treated as "no result".
     ///

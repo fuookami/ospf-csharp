@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 ///
 /// Three silent failures: (1) **iterating only the executors a task enables** — unavailable pairs are pinned to 0 so missing them is harmless, but some pairs then end up
 /// **entirely uncharged** while the solution stays feasible and the objective stays a respectable number; (2) **silently zeroing a failed extraction** — that task puts no
-/// pressure on the objective and looks cheap; (3) **adding the executor objective without an extractor** — the code explicitly does nothing then, and the extra objective
+/// pressure on the objective and looks cheap; (3) **adding the executor objective without an extractor** — the implementation explicitly does nothing then, and the extra objective
 /// changes the solution.
 /// </remarks>
 public class CostObjectiveTests {

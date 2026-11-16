@@ -361,7 +361,7 @@ public class Demo2SecurityContextTests {
     }
 
     /// <summary>
-    /// **三个 Benders 钩子** / The three Benders hooks match the code.
+ /// **三个 Benders 钩子** / The three Benders hooks match the implementation.
     /// </summary>
     /// <remarks>
     /// 四点成对，全部用**约束行数**与**符号**观察：

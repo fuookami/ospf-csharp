@@ -108,7 +108,7 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
         ResultVar = new RealVar(name + "_masking");
     }
 
-    /// <summary>推导失败时回退到 `1e6` / The code falls back to `1e6` when the inference fails.</summary>
+ /// <summary>推导失败时回退到 `1e6` / The implementation falls back to `1e6` when the inference fails.</summary>
     private static V FallbackBigM(IIntoValue<V> converter) => converter.IntoValue(new Flt64(1e6));
 
     /// <summary>Big-M 上下界 / The Big-M bounds.</summary>
@@ -144,8 +144,8 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
     /// `MaskingStructure` / `ConditionalValue`，所以**只实现直接的四行 Big-M**——这也是掩码不是二值类型时
     /// 自己走的那一支。
     ///
-    /// The code has a `deferredStructure` path handing the mask to the `ConditionalValue` intermediate machinery. C# has no `MaskingStructure` / `ConditionalValue`, so only
-    /// the direct four-row Big-M is implemented — which is also the branch the code itself takes when the mask is not binary.
+ /// This implementation has a `deferredStructure` path handing the mask to the `ConditionalValue` intermediate machinery. C# has no `MaskingStructure` / `ConditionalValue`, so only
+ /// the direct four-row Big-M is implemented — which is also the branch the implementation itself takes when the mask is not binary.
     /// </remarks>
     public Try RegisterConstraints(IAbstractLinearMechanismModel<V> model) {
         if (model is null) {
@@ -163,7 +163,7 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
             .Select(monomial => new LinearMonomial<V>(monomial.Coefficient.Negate(), monomial.Symbol))
             .ToArray();
 
-        // ③④ 的右侧是 `-lower` / `-upper`，左侧的常量是 `-input.constant`：把 `y - x` 里的 `x` 拆成"项 + 常量"再搬过去。
+        // ③④ 的右侧是 `-lower` / `-upper`，左侧的常量是 `-input.constant`：把 `y - x` 里的 `x` 拆成"项 + 常量"再实现出来。
         // Rows 3–4 carry `-lower` / `-upper` on the right while the left constant is `-input.constant`: `y - x` splits `x` into terms plus a constant that moves across.
         LinearInequality<V>[] constraints = new[] {
             new LinearInequality<V>(
@@ -208,7 +208,7 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
 /// 直接拿多项式当掩码写进 Big-M 行会在 `mask` 被多个变量共享时失去整数性，
 /// 而失去之后模型**仍然可解**，只是解里 `mask` 可以是 0.5。
 ///
-/// The code builds a binary variable `m`, defines it by an equality against the mask polynomial, then applies the standard masking rows. Writing the polynomial straight into the
+/// This implementation builds a binary variable `m`, defines it by an equality against the mask polynomial, then applies the standard masking rows. Writing the polynomial straight into the
 /// Big-M rows loses integrality when `mask` is shared by several variables — and the model **still solves**, only with `mask = 0.5` in the answer.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
@@ -313,7 +313,7 @@ public sealed class MaskingWithPolyMaskFunction<V> : IMathFunctionSymbol<V>, IHa
 /// `MaskingFunction` 共用 `MaskingStructure` 那条延迟结构路径，而 C# 没有那套中间结构——把它做实要先把
 /// 等价的多行 Big-M 推导出来，属于独立一批的量。列在这里是为了不让人以为它已经被 覆盖。
 ///
-/// **Still an empty stub** (`Evaluate` always null, `RegisterConstraints` always Ok). The code's `MaskingRangeFunction` shares the deferred `MaskingStructure` path with
+/// **Still an empty stub** (`Evaluate` always null, `RegisterConstraints` always Ok). Its `MaskingRangeFunction` shares the deferred `MaskingStructure` path with
 /// `MaskingFunction`, and C# has no such intermediate machinery — making it real requires deriving the equivalent multi-row Big-M separately. It is listed here so nobody assumes
 /// covered it.
 /// </remarks>

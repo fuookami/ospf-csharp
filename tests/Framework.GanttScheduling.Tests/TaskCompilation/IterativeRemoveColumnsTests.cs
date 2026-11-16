@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 这里对**所有**已移除任务做"固定为 0 + 摘变量"，不是只处理本轮新删的。
 /// 只处理本轮的话，早先被删的列仍在模型里可被选中——它们只是从聚合表里消失了。
 ///
-/// The code pins and drops **every** removed task, not only this round's. Handling only this round leaves earlier retirements still selectable in the model — they merely
+/// The implementation pins and drops **every** removed task, not only this round's. Handling only this round leaves earlier retirements still selectable in the model — they merely
 /// vanished from the aggregate tables.
 /// </remarks>
 public class IterativeRemoveColumnsTests {
@@ -234,7 +234,7 @@ public class IterativeRemoveColumnsTests {
     /// <remarks>
     /// 第 0 轮建了 `T1`，第 1 轮建了 `T2`。回收时 `T1` 属于第 0 轮。
     /// 若只处理"最新一轮"的已移除任务（`task.Iteration == _x.Count - 1`），`T1` 会从聚合表里消失，
-    /// 但**它的变量仍留在模型里可被选中**——一个"已回收"的列照旧出现在解里，且没有任何报错。
+    /// 但**它的变量仍留在模型里可被选中**——一个"已回收"的列不变出现在解里，且没有任何报错。
     ///
     /// Round 0 built `T1`, round 1 built `T2`. At retirement `T1` belongs to round 0. Handling only the **newest** round's removed tasks (`task.Iteration == _x.Count - 1`) makes `T1`
     /// vanish from the aggregates while **its variable stays selectable in the model** — a "retired" column still shows up in the solution, with no error at all.

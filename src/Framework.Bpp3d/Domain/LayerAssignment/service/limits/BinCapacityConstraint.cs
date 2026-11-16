@@ -54,7 +54,7 @@ public sealed class BinCapacityConstraint<V> : IBpp3dConstraint<V>
     /// `invoke(model)` 里逐箱加一条 `Σ 装载重量 ≤ capacity` 的线性约束，**不做对偶刷新**；
     /// 这里同样不做，因此恒成功——但右端项**不再是空的**。
     ///
-    /// The code adds one `Σ loading weight ≤ capacity` row per bin inside `invoke(model)` and performs **no dual refresh**; this does the same, so it
+ /// This implementation adds one `Σ loading weight ≤ capacity` row per bin inside `invoke(model)` and performs **no dual refresh**; this does the same, so it
     /// always succeeds — but the right-hand side is **no longer empty**.
     /// </remarks>
     /// <param name="shadowPriceMap">影子价格表 / Shadow-price map.</param>

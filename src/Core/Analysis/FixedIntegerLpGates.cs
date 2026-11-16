@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// </summary>
 /// <remarks>
 /// **这是三阶段求解前的四道判定。** 求解本身要真实 LP 后端，
-/// **但"什么情况下不许下结论"是纯判定**，可以单独搬、单独测。
+/// **但"什么情况下不许下结论"是纯判定**，可以单独实现、单独测。
 ///
 /// **These are the four verdicts before the three-stage solve.** The solve itself needs a real LP backend, **but "when must we not conclude anything" is pure judgement**, portable and testable on its own.
 ///

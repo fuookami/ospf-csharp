@@ -37,9 +37,9 @@ public static class LengthUnits {
     // **换算因子逐条抄自的 `DerivedPhysicalUnit(... * Scale...)` 表达式**，
     // **一个数都没有自己算**：单位换算错了不会报错，只会让"5 海里"变成别的长度。
     //
-    // **The 22 units below were added from the code.**
+ // **The 22 units below were added.**
     //
-    // **The code has 33 length units and this repo had 10**, and `docs/` never mentioned it —
+ // **This implementation has 33 length units and this repo had 10**, and `docs/` never mentioned it —
     // **"23 short" and "good enough" look the same in a document.**
     //
     // **Every factor is copied from its `DerivedPhysicalUnit(... * Scale...)` expressions**,
@@ -96,7 +96,7 @@ public static class LengthUnits {
     /// **的是儒略年 365.25 天**（`LightDay * 365.25`），**不是 365 天也不是 365.2425**。
     /// **三者差 0.0069%**——**在光年的量级上就是 6.5 亿公里。**
     ///
-    /// **The code uses the Julian year of 365.25 days** (`LightDay * 365.25`), **not 365 and not 365.2425**.
+ /// **This implementation uses the Julian year of 365.25 days** (`LightDay * 365.25`), **not 365 and not 365.2425**.
     /// **The three differ by 0.0069%** — **which at a light year is about 650 million kilometres.**
     /// </remarks>
     public static readonly PhysicalUnit LightYear = new DerivedUnit(SIBaseUnits.Meter, Scale.Invoke(299792458.0 * 86400 * 365.25), "light year", "ly");

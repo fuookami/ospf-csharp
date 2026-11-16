@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// **没有 SDK 就不声明任何能力。** 这是本仓反复回到的一条：能力声明宁可少说。返回"支持 9 项"而其实一个都调不通，
 /// 比返回"支持 0 项"危险得多——前者会让上层选择一条**不存在的原生路径**。
 ///
-/// The code reflects over `GRBModel`'s exact method signatures on the Java side; this does the same on the
+/// The implementation reflects over `GRBModel`'s exact method signatures on the Java side; this does the same on the
 /// .NET side but **without referencing the Gurobi managed assembly**, so this code compiles **on a machine with no SDK** — the result is simply empty.
 ///
 /// **No SDK, no capability claims.** This is a rule this repository keeps returning to: a capability declaration may understate. Reporting "supports 9" when not one of
@@ -70,7 +70,7 @@ public static class GurobiFunctionCapabilities
         if (HasMethod(modelType, "AddSOS"))
         {
             // **一个方法同时支撑两种能力**：`AddSOS` 的 `type` 参数决定 1 还是 2。
-            // **One method backs two capabilities** (matching the code): `AddSOS`'s type argument picks 1 or 2.
+ // **One method backs two capabilities** (.
             supported.Add(FunctionNativeCapability.Sos1);
             supported.Add(FunctionNativeCapability.Sos2);
         }
@@ -85,7 +85,7 @@ public static class GurobiFunctionCapabilities
         if (HasMethod(modelType, "AddGenConstrMax") && HasMethod(modelType, "AddGenConstrMin"))
         {
             // **两个都要**：只有一个说明这对接口不完整，声明"支持"会让上层调用不存在的那一半。
-            // **Both are required** (matching the code): with only one the pair is incomplete, and claiming support would let the layer above call the missing half.
+ // **Both are required** (.
             supported.Add(FunctionNativeCapability.GeneralMinMax);
         }
         if (HasMethod(modelType, "AddGenConstrAnd") && HasMethod(modelType, "AddGenConstrOr"))

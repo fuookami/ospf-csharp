@@ -155,7 +155,7 @@ public class DiagnosticActivationTests {
     /// "构造后再校验"来防重复。这里 `Put` 先删同源再追加，**重复在入口就不可能存在**——
     /// 校验因此永远通过。**这一点要说清楚，否则那条校验看起来像在防一件不可能发生的事。**
     ///
-    /// The code guards duplicates by validating after the fact. Here `Put` removes the same source first, so **a duplicate cannot exist at the entry point** and the
+ /// The implementation guards duplicates by validating after the fact. Here `Put` removes the same source first, so **a duplicate cannot exist at the entry point** and the
     /// validation therefore always passes. **Say that out loud, or the check looks like it guards something that cannot happen.**
     /// </remarks>
     [Fact]

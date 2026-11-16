@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 2. **带空闲时编译量的上界是 2，不是 1**。成本系数乘上去时，同一套系数在有/无空闲两种配置下
 ///    能差出两倍——按"它就是个 0/1 指示量"去估算成本会低估一半。
 ///
-/// The code describes an executor with layers:
+/// The implementation describes an executor with layers:
 ///
 /// | Symbol | Meaning | Constraint |
 /// | --- | --- | --- |

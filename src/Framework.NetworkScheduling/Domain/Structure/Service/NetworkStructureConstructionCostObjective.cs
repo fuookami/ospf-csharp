@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.NetworkScheduling.Domain.Structure.Service;
 /// **The cost expression must be evaluated lazily.** The construction-cost expression only exists after the construction variable
 /// component has been registered into the model — at objective-construction time it is still empty. Capturing the polynomial eagerly
 /// would register an empty objective: the model still solves successfully but returns an arbitrary feasible solution instead of the
-/// optimum, with nothing reported. That is exactly why the code takes a ` -&gt; LinearPolynomial` supplier rather than a
+/// optimum, with nothing reported. That is exactly why the implementation takes a ` -&gt; LinearPolynomial` supplier rather than a
 /// polynomial.
 /// </remarks>
 public sealed class NetworkStructureConstructionCostObjective : IPipeline<LinearMetaModel<Flt64>> {

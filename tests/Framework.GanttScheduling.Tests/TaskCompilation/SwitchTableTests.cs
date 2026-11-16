@@ -78,7 +78,7 @@ public class SwitchTableTests {
     /// `switch` 里对对角线返回 `empty`，但 `SwitchCostTriples` **不跳过**它。若判据只看"表里有没有这一项"，
     /// 跳过对角线和填零都通过；所以我断言**项在表里**而且**多项式为空**——两件事一起才算对。
     ///
-    /// The code returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it. Checking only "is the entry present" passes both skipping and
+ /// This implementation returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it. Checking only "is the entry present" passes both skipping and
     /// zero-filling, so the assertion demands **the entry is present** *and* **its polynomial is empty**.
     /// </remarks>
     [Fact]
@@ -391,7 +391,7 @@ public class SwitchTableTests {
     /// 系数为 `null` 时用无穷大；`Flt64` 没有无穷，所以只能失败。悄悄当成 1 会让"这个换型不计成本"变成"计 1"，
     /// 而两个数看起来都正常。
     ///
-    /// The code uses infinity when the coefficient is `null`; `Flt64` has none, so it must fail. Treating it as 1 silently turns "this switch is free" into "it costs 1", and
+ /// This implementation uses infinity when the coefficient is `null`; `Flt64` has none, so it must fail. Treating it as 1 silently turns "this switch is free" into "it costs 1", and
     /// both numbers look normal.
     /// </remarks>
     [Fact]
@@ -431,9 +431,9 @@ public class SwitchTableTests {
     /// 第一版判据断言最小值是 0，实测 −14400——断言写的是我以为会发生的，不是实现做的。
     ///
     /// The switch time is `(est[to] − end[from]) × indicator` and the objective sums over **all ordered pairs**, so minimising drives one direction **negative** (it orders the
-    /// later task before the earlier one, whose gap is negative). The code does not clamp that (the earlier ceiling) and this copies it rather than quietly taking `max(0, ·)`.
+ /// later task before the earlier one, whose gap is negative). This implementation does not clamp that (the earlier ceiling) and this copies it rather than quietly taking `max(0, ·)`.
     /// Maximising is pushed **above** the planned 3600 s. Together these pin "`x` really reads `est`": with a constant gap the sum could only be `0` or `3600`, never negative and
-    /// never above 3600. The first version of this criterion asserted the minimum was 0 and measured −14400 — the assertion described what I expected, not what the code does.
+ /// never above 3600. The first version of this criterion asserted the minimum was 0 and measured −14400 — the assertion described what I expected, not what this implementation does.
     /// </remarks>
     [Fact]
     public void SwitchTime_ShouldFollowTheEstimatedStartUnderRealScip() {

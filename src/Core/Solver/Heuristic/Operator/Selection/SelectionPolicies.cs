@@ -101,7 +101,7 @@ public sealed record PolicySnapshot(
 /// </summary>
 /// <remarks>
 /// **`snapshot`/`restore` 必须按动作名对齐，不能按下标**。快照里的 `actions` 顺序是"当时配置的顺序"，恢复时的 `actions` 可能
-/// 已经被重新排序或插入；按下标恢复会把 A 动作的计数搬到 B 动作上，**每个动作的数值都仍然合理**，只是整体错位。
+/// 已经被重新排序或插入；按下标恢复会把 A 动作的计数实现到 B 动作上，**每个动作的数值都仍然合理**，只是整体错位。
 /// **`snapshot`/`restore` must align by action name, not by index.** The snapshot's `actions` order is "the order configured then",
 /// while the restoring side's `actions` may have been reordered or extended; restoring by index moves A's counts onto B, and **every
 /// action's numbers still look plausible**, only misattributed.

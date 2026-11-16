@@ -52,7 +52,7 @@ public sealed class Demo2BendersQualityGuardTests
     /// 的是 `override.scoreXWeight ?: default.scoreXWeight`，本仓沿用；这条判据钉的就是"没填的取默认"。
     ///
     /// This is the easiest cell to get wrong: with a single weight supplied, **the missing ones must take their defaults** before normalisation — not zero, and
-    /// not skipped. The code writes `override.scoreXWeight ?: default.scoreXWeight`; this criterion pins exactly that.
+ /// not skipped. This implementation writes `override.scoreXWeight ?: default.scoreXWeight`; this criterion pins exactly that.
     /// </remarks>
     [Fact]
     public void APartialOverride_ShouldStillSumToOne() {
@@ -79,7 +79,7 @@ public sealed class Demo2BendersQualityGuardTests
     /// **守卫从此不再触发，评分也不再是可比较的数**。`<= 1e-12` 兜底回（0.35, 0.2, 0.2, 0.15, 0.1）。
     ///
     /// With all five weights zero (or all negative) the normalisation yields `NaN`, and any comparison with `NaN` is false — **the guard stops firing and the
-    /// score stops being a comparable number**. The code catches it with `<= 1e-12` and falls back to (0.35, 0.2, 0.2, 0.15, 0.1).
+ /// score stops being a comparable number**. The implementation catches it with `<= 1e-12` and falls back to (0.35, 0.2, 0.2, 0.15, 0.1).
     /// </remarks>
     [Fact]
     public void AZeroWeightSum_ShouldFallBackToTheDefaultShares() {
@@ -104,7 +104,7 @@ public sealed class Demo2BendersQualityGuardTests
     ///
     /// 一次给全部九个越界值，断言每一个都被夹回边界。**判据钉的是边界，不是"大致被夹过"。**
     ///
-    /// The code coerces each one. **These are not cosmetic**: `iterationPressurePercent = 0` fires iteration pressure on the first iteration, and
+ /// The implementation coerces each one. **These are not cosmetic**: `iterationPressurePercent = 0` fires iteration pressure on the first iteration, and
     /// `trajectoryMinSnapshots = 0` lets trajectory analysis run on a single snapshot — **both look like "the guard fired too early"**, and the caller will
     /// assume their thresholds are wrong. All nine are given out-of-range values at once and each is asserted back on its boundary.
     /// </remarks>

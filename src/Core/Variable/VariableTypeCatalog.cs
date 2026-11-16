@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Variable;
 ///
 /// 这个目录仍然有用（报告、校验、跨语言对照），但**它不是重建器的前置件**。
 ///
-/// **correction**: claimed this catalog is the rebuilder's prerequisite. **That was wrong.** The code's `buildModel` **does not rebuild variables from
+/// **correction**: claimed this catalog is the rebuilder's prerequisite. **That was wrong.** Its `buildModel` **does not rebuild variables from
 /// `TypeName`**: it walks the snapshot's expression AST and reuses the `IVariableItem` references found there. A rebuilder therefore does not *create* variables, it *finds*
 /// them — **and no type name appears on that path.** The catalog stays useful for reporting, verification and cross-language comparison, but **it is not the rebuilder's
 /// prerequisite.**
@@ -89,7 +89,7 @@ public static class VariableTypeCatalog
     /// **认不出就返回 `false`，不兜底造一个连续型**：一个错的变量类型不报错，只是让整数模型按 LP 求解，
     /// **解出来了、值不对、没有一行日志说它换过类型。**
     ///
-    /// **`RegisterVariable` takes a variable instance, not a type object**, and this factory can supply one — **but that is not what the code does**: the code *finds* the original variable objects in the expression AST, and a new object is not the same variable (`Identifier` / `Key` differ, so it registers as another one). **See the type remarks for the correction.** **An unrecognised name returns
+ /// **`RegisterVariable` takes a variable instance, not a type object**, and this factory can supply one — **but that is not what this implementation does**: the implementation *finds* the original variable objects in the expression AST, and a new object is not the same variable (`Identifier` / `Key` differ, so it registers as another one). **See the type remarks for the correction.** **An unrecognised name returns
     /// `false` with no fallback**: a wrong variable type raises nothing, it just lets an integer model be solved as an LP — **solved, wrong, and with no log line saying the type
     /// changed.**
     /// </remarks>

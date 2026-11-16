@@ -23,7 +23,7 @@ public sealed record RenderDTO(IReadOnlyList<RenderPositionDTO> Positions);
 /// **两个重量都是可空的，而且可空是有意义的**：`null` 表示该舱位不使用这个模式，
 /// 而 `0` 是一个真实的重量值。可空表达这件事，这里沿用——压成 `0` 会让渲染侧分不清"没启用"和"启用但是零"。
 ///
-/// **Both weights are nullable, and the nullability carries meaning**: `null` means the position does not use that mode, while `0` is a real weight. The code
+/// **Both weights are nullable, and the nullability carries meaning**: `null` means the position does not use that mode, while `0` is a real weight. The implementation
 /// expresses it with nullability and so does this implementation — collapsing to `0` would leave the rendering side unable to tell "not enabled" from "enabled but zero".
 /// </remarks>
 /// <param name="PositionId">舱位稳定标识 / Stable position identifier</param>

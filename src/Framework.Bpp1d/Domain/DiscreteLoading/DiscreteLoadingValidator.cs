@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading;
 /// **不可行或非法的输入进入建模阶段**，而建模阶段的失败信息离根因很远。
 ///
 /// **Only `validate` is implemented here**, not `register`: the latter turns the whole problem into a linear meta model (`BinVar`, `LinearPolynomial`, layout-group
-/// constraints) and belongs to the next wiring layer. **`validate` is valuable on its own**: the code performs eleven kinds of checks there, and missing any one
+/// constraints) and belongs to the next wiring layer. **`validate` is valuable on its own**: the implementation performs eleven kinds of checks there, and missing any one
 /// lets **infeasible or illegal input reach the modelling stage**, where the failure message is far from the root cause.
 /// </remarks>
 public sealed class DiscreteLoadingValidator<V>
@@ -168,7 +168,7 @@ public sealed class DiscreteLoadingValidator<V>
             // 是这样写的，保留双重保护。
             //
             // **A negative capacity is caught in two places**: here and the "fixed load within capacity" check below (`0 > negative` is always true). Disabling this one
-            // alone therefore does **not** let a negative capacity through — measured, and that is **genuine redundant protection**, not a weak criterion. The code
+ // alone therefore does **not** let a negative capacity through — measured, and that is **genuine redundant protection**, not a weak criterion. The implementation
             // is written the same way, so the double guard is kept.
             if (capacityOk.Value.CompareTo(Flt64.Zero) < 0 || position.MaxCount == 0) {
                 return Invalid($"capacity {position.Id}");
@@ -389,7 +389,7 @@ public sealed class DiscreteLoadingValidator<V>
             // 是两处都写，保留双重保护。
             //
             // **A disabled position is guarded in two places**: here and the "disabled position may only carry fixed cargo" check below. Deleting this one alone does
-            // **not** let an illegal solution through — measured, so it is **genuine redundant protection**, not a weak criterion. The code guards both, so both
+ // **not** let an illegal solution through — measured, so it is **genuine redundant protection**, not a weak criterion. The implementation guards both, so both
             // are kept.
             if (!position.Enabled && solution.OccupiedPositions.Contains(position.Id)) {
                 if (position.FixedOccupied) {
@@ -446,7 +446,7 @@ public sealed class DiscreteLoadingValidator<V>
     /// **用 `ApplicationError` 而不是 `IllegalArgument`**：输入本身是合法的，
     /// 是**这个解**不合规。错误码要能让调用方区分"我的问题定义错了"与"求解器给了个坏解"。
     ///
-    /// **`ApplicationError` rather than `IllegalArgument`**: the input is legal; **this solution** is not. The code must let callers tell "my problem definition is wrong"
+ /// **`ApplicationError` rather than `IllegalArgument`**: the input is legal; **this solution** is not. The implementation must let callers tell "my problem definition is wrong"
     /// from "the solver returned a bad solution".
     /// </remarks>
     private static Try InvalidSolution(string reason) =>

@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 把 `extra` 理解成"最大减最小"（跨度）是个安静的错：数值仍然是"一个完工时间"，
 /// 但目标从"尽早全部做完"变成了"把排程压紧"，**滞后与否完全不再被计入**。
 ///
-/// The code has two branches: `extra = true` uses `MinMaxFunction`, otherwise `MaxFunction`. The names suggest "max minus min" or "minimise the maximum", but's
+/// This implementation has two branches: `extra = true` uses `MinMaxFunction`, otherwise `MaxFunction`. The names suggest "max minus min" or "minimise the maximum", but's
 /// own documentation settles it:
 ///
 /// > Min-max function: `result = max(polynomials[0], polynomials[1], ...)`

@@ -105,7 +105,7 @@ public class MomentumTorqueSurfaceDensityUnitsTests
     [Fact]
     public void TheTorqueEnergyOverlap_ShouldBeDocumentedAsUncatchable()
     {
-        // **这两件事是真的，所以照旧断言**：力矩单位存在，且它的数值等于力乘长度。
+        // **这两件事是真的，所以不变断言**：力矩单位存在，且它的数值等于力乘长度。
         // **"它是不是从 Joule 来的"不可观测，所以不断言。**
         //
         // **These two are true and stay asserted**: the torque unit exists, and its value equals force times length.

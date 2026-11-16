@@ -68,7 +68,7 @@ public interface ICargoView {
     /// 这是真实的语义差异，不能靠换算糊过去：把层数当长度用会让高度门限静默失效。
     /// 所以这里如实做成"未知即 null"，策略遇到未知高度一律判否。
     ///
-    /// the code stores `maxHeight` as a length (`Quantity&lt;FltX&gt;`), while the current C# item model keeps `MaxHeight` as a `UInt64` layer
+ /// the implementation stores `maxHeight` as a length (`Quantity&lt;FltX&gt;`), while the current C# item model keeps `MaxHeight` as a `UInt64` layer
     /// count. That is a real semantic difference and cannot be papered over by conversion: treating a layer count as a length would let the height
     /// gate silently pass. So it is modelled honestly as "unknown means null", and the policies refuse whenever the height is unknown.
     /// </remarks>

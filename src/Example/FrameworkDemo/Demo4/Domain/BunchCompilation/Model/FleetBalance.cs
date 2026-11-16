@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// `fleet_l` 变成"这一轮的束各占一项"。C# 的 `Flush` 是空实现，这里显式 `Clear` 再累加——**否则每多一轮就多一批项，
 /// 跑十轮之后同一个束在表达式里出现十次**。
 ///
-/// The code counts the fleet by **checkpoint** ("minor type x airport"), puts one `z` variable per aircraft into an expression, and attaches a negative-side slack
+/// This implementation counts the fleet by **checkpoint** ("minor type x airport"), puts one `z` variable per aircraft into an expression, and attaches a negative-side slack
 /// bounding it by the checkpoint's aircraft count. The checkpoint is not arbitrary — **an airborne aircraft counts at the airport it will land at, an idle one at where it is now** —
 /// otherwise "how many of this type can land at ZSPD tonight" is unanswerable.
 ///

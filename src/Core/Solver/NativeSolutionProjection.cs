@@ -68,7 +68,7 @@ public static class NativeSolutionProjection
         // **下游全部按键查值，没有一处依赖顺序，所以这个差异没有行为后果——但它是一处<b>有意的</b>差异，
         // 而不是"忘了"。**
         //
-        // **The code uses a `LinkedHashMap` to keep insertion order; this uses a plain dictionary.**
+ // **This implementation uses a `LinkedHashMap` to keep insertion order; this uses a plain dictionary.**
         // **Every downstream use looks values up by key and none depends on order, so the difference has no behavioural
         // consequence — but it is a <b>deliberate</b> one, not an oversight.**
         var result = new Dictionary<VariableItemKey, Flt64>(columns.Count);

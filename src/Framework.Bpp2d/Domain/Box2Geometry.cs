@@ -66,7 +66,7 @@ public sealed record Box2Geometry<V>(Quantity<V> X, Quantity<V> Y, IQuantityProj
     /// </summary>
     /// <remarks>
     /// **与一处刻意差异**：`centerX`／`centerY` 对矩形返回**左下角坐标**而不是中心，与注释所述不符。
-    /// 这里按注释语义计算真实中心。照搬一个明显与自身文档矛盾的实现不算"同步能力"。
+    /// 这里按注释语义计算真实中心。如此一个明显与自身文档矛盾的实现不算"同步能力"。
     ///
     /// **A deliberate difference**: its `centerX`/`centerY` return the **lower-left corner** for
     /// rectangles, contradicting its own documentation. The real centre is computed here; faithfully copying an

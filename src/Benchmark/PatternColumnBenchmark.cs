@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Benchmark;
 ///
 /// fills a gap**: its (74 lines) has always existed and this repo had none. It measures **the write side of column
 /// generation** — each `addColumns` batch grows the model's rows, columns and base objective, and **no solve-once benchmark covers that path**, because a solve benchmark
-/// fixes the column count while this cost grows linearly with it. The spec matches the code: one item (`amount = 10000`), one bin type (length and capacity both
+/// fixes the column count while this cost grows linearly with it. The spec matches the implementation: one item (`amount = 10000`), one bin type (length and capacity both
 /// 10000), zero spacing, `dataset` deciding the column count (256 / 512 / 1024), each column consuming `i` items, appended in `batchSize` batches.
 /// </remarks>
 [MemoryDiagnoser]
@@ -97,7 +97,7 @@ public class PatternColumnBenchmark {
         using var model = new LinearMetaModel<Flt64>("pattern-columns");
         var context = new PatternAssignmentContext<Flt64>(_problem, Flt64PackingValueAdapter.Instance);
         // **注册、每批追加、关闭都在计时之内**：是这么做的，分开计时会漏掉建行与建列那一半。
-        // **Register, each batch and close all sit inside the timing**, as in the code; timing them apart would miss the row and column construction.
+ // **Register, each batch and close all sit inside the timing**; timing them apart would miss the row and column construction.
         // **失败就抛**：`Should` 在基准项目里不可用（那是测试项目的东西），
         // 而 `check` 的等价物就是抛异常——**基准里静默忽略失败会把"什么都没做"计时成一个很快的结果。**
         // **Throw on failure**: `Should` belongs to the test projects, and the equivalent of its `check` is to throw —

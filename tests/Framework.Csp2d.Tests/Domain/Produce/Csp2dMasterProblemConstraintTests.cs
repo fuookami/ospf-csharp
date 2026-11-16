@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Produce;
 /// 对应后半段。判据同时走**约束条数**（`model.Constraints.Count`）与**覆盖量数学**（internal 助手），
 /// 因为前者能证明"该注册的注册了 / 该跳过的不注册"，后者能证明系数算对了。
 ///
-/// Mirrors the tail of the code. The criteria use both the **constraint count** (`model.Constraints.Count`) and the **coverage math**
+/// Mirrors the tail of the implementation. The criteria use both the **constraint count** (`model.Constraints.Count`) and the **coverage math**
 /// (internal helpers): the former proves "registered what must be registered and skipped what must be skipped", the latter proves the coefficients are right.
 /// </remarks>
 public class Csp2dMasterProblemConstraintTests {

@@ -37,7 +37,7 @@ public class NativeFingerprintIndicatorTests
     /// **判据逐级叠加同一份指示数据，断言每一级都压过下一级。**
     /// **只测单级的话，一个顺序写反的实现也能全绿——单级算例对顺序完全不敏感。**
     ///
-    /// **The code order is: difference(8), conjunction(7), zero band(6), implied(5), conditional value(4),
+ /// **The implementation order is: difference(8), conjunction(7), zero band(6), implied(5), conditional value(4),
     /// equivalents(3), plain(2).**
     ///
     /// **The criterion accumulates features onto one indicator and asserts each rung dominates the next.** **Testing only
@@ -111,7 +111,7 @@ public class NativeFingerprintIndicatorTests
     /// **阶梯里 `max-1` 位于指示器之后，所以两者同时非空时由指示器胜出。**
     /// **这一条很容易写反：直觉上"MAX 比指示器复杂"，但阶梯看的是<b>顺序</b>不是复杂度。**
     ///
-    /// **In the code ladder `max-1` comes after the indicator rungs, so an indicator wins when both are non-empty.**
+ /// **In the implementation ladder `max-1` comes after the indicator rungs, so an indicator wins when both are non-empty.**
     /// **Easy to invert: intuitively MAX is "more complex", but the ladder is about <b>order</b>, not complexity.**
     /// </remarks>
     [Fact]

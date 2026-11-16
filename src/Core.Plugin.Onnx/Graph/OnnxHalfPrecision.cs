@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// getting one wrong does not raise, it gives a model that runs and is slightly off, which is the hardest kind of error to attribute.**
 ///
 /// The implementation expands the IEEE fields by hand (sign 1 / exponent 5 / mantissa 10) rather than leaning on `BitConverter`'s `Half`: **`System.Half` exists in .NET, but
-/// expanding it explicitly puts subnormals and infinity/NaN on the face of the code, and half precision's traps live entirely on those two paths.**
+/// expanding it explicitly puts subnormals and infinity/NaN on the face of the implementation, and half precision's traps live entirely on those two paths.**
 /// </remarks>
 public static class OnnxHalfPrecision
 {

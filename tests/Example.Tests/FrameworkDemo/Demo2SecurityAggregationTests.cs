@@ -333,7 +333,7 @@ public class Demo2SecurityAggregationTests {
         // **One unobservable recorded**: replacing `if (!density.IsOk) return density;` with `_ = density;` lets the surface density and low payload **fail in turn** (they need
         // the same load and total weight symbols), so `IsOk` stays `false` and neither clears its symbol on failure — all three symbols are `null` either way and no assertion can
         // separate "returned early" from "kept going and failed each step". All three `_ = x;` mutations survive (measured). Making it observable would need a later step that does
-        // **not** depend on the input the earlier one failed on, which conflicts with this class's structure where every derived model shares the same load symbols. The code's
+ // **not** depend on the input the earlier one failed on, which conflicts with this class's structure where every derived model shares the same load symbols. Its
         // form is kept and its lack of coverage recorded here.
     }
 
@@ -386,7 +386,7 @@ public class Demo2SecurityAggregationTests {
     /// `Aggregation.register` 收 `stowageMode` 却不用它（只往 `registerForBendersSP` 传）。三种模式注册出的约束数相同。
     /// 若把模式误用进某处（例如按模式跳过密度约束），这条会红。
     ///
-    /// The code accepts `stowageMode` and does not use it on this path. All three modes register the same number of constraints; misusing the mode somewhere turns this red.
+ /// The implementation accepts `stowageMode` and does not use it on this path. All three modes register the same number of constraints; misusing the mode somewhere turns this red.
     /// </remarks>
     [Fact]
     public void Aggregation_ShouldIgnoreTheStowageModeWhenRegistering() {

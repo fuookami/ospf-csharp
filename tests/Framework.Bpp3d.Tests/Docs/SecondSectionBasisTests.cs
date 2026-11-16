@@ -69,7 +69,7 @@ public class SecondSectionBasisTests
         // **`bin/` and `obj/` must be excluded: `SearchOption.AllDirectories` also counts SDK-generated files, so the number
         // depends on how many were generated at that moment.** **Measured: in one workspace the count was 16 before
         // `obj/` was cleared and 14 after a rebuild — a criterion whose number can change per build measures the machine, not
-        // the code.**
+ // the implementation.**
         int heuristicTests = Directory
             .GetFiles(
                 Path.Combine(root, "tests", "Core.Plugin.Heuristic.Tests"),

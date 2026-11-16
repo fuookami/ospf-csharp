@@ -219,7 +219,7 @@ public class SlackFunctionTests {
     /// 沿用这个顺序，所以阈值模式只在**单方向**下才有区别——这条判据就用单方向。
     ///
     /// In threshold mode an equality would **pin** the slack to the absolute difference, making "deviation" a non-choice. The criterion looks for "no equality row, only one-sided rows".
-    /// **The code checks the absolute-value branch first**: with both directions open, even `threshold = true` takes the four-row formulation. That order is copied, so
+ /// **The implementation checks the absolute-value branch first**: with both directions open, even `threshold = true` takes the four-row formulation. That order is copied, so
     /// threshold mode only differs for **one direction** — which is what this criterion uses.
     /// </remarks>
     [Fact]

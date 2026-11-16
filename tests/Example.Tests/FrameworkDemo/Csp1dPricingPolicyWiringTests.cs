@@ -167,7 +167,7 @@ public class Csp1dPricingPolicyWiringTests {
         // **必须用会产出新列的定价器**：默认定价器与初始池共用枚举器，
         // 第一轮的列全是池里已有的，去重后为空，**策略根本不会被调用**。
         // **A pricing generator that yields new columns is required**: the default one shares the pool's enumerator, so its first round is all duplicates and after
-        // dedup is empty, **and the policy is never invoked** (matching the code).
+ // dedup is empty, **and the policy is never invoked** (.
         var generation = new Csp1dColumnGeneration<Flt64>(
             new MockColumnGenerationSolver(),
             pricingGenerator: new OneShotPricingGenerator(material, policy));
@@ -255,8 +255,8 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// declared "the pricing enumerator replaying the initial plans is the top gap", and later batches tried to "fix" it. After checking properly:
     ///
-    /// 1. **The code's default pricing generator shares the initial pool's enumerator** (`SimpleInitialCuttingPlanGenerator`), and so does C#;
-    /// 2. The code **also asserts `AllDuplicates`** in that situation — but with a **custom fake pricing generator** that
+ /// 1. **Its default pricing generator shares the initial pool's enumerator** (`SimpleInitialCuttingPlanGenerator`), and so does C#;
+ /// 2. The implementation **also asserts `AllDuplicates`** in that situation — but with a **custom fake pricing generator** that
     /// can yield duplicate columns;
     /// 3. Here C# uses the **real default pricing generator with an all-zero-dual mock**, so the reduced-cost test `benefit > cost` fails, `Generate` returns empty, and the
     ///    `PricingConverged` branch runs.

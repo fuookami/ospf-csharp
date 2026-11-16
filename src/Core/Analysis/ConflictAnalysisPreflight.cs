@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 把缓存读放在关闭检查之前，一个已关闭的会话**仍然会返回上一次的结论**——
 /// **于是"关闭"这件事对调用方完全不生效**，而它本该是"不要再给我东西了"。
 ///
-/// **The position of gate 2 is the whole point of this file.** The code checks `isClosed` **before** `session.cached(...)`. Reading the cache first means a closed session **still returns the previous
+/// **The position of gate 2 is the whole point of this file.** The implementation checks `isClosed` **before** `session.cached(...)`. Reading the cache first means a closed session **still returns the previous
 /// conclusion** — **making "closed" a no-op for the caller**, when it should mean "stop giving me things".
 /// </remarks>
 public static class ConflictAnalysisPreflight
@@ -97,7 +97,7 @@ public static class ConflictAnalysisPreflight
     /// | 选项 → 快照 → 层次 | **`IllegalArgument`（快照坏了）** | 修快照 |
     /// | 层次先行 | `Unsupported`（后端不支持） | **换一个根本不是问题的后端** |
     ///
-    /// **The order cannot change: options, then snapshot, then the tier.** A broken snapshot with an unavailable backend reports `IllegalArgument` under the code order and `Unsupported` under a
+ /// **The order cannot change: options, then snapshot, then the tier.** A broken snapshot with an unavailable backend reports `IllegalArgument` under the implementation order and `Unsupported` under a
     /// tier-first order — **and the second one sends the caller to swap a backend that was never the problem.**
     ///
     /// **"层次不可用"是三种结果里唯一不返回错误的**：它返回一份 `Unsupported` 解释，

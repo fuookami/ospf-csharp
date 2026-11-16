@@ -228,7 +228,7 @@ public sealed class Position
     /// `Position._loadingOrder` 是**可后置赋值**的：初始化器先造出全部舱位，再按装载顺序串起前后驱。
     /// C# 侧原先没有这个属性，于是 `NeighbourCalculator` 的拓扑分支无法落地。这里补成可写属性，默认 `null`。
     ///
-    /// In the code `Position._loadingOrder` is **assigned after construction**: the initializer builds every position, then links predecessors and successors in loading order.
+ /// In the implementation `Position._loadingOrder` is **assigned after construction**: the initializer builds every position, then links predecessors and successors in loading order.
     /// The C# side had no such property, which is why the topological neighbour branch could not be implemented. It is writable here and defaults to `null`.
     /// </remarks>
     public LoadingOrder? LoadingOrder { get; set; }
@@ -270,8 +270,8 @@ public sealed class Position
     /// `Position` (`LoadingOrder.DirectPrec`, `Appointment`, …) compared by reference — two position objects with the same `Id` became distinct keys, and
     /// lookups, de-duplication and adjacency all silently broke.
     ///
-    /// The code `data class` compares **all constructor parameters**, of which `coordinate` is a plain `class` (reference equality) while `shape` and
-    /// `location` are `data class`es (value equality). But `Id` is documented as the unique identifier in the code, and **the same `Id` implies the same
+ /// The implementation `data class` compares **all constructor parameters**, of which `coordinate` is a plain `class` (reference equality) while `shape` and
+ /// `location` are `data class`es (value equality). But `Id` is documented as the unique identifier in the implementation, and **the same `Id` implies the same
     /// everything else**, so comparing by `Id` matches its observable behaviour and is simpler.
     /// </remarks>
     public override bool Equals(object? obj) => obj is Position other && Id == other.Id;

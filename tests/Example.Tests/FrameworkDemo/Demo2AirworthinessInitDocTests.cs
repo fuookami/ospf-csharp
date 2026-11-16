@@ -1,4 +1,4 @@
-// 适航安全上下文的两个入口：说明与代码一致/ The two entry points of the airworthiness context: remarks match the code.
+// 适航安全上下文的两个入口：说明与代码一致/ The two entry points of the airworthiness context: remarks match the implementation.
 
 using System;
 using System.IO;
@@ -43,7 +43,7 @@ public class Demo2AirworthinessInitDocTests {
     /// 只钉注释不够（`Init` 被删掉时注释还是会撒谎），只钉代码也不够（过期的话会被写回去）。
     ///
     /// Four paired points: `public Try Init(` is in the source; **"the only entry point while `Init` is unimplemented" is gone**; the upstream guard is still there; and the remarks say
-    /// `Init` has been there. Pinning only the remark is not enough (`Init` deleted leaves the remark lying), and pinning only the code is not enough either (the stale sentence comes
+ /// `Init` has been there. Pinning only the remark is not enough (`Init` deleted leaves the remark lying), and pinning only this implementation is not enough either (the stale sentence comes
     /// back).
     /// </remarks>
     [Fact]

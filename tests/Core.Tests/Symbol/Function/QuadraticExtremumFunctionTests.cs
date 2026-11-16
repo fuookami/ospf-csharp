@@ -130,7 +130,7 @@ public class QuadraticExtremumFunctionTests
     /// **代价是"空输入"与"输入一个常数 0"无法区分**——
     /// **而如果这里改成抛异常，行为就变了，所以沿用。**
     ///
-    /// **The code substitutes a zero.** **The cost is that "empty input" cannot be told from "one constant
+ /// **The implementation substitutes a zero.** **The cost is that "empty input" cannot be told from "one constant
     /// zero"** — **and throwing here would change its behaviour, so it is copied as is.**
     /// </remarks>
     [Fact]

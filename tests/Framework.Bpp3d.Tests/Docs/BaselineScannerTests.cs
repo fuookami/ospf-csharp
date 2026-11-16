@@ -14,9 +14,9 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// </summary>
 /// <remarks>
 /// **缺口全部来自这个扫描**，而各轮的扫描是**每批临时写一次的 Python**。
-/// **临时脚本的结局是：下一会话不知道它存在，于是要么重写，要么相信"已经全搬完了"。**
+/// **临时脚本的结局是：下一会话不知道它存在，于是要么重写，要么相信"已经全实现完了"。**
 ///
-/// **而"相信已经全搬完了"是这里最贵的错**：它会让人跳过整个核对环节。
+/// **而"相信已经全实现完了"是这里最贵的错**：它会让人跳过整个核对环节。
 ///
 /// **All of the gaps came from this scan**, and each round'ss scan was **throwaway Python**. **The fate of a throwaway script is that the next session does not know it exists, and either rewrites it or believes
 /// everything is already implemented.** **Believing that is the expensive error here**: it makes people skip the whole check.
@@ -76,7 +76,7 @@ public class BaselineScannerTests
     /// <summary>**每个"写不了"都要点出对应的绊线判据** / Every blocker has to name its tripwire.</summary>
     /// <remarks>
     /// **一个没有绊线的"写不了"会永远写不了**：卡点解除之后，
-    /// **没有人会重跑一遍扫描来发现它其实已经能搬了。**
+    /// **没有人会重跑一遍扫描来发现它其实已经能实现了。**
     ///
     /// **A blocker without a tripwire stays a blocker forever**: once the cause is gone, **nobody reruns the scan to discover it became portable.**
     /// </remarks>

@@ -43,7 +43,7 @@ public sealed record CriticalityProfileAnalysisResult(
     /// <remarks>
     /// **这是一个 `get` 别名。** 保留它是因为调用方读的是"目标报告"这个意图。
     ///
-    /// **The code has this as a `get` alias.** It is kept because the caller reads the intent "target reports".
+ /// **This implementation has this as a `get` alias.** It is kept because the caller reads the intent "target reports".
     /// </remarks>
     public IReadOnlyList<CriticalConstraintAnalysisReport> TargetReports => Reports;
 
@@ -158,7 +158,7 @@ public sealed record CriticalityProfileAnalysisResult(
     /// **错位一位不会抛异常，只会让结论看着依然合理**：
     /// **状态来自 A 号目标，阻塞集合来自 B 号目标，而两者都合法。**
     ///
-    /// **This is the implementation of the three `require` guards in the code.** They do not guard against empty arguments — **they guard against two lists coming from different runs**, **which is the one way this result type can be silently wrong.**
+ /// **This is the implementation of the three `require` guards in the implementation.** They do not guard against empty arguments — **they guard against two lists coming from different runs**, **which is the one way this result type can be silently wrong.**
     /// Classification, the blocking summary, and the repair advice all pair reports and observations **by position**.
     /// **One step of misalignment raises nothing; it only makes the conclusion look reasonable**: **status from target A, blocking set from target B, both valid.**
     /// </remarks>

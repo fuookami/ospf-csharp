@@ -58,7 +58,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 /// `QuantitySymbolCombination` all exist here.** Only the `QuadraticIntermediateSymbols` factory object is missing — ten
 /// `invoke` overloads, each building a shape's worth of empty quadratic expression symbols.
 ///
-/// **And it has <b>zero production callers</b> in the code: `git grep` hits only its own file and one test.**
+/// **And it has <b>zero production callers</b> in the implementation: `git grep` hits only its own file and one test.**
 ///
 /// **That reason differs from the sibling decision and the two must be kept apart: there the base class was "already had, unobservable, or
 /// an empty check", while this is "buildable, merely unused".** **"Nobody uses it" changes; "it would be pointless" does

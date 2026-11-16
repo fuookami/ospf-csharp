@@ -1,5 +1,4 @@
 // 客户覆盖与车队数量约束管线 / Customer-coverage and fleet-size constraint pipelines.
-//（3511 字节）对应。
 // And.
 
 using System;

@@ -76,7 +76,7 @@ public static class DiscreteConditionNormalization
         // 把安全假分支移到正半轴，而固定指示变量时不需要再生成变换后的关系约束。**
         //
         // **The fold comes first**: **it is based on the <b>original</b> relation, not the transformed one.**
-        // **The code's comment says so: with `delta > strictBoundary` the transformed polynomial can move a safe
+ // **Its comment says so: with `delta > strictBoundary` the transformed polynomial can move a safe
         // false branch into the positive half-line, and a fixed indicator needs no transformed relation constraints.**
         TruthValue? singleBranchFold = DiscreteConditionGap.AvoidsGap(relation, bounds, strictBoundary);
 

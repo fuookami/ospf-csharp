@@ -117,7 +117,7 @@ public abstract record DiagnosticSource
         ///
         /// **This used to return a fixed `"variable-bound"`, and the contract has no such word.** The contract's `[evidence-kind]` holds exactly five.
         /// **Worse, it disagreed with its own `StableId`**: `VariableBound`'s `StableId` is `variable:&lt;id&gt;:lower|upper`, **identical to `VariableLowerBound` / `VariableUpperBound`.** **So one round trip through
-        /// `InfeasibilityMember` keeps the `StableId` and changes the `Kind`** — **and a cross-language comparison keyed on (stable_id, kind) then depends on which branch the code took.**
+ /// `InfeasibilityMember` keeps the `StableId` and changes the `Kind`** — **and a cross-language comparison keyed on (stable_id, kind) then depends on which branch the implementation took.**
         /// </remarks>
         public override string Kind => Ref.Side == BoundSide.Lower
             ? "variable-lower-bound"

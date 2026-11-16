@@ -201,7 +201,7 @@ public sealed record LateAcceptanceState(
 /// **多目标下直接拒绝**，而不是退化为"只看当前目标"。多目标没有唯一的"当前最优"，用一个个体充当基准会让接受判据取决于
 /// 工作集的排列顺序，**而策略看起来仍在正常工作**。
 /// **Multi-objective search rejects outright** rather than degrading to "compare against the current objective". Multi-objective search
-/// has no unique current best, and using one individual as the code makes acceptance depend on the working set's order **while the
+/// has no unique current best, and using one individual as the implementation makes acceptance depend on the working set's order **while the
 /// policy still looks like it works**.
 /// **历史只在第一次调用时用当前目标填满**，之后按游标原地替换。每次调用都重新填充会让延迟窗口永远等于当前目标，退化成爬山法。
 /// **The history is filled with the current objective only on the first call**, then replaced in place at the cursor. Refilling on every

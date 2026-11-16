@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 /// The old implementation defaulted to `limit = 4096`, treating a hand-written "defensive cap" as real semantics: with a 1mm width and 10000mm available the correct
 /// answer is **10000**, but it returned **4096** **without reporting anything**.
 ///
-/// The code's `computeMaxRepeatCount` has **no cap**, so 4096 was a real divergence. But **deleting the cap outright would inherit its infinite loop**
+/// Its `computeMaxRepeatCount` has **no cap**, so 4096 was a real divergence. But **deleting the cap outright would inherit its infinite loop**
 /// (with a zero width, repeated addition never advances), hence the explicit zero-width guard.
 ///
 /// The criteria come in two groups: **no truncation** (large legitimate values must be exact) and **no infinite loop** (zero width must return immediately).

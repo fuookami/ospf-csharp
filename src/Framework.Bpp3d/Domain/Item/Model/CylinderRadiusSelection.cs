@@ -43,7 +43,7 @@ public sealed record PWLRadiusSelectionMetadata(
     /// 来源为空则报表无法追溯这次选择是怎么来的。构造期 `require` 守，这里用 `ArgumentException`。
     ///
     /// **At least one segment and a non-blank source**: a zero-segment approximation is not degenerate, it is absent, and a blank source leaves the report unable to trace where the selection came
-    /// from. The code guards with construction-time `require`; here it is `ArgumentException`.
+ /// from. The implementation guards with construction-time `require`; here it is `ArgumentException`.
     /// </remarks>
     public void Validate() {
         if (NumSegments < 1) {

@@ -98,7 +98,7 @@ public class RemainingGapLedgerTests {
     /// <remarks>
     /// 行数是这条表唯一可以核对的量。**它一旦和代码不符，整张表就只是印象。**
     ///
-    /// The line counts are the only checkable quantity here. **Once they disagree with the code the whole table is just an impression.**
+ /// The line counts are the only checkable quantity here. **Once they disagree with the implementation the whole table is just an impression.**
     /// </remarks>
     [Fact]
     public void TheLedger_ShouldCarryTheMeasuredLineCounts() {

@@ -80,7 +80,7 @@ public sealed record NormalizedCondition(
 /// indicator rows can be satisfied.**
 ///
 /// **There is also a "both branches empty" check**: **when the range meets neither branch there is no solution.**
-/// **The code errors rather than returning "both are false"** — **the latter would read as "the condition is
+/// **The implementation errors rather than returning "both are false"** — **the latter would read as "the condition is
 /// always false" while the actual problem is "this range is not legal".**
 /// </remarks>
 public static class ConditionNormalization

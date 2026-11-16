@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Solver.Report;
 /// 本仓一个文件都没有。** **而它依赖的 `SolveReport`／`SolveIssue`／`SolveIssueCategory`／
 /// `AuditFingerprint`／`SolverProvenance` 全都在——所以缺的是这一层编排，不是底座。**
 ///
-/// **adds it from its `SolveExperimentCase`.**The whole block was absent here: the code has
+/// **adds it from its `SolveExperimentCase`.**The whole block was absent here: this implementation has
 /// `SolveExperiment*`/`BatchSolveExperiment*` and this repo had no file for either.** **Every dependency
 /// (`SolveReport`, `SolveIssue`, `SolveIssueCategory`, `AuditFingerprint`, `SolverProvenance`) already exists — what was
 /// missing is this orchestration layer, not the foundation.**

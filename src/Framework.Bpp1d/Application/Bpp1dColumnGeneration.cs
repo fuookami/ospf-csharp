@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Application;
 ///
 /// The only difference from `Bpp1dMilp` is the **LP pricing loop before the final integer model**: each round adds candidates with a negative reduced cost to the
 /// restricted master problem (RMP) until there are none left or the budget runs out. **The final model always sits on "generated pool plus seeds", never on the RMP.**
-/// The code is explicit about this: an integer optimum over the restricted pool is **not a global optimum**, and reporting it would pass an approximation off as
+/// This implementation is explicit about this: an integer optimum over the restricted pool is **not a global optimum**, and reporting it would pass an approximation off as
 /// optimal.
 /// </remarks>
 public sealed class Bpp1dColumnGeneration<V>
@@ -129,7 +129,7 @@ public sealed class Bpp1dColumnGeneration<V>
                 // **LP 不可行不是失败，是"换个收口方式"。** 种子被库存耦合卡住时 RMP 可能无解，
                 // 这里 `break`：用已生成的池去建最终模型，**不宣称定价已收敛**。
                 //
-                // **An infeasible LP is not a failure but a different way of closing out.** Stock coupling can make the RMP infeasible; the code breaks here and
+ // **An infeasible LP is not a failure but a different way of closing out.** Stock coupling can make the RMP infeasible; the implementation breaks here and
                 // builds the final model from the generated pool, **without claiming pricing convergence**.
                 if (failedLp.Error.Code == ErrorCode.ORModelInfeasible) {
                     break;

@@ -227,7 +227,7 @@ public sealed class StandardFinalSolver : IColumnGenerationFinalSolver
     /// <param name="fallbackType">兜底板材类型 / The fallback sheet type.</param>
     /// <returns>板材清单 / The sheets.</returns>
     /// <remarks>
-    /// 四点照做 `buildSheets`：
+    /// 四点如此 `buildSheets`：
     ///
     /// 1. 板材类型**取该列自带的那块**，没有才用兜底（主板材优先）。
     /// 2. 份数**向下取整并至少一份**：`0.4` 也算一份——已经过了容差筛选，能到这里就说明它算被选中。

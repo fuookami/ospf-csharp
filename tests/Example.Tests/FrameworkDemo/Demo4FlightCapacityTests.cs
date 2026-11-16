@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **天花板**：判据只覆盖"开关与表的存在性"，还没有任务实例走一遍 `AddColumns`——造一个 `FlightTask` 需要 `FlightLeg` 等一整套输入，
 /// 那是后续的事。升级路径：有任务夹具之后补"零容量的束不进表达式"与"列变量按去重顺序取"。
 
-/// The code's did not exist on the C# side at all: **how many passengers or how much cargo a round really moves had no readable quantity**. Two "a
+/// Its did not exist on the C# side at all: **how many passengers or how much cargo a round really moves had no readable quantity**. Two "a
 /// constructor parameter is not a member" defects were fixed along the way — `PassengerCapacity`'s cabin table and `CargoCapacity`'s value were both **unreachable from outside**.
 ///
 /// **Ceiling**: the criteria cover only the switches and the presence of the tables; no real task instance walks `AddColumns` yet, because building one needs `FlightLeg` and a whole

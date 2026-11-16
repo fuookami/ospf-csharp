@@ -198,7 +198,7 @@ internal static class AggregationInitializer
             : null;
 
         // 包线按**每个飞行阶段**各建一条。`phase.name.lowercase`；C# 的 `ToLowerInvariant` 对 `ZeroFuel` 同样给出 `zerofuel`。
-        // One envelope per **flight phase**. The code uses `phase.name.lowercase`; C#'s `ToLowerInvariant` yields `zerofuel` for `ZeroFuel` too.
+ // One envelope per **flight phase**. This implementation uses `phase.name.lowercase`; C#'s `ToLowerInvariant` yields `zerofuel` for `ZeroFuel` too.
         var envelopes = new Dictionary<FlightPhase, IReadOnlyList<IEnvelope>>();
         foreach (FlightPhase phase in Enum.GetValues<FlightPhase>()) {
             string suffix = phase.ToString().ToLowerInvariant();

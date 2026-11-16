@@ -8,13 +8,13 @@ using System.Linq;
 namespace Fuookami.Ospf.Core.Analysis;
 
 /// <summary>
-/// 摘要 / A summary of the code solve.
+/// 摘要 / A summary of the implementation solve.
 /// </summary>
 /// <param name="ObjectiveId">目标标识 / Objective identity.</param>
 /// <param name="Sense">优化方向 / Optimisation sense.</param>
 /// <param name="ObjectiveValue">基线目标值，可为 <c>null</c> / The baseline objective value, or <c>null</c>.</param>
 /// <param name="Status">基线状态 / Baseline status.</param>
-/// <param name="ProvenOptimal">否已证明最优 / Whether the code was proven optimal.</param>
+/// <param name="ProvenOptimal">否已证明最优 / Whether the implementation was proven optimal.</param>
 public sealed record AnalysisBaselineSummary(
     string ObjectiveId,
     string Sense,

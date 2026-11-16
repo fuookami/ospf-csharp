@@ -98,7 +98,7 @@ public sealed class Demo2SingleModelSolveTests
 
     /// <summary>
     /// **成功分支不带分配**（源码层）：默认门禁守不住行为，就守住代码。
-    /// **The success branch carries no assignments** (source level): where the default gate cannot hold the behaviour, it holds the code.
+ /// **The success branch carries no assignments** (source level): where the default gate cannot hold the behaviour, it holds the implementation.
     /// </summary>
     /// <remarks>
     /// 行为版本在真后端门内（`Demo2BendersScipTests`，断言 `Optimal` 时分配为 `null`）。这一条是**默认门禁的替身**：
@@ -124,7 +124,7 @@ public sealed class Demo2SingleModelSolveTests
     }
 
     /// <summary>读 `FullLoadApplication.cs`（剥掉注释行）/ Read the source with comment lines stripped.</summary>
-    /// <returns>代码 / The code.</returns>
+ /// <returns>代码 / The implementation.</returns>
     private static string Source() {
         var directory = new global::System.IO.DirectoryInfo(global::System.AppContext.BaseDirectory);
         while (directory is not null) {

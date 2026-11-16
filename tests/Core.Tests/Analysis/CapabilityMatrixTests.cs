@@ -114,7 +114,7 @@ public class CapabilityMatrixTests {
     /// <remarks>
     /// 本仓为此写过一条注释：**从任意模型类型推导，会让只支持线性/MIP 的后端声称一个它兑现不了的回退。**
     ///
-    /// The code calls this out in a comment: **deriving it from any model type would let a linear/MIP-only backend advertise a fallback it cannot deliver.**
+ /// The implementation calls this out in a comment: **deriving it from any model type would let a linear/MIP-only backend advertise a fallback it cannot deliver.**
     /// </remarks>
     [Fact]
     public void TheFallback_ShouldRequireADeclaredCpPath() {

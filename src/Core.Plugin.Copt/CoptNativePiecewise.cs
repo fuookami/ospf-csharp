@@ -60,7 +60,7 @@ internal static class CoptNativePiecewise
     /// **"Before writing" is the point: a mid-way failure leaves the model half-modified, and COPT's `addVar` cannot roll
     /// back.** **So the check must be one <b>up-front</b> pass, not interleaved with the writing.**
     ///
-    /// **The code does three things here, copied as-is:** **the infinity sentinel must be finite and positive; input
+ /// **This implementation does three things here, copied as-is:** **the infinity sentinel must be finite and positive; input
     /// and result keys must differ and result keys must not repeat; and there must be at least two breakpoints with the
     /// same length as the values.**
     /// </remarks>

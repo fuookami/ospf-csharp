@@ -288,7 +288,7 @@ public class ConstraintProgrammingBenchmark {
     /// **once `end` is a free variable, the first assignment that violates it fails the whole solve** (`recordEvaluationFailure` → `stopped = true`). This
     /// copy keeps the free `end` variable and only feeds the lowering benchmarks; the solve benchmarks use `BuildSolvableSchedulingModel`.
     ///
-    /// The code has a single fixture, so its `schedulingSolve` benchmark **measures a failure path** and never really enumerates a schedule.
+ /// This implementation has a single fixture, so its `schedulingSolve` benchmark **measures a failure path** and never really enumerates a schedule.
     /// </remarks>
     private static ConstraintProgrammingModel BuildSchedulingModel(int count) {
         var model = new ConstraintProgrammingModel(

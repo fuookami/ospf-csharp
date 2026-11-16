@@ -15,10 +15,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </summary>
 /// <remarks>
 /// `addColumns` 每次都先 `taskCost.flush`，然后只对本次新增的列追加 `cost × x[task]`。
-/// 之前迭代的列还在模型里（`_x` 累积、约束照旧），但它们的**代价项已经不在目标中**——
+/// 之前迭代的列还在模型里（`_x` 累积、约束不变），但它们的**代价项已经不在目标中**——
 /// 目标值偏小，不会报错，列生成越久越明显。
 ///
-/// The code's `addColumns` always calls `taskCost.flush` and then appends `cost × x[task]` for this iteration's new columns only. Earlier columns remain in the model
+/// Its `addColumns` always calls `taskCost.flush` and then appends `cost × x[task]` for this iteration's new columns only. Earlier columns remain in the model
 /// (`_x` accumulates, constraints stay) but their **cost terms are gone from the objective** — the objective reads too small, nothing is reported, and it gets worse the longer
 /// column generation runs.
 /// </remarks>
@@ -96,7 +96,7 @@ public class TaskCostAccumulationTests {
     /// 静默取 `1` 会让"不可定价的列"变得比真实列更便宜，列生成于是**偏爱制造这类列**。
     /// 失败时保留上一轮的表，比留下一张半轮的表更容易排查。
     ///
-    /// The code is `cost(task).solverCostOrNull(Flt64.infinity)!!` — an absent cost becomes infinity. Defaulting to `1` makes an unpriced column cheaper than real ones, so
+ /// This implementation is `cost(task).solverCostOrNull(Flt64.infinity)!!` — an absent cost becomes infinity. Defaulting to `1` makes an unpriced column cheaper than real ones, so
     /// column generation **favours producing such columns**. Keeping the previous round's table on failure is easier to diagnose than a half round.
     /// </remarks>
     [Fact]

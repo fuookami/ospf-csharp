@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// 各算子模块声明的支持集合，汇总成"这张图能不能被表达"的一处判定。
 /// **降阶到一半才发现算人不支持，模型已经建了一半——** **而那半个模型是可以求解的，于是"部分导入"会以"成功"的面目出现。**
 ///
-/// Syncs the support sets the code declares, gathered into one "can this graph be expressed" judgement. **Finding an unsupported operator half-way through
+/// Syncs the support sets the implementation declares, gathered into one "can this graph be expressed" judgement. **Finding an unsupported operator half-way through
 /// leaves half a model behind, and half a model is solvable, so a partial import presents itself as success.**
 /// </remarks>
 public class OnnxOperatorRegistryTests

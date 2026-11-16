@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **把三层混成"未实现"，会让人以为补上最容易的那层就够了——而那层已经在了。**
 ///
 /// Three plugin rows said "PWL not implemented" and item 3 said "no `PWL` in `PackingRendererAdapter`". **Those are symptoms, not the size of the gap.** measured three
-/// layers with different states: the piecewise symbols are **present** and Demo2 really uses them; the **function expansion layer (576 lines in the code) is entirely
+/// layers with different states: the piecewise symbols are **present** and Demo2 really uses them; the **function expansion layer (576 lines in the implementation) is entirely
 /// absent**; the plugins have **no native writes**, Gurobi only detection. **Conflating them into "not implemented" suggests that filling in the easiest layer would do — and
 /// that layer is already here.**
 /// </remarks>
@@ -53,7 +53,7 @@ public class PwlLayerClaimsTests
     /// 有 **576 行**：`AbsStructure`/`MaxStructure`/`SemiStructure`/`DeferredFunctionConstraintRegion` 与策略枚举。
     /// C# 的 `Core/Solver/Function/` 只有 `FunctionSolverCapabilities.cs` 一个文件——**这是缺口的真实大小。**
     ///
-    /// The code's is **576 lines**; the C# `Core/Solver/Function/` holds only a capability declaration — **that is the real size of the gap.**
+ /// It is **576 lines**; the C# `Core/Solver/Function/` holds only a capability declaration — **that is the real size of the gap.**
     /// </remarks>
     [Fact]
     public void TheFunctionExpansionLayer_ShouldStillBeAbsent() {
@@ -90,7 +90,7 @@ public class PwlLayerClaimsTests
         //
         // **Copt now <b>has</b> a native piecewise file.**
         //
-        // **How the code side was decided: the code is 209 lines and C#'s read side
+ // **How the side was decided: this implementation is 209 lines and C#'s read side
  // already existed — so the write side was the gap.**
         //
         // **后来 Cplex 的写侧也补上了，于是这一条现在断言<b>两者都有</b>。**

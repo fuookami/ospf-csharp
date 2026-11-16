@@ -56,7 +56,7 @@ public sealed class LoadingOrderOutputExporter
     /// <returns>响应 DTO / The response DTO</returns>
     /// <remarks>
     /// `input` 目前不参与计算：签名收它，是为了将来把请求侧的信息（比如按分区过滤）带进排序。**保留参数，不为了"用上它"编逻辑。**
-    /// `input` does not take part in the computation yet: the code takes it so request-side information (e.g. filtering by partition) can enter the ordering
+ /// `input` does not take part in the computation yet: the implementation takes it so request-side information (e.g. filtering by partition) can enter the ordering
     /// later. **Keep the parameter rather than inventing logic to "use" it.**
     /// </remarks>
     public Result<LoadingOrderResponseDTO, ErrorCode, Error<ErrorCode>> Invoke(RequestDTO input)

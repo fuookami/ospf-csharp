@@ -22,11 +22,11 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// ** fixes a real defect, and it belongs to the easiest kind to let through.**
 ///
 /// Checking against its turned up that **this repo's `Kilobyte` used 1024**,
-/// **while its is `Scale.kilo × 8 = 8000`**. **1024 is `Kibibyte`'s value.**
+/// **while it is `Scale.kilo × 8 = 8000`**. **1024 is `Kibibyte`'s value.**
 /// `Megabyte`/`Gigabyte` were wrong the same way (1024², 1024³).
 ///
 /// **Nothing throws — it only makes "a 1 GB disk" read as binary, off by 7.4%.**
-/// **And "is a KB 1000 or 1024" is genuinely mixed in practice, so nobody suspects the code.**
+/// **And "is a KB 1000 or 1024" is genuinely mixed in practice, so nobody suspects the implementation.**
 ///
 /// ** fixes that and builds out both families: decimal (KB/MB/GB…) and binary (KiB/MiB/GiB…).**
 /// </remarks>

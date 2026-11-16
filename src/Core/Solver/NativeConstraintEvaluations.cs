@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// <remarks>
 /// 对齐的 `absEvaluations` 与 `maxEvaluations`。
 ///
-/// **两个求值器之间有两处不对称，都照做并在判据里钉住。**
+/// **两个求值器之间有两处不对称，都在判据里钉住。**
 ///
 /// **第一处：容差的来源不同。**
 ///
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// **这里<b>沿用</b>以保持与可比性，并把这一点写成判据，
 /// 让"最小值的结构被当成最大值来评"成为一个被记录的事实而不是一个潜伏的错。**
 ///
-/// **Two asymmetries between the evaluators, both copied from the code and pinned by criteria.**
+/// **Two asymmetries between the evaluators, both and pinned by criteria.**
 ///
 /// **First, the tolerance source differs**: **ABS converts `PIECEWISE_TOLERANCE` through the helper, MAX uses the literal
 /// `1e-6`.** **Numerically identical, structurally different: changing the constant moves ABS and not MAX.**
@@ -160,7 +160,7 @@ public static class NativeConstraintEvaluations
             }
 
             // **这里<b>不</b>看 `minimum`，永远取最大。沿用。**
-            // **The code does <b>not</b> consult `minimum` here and always takes the maximum. Copied.**
+ // **This implementation does <b>not</b> consult `minimum` here and always takes the maximum. Copied.**
             double extreme = double.NegativeInfinity;
             foreach (double input in inputs) {
                 if (input > extreme) {

@@ -86,11 +86,11 @@ public class Demo2AircraftDomainTests {
         // 三条都沿用。修好第 1 条会凭空造出目前不存在的邻接，那会让下游的 `BiologicalAdjacentLimit` 变严格——
         // 而它已经在别的批次行为钉过了。
         //
-        // **The code's shape, measured, with three counter-intuitive facts pinned**: the "colinear and opposite sides" branch is **unreachable** (it needs `onSameLine`, which
+ // **Its shape, measured, with three counter-intuitive facts pinned**: the "colinear and opposite sides" branch is **unreachable** (it needs `onSameLine`, which
         // requires "both on the left", together with `!onSameSide`, and the two are mutually exclusive), so **left and right positions are never physically adjacent** (measured
         // `left+right partial -> 0`); the same-side branch **never accepts two fully overlapping positions**, because `Between` also counts the two positions **themselves** and `none`
         // is then always false (measured `left+left identical -> 0`); and **partial overlap is adjacent** (measured `left+left partial -> 1`, `right+right partial -> 1`). All three
-        // are copied: fixing the first would invent adjacencies the code does not have, making the downstream `BiologicalAdjacentLimit` stricter than the code already pinned.
+ // are copied: fixing the first would invent adjacencies this implementation does not have, making the downstream `BiologicalAdjacentLimit` stricter than the implementation already pinned.
         AircraftPosition leftA = MakePosition("L1", 100.0, 200.0, -60.0, -10.0);
         AircraftPosition rightA = MakePosition("R1", 150.0, 250.0, 10.0, 60.0);
         AircraftPosition leftB = MakePosition("L2", 150.0, 250.0, -60.0, -10.0);

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// </summary>
 /// <remarks>
 /// **实现的是 `ConstraintActivityAnalyzer` 的核心**：`analyze(session, …)` 重载要
-/// `CriticalConstraintAnalysisSession`（缓存与生命周期），那一层还没搬，**这里只搬纯计算入口，没搬的重载没有空跑版本**。
+/// `CriticalConstraintAnalysisSession`（缓存与生命周期），那一层还没实现，**这里只实现纯计算入口，没实现的重载没有空跑版本**。
 ///
 /// 判据钉的是**"精确值分类、标量值展示"**这条分工：分类用 `BigInteger` 精确算，
 /// 标量只用于展示。**两者混用会让 `9007199254740993` 这类值在容差边界上分类错。**

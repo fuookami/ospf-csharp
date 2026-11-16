@@ -215,7 +215,7 @@ public class DeviationConstraintTests {
     /// 有约束 → 不可行；去掉 → 可行。两边都跑，因为只测不可行会让"模型本来别处坏掉"通过。
     ///
     /// **A ceiling measured in**: `est` is pinned to the **task's own window** start at registration (`est ≤ time.Start` when delay is forbidden), so the row
-    /// `est ≤ scheduledTime.Start` is only **tight** when the planned time is earlier than the task window; otherwise it is looser and therefore redundant. The code behaves
+ /// `est ≤ scheduledTime.Start` is only **tight** when the planned time is earlier than the task window; otherwise it is looser and therefore redundant. The implementation behaves
     /// the same way (it writes only this row), so this copies it rather than quietly replacing it with `min(time.Start, scheduled.Start)`.
     ///
     /// The criterion takes the **tight** side: task window 03:00–05:00, planned 01:00 → `est ≥ 10800` and `est ≤ 3600` contradict. With the row → infeasible; without → feasible.

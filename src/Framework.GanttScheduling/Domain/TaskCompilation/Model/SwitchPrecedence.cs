@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// - 在换型统计里给每个任务一条凭空的自换型；
 /// - 而不产生任何错误或警告——数值全都算得出来。
 ///
-/// The code's `frontOf[t1, t2]` is an `IfFunction` testing `estimateStartTime[t1] ≤ estimateStartTime[t2]`, i.e. "task 1 starts no later than task 2". But the
+/// Its `frontOf[t1, t2]` is an `IfFunction` testing `estimateStartTime[t1] ≤ estimateStartTime[t2]`, i.e. "task 1 starts no later than task 2". But the
 /// **diagonal is an exception**: `task1 == task2` yields an empty symbol (identically zero).
 ///
 /// That exception cannot be dropped. `t ≤ t` is always true, so the normal construction would give `front_of[t, t] = 1` — **every task claiming to precede itself**. That
@@ -44,7 +44,7 @@ public static class SwitchPrecedence {
     /// **首尾相接（`leftStart == rightStart`）算"不晚于"，即成立**：判定是 `leq`，不是 `lt`。
     /// 两个任务同时可以开始，也算左在右前——若写成 `&lt;`，同一时刻开始的先后关系会**全部消失**。
     ///
-    /// **Touching starts (`leftStart == rightStart`) count as "no later than", i.e. true**: the code tests `leq`, not `lt`. Two tasks that may start at the same moment
+ /// **Touching starts (`leftStart == rightStart`) count as "no later than", i.e. true**: the implementation tests `leq`, not `lt`. Two tasks that may start at the same moment
     /// still have left before right — writing `&lt;` would make **every** same-instant precedence relation vanish.
     /// </remarks>
     public static bool IsFrontOf(bool sameTask, double leftStart, double rightStart)

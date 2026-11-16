@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 ///
 /// The rows are `estEnd ≤ lastEnd` / `estEnd ≥ earliestEnd` — a **mirrored pair**; swapping them keeps the model feasible and merely slides the plan. Three silent failures:
 /// (1) **inverted direction** — both sides usually feasible, the solve succeeds and the answer is skewed; (2) **wrong symbol** — the row binds `estEnd`; binding `est` constrains the
-/// start instead and breaks as soon as the duration changes; (3) **inverted task filter** — with the switch on the code keeps the tasks that may **not** move.
+/// start instead and breaks as soon as the duration changes; (3) **inverted task filter** — with the switch on this implementation keeps the tasks that may **not** move.
 /// </remarks>
 public class EndConstraintTests {
     private static readonly DateTimeOffset Origin = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
@@ -105,7 +105,7 @@ public class EndConstraintTests {
         List<(string Name, ConstraintRelation Sign, double Rhs)> rows = Rows(setup.Model);
         rows.Should().HaveCount(2);
         rows.Single(row => row.Name == "task_delay_last_end_time_T1").Sign.Should().Be(ConstraintRelation.LessEqual);
-        // 归一化后的右端 = 目标时间 − 工期：`estEnd = est + 工期`，把工期这个常量搬到右边就得到 `est ≤ 目标 − 工期`。
+        // 归一化后的右端 = 目标时间 − 工期：`estEnd = est + 工期`，把工期这个常量实现到右边就得到 `est ≤ 目标 − 工期`。
         // 断言归一化后的值而不是"目标时间"本身，才是真的在查"行绑的是 estEnd、工期被算进去了"。
         // The normalised right-hand side is "target − duration": `estEnd = est + duration`, and moving that constant across gives `est ≤ target − duration`. Asserting the
         // normalised value rather than the raw target is what pins "the row binds estEnd with the duration included".

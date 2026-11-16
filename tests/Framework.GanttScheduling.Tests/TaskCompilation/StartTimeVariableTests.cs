@@ -214,7 +214,7 @@ public class StartTimeVariableTests {
     /// 离散窗口上用 `UIntVariable1`。`UIntVar` 的缺省上界是 `ulong.MaxValue`（换成 double 是 1.8e19，
     /// 超过 binary64 精确整数上界 2^53），求解器注册阶段就会拒。在边界换算做对之前，**宁可报错**。
     ///
-    /// The code uses `UIntVariable1` on discrete windows. `UIntVar`'s default upper bound is `ulong.MaxValue` (1.8e19 as a double, beyond binary64's exact-integer limit of
+ /// This implementation uses `UIntVariable1` on discrete windows. `UIntVar`'s default upper bound is `ulong.MaxValue` (1.8e19 as a double, beyond binary64's exact-integer limit of
     /// 2^53), which the solver rejects at registration. Until the bound conversion is right, **failing is better**.
     /// </remarks>
     [Fact]

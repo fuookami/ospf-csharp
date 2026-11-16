@@ -19,7 +19,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 
 // `typealias Bpp2dColumnVariable = AbstractVariableItem<UInt64, UInteger>` 无法在 C# 表达
 // （`src/Core/Symbol/SymbolCombination.cs:95` 同样记录），所以用 `using` 别名；别名不能带 XML 文档。
-// The code's typealias cannot be expressed in C#, so a using alias is used; aliases cannot carry XML docs.
+// Its typealias cannot be expressed in C#, so a using alias is used; aliases cannot carry XML docs.
 using Bpp2dColumnVariable = Fuookami.Ospf.Core.Variable.CombinationVariableItem<Fuookami.Ospf.Math.Algebra.Number.UInt64, Fuookami.Ospf.Core.Variable.UInteger>;
 
 namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
@@ -104,7 +104,7 @@ public sealed class ImpreciseAssignment
     /// 只有 `Iteration`（优化轮次，不是列序号）。用 `Iteration` 代替会把"第几轮"当成"第几列"，
     /// 列一多就索引错位。所以这里让调用方传列下标——**传错的锅在调用方，不在类型里藏一个假下标**。
     ///
-    /// **One difference from the code**: the code uses `layer.index` (from `ManualIndexed`), while this repository's `Layer` **has no manual index**, only `Iteration` (the optimisation
+ /// **One difference**: this implementation uses `layer.index` (from `ManualIndexed`), while this repository's `Layer` **has no manual index**, only `Iteration` (the optimisation
     /// round, not the column number). Substituting `Iteration` would treat "which round" as "which column" and misalign as soon as a round carries more than one column, so the caller passes
     /// the index — **a wrong index is then the caller's problem rather than a fake index hidden in the type**.
     /// </remarks>

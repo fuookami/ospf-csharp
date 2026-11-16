@@ -270,7 +270,7 @@ public class SimpleIndicatorRowsTests
     /// 它<b>不</b>断言那个临建的列被登记了，因为登记是调用方的责任，而这里没有调用方。**
     /// **把这条限制写出来，比让读的人以为"临建就完事了"要好。**
     ///
-    /// **The code creates `BinVar("${namePrefix}_side")` when `sideVar` is null.**
+ /// **The implementation creates `BinVar("${namePrefix}_side")` when `sideVar` is null.**
     ///
     /// **The criterion only asserts "it builds, with four rows" — it does <b>not</b> assert the created column was
     /// registered, because registering is the caller's job and there is no caller here.**

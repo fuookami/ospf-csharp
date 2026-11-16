@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Solver;
 
 /// <summary>
-/// native 求值：两处沿用下来的不对称 / Two asymmetries copied from the code.
+/// native 求值：两处沿用下来的不对称 / Two asymmetries.
 /// </summary>
 /// <remarks>
 /// 对齐的 `absEvaluations` 与 `maxEvaluations`。

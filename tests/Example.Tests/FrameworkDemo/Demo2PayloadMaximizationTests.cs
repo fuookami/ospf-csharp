@@ -307,7 +307,7 @@ public class Demo2PayloadMaximizationTests {
     ///
     /// 判据用**反射**确认 `Aggregation` 的实例身份：只断言"两次都成功"会让"每次都重建"的变异存活（实测存活过一次），因为重建同样返回成功。
     ///
-    /// The code's `if (!::aggregation.isInitialized)` means a second `init` keeps the original aggregation; rebuilding would drop the previous symbol references while the model
+ /// Its `if (!::aggregation.isInitialized)` means a second `init` keeps the original aggregation; rebuilding would drop the previous symbol references while the model
     /// still holds them. The criterion checks `Aggregation`'s **instance identity** via reflection: asserting only "both succeed" lets a "rebuild every time" mutant survive (measured
     /// once), since rebuilding also succeeds.
     /// </remarks>

@@ -66,7 +66,7 @@ public class TaskNotOnTimeMinimization<T, E, A>
     ///
     /// The method minimises `coefficient × Σ_t NotOnTime[t]`, objective name `task not on time`. The task set is the one given at construction — **no per-task re-filtering**,
     /// because "may move" and "on time" are different things: a task allowed to delay still deserves credit for finishing on time, its `on_time` merely being constant zero when
-    /// the switch is off. The code's `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
+ /// the switch is off. Its `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
     /// function — so only the zero-threshold path exists.
     /// </remarks>
     public Try Invoke(object model) {

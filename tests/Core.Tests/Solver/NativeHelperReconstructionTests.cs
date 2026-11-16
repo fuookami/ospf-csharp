@@ -211,11 +211,11 @@ public class NativeHelperReconstructionTests
     /// ABS does not reject a solution containing helpers, unlike selectors.
     /// </summary>
     /// <remarks>
-    /// **这是一处<b>已知的不对称</b>，这里照做不改。**
+    /// **这是一处<b>已知的不对称</b>，这里如此不改。**
     /// **ABS 的辅助列同样是消掉的，但这里没写这条检查；
     /// 单方面加上会让两侧行为分岔。**
     ///
-    /// **A <b>known asymmetry</b>, copied from the code.** **ABS helpers are eliminated too, but the code has no
+ /// **A <b>known asymmetry</b>,.** **ABS helpers are eliminated too, but this implementation has no
     /// such check; adding one unilaterally would fork the two sides' behaviour.**
     /// </remarks>
     [Fact]

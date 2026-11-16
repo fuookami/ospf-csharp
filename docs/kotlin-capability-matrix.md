@@ -134,7 +134,7 @@ three rows each had something measured to say.
 | 持久化：EF Core / SQLite / MySQL / MongoDB / Redis | `Framework.Plugin` | ◐ | **SQLite 有真实往返**；**MySQL / PostgreSQL 有真实往返（各三条判据）**，**MongoDB 也有真实往返（三条判据）**（验收表 `⊘3`）。**Redis 是另一个形状：`RedisClient.cs` 203 行代码**在**，而生产调用方**不在**——只有三个测试文件提到它，而那三个文件**都不构造它**。**所以"Redis 有客户端"成立，"Redis 可用"**已被推翻（本机真跑通了往返，见本行末尾）**。**并且这些测试全是影子检查：`InterfaceVerificationTests`（14 条）、`RedisInterfaceTests`（11 条）、`KafkaInterfaceTests`（8 条）合计 33 条判据全部只问"某个成员在不在"。判据：`ExistenceOnlyTestHabitTests`。 **更正：**本机 `127.0.0.1:6379` 端口开着、`PING` 返回 `+PONG`、无密码——所以"没有真实往返"只是**没人写那条测试**。** `RedisRoundTripIntegrationTest` 现在用生产入口 `Redis.Init` 起客户端并做五种取值形态的真往返（**4 条**，`-p:RunRedisIntegration=true`）；`Redis.Init` 补上了 `LastInitError`，"连不上"与"没配置"不再长得一样（另 **2 条**默认构建判据钉住诊断面）。**这一行不是缺口：** 本项目是框架，**只提供能力、不保证项目内必然有使用的地方**——可用且已实测即算完成；接哪条业务路径是使用方的决定。** |
 | 持久化：H2 / JDBC client / Ktorm / MyBatis / MongoDB 翻译层 | — | ❌ | **评估过了，"未评估"这个状态消掉了，结论有两半**——**当时 `src/` 下 `BsonDocument` 出现 0 次，`MongoRepository` 只会 `Filter.Eq("_id", …)`**（计数可复现：`logs/b1117-module-sizes.py`）**。**① 谓词→查询的翻译能力在 C# 侧是有的，只是换了机制**：`SqlRelationalQueryCompiler`（**838 行**）覆盖全部 8 种布尔节点（`BooleanConstant`/`Comparison<>`/`InExpression<>`/`PatternMatch<>`/`NullCheck`/`And`/`Or`/`Not`），**14 条判据**（字面量参数化、通配符、空 IN、EXISTS 子查询、MySQL null 排序模拟、歧义列拒绝等）；EF Core 接表达式树，因此"手拼 SQL 字符串"那一层（`JdbcClientSql.quoteIdentifierPath` 之类）**不需要对应物**。**② Mongo 翻译层已全部补齐并接线**：`MongoScalarTranslator`（**11 条判据**：`$字段` 引用、字段名解析、五个二元运算映射、`-x`→`$multiply:[-1,x]`、**`ABS`/`POWER` 按失败而非自作主张**、`null`→`BsonNull`、深度护栏失败而非漏出）；`MongoOrderByTranslator`（**5 条判据**：升序 1/降序 -1、空排序→`null`、字段解析失败即失败、**多字段顺序保留**、`Nulls` 不静默忽略）；`MongoUpdateTranslator`（**6 条判据**：`$set` 形状、**`SetNull` 写 `BsonNull` 而非 `$unset`**、空赋值→`null`、字段解析失败即失败、**整型保持 `Int32` 否则写进去查不出来**、**`SetFromExpression` 拒绝而非猜**）；`MongoBooleanTranslator`（**四个里最大**，**14 条判据**：三值常量（`Unknown` 归"匹配不到"）、**常量在左时六个运算符全部反转**、引用在左不变、**null 检查同时管"是 null"与"缺失"**、正则元字符转义、**`Like` 先转义再替换通配符**、`$expr` 字段对字段、`NOT` 包整棵子树、不支持的谓词失败、**空逻辑在 C# 里构造不出来**（构造器拒绝空操作数，故那两段分支已删））；**把它们接进真实查询路径**：`MongoRepository.FindAsync(predicate, sortBy, resolver)`——在此之前仓库只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`，**四个翻译器没有被任何生产路径调用过**；**三条判据**钉住最要紧的行为：**翻译失败不退化成"查全部"、不碰集合**（`FindCalls == 0`）、可翻译的谓词确实走到集合、排序失败同样不退化成无序结果。**明确的局限**：这条判据用探针复刻控制流形状（`IMongoDatabase` 有 40+ 成员，已踩过），**未连真实 Mongo 实例**。**仍未实现的**：H2 / Ktorm / MyBatis / JDBC 四个后端（C# 侧用 EF Core 承担同类职责，**已逐项核对（契约层）**：**三个表达式仓储的 `{find, count, exists, update, delete}` 与本仓 `ExpressionRepository` 一一对应，一个不多一个不少**；不等价的那部分同样明确：**用四个方言后端做同一件事，本仓用 EF Core 一个栈承担——是换了一条实现路，不是少了一个操作**；判据 `PersistenceContractEquivalenceTests`**）。**同口径计数**：`framework-plugin` **61** 个主源码 vs 本仓 `Framework.Plugin` **15** 个。**（旧文写"61 vs 48/53，命名口径差异不是缺口"——那是拿一个模块比全部插件项目，口径不同。）**改状态为 ◐ 並写清依据**：**这一格原来是 ❌，而它得 ❌ 的理由是"四个方言后端未实现"——那是"这些具体后端没有"，**不是"持久化能力没有"**。**而这两件事已经分开量过：**Mongo 翻译层已接线（`MongoTranslatorWiringTests`：三个有生产调用方，第四个因仓储用整文档替换而不需要）；**五个调用操作在契约层一一对应（`PersistenceContractEquivalenceTests`）。**所以状态改为 ◐：**能力在、代替实现已核对，缺的是那四个方言后端本身。** | ◐ |
 | 对偶解按身份整理（`TidyDualSolutionByIdentity`） | `Core` | ✅ | **新增 `TidyDualSolutionByIdentity`：`tidyDualSolution` 返回 `Map<Constraint, Flt64>`，C# 视图不持有约束对象引用，所以 key 用 `ConstraintId`。**两处新增：**对偶/Farkas 模型保存原模型行身份快照 `PrimalRowIdentities`（`BuildDual` 构造时带上），对偶路径按 `DualOrigin.RowIndex` 回查；行对齐路径直接取本模型 `Constraints.Ids[row]`。**快照而不是引用**：**视图的意义是可复制的快照，持活的原模型会让对偶模型生命周期绑在原模型上，原模型 `Dispose` 后对偶整理就会失败。**记下一条**未测**，而不是把它报成"实测通过"**：**变异实验把实现改成"完全不读 `PrimalRowIdentities`"，22 条判据**全部通过**（**该文件原有 22 条，新增的那一条才是第 23 条**）。原因是测试能造的原模型只有两种——没有行身份（两条路的表都为空，无法区分）与有手写行身份（`Dual` 在身份集合校验那关就失败，走不到整理步骤）。第二种失败不是缺陷：身份必须与注册表自洽，测试里手写的身份不在任何注册表里，`Dual` 拒绝它是对的。**要让这条路径可测，需要能注册手写身份的构造入口或真实走过注册流程的模型——比更大，不做，而是把"未测"写成"未测"。**判据 5 条（并入 `LinearTriadDualTest`）：**无行身份时空表是正确答案**、**有行身份时完整覆盖且键真实不重复**、**快照存在且空列表不是 `null`**、**普通模型无快照**、**行对齐路径的键取自本模型身份（对照判据）**。**第一条是**方向写错**的判据，值得原样记：**初版要求"表必须覆盖每一行"，跑起来红了（期望 3、实得 0）——而红的原因不是实现错了，是**判据前提错了**：测试原模型没给变量和约束设身份，而在 `origins` 为空时同样返回空 map。一个要求"表非空"的判据会逼实现去**伪造**身份，而伪造的身份比没有身份更危险——它会出现在下游账里，却指向不存在的约束。**另一条造模型的教训**：**初版给三行塞手写 `ModelElementIdentity` 后 `Dual` 直接失败——身份不是"填个字符串"，它必须与一份注册表自洽。**
-| 约束求值 `NativeConstraintEvaluations` | `Core` | ⚠️ | **两个求值器。两个求值器之间有两处不对称，都照做并在判据里钉住。**第一处：容差的来源不同**：**ABS 走 `finiteSolverDouble(PIECEWISE_TOLERANCE, ...)` 转换之后的值，MAX 用字面量 `1e-6`。数值上相同，结构上不同——`PIECEWISE_TOLERANCE` 一旦改动，ABS 跟着走，MAX 不跟。**的第 8 条“不可测”发现**：**这条差别**当前测不出来**，因为两者数值相同；变异验证：把 ABS 也改成字面量，7 条判据全绿。判据只能断言“两者当前相等”，并在注释里写清“这是巧合而不是同源”。**第二处，也是更要紧的一处：`maxEvaluations` **忽略 `structure.minimum`**：**它永远取 `maxOrNull`，所以一个 `minimum = true` 的结构会被拿去和**最大值**比。**这不是本仓库的偏差，是**缺陷**：**`NativeMaxData` 带着 `minimum`，`restoreValues` 也按它取极值，而 `maxEvaluations` 却没看这个标志——同一份数据在两条路径上被解释成两种含义。**照抄以保持的可比性，并把这一点写成判据。一个被记录下来的缺陷是“已知债”；一个没人测过的缺陷是“潜伏的错”。**这条判据有一个反直觉的性质：如果哪天有人“修正”了它（让求值器看 `minimum`），判据会变红。**变异验证：把 `minimum` 纳入求值的“修正版”让 2 条判据变红。**这正是记录缺陷的判据应有的行为——它不是“实现正确”的证据，而是“实现”的证据。修正时必须同时改判据，那一步是**有意的**，而不是被红条逼出来的。**容差边界是 `<=` 而不是 `<`**：**判据用 `violation` 恰为 `1e-6` 与 `1e-6 + 1e-9` 这一对，只测 0 与一个大值的话两者区分不开。**判据 `NativeConstraintEvaluationsTests` **7 条**：**ABS 求值形状**、**容差边界含等号**、**MAX 忽略 `minimum`（期望 `10`、结果 `3`、违反量 `7`、判为不满足）**、**两条路径对同一标志的两种解释并排断言**、**两处容差当前相等（记录巧合）**、**缺 token 按类分别报**、**空结构列表**。**变异：`<=` 改 `<` → 红 1 条；“修正” `minimum` → 红 2 条；ABS 容差改字面量 → **全绿**（**如实记录，未声称覆盖**）。**一处 C# 细节**：**`ConstraintEvaluation<V>` 的字段名是 `ConstraintId` / `Relation` / `Satisfied`，关系枚举叫 `SolveConstraintRelation`（不是 `ConstraintRelation`）。**
+| 约束求值 `NativeConstraintEvaluations` | `Core` | ⚠️ | **两个求值器。两个求值器之间有两处不对称，都在判据里钉住。**第一处：容差的来源不同**：**ABS 走 `finiteSolverDouble(PIECEWISE_TOLERANCE, ...)` 转换之后的值，MAX 用字面量 `1e-6`。数值上相同，结构上不同——`PIECEWISE_TOLERANCE` 一旦改动，ABS 跟着走，MAX 不跟。**的第 8 条“不可测”发现**：**这条差别**当前测不出来**，因为两者数值相同；变异验证：把 ABS 也改成字面量，7 条判据全绿。判据只能断言“两者当前相等”，并在注释里写清“这是巧合而不是同源”。**第二处，也是更要紧的一处：`maxEvaluations` **忽略 `structure.minimum`**：**它永远取 `maxOrNull`，所以一个 `minimum = true` 的结构会被拿去和**最大值**比。**这不是本仓库的偏差，是**缺陷**：**`NativeMaxData` 带着 `minimum`，`restoreValues` 也按它取极值，而 `maxEvaluations` 却没看这个标志——同一份数据在两条路径上被解释成两种含义。**照抄以保持的可比性，并把这一点写成判据。一个被记录下来的缺陷是“已知债”；一个没人测过的缺陷是“潜伏的错”。**这条判据有一个反直觉的性质：如果哪天有人“修正”了它（让求值器看 `minimum`），判据会变红。**变异验证：把 `minimum` 纳入求值的“修正版”让 2 条判据变红。**这正是记录缺陷的判据应有的行为——它不是“实现正确”的证据，而是“实现”的证据。修正时必须同时改判据，那一步是**有意的**，而不是被红条逼出来的。**容差边界是 `<=` 而不是 `<`**：**判据用 `violation` 恰为 `1e-6` 与 `1e-6 + 1e-9` 这一对，只测 0 与一个大值的话两者区分不开。**判据 `NativeConstraintEvaluationsTests` **7 条**：**ABS 求值形状**、**容差边界含等号**、**MAX 忽略 `minimum`（期望 `10`、结果 `3`、违反量 `7`、判为不满足）**、**两条路径对同一标志的两种解释并排断言**、**两处容差当前相等（记录巧合）**、**缺 token 按类分别报**、**空结构列表**。**变异：`<=` 改 `<` → 红 1 条；“修正” `minimum` → 红 2 条；ABS 容差改字面量 → **全绿**（**如实记录，未声称覆盖**）。**一处 C# 细节**：**`ConstraintEvaluation<V>` 的字段名是 `ConstraintId` / `Relation` / `Satisfied`，关系枚举叫 `SolveConstraintRelation`（不是 `ConstraintRelation`）。**
 
 | 未出现类型的**成因分类**（`core` 166 个） | `Core` | ◐ | **"未出现"这三个字掩盖了三种完全不同的情况——真缺、换了机制、改了名，只有第一种要补。** 扫描得到 `core` 命中率 **74.3%**、166 个未出现；脚本 `logs/b1130-classify-absent.py` 按后缀归类（复用同一提取器，避免两处口径漂移）。**构成**：符号层 42 个（`*Function`/`*Materializer`，依赖 `MathFunctionSymbol` 整套生命周期接口）、泛型特化 14 个（`Dyn*Variable`，本仓用 `VariableCombination<T, TType, S>` 泛型表达，不为每种组合建类）；其余为**未归类**，**不四舍五入成一个整数**。 |
 **本表记的是能力，不记"某一步补了什么"。** 每一格的差异与证据写在那一行里。
@@ -286,7 +286,7 @@ accidentally deleted this section (wrong replacement start); the content was reb
 | --- | --- | --- | --- |
 | CoreDemo / FrameworkDemo | `Example` | ✅ | Demo2 **185** / C# **175** 个文件、**0 个空壳**；Demo4 与 Demo5 各有独立清单判据 |
 | Demo5 双语文档 | `Example` | ✅ | 由 `Demo5DocumentationTests` 钉住 |
-| 基准套件 | `Benchmark` | ✅ | **20 个基准**（另有 1 个不计时的转储工具 `CrossVersionSemanticDump.cs`），15 个工作负载一一对应**（补齐最后两个 证伪了"依赖缺失/`internal`"这个理由） **（复审换成 `19c72455`）**：**新比固定多 14 个文件，其中 6 个是新的 JMH 基准，全在 `ospf-kotlin-benchmark`，且**只依赖库内 API**——所以不属于"外部所限"，是**待实现**。** 已实现 1 个：`TokenInvalidateRebuildBenchmark`（3 个基准 × 3 档；large 档实测"重建 2.65 ms"对"稳态读 2.54 µs"，另有 `TokenIndexInvalidationTests` 两条行为判据钉住"结构变更后索引仍正确、被移除的 token 不再解析"）。**6 个新基准已全部有文件；下面这个的待办段在此点名（判据 `TheUnportedNewWorkloads_ShouldBeNamedInTheMatrix` 只钉"必须被写下来"，不要求代码在场）**：`TokenSharedReadBenchmark` **已实现**（三个读方法 + 空调度对照 + `ColdBuildWork` 诊断；`CountingVariable` 照搬为 `AbstractVariableItem` 子类并覆写 `Identifier` 计数；`TokenSharedReadBenchmarkTests` 5 条判据，其中一条钉住"一次完整建表的标识符读数必须不少于 token 数"——否则这个"建表工作量"读数会退化成装饰）、`PrimeMixedExpansionBenchmark` **已实现**（连同同一文件里的 `PrimeReaderLatencyBenchmark`：`CyclicBarrier` 用 .NET `Barrier` 对齐起跑；writer 是唯一扩容者、按 volatile 换代；判据 `ConcurrencyBenchmarkTests` 5 条钉住"混合批次的 reader 半边等于纯 reader""每种形态进度不同""reader 数真的改变负载""writer 在窗内重建过整代""`readyOnly` 不起 writer"；**能力差已写明：本仓基准运行器不产出 JMH `Mode.SampleTime` 的 p95/p99**）、`GenerationScaleBenchmark` **已实现**（3 个生成器 × 3 个场景 × 4 个并行度 × 2 个方案上限；`GenerationScaleBenchmarkTests` 的判据钉住"每个参数维度真的接到夹具上"——生成器看夹具类型、场景看 12 个物料上界是否两两不同、上限看方案数是否被截断）、`NetworkSharedGraphBenchmark` **已实现**（形态 × 规模 × reader 数，五个基准方法；`NetworkSharedGraphBenchmarkTests` 八条判据用精确等式而不是"大于零"——环形形态下每个 reader 的可达集必须正好等于节点数、反向视图出弧必须正好 4、空调度必须恰好发 0…n-1 号）、`CrossVersionSemanticDump` **已实现（三段）**（`NET`／`TOK`／`PRM` 已转储，`--dump` 走它而不计时；`CrossVersionSemanticDumpTests` 七条判据钉住"只含已实现段、布尔小写、非统计行两次运行逐行相同、待办清单与已实现段不重叠且六段齐备、核心数字是真值（π(20000)=2262）、投影段真结构、截断真的截断且规范键不是同一串"**；**起六段齐备：** `PRJ` 用 `ColumnProjection.SnapshotAsync`／`PricingRequestAsync`／`MasterAsync`，`GEN`／`TRUNC` 用 `Domain` 层的 `CuttingPlanCanonicalKey.From(plan)`——**两条"待办"理由实测都不成立，和 `PreciseAssignment`、"环境所限"是同一个错法。**可比性限制已写明：** 用 Kotlin `String.hashCode()` 做摘要，**跨语言不可比**，所以本转储不输出 `hashCode` 摘要——可逐行对比的是计数、排序后原值拼接与布尔量。 |
+| 基准套件 | `Benchmark` | ✅ | **20 个基准**（另有 1 个不计时的转储工具 `CrossVersionSemanticDump.cs`），15 个工作负载一一对应**（补齐最后两个 证伪了"依赖缺失/`internal`"这个理由） **（复审换成 `19c72455`）**：**新比固定多 14 个文件，其中 6 个是新的 JMH 基准，全在 `ospf-kotlin-benchmark`，且**只依赖库内 API**——所以不属于"外部所限"，是**待实现**。** 已实现 1 个：`TokenInvalidateRebuildBenchmark`（3 个基准 × 3 档；large 档实测"重建 2.65 ms"对"稳态读 2.54 µs"，另有 `TokenIndexInvalidationTests` 两条行为判据钉住"结构变更后索引仍正确、被移除的 token 不再解析"）。**6 个新基准已全部有文件；下面这个的待办段在此点名（判据 `TheUnportedNewWorkloads_ShouldBeNamedInTheMatrix` 只钉"必须被写下来"，不要求代码在场）**：`TokenSharedReadBenchmark` **已实现**（三个读方法 + 空调度对照 + `ColdBuildWork` 诊断；`CountingVariable` 如此为 `AbstractVariableItem` 子类并覆写 `Identifier` 计数；`TokenSharedReadBenchmarkTests` 5 条判据，其中一条钉住"一次完整建表的标识符读数必须不少于 token 数"——否则这个"建表工作量"读数会退化成装饰）、`PrimeMixedExpansionBenchmark` **已实现**（连同同一文件里的 `PrimeReaderLatencyBenchmark`：`CyclicBarrier` 用 .NET `Barrier` 对齐起跑；writer 是唯一扩容者、按 volatile 换代；判据 `ConcurrencyBenchmarkTests` 5 条钉住"混合批次的 reader 半边等于纯 reader""每种形态进度不同""reader 数真的改变负载""writer 在窗内重建过整代""`readyOnly` 不起 writer"；**能力差已写明：本仓基准运行器不产出 JMH `Mode.SampleTime` 的 p95/p99**）、`GenerationScaleBenchmark` **已实现**（3 个生成器 × 3 个场景 × 4 个并行度 × 2 个方案上限；`GenerationScaleBenchmarkTests` 的判据钉住"每个参数维度真的接到夹具上"——生成器看夹具类型、场景看 12 个物料上界是否两两不同、上限看方案数是否被截断）、`NetworkSharedGraphBenchmark` **已实现**（形态 × 规模 × reader 数，五个基准方法；`NetworkSharedGraphBenchmarkTests` 八条判据用精确等式而不是"大于零"——环形形态下每个 reader 的可达集必须正好等于节点数、反向视图出弧必须正好 4、空调度必须恰好发 0…n-1 号）、`CrossVersionSemanticDump` **已实现（三段）**（`NET`／`TOK`／`PRM` 已转储，`--dump` 走它而不计时；`CrossVersionSemanticDumpTests` 七条判据钉住"只含已实现段、布尔小写、非统计行两次运行逐行相同、待办清单与已实现段不重叠且六段齐备、核心数字是真值（π(20000)=2262）、投影段真结构、截断真的截断且规范键不是同一串"**；**起六段齐备：** `PRJ` 用 `ColumnProjection.SnapshotAsync`／`PricingRequestAsync`／`MasterAsync`，`GEN`／`TRUNC` 用 `Domain` 层的 `CuttingPlanCanonicalKey.From(plan)`——**两条"待办"理由实测都不成立，和 `PreciseAssignment`、"环境所限"是同一个错法。**可比性限制已写明：** 用 Kotlin `String.hashCode()` 做摘要，**跨语言不可比**，所以本转储不输出 `hashCode` 摘要——可逐行对比的是计数、排序后原值拼接与布尔量。 |
 | 基准趋势脚本 | `scripts/` | ✅ | `checks=29 failures=0` |
 | 双语文档（仓库级 README） | 根目录 | ◐ | 已扩到 171 / 158 行；**主题覆盖而非逐行对齐** |
 | 其余模块 README | — | ❌ | `src/Starters/*` **十份**（补了 Bpp1d/Bpp2d/Csp2d/NetworkScheduling 四个启动器）；其余模块**未排期**写 README |
@@ -380,17 +380,16 @@ benchmark fixtures only prove the fixtures are covered, not performance.
 | 消息插件往返 | 真实 Kafka broker | ✅ **三条判据**（生产→消费且键值都对 / JSON 载荷往返 / 不可达 broker 在超时内返回空而不挂住）；**同时修掉 `Dispose` 不 flush 导致的消息静默丢失** |
 | 跨语言互通 | 两侧同版本同时运行 | **只有三处实测**（见第七章） |
 | 性能对比 | 两侧同夹具同机器 | **仍然完全没有**，但**夹具覆盖已补齐**：15 个工作负载、本仓 15 个，两个新基准实跑通过 |
-**只补了夹具，没有做任何性能结论。** 这两件事必须分开：
+**夹具齐了，性能结论一条都没有。** 这两件事必须分开：
 
-| 做了什么 | 能得出什么 |
+| 项 | 状态 |
 | --- | --- |
-| 补齐两个缺失的基准工作负载，并各实跑一次（`small 1 1 1`，各 6 个基准） | **夹具覆盖齐了**，性能**仍然一句没说** |
+| 基准工作负载（15 个，`small 1 1 1`，各 6 个基准） | **覆盖齐了**，性能**仍然一句没说** |
 | — | 同夹具同机器的两侧对比**仍未做**：需要同时跑 Kotlin 侧，而本仓库不切那个 checkout |
 
-**夹具覆盖是性能对比的必要条件，不是它本身。** 补齐之前，"性能没测过"和"没有可比的东西"分不开；
-补齐之后只剩前者——**而前者正是这条偏差的本意。**
+**夹具覆盖是性能对比的必要条件，不是它本身。** 现在"性能没测过"是唯一剩下的一句，**而它正是这条偏差的本意。**
 
-**only filled in the fixtures; it draws no performance conclusion.** Those are separate: the two missing workloads now exist and each ran once (`small 1 1 1`,
+**The fixtures are complete and there is no performance conclusion.** Those are separate: the workloads exist and each ran once (`small 1 1 1`,
 six benchmarks each), so **the fixture coverage is complete and nothing has been said about performance**. A same-fixture same-machine comparison **still has not been
 done**: it needs the Kotlin side running too, and this repository does not switch that checkout. **Fixture coverage is a precondition for a comparison, not the
 comparison** — before this, "performance was never measured" and "there is nothing to compare" were indistinguishable; now only the former remains, **which is what
@@ -453,12 +452,12 @@ conservatism but **assuming a closed door is locked without trying the handle**:
 **pins down what item 3 really is.** It used to say only "no `PWL` in `PackingRendererAdapter`, the radius result never reaches rendering" — **a symptom, not the
 size of the gap**. Measured: the piecewise **symbols** exist here and Demo2 really uses them; the **function expansion layer** (`FunctionExpansion.kt`, **576 lines**)
 is **entirely absent** — `Core/Solver/Function/` holds only a capability declaration — and the plugins have no native writes (22 for Copt, 6 for Cplex), while
-Gurobi has only **detection**. **"Detection not ported" conflated three things**, and detection is the easiest layer and is already here. A vague "not ported" lets the
-next person believe adding reflection is enough — **which is exactly the layer that is not missing.**
+Gurobi has only **detection**. **Lumping the three layers together as "not done" conflates them**, and detection is the easiest layer and is already here. A vague
+"not done" lets the next person believe adding reflection is enough — **which is exactly the layer that is not missing.**
 
 | 4 | **通配符泛型缺失** | **仍然成立** | `MultiArray` **11 个**源文件里 **5 个**用 `where` 约束表达 Kotlin 的协变/逆变；C# 没有声明点变体 |
 | 5 | **原生后端行为未验证** | **收窄了，但没消失** | 见下 |
-| 6 | **`core.analysis` 仍缺多数分析器** | **更新：`effectiveDomain` 已搬（二值性是类型不变量）；三条主链的编排只剩 `analyze` 类本体（需真实后端）** | 见下 |
+| 6 | **`core.analysis` 仍缺多数分析器** | **更新：`effectiveDomain` 已实现（二值性是类型不变量）；三条主链的编排只剩 `analyze` 类本体（需真实后端）** | 见下 |
 ### 偏差 **四个后端在这个环境里真跑过**
 
 **把六个插件的集成门逐个真跑了一遍**，结论推翻了两版措辞：
@@ -776,9 +775,9 @@ return declared == CapabilitySupport.Supported && matrix.ModelTypes.Count == 0;
 
 | 类别 | 含义 | 下一步 |
 | --- | --- | --- |
-| **环境所限** | 代码能搬，本机没许可 / 实例 / SDK | **换个环境就能验** |
+| **环境所限** | 代码能实现，本机没许可 / 实例 / SDK | **换个环境就能验** |
 | **语言所限** | 依赖 JVM 专有库 | **不是缺口，是等价替换** |
-| **需真实后端** | 逻辑已搬，验证必须接真实求解器 | **接上后端才能验** |
+| **需真实后端** | 逻辑已实现，验证必须接真实求解器 | **接上后端才能验** |
 
 **混成一类，读者只能统一当成"做不到"。**
 
@@ -859,7 +858,7 @@ return declared == CapabilitySupport.Supported && matrix.ModelTypes.Count == 0;
 
 ### **状态和次数都对，只有观察列表不同**
 
-实现了 `ConstraintPerturbationPipeline`（扰动分析的编排）。**所有判定早已单独搬过，这一段只钉顺序。**
+实现了 `ConstraintPerturbationPipeline`（扰动分析的编排）。**所有判定早已单独实现过，这一段只钉顺序。**
 
 #### 一、两条顺序规则
 
@@ -897,9 +896,9 @@ return declared == CapabilitySupport.Supported && matrix.ModelTypes.Count == 0;
 
 对三个文件逐个取函数名，再到 C# 侧按名字搜：
 
-- `ConflictAnalyzer` —— 函数名 7 个：`sourceOf` / `groupSummaries` / `remapBackendConflict` / `literalKey` / `assumptionSeed` / `nativeSeed` / `unsupportedExplanation` **全部已搬**；**缺 `analyze` 本体**
-- `ConstraintPerturbationAnalyzer` —— 10 个已搬（`aggregateStatus` / `capabilityAllowed` / `classifyOutcome` / `deriveRhsSnapshot` / `integerPatternChanged` / `objectiveImprovement` / `refineThreshold` / `requestedDeltas` / `runRemoval` / `RunDeltas`）；缺 `solve(request)` 与 `analyze` 本体
-- `CriticalConstraintAnalysisPipeline` —— 五阶段编排已搬；缺 `analyzeAndExplain` 与 `rankConstraintCandidates`
+- `ConflictAnalyzer` —— 函数名 7 个：`sourceOf` / `groupSummaries` / `remapBackendConflict` / `literalKey` / `assumptionSeed` / `nativeSeed` / `unsupportedExplanation` **全部已实现**；**缺 `analyze` 本体**
+- `ConstraintPerturbationAnalyzer` —— 10 个已实现（`aggregateStatus` / `capabilityAllowed` / `classifyOutcome` / `deriveRhsSnapshot` / `integerPatternChanged` / `objectiveImprovement` / `refineThreshold` / `requestedDeltas` / `runRemoval` / `RunDeltas`）；缺 `solve(request)` 与 `analyze` 本体
+- `CriticalConstraintAnalysisPipeline` —— 五阶段编排已实现；缺 `analyzeAndExplain` 与 `rankConstraintCandidates`
 
 **用列表不用表格，原因是判据按结构取行**：`RemainingGapLedgerTests` 按"第一行以 `| \`文件名\`` 开头"取行，
 写成表格会把那张缺口台账的行顶掉。**这是同一个坑的第二次踩，判据又一次当场红。**
@@ -979,7 +978,7 @@ return declared == CapabilitySupport.Supported && matrix.ModelTypes.Count == 0;
 
 ### **"没测"第五次，这次是"没变"**
 
-实现了 `capabilityAllowed` 与 `integerPatternChanged`。`aggregateStatus` 已在 搬过，不重复。
+实现了 `capabilityAllowed` 与 `integerPatternChanged`。`aggregateStatus` 已在 实现过，不重复。
 
 #### 一、任一侧解缺失 → `null`，不是 `false`
 
@@ -1209,7 +1208,7 @@ return declared == CapabilitySupport.Supported && matrix.ModelTypes.Count == 0;
 
 ### **删除后可达，所以要保留**
 
-实现了删除复验的判定 `ConflictDeletionCheck`。**复验循环本身没搬**——它要真的跑一次求解。
+实现了删除复验的判定 `ConflictDeletionCheck`。**复验循环本身没实现**——它要真的跑一次求解。
 
 #### 一、方向与直觉相反
 
@@ -1326,7 +1325,7 @@ return requested.Where(wanted.Contains).ToArray(); // 不是 return wanted
 
 ### **指错位置比不给位置更糟**
 
-实现了 `ConflictAnalyzer` 的 `sourceOf` 与 `groupSummaries`。**两个种子策略（原生 IIS、假设式）没搬。**
+实现了 `ConflictAnalyzer` 的 `sourceOf` 与 `groupSummaries`。**两个种子策略（原生 IIS、假设式）没实现。**
 
 #### 一、三种成员，映射互不相同
 
@@ -1436,7 +1435,7 @@ Kind == Removal ? Outcome == Effective : null
 但它说明一件事：这些判据不是在装饰文档，它们会真的互相打起来。**
 
 
-#### 四、还没搬的
+#### 四、还没实现的
 
 `refineThreshold`（阈值二分）与候选漏斗。删除测试这条链现在是完整的：派生 → 求解 → 分类。
 
@@ -1477,7 +1476,7 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 ### **没跑完和跑不了是两件事**
 
 `ConstraintPerturbationAnalyzer` 的四个纯函数：`RequestedDeltas`、`ObjectiveImprovement`、`ClassifyOutcome`、`AggregateStatus`。
-**求解循环与阈值二分没搬。**
+**求解循环与阈值二分没实现。**
 
 #### 一、`AggregateStatus` 有四条规则，每条都能单独出错
 
@@ -1540,7 +1539,7 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 
 `finally { derivedModel.Model.Dispose(); }`。**它持有原生句柄，漏一次不是测试变红，而是内存慢慢涨。**
 
-#### 五、这批没搬的
+#### 五、这批没实现的
 
 候选漏斗（`buildCandidateFunnel` 那一层）、分析缓存、能力矩阵过滤。
 **它们决定"分析哪些目标"，不决定"分类对不对"**——后者是这批的范围。
@@ -1578,7 +1577,7 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 
 这不是笔误，是**结构体与 `null` 的语义差**；同一形状在别处还会再出现。
 
-#### 四、还没搬的
+#### 四、还没实现的
 
 `analyze` 本体的**求解与分类**（`mapOutput` 的 Feasible/Infeasible 分支、能力矩阵过滤、缓存）。
 **这批只保证"报告写可行之前，那个可行被复核过"。**
@@ -1619,9 +1618,9 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 按 的更正值了重建器：`SnapshotModelRebuilder`，走**表达式 AST 找回变量**这条路。
 这是 `ConstraintProgrammingSnapshotBuilder.buildModel` 的**普通路径**（全部成员激活）。
 
-#### 一、没搬的三处，遇到就报错
+#### 一、没实现的三处，遇到就报错
 
-| 未搬 | 遇到时 |
+| 未实现 | 遇到时 |
 | --- | --- |
 | 区间变量 | 报错 |
 | 选择性停用证据时的值域重绑（`activeSources`） | 未实现，调用方拿不到这条重载 |
@@ -1736,8 +1735,8 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 **重建器本体仍缺**——`ConstraintProgrammingSnapshotBuilder` 的 440 行逻辑：重建变量、表达式、区间、约束、目标，
 再为每个候选追加一条 target 约束。前置件现在齐了（类型目录 + 变量工厂），**剩下的确实是逻辑**。
 
-`.analysis` 里与重建相关的还有 `ConstraintProgrammingAssumptionMapper`（已在 搬完）与
-`FixedIntegerProjection`（同批搬完），**所以重建器不需要再补旁支。**
+`.analysis` 里与重建相关的还有 `ConstraintProgrammingAssumptionMapper`（已在 实现完）与
+`FixedIntegerProjection`（同批实现完），**所以重建器不需要再补旁支。**
 
 
 ### **快照把变量类型存成了类名，而没人能读回来**
@@ -1825,7 +1824,7 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 ### **"没测出来"不是"没改善"**
 
 补了 `CriticalConstraintAnalysisReport.kt` 的有效性侧：`EffectivenessEntry` 与 `EffectivenessRanking`。
-当时只补了漏斗那一块，**所以那个文件此前是"部分搬"却记在"整文件搬完"里**——账目在 才对齐。
+当时只补了漏斗那一块，**所以那个文件此前是"部分实现"却记在"整文件实现完"里**——账目在 才对齐。
 
 `buildEffectivenessRanking`、`summarizeGroups`、`AnalysisGroupSummary` 与报告构造器**仍缺**。
 
@@ -1859,8 +1858,8 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 ### **三个零值都不是"没配置"**
 
 补了 `CriticalConstraintAnalysisPipeline.kt`（359 行）的选项层：`ConflictAnalysisOptions` 与
-`CriticalConstraintAnalysisOptions`。**编排器本身没搬**——它要依次调扰动、目标可行性、冲突三个分析器，
-**而这三个的分析器本体都还没搬。**写一个调不到东西的编排器，正是本仓反复拒绝的那种"看起来有了"。
+`CriticalConstraintAnalysisOptions`。**编排器本身没实现**——它要依次调扰动、目标可行性、冲突三个分析器，
+**而这三个的分析器本体都还没实现。**写一个调不到东西的编排器，正是本仓反复拒绝的那种"看起来有了"。
 
 #### 一、三个零值，三种合法含义
 
@@ -1937,7 +1936,7 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 **的实测**：4 条判据在真实 Gurobi 上通过；变异（`IISQConstr` → `IISConstr`）2 红。
 
 
-### **线性原生 IIS 搬完，`NativeIis` 从 `false` 改 `true`**
+### **线性原生 IIS 实现完，`NativeIis` 从 `false` 改 `true`**
 
 | 类 | 状态 |
 | --- | --- |
@@ -1993,7 +1992,7 @@ C# 侧构造不出一条"存在但不是 `IntegerComparison`"的约束，所以�
 
 #### 一、`NativeIis` 仍然是 `false`，这是对的
 
-`GurobiReportSupport` 里那句 `NativeIis: false` **没有改**。两个 IIS 类没搬，能力就是没有，
+`GurobiReportSupport` 里那句 `NativeIis: false` **没有改**。两个 IIS 类没实现，能力就是没有，
 **提前翻成 `true` 会让上层以为有一条它其实没有的提取路径**。
 
 判据里专门钉了这一点：分析器只声明 `Farkas` + `Lp`，**不声明 `Mip`**——
@@ -2039,22 +2038,22 @@ Farkas 证书证不了混合整数模型不可行。
 
 | 类别 | 数量 | 文件 |
 | --- | --- | --- |
-| **整文件搬完** | **15** | 其余全部 |
-| **只搬报告侧**（分析器本体要真实 CP 后端） | **3** | `TargetFeasibilityAnalyzer`、`ConstraintPerturbationAnalyzer`、`ConflictAnalyzer` |
+| **整文件实现完** | **15** | 其余全部 |
+| **只实现报告侧**（分析器本体要真实 CP 后端） | **3** | `TargetFeasibilityAnalyzer`、`ConstraintPerturbationAnalyzer`、`ConflictAnalyzer` |
 | **完全未动** | **0** | — |
-| **只搬选项层** | **1** | `CriticalConstraintAnalysisPipeline`（选项已补，编排器缺） |
+| **只实现选项层** | **1** | `CriticalConstraintAnalysisPipeline`（选项已补，编排器缺） |
 | **合计** | **19** | — |
 
 C# 的 18 个 `.cs` 里，`TargetFeasibilityReport`、`ConstraintPerturbationReport`、`ConflictExplanation`
 **在是那三个分析器文件的一部分**，拆出来是为了让不需要后端的部分先落地。
 **所以"C# 18 个文件"不等于"覆盖18 个文件"。**
 
-#### 插件分析器：一个搬完了，一个没动
+#### 插件分析器：一个实现完了，一个没动
 
 | 文件 | 行数 | 状态 |
 | --- | --- | --- |
-| `ScipInfeasibilityAnalyzers` | 278 | **已搬完**（1 个类，有 `ScipFarkasDiagnosticTest`） |
-| `GurobiInfeasibilityAnalyzers` | 518 | **已搬完**：三个类全部到位，都在真实后端跑过 |
+| `ScipInfeasibilityAnalyzers` | 278 | **已实现完**（1 个类，有 `ScipFarkasDiagnosticTest`） |
+| `GurobiInfeasibilityAnalyzers` | 518 | **已实现完**：三个类全部到位，都在真实后端跑过 |
 
 **SCIP 侧此前被记成"部分"，这是错的。** 那个文件只有**一个类** `ScipFarkasInfeasibilityAnalyzer`，
 C# 有同名同类实现，且**有两处差异是 C# 自己写明了理由的**：
@@ -2083,7 +2082,7 @@ C# 有同名同类实现，且**有两处差异是 C# 自己写明了理由的**
 
 ### 第 6 条的附录：剩下 8 个，逐条写明缺什么
 
-前面几批已经逐块补了 13 个。**剩下的 8 个不再"待办"，而是逐条记账**——
+**13 个已逐块实现，剩下的 8 个逐条记账**——
 因为"做不到"和"没做"是两件事，混在一起记，后续就会再翻一遍。
 
 | 文件 | 行数 | 求解引用 | C# 状态 | 缺的前置件 |
@@ -2104,7 +2103,7 @@ C# 有同名同类实现，且**有两处差异是 C# 自己写明了理由的**
 它已补，**不需要后端**；剩余 core 部分因此是 **3421 行**，加上插件 **796 行 = 4217 行**。
 
 **补了 `TargetFeasibilityReport`，没补分析器**：第 673 行是一处真正的 `solver.solve(model, options)`，
-之前的 `ConstraintProgrammingSnapshotBuilder` 还要重建可变模型。**那部分要真实 CP 后端，没搬也没空跑。**
+之前的 `ConstraintProgrammingSnapshotBuilder` 还要重建可变模型。**那部分要真实 CP 后端，没实现也没空跑。**
 `Core/Analysis/` **14 → 15**，缺口 **7 → 6**。
 
 **报告钉的是四个状态不许互相冒充**：`Reachable`/`Unreachable` 是结论，`Unknown`/`Unsupported` 是"没结论"的两种原因。
@@ -2114,7 +2113,7 @@ C# 有同名同类实现，且**有两处差异是 C# 自己写明了理由的**
 `Core/Analysis/` **15 → 16**，缺口 **6 → 5**。
 
 **第 349 行起是分析器本体**，含 `activeBackend!!.solve(request)` 与 `backend!!.solve(request)`，
-**要真实重新优化后端，没搬也没空跑。**
+**要真实重新优化后端，没实现也没空跑。**
 
 **判据钉三件事**：
 
@@ -2131,7 +2130,7 @@ C# 有同名同类实现，且**有两处差异是 C# 自己写明了理由的**
 `ConflictVerification`、`ConflictGroupSummary` 与 `ConflictExplanation`。`Core/Analysis/` **16 → 17**，缺口 **5 → 4**。
 
 **第 262 行起是两个分析器**，第 630 行 `solver.solve(...)`、第 755 行 `session.solve(assumptions = ...)`。
-**要真实 CP 后端，没搬也没空跑。**
+**要真实 CP 后端，没实现也没空跑。**
 
 **`ConflictExplanation.Validate()` 挡的每一条，都是"报告看起来有结论，但证据撑不住"的形状**：
 
@@ -2173,7 +2172,7 @@ plugin work, for **4217**.
 `Session` → `TargetFeasibilityReport` / `ConflictExplanation` / `ConstraintPerturbationReport` → 三个分析器 → `Pipeline`。
 
 **这一整棵树都挂在 `CriticalConstraintAnalysisSession` 上，而它持有一个活的求解器实例。**
-所以顺序不是"先搬小的"，而是**先搬那个能创建会话的**，否则搬来的每个类型都没有构造入口。
+所以顺序不是"先实现小的"，而是**先实现那个能创建会话的**，否则实现来的每个类型都没有构造入口。
 
 #### 二、"求解引用"只是 grep 代理，不是证明
 
@@ -2183,7 +2182,7 @@ plugin work, for **4217**.
 **它的 `buildReport` 只读快照与赋值**，不是"grep 没找到所以不碰后端"。
 **这条口径的局限写在这里，免得下次把 0 当成"不需要后端"的证明。**
 
-#### 三、为什么这批不搬
+#### 三、为什么这批不实现
 
 这 8 个里最小的是 270 行的 `ConstraintProgrammingAnalysisBackends`，但它是**后端适配胶水**：
 它的"输入"是求解器的回调，"输出"是求解器的状态。**实现出来只会得到一个无法调用的形状。**
@@ -2227,7 +2226,7 @@ books the eight gaps and pins the numbers, **so the next step starts from "4558 
 
 **已补齐（`Domain/LayerAssignment/service/limits/MixedBinObjectives.cs`）：**`BinVolumeMinimization`（系数 = 权重 × 箱型体积）、`BinTypeCostMinimization`（系数 = 权重 × 该箱型成本）、`PerTypeBinCost.Of`。
 
-**三个跳过条件逐条照搬：** **成本表为空、权重为零、该箱型未配置成本——第三种**不进多项式**，而不是以 0 系数进去（0 项在求和里是噪声，在报告里会被读成"这个箱型免费"）。**"配置为零成本"同样跳过**，这是`mapIndexedNotNull` 的另一半。
+**三个跳过条件逐条落实：** **成本表为空、权重为零、该箱型未配置成本——第三种**不进多项式**，而不是以 0 系数进去（0 项在求和里是噪声，在报告里会被读成"这个箱型免费"）。**"配置为零成本"同样跳过**，这是`mapIndexedNotNull` 的另一半。
 
 **判据 `MixedBinObjectiveTests`（5 条）：** 过期断言已消失且更正被记录、`PreciseAssignment` 确实在仓库里、三个跳过条件、零成本也跳过、体积系数按权重缩放、缺省成本由调用方决定。
 
@@ -2296,7 +2295,7 @@ books the eight gaps and pins the numbers, **so the next step starts from "4558 
 
 #### 二、递归与几何分开
 
-**用 `QuantityPlacement3&lt;Item, FltX&gt;` 加两个几何助手（`topItemPlacements`／`filterBottomOverlapped`），而 C# 侧 `QuantityPlacement3` 在 `Application` 层、那两个助手没有对应物。** **但递归本身只问三件事：类型、高度、谁压在谁上面。** **所以几何收成一个谓词 `Covers`，由调用方实现；递归、同类型过滤、取最大值三条语义逐行照搬。**
+**用 `QuantityPlacement3&lt;Item, FltX&gt;` 加两个几何助手（`topItemPlacements`／`filterBottomOverlapped`），而 C# 侧 `QuantityPlacement3` 在 `Application` 层、那两个助手没有对应物。** **但递归本身只问三件事：类型、高度、谁压在谁上面。** **所以几何收成一个谓词 `Covers`，由调用方实现；递归、同类型过滤、取最大值三条语义逐行照此。**
 
 **一处说明白的偏离：** **用协程并行求各分支最大值，这里是串行——结果相同（都是最大值），并行度属于调用方。** **另有 `ponytail:` 标注的 64 层深度上限：真实的垛不会那么深，而互相压住的环会让递归停不下来。**
 
@@ -2318,7 +2317,7 @@ books the eight gaps and pins the numbers, **so the next step starts from "4558 
 
 **`OverlapsBottom`（底面投影重叠，与高度无关）：** 递归用它，等价于`filterBottomOverlapped`；**`IsAbove`（谁更高）：** 顶层集合用它，等价于 `topPlacements` 的第二条。****第一版把两者合成一个 `Covers`（"贴着才算压在上面"），于是三层堆叠只数出两层——**两个关系不同，合成一个就丢信息。**
 
-**`Covers` 抽象按用户要求保留：** **递归仍然只认这两个谓词，真实几何通过 `PlacementTyping.AsStackPlacement` 接进去，判据里的最小替身照旧可用。**
+**`Covers` 抽象按用户要求保留：** **递归仍然只认这两个谓词，真实几何通过 `PlacementTyping.AsStackPlacement` 接进去，判据里的最小替身不变可用。**
 
 #### 判据 `PlacementTypingTests`（4 条）
 
@@ -2326,9 +2325,9 @@ books the eight gaps and pins the numbers, **so the next step starts from "4558 
 
 ### 两个混沌吸引子回到标准式
 
-**Kotlin 的 `966cafbc` 修了 `AizawaAttractor` 与 `WimolBanlueAttractor` 的公式，而 C# 侧搬的是**修复前**那一版——于是同一个错误在这里又活了一轮，五个偏离点全在：**
+**Kotlin 的 `966cafbc` 修了 `AizawaAttractor` 与 `WimolBanlueAttractor` 的公式，而 C# 侧实现的是**修复前**那一版——于是同一个错误在这里又活了一轮，五个偏离点全在：**
 
-| 位置 | 修复前（C# 原样搬来的） | 标准式 |
+| 位置 | 修复前（C# 原样实现来的） | 标准式 |
 | --- | --- | --- |
 | Aizawa `dx` | 减的是完整的 `dy` | 减 `δ·y` |
 | Aizawa `dz` 线性项 | `α·x` | `α·z` |

@@ -610,10 +610,10 @@ public class LinearTriadDualTest {
     /// **这正是"判据前提被有意改变"的典型情形：** **红的原因是实现前进，
     /// 而不是实现退化。所以是拆分判据，不是回退实现。**
     ///
-    /// **The `Dual` path carries no derived identity (nor does the code), while `FarkasDual` does.** **So this assertion only applies to dual columns — the two places that reused it for Farkas columns went red once those gained identities.**
+ /// **The `Dual` path carries no derived identity (nor does the implementation), while `FarkasDual` does.** **So this assertion only applies to dual columns — the two places that reused it for Farkas columns went red once those gained identities.**
     ///
     /// **This is the textbook "the criterion's premise was deliberately changed" case: the red is because the
-    /// implementation moved toward the code, not away.** **So split the criterion; do not revert the
+ /// implementation moved toward the implementation, not away.** **So split the criterion; do not revert the
     /// implementation.**
     /// </remarks>
     /// <summary>
@@ -640,7 +640,7 @@ public class LinearTriadDualTest {
     /// variables or constraints (`Identities` empty ⇒ `Ids` empty), and its `tidyDualSolution` likewise returns
     /// an empty map when `origins` is empty.**
     ///
-    /// **So "empty table" agrees with the code and is correct.** **A criterion demanding a non-empty table would force
+ /// **So "empty table" agrees with the implementation and is correct.** **A criterion demanding a non-empty table would force
     /// the implementation to <b>fabricate</b> identities — and a fabricated identity is more dangerous than none: it
     /// appears in a downstream ledger while pointing at a constraint that does not exist.**
     ///
@@ -722,7 +722,7 @@ public class LinearTriadDualTest {
     ///
     /// **So the dual model must <b>carry over</b> the primal's row identities, or the two halves never line up.**
     ///
-    /// **The code needs no carry: its `dualOrigin` is a constraint object reference that points home by nature. C#
+ /// **The implementation needs no carry: its `dualOrigin` is a constraint object reference that points home by nature. C#
     /// expresses the same thing with a row index, so it must add one snapshot — an <b>extra step</b> caused by the
     /// representation difference, not an extra capability.**
     /// </remarks>
@@ -762,7 +762,7 @@ public class LinearTriadDualTest {
     /// the real obstacle was three missing fields on a test model — a judgement made <b>without reading the validation
     /// source</b>.**
     ///
-    /// **"Cannot be done" must come after reading the code that refuses it; otherwise it is just another way of saying
+ /// **"Cannot be done" must come after reading the implementation that refuses it; otherwise it is just another way of saying
     /// "I did not find a way".**
     /// </remarks>
     [Fact]

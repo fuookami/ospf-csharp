@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// 工厂去包它。**
 ///
 /// **本仓的 `ConstraintPerturbationPipeline.AnalyzeAsync` &lt;b&gt;已经直接接收 `IConstraintProgrammingSolver`**，
-/// 并把上面那件事做完了**——**所以再搬一个同样的类进来，只会得到两条做同一件事的路径。**
+/// 并把上面那件事做完了**——**所以再实现一个同样的类进来，只会得到两条做同一件事的路径。**
 ///
 /// **这个工厂因此只做一件事：** **给出一个&lt;b&gt;配置好的** CP 求解器，
 /// 而"怎么扰动"这件事仍然只有流水线一份实现。**
 ///
-/// **The code has a `ConstraintProgrammingPerturbationBackend` class that builds the perturbed model, opens a session and
+/// **This implementation has a `ConstraintProgrammingPerturbationBackend` class that builds the perturbed model, opens a session and
 /// solves, with each plugin adding a `…PerturbationBackend` factory around it.** **This repo's
 /// `ConstraintPerturbationPipeline.AnalyzeAsync` already accepts an `IConstraintProgrammingSolver` and does exactly that — so
 /// implementation the class too would leave two paths doing one job.** **This factory therefore does one thing: hand back a

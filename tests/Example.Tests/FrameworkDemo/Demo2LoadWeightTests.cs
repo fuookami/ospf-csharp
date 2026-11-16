@@ -242,7 +242,7 @@ public class Demo2LoadWeightTests {
     /// 与 `estimate_loaded` 成对：`estimate_loaded` 取内核占用变量（不可用舱位在那里恒 1），`actual_loaded` 单独再写一次常数 1。
     /// 两者都得是 1，不能一个 1 一个 0。
     ///
-    /// Paired with `estimate_loaded`: the code takes the kernel occupancy there (constant one for an unavailable position) and writes constant one again for `actual_loaded`.
+ /// Paired with `estimate_loaded`: the implementation takes the kernel occupancy there (constant one for an unavailable position) and writes constant one again for `actual_loaded`.
     /// Both must be one, never one-and-zero.
     /// </remarks>
     [Fact]

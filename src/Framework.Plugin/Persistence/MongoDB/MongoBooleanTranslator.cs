@@ -186,7 +186,7 @@ public static class MongoBooleanTranslator
         // **因为 Mongo 里 `{f: null}` 会同时匹配"字段是 null"与"字段不存在"**，
         // **而写这个条件的人通常只想表达前者。**
         //
-        // **A `null` constant cannot be treated as an ordinary value**: **the code rejects it outright**
+ // **A `null` constant cannot be treated as an ordinary value**: **this implementation rejects it outright**
         // (`Null comparison constant is not supported`), **because `{f: null}` in Mongo matches both
         // "the field is null" and "the field is missing"**, **while whoever wrote the condition usually meant only the former.**
         if (constant.Value is null)
@@ -351,7 +351,7 @@ public static class MongoBooleanTranslator
         // **所以那一段在这里不可达，已删掉，而不是留一段取不到的代码。**
         // `MongoBooleanTranslatorTests.TheEmptyLogical_ShouldBeImpossibleToConstruct` 钉住这个约束。
         //
-        // **The code has an "operands are empty" branch here (empty `and` is always true, empty `or` matches nothing),
+ // **This implementation has an "operands are empty" branch here (empty `and` is always true, empty `or` matches nothing),
         // and the C# `AndExpression`/`OrExpression` constructors reject empty operands outright** —
         // **so that branch is unreachable here and was deleted rather than left as dead code.**
         // `MongoBooleanTranslatorTests.TheEmptyLogical_ShouldBeImpossibleToConstruct` pins the constraint.
@@ -400,7 +400,7 @@ public static class MongoBooleanTranslator
     /// **`{_id: {$exists: false}}`**：每个文档都有 `_id`，所以这条过滤不了任何东西。
     /// **换成 `{_id: null}` 就错了**——它还会匹配 `_id` 缺失的文档（正常集合里没有，但语义不同）。
     ///
-    /// **The code uses `{_id: {$exists: false}}`**: every document has an `_id`, so nothing passes.
+ /// **This implementation uses `{_id: {$exists: false}}`**: every document has an `_id`, so nothing passes.
     /// **`{_id: null}` would be wrong** — it also matches documents without an `_id` (absent in a normal collection, but a different meaning).
     /// </remarks>
     private static BsonDocument AlwaysFalse() =>

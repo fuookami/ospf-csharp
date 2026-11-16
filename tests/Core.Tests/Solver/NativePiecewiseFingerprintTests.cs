@@ -78,7 +78,7 @@ public class NativePiecewiseFingerprintTests
     ///
     /// **如果实现无条件加一个换行，两者不同，判据变红。**
     ///
-    /// **The code does `append(fingerprint.value)` then `if (structureLines.isNotEmpty)`.** **So "no PWL structures"
+ /// **This implementation does `append(fingerprint.value)` then `if (structureLines.isNotEmpty)`.** **So "no PWL structures"
     /// hashes the previous fingerprint itself, not "that plus a newline".**
     ///
     /// **The criterion writes that identity out: an empty list must equal `Sha256(previous.Value, "{backend}-pwl-1")`.**

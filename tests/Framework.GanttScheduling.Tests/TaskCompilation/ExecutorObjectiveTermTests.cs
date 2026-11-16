@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 混为一谈会出两种相反的错：把"没配置"当成"禁止"会让**所有执行器都不可选**；
 /// 把"不可定价"当成"权重一"会让本该禁止的选项变得很便宜。
 ///
-/// The code writes `coefficient?.let {... }` around `it(e) ?: Flt64.infinity`, one `?` apart. Conflating them yields two opposite errors: "not configured" as "forbid"
+/// This implementation writes `coefficient?.let {... }` around `it(e) ?: Flt64.infinity`, one `?` apart. Conflating them yields two opposite errors: "not configured" as "forbid"
 /// makes **every executor unusable**; "unpriced" as "weight one" makes an option that should be forbidden very cheap.
 /// </remarks>
 public class ExecutorObjectiveTermTests {
@@ -52,7 +52,7 @@ public class ExecutorObjectiveTermTests {
     /// 是 `infinity`——该执行器的此项不可定价，即禁止。静默取 `1` 会把"禁止"变成"每次罚 1"，
     /// 于是本该被排除的执行器方案被轻松选中。
     ///
-    /// The code yields `infinity` — the term cannot be priced for that executor, i.e. it is forbidden. Defaulting to `1` turns "forbid" into "penalty 1 each", so an executor
+ /// The implementation yields `infinity` — the term cannot be priced for that executor, i.e. it is forbidden. Defaulting to `1` turns "forbid" into "penalty 1 each", so an executor
     /// assignment that should be excluded is chosen cheaply.
     /// </remarks>
     [Fact]

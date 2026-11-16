@@ -1,5 +1,5 @@
 // 网络建设聚合与上下文 / Network-design aggregation and context.
-// `NetworkDesignContext` 类（5875 字节）对应。
+// `NetworkDesignContext` 类
 // And the `NetworkDesignContext` class.
 
 using System;

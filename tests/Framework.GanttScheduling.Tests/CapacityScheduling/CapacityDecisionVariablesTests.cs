@@ -130,7 +130,7 @@ public class CapacityDecisionVariablesTests {
             "the same cell must keep one symbol");
 
         // **"变量真的进了模型"这一条在单元层面测不出来**：`Add` 对变量项是幂等的（同一格加两次不报错），
-        // 而删掉注册循环之后，建行、取符号、数单项式全都照旧——差别要到求解器那边才显形。
+        // 而删掉注册循环之后，建行、取符号、数单项式全都不变——差别要到求解器那边才显形。
         // 与其写一条假判据，这里如实留空；升级路径是等产能调度有了求解路径，再补一条解级判据。
         // **"The variables really entered the model" cannot be tested at the unit level**: `Add` is idempotent for variable items (the same cell twice does not error), and with the
         // registration loop deleted, building rows, taking symbols and counting monomials all still work — the difference only shows up at the solver. Rather than write a fake

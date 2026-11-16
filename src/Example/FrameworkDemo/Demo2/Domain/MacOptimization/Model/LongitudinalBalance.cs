@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Model
 /// **which slacks register depends on the stowage mode**, tabulated above. Three things must be copied: **`OPT` and `C` are excluded under full load** —
 /// they are not on either side of the `MACRange`, and giving them slack lets the model push the optimum away; **weight recommendation registers an empty set**, not "the default set",
 /// since falling back to "register everything when unconfigured" would add two coefficient-less objectives there; and **the symbol names carry a type suffix**
-/// (`longitudinal_balance_slack_A` / `_B` / `_opt`) — the code uses `type.name` but hard-codes `"_opt"` for `OPT`, so the suffix is lower-case only in the predistribution case.
+/// (`longitudinal_balance_slack_A` / `_B` / `_opt`) — this implementation uses `type.name` but hard-codes `"_opt"` for `OPT`, so the suffix is lower-case only in the predistribution case.
 /// That inconsistency is its and is copied.
 /// </remarks>
 public sealed class LongitudinalBalance

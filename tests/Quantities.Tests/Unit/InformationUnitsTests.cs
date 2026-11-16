@@ -183,7 +183,7 @@ public class InformationUnitsTests
         }
     }
 
-    /// <summary>**单位清单** / The unit list matches the code.</summary>
+ /// <summary>**单位清单** / The unit list matches the implementation.</summary>
     [Fact]
     public void TheUnitList_ShouldMatchTheBaseline()
     {

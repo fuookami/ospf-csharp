@@ -346,7 +346,7 @@ public static class DeferredFunctionMaterializationGate
 /// 1. **`Eager` 直接返回原模型**
 /// 2. **过滤待处理结构**（三个条件）
 /// 3. **逐结构校验输入边界**（这里）
-/// 4. **复制模型、搬区域记录、调用驱动**（这里）
+/// 4. **复制模型、实现区域记录、调用驱动**（这里）
 ///
 /// **第三段只对两类结构做事：** **`UnivariateLinearPiecewiseStructure` 与 `MaxStructure` 需要校验输入边界，
 /// 别的结构 `ok`。** **这不是遗漏——只有这两个结构的 fallback 会用到创建时捕获的输入范围，
@@ -357,7 +357,7 @@ public static class DeferredFunctionMaterializationGate
 /// 以及成功时源模型也不被改（这一点只能靠复制）。**
 /// **两者都要，所以复制是必需的，不是优化。**
 ///
-/// **The code's four parts all live in one function: return the model
+/// **Its four parts all live in one function: return the model
 /// unchanged when `Eager`; filter the pending structures (three conditions); validate
 /// each structure's input bounds; copy the model, carry over the region records and call the driver)
 /// **
@@ -470,7 +470,7 @@ public static class DeferredFunctionMaterialization
             }
         }
 
-        // **第四段：复制、搬区域记录、物化。**
+        // **第四段：复制、实现区域记录、物化。**
         // **Part four: copy, carry the region records, materialise.**
         var copy = new LinearMechanismModel<Flt64>(
             parent: model.Parent,

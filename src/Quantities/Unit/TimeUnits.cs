@@ -20,7 +20,7 @@ public static class TimeUnits {
     // Week 与 Year 都不是"多少个基本单位"那么简单：
     // **Year 用的是儒略年 365.25 天**（与 LightYear 同源），不是 365，也不是 365.2425。
     //
-    // The two below were added from the code Time.kt.
+ // The two below were added Time.kt.
     //
     // Neither Week nor Year is a plain multiple of a base unit:
     // **Year uses the Julian year of 365.25 days** (the same source as LightYear), not 365 and not 365.2425.

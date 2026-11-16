@@ -183,7 +183,7 @@ internal sealed class GenerationCollector<TPlan> {
     /// **这里只补计数通道，不补跨贡献判定本身**——判定需要 `relaxedDominanceKey` 与
     /// `canCrossContributionDominate`，那是一个独立的能力缺口（见计划小节"仍然存在的缺口"）。
     ///
-    /// The code increments this counter's cross-contribution branch. On the C# side there was previously **only the field and
+ /// The implementation increments this counter's cross-contribution branch. On the C# side there was previously **only the field and
     /// the statistics parameter**; `_dominanceStrategy` was stored but **never read**, and the cross-contribution branch did not exist at all.
     ///
  /// ** adds only the counting channel, not the cross-contribution decision itself** — that decision needs `relaxedDominanceKey` and
@@ -240,7 +240,7 @@ internal sealed class GenerationCollector<TPlan> {
         // 而 `plans.add` 之后才轮到收集器的去重。顺序反了会让"被过滤掉的候选"占掉规范键名额，
         // 把**本来该被接受的同键候选**挤掉。
         //
-        // **The candidate filter must run before deduplication.** The code applies `candidateFilters` before `plans.add(plan)`, and only after that does the
+ // **The candidate filter must run before deduplication.** The implementation applies `candidateFilters` before `plans.add(plan)`, and only after that does the
         // collector dedupe. Reversing the order lets a **filtered-out** candidate occupy the canonical-key slot and squeeze out a same-key candidate that should have
         // been accepted.
         if (_candidateFilter is not null && !_candidateFilter(plan, _existingPlansForFilter)) {

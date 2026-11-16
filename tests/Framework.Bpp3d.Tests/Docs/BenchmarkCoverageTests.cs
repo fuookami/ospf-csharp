@@ -1,4 +1,4 @@
-// 基准夹具的覆盖与两侧对应 / Benchmark fixture coverage against the code.
+// 基准夹具的覆盖与两侧对应 / Benchmark fixture coverage against the implementation.
 
 using System;
 using System.IO;
@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **这种缺口不会让任何东西变红**，它只是让"性能没测过"看起来像"没需求"。所以这里把数量钉住：
 /// 少一个就红，多一个也要跟着改文档。
 ///
-/// counted both sides: the code has **15** workloads, this repo had **13** — `GenerationCacheBuildBenchmark` and `PatternColumnBenchmark` were missing, and
+/// counted both sides: this implementation has **15** workloads, this repo had **13** — `GenerationCacheBuildBenchmark` and `PatternColumnBenchmark` were missing, and
 /// **nothing turns red over a missing benchmark**; it just makes "performance was never measured" look like "performance was never needed". This pins the count.
 /// </remarks>
 public class BenchmarkCoverageTests
@@ -34,9 +34,9 @@ public class BenchmarkCoverageTests
     /// </summary>
     /// <remarks>
     /// **`19c72455` 的 6 个新基准已经全部实现；`CrossVersionSemanticDump` 的三段（`PRJ`／`GEN`／`TRUNC`）仍是待办，必须写在能力矩阵里。**
-    /// **"没有数"与"数过了但还没搬"是两件事：后者会在下一个人读到它时被安排，前者只会被当成不存在。**
+    /// **"没有数"与"数过了但还没实现"是两件事：后者会在下一个人读到它时被安排，前者只会被当成不存在。**
     ///
-    /// **判据只读文档，不要求代码在场**——所以它不会因为"还没搬"而红，只会因为"没写下来"而红。
+    /// **判据只读文档，不要求代码在场**——所以它不会因为"还没实现"而红，只会因为"没写下来"而红。
     ///
     /// **Of the six new benchmarks in `19c72455` one is implemented; the other five must be named in the capability matrix.** **"Never
     /// counted" and "counted but not implemented" are different states: the second gets scheduled when someone reads it, the first is simply
@@ -96,7 +96,7 @@ public class BenchmarkCoverageTests
             "TokenInvalidateRebuildBenchmark",
             "GenerationScaleBenchmark",
             // **这一个文件里有两个类：`PrimeMixedExpansionBenchmark` 与 `PrimeReaderLatencyBenchmark`。**
-            // **The code file holds two classes: the mixed-expansion one and the reader-latency one.**
+ // **The implementation file holds two classes: the mixed-expansion one and the reader-latency one.**
             "PrimeMixedExpansionBenchmark",
             "TokenSharedReadBenchmark",
             "NetworkSharedGraphBenchmark",

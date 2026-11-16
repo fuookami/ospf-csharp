@@ -129,7 +129,7 @@ public class Demo2ClosingLimitsTests {
     /// <remarks>
     /// 名字必须是字面量 `ballast_weight_limit`，**不带** `name` 前缀（名字写死）。方向是 `ballast_weight ≥ min_ballast_weight`。
     ///
-    /// The name must be the literal `ballast_weight_limit` with **no** `name` prefix (the code hard-codes it), and the direction is
+ /// The name must be the literal `ballast_weight_limit` with **no** `name` prefix (the implementation hard-codes it), and the direction is
     /// `ballast_weight ≥ min_ballast_weight`.
     /// </remarks>
     [Fact]
@@ -359,7 +359,7 @@ public class Demo2ClosingLimitsTests {
     /// 这条性质只在"区域端点恰好落在某舱位的区间内且该点有左右配对"时才可观测，而那种输入与"舱位边界进候选"无法区分。
     /// 因此沿用写法，并在此记录它没有被判据覆盖。
     ///
-    /// The code is `line.positions.none { it.status.available }` — skipped only when **both** sides are unavailable; with one side unavailable the two rows stay.
+ /// This implementation is `line.positions.none { it.status.available }` — skipped only when **both** sides are unavailable; with one side unavailable the two rows stay.
     /// **One unobservable recorded**: among the candidate arms (zone ends plus position boundaries) a zone end only produces a line when a position happens to satisfy `On(arm)`
     /// there. Here both positions have `FrontArm`/`BackArm` of 500/900, so after widening the zone to 400—1000 neither 400 nor 1000 has any position on it and `Lines` stays
     /// {500, 900}. Deleting the "zone ends are candidates" line changes `Lines` and every constraint **not at all** (the mutation survives, measured). That property is only

@@ -107,7 +107,7 @@ public sealed record NativeIndicatorData(
 /// 但它们被<b>单独</b>列进主输入的禁碰名单。**
 ///
 /// **所以一个变量可以同时是"条件数值结果"与"某一族的等价结果"而不冲突——
-/// 而它如果是主输入的项就会被拒。** **这条不对称照做。**
+/// 而它如果是主输入的项就会被拒。** **这条不对称是有意的。**
 ///
 /// **The heart of this cell is a <b>retained-column set</b>, and it must be computed <b>before</b> recursing.**
 ///
@@ -128,7 +128,7 @@ public sealed record NativeIndicatorData(
 /// conjunction/difference checks) but are listed <b>separately</b> in the main input's forbidden list.**
 ///
 /// **So a variable can be both a conditional-value result and some family's equivalent result without conflict — while
-/// the same variable as a main-input term is refused.** **This asymmetry is copied from the code.**
+/// the same variable as a main-input term is refused.** **This asymmetry is.**
 /// </remarks>
 public static class NativeIndicator
 {

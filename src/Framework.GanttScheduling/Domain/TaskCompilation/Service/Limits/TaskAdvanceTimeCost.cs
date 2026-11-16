@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 零阈值只是省掉一个变量，不是换一套语义。若它们哪怕差一点点，"设了阈值"和"没设阈值"就会给出不同的解，
 /// 而这在配置层面完全看不出。
 ///
-/// The code has two branches in `invoke`: with a threshold of exactly zero it charges `coefficient * advanceTime` linearly; with a non-zero threshold it introduces a slack
+/// This implementation has two branches in `invoke`: with a threshold of exactly zero it charges `coefficient * advanceTime` linearly; with a non-zero threshold it introduces a slack
 /// variable and penalises only the excess. **Both branches must give the same value** — a zero threshold merely saves one variable, it does not swap semantics. If they diverge
 /// even slightly, "configured a threshold" and "no threshold" produce different solutions, and that is invisible at the configuration level.
 ///
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// C# 的 `Flt64` 基于 `decimal`，没有无穷；静默取 `1` 会把"禁止提前"变成"每单位罚 1"，
 /// 于是本该被拒绝的排程被轻松接受。所以这里返回失败。
 ///
-/// **A missing coefficient is not "one"**. The code takes `infinity` when `coefficient(task)` is null, meaning that task's advance **cannot be priced**. C#'s `Flt64` is built on
+/// **A missing coefficient is not "one"**. The implementation takes `infinity` when `coefficient(task)` is null, meaning that task's advance **cannot be priced**. C#'s `Flt64` is built on
 /// `decimal` and has no infinity; silently defaulting to `1` turns "advance prohibited" into "penalty 1 per unit", so a schedule that should be rejected is accepted cheaply. Hence
 /// the failure here.
 /// </remarks>
@@ -69,7 +69,7 @@ public static class TaskAdvanceTimeCost {
     /// 在**全局开关打开时**才筛选，且筛选条件是"任务允许提前 **且** 已排定"。
     /// 未排定的任务没有提前时间可言；不允许提前的任务就算算进去也恒为零。两者都算进去只会让目标多项式变长。
     ///
-    /// The code filters only when the **global switch is on**, and the condition is "the task allows advancing **and** is scheduled". An unscheduled task has no advance to
+ /// The implementation filters only when the **global switch is on**, and the condition is "the task allows advancing **and** is scheduled". An unscheduled task has no advance to
     /// speak of; a task that forbids advancing contributes a constant zero. Including either only lengthens the objective polynomial.
     /// </remarks>
     public static IReadOnlyList<T> Select<T>(

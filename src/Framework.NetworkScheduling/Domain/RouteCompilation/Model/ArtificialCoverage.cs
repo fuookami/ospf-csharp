@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.NetworkScheduling.Domain.RouteCompilation.Mode
 /// **没有人工变量，列生成的第一阶段就无法在"覆盖不全"时保持可行**：初始列集通常只覆盖部分客户，等式约束会立刻不可行，pricer 也就
 /// 拿不到任何对偶信息。人工变量把缺失的覆盖显式记账，让第一阶段总能给出一个可行基。
 /// 用泛型参数 `V` 表达"任意客户类型"（相当于星投影）：人工覆盖只关心客户标识，不关心具体数值类型。
-/// The code declares `List&lt;Customer&lt;*&gt;&gt;` (a star projection); the C# side expresses the same with the generic
+/// The implementation declares `List&lt;Customer&lt;*&gt;&gt;` (a star projection); the C# side expresses the same with the generic
 /// parameter `V`: artificial coverage only cares about customer identity, not the numeric type.
 ///
 /// **Without artificial variables the first phase of column generation cannot stay feasible while coverage is incomplete**: the

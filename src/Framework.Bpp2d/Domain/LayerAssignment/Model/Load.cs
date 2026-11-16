@@ -68,8 +68,8 @@ public interface ILoad
 /// that column's coefficient for the demand". Three things must be copied: **the load variables are built once** (`registerLoad` is idempotent), since rebuilding turns `load_0` into two
 /// different symbols and constraints cannot find them; **`appendColumnTerms` returns early when unregistered** rather than throwing, because column generation registers first and appends
 /// each round and the reverse order must not explode; and **the coefficient comes from `LayerAssignmentMath.LayerDemandCoefficient`** rather than "units in the column", which is simply
-/// wrong for area demands. The code builds `OverLoad` / `LessLoad` lazily in `AbstractLoad`; here they are empty lists plus the switches (`OverEnabled` / `LessEnabled` default
-/// `false` / `true`, as in the code) until the slack constraints land — **an empty list with a switch is not a capability**, hence this note.
+/// wrong for area demands. This implementation builds `OverLoad` / `LessLoad` lazily in `AbstractLoad`; here they are empty lists plus the switches (`OverEnabled` / `LessEnabled` default
+/// `false` / `true`.
 /// </remarks>
 public sealed class ImpreciseLoad : ILoad
 {
@@ -172,7 +172,7 @@ public sealed class ImpreciseLoad : ILoad
     ///
     /// Four things copied: **built lazily by switch and only once**, since rebuilding turns `over_load_0` into two different symbols; **the over and under
     /// symbols start as a copy of the current `load`**, not as fresh variables, because they express by how much the demand is currently over- or under-supplied and therefore follow the load
-    /// amounts — the code copies at registration time and **later `appendColumnTerms` calls only append to `load`**, so over and under do not grow with it, which is its existing semantics
+ /// amounts — the implementation copies at registration time and **later `appendColumnTerms` calls only append to `load`**, so over and under do not grow with it, which is its existing semantics
     /// and is copied and recorded here rather than quietly "fixed"; **a disabled switch builds and adds nothing**, since a built-but-unregistered symbol is unreachable and undeletable; and **any
     /// failing `Add` returns at once** instead of continuing, a half-built symbol layer being worse than none.
     /// </remarks>

@@ -27,7 +27,7 @@ public class PluginRatingReasonTests
     /// <remarks>
     /// 只看第三节那张表。``➖`` 的行允许为空吗？**不允许**：那两行写明了"代码本身未实现"，说明空着从来不是这个表想要的样子。
     ///
-    /// Scoped to section three. Do the ``➖`` rows get to stay empty? **No**: those two state "the code itself does not implement it", which shows the table never
+ /// Scoped to section three. Do the ``➖`` rows get to stay empty? **No**: those two state "the implementation itself does not implement it", which shows the table never
     /// wanted empty cells in the first place.
     /// </remarks>
     [Fact]
@@ -111,7 +111,7 @@ public class PluginRatingReasonTests
     /// <remarks>
     /// 本仓是 **4 个类委托**给 `Core.Plugin.Gurobi`，**22 个文件的独立副本**。写"同上"会让读者以为两者形状相同。
     ///
-    /// This repo has **four classes delegating** to `Core.Plugin.Gurobi`; the code is an **independent 22-file copy**. "Same as above" makes a reader believe the
+ /// This repo has **four classes delegating** to `Core.Plugin.Gurobi`; this implementation is an **independent 22-file copy**. "Same as above" makes a reader believe the
     /// shapes match.
     /// </remarks>
     [Fact]

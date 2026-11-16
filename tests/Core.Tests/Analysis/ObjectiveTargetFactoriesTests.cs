@@ -92,7 +92,7 @@ public class ObjectiveTargetFactoriesTests
     /// 本仓同时提供 `relativeAtLeast` 与 `atLeastRelative`（预算单位同理），
     /// **两套名字必须落到同一个值上**，否则调用方按哪套写会得到不同结果。
     ///
-    /// The code offers both `relativeAtLeast` and `atLeastRelative` (and the same for business units). **The two names must land on the same value**, or the caller's choice of name changes the answer.
+ /// The implementation offers both `relativeAtLeast` and `atLeastRelative` (and the same for business units). **The two names must land on the same value**, or the caller's choice of name changes the answer.
     /// </remarks>
     [Fact]
     public void TheTwoNamingOrders_ShouldAgree() {

@@ -80,12 +80,12 @@ public sealed class MinLowPayload
     /// <param name="zeroFuelWeight">零燃油重量 / The zero-fuel weight.</param>
     /// <returns>最小低载荷 / The minimum low payload.</returns>
     /// <remarks>
-    /// 四条分支照做：只有一点 → 那点；不高于首点 → 首点；不低于末点 → 末点；否则在相邻两点间**线性插值**。
+    /// 四条分支如此：只有一点 → 那点；不高于首点 → 首点；不低于末点 → 末点；否则在相邻两点间**线性插值**。
     ///
     /// 注意这与 `MaxLoadWeightLimit` 是**相反的**：那里是阶跃（段内恒定），这里是插值（段内线性）。两者都是做法，差异来自数据本身——
     /// 最大装载重量是按图表给出的阶梯规格，最小低载荷是一条连续的边界曲线。**不要因为"看着不一致"就把其中一个改成另一个的样子。**
     ///
-    /// Four branches as in the code: one point → that point; not above the first → the first; not below the last → the last; otherwise **linear interpolation** between
+ /// Four branches; not above the first → the first; not below the last → the last; otherwise **linear interpolation** between
     /// neighbours. Note this is the **opposite** of the earlier `MaxLoadWeightLimit`: that one steps (constant within a segment), this one interpolates (linear within a span). Both are
     /// its behaviour and the difference comes from the data — the maximum load weight is a stepped chart specification, the minimum low payload a continuous boundary
     /// curve. **Do not "fix" one to look like the other just because they differ.**
@@ -130,7 +130,7 @@ public sealed class MinLowPayload
                 name: "min_low_payload");
         } else if (_totalWeight.EstimateTotalWeight(FlightPhase.ZeroFuel) is { } zeroFuelEstimate) {
             // 首尾两点定斜率与截距：`sorted.first` / `sorted.last`，不是最小二乘拟合。
-            // The first and last points fix the slope and intercept: the code uses `sorted.first` / `sorted.last`, not a least-squares fit.
+ // The first and last points fix the slope and intercept: this implementation uses `sorted.first` / `sorted.last`, not a least-squares fit.
             MinLowPayloadPoint first = Points[0];
             MinLowPayloadPoint last = Points[Points.Count - 1];
             double span = last.Zfw - first.Zfw;

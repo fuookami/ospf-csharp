@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// <see cref="RelationalQueryJoinValidator"/>／<see cref="RelationalQueryExpressionFreezer"/> 一致，三者共用同一
 /// 套约定。
 ///
-/// **A difference from the code**: Kotlin destructures <c>Comparison&lt;*&gt;</c> and friends through generic
+/// **A difference**: Kotlin destructures <c>Comparison&lt;*&gt;</c> and friends through generic
 /// pattern matching; a C# generic argument is only known at run time so one pattern cannot cover every
 /// instantiation, and properties are read reflectively instead. The convention is shared with
 /// <see cref="RelationalQueryJoinValidator"/> and <see cref="RelationalQueryExpressionFreezer"/>.

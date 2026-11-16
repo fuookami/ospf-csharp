@@ -139,7 +139,7 @@ public class MixedBinObjectivesTests {
     /// <remarks>
     /// 余料函数收的是 `volume.value`（裸数值）而不是带单位的量：这里保持同样口径，
     /// 因为余料的输入本来就来自同一箱型，混单位没有意义，加一层 `Quantity` 只会掩盖"两个不同箱型相减"这种真错误。
-    /// The code's waste functions take `volume.value` (a bare number) rather than a quantity: the same convention is kept here, because the inputs come from one bin
+ /// Its waste functions take `volume.value` (a bare number) rather than a quantity: the same convention is kept here, because the inputs come from one bin
     /// type by construction, so mixing units is meaningless and wrapping them in `Quantity` would only hide the real error of subtracting two different bin types.
     /// </remarks>
     private static FltX Value(double value) => new(value);

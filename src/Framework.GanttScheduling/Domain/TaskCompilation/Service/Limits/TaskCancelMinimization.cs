@@ -47,7 +47,7 @@ public class TaskCancelMinimization<T, E, A>
         _tasks = tasks;
         _compilation = compilation;
         // 默认系数是 `Flt64.one`：没有系数就是"每个取消一视同仁"。
-        // The code's default coefficient is `Flt64.one`: without one, every cancellation counts the same.
+ // Its default coefficient is `Flt64.one`: without one, every cancellation counts the same.
         _coefficient = coefficient ?? (_ => Flt64.One);
         _name = name;
     }
@@ -96,7 +96,7 @@ public class TaskCancelMinimization<T, E, A>
         var monomials = new List<LinearMonomial<Flt64>>();
         foreach (T task in _tasks) {
             // 对允许取消的任务计成本：不允许取消的任务 `y == 0`，加进去也只是个恒零项。
-            // The code charges only tasks that may be cancelled: a task that cannot cancel has `y == 0`, so adding it would be a permanently-zero term.
+ // The implementation charges only tasks that may be cancelled: a task that cannot cancel has `y == 0`, so adding it would be a permanently-zero term.
             if (!task.CancelEnabled) {
                 continue;
             }

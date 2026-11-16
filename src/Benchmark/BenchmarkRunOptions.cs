@@ -30,7 +30,7 @@ public enum BenchmarkResultFormat {
 /// 于是 `"abc"` 会被当成"没给"；这里区分"没给"与"给了但非法"，**因为把非法值静默当成默认值时，一次本该 10 轮
 /// 的测量会跑成 1 轮，而报告里看不出来**。
 ///
-/// **Positional arguments all have defaults, and an out-of-range item never swallows the earlier parse results.** The code uses
+/// **Positional arguments all have defaults, and an out-of-range item never swallows the earlier parse results.** This implementation uses
 /// `args.getOrNull(n)?.toIntOrNull ?: 1`, so `"abc"` reads as "not given"; this version distinguishes "absent" from "present but invalid", **because
 /// silently treating an invalid value as the default turns a ten-iteration measurement into a single iteration, and nothing in the report shows it**.
 ///

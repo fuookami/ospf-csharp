@@ -164,7 +164,7 @@ public class NativeValueRestorationTests
     /// **并列时选哪一支不影响目标值（两支一样大），但它影响求解器看到的
     /// 选择变量值——而那是可复现性的一部分：同一个解必须重建出同一组选择列。**
     ///
-    /// **The code's `indexOf(maxOrNull)` takes the <b>first</b> extreme.**
+ /// **Its `indexOf(maxOrNull)` takes the <b>first</b> extreme.**
     ///
     /// **On a tie the choice does not change the objective, but it does change the selector values the solver sees — and
     /// that is part of reproducibility: one solution must reconstruct one selector set.**

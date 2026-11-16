@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// Four derived models are built in the constructor and registered by `Register`, tabulated above. Three easy mistakes: (1) **`MaxCLIM` needs both
 /// conditions** — testing only the point list builds a CLIM on a narrow body, testing only the wide-body flag throws on an empty list; (2) **the registration order** is linear
 /// density → surface density → `MaxCLIM` → `MinLowPayload` → envelopes, and reports that reference constraints by index depend on it; (3) **`RegisterForBendersSP` is just
-/// `Register`** while `RegisterForBendersMP` is a **no-op** (the code is `return ok`). Both look like they should do more; they do not, and the tests pin that.
+/// `Register`** while `RegisterForBendersMP` is a **no-op** (this implementation is `return ok`). Both look like they should do more; they do not, and the tests pin that.
 /// </remarks>
 public sealed class AirworthinessSecurityAggregation
 {
@@ -206,7 +206,7 @@ public sealed class AirworthinessSecurityAggregation
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 顺序照做：线性密度 → 表面密度 → `MaxCLIM`（若有）→ `MinLowPayload` → 包络。
+    /// 顺序如此：线性密度 → 表面密度 → `MaxCLIM`（若有）→ `MinLowPayload` → 包络。
     ///
     /// `stowageMode` 在这条路径上**没有被用到**——`register` 也收它，只往 `registerForBendersSP` 传。保留参数是为了与聚合层的调用形状一致。
     ///

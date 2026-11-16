@@ -51,7 +51,7 @@ public sealed class WeightRecommendationPipelineContext
     /// 单点定义，避免六个子域各自写一遍常量。每一处调用都写字面量 `StowageMode.WeightRecommendation`，
     /// 本仓用一个常量收敛——语义相同，改成别的模式时只有一处要动。
     ///
-    /// Defined once so six sub-domains do not each repeat the constant. The code writes the literal `StowageMode.WeightRecommendation` at every call site; this implementation converges it to one
+ /// Defined once so six sub-domains do not each repeat the constant. This implementation writes the literal `StowageMode.WeightRecommendation` at every call site; this implementation converges it to one
     /// constant with identical semantics, so switching modes touches one place.
     /// </remarks>
     public const StowageMode Mode = StowageMode.WeightRecommendation;

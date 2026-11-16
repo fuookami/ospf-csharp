@@ -273,7 +273,7 @@ public class NativePiecewiseTests
     ///
     /// **My first version asserted `no valid segment` and actually got `outside its domain`, because `upper` is the last
     /// breakpoint.** **Before changing a criterion, decide whether the criterion or the implementation is wrong: here the
-    /// criterion was, and the implementation matches the code.**
+ /// criterion was, and the implementation matches the implementation.**
     /// </remarks>
     [Fact]
     public void TheTwoLayers_ShouldReportShuffledBreakpointsDifferently() {

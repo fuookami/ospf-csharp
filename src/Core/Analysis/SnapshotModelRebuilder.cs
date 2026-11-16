@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **Variables are *found*, not *created***: the registered expressions and objectives are walked, their `IVariableItem` references indexed by `VariableId`, and registered
 /// as-is. **A freshly built variable with the same name is a different variable** — `Identifier` / `Key` differ, so it registers as another one ( correction).
 ///
-/// **没搬的部分，逐条在这里说明边界**：选择性停用证据时的值域重绑（`activeSources`）、区间变量、
+/// **没实现的部分，逐条在这里说明边界**：选择性停用证据时的值域重绑（`activeSources`）、区间变量、
 /// 以及目标过滤（`objectiveFilter`）。**它们不静默跳过——遇到就直接报错**，
 /// 因为"少了一条约束、解出来还是个数"正是最难发现的失效。
 ///
@@ -62,7 +62,7 @@ public static class SnapshotModelRebuilder
         ArgumentNullException.ThrowIfNull(snapshot);
 
         if (snapshot.Intervals.Count > 0) {
-            return Fail("区间变量尚未搬入重建器 / Interval variables are not ported into the rebuilder");
+            return Fail("区间变量尚未支持 / Interval variables are not supported by the rebuilder");
         }
 
         Dictionary<VariableId, IVariableItem> recovered = RecoverVariables(snapshot);
@@ -79,7 +79,7 @@ public static class SnapshotModelRebuilder
         foreach (ConstraintProgrammingVariableSnapshot definition in snapshot.Variables) {
             if (!recovered.TryGetValue(definition.Id, out IVariableItem? variable)) {
                 model.Dispose();
-                // **不能照旧 `continue`**：跳过的依据是"该变量完全没被引用"，
+                // **不能不变 `continue`**：跳过的依据是"该变量完全没被引用"，
                 // 而这里"找不到"是"我们没能从 AST 里收出来"——**两件事，跳过就是把后者当成前者。**
                 //
                 // **This must not `continue` here**: the skip case is "the variable is referenced nowhere", while a miss here means "we could not

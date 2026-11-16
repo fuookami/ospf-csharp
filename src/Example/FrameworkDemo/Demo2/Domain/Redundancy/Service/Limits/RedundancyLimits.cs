@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service.Li
 /// 对齐：`minimize(coefficient × redundancySlack)`。
 /// 系数是**调用时求值**的（`coefficient:  -> Flt64`），因为参数对象在管线构建之后还会被改。
 ///
-/// `minimize(coefficient × redundancySlack)`. The coefficient is **evaluated at invoke time** (the code takes `coefficient:  -> Flt64`) because the
+/// `minimize(coefficient × redundancySlack)`. The coefficient is **evaluated at invoke time** (the implementation takes `coefficient: -> Flt64`) because the
 /// parameter object keeps being updated after the pipeline list is built.
 /// </remarks>
 public sealed class RedundancyLimit

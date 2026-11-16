@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// Previously `Register` returned `Ok` outright with nothing in the model. The bunch task time's deviation masks read the `task_compilation` table, so that whole path could only
 /// fail — builds it (together with `y`, `bunch_cost`, the assignment placeholders, `z` and `executor_compilation`). Three silent failures: (1) **putting `Σ_e x[t,e]`
 /// into `task_compilation`** — a bunch's assignment columns are created **per round** and do not exist at registration; (2) **pinning locked cancellation tasks with a constraint** —
-/// the code pins the **range**, and a constraint would add one more row per round; (3) **making `executor_compilation` `null` without leisure** — it is the carrier of "how
+/// the implementation pins the **range**, and a constraint would add one more row per round; (3) **making `executor_compilation` `null` without leisure** — it is the carrier of "how
 /// much this executor is used" and must be a constant zero.
 /// </remarks>
 public class BunchCompilationRegisterTests {

@@ -269,7 +269,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // **快照而不是引用：视图的全部意义是可复制的快照，而持有一个活的原模型会让对偶模型的生命周期
     // 绑在原模型上——原模型被 `Dispose` 之后，对偶模型的对偶整理就会失败。**
     //
-    // **a dual model keeps a snapshot of the primal's row identities.** **The code puts a constraint object
+ // **a dual model keeps a snapshot of the primal's row identities.** **The implementation puts a constraint object
     // reference into `dualOrigin` and the dual's rows <b>are</b> the primal's, so that key is naturally the primal
     // constraint. C#'s dual model builds <b>new</b> constraints (the originals are not visible at construction), so the
     // original identities must be <b>carried over</b> — otherwise `DualOrigin.RowIndex` points into an identity set the
@@ -424,7 +424,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // 这个返回带身份的字典（供按身份对账的调用方）。两者都保留，因为"数第几行"与"这是哪条约束"
     // 是两种不同的消费方式，而强行统一会让其中一方要么丢信息、要么多做一次映射。**
     //
-    // **The code returns `Map&lt;Constraint, Flt64>`: the dual model goes through `dualOrigin`, an ordinary model
+ // **This implementation returns `Map&lt;Constraint, Flt64>`: the dual model goes through `dualOrigin`, an ordinary model
     // through `constraints.origins`.**
     //
     // **A C# view holds no constraint object references (a recorded representation difference), so the best key
@@ -816,7 +816,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         // **read the source element's identity. `derivedDiscriminator` means "model-local
         // discriminator when the source id is null, stable one otherwise", copied here.** **Both lookups return
         // `(identity, namespace, schema)`, because C# keeps the last two on the view variable/constraint rather than on
-        // the identity, the same layer where the code keeps them on `Variable`.** **`RowSource` degrades to `null`
+ // the identity, the same layer where this implementation keeps them on `Variable`.** **`RowSource` degrades to `null`
         // out of range rather than inventing an identity for a row that has none.**
         (ModelElementIdentity? Identity, string? Namespace, string? SchemaVersion) RowSource(int row) {
             if (row < 0 || row >= Constraints.Identities.Count) {

@@ -348,7 +348,7 @@ public sealed class LoadingEffectivenessAggregation
                 continue;
             }
             // **到达站不计入目的地**（`if (it.destination != flight.arrival)`）。
-            // **The arrival is not a destination**, as in the code.
+ // **The arrival is not a destination**.
             if (flight is not null && string.Equals(destination, flight.Destination.Code, StringComparison.Ordinal))
             {
                 continue;

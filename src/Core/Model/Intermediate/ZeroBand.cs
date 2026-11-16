@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 ///
 /// Following its.
 ///
-/// **It is a pure data carrier and validates nothing**, matching the code.
+/// **It is a pure data carrier and validates nothing**.
 /// **The "reject a negative tolerance" check lives at the use site** (`DeadZoneFunction` already rejects a negative
 /// `delta` in its own constructor), **not in the carrier**: **the carrier has no value converter and therefore no zero,
 /// so it could only rely on comparison semantics handed to it.** **Forcing the check in would need one more parameter

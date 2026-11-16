@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Produce;
 /// 对应的 `Csp2dPatternAssignment` / `safeCsp2dPolynomial`。这里只落变量与四个聚合表达式，
 /// 三个约束与目标留给后续。
 ///
-/// Mirrors `Csp2dPatternAssignment` / `safeCsp2dPolynomial` from the code. lands the variables and the four aggregate expressions;
+/// Mirrors `Csp2dPatternAssignment` / `safeCsp2dPolynomial`. lands the variables and the four aggregate expressions;
 /// the three constraints and the objective come next.
 /// </remarks>
 public class Csp2dPatternAssignmentTests {

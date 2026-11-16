@@ -88,7 +88,7 @@ public sealed record PackingPattern<V>(string BinTypeId, IReadOnlyDictionary<str
     /// **键里带长度前缀**（`id.Length + ":" + id`）：只用 `;` 与 `=` 分隔，`"a=1;b"` 与 `"a=1"` + `"b"`
     /// 这类带分隔符的标识会撞键。同样的长度前缀编码。
     ///
-    /// **The key carries length prefixes** (`id.Length + ":" + id`): with only `;` and `=` separators, identifiers containing them (`"a=1;b"`) would collide. The code
+ /// **The key carries length prefixes** (`id.Length + ":" + id`): with only `;` and `=` separators, identifiers containing them (`"a=1;b"`) would collide. The implementation
     /// uses the same length-prefix encoding.
     /// </remarks>
     public string Key {
@@ -213,7 +213,7 @@ public sealed record PackingProblem<V>(
     ///    若第一个也加 `amount`，每列都会凭空多出一段尾部间距，容量判定会**偏保守**。
     /// 2. **件数用二进制倍增，不逐件累加**：需求可以很大（`ulong`），逐件循环会卡住。
     ///
-    /// **Two easy mistakes the code gets right**: (1) **spacing goes between pieces only, never trailing** — the first item adds `amount - 1` gaps and the rest add
+ /// **Two easy mistakes the implementation gets right**: (1) **spacing goes between pieces only, never trailing** — the first item adds `amount - 1` gaps and the rest add
     /// `amount`; adding `amount` for the first would invent a trailing gap per pattern and make the capacity check **conservatively wrong**. (2) **counts use binary
     /// scaling, not per-piece accumulation** — demand can be large (`ulong`) and a per-piece loop would stall.
     /// </remarks>

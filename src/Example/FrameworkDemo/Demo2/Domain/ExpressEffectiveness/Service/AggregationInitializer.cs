@@ -24,8 +24,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 3. **`aircraftAggregation` 在收了但没用**——本仓不收，收了不读会让调用方以为有影响。
 ///
 /// **one check** (upstream present) plus **one derivation rule** (the must-ship indices). Three things must be copied: **the must-ship criterion is
-/// `cargo.priority >= 8`** using the **request's index** (its `mapIndexedNotNull`), not a name and not an `Item`, with 8 hard-coded as in the code; **the aggregation
-/// takes the `stowageMode`**, since that decides between `AbsoluteOrder` and `RelativeOrder`; and **`aircraftAggregation` is accepted but unread in the code** — it is omitted
+/// `cargo.priority >= 8`** using the **request's index** (its `mapIndexedNotNull`), not a name and not an `Item`, with 8 hard-coded; **the aggregation
+/// takes the `stowageMode`**, since that decides between `AbsoluteOrder` and `RelativeOrder`; and **`aircraftAggregation` is accepted but unread in the implementation** — it is omitted
 /// here, since accepting and ignoring it would suggest it matters.
 /// </remarks>
 internal static class AggregationInitializer
@@ -70,7 +70,7 @@ internal static class AggregationInitializer
     /// 单独成方法是**为了让它可被测**：上一版的判据自己重算了一遍期望值而没调用被测代码，结果"阈值改成 7"的变异存活。
     ///
     /// **The indices of items whose priority is at least 8**. It is a separate method **so that it can be tested**: the previous version's criterion
-    /// recomputed the expectation itself without calling the code under test, and a mutant changing the threshold to 7 survived.
+ /// recomputed the expectation itself without calling the implementation under test, and a mutant changing the threshold to 7 survived.
     /// </remarks>
     /// <param name="input">请求 DTO / The request DTO.</param>
     /// <returns>货物下标 / The item indices.</returns>
@@ -80,8 +80,8 @@ internal static class AggregationInitializer
         var indices = new List<int>();
         for (int index = 0; index < input.Cargos.Count; ++index)
         {
-            // **优先级 >= 8 的必须发货**，阈值照做。
-            // **A priority of 8 or more must ship**, the threshold copied from the code.
+            // **优先级 >= 8 的必须发货**，阈值照此。
+ // **A priority of 8 or more must ship**, the threshold.
             if (input.Cargos[index].Priority >= MustShipPriorityThreshold)
             {
                 indices.Add(index);

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// 前者的语义是"有效层数 = min(包材层数, 重量属性层数)"，后者是"沿着'谁压在谁上面'递归取最大值"。
 /// 判据各钉住一半：层数合成能变小、递归在同类型链上给出正确的层数与高度、类型不同则不叠。
 ///
-/// In the code these are the fields of `PackageAttribute` and its companion's `layerLayer`/`layerHeight`/`layer`. The former means "effective layers =
+/// In the implementation these are the fields of `PackageAttribute` and its companion's `layerLayer`/`layerHeight`/`layer`. The former means "effective layers =
 /// min(package layers, weight-attribute layers)" and the latter "recurse along who-covers-whom and take the maximum". The criteria pin each half: the
 /// composition can only lower, the recursion gives the right count and height on a same-type chain, and different types do not stack.
 /// </remarks>
@@ -132,7 +132,7 @@ public class PackageAttributeSlotsTests
             // 底面重叠 = 同一竖向列：替身没有水平坐标，于是同类型即同列。
             // 这里比的是底面投影，与高度无关；这一条正是被 `OverlapsBottom`／`IsAbove` 分开之后才看清的。
             //
-            // Footprint overlap means the same vertical column; the double has no horizontal coordinate, so same type is the same column. The code
+ // Footprint overlap means the same vertical column; the double has no horizontal coordinate, so same type is the same column. The implementation
             // compares bottom footprints regardless of height, which only became clear once `OverlapsBottom` and `IsAbove` were separated.
             other is Placement placement &&
             string.Equals(placement.ItemType, ItemType, StringComparison.Ordinal);

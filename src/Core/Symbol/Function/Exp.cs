@@ -121,7 +121,7 @@ public sealed class ExpFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynomia
     /// **这是 `UnivariateLinearPiecewiseFunction` 的既有约束，不是这里加的。**
     /// **要建模无界变量上的 `exp`，必须先给出界（把变量声明在有限区间上，或显式传 `bigM`）。**
     ///
-    /// **The default of 16 segments matches the code.** **Fewer segments mean more error in the middle of each
+ /// **The default of 16 segments matches the implementation.** **Fewer segments mean more error in the middle of each
     /// interval** — **and the error is exactly zero at the breakpoints, so "spot-check a few breakpoints" cannot
     /// reveal too few segments.**
     ///

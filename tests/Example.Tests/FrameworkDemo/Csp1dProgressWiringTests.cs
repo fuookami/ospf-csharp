@@ -161,7 +161,7 @@ public class Csp1dProgressWiringTests {
     /// `RangedProgress` 的变异（"永远返回区间起点"）**存活**——因为第一轮 `iteration = 0` 时，
     /// 正确值与变异值**都是 20**，无法区分。这一点在缺口里记下。
     ///
-    /// The code's :470 reports `(pricing_iteration, in-stage 40)` after each LP solve, with overall progress inside the iteration band (20—75). Without it, the
+ /// Its :470 reports `(pricing_iteration, in-stage 40)` after each LP solve, with overall progress inside the iteration band (20—75). Without it, the
     /// 20—75 band has **no feedback at all** during a long solve.
     ///
     /// **The criterion's limits**: it verifies "the snapshot exists with in-stage 40" and **not the band arithmetic**. The `RangedProgress` mutation ("always return
@@ -238,7 +238,7 @@ public class Csp1dProgressWiringTests {
     /// 判据失败的真正原因是**当时 `MockColumnGenerationSolver` 覆盖了带 options 的重载、
     /// 把适配器包装摘掉了**。**"读代码推出的结论"与"实测的结论"在这里正好相反。**
     ///
-    /// The code's `:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
+ /// Its `:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
     ///
     /// **claimed this was "unobservable" because "`Register` fails and the solver is never reached" — that conclusion was wrong.** I inferred it from reading code
     /// without actually running there. In fact the full CSP1D flow **does reach the final MILP**: the snapshots include `REGISTRATION/-/100/99` and `MILP/incumbent/99/99`.
@@ -284,7 +284,7 @@ public class Csp1dProgressWiringTests {
     /// **The criterion's limits must be stated**: it **cannot distinguish "there are explicit checkpoints" from "there are none"**. Mutation testing confirmed that
     /// deleting **all 3** `progressContext?.ThrowIfCancelled` calls still leaves this green.
     ///
-    /// The reason is that `SolverProgressContext.Report` **also calls `ThrowIfCancelled` internally** (aligned with the code), and CSP1D always reports
+ /// The reason is that `SolverProgressContext.Report` **also calls `ThrowIfCancelled` internally** (aligned with the implementation), and CSP1D always reports
     /// one stage snapshot after the entry. So cancellation **is caught by `Report`**, and the explicit checkpoints are a **redundant second layer**.
     ///
     /// **Redundancy is not a bug**: explicit checkpoints throw earlier when cancellation happens between two reports. But **they have no independent falsifiability**,

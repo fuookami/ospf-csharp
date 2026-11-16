@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// `{name}_{zone}_{arm}_{index}`. Four easy mistakes: (1) **the coefficients are nullable** — a `null` left coefficient keeps the left term **out** of the polynomial rather than
 /// multiplying by zero, and downstream reading a coefficient by symbol treats `null` and 0 differently; (2) **two rows per line** (`left − right ≤ lhs`, `right − left ≤ rhs`), and
 /// one alone bounds a single side; (3) **the name carries the row index**, or "constraint 3 is infeasible" does not say which side; (4) **the line is skipped only when both sides
-/// are unavailable** — the code is `none { it.status.available }`, so one unavailable side still gets its row.
+/// are unavailable** — this implementation is `none { it.status.available }`, so one unavailable side still gets its row.
 /// </remarks>
 internal sealed class UnsymmetricalLinearDensityLimit
 {

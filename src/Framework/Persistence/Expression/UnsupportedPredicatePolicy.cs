@@ -45,7 +45,7 @@ public abstract record PredicateTranslation<T> where T : class {
 ///
 /// **The policy decides the error code, not just the message**: `FailFast` gives `IllegalArgument` (the caller wrote a predicate the backend
 /// cannot take), `ClientFilter` gives `ApplicationFailed` (this backend cannot, another can) and `AlwaysFalse` gives `ApplicationError` (this backend cannot and has degraded to a constant false).
-/// Three codes point at three different reactions, and merging them would leave the caller unable to tell whether to change the code or the backend.
+/// Three codes point at three different reactions, and merging them would leave the caller unable to tell whether to change the implementation or the backend.
 /// </remarks>
 public sealed record UnsupportedPredicateDetail(
     string Predicate,

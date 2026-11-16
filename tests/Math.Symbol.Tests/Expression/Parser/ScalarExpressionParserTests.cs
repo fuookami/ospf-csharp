@@ -193,7 +193,7 @@ public class ScalarExpressionParserTests
     ///
     /// **This fills a criterion gap**: the original one pinned only the nesting in `else`,
     /// **so replacing `thenBranch = ParseTernary` with `ParseLogicalOr` left everything green.**
-    /// **The code recurses on both branches, so both have to be pinned.**
+ /// **The implementation recurses on both branches, so both have to be pinned.**
     /// </remarks>
     [Fact]
     public void TheThenBranch_ShouldAlsoAllowANestedTernary()

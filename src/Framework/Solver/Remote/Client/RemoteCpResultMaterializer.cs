@@ -237,7 +237,7 @@ public static class RemoteCpResultMaterializer {
     /// 两条容易漏的规则：snapshot 没有目标却返回了目标值要拒绝（否则凭空冒出一个目标）；有目标却没有报告
     /// 目标值也要拒绝（不能拿别处的值凑数）。
     ///
-    /// As in the code this **does not trust what the backend computed**: every constraint is re-evaluated
+ /// As in the implementation this **does not trust what the backend computed**: every constraint is re-evaluated
     /// against this request's snapshot and the objective is recomputed independently and compared with the
     /// reported value. This catches "the backend returned a self-consistent solution that does not satisfy
     /// this model", which the cross-talk fingerprints cannot — those only prove the same input was measured,
@@ -312,7 +312,7 @@ public static class RemoteCpResultMaterializer {
     ///
     /// 诊断解析失败会让本方法整体失败，而不是产出一份缺诊断的报告——CP 的诊断里带不可行证据。
     ///
-    /// The status rule matches the code: only a **proven** optimum (`OPTIMAL` presence with a `Verified`
+ /// The status rule matches the implementation: only a **proven** optimum (`OPTIMAL` presence with a `Verified`
     /// proof) is `SolverStatus.Optimal`; everything else is `Feasible`. An unproven optimality claim is
     /// downgraded rather than copied from the backend's optimism. A diagnostics parse failure fails the whole
     /// call instead of producing a report without diagnostics, because CP diagnostics carry infeasibility

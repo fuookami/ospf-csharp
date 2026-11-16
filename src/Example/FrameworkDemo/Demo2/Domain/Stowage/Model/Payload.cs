@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 一个谁也没要求的规划值。
 ///
 /// six families (main/lower/total × recommended/actual) with **a different source per loading mode** — `FullLoad` takes the recommended payload from the
-/// **actual** load weights, the other two modes from the **recommended** ones; the actual payload always comes from the actual weights. The code writes this table out four
+/// **actual** load weights, the other two modes from the **recommended** ones; the actual payload always comes from the actual weights. This implementation writes this table out four
 /// times, once per family; C# folds it into one accessor but **the mapping must match branch for branch**. Writing `FullLoad`'s recommended payload from recommended weights is
 /// the classic mistake: it compiles, it solves, and "full load" simply reports a planned value nobody asked for.
 /// </remarks>
@@ -175,7 +175,7 @@ public sealed class Payload
 
         // 预分配模式下推荐业载必须**等于目标业载**：`eq` 约束，不是目标函数里的软项。
         // 少了这一行，预分配算出来的业载可以偏离货主要多少——总量对不上，而每一舱位看起来都合法。
-        // Under predistribution the recommended payload must **equal** the target: the code uses an `eq` row, not a soft objective term. Without it the predistribution can
+ // Under predistribution the recommended payload must **equal** the target: this implementation uses an `eq` row, not a soft objective term. Without it the predistribution can
         // drift away from the shipper's figure — the total does not add up while every position looks legal.
         if (mode == StowageMode.Predistribution && EstimatePayload is { } estimatePayload) {
             double target = ComputedPayload ?? PlannedPayload;

@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Adapter;
 /// <see cref="IsValidRemoteIdentity"/> before any remote serialization, and a failure rejects
 /// serialization outright rather than best-effort serializing an incomplete identity.
 ///
-/// The code's linear/quadratic body serialization and the <c>ModelData</c> factories are not yet
+/// Its linear/quadratic body serialization and the <c>ModelData</c> factories are not yet
 /// implemented; the model-level identity accessors they need are supplied here as
 /// <c>IBasicModelView.IdentityNamespace</c>/<c>IdentitySchemaVersion</c> default interface members, which
 /// break no existing implementation.
@@ -496,7 +496,7 @@ public static class OspfRemoteModelSerializer {
     /// 身份元数据是否可用于远程序列化 / Whether the identity metadata may be serialized remotely.
     /// </summary>
     /// <remarks>
-    /// 规则逐条照搬：
+    /// 规则逐条落实：
     /// - 标识空白、origin 的 kind／key 空白、任一 provenance 的 kind／key 空白 → 无效。
     /// - 存在 origin 且 provenance 非空，但 origin **不在** provenance 里 → 无效（两者自相矛盾）。
     /// - <c>ModelLocal</c>：必须无 origin、无 provenance，且标识不得以 <c>artifact:</c> 开头——
@@ -504,7 +504,7 @@ public static class OspfRemoteModelSerializer {
     /// - <c>Stable</c>：必须有非空标识、不得以 <c>model-local-</c> 开头、<c>artifact:</c> 开头的标识必须是
     ///   该类别下由框架生成的 artifact 标识、命名空间与 schema 版本都非空、并且存在自称或来源记录。
     ///
-    /// The code rules are implemented one by one: blank ids, blank origin kind/key and any blank
+ /// The implementation rules are implemented one by one: blank ids, blank origin kind/key and any blank
     /// provenance kind/key are invalid; an origin that contradicts a non-empty provenance is invalid;
     /// <c>ModelLocal</c> must carry neither origin nor provenance and may not use an <c>artifact:</c> id
     /// (otherwise a model-internal element masquerades as cross-model identity); <c>Stable</c> requires a

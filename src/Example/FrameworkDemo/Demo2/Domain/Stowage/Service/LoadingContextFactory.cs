@@ -127,7 +127,7 @@ internal static class LoadingContextFactory
         // which holds only for `Preassigned`/`Optional`. So an `AdjustmentNeeded` item **got no allowed assignment at all** and could never be placed, and an item
         // already inside a position's `LoadedItems` got none either. **Nothing raised an error**: the sparse decisions only create variables for legal pairs, so no
         // variable reads as "this item does not exist". The old comment claimed `StowageNeeded` folded all three conditions — **that sentence was wrong**, which is the
-        // price of believing a comment over the code.
+ // price of believing a comment over the implementation.
         //
         // **再加一条前置校验与一条过滤**：
         //
@@ -137,7 +137,7 @@ internal static class LoadingContextFactory
         // **甲板那条没有沿用**，理由写在下面过滤处：同一字段已经推导成 `Item.location`，再过滤一次是空转。
         //
         // **One more pre-check and one filter**: an `allowedPositions` entry naming an **unknown position is refused** (otherwise the restriction
-        // never takes effect and leaves no trace), and `null` means unrestricted while a non-null set must contain the position. **The code's deck comparison
+ // never takes effect and leaves no trace), and `null` means unrestricted while a non-null set must contain the position. **Its deck comparison
         // is not copied**, for the reason recorded at the filter below: the same field already becomes `Item.location`, so a second filter is a no-op.
         var spaceByPosition = new Dictionary<string, string>(aggregation.Positions.Count, StringComparer.Ordinal);
         foreach (PositionInput requested in input.Positions ?? []) {
@@ -185,7 +185,7 @@ internal static class LoadingContextFactory
                 // 我写了那道过滤，然后用变异测试验证：把它关掉，判据**照样绿**（下舱货仍然一个指派都拿不到，
                 // 因为 `Item.location` 已经挡住了）。所以删掉它——**留一段测不出、又不改变行为的代码，只会让人以为这里有两道防线。**
                 //
-                // **The deck is no longer filtered separately, because there is nothing left to filter** (measured). The code compares
+ // **The deck is no longer filtered separately, because there is nothing left to filter** (measured). The implementation compares
                 // `cargo.deckLocation` against the position's deck; this implementation already turns the same `DeckLocation` into `Item.location` (`Main → MainDeck`,
                 // else `LowNotBulk`), and `StowagePosition.Enabled(item)` judges availability from it — **deriving the same field twice makes the second check a
                 // no-op**. I wrote its filter anyway and mutation-tested it: disabling it left the criterion **green** (the lower-deck cargo still got
@@ -208,7 +208,7 @@ internal static class LoadingContextFactory
             // "只增不减、不覆盖几何冲突"，而几何冲突在 `Bpp1d/2dDiscreteLoading.Context` 里合并，所以这里只放业务那一半。
             //
             // **The caller's declared business exclusions really go in** . The set used to be empty: declaring one did nothing, **with no error — the rule
-            // simply did not exist**. The code adds without ever replacing, and geometry is merged inside `Bpp1d/2dDiscreteLoading.Context`, so only the business
+ // simply did not exist**. This implementation adds without ever replacing, and geometry is merged inside `Bpp1d/2dDiscreteLoading.Context`, so only the business
             // half belongs here.
             Conflicts: RequestConflicts(input),
             // **布局组真的进去**。之前恒为空表，于是"区域或整机恰选一种布局"变成了"随便几种"。
@@ -258,7 +258,7 @@ internal static class LoadingContextFactory
         // **The physical space each position belongs to, taken from the request** . **Before this line said `SpaceId: position.Name`, which is a real
         // defect**: `LoadingGeometry.Conflicts` **buckets by `SpaceId`**, so a position that is its own space can never be paired and **the 1-D geometric sweep
         // produces no conflict at all** — the earlier sweep was effectively unwired in Demo2. And "no conflicts" raises no error; it just yields **a solution that
-        // violates the geometry**. The code uses `spaceId = p.spaceId` (a request field), and this implementation has that field too (defaulting to `MAIN`).
+ // violates the geometry**. This implementation uses `spaceId = p.spaceId` (a request field), and this implementation has that field too (defaulting to `MAIN`).
         // **几何数值的单位来自请求**。 的二维路径把它们**当成米**硬编码，而请求的 `LengthUnit` 默认是**英寸**——
         // 于是一个 1.0 的舱位被当成 1 米（39.37 倍），**判交结果照样"看起来合理"**。这与 记的那处是同一个缺陷类别。
         //
@@ -272,7 +272,7 @@ internal static class LoadingContextFactory
 
 
         // 一维几何：`[前臂, 后臂]`。`geometry.front/back`；本仓的舱位直接带 `Coordinate.FrontArm/BackArm`。
-        // 1-D geometry is `[front arm, back arm]`. The code reads `geometry.front/back`; a position here carries `Coordinate.FrontArm/BackArm` directly.
+ // 1-D geometry is `[front arm, back arm]`. This implementation reads `geometry.front/back`; a position here carries `Coordinate.FrontArm/BackArm` directly.
         var geometry = new List<LoadingInterval<Flt64>>(aggregation.Positions.Count);
         foreach (StowagePosition position in aggregation.Positions) {
             geometry.Add(new LoadingInterval<Flt64>(

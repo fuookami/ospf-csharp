@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 public class GurobiFarkasDiagnosticTest {
     /// <summary>**只声明 Farkas，且只声明 LP** / Only Farkas is declared, and only for LP.</summary>
     /// <remarks>
-    /// 原生 IIS 还没搬，**`NativeIis` 就必须继续是 `false`**。提前写成 `true` 会让上层以为有一条它其实没有的提取路径。
+    /// 原生 IIS 还没实现，**`NativeIis` 就必须继续是 `false`**。提前写成 `true` 会让上层以为有一条它其实没有的提取路径。
     ///
     /// Native IIS is not implemented yet, so **`NativeIis` must stay `false`**. Flipping it early would tell callers about an extraction path that does not exist.
     /// </remarks>

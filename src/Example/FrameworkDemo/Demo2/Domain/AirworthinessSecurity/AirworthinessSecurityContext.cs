@@ -48,7 +48,7 @@ public sealed class AirworthinessSecurityContext
     /// <remarks>
     /// `lateinit var aggregation`，正常路径是 <see cref="Init"/>。这个无参构造保留给该路径。
     ///
-    /// The code uses `lateinit var aggregation` and the normal path is <see cref="Init"/>; this constructor is kept for it.
+ /// This implementation uses `lateinit var aggregation` and the normal path is <see cref="Init"/>; this constructor is kept for it.
     /// </remarks>
     public AirworthinessSecurityContext() {
     }
@@ -172,7 +172,7 @@ public sealed class AirworthinessSecurityContext
     /// `return ok`，而且**不转发**给聚合的 `registerForBendersMP`。两者在都是空操作，所以"转发"看不出区别——但转发会让将来聚合那边一改就悄悄改变这里的行为。
     /// 不转发是更保守的读法。
     ///
-    /// The code is `return ok` and does **not** forward to the aggregation's `registerForBendersMP`. Both are no-ops there, so forwarding looks identical — but forwarding
+ /// This implementation is `return ok` and does **not** forward to the aggregation's `registerForBendersMP`. Both are no-ops there, so forwarding looks identical — but forwarding
     /// would silently change this behaviour the day the aggregation's version grows. Not forwarding is the more conservative reading.
     /// </remarks>
     public Try RegisterForBendersMP(LinearMetaModel<Flt64> model) {

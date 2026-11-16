@@ -111,7 +111,7 @@ public class FixedVariableEqualityTests
     ///
     /// **`NaN` 会被原样放进右端**——**这是有意为之，检查在调用方。**
     ///
-    /// **The code does not either.** **Recording it as a criterion makes "no check" a <b>documented behaviour</b>
+ /// **This implementation does not either.** **Recording it as a criterion makes "no check" a <b>documented behaviour</b>
     /// rather than a possible omission.**
     ///
     /// **`NaN` goes into the right-hand side verbatim** — **deliberately; the checking is the caller's.**

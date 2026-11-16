@@ -83,7 +83,7 @@ public sealed record Material2<V>(
     /// **卷长给定是允许的**：它把问题退化成"按固定长度切段的定尺问题"。留了注释没有拦——
     /// **能跑的组合就不该被当成错误**，语义差异写进文档即可。
     ///
-    /// **A given coil length is allowed**: it degrades the problem into fixed-length segments. The code keeps only a comment rather than a rejection: **a
+ /// **A given coil length is allowed**: it degrades the problem into fixed-length segments. This implementation keeps only a comment rather than a rejection: **a
     /// combination that runs should not be reported as an error**, and the semantic difference belongs in the docs.
     /// </remarks>
     public Result<Success, ErrorCode, Error<ErrorCode>> Validate() {

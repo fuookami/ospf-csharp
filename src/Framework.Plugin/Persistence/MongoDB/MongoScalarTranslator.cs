@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// **不支持的运算必须失败，不能返回 null 或原样**——`$power` 就是一个例子：
 /// **把不支持的运算悄悄当成"没这回事"，查询会返回一个错误的结果集，而调用方以为查对了。**
 ///
-/// The code's `MongoScalarTranslator` (**209 lines**) turns a `ScalarExpression` into a `BsonValue` usable inside
+/// Its `MongoScalarTranslator` (**209 lines**) turns a `ScalarExpression` into a `BsonValue` usable inside
 /// an aggregation pipeline: references become `$field`, constants pass through, unary/binary operators become
 /// `$multiply`/`$add`/`$divide` documents.
 ///
@@ -32,7 +32,7 @@ public static class MongoScalarTranslator
     /// **`resolveFieldName` 由调用方给**：它做成构造参数，因为文档字段名与模型属性名常常不同
     /// （前者带前缀、或做过下划线转换）。**在这里写死属性名，等于假设两者永远相同。**
     ///
-    /// **`resolveFieldName` comes from the caller**: the code takes it as a constructor parameter because
+ /// **`resolveFieldName` comes from the caller**: the implementation takes it as a constructor parameter because
     /// document field names and model property names often differ (prefixing, snake_case conversion).
     /// **Hard-coding the property name here would assume the two are always identical.**
     /// </remarks>

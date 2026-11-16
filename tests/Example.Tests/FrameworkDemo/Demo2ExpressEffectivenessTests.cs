@@ -415,7 +415,7 @@ public class Demo2ExpressEffectivenessTests {
             .Should().Contain("配载聚合未初始化");
 
         // **调用被测函数本身**，不要自己重算期望值——上一版正是后者，让"阈值改成 7"的变异存活。
-        // **Call the code under test**, rather than recomputing the expectation — the previous version did the latter and a threshold-to-7 mutant survived.
+ // **Call the implementation under test**, rather than recomputing the expectation — the previous version did the latter and a threshold-to-7 mutant survived.
         Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.Service.AggregationInitializer
             .MustShipIndices(request).Should().Equal(new[] { 1 }, "priority 8 qualifies and 7 does not");
     }

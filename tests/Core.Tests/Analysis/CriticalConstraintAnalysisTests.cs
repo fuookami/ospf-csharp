@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// <remarks>
 /// **实现的是 `CriticalConstraintAnalysisReport` 的漏斗块**：
 /// 其余两块要 `ConstraintPerturbationReport` 与 `ConflictExplanation`，这两个都住在**带后端求解**的文件里，
-/// 所以这里只搬漏斗，**没搬的部分不写空跑版本**。
+/// 所以这里只实现漏斗，**没实现的部分不写空跑版本**。
 ///
 /// 判据钉的是**"没有证据就不许分层"**：这一层最容易犯的错是把 `Unknown` 读成"不重要"。
 ///

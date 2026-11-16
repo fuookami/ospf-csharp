@@ -60,7 +60,7 @@ public abstract class HeuristicPolicy : IAbstractHeuristicPolicy {
 /// iterations would see a stale value.
 /// **与有意偏离**：`UInt64` 计数并支持构造时恢复计数与耗时；这里保留 `int` 计数，因为全部调用点都与 `int` 预算比较，
 /// 换成 `UInt64` 会牵动整条调用链且没有行为收益。恢复语义只保留耗时，计数通过 `Reset` 归零。
-/// **Deliberate divergence from the code**: the code counts with `UInt64` and restores both counters and elapsed time through
+/// **Deliberate divergence**: this implementation counts with `UInt64` and restores both counters and elapsed time through
 /// its constructor. This implementation keeps `int` counters because every call site compares against `int` budgets; switching to `UInt64`
 /// would ripple through the whole chain with no behavioural gain. Only elapsed time is restorable, and `Reset` zeroes the counters.
 /// </remarks>

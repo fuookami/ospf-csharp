@@ -37,7 +37,7 @@ public static class BudgetGate {
     /// <param name="budget">预算；<c>null</c> 表示不设上限 / The budget, or <c>null</c> for no limit.</param>
     /// <returns>达到或超过预算时为 <c>true</c> / <c>true</c> when the budget is reached or exceeded.</returns>
     // **没有预算 = 永不超支。** `budget != null && …`，不是 `budget == null || …`。
-    // **No budget means never exceeded.** The code is `budget != null && …`, not `budget == null || …`.
+ // **No budget means never exceeded.** This implementation is `budget != null && …`, not `budget == null || …`.
     public static bool Exceeded(TimeSpan elapsed, TimeSpan? budget) =>
         budget is { } limit && elapsed >= limit;
 

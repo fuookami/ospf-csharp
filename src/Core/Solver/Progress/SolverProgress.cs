@@ -75,7 +75,7 @@ public sealed record SolverSubStage(
     /// **必须逐键顺序替换，且用 `{key}` 形式**。
     /// `args.entries.fold(template) { text, (key, value) -> text.replace("{$key}", value) }`。
     ///
-    /// **Keys must be substituted in order using the `{key}` form**, matching the code.
+ /// **Keys must be substituted in order using the `{key}` form**.
     /// </remarks>
     public string Render(string template) {
         string text = template;
@@ -231,7 +231,7 @@ public sealed class SolverProgressContext {
     /// 2. 无解析器时**直接 `Normalized`**，不清空已解析标签。
     /// 3. 有解析器时**覆盖**两个已解析标签，然后 `Normalized`。
     ///
-    /// **The order must match the code**: `ThrowIfCancelled` first, then label resolution, then through the monotonic state before reporting.
+ /// **The order must match the implementation**: `ThrowIfCancelled` first, then label resolution, then through the monotonic state before reporting.
     ///
     /// Three details aligned item by item: (1) **the cancellation check comes first** — when cancelled, **nothing is reported** and no localization happens;
     /// (2) without a resolver, call `Normalized` directly and do not clear the already-resolved labels; (3) with a resolver, **overwrite** both resolved labels and
@@ -273,7 +273,7 @@ public sealed class SolverProgressContext {
     /// 都收敛到 `0..100`。`@Synchronized`，C# 用 `lock`。
     ///
     /// **Progress never decreases**: in-stage takes `max(last for that stage, current)`, overall takes `max(last overall, current)`, both clamped to `0..100`.
-    /// The code uses `@Synchronized`; C# uses `lock`.
+ /// This implementation uses `@Synchronized`; C# uses `lock`.
     /// </remarks>
     private SolverProgressSnapshot AcceptMonotonic(SolverProgressSnapshot snapshot) {
         lock (_gate) {

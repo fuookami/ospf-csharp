@@ -112,7 +112,7 @@ public static class NumberConversions {
     /// 把 `where V : struct` 改成 `where V : struct, IRealNumber&lt;V&gt;` 会顺着 `Product&lt;V&gt;` / `Csp1dSolution&lt;V&gt;`
     /// 等几十个声明级联，与本缺陷的收益不成比例。
     ///
-    /// The code's `Product&lt;V : RealNumber&gt;.toRenderDto` calls `toFltX` straight off the interface, so all twelve numeric types work. C#'s `IRealNumber&lt;TSelf&gt;` carries
+ /// Its `Product&lt;V : RealNumber&gt;.toRenderDto` calls `toFltX` straight off the interface, so all twelve numeric types work. C#'s `IRealNumber&lt;TSelf&gt;` carries
     /// `ToFltX` too, but callers constrain only `where V : struct`, **and interface members are unreachable through such a type parameter**, so every call site grew its own `is` chain
     /// recognising `Flt64` / `FltX` / `Int64` / `UInt64` and throwing `NotSupportedException` for the rest. Each of the two call sites was missing a different half, so `Flt32` / `Int32` /
     /// `UInt32` blew up at run time. This method **consolidates the chain in one place** and completes it for all twelve types. It is still a run-time `switch` rather than a constraint:

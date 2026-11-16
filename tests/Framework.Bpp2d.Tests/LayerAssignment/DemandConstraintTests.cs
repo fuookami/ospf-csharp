@@ -121,7 +121,7 @@ public class DemandConstraintTests {
         rows[0].Inequality.Comparison.Should().Be(Comparison.GE, "the demand must be covered");
 
         // **每一行挂的是自己那一项装载变量**：只比行名会漏掉"两行都挂了 `load_0`"这种错位
-        // （行名照旧不同，断言全过，但第二条需求被约束在第一个装载量上）。
+        // （行名不变不同，断言全过，但第二条需求被约束在第一个装载量上）。
         // **Each row carries its own load variable**: comparing names alone misses "both rows carry `load_0`", where every name assertion still passes while the second demand ends up
         // constrained by the first load amount.
         rows[0].Inequality.Lhs.Monomials.Single().Symbol.ToString().Should().Be("load_0");

@@ -55,7 +55,7 @@ public sealed record WhaleOptimizationUpdate(IParameterSource Decay, double Spir
             var moved = new List<V>(dimension);
 
             // 抽样顺序必须：p → A → C →（探索时）参照下标 → spiralLength。
-            // The draw order must match the code: p, then A, then C, then (on exploration) the reference index, then spiralLength.
+ // The draw order must match the implementation: p, then A, then C, then (on exploration) the reference index, then spiralLength.
             double p = NumericSupport.Unit(entropy);
             bool spiral = p >= 0.5;
             double coefficientA = (2.0 * a * NumericSupport.Unit(entropy)) - a;
@@ -100,7 +100,7 @@ public sealed record WhaleOptimizationUpdate(IParameterSource Decay, double Spir
 /// then suddenly hugs the optimum.
 /// **每维的额外抽样不能提前**。每维内部各抽一次（远距探索段抽一次、软围攻段再抽一次），提前到循环外会让同一维的多次更新
 /// 共用一个随机数，探索性大幅下降而结果看起来仍然合理。
-/// **The extra per-dimension draws cannot be hoisted.** The code draws once inside each dimension (one in the distant-exploration
+/// **The extra per-dimension draws cannot be hoisted.** The implementation draws once inside each dimension (one in the distant-exploration
 /// branch, one in the soft-siege branch); hoisting them outside the loop makes every dimension reuse one random number, sharply reducing
 /// exploration while the results still look reasonable.
 /// </remarks>

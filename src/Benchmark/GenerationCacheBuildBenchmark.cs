@@ -106,7 +106,7 @@ public class GenerationCacheBuildBenchmark {
     /// `custom` 场景里塞一个 `isSatisfied` 恒为 `true` 的匿名约束。**它不是装饰**：
     /// 生成器要为每条约束走一次判定，多一条就多一次虚调用——**这正是要计时的那部分。**
     ///
-    /// The code adds an anonymous constraint whose `isSatisfied` is always `true`. **It is not decoration**: the generator consults every constraint on every
+ /// This implementation adds an anonymous constraint whose `isSatisfied` is always `true`. **It is not decoration**: the generator consults every constraint on every
     /// candidate, so one more is one more virtual call — **which is exactly the part being timed.**
     /// </remarks>
     private sealed class AlwaysSatisfiedConstraint : ICuttingPlanConstraint<Flt64> {

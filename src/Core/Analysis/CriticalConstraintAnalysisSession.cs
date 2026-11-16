@@ -274,7 +274,7 @@ public sealed class CriticalConstraintAnalysisSession : IDisposable
 
     /// <summary>当 session 基线无效时返回结构化失败 / Return a structured failure when a session baseline is invalid.</summary>
     /// <param name="session">分析会话 / The analysis session.</param>
-    /// <returns>失败结果，效时为 <c>null</c> / The failure, or <c>null</c> when the code is valid.</returns>
+ /// <returns>失败结果，效时为 <c>null</c> / The failure, or <c>null</c> when this implementation is valid.</returns>
     internal static Try? InvalidSessionResult(CriticalConstraintAnalysisSession session) =>
         session.Validation.IsOk ? null : session.Validation;
 

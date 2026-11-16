@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 整数时长截断是对的，负数时长截断到 0 是错的 / Truncating integer seconds is right; truncating negatives is not.
 /// </summary>
 /// <remarks>
-/// 补 4 个面积单位与 2 个 Duration 转换器（/）。
+/// 4 个面积单位与 2 个 Duration 转换器。
 ///
 /// **两个类型对"负时长"的处理必须不同**：
 /// **`IntX` 能表示负数，所以截断即可；`UIntX` 不能，所以负数必须拒绝。**

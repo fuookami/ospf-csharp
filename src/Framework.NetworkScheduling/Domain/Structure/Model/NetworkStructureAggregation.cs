@@ -1,5 +1,4 @@
 // 结构聚合与上下文 / Structure aggregation and context.
-// （4398 字节）对应。
 // And.
 
 using System;

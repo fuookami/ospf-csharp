@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Proto;
 /// **这里把"我们依赖哪些字段号"写成表，并用一个真实模型证明它——** **表里的号若与代码不符，这个模型就读不出来。**
 ///
 /// Syncs the `ir_version` handling: **no version branch, because protobuf field numbers are immutable once published and a new version only appends fields.** This layer writes down
-/// **which field numbers the plugin relies on** and proves it with a real model — **a table that disagrees with the code cannot parse that model.**
+/// **which field numbers the plugin relies on** and proves it with a real model — **a table that disagrees with the implementation cannot parse that model.**
 /// </remarks>
 public class OnnxSchemaVersionTests
 {

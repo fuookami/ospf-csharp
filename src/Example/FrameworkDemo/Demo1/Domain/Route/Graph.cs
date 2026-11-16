@@ -40,8 +40,6 @@ public sealed class NormalNode : Node {
 /// <summary>
 /// 从网络消耗带宽的具有特定需求的终端节点。A terminal node that consumes bandwidth from the network with a specific demand.
 /// </summary>
-/// <param name="Id">节点 ID / Node ID</param>
-/// <param name="Demand">带宽需求 / Bandwidth demand</param>
 public sealed class ClientNode : Node {
     /// <summary>带宽需求 / Bandwidth demand</summary>
     public UInt64 Demand { get; }

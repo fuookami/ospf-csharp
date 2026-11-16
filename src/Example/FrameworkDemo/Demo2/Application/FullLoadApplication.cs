@@ -512,7 +512,7 @@ public sealed class FullLoadApplication
             notes.Add($"benders_stages=declared:{stages.Count};integer={integerCount}");
             Result<LinearBendersModels, ErrorCode, Error<ErrorCode>> partitioned =
                 await LinearBendersPartition.BuildAsync(model, stages);
-            // **的历史**：：给 demo2 声明阶段表（`occupied_*`/`assignment_*` → `Master`）之后，**模型根本没到求解器**
+            // **的历史**：给 demo2 声明阶段表（`occupied_*`/`assignment_*` → `Master`）之后，**模型根本没到求解器**
             // （`MasterCalls == 0`，两条判据同时红）。 早量过"声明阶段不会收窄追索"，所以这次声明**没有收益、只有风险**，已回退。
             // 要接阶段表，得先弄清 `LinearBendersPartition` 对"与行规则不一致的声明"是什么反应——**那是后续的事**。
             //
@@ -577,7 +577,7 @@ public sealed class FullLoadApplication
             // reader does not have to guess or run another probe.
             notes.Add($"benders_failed_detail: {solved}");
 
-            // **两种"没走回退"照旧分成两句**。
+            // **两种"没走回退"不变分成两句**。
             if (milpSolver is null) {
                 notes.Add("benders_failed: policy allows the MILP fallback, but no MILP solver was supplied on this path");
             }
@@ -606,7 +606,7 @@ public sealed class FullLoadApplication
         //
         // 四个上下文的签名本来就不一致（软安全与适航安全不收模式），照各自的签名调，**不去统一它们**——统一需要证据。
         //
-        // **The master problem is wired.** The code puts stowage, MAC, soft security and MAC optimisation into the master. Before this the body was
+ // **The master problem is wired.** The implementation puts stowage, MAC, soft security and MAC optimisation into the master. Before this the body was
         // a comment and the only real action was adding a theta variable, so the master had **zero constraints** and `SolveWithBenders` could only refuse with
         // "not registered". The four contexts' signatures already differ (soft security and airworthiness take no mode); each is called with its own signature,
         // **and they are not unified** — unifying needs evidence.
@@ -640,7 +640,7 @@ public sealed class FullLoadApplication
         // - `AirworthinessSecurityContext.RegisterForBendersSP(mode, model, solution)` 收到解之后转给 `Register(mode, model)`，**照样不读它**。
         //
         // 也就是说：`registerForBendersSP(mode, model, solution)` 里的 `solution` **在本仓当前实现下是死的**。
-        // 既然如此，把注册按"每轮迭代"搬过来只会得到一个**每轮做同样事情的循环**。所以注册一次，位置在解出来之前。
+        // 既然如此，把注册按"每轮迭代"实现出来只会得到一个**每轮做同样事情的循环**。所以注册一次，位置在解出来之前。
         //
         // **这个"解是死的"结论用判据钉住了**（`Demo2BendersSubModelTests`）：两个不同的解注册出来的模型形状必须完全相同。
         // 哪天哪个域开始真的读解，那条判据就红，**那时才把它挪进循环**。

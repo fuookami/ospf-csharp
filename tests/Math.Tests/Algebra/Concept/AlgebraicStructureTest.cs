@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Math.Tests.Algebra.Concept;
 /// **这条注释就是防止那件事。**
 ///
 /// **None of these twelve can ever go red on its own.** Measured: removing `IFloatingNumber<Flt64>` from the base-interface list of `Flt64`
-/// **produces 1734 compile errors in `tests/Math.Tests` at once** — meaning that if the code compiles, these assertions are necessarily true.
+/// **produces 1734 compile errors in `tests/Math.Tests` at once** — meaning that if the implementation compiles, these assertions are necessarily true.
 ///
 /// **Their value is an inventory, not a criterion**: a reader sees at a glance which algebraic structures `Flt64` claims.
 /// **The real behavioural criteria live in `FieldLawTest` (field axioms via `Validate`, which does actual arithmetic) and `Flt64Test` (19 numeric criteria).**

@@ -73,7 +73,7 @@ public sealed class ItemAssignmentLimit
                 ItemStatus.Preassigned or ItemStatus.AdjustmentNeeded => Comparison.EQ,
                 ItemStatus.Optional => Comparison.LE,
                 // `else -> {}`：`Reserved` 与 `Loaded` 不加行。
-                // The code's `else -> {}`: `Reserved` and `Loaded` get no row.
+ // Its `else -> {}`: `Reserved` and `Loaded` get no row.
                 _ => null,
             };
             if (comparison is not { } op) {

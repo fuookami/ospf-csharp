@@ -356,7 +356,7 @@ public static class RemoteReportMapping {
 
         // 尾段字段（耗时、不可用原因、外部引用、复验次数、终止原因）各自可选。
         // The tail fields (elapsed, unavailable reason, external reference, verification checks and
-        // termination reason) are each optional in the code.
+ // termination reason) are each optional in the implementation.
         TimeSpan? elapsed = null;
         if (fields.TryGetValue("infeasibility.elapsedMs", out string? elapsedMs)) {
             if (!long.TryParse(elapsedMs, out long elapsedValue) || elapsedValue < 0) {
@@ -1023,7 +1023,7 @@ public static class RemoteReportMapping {
         // expectedPresence 由独立的 optimal／feasible 两个布尔推导；C# 的 SliceResult 没有独立的
         // optimal 布尔，presence 本身就是最优性的编码，因此这里只能做非循环的那部分校验：有解必须可行，
         // 无解必须不可行。
-        // The code derives expectedPresence from independent optimal/feasible booleans; C#'s
+ // The implementation derives expectedPresence from independent optimal/feasible booleans; C#'s
         // SliceResult has no separate optimal flag because presence encodes it, so only the non-circular
         // half of the check remains: a present solution must be feasible and an absent one must not be.
         bool claimsSolution = slice.SolutionPresence is

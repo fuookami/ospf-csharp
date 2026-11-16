@@ -24,7 +24,7 @@ public sealed class SheetModelTest {
     /// <summary>
     /// **相等性必须包含类型编码**：同尺寸不同编码是两种板材，不带编码会让多板材类型被错误去重。
     /// **Equality must include the type code**: equal sizes with different codes are different sheet types, and
-    /// omitting the code would wrongly deduplicate across sheet types.
+ /// omitting the implementation would wrongly deduplicate across sheet types.
     /// </summary>
     [Fact]
     public void SheetType_ShouldDistinguishTypeCode() {
@@ -108,7 +108,7 @@ public sealed class SheetModelTest {
     /// <summary>
     /// **层的相等性包含板材类型编码**：同一排布放在不同板材上是不同的列，不带编码会把它们错误去重。
     /// **Layer equality includes the sheet type code**: the same layout on different sheets is a different column, and
-    /// leaving the code out deduplicates them incorrectly.
+ /// leaving the implementation out deduplicates them incorrectly.
     /// </summary>
     [Fact]
     public void Layer_Equality_ShouldIncludeSheetType() {

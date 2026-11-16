@@ -90,7 +90,7 @@ public class PolynomialLexerTests
     /// **它判成词法错误，这里跟着判。**
     ///
     /// **It is tempting to let it slide**, and once it slides, the meaning of `.5` and `5.` has to be guessed downstream.
-    /// **The code calls it a lexical error, and so does this.**
+ /// **The implementation calls it a lexical error, and so does this.**
     /// </remarks>
     [Fact]
     public void TheLoneDecimalPoint_ShouldFail()

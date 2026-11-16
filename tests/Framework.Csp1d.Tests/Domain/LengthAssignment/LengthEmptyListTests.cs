@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.LengthAssignment;
 /// **这是第二次"修一处等于没修"**（第一次是 `SolutionAmount`）。
 /// 两次都是**同一个模式在另一个类里**。规律：**修完一处必须全仓搜该模式**。
 ///
-/// **the earlier deviation**: fixed this in `YieldAggregation` and **missed `LengthAggregation`**, which had **the identical `Count > 0 ? list : null`**. The code's two
+/// **the earlier deviation**: fixed this in `YieldAggregation` and **missed `LengthAggregation`**, which had **the identical `Count > 0 ? list : null`**. Its two
 /// fields are `= emptyList` and the return passes the lists through. **This is the second "fixing one place changes nothing"** in this session (the first was
 /// `SolutionAmount`). Both were **the same pattern in another class**. The rule: **after fixing one site, search the whole repo for the pattern**.
 /// </remarks>
@@ -95,7 +95,7 @@ public class LengthEmptyListTests {
     /// 若实现把两者都写成 `> 0.0`，"长度为 0 的动态产品"会**从结果里消失**——
     /// 下游会以为那个产品根本没有动态卷长。
     ///
-    /// The code uses `>= 0.0` for `assignedLength` and `> 0.0` for `overLength` — **the two boundaries differ** (table above). If both were `> 0.0`, a dynamic product
+ /// This implementation uses `>= 0.0` for `assignedLength` and `> 0.0` for `overLength` — **the two boundaries differ** (table above). If both were `> 0.0`, a dynamic product
     /// with length 0 would **vanish from the result**, and downstream would believe it has no dynamic length at all.
     /// </remarks>
     [Fact]

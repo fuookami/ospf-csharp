@@ -39,7 +39,7 @@ public static class ResourceArcs {
 /// <remarks>
 /// 用 `record` 而非类：`data class`，两侧的 `Set` 成员判断（`arc in forbiddenArcs`）与冲突比较（`arc != required`）
 /// 都依赖**结构相等**。四个字段全是浅值对象，结构相等在这里既正确又便宜。
-/// A `record` rather than a class: the code is a `data class`, and both the `Set` membership test
+/// A `record` rather than a class: this implementation is a `data class`, and both the `Set` membership test
 /// (`arc in forbiddenArcs`) and the conflict comparison (`arc != required`) rely on **structural equality**. All four fields
 /// are shallow value objects, so structural equality is both correct and cheap here.
 /// </remarks>

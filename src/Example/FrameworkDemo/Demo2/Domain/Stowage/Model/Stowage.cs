@@ -66,7 +66,7 @@ public static class ItemStatuses
 /// 名称重复会让两件货共用一列——这是 `Item` 还缺 `Id` 的后果，已记入缺口。
 ///
 /// closely: **legality** (`StowageNeeded` / `AdjustmentNeeded`) and **symbol bridging** (`stowage_{i}_{j}` per legal pair, `loaded_{i}` per item).
-/// One known divergence: the code keys by `items[i].id` while C#'s `Item` only has `Name`, so the key is the **name**. Duplicate names would make two items share a column —
+/// One known divergence: the implementation keys by `items[i].id` while C#'s `Item` only has `Name`, so the key is the **name**. Duplicate names would make two items share a column —
 /// a consequence of `Item` still lacking an `Id`, recorded as a gap.
 /// </remarks>
 public sealed class Stowage

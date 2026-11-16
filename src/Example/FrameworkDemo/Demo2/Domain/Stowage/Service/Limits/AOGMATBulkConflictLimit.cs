@@ -63,7 +63,7 @@ public sealed class AOGMATBulkConflictLimit
         _positions = positions;
         _stowage = stowage;
         // 的名字就是 `aot_mat_bulk_conflict_limit`（`AOG` 打成了 `AOT`）。沿用，不"顺手改正"——改名会让按名字定位的调用方找不到它。
-        // The code's name literally is `aot_mat_bulk_conflict_limit` (`AOG` typed as `AOT`). Copied as-is rather than "fixed": renaming breaks any caller that locates the
+ // Its name literally is `aot_mat_bulk_conflict_limit` (`AOG` typed as `AOT`). Copied as-is rather than "fixed": renaming breaks any caller that locates the
         // pipeline by name.
         Name = name;
     }

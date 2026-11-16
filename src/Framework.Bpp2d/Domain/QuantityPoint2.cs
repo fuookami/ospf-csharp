@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// <c>ArgumentException</c>，本类型**刻意不复用它**——几何计算里一个量纲写错不该让整个排样崩掉，而应作为可处理的
 /// 失败返回。
 ///
-/// **A deliberate difference from the code**: its `plus`/`minus` return <c>QuantityVector2</c> and can
+/// **A deliberate difference**: its `plus`/`minus` return <c>QuantityVector2</c> and can
 /// only throw on a dimension mismatch; these return a result type so callers get a structured failure.
 /// <see cref="QuantityArithmetic"/>'s `Plus`/`Minus` throw <c>ArgumentException</c> and are **deliberately not
 /// reused** here: a single wrong dimension in a geometry computation should be a handleable failure, not a crash.

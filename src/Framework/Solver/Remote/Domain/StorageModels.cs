@@ -27,7 +27,7 @@ public sealed record StoredObject(
 /// 字段名必须与**逐字**一致：<c>ref</c>（不是 <c>objectRef</c>）与
 /// <c>createdAtEpochMs</c>（整型毫秒，不是 ISO 字符串）。此前 C# 侧写成 <c>objectRef</c>／
 /// <c>createdAt</c>，两端互相读不到对方的字段。
-/// Field names must match the reference **verbatim**: the code uses <c>ref</c> (not
+/// Field names must match the reference **verbatim**: this implementation uses <c>ref</c> (not
 /// <c>objectRef</c>) and <c>createdAtEpochMs</c> (integer milliseconds, not an ISO string). C# previously
 /// used <c>objectRef</c>/<c>createdAt</c>, so neither side could read the other's fields.
 /// </remarks>

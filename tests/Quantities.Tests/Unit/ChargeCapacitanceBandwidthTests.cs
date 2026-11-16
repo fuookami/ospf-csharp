@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// Adds and creates `CapacitanceUnits` (5).
 ///
-/// **The code writes the farad family while declaring `Capacitance`** —
+/// **This implementation writes the farad family while declaring `Capacitance`** —
 /// **following the file name builds charge units; following the declared quantity is right.**
 /// </remarks>
 public class ChargeCapacitanceBandwidthTests
@@ -50,7 +50,7 @@ public class ChargeCapacitanceBandwidthTests
         //
         // Be (value equality) rather than BeSameAs: **the quantity `Coulomb.Divide(Volt)` computes is not the
         // same instance as `Dimensions.Capacitance`, while the dimension vector matches.**
-        // **BeSameAs goes red on that, and the criterion is too strict rather than the code wrong.**
+ // **BeSameAs goes red on that, and the criterion is too strict rather than the implementation wrong.**
         ElectricChargeUnits.Coulomb.Quantity.Should().Be(Dimensions.ElectricCharge,
             "the coulomb stays a charge unit");
 

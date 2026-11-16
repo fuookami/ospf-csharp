@@ -114,7 +114,7 @@ public static class ProduceSlackHelper {
     ///
     /// **The key is the material object, not a position**: its `LinearIntermediateSymbols1` indexes by `Shape1` position, which equals the material index only when indices are
     /// contiguous; keying by object avoids assuming that. **The range must be set**: `produce_quantity_ (product)` takes its bound from the demand and the consumption one from the reserves; without
-    /// a range the solver simply drives the quantity to infinity. **An invalid range fails rather than being skipped**, since the code uses `.value!!` and skipping silently drops the bound.
+ /// a range the solver simply drives the quantity to infinity. **An invalid range fails rather than being skipped**, since this implementation uses `.value!!` and skipping silently drops the bound.
     /// </remarks>
     public static Try BuildQuantityTable<M>(
         IReadOnlyList<(M Material, Flt64? Lower, Flt64? Upper)> materials,
@@ -286,7 +286,7 @@ public static class ProduceSlackHelper {
     /// 2. **`constraint: true`**：这四个目标不像超量 / 不足表那样自己加行，松弛必须自带 `x - pos ≤ 阈值`，
     ///    否则 `pos` 是个没有上界的自由变量，最小化时恒取 0、最大化时冲到无穷。
     /// 3. **系数在松弛外面乘**，即 `coefficient(x) * slack`。
-    /// 4. **空列表的处理两边不同**：四个"数量"目标照旧 `minimize` 一个空多项式，四个"超量 / 不足"目标
+    /// 4. **空列表的处理两边不同**：四个"数量"目标不变 `minimize` 一个空多项式，四个"超量 / 不足"目标
     ///    外层有 `if (materials.isNotEmpty)`，为空时连目标都不加。这个差别由 `skipWhenEmpty` 承载。
     ///
     /// shape shared by all eight: **a zero threshold charges the symbol itself and only a non-zero
@@ -382,7 +382,7 @@ public static class ProduceSlackHelper {
     /// <param name="args">影子价格键 / The shadow-price key.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 行名照做 `${name}_ub_${product}` 的顺序：**后缀在前、标识在后**，`produce_quantity_ub_0`。
+    /// 行名如此 `${name}_ub_${product}` 的顺序：**后缀在前、标识在后**，`produce_quantity_ub_0`。
     ///
     /// 三处必须沿用：
     ///
@@ -474,7 +474,7 @@ public static class ProduceSlackHelper {
     /// `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and cannot be attached after construction. The key is attached to the
     /// **constraint row's** `Args`, and the row is what the dual value is keyed by. Four things are carried over: **only a row carrying a key has
     /// a price** and a row without one is skipped silently rather than being an error (its `when` has no `else`); **prices accumulate per row**, since one key can be hit by several rows and
-    /// the code uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as "already computed"; and **a table that
+ /// this implementation uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as "already computed"; and **a table that
     /// was never built skips the whole block** instead of failing, since `refresh` may run before registration.
     /// </remarks>
     public static Try RefreshTable(

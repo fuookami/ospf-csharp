@@ -86,7 +86,7 @@ public sealed class PathCompilation {
         ArgumentNullException.ThrowIfNull(name);
         // C# 侧没有单元素二元变量类型，用长度 1 的 `UIntVariable1` 表达同一语义（`BinVar`）。
         // The C# side has no single-element binary variable type; a length-1 `UIntVariable1` expresses the same semantics
-        // (the code uses `BinVar`).
+ // (this implementation uses `BinVar`).
         var variable = new UIntVariable1(name, Shape1.Invoke(1));
         _variables[id] = variable;
         foreach ((string rowId, LinearExpressionSymbol symbol) in _rows) {

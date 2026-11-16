@@ -82,7 +82,7 @@ internal sealed class LongitudinalMomentLimit
             }
 
             // `phase.name.lowercase`：`ZeroFuel` → `zerofuel`，不是 `zero_fuel`。
-            // The code's `phase.name.lowercase`: `ZeroFuel` becomes `zerofuel`, not `zero_fuel`.
+ // Its `phase.name.lowercase`: `ZeroFuel` becomes `zerofuel`, not `zero_fuel`.
             string suffix = phase.ToString().ToLowerInvariant();
 
             string minimumName = Name + "_" + suffix + "_minimum";

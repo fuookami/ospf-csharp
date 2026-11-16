@@ -27,14 +27,14 @@ namespace Fuookami.Ospf.Math.Symbol.Expression.Parser;
 /// The arithmetic part of its lives here.
 /// **C# had only a private `ParseScalarValue` inside `Parser`, serving comparison operands (literals and paths)**,
 /// **with no public scalar entry and no arithmetic.**
-/// **This layer does not do ternaries, `if-then-else`, logic, or pattern matching** — those stay in the code,
+/// **This layer does not do ternaries, `if-then-else`, logic, or pattern matching** — those stay in the implementation,
 /// **and a tripwire pins their absence.**
 ///
 /// 优先级与结合性：
 /// `additive`（`+`/`-`，左结合）→ `multiplicative`（`*`/`/`/`%`，左结合）→ `unaryMinus` → `power`（`^`/`**`，**右结合**）→ `unaryPlus` → `primary`。
 /// **`-2^2` 读作 `-(2^2)`**：一元负号比幂松。**`2^3^2` 读作 `2^(3^2)`**：幂右结合。
 ///
-/// Precedence and associativity, matching the code: **`-2^2` means `-(2^2)`** and **`2^3^2` means `2^(3^2)`**.
+/// Precedence and associativity.
 /// </remarks>
 public sealed class ScalarExpressionParser
 {

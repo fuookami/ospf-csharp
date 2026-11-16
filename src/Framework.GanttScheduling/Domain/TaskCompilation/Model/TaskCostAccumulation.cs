@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// </summary>
 /// <remarks>
 /// `addColumns` 每次都先 `taskCost.flush`，然后**只对本次新增的列**追加 `cost × x[task]`。
-/// 于是目标里只留下**最近一次迭代**的代价项，之前迭代的列虽然还在模型里（`_x` 累积、约束照旧），
+/// 于是目标里只留下**最近一次迭代**的代价项，之前迭代的列虽然还在模型里（`_x` 累积、约束不变），
 /// 它们的**代价项已经不在目标中了**。
 ///
 /// 这不是笔误，是原样行为；本实现沿用。后果很具体：
@@ -30,10 +30,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// ponytail: 沿用flush 语义；若要让目标覆盖全部历史列，改成**累积字典**（`task → weight`，
 /// 每轮 `Add` 而非 `Clear`），并把 `RetainedIterations` 改成"全部"。
 ///
-/// The code's `addColumns` always calls `taskCost.flush` first and then appends `cost × x[task]` for **this iteration's new columns only**. So the objective keeps only the
+/// Its `addColumns` always calls `taskCost.flush` first and then appends `cost × x[task]` for **this iteration's new columns only**. So the objective keeps only the
 /// **most recent iteration's** cost terms; earlier columns are still in the model (`_x` accumulates, the constraints remain) but their **cost terms are gone from the objective**.
 ///
-/// This is the code verbatim, not a typo, and this implementation copies it. The consequences are concrete:
+/// This is the implementation verbatim, not a typo, and this implementation copies it. The consequences are concrete:
 ///
 /// | Symptom | Detail |
 /// | --- | --- |
@@ -41,7 +41,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// | nothing is reported | the objective is still a well-formed polynomial |
 /// | worse the longer column generation runs | more early columns, more missing cost |
 ///
-/// ponytail: the flush semantics are copied from the code; to cover every historical column, switch to an **accumulating dictionary** (`task → weight`, `Add` each round
+/// ponytail: the flush semantics are; to cover every historical column, switch to an **accumulating dictionary** (`task → weight`, `Add` each round
 /// instead of `Clear`) and change `RetainedIterations` to "all".
 /// </remarks>
 public class TaskCostAccumulation<T> {
@@ -59,7 +59,7 @@ public class TaskCostAccumulation<T> {
     public IReadOnlyList<Term> Terms => _terms;
 
     /// <summary>目标中保留的迭代数 / How many iterations the objective retains.</summary>
-    /// <remarks>保留最近一轮，所以是 `1`。 / The code keeps only the latest round, so this is `1`.</remarks>
+ /// <remarks>保留最近一轮，所以是 `1`。 / This implementation keeps only the latest round, so this is `1`.</remarks>
     public static int RetainedIterations => 1;
 
     /// <summary>

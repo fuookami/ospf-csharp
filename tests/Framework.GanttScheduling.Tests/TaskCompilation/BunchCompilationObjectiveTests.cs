@@ -85,7 +85,7 @@ public class BunchCompilationObjectiveTests {
     /// <remarks>
     /// `coefficient?.let { … }`，所以必须**成对**：给了系数 → 每个执行器一项；没给 → 模型里没有子目标。
     ///
-    /// The code is `coefficient?.let { … }`, so this must be **paired**: with a coefficient → one term per executor; without one → no sub-objective at all.
+ /// This implementation is `coefficient?.let { … }`, so this must be **paired**: with a coefficient → one term per executor; without one → no sub-objective at all.
     /// </remarks>
     [Fact]
     public void ExecutorLeisureMinimization_ShouldWorkOnABunchCompilationOnlyWithACoefficient() {

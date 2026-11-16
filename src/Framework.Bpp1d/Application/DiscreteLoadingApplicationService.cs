@@ -92,7 +92,7 @@ public sealed record DiscreteLoadingSolveResult<V>(
 /// 必须一致（相对容差 `1e-6`）。少了它，一个**模型与求解器错位**的错误会被当成正常结果返回——
 /// 那类错误最难在业务侧发现，因为结果"看起来合理"。
 ///
-/// **Only the MILP path is implemented here; the Benders path is not.** The code tries Benders first when `preferBenders` is set and may fall back. All the Benders
+/// **Only the MILP path is implemented here; the Benders path is not.** The implementation tries Benders first when `preferBenders` is set and may fall back. All the Benders
 /// dependencies exist on the C# side, but the budget did not cover both paths — **so `preferBenders` is refused explicitly rather than silently degraded**, which
 /// would let callers believe they hold a Benders trace and termination reason. **The objective re-check in `finish` is the most important part**: the solver's
 /// objective must agree with one **recomputed from the full model** (relative tolerance `1e-6`), because otherwise a **model/solver mismatch** is returned as a
@@ -281,7 +281,7 @@ public sealed class DiscreteLoadingApplicationService<V>
         // 复现： 把分区列生成接上之后，真 SCIP 后端跑完链，停在这一句上（`rows52,symbols76`）。
         //
         // **Objective sub-objects must be flattened to variable level first**: a monomial inside `MetaSubObjects` may carry an **expression symbol**
-        // (`LinearExpressionSymbol` such as `stowage_{i}_{j}`), which is not a variable and is not in the solution table. The code goes through
+ // (`LinearExpressionSymbol` such as `stowage_{i}_{j}`), which is not a variable and is not in the solution table. The implementation goes through
         // `model.objectiveSnapshot`, and that step *is* the flattening; this implementation never had it, so any domain objective referencing an expression symbol failed here
         // with "missing objective variable" — **a message that sends you to inspect the solution table, which is complete**.
         // Reproduced: with partition column generation wired, the real SCIP backend ran the chain and stopped exactly here (`rows52,symbols76`).
@@ -400,7 +400,7 @@ public sealed class DiscreteLoadingApplicationService<V>
     /// 一个"没装东西"的解看起来可行。这里也是直接 `Failed(DataNotFound)`。
     ///
     /// **A missing value is a failure, never zero.** Benders merges only the variables it knows; filling the rest with 0 would make a "loads nothing" solution look
-    /// feasible. The code fails with `DataNotFound` here too.
+ /// feasible. The implementation fails with `DataNotFound` here too.
     /// </remarks>
     internal static Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> MergeBendersValues(
         LinearMetaModel<Flt64> model,

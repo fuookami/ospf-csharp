@@ -290,7 +290,7 @@ public sealed class QuadraticTetradModel : BasicQuadraticTetradModel, IQuadratic
     ///
  /// adds the entry point. **The penalty is fixed at `1.0`** because its `elastic` takes no arguments and `buildElasticModel` takes
     /// no penalty — the penalty is a builder-internal constant. The C# static method accepts `elasticPenalty` so tests can verify the penalty really reaches the
-    /// objective, while `Elastic` must **not expose it**, matching the code.
+ /// objective, while `Elastic` must **not expose it**.
     /// </remarks>
     public QuadraticTetradModel Elastic() =>
         QuadraticTetradElasticBuilder.BuildElasticModel(this, Flt64.One);

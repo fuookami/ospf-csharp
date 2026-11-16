@@ -206,7 +206,7 @@ public sealed record PwlRadiusSquaredApproximation(
     /// 断点、斜率、截距仍以 `double` 存储（它们是构造时一次性算好的常数），但**求值与相减在十进制域内完成**：
     /// 先把这三个常数转成 `FltX` 一次，之后不再往返。
     ///
-    /// **Why this overload exists**: the `double` version lowers the radius to `double`, computes, then raises the result back to `FltX`, and each conversion rounds. The code's `ActualError` stays in
+ /// **Why this overload exists**: the `double` version lowers the radius to `double`, computes, then raises the result back to `FltX`, and each conversion rounds. Its `ActualError` stays in
     /// `FltX` (decimal) throughout with neither conversion. For a quantity compared against a tolerance, an uncertain rounding direction matters more than the rounding magnitude: it makes a
     /// borderline verdict flip at random. The breakpoints, slopes and intercepts stay stored as `double` (constants computed once at construction), but **evaluation and subtraction happen in the
     /// decimal domain**: those three constants convert to `FltX` once and never round-trip again.

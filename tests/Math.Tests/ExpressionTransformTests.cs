@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Math.Tests;
 /// 表达式树变换 / Expression tree transformation.
 /// </summary>
 /// <remarks>
-/// 补的两个入口此前不存在**，所以这里钉的是**语义**而不是"函数在不在"：后序、叶子照旧、布尔身份不变。
+/// 补的两个入口此前不存在**，所以这里钉的是**语义**而不是"函数在不在"：后序、叶子不变、布尔身份不变。
 ///
 /// added two entry points that did not exist**, so these pin the **semantics** rather than "the function exists": post-order, leaves pass through, boolean
 /// identity unchanged.
@@ -138,7 +138,7 @@ public class ExpressionTransformTests {
     /// **它只是让变换器拿到原来那些标量实例**，于是"变换"变成只改外壳。
     /// **所以判据必须能看见"标量是新实例"这件事，否则这条重载少了什么都测不出来。**
     ///
-    /// **This is the code `BooleanExpression.transform` overload, absent from C# formerly.**
+ /// **This is the implementation `BooleanExpression.transform` overload, absent from C# formerly.**
     /// **Dropping the first step (`TransformScalars(it)`) raises nothing and loses no member** —
     /// **it merely hands the transformer the original scalar instances, so "transform" only changes the shell.**
     /// **So the criterion has to see that the scalars are fresh instances, or it cannot tell what the overload dropped.**
@@ -180,7 +180,7 @@ public class ExpressionTransformTests {
     /// <remarks>
     /// 是这个行为：`Comparison` 的布尔身份不由这一层改变。**判据钉的是"没改"，因为"改了"才会破坏语义。**
     ///
-    /// The code behaves the same way: this layer does not change a comparison's boolean identity. **The criterion pins "not changed", because a change is what
+ /// The implementation behaves the same way: this layer does not change a comparison's boolean identity. **The criterion pins "not changed", because a change is what
     /// would break the semantics.**
     /// </remarks>
     [Fact]

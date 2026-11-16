@@ -127,7 +127,7 @@ public class MongoUpdateTranslatorTests
     /// **A string may be a constant or unparsed expression source** —
     /// **guessing it is a constant writes unvalidated text into the database as data.**
     ///
-    /// **The code accepts `ScalarConstant` only** and fails the rest with `"expression is not supported"`.
+ /// **The implementation accepts `ScalarConstant` only** and fails the rest with `"expression is not supported"`.
     /// </remarks>
     [Fact]
     public void TheExpressionAssignment_ShouldRefuseRatherThanGuess()

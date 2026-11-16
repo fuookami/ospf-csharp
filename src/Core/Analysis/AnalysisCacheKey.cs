@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **而删除复验从不碰缓存**——所以键里没有它是对的。
 /// **但这条"对"依赖一个前提：谁都不许从收缩路径去读缓存。**
 ///
-/// **`activeSources` is deliberately absent.** The code cache is read and written only on the **full-model** path, **and deletion checks never touch it** — so leaving it out is correct. **But that correctness rests
+/// **`activeSources` is deliberately absent.** The implementation cache is read and written only on the **full-model** path, **and deletion checks never touch it** — so leaving it out is correct. **But that correctness rests
 /// on one premise: nobody may read the cache from a shrink path.**
 /// </remarks>
 public sealed record AnalysisCacheKey

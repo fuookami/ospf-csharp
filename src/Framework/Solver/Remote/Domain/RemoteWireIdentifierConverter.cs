@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 /// 标识一律是 <c>@JvmInline value class X(val value: String)</c>，序列化为**裸字符串**；
 /// C# 的 <c>readonly record struct X(string Value)</c> 默认会写成 <c>{"value":"…"}</c>，两端无法互通。
 /// 本工厂识别"只有一个公共 <c>Value</c> 字符串属性 + 一个字符串构造参数"的值类型并按裸字符串处理。
-/// Pinned Kotlin identifiers are <c>@JvmInline value class X(val value: String)</c> and serialize as **bare
+/// An identifier is a single-value wrapper (<c>value class</c> on the JVM)</c> and serialize as **bare
 /// strings**; a C# <c>readonly record struct X(string Value)</c> would default to <c>{"value":"…"}</c> and the
 /// two sides would not interoperate. This factory recognizes value types with exactly one public string
 /// <c>Value</c> property plus one string constructor parameter and treats them as bare strings.

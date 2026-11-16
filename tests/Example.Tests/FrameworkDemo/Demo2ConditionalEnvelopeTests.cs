@@ -215,7 +215,7 @@ public class Demo2ConditionalEnvelopeTests {
     /// </summary>
     /// <remarks>
     /// 四点成对：注册成功 / 两个开关符号 `_min_switch` / `_max_switch` 都在 / **`min = 第二组 + 开关·(第一组 − 第二组)`**
-    /// （常数项含第二组的值，系数里既有一也能找到第一组与第二组的差）/ `min_index_` / `max_index_` 名字照旧。
+    /// （常数项含第二组的值，系数里既有一也能找到第一组与第二组的差）/ `min_index_` / `max_index_` 名字不变。
     /// 开关写反（`第二组 − 第一组`）不会报错，**只有"第二组是基准、第一组是差值"这个结构能分辨**。
     ///
     /// Four paired points: registration succeeds; both switch symbols (`_min_switch`, `_max_switch`) are present; **`min = second + switch·(first − second)`** (the constant carries the

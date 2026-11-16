@@ -282,7 +282,7 @@ public sealed class RouteCompilation<V> where V : struct, IRealNumber<V> {
     /// </summary>
     /// <remarks>
     /// **默认不自动删列**：仅在显式启用列上限时才由调用方调用，本实现提供但从不主动调用。
-    /// The code notes "the first version defaults to no automatic column removal; only called when a column limit is explicitly
+ /// The implementation notes "the first version defaults to no automatic column removal; only called when a column limit is explicitly
     /// enabled"; this implementation follows suit and never calls it on its own.
     /// </remarks>
     /// <param name="routesToRemove">待移除路线 / Routes to remove.</param>
@@ -407,7 +407,7 @@ public sealed class RouteCompilation<V> where V : struct, IRealNumber<V> {
     /// <remarks>
     /// **该参数在本方法体内不被使用**：它只供 `extractSolution` 转发。这里保留
     /// 同样的签名，是为了让调用方在两个提取方法之间切换时不必改参数列表。
-    /// **This parameter is unused inside this method, matching the code**: its `extractRouteValues` also only declares it
+ /// **This parameter is unused inside this method
     /// so `extractSolution` can forward it. Keeping the same signature lets callers switch between the two extraction methods without
     /// rewriting their argument lists.
     /// </remarks>

@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 5. **约束名带来源**：`source_early_limit_{source}`。
 ///
 /// **at least one of a source's items must go into an early position**. Five things must be copied: **only sources with more than one item are constrained**
-/// (the code skips when `cargos.size` is at most 1); **the early positions are the first `earlyEnd + 1` in `linearLoadingOrder` order**, explicitly by loading order rather than
+/// (the implementation skips when `cargos.size` is at most 1); **the early positions are the first `earlyEnd + 1` in `linearLoadingOrder` order**, explicitly by loading order rather than
 /// input-list order;
 /// **the take bound is `(earlyEnd + 1).coerceIn(0, positions.size)`**, without which it would overrun; **the relation is `GE` with right-hand side 1** (at least one), not an equality;
 /// and **the name carries the source**.

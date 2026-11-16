@@ -229,7 +229,7 @@ public sealed class StowageAggregation
     /// 这里把"业载已注册"当**前提**写进签名（没有 payload 参数，不猜、不跳过），只补总重与最大装载重量。
     /// **调用方必须先跑 `RegisterForBendersMP`**，否则模型里没有业载，重量符号引用不到东西。
     ///
-    /// The code is **one model plus a stage table**, so the payload can be registered only once. `RegisterForBendersSP`
+ /// This implementation is **one model plus a stage table**, so the payload can be registered only once. `RegisterForBendersSP`
     /// registers it again on the same model, and `Register` allows one registration per object — **those are two paths, not one**. This puts "the payload is already
     /// registered" into the signature as a **premise** (no payload argument, no guessing, no skipping) and adds only the weight families. **The caller must run
     /// `RegisterForBendersMP` first**, otherwise the model has no payload and the weight symbols reference nothing.

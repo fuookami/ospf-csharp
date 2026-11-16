@@ -377,7 +377,7 @@ public class Demo2StowageLimitTests {
     /// 2. 带码但不可用：**没有行**。
     /// 3. 可用但没有码：**没有行**（少查类型码会给所有舱位强制装载，舱位多于货物时立刻不可行）。
     ///
-    /// Three paired points: coded and available gets an `estimate_loaded = 1` row; coded but unavailable gets **none**; available but uncoded gets **none** (dropping the code
+ /// Three paired points: coded and available gets an `estimate_loaded = 1` row; coded but unavailable gets **none**; available but uncoded gets **none** (dropping the implementation
     /// forces loading everywhere and turns infeasible as soon as positions outnumber items).
     /// </remarks>
     [Fact]

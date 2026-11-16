@@ -3,7 +3,7 @@
 //
 // **时间类型的映射**：`kotlin.time.Duration` 与 `kotlin.time.Instant`，C# 侧用标准库 `TimeSpan` 与
 // `DateTimeOffset`，不引入任何新依赖。`TimeSpan` 是有符号时长、`DateTimeOffset` 是带偏移的绝对时刻，语义一一对应。
-// **Time type mapping**: the code uses `kotlin.time.Duration` and `kotlin.time.Instant`; the C# side uses the standard
+// **Time type mapping**: this implementation uses `kotlin.time.Duration` and `kotlin.time.Instant`; the C# side uses the standard
 // library's `TimeSpan` and `DateTimeOffset` with no new dependency. `TimeSpan` is a signed duration and `DateTimeOffset`
 // an absolute instant with offset — a one-to-one correspondence.
 

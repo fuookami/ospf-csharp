@@ -36,14 +36,14 @@ public static class PowerUnits {
     //
     // The four below were added from Power.kt, **and this group carries a same-name-different-value trap.**
     //
-    // **The code `Horsepower` is 735 W (metric PS) while this repo Horsepower is 745.69987 W (mechanical).**
+ // **The implementation `Horsepower` is 735 W (metric PS) while this repo Horsepower is 745.69987 W (mechanical).**
     // **One name, two values 1.4% apart, and the symbol `hp` is used in both senses.**
     //
     // **Handling: this repo Horsepower stays mechanical** (the international meaning of `hp`),
-    // **and the code 735 is admitted under the name `MetricHorsepower`** —
+ // **and the implementation 735 is admitted under the name `MetricHorsepower`** —
     // **changing the existing `Horsepower` would silently shift every existing call by 1.4%.**
     //
-    // **The code `UKHorsepower` writes `Watt * 550`, and 550 is the ft-lbf/s figure.**
+ // **The implementation `UKHorsepower` writes `Watt * 550`, and 550 is the ft-lbf/s figure.**
     // **The conversion factor was left out: 550 x 0.3048 x 4.4482216152605 = 745.69987 W**,
     // **which is exactly mechanical horsepower. So `UKHorsepower` is this repo existing `Horsepower`.**
 
@@ -78,7 +78,7 @@ public static class PowerUnits {
     /// **550 是 ft·lbf/s 的数值，漏了换算；550 ft·lbf/s = 745.69987 W。**
     /// **所以它与机械马力是同一个值，这里做成本仓 `Horsepower` 的别名。**
     ///
-    /// **The code 550 is the ft-lbf/s figure with the conversion dropped; 550 ft-lbf/s = 745.69987 W.**
+ /// **The implementation 550 is the ft-lbf/s figure with the conversion dropped; 550 ft-lbf/s = 745.69987 W.**
     /// **So it equals mechanical horsepower, and is an alias of this repo `Horsepower` here.**
     /// </remarks>
     public static readonly PhysicalUnit UKHorsepower = Horsepower;

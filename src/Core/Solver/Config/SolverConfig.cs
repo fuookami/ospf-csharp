@@ -62,7 +62,7 @@ public record SolverConfig {
     /// **接线需要一条从 `ILinearTriadModelView` 拿到策略的通路，而那个接口目前没有这个成员。**
     /// **这一点写在这里而不是留白，因为它决定了后续的起点。**
     ///
-    /// **follows its: the code reads <b>two</b> policies at the solve entry, one
+ /// **follows its: this implementation reads <b>two</b> policies at the solve entry, one
     /// from the config and one from the model, and if <b>either</b> is `EAGER` it takes the ordinary solve with no deferred
     /// materialisation.**
     ///

@@ -82,7 +82,7 @@ public class Bpp3dPackingProgramTrapsTests {
     ///
     /// 判据同时断言两侧，使得**任何一侧被改动**都会红——修好它是好事，但必须同步文档。
     ///
-    /// Both are `Quantity<V>` (unit-carrying) in the code; C# flattened `PackageSolutionLikeQuantity.Weight` to a **bare `Flt64`**, so whether "5" means 5 g or 5 kg is
+ /// Both are `Quantity<V>` (unit-carrying) in the implementation; C# flattened `PackageSolutionLikeQuantity.Weight` to a **bare `Flt64`**, so whether "5" means 5 g or 5 kg is
     /// **unknowable**. The criterion asserts both sides, so **changing either** goes red — fixing it is good, but the docs must follow.
     /// </remarks>
     [Fact]

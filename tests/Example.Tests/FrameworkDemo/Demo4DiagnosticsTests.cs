@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 是两个**纯计数**类型，不打印、不写文件。做成"打印函数"的版本没法在判据里断言——
 /// **进 IO 的代码只能靠抓输出，而抓输出的判据一改格式就全红**。
 ///
-/// The code's holds two **pure counter** types — no printing, no file writing. A "print function" version cannot be asserted on: **code that reaches IO can only be
+/// Its holds two **pure counter** types — no printing, no file writing. A "print function" version cannot be asserted on: **code that reaches IO can only be
 /// checked by capturing output, and such criteria go red the moment the format changes**.
 /// </remarks>
 public class Demo4DiagnosticsTests {

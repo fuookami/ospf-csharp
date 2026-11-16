@@ -104,7 +104,7 @@ public class UnitKeyConvergenceTests {
     /// **byte-for-byte `symbol ?: ""`**.
     ///
     /// The criteria pin both facts, **preventing someone from "fixing" `AnonymousPhysicalUnit.ToString` into the base's three-step fallback** — that would diverge
-    /// from the code, and **no existing criterion would notice**.
+ ///, and **no existing criterion would notice**.
     /// </remarks>
     [Fact]
     public void AnonymousUnit_ShouldKeyAsTheBaselineDoes() {
@@ -143,7 +143,7 @@ public class UnitKeyConvergenceTests {
     /// **This exists for a mutant that cannot be killed through `UnitKey`.** Changing `AnonymousPhysicalUnit.ToString` to `Symbol ?? Name ?? ""` leaves **every
     /// `UnitKey` criterion green** — `UnitKey` already tries `Name` **before** `ToString`, so an extra fallback layer **does not change its result**.
     ///
-    /// But `ToString` **has direct callers** (rendering, logs, id assembly), and the code is `symbol ?: ""` — **no name fallback**, so `ToString` returns **an
+ /// But `ToString` **has direct callers** (rendering, logs, id assembly), and this implementation is `symbol ?: ""` — **no name fallback**, so `ToString` returns **an
     /// empty string** even when a name exists. A C# name fallback would make diagnostic output differ.
     ///
     /// **"Equivalent for `UnitKey`" is not "equivalent".** A criterion must land on **the method that was changed**, not on one of its consumers.

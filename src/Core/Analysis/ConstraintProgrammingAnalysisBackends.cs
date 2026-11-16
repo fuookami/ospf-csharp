@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 补（270 行）里不需要求解器的部分**：
 /// 两个证明判定、assumption 映射、固定值投影、后端失败传播。
 ///
-/// **没搬的是 `ConstraintProgrammingPerturbationBackend` 本身**：它要 `solver.CreateSession(model, options)` 与
+/// **没实现的是 `ConstraintProgrammingPerturbationBackend` 本身**：它要 `solver.CreateSession(model, options)` 与
 /// `session.Solve(hints)`，**那是真实后端**。
 ///
 /// **The parts of (270 lines) that need no solver is implemented**: the two proof gates, the assumption mapper, the fixed-value projection and

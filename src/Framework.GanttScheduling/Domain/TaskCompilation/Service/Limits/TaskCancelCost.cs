@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 ///
 /// Cancelling a task costs `coefficient`, and the objective minimises the total. Two boundaries are worth pinning:
 ///
-/// 1. **A missing coefficient is not "one".** The code takes `infinity` — that task's cancellation **cannot be priced**, i.e. it is forbidden. C#'s `Flt64` is built on
+/// 1. **A missing coefficient is not "one".** The implementation takes `infinity` — that task's cancellation **cannot be priced**, i.e. it is forbidden. C#'s `Flt64` is built on
 ///    `decimal` and has no infinity; defaulting to `1` turns "cancellation forbidden" into "cancelling once costs 1", so a schedule that should be rejected is accepted cheaply —
 ///    **one extra cancellation merely lowers the objective a little**.
 /// 2. **With the global switch off, no task enters the objective.** Whether a task can be cancelled is simply not modelled then; keeping tasks in the objective only lengthens

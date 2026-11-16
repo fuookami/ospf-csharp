@@ -18,10 +18,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 /// **面积最小化目标** / The area-minimisation objective.
 /// </summary>
 /// <remarks>
-/// 判据的重点：**未注册面积符号时直接失败**（不是加一个空目标）、**目标名与分类照做**、
+/// 判据的重点：**未注册面积符号时直接失败**（不是加一个空目标）、**目标名与分类如此**、
 /// 以及**系数真的乘进目标里**（不是记下来但没用）。
 ///
-/// The criteria focus on **failing outright when the area symbol is unregistered** rather than adding an empty objective, **the objective name and category matching the code**, and
+/// The criteria focus on **failing outright when the area symbol is unregistered** rather than adding an empty objective, **the objective name and category
 /// **the coefficient actually multiplying into the objective** rather than being stored and ignored.
 /// </remarks>
 public class AreaMinimizationTests {
@@ -36,11 +36,11 @@ public class AreaMinimizationTests {
     ///
     /// 1. 未注册 → **失败**（不是"成功但目标为空"）。
     /// 2. 注册后 → 成功，且模型上**恰好一个**目标。
-    /// 3. 目标**名与分类**照做（`area_minimization` / `Minimum`）。
+    /// 3. 目标**名与分类**如此（`area_minimization` / `Minimum`）。
     /// 4. 目标多项式里**挂的是面积符号本身**，不是某个空单项。
     ///
     /// Four paired points: before registration it **fails** rather than "succeeding with an empty objective"; after registration it succeeds with **exactly one** objective on the model; the
-    /// objective's **name and category** match the code; and the polynomial carries **the area symbol itself** rather than an empty monomial.
+ /// objective's **name and category** match the implementation; and the polynomial carries **the area symbol itself** rather than an empty monomial.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldFailUntilTheAreaSymbolIsRegistered() {

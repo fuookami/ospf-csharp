@@ -104,7 +104,7 @@ internal sealed record ConstraintReading(double Violation, bool Feasible);
 /// **C# 用"约束搜索对象"代替模型装饰器**。处理器挂到 `model` 上，是因为 `compareIndividuals(model, …)` 只拿到模型引用；
 /// C# 直接把处理器与问题放在一起，省掉一整层接口委托装饰器。语义相同（同一个处理器、同一份缓存），但**不再能通过模型引用找回
 /// 处理器**——这是有意的形状差异。
-/// **C# replaces its model decorator with a constrained-search object.** The code hangs the handler on `model` because
+/// **C# replaces its model decorator with a constrained-search object.** The implementation hangs the handler on `model` because
 /// `compareIndividuals(model, …)` only receives the model reference; C# keeps the handler next to the problem and drops an entire
 /// layer of delegating decorator. The semantics match (same handler, same cache), but the handler is **no longer recoverable from the
 /// model reference** — a deliberate shape difference.

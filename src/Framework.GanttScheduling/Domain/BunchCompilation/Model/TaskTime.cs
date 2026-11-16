@@ -95,7 +95,7 @@ public class BunchSchedulingTaskTime<B, T, E, A> : TaskSchedulingTaskTime<T, E, 
     ///
     /// **A bunch's `est` is one displacement shared by the whole bunch**, not a variable per task — that is what "bunch" means: members start and end together. With a redundancy
     /// range that displacement is the redundancy amount (bounded by ± the value; with per-task clamps when the task has a time); without one it is constant zero. `estEnd` is
-    /// **identical** to `est` (the code does not add the duration in this branch). This class therefore overrides only this method, and all eight tables (deviation, over-max,
+ /// **identical** to `est` (this implementation does not add the duration in this branch). This class therefore overrides only this method, and all eight tables (deviation, over-max,
     /// on-time, end-time deviation) come from `TaskSchedulingTaskTime`: they depend only on "what is each task's `est`", not on where it comes from. Previously this class built
     /// four of the eight itself — a state that looks like "some time expressions exist", which is harder to notice than an outright failure. Mixing the two schemes (creating a
     /// variable per task here too) dissolves the implicit "members of a bunch start and end together" constraint while the solution stays feasible and the objective looks fine.

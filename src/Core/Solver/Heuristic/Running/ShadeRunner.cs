@@ -198,13 +198,13 @@ public sealed record ShadeState<ObjValue, V>(
 /// **`ShadeNumerics` 只保留原生一支，fdlibm 协议在配置层明确拒绝**。`FdlibmV1` 依赖 Java 的 `StrictMath`（fdlibm 的 `tan`），
 /// 本实现无法在 .NET 上复现其逐位结果；写一个"看起来一样"的枚举只会让调用方以为可复现，而**收下配置却按原生数值跑**更糟——
 /// 同一份配置会对应两份轨迹。所以 `RegistryParameters` 对 `numerics: shade-fdlibm-v1` 直接失败，`Tangent` 恒用 `System.Math.Tan`。
-/// **Only the native branch of `ShadeNumerics` is kept; the fdlibm protocol is refused at the configuration layer.** The code's `FdlibmV1`
+/// **Only the native branch of `ShadeNumerics` is kept; the fdlibm protocol is refused at the configuration layer.** Its `FdlibmV1`
 /// relies on Java's `StrictMath` (fdlibm's `tan`), whose bit-exact results cannot be reproduced on .NET; a "looks the same" enum would only make
 /// callers believe it is reproducible, and **accepting the config while running native numerics** is worse — one config would map to two
 /// trajectories. So `RegistryParameters` fails on `numerics: shade-fdlibm-v1` outright and `Tangent` always uses `System.Math.Tan`.
 /// **没有了"模型自带约束排序"这条分支**。`keepBest` 先问模型有没有约束处理器；本实现把约束处理器放在问题旁边而非模型上
 /// （既定形状差异），因此 `keepBest` 直接按严格比较排序。
-/// **The "model-carried constraint ranking" branch is gone.** The code's `keepBest` first asks the model for a constraint handler; this
+/// **The "model-carried constraint ranking" branch is gone.** Its `keepBest` first asks the model for a constraint handler; this
 /// port keeps the handler next to the problem rather than on the model (an established shape difference), so `keepBest` sorts by strict
 /// comparison directly.
 /// </remarks>

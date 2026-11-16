@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 ///
 /// 所以这里用短路：第一步非 `Ok` 就直接返回，第二步根本不执行。
 ///
-/// The code splits registration into two steps: **`aggregation.register(model)` first, `pipelineList(model)` only on success**. The order is semantics, not style — the
+/// This implementation splits registration into two steps: **`aggregation.register(model)` first, `pipelineList(model)` only on success**. The order is semantics, not style — the
 /// pipelines append constraints to the model. Continuing to step two after step one failed attaches those constraints to **a half-registered model**: constraint names point at
 /// columns that do not exist or contradict each other, and the error surfaces much later as "the model is infeasible", **several layers away from its actual cause**.
 ///

@@ -274,7 +274,7 @@ public class Demo2LoadTorqueTests {
     /// 于是单方案下整段容量联动消失——而单方案恰恰是最常用的那种。**这条判据是那一版错误理解的留档改写**：
     /// 现在钉住"单方案下也有那两行"，与多方案成对。
     ///
-    /// The code's `linkAdditionalWeight` block sits inside no `if`, so it applies under the single schema too. wrapped it in `if (WithMultiLoadingSchema)` and the whole
+ /// Its `linkAdditionalWeight` block sits inside no `if`, so it applies under the single schema too. wrapped it in `if (WithMultiLoadingSchema)` and the whole
     /// link vanished under the single schema — the common case. **This criterion is the rewritten record of that misunderstanding**: it now pins "the two rows are there under the
     /// single schema as well", paired with the multi-schema case.
     /// </remarks>

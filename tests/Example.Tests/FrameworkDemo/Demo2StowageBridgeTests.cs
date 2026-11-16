@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 所以判据成对：合法组合有变量、不合法组合**没有**；`stowage` 的系数指着那个变量；`loaded` 的项数等于该货的合法舱位数。
 ///
-/// The code does two things: decide legality (`StowageNeeded`/`AdjustmentNeeded`) and translate the kernel's sparse decisions into `stowage_{i}_{j}` and
+/// This implementation does two things: decide legality (`StowageNeeded`/`AdjustmentNeeded`) and translate the kernel's sparse decisions into `stowage_{i}_{j}` and
 /// `loaded_{i}`. Both have a quiet failure mode: wrong legality produces decision variables for forbidden pairs (the model solves, and loads what it should not), and a wrong
 /// translation order (translate before registering the kernel) makes every `stowage` an **empty polynomial** — identically zero, still solvable, loading nothing.
 /// </remarks>
@@ -154,7 +154,7 @@ public class Demo2StowageBridgeTests {
 
 
     /// <summary>
-    /// **"下舱位拒主舱货"没有查** / The code does not check "a lower position refuses main cargo".
+ /// **"下舱位拒主舱货"没有查** / This implementation does not check "a lower position refuses main cargo".
     /// </summary>
     /// <remarks>
     /// `enabled` 只写了一个方向：`this.location.main && item.location.low`（主舱位拒下舱货）。
@@ -263,7 +263,7 @@ public class Demo2StowageBridgeTests {
     /// `if (!::loadingContext.isInitialized) return Failed(...)`。返回 `Ok` 会让调用方以为矩阵建好了，
     /// 而实际上一列都没有——这正是本仓反复修的那类壳行为。
     ///
-    /// The code is `if (!::loadingContext.isInitialized) return Failed(...)`. Returning `Ok` would let the caller believe the matrix exists when there is not one column —
+ /// This implementation is `if (!::loadingContext.isInitialized) return Failed(...)`. Returning `Ok` would let the caller believe the matrix exists when there is not one column —
     /// exactly the shell behaviour this repo keeps removing.
     /// </remarks>
     [Fact]

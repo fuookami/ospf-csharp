@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// <remarks>
 /// 补了 前 348 行的纯数据类型**（策略、请求、结果、观测、报告）。
 /// 第 349 行起是分析器本体，含 `activeBackend!!.solve(request)` 与 `backend!!.solve(request)`，
-/// **要真实重新优化后端，这里不搬，也不写空跑版本。**
+/// **要真实重新优化后端，这里不实现，也不写空跑版本。**
 ///
 /// **implemented the first 348 lines of** — the policies, request, result, observation and report. From line 349 on is the analyzer itself, with
 /// `activeBackend!!.solve(request)` and `backend!!.solve(request)`; **that needs a real reoptimization backend, so it was neither implemented nor stubbed.**

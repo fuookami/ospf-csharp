@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 2. `load_amount` 的每一项必须指着**该舱位在 `stowage` 里的那批符号**，系数 1——重算一遍项数一样、变量不同；
 /// 3. `full` 的三条分支（不可用 → 恒 1、单位 → 就是装载量、多位 → `SameAsFunction`）必须各走各的。
 ///
-/// The code is 585 lines; lands four things (`y`, `z`, `load_amount_{position}`, `full_{position}`) because they are the bottom of the dependency stack —
+/// This implementation is 585 lines; lands four things (`y`, `z`, `load_amount_{position}`, `full_{position}`) because they are the bottom of the dependency stack —
 /// the torque/CLI/weight symbols all sit on top of `load_amount`. The criteria target the three places that fail quietly: variables only for positions that need them; every
 /// `load_amount` term pointing at the **stowage** symbols of that position with coefficient 1 (recomputing gives the same count but different variables); and the three `full`
 /// branches (unavailable → constant 1, single slot → the amount itself, multi-slot → `SameAsFunction`) each taking its own path.
@@ -156,7 +156,7 @@ public class Demo2LoadTests {
     /// 结果单方案下"谓词重量松弛"拿不到 `y`。**这条判据是那一版错误理解的留档改写**：现在钉住"单方案下 `Y`/`Z` 仍然存在，
     /// 且范围按状态钉零"，与多方案成对。
     ///
-    /// In the code `y`/`z` sit inside no `if` at all; `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly placed them under the guard and the predicate
+ /// In the implementation `y`/`z` sit inside no `if` at all; `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly placed them under the guard and the predicate
     /// weight slack then had no `y` under the single schema. **This criterion is the rewritten record of that misunderstanding**: it now pins "under the single schema `Y`/`Z` still
     /// exist, pinned to zero by status", paired with the multi-schema case.
     /// </remarks>
@@ -209,7 +209,7 @@ public class Demo2LoadTests {
     /// 这里给装载量加了 `range.leq(mla)`。少了这一行，一个 3 槽位舱位里装 5 件在模型层面完全合法——五个二元 `stowage`
     /// 变量各自为 1，加起来就是 5，"件数上限"只在报告里被当成常识，不在模型里。
     ///
-    /// The code bounds the amount by `range.leq(mla)`. Without it a 3-slot position holding 5 pieces is perfectly legal: five binary `stowage` variables each set to one sum to
+ /// The implementation bounds the amount by `range.leq(mla)`. Without it a 3-slot position holding 5 pieces is perfectly legal: five binary `stowage` variables each set to one sum to
     /// five, and the piece limit lives only as a convention in the report, not in the model.
     /// </remarks>
     [Fact]

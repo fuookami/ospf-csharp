@@ -96,7 +96,7 @@ public class DeferredFunctionLogicProjectionTests
     }
 
     /// <summary>
-    /// **输入不是二元变量时不派生，急切注册照旧** /
+    /// **输入不是二元变量时不派生，急切注册不变** /
     /// Non-binary inputs derive nothing and eager registration stays.
     /// </summary>
     /// <remarks>

@@ -147,7 +147,7 @@ public sealed class RedundancyContext
     /// <remarks>
     /// 子问题**没有额外约束**（冗余的目标全在主问题），返回成功如实。
     ///
-    /// The code adds **no extra constraints** to the sub-problem (every redundancy objective lives in the master problem), so success is accurate.
+ /// This implementation adds **no extra constraints** to the sub-problem (every redundancy objective lives in the master problem), so success is accurate.
     /// </remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model) =>
         Results.Ok<Success>(Results.SuccessInstance);

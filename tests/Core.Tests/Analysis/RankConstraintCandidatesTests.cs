@@ -92,7 +92,7 @@ public class RankConstraintCandidatesTests {
     /// **这是最容易被写成反义的一条**：`limit <= 0` 直觉上像"不限"，
     /// **而语义是"不要任何候选"——写成不限会让上游的 0 变成全量分析。**
     ///
-    /// **This is the one most easily inverted**: `limit <= 0` reads like "no cap", **while the code means "no candidates at all" — inverting it turns an upstream zero into a full analysis.**
+ /// **This is the one most easily inverted**: `limit <= 0` reads like "no cap", **while the implementation means "no candidates at all" — inverting it turns an upstream zero into a full analysis.**
     /// </remarks>
     [Theory]
     [InlineData(0)]

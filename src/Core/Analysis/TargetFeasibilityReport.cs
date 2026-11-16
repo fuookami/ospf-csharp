@@ -14,9 +14,9 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// <remarks>
 /// 与里的 `TargetFeasibilityReport` 对应。
 ///
-/// 只搬报告，不搬分析器**：分析器第 673 行有一处真正的 `solver.solve(model, options)`，
+/// 只实现报告，不实现分析器**：分析器第 673 行有一处真正的 `solver.solve(model, options)`，
 /// 而它之前的 `ConstraintProgrammingSnapshotBuilder` 又要重建可变模型。**那部分需要真实 CP 后端，
-/// 这里不搬，也不写空跑版本。**
+/// 这里不实现，也不写空跑版本。**
 ///
 /// **`Reachable` / `Unreachable` / `Unknown` / `Unsupported` 四个状态必须分开**：前两个是结论，
 /// 后两个是"没结论"的两种原因。**把 `Unsupported` 当成 `Unreachable`，会让"换个后端就能解"看起来像"目标不可能达成"。**

@@ -30,14 +30,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service;
 /// 三处必须沿用：
 ///
 /// 1. **`withSoftSecurity` 为假时直接返回空表**，一条管线都不加。这不是"优化"，而是软安全在这一模式下**整体关闭**。
-/// 2. **`EmptyHatedLimit` 的三个条件缺一不可**：全配载、 、主舱货 ≥ 5。只写"全配载"会让 也加这条目标；
+/// 2. **`EmptyHatedLimit` 的三个条件缺一不可**：全配载、主舱货 ≥ 5。只写"全配载"会让 也加这条目标；
 ///    阈值写成 `> 5` 会漏掉正好 5 件的情形（`>= 5`）。
 /// 3. **`MainDeckDoorEmptyLimit` 的权重是分类阶梯**（空板 1 / 非空板 2 / 箱 5 / 其它 0），再乘 `parameter.besideDoorMainPosition`。
 ///    把阶梯写成常数会让"舱门旁放空板"与"放箱"代价相同，整个偏好失效。**三个条件互斥，顺序不影响结果**（见 `DoorWeight`）。
 ///
 /// **four conditions, four distinct tests**, tabulated above. Three things must be copied: **a false `withSoftSecurity` returns an empty list**
 /// immediately — not an optimisation but soft security being **switched off entirely** in that mode; **`EmptyHatedLimit` needs all three conditions** — full-load, and at least
-/// five main-deck items, since testing only "full-load" adds the objective for a too, and `> 5` would miss exactly five (the code uses `>= 5`); and
+/// five main-deck items, since testing only "full-load" adds the objective for a too, and `> 5` would miss exactly five (this implementation uses `>= 5`); and
 /// **`MainDeckDoorEmptyLimit`'s weight is a class ladder** (empty pallet 1, non-empty pallet 2, container 5, otherwise 0) multiplied by `parameter.besideDoorMainPosition`, since
 /// collapsing the ladder to a constant makes "an empty pallet by the door" cost the same as "a container", disabling the preference.
 /// </remarks>

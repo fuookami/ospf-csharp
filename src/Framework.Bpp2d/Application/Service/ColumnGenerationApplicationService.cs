@@ -145,7 +145,7 @@ public sealed class ColumnGenerationApplicationService
     /// 跑默认算法 / Run the default algorithm.
     /// </summary>
     /// <remarks>
-    /// 组装的顺序照做：**种子列先于一切**。算法拿不到种子时首轮 RMP 是空变量模型，
+    /// 组装的顺序如此：**种子列先于一切**。算法拿不到种子时首轮 RMP 是空变量模型，
     /// LP 必然不可行，对偶解也拿不到，整轮白跑。
     ///
     /// The assembly follows its order: **seed columns come first**. Without seeds the first RMP is an empty-variable model, the LP is necessarily infeasible, no duals appear and the

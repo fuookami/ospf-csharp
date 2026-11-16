@@ -29,8 +29,8 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 2. **按谓词取装载量**（`load_amount_of_{舱位}`）。用途是"只看主舱货"或"只看某类货"装了几件，与全部货物的
 ///    `load_amount` 是**两个不同的量**——它们共用同一批 `stowage` 符号，所以同一份解里必然自洽。
 ///
-/// Two things: (1) under predistribution the payload must **equal** the target — the code adds an `eq` row, not a soft objective term; without it the planned total drifts
-/// from the shipper's figure while every position looks legal on its own. (2) **Predicate-scoped amounts** (`load_amount_of_{position}`), which the code uses for "main-deck
+/// Two things: (1) under predistribution the payload must **equal** the target — this implementation adds an `eq` row, not a soft objective term; without it the planned total drifts
+/// from the shipper's figure while every position looks legal on its own. (2) **Predicate-scoped amounts** (`load_amount_of_{position}`), which this implementation uses for "main-deck
 /// pieces only" or "pieces of one class" — a **different quantity** from the all-items `load_amount`, sharing the same `stowage` symbols so one solution is consistent by
 /// construction.
 /// </remarks>
@@ -209,7 +209,7 @@ public class Demo2PayloadConservationTests {
     /// 而重复项在"同一件货算两次"这种用法里是有意的。
     ///
     /// Paired: a repeated position index lands on one key (two symbols would be equal in value but distinct objects, so a duplicate surviving would mean the dictionary does not
-    /// replace by key), and `ItemIndicesOf` keeps the caller's order and duplicates — the code signature is `List<Int>`, not `Set`, and converting would silently drop
+ /// replace by key), and `ItemIndicesOf` keeps the caller's order and duplicates — the implementation signature is `List<Int>`, not `Set`, and converting would silently drop
     /// duplicates that are deliberate in "count this item twice" usages.
     /// </remarks>
     [Fact]

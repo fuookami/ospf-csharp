@@ -53,7 +53,7 @@ public sealed class FlightLinkShadowPriceKey(Link link) : ShadowPriceKey(typeof(
 /// 阈值 1 与链接松弛的源多项式单位必须一致：源是 `link_k + 0.5·y[前驱] + 0.5·y[后继]`，`link_k` 数的是"这一轮几个束把它们接在一起"，
 /// 所以"至少一次"就是 1。**写成机数或成本会让这条约束变成另一件事。**
 ///
-/// The code's adds `slack ≥ 1` per link and puts `Σ coefficient × slack` into the minimisation objective. **The same shape as the fleet limit  with a
+/// It adds `slack ≥ 1` per link and puts `Σ coefficient × slack` into the minimisation objective. **The same shape as the fleet limit with a
 /// different threshold**: the fleet's right-hand side is an aircraft count, the link's is constantly 1 — a link holds as soon as it is stitched once.
 ///
 /// The threshold 1 has to agree with the units of the link slack's source: the source is `link_k + 0.5·y[prev] + 0.5·y[succ]`, and `link_k` counts "how many bunches of this round
@@ -155,7 +155,7 @@ public sealed class FlightLinkLimit
     /// 等参数接口需要携带时再补。
     ///
     /// **Returns zero rather than throwing**: a zero shadow price only costs column generation one acceleration term while the answer stays correct; throwing would halt the whole
-    /// pipeline. The code's extractor looks the link up by the **origin** tasks of the predecessor and successor, while C#'s shadow-price arguments carry no predecessor —
+ /// pipeline. Its extractor looks the link up by the **origin** tasks of the predecessor and successor, while C#'s shadow-price arguments carry no predecessor —
     /// **`ponytail:` ceiling**, to be filled in when the argument interface needs it.
     /// </remarks>
     public ShadowPriceExtractor<IGanttSchedulingShadowPriceArguments<Aircraft, FlightTaskAssignment>, GanttSchedulingShadowPriceMap<Aircraft, FlightTaskAssignment>>? Extractor()

@@ -112,7 +112,7 @@ public sealed class Demo17InstanceAdapterTests {
         customer.TimeWindow.ReadyTime.Should().BeBefore(customer.TimeWindow.DueTime);
     }
 
-    /// <summary>**每个需求都被搬到客户上** / Every demand is carried onto the customer.</summary>
+    /// <summary>**每个需求都被实现到客户上** / Every demand is carried onto the customer.</summary>
     [Fact]
     public void Create_ShouldCarryEveryDemand() {
         Result<VrptwInstance<Flt64>, ErrorCode, Error<ErrorCode>> created =

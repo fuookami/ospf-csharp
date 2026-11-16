@@ -189,7 +189,7 @@ public class ProduceQuantityObjectiveTests {
     }
 
     /// <summary>
-    /// **空列表：数量目标照旧加空目标，超量 / 不足目标不加** / An empty list still adds an objective for the quantity objectives and adds none for the over/less ones.
+    /// **空列表：数量目标不变加空目标，超量 / 不足目标不加** / An empty list still adds an objective for the quantity objectives and adds none for the over/less ones.
     /// </summary>
     /// <remarks>
     /// 三点成对：
@@ -199,7 +199,7 @@ public class ProduceQuantityObjectiveTests {
     /// 3. 两者的差别**不是笔误**：本来就是这样写的，判据把这个不对称钉住。
     ///
     /// Three paired points: `ProduceQuantityMinimization` with an empty list **still adds** an objective (named `produce quantity`, with no terms); `ProduceOverQuantityMinimization` with an empty
-    /// list adds **no objective at all**, matching `if (materials.isNotEmpty)`; and the difference is **not a typo** — that is how the code is written, and the criterion pins the
+ /// list adds **no objective at all**, matching `if (materials.isNotEmpty)`; and the difference is **not a typo** — that is how this implementation is written, and the criterion pins the
     /// asymmetry.
     /// </remarks>
     [Fact]

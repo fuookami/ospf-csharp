@@ -31,8 +31,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// Previously `Register` returned `Ok` outright with nothing in the model. It **shares all eight tables** with task scheduling time — those depend only on "what is each task's
 /// `est`". extracts the source of `est` into a virtual method (`BuildEstimatePolynomials`) and rewrites the iterative branch as **constant zero** (its shape
 /// there, where `estEnd` does not add the duration either). Three silent failures: (1) **using the independent-variable scheme** — an iterative task has no independent start
-/// variable, so that would conjure a movable start for every task; (2) **adding the duration to `estEnd`** — the code does not in this branch, and mixing them inflates every
-/// end time by one duration; (3) **silently ignoring the redundancy range** — the code fails there ("the withRedundancy path is not implemented"), and ignoring it would let
+/// variable, so that would conjure a movable start for every task; (2) **adding the duration to `estEnd`** — this implementation does not in this branch, and mixing them inflates every
+/// end time by one duration; (3) **silently ignoring the redundancy range** — the implementation fails there ("the withRedundancy path is not implemented"), and ignoring it would let
 /// the caller believe redundancy was modelled.
 /// </remarks>
 public class IterativeTaskTimeTests {
@@ -119,7 +119,7 @@ public class IterativeTaskTimeTests {
     /// 所以这条要求属于**用它的人**，不属于共用循环——任务束与迭代任务那两支不加工期，也就不该被挡住。
     ///
     /// The default end time is "start + duration". Without one it must **not** quietly become 0: every task's completion would collapse onto its start instant, the objective would
-    /// still produce a number and the solution would stay feasible, only every task would be "zero-length". The code adds the duration here too, so this requirement belongs to
+ /// still produce a number and the solution would stay feasible, only every task would be "zero-length". This implementation adds the duration here too, so this requirement belongs to
     /// **whoever uses it**, not to the shared loop — the bunch and iterative branches do not add it and must not be blocked by it.
     /// </remarks>
     [Fact]
@@ -179,7 +179,7 @@ public class IterativeTaskTimeTests {
     /// 迭代任务调度时间的六个开关全写死成 `true`。判据查每张表都非空——少一张就说明那一支没走到。
     /// 特别地 `DelayLastEndTime` / `AdvanceEarliestEndTime` / `OnTime` 只有开关开着才建，正是靠这四个开关。
     ///
-    /// The code hard-codes all six switches to `true` for iterative task time. The criterion pins that every table is non-null — one missing means a branch was skipped. In
+ /// The implementation hard-codes all six switches to `true` for iterative task time. The criterion pins that every table is non-null — one missing means a branch was skipped. In
     /// particular `DelayLastEndTime`, `AdvanceEarliestEndTime` and `OnTime` only exist with those switches on, which is what the flags are for.
     /// </remarks>
     [Fact]
@@ -208,7 +208,7 @@ public class IterativeTaskTimeTests {
         taskTime.OnTime.Should().NotBeNull("on-time is defined while those criteria are on");
     }
 
-    /// <summary>**冗余范围 → 失败（没实现）** / A redundancy range fails (the code does not implement it either).</summary>
+ /// <summary>**冗余范围 → 失败（没实现）** / A redundancy range fails (this implementation does not implement it either).</summary>
     /// <remarks>
     /// 而且必须**在建任何符号之前**失败：先建一半再报错会留下一个半成品模型，后续求解会看到一个缺了一半的模型。
     /// 判据因此同时断言"失败"与"模型里没有被塞进任何符号"。

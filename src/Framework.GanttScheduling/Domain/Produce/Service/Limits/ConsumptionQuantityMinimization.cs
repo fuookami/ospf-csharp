@@ -55,7 +55,7 @@ public sealed class ConsumptionQuantityMinimization<C> : IPipeline<object>
     /// <inheritdoc/>
     /// <remarks>
     /// 阈值 0 时直接计费数量符号，非零时建一条**自带约束**的阈值松弛再计费它的正部；系数在松弛外面乘。
-    /// 列表为空时**照旧加一个空目标**（四个"数量"目标都如此）。
+    /// 列表为空时**不变加一个空目标**（四个"数量"目标都如此）。
     ///
     /// A zero threshold charges the quantity symbol itself; a non-zero one builds a threshold slack that **carries its own rows** and charges its positive part, with the coefficient multiplying
     /// outside the slack. An empty list still adds an empty objective, as the four "quantity" objectives do.

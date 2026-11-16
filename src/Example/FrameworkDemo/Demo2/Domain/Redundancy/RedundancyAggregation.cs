@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy;
 /// the first one takes its slots, so swapping them changes the solution in degenerate cases.
 ///
 /// **One deliberate parameter omission**: the full signature also takes
-/// (the code uses `payload` for `Redundancy`'s total capacity while this implementation sums `mlw` directly), so this implementation **does not accept parameters with no consumer**.
+/// (this implementation uses `payload` for `Redundancy`'s total capacity while this implementation sums `mlw` directly), so this implementation **does not accept parameters with no consumer**.
 /// </remarks>
 public sealed class RedundancyAggregation
 {
@@ -67,7 +67,7 @@ public sealed class RedundancyAggregation
     /// <remarks>
     /// **先冗余、后纵向平衡**。
     ///
-    /// **Redundancy first, then the balance**, as in the code.
+ /// **Redundancy first, then the balance**.
     /// </remarks>
     public Try Register(LinearMetaModel<Flt64> model)
     {

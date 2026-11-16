@@ -141,7 +141,7 @@ public class ProduceQuantityTableTests {
     /// 三点成对：
     ///
     /// 1. 储备为 `null` 的材料，其超量 / 不足项**不是** `SlackFunction`——建松弛会凭空多出两个变量。
-    /// 2. 它仍**在表里**，按材料取得到，名字照旧——缺项与"零"不是一回事。
+    /// 2. 它仍**在表里**，按材料取得到，名字不变——缺项与"零"不是一回事。
     /// 3. 因此模型里**没有**对应材料的 `_pos` / `_neg` 变量。
     ///
     /// Three paired points: a material with null reserves has an over/less entry that is **not** a `SlackFunction`, since building one would invent two variables; the entry is still **in the table**

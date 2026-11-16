@@ -111,7 +111,7 @@ public sealed class Demo2ApplicationServiceTests {
         // 把拒绝点提前到装配阶段**：道守卫在 `AggregationInitializer` 里，不在注册阶段。
         // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物。
         //
-        // **moves the refusal to assembly**: the code keeps that guard in `AggregationInitializer`, not at registration. The old
+ // **moves the refusal to assembly**: this implementation keeps that guard in `AggregationInitializer`, not at registration. The old
         // `DomainRegisterFailed` pinned a local deviation.
         predistribution.Status.Should().Be("InitFailed",
             "the full-load sample has no predicate load weight specification, and the baseline refuses that during assembly");
@@ -155,7 +155,7 @@ public sealed class Demo2ApplicationServiceTests {
         }
 
         // **正向的一半**：三个状态里，两个必须真的出现。
-        // **The positive half**: two of the code statuses have to actually appear.
+ // **The positive half**: two of the implementation statuses have to actually appear.
         source.Should().Contain("\"NoSolution\"", "an infeasible model still reports NoSolution");
         source.Should().Contain("\"NotConverged\"", "a non-converged solver is still named as such");
     }

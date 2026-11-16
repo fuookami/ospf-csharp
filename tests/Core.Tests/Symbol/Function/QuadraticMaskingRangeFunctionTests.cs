@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **五条约束里，1、2 在 `z = 0` 时给 `y = p`，而 `y` 本该是 0——**
 /// **所以 3、4（`y ≤ M·z`、`y ≥ −M·z`）才是这里的关键。**
 ///
-/// Replaces a stub with the real encoding, following the code.
+/// Replaces a stub with the real encoding, following the implementation.
 ///
 /// **Of the five rows, 1 and 2 give `y = p` at `z = 0` while `y` should be zero —**
 /// **so rows 3 and 4 (`y ≤ M·z`, `y ≥ −M·z`) are what turns on.**

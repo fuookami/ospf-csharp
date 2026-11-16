@@ -53,7 +53,7 @@ public class Demo2DtoRecountTests
     /// **`WeightUnitInput` 这条判据会在缺口补上时变红**——那正是它该做的事：届时把它移进"必须有"的那一组。
     ///
     /// **"The file is unwanted" and "every declaration in it is unwanted" are different claims**, and initially conflated them. Measured: `LengthUnitInput` (2),
-    /// `DeckLocationInput` (5) and `LoadingSpaceInput` (3) are all referenced in the code and all present here; `WeightUnitInput` (2) is referenced but **absent**
+ /// `DeckLocationInput` (5) and `LoadingSpaceInput` (3) are all referenced in the implementation and all present here; `WeightUnitInput` (2) is referenced but **absent**
     /// here — a real gap; the `LoadingGeometryInput` record has **zero** references, and not copying it is correct. **This criterion turns red once the gap closes** —
     /// which is its job: that is when it moves into the "must exist" group.
     /// </remarks>

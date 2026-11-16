@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 另一个容易漏的形态：乘客飞机的容量表只覆盖**它真的排了班的**那些航班。查不到容量就当成"容量为零"会把一条本来合法的排班判死，
 /// 当成"容量无穷"又会让超售悄悄通过——所以这里**查不到就报失败**，交给人看。
 ///
-/// The code's adds `amount[flight, cabin] ≤ capacity[flight, cabin]` per flight and cabin.
+/// It adds `amount[flight, cabin] ≤ capacity[flight, cabin]` per flight and cabin.
 ///
 /// This is **the only seam** between the passenger domain and the fleet layer: the left side is the passenger amount expression , the right side the per-cabin capacity expression
 /// built during bunch compilation . Both sides are matched by symbol name, so the criterion must **pin down which symbol sits on each side** — counting rows would let an

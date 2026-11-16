@@ -41,7 +41,7 @@ public sealed record LayerGenerationDemandEntry(
 /// <remarks>
 /// `Duration` 表示时间限制，C# 对应 <see cref="TimeSpan"/>；`scoreByShadowPrice` 是可空委托，对应可空的
 /// <see cref="Func{T1, T2, TResult}"/>。二者都不是降级——它们表达的是同一件事。
-/// The code uses `Duration` for the time limit, mapped to <see cref="TimeSpan"/> here; `scoreByShadowPrice` is a
+/// This implementation uses `Duration` for the time limit, mapped to <see cref="TimeSpan"/> here; `scoreByShadowPrice` is a
 /// nullable delegate, mapped to a nullable <see cref="Func{T1, T2, TResult}"/>. Neither is a downgrade — they express
 /// the same thing.
 /// </remarks>

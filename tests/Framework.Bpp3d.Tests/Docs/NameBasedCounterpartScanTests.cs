@@ -49,11 +49,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// `src/Core/Symbol/Function/`), `UnivariateLinearPiecewise` (called missing; this repo names it
 /// `UnivariateLinearPiecewiseFunction`), and `ModelView` / `ConstraintPriority` (both called missing, both under
 /// `src/Core/Model/Basic/`).** **All three commit the same act: substituting "the names are equal" for "these are the same
-/// thing" — and Kotlin and C# name things differently (`Function`, `View`, `Item`, `Group` suffixes), while the code also
+/// thing" — and Kotlin and C# name things differently (`Function`, `View`, `Item`, `Group` suffixes), while the implementation also
 /// carries many `typealias` and pure-function files, so <b>the names were never supposed to match</b>.**
 ///
 /// **So not deliver "how much is missing"; it delivers "that number is not deliverable".** **What the criterion
-/// asserts is that the names I misjudged do have counterparts here — it guards not against "the code lacks something" but
+/// asserts is that the names I misjudged do have counterparts here — it guards not against "the implementation lacks something" but
 /// against "someone, myself included, runs the same script again and gets another number".**
 /// </remarks>
 public class NameBasedCounterpartScanTests

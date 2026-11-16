@@ -117,7 +117,7 @@ public sealed record FlowControl(
     /// `FlowControl` 是 `FltX` 上的抽象资源容量，`quantityRangeValue` 从 0 到额度。
     /// C# 侧它此前只是个规则记录，**当不了容量**——所以 `Flow` 也就当不了 `ConnectionResource`。
     ///
-    /// In the code `FlowControl` is an `AbstractResourceCapacity` over `FltX`, with a quantity range from 0 to the amount. On the C# side it was only a rule record and could not
+ /// In the implementation `FlowControl` is an `AbstractResourceCapacity` over `FltX`, with a quantity range from 0 to the amount. On the C# side it was only a rule record and could not
     /// serve as a capacity — which is why `Flow` could not be a `ConnectionResource` either.
     /// </remarks>
     public Flt64 LowerBound => Flt64.Zero;
@@ -144,7 +144,7 @@ public sealed record FlowControl(
 /// 它是连接资源（容量类型是 `FlowControl`），会被装进 `BunchSchedulingConnectionResourceUsage` 变成连接资源用量。
 /// 一个"长得像资源、但不是资源"的类，比完全没有这个类更难发现。
 ///
-/// **It used to be a plain class**: it had `Id`/`Airport`/`Scene`/`Capacities` yet did not derive from `ConnectionResource`, so **it could not serve as a resource** — in the code it
+/// **It used to be a plain class**: it had `Id`/`Airport`/`Scene`/`Capacities` yet did not derive from `ConnectionResource`, so **it could not serve as a resource** — in the implementation it
 /// is a connection resource whose capacity type is `FlowControl`, wired into `BunchSchedulingConnectionResourceUsage` as connection usage. A class that looks like a resource without being one is
 /// harder to spot than a missing class.
 /// </remarks>
@@ -189,7 +189,7 @@ public sealed class Flow : Fuookami.Ospf.Framework.GanttScheduling.Domain.Resour
     /// **按命中的条件数计**：`capacities.count { scene(...) }`，不是把各条容量加起来。也就是说"这个时间范围内有
     /// 多少条规则同时生效"，而不是"这些规则一共给了多少额度"。
     ///
-    /// **Counts the conditions that fire**: the code is `capacities.count { scene(...) }`, not a sum of the amounts. It answers "how many rules are active in this range", not
+ /// **Counts the conditions that fire**: this implementation is `capacities.count { scene(...) }`, not a sum of the amounts. It answers "how many rules are active in this range", not
     /// "how much allowance do they add up to".
     /// </remarks>
 #pragma warning disable CS8765

@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 后者在舱位比货物多时立刻不可行，是这两条里更常见的那种错。
 ///
 /// One row `estimate_loaded_j = 1` per position that is **available and carries the `EmptyForbidden` code**. Both conditions matter. Dropping
-/// "available" forces loading into positions nobody uses and makes the model infeasible outright; dropping the code forces loading everywhere. The latter turns infeasible as soon
+/// "available" forces loading into positions nobody uses and makes the model infeasible outright; dropping the implementation forces loading everywhere. The latter turns infeasible as soon
 /// as there are more positions than items and is the more common of the two mistakes.
 /// </remarks>
 public sealed class EmptyForbiddenLimit

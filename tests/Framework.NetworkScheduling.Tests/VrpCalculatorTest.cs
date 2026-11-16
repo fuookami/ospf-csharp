@@ -167,7 +167,7 @@ public sealed class VrpCalculatorTest {
             .IsOk.Should().BeFalse();
     }
 
-    /// <summary>按距离计费把数值搬到成本单位 / Distance-based costing moves the value into the cost unit.</summary>
+    /// <summary>按距离计费把数值实现到成本单位 / Distance-based costing moves the value into the cost unit.</summary>
     [Fact]
     public void DistanceArcCost_ShouldUseCostUnit() {
         var calculator = new DistanceArcCostCalculator<FltX>(SIBaseUnits.Meter, SIBaseUnits.Second);

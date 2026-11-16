@@ -33,7 +33,7 @@ public class MongoOrderByTranslatorTests
     /// **而 `1`/`-1` 这两个数字本身没有自解释性**——写反了代码读起来一模一样。
     ///
     /// **Reversing the direction is the easiest mistake to make and the hardest to notice**: the query returns as usual, just backwards.
-    /// **And the numbers `1`/`-1` carry no self-explanation** — reversed, the code reads identically.
+ /// **And the numbers `1`/`-1` carry no self-explanation** — reversed, this implementation reads identically.
     /// </remarks>
     [Fact]
     public void TheDirection_ShouldBecomeOneOrMinusOne()

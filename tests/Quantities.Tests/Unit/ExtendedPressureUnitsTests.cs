@@ -39,7 +39,7 @@ public class ExtendedPressureUnitsTests
     /// **这条是"方向"判据，而它是这里唯一能抓住沿用地方。**
     /// **乘法会得到 77007，除法得 133322.37——两者都"是个压力值"，只有方向区分得开。**
     ///
-    /// **This is the direction criterion, and it is the only thing here that catches copying the code.**
+ /// **This is the direction criterion, and it is the only thing here that catches copying the implementation.**
     /// **Multiplying yields 77007 and dividing yields 133322.37 — both "a pressure"; only the direction separates them.**
     /// </remarks>
     [Fact]

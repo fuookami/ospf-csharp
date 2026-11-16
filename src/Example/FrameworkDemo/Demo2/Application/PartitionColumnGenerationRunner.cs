@@ -98,8 +98,8 @@ internal static class PartitionColumnGenerationRunner
         }
 
         PartitionColumnGenerationOutcome<Flt64> outcome = solvedOk.Value;
-        // 备注格式照做：`partition_columns={n};iterations={m};root_lp_converged={bool}`。
-        // The note follows the code verbatim.
+        // 备注格式：`partition_columns={n};iterations={m};root_lp_converged={bool}`。
+ // The note follows the implementation verbatim.
         notes.Add($"partition_columns={outcome.ColumnCount};iterations={outcome.Trace.Count};root_lp_converged={outcome.LpConverged}");
         notes.Add($"partition_solver={solver.Name}");
 

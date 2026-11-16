@@ -111,7 +111,7 @@ public sealed class RelationalQueryPlanTest {
     /// <summary>
     /// 分页上限必须为正；<c>Limit = 0</c> 表示"取零行"是很多后端不支持的语义，代码明确拒绝。
     /// A page limit must be positive; <c>Limit = 0</c> (fetch zero rows) is a semantic many backends do not
-    /// support and the code rejects it explicitly.
+ /// support and this implementation rejects it explicitly.
     /// </summary>
     [Theory]
     [InlineData(0, 0)]

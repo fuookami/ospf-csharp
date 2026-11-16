@@ -35,7 +35,7 @@ public sealed record SolvePolicy(
 /// **`RequiresSeparation` has no reader here** (every reference was checked): it has one test asserting it round-trips, and
 /// no production line reads it. **This is neither a gap nor a missed connection** — it is part of the request contract, copied so the request shape matches the
 /// rule. Whoever needs it later (e.g. "cargos requiring separation may not share a position") is adding a **new feature** and has to build the rule with it;
-/// **do not attach a constraint just to make it look used** — that invents a rule the code does not have, with nothing to say whether it is right.
+/// **do not attach a constraint just to make it look used** — that invents a rule this implementation does not have, with nothing to say whether it is right.
 /// </remarks>
 /// <param name="Name">货物名称 / Cargo name</param>
 /// <param name="Weight">货物重量 / Cargo weight (kg)</param>
@@ -64,7 +64,7 @@ public sealed record CargoInput(
     // `deckLocation` 还决定 `Item.location`：`Main → normalMain`、其余 → `lowNotBulk`，
     // 而在 之前这里**恒为主舱**，于是下舱货被当成主舱货。
     //
-    // adds the code `CargoInput`'s three missing fields.** The first two decide **allowed assignments**: the code first rejects an
+ // adds the implementation `CargoInput`'s three missing fields.** The first two decide **allowed assignments**: the implementation first rejects an
     // `allowedPositions` entry naming an unknown position, then filters by `allowedPositions?.contains(spaceName) != false` and `deckLocation == the position's
     // deck`. Without them the kernel **lets every cargo go anywhere** — no error, just a wider solution space. `deckLocation` also decides `Item.location`
     // (`Main → normalMain`, everything else → `lowNotBulk`), and before **every item was main deck**, so lower-deck cargo counted as main-deck cargo.
@@ -133,13 +133,13 @@ public sealed record PositionInput(
     // 必要输入（舱位归属哪个物理空间、装载顺序索引、矩形边界）。缺它们时那个初始化器只能恒失败。
     // 全部给了默认值，既有两处 `new PositionInput("P1", 10.0, -1.0, -0.5)` 调用不受影响。
     //
-    // **Fields the code needs, added**: `spaceId`, `partitionId`, `loadingOrder` and `geometry` are required inputs for the aircraft aggregation initializer
+ // **Fields the implementation needs, added**: `spaceId`, `partitionId`, `loadingOrder` and `geometry` are required inputs for the aircraft aggregation initializer
     // (which physical space a position belongs to, its loading-order index, its rectangle bounds). Without them that initializer could only fail. All defaulted, so the two existing
     // `new PositionInput("P1", 10.0, -1.0, -0.5)` call sites are unaffected.
     // 补齐舱位状态码**：舱位是 `Loaded`/`Reserved` 时不可用、`Preassigned` 时要调整——这些都从码推出来，
     // 不再由装配器恒写 `stowageNeeded = true`。默认 `Unloaded` 与既有调用一致。
     //
-    // adds the position status code**: availability and the adjustment requirement come from the code instead of the assembler
+ // adds the position status code**: availability and the adjustment requirement come instead of the assembler
     // hard-coding `stowageNeeded = true`. The `Unloaded` default matches every existing call site.
     string SpaceId = "MAIN",
     string PartitionId = "DEFAULT",
@@ -177,7 +177,7 @@ public sealed record PositionInput(
     // `ala`/`alw` 是**建议装载件数/重量（软目标）**，`AdviceLoadAmountLimit`/`AdviceLoadWeightLimit`
     // 只收非 `null` 的舱位。模型侧早就实现了，**缺的一直是这两个字段的来路**，于是那两条目标永远为空。
     //
-    // adds the code `PositionInput`'s three missing fields.** `maxLoadCount` is the position's **maximum item count**: the code rejects `<= 0`
+ // adds the implementation `PositionInput`'s three missing fields.** `maxLoadCount` is the position's **maximum item count**: this implementation rejects `<= 0`
     // and rejects "loaded items exceed it". Before this implementation **hard-coded `1UL`** (the comment said "conservative"), so a position that holds 20 items was
     // treated as holding 1 — **no error, just a solution space cut down by most of its width.** `ala`/`alw` are the **advisory count/weight (soft targets)**, and
     // its `AdviceLoadAmountLimit`/`AdviceLoadWeightLimit` only collect positions with a non-null value. The model side has been implemented for a long
@@ -206,7 +206,7 @@ public sealed record LayoutGroupInput(string Id, IReadOnlySet<string> Positions,
 /// </summary>
 /// <remarks>
 /// **不覆盖几何冲突，只追加**。顺序无关：`(A,B)` 与 `(B,A)` 是同一条。
-/// **Adds to the geometric conflicts, never replaces them** (the code says so), and order does not matter: `(A,B)` and `(B,A)` are the same edge.
+/// **Adds to the geometric conflicts, never replaces them** (the implementation says so), and order does not matter: `(A,B)` and `(B,A)` are the same edge.
 /// </remarks>
 /// <param name="First">首舱位名 / First position name</param>
 /// <param name="Second">次舱位名 / Second position name</param>
@@ -341,7 +341,7 @@ public sealed record RequestDTO(
     AircraftTypeInput AircraftType = AircraftTypeInput.B737,
     // ****：`spaces` 与长度单位作为请求的一部分，`AggregationInitializer` 靠它们决定每个舱位落在哪块甲板、
     // 以及把力臂从请求单位换算到机型单位。默认值让既有请求继续可用。
-    // ****: the code carries `spaces` and the length unit in the request; the aggregation initializer uses them to place each position on a deck and to convert arms from
+ // ****: this implementation carries `spaces` and the length unit in the request; the aggregation initializer uses them to place each position on a deck and to convert arms from
     // the request unit into the model's. Defaults keep existing requests working.
     IReadOnlyList<LoadingSpaceInput>? Spaces = null,
     LengthUnitInput LengthUnit = LengthUnitInput.Inch,
@@ -372,13 +372,13 @@ public sealed record RequestDTO(
     // `weightUnit` 决定请求里重量数字的单位。**默认 `Kilogram`，而且真的读它**（舱位承重那一行用 `input.weightUnit`），
     // 所以这里也默认 `Kilogram`，并让货物重量、舱位承重、问题声明三处**都用它**。
     //
-    // `weightUnit` decides the unit of the request's weight numbers. **The code defaults to `Kilogram` and really reads it** (the position-capacity line
+ // `weightUnit` decides the unit of the request's weight numbers. **The implementation defaults to `Kilogram` and really reads it** (the position-capacity line
     // uses `input.weightUnit`), so this defaults to `Kilogram` too and lets the item weight, the position cap and the problem declaration **all follow it**.
     //
-    // adds the code `RequestDTO`'s three missing fields.** `positionConflicts` are the caller's **business exclusions**, which the code merges into
+ // adds the implementation `RequestDTO`'s three missing fields.** `positionConflicts` are the caller's **business exclusions**, which the implementation merges into
     // the loading problem (**adds only, never overriding geometry**). This implementation always passed `new HashSet<PositionConflict>` — **declaring one did nothing, with no
     // error; the rule simply did not exist.** `layoutGroups` carry "exactly one layout per region or aircraft"; the empty list turned "exactly one" into "any number".
-    // `weightUnit` says what unit the request's weight numbers are in, and the code really reads it, so it is used for the item weight, the position cap and the
+ // `weightUnit` says what unit the request's weight numbers are in, and the implementation really reads it, so it is used for the item weight, the position cap and the
     // problem declaration alike.
     WeightUnitInput WeightUnit = WeightUnitInput.Kilogram,
     IReadOnlyList<LayoutGroupInput>? LayoutGroups = null,
@@ -401,9 +401,9 @@ public sealed record RequestDTO(
     /// 这里只映射**实际用到的两个**。别的参数留在默认值上，是因为没从请求里取它们；
     /// **不为了让这个属性看起来完整而顺手补几条没有依据的映射。**
     ///
- /// **the code feeds the two priorities from `weightRecommendationObjective` straight into `Parameter`,
+ /// **the implementation feeds the two priorities from `weightRecommendationObjective` straight into `Parameter`,
     /// while this implementation used `new Parameter` everywhere — **both priorities in the request were silently dropped** and the weight-recommendation objective
-    /// coefficients were always the defaults. Only the two the code maps are mapped here. The rest stay at their defaults because the code does not read
+ /// coefficients were always the defaults. Only the two this implementation maps are mapped here. The rest stay at their defaults because this implementation does not read
     /// them from the request either; **no extra mapping is invented to make this property look complete.**
     /// </remarks>
     public Parameter ResolvedParameter {

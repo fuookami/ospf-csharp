@@ -272,7 +272,7 @@ public class Demo2StowageLimit2Tests {
         // "航材指定舱位不放普通散货"由 `Enabled` 负责，这条过滤是**防御性的重复**（`enabled` 有同一组规则）。
         // **One unobservable recorded**: deleting the `AOGMATAppointed` filter is invisible here — `Enabled` refuses non-AOG cargo outright at such a position, so normal
         // bulk's `StowageNeeded` is identically false and the preceding `!StowageNeeded` already rejects it. In this implementation "an AOG/MAT-appointed position takes no normal bulk"
-        // is `Enabled`'s job and this filter is a **defensive duplicate** — the code is the same, its `enabled` carrying the same rules.
+ // is `Enabled`'s job and this filter is a **defensive duplicate** — this implementation is the same, its `enabled` carrying the same rules.
         names.Should().NotContain(name => name.Contains("_P3", System.StringComparison.Ordinal),
             "a position already holding cargo is excluded");
 
@@ -308,7 +308,7 @@ public class Demo2StowageLimit2Tests {
     ///
     /// This is the batch's most important finding, and **it is its property, not a concession of this implementation**. Both of the first two branches require
     /// `Stowage.stowageNeeded(item, position)`, which requires `position.enabled(item).ok`, and `Position.enabled` **already** carries the four rules tabulated above — so
-    /// `stowageNeeded` is identically false there and those branches **never emit a row**, in the code too since its `enabled` has the same rules. Copied as-is and
+ /// `stowageNeeded` is identically false there and those branches **never emit a row**, in the implementation too since its `enabled` has the same rules. Copied as-is and
     /// recorded: deleting the dead branches would change nothing, while deleting a rule from `Enabled` would bring the matching branch to life with different semantics (a
     /// variable pinned to zero versus a combination that does not exist at all). The criteria therefore assert only that **branch three's pair row exists and is `≤ 1`**, and that
     /// the positions matching branches one and two get **no** row, recording their unreachability.

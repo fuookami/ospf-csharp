@@ -122,7 +122,7 @@ public class PositiveIndicatorRowsTests
     ///
     /// **本实现直接拒绝负 tolerance**（要求 `≥ 0`），所以这条判据断言拒绝，而不是断言松弛仍为正。
     ///
-    /// **This implementation rejects a negative tolerance outright (the code also requires `≥ 0`), so the criterion
+ /// **This implementation rejects a negative tolerance outright (the implementation also requires `≥ 0`), so the criterion
     /// asserts the rejection rather than a positive relaxation.**
     /// </remarks>
     [Fact]

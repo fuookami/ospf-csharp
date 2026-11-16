@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **这与力矩/能量是同一类 SI 取舍**：**"每秒转多少弧度"与"每秒多少个周期"数值差 `2π`，**
 /// **而量纲完全一样。**
 ///
-/// **Created from the code, two units.**
+/// **Created, two units.**
 ///
 /// **Angular velocity and frequency share a dimension** (both `1/s`), **so `RadianPerSecond` and `Hertz` are
 /// dimensionally indistinguishable** — **the same kind of SI trade-off as the earlier torque and energy**:

@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **while the total individual count merely "got smaller"**.
 /// **本实现是串行的**。并发 dispatcher 并行推进各岛；这里按索引顺序串行推进，理由是"同样的随机流必须给出同样的结果"。
 /// 升级路径：按岛索引分片调度，判据是"并行与串行的结果逐位相同"。`ponytail:` 并发不是这里的目标，正确性优先。
-/// **This implementation is serial.** The code advances the islands in parallel via a dispatcher; here they advance serially in index order, for the
+/// **This implementation is serial.** The implementation advances the islands in parallel via a dispatcher; here they advance serially in index order, for the
 /// reason that "the same random stream must give the same result". Upgrade path: index-sharded scheduling, gated on "parallel matches
 /// serial bit for bit". `ponytail:` concurrency is out of scope; correctness first.
 /// </remarks>

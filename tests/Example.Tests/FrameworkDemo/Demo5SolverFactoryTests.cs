@@ -19,7 +19,7 @@ public sealed class Demo5SolverFactoryTests {
     /// <remarks>
     /// `else -> Gurobi`——写错一个名字会**静默拿到 Gurobi**，而错误要到后端不可用时才以一个无关的失败形式出现。
     ///
-    /// The code is `else -> Gurobi` — a typo **silently gets Gurobi**, and the mistake only surfaces later as an unrelated backend-unavailable
+ /// This implementation is `else -> Gurobi` — a typo **silently gets Gurobi**, and the mistake only surfaces later as an unrelated backend-unavailable
     /// failure.
     /// </remarks>
     [Fact]

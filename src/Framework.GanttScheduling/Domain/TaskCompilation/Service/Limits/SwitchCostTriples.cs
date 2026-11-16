@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 ///
 /// **对角线是否为零应由换型数据决定，不该由循环替它决定。**
 ///
-/// The code is `executors × tasks × tasks`, **including the `task1 == task2` diagonal**: it never writes `if (task1 == task2) continue`.
+/// This implementation is `executors × tasks × tasks`, **including the `task1 == task2` diagonal**: it never writes `if (task1 == task2) continue`.
 ///
 /// A "natural" implementation would skip the diagonal, since "switching from a task to itself" sounds meaningless. But that changes the model: if `switch[e, t, t]` is
 /// non-zero in the compilation (say it includes setup time), skipping it **under-penalises part of the switch time**, while the schedule looks entirely normal.

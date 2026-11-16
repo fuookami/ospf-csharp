@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Application;
 /// <remarks>
 /// 对应的纯函数部分。求解器入口（`Csp2dMilp` / `Csp2dColumnGeneration`）需要真求解器，另批处理。
 ///
-/// Mirrors the pure-function part of the code. The solver entries need a real solver and are handled in another batch.
+/// Mirrors the pure-function part of the implementation. The solver entries need a real solver and are handled in another batch.
 /// </remarks>
 public class Csp2dSolverSupportTests {
     /// <summary>**每个物料都产出一批候选，编号带物料下标** / Each material yields its own candidates, with the material index in the identifier.</summary>

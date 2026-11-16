@@ -82,7 +82,7 @@ public enum FunctionExpansionPolicy
 /// unknown structure says "this structure retains no result column", not "I am unfinished".**
 ///
 /// **This implementation covers only the structures this assembly has (`IndicatorStructure`).**
-/// **The code has a branch for each of the others, but they do not exist here yet — <b>whoever lands one must add a
+/// **This implementation has a branch for each of the others, but they do not exist here yet — <b>whoever lands one must add a
 /// branch here too</b>.**
 /// **Forgetting does not fail the build; the structure silently reports "no result column", the caller usually takes the
 /// "no retention needed" path, and the model ends up short one column.**

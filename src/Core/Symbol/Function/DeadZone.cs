@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 机械间隙、传感器死区、控制器的容差带都是这个形状。
 ///
 /// 实现上不另写编码：这个函数本身就是 AbsFunction 再 MaxFunction 拼出来的，
-/// 这里照做——手写会产生第二套 Big-M，而两套 Big-M 在同一模型里会互相挤掉对方的可行域。
+/// 这里不手写——手写会产生第二套 Big-M，而两套 Big-M 在同一模型里会互相挤掉对方的可行域。
 ///
 /// The dead-zone shape.
 ///

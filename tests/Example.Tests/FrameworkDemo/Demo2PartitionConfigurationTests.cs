@@ -215,7 +215,7 @@ public class Demo2PartitionConfigurationTests
         stowage.Init(aircraft, request, stowageMode).IsOk.Should().BeTrue("the sample request must pass the stowage initialiser");
         StowageAggregation aggregation = stowage.Aggregation!;
         // **`Load.Y`/`Load.Z` 是注册进模型时才建的符号**，装配阶段它们还是 `null`。生产路径也先注册再取局部变量，
-        // 所以这里照做——否则判据测的是"还没注册的聚合"，而那从来不是生产会遇到的状态。
+        // 所以这里不手写——否则判据测的是"还没注册的聚合"，而那从来不是生产会遇到的状态。
         //
         // **`Load.Y`/`Load.Z` are symbols created when registering into a model**, still `null` right after assembly. Production also registers before reading the local
         // variables, so this does the same — otherwise the criterion tests "an aggregation that was never registered", a state production never sees.
@@ -359,7 +359,7 @@ public class Demo2PartitionConfigurationTests
     // the unit to hard-coded metres — **and it stayed green**. The reason is plain: a request carries a single `LengthUnit`, so **every rectangle scales by the same
     // factor, and overlap is invariant under uniform scaling**. "The unit comes from the request" therefore **cannot be pinned by an overlap verdict**. The fix is
     // still right (`input.lengthUnit` is honoured, and hard-coded metres inflate a position 39.37x); it simply **has no criterion that can see it at this
-    // level**. I would rather record an honest hole than keep a criterion that **stays green when the code is wrong** — the same trap recorded.
+ // level**. I would rather record an honest hole than keep a criterion that **stays green when this implementation is wrong** — the same trap recorded.
 
     /// <summary>**已装载的货物必须固定在自己的舱位** / An already-loaded item must stay fixed to its position.</summary>
     /// <remarks>

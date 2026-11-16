@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 与机队那一条**结构相同、右端项不同**：机队是"至少这么多架"，链接是"至少接上一次"——
 /// 恒为 1。阈值写错（比如用机数或成本）约束就变成另一件事，而**名字还叫 link**。
 ///
-/// The code's has **the same shape as the fleet limit with a different right-hand side**: the fleet says "at least this many aircraft", the link says
+/// It has **the same shape as the fleet limit with a different right-hand side**: the fleet says "at least this many aircraft", the link says
 /// "stitched together at least once" — constantly 1. A wrong threshold (an aircraft count or a cost) turns the constraint into something else while **still being named link**.
 /// </remarks>
 public class Demo4FlightLinkLimitTests {

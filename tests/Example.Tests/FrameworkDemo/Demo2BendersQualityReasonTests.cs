@@ -168,7 +168,7 @@ public sealed class Demo2BendersQualityReasonTests
     /// **而症状是"Benders 一启用就被判质量差"**——读者会去调阈值，而不是去查这道闸。
     ///
     /// This is **the most important gate in the whole chain**: the gap at `0.001` is below the weak threshold of `2e-3` while every other signal is bad
-    /// (overtime, iteration pressure, almost no cuts, completely stagnant snapshots). The code returns `null` — quality is acceptable. This gate is the only
+ /// (overtime, iteration pressure, almost no cuts, completely stagnant snapshots). This implementation returns `null` — quality is acceptable. This gate is the only
     /// way the guard switches itself off; miss it and any long run is judged poor **because it took time**, with the symptom being "Benders is always judged bad
     /// the moment it starts" — the reader will go tune thresholds instead of looking at the gate.
     /// </remarks>

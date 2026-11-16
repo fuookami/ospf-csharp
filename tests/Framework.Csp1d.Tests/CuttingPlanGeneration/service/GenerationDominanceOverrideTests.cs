@@ -138,7 +138,7 @@ public class GenerationDominanceOverrideTests {
     /// 语义是 `all { it(plan, existing) }`；全 true 时应当**一条都不少**。
     /// 若实现把"有覆盖"当成"全拒"，这条会红。
     ///
-    /// The code semantics is `all { it(plan, existing) }`; with all true **nothing may be lost**. If the implementation treated "has overrides" as "reject
+ /// The implementation semantics is `all { it(plan, existing) }`; with all true **nothing may be lost**. If the implementation treated "has overrides" as "reject
     /// everything", this would fail.
     /// </remarks>
     [Fact]
@@ -204,7 +204,7 @@ public class GenerationDominanceOverrideTests {
     /// 所以这里断言"**至少有一次调用看到非空 `existing`**"：只有多切片搜索接受了第一条方案之后，
     /// 后续候选才会看到它。
     ///
-    /// The code passes `existing` into the override; callers rely on it for dominance. If the implementation passed an **empty list**, strategies depending on
+ /// The implementation passes `existing` into the override; callers rely on it for dominance. If the implementation passed an **empty list**, strategies depending on
     /// `existing` would silently break — **while "it was called" would still hold**.
     ///
     /// So this asserts "**at least one call saw a non-empty `existing`**": only after the search accepts a first plan do later candidates see it.

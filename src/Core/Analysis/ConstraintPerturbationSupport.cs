@@ -369,7 +369,7 @@ public static class ConstraintPerturbationSupport
     /// 于是"没变"这个结论是从空气里来的。**
     ///
     /// **This is the "not measured must not be written as unchanged" family again, for the fifth time**: when either solution is missing it returns `null`, not `false`. Returning `false`
-    /// would let the report claim "the integer pattern did not change after the perturbation" — **while the code solution was never obtained, so the claim comes from nothing.**
+ /// would let the report claim "the integer pattern did not change after the perturbation" — **while the implementation solution was never obtained, so the claim comes from nothing.**
     /// </remarks>
     public static bool? IntegerPatternChanged(
         ConstraintProgrammingSolution? baseline,

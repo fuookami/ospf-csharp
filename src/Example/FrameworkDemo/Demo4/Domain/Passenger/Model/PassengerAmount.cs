@@ -34,14 +34,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// **一处必要差异**：没开航班变更时会去读未初始化的变量表（运行时抛异常）。C# 侧遇到 `null` 就跳过那几项——
 /// 没开就是没开，不是错误。
 ///
-/// The code's: one expression per (flight task, cabin), assembled from four things: **the original head count** when the passenger is already in that cabin;
+/// Its: one expression per (flight task, cabin), assembled from four things: **the original head count** when the passenger is already in that cabin;
 /// **cancellation**, subtracted regardless of cabin (cancelling means "this person does not fly", independent of cabin); **changing out** — the passenger's own cabin subtracts every change,
 /// while **other cabins** add "the amount moved into this cabin"; and **changing in** — when someone else's itinerary moves onto this flight, that flight gains those people in that cabin.
 ///
 /// The easiest mistake is the two branches in the third point: **the own cabin subtracts, other cabins add**. Swapping them makes the head count double or vanish between cabins while
 /// the capacity constraints still pass — **because those constraints only look at the total, not the split**.
 ///
-/// **One necessary difference**: without flight change enabled the code reads an uninitialised variable table and throws at runtime. The C# side skips those terms on `null` —
+/// **One necessary difference**: without flight change enabled this implementation reads an uninitialised variable table and throws at runtime. The C# side skips those terms on `null` —
 /// not enabled means not enabled, not an error.
 /// </remarks>
 public sealed class PassengerAmount {

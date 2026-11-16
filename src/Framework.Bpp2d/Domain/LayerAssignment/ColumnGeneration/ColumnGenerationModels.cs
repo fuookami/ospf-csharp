@@ -92,7 +92,7 @@ public sealed record ColumnGenerationFinalResult(
 /// 列生成的失败阶段 / The column-generation failure stage.
 /// </summary>
 /// <remarks>
-/// **成员照做**（`InitialColumns` / `RestrictedMasterProblem` / `CandidateFilter` / `FinalMilp` / `SolutionAnalysis`）。
+/// **成员如此**（`InitialColumns` / `RestrictedMasterProblem` / `CandidateFilter` / `FinalMilp` / `SolutionAnalysis`）。
 /// 凭印象写过一版 `Registration` / `LpSolving` / …，与最终阶段不符——读回实现时发现并改正。
 /// 五个阶段正好对应主循环里五个可能失败的位置，多一个少一个都会让失败报告指错地方。
 ///

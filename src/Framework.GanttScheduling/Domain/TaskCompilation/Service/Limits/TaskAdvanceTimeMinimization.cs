@@ -96,9 +96,9 @@ public class TaskAdvanceTimeMinimization<T, E, A>
     ///   threshold 参数**，`ThresholdSlack` 也只是个纯函数——所以只有阈值 0 这一支，阈值那条路径没有可表达的入口。</item>
     /// </list>
     ///
-    /// The code minimises `Σ coefficient(task) * advanceTime[task]` when `taskTime.advanceEnabled`, over the task set from `TimeDeviationSelection.Select` (global switch + task
+ /// The implementation minimises `Σ coefficient(task) * advanceTime[task]` when `taskTime.advanceEnabled`, over the task set from `TimeDeviationSelection.Select` (global switch + task
     /// switch + **has a scheduled time**). Three departures, all "cannot express": advance disabled returns `Ok` (**kept** — the objective does not exist); an extraction failure uses
-    /// infinity in the code and `Flt64` has none (the same limit), so it fails; and its `threshold` branch (build a `thresholdSlack`, minimise its positive part)
+ /// infinity in the implementation and `Flt64` has none (the same limit), so it fails; and its `threshold` branch (build a `thresholdSlack`, minimise its positive part)
     /// has **no threshold parameter** in the C# constructor — `ThresholdSlack` is a pure function only, so only the zero-threshold path is expressible.
     /// </remarks>
     public Try Invoke(object model) {

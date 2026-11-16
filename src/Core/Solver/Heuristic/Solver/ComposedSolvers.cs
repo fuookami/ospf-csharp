@@ -31,13 +31,13 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 /// **每个工厂都做三件事：装配运行器、给它一个人能认出来的名字、把它包成求解器。** 没有第四件事——
 /// 工厂里出现"顺手做点别的"（调参、预热、额外校验）就会让"这个算法到底是怎么装的"变得无法对照。
 /// **Every factory does three things: assemble a runner, give it a recognisable name, and wrap it into a solver.** There is no fourth thing —
-/// a factory that "does a little extra" (tuning, warm-up, extra validation) makes it impossible to compare against how the code actually
+/// a factory that "does a little extra" (tuning, warm-up, extra validation) makes it impossible to compare against how the implementation actually
 /// wires that algorithm.
 /// **变异率与拓扑是有语义的默认值，不是装饰**：蜂群类算法在一律 `NoMutation` + 变异率 `0` + `GlobalTopology`。
 /// 给它们配上非零变异率会让"标准的 GWO / SCA / MVO"**悄悄多了一个不存在的随机扰动**，
 /// 而收敛曲线只会"更抖一点"。
 /// **The mutation rate and the topology are semantic defaults, not decoration**: the swarm algorithms are uniformly `NoMutation` with a zero
-/// mutation rate and `GlobalTopology` in the code. Giving them a non-zero rate **quietly adds a random perturbation the code does not
+/// mutation rate and `GlobalTopology` in the implementation. Giving them a non-zero rate **quietly adds a random perturbation this implementation does not
 /// have**, and the convergence curve merely looks "a bit noisier".
 /// </remarks>
 public static class ComposedSolvers {
@@ -232,8 +232,8 @@ public static class ComposedSolvers {
     /// <remarks>
     /// GWO / SCA / MVO 三个工厂的装配完全同构，只有名字与默认更新算子不同。把这段重复写成一处，
     /// **是为了让"三者装配一致"这件事由代码结构本身保证**，而不是靠三份逐字复制的参数表。
-    /// The GWO / SCA / MVO factories are assembled identically in the code, differing only in the name and the default update operator.
-    /// Factoring the repetition out **lets the code structure itself guarantee "all three are assembled alike"**, instead of relying on three
+ /// The GWO / SCA / MVO factories are assembled identically in the implementation, differing only in the name and the default update operator.
+ /// Factoring the repetition out **lets the implementation structure itself guarantee "all three are assembled alike"**, instead of relying on three
     /// hand-copied parameter lists.
     /// </remarks>
     /// <typeparam name="ObjValue">目标值类型 / The objective-value type.</typeparam>

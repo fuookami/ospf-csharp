@@ -127,9 +127,9 @@ internal static class GenerationQuantityMath {
     /// Implemented as **repeated addition plus a sign check** rather than division, because the value type is generic and division would need an extra arithmetic member.
     ///
     /// **The default cap used to be `4096`, which silently truncated legitimate results**: with a 1mm width and 10000mm available the correct answer is 10000, but the
-    /// old implementation stopped at 4096 **without reporting anything**. The code's `computeMaxRepeatCount` has **no cap**, so this was a real divergence.
+ /// old implementation stopped at 4096 **without reporting anything**. Its `computeMaxRepeatCount` has **no cap**, so this was a real divergence.
     ///
-    /// **Why the cap cannot simply be deleted**: with a zero width, repeated addition never advances and the code itself loops forever. So instead there is an
+ /// **Why the cap cannot simply be deleted**: with a zero width, repeated addition never advances and the implementation itself loops forever. So instead there is an
     /// **explicit zero/negative-width guard** returning 0 — removing the truncation without inheriting its infinite loop.
     /// </remarks>
     public static ulong MaxRepeatCount<V>(Quantity<V> width, Quantity<V> remaining, IQuantityArithmetic<V> arithmetic, ulong limit = ulong.MaxValue)
@@ -186,7 +186,7 @@ internal static class GenerationQuantityMath {
     ///
     /// **once added `GetType.FullName` here; that was wrong and reverts it.** The reasoning then was that two differently typed units with the same
     /// conversion rule collide on one key — **and that is exactly its behaviour**: it looks only at symbol/name/dimension+scale, **never at the type**.
-    /// Adding the type name on the C# side makes two units the code considers "the same" become "different", i.e. **the same input yields different keys under
+ /// Adding the type name on the C# side makes two units the implementation considers "the same" become "different", i.e. **the same input yields different keys under
     /// the two implementations**, which is a cross-language semantic divergence.
     ///
     /// **This is the single implementation of the unit key**: both `GenerationWidthIndex.CanonicalUnitKey` and `CrossContributionProjector.Measure` delegate here,

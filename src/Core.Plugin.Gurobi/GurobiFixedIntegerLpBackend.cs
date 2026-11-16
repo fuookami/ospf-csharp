@@ -39,9 +39,9 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi's linear solver.** **The middle layer did not exist at first, which is why neither plugin could connect; this change
 /// connects Gurobi's end.**
 ///
-/// **One explicit absence: the code allows the ranging hook to be omitted, leaving `sensitivityRange` empty — "better absent
+/// **One explicit absence: the implementation allows the ranging hook to be omitted, leaving `sensitivityRange` empty — "better absent
 /// than invented".** **This factory omits it: Gurobi's `SARHSLow`/`SARHSUp` are only correct when read during the
-/// &lt;b&gt;primary&lt;/b&gt; solve with presolve disabled (the code records the measurement that a second solve no longer honours the
+/// &lt;b&gt;primary&lt;/b&gt; solve with presolve disabled (the implementation records the measurement that a second solve no longer honours the
 /// presolve configuration and returns sentinel values).** **Until that is done, ranges stay `null` rather than being filled with
 /// something that merely looks like a range.**
 /// </remarks>

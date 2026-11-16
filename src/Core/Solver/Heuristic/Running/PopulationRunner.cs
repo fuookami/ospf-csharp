@@ -41,7 +41,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **并行度沿用运行器的串行语义**。`SearchExecution.dispatcher` 并发产生子代与变异体；本实现按批次顺序执行，
 /// 因为共享的模型回调并非线程安全，而"并行但结果不确定"比"串行但可重放"更难归因。
 /// ponytail: 需要真正的并行时再引入按索引分片的调度，那时的正确性判据是"同一随机流下结果与串行一致"。
-/// **Parallelism follows the runner's serial semantics.** The code uses `SearchExecution.dispatcher` to produce offspring and mutants
+/// **Parallelism follows the runner's serial semantics.** This implementation uses `SearchExecution.dispatcher` to produce offspring and mutants
 /// concurrently; this implementation executes in order, because the shared model callback is not thread-safe and "parallel but non-deterministic" is
 /// harder to attribute than "serial but replayable".
 /// ponytail: introduce index-sharded scheduling when real parallelism is needed; the correctness criterion then is "the same random stream

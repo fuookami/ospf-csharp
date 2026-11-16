@@ -30,8 +30,8 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Item.Model;
 /// | 间距只加在件与件之间 | 第一个物品也加 `amount` 份 | 每列凭空多出尾部间距，容量判定偏保守 |
 /// | 件数用二进制倍增 | 逐件累加 | 大件数会卡住 |
 ///
-/// **creates `Framework.Bpp1d`**: the code has 10 files (~1391 lines) and the C# side had **nothing**. covers only the **domain model layer**;
-/// application and service layers come later. The criteria pin the **two easy mistakes** above (the code is right).
+/// **creates `Framework.Bpp1d`**: this implementation has 10 files (~1391 lines) and the C# side had **nothing**. covers only the **domain model layer**;
+/// application and service layers come later. The criteria pin the **two easy mistakes** above (this implementation is right).
 /// </remarks>
 public class PackingProblemTests {
     /// <summary>**间距只加在件与件之间，不加尾部** / Spacing goes between pieces only, never trailing.</summary>

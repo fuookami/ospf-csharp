@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 写法是先按可用集合写 `0`，再按"执行器已定"写 `1`，**后写的生效**。
 /// 若实现把两条当成交集处理，那个任务会**既被禁止又被要求**——模型直接不可解，而错误信息只会说"不可行"。
 ///
-/// The code writes `0` from the enabled set first, then `1` for "executor is fixed", so **the later write wins**. Treating the two as an intersection leaves that task
+/// This implementation writes `0` from the enabled set first, then `1` for "executor is fixed", so **the later write wins**. Treating the two as an intersection leaves that task
 /// **both forbidden and required** — the model becomes infeasible, and the only message is "infeasible".
 /// </remarks>
 public class TaskAssignmentRangeTests {
@@ -76,7 +76,7 @@ public class TaskAssignmentRangeTests {
     /// 这是代码里最容易读错的一处。判据必须用"已定 + 不在可用集合 + 不允许取消"这种输入，
     /// 并把期望钉在**必须**——若实现取交集，这里会得到"禁止"，与"必须"正好相反。
     ///
-    /// This is the easiest part of the code to misread. The fixture must use "fixed + not enabled + cannot cancel" and pin the expectation to **required** — an
+ /// This is the easiest part of the implementation to misread. The fixture must use "fixed + not enabled + cannot cancel" and pin the expectation to **required** — an
     /// implementation taking an intersection yields "forbidden" here, the exact opposite.
     /// </remarks>
     [Fact]

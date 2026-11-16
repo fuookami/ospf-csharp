@@ -97,7 +97,7 @@ public sealed class FlightLink {
     /// **没有链接时什么都不建**（的提前返回）。构建一次之后不再重建：重建会让同一个链接在模型里
     /// 出现两个符号，求解时它们各自取值、彼此无关。
     ///
-    /// **No links build nothing** (an early return matching the code). The tables are built once and never rebuilt: rebuilding would put two symbols for the same link into the model,
+ /// **No links build nothing** (an early return. The tables are built once and never rebuilt: rebuilding would put two symbols for the same link into the model,
     /// each taking its own value at solve time.
     /// </remarks>
     public Try Register(IAbstractLinearMetaModel<Flt64> model) {

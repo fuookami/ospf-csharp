@@ -218,7 +218,7 @@ public class DelayAdvanceObjectiveTests {
     /// `Flt64.infinity` 兜底；`Flt64` 没有无穷。**静默退回 1 会把"计费未知"变成"计费 1"**，
     /// 而目标看上去完全正常。
     ///
-    /// The code falls back to `Flt64.infinity`; `Flt64` has none (the same limit). **Silently falling back to 1 turns "unknown charge" into "charge 1"** while the objective
+ /// The implementation falls back to `Flt64.infinity`; `Flt64` has none (the same limit). **Silently falling back to 1 turns "unknown charge" into "charge 1"** while the objective
     /// looks perfectly normal.
     /// </remarks>
     [Fact]
@@ -281,7 +281,7 @@ public class DelayAdvanceObjectiveTests {
     /// 这条判据盯的是"**掩码真的乘上去了**"：符号必须是 `MaskingWithPolyMaskFunction` 的适配器（内部自带一个二值 `m`），
     /// 而不是裸的 `est_slack_*_pos`。只看"注册成功"会让"忘了乘掩码"通过——而忘了乘之后解同样合法，只是被取消的任务也在计费。
     ///
-    /// A cancelled task must not accrue deviation, so the code writes `delay_time = pos × taskCompilation`. C#'s `MaskingFunction` only became real. The criterion
+ /// A cancelled task must not accrue deviation, so this implementation writes `delay_time = pos × taskCompilation`. C#'s `MaskingFunction` only became real. The criterion
     /// targets "**the mask is really applied**": the symbol must be a `MaskingWithPolyMaskFunction` adapter (carrying its own binary `m`), not a bare `est_slack_*_pos`. Checking
     /// only "registration succeeded" would let a missing mask through — and without it the solution is still legal, just with cancelled tasks being charged too.
     /// </remarks>

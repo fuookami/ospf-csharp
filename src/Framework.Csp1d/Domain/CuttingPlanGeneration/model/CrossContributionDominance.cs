@@ -37,7 +37,7 @@ public static class CrossContributionDominance {
     /// **余宽为空时一律返回 false**：空值短路，意思是"不知道余宽就无法判定支配"。
     /// 这是**保守**选择——宁可接受一个可能重复的候选，也不错误剪掉一个更优的候选。
     ///
-    /// **A null rest width always yields false**: the code short-circuits on null, meaning "without knowing the rest width, dominance cannot be decided".
+ /// **A null rest width always yields false**: the implementation short-circuits on null, meaning "without knowing the rest width, dominance cannot be decided".
     /// That is the **conservative** choice — better to accept a possibly-redundant candidate than to wrongly prune a better one.
     /// </remarks>
     public static bool Dominates(

@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// succeeds.**
 ///
 /// **A non-linear input uses an unbounded `RealVar`, never a `URealVar`.**
-/// **The code's comment records why**: **a `URealVar` silently clips negatives to zero at the solver boundary —
+/// **Its comment records why**: **a `URealVar` silently clips negatives to zero at the solver boundary —
 /// so the polynomial is wrong on its whole negative half while the model still solves fine.**
 /// </remarks>
 public sealed class QuadraticLinearFunction : IMathFunctionSymbol<Flt64> {

@@ -12,10 +12,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchGeneration.Servi
 /// **天花板：目前没有生产者。** `RouteGraphGenerator` 会往这些字段里累加，C# 侧的生成器还没接——
 /// 门禁里能断言的是"结构在、默认是零、互不影响"，不是"生成器真的填了"。升级路径：把计数接进 `RouteGraphGenerator` 的展开循环。
 ///
-/// The code's holds two **pure counter** types — no printing, no file writing. Diagnostics are readable data; producing output is the caller's business. That is exactly
+/// Its holds two **pure counter** types — no printing, no file writing. Diagnostics are readable data; producing output is the caller's business. That is exactly
 /// why this must not become a "print function": **code that reaches IO cannot be asserted on in a criterion**.
 ///
-/// **Ceiling: there is no producer yet.** The code's `RouteGraphGenerator` accumulates into these fields, while the C# generator is not wired — the gates can assert "the shape
+/// **Ceiling: there is no producer yet.** Its `RouteGraphGenerator` accumulates into these fields, while the C# generator is not wired — the gates can assert "the shape
 /// exists, the defaults are zero, the counters are independent", not "the generator really fills them". Upgrade path: wire the counters into `RouteGraphGenerator`'s expansion loop.
 /// </remarks>
 public sealed class RouteGraphDiagnostics {

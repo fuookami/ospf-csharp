@@ -14,10 +14,10 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// </summary>
 /// <remarks>
 /// 探测器有两个可注入点（`modelClass` 与 SDK 常量），测试就靠这两个点验证"探测不到就什么都不说"。
-/// 把同样的可注入点搬到.NET 侧：`Detect(modelType)` 可以喂一个假类，于是判据**不依赖本机装没装 Gurobi**——
+/// 把同样的可注入点实现到.NET 侧：`Detect(modelType)` 可以喂一个假类，于是判据**不依赖本机装没装 Gurobi**——
 /// 这一点很要紧，否则判据在 CI 上绿、在开发机上红，红绿都由环境决定。
 ///
-/// The code's detector has two injectable points (`modelClass` and an SDK constant), and its tests use them to verify "cannot detect → say nothing". carries the
+/// Its detector has two injectable points (`modelClass` and an SDK constant), and its tests use them to verify "cannot detect → say nothing". carries the
 /// same injectable point over: `Detect(modelType)` takes a fake class, so the criteria **do not depend on whether this machine has Gurobi** — which matters, because
 /// otherwise the criteria go green in CI and red on a developer machine, with the colour decided by the environment.
 /// </remarks>
@@ -48,7 +48,7 @@ public sealed class GurobiFunctionCapabilitiesTests
     /// 是 `addGenConstrMax` 与 `addGenConstrMin` **两个都要**。只有一个时声明"支持"，会让上层去调不存在的那一半——
     /// 而调用那一刻的错误会出现在**另一端**，看起来像上层写错了。
     ///
-    /// The code requires **both** `addGenConstrMax` and `addGenConstrMin`. Claiming support with only one lets the layer above call the missing half, and the error
+ /// This implementation requires **both** `addGenConstrMax` and `addGenConstrMin`. Claiming support with only one lets the layer above call the missing half, and the error
     /// surfaces **at the other end**, looking like the caller's mistake.
     /// </remarks>
     [Fact]

@@ -114,7 +114,7 @@ public static class DeferredFunctionFallbackMaterializers
         NotPorted(string kind, DeferredFunctionStructure structure) =>
             new Failed<DeferredFunctionFallbackConstraints, ErrorCode, Error<ErrorCode>>(
                 ErrorCode.IllegalArgument,
-                $"{kind} row generation is not ported yet: {structure.GetType().Name}");
+                $"{kind} row generation is not implemented: {structure.GetType().Name}");
 
     private sealed class PwlMaterializer : IDeferredFunctionFallbackMaterializer
     {

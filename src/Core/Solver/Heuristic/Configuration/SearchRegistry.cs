@@ -608,7 +608,7 @@ public sealed class SearchRegistry<O, V>
     /// **未注册的类型不会失败，而是退化成表格策略**——这是唯一的"回退"，也是唯一一处值得解释的例外：
     /// 表格策略本身就是"用通用表格近似任意选择器"，退化后仍然是**同一族行为**，且参数仍然全部受校验。
     /// 这与"未知组件退回默认算子"不同：后者是**换了一个语义完全不同的东西**。
-    /// **An unregistered type does not fail but degrades into the tabular policy** — the only "fallback" in the code, and the only one worth
+ /// **An unregistered type does not fail but degrades into the tabular policy** — the only "fallback" in the implementation, and the only one worth
     /// explaining: the tabular policy is itself "approximate any selector with a generic table", so the degenerate case stays **in the same family**
     /// and its parameters are still fully validated. That differs from "an unknown component falls back to a default operator", which **swaps in
     /// something with entirely different semantics**.

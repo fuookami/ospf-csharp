@@ -88,7 +88,7 @@ public sealed class Demo2SingleModelPartitionTests
             // 这里同样会为非决策变量补 `bound_lb_/bound_ub_` 边界行。
             //
             // **Measured **: 11 source rows become 14 master and 19 sub. The master gains rows for theta and the objective; **the sub has nineteen rows**, so the
-            // rows really are split — the code likewise adds `bound_lb_/bound_ub_` rows for non-decision variables, and this implementation does the same.
+ // rows really are split — the implementation likewise adds `bound_lb_/bound_ub_` rows for non-decision variables, and this implementation does the same.
             models.Master.Constraints.Count.Should().Be(14);
             models.Sub.Constraints.Count.Should().Be(19,
                 "the recorded state: rows are split; change this number only with a measurement that shows a different split");
@@ -166,7 +166,7 @@ public sealed class Demo2SingleModelPartitionTests
     /// 这不是缺一个功能，是划分器只按变量切分。要让追索真的收窄，得让划分器能按**约束行**归属——那是框架层的新能力，
     /// 需要证据与新判据，不能在这里假装填一张空表。
     ///
-    /// The code's `bendersStages` maps `IVariableItem` to a stage — **only variables can be keys**. The measured recourse half adds `+0 tokens` and `+8 symbols`:
+ /// Its `bendersStages` maps `IVariableItem` to a stage — **only variables can be keys**. The measured recourse half adds `+0 tokens` and `+8 symbols`:
     /// **symbols only, no variables**. So this path **cannot express "this half is the recourse" through the stage table** — not "the table is not filled yet", but **there is no
     /// key to fill**. This is not a missing feature but a partitioner that splits by variable only. Narrowing the recourse for real needs row-level ownership in the
     /// framework, with evidence and criteria of its own; faking an empty table here is not that.
@@ -322,7 +322,7 @@ public sealed class Demo2SingleModelPartitionTests
 
     /// <summary>读一个 Demo2 源码文件并剥离注释行 / Read a Demo2 source file with comment lines stripped.</summary>
     /// <param name="fileName">文件名 / The file name.</param>
-    /// <returns>代码 / The code.</returns>
+ /// <returns>代码 / The implementation.</returns>
     private static string DemoSource(string fileName) {
         var directory = new global::System.IO.DirectoryInfo(global::System.AppContext.BaseDirectory);
         while (directory is not null) {

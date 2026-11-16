@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// 这批用**记录型替身**来证明：替身记下自己有没有被调用，判据看的是**调用记录**，
 /// 而不是"结果非空"——后者在生成器返回空时也会因别的路径通过。
 ///
-/// The code demo3 injects **`NSameGenerator` as the initial generator and `FullSumGenerator` as the pricing enumerator** into
+/// The implementation demo3 injects **`NSameGenerator` as the initial generator and `FullSumGenerator` as the pricing enumerator** into
 /// `Csp1dColumnGeneration`, which drives the whole column-generation flow.
 ///
 /// Both injection points exist on the C# side (constructor arguments 2 and 3) and both `_initialGenerator` and `_pricingGenerator` have real call sites. But
@@ -153,7 +153,7 @@ public class Csp1dColumnGenerationWiringTests {
     /// **mid-flight** cancellation test (call `Cancel` during the loop and assert prompt throwing), which depends on timing and was not done in.
     /// **Recording that honestly rather than pretending the criterion is stronger.**
     ///
-    /// The code `Csp1dColumnGeneration` calls `progressContext?.throwIfCancelled` at 4 interruptible boundaries. **The C# side had no checkpoints at
+ /// The implementation `Csp1dColumnGeneration` calls `progressContext?.throwIfCancelled` at 4 interruptible boundaries. **The C# side had no checkpoints at
     /// all** — `grep CancellationToken` found zero hits in that file.
     ///
     /// The consequence is not "cancellation is slow" but **cancellation does not work at all**: after the caller calls `Cancel`, the solve keeps running the

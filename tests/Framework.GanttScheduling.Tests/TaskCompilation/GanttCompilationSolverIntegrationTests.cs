@@ -313,7 +313,7 @@ public class GanttCompilationSolverIntegrationTests {
     /// The masking rows are four Big-M rows plus a definition, and the likeliest failure is **making the model infeasible** — reported as "no solution", looking like an
     /// unschedulable plan. The masked delay is maximised here: `task_compilation` is forced to 1, so the mask is the identity and the value must still be `21 × 3600`.
     /// **The ceiling is recorded here**: in C# `task_compilation == 1` is forced (`AddCompilationConstraints`), so under a plain compilation this mask is **identically 1**, as in
-    /// the code. Where it really matters is iterative compilation (a task may be outside the current batch), and that path is not wired yet.
+ /// the implementation. Where it really matters is iterative compilation (a task may be outside the current batch), and that path is not wired yet.
     /// </remarks>
     [Fact]
     public async System.Threading.Tasks.Task MaskedDelayTime_ShouldStillEqualTheDeviationUnderRealScip() {

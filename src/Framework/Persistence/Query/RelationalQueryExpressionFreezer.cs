@@ -61,7 +61,7 @@ internal static class RelationalQueryExpressionFreezer {
     /// "构造后不可变"就成了假的。可复制集合与 <see cref="FreezePayload(object?)"/> 的判定保持一致——两者分叉会让
     /// "冻结时放过、校验时拒绝"或反之。
     ///
-    /// The code **rejects** such payloads at construction rather than keeping the reference: keeping it means
+ /// The implementation **rejects** such payloads at construction rather than keeping the reference: keeping it means
     /// the plan shares mutable state with the caller and "immutable after construction" becomes false. The copyable
     /// set is kept identical to <see cref="FreezePayload(object?)"/>; if the two diverge, one would freeze what the other
     /// rejects.

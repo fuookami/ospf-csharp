@@ -535,7 +535,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// <c>pollInterval</c> 默认值 200 ms 保持一致。此前 C# 用 50 ms，对同一台服务端
     /// 会造成四倍请求量，而默认值是可以被调用方覆盖的。
     /// The `<c>pollInterval</c>` default is 200 ms. C# previously used
-    /// 50 ms, quadrupling the request volume against the same server, while the code default is
+ /// 50 ms, quadrupling the request volume against the same server, while the implementation default is
     /// caller-overridable.
     /// </remarks>
     private const int PollIntervalMs = 200;

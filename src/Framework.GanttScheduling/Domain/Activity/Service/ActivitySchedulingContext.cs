@@ -24,9 +24,9 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Service;
 /// The context carries one registration: it holds the candidate list and forwards `register` / `validate` / `extractSolution` to the aggregation layer. Two boundaries are
 /// worth pinning:
 ///
-/// 1. **The namespace must be legal.** The code requires `[A-Za-z][A-Za-z0-9_]*` because that name becomes the prefix of every constraint name in the solver. Letting
+/// 1. **The namespace must be legal.** This implementation requires `[A-Za-z][A-Za-z0-9_]*` because that name becomes the prefix of every constraint name in the solver. Letting
 ///    arbitrary strings through lets two different contexts collide on constraint names, and the solver indexes by name alone — **constraints are silently overwritten**.
-/// 2. **The candidate list must be a snapshot.** The code writes `choices.toList`, a copy. Holding the caller's list directly means one later `Add` by the caller
+/// 2. **The candidate list must be a snapshot.** This implementation writes `choices.toList`, a copy. Holding the caller's list directly means one later `Add` by the caller
 ///    **silently changes this context's candidate set**, with the context showing no sign of having changed.
 /// </remarks>
 public sealed class ActivitySchedulingContext<V>
@@ -174,7 +174,7 @@ public sealed class ActivitySchedulingContext<V>
     /// 规则：**首字符必须是字母**，其余只能是字母、数字、下划线。首字符不允许数字，因为这个名字会直接拼进约束名，
     /// 而 `0_selection` 这样的名字在某些后端会被解析成别的东西。
     ///
-    /// The rule matches the code: **the first character must be a letter**, the rest letters, digits or underscores. A leading digit is refused because the name goes
+ /// The rule matches the implementation: **the first character must be a letter**, the rest letters, digits or underscores. A leading digit is refused because the name goes
     /// straight into constraint names, and a name like `0_selection` gets parsed as something else by some backends.
     /// </remarks>
     public static Result<Success, ErrorCode, Error<ErrorCode>> ValidateNamespace(string? name) {

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 第三个条件最容易被漏掉：它看起来像冗余校验，其实是这个量的**定义前提**。
 /// 这种情况**排除**而不是当成零——当成零会让"提前了但没有基准"安静地通过。
 ///
-/// The third condition is the easiest to skip: it looks like a redundant validation but is really the **precondition for the definition**. The code **excludes** the case
+/// The third condition is the easiest to skip: it looks like a redundant validation but is really the **precondition for the definition**. The implementation **excludes** the case
 /// rather than treating it as zero — zero would let "advanced, but there is no reference" through quietly.
 /// </remarks>
 public class TimeDeviationSelectionTests {

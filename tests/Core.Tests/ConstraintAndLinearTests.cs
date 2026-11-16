@@ -58,7 +58,7 @@ public sealed class SymmetricEigenTests {
     /// 每个向量自身正交归一这件事**在向量取错时也成立**，所以必须同时检查不同向量之间的内积为 0，才能确认它们真的构成
     /// 一组特征基。按行读取会得到另一组正交基——只查单个向量看不出任何异常。
     /// A vector being unit length **holds even when the vectors are wrong**, so distinct vectors' inner products must also be checked
-    /// to confirm they really form an eigenbasis. The code transposes explicitly; reading rows gives a different orthonormal basis
+ /// to confirm they really form an eigenbasis. The implementation transposes explicitly; reading rows gives a different orthonormal basis
     /// and inspecting single vectors reveals nothing.
     /// </remarks>
     [Fact]

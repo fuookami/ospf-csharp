@@ -208,7 +208,7 @@ public sealed class CapabilityMatrixTests {
     /// 而实际上那些只证明"代码在"。
     ///
     /// The P9 acceptance criteria require the externally-unverified items to be listed separately. Without this section the ✅ marks above read as
-    /// "actually ran it", while they only prove "the code is there".
+ /// "actually ran it", while they only prove "this implementation is there".
     /// </remarks>
     [Fact]
     public void CapabilityMatrix_ShouldListTheExternallyUnverifiedItems() {

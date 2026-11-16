@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// A sweep over 22 modules by public type name and `quantities` hit **45.6%** (167 absent).
 /// the earlier item-by-item check found the largest block to be **length units**:
-/// **the code has 33 and this repo's `LengthUnits` had 10**, with `docs/` silent about it.
+/// **this implementation has 33 and this repo's `LengthUnits` had 10**, with `docs/` silent about it.
 ///
 /// **A wrong conversion does not throw; it makes "5 nautical miles" a different length** —
 /// **so the criteria pin the factors, not merely that the fields exist.**

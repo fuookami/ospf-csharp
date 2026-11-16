@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **未知输出可以带回一个候选解**，而它做一件很有分寸的事：
 /// **候选解若通过完整校验，就把状态从 `Unknown` 提升为 `Reachable`。**
 ///
-/// **An unknown output may carry a candidate solution**, and the code does something careful with it: **if the candidate passes full validation, the status is promoted from `Unknown` to `Reachable`.**
+/// **An unknown output may carry a candidate solution**, and this implementation does something careful with it: **if the candidate passes full validation, the status is promoted from `Unknown` to `Reachable`.**
 ///
 /// **两个方向都不能松：**
 ///

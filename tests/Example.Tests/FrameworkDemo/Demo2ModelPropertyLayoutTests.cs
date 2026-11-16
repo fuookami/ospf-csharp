@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 因为这个代码库把模型的属性拆进了嵌套类型：`PositionShape.Length`、`ItemOrder.CarBoard`、`ItemLocation.IsNormalMain`。
 ///
 /// **按文件比对配不上这个代码库。** 所以脚本删掉了，改成这条判据：把"哪个属性该在哪个类型上"直接钉住。
-/// 它挡的不是"字段缺失"，而是**"属性被搬到别处或删掉"**。
+/// 它挡的不是"字段缺失"，而是**"属性被实现到别处或删掉"**。
 ///
 /// **这三条"属性在哪个类型上"的判据，价值有限，必须说清楚。** 我试过变异验证：删掉 `PositionShape.DeclaredArea`，
 /// **编译就失败了**——所以这三条**抓不到删除，编译器先抓到了**。它们能抓的只有"属性被挪到另一个公开类型、
@@ -44,10 +44,10 @@ public class Demo2ModelPropertyLayoutTests
 {
     /// <summary>**舱位几何属性挂在 `PositionShape` 上** / The position geometry lives on `PositionShape`.</summary>
     /// <remarks>
-    /// 它们直接放在 `Position` 上。搬到 `PositionShape` 是一次**有意的重构**（形状与坐标分开），
-    /// **不是缺失**——但"搬走了"和"删掉了"从外面看一样，所以这里钉住。
+    /// 它们直接放在 `Position` 上。实现到 `PositionShape` 是一次**有意的重构**（形状与坐标分开），
+    /// **不是缺失**——但"实现走了"和"删掉了"从外面看一样，所以这里钉住。
     ///
-    /// The code puts them straight on `Position`. Moving them to `PositionShape` is a **deliberate refactor** (shape apart from coordinates), **not a gap** — but
+ /// The implementation puts them straight on `Position`. Moving them to `PositionShape` is a **deliberate refactor** (shape apart from coordinates), **not a gap** — but
     /// "moved" and "deleted" look the same from outside, which is what this pins.
     /// </remarks>
     [Fact]
@@ -89,7 +89,7 @@ public class Demo2ModelPropertyLayoutTests
         typeof(ItemLocation).GetProperty(nameof(ItemLocation.IsTail)).Should().NotBeNull();
     }
 
-    /// <summary>**一处真实差异：单位标签没有搬过来** / One real difference: the unit labels did not come across.</summary>
+    /// <summary>**一处真实差异：单位标签没有实现出来** / One real difference: the unit labels did not come across.</summary>
     /// <remarks>
     /// 参考侧 `AircraftModel` 上有 `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`，而本仓**一个都没有**：
     /// `LinearDensityLimit` 用的是裸 `double MaxLinearDensity = 500.0`。
@@ -99,7 +99,7 @@ public class Demo2ModelPropertyLayoutTests
     ///
     /// 这条判据**钉住当前的裸 double**，而不是假装标签在。**写明"这里没有单位"比给一个假单位好。**
     ///
-    /// The code's `AircraftModel` carries `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`; this implementation has **none of them** — `LinearDensityLimit`
+ /// Its `AircraftModel` carries `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`; this implementation has **none of them** — `LinearDensityLimit`
     /// uses a bare `double MaxLinearDensity = 500.0`. **This changes no number today**, since neither side converts units at all and both share one implicit unit. **But
     /// "implicit" is the hazard**: the day someone makes one side unit-carrying, the other raises nothing and simply computes a wrong value. This criterion **pins
     /// the bare double** rather than pretending the labels exist. **Saying "there is no unit here" beats inventing one.**

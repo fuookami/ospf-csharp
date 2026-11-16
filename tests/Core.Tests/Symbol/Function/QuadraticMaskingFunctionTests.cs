@@ -153,7 +153,7 @@ public class QuadraticMaskingFunctionTests
         // 读不到输入给 `null`"。**
         //
         // **`MaskingFunction` reads the <b>bridge variable</b>, not the original input.**
-        // **So the value must be supplied for the bridge; otherwise it reads "no such symbol", and the code rule is
+ // **So the value must be supplied for the bridge; otherwise it reads "no such symbol", and the implementation rule is
         // "a missing mask gives zero, a missing input gives `null`".**
         QuadraticMaskingFunction function = Quadratic();
         function.Evaluate(new Dictionary<ISymbol, Flt64> {

@@ -59,7 +59,7 @@ public sealed record NormalizedAbs(
 ///
 /// **两层严格程度不同，而宽松的那一层在前。** **这不是矛盾——归一化只保证"数据形状可用"，
 /// 行生成才保证"能建出约束"——但它意味着<b>一个零选择的快照会走到很后面才被拒</b>。**
-/// **这里照做，并把这件事写成判据，让它成为一个被记录的事实。**
+/// **这里也查一次，并把这件事写成判据，让它成为一个被记录的事实。**
 ///
 /// **Two levels of uniqueness, checking different things:**
 ///
@@ -81,7 +81,7 @@ public sealed record NormalizedAbs(
 ///
 /// **The two layers differ in strictness and the lenient one comes first.** **Not a contradiction — normalization only
 /// guarantees "the data shape is usable" while row generation guarantees "constraints can be built" — but it does mean
-/// a zero-selector snapshot travels a long way before being rejected.** ** copies the code and turns that
+/// a zero-selector snapshot travels a long way before being rejected.** ** copies the implementation and turns that
 /// into a criterion so it is a recorded fact.**
 /// &lt;/remarks>
 public static class NativePrimitiveNormalizer
@@ -164,9 +164,9 @@ public static class NativePrimitiveNormalizer
             VariableItemKey negativeKey = structure.NegativeVariable.Key;
             VariableItemKey signKey = structure.SignVariable.Key;
 
-            // **结构内部的五键唯一：`NativeAbs.Prepare` 已经查过一遍，这里照做再查一次。**
+            // **结构内部的五键唯一：`NativeAbs.Prepare` 已经查过一遍，这里也再查一次。**
             // **重复在这里是<b>无害的多余</b>：两道检查用的是同一个判据，谁也拦不住对方拦不住的。**
-            // **The in-structure five-key uniqueness was already checked by `NativeAbs.Prepare`; the code repeats it
+ // **The in-structure five-key uniqueness was already checked by `NativeAbs.Prepare`; the implementation repeats it
             // and so does this.** **The duplication is <b>harmless but inert</b>: both use the same predicate, so neither
             // catches what the other misses.**
             var keys = new VariableItemKey[] {

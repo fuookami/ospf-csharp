@@ -236,7 +236,7 @@ public sealed class QTable {
         // 于是恢复出来的仍是清空后的表——而快照调用本身返回成功，看不出任何异常。的是 `it.toList`，即拷贝。
         // **Each row must be copied.** `Array.AsReadOnly(row)` is only a live view over the internal array, so `Clear` or any later
         // update mutates the "snapshot" too and the restore yields the cleared table — while the snapshot call itself succeeds and
-        // nothing looks wrong. The code uses `it.toList`, i.e. a copy.
+ // nothing looks wrong. This implementation uses `it.toList`, i.e. a copy.
         var copy = new List<IReadOnlyList<Flt64>>(_entries.Length);
         foreach (Flt64[] row in _entries) {
             var cloned = new Flt64[row.Length];
@@ -812,7 +812,7 @@ public sealed class QlearningSource : IParameterSource, IIterationObserver {
 /// 的通配符擦除目标值类型；C# 没有通配符，只能用视图投影把 `IIndividual&lt;ObjValue, V&gt;` 转成
 /// `IIndividual&lt;object?, V&gt;`。这里不做任何数据拷贝，只换一个静态类型。
 /// **`QlearningAgent.Step` only needs the solution vector and the objective value, but callers hold individuals with a concrete
-/// objective type.** The code erases the objective type with the `Individual&lt;*, V&gt;` wildcard; C# has no wildcards, so a view
+/// objective type.** The implementation erases the objective type with the `Individual&lt;*, V&gt;` wildcard; C# has no wildcards, so a view
 /// projection converts `IIndividual&lt;ObjValue, V&gt;` into `IIndividual&lt;object?, V&gt;`. No data is copied, only the static type
 /// changes.
 /// </remarks>

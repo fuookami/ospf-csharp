@@ -198,9 +198,9 @@ public class Demo2TorqueTests {
     /// 代码保持顺序（先重力后力臂），但这个性质只靠注释记着，不伪装成已被判据覆盖。
     ///
     /// The dry-operating torque must be `40000 × TorquePerWeight(900)` — `Dow` (40000, not the total weight) times `BalancedArm` (900, not `StandardDatum` 120). Getting either
-    /// wrong still yields a plausible torque, so only pinning "which weight, which arm" shows it. **One unobservable recorded**: the code takes gravity first and then the arm.
+ /// wrong still yields a plausible torque, so only pinning "which weight, which arm" shows it. **One unobservable recorded**: the implementation takes gravity first and then the arm.
     /// In kilogram-force, `Gravity(1 kg) = 1 kgf` and `TorquePerWeight(arm)` is exactly `arm` (measured: 900 → 900), so "gravity first" and "arm first" are **numerically
-    /// identical** here and no criterion can separate them. In newtons they would differ by 9.8×. The code keeps its order, but that property lives in this comment
+ /// identical** here and no criterion can separate them. In newtons they would differ by 9.8×. This implementation keeps its order, but that property lives in this comment
     /// rather than posing as test coverage.
     /// </remarks>
     [Fact]

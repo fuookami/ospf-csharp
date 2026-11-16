@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **推不出来就说推不出来：** **`Unknown` 不是一个可以当 1 用的值**，**它只是"这里没有依据"。** **能不能继续由调用方决定，** '
 /// **而不是由这里猜一个 1 蒙过去。**
 ///
-/// Syncs `materializeShapes`: **the code fills shapes in before lowering, because "how many elements does this tensor hold" decides whether every later step can stay per element.**
+/// Syncs `materializeShapes`: **the implementation fills shapes in before lowering, because "how many elements does this tensor hold" decides whether every later step can stay per element.**
 ///
 /// **Why it is needed: the affine chain looks at nodes and not shapes, so an undeclared output shape lets a three-element tensor pass as one number while the import succeeds — the
 /// caller receives something that looks fine.** **This layer infers the element count and closes that path.**

@@ -26,11 +26,11 @@ public static class BandwidthUnits {
     // **`KilobytesPerSecond` 是 1000 B/s，`KibibytesPerSecond` 才是 1024 B/s。**
     // **定义到十进制那一套，所以这里也只有十进制。**
     //
-    // The five below were added from the code Bandwidth.kt (five existing, ten total).
+ // The five below were added Bandwidth.kt (five existing, ten total).
     //
     // **Bandwidth keeps the decimal/binary split from `Information`**.
     // **`KilobytesPerSecond` is 1000 B/s and `KibibytesPerSecond` would be 1024.**
-    // **The code defines only the decimal family, and so does this.**
+ // **The implementation defines only the decimal family, and so does this.**
 
     /// <summary>太比特每秒（10¹² bit/s）/ Terabit per second.</summary>
     public static readonly PhysicalUnit TerabitsPerSecond = new DerivedUnit(

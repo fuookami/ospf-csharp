@@ -42,7 +42,7 @@ public class GurobiNativeIisDiagnosticTest {
     ///
     /// `NativeIis` moved from `false` to `true`, and **not because that is what lets the analyzer run** — `LinearIisCompute` hands the orchestrator
     /// `solver.Descriptor?.Capabilities` and Gurobi does not override `Descriptor` (default `null`), so **the flag does not currently take part in filtering.** It changed because
-    /// **declaration and implementation stopped agreeing**: the code has this capability and C# now does too. This criterion does not inspect that boolean — **it checks that
+ /// **declaration and implementation stopped agreeing**: this implementation has this capability and C# now does too. This criterion does not inspect that boolean — **it checks that
     /// the capability actually works**, by running the whole path on a genuinely infeasible model and seeing whether the evidence comes back as `NativeIis`.
     /// **A correct flag over a hollow analyzer would make that sentence false.**
     /// </remarks>

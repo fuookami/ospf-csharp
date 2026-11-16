@@ -59,7 +59,7 @@ public sealed record FinalAssignmentArtifacts(
 /// Aligned with its `LayerAssignmentContext`, **but only `RegisterRmp` lands here**: its three prerequisites (`ImpreciseAssignment`, `ImpreciseLoad`,
 /// `DemandConstraint`) are all in place, while `RegisterFinal` needs `PreciseAssignment` / `PreciseLoad` plus five constraints that do not exist yet
 /// (`AreaMinimization`, `SheetAmountMinimization`, `SheetCapacityConstraint`, `SheetTypeCostMinimization`, `SheetAreaMinimization`), and the solver write-back needs the column-generation
-/// main loop. One structural difference: the code calls `load.register(model)` after `registerLoad` to register the load's symbol layer, but this repository's `ImpreciseLoad` has no such
+/// main loop. One structural difference: the implementation calls `load.register(model)` after `registerLoad` to register the load's symbol layer, but this repository's `ImpreciseLoad` has no such
 /// layer — `OverLoad` / `LessLoad` are still empty lists (recorded) — so it is skipped here. **That call must be added once the slack variables land**, or the slack constraints will
 /// not find their symbols.
 /// </remarks>
@@ -191,7 +191,7 @@ public sealed class LayerAssignmentContext
     ///
     /// Aligned with its `registerFinal`, and **the order must not change**: **the precise assignment is built and `y` registered first**, since the other three artifacts reference it;
     /// **the copy bound comes from `MaxCopies.PerColumn`** rather than a constant, because a bound that is too small leaves the final solution short while a large one merely costs time; **the
-    /// capacity constraint can be switched off** while the capacity symbols are still registered for the artifacts to use; and **the load reuses `ImpreciseLoad`** — the code uses `PreciseLoad`
+ /// capacity constraint can be switched off** while the capacity symbols are still registered for the artifacts to use; and **the load reuses `ImpreciseLoad`** — this implementation uses `PreciseLoad`
     /// here, but the two differ only in the slack-variable registration layer that this repository does not have yet (recorded), so **one type is reused rather than duplicating nearly
     /// identical code**, with the difference noted here.
     /// </remarks>

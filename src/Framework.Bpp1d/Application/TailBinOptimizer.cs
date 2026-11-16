@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Application;
 /// 它必须接收**完整结果**再判断。这里用一个 `accept` 回调承担这件事。
 ///
 /// Keeps the prefix bins, re-solves only the **tail window**, then re-verifies the candidate against the **full problem**: relaxing constraints on a local model does
-/// not make a global solution feasible. The code's comment names the other half — **external business constraints cannot be applied to a local problem**; they
+/// not make a global solution feasible. Its comment names the other half — **external business constraints cannot be applied to a local problem**; they
 /// must receive the **complete result**, which the `accept` callback does here.
 /// </remarks>
 public sealed class TailBinOptimizer<V>
@@ -192,7 +192,7 @@ public sealed class TailBinOptimizer<V>
     /// **`ConsumedLength` 必须换算**：箱长与问题里的长度若单位不同（米与毫米），
     /// 不算换就把"500 mm 的箱"与"0.5 m 的箱"当成同一长度，比较结果毫无意义。
     ///
-    /// **The three metrics each stand alone, never summed or converted into one another**, exactly as in the code (table above). **`ConsumedLength` must be
+ /// **The three metrics each stand alone, never summed or converted into one another**, exactly. **`ConsumedLength` must be
     /// converted**: a bin length in metres and the problem's length in millimetres would otherwise compare "500 mm" with "0.5 m" as the same value.
     /// </remarks>
     /// <remarks>

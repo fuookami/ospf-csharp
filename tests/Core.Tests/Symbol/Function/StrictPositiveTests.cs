@@ -132,7 +132,7 @@ public class StrictPositiveTests
     /// **这是代码给出的全部保证：这种情形下等价性没有被证明，只是没有被证伪。**
     ///
     /// **A constant on the same side of zero is safe** (with `c ≥ 0`, `p ≥ 0` holds outright), **while one inside
-    /// `(−δ, 0)` is not.** **That is all the code guarantees: the equivalence is not proved there, merely not
+ /// `(−δ, 0)` is not.** **That is all the implementation guarantees: the equivalence is not proved there, merely not
     /// disproved.**
     /// </remarks>
     [Fact]

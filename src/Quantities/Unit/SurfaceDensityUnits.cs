@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **`KilogramPerSquareMeter` 与 `GramPerSquareMeter` 相差 1000 倍**，
 /// **而这两个名字只差一个词**——**与 `LitersPerMinute` / `LitersPerSecond` 是同一类风险。**
 ///
-/// **Created from the code.** Both are `mass / area`.
+/// **Created.** Both are `mass / area`.
 ///
 /// **`KilogramPerSquareMeter` and `GramPerSquareMeter` differ by 1000**,
 /// **while their names differ by one word** — **the same risk as the earlier `LitersPerMinute` / `LitersPerSecond`.**

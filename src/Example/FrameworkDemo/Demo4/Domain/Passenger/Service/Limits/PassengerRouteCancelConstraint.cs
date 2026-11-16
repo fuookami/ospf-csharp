@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// **方向写反不会报错**：模型照样可行，只是解里会出现"前一段只取消 1 人、后一段取消 4 人"这种现实中不存在的组合。
 /// 所以判据必须**读出左右两侧各是谁**，而不是只数行数。
 ///
-/// The code's adds `cancel[previous leg] ≤ cancel[next leg]` between adjacent legs — **the next leg can only be cancelled at least as much
+/// It adds `cancel[previous leg] ≤ cancel[next leg]` between adjacent legs — **the next leg can only be cancelled at least as much
 /// as the previous one**. An itinerary is a chain: cancel the people on an earlier leg and the later legs simply will not have them.
 ///
 /// **Reversing the direction raises nothing**: the model stays feasible and the solution merely contains combinations that cannot happen — "1 cancelled on the first leg, 4 on the next".

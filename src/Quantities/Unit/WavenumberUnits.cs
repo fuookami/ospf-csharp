@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **所以这个文件同时是"单位 + 量纲"的第一处**——
 /// **它用一个 `1/m` 的单位来代表量纲，而不是先在 `Dimensions` 里注册再引用。**
 ///
-/// **Created from the code.** The code has one unit, `ReciprocalMeter`, the reciprocal of the metre.
+/// **Created.** This implementation has one unit, `ReciprocalMeter`, the reciprocal of the metre.
 ///
 /// **`Dimensions.cs` did not have a `Wavenumber` quantity** (of the 13 missing dimensions measured, this was the only
 /// one missing even the dimension), **so this file is the first place where the unit and the dimension arrive together** —

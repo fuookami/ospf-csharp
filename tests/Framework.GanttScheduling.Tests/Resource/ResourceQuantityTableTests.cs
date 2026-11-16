@@ -22,12 +22,12 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 /// 资源模块是唯一整块没接线的地方：`IResourceUsage` 连数量表都没有，三个实现的 `Register` 都是返回空 `Ok` 的桩，
 /// 于是容量约束那三条 `Invoke => Ok` 也就无米可炊。这里补最小的一片：**一个实现的 `quantity` / `overQuantity` / `lessQuantity` 三张表**。
 ///
-/// 三件必须照做：**范围要设**（不设是全域，松弛可以任意大，"超出多少"永远算成零）、
+/// 三件必须如此：**范围要设**（不设是全域，松弛可以任意大，"超出多少"永远算成零）、
 /// **超量取正部、不足取负部**、**槽自己的开关要单独看**（资源级开着不等于这个容量开）。
 ///
 /// The resource module is the one block never wired: `IResourceUsage` did not even have a quantity table, all three `Register` implementations were stubs returning an empty `Ok`, and the
 /// capacity constraint's three `Invoke => Ok` bodies had nothing to work with. adds the smallest slice: **the `quantity` / `overQuantity` / `lessQuantity` tables for one
-/// implementation**. Three things must be copied from the code: **the range must be set** (unset is the full domain, the slack could be arbitrarily large, and "how much over" always
+/// implementation**. Three things must be: **the range must be set** (unset is the full domain, the slack could be arbitrarily large, and "how much over" always
 /// computes to zero), **over takes the positive part and less the negative part**, and **each slot's own switch is checked separately** (a resource-level flag does not mean this capacity has it on).
 /// </remarks>
 public class ResourceQuantityTableTests {
@@ -214,7 +214,7 @@ public class ResourceQuantityTableTests {
         // **看的是多项式里的辅助变量，不是适配器自己的名字**：`Build` 用给定的名字建适配器，
         // `_pos` / `_neg` 是它内部的辅助变量。
         // **Look at the helper variables inside the polynomial, not the adapter's own name**: `Build` names the adapter from the given name, while `_pos` / `_neg` are its internal helpers
-        // (the the same lesson).
+        // (the same lesson).
         List<string> overNames = SlackNames(over.Values.First());
         overNames.Should().Contain(name => name.EndsWith("_pos"));
         overNames.Should().NotContain(name => name.EndsWith("_neg"));

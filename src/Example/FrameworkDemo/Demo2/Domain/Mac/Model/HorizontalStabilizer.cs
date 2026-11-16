@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// 3. **警告松弛（`warnSlack`）未实现**，见下方 `ponytail:` 说明。
 ///
 /// This class carries **trim lookup** and **the trim symbol** only: (1) **the trim is the nearest point by take-off weight**, not an interpolation, and
-/// an empty table yields 0; (2) **`trim` is a zero polynomial** — the code itself writes `LinearExpressionSymbol(Flt64.zero, …)`, so the lookup never reaches the symbol
+/// an empty table yields 0; (2) **`trim` is a zero polynomial** — the implementation itself writes `LinearExpressionSymbol(Flt64.zero, …)`, so the lookup never reaches the symbol
 /// there. `At` is therefore a usable lookup on its own while `TrimSymbol` stays zero. That is its state, not a concession of this implementation.
 /// (3) **the warning slack (`warnSlack`) is not implemented** — see the `ponytail:` note.
 /// </remarks>
@@ -144,7 +144,7 @@ public sealed class HorizontalStabilizer
     /// `withMacOptimization` 下还会注册一个 `warnSlack`，四个分支：上下界都有 → `SlackRangeFunction`；只有下界 → 负向阈值松弛；
     /// 只有上界 → 正向阈值松弛；都没有 → 恒零符号。**起四支全部接上**，因为 `SlackRangeFunction` 与 `SlackFunction` 本仓都已具备。
     ///
-    /// The code also registers a `warnSlack` under `withMacOptimization`, in four branches: both bounds → `SlackRangeFunction`; lower only → a negative threshold slack; upper
+ /// The implementation also registers a `warnSlack` under `withMacOptimization`, in four branches: both bounds → `SlackRangeFunction`; lower only → a negative threshold slack; upper
     /// only → a positive threshold slack; neither → a constant-zero symbol. **All four are wired up now**, since this implementation now has both `SlackRangeFunction` and `SlackFunction`.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model) {
@@ -204,7 +204,7 @@ public sealed class HorizontalStabilizer
                             name: name));
                 } else {
                     // **都没有**：恒零符号（是这样，不是"不注册"）。
-                    // **Neither**: a constant-zero symbol, as the code does — not "skip registration".
+ // **Neither**: a constant-zero symbol, as this implementation does — not "skip registration".
                     // **恒零分支是普通符号**，不是函数符号——这里建的就是 `LinearExpressionSymbol`。
                     // 用 adapter 包一个普通符号在类型上就通不过，也不该硬凑。
                     // **The constant-zero branch is a plain symbol**, not a function symbol — a `LinearExpressionSymbol` is built here. Wrapping a plain symbol in the

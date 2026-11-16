@@ -75,7 +75,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// **The two agree only when <b>`p` takes values on a lattice of spacing `δ`</b>** — **because then no lattice point
 /// lies in `(−δ, 0)`.**
 ///
-/// **So for `δ ≠ 1` the code demands a proof that `δ` aligns with the lattice**, and **rejects when it cannot be
+/// **So for `δ ≠ 1` the implementation demands a proof that `δ` aligns with the lattice**, and **rejects when it cannot be
 /// shown.** **At `δ = 1` no proof is needed: an integer variable's spacing is one by definition.**
 ///
 /// **That rejection matters**: **if the variables could actually reach `−0.25`, the equivalence disappears while the

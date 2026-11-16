@@ -218,7 +218,7 @@ public class VariableTypeFactoryTests {
 /// **更正了 的判断**：`buildModel` 不从 `TypeName` 重建变量，
 /// 而是遍历表达式 AST 把 `IVariableItem` 引用**原样收出来**。
 ///
-/// **corrected the claim**: the code does not rebuild variables from `TypeName`; it walks the expression AST and reuses the `IVariableItem` references.**
+/// **corrected the claim**: this implementation does not rebuild variables from `TypeName`; it walks the expression AST and reuses the `IVariableItem` references.**
 /// </remarks>
 public class SnapshotVariableIdentityTests {
     /// <summary>**快照里的变量就是原来那个对象** / The variable in the snapshot is the original object.</summary>

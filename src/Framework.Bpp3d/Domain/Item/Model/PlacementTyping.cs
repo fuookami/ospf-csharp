@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 旧实现全仓零调用方，所以这次直接替换，而不是并存两个同名不同义的方法。
 ///
 /// Three geometry helpers: membership (`topItemPlacements`/`bottomItemPlacements`), ordered (`topPlacements`/`bottomPlacements`) and filtering (`filterBottomOverlapped`). **The old `TopItemPlacements` returned "every placement on the globally
-/// highest layer" while the code returns "every placement that no overlapping placement sits above". The two disagree on an uneven stack: the
+/// highest layer" while this implementation returns "every placement that no overlapping placement sits above". The two disagree on an uneven stack: the
 /// current code counts both as top (neither covers the other) while the old one returned only the taller — so the short one was treated as covered when
 /// nothing was on it. The old implementation had zero callers (measured), so it is replaced rather than kept as a same-name-different-meaning
 /// twin.

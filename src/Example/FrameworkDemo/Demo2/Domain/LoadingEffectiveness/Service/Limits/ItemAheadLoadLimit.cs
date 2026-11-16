@@ -74,7 +74,7 @@ internal sealed class ItemAheadLoadLimit
     /// <remarks>
     /// 顺序有意义：越靠后的谓词越宽。`find` 取**第一个**成立的。
     ///
-    /// The order matters: later predicates are wider. The code's `find` takes the **first** that holds.
+ /// The order matters: later predicates are wider. Its `find` takes the **first** that holds.
     /// </remarks>
     public static IReadOnlyList<Func<Item, bool>> Predicates { get; } = new Func<Item, bool>[]
     {

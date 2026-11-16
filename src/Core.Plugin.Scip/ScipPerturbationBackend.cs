@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Scip;
 /// 而 SCIP 有一个原生的 `ScipConstraintProgrammingSolver`。** **两个工厂因此不是同一句话——
 /// 这一点与那个被推翻的"同一句话"判据理由相同：&lt;b&gt;能力不同，实现就不该假装相同**。
 ///
-/// **The code's factory body is `ConstraintProgrammingPerturbationBackend(ScipConstraintProgrammingSolver(...))`; this
+/// **Its factory body is `ConstraintProgrammingPerturbationBackend(ScipConstraintProgrammingSolver(...))`; this
 /// repo's pipeline accepts the CP solver directly, so all that is left is handing back a configured one.** **The difference from
 /// Gurobi is worth stating: Gurobi has no CP solver of its own (it goes through `MipBacked` over the linear backend) while SCIP
 /// has a native `ScipConstraintProgrammingSolver`.** **So the two factories are not the same sentence — the same reason the earlier

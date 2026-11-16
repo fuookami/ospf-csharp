@@ -129,7 +129,7 @@ public class MathParsingPortCountTests
         // number is worth recording: I nearly shipped a line count as an occurrence count.**
         // **29 → 30。** **多出来的那一处是我在 `TokenSharedReadBenchmark` 的矩阵笔记里
         // 写的"5 条判据"——它和其余 29 处一样，是<b>没被逐条钉住的计数宣称**。**
-        // **判据照旧报警是对的：** **它不是"矩阵里只能有 29 个这样的句子"，而是"每多一句都得有人知道"。**
+        // **判据不变报警是对的：** **它不是"矩阵里只能有 29 个这样的句子"，而是"每多一句都得有人知道"。**
         //
         // **29 to 30.** **The extra one is the "5 criteria" sentence added to the `TokenSharedReadBenchmark` note — like the other 29 it
         // is a count claim nobody pins one by one.** **The criterion firing is correct: it does not mean "the matrix may hold only 29 such
@@ -145,10 +145,10 @@ public class MathParsingPortCountTests
         // **31 back to 30.** **Rewriting the second row for list semantics removed the "298 criteria rely on it" sentence —** that really was a count claim, so the drop moves
         // the number too, instead of leaving the assertion in place pretending nothing changed.
         total.Should().Be(
-            // **26：** **矩阵里删掉了大批"某某批补了什么"的叙述，** **连带带走了那些顺带写着"N 条判据"的句子。** **判据本身不放宽——它照旧要求"每一处计数宣称都得有人知道"，只是数字随文档一起降到 26。**
+            // **26：** **矩阵里删掉了大批"某某批补了什么"的叙述，** **连带带走了那些顺带写着"N 条判据"的句子。** **判据本身不放宽——它不变要求"每一处计数宣称都得有人知道"，只是数字随文档一起降到 26。**
             //
             // **26: the matrix dropped the batch-by-batch narration, which took those sentences claiming "N criteria" with it. The criterion is not relaxed — it still requires every count
-            // claim to be known — the code just moved with the document.**
+ // claim to be known — the implementation just moved with the document.**
             // **22：** **这一轮把"某一步补了什么"的进度表从矩阵里删掉了**，那些行里顺带写着的"N 条判据"
             // 也一并消失。**判据不是要求"矩阵里只能有 22 句"，而是"每多一句都得有人知道"。**
             //

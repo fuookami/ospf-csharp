@@ -1,6 +1,4 @@
 // 启发式求解器入口 / The heuristic-solver entry points.
-// （2904 B）对应； 的对应件在这里。
-// ; is implemented alongside it.
 
 using System;
 using System.Collections.Generic;

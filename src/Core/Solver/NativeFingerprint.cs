@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **Covers the fast path and the PWL / ABS / MAX / semi-continuous / binary-logic structure lines.**
 ///
-/// **Gap, recorded rather than silently dropped:** **the code also accepts `indicators` and `maskings`, whose
+/// **Gap, recorded rather than silently dropped:** **the implementation also accepts `indicators` and `maskings`, whose
 /// `NativeIndicatorData` and `NativeMaskingData` do <b>not</b> exist on the C# side yet.**
 ///
 /// **Those two types each carry a whole family of nested semantics** (**the `zeroBand` side column, `conjunction`,
@@ -396,7 +396,7 @@ public static class NativeFingerprint
             SolveFingerprinting.Sha256(content.ToString(), schema));
     }
 
-    /// &lt;summary>阶梯选 schema 版本 / Pick the schema version following the code ladder.&lt;/summary>
+ /// &lt;summary>阶梯选 schema 版本 / Pick the schema version following the implementation ladder.&lt;/summary>
     /// &lt;remarks>
     /// **阶梯有十三个分支，这里只有<b>五个</b>可达：**
     /// **`binary-logic-1`、`semi-1`、`max-1`、`abs-1`、`pwl-abs-1`。**
@@ -409,7 +409,7 @@ public static class NativeFingerprint
     ///
     /// **所以要测的不是"某一个分支对不对"，而是<b>相邻两个同时非空时谁赢</b>。**
     ///
-    /// **The code ladder has thirteen branches; <b>five</b> are reachable here:**
+ /// **The implementation ladder has thirteen branches; <b>five</b> are reachable here:**
     /// **`binary-logic-1`, `semi-1`, `max-1`, `abs-1`, `pwl-abs-1`.**
     ///
     /// **The other eight (`masking-1/2`, `indicator-2..8`) presuppose indicators or maskings, absent from this signature —
@@ -458,7 +458,7 @@ public static class NativeFingerprint
         // indicator-8..2 → max-1 → abs-1 / pwl-abs-1。**
         // **而 `max` 那档在位于 indicator 之后，所以两者同时非空时应由 indicator 胜出。**
         //
-        // **The indicator ladder sits <b>above</b> MAX: the code order is masking, binary-logic, semi, max,
+ // **The indicator ladder sits <b>above</b> MAX: the implementation order is masking, binary-logic, semi, max,
         // indicator-8..2, max-1, abs-1/pwl-abs-1.** **`max` comes after the indicator rungs, so when both are non-empty
         // the indicator wins.**
         if (indicatorList.Count > 0) {
@@ -532,7 +532,7 @@ public static class NativeFingerprint
     /// internal numbering.** **Sorting by key would make the same model fingerprint differently under a different column
     /// arrangement.**
     ///
-    /// **The code's `sortedBy { it.first }` sorts on the first element of `Pair&lt;Int, Double&gt;`, the column.**
+ /// **Its `sortedBy { it.first }` sorts on the first element of `Pair&lt;Int, Double&gt;`, the column.**
     /// &lt;/remarks>
     public static string? TermsText(
         IReadOnlyDictionary<VariableItemKey, double>? terms,
@@ -568,7 +568,7 @@ public static class NativeFingerprint
     /// **这里用<b>小写</b>以贴合文本形状——但因为指纹文本本就不保证跨语言一致
  ///，这一处选择只影响本侧的自洽性。**
     ///
-    /// **The code's interpolation yields Kotlin's `true`/`false`, differing in <b>case</b> from .NET's
+ /// **Its interpolation yields Kotlin's `true`/`false`, differing in <b>case</b> from .NET's
     /// `True`/`False`.** **Lowercase is used here to match its text shape — but since the fingerprint text is
     /// not guaranteed to match across languages (recorded), this choice only affects self-consistency.**
     /// &lt;/remarks>

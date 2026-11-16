@@ -237,7 +237,7 @@ public class BunchColumnTests {
     /// 只测前者会让"把谁都移除"通过，只测后者会让"谁都不移除"通过。
     ///
     /// Dropping the bunch from the bunch list is not enough: its column variable and cost coefficient remain and the solver keeps selecting it — "removal" then only affects
-    /// reporting. The code pins the range to 0 and then `remove`s it. The criterion is **paired**: the removed column is retired, pinned and gone from the variable count, while
+ /// reporting. The implementation pins the range to 0 and then `remove`s it. The criterion is **paired**: the removed column is retired, pinned and gone from the variable count, while
     /// the kept column is neither. Testing only the first passes if everything is removed; only the second, if nothing is.
     /// </remarks>
     [Fact]

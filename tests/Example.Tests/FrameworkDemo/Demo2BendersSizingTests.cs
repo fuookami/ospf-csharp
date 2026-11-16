@@ -72,7 +72,7 @@ public sealed class Demo2BendersSizingTests
     /// "用户明确关掉调参"变成"用户要 64 次迭代"——**一个默认值悄悄覆盖了用户的显式选择**，
     /// 而且求解照样跑成功，只是跑得比用户要求的久。
     ///
-    /// The code returns early here, passing the three fields through untouched and leaving both stall windows `null`. Missing this branch turns
+ /// This implementation returns early here, passing the three fields through untouched and leaving both stall windows `null`. Missing this branch turns
     /// `0 + 64 = 64`, so "the user switched tuning off" becomes "the user wants 64 iterations" — **a default silently overriding an explicit choice**, and the solve
     /// still succeeds, just for longer than asked.
     /// </remarks>
@@ -149,7 +149,7 @@ public sealed class Demo2BendersSizingTests
     /// 比较的是 `tunedAdaptive.minBinaryVariables`（调参不走阈值，所以数值上等于配置值），而不是某个常数。
     /// 判据钉两端：低于阈值 → 落回 MILP 并写明理由；达到阈值 → 走 Benders。
     ///
-    /// The code compares against `tunedAdaptive.minBinaryVariables` (tuning does not rewrite the threshold, so it equals the configured value), not a constant.
+ /// The implementation compares against `tunedAdaptive.minBinaryVariables` (tuning does not rewrite the threshold, so it equals the configured value), not a constant.
     /// The criterion pins both sides: below the threshold falls back to MILP with the reason written down, at the threshold it takes Benders.
     /// </remarks>
     [Theory]

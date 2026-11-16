@@ -23,16 +23,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 /// 差别只有 `StowageMode`。各写一份的后果是**三份会慢慢分叉**—— 接线全配载时另外两条还在报"未实现"，
 /// 就是分叉的第一天。
 ///
-/// 装配顺序照做：配载 → 重心 → 适航 → 软安全 → 重心优化。后面的域引用前面的符号，顺序错了**不会在这里报错**，
+/// 装配顺序：配载 → 重心 → 适航 → 软安全 → 重心优化。后面的域引用前面的符号，顺序错了**不会在这里报错**，
 /// 只会以"引用了不存在的 token"在下游炸开。求解失败不吞掉——把**错误码**写进备注，**消息文本随后端措辞变，码不会**。
 ///
 /// **One implementation, three call sites**: the tails of the full-load, predistribution and weight-recommendation `Execute` paths are identical (assemble,
 /// build the triad, solve, fill the response); the only difference is `StowageMode`. Writing it three times means **the three slowly diverge** — which is
 /// exactly what happened when wired full load while the other two still reported "not implemented".
 ///
-/// Assembly order mirrors the code: stowage → MAC → airworthiness → soft security → MAC optimisation. Later domains reference earlier symbols, and a wrong
+/// Assembly order mirrors the implementation: stowage → MAC → airworthiness → soft security → MAC optimisation. Later domains reference earlier symbols, and a wrong
 /// order raises nothing here but explodes downstream as "a referenced token does not exist". A solve failure is not swallowed — the **error code** goes into the
-/// notes, **the message text varies with backend wording but the code does not**.
+/// notes, **the message text varies with backend wording but this implementation does not**.
 /// </remarks>
 internal static class DirectMilpRunner
 {
@@ -109,7 +109,7 @@ internal static class DirectMilpRunner
     /// 把求解失败映射成公开响应 / Map a solver failure onto the public response.
     /// </summary>
     /// <param name="notes">诊断信息 / The diagnostics.</param>
-    /// <param name="code">求解器返回的错误码 / The code the solver returned.</param>
+ /// <param name="code">求解器返回的错误码 / The implementation the solver returned.</param>
     /// <param name="message">求解器返回的错误文字 / The message the solver returned.</param>
     /// <returns>公开响应 / The public response.</returns>
     /// <remarks>
@@ -121,10 +121,10 @@ internal static class DirectMilpRunner
     /// 否则同一个响应里的 `DirectSolveFailed` 诊断会让人以为失败没有被解释。
     ///
     /// **The branch `solverFailureResponse` needs was missing here.**
-    /// The old code never looked at the code and **reported `DirectSolveFailed` for everything** — so the caller saw "the solve went wrong",
+ /// The old code never looked at the implementation and **reported `DirectSolveFailed` for everything** — so the caller saw "the solve went wrong",
     /// **when the truth was "this model is infeasible"**: **the first sends somebody to the backend, the second to the model.**
     ///
-    /// **The wording follows the code**: the status becomes `NoSolution` and one sentence says the mapping happened,
+ /// **The wording follows the implementation**: the status becomes `NoSolution` and one sentence says the mapping happened,
     /// otherwise the `DirectSolveFailed` diagnostic in the same response suggests the failure went unexplained.
     /// </remarks>
     internal static ResponseDTO SolverFailureResponse(IReadOnlyList<string> notes, ErrorCode code, string message) =>

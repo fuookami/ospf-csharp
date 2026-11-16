@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// **更新写错比查询写错更贵**：查询错了重新查一次就好，**更新错了数据已经变了**——
 /// **而没有备份的地方，改错的值不会自己回来。**
 ///
-/// The code's `MongoUpdateTranslator` (**120 lines**) turns `UpdateAssignments` into `Updates.combine(...)`:
+/// Its `MongoUpdateTranslator` (**120 lines**) turns `UpdateAssignments` into `Updates.combine(...)`:
 /// every assignment lands on `$set`, and the field name goes through the caller's resolver.
 ///
 /// **A wrong update costs more than a wrong query**: a wrong query can be run again,
@@ -103,7 +103,7 @@ public static class MongoUpdateTranslator
     /// **这不是偷懒**：Mongo 的 `$set` 里可以放聚合表达式，**但那会引入一整套作用域规则**，
     /// 而更新路径根本没打算支持它。**在这里"顺手支持"等于发明一个没人验证过的语义。**
     ///
-    /// The code reads `item.expression as? ScalarConstant&lt;*&gt; ?: return assignmentFailure(..., "expression is not supported")` —
+ /// This implementation reads `item.expression as? ScalarConstant&lt;*&gt; ?: return assignmentFailure(..., "expression is not supported")` —
     /// **only constants get through; everything else fails.**
     ///
     /// **That is not laziness**: Mongo's `$set` can carry aggregation expressions, **but that brings a whole scoping model**,

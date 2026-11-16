@@ -127,7 +127,7 @@ public sealed class MacOptimizationAggregation
     /// 这里**什么都不做**，且 `flushForBendersSP` 是 `private` 且从未被调用。沿用成空操作，而不是"顺手实现"——
     /// 子问题不消费这些松弛符号。
     ///
-    /// The code does **nothing** here, and its `flushForBendersSP` is `private` and never called. Copied as a no-op rather than "implemented in passing": the sub-problem does not
+ /// This implementation does **nothing** here, and its `flushForBendersSP` is `private` and never called. Copied as a no-op rather than "implemented in passing": the sub-problem does not
     /// consume these slack symbols.
     /// </remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model, IReadOnlyList<Flt64> solution) =>

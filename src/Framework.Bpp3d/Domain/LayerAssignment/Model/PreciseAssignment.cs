@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Model;
 /// 5. **`tail` 是普通二值变量**，没有函数包装。
 /// 6. `floor(箱高 / 层高)` 用**向下取整**，不是四舍五入——多算一层就会让装不下的层被用上。
 ///
-/// Aligned with the code, four symbols: `x` (integer load over bin × layer), `u` (whether `x` is positive, same shape), `v` (whether the bin is used), `tail` (whether the bin is a tail
+/// Aligned with the implementation, four symbols: `x` (integer load over bin × layer), `u` (whether `x` is positive, same shape), `v` (whether the bin is used), `tail` (whether the bin is a tail
 /// bin). Six things must be copied: **`x[i, j]`'s upper bound has two cases** — zero when the layer's bin type mismatches or the bin cannot hold the layer, pinning that cell, and
 /// `floor(bin height / layer height)` otherwise, since leaving the mismatched case unbounded would let incompatible combinations into solutions; **only compatible cells are registered on
 /// the model**, not registered-then-constrained-to-zero; **`u` binarises `x` cell by cell**; **`v` binarises the row sum**, so `v[i]` holds exactly when bin i carries at least one layer;
@@ -92,7 +92,7 @@ public sealed class PreciseAssignment
     /// `bin.enabled(layer)` 落在 `Container3Geometry.enabled` 上：宽高深三项都不小于该层。
     /// 注意它是**几何可容纳**，与 <see cref="Matches"/>（层与箱型同类型）是两件事，两个条件在注册时是**且**的关系。
     ///
-    /// The code's `bin.enabled(layer)` resolves to `Container3Geometry.enabled`: width, height and depth all at least the layer's. Note this is **geometric fit**, distinct from
+ /// Its `bin.enabled(layer)` resolves to `Container3Geometry.enabled`: width, height and depth all at least the layer's. Note this is **geometric fit**, distinct from
     /// <see cref="Matches"/> (the layer's bin type equals the bin's); registration requires **both**.
     /// </remarks>
     public static bool Enabled(Bin<BinLayer, FltX> bin, BinLayer layer)

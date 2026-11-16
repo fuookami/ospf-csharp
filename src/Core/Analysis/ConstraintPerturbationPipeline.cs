@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 一次扰动分析的编排 / The orchestration of one perturbation analysis.
 /// </summary>
 /// <remarks>
-/// **这是 `ConstraintPerturbationAnalyzer.analyze` 的编排层。** 所有判定都已单独搬过
+/// **这是 `ConstraintPerturbationAnalyzer.analyze` 的编排层。** 所有判定都已单独实现过
 /// （派生、求解请求、分类、聚合、删除、二分、扫描、前置门），**这一段只把它们的顺序钉死。**
 ///
 /// **This is the orchestration layer of `ConstraintPerturbationAnalyzer.analyze`.** Every verdict was implemented on its own — derivation, solve request, classification, aggregation,

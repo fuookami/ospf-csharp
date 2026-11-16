@@ -125,7 +125,7 @@ public class OnnxShapeTransformTests
     /// **形状换了、表达式没换——** **下游若按位置去接，拿到的就是错位的元素，而模型照常求解。** '
     /// **所以这里不是"还没做"，是"这一层表达不了"。**
     ///
-    /// **In the code transpose permutes input.elements by coordinate, while each binding here holds one scalar expression plus a shape.** **The shape changes and the
+ /// **In the implementation transpose permutes input.elements by coordinate, while each binding here holds one scalar expression plus a shape.** **The shape changes and the
     /// expression does not, and a positional downstream then reads misaligned elements while the model still solves.** **So this is not "not done yet" — this layer cannot
     /// express it.**
     /// </remarks>

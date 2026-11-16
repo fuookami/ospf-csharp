@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// 策略本身的行为另有判据： 用一个最小 `ICargoView` 替身把四道门限各撞一次。
 ///
 /// The review found none of its twelve types on the C# side and no mention of them in any document. After two things
-/// need pinning: the twelve types really exist (by reflection, not by memory), and nothing in production code constructs them — in the code they
+/// need pinning: the twelve types really exist (by reflection, not by memory), and nothing in production code constructs them — in the implementation they
 /// are read only inside, so the C# side must be "model only" too. The second check also guarantees "adding a model" did not
 /// quietly become "changing behaviour". The policies' behaviour has its own criteria: a minimal `ICargoView` double walks each gate once.
 /// </remarks>
@@ -165,7 +165,7 @@ public class CargoAttributeModelTests
     /// C# 的物品模型把 `MaxHeight` 存成层数，而长度。 这里刻意让它"未知"，并让策略判否：
     /// 把层数当长度会让高度门限静默失效——那才是"看起来迁移完了"的假象。
     ///
-    /// The C# item model keeps `MaxHeight` as a layer count while the code keeps a length. Unknown is deliberately modelled here and the
+ /// The C# item model keeps `MaxHeight` as a layer count while this implementation keeps a length. Unknown is deliberately modelled here and the
     /// policy refuses: treating a layer count as a length would let the height gate silently pass — which is precisely the illusion of "implemented".
     /// </remarks>
     [Fact]

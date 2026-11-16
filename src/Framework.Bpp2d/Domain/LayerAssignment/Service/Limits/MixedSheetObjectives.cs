@@ -1,7 +1,7 @@
 // 混合板材目标 / Mixed sheet objectives.
 //
 // 的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在），见文末说明。
-// The code's two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the C# side — see the tail note.
+// Its two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the C# side — see the tail note.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

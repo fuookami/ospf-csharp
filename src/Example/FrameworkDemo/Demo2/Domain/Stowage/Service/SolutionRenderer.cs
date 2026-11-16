@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// **deck ordinal → loading-order number → the position id's string order**, and emit id, name, item ids and both weights per position.
 ///
 /// **Three things copied rather than "fixed while at it"**: (1) the third key is `id.ToString`, i.e. **lexicographic** — `"10"` sorts before `"2"`. It looks like
-/// a bug, but it is the code behaviour; the earlier `LoadingOrderOutputExporter` copies it for the same reason, so the two stay consistent. (2) the item ids are
+/// a bug, but it is the implementation behaviour; the earlier `LoadingOrderOutputExporter` copies it for the same reason, so the two stay consistent. (2) the item ids are
 /// **sorted before output**, which is what its `.sorted` means. (3) the weight uses `unit.symbol ?? unit.name`, **left blank when the unit is
 /// missing** rather than inventing a default.
 ///

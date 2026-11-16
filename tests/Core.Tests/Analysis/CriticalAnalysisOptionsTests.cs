@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// </summary>
 /// <remarks>
 /// 补的是选项层，没补编排器。**
-/// 编排器要依次调扰动、目标可行性、冲突三个分析器，**而这三个的分析器本体都还没搬**。
+/// 编排器要依次调扰动、目标可行性、冲突三个分析器，**而这三个的分析器本体都还没实现**。
 ///
 /// **The option layer is implemented, the orchestrator is not**: it calls the perturbation, target-feasibility and conflict analyzers,
 /// **none of whose bodies is implemented**.

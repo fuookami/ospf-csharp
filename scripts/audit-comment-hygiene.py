@@ -18,12 +18,28 @@ PATTERNS = [
     ("会话坐标", re.compile(r"本会话|本批次")),
     ("迁移阶段", re.compile(r"\bphase\s+\d+", re.IGNORECASE)),
     ("as of Batch", re.compile(r"as of batch|ported in b[0-9]", re.IGNORECASE)),
+    # **"相对另一个仓库"的词汇**：移植/搬/未移植，以及"固定/同步 Kotlin <提交>"这类指针。
+    # 注意 `可移植 checkpoint` 是数据格式术语，先排除。
+    # **Vocabulary that points at another repository**: port/migrate, plus "pinned Kotlin <commit>". Note that
+    # `portable checkpoint` is a data-format term and is excluded first.
+    ("移植/搬", re.compile(r"(?<!可)移植|搬(?!运)|this port|the port|pinned Kotlin|固定 Kotlin|同步 Kotlin", re.IGNORECASE)),
 ]
 
 SKIP_DIRS = {"bin", "obj", ".git", "logs", "node_modules"}
 
 # 说明文件本身要举反例，所以不参与扫描。
-SKIP_FILES = {"docs/comment-hygiene-audit.md", "scripts/audit-comment-hygiene.py"}
+# **跨语言证据**：这几处写的是"这份 fixture 由另一侧真实编码产出"，是本仓唯一的互通声明——
+# **删掉它就删掉了"这些字节从哪来"这个证据本身**，所以豁免。
+# The spec file quotes counter-examples, so it is not scanned. The cross-language evidence files are exempt:
+# they state where these fixtures came from, which is the only interoperability claim this repository makes.
+SKIP_FILES = {
+    "docs/comment-hygiene-audit.md",
+    "scripts/audit-comment-hygiene.py",
+    "tests/Framework.Tests/Solver/RemoteWireContractTest.cs",
+    "tests/Framework.Tests/Solver/RemoteFixtureProvenanceTests.cs",
+    "tests/Framework.Tests/Quality/RemoteFixtureProvenanceTests.cs",
+    "tests/Framework.Tests/RemoteFixtures/README.md",
+}
 
 
 def hits():

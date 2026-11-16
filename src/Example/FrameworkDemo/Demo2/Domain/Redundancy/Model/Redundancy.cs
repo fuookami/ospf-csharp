@@ -60,7 +60,7 @@ public sealed class Redundancy
     /// `position.mlw.mlw.value` 直接相加——**不换算单位**，因为 `mlw` 的单位与 `weightUnit` 一致。
     /// C# 的 `Item.Weight` 与 `MaxLoadWeightLimit.Mlw` 都是无单位 `double`（按千克），所以这里同样直接相加。
     ///
-    /// The code sums `position.mlw.mlw.value` directly, **without unit conversion**, because `mlw` is already in `weightUnit`. C#'s `Item.Weight` and
+ /// The implementation sums `position.mlw.mlw.value` directly, **without unit conversion**, because `mlw` is already in `weightUnit`. C#'s `Item.Weight` and
     /// `MaxLoadWeightLimit.Mlw` are both bare doubles (kilograms), so the same direct sum applies.
     /// </remarks>
     public Flt64 MainDeckCapacity => _positions

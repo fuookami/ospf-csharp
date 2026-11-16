@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Plugin.Scip.Tests;
 /// **而"是同一句话"这件事本身要能被判据看见——否则下一个人照SCIP 那份重复抄回来，
 /// 一切测试照样绿，而两个后端从此可能悄悄分叉。**
 ///
-/// **The code has a separate `…FixedIntegerLpBackend` class in each plugin, writing the "lower → dump → solve → duals" chain
+/// **This implementation has a separate `…FixedIntegerLpBackend` class in each plugin, writing the "lower → dump → solve → duals" chain
 /// twice.** **This repo does not copy that: the chain is extracted into a backend-neutral layer, so the two plugin factories
 /// are now the same sentence with a different solver.** **And "the same sentence" must be visible to a criterion — otherwise the
 /// next person can copy its SCIP duplication back, every test stays green, and the two backends may quietly diverge.**

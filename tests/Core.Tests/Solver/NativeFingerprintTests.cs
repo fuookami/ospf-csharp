@@ -325,7 +325,7 @@ public class NativeFingerprintTests
     ///
     /// **A <b>gap criterion</b>: it asserts an absence.**
     ///
-    /// **The code ladder has thirteen branches; five are reachable here.** **The other eight presuppose indicators or
+ /// **The implementation ladder has thirteen branches; five are reachable here.** **The other eight presuppose indicators or
     /// maskings, which this signature does not carry.**
     ///
     /// **So those eight are <b>missing</b>, not folded in.** **The criterion enumerates every schema this implementation can

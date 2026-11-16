@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 顺序错一步的后果都不报错：约束引用了还不存在的列、代价加到了会被清空的表上、
 /// 或者跨轮冲突漏掉了本轮自己的列。
 ///
-/// The code's `addColumns` runs: build `x_iteration` → `taskCost.flush` then add this round's cost → rewrite `taskAssignment` → rewrite `taskCompilation` → add the `xor` and
+/// Its `addColumns` runs: build `x_iteration` → `taskCost.flush` then add this round's cost → rewrite `taskAssignment` → rewrite `taskCompilation` → add the `xor` and
 /// cross-round conflict constraints. Getting the order wrong raises nothing: constraints reference columns that do not exist yet, cost lands on a table about to be cleared, or the
 /// cross-round conflicts miss this round's own columns.
 /// </remarks>
@@ -87,7 +87,7 @@ public class IterativeAddColumnsTests {
     /// 无穷大表示"不可定价"。`Flt64` 没有无穷，
     /// 当成零会让"排不起的任务"在目标里**免费**，于是求解器会优先选它。
     ///
-    /// The code uses infinity for "cannot be priced". `Flt64` has none (the same limit); treating it as zero makes an unaffordable task **free** in the objective, and the
+ /// This implementation uses infinity for "cannot be priced". `Flt64` has none (the same limit); treating it as zero makes an unaffordable task **free** in the objective, and the
     /// solver then prefers it.
     /// </remarks>
     [Fact]

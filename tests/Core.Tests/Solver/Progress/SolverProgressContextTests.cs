@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// 三条判据分别钉住 `Report` 里的三个环节。**它们之所以必须分开**：`Report` 的顺序是
 /// "取消 → 本地化 → 单调 → 上报"，任何一环写错，只要其余环正确，**只测"上报成功"的判据依然会绿**。
 ///
-/// The code's (224 lines) plus (127 lines) is a whole reporting system. **The C# side had none**:
+/// Its (224 lines) plus (127 lines) is a whole reporting system. **The C# side had none**:
 /// `grep ProgressReporter` only matched a local delegate field in Benders, unrelated to this.
 ///
 /// The three criteria pin the three stages inside `Report`. **They must be separate** because `Report` runs "cancel → localize → monotonise → report", and if any one
@@ -74,7 +74,7 @@ public class SolverProgressContextTests {
     /// `stageProgress` 按 `stage.id` **分开记账**。若实现只保留一个全局阶段进度，
     /// 换阶段后新阶段的进度会被上一阶段的高值压住。
     ///
-    /// The code keeps **separate accounts** in `stageProgress` keyed by `stage.id`. If the implementation kept one global in-stage value, a new stage's progress
+ /// This implementation keeps **separate accounts** in `stageProgress` keyed by `stage.id`. If the implementation kept one global in-stage value, a new stage's progress
     /// would be pinned by the previous stage's high-water mark.
     /// </remarks>
     [Fact]
@@ -109,7 +109,7 @@ public class SolverProgressContextTests {
     /// 无解析器时**直接 `Normalized`**，不动两个已解析标签。若实现无条件填上默认标签，
     /// 调用方就无法区分"本地化过"与"没本地化"。
     ///
-    /// The code calls **`Normalized` directly** when there is no resolver and leaves the two resolved labels alone. If the implementation unconditionally filled
+ /// The implementation calls **`Normalized` directly** when there is no resolver and leaves the two resolved labels alone. If the implementation unconditionally filled
     /// in the defaults, callers could not tell "localized" from "not localized".
     /// </remarks>
     [Fact]

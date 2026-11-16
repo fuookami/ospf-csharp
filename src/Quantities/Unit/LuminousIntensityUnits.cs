@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **按新建。** 有一个 `Candela`，**它是七个 SI 基本单位之一**，
 /// **所以这里不是"新建一个导出单位"，而是"给已有的基本单位一个入口"。**
 ///
-/// **Created from the code.** The code has one unit, `Candela`, **which is one of the
+/// **Created.** This implementation has one unit, `Candela`, **which is one of the
 /// seven SI base units**, **so this is not a new derived unit but an entry point to an existing base unit.**
 /// </remarks>
 public static class LuminousIntensityUnits

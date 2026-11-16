@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Material;
 /// <remarks>
 /// 对应的后半段：`CuttingPlan2`、`cuttingPlan2Of`、`fitsIn`、`remnantReaches`。
 ///
-/// Mirrors the tail of the code: `CuttingPlan2`, `cuttingPlan2Of`, `fitsIn`, `remnantReaches`.
+/// Mirrors the tail of the implementation: `CuttingPlan2`, `cuttingPlan2Of`, `fitsIn`, `remnantReaches`.
 /// </remarks>
 public class CuttingPlan2Tests {
     /// <summary>**贡献由图案件数自动推导** / Contributions are derived from the pattern piece counts.</summary>

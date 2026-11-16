@@ -10,7 +10,7 @@
 
 ospf-csharp is the C# / .NET 10 implementation of [ospf](https://github.com/fuookami/ospf) — an optimization solver package framework for mathematical programming (LP/MILP/QP), column generation, branch-and-price, and metaheuristic algorithms.
 
-This project is a 1:1 migration from [ospf-kotlin](https://github.com/fuookami/ospf-kotlin) (Kotlin/JVM), with idiomatic C# adaptations where Kotlin internal DSL features don't translate directly. The [ospf-rust](https://github.com/fuookami/ospf-rust) version serves as a secondary reference.
+It belongs to the [ospf](https://github.com/fuookami/ospf) family and keeps the same capability surface, with idiomatic C# adaptations where Kotlin internal DSL features don't translate directly. The [ospf-rust](https://github.com/fuookami/ospf-rust) version serves as a secondary reference.
 
 ## Module Documentation
 

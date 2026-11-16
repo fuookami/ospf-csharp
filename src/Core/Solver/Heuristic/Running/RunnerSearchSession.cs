@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// `LocalSearchUpdates` 读 `remaining &lt;= 2` 提前退出；本实现在 earlier 把约束与预算从模型上剥离（`SearchConstraints` 取代模型装饰器，
 /// 预算走 `SearchBudget`），算子拿不到模型侧的这两个读数，**调用方用 `SearchBudget` 包住整次调用**（见 `LocalSearchComposites`）。
 /// 补一个没人读的属性只会变成下一个人的困惑来源，所以**不补**。
-/// **The code's two views have consumers; this implementation has none — an established shape difference, not a gap.** The code's `FitnessEvaluator` reads `rejected` to drop a
+/// **Its two views have consumers; this implementation has none — an established shape difference, not a gap.** Its `FitnessEvaluator` reads `rejected` to drop a
 /// rejected evaluation, and `LocalSearchUpdates` reads `remaining &lt;= 2` to exit early; this implementation detached constraints and budgets from the model in earlier
 /// (`SearchConstraints` replaced the model decorator, budgets go through `SearchBudget`), so operators cannot reach either reading and **the caller wraps the whole call in a
 /// `SearchBudget`** (see `LocalSearchComposites`). Adding an unconsumed property would only become the next person's confusion, so **it stays out**.
@@ -170,7 +170,7 @@ internal sealed class EvaluationModel<ObjValue, V>
 /// <remarks>
 /// **约束处理器是显式参数，不从模型上探测**。`constraintHandling(model)` 从模型引用找回处理器；本实现沿用
 /// `ConstrainedSearch` 的形状，把处理器作为构造参数（与既有约束处理器一致，是既定的形状差异）。
-/// **The constraint handler is an explicit parameter, never probed off the model.** The code recovers it from the model reference
+/// **The constraint handler is an explicit parameter, never probed off the model.** The implementation recovers it from the model reference
 /// via `constraintHandling(model)`; this implementation follows the `ConstrainedSearch` shape and takes it as a constructor argument (an
 /// established shape difference shared with the existing constraint handler).
 /// **每一步都要先保存约束状态，在失败路径上恢复**。不恢复会让一次失败的步进把 ε 与排序流推进到"这一步从未发生过"之外的状态，

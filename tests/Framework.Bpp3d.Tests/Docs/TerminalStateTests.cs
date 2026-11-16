@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
 /// **终态核对：固定的、数字是实测的、结论不被删掉** /
-/// Terminal check: the code is fixed, the numbers are measured, the conclusion is not deleted.
+/// Terminal check: this implementation is fixed, the numbers are measured, the conclusion is not deleted.
 /// </summary>
 /// <remarks>
 /// **整条链的三个锚点钉在一起：**

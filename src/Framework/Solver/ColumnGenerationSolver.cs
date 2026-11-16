@@ -163,7 +163,7 @@ public interface IColumnGenerationSolver {
     /// C# 侧原先**没有这个重载**，只有带 `name` 的那个——所以主问题阶段
     /// **既没有阶段快照，也没有 `MasterLP` 的适配包装**。这是 只接了一条路径的直接原因。
     ///
-    /// **The code's `solveLP(metaModel, options)` is the master-problem entry point**; it reports progress **once before and once after** the solve and wraps the
+ /// **Its `solveLP(metaModel, options)` is the master-problem entry point**; it reports progress **once before and once after** the solve and wraps the
     /// callbacks with the adapters under the `MasterLP` stage (snippet above).
     ///
     /// The C# side **had no such overload**, only the one taking `name` — so the master-problem stage had **neither a stage snapshot nor `MasterLP` adapter

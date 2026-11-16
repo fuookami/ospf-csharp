@@ -1,4 +1,4 @@
-// NSGA-II 的约束分组选择：说明与代码一致/ NSGA-II constraint-group selection: remarks match the code.
+// NSGA-II 的约束分组选择：说明与代码一致/ NSGA-II constraint-group selection: remarks match the implementation.
 
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests;
 
 /// <summary>
-/// **NSGA-II 运行器的说明与代码一致** / The NSGA-II runner's remarks match the code.
+/// **NSGA-II 运行器的说明与代码一致** / The NSGA-II runner's remarks match the implementation.
 /// </summary>
 /// <remarks>
 /// 说明原来说"没有实现模型自带约束分组这条路径"。查过之后：**能力在**——`SearchConstraints.SelectSurvivors` 就是

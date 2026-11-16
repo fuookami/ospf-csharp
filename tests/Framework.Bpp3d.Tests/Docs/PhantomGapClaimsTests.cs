@@ -1,4 +1,4 @@
-// 点了名字却在不存在的能力 / Capabilities that were named but do not exist in the code.
+// 点了名字却在不存在的能力 / Capabilities that were named but do not exist in the implementation.
 
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **"缺口"要点名一个真有的东西** / A "gap" has to name something the code really has.
+/// **"缺口"要点名一个真有的东西** / A "gap" has to name something the implementation really has.
 /// </summary>
 /// <remarks>
 /// 核了 P9 摘要里最后两条"未实现"：
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **两条都点了一个不存在的东西。** 这种"缺口"比漏记更坏：它列在待办里，谁去补都会先花一批时间
 /// 找那个不存在的能力，**而找到之后只能得出"没有"** —— 与 `BinType.Capacity` 那处是同一个形状，第三次。
 ///
-/// checked the last two "not implemented" notes: the BPP modules have **zero** `pwl` in `main`, and the code has **no shape cache anywhere**. **Both named something
+/// checked the last two "not implemented" notes: the BPP modules have **zero** `pwl` in `main`, and this implementation has **no shape cache anywhere**. **Both named something
 /// that does not exist**, which is worse than a missing entry: it sits on the to-do list, and whoever picks it up spends a batch looking for it — **and can only
 /// conclude "it is not there"**. Same shape as the earlier `BinType.Capacity`, for the third time.
 /// </remarks>
@@ -61,7 +61,7 @@ public class PhantomGapClaimsTests
     /// `cache` 只出现在基准名（`GenerationCacheBuildBenchmark` 等）与 README 散文里，**没有一处是 shape 缓存**。
     /// 所以"shape-DTO 缓存未实现"这句话没有对应物。
     ///
-    /// In the code `cache` appears only in benchmark names and README prose — **never as a shape cache** — so "shape-DTO cache not implemented" has no counterpart.
+ /// In the implementation `cache` appears only in benchmark names and README prose — **never as a shape cache** — so "shape-DTO cache not implemented" has no counterpart.
     /// </remarks>
     [Fact]
     public void ThereShouldBeNoShapeDtoCache() {

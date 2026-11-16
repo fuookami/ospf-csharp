@@ -266,9 +266,9 @@ public sealed class ScipLinearSolver : ILinearSolver {
         };
         // **消息随码走，不再一律说"无法表达"**：不可行、无界都是 SCIP 明确报告过的结论，说"无法表达"会让调用方以为
         // 只是接口局限、问题本身未知——**而它其实已经被证明没有可行解**。只有码确实说不清时才用"无法表达"那句。
-        // **The message follows the code instead of always saying "cannot represent"**: infeasibility and unboundedness are conclusions SCIP explicitly reported, and
+ // **The message follows the implementation instead of always saying "cannot represent"**: infeasibility and unboundedness are conclusions SCIP explicitly reported, and
         // claiming "cannot represent" makes the caller read it as an interface limitation with the problem unresolved — **while it has in fact been proved infeasible**.
-        // The "cannot represent" wording is kept only where the code really cannot say.
+ // The "cannot represent" wording is kept only where the implementation really cannot say.
         string message = code switch {
             ErrorCode.ORModelInfeasible => $"SCIP 报告不可行：{value.TerminationReason} / SCIP reports infeasible: {value.TerminationReason}",
             ErrorCode.ORModelUnbounded => $"SCIP 报告无界：{value.TerminationReason} / SCIP reports unbounded: {value.TerminationReason}",

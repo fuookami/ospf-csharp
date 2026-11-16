@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **此前那一行写的是"由 3 个增至 18 个，仍缺 3（源文件 21）"**。这个口径混了"文件数"和"覆盖的源文件数"：
 /// 有三个源文件里的类型被拆成了单独的 C# 文件，**文件数涨了，覆盖数没涨**。
 ///
-/// 按实测重记，分开三种：整文件搬完、只搬报告侧、完全未动。**两个方向都错过一次——
+/// 按实测重记，分开三种：整文件实现完、只实现报告侧、完全未动。**两个方向都错过一次——
 /// 写成"缺 3"低估了 Gurobi，写成"缺 6 个文件"又高估了 SCIP。**
 ///
 /// 判据钉的是**口径本身**：文档三个类别的数量必须加起来等于源文件总数，且每一类点名的文件都存在。
@@ -54,8 +54,8 @@ public class AnalysisGapLedgerTests {
     public void TheThreeCategories_ShouldAddUpToTheBaselineTotal() {
         string matrix = Matrix();
 
-        matrix.Should().Contain("整文件搬完", "the fully-ported category has to be named");
-        matrix.Should().Contain("只搬报告侧", "the report-only category has to be named");
+        matrix.Should().Contain("整文件实现完", "the fully-implemented category has to be named");
+        matrix.Should().Contain("只实现报告侧", "the report-only category has to be named");
         matrix.Should().Contain("完全未动", "the untouched category has to be named");
 
         MatchCollection counts = Regex.Matches(matrix, @"\|\s*\*\*(\d+)\*\*\s*\|");
@@ -76,7 +76,7 @@ public class AnalysisGapLedgerTests {
     public void TheNamedAnalyzers_ShouldBeNamedConsistently() {
         string matrix = Matrix();
 
-        // 只搬报告侧的三个，必须在文档里点名，且不能在"整文件搬完"里。
+        // 只实现报告侧的三个，必须在文档里点名，且不能在"整文件实现完"里。
         foreach (string name in new[] { "TargetFeasibilityAnalyzer", "ConstraintPerturbationAnalyzer", "ConflictAnalyzer" }) {
             matrix.Should().Contain(name, $"{name} is one of the three report-only ports");
         }
@@ -99,7 +99,7 @@ public class AnalysisGapLedgerTests {
     ///
     /// **把有理由的差异记成缺口，和把缺口记成完成一样，都会让工作量判断失真。**
     ///
-    /// The SCIP side used to be recorded as "partial". The code file holds **one class**, and C# has the same class with two divergences (thread count and backend
+ /// The SCIP side used to be recorded as "partial". The implementation file holds **one class**, and C# has the same class with two divergences (thread count and backend
     /// configuration not applied) **whose reasons are written down in C# itself.** **Recording a reasoned divergence as a gap distorts the workload the same way
     /// recording a gap as done does.**
     /// </remarks>
@@ -108,7 +108,7 @@ public class AnalysisGapLedgerTests {
         string matrix = Matrix();
 
         matrix.Should().Contain("ScipInfeasibilityAnalyzers", "the SCIP file has to appear in the ledger");
-        matrix.Should().Contain("已搬完",
+        matrix.Should().Contain("已实现完",
             "SCIP's single class is ported; recording it as missing overstates the gap");
         matrix.Should().Contain("ThreadCount", "the thread-count divergence has to be named");
         matrix.Should().Contain("BackendConfiguration", "the backend-configuration divergence has to be named");
@@ -133,7 +133,7 @@ public class AnalysisGapLedgerTests {
     public void TheGurobiAnalyzers_ShouldRecordWhichMemberIsPorted() {
         string matrix = Matrix();
         matrix.Should().Contain("GurobiInfeasibilityAnalyzers", "the Gurobi file has to appear in the ledger");
-        matrix.Should().Contain("已搬完", "all three Gurobi analyzers are ported now");
+        matrix.Should().Contain("已实现完", "all three Gurobi analyzers are implemented now");
         matrix.Should().Contain("三个类全部到位", "the ledger has to say the file is complete, not merely partly ported");
 
         string root = RepositoryRoot();
@@ -141,7 +141,7 @@ public class AnalysisGapLedgerTests {
         support.Should().Contain("NativeIis: true",
             "the linear native IIS is implemented now, and the declaration has to follow the implementation");
         // **两个 IIS 类一个都没有 C# 文件**，而 Farkas 那个有——方向相反的断言必须同时存在，
-        // 否则"部分已搬"这句话本身无法被证伪。
+        // 否则"部分已实现"这句话本身无法被证伪。
         // **Neither IIS class has a C# file, while the Farkas one does** — the two assertions must coexist, or "partly implemented" cannot be falsified.
         foreach (string analyzer in new[] { "GurobiQuadraticNativeIISAnalyzer" }) {
             Directory.EnumerateFiles(Path.Combine(root, "src/Core.Plugin.Gurobi"), $"{analyzer}.cs")

@@ -51,7 +51,7 @@ public class TaskCostMinimization<E, A>
     /// 普通编译**没有**代价项（它的代价写在列系数里），此时必须失败而不是空操作：
     /// 返回 `Ok` 等于宣称"成本已最小化"，而目标里根本没有这一项——解照样出来，只是完全不看成本。
     ///
-    /// The code is `model.minimize(symbol = compilation.taskCost, name = "task cost")`.
+ /// This implementation is `model.minimize(symbol = compilation.taskCost, name = "task cost")`.
     ///
     /// A plain compilation **has no** cost term (its cost sits in the column coefficients), and that must fail rather than do nothing: returning `Ok` claims "the cost was minimised"
     /// while the objective has no such term — a solution still comes out, simply ignoring cost entirely.

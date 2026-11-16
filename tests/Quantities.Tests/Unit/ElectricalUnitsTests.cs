@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// Creates `CurrentUnits` (none of its four current units had a file here)
 /// and adds `Voltage.Megavolt` plus the alias spellings `Kiloohm`/`Megaohm`.
 ///
-/// **Why all three at once**: the code defines `Volt = Watt / Ampere` and `Ohm = Volt / Ampere` —
+/// **Why all three at once**: the implementation defines `Volt = Watt / Ampere` and `Ohm = Volt / Ampere` —
 /// **without current, the voltage and resistance derivations have nothing to stand on.**
 /// </remarks>
 public class ElectricalUnitsTests
@@ -113,7 +113,7 @@ public class ElectricalUnitsTests
         ladder.Should().BeInAscendingOrder("micro < milli < 1 < kilo < mega");
     }
 
-    /// <summary>**单位清单** / The unit lists match the code.</summary>
+ /// <summary>**单位清单** / The unit lists match the implementation.</summary>
     [Theory]
     [InlineData(typeof(CurrentUnits), "Ampere,Milliampere,Microampere,Kiloampere")]
     [InlineData(typeof(VoltageUnits), "Volt,Microvolt,Millivolt,Kilovolt,Megavolt")]

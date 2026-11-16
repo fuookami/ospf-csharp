@@ -23,8 +23,8 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **整数比较暴露精确的标量松弛度量；
 /// 全局约束与稀疏值域按语义契约求值，绝不伪造 LP 风格松弛。**
 ///
-/// 只搬核心分析：三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
-/// 那一层还没搬，所以这里**只搬纯计算入口** `Analyze(snapshot, solution)`。**没搬的重载没有空跑版本。**
+/// 只实现核心分析：三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
+/// 那一层还没实现，所以这里**只实现纯计算入口** `Analyze(snapshot, solution)`。**没实现的重载没有空跑版本。**
 ///
 /// **Integer comparisons expose an exact scalar slack metric; global constraints and sparse
 /// domains are evaluated through their semantic contract and never receive a fabricated LP-style slack.** **Only the core analysis is implemented**: the three

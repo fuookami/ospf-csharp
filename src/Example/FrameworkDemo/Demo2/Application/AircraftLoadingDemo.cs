@@ -147,7 +147,7 @@ public sealed class AircraftLoadingDemo
             await solver.SolveAsync(matrix).ConfigureAwait(false);
         if (solved is Failed<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveFailed) {
             // **失败码单独写进备注**：消息文本会随后端措辞变，**码不会**——判据钉码，才不会因为一句措辞改动就失效，也不会因为吞掉细节而恒绿。
-            // **The error code goes into the note separately**: the message text varies with backend wording, **the code does not** — pinning the code keeps the criterion from
+ // **The error code goes into the note separately**: the message text varies with backend wording, **this implementation does not** — pinning this implementation keeps the criterion from
             // breaking on a reworded message, and from staying green while the detail is swallowed.
             _notes.Add("Solve failed: " + solveFailed.Error.Code + " " + solveFailed.Error.Message);
             return new Failed<Success, ErrorCode, Error<ErrorCode>>(solveFailed.Error);

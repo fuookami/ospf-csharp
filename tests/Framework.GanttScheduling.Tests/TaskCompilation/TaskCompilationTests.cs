@@ -276,7 +276,7 @@ public class TaskCompilationTests {
     /// 一个任务既 `CancelEnabled = false` 又被锁定：这里先写 0 再写 1，**后写的赢**，结果是 1。
     /// 反过来写成"不允许取消优先"会得到 0——模型于是取消了一个**明确要求保留**的任务。
     ///
-    /// A task with `CancelEnabled = false` that is also locked: the code writes 0 then 1, **the later write wins**, giving 1. Getting the order wrong yields 0 — the model then
+ /// A task with `CancelEnabled = false` that is also locked: this implementation writes 0 then 1, **the later write wins**, giving 1. Getting the order wrong yields 0 — the model then
     /// cancels a task that was **explicitly required to stay**.
     /// </remarks>
     [Fact]
@@ -508,7 +508,7 @@ public class TaskCompilationTests {
     /// <remarks>
     /// 理由同上：`x` 还不存在。独立变量 `xor[e]`，其语义由跨轮冲突约束与 `xor` 下界钉住。
     ///
-    /// Same reason: `x` does not exist yet. The code uses a standalone `xor[e]`, whose meaning is pinned by the cross-round conflict constraints and the `xor` lower
+ /// Same reason: `x` does not exist yet. This implementation uses a standalone `xor[e]`, whose meaning is pinned by the cross-round conflict constraints and the `xor` lower
     /// bound.
     /// </remarks>
     [Fact]
@@ -721,7 +721,7 @@ public class TaskCompilationTests {
             executors, compilation);
         ((IMetaConstraintGroup)minimization).Name.Should().Be("executor_cost_minimization");
         // 这里写的是 `coefficient?.let { … }`：**没给提取器就什么都不做**，那是语义而不是漏接线。
-        // The code is `coefficient?.let { … }`: with no extractor it does nothing, and that is semantics rather than missing wiring.
+ // This implementation is `coefficient?.let { … }`: with no extractor it does nothing, and that is semantics rather than missing wiring.
         minimization.Invoke(new object()).IsOk.Should().BeTrue(
             "without an extractor the executor cost does not exist, so even a non-model is not an error");
 
@@ -738,7 +738,7 @@ public class TaskCompilationTests {
     /// 必须**给系数**才走到模型检查：没给系数时直接 `Ok`（`coefficient?.let { … }`），
     /// 于是这条判据若不给系数，永远看不到 `IllegalArgument`。
     ///
-    /// A coefficient is **required** to reach the model check: without one the code returns `Ok` (`coefficient?.let { … }`), so a criterion that omits it would never see
+ /// A coefficient is **required** to reach the model check: without one this implementation returns `Ok` (`coefficient?.let { … }`), so a criterion that omits it would never see
     /// `IllegalArgument`.
     /// </remarks>
     [Fact]

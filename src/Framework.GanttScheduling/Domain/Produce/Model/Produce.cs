@@ -92,7 +92,7 @@ public abstract class AbstractProduce<P>(
     ///
     /// Walk the over and less tables and accumulate each row's dual value into the map by its `args`. Four things are carried over:
     /// **only a row carrying a key has a price** and a row without one is skipped silently rather than being an error (its `when` has no `else`); **prices accumulate per key**, since one
-    /// key can be hit by several rows and the code uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as
+ /// key can be hit by several rows and this implementation uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as
     /// "already computed"; and **a table that was never built skips the whole block** instead of failing, since `refresh` may run before registration. **The key is read from the
     /// constraint row**: `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and
     /// `LinearFunctionSymbolAdapter` takes no parent, so it cannot be attached after construction. The key therefore sits on the **constraint row**, which is what the dual value is keyed by, so

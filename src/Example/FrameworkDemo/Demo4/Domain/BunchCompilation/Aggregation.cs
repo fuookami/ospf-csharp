@@ -54,7 +54,7 @@ public sealed class Aggregation
         // **流量是连接资源用量**：`flow` 就是这么装的，只是 C# 侧此前连 `Flow` 都当不了资源。
         // 缺省为空列表——**没有流量规则时不该建出任何流量行**，而不是建一堆恒零的符号。
         //
-        // **Flows are connection resource usage**: the code wires `flow` exactly this way, except the C# side could not even treat `Flow` as a resource . The default is an empty
+ // **Flows are connection resource usage**: the implementation wires `flow` exactly this way, except the C# side could not even treat `Flow` as a resource . The default is an empty
         // list — **no flow rules must build no flow rows**, rather than a pile of always-zero symbols.
         Flow = new BunchSchedulingConnectionResourceUsage<Flow, FlowControl, Flt64>(
             timeWindow, flows ?? Array.Empty<Flow>(), "flow");

@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// 这条上界不是可有可无的收紧：没有它，取消变量可以取任意大，取消最小化会把"取消多少人"压到零的同时，
 /// 让别的约束通过这个变量拿到任意多的自由度。
 ///
-/// The code's: one non-negative integer variable per flight passenger, bounded above by that passenger's head count — **cancelling more people than exist is
+/// Its: one non-negative integer variable per flight passenger, bounded above by that passenger's head count — **cancelling more people than exist is
 /// impossible**. That bound is not optional tightening: without it the cancellation variables could take any value, and cancellation minimisation would drive "how many people are
 /// cancelled" to zero while other constraints gain arbitrary freedom through them.
 /// </remarks>

@@ -123,7 +123,7 @@ public sealed record ImpliedCondition
         // **理由是这两个情形下 `lowerAdjust` 或 `upperAdjust` 会变成 0 或负数，
         // 于是门控行的系数消失，前置为假时约束不再松弛。**
         //
-        // **The code rejects `lower > 0` and `upper < tolerance`.** **In both cases `lowerAdjust` or
+ // **This implementation rejects `lower > 0` and `upper < tolerance`.** **In both cases `lowerAdjust` or
         // `upperAdjust` becomes zero or negative, the gate coefficient vanishes, and the constraint no longer relaxes
         // when the antecedent is false.**
         if (Bounds.Lower.CompareTo(Flt64.Zero) > 0) {

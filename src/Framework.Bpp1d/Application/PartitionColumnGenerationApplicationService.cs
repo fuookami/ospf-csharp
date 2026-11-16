@@ -300,7 +300,7 @@ public sealed class PartitionColumnGenerationApplicationService<V>
         // 传了别的定价器就退回逐分区路径——**行为就是这样**，这里照着做并写在注释里，而不是假装有批量。
         //
         // **Batch pricing only holds for the default MILP pricer**: `PricePrepared` needs a "model built up front", a contract a custom pricer cannot offer. With any other pricer the
-        // per-partition path is used — **that is what the code does**, mirrored here and written down rather than faking a batch.
+ // per-partition path is used — **that is what this implementation does**, mirrored here and written down rather than faking a batch.
         MilpPartitionPricingOracle<V>? batchOracle = config.BatchPricingEnabled ? _oracle as MilpPartitionPricingOracle<V> : null;
         if (batchOracle is not null) {
             var partitionIds = new List<string>(partitions.Count);

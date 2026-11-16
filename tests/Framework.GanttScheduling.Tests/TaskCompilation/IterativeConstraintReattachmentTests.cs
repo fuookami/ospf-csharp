@@ -1,4 +1,4 @@
-// 换模型后约束不搬的判据 / Criteria for constraints not following a model switch.
+// 换模型后约束不实现的判据 / Criteria for constraints not following a model switch.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +15,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **符号跟着编译走，约束只跟着模型走** / Symbols follow the compilation; constraints only follow the model.
 /// </summary>
 /// <remarks>
-/// `ReattachTo`把**符号**搬到新模型上，但 `AddColumns` 加的 `xor[e] ≥ x[t]` 与跨轮冲突是**模型的行**，
-/// 不会跟着搬。于是"先在第 0 个模型上加列、再注册到第 1 个模型"会得到一个
+/// `ReattachTo`把**符号**实现到新模型上，但 `AddColumns` 加的 `xor[e] ≥ x[t]` 与跨轮冲突是**模型的行**，
+/// 不会跟着实现。于是"先在第 0 个模型上加列、再注册到第 1 个模型"会得到一个
 /// **有全部列、却一条列相关约束都没有**的模型。
 ///
 /// 这个模型**可解**——只是每列都可以随便选：`xor` 不再被下界约束住（执行器使用免费）、
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// That model **solves** — every column is simply free to choose: `xor` is no longer bounded below (executor usage is free), and two rounds' columns of the same task can be selected
 /// together (the cross-round conflicts are gone). The answer is legal and absurdly cheap.
 ///
-/// The code behaves the same way (its `addColumns` constraints go only into the model handed to it), so **does not fix it** — it pins it: after switching models the caller
+/// The implementation behaves the same way (its `addColumns` constraints go only into the model handed to it), so **does not fix it** — it pins it: after switching models the caller
 /// must run `AddColumns` again (or wait for a replay in a later batch).
 /// </remarks>
 public class IterativeConstraintReattachmentTests {
@@ -74,12 +74,12 @@ public class IterativeConstraintReattachmentTests {
     /// 同一任务的两轮列可以同时被选中（跨轮冲突消失）。答案合法，代价低得离谱。
     ///
     /// `addColumns` 的约束只加进传给它的那个模型，所以它**没有**这个问题需要的搬运；
-    /// 本实现按 的 `ReattachTo` 一并重放——否则"换模型"这个已落地能力只搬了一半。
+    /// 本实现按 的 `ReattachTo` 一并重放——否则"换模型"这个已落地能力只实现了一半。
     ///
     /// Without this, the new model would have **every column and not one column-related constraint**: `xor` is no longer bounded below (executor usage is free) and two rounds' columns
     /// of the same task can be selected together (the cross-round conflicts are gone). The answer is legal and absurdly cheap.
     ///
-    /// The code's `addColumns` adds its constraints only to the model handed to it, so it has no carrying logic; this implementation replays them as part of the earlier `ReattachTo` —
+ /// Its `addColumns` adds its constraints only to the model handed to it, so it has no carrying logic; this implementation replays them as part of the earlier `ReattachTo` —
     /// otherwise the already-landed "switch model" capability would carry only half of what it must.
     /// </remarks>
     [Fact]
@@ -111,9 +111,9 @@ public class IterativeConstraintReattachmentTests {
     /// **已回收的列不会被换模型复活** / A retired column is not revived by a model switch.
     /// </summary>
     /// <remarks>
-    /// `RemoveColumns` 把列固定为 0 并从模型里摘掉。若 `ReattachTo` 把它再搬进新模型，
+    /// `RemoveColumns` 把列固定为 0 并从模型里摘掉。若 `ReattachTo` 把它再实现进新模型，
     /// 那条"已回收"的列又回来了——它仍被固定为 0，所以选不上，但**模型里多了一批永远取 0 的列**，
-    /// 而引用它的约束也一起被搬过去。
+    /// 而引用它的约束也一起被实现出来。
     ///
     /// `RemoveColumns` pins the column to 0 and drops it from the model. If `ReattachTo` moves it into a new model, that "retired" column is back — still pinned to 0, so unselectable,
     /// but **the model now carries a batch of permanently zero columns**, and the constraints referring to it move along too.

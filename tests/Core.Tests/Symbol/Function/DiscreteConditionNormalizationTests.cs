@@ -100,7 +100,7 @@ public class DiscreteConditionNormalizationTests
     /// recomputation from the transformed range <b>never disagreed</b>.**
     ///
     /// **Both sides of that `??` are therefore equivalent in the current shape, and the precedence is
-    /// <b>untestable</b>.** **It stays for readability and structural parity with the code, not for a behavioural
+ /// <b>untestable</b>.** **It stays for readability and structural parity with the implementation, not for a behavioural
     /// difference.**
     ///
     /// **The criterion now asserts only "a folded truth value settles both branches" and no longer claims to test the

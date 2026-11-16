@@ -375,7 +375,7 @@ public sealed class ComposedSolversTests {
     /// criteria: **a criterion that depends on "the results happen to be distinguishable" is not a reliable criterion**.
     ///
     /// This group therefore asserts "all twelve run to completion and report a feasible solution", and **records explicitly that the third
-    /// group's default update operators have no test-level protection** — only the directly readable fact in the code that each factory passes its
+ /// group's default update operators have no test-level protection** — only the directly readable fact in the implementation that each factory passes its
     /// own operator. No assertion is fabricated to cover the hole.
     /// </remarks>
     [Fact]

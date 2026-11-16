@@ -55,8 +55,8 @@ public sealed class PositionStatus
     /// 由状态码决定：`Loaded` 与 `Reserved` 都不可用。**不是从 `StowageNeeded || AdjustmentNeeded` 推出来的**——
     /// 两者在四个码上碰巧等价，但"可用"是码的属性，不是装载需求的导数。
     ///
-    /// Decided by the code: `Loaded` and `Reserved` are both unavailable. **Not derived from `StowageNeeded || AdjustmentNeeded`** — the two coincide on the
-    /// four codes, but availability is a property of the code, not a derivative of the stowage requirement.
+ /// Decided by the implementation: `Loaded` and `Reserved` are both unavailable. **Not derived from `StowageNeeded || AdjustmentNeeded`** — the two coincide on the
+ /// four codes, but availability is a property of the implementation, not a derivative of the stowage requirement.
     /// </remarks>
     public bool Available => Code is not (PositionStatusCode.Loaded or PositionStatusCode.Reserved);
 
@@ -64,7 +64,7 @@ public sealed class PositionStatus
     public bool Unavailable => !Available;
 
     /// <summary>
-    /// 旧的四布尔构造（**会丢状态码**，仅供既有测试使用）/ Legacy four-flag constructor (**loses the code**, for existing tests only).
+ /// 旧的四布尔构造（**会丢状态码**，仅供既有测试使用）/ Legacy four-flag constructor (**loses the implementation**, for existing tests only).
     /// </summary>
     /// <remarks>
     /// `AdjustmentNeeded` ⇒ `Preassigned`、`StowageNeeded` ⇒ `Unloaded`、其余 ⇒ `Loaded`——**推不出 `Reserved`**。
@@ -72,7 +72,7 @@ public sealed class PositionStatus
     /// 一旦测试改用 `From` 就删掉它。
     ///
     /// Maps `AdjustmentNeeded` to `Preassigned`, `StowageNeeded` to `Unloaded` and everything else to `Loaded` — **`Reserved` cannot be recovered**.
-    /// Production always goes through `From`, where the code is given rather than guessed. `ponytail:` this overload exists only to avoid touching dozens of
+ /// Production always goes through `From`, where this implementation is given rather than guessed. `ponytail:` this overload exists only to avoid touching dozens of
     /// existing tests; delete it once they move to `From`.
     /// </remarks>
     public PositionStatus(bool stowageNeeded, bool adjustmentNeeded, bool predicateWeightNeeded, bool recommendedWeightNeeded)
@@ -210,7 +210,7 @@ public sealed class MaxLoadWeightLimit
     /// <param name="zeroFuelWeight">零油重 / The zero-fuel weight.</param>
     /// <returns>该零油重下的最大装载重量 / The maximum load weight there.</returns>
     /// <remarks>
-    /// 照做 `invoke(zfw)` 的三条分支：无分段用常数；低于第一段的下界用第一段；落在某段内用该段；都不落则用最后一段。
+    /// 如此 `invoke(zfw)` 的三条分支：无分段用常数；低于第一段的下界用第一段；落在某段内用该段；都不落则用最后一段。
     /// **"都不落则用最后一段"不是兜底而是规格**：零油重超过最后一段的上界说明这架飞机已经超重，那时允许的装载量应当是最小的那个，
     /// 而不是"没有限制"。
     ///

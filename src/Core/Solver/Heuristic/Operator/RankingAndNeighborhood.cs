@@ -202,7 +202,7 @@ public static class NeighborhoodSupport {
     /// iteration counter looks entirely normal**. The cap is `dimension * 4`, and the worst case simply perturbs a few fewer positions.
     /// **越界夹紧用 `NumericSupport` 的求解器序下标**。`model.tokens[index]` 是令牌表的自然顺序，与解向量的求解器顺序可能错位，
     /// 之后每次夹紧都用错区间，而表现只是"解的质量不如预期"。
-    /// **Bounds come from `NumericSupport`'s solver-order indexing.** The code's `model.tokens[index]` follows the token table's
+ /// **Bounds come from `NumericSupport`'s solver-order indexing.** Its `model.tokens[index]` follows the token table's
     /// natural order, which can be misaligned with the solution vector's solver order; every clamp then uses the wrong interval and the
     /// only symptom is "solution quality is worse than expected".
     /// </remarks>

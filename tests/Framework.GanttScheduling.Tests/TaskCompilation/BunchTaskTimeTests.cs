@@ -191,7 +191,7 @@ public class BunchTaskTimeTests {
     /// 本仓的 `BunchCompilation` 没有那一层。之前这里返回 `Ok`，而唯一调用方又把返回值丢掉：于是"列没加上"与"加上了"在代码里完全一样。
     /// 现在明确失败，且调用方检查返回值。
     ///
-    /// The code's `addColumns` accumulates `valueOf(time.start) * xi[bunch]` into `est` / `estEnd`, and `xi` is the compilation layer's per-round column variable — which
+ /// Its `addColumns` accumulates `valueOf(time.start) * xi[bunch]` into `est` / `estEnd`, and `xi` is the compilation layer's per-round column variable — which
     /// `BunchCompilation` lacks. This used to return `Ok` while the only caller discarded the result, so "columns not added" and "added" were identical in code. It now fails
     /// loudly and the caller checks the result.
     /// </remarks>
@@ -224,7 +224,7 @@ public class BunchTaskTimeTests {
     /// 但任务束的 `est` 是**连续位移**（`est_redundancy`），与整数开始时刻无关；Demo4 的束时间窗恰恰是离散的。
     /// 把守卫放在共用循环里会把这条本来能注册的路径挡住，而且报的是"开始时间变量没接线"，指向完全无关的地方。
     ///
-    /// The discrete-window guard belongs to the "build start-time variables" branch — the code uses `UIntVariable1`, and this repository has no integer start-time variable yet.
+ /// The discrete-window guard belongs to the "build start-time variables" branch — this implementation uses `UIntVariable1`, and this repository has no integer start-time variable yet.
     /// A bunch's `est` is a **continuous displacement** (`est_redundancy`) unrelated to integer start instants, and Demo4's bunch window is discrete. Putting the guard in the
     /// shared loop blocks a path that does register, and reports "the start-time variable is not wired", pointing somewhere entirely unrelated.
     /// </remarks>

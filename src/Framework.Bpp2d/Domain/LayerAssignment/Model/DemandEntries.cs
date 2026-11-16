@@ -62,7 +62,7 @@ public static class DemandEntries
             }
             // ponytail: `amountScaler` 把件数逐次加一累加成数值，为的是不引入 `Double`。
             // 这里直接走 `decimal` 转换——同样是精确整数、没有浮点中转，而且少一次 O(件数) 循环。
-            // ponytail: the code accumulates the count one at a time via `amountScaler` to avoid introducing a `Double`. This casts straight to `decimal` instead — equally exact, still
+ // ponytail: the implementation accumulates the count one at a time via `amountScaler` to avoid introducing a `Double`. This casts straight to `decimal` instead — equally exact, still
             // floating-point free, and without an O(count) loop.
             FltX scaler = new((decimal)amount);
             Quantity<FltX> perPiece = item.Shape.BoundingArea;

@@ -76,7 +76,7 @@ public class Pattern2Tests {
     ///
     /// Here a placement whose **dimension is not an area at all** produces that case: a "piece" one metre wide and one kilogram tall has an area of metre-kilogram.
     ///
-    /// The code's `quantitySum(...) ?: quantityZeroOf(...)` yields `0` here, so "0% utilization" looks like a legal result while the real situation is that
+ /// Its `quantitySum(...) ?: quantityZeroOf(...)` yields `0` here, so "0% utilization" looks like a legal result while the real situation is that
     /// **the arithmetic cannot be done at all**.
     /// </remarks>
     [Fact]

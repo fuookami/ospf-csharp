@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic;
 /// and **which one wins changes what the caller sees**: a timeout and an exhausted budget are different reports — the first says the environment was
 /// slow, the second says the search spent its allowance.
 ///
-/// The code's order, copied here: diagnostics → `Failed`, stopped → `Stopped`, evaluation allowance → `EvaluationLimit`, steps → `StepLimit`,
+/// Its order, copied here: diagnostics → `Failed`, stopped → `Stopped`, evaluation allowance → `EvaluationLimit`, steps → `StepLimit`,
 /// decisions → `StepLimit` (**decisions and steps share a reason, because to the caller both mean "ran out of turns"**), time → `TimeLimit`,
 /// every worker disabled → `NoCandidate`, otherwise `null` (this slice finished normally).
 /// </remarks>

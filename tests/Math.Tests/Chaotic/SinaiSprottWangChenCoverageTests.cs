@@ -78,7 +78,7 @@ public class SinaiSprottWangChenTests
     /// **`b` 被声明而公式里没有它。保留它是因为那是签名，但"它无效"必须可测**——
     /// **否则下一个人会去调 `b` 并以为在调系统。**
     ///
-    /// **The code declares `b` and the equations ignore it. It stays because it is the signature, but "it does
+ /// **The implementation declares `b` and the equations ignore it. It stays because it is the signature, but "it does
     /// nothing" has to be measurable** — **or the next person tunes `b` believing it tunes the system.**
     /// </remarks>
     [Fact]

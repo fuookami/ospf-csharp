@@ -54,7 +54,7 @@ public sealed class PriorityAppointment
     /// `payload`、`totalWeight`、`ballast` 三个参数**在函数体里一次都没用到**——它们只是签名的一部分。这里不收，
     /// 因为收了却不读会让调用方以为有影响。
     ///
-    /// The code's `payload`, `totalWeight` and `ballast` parameters are **never read in the body** — they are signature decoration. They are omitted here, since accepting and
+ /// Its `payload`, `totalWeight` and `ballast` parameters are **never read in the body** — they are signature decoration. They are omitted here, since accepting and
     /// ignoring them would suggest they matter.
     /// </remarks>
     public static PriorityAppointment From(

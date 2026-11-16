@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 半装的聚合在求解时表现为"约束莫名不紧"，比直接失败难查得多。
 ///
 /// Both / / / each filled one piece, but each was **only exercised inside its own criteria**; whether the chain closes can only be answered by a single registration.
-/// The code's `register` order is taskTime, flow, fleetBalance, flightLink, flightCapacity, and **a failure anywhere aborts the whole registration**: a half-wired aggregation shows
+/// Its `register` order is taskTime, flow, fleetBalance, flightLink, flightCapacity, and **a failure anywhere aborts the whole registration**: a half-wired aggregation shows
 /// up at solve time as "the constraint is mysteriously slack", much harder to diagnose than a straight failure.
 /// </remarks>
 public class Demo4AggregationAssemblyTests {

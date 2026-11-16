@@ -161,7 +161,7 @@ public class NativeColumnProjectionTests
     /// **正确的实现给出 `0` 与 `1`（列表下标）；如果误用 `SolverIndex`，会给出 `5` 与 `9`——
     /// 而那会让解向量按错误的列去索引。**
     ///
-    /// **The code's `keys.withIndex` uses the <b>list index</b>, not the token's own `solverIndex`.**
+ /// **Its `keys.withIndex` uses the <b>list index</b>, not the token's own `solverIndex`.**
     ///
     /// **The criterion builds an input where the two differ: `SolverIndex` values `5` and `9` at list positions `0` and
     /// `1`.**

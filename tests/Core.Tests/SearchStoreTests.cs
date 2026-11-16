@@ -100,7 +100,7 @@ public sealed class FileSearchStoreTests : IDisposable {
     /// passes all four assertions in `Key_ShouldRejectPathEscape` above.
     ///
     /// So this is the **sixth equivalent mutant**. It is kept for a different reason than the earlier ones: **it is not "defensive code
-    /// from the code" but "the second layer of defence in depth"** — the string check is whitelist-style (rejecting separators) and
+ ///" but "the second layer of defence in depth"** — the string check is whitelist-style (rejecting separators) and
     /// the containment check is black-box-style (verifying the result). If the whitelist misses a character, the second layer still
     /// catches it; but it currently carries no observable duty, and **we must not claim it stops anything**.
     /// </remarks>

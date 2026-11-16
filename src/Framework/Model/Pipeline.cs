@@ -92,7 +92,7 @@ public interface ICGPipeline<Args, in MModel, TMap> : IPipeline<MModel>
     /// **保留而不删**：删除会改变既有结构，且它与默认实现等价、无行为风险。
     /// 记录在此，避免下一个人误以为它是活路径。
     ///
-    /// **Nothing in this repository calls it** ( grepped the whole tree; only the definition matched). In the code **every** pipeline explicitly overrides
+ /// **Nothing in this repository calls it** ( grepped the whole tree; only the definition matched). In the implementation **every** pipeline explicitly overrides
     /// `refresh` to call `refreshByKeyAsArgs`, while its **default `refresh` and `refreshByKeyAsArgs` are two equivalent implementations**. C# kept the
     /// default (which is what actually runs) and added **no overrides**, so this static copy **has no callers**. **It is line-for-line equivalent to the default**
     /// (same grouping, same key-type test, same accumulation), so it is not a defect — it is **dead code left over from earlier work**. Kept rather than deleted:

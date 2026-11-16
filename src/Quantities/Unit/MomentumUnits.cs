@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// **两者数值相同、量纲相同，但写成 `kg·m/s` 让动量与"质量 × 速度"这个定义直接对应**，
 /// **而写成 `N·s` 会让它看起来像冲量。**
 ///
-/// **Created from the code.** The code has one momentum unit, **and it is `kg·m/s`, not `N·s`** —
+/// **Created.** This implementation has one momentum unit, **and it is `kg·m/s`, not `N·s`** —
 /// **the two agree in value and dimension, but `kg·m/s` mirrors the definition "mass × velocity"**,
 /// **while `N·s` makes it look like an impulse.**
 /// </remarks>

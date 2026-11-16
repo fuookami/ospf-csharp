@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// Dropping that chain does not merely under-count — it **counts the same switch many times**. With `A → B → C` on one executor, "assigned and ordered" alone would also
 /// treat `A→C` as a switch, charging switch time four times over, while the schedule itself looks perfectly normal.
 ///
-/// **The two branches differ in strictness, and that is the code verbatim:**
+/// **The two branches differ in strictness, and that is the implementation verbatim:**
 ///
 /// | Branch | Ordering test | Betweenness test |
 /// | --- | --- | --- |

@@ -80,7 +80,7 @@ public class NativeIndicatorTests
     /// **So this layer's own `bandTolerance >= tolerance` never runs — by the time control reaches it, the upstream has
     /// already refused.**
     ///
-    /// **This implementation copies its duplicate check (the code has both layers too), so it is
+ /// **This implementation copies its duplicate check (this implementation has both layers too), so it is
     /// <b>kept</b>; but the criterion must say <b>which layer</b> is doing the work, otherwise the next reader assumes this
     /// one is covered.**
     ///
@@ -314,7 +314,7 @@ public class NativeIndicatorTests
     /// The conditional value must not be a retained column, yet it may be the consequent's result.
     /// </summary>
     /// <remarks>
-    /// **这是两套集合的不对称，照做：**
+    /// **这是两套集合的不对称，如此：**
     ///
     /// | 集合 | 内容 | 谁被拒 |
     /// | --- | --- | --- |
@@ -324,7 +324,7 @@ public class NativeIndicatorTests
     /// **所以一个变量可以同时是"条件数值结果"与"某一族的等价结果"而不冲突——
     /// 而它如果是主输入的项就会被拒。**
     ///
-    /// **The asymmetry between two sets, copied from the code** (see the table above).
+ /// **The asymmetry between two sets,** (see the table above).
     ///
     /// **So a variable can be both a conditional-value result and some family's equivalent result without conflict — while
     /// the same variable as a main-input term is refused.**

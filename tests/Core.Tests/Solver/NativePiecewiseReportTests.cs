@@ -214,8 +214,8 @@ public class NativePiecewiseReportTests
     /// `[b_{i-1}, b_i] ∋ v` and the search hits there.** **If `i == 0` then `v == b_0`; for segment 0 to miss we need
     /// `b_1 < v`, and for segment 1 to miss `b_2 < v`, and so on, giving `b_n < v` — contradicting `v <= b_n`.**
     ///
-    /// **So the search always hits and `no valid segment` is dead code.** **The code keeps it and copies
-    /// the code; the criterion does not change that but <b>records the unreachability</b> and samples it, because dead
+ /// **So the search always hits and `no valid segment` is dead code.** **This implementation keeps it and copies
+ /// the implementation; the criterion does not change that but <b>records the unreachability</b> and samples it, because dead
     /// code without a criterion gets read next time as "a case still unhandled".**
     /// </remarks>
     [Fact]

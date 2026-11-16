@@ -100,7 +100,7 @@ public class Demo3FrameworkParityTests {
         solution.Produce.Should().NotBeNull("the solution must carry a produce aggregate");
     }
 
-    /// <summary>**贪心定价会漏掉改进列**——记录 Demo3 与实质差异 / Greedy pricing misses improving columns — Demo3's substantive difference from the code.</summary>
+ /// <summary>**贪心定价会漏掉改进列**——记录 Demo3 与实质差异 / Greedy pricing misses improving columns — Demo3's substantive difference.</summary>
     /// <remarks>
     /// **这条判据的第一版反例是错的。** 我原本用宽度 `45 / 45 / 10`、卷长 100，
     /// 以为贪心会先吃两个 45 然后装不下 10——**实测贪心拿了 2×45 + 1×10 = 100**，

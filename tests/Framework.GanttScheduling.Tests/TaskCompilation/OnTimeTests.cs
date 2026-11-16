@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <item>**把 `OnTime` 与 `NotOnTime` 方向写反**：`on_last_end_time` 是"不晚于最晚结束"，`on_earliest_end_time` 是"不早于最早结束"。</item>
 /// </list>
 ///
-/// The code's `onTime` / `notOnTime` did not exist and both objectives returned `Failed`. Three silent failures: (1) **treating `NotOnTime` as `1 − OnTime`** — the code
+/// Its `onTime` / `notOnTime` did not exist and both objectives returned `Failed`. Three silent failures: (1) **treating `NotOnTime` as `1 − OnTime`** — the implementation
 /// has a **dead band**, only "a whole window late/early" counts, so a task can be in neither map; (2) **missing the "task may move" test** — an immovable task's `on_time` is
 /// constant zero, yet billing it would count as one "on time"; (3) **swapping the two directions** — `on_last_end_time` is "not after the last end", `on_earliest_end_time` is
 /// "not before the earliest end".

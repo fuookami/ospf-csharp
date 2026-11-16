@@ -102,7 +102,7 @@ public static class OnnxSymbolicActivation
     /// **为什么"界从输入自己取"是要紧的：** **调用方给的界与模型里的约束是两份东西，** **两边一不一致模型都能求解——**
     /// **只是分段近似的区间与实际可行域错开了，近似的误差落在没人看的地方。**
     ///
-    /// **Four things follow the code: a bound beyond 1e6 is treated as missing; lower == upper collapses to a constant instead of building a function; the breakpoints are
+ /// **Four things follow the implementation: a bound beyond 1e6 is treated as missing; lower == upper collapses to a constant instead of building a function; the breakpoints are
     /// uniform with exact interpolation at them (not a fit); and the interval is the one the model itself is constrained by.**
     ///
     /// **取界的来源**：`BigMValues` 在 C# 侧是 `internal`，插件调不到；

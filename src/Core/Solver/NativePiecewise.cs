@@ -54,7 +54,7 @@ public sealed record NativePiecewiseData(
 /// **`maximumMagnitude` 用 `abs(value) &lt; maximumMagnitude`，即<b>严格</b>上界**，
 /// 与 `NativeAbs` 一致。
 ///
-/// **This layer does <b>not</b> touch solver bounds or fallback selector usage** (the code comment says so
+/// **This layer does <b>not</b> touch solver bounds or fallback selector usage** (the implementation comment says so
 /// explicitly). **It answers one question: can this structure be translated into a set of `x/y` breakpoints.**
 ///
 /// **Breakpoints must be <b>strictly</b> increasing: `x[i-1] >= x[i]` is rejected.**

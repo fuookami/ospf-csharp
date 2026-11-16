@@ -24,11 +24,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 /// 这两个目标以前都是 `Invoke => Ok`——模型里连一个目标项都没有，而"最小化超量"这句话听起来又完全成立。
 /// 把超量 / 不足两张表补齐，这里才轮到它们。
 ///
-/// 三件照做：**阈值 0 时目标项是松弛符号本身**（每个槽一个单项式）、**阈值非零时另建带阈值的松弛并取正部**、
+/// 三件如此：**阈值 0 时目标项是松弛符号本身**（每个槽一个单项式）、**阈值非零时另建带阈值的松弛并取正部**、
 /// **权重乘在目标项上而不是松弛内部**。
 ///
 /// Both objectives used to be `Invoke => Ok` — not a single term in the model, while "minimise the over quantity" sounds entirely true. built the over and less tables; is
-/// where they pay off. Three things are copied from the code: **at a zero threshold the term is the slack symbol itself** (one monomial per slot), **a positive threshold builds a
+/// where they pay off. Three things are: **at a zero threshold the term is the slack symbol itself** (one monomial per slot), **a positive threshold builds a
 /// separate thresholded slack whose positive part becomes the term**, and **the weight multiplies the term** rather than sitting inside the slack.
 /// </remarks>
 public class ResourceQuantityObjectiveTests {

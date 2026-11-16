@@ -254,7 +254,7 @@ public sealed class Csp1dMilpSolver {
         // 不传的话 `ExtractFromDualSolution` 里 `if (_cgPipelines.Count > 0)` **永不成立**，影子价格**永远是空表**——
         // 而定价正是靠对偶价格决定要不要出列的，于是列生成**第一轮就收敛**。
         //
-        // **The context's CGPipelines must be passed**: the code is `Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`.
+ // **The context's CGPipelines must be passed**: this implementation is `Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`.
         // Without them, `if (_cgPipelines.Count > 0)` inside `ExtractFromDualSolution` **never holds** and shadow prices are **always an empty map** —
         // and pricing decides by dual price whether to emit a column, so column generation **converges on the first round**.
         var shadowPriceLifecycle = new Csp1dShadowPriceLifecycle<V>(domainValueSample, context.CgPipelines);
@@ -473,7 +473,7 @@ public sealed class Csp1dMilpSolver {
                     // **没有需求时不设上界。** `product?.maxOverProduceLength`，两者都没有就留空；
                     // C# 原本无条件用需求量，`productDemands` 为空时**会越界**。
                     //
-                    // **Leave the upper bound unset when there is no demand.** The code uses `product?.maxOverProduceLength` and leaves it unset when neither exists;
+ // **Leave the upper bound unset when there is no demand.** This implementation uses `product?.maxOverProduceLength` and leaves it unset when neither exists;
                     // C# used the demand unconditionally and would **index out of range** on an empty list.
                     V maxDemand = productDemands[0].Quantity.Value;
                     foreach (ProductDemand<V>? d in productDemands.Skip(1)) {

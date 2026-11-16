@@ -92,7 +92,7 @@ public class TaskOverMaxAdvanceTimeConstraint<E, A>
     ///
     /// 影子价格提取器按任务读取已回填的价格，见 `Extractor`。
     ///
-    /// One row per task: `advance_time[task] ≤ max allowed advance`, named `task_over_max_advance_time_{task}`. Task selection (including the part of the code that looks inverted) is documented on
+ /// One row per task: `advance_time[task] ≤ max allowed advance`, named `task_over_max_advance_time_{task}`. Task selection (including the part of the implementation that looks inverted) is documented on
     /// `OverMaxConstraintRows.Add`. The shadow-price extractor reads the already-filled price per task; see `Extractor`. (The old remark here claimed it needed the solver dual channel,
     /// which was wrong: `ICGPipeline.Refresh` fills the map from the rows' `Args`.)
     /// </remarks>

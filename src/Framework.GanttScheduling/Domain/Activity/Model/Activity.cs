@@ -70,7 +70,7 @@ public enum ActivityExecutionStatus {
 /// </remarks>
 /// <remarks>
 /// 任务与资源身份在这里用 `string`：C# 的 `Executor.Id` 是 `string`，而`ExecutorId` 是接口。
-/// 把接口继承体系搬过来会牵动整个 `Task` 领域，而这里只需要一个可用于分组与比较的键。
+/// 把接口继承体系实现出来会牵动整个 `Task` 领域，而这里只需要一个可用于分组与比较的键。
 /// `ponytail:` 天花板——等到活动与任务领域真正需要共享身份时，再引入 `ExecutorId` 接口。
 ///
 /// **The task and resource identities are `string` here**: C#'s `Executor.Id` is a `string` while its `ExecutorId` is an interface. Porting that interface

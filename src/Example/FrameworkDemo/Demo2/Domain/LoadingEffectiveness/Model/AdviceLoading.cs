@@ -44,7 +44,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// `Load.EstimateLoadWeight`**; **the two families are named `advice_amount_slack_{position}` and `advice_weight_slack_{position}`**, relying on the `StowagePosition.ToString` override
 /// Added
 ///
-/// **One deliberate unit simplification**: the code converts both the relaxed quantity and the threshold into `aircraftModel.weightUnit` before subtracting, while this implementation requires the
+/// **One deliberate unit simplification**: the implementation converts both the relaxed quantity and the threshold into `aircraftModel.weightUnit` before subtracting, while this implementation requires the
 /// caller to supply `Alw` and `EstimateLoadWeight` **in the same unit**. The two differ only by a **positive scale factor**, which the objective coefficient
 /// `parameter.AdviceLoadWeight` absorbs, so behaviour is equivalent; doing the conversion inside the symbol would introduce a unit path with no consumer.
 /// </remarks>

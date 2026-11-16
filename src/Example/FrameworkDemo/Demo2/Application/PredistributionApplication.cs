@@ -34,7 +34,7 @@ public sealed class PredistributionApplication
     // **预配载里还注册这两个域**：漏掉它们不会报错，只会让模型少几条约束——
     // 实测后果是整条路径不可行（49 行 vs 54 行）。
     //
-    // **The code registers these two more domains for predistribution** : omitting them never errors, it just leaves the model with fewer
+ // **The implementation registers these two more domains for predistribution** : omitting them never errors, it just leaves the model with fewer
     // constraints — the measured consequence was that the whole path became infeasible (49 rows vs 54).
     private readonly ExpressEffectivenessContext _expressEffectivenessContext = new();
     private readonly LoadingEffectivenessContext _loadingEffectivenessContext = new();
@@ -120,7 +120,7 @@ public sealed class PredistributionApplication
                     // 以前只注册四个，**预配载路径因此不可行**（49 行，SCIP 报 `ORModelInfeasible`），而七个域全注册时可行（54 行，目标 1）。
                     // 缺域不会报错，只会让模型"少几条约束"——这类缺陷最难发现，因为装配看起来是成功的。
                     //
-                    // **The code registers three more domains here** : `macOptimization`, `expressEffectiveness`, `loadingEffectiveness`.
+ // **The implementation registers three more domains here** : `macOptimization`, `expressEffectiveness`, `loadingEffectiveness`.
                     // Registering only four made the predistribution path **infeasible** (49 rows, SCIP reports `ORModelInfeasible`), while all seven are feasible
                     // (54 rows, objective 1). A missing domain never errors — it just leaves the model with fewer constraints, which is the hardest kind to notice.
                     _macOptimizationContext.Register(StowageMode.Predistribution, parameter, model),

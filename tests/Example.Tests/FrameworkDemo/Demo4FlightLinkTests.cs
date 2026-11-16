@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 每条链接建两个符号——`link_k` 与 `link_slack_k`——后者的源多项式是 `link_k + 0.5·y[前驱] + 0.5·y[后继]`，
 /// 两条系数都是 0.5：**一条链接由两个任务共同承担，各算一半，才不会把同一对任务重复计数**。
 ///
-/// The code is usually read as "a constraint" but is actually a **slack**: whether a link holds is left to the objective instead of being forbidden outright. Each
+/// This implementation is usually read as "a constraint" but is actually a **slack**: whether a link holds is left to the objective instead of being forbidden outright. Each
 /// link builds two symbols — `link_k` and `link_slack_k` — the latter over the source polynomial `link_k + 0.5·y[prev] + 0.5·y[succ]`, both coefficients 0.5: **a link is shared by two
 /// tasks and counting each as half is what stops the same pair from being counted twice**.
 /// </remarks>

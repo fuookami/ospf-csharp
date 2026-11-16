@@ -177,7 +177,7 @@ public sealed record RandomUniformInitializer(Func<Flt64> Entropy) : IInitialize
         IReadOnlyList<Fuookami.Ospf.Core.Token.Token<V>> tokens = model.Tokens.TokensInSolver;
         // **空令牌表必须回退，不能走采样**。`all { ... }` 在零变量上空真成立，于是"全都有界"，接着生成一批长度为零的解——
         // 种群看起来有 `amount` 个成员，实际每个都不含任何基因，目标评估只会得到默认值。这是最容易"看起来一切正常"的一类缺陷。
-        // **An empty token table must fall back, never sample.** The code's `all { ... }` is vacuously true over zero variables, so
+ // **An empty token table must fall back, never sample.** Its `all { ... }` is vacuously true over zero variables, so
         // "everything is bounded" holds and a batch of zero-length solutions is produced: the population looks like it has `amount`
         // members while none of them carries a single gene, and objective evaluation only ever returns the default. This is the
         // easiest kind of defect to "look completely normal".
@@ -215,7 +215,7 @@ public sealed record RandomUniformInitializer(Func<Flt64> Entropy) : IInitialize
 /// <remarks>
 /// **这一实现会对无界变量直接崩溃**：它用 `token.lowerBound!!` 非空断言取值。本实现改为——无界变量保持原值、不参与镜像，
 /// 而不是抛异常；否则"模型里有一个无界变量"就会让整个初始化失败，而调用方拿到的只是一个空引用异常。
-/// **The code's implementation crashes outright on unbounded variables**: it dereferences `token.lowerBound!!`. This implementation keeps
+/// **Its implementation crashes outright on unbounded variables**: it dereferences `token.lowerBound!!`. This implementation keeps
 /// the original value for unbounded variables and skips mirroring them instead of throwing; otherwise "one unbounded variable in the
 /// model" fails the whole initialization, and the caller only sees a null-reference exception.
 /// **镜像解会成倍放大种群**。`originals + mirrored` 的长度是请求数量的两倍——调用方若已按 `amount` 分配了缓冲区，必须自行截断。

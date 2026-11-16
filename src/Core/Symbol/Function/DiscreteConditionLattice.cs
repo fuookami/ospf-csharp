@@ -47,7 +47,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **所以两处检查都必需：`spacing ≥ δ` 挡"格点太密"，余数距离挡"格点位置不对齐"。**
 ///
 /// **The immediate reason is a gap already found**: **the earlier `ProveShift` only checked
-/// "spacing ≥ δ", while the code also checks "the distance from the constant to the nearest lattice point
+/// "spacing ≥ δ", while the implementation also checks "the distance from the constant to the nearest lattice point
 /// <b>on the side that would be misclassified</b> is at least δ".** **The former is necessary, not sufficient.**
 ///
 /// **The counterexample that shows why**: **`p = 3x + 2`, `δ = 2`. The values are `2 + 3ℤ = …, −1, 2, 5, …`.**

@@ -2,7 +2,7 @@
 //
 // 裸 `String` id 改为**语义化标记接口**，业务侧实现接口、子类协变 override，以保留类型安全。C# 侧此前 `ActualItem.Id`
 // 仍是裸 `string`，物品编号与箱型编号、物料编号在类型上无法区分——把物品编号传给要箱型编号的方法，编译能过。
-// The code replaced raw `String` ids with **semantic marker interfaces** so implementations and covariant overrides
+// The implementation replaced raw `String` ids with **semantic marker interfaces** so implementations and covariant overrides
 // keep type safety. On the C# side `ActualItem.Id` was still a raw `string`, leaving item, bin-type and material identifiers
 // indistinguishable at the type level — passing an item id where a bin-type id was expected compiled fine.
 

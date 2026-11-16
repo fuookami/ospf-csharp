@@ -80,7 +80,7 @@ public class CrossContributionDominanceTests {
     /// `newContributions[productId] ?: return false`。**缺产品与"贡献为 0"是两件事**：
     /// 若用 `GetValueOrDefault` 默认 0，缺产品会被当成"贡献 0"，只要旧方案贡献也 ≥ 0 就误判支配。
     ///
-    /// The code uses `newContributions[productId] ?: return false`. **A missing product and "contribution 0" are different things**: defaulting to 0
+ /// This implementation uses `newContributions[productId] ?: return false`. **A missing product and "contribution 0" are different things**: defaulting to 0
     /// would treat a missing product as "contribution 0", wrongly granting dominance whenever the existing contribution is also ≥ 0.
     /// </remarks>
     [Fact]
@@ -97,7 +97,7 @@ public class CrossContributionDominanceTests {
     /// 本实现专门检查单位，本判据专门钉住它。
     ///
     /// This is **the easiest rule to omit**: comparing 3 centimetres against 5 metres numerically says "3 is smaller, dominates", yet the units are not
-    /// comparable. The code checks units explicitly and this criterion pins it.
+ /// comparable. The implementation checks units explicitly and this criterion pins it.
     /// </remarks>
     [Fact]
     public void DifferentUnits_ShouldNotDominate() {

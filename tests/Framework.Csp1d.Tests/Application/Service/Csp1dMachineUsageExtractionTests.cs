@@ -176,7 +176,7 @@ public class Csp1dMachineUsageExtractionTests {
     /// 没有匹配项时**整条设备不出现**。
     ///
     /// The guard is `if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`. Without it, **a centimetre consumption would be summed as
-    /// millimetres** — a factor of 10 with no warning. The criterion asserts "no usage record for this machine" rather than "usage is zero": the code uses
+ /// millimetres** — a factor of 10 with no warning. The criterion asserts "no usage record for this machine" rather than "usage is zero": this implementation uses
     /// `mapNotNull`, so with no matching entry **the machine does not appear at all**.
     /// </remarks>
     [Fact]

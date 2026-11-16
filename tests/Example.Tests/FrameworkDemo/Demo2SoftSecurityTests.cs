@@ -321,7 +321,7 @@ public class Demo2SoftSecurityTests {
         model.MetaSubObjects.Count.Should().BeGreaterThan(objectivesBefore + 1, "the divide-empty families land as well now");
 
         // **只有带 `EmptyHated` 类型码的舱位参与**：P1 有该码、P2 没有，所以那一项的单项式只能来自 P1。
-        // **Only positions carrying `EmptyHated` participate**: P1 has the code and P2 does not, so that term's monomials can only come from P1.
+ // **Only positions carrying `EmptyHated` participate**: P1 has the implementation and P2 does not, so that term's monomials can only come from P1.
         Fuookami.Ospf.Core.Model.Mechanism.MetaSubObject<Flt64> hated = model.MetaSubObjects.Single(sub => sub.Name == "empty hated");
         hated.Polynomial.Monomials.Should().ContainSingle("only P1 carries the EmptyHated type code");
         hated.Polynomial.Monomials[0].Symbol.Name.Should().Contain("P1");
@@ -377,7 +377,7 @@ public class Demo2SoftSecurityTests {
         // 1. A false withSoftSecurity gives zero.
         var b757 = new Rig(MainDeckItems(5), positions, AircraftType.B757);
         // `withSoftSecurity` **只在建议打板模式下为假**；预配载仍然启用。
-        // `withSoftSecurity` is false **only in weight-recommendation mode**; predistribution still enables it, as in the code.
+ // `withSoftSecurity` is false **only in weight-recommendation mode**; predistribution still enables it.
         // 预配载：软安全启用，但空载厌恶**只对全配载**生效 → 门舱 + 分隔空载 = 2 条。
         // Predistribution: soft security is on, but empty-hating applies **only to full load**, so door plus divide-empty = 2.
         Generate(b757, StowageMode.Predistribution).Should().HaveCount(2, "predistribution still enables soft security");

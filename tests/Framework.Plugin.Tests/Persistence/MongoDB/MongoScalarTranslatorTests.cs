@@ -29,9 +29,9 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **查询会返回一个错误的结果集，而调用方以为查对了**——
 /// **这是最难发现的一类错误：它不抛异常，只是答错了。**
 ///
-/// The code's `MongoScalarTranslator` (**209 lines**) turns scalar expressions into aggregation-pipeline values.
+/// Its `MongoScalarTranslator` (**209 lines**) turns scalar expressions into aggregation-pipeline values.
 /// **Found that none of the four C# Mongo translators existed** (`BsonDocument` appeared 0 times under `src/`),
-/// **while the code carries 18 offline criteria across them — none needing a Mongo instance.** adds the first.
+/// **while this implementation carries 18 offline criteria across them — none needing a Mongo instance.** adds the first.
 ///
 /// **Why "fails" itself needs pinning**: returning `null` or the input for an unsupported operator
 /// **makes the query return a wrong result set while the caller believes it succeeded** —

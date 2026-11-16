@@ -130,7 +130,7 @@ public class PatternAssignmentModellingTests {
     /// 列生成每轮都会重发整池候选，把"已在池里"当成错误会让每轮都失败。
     /// 但**必须真的不建第二个变量**，否则同一方案在目标里被重复计费。
     ///
-    /// The code does `if (pattern.key in pool) continue` — **skip, not fail**: column generation resends the whole pool each round, so treating "already in the pool"
+ /// This implementation does `if (pattern.key in pool) continue` — **skip, not fail**: column generation resends the whole pool each round, so treating "already in the pool"
     /// as an error would fail every round. But it **must not create a second variable**, or the same pattern is charged twice in the objective.
     /// </remarks>
     [Fact]

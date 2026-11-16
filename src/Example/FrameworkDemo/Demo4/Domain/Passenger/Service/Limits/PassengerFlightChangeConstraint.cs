@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// **一处必要差异**：`IfFunction` 的 `strictBoundary` 取默认的 `NONZERO_TOLERANCE = 1e-10`，
 /// C# 的 `Create` 没有缺省值，所以显式传 `1e-10`；传 0.5 之类的"看起来像阈值"的值会让 `SafeLattice` 直接拒绝构造。
 ///
-/// The code's builds a 0/1 indicator per itinerary leg with `IfFunction` — "this connection is too tight to catch" — and bounds the re-booking
+/// It builds a 0/1 indicator per itinerary leg with `IfFunction` — "this connection is too tight to catch" — and bounds the re-booking
 /// variables by `head count × indicator`.
 ///
 /// Two directions, one row each: **catching the next leg** — `earliest start = this leg's arrival − the next leg's departure + airport transfer time`, positive means "cannot catch it";

@@ -92,7 +92,7 @@ public sealed class MacAggregation
     /// `stowageMode` 在这条路径上**没有被用到**——`register` 收它，只往下传给水平安定面；而 C# 侧的 `HorizontalStabilizer.Register`
     /// 没有这个参数（`stowageMode` 影响的是限值约束，不在这里）。保留参数是为了签名一致。
     ///
-    /// `stowageMode` is **unused** on this path: the code accepts it and forwards it to the horizontal stabilizers, while the C# `HorizontalStabilizer.Register` has no such
+ /// `stowageMode` is **unused** on this path: the implementation accepts it and forwards it to the horizontal stabilizers, while the C# `HorizontalStabilizer.Register` has no such
     /// parameter (the mode affects the limit constraints, which live elsewhere). The parameter stays for signature parity.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model) {

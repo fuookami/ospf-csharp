@@ -27,7 +27,7 @@ public static class VolumeUnits {
     // **UK 液量盎司 28.4130625 mL，US 液量盎司 29.5735295625 mL**；
     // **UK 加仑 4.54609 L，US 加仑 3.78541178 L**——**两者差 20%，而名字只差两个字母。**
     //
-    // The sixteen below were added from the code Volume.kt.
+ // The sixteen below were added Volume.kt.
     //
     // **Imperial and US liquid measures share names and differ in size:**
     // **UK fluid ounce 28.4130625 mL, US fluid ounce 29.5735295625 mL**;

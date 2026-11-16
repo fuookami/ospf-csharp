@@ -188,7 +188,7 @@ public interface ITaskCompilation<E, A>
 /// `taskCost` 在**迭代编译**上，名字是 `bunch_cost`。它是目标函数的载体，
 /// 由 `TaskCostMinimization` 取走。普通编译没有这一项——它的代价写在列变量的系数里。
 ///
-/// The code's `taskCost` lives on the **iterative** compilation and is named `bunch_cost` (a historical name copied verbatim). It carries the objective and is picked up by
+/// Its `taskCost` lives on the **iterative** compilation and is named `bunch_cost` (a historical name copied verbatim). It carries the objective and is picked up by
 /// `TaskCostMinimization`. A plain compilation has no such term — its cost sits in the column coefficients.
 /// </remarks>
 public interface ITaskCost {
@@ -209,7 +209,7 @@ public interface ITaskCost {
 /// 三张表放在同一个接口里，因为它们是**同一次编译的产物**：拆成三个接口只会让每个调用方
 /// 各自转型三次，而拿到的永远是同一个对象。
 ///
-/// The code's `Compilation` has six tables — `y` (cancel), `z` (leisure), `taskAssignment` (task × executor), `taskCompilation`, `executorCompilation` — plus two booleans.
+/// Its `Compilation` has six tables — `y` (cancel), `z` (leisure), `taskAssignment` (task × executor), `taskCompilation`, `executorCompilation` — plus two booleans.
 /// Two of them plus `taskCompilation` and `executorCompilation` have landed already; this adds **cancel, leisure and assignment**.
 ///
 /// They share one interface because they are **products of the same compilation**: splitting them into three would make every caller cast three times to reach the very same
@@ -233,7 +233,7 @@ public interface ICompilationColumns<E, A>
     /// 把 `x` 挂在这个名字上会让"按任务取分配列"拿到真变量、按 `taskAssignment` 取到中间符号——
     /// 而两者在 0/1 世界里读起来一样，只在**跨轮聚合**时才分道扬镳（那时真变量根本不存在）。
     ///
-    /// **This is the intermediate symbol, not the `x` variable.** The code's `Compilation` has both `x: BinVariable2` (a real variable) and
+ /// **This is the intermediate symbol, not the `x` variable.** Its `Compilation` has both `x: BinVariable2` (a real variable) and
     /// `taskAssignment: LinearIntermediateSymbols2` (a `task_assignment_*` intermediate symbol), **same name, different things**. Hanging `x` on this name means "get the assignment column
     /// for a task" hands back a real variable while `taskAssignment` hands back an intermediate symbol — and the two read alike in a 0/1 world, parting ways only under
     /// **cross-round aggregation**, where the real variable does not exist at all.
@@ -359,7 +359,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
     /// 与 `TaskAssignmentRange`同一条规则。漏掉它，模型只是"多搜了一些 0/1"，
     /// 结果仍然可行——但那条"任务只能由这个执行器做"的约束就**不存在**了。
     ///
-    /// This is where the placeholder columns are first **replaced by real variables** and handed to the model. The code's `register` does six things; three land here:
+ /// This is where the placeholder columns are first **replaced by real variables** and handed to the model. Its `register` does six things; three land here:
     ///
  /// | Table | | Note |
     /// | --- | --- | --- |
@@ -383,7 +383,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
         //    守卫只保证"变量只建一次"，`model.add` 是无条件的——对同一个模型重来会撞上重名符号。
         //    所以这里按**模型实例**记住，重复注册直接返回成功。
         //
-        // Already registered on **this** model: registering again is a no-op. The code's guards only ensure "the variables are built once", while `model.add` is
+ // Already registered on **this** model: registering again is a no-op. Its guards only ensure "the variables are built once", while `model.add` is
         //    unconditional — redoing it on the same model hits a repeated symbol. So the model instance is remembered and a repeat call succeeds outright.
         foreach (object registered in _registeredModels) {
             if (ReferenceEquals(registered, model)) {
@@ -395,7 +395,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
         Try added;
 
         // 1. `x`：**只建一次**。守卫是 `if (!::x.isInitialized)`。
-        //    `x`: build **once**. The code guards with `if (!::x.isInitialized)`.
+ // `x`: build **once**. The implementation guards with `if (!::x.isInitialized)`.
         if (_assignmentVariable is null) {
             (BinVariable2 assignmentVariable, IReadOnlyDictionary<(IAbstractTask<E, A> Task, E Executor), object> assignmentTable) =
                 CompilationTable.BuildAssignmentColumns(taskList, _executors, "x");
@@ -569,7 +569,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
     /// 那是挂在符号上的、跟着符号走；本实现写成**模型的约束行**，于是"换一个模型"要重新加一次。
     /// 差别不在解上，在**换了模型之后**：只加一次的话，第二个模型没有这条约束。
     ///
-    /// The code writes this as a **symbol range** (`taskCompilation[task].range.set(ValueRange(one, one))`), which rides along with the symbol; this implementation writes it as a
+ /// This implementation writes this as a **symbol range** (`taskCompilation[task].range.set(ValueRange(one, one))`), which rides along with the symbol; this implementation writes it as a
     /// **model constraint row**, so "another model" needs it added again. The difference is not in the solution but **after switching models**: added only once, the second model lacks
     /// this constraint.
     /// </remarks>
@@ -711,7 +711,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
     /// 规则，且**后写的覆盖先写的**：不允许取消 → 固定 0；被锁定 → 固定 1。
     /// 一个任务同时"不允许取消"又"被锁定"时得到 **1**——锁定赢。
     ///
-    /// The rule matches the code and **the later write wins**: cancel disabled → 0; locked → 1. A task that both forbids cancelling and is locked ends up **1** — the lock wins.
+ /// The rule matches the implementation and **the later write wins**: cancel disabled → 0; locked → 1. A task that both forbids cancelling and is locked ends up **1** — the lock wins.
     /// </remarks>
     private void TightenCancelRanges(BinVariable1 variable, IReadOnlyList<IAbstractTask<E, A>> tasks) {
         for (int index = 0; index < tasks.Count; ++index) {
@@ -932,7 +932,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     ///
     /// - `taskCompilation` must **not** contain `Σ x`: `x` is appended per round and the round count is unknown at registration. Writing `Σ x` freezes an empty sum at
     ///   registration, and every later round's columns stay out of that equation.
-    /// - `executorCompilation` must **not** be `OR(x)`, same reason. The code uses a standalone `xor[e]` whose meaning is pinned by the cross-round conflict constraints
+ /// - `executorCompilation` must **not** be `OR(x)`, same reason. This implementation uses a standalone `xor[e]` whose meaning is pinned by the cross-round conflict constraints
     ///    and the `xor` lower bound , not computed by an `OR` function.
     ///
     /// Copying the plain compilation's shape into the iterative one still **solves** — `taskCompilation` just equals `y`, so "a task is done or cancelled" degrades to "a task is
@@ -1096,7 +1096,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
         if (!added.IsOk) {
             return added;
         }
-        // 已回收的列**不搬**：它在原模型上被固定为 0 并摘掉了，搬到新模型上等于把它复活。
+        // 已回收的列**不实现**：它在原模型上被固定为 0 并摘掉了，实现到新模型上等于把它复活。
         // Retired columns are **not moved**: they were pinned to 0 and dropped in the original model, and moving them would revive them.
         foreach (BinVariable1 round in _x) {
             added = linear.Add(round.Items.Where(item => !_retiredVariables.Contains(item)));
@@ -1104,7 +1104,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
                 return added;
             }
         }
-        // 引用已回收变量的约束**也不搬**：搬过去就是一条指向不存在变量的约束。
+        // 引用已回收变量的约束**也不实现**：实现出来就是一条指向不存在变量的约束。
         // Constraints referring to a retired variable are **not moved** either: moving them would be a row pointing at a variable that is not there.
         foreach ((LinearInequality<Flt64> inequality, string name) in _columnConstraints) {
             if (MentionsRetired(inequality)) {
@@ -1223,7 +1223,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
         for (int index = 0; index < unduplicated.Count; ++index) {
             if (costOf(unduplicated[index]) is not { } weight) {
                 // 无穷大，而 `Flt64` 没有无穷（的同一处限制），所以这里失败而不是静默当零。
-                // The code uses infinity, which `Flt64` cannot represent (the same limit), so this fails instead of silently using zero.
+ // This implementation uses infinity, which `Flt64` cannot represent (the same limit), so this fails instead of silently using zero.
                 return Results.Failed<IReadOnlyList<IT>>(new Err<ErrorCode>(
                     ErrorCode.ApplicationError,
                     "任务代价提取失败，该列不可定价 / Task cost extraction failed; this column cannot be priced"));

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **这一层的边界很清楚：** **只推仿射链认识的算子**（`Add`／`Sub`／`Mul`／`Sum`／`Neg`／`Identity`／`Cast`），
 /// **其余一律"推不出来"——** **而不是拿 1 蒙过去。**
 ///
-/// Syncs `materializeShapes`: **the code fills shapes in before lowering, because "how many elements" decides whether later steps can stay per element.**
+/// Syncs `materializeShapes`: **the implementation fills shapes in before lowering, because "how many elements" decides whether later steps can stay per element.**
 ///
 /// **The boundary is explicit: only the operators the affine chain knows are inferred, and everything else is "cannot be inferred" rather than a guessed 1.**
 /// </remarks>

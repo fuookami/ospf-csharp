@@ -85,7 +85,7 @@ public class SwitchOccurrenceTests {
     /// 这是原样。判据两条都钉住，否则把两支的严格性搞混也测不出来。
     ///
     /// This branch uses strict `&lt;`, while **the movable branch's `frontOf` uses `≤`**. The same "starts together" arrangement gives opposite answers in the two branches, and
-    /// that is the code verbatim. Both are pinned, otherwise swapping the two strictnesses would go unnoticed.
+ /// that is the implementation verbatim. Both are pinned, otherwise swapping the two strictnesses would go unnoticed.
     /// </remarks>
     [Fact]
     public void Fixed_ShouldNotSwitchOnEqualStarts() {

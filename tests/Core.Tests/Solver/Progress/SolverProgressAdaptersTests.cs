@@ -118,7 +118,7 @@ public class SolverProgressAdaptersTests {
     /// `BranchAndPrice → 70 + p*2/10`、其余 `30 + p*7/10`。
     /// **四档必须逐个验证**——只验一档时，其余三档写错不会被发现。
     ///
-    /// The code's four coefficients are `MasterLP → 30 + p*4/10`, `ColumnGeneration → 60 + p*2/10`, `BranchAndPrice → 70 + p*2/10`, and everything else
+ /// Its four coefficients are `MasterLP → 30 + p*4/10`, `ColumnGeneration → 60 + p*2/10`, `BranchAndPrice → 70 + p*2/10`, and everything else
     /// `30 + p*7/10`. **All four must be verified** — checking only one leaves the other three free to be wrong.
     /// </remarks>
     [Fact]
@@ -143,7 +143,7 @@ public class SolverProgressAdaptersTests {
     /// `percentage` 在 `totalValue == 0.0` 时返回 100，而不是 0——**总量为零意味着"已经全部完成"**。
     /// 这条在初始化瞬间触发，写成 0 会让进度条从 0 开始跳。
     ///
-    /// The code's `percentage` returns 100 when `totalValue == 0.0`, not 0 — **a zero total means "everything is done"**. This fires at the first instant of
+ /// Its `percentage` returns 100 when `totalValue == 0.0`, not 0 — **a zero total means "everything is done"**. This fires at the first instant of
     /// initialisation; writing 0 makes the progress bar jump from zero.
     /// </remarks>
     [Fact]

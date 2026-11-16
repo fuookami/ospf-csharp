@@ -97,7 +97,7 @@ public sealed class AircraftModel
     /// `torqueUnit = forceUnit * lengthUnit`。C# 的 `PhysicalUnit` 有 `Multiply`，所以这里沿用乘法而不是写死一个常量——
     /// 写死会在换单位时静默不同步。
     ///
-    /// The code's `torqueUnit = forceUnit * lengthUnit`. C#'s `PhysicalUnit` has `Multiply`, so this multiplies rather than hard-coding a constant: a constant silently
+ /// Its `torqueUnit = forceUnit * lengthUnit`. C#'s `PhysicalUnit` has `Multiply`, so this multiplies rather than hard-coding a constant: a constant silently
     /// desynchronises when the units change.
     /// </remarks>
     public static PhysicalUnit TorqueUnit => ForceUnit.Multiply(LengthUnit);
@@ -127,7 +127,7 @@ public sealed class AircraftModel
     /// `weight * (Flt64.one * (forceUnit / weightUnit))`——先把"每单位重量的力"做成量纲，再乘重量。
     /// 不能直接乘 9.80665：那是 `KilogramForce` 内部的比例，而这里要的是**量纲换算**，两者只是数值上巧合相等。
     ///
-    /// The code is `weight * (Flt64.one * (forceUnit / weightUnit))` — build the force-per-weight dimension first, then multiply. Multiplying by 9.80665 directly would
+ /// This implementation is `weight * (Flt64.one * (forceUnit / weightUnit))` — build the force-per-weight dimension first, then multiply. Multiplying by 9.80665 directly would
     /// coincide numerically here but conflate a unit ratio with a conversion factor.
     /// </remarks>
     public static Quantity<Flt64> Gravity(Quantity<Flt64> weight) {

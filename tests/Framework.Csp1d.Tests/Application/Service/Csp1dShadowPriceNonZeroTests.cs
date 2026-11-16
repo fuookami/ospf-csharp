@@ -141,8 +141,8 @@ public class Csp1dShadowPriceNonZeroTests {
         // （实测 `19.0 = 9.5 × 2`）。判据现在走**真实路径**，比合成约束强。
         //
         // **The machine capacity constraint now comes from the real path.** In it had to be added by hand because "a model made only of initial plans produces no
-        // machine constraint" — and that batch recorded "machine symbols are not populated in the constructor" as "consistent with the code". **proved that wrong**:
-        // the code fills them via `PlanBatchTerms` in `register`, and once C# was fixed the initial plans produce `machine_capacity_0`. **The hand-added constraint then
+ // machine constraint" — and that batch recorded "machine symbols are not populated in the constructor" as "consistent with the implementation". **proved that wrong**:
+ // the implementation fills them via `PlanBatchTerms` in `register`, and once C# was fixed the initial plans produce `machine_capacity_0`. **The hand-added constraint then
         // became a duplicate** (measured `19.0 = 9.5 × 2`). The criterion now exercises **the real path**, which is stronger than a synthetic constraint.
 
         var lifecycle = new Csp1dShadowPriceLifecycle<Flt64>(Millimetres(1.0).Value, context.CgPipelines);

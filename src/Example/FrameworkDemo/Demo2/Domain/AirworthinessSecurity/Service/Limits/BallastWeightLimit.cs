@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// one row `ballast_weight ≥ min_ballast_weight`, named the literal `ballast_weight_limit` (**not** prefixed with `name` — the literal is hard-coded). Three
 /// easy mistakes: (1) **both preconditions must hold** — no available ballast position or no minimum ballast weight both return success, because a flight that carries no ballast
-/// should not have this constraint; (2) **the name is hard-coded**; it looks like it should use `{name}`, but the code uses the literal, and renaming breaks existing reports;
+/// should not have this constraint; (2) **the name is hard-coded**; it looks like it should use `{name}`, but this implementation uses the literal, and renaming breaks existing reports;
 /// (3) **the lower bound is `AdaptiveMinBallastWeightSymbol`**, not the raw `MinBallastWeight` number — the former is registered in the model under soft security, the latter is just
 /// a constructor argument.
 /// </remarks>

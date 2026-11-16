@@ -354,7 +354,7 @@ public sealed record RemoteTaskActionView(
             ? SliceOutcome.Unknown
             : InferredOutcome;
         // 调度决策补全缺失字段；未知语义下结果强制 UNKNOWN。
-        // The scheduling decision fills its missing fields per the code; the outcome is forced to
+ // The scheduling decision fills its missing fields per the implementation; the outcome is forced to
         // UNKNOWN under unknown semantics.
         SchedulingDecision? effectiveScheduling = Scheduling?.Complete(
             taskId: new TaskId(handle.TaskId.Value),

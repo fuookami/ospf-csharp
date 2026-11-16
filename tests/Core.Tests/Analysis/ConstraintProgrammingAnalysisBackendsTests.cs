@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// <remarks>
 /// 补了（270 行）里不需要求解器的部分**：
 /// 两个证明判定、assumption 映射、固定值投影、后端失败传播。
-/// **没搬的是 `ConstraintProgrammingPerturbationBackend` 本身**——它要 `solver.CreateSession` 与 `session.Solve`。
+/// **没实现的是 `ConstraintProgrammingPerturbationBackend` 本身**——它要 `solver.CreateSession` 与 `session.Solve`。
 ///
 /// **The solver-free parts of is implemented**; **what did not come over is the backend itself.**
 /// </remarks>
@@ -126,7 +126,7 @@ public class ConstraintProgrammingAnalysisBackendsTests {
     /// <remarks>
     /// 返回 `true` 会让一份**没有可比对象**的报告声称"派生目标"。
     ///
-    /// Returning `true` would let a report **with nothing to compare** claim the derived objective matches the code.
+ /// Returning `true` would let a report **with nothing to compare** claim the derived objective matches the implementation.
     /// </remarks>
     [Fact]
     public void TheObjectivesAgree_ShouldNeedBothSides() {

@@ -84,10 +84,10 @@ public sealed class Demo2DomainFingerprintTests {
     ///
     /// 另一个形状细节：**均衡域只加符号与目标、不加行**（`50/64/34/0` → `55/64/34/1`）。
     ///
-    /// **This is six domains, not seven**. The code swaps in express effectiveness, recommended-weight equalization and payload maximization **for** soft
+ /// **This is six domains, not seven**. The implementation swaps in express effectiveness, recommended-weight equalization and payload maximization **for** soft
     /// security, mac optimization and loading effectiveness, so the row names here differ from the two tables above — it is not "the same domains with fewer rows".
     /// Before this table said "identical to full load", which was **fake data measured while the mode was not yet connected**; between and it recorded a
-    /// "seven-domain weight recommendation" (`54/71/53/2`), **a shape the code never builds** because the generic context's `Register` only had the seven-domain set.
+ /// "seven-domain weight recommendation" (`54/71/53/2`), **a shape the implementation never builds** because the generic context's `Register` only had the seven-domain set.
     /// With the composition split by mode this is the first real measurement: `55/64/34/2`, matching `WeightRecommendationApplication`'s
     /// `direct_model=rows55,symbols64,objective2`. One further shape note: **equalization adds symbols and objectives but no rows** (`50/64/34/0` → `55/64/34/1`).
     /// </remarks>
@@ -255,7 +255,7 @@ public sealed class Demo2DomainFingerprintTests {
         // 读代码可见：`predicateLoadWeightMin == null` 那道守卫**在 `AggregationInitializer` 里**，也就是**装配阶段**。
         // 所以旧判据钉的是本仓的一处实现偏差（守卫放晚了），不是既定行为。
         //
-        // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Reading the code: the
+ // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Reading the implementation: the
         // `predicateLoadWeightMin == null` guard sits **in `AggregationInitializer`**, i.e. **during assembly**. The old criterion therefore pinned a local deviation
         // (the guard sat one step late), not established behaviour.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest();

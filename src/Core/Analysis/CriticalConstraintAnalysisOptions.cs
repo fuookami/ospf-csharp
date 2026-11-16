@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// </summary>
 /// <remarks>
 /// 补的是（359 行）的选项层，没补编排器本身。**
-/// 编排器要依次调用扰动、目标可行性与冲突三个分析器，**而这三个的分析器本体都还没搬**（只有各自的报告类型）。
+/// 编排器要依次调用扰动、目标可行性与冲突三个分析器，**而这三个的分析器本体都还没实现**（只有各自的报告类型）。
 /// 写一个调不到东西的编排器，正是本仓反复拒绝的那种"看起来有了"。
 ///
 /// **The option layer of (359 lines) and not the orchestrator. is implemented** The orchestrator calls the perturbation, target-feasibility and
@@ -50,7 +50,7 @@ public sealed record CriticalConstraintAnalysisOptions(
     /// 而策略类型自己的默认是 `deltas = [1.0]`，要跑一串 RHS 扰动。**两者代价差一个数量级**，
     /// 而流水线是自动跑的，**默认值取重的那个会让"跑一次分析"变成一件很贵的事。**
     ///
-    /// **This default is not `ConstraintPerturbationPolicy`'s own default, and it must not be "unified" by accident.** The code pipeline defaults to
+ /// **This default is not `ConstraintPerturbationPolicy`'s own default, and it must not be "unified" by accident.** The implementation pipeline defaults to
     /// `deltas = emptyList, removalTest = true` — removal tests only, no RHS perturbation — while the policy type's own default is `deltas = [1.0]`, which runs a series of RHS
     /// perturbations. **The two differ by an order of magnitude in cost**, and the pipeline runs automatically, so **picking the heavier default turns "one analysis run" into
     /// something expensive.**

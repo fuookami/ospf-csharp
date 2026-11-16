@@ -60,7 +60,7 @@ public class ConflictAnalysisPreflightTests {
     /// **错误码必须与"选项非法"不同**：调用方对它们的处置不同——
     /// 前者该换个会话，后者该改选项。
     ///
-    /// **The code must differ from "invalid options"**: the caller reacts differently — the first needs another session, the second needs different options.
+ /// **The implementation must differ from "invalid options"**: the caller reacts differently — the first needs another session, the second needs different options.
     /// </remarks>
     [Fact]
     public void TheClosedSession_ShouldBeRefusedWithItsOwnCode() {

@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **那一整套展开依赖降阶上下文（表达式、张量、令牌），还没实现；** **但展开之前的**可展开性判定**是独立的，而它恰好是"能不能导入"的分界线：**
 /// **一个迭代次数依赖数据的 `Loop` 若被放过，** **模型会按某个猜出来的次数展开，解看着正常——只是优化的是另一个网络。**
 ///
-/// Syncs `OnnxSubgraph`. **The code unrolls everything: an `If` condition must be constant, a `Loop` trip count and termination constant, a `Scan` length from a
+/// Syncs `OnnxSubgraph`. **The implementation unrolls everything: an `If` condition must be constant, a `Loop` trip count and termination constant, a `Scan` length from a
 /// constant — so the modelling size grows linearly with the trip count, all at import time.**
 ///
 /// **The unrolling itself needs the lowering context (expressions, tensors, tokens) and is not implemented yet; the unrollability decision that precedes it is independent,

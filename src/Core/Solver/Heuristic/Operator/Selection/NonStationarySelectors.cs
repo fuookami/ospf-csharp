@@ -226,7 +226,7 @@ public class NonStationarySelector : ISelectionPolicy {
         }
         // **按 `actions` 的原序过滤掩码**，而不是按 `available` 的顺序，即 `actions.filter { it in available }`；
         // 用 `available` 的顺序会让 `maxBy` 在并列时选出不同动作，而两种顺序下的分数完全相同。
-        // **The mask is filtered in `actions` order**, not `available` order. The code writes `actions.filter { it in available }`;
+ // **The mask is filtered in `actions` order**, not `available` order. This implementation writes `actions.filter { it in available }`;
         // using `available` order makes `maxBy` pick a different action on ties while both orders have identical scores.
         var filtered = new List<string>(_actions.Count);
         foreach (string action in _actions) {

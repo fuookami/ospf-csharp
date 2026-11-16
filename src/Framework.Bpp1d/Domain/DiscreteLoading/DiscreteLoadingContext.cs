@@ -193,7 +193,7 @@ public sealed class DiscreteLoadingContext<V>
     /// **第二条是这里最要紧的**：`0.5` 不是浮点噪声，是**求解器在说"这个解不是整数解"**。
     /// 四舍五入会把一个 LP 松弛解当成整数解报出去。
     ///
-    /// **One deliberate deviation from the code**: it accepts a `values: List&lt;Flt64&gt;` and indexes by `tokens.indexOf(variable)`, whereas this reads
+ /// **One deliberate deviation**: it accepts a `values: List&lt;Flt64&gt;` and indexes by `tokens.indexOf(variable)`, whereas this reads
     /// `model.Tokens.Find(variable)?.DoubleResult` — **the same data with one fewer parameter**, matching how `Csp1dProduceContext` already extracts solutions
     /// (the solver writes results back into tokens in this pipeline). The four rejection rules are in the table; **the second is the important one** — `0.5` is not
     /// floating noise, it is **the solver saying "this is not an integer solution"**, and rounding it up reports an LP relaxation as an integer plan.
@@ -300,7 +300,7 @@ public sealed class DiscreteLoadingContext<V>
     /// **容差取 `1e-6`**：求解器返回的 `1.0000001` 必须被当成 1，否则所有正常解都会被拒。
     /// 但 `0.5` 必须被拒——那是**求解器在说"这不是整数解"**。
     ///
-    /// **The tolerance is `1e-6`, matching the code**: a solver's `1.0000001` must count as 1 or every normal solution would be rejected, while `0.5` must be
+ /// **The tolerance is `1e-6`.0000001` must count as 1 or every normal solution would be rejected, while `0.5` must be
     /// refused — that is **the solver saying "this is not an integer solution"**.
     /// </remarks>
     private static double? ReadBinary(LinearMetaModel<Flt64> model, IVariableItem variable) {

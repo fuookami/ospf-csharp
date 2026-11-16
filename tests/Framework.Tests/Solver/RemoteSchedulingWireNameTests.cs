@@ -66,7 +66,7 @@ public class RemoteSchedulingWireNameTests {
     /// <remarks>
     /// `deadline` 带着 `@SerialName("deadlineEpochMs")`，**属性名和 wire 名不同**——正是这种地方最容易写错。
     ///
-    /// In the code `deadline` carries `@SerialName("deadlineEpochMs")`: **the property name and the wire name differ**, which is exactly where this goes wrong.
+ /// In the implementation `deadline` carries `@SerialName("deadlineEpochMs")`: **the property name and the wire name differ**, which is exactly where this goes wrong.
     /// </remarks>
     [Fact]
     public void SchedulingRequest_ShouldUseTheBaselineNames() {
@@ -122,7 +122,7 @@ public class RemoteSchedulingWireNameTests {
     [Fact]
     public void NameParity_ShouldNotBeClaimedAsInteroperability() {
         // fixtures 目录里没有调度模型与能力摘要的样本——因此这两组的往返**未实测**。
-        // The code's fixtures directory contains no scheduling-model or capability sample, so round trips for these two groups are **not measured**.
+ // Its fixtures directory contains no scheduling-model or capability sample, so round trips for these two groups are **not measured**.
         string[] baselineFixtures = [
             "remote-cp-result-v1.json",
             "remote-cp-result-v2.json",

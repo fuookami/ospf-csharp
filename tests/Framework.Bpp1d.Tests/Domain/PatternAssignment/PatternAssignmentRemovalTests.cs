@@ -41,7 +41,7 @@ public class PatternAssignmentRemovalTests {
     /// 因而判定该 API 无效、把 `removeColumns` 记为缺口。**实测证明它有效**（一个目标里两项，移除一项后只剩另一项）。
     /// 这条判据把那个结论钉住。
     ///
-    /// The code relies on `removeObjectiveTerms(variables)`. **read "objective empty after clearing" as "nothing was cleared"** and wrongly recorded
+ /// The implementation relies on `removeObjectiveTerms(variables)`. **read "objective empty after clearing" as "nothing was cleared"** and wrongly recorded
     /// `removeColumns` as blocked. **Measurement shows it works** (two terms in one objective; removing one leaves the other). This criterion pins that conclusion.
     /// </remarks>
     [Fact]

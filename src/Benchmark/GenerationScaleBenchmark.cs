@@ -132,10 +132,10 @@ public class GenerationScaleBenchmark
 
     /// <summary>恒真的自定义策略 / An always-satisfied custom policy.</summary>
     /// <remarks>
-    /// **`custom` 场景里塞一条恒真约束，C# 侧照搬。** **它不是装饰：** **生成器对每条约束都要走一次判定，
+    /// **`custom` 场景里塞一条恒真约束，本实现如此。** **它不是装饰：** **生成器对每条约束都要走一次判定，
     /// 多一条就多一次虚调用——这正是要计时的部分。**
     ///
-    /// **The code adds an always-true constraint in the `custom` scenario and this mirrors it.** **It is not decoration: the generator
+ /// **This implementation adds an always-true constraint in the `custom` scenario and this mirrors it.** **It is not decoration: the generator
     /// rules on every constraint for every candidate, so one more is one more virtual call — exactly what is being timed.**
     /// </remarks>
     private sealed class AlwaysSatisfiedConstraint : ICuttingPlanConstraint<Flt64> {

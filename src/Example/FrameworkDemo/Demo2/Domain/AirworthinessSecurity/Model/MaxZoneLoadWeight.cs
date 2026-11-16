@@ -25,7 +25,7 @@ public sealed record ZoneLoadLimitPart(int PositionIndex, double Weight);
 /// <param name="Name">名称 / The name.</param>
 /// <param name="MaxLoadWeight">最大载荷重量（千克）/ The maximum load weight, in kilogram.</param>
 /// <param name="Parts">限制部分 / The contributing parts.</param>
-/// <param name="Liferaft">此区域内的救生筏，可为空 / The liferaft in this zone, nullable.</param>
+/// <param name="LiferaftWeight">此区域内的救生筏重量，可为空 / The liferaft weight in this zone, nullable.</param>
 public sealed record ZoneLoadLimitZone(
     string Name,
     double MaxLoadWeight,
@@ -39,7 +39,7 @@ public sealed record ZoneLoadLimitZone(
 /// `LimitZone` 持有 `Liferaft?` 对象，
 /// 上限只用到它的**重量**，所以这里直接存重量：持有整个对象会让"救生筏在哪"与"区域装了多少"耦合，而后者才是这个类管的事。
 ///
-/// The code's `LimitZone` holds a `Liferaft?` and the limit only uses its **weight**, so the weight is stored directly: holding the object would
+/// Its `LimitZone` holds a `Liferaft?` and the limit only uses its **weight**, so the weight is stored directly: holding the object would
 /// couple "where the liferaft is" to "how much a zone carries", and only the latter is this class's business.
 /// </remarks>
 public sealed class MaxZoneLoadWeight

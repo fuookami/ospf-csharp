@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// "扩展时是否检查剪枝约束"。所以判据不能只看"产出了一些方案"，
 /// 必须看**同一条剪枝约束下两者的产出不同**。
 ///
-/// Before the class **did not exist at all** on the C# side — the code `DFSGenerator` (484 lines) had never been implemented.
+/// Before the class **did not exist at all** on the C# side — the implementation `DFSGenerator` (484 lines) had never been implemented.
 ///
 /// **The core criterion is differential**: DFS and FullSum share the identical search logic, differing only in whether pruning constraints are checked while
 /// expanding. So the criterion cannot be "it produced some plans"; it must be that **the same pruning constraint makes the two produce different results**.

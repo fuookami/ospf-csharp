@@ -57,7 +57,7 @@ public sealed class ULD
     /// 构造 ULD。Construct a ULD from a name and an explicit code.
     /// </summary>
     /// <param name="name">名称 / The name.</param>
-    /// <param name="code">代码 / The code.</param>
+ /// <param name="code">代码 / The implementation.</param>
     /// <remarks>
     /// **公开**是必须的：主构造函数本来就该公开，所以 `ULD("AKE12345MU", ULDCode.AKE)` 这种
     /// "名称带编号、代码另行给出"的实例是常规写法。C# 之前把构造函数设成 private，只留两个工厂，而
@@ -65,7 +65,7 @@ public sealed class ULD
     /// `enabled` 里那两条集装器规则因此是**永不触发的死代码**，而它们看起来完全正常。
     ///
     /// **Public on purpose**: the primary constructor is public, so `ULD("AKE12345MU", ULDCode.AKE)` — a name carrying a number with the
-    /// code given separately — is the ordinary form. C# had the constructor private behind two factories, and `FromName("AKE12345MU")` matches the code against the **whole**
+ /// code given separately — is the ordinary form. C# had the constructor private behind two factories, and `FromName("AKE12345MU")` matches the implementation against the **whole**
     /// name, so `Code` was always null — making the two ULD rules in `enabled` **dead code that never fires** while looking perfectly fine.
     /// </remarks>
     public ULD(string name, ULDCode? code)

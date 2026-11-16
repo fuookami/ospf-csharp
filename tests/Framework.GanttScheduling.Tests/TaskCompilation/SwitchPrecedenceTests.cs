@@ -56,7 +56,7 @@ public class SwitchPrecedenceTests {
     /// `leq` 不是 `lt`。写成 `<` 会让**所有同时开始的先后关系全部消失**——
     /// 而"两个任务可以同时开始"在排班里非常常见。
     ///
-    /// The code tests `leq`, not `lt`. Writing `&lt;` makes **every** same-instant relation vanish — and "two tasks may start together" is very common in scheduling.
+ /// The implementation tests `leq`, not `lt`. Writing `&lt;` makes **every** same-instant relation vanish — and "two tasks may start together" is very common in scheduling.
     /// </remarks>
     [Fact]
     public void IsFrontOf_ShouldHoldOnEqualStarts() {

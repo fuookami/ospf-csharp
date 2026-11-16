@@ -48,7 +48,7 @@ public sealed record PositionPair(int First, int Second);
 /// **四条分支的顺序是硬要求**：`position2` 需装载这一支必须排在 `loadAmount2 == 0` 之前，因为后者是"舱位根本不用"的静态情形，
 /// 前者才是"用了但装得少"的动态情形。调换顺序会让需装载的舱位走静态分支，惩罚项恒为 0，整个目标失效。
 ///
-/// 三处必须照做：
+/// 三处必须如此（否则惩罚项会静默变成 0）：
 ///
 /// 1. **"是否固定为零"看 `range.fixedValue`**，不是看多项式是否为空。一个多项式可能没有单项式（和为零）但仍是**变量**，
 ///    那与"固定为零"是两回事。
@@ -306,7 +306,7 @@ public sealed class DivideEmptyLoading
     /// `subtractOne` 为真时条件是 `amount1 - amount2 - 1 + ε`，为假时是 `amount1 + amount2 - constant + ε`。
     /// 分支顺序，**`position2` 需装载那一支必须在"固定为零"之前**。
     ///
-    /// With `subtractOne` the condition is `amount1 - amount2 - 1 + ε`, otherwise `amount1 + amount2 - constant + ε`. The branch order matches the code, and the
+ /// With `subtractOne` the condition is `amount1 - amount2 - 1 + ε`, otherwise `amount1 + amount2 - constant + ε`. The branch order matches the implementation, and the
     /// `position2`-needs-stowage branch **must** precede the "fixed at zero" one.
     /// </remarks>
     private Result<ILinearIntermediateSymbol<Flt64>, ErrorCode, Error<ErrorCode>> Build(
@@ -381,7 +381,7 @@ public sealed class DivideEmptyLoading
     }
 
     // `NONZERO_TOLERANCE`：常量，避免"刚好差一件"在浮点边界上抖动。
-    // The code constant that keeps a "differs by exactly one piece" case off the floating-point boundary.
+ // The implementation constant that keeps a "differs by exactly one piece" case off the floating-point boundary.
     private const double NonzeroTolerance = 1e-6;
 
     // "固定为零"= **多项式里没有单项式**（和为零）。
@@ -458,7 +458,7 @@ public sealed class DivideEmptyLoading
     /// **不猜**：与其把条件悄悄降级成"恒零"（那会让整族惩罚失效而判据全绿——正是 那次假绿的形态），不如让注册
     /// **明确失败**，并把这一处记进能力缺口。
     ///
-    /// **This currently returns a failure and says why** — the batch's **one unlanded piece**, not a "return Ok for now". The code expresses "the first position holds at least
+ /// **This currently returns a failure and says why** — the batch's **one unlanded piece**, not a "return Ok for now". The implementation expresses "the first position holds at least
     /// one more piece than the second" through `IfFunction(condition = …)`. This implementation's `IfFunction.From` carries a **discrete-lattice proof** (`SafeLattice`) requiring the
     /// condition's coefficients and constant to share one integer lattice; here the constant is `-1` and the coefficients `+1/-1/-1`, spacing 1 with constant residue 0, which by
     /// reading should pass — yet it consistently returns "invalid constraint input or inexact expansion / invalid discrete proof". Everything tabulated above was checked. The

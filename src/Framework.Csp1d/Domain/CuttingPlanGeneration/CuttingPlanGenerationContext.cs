@@ -304,7 +304,7 @@ public sealed class GenerationInput<V> where V : struct {
     ///
     /// **The candidate filters**, projected from `ICsp1dGenerationStrategy.AcceptCandidate`.
     ///
-    /// **The semantics are also "all must pass"**: the code writes `candidateFilters.all { it(plan, input.existingPlans) }`. Note the second argument is
+ /// **The semantics are also "all must pass"**: this implementation writes `candidateFilters.all { it(plan, input.existingPlans) }`. Note the second argument is
     /// **`input.existingPlans`** — the same hook behaves differently in the **initial pool** (empty) and **pricing** (current column pool) contexts, which is exactly what
     /// lets it express "do not collide with existing plans".
     /// </remarks>

@@ -103,7 +103,7 @@ public sealed class LinearDensity
     /// <param name="positions">舱位 / The positions.</param>
     /// <returns>限制线 / The limit lines.</returns>
     /// <remarks>
-    /// 四步，照做：
+    /// 四步，如此：
     ///
     /// 1. 区域覆盖的舱位 = 甲板位置在区域内 **且** 坐标与区域的力臂区间有交集；
     /// 2. 候选力臂 = 区域两端 + 每个上述舱位的前后臂，去重（**保留首次出现顺序**）；
@@ -112,7 +112,7 @@ public sealed class LinearDensity
     ///
     /// 第 4 步丢掉空线不是省事：一条没有舱位的横截面没有任何重量可检查，留着只会让约束生成器为它加一行恒等于 0 ≤ 上限的废约束。
     ///
-    /// Four steps as in the code: (1) the zone's positions are those whose deck location is in the zone **and** whose coordinate intersects the zone's arm range;
+ /// Four steps;
     /// (2) candidate arms are the zone's two ends plus each such position's front and back arms, de-duplicated (**first occurrence order kept**); (3) only candidates inside the
     /// zone's arm range survive — a cut outside the zone means nothing; (4) each arm takes the positions lying **on** it, and **whole empty lines are dropped**. Dropping empty
     /// lines is not laziness: a cross-section with no position has no weight to check, and keeping it only makes the constraint generator emit a vacuous `0 ≤ limit` row.

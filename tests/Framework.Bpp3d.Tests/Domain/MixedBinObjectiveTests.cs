@@ -13,11 +13,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 
 /// <summary>
-/// **两个箱型目标：跳过条件与系数，以及那条已经过期的"搬不了"注释** /
+/// **两个箱型目标：跳过条件与系数，以及那条已经过期的"实现不了"注释** /
 /// The two bin objectives — skip conditions and coefficients — and the stale "cannot be implemented" note.
 /// </summary>
 /// <remarks>
-/// **这段代码原来是"搬不了"，理由是依赖 `PreciseAssignment`，而那个类一直在仓库里。** **所以这里的第一件事不是写新代码，
+/// **这段代码原来是"实现不了"，理由是依赖 `PreciseAssignment`，而那个类一直在仓库里。** **所以这里的第一件事不是写新代码，
 /// 是<b>把那句过期结论改对**；**判据顺手把它钉住：** **文件里不得再出现"PreciseAssignment（C# 侧不存在）"这类断言。**
 ///
 /// **其余判据钉住三个跳过条件：** **成本表为空、权重为零、该箱型未配置成本——第三种<b>不进多项式**，
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// </remarks>
 public class MixedBinObjectiveTests
 {
-    /// <summary>**"搬不了"的理由已经不成立，注释也已更正** / The stated blocker no longer holds and the note was corrected.</summary>
+    /// <summary>**"实现不了"的理由已经不成立，注释也已更正** / The stated blocker no longer holds and the note was corrected.</summary>
     [Fact]
     public void TheStaleBlockerNote_ShouldBeGone() {
         string root = RepositoryRoot();

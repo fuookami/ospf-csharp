@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **So the earlier "framework complete, backends empty" can be stated one layer more precisely: besides the six plugin functions,
 /// this middle layer was missing too.**
 ///
-/// **Semantics copied from the code rather than loosened: duals are exposed only by original stable constraint ID; rows that
+/// **Semantics rather than loosened: duals are exposed only by original stable constraint ID; rows that
 /// do not map to an original are omitted; the dual is a local marginal value under the incumbent, not a global MILP shadow
 /// price; and only a &lt;b&gt;proven optimum&lt;/b&gt; rises to `Reachable`, while an incumbent or no solution stays `Unknown`.**
 /// </remarks>
@@ -226,7 +226,7 @@ public sealed class LinearSolverFixedIntegerLpSolver : ILoweredFixedIntegerLpSol
         // **这是我自己的判据抓到的：** **夹具里第三个求值与第一个同 ID，
         // 于是结果只剩一条——而我要的是"要么一条、要么明确丢掉"。**
         //
-        // **Keep only those mapping to exactly one row: the code says a value is given only when an original constraint
+ // **Keep only those mapping to exactly one row: the implementation says a value is given only when an original constraint
         // corresponds to a <b>unique</b> lowered row.** **The first implementation let later writes overwrite earlier ones, so a
         // constraint spanning two rows silently received the second row's dual — a perfectly plausible number with the wrong
         // owner.** **My own criterion caught it: the fixture's third evaluation shares the first one's ID, and the result held

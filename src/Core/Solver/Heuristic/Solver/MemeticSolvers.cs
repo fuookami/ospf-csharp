@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 ///
 /// **打磨拿到的是一份全新的迭代状态**。沿用全局的迭代状态会让打磨的停止判据从全局已经用掉的预算开始数，
 /// **于是打磨要么一步都不走，要么走得比配置的多**。
-/// **The polish receives a fresh iteration state** (as in the code). Reusing the global one makes the polish's stopping criterion
+/// **The polish receives a fresh iteration state** (. Reusing the global one makes the polish's stopping criterion
 /// count from the budget the global search already consumed, **so the polish either never takes a step or takes more than configured**.
 /// </remarks>
 /// <typeparam name="ObjValue">目标值类型 / The objective-value type.</typeparam>

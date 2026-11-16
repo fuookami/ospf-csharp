@@ -106,7 +106,7 @@ public sealed record SerializedLinearModel(
 /// C# 只有一个 <c>ColIndex</c>，根本无法表达二次项，与wire 形状不符。
 /// Matches the reference: a quadratic cell needs **two** column indices
 /// (<c>colIndex1</c>/<c>colIndex2</c>). C# previously had a single <c>ColIndex</c>, which cannot express a
-/// quadratic term at all and did not match the code wire shape.
+/// quadratic term at all and did not match the implementation wire shape.
 /// </remarks>
 /// <param name="RowIndex">行索引 / Row index.</param>
 /// <param name="ColIndex1">第一个列索引 / First column index.</param>

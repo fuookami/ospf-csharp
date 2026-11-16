@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **六个形状算子：错一位就静默** / Six shape operators: one off is silent.
 /// </summary>
 /// <remarks>
-/// 。**这些算子只算形状、不搬元素，所以不会抛异常——** **只会在下游让一个约束绑错变量。**
+/// 。**这些算子只算形状、不实现元素，所以不会抛异常——** **只会在下游让一个约束绑错变量。**
 ///
 /// Syncs. **These operators compute shapes without moving elements, so nothing throws — downstream a constraint simply binds the wrong
 /// variable.**

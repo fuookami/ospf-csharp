@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 干两件事：每个检查点加一条 `slack ≥ 机数`，再把 `Σ 系数 × slack` 放进最小化目标。
 /// **两半正好是一对反向的错误**：只加约束，松弛可以取任意大值；只加目标，松弛一路压到零——"平衡得完美"，其实一架飞机都没数进去。
 ///
-/// The code's does two things: one `slack ≥ aircraft count` row per checkpoint, then `Σ coefficient × slack` into the minimisation objective. **The two halves
+/// It does two things: one `slack ≥ aircraft count` row per checkpoint, then `Σ coefficient × slack` into the minimisation objective. **The two halves
 /// are opposite failure modes**: with only the constraint the slack may take any large value; with only the objective it is driven to zero — "perfectly balanced", while no aircraft was
 /// counted at all.
 /// </remarks>

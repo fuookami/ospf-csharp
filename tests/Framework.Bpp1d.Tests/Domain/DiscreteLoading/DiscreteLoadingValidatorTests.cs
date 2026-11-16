@@ -51,7 +51,7 @@ public class DiscreteLoadingValidatorTests {
         // 最初写成 5.0（千克），实测 5000.0 —— **判据写错了，不是代码错了**。
         //
         // **The normalisation target is `WeightUnit` (grams here), not kilograms.** The first version expected 5.0 (kilograms) and measured 5000.0 — **the criterion was
-        // wrong, not the code**.
+ // wrong, not the implementation**.
         validator.Capacities["P1"].ToDouble().Should().BeApproximately(
             5000.0, 1e-9, "the problem's weight unit is grams, so the capacity stays 5000");
         validator.ItemWeights["I1"].ToDouble().Should().BeApproximately(

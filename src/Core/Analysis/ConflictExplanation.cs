@@ -60,7 +60,7 @@ public sealed record ConflictGroupSummary(string? Group, int Count);
 /// `AvailableEvidence` 是完整的原始激活集合；`Members` 是当前冲突/MUS 候选，**绝不包含目标**。
 ///
 /// **只做报告侧**：`solver.solve(...)` 与 `session.solve(assumptions = ...)` 两条路径之后才轮到
-/// `ConflictAnalyzer` 与 `MinimalConflictAnalyzer`。**那部分要真实 CP 后端，没搬也没空跑。**
+/// `ConflictAnalyzer` 与 `MinimalConflictAnalyzer`。**那部分要真实 CP 后端，没实现也没空跑。**
 ///
 /// `AvailableEvidence` is the complete original activation universe; `Members` is the current conflict/MUS candidate and **never includes the target**. **This covers the
 /// report side only**: `solver.solve(...)` and `session.solve(assumptions = ...)` come first; `ConflictAnalyzer` and `MinimalConflictAnalyzer` run only after them and

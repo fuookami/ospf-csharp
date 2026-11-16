@@ -521,7 +521,7 @@ public sealed record LayerGenerationContext<V>(
     /// <remarks>
     /// 顺序（八个）。**顺序即优先级，只在 `maxCandidates` 截断时可见**：先生成的候选先占额度，因此块装载族
     /// 放在 BLA 之前、历史层放在最后——历史层只是回放，不该挤掉新生成的候选。
-    /// The order matches the code (eight). **The order is priority, visible only when `maxCandidates` truncates**:
+ /// The order matches the implementation (eight). **The order is priority, visible only when `maxCandidates` truncates**:
     /// earlier generators claim the budget first, so the block-loading family precedes BLA and the historical generator
     /// goes last — it merely replays and should not crowd out freshly generated candidates.
     /// </remarks>

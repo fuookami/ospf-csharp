@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain;
 /// <remarks>
 /// 对应（三级生成器与上下文两部分）。
 ///
-/// Mirrors the three-stage generator and context parts of the code.
+/// Mirrors the three-stage generator and context parts of the implementation.
 /// </remarks>
 public class PatternGenerationContextTests {
     /// <summary>**三级生成器产出三级刀序，且不受请求里的工艺影响** / The three-stage generator emits a three-stage order regardless of the requested process.</summary>

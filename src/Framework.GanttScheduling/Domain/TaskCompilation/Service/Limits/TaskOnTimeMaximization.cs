@@ -64,7 +64,7 @@ public class TaskOnTimeMaximization<T, E, A>
     /// 阈值非零时先建 `thresholdSlack`，再最大化**它的截断部分**（"奖到阈值为止"）；阈值为 0 时目标就是加权和本身。
     /// 两条分支都在 `Invoke` 里。
     ///
-    /// The code maximises `coefficient × Σ_t OnTime[t]`, objective name `task on time`. The task set is the one given at construction — **no per-task re-filtering**,
+ /// The implementation maximises `coefficient × Σ_t OnTime[t]`, objective name `task on time`. The task set is the one given at construction — **no per-task re-filtering**,
     /// because "may move" and "on time" are different things: a task allowed to delay still deserves credit for finishing on time, its `on_time` merely being constant zero when
     /// the switch is off. A non-zero threshold builds a `thresholdSlack` and maximises **its capped part** ("rewarded up to the threshold"); with a zero threshold the objective
     /// is the weighted sum itself. Both branches live in `Invoke`.

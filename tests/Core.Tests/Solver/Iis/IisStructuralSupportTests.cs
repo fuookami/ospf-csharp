@@ -68,7 +68,7 @@ public class IisStructuralSupportTests {
     /// 这是 IIS 的核心语义：**只保留导致不可行的边界**，其余置 `null`。
     /// 判据同时钉住**排序**（`sortedBy`）与**边界取舍**。
     ///
-    /// This is the core IIS semantics: **keep only the bounds that cause infeasibility** and null the rest. The criterion pins both the **ordering** (the code sorts)
+ /// This is the core IIS semantics: **keep only the bounds that cause infeasibility** and null the rest. The criterion pins both the **ordering** (the implementation sorts)
     /// and the **bound selection**.
     /// </remarks>
     [Fact]
@@ -185,7 +185,7 @@ public class IisStructuralSupportTests {
     /// <summary>**裁剪后行序升序、且列索引已重映射** / Rows come out ascending and columns are remapped.</summary>
     /// <remarks>
     /// 传入 `[1, 0, 1]` 时结果必须只剩两行、且顺序为原 `0`、原 `1`。
-    /// 名称跟随原行，用来确认**行的元数据也一起被搬运**，不是只搬了系数。
+    /// 名称跟随原行，用来确认**行的元数据也一起被搬运**，不是只实现了系数。
     ///
     /// Passing `[1, 0, 1]` must yield two rows ordered as the original `0` then `1`. Names follow their original rows, proving **row metadata is carried along**, not just
     /// coefficients.

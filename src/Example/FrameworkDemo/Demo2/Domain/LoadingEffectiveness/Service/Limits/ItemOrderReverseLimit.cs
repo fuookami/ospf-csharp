@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// must be copied: **it is `Minimum`**; **the name has a space**, unlike the pipeline name; **an empty set returns success without an objective** (its early return); **the
 /// coefficient takes two (position, item) pairs with crossed ordering** — `(position2, item1)` and `(position1, item2)` — since `(position1, item1)` would misassign the weights; and **a
 /// missing symbol fails rather than being skipped**, because it means the registration order is wrong. Point four's crossed ordering is **identical** to the earlier
-/// `ItemPriorityReverseLimit`, the code being consistent.
+/// `ItemPriorityReverseLimit`, the implementation being consistent.
 /// </remarks>
 internal sealed class ItemOrderReverseLimit
 {

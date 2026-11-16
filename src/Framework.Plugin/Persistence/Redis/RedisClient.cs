@@ -157,7 +157,7 @@ public static class Redis {
     /// **原实现把异常吞掉只返回 `null`。** **失败原因必须能读出来，否则"环境所限"与"代码没接上"无法区分。**
     ///
     /// **The original swallowed the exception and returned `null`.** **The reason has to be readable, or "limited by the
-    /// environment" cannot be told apart from "the code is not wired".**
+ /// environment" cannot be told apart from "this implementation is not wired".**
     /// </remarks>
     public static string? LastInitError { get; private set; }
 

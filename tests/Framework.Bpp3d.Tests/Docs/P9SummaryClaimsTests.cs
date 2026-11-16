@@ -56,7 +56,7 @@ public class P9SummaryClaimsTests
     /// `PackingProblem.validatePattern` 里把物品重量换算到箱体单位、按件数缩放、求和，再与 `maxWeight` 比较。
     /// C# 的 `PackingProblem.ValidatePattern` 逐行对应。**这条判据钉的是"重量被读了"，不是"重量字段在"。**
     ///
-    /// The code converts each item's weight into the bin's unit, scales by the count, sums, and compares against `maxWeight`; the C# `ValidatePattern` matches it
+ /// The implementation converts each item's weight into the bin's unit, scales by the count, sums, and compares against `maxWeight`; the C# `ValidatePattern` matches it
     /// line for line. **This pins "the weight is read", not "the weight field exists".**
     /// </remarks>
     [Fact]
@@ -69,7 +69,7 @@ public class P9SummaryClaimsTests
         text.Should().Contain("方案超过箱体容量",
             "and exceeding it has to be refused, not silently accepted");
         // **`BinType.Capacity` 在也不存在**：那条笔记点了一个不存在的字段。
-        // **`BinType.Capacity` does not exist in the code either**: that note named a field that was never there.
+ // **`BinType.Capacity` does not exist in the implementation either**: that note named a field that was never there.
         text.Should().NotContain("Capacity",
             "the baseline's BinType is (id, length, maxWeight, cost, inventory); a Capacity field would be an invention");
     }

@@ -158,7 +158,7 @@ public sealed class ScheduleLogValidationTests
     /// Measured: changing `complete`'s `Evaluations` from 5 to 50 leaves `Checksum != Digest` **false** —
     /// because `Digest` **recomputes from the current `Events`**, **so of course it matches after the edit**.
     ///
-    /// **The code's `digest` has the same semantics**, **so this is not a defect here but an identical self-consistency check on both sides.**
+ /// **Its `digest` has the same semantics**, **so this is not a defect here but an identical self-consistency check on both sides.**
     ///
     /// **What it stops is a wrong or empty checksum, not edited content.** This criterion pins that sentence
     /// **so nobody (including a later batch of me) treats it as a signature.**

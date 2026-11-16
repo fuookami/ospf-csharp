@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Token;
 ///
 /// **它也顺手覆盖了一个容易漏的方向：** **被移除的 token 不该还能查到，而新加的 token 必须立刻能查到。**
 ///
-/// **This is the behavioural premise of `TokenInvalidateRebuildBenchmark` (derived from the code): that benchmark assumes
+/// **This is the behavioural premise of `TokenInvalidateRebuildBenchmark` (): that benchmark assumes
 /// adding or removing one token invalidates the index and the next read rebuilds it — and the rebuilt result must be correct.** **The
 /// benchmark times only; it cannot catch a wrong answer.** **It also covers both directions: a removed token must stop resolving, and a
 /// newly added one must resolve immediately.**

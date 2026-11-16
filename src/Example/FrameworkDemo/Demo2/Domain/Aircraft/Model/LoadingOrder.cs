@@ -36,7 +36,7 @@ public sealed class LoadingOrder
     /// 前驱深度 / The predecessor depth.
     /// </summary>
     /// <remarks>
-    /// **照做，包括它的怪癖**：写法是 `directPrec.minOfOrNull { it.precDepth } ?: UInt8.zero`——
+    /// **照此，包括它的怪癖**：写法是 `directPrec.minOfOrNull { it.precDepth } ?: UInt8.zero`——
     /// 取直接前驱的 `precDepth` 的**最小值**，而叶子节点的 `precDepth` 也是 0（空集回退到 0）。于是**整条链上每个节点的
     /// `precDepth` 都是 0**，它并不表示"离起点多远"。
     ///

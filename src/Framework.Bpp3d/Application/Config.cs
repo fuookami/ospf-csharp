@@ -123,7 +123,7 @@ public static class ContinuousRadiusSolverHelpers {
             }
 
             // **没有半径权重函数键的竖直圆柱不参与连续半径优化**。
-            // **A vertical cylinder without a radius weight-function key does not participate in continuous-radius optimisation**, matching the code.
+ // **A vertical cylinder without a radius weight-function key does not participate in continuous-radius optimisation**.
             if (cylinder.RadiusWeightFunctionKey is null) {
                 continue;
             }

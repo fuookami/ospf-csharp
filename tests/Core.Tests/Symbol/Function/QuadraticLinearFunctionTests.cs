@@ -100,7 +100,7 @@ public class QuadraticLinearFunctionTests
     /// **于是同一个多项式在负半轴上的结果全错，而模型照样求解成功。**
     /// **判据直接求一个负值，验证它原样返回。**
     ///
-    /// **The code's comment records this**: **an earlier `URealVar` silently clipped negatives to zero at the
+ /// **Its comment records this**: **an earlier `URealVar` silently clipped negatives to zero at the
     /// solver boundary** — **so the polynomial was wrong on its whole negative half while the model still solved
     /// fine.** **The criterion evaluates a negative value and checks it comes back unchanged.**
     /// </remarks>

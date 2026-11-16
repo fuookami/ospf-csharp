@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// </summary>
 /// <remarks>
 /// `TargetFeasibilityAnalyzer.analyze` 的求解与分类部分：派生重建 → 求解 → 按输出分类。
-/// 候选漏斗与缓存那一层没搬。
+/// 候选漏斗与缓存那一层没实现。
 ///
 /// Ported from the solve-and-classify part of `TargetFeasibilityAnalyzer.analyze`: derived rebuild, solve, then classify by output. The candidate funnel and the cache layer
 /// are not implemented.
@@ -79,7 +79,7 @@ public static class TargetFeasibilityAnalyzer
         DerivedModel derivedModel = okDerived.Value!;
         try {
             // **复核必须针对实际提交给后端的那份快照**，不是基线快照（见 `TargetWitnessValidator`）。
-            // **The re-check has to use the snapshot actually sent to the backend**, not the code.
+ // **The re-check has to use the snapshot actually sent to the backend**, not the implementation.
             ConstraintProgrammingModelSnapshot submitted = derivedModel.Model.Snapshot().Value!;
 
             Result<ConstraintProgrammingSolverOutput, ErrorCode, Error<ErrorCode>> solved;

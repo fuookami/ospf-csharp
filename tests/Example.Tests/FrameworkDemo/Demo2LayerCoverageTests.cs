@@ -24,7 +24,7 @@ public sealed class Demo2LayerCoverageTests
     /// **哪些判据跑在默认层，必须被钉住** / Which criteria run in the default layer must be pinned.
     /// </summary>
     /// <remarks>
-    /// / 把三条判据搬出了 `#if SCIP_INTEGRATION`，让**没有求解器的机器**也能挡住"两条路径不一致"。
+    /// / 把三条判据实现出了 `#if SCIP_INTEGRATION`，让**没有求解器的机器**也能挡住"两条路径不一致"。
     /// 但这件事本身**没有任何东西记着**：谁把它们挪回 `#if` 里，覆盖率会静默下降，而所有判据依然全绿。
     ///
     /// 所以这里读**那份测试文件的源文本**，按行跟踪 `#if`/`#endif` 的深度，断言那三条的方法声明**在深度 0**；

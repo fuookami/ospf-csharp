@@ -96,7 +96,7 @@ public class AlgorithmClassesShouldBeTestedTests
     }
 
     /// <summary>
-    /// **启发式插件只有工厂函数，没有类** / The code heuristic plugin has factory functions, not classes.
+ /// **启发式插件只有工厂函数，没有类** / The implementation heuristic plugin has factory functions, not classes.
     /// </summary>
     /// <remarks>
     /// **这一条是这里唯一无法在仓内验证的断言——它的判据在仓外。**
@@ -105,7 +105,7 @@ public class AlgorithmClassesShouldBeTestedTests
  /// **记录的内容：** **只有一个 `fun islandGenetic(...)`，
     /// 只有一个 `fun harmonySearch(...)`——**没有类**。
     ///
-    /// **所以本仓这 6 个类<b>不是搬来的**，是 C# 侧等价的算法封装面；
+    /// **所以本仓这 6 个类<b>不是实现来的**，是 C# 侧等价的算法封装面；
     /// 而真正的"对应物"在 `ComposedSolvers` 里（35 个入口，一一对应工厂函数）。**
     ///
     /// **两者都留着不算错（类被测试、函数被调用），但<b>必须有人写下来</b>——

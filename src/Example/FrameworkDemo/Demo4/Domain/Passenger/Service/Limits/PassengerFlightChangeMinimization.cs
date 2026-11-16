@@ -82,7 +82,7 @@ public sealed class PassengerFlightChangeMinimization
 
         if (!_change.WithFlightChange || _change.PassengerFlightChange is not { } table) {
             // **没开航班变更就不是错误**：这种情况下 `monomials` 为空，直接不加目标。
-            // **Flight change being off is not an error**: the code finds `monomials` empty here and simply adds no objective.
+ // **Flight change being off is not an error**: the implementation finds `monomials` empty here and simply adds no objective.
             return Results.Ok<Success>(Results.SuccessInstance);
         }
 

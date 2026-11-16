@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Analysis;
 
 /// <summary>
-/// 搬进来的契约文件必须与钉住的那份逐字节相同 / A copied contract has to be byte-identical to the pinned copy.
+/// 实现进来的契约文件必须与钉住的那份逐字节相同 / A copied contract has to be byte-identical to the pinned copy.
 /// </summary>
 /// <remarks>
 /// **这两份文件是"跨语言"这个词的全部依据。** 它们一旦被改动——哪怕只是补个空格、

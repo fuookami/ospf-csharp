@@ -70,7 +70,7 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// **`L > 0` is not validated, and that is not an omission**: **neither does its
 /// `materializeFallbackConstraints`.** **But `L ≤ 0` degrades "semi-continuous" into "an ordinary bounded variable",
 /// because the indicator-1 interval then contains zero and "either zero or ≥ L" loses its meaning.** **This
-/// implementation adds no check the code lacks, and records the consequence here.**
+/// implementation adds no check the implementation lacks, and records the consequence here.**
 /// </remarks>
 public sealed record SemiStructure(
     Flt64 LowerBound,

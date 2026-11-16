@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization;
 ///
 /// **initialisation is idempotent** (skipped once initialised) and **registration builds the pipelines then runs each**. Unlike `SoftSecurityContext`, this
 /// `Register` **takes the `stowageMode`**, because the longitudinal and lateral slack sets depend on it; dropping it would register two longitudinal slacks under weight
-/// recommendation, where the code registers none.
+/// recommendation, where the implementation registers none.
 /// </remarks>
 public sealed class MacOptimizationContext
 {

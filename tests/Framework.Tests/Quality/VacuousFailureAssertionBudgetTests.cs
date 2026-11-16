@@ -39,7 +39,7 @@ public sealed class VacuousFailureAssertionBudgetTests
     /// 数字变了就说明有人动过存量：**变小**请同步把这里改小（值得庆祝的事），**变大**请先补断言。
     ///
     /// A changed number means somebody moved the stock: if it **shrank**, lower this constant too (worth celebrating); if it **grew**, add the missing assertion first.
-    /// 记的是 **465**，补了 7 条并**修正了口径**（注释不算行），于是是 **458**。
+    /// 记的是 **465**，而代码在 **458**；差的那 7 条来自**口径修正**（注释不算行）。
     /// recorded **465**; pinned seven and **corrected the rule** (comments do not count lines), which makes it **458**.
     /// </remarks>
     private const int Budget = 458;
@@ -114,7 +114,7 @@ public sealed class VacuousFailureAssertionBudgetTests
     ///
     /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should.BeTrue` can never go red on its own.**
  /// Measured : removing `IFloatingNumber&lt;Flt64&gt;` from the base-interface list of `Flt64`
-    /// **produces 1734 compile errors in `tests/Math.Tests` at once** — **if the code compiles, the assertion is necessarily true.**
+ /// **produces 1734 compile errors in `tests/Math.Tests` at once** — **if the implementation compiles, the assertion is necessarily true.**
     ///
     /// **They are harmless in themselves** (an inventory of what a type claims is useful);
     /// **what harms is counting them as criteria**: forty-one always-true assertions inside a table of "N criteria"

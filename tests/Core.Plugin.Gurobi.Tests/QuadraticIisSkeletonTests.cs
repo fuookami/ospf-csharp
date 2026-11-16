@@ -109,7 +109,7 @@ public class QuadraticIisSkeletonTests {
     /// 本实现先跑弹性过滤，失败才跑删除过滤。枚举值的**顺序**因此有意义：
     /// `ElasticFilter` 在前。若将来实现时把顺序搞反，诊断信息会误导。
     ///
-    /// The code runs the elastic filter first and the deletion filter only on failure, so the enum **order** matters: `ElasticFilter` comes first. Getting it backwards
+ /// The implementation runs the elastic filter first and the deletion filter only on failure, so the enum **order** matters: `ElasticFilter` comes first. Getting it backwards
     /// would mislead diagnosis later.
     /// </remarks>
     [Fact]

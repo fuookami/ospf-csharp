@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// **C# 这一方也在 `checkpoint-wire-contract.tsv` 的约束之下** / C# is a party to `checkpoint-wire-contract.tsv`.
 /// </summary>
 /// <remarks>
-/// 验收表 4.7 一直写着"`checkpoint-wire-contract.tsv` 是 **Kotlin↔Rust** 之间的契约，**没有 C# 这一方**，不搬"。
+/// 验收表 4.7 一直写着"`checkpoint-wire-contract.tsv` 是 **Kotlin↔Rust** 之间的契约，**没有 C# 这一方**，不实现"。
 /// **这个判断是错的。**
 ///
 /// **C# 实现了同一套 checkpoint 信封**：`ConstraintProgrammingCheckpoint` 带 `integritySha256` 与逐字段的
@@ -114,7 +114,7 @@ public class CheckpointWireContractTests
         }
     }
 
-    /// <summary>**provenance 的前 7 个字段与契约一致，而契约本身落后于实现** / Provenance matches the contract for seven fields, and the contract lags the code.
+ /// <summary>**provenance 的前 7 个字段与契约一致，而契约本身落后于实现** / Provenance matches the contract for seven fields, and the contract lags the implementation.
     /// </summary>
     /// <remarks>
     /// **契约的 `[provenance-field]` 一节只列到 6**（`solverId` … `threadCount`），
@@ -125,9 +125,9 @@ public class CheckpointWireContractTests
     /// **把它写下来，是为了让下一个人知道"7 与 10 不一致"是已知的、有出处的。**
     ///
     /// **The contract's `[provenance-field]` section stops at 6** (`solverId` … `threadCount`),
-    /// **while the code has 10**: it adds `randomSeed`, `deterministic` and `environmentSummary`.
+ /// **while this implementation has 10**: it adds `randomSeed`, `deterministic` and `environmentSummary`.
     ///
-    /// **So "the contract stops at 6" is not a C# problem; the contract did not keep up with the code.**
+ /// **So "the contract stops at 6" is not a C# problem; the contract did not keep up with the implementation.**
     /// **This pins the first 7 (0—6 in the contract)** — **the extra three are the contract's gap, not something to "revert".**
     /// **Writing it down is so the next reader knows "7 versus 10" is known and sourced.**
     /// </remarks>
@@ -170,7 +170,7 @@ public class CheckpointWireContractTests
     /// **这正好满足要求，而"正好"是必须被钉住的东西**：把 `Origin` 改成枚举，
     /// **`backend` 与 `vendorSpecificStop` 会在反序列化时炸掉，而三方摘要都对不上。**
     ///
-    /// **The contract leaves `backend` and unknown codes to "preserved verbatim"**, and the code criterion reads
+ /// **The contract leaves `backend` and unknown codes to "preserved verbatim"**, and the implementation criterion reads
     /// `listOf("user", "backend", "vendorSpecificStop")` with a **lossless round trip** requirement.
     ///
     /// **In C# the carrier is `PortableCancellationRecord.Origin`, typed as a plain `string` rather than an enum** —

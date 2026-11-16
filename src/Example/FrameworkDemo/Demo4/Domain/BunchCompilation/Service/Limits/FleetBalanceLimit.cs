@@ -59,7 +59,7 @@ public sealed class FleetBalanceShadowPriceKey(Airport airport, AircraftMinorTyp
 /// **两半都不能少**：只加约束不加目标，松弛可以取任意大的值，模型照样可行但成本毫无意义；只加目标不加约束，
 /// 松弛会一路压到零——**看起来"平衡得完美"，其实一架飞机都没数进去**。这两半正好是一对反向的错误。
 ///
-/// The code's adds `slack ≥ aircraft count` per checkpoint and puts `Σ coefficient × slack` into the minimisation objective.
+/// It adds `slack ≥ aircraft count` per checkpoint and puts `Σ coefficient × slack` into the minimisation objective.
 ///
 /// **Neither half may be dropped**: with the constraint but no objective the slack may take any large value, the model stays feasible and the cost is meaningless; with the objective but
 /// no constraint the slack is driven to zero — **looking perfectly balanced while no aircraft was counted at all**. The two halves are exactly opposite failure modes.

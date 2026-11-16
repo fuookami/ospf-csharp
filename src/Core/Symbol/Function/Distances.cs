@@ -82,7 +82,7 @@ internal static class DistanceTerms {
 ///
 /// <c>Σ |left_i − right_i|</c>。
 ///
-/// The L1 distance from the code.
+/// The L1 distance.
 ///
 /// <c>Σ |left_i − right_i|</c>.
 /// </remarks>
@@ -230,7 +230,7 @@ public sealed class L1DistanceFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// **`MaxFunction` 用大 M 把 <c>z ≥ |left_i − right_i|</c> 逐条挂上，于是 <c>z</c> 只有在下界方向上被约束。**
 /// **目标里最小化它才恰好等于最大绝对差；最大化它就会跑偏。**
 ///
-/// The L∞ distance from the code.
+/// The L∞ distance.
 ///
 /// <c>max_i |left_i − right_i|</c>.
 ///

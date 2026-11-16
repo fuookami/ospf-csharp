@@ -296,7 +296,7 @@ public class Csp1dLengthBoundDerivationTests {
     ///
     /// **判据记录这个一致性**：它防止下一个人"顺手"把变量改成按产品建。
     ///
- /// **This was first recorded as a gap — that was wrong.** The code's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
+ /// **This was first recorded as a gap — that was wrong.** Its `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
     /// No demand means no variables and no constraints, even though the derivation step can find the product from a plan's contribution. So the "find the product from a
     /// contribution" branch in `ResolveDefaultLengthBounds` **only affects the derived config values**, which are **unused when there is no demand**. The C# side matches that
     /// shape, and this criterion records that consistency — it stops the next person from "helpfully" switching the variables to be per-product.

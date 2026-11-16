@@ -86,7 +86,7 @@ public class DeferredFunctionProjectionCoverageTests
     /// </summary>
     /// <remarks>
     /// **`SemiFunction` 的 `lb`／`ub` 都是可选的、有默认值。**
-    /// **所以"投影把上下界搬过去了"这句话必须用<b>非默认值</b>来验——用默认值验，漏搬也看不出来。**
+    /// **所以"投影把上下界实现出来了"这句话必须用<b>非默认值</b>来验——用默认值验，漏实现也看不出来。**
     ///
     /// **`SemiFunction`'s `lb`/`ub` are optional with defaults, so "the projection carried the bounds over" must be checked
     /// with <b>non-default</b> values — with defaults, forgetting to carry them looks identical.**

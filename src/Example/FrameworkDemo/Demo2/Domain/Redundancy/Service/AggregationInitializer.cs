@@ -18,8 +18,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service;
 /// 这里一条校验都没有（不像装载效能那边有六条拖车校验），所以本仓也不加。加校验会让合法请求被拒，
 /// 而条路径从来不会拒。
 ///
-/// **no validation**, every field taken straight from the stowage aggregation. The code performs no check here (unlike the six trailer validations in
-/// loading effectiveness), so this implementation adds none — adding one would reject requests the code never rejects.
+/// **no validation**, every field taken straight from the stowage aggregation. The implementation performs no check here (unlike the six trailer validations in
+/// loading effectiveness), so this implementation adds none — adding one would reject requests the implementation never rejects.
 /// </remarks>
 internal static class AggregationInitializer
 {

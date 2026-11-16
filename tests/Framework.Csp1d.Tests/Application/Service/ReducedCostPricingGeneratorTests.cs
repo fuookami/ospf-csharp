@@ -310,7 +310,7 @@ public class ReducedCostPricingGeneratorTests {
     /// 判据用**一个无 symbol、无 name 的自定义单位**，把对偶价格按 `GenerationQuantityMath.UnitKey(unit)`
     /// 的正确取值存入；若实现落空串，就**查不到**这条价格、返回空。
     ///
-    /// The code is `unit.symbol ?: unit.name ?: unit.toString`.
+ /// This implementation is `unit.symbol ?: unit.name ?: unit.toString`.
     ///
     /// **This was once written as `Symbol ?? Name ?? string.Empty`** — the first two fallbacks agree, **the third lands on an empty string**. Consequence: every unit
     /// with neither symbol nor name **shares one key**, so `(product, "")` makes **dual prices of different units match each other**, pricing picks the wrong price and
@@ -370,7 +370,7 @@ public class ReducedCostPricingGeneratorTests {
     /// **This criterion was once inverted, which is worth recording.**
     ///
     /// added "the pricing generator filters plans already in the pool" together with a criterion asserting "an existing plan yields nothing". Later it turned out
-    /// **the code puts that filter in `deduplicatePlans` (the column-generation side)**, with the pricing generator only deduping among candidates. The observable
+ /// **the implementation puts that filter in `deduplicatePlans` (the column-generation side)**, with the pricing generator only deduping among candidates. The observable
     /// difference is the termination reason (table above).
     ///
     /// So **the pricing generator must report plans already in the pool** — filtering is downstream. The criterion is inverted accordingly.
@@ -467,7 +467,7 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// 断言"**恰好留下 B 和 C**"而不是"数量是 2"——**只断言数量时旧实现也通过**。
     ///
-    /// **The code sorts first, then takes the limit**; the old C# implementation took the limit **in enumeration order**. When the limit truncates, **the sort
+ /// **The implementation sorts first, then takes the limit**; the old C# implementation took the limit **in enumeration order**. When the limit truncates, **the sort
     /// decides which columns survive**.
     ///
     /// The fixture uses three products A / B / C with **increasing benefit in enumeration order A < B < C** (1.5, 2.5, 3.5) and a limit of **2**.
@@ -773,8 +773,8 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// **This is the substantive "reduced cost" criterion**, and the step the earlier version **lacked**.
     ///
-    /// wrote the code `SimplePricingGenerator` semantics ("emit when the dual price is positive") into the class named
-    /// **`ReducedCostPricingGenerator`** — **name and semantics disagreed**. In the code `ReducedCostPricingGenerator` is a **wrapper**: the enumerator enumerates
+ /// wrote the implementation `SimplePricingGenerator` semantics ("emit when the dual price is positive") into the class named
+ /// **`ReducedCostPricingGenerator`** — **name and semantics disagreed**. In the implementation `ReducedCostPricingGenerator` is a **wrapper**: the enumerator enumerates
     /// candidates, which are then filtered by `benefit > objectiveCost` (whose base is **1**).
     ///
     /// The criterion uses "**benefit 0.5, cost 1**": the dual price is positive (`0.01 > 0`, so the old implementation would emit), but the benefit

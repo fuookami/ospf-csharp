@@ -1,5 +1,5 @@
 // 广义流约束管线 / Generalized-flow constraint pipelines.
-//（2032 字节）、（1005 字节）对应。
+//（2032 字节）、
 // , and
 //.
 

@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 所以这里只实现一份：判定作为参数传进来。**同一条规则写两遍，改一处忘另一处就是漏一对，
 /// 而漏一对是双重占用。**
 ///
-/// The code's conflict family has **two almost identical double loops**: `TaskConflictConstraint` takes an injected `conflict` predicate, and `TaskTimeConflictConstraint`
+/// Its conflict family has **two almost identical double loops**: `TaskConflictConstraint` takes an injected `conflict` predicate, and `TaskTimeConflictConstraint`
 /// hard-codes the predicate as "intervals intersect". The loop structure, index ranges and the "each pair once" convention are identical; only that one line differs.
 ///
 /// So only one implementation lives here, with the predicate as a parameter. **Writing the same rule twice and forgetting the other copy means missing a pair, and a missed pair

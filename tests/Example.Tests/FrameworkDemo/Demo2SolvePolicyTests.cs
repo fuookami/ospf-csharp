@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// <remarks>
 /// `SolvePolicy` 有三个字段。**第三个存在与否不是"整洁度问题"**：它是
 /// "分区列生成与 Benders 不能同时启用"那条校验的**唯一输入**。输入不在时，校验只能是假的，
-/// 所以此前明确记着"搬不了"；补上字段后，校验随之落地。
+/// 所以此前明确记着"实现不了"；补上字段后，校验随之落地。
 ///
 /// `SolvePolicy` has three fields; this implementation had two. **Whether the third exists is not a tidiness question**: it is the **only input** to the
 /// "partition CG and Benders cannot both be enabled" check. With no input, that check could only be faked, which is why this implementation recorded it as "cannot move";
@@ -90,7 +90,7 @@ public sealed class Demo2SolvePolicyTests
     /// 策略校验放在心跳**之前**，所以这两条提前返回很容易漏掉收尾心跳。而"只报成功的心跳等于没有心跳"——
     /// 调用方最需要知道的恰恰是"它结束了、而且失败了"。 把收尾抽成 `Finish` 就是为了这个。
     ///
-    /// The checks run **before** the heartbeat (matching the code), so these two early returns are easy to ship without one. "Heartbeats that only report
+ /// The checks run **before** the heartbeat (. "Heartbeats that only report
     /// success are no heartbeats at all" — what a caller most needs to know is that it **ended and failed**. extracted `Finish` for exactly this.
     /// </remarks>
     [Fact]
@@ -116,7 +116,7 @@ public sealed class Demo2SolvePolicyTests
     /// 这条判据同时钉住两端：三个"支持"的机型**必须能被分派**（不报 `UnsupportedAircraft`），`Unknown` **必须被拒**。
     /// **只钉后者的话，"全都不支持"也能让它绿。**
     ///
-    /// This implementation used to define `SupportedAircraft` as ` || `, so **and reported unsupported** — the code excludes only `Unknown` (measured by
+ /// This implementation used to define `SupportedAircraft` as ` || `, so **and reported unsupported** — the implementation excludes only `Unknown` (measured by
     /// ). This criterion pins both ends: the three supported types **must reach dispatch** (no `UnsupportedAircraft`), and `Unknown` **must be refused**. With only
     /// the second half, "nothing is supported" would stay green.
     /// </remarks>
@@ -156,7 +156,7 @@ public sealed class Demo2SolvePolicyTests
     /// 顺序是有意义的：`Unknown` 机型 + 策略互斥同时成立时，报哪一个决定了调用方先去改什么。
     /// 这里报机型，**先改策略的人会白改一遍**。这条判据钉的就是那个顺序。
     ///
-    /// The order matters: with `Unknown` **and** a policy conflict both present, which one is reported decides what the caller fixes first. The code reports the
+ /// The order matters: with `Unknown` **and** a policy conflict both present, which one is reported decides what the caller fixes first. The implementation reports the
     /// aircraft, so **someone who fixed the policy first would have wasted the effort**. This criterion pins that order.
     /// </remarks>
     [Fact]

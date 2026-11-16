@@ -179,7 +179,7 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
     /// 已经退役过的列再来一次也是空操作：重复摘一个已摘的变量没有好处，重复登记会让计数类判据失真。
     ///
     /// Dropping the bunch from the bunch list is not enough: its column variable and cost coefficient remain and the solver keeps selecting it — "removal" then only affects
-    /// reporting. The code's two steps (pin to 0, `remove`) are copied, **plus an objective cleanup**: measured — with the variable dropped but the objective untouched, expansion
+ /// reporting. Its two steps (pin to 0, `remove`) are copied, **plus an objective cleanup**: measured — with the variable dropped but the objective untouched, expansion
     /// fails with "variable x_… is not registered" (`IllegalArgument`), because the objective still mentions that variable. A bunch whose columns were never added (that round has not
     /// been reached) is a **no-op**, not a failure: removing a bunch is legal at the compilation layer and there is no variable to drop. A column already retired is also a no-op:
     /// dropping twice helps nothing, and double-recording skews count-based criteria.
@@ -280,7 +280,7 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
     /// <item>没有空闲时 `executor_compilation` 是**常量零**而不是 `null`——它是"这个执行器被用了多少"的载体。</item>
     /// </list>
     ///
-    /// The code builds six things: `y` (a per-task cancellation column, locked tasks pinned to 1), `bunch_cost` (the objective carrier), `task_assignment_*` (**placeholder**
+ /// This implementation builds six things: `y` (a per-task cancellation column, locked tasks pinned to 1), `bunch_cost` (the objective carrier), `task_assignment_*` (**placeholder**
     /// intermediate symbols filled by each round's `addColumns`), `task_compilation_t = y[t]`, `z` (a per-executor leisure column, only with `withExecutorLeisure`), and
     /// `executor_compilation_e = z[e]` (constant zero without leisure). **This used to return `Ok` outright**: nothing was in the model while the bunch task time's deviation masks
     /// need the `task_compilation` table, so that whole path could only fail. Three details worth naming: (1) `task_compilation_t` here is **just `y[t]`**, with no `Σ_e x[t,e]`
@@ -474,7 +474,7 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
 
         // 2. `bunch_cost` 累加 `cost × x`。没有求解器成本时**明确失败**：`Flt64.infinity` 当默认值，
         //    本仓的 `Flt64` 是十进制承载、没有无穷，硬塞一个有限大数会让"选不起的列"变成"便宜得离谱"。
-        // `bunch_cost` accumulates `cost × x`. A missing solver cost **fails loudly**: the code defaults to `Flt64.infinity`, while this repository's `Flt64` is decimal-backed
+ // `bunch_cost` accumulates `cost × x`. A missing solver cost **fails loudly**: the implementation defaults to `Flt64.infinity`, while this repository's `Flt64` is decimal-backed
         // with no infinity, and substituting a large finite number would turn "unaffordable column" into "implausibly cheap one".
         for (int index = 0; index < unduplicated.Count; ++index) {
             B bunch = unduplicated[index];

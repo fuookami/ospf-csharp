@@ -139,7 +139,7 @@ public class Csp1dWasteValueTests {
     /// `?: return null`。若实现改成"返回零"，**"没有数据"和"真的没有余料"就混在一起**——
     /// 下游无法区分，KPI 会显示成"零浪费"。
     ///
-    /// The code is `?: return null`. If it returned zero instead, **"no data" and "genuinely no waste" would be conflated**, and the KPI would read as
+ /// This implementation is `?: return null`. If it returned zero instead, **"no data" and "genuinely no waste" would be conflated**, and the KPI would read as
     /// "zero waste".
     /// </remarks>
     [Fact]

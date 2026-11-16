@@ -8,7 +8,7 @@
 // 前者描述"用的是什么包装工艺"，后者描述"包装的几何形态"。C# 的 `PackageCategory`（Standard／Irregular／Cylindrical）
 // 服务于几何与排布判断，因此**保留现状**，只在注释里记下分歧，不引入第二套 `PackageType` 去撞名。
 //
-// **A recorded divergence from the code**: its `PackageType` is seven packaging processes
+// **A recorded divergence**: its `PackageType` is seven packaging processes
 // (DutyCorrugatedBoardPedal / WoodenContainer / HoneycombBox / Pallet / CartonPallet / CartonContainer / PackingFoam) plus a
 // `category` mapping, whereas C# already has a **different concept** under the same name (`Box` / `Bag` / `Barrel` /
 // `Bundle` / `Pallet` / `Roll`, classified by shape). They are not the same thing and cannot be merged: the first describes
@@ -56,7 +56,7 @@ public static class PackageClassificationRules {
     /// <remarks>
     /// null 与空列表**必须同等对待**：的是 `packages.isNullOrEmpty`，若把 null 当成"未知"再单独分支，会多出一条
     /// 与空列表不一致的路径。
-    /// null and an empty list **must be treated identically**: the code uses `packages.isNullOrEmpty`, and treating null
+ /// null and an empty list **must be treated identically**: this implementation uses `packages.isNullOrEmpty`, and treating null
     /// as "unknown" with its own branch would create a path inconsistent with the empty case.
     /// </remarks>
     /// <param name="subPackageCount">子包装数量，null 视为无 / Sub-package count, null meaning none.</param>

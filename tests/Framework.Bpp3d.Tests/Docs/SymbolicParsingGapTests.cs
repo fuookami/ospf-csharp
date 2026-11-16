@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **这条绊线的方向是反的：缺口还是缺口时它绿，补上了它红。**
 /// **红不是问题，红了才是提醒"文档里那句缺口该改了"。**
 ///
-/// **The code has a whole text-parsing stack: `ScalarParser` (713 lines), `PolynomialLexer` (281), `PolynomialParser` (622).**
+/// **This implementation has a whole text-parsing stack: `ScalarParser` (713 lines), `PolynomialLexer` (281), `PolynomialParser` (622).**
 /// **C# has only the numeric parser (`INumberParser&lt;T&gt;` / `Int64NumberParser`)**; the expression and polynomial text entry points have no implementation.
 /// **This tripwire points the other way: green while the gap is a gap, red once it is filled.** **Red is not a failure, red is the reminder that the documented gap needs editing.**
 /// </remarks>
@@ -78,12 +78,12 @@ public class SymbolicParsingGapTests
     /// **这条判据换过三次对象，每次都是因为我把缺口的位置认错了。**
     ///
  /// 1. 一开始钉"整条表达式解析栈不在"——**那是我读错了文件名差集，栈一直在。**
-    /// 2. 然后钉"三元与 `if-then-else` 不在"——**它们搬完之后这条就该红，靠手工收窄才让它继续绿。**
+    /// 2. 然后钉"三元与 `if-then-else` 不在"——**它们实现完之后这条就该红，靠手工收窄才让它继续绿。**
     /// 3. 最后钉"标量解析器里没有 `PatternMatch`"——**而模式匹配根本不在 里，它在布尔侧，
     /// C# 的 `Parser.cs` 早就实现了。我钉的是一个不存在的缺口。**
     ///
     /// **现在钉的是能长期成立的那件事：优先级链的九层都在、顺序对、且比较确实不链式。**
-    /// **这条不会因为"某块搬完了"而需要收窄，因为它钉的是结构，不是进度。**
+    /// **这条不会因为"某块实现完了"而需要收窄，因为它钉的是结构，不是进度。**
     ///
     /// **This criterion has changed its target three times, each time because I mislocated the gap.**
  /// **1. It first pinned "the whole expression stack is absent" — my misreading of a filename diff ; the stack was there.**
@@ -166,7 +166,7 @@ public class SymbolicParsingGapTests
             .Concat(Directory.GetFiles(Path.Combine(Root().FullName, "src", "Math"), "*Parser*.cs", SearchOption.AllDirectories))
             .Select(path => Path.GetFileName(path)!)
             .Where(name => name.Contains("Polynomial", StringComparison.Ordinal))
-            // **词法层与语法层都已搬，所以这里只钉标量解析那 713 行。**
+            // **词法层与语法层都已实现，所以这里只钉标量解析那 713 行。**
             // **`PolynomialLexer.cs` 与 `PolynomialParser.cs` 是已有的，不算命中。**
             // **The lexical layer landed and the grammar layer, so this pins only the 713-line scalar parser.**
             // **`PolynomialLexer.cs` and `PolynomialParser.cs` are expected and do not count.**

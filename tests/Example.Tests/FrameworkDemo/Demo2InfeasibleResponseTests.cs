@@ -24,9 +24,9 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **直接测映射函数**：为了跑它去造一个满足 `ILinearSolver` 六个抽象重载的假求解器，
 /// **假件会比被测逻辑长十倍，而多出来的部分证明不了任何事。**
 ///
-/// The code's carries a branch this implementation lacked:
+/// It carries a branch this implementation lacked:
 /// **when the solver returns `ORModelInfeasible` or `ORModelInfeasibleOrUnbounded`, the public response is `NoSolution`**,
-/// with one sentence saying the mapping happened. **This implementation never looked at the code and reported `DirectSolveFailed` for everything.**
+/// with one sentence saying the mapping happened. **This implementation never looked at the implementation and reported `DirectSolveFailed` for everything.**
 ///
 /// **The difference is not wording**: **"the solve went wrong" sends somebody to the backend, "the model is infeasible" sends them to the model —
 /// the wrong one points the search backwards.**
@@ -66,7 +66,7 @@ public class Demo2InfeasibleResponseTests
     /// **这条防的是"把整个失败分支都改成 NoSolution"**：那会让真正的后端故障
     /// **伪装成"模型不可行"**，而那是**更难查**的那一种。
     ///
-    /// **状态名照搬**：非不可行分支返回 `ResponseDTO(request, error)`，
+    /// **状态名如此**：非不可行分支返回 `ResponseDTO(request, error)`，
     /// 而那个构造函数写死 `status = "Error"`、`notes = listOf(error.message)`。
     /// **`"DirectSolveFailed"` 是本仓自造的**（搜不到），**所以它不是可以钉的预期行为。**
     ///
@@ -75,7 +75,7 @@ public class Demo2InfeasibleResponseTests
     ///
     /// **The status name follows the contract**: the non-infeasible branch returns `ResponseDTO(request, error)`,
     /// and that constructor hard-codes `status = "Error"` and `notes = listOf(error.message)`.
-    /// **`"DirectSolveFailed"` was invented by this implementation** (it appears nowhere in the code), **so it is not expected behaviour to pin.**
+ /// **`"DirectSolveFailed"` was invented by this implementation** (it appears nowhere in the implementation), **so it is not expected behaviour to pin.**
     /// </remarks>
     [Theory]
     [InlineData(ErrorCode.OREngineSolvingException)]

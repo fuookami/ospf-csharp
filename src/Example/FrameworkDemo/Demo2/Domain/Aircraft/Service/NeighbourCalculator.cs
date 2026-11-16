@@ -140,7 +140,7 @@ internal static class PhysicalNeighbourCalculator
 internal static class IndirectPhysicsNeighbourCalculator
 {
     // `nearEnoughLongitudinalRatio = 0.5`。
-    // The code's `nearEnoughLongitudinalRatio = 0.5`.
+ // Its `nearEnoughLongitudinalRatio = 0.5`.
     private const double NearEnoughLongitudinalRatio = 0.5;
 
     /// <summary>

@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// | 谓词装载重量 | `y_j` | 值**大于 0** 才收录 |
 /// | 推荐装载重量 | `z_j` | 值**大于 0** 才收录 |
 ///
-/// 四处必须照做：
+/// 四处必须如此（否则收录的集合会多出或漏掉）：
 ///
 /// 1. **阈值是 `0.5`，不是 `0`**。二元变量在数值上可能回来 `1e-9` 或 `0.999`，用 `> 0` 会把浮点噪声当成"装了"。
 /// 2. **`y` 与 `z` 的单位是变量自带的**（`aircraftModel.weightUnit`），不是 `mlw` 的单位。

@@ -61,7 +61,7 @@ public readonly record struct HorizontalStabilizerAngle(string Angle)
     /// C# 侧 `record struct` 的默认输出是 `HorizontalStabilizerAngle { Angle = … }`，而 `HorizontalStabilizer.Key.ToString`
     /// 又委托给它，于是目标名 `"horizontal stabilizer {key}"` 里塞进一整个类型转储。
     ///
-    /// **This override is required.** The code is a `value class` wrapping a string, whose `toString` is just the string. The C# `record struct` defaults to
+ /// **This override is required.** This implementation is a `value class` wrapping a string, whose `toString` is just the string. The C# `record struct` defaults to
     /// `HorizontalStabilizerAngle { Angle = … }`, and `HorizontalStabilizer.Key.ToString` delegates to it, so the objective name `"horizontal stabilizer {key}"` ends up with a whole
     /// type dump in it.
     /// </remarks>

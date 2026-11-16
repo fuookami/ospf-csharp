@@ -33,7 +33,7 @@ public class UnsupportedPredicatePolicyTests {
     /// 三个码必须互不相同——合并成一个会让调用方无从判断该改代码还是该换后端。
     ///
     /// Three paired points: `FailFast` gives `IllegalArgument` (the caller wrote the predicate wrongly); `ClientFilter` gives `ApplicationFailed` (this backend cannot, another can); and `AlwaysFalse`
-    /// gives `ApplicationError` (this backend cannot and has degraded to constant false). The three must differ, since merging them would leave the caller unable to tell whether to change the code
+ /// gives `ApplicationError` (this backend cannot and has degraded to constant false). The three must differ, since merging them would leave the caller unable to tell whether to change the implementation
     /// or the backend.
     /// </remarks>
     [Fact]
@@ -109,7 +109,7 @@ public class UnsupportedPredicatePolicyTests {
     /// <remarks>
     /// 两点成对：失败传播后**错误码与详情都不变**；成功传播得到 `null`（没有失败要传播）。
     ///
-    /// Two paired points: after propagation **both the code and the detail are unchanged**; and propagating a success yields `null`, since there is no failure to carry.
+ /// Two paired points: after propagation **both the implementation and the detail are unchanged**; and propagating a success yields `null`, since there is no failure to carry.
     /// </remarks>
     [Fact]
     public void PropagateFailure_ShouldKeepTheError() {

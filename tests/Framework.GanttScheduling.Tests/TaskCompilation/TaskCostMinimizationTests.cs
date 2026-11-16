@@ -44,10 +44,10 @@ public class TaskCostMinimizationTests {
 
     /// <summary>**注册后 `TaskCost` 就是那个 `bunch_cost` 符号** / After registration `TaskCost` is that `bunch_cost` symbol.</summary>
     /// <remarks>
-    /// 名字照做：字段叫 `taskCost`、符号叫 `bunch_cost`。认错符号的后果是目标里加进了别的东西——
+    /// 名字如此：字段叫 `taskCost`、符号叫 `bunch_cost`。认错符号的后果是目标里加进了别的东西——
     /// 照样求解、照样出解，只是最小化的不是成本。
     ///
-    /// The name is copied from the code: the field is `taskCost`, the symbol is `bunch_cost`. Picking the wrong symbol puts something else in the objective — it still solves and
+ /// The name is: the field is `taskCost`, the symbol is `bunch_cost`. Picking the wrong symbol puts something else in the objective — it still solves and
     /// still returns a solution, it simply is not minimising cost.
     /// </remarks>
     [Fact]

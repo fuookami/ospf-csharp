@@ -192,7 +192,7 @@ public class TokenSharedReadBenchmark
 
     /// <summary>标识符读取可计数的变量项 / A variable item whose identifier reads are counted.</summary>
     /// <remarks>
-    /// **`CountingVariable` 在这里照搬：** **标识符由夹具自己固定分配，不依赖内部生成器，
+    /// **`CountingVariable` 在这里如此：** **标识符由夹具自己固定分配，不依赖内部生成器，
     /// 于是"读取次数"就是"建表时问过多少次标识符"的直接读数。**
     ///
     /// **`CountingVariable` is mirrored here: the identifier is fixed by the fixture rather than generated, so the read count is a

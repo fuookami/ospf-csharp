@@ -68,7 +68,7 @@ public static class OnnxGraphEvaluator
     /// <param name="constants">常量名到标量值的映射 / The mapping from constant names to scalar values.</param>
     /// <param name="constantArrays">常量名到数组值的映射（`Scan` 用）/ The mapping from constant names to arrays, used by Scan.</param>
     /// <param name="allowMultiElementOutput">是否允许逐元素输出（调用方已给出每元素符号）/ whether a per-element output is allowed because the caller supplies per-element symbols.</param>
-    /// <param name="quadraticMode">是否按二次域求值（对齐`OnnxDegreeMode`）/ whether to evaluate in the second-degree domain, as the code OnnxDegreeMode does.</param>
+ /// <param name="quadraticMode">是否按二次域求值（对齐`OnnxDegreeMode`）/ whether to evaluate in the second-degree domain, as the implementation OnnxDegreeMode does.</param>
     /// <param name="constantIntArrays">常量名到整数数组的映射（`Reshape` 的目标形状用）/ The mapping from constant names to integer arrays, used by Reshape targets.</param>
     /// <returns>求值结果 / The result.</returns>
     /// <remarks>
@@ -1134,7 +1134,7 @@ public static class OnnxGraphEvaluator
             // 说真话：不是"必须是常量"，而是"逐轮切片需要元素列表，而这一层每个绑定只有一个标量表达式"。
             // `sliceLeading` 从张量表达式里切元素子集，那需要逐元素表示。
             //
-            // Say the real reason: it is not "must be constant" but "a per-round slice needs an element list, and each binding here is one scalar expression". The code
+ // Say the real reason: it is not "must be constant" but "a per-round slice needs an element list, and each binding here is one scalar expression". The implementation
             // slices a sub-list of elements out of a tensor expression with sliceLeading, which needs the per-element representation.
             return "'Scan' 的扫描输入这里取不到逐轮切片：导入期只有常量张量才拿得到每一片，"
                  + "而运行期切片需要逐元素表示（基线用 sliceLeading 从张量表达式中切元素子集），这一层每个绑定只有一个标量表达式 / "

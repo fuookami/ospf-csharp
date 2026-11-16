@@ -204,8 +204,8 @@ public sealed record AlternativeImprovementPlan(ObjectiveTarget Target, Correcti
 
 /// <summary>修正集代数 / The correction-set algebra.</summary>
 /// <remarks>
-/// 只搬这一半**：434 行里，尾部约 110 行要 `ConflictExplanation`，而后者住在
-/// **带后端求解**的 里。**没搬的那部分没有空跑版本。**
+/// 只实现这一半**：434 行里，尾部约 110 行要 `ConflictExplanation`，而后者住在
+/// **带后端求解**的 里。**没实现的那部分没有空跑版本。**
 ///
 /// **Only this half is implemented**: of its 434 lines, the last ~110 need `ConflictExplanation`, which lives inside the **backend-solving**. **Nothing was
 /// stubbed in its place.**
@@ -240,7 +240,7 @@ public static class CorrectionRecommendations
         // **C# 这边检查写在 `Validate` 里，而它没有任何构造路径调用**——
         // **于是"空候选"能造出一个修复不了任何东西的修复计划，"重复来源"能把同一份证据算两遍价。**
         //
-        // **The code does these four checks in `CorrectionSet`'s `init`, so a constructed set is always legal.**
+ // **This implementation does these four checks in `CorrectionSet`'s `init`, so a constructed set is always legal.**
         // **On the C# side the checks live in `Validate`, and formerly no construction path called it** —
         // **so empty candidates could produce a repair plan that repairs nothing, and a duplicate source could price the same evidence twice.**
         return Validated(new CorrectionSet(selected, selected.Sum(candidate => candidate.Weight * candidate.Relaxation)), settings);
@@ -375,7 +375,7 @@ public static class CorrectionRecommendations
     /// <remarks>
     /// **它只是转发。** 保留同一个别名，**因为调用方读的是"放宽建议"这个意图，而不是"改进方案"这个形状**。
     ///
-    /// **In the code it only forwards.** The alias is kept because **the caller reads the intent "relaxation recommendation", not the shape "improvement plan".**
+ /// **In the implementation it only forwards.** The alias is kept because **the caller reads the intent "relaxation recommendation", not the shape "improvement plan".**
     /// </remarks>
     public static IReadOnlyList<AlternativeImprovementPlan> RelaxationRecommendationsFromConflict(
         ConflictExplanation conflict,

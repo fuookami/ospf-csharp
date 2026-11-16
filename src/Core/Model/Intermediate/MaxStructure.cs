@@ -361,7 +361,7 @@ public sealed record MaxStructure(
     /// 先生成行再校验的话，一个证明已经失效的快照会先产出一组行，
     /// 而调用方可能已经拿它去建模型了。**
     ///
-    /// **The order is "validate the input-range proof, then generate the rows", as in the code.**
+ /// **The order is "validate the input-range proof, then generate the rows".**
     ///
     /// **Checking first is not formality**: **the correctness of `M_i` rests on that proof.** **Generating first would let a
     /// snapshot with an invalidated proof produce rows that the caller may already have used to build the model.**

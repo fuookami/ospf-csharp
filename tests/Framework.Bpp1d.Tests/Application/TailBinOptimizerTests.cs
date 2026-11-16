@@ -110,7 +110,7 @@ public class TailBinOptimizerTests {
     /// 改成 `>=` 时，同分（正常情形）就不再调用 `accept`：**外部业务策略被静默跳过**。
     /// 判据用一个"总是拒绝"的 `accept`：严格大于下它必然被调用 ⇒ 结果失败。
     ///
-    /// The code keeps the original only on **strictly greater**. With `&gt;=`, a tie — the normal case — never reaches `accept`, so the **external business policy is
+ /// This implementation keeps the original only on **strictly greater**. With `&gt;=`, a tie — the normal case — never reaches `accept`, so the **external business policy is
     /// silently skipped**. The criterion passes an always-rejecting `accept`: under strict-greater it is called and the result must fail.
     /// </remarks>
     [Fact]

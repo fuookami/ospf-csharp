@@ -264,13 +264,13 @@ public sealed class OnnxElementList
     ///
     /// **批量维（秩 > 2）也明确拒绝：** **按 numpy 规则广播尚未实现——** **把批量维当普通维度算会让索引整体错位。**
     ///
-    /// **Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed at the end, as in the code; rank 0 is refused.**
+ /// **Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed at the end; rank 0 is refused.**
     ///
  /// ** covers the linear case where at least one side is constant.** **With variables on both sides each element becomes quadratic while this layer holds linear polynomials —
-    /// the code can do it because it has OnnxDegreeMode, and the quadratic path on the C# side is separate (OnnxQuadraticProduct).** **So it is refused with the reason named, rather than
+ /// the implementation can do it because it has OnnxDegreeMode, and the quadratic path on the C# side is separate (OnnxQuadraticProduct).** **So it is refused with the reason named, rather than
     /// quietly stuffing a quadratic product into a linear polynomial.**
     ///
-    /// **Batch dimensions (rank > 2) are refused too: the code broadcasts them under numpy rules and this layer does not — treating a batch dimension as an ordinary one misaligns every
+ /// **Batch dimensions (rank > 2) are refused too: the implementation broadcasts them under numpy rules and this layer does not — treating a batch dimension as an ordinary one misaligns every
     /// index.**
     /// </remarks>
     public Result MatMul(OnnxElementList right) {
@@ -391,7 +391,7 @@ public sealed class OnnxElementList
     /// **偏置 `C` 可以是 `[M,N]` 或 `[N]`：** **后者按行广播——** **这是 ONNX 允许的两种形态；** **其余形状拒绝，** '
     /// **因为"形状差不多"的偏置会让某一列静默加上别的列的值。**
     ///
-    /// **The order matches the code: transpose by transA/transB, multiply, scale by alpha, then add beta·C elementwise.** **Any other order yields different numbers while every step looks right on its
+ /// **The order matches the implementation: transpose by transA/transB, multiply, scale by alpha, then add beta·C elementwise.** **Any other order yields different numbers while every step looks right on its
     /// own.**
     ///
     /// **Two-dimensional inputs only: its Gemm refuses higher rank outright, and "rank 1 behaves as a vector" is MatMul's rule, not Gemm's.**
@@ -490,7 +490,7 @@ public sealed class OnnxElementList
     ///
     /// **轴为空表示"全部归约"；** **负数轴按秩归一，越界拒绝。**
     ///
-    /// **The accumulation groups by "source coordinate maps to which target coordinate", the same way the code does: each position works out the target index it falls into and positions
+ /// **The accumulation groups by "source coordinate maps to which target coordinate", the same way this implementation does: each position works out the target index it falls into and positions
     /// sharing one index are added together.**
     ///
     /// **keepdims is not decoration: with true the shape is [1,1] and with false it is empty (a scalar) — both hold one element, and what a downstream reads off the shape differs

@@ -40,7 +40,7 @@ public sealed class RelationalQueryExecutionStatsTest {
 
     /// <summary>
     /// 失败记录**仍然**要保存计划信息——这正是代码注释强调的点：失败也要能回溯到计划。
-    /// A failure record **still** keeps plan information, which is exactly what the code comment stresses.
+ /// A failure record **still** keeps plan information, which is exactly what the implementation comment stresses.
     /// </summary>
     [Fact]
     public void RecordFailure_ShouldStillCapturePlan() {
@@ -128,7 +128,7 @@ public sealed class RelationalQueryExecutionStatsTest {
 
     /// <summary>
     /// 并发记录必须一条不丢、且不抛异常（并发队列的理由就在这里）。
-    /// Concurrent recording must lose nothing and never throw — that is precisely why the code uses a
+ /// Concurrent recording must lose nothing and never throw — that is precisely why this implementation uses a
     /// concurrent queue.
     /// </summary>
     [Fact]

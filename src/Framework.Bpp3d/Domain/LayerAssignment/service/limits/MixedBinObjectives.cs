@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// `weight * solverValueAdapter.volumeToSolver(bin.type.volume)`，把数值换算留给适配器；这里同样只产出**系数**，
 /// 不替调用方决定符号域——**注册多项式是模型侧的事，判据能测的是"哪个箱拿到什么系数"。**
 ///
-/// The code writes the coefficient as
+/// This implementation writes the coefficient as
 /// `weight * solverValueAdapter.volumeToSolver(bin.type.volume)` and leaves the value conversion to an adapter; this does the same and only produces the
 /// **coefficient** — registering the polynomial is the model's business, and what a criterion can check is "which bin gets what coefficient".
 /// </remarks>

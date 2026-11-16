@@ -190,9 +190,9 @@ public sealed record PersistenceConfig(
 /// to run time, **far from the configuration mistake**.
 /// **子算法不递归校验**。`validate` 只检查顶层；递归校验会让一份"顶层合法、子层有问题"的配置在父层报错，
 /// **而错误信息指向的是父层标识**。这是的**已知行为**，不是遗漏。
-/// **Child algorithms are not validated recursively.** The code's `validate` checks only the top level; recursive validation would
+/// **Child algorithms are not validated recursively.** Its `validate` checks only the top level; recursive validation would
 /// report a "top-level legal, child broken" configuration against the parent, **with the error message pointing at the parent identity**.
-/// This is **known behaviour** matching the code, not an omission.
+/// This is **known behaviour**.
 /// </remarks>
 public sealed record HyperHeuristicConfig(
     [property: JsonPropertyName("problem")] ComponentSpec Problem,
@@ -400,7 +400,7 @@ public sealed class HyperHeuristicBuilder {
     public Result<HyperHeuristicConfig, ErrorCode, Error<ErrorCode>> Build() {
         // **必须给出 problem**：`build` 里直接拒绝缺失的 problem，而不是塞一个默认值。
         // 塞默认值会让一份"忘了声明问题"的配置被当成"用模型问题"的配置，**而运行时会拿一个空模型去求解**。
-        // **A problem is required**: the code rejects a missing problem outright in `build` rather than substituting a default.
+ // **A problem is required**: this implementation rejects a missing problem outright in `build` rather than substituting a default.
         // Substituting one turns "forgot to declare the problem" into "uses the model problem", **and the run then solves against an
         // empty model**.
         if (_problem is null) {

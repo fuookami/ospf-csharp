@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo5;
 /// 写错一个名字（`"gruobi"`）会**静默拿到 Gurobi**，而错误要到后端不可用时才以一个无关的失败形式出现。
 /// 这里改成显式枚举，未知名返回失败并指名它。
 ///
-/// **An unknown solver name must fail.** The code is `when (solver.lowercase) { "scip" -> …; else -> Gurobi }` — a typo (`"gruobi"`) **silently
+/// **An unknown solver name must fail.** This implementation is `when (solver.lowercase) { "scip" -> …; else -> Gurobi }` — a typo (`"gruobi"`) **silently
 /// gets Gurobi**, and the mistake only surfaces later as an unrelated backend-unavailable failure. This version enumerates explicitly and reports the
 /// unknown name.
 ///
 /// **名字大小写不敏感**：`Gurobi`、`GUROBI`、`gurobi` 都指向同一后端。
-/// **Names are case-insensitive** (matching the code): `Gurobi`, `GUROBI`, `gurobi` all select the same backend.
+/// **Names are case-insensitive** (.
 /// </remarks>
 public static class Demo5SolverFactory {
     /// <summary>Gurobi 后端名 / The Gurobi backend name.</summary>

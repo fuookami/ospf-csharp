@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// `Register` puts the <c>mac</c> symbol into the model from the **take-off** index symbol through the formula: with a known take-off total weight
 /// `mac = formula.mac(index_takeoff, tow)` keeping the index linear, and without one `mac` is the **constant zero** — literally `LinearExpressionSymbol(Flt64.zero)`,
 /// it is neither skipped nor an error. Two easy mistakes: (1) **only the take-off phase is consulted**, both `computedTotalWeight[TakeOff]` and `index[TakeOff]`, with no loop over
-/// phases; (2) **registration is idempotent** — the code guards with `if (!::mac.isInitialized)`; this builds the symbol once but **adds it every call**, leaving duplicate-add
+/// phases; (2) **registration is idempotent** — the implementation guards with `if (!::mac.isInitialized)`; this builds the symbol once but **adds it every call**, leaving duplicate-add
 /// semantics to the model rather than second-guessing them here.
 /// </remarks>
 public sealed class MacModel

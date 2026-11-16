@@ -1,5 +1,4 @@
 // Phase-I 与 Phase-II 最小化目标管线 / Phase-I and Phase-II minimisation objectives.
-//（1685 字节）对应。
 // And.
 
 using System;

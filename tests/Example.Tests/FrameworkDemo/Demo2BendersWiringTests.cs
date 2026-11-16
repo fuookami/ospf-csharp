@@ -215,7 +215,7 @@ public sealed class Demo2BendersWiringTests
 
     /// <summary>去掉注释行 / Strip comment lines.</summary>
     /// <param name="path">文件 / The file.</param>
-    /// <returns>代码 / The code.</returns>
+ /// <returns>代码 / The implementation.</returns>
     private static string StripComments(string path) {
         var code = new global::System.Text.StringBuilder();
         foreach (string line in global::System.IO.File.ReadAllLines(path)) {
@@ -268,7 +268,7 @@ public sealed class Demo2BendersWiringTests
         global::System.IO.File.Exists(path).Should().BeTrue("the source must be locatable for this criterion");
 
         // **代码里要有调用，注释里要有理由**：两处分开查，因为 `StripComments` 会把理由剥掉。
-        // **A call in the code and a reason in the comments**: checked separately, because `StripComments` removes the reason.
+ // **A call in the implementation and a reason in the comments**: checked separately, because `StripComments` removes the reason.
         StripComments(path!).Should().Contain("SolveSingleModelBendersAsync(",
             "the dispatch must call the single-model chain; the old route stays reachable for comparison");
         // **两次尝试都要在理由里留痕**：第一次是脚本不收敛，第二次是**默认门禁的假脚本不收敛而真后端收敛**——
@@ -280,7 +280,7 @@ public sealed class Demo2BendersWiringTests
         // **叙述清理把批次号去掉了，规则本身没变：两次尝试的理由不同，源码里都必须写明。**
         //
         // **What this needs is "each rejection left its own reason", not "a batch id is still there".** The narration cleanup removed the ids and **the rule is unchanged: the two attempts
-        // were rejected for different reasons, and both have to be written next to the code.**
+ // were rejected for different reasons, and both have to be written next to the implementation.**
         global::System.IO.File.ReadAllText(path!).Should().Contain("tried the switch a second time and it was rejected again",
             "the second rejection needs its own reason next to the code");
         global::System.IO.File.ReadAllText(path!).Should().Contain("tried switching this line to the single-model route and measurement rejected it",

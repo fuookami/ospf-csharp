@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// 判据特意构造**两者不相等**的快照（`progressInStage = 50`、`overallProgress = 90`），
 /// 这样两种实现给出**不同的结果**，才能区分。
 ///
-/// The code's `phase(start, end)` computes `overallProgress = start + progressInStage * (end - start) / 100` (snippet above).
+/// Its `phase(start, end)` computes `overallProgress = start + progressInStage * (end - start) / 100` (snippet above).
 ///
 /// **The remap input is `progressInStage`, not the sub-context's `overallProgress`.** This is the easiest thing to get wrong in the whole batch: using
 /// `overallProgress` also produces a **plausible-looking** number, but it is a **double squash** — the sub-solver's in-stage progress (already 0—100) is treated as

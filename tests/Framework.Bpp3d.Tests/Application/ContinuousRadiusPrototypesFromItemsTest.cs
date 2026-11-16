@@ -91,7 +91,7 @@ public class ContinuousRadiusPrototypesFromItemsTest {
     /// 取 `PackageShapeSpec.VerticalCylinder`。**若实现只判"是不是圆柱"而不判轴向，
     /// 横置圆柱会混进来**——而原型数量仍然"看起来合理"。
     ///
-    /// The code takes only `PackageShapeSpec.VerticalCylinder`. **An implementation that only asks "is it a cylinder" without checking the axis lets
+ /// The implementation takes only `PackageShapeSpec.VerticalCylinder`. **An implementation that only asks "is it a cylinder" without checking the axis lets
     /// horizontal ones through** while the prototype count still looks plausible.
     /// </remarks>
     [Fact]
@@ -136,7 +136,7 @@ public class ContinuousRadiusPrototypesFromItemsTest {
     /// `putIfAbsent`：**先到先得**。若实现改用 `[key] = value`，
     /// 内容相同的重复项会被后一个覆盖——**数量一样，但语义从"保留首个"变成"保留末个"**。
     ///
-    /// The code uses `putIfAbsent`: **first wins**. An implementation using `[key] = value` lets a later duplicate overwrite an earlier one — **same count,
+ /// This implementation uses `putIfAbsent`: **first wins**. An implementation using `[key] = value` lets a later duplicate overwrite an earlier one — **same count,
     /// but "keep the first" silently becomes "keep the last"**.
     /// </remarks>
     [Fact]

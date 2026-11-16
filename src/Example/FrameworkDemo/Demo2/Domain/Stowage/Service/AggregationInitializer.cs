@@ -80,7 +80,7 @@ internal static class AggregationInitializer
         // 少了第一条，一个"装 0 件"的舱位会变成**永远不可用的舱位**——而它看起来只是一个普通的舱位，
         // 求解器用不上它也不报错。少了第二条，一个"已装 5 件、上限 3 件"的舱位会让内核收到一个**初始就不可行**的起点。
         //
-        // **The code's two `maxLoadCount` checks**: reject `<= 0`, and reject "loaded items exceed it". Without the first, a "holds 0 items" position
+ // **Its two `maxLoadCount` checks**: reject `<= 0`, and reject "loaded items exceed it". Without the first, a "holds 0 items" position
         // becomes **permanently unusable** while looking like an ordinary one — the solver just never uses it and says nothing. Without the second, a position with
         // 5 items loaded and a cap of 3 hands the kernel **a starting point that is infeasible before it begins**.
         foreach (PositionInput position in input.Positions) {
@@ -113,7 +113,7 @@ internal static class AggregationInitializer
         }
 
         // 请求舱位按名字与飞机舱位配对。`first { it.name == basePosition.spaceName }` 缺项时会抛，这里先查一遍给出可读失败。
-        // The request positions are paired with the aircraft's by name. The code's `first { ... }` throws on a miss; this checks first and returns a readable failure.
+ // The request positions are paired with the aircraft's by name. Its `first { ... }` throws on a miss; this checks first and returns a readable failure.
         var requestByName = new Dictionary<string, PositionInput>(input.Positions.Count);
         foreach (PositionInput position in input.Positions) {
             if (!requestByName.TryAdd(position.Name, position)) {
@@ -134,8 +134,8 @@ internal static class AggregationInitializer
             items.Add(new Item(
                 name: cargo.Name,
                 weight: cargo.Weight,
-                // 优先级名与档位照做：`P{优先级}`，`>= 8` 高、`<= 2` 低、其余普通。
-                // The priority name and bucket follow the code: `P{priority}`, `>= 8` high, `<= 2` low, otherwise normal.
+                // 优先级名与档位如此：`P{优先级}`，`>= 8` 高、`<= 2` 低、其余普通。
+ // The priority name and bucket follow the implementation: `P{priority}`, `>= 8` high, `<= 2` low, otherwise normal.
                 priority: new CargoPriority(
                     Name: "P" + cargo.Priority,
                     Priority: new Fuookami.Ospf.Math.Algebra.Number.UInt64((ulong)cargo.Priority),
@@ -157,7 +157,7 @@ internal static class AggregationInitializer
                 // 之前这里**恒为主舱**，于是下舱货被当成主舱货——而"下舱货不能放主舱"正是甲板过滤要表达的约束，
                 // **恒为主舱会让它从一开始就不成立**。
                 //
-                // **The deck comes from the request**: the code maps `Main → normalMain` and everything else → `lowNotBulk`. Before this was
+ // **The deck comes from the request**: this implementation maps `Main → normalMain` and everything else → `lowNotBulk`. Before this was
                 // **always main deck**, so lower-deck cargo counted as main-deck cargo — and "lower-deck cargo cannot go on the main deck" is exactly what the deck
                 // filter expresses, **which was false from the start**.
                 location: cargo.DeckLocation == DeckLocationInput.Main ? ItemLocation.MainDeck : ItemLocation.LowNotBulk,
@@ -219,7 +219,7 @@ internal static class AggregationInitializer
                 // **只收非 `null` 的舱位**，所以这两个属性拿不到值时那两条软目标**永远是空表**——不报错，只是"建议装载"
                 // 这个能力在模型里根本不存在。
                 //
-                // **The advisory count/weight come from the request** . The code's limits **only collect positions with a non-null value**, so with no
+ // **The advisory count/weight come from the request** . Its limits **only collect positions with a non-null value**, so with no
                 // source for these two the objectives were **always empty** — no error, just "advisory loading" simply not existing in the model.
                 Ala = requestPosition.Ala,
                 Alw = requestPosition.Alw,

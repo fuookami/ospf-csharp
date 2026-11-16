@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// <c>MinFunction</c>**，于是"第 k 大"就变成"排序后第 k 个"。
 ///
 /// **代价是 O(n²) 对函数**——**n 个输入要 n(n−1) 个函数**。
-/// **这是选择，本仓照做**，因为顺序统计量本来就没有更省的精确线性编码。
+/// **这是有意的选择**，因为顺序统计量本来就没有更省的精确线性编码。
 /// **`ponytail:` 有意保留 O(n²)：输入通常是个位数；若某天 n 上百，需要的是排序网络（Batcher）而不是加大 bigM。**
 ///
 /// **`MaxFunction` 与 `MinFunction` 必须成对用同一对多项式**——
@@ -121,7 +121,7 @@ internal sealed class DescendingOrder<V> where V : struct, IRealNumber<V>, INumb
 /// **`k` 从 0 开始**：**`k = 0` 是最大值，`k = n − 1` 是最小值。**
 /// **从 1 开始的约定会让 `k = 0` 与 `k = n` 都越界，而越界检查的边界会差一位。**
 ///
-/// The k-th largest from the code.
+/// The k-th largest.
 ///
 /// **`k` is zero-based**: **`k = 0` is the maximum and `k = n − 1` the minimum.**
 /// **A one-based convention would put both `k = 0` and `k = n` out of range, and the bounds check would be off by

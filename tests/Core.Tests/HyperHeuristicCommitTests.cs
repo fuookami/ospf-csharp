@@ -56,7 +56,7 @@ public sealed class HyperHeuristicCommitTests {
     /// 语义上讲得通：消耗了额度却没有产出，说明该算法还在工作、只是这一步没攒够一个完整步；
     /// 而"零消耗零产出"才是**空转**，继续派发它只会把决策次数烧光。
     ///
-    /// **This is a case where my first expectation was wrong**: I assumed "having a global budget means never disabling". The code condition is
+ /// **This is a case where my first expectation was wrong**: I assumed "having a global budget means never disabling". The implementation condition is
     /// `result.evaluations == 0L && result.steps == 0L` — **both must be zero**, budget or not. That makes sense: spending allowance without output
     /// means the algorithm is still working and merely did not accumulate a whole step, whereas "zero spent, zero produced" is **spinning**, and
     /// dispatching it again only burns decision count.
