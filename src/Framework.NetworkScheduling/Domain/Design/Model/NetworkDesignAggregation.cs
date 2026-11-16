@@ -1,5 +1,4 @@
 // 网络建设聚合与上下文 / Network-design aggregation and context.
-// 与固定 Kotlin （13326 字节）、 的
 // `NetworkDesignContext` 类（5875 字节）对应。
 // And the `NetworkDesignContext` class.
 

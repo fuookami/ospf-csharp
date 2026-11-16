@@ -1,5 +1,4 @@
 // 运行器会话 / The runner session.
-// 与固定 Kotlin （11692 B）对应。
 
 using System;
 using System.Collections.Generic;

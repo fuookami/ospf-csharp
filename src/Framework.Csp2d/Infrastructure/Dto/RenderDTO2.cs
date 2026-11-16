@@ -1,6 +1,4 @@
 // 渲染用 DTO / Render DTOs.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 

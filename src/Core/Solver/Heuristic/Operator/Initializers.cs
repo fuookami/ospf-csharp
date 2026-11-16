@@ -1,5 +1,4 @@
 // 参数演化源与初始化算子 / Parameter evolution sources and initializers.
-// 与固定 Kotlin 、
 // 对应。
 // , and.
 

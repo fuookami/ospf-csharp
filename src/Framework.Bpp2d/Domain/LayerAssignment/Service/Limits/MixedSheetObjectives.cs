@@ -1,6 +1,4 @@
 // 混合板材目标 / Mixed sheet objectives.
-// 与固定 Kotlin 的纯函数部分对应。
-// The pure-function part of the pinned Kotlin: .
 //
 // 的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在），见文末说明。
 // The code's two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the C# side — see the tail note.

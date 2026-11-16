@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// 箱容量约束 / Bin capacity constraint.
 /// </summary>
 /// <remarks>
-/// 移植的**右端项**部分。
+/// 实现的**右端项**部分。
 ///
 /// **修复前**：这个类没有构造函数参数，`RightHandSide` 恒返回**空字典**——一个永远"没有右端项"的约束。
 /// 而它同时挂着 `EnableFinalBinCapacityConstraint = true` 这个开关（默认开启），于是"容量约束已启用"与

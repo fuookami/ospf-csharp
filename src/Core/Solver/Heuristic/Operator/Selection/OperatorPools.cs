@@ -1,5 +1,4 @@
 // 算子池与绑定 / Operator pools and bindings.
-// 与固定 Kotlin （19823 B）的 `RecoverableComponent`、`OperatorPool`、`SlotSnapshot`、
 // `OperatorBindings` 四部分对应；同文件的 `ControlledSearchSession` 依赖尚未实现的 `SearchMemory`/`RewardPolicy`/
 // `ProgressFeatures`（属于 `memory/` 与 `learning/` 族），留待那些族完成后单独成批。
 // Mirrors `RecoverableComponent`, `OperatorPool`, `SlotSnapshot` and `OperatorBindings` 's

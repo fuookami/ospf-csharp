@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// </summary>
 /// <remarks>
 /// `ItemStatus` 是**带默认值的枚举成员**（`Loaded { override val loaded = true }` …），C# 的枚举没有成员属性，
-/// 于是这里的映射就是那份默认值的移植。**沿用而不要"合理推断"**：`Preassigned` 和 `Optional` 都是"需要装载"，
+/// 于是这里的映射就是那份默认值的实现。**沿用而不要"合理推断"**：`Preassigned` 和 `Optional` 都是"需要装载"，
 /// 但 `Preassigned` 不是"需要调整"；`AdjustmentNeeded` 同时是"已装载"和"可用"。
 ///
 /// `ItemStatus` is an enum **with per-member overrides** (`Loaded { override val loaded = true }` …); a C# enum has no member properties, so this mapping is that

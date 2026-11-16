@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service;
 ///    这种不一致是既有设计。
 ///
 /// **pipelines exist only under predistribution**, with an empty list otherwise. Two things must be copied: **anything but predistribution returns an empty
-/// list** — not "fewer pipelines" but none, since redundancy only matters during predistribution; and **the balance comes before redundancy**, matching its `pipelines.add`
+/// list** — not "fewer pipelines" but none, since redundancy only matters during predistribution; and **the balance comes before redundancy**, matching `pipelines.add`
 /// order, which is the **reverse** of `Aggregation.Register`'s order — an inconsistency kept as is.
 /// </remarks>
 internal sealed class PipelineListGenerator

@@ -1,5 +1,4 @@
 // NSGA-II 运行器 / The NSGA-II runner.
-// 与固定 Kotlin （11159 B）对应。
 
 using System;
 using System.Collections.Generic;

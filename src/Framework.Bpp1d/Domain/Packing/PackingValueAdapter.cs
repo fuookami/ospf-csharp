@@ -1,6 +1,4 @@
 // 求解器数值边界 / Solver numeric boundary.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Math.Algebra.Number;

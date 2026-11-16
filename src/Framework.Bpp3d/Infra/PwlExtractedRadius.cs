@@ -1,5 +1,4 @@
 // 从 PWL 求解结果中提取的半径 / The radius extracted from a PWL solve.
-// 与固定 Kotlin 中的 `PWLExtractedRadius` 对应。
 // .
 
 using System.Collections.Generic;

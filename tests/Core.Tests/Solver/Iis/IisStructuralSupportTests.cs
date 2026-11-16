@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 /// </summary>
 /// <remarks>
 /// **定位到二次 IIS 整体缺失（846 行 / 12 函数）**，建了骨架。
-/// 这里移植其中**四个不调用求解器的纯函数**——它们只读写模型形状，
+/// 这里实现其中**四个不调用求解器的纯函数**——它们只读写模型形状，
 /// 因此**在当前无 SDK 的环境里可以完整验证**，不像 `performElasticFiltering` 那样
 /// 必须先有真实求解器。
 ///

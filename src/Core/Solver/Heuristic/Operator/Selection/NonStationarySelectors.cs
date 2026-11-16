@@ -1,5 +1,4 @@
 // 非平稳选择器 / Non-stationary selectors.
-// 与固定 Kotlin （12156 B）对应。
 
 using System;
 using System.Collections.Generic;

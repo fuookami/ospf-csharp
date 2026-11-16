@@ -1,5 +1,4 @@
 // VRPTW 模型：客户、起止仓库与路线停靠点 / VRPTW model: customer, depot and route stop.
-// 与固定 Kotlin 、（16 行）、（26 行）对应。
 // , and.
 
 using System;

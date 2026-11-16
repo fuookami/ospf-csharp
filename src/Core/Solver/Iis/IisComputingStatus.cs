@@ -32,7 +32,7 @@ public sealed record IisComputingStatus(
         RestBoundAmount + RestConstraintAmount,
         TotalBoundAmount + TotalConstraintAmount);
 
-    // 与 Kotlin 一致：分母为零时保留 IEEE 的无穷或 NaN，不静默归零。 / Matches Kotlin: a zero denominator keeps IEEE infinity or NaN instead of being silently zeroed.
+    // 分母为零时保留 IEEE 的无穷或 NaN，不静默归零。 / A zero denominator keeps IEEE infinity or NaN instead of being silently zeroed.
     private static Flt64 Ratio(ulong rest, ulong total) => new((double)rest / (double)total);
 }
 

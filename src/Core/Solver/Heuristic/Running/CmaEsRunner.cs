@@ -1,5 +1,4 @@
 // CMA-ES 运行器 / The CMA-ES runner.
-// 与固定 Kotlin 、（12640 B）对应。
 // And (12640 B).
 
 using System;

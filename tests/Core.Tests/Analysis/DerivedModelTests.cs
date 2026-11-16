@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 带目标的派生重建 / Rebuilding with a target.
 /// </summary>
 /// <remarks>
-/// 这是 `build(snapshot, target)` 的移植：重建模型，再追加一条目标约束。
+/// 这是 `build(snapshot, target)` 的实现：重建模型，再追加一条目标约束。
 ///
 /// The implementation of `build(snapshot, target)`: rebuild the model, then append a target constraint.
 /// </remarks>

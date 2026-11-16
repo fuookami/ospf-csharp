@@ -110,7 +110,7 @@ public static class CrossContributionProjector {
     /// `symbol ?: name ?: toString` and **never looks at the type**. Adding the type name makes the same input key differently.
     ///
     /// both reverts that step and collapses the implementation: this and `GenerationWidthIndex.CanonicalUnitKey` delegate to `GenerationQuantityMath.UnitKey`,
-    /// matching its "one private fun".
+    /// matching "one private fun".
     ///
     /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`.** Before this fell back to the empty string and changed
     /// it to `full type name|ToString` — but **three copies each writing it out** was the real problem. This collapses it into one: both this and

@@ -1,5 +1,4 @@
 // 计费搜索评估 / Metered search evaluation.
-// 与固定 Kotlin （1875 字节）对应。
 
 using System;
 using System.Collections.Generic;

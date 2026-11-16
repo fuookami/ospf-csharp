@@ -1,5 +1,4 @@
 // VRP 行驶时间与弧成本计算 / VRP travel-time and arc-cost calculation.
-// 与固定 Kotlin 、（70 行）对应。
 // And.
 
 using System;

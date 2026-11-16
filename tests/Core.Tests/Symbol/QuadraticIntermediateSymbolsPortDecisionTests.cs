@@ -13,7 +13,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Symbol;
 
 /// <summary>
-/// **`QuadraticIntermediateSymbols` 这个工厂对象不移植，理由与同族另一项不同** /
+/// **`QuadraticIntermediateSymbols` 这个工厂对象不实现，理由与同族另一项不同** /
 /// The `QuadraticIntermediateSymbols` factory object is not implemented, for a different reason than the sibling decision.
 /// </summary>
 /// <remarks>
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 ///
 /// **这与理由不同，值得分清：**
 ///
-/// | 批次 | 不移植的理由 |
+/// | 批次 | 不实现的理由 |
 /// | --- | --- |
 /// | — | 基类的三条内容在本仓<b>要么已有、要么不可观测、要么是空检查</b> |
 /// | — | **功能可以造出来，只是<b>没有使用者</b>** |

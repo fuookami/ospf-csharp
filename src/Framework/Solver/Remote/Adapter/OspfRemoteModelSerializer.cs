@@ -242,7 +242,7 @@ public static class OspfRemoteModelSerializer {
     /// </summary>
     /// <remarks>
     /// 整模型身份校验 → 逐元素身份闸门 → 组装。二次单元按列的**两个**索引拆分：C# 用
-    /// <c>Col2 &lt; 0</c> 哨兵值表示线性项（Kotlin 用可空 <c>colIndex2</c>），因此线性项进入
+    /// <c>Col2 &lt; 0</c> 哨兵值表示线性项（可空 <c>colIndex2</c>），因此线性项进入
     /// <c>LinearCells</c>、其余进入 <c>QuadraticCells</c>，与<c>colIndex2 == null</c> 判定等价。
     ///
     /// 同一个约束行会**同时**出现在 <c>linearConstraints</c> 与 <c>quadraticConstraints</c>

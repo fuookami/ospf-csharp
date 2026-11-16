@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Output;
 /// **输出聚合是模型语义，不是后处理** / Aggregation is semantics, not post-processing.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxAggregation` 与 `OnnxOutputSelection`。**优化模型只有一个目标值而 ONNX 输出是张量，**
+/// `OnnxAggregation` 与 `OnnxOutputSelection`。**优化模型只有一个目标值而 ONNX 输出是张量，**
 /// **所以"怎么折"决定了优化在优化什么：** **`Sum` 与 `Mean` 会让同一个网络优化出不同的解。**
 ///
 /// Syncs `OnnxAggregation` and `OnnxOutputSelection`. **An optimisation model has one objective while an ONNX output is a tensor, so how it folds decides what is

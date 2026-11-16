@@ -56,7 +56,7 @@ public sealed record OnnxBounds(double Lower, double Upper)
 /// **导入选项** / The import options.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxImportOptions`。**这些选项不是"调参"，而是"这个模型能不能被表达"的边界：**
+/// `OnnxImportOptions`。**这些选项不是"调参"，而是"这个模型能不能被表达"的边界：**
 /// **`mode` 决定多项式阶数上限、`inputBounds` 决定分段近似能不能做、`supportedOpset` 决定算子语义是否与我们实现的一致。**
 /// **每一条错了都表现为"模型跑不通"或更糟——"跑通了但是另一个模型"。**
 ///

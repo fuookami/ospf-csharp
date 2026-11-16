@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 扰动观察的构造器 / Constructors for perturbation observations.
 /// </summary>
 /// <remarks>
-/// **这是 的 `unknownObservation` 的移植。**
+/// **这是 的 `unknownObservation` 的实现。**
 ///
 /// 它写成"只填三个字段、其余全默认"的工厂：
 ///

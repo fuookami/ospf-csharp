@@ -1,5 +1,4 @@
 // 运输分配域 / Transport-allocation domain.
-// 与固定 Kotlin （21086 字节）对应。
 
 using System;
 using System.Collections.Generic;

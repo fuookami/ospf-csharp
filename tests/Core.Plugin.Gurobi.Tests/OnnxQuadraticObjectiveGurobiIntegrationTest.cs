@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **二次目标真的被求解：`(x−3)²` 的最小值是 0，落在 x = 3** / A quadratic objective is really solved.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `Quadratic` 导入模式。**此前把这一条记成"挂接没做成"，原因其实是我用错了类：** '
+/// `Quadratic` 导入模式。**此前把这一条记成"挂接没做成"，原因其实是我用错了类：** '
 /// **二次的 `AddObject` 在 `QuadraticMetaModel` 上，不在 `LinearMetaModel` 上——编译器是对的，读错的是我。** '
 /// **这里把它改正，并补上"二次模型要给一个参考点"这一步。**
 ///

@@ -1,5 +1,5 @@
 // 超启发式配置的预检 / Preflight validation for a hyper-heuristic configuration.
-// 对应固定 Kotlin （47241 B）里 `open` 前半段的校验阶梯。
+//  `open` 前半段的校验阶梯。
 // First half: 
 
 using System;

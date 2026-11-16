@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **模型属性在 C# 里挂在哪个类型上** / Which type each model property lives on here.
 /// </summary>
 /// <remarks>
-/// **这里的结论是一个测量方法失败，不是一次移植。** 早先试过的办法是
+/// **这里的结论是一个测量方法失败，不是一次实现。** 早先试过的办法是
 ///// 把源侧的 `val` 与 C# 同**文件**的属性做差集。
 /// 连修五轮（`Is` 前缀、record 位置参数、末位参数、枚举成员、嵌套类）**仍然大面积误报**——
 /// 因为这个代码库把模型的属性拆进了嵌套类型：`PositionShape.Length`、`ItemOrder.CarBoard`、`ItemLocation.IsNormalMain`。

@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing.Service;
 /// horizontal cylinders have sufficient support, no overlaps between items.
 /// </summary>
 /// <remarks>
-/// 移植（23023 B）的**终态重叠检测**：长方体-长方体、圆柱-长方体、
+/// 实现（23023 B）的**终态重叠检测**：长方体-长方体、圆柱-长方体、
 /// 同轴圆柱-圆柱、异轴圆柱-圆柱四种配对。
 ///
-/// **这里不移植**：宽相位扫掠表（`candidateGeometryPairs` / `sweepScore`，大箱降复杂度用）、
+/// **这里不实现**：宽相位扫掠表（`candidateGeometryPairs` / `sweepScore`，大箱降复杂度用）、
 /// 越界检测。两者留在 P9 台账。
 ///
 /// Ports its **final-state overlap detection**: box-box, cylinder-box, same-axis cylinder-cylinder, and different-axis

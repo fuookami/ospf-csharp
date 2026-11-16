@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 分析缓存的键 / The analysis cache key.
 /// </summary>
 /// <remarks>
-/// **这是 `TargetFeasibilityAnalyzer.CacheKey` 与 `ConflictAnalyzer.CacheKey` 的移植。**
+/// **`TargetFeasibilityAnalyzer.CacheKey` 与 `ConflictAnalyzer.CacheKey` 的合并体。**
 ///
 /// 键是三段：**分析器实例 + 目标 + 选项**。
 ///

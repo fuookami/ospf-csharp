@@ -1,5 +1,4 @@
 // 换型发生条件 / When a switch occurs.
-// 与固定 Kotlin 里 `switch` 的两支构造对应：
 // 有 `taskTime` 时取 `x[e,t1] AND x[e,t2] AND frontOf[t1,t2] AND NOT betweenIn[t3,t1,t2]`（对每个 t3）；
 // 无 `taskTime` 时取 `t1.start < t2.start` 且无第三个任务的起点严格落在两者之间。
 // Two branches build `switch`: 

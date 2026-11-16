@@ -1,5 +1,4 @@
 // 广义流弧变量组件 / Generalized-flow arc variable component.
-// 与固定 Kotlin （2697 字节）对应。
 //
 // `GeneralizedFlowPipelineFactory` 是 `fun interface`，在 C# 里直接由
 // `Func<GeneralizedFlowExpressions, IPipeline<LinearMetaModel<Flt64>>>` 表达，不再单独声明一个只有单一方法的接口。

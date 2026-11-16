@@ -1,5 +1,4 @@
 // 通用路径主问题类型 / Generic path master-problem types.
-// 与固定 Kotlin （5133 字节）中的问题类型部分对应。
 // The problem types of the: .
 
 using System;

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **`If` 真的展开：三件东西接起来** / The If is actually unrolled, three pieces wired together.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerIf` 落地形态：**选分支 → 压作用域 → 求值 → 弹作用域。** '
+/// `lowerIf` 落地形态：**选分支 → 压作用域 → 求值 → 弹作用域。** '
 /// **"子图"在这里不再是一个特殊概念——它只是"在子上下文里运行的一张普通图"。**
 ///
 /// Syncs the concrete `lowerIf`: **choose, push, evaluate, pop.** **A subgraph stops being a special concept: it is an ordinary graph run in a child context.**

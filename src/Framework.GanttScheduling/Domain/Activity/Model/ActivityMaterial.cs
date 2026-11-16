@@ -1,6 +1,4 @@
 // 活动物料库存模型 / Activity material inventory model.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

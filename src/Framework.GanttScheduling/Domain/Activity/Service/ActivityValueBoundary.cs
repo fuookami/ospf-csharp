@@ -1,5 +1,4 @@
 // 活动数值转换边界 / The activity value conversion boundary.
-// 与固定 Kotlin 里的
 // `ActivityValueBoundary` 对应。
 // .
 

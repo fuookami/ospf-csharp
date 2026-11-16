@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 把"行来源"对偶/敏感度区间映射回原始约束 / Map row-origin duals and sensitivity ranges back onto original constraints.
 /// </summary>
 /// <remarks>
-/// **这是 里 `mapExplicitProvenanceDuals` 与 `mapExplicitProvenanceRanges` 的移植。**
+/// **这是 里 `mapExplicitProvenanceDuals` 与 `mapExplicitProvenanceRanges` 的实现。**
 ///
 /// **两条规则决定了结果对不对，而且都会"安静地"出错：**
 ///

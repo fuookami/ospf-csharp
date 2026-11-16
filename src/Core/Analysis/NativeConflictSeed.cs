@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 原生 IIS 冲突种子 / The native-IIS conflict seed.
 /// </summary>
 /// <remarks>
-/// 移植自 `ConflictAnalyzer.nativeSeed`：**直接在派生模型上请求后端自己算冲突**，不再加 guard 字面量。
+/// `ConflictAnalyzer.nativeSeed`：**直接在派生模型上请求后端自己算冲突**，不再加 guard 字面量。
 /// 比假设式快，**但要求后端真的会做 conflict 分析**——它不做就返回 `null`，让调用方退回假设式。
 ///
 /// Ported from `nativeSeed`: **ask the backend to work out the conflict on the derived model**, with no guard literals. Faster than the assumption path, **but it requires a

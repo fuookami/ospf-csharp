@@ -1,5 +1,4 @@
 // 列变量登记 / Registration of column variables.
-// 与固定 Kotlin 的 `_x.add(xi)` 与
 // `x[otherIteration][task2]` 两级访问对应。
 // Mirrors `_x.add(xi)` and the two-level `x[otherIteration][task2]` access's.
 

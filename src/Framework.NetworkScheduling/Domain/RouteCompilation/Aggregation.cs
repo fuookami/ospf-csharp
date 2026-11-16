@@ -1,5 +1,4 @@
 // 路线编译聚合 / Route compilation aggregation.
-// 与固定 Kotlin （3748 字节）对应。
 
 using System;
 using System.Collections.Generic;

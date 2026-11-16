@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 假设式冲突种子 / The assumption-based conflict seed.
 /// </summary>
 /// <remarks>
-/// 移植自 `ConflictAnalyzer.assumptionSeed`：**给每条约束加一个 guard 字面量，把它们全部作为假设求解，**
+/// `ConflictAnalyzer.assumptionSeed`：**给每条约束加一个 guard 字面量，把它们全部作为假设求解，**
 /// 再按后端报告的冲突反查原始证据。
 ///
 /// **这条路不要求后端暴露原生 IIS 接口**，所以它是两个种子策略里更通用的那个。

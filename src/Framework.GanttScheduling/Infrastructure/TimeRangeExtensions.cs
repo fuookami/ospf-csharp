@@ -8,7 +8,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
 
 /// <summary>
 /// TimeRange 拆分与查找扩展方法 / TimeRange split and find extension methods.
-/// 从 kotlin TimeRange.kt 的 split/rsplit/findFrom/findUntil/find 扩展函数移植。
+/// 从 kotlin TimeRange.kt 的 split/rsplit/findFrom/findUntil/find 扩展函数实现。
 /// Ported from kotlin TimeRange.kt split/rsplit/findFrom/findUntil/find extension functions.
 /// </summary>
 public static class TimeRangeExtensions {
@@ -24,7 +24,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 按持续时间单元拆分时间范围 / Split the time range by duration unit.
-    /// 从 kotlin TimeRange.split(DurationRange, ...) 移植。
+    /// 从 kotlin TimeRange.split(DurationRange, ...) 实现。
     /// </summary>
     /// <param name="range">待拆分的时间范围 / The time range to split.</param>
     /// <param name="unit">持续时间单元范围 / The duration unit range [lb, ub].</param>
@@ -134,7 +134,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 从指定时间点开始查找相交的时间范围列表 / Find time ranges from the specified instant.
-    /// 从 kotlin List&lt;TimeRange&gt;.findFrom(Instant) 移植。
+    /// 从 kotlin List&lt;TimeRange&gt;.findFrom(Instant) 实现。
     /// </summary>
     /// <param name="ranges">已排序的时间范围列表 / The sorted list of time ranges.</param>
     /// <param name="time">起始时间点 / The start instant.</param>
@@ -152,7 +152,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 从指定时间点开始查找相交的元素 / Find elements from the specified instant.
-    /// 从 kotlin List&lt;T&gt;.findFrom(Instant, Extractor) 移植。
+    /// 从 kotlin List&lt;T&gt;.findFrom(Instant, Extractor) 实现。
     /// </summary>
     /// <typeparam name="T">列表元素类型 / The list element type.</typeparam>
     /// <param name="list">已排序的元素列表 / The sorted list of elements.</param>
@@ -173,7 +173,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 查找直到指定时间点的时间范围列表 / Find time ranges until the specified instant.
-    /// 从 kotlin List&lt;TimeRange&gt;.findUntil(Instant) 移植。
+    /// 从 kotlin List&lt;TimeRange&gt;.findUntil(Instant) 实现。
     /// </summary>
     /// <param name="ranges">已排序的时间范围列表 / The sorted list of time ranges.</param>
     /// <param name="time">结束时间点 / The end instant.</param>
@@ -191,7 +191,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 查找直到指定时间点的元素 / Find elements until the specified instant.
-    /// 从 kotlin List&lt;T&gt;.findUntil(Instant, Extractor) 移植。
+    /// 从 kotlin List&lt;T&gt;.findUntil(Instant, Extractor) 实现。
     /// </summary>
     /// <typeparam name="T">列表元素类型 / The list element type.</typeparam>
     /// <param name="list">已排序的元素列表 / The sorted list of elements.</param>
@@ -212,7 +212,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 查找与给定时间范围相交的时间范围列表 / Find time ranges intersecting with the given time range.
-    /// 从 kotlin List&lt;TimeRange&gt;.find(TimeRange) 移植。
+    /// 从 kotlin List&lt;TimeRange&gt;.find(TimeRange) 实现。
     /// </summary>
     /// <param name="ranges">已排序的时间范围列表 / The sorted list of time ranges.</param>
     /// <param name="time">目标时间范围 / The target time range.</param>
@@ -230,7 +230,7 @@ public static class TimeRangeExtensions {
 
     /// <summary>
     /// 查找与给定时间范围相交的元素 / Find elements intersecting with the given time range.
-    /// 从 kotlin List&lt;T&gt;.find(TimeRange, Extractor) 移植。
+    /// 从 kotlin List&lt;T&gt;.find(TimeRange, Extractor) 实现。
     /// </summary>
     /// <typeparam name="T">列表元素类型 / The list element type.</typeparam>
     /// <param name="list">已排序的元素列表 / The sorted list of elements.</param>

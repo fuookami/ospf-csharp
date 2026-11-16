@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **只改形状的那组算子：数值一个都不动，所以错全在形状上** / The shape-only group: no value moves, so every mistake lives in the shape.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxShapeOperators` 在逐节点求值里的那一半。**正因为"数值不动"，它们的错最容易漏：**
+/// `OnnxShapeOperators` 在逐节点求值里的那一半。**正因为"数值不动"，它们的错最容易漏：**
 /// **元素个数对不上时不会报错，只是后面某个算子按错的维度去接，而错位之后每个维度都跟着错。**
 ///
 /// Syncs the node-by-node half of `OnnxShapeOperators`. **Precisely because no value moves, their mistakes slip through most easily: a mismatched element count raises

@@ -1,5 +1,4 @@
 // ESPPRC 精确定价器 / ESPPRC exact pricer.
-// 与固定 Kotlin 对应。
 //
 // 定价 = 在定价图上做带资源约束的标签扩展，把"是否存在负 reduced cost 的列"这个问题回答到底。本实现支持：单路线 elementarity、
 // reduced cost／时间／负载三资源支配、基于 elementarity 与容量单调性的保守客户排除、前驱链回溯生成完整 `Route`，

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 目标可行性分析 / Target feasibility analysis.
 /// </summary>
 /// <remarks>
-/// 移植自 `TargetFeasibilityAnalyzer.analyze` 的求解与分类部分：派生重建 → 求解 → 按输出分类。
+/// `TargetFeasibilityAnalyzer.analyze` 的求解与分类部分：派生重建 → 求解 → 按输出分类。
 /// 候选漏斗与缓存那一层没搬。
 ///
 /// Ported from the solve-and-classify part of `TargetFeasibilityAnalyzer.analyze`: derived rebuild, solve, then classify by output. The candidate funnel and the cache layer

@@ -1,5 +1,4 @@
 // 包装分类 / Package classification.
-// 与固定 Kotlin 中 `PackageClassification` 部分对应，语义取自
 // 的推导规则（`packages.isNullOrEmpty ? Inner : Outer`）。
 // (`packages.isNullOrEmpty ? Inner : Outer`).
 //

@@ -1,5 +1,4 @@
 // 运行器基类与轨迹运行器 / The runner base class and the trajectory runner.
-// 与固定 Kotlin 、（7017 B）、（4185 B）对应。
 // 同族的（11692 B）与其余 runner 单独成批。
 // , (7017 B) and
 // (4185 B). The same family's (11692 B) and the remaining runners come in

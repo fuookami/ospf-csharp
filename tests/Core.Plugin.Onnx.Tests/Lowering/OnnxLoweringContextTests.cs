@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **作用域：读得出去，写不进来** / Scopes read outward and write inward.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxLoweringContext` 最小形态，也是子图展开的前提。**判据钉的是"泄漏"这一类错误：**
+/// `OnnxLoweringContext` 最小形态，也是子图展开的前提。**判据钉的是"泄漏"这一类错误：**
 /// **一个大字典会让子图的中间结果跑到外层，而症状是"外层某处引用到了不该看见的名字"，在几百个节点的图里几乎无法定位。**
 ///
 /// Syncs the minimal `OnnxLoweringContext`, the prerequisite for unrolling subgraphs. **The criteria target leakage: a single dictionary lets a subgraph's intermediates

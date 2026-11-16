@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 冲突删除复验的判定 / The verdict of one conflict deletion check.
 /// </summary>
 /// <remarks>
-/// 移植自 `ConflictAnalyzer.analyze` 的删除复验循环体。**求解那一层由调用方提供**，
+/// `ConflictAnalyzer.analyze` 的删除复验循环体。**求解那一层由调用方提供**，
 /// 于是这个判定可以脱离后端单独钉死。
 ///
 /// Ported from the deletion-check loop body of `ConflictAnalyzer.analyze`. **The solve is supplied by the caller**, so the verdict can be pinned down without a backend.
@@ -130,7 +130,7 @@ public static class ConflictDeletionCheck
     /// <param name="budget">时间预算，可为 <c>null</c> / The time budget, or <c>null</c>.</param>
     /// <returns>该停下时为 <c>true</c> / <c>true</c> when it has to stop.</returns>
     /// <remarks>
-    /// **这是 `ConflictAnalyzer.analyze` 删除循环里那道中止条件的移植。**
+    /// **这是 `ConflictAnalyzer.analyze` 删除循环里那道中止条件的实现。**
     ///
     /// **`checks &gt;= max` 而不是 `checks &gt; max`。** 用后者会**多做一次复验**，
     /// **而每一次复验都是一次完整求解**——多出来的那一次正好是最贵的那一次。

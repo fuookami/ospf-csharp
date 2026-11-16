@@ -1,5 +1,4 @@
 // 空间区域、块与旋转校验 / Space region, block and rotation guard.
-// 与固定 Kotlin 与
 //（37 行）对应。
 // And.
 

@@ -40,7 +40,7 @@ public sealed class CriticalPipelineBackends
 /// 关键约束分析的编排 / The orchestration of the critical-constraint analysis.
 /// </summary>
 /// <remarks>
-/// 移植自 `CriticalConstraintAnalysisPipeline.analyze` 的五阶段串联。**每个阶段的实际求解由注入的委托完成。**
+/// `CriticalConstraintAnalysisPipeline.analyze` 的五阶段串联。**每个阶段的实际求解由注入的委托完成。**
 ///
 /// Ported from the five-stage chain of `CriticalConstraintAnalysisPipeline.analyze`. **The work of each stage is done by the injected delegates.**
 ///

@@ -1,5 +1,5 @@
 // 余料分析 / Remnant analysis.
-// 与固定 Kotlin 对应：排样终态需要知道每块板材上还剩哪些
+// 排样终态需要知道每块板材上还剩哪些
 // 可用矩形区域，供余料入库或后续工单复用。本分析器按「水平切片」把已用区域从板材中扣掉，输出互不重叠的自由矩形。
 // At the final packing state, 2D packing needs to know which rectangular regions remain
 // usable on each sheet. This analyser subtracts occupied regions by horizontal slices and reports pairwise disjoint
@@ -9,7 +9,7 @@
 // This is **remnant reporting**, not remnant inventory. Cross-job stock, priority and warehouse location management
 // are inventory semantics and stay outside this framework.
 //
-// 层模型（`Sheet`／`SheetLayer`／`Layer`）已在 earlier 移植，因此本类同时提供**接 `Sheet` 的正规入口**
+// 层模型（`Sheet`／`SheetLayer`／`Layer`）已在 earlier 实现，因此本类同时提供**接 `Sheet` 的正规入口**
 // （`AnalyzeSheets`）与接扁平放置列表的入口（`Analyze`／`AnalyzeSheet`）。两者共用同一套切片算法，差别只在
 // 如何取得占用区域。
 // The layer model (`Sheet` / `SheetLayer` / `Layer`) landed in earlier, so this offers both the **proper `Sheet`

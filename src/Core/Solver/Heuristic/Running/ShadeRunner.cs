@@ -1,5 +1,5 @@
 // SHADE 运行器 / The SHADE runner.
-// 与固定 Kotlin 对应（`ShadeNumerics` 除外，见注释）。
+// 对应（`ShadeNumerics` 除外，见注释）。
 
 using System;
 using System.Collections.Generic;

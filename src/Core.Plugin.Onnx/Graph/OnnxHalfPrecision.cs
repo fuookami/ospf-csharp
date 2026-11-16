@@ -6,7 +6,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// **半精度（binary16）位模式转 `double`** / IEEE 754 binary16 bit patterns to `double`.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxHalfPrecision`。**为什么值得单独写一层：** **`TensorProto` 里 FP16 的常量是 2 字节位模式，'
+/// `OnnxHalfPrecision`。**为什么值得单独写一层：** **`TensorProto` 里 FP16 的常量是 2 字节位模式，'
 /// **而它们几乎总是权重与初始值——** **读错一个的后果不是"报错"，是"模型能跑但偏差一点点"，**
 /// **而那正是最难归因的一类错误。**
 ///

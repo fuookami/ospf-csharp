@@ -49,7 +49,6 @@ internal sealed class BoxedNumericOps<T> : IBoxedNumericOps where T : struct {
 
 /// <summary>
 /// 数值分派器 / Numeric Dispatcher.
-/// Kotlin object; C# sealed class with Instance singleton.
 /// </summary>
 public sealed class NumericDispatcher {
     /// <summary>单例实例 / Singleton instance.</summary>

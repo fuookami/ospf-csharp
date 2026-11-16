@@ -781,10 +781,10 @@ public static class OnnxGraphEvaluator
     /// <remarks>
     /// **轴可以从属性来，也可以从第二个输入（常量整数数组）来：** **两条都要认，** **而"只认其中一条"会让一半的真实模型导不进来。**
     ///
-    /// **`keepdims` 默认是 1（保留），与`attributes.int("keepdims", 1L)` 一致。**
+    /// **`keepdims` 默认是 1（保留）**：读属性时用 `attributes.int("keepdims", 1L)`，缺省即保留。
     ///
     /// **The axes may come from the attribute or from the second input (a constant integer array): both are accepted, and accepting only one would lock out half of the real models.**
-    /// **keepdims defaults to 1, matching its attributes.int("keepdims", 1L).**
+    /// **`keepdims` defaults to 1**: the attribute is read as `attributes.int("keepdims", 1L)`, so an absent value means "keep".
     /// </remarks>
     private static string? EvaluateReduceSum(
         OnnxNode node,

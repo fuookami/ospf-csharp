@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **把一个 ONNX 仿射结果挂进真实的机制模型** / Attach an ONNX affine result to a real mechanism model.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxFunctionalModel` 里"把降阶结果加进模型"那一步。**这是"插件能往真实模型里加东西"的实证：**
+/// `OnnxFunctionalModel` 里"把降阶结果加进模型"那一步。**这是"插件能往真实模型里加东西"的实证：**
 /// **变量被注册、界以约束形式加上、目标被设上，然后整条链由求解器解出来。**
 ///
 /// **为什么按这个次序加：** **变量必须先进令牌表，否则约束引用不到它们；** **目标最后加，因为它是整个模型的落点。**

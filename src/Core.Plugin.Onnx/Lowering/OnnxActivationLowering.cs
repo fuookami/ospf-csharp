@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **精确激活算子的表达式降阶** / Expression lowering for the exact activation operators.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation` 里"精确"那一半（`Relu`／`Clip`／`LeakyRelu`／`HardSigmoid`）。
+/// `OnnxActivation` 里"精确"那一半（`Relu`／`Clip`／`LeakyRelu`／`HardSigmoid`）。
 /// **它们在 LP 里都不是"一个函数调用"，而是一组约束加一个结果变量：** **`Relu(x)` 在本插件里是一条正部函数的曲线，`
 /// **而把这些写成"直接代公式"会得到一条非线性的目标——** **求解器要么拒绝，要么在不该松弛的地方松弛。**
 ///

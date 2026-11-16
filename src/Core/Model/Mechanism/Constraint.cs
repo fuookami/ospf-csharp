@@ -358,7 +358,7 @@ internal static class ConstraintCellFactory {
 
 /// <summary>
 /// 元对偶解 / Meta dual solution.
-/// <para>构造仅通过 PUBLIC 工厂 Create / ToMeta 暴露 -- 取代 Kotlin 侧依赖反射的桥接路径。</para>
+/// <para>构造仅通过 PUBLIC 工厂 Create / ToMeta 暴露 -- 取代 依赖反射的桥接路径。</para>
 /// </summary>
 public sealed record MetaDualSolution(
     IReadOnlyDictionary<MathConstraint, Flt64> Constraints,

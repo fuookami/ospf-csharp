@@ -1,5 +1,4 @@
 // 启发式搜索协议 / The heuristic search protocol.
-// 与固定 Kotlin （9819 字节）对应。
 
 using System;
 using System.Collections.Generic;

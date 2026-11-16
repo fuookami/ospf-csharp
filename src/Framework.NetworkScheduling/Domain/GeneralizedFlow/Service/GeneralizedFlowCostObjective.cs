@@ -1,5 +1,4 @@
 // 广义流费用目标 / Generalized-flow cost objective.
-// 与固定 Kotlin （998 字节）对应。
 
 using System;
 using Fuookami.Ospf.Core.Model.Basic;

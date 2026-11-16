@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **`If` 的展开：条件为常量时选一个分支体** / Unrolling an `If`: with a constant condition, one branch body is chosen.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph.lowerIf`。**这是三类控制流里最浅的一类，因为它不需要迭代变量，只需要"选"。**
+/// `OnnxSubgraph.lowerIf`。**这是三类控制流里最浅的一类，因为它不需要迭代变量，只需要"选"。**
 ///
 /// **但它有一条容易漏的约束：** **两个分支必须产出同样的东西（同样的个数、同样的类型）。** **ONNX 允许它们内部完全不同，**
 /// **而外部只看得见结果——** **若两边的输出个数不同，选中的是哪一个都会让下游按错的个数去接，** **而错位之后每个维度都跟着错。**

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **`Loop` 真的展开：同一批接线多一层种子回写** / Loop unrolled: the same wiring plus one write-back.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerLoop` 落地形态。**`If` 只跑一次体，`Loop` 跑 `trip` 次，每一轮的输入是上一轮的输出——** '
+/// `lowerLoop` 落地形态。**`If` 只跑一次体，`Loop` 跑 `trip` 次，每一轮的输入是上一轮的输出——** '
 /// **这就是它与 `If` 的全部差别。**
 ///
 /// Syncs the concrete `lowerLoop`. **If runs the body once; Loop runs it `trip` times with each round's inputs being the previous round's outputs — that is the whole

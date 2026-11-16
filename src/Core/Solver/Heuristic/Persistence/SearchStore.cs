@@ -1,5 +1,4 @@
 // 搜索存储 / The search store.
-// 与固定 Kotlin （6559 B）对应。
 
 using System;
 using System.Collections.Generic;

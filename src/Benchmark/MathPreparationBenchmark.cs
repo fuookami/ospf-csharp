@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// 覆盖其中可移植的子集：`contraction`、`normalizeShared` /
 /// `normalizeFlat`、`matchingTraversal`、`boundedWorkerMap`。
 ///
-/// **四处明确不移植**（C# 侧没有对应入口，且不写"看起来等价"的替代）：
+/// **四处明确不实现**（不写"看起来等价"的替代）：
 ///
 /// 1. `strictGradient` / `exactGradient`：`CanonicalPolynomial.compileGradientCanonical`，C# 只有
 ///    `LinearPolynomial.CompileGradientLinear` / 二次版——**没有 canonical 幂次多项式的梯度编译**。

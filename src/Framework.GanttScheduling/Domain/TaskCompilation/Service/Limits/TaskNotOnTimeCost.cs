@@ -1,5 +1,4 @@
 // 不准时代价 / The not-on-time cost.
-// 与固定 Kotlin 对应，
 // 是 `TaskOnTimeReward` 的对偶。
 // ; the dual of the earlier `TaskOnTimeReward`.
 

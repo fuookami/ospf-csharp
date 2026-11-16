@@ -1,6 +1,4 @@
 // 本地日期偏移 / Local date offset.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System;
 

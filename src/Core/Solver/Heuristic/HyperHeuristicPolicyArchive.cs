@@ -1,5 +1,5 @@
 // 策略档案的导出与恢复 / Exporting and restoring the policy archive.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.exportPolicy` / `restorePolicy(saved)`。
+//  `HyperHeuristicRun.exportPolicy` / `restorePolicy(saved)`。
 // .
 
 using System;

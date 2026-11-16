@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 声明的 CP 特性不被支持时的目标报告 / The target report for declared-but-unsupported CP features.
 /// </summary>
 /// <remarks>
-/// **这是 `TargetFeasibilityAnalyzer.unsupportedTargetReport` 与 `analyzeActiveSources` 第一道门的移植。**
+/// **这是 `TargetFeasibilityAnalyzer.unsupportedTargetReport` 与 `analyzeActiveSources` 第一道门的实现。**
 ///
 /// **`TargetFixed` 必须是 `false`。** 这个字段的含义是"目标值已经被固定下来了"，
 /// **而这里恰恰相反：根本没算，目标值未知。** 把它留成默认的 `true` 会让下游以为

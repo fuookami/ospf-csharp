@@ -190,8 +190,8 @@ public static class RemoteWireJson {
             new RemoteNullableWireEnumConverter<TimeSensitivity>(
                 parse: RemoteWireEnums.ParseTimeSensitivity,
                 write: RemoteWireEnums.Write),
-            // 标识值类型必须写成裸字符串，与固定 Kotlin 的 value class 一致。
-            // Identifier value types must be written as bare strings to match the pinned Kotlin value classes.
+            // 标识值类型必须写成裸字符串，：值类型必须写成裸字符串。
+            // Identifier value types must be written as bare strings, since the wire shape is a plain stringes.
             new RemoteWireIdentifierConverterFactory(),
         },
     };

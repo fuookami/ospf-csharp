@@ -1,8 +1,8 @@
 // 物理量核心算子 / Quantity core operators.
-// 与固定 Kotlin 对应。C# 侧 `QuantityOps` 已提供 `PlusSafe`／`MinusSafe`／
+// 对应。C# 侧 `QuantityOps` 已提供 `PlusSafe`／`MinusSafe`／
 // `QuantityProduct`／`OrdSafe`／`MaxSafe`／`MinSafe`／`QuantityZeroOf`，`QuantityOperators` 已提供加减乘除与标量运算，
 // 因此本文件**只补确实缺失的部分**，不再重复定义已有能力。
-// The pinned Kotlin: . C#'s `QuantityOps` already provides
+// . C#'s `QuantityOps` already provides
 // `PlusSafe`/`MinusSafe`/`QuantityProduct`/`OrdSafe`/`MaxSafe`/`MinSafe`/`QuantityZeroOf` and `QuantityOperators`
 // already provides arithmetic and scalar operations, so this file **only adds what is genuinely missing**.
 

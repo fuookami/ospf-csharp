@@ -1,5 +1,4 @@
 // 建设变量组件 / Construction variable component.
-// 与固定 Kotlin （10137 字节）对应。
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 // 离散装载输入校验 / Discrete-loading input validation.
-// 与固定 Kotlin 的 `validate` 对应。
 // .
 
 using System.Collections.Generic;
@@ -28,7 +27,7 @@ namespace Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading;
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// **这里只移植 `validate`**，不移植 `register`：后者要把整个问题写成线性元模型
+/// **这里只实现 `validate`**，不实现 `register`：后者要把整个问题写成线性元模型
 /// （`BinVar`、`LinearPolynomial`、布局选择组约束），属于下一层的接线工作。
 ///
 /// **`validate` 本身价值很高**：它承担了 11 类校验，任何一条漏掉都会让
@@ -253,7 +252,7 @@ public sealed class DiscreteLoadingValidator<V>
     /// <param name="additionalWeights">附加重量，单位同问题 / Additional weights in the problem's unit.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// **这是整个模块最值得移植的一块**：它**不依赖求解器、不依赖元模型**，
+    /// **这是整个模块最值得实现的一块**：它**不依赖求解器、不依赖元模型**，
     /// 只用问题定义与归一化后的容量/重量，就能把"求解器说这个解可行"独立复核一遍。
     /// 没有它，求解器或其适配层的任何一处错误都会**直接变成对外结论**。
     ///

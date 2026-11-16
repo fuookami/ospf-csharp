@@ -1,5 +1,4 @@
 // 生物启发类更新算子 / Biologically-inspired update operators.
-// 与固定 Kotlin （11044 B）对应。
 
 using System;
 using System.Collections.Generic;

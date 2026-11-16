@@ -1,5 +1,4 @@
 // 小生境类更新算子 / Niche-flavoured update operators.
-// 与固定 Kotlin （8963 B）对应。
 
 using System;
 using System.Collections.Generic;

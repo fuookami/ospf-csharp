@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Proto;
 /// **字段号表必须与解析器的实际行为一致，而不是与注释一致** / The field table has to match the parser's behaviour, not its comments.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `ir_version` 处理：**结论是不按版本分支，** **理由是 protobuf 的字段号一旦发布不可改，新版本只追加字段。**
+/// `ir_version` 处理：**结论是不按版本分支，** **理由是 protobuf 的字段号一旦发布不可改，新版本只追加字段。**
 /// **这里把"我们依赖哪些字段号"写成表，并用一个真实模型证明它——** **表里的号若与代码不符，这个模型就读不出来。**
 ///
 /// Syncs the `ir_version` handling: **no version branch, because protobuf field numbers are immutable once published and a new version only appends fields.** This layer writes down

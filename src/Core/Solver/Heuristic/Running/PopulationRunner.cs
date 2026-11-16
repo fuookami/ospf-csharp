@@ -1,5 +1,4 @@
 // 种群运行器 / The population runner.
-// 与固定 Kotlin （7841 B）对应。
 
 using System;
 using System.Collections.Generic;

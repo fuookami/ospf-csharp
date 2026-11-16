@@ -1,5 +1,4 @@
 // 超启发式的算子绑定与工作单元装配 / Operator bindings and worker assembly for the hyper-heuristic.
-// 对应固定 Kotlin （47241 B）里 `open` 的装配段：
 // 每个算法一条分支问题、一条独立随机流、一组算子绑定、一个会话。
 // Assembly part: one branch problem, one independent random
 // stream, one set of operator bindings and one session per algorithm.

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing.Service;
 /// 将装箱结果转换为渲染 DTO / Converts packing results to rendering DTOs.
 /// </summary>
 /// <remarks>
-/// 移植（12325 B）的**装载计划产出**部分。
+/// 实现（12325 B）的**装载计划产出**部分。
 ///
 /// **修复前**：`ToSchema` 只产出两个 KPI（`bin_count` / `material_count`），**一条装载计划都没有**，
 /// 于是"渲染成功"与"渲染出空图"完全无法区分。

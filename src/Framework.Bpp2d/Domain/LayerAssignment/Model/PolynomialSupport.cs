@@ -1,6 +1,4 @@
 // 多项式构造辅助 / Polynomial construction helpers.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Number;

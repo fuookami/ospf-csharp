@@ -1,5 +1,4 @@
 // 最大完工时间的取值 / The value of the makespan.
-// 与固定 Kotlin 的 `register` 对应：
 // `extra` 分支用 `MinMaxFunction`，否则用 `MaxFunction`，两者都作用在 `estimateEndTime[task]` 上。
 // The `extra` branch uses
 // `MinMaxFunction`, otherwise `MaxFunction`, both over `estimateEndTime[task]`.

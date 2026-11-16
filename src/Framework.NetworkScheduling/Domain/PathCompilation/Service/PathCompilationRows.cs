@@ -1,5 +1,4 @@
 // 路径行边界管线 / Path row-bound pipeline.
-// 与固定 Kotlin （1708 字节）对应。
 
 using System;
 using System.Collections.Generic;

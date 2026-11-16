@@ -1,5 +1,4 @@
 // VRP 策略扩展点：弧可行性与路线成本 / VRP policy extensions: arc feasibility and route cost.
-// 与固定 Kotlin 、（54 行）对应。
 // And.
 
 using System;

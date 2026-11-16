@@ -129,7 +129,7 @@ internal sealed class ScipFarkasInfeasibilityAnalyzer : IFarkasInfeasibilityAnal
                     BoundSide.Upper));
             }
         }
-        // 证书成员同时列出被用到的变量界，与 Kotlin 侧 members 语义一致。 / Members also list the used variable bounds, matching the Kotlin member semantics.
+        // 证书成员同时列出被用到的变量界，与 侧 members 语义一致。 / Members also list the used variable bounds, matching the Kotlin member semantics.
         foreach (VariableBoundRef bound in bounds) {
             members.Add(new InfeasibilityMember.VariableBoundMember(bound));
         }

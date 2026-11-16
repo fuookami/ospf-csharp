@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Proto;
 /// **最小的 protobuf 线格式读取器** / A minimal protobuf wire-format reader.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 时的一个**有意的不同选择**。`onnx-protobuf_2.13` 把 `onnx.proto` 生成成 Kotlin 类；
+/// 时的一个**有意的不同选择**。`onnx-protobuf_2.13` 把 `onnx.proto` 生成成 Kotlin 类；
 /// C# 侧没有现成的 ONNX 模型包，两个选项是：
 ///
 /// **① 引用 `Google.Protobuf` 并从 `onnx.proto` 生成 C# 类**——**约三万行生成代码**，而本插件只读十来种字段；

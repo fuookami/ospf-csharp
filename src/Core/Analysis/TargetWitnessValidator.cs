@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// </summary>
 /// <remarks>
 /// **求解器说"可行"不等于"可行"**：这一步拿解出来的解逐条复核，**只要有一步不过，那个"可行"就不能写进报告。**
-/// 移植自 `TargetFeasibilityAnalyzer.validateTargetWitness`，五项检查按序执行。
+/// `TargetFeasibilityAnalyzer.validateTargetWitness`，五项检查按序执行。
 ///
 /// **A solver saying "feasible" is not feasibility**: this re-checks the solution it returned, item by item, and **if any check fails the word "feasible" must not reach the
 /// report.** Ported from `TargetFeasibilityAnalyzer.validateTargetWitness`; the five checks run in order.

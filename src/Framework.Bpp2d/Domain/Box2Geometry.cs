@@ -1,6 +1,6 @@
 // 二维包围盒几何 / 2D bounding box geometry.
-// 与固定 Kotlin 对应：在 `QuantityBox2` 之上提供装箱所需的包含与相交能力。
-// The pinned Kotlin: containment and intersection on top of
+// 在 `QuantityBox2` 之上提供装箱所需的包含与相交能力。
+// Containment and intersection on top of
 // `QuantityBox2`.
 
 using System;

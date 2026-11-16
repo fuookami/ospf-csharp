@@ -79,7 +79,7 @@ internal sealed record DeletionFilter(IReadOnlySet<int> Mis, IReadOnlySet<int> G
 /// Legacy linear IIS computation based on elastic and deletion filtering.
 /// </summary>
 /// <remarks>
-/// 与 Kotlin <c>computeLegacyIIS</c> 一致：先构造带二值指示列的弹性模型，依次只放开变量界松弛、只放开不等式与变量界
+/// 先构造带二值指示列的弹性模型，依次只放开变量界松弛、只放开不等式与变量界
 /// 松弛、放开全部松弛，三轮都不可行时改为逐个删除松弛的删除过滤。结果是原模型行列的子集，因此证据只是启发式的。
 /// It mirrors Kotlin <c>computeLegacyIIS</c>: build the elastic model with binary indicators, then relax bound slacks only,
 /// inequality and bound slacks, and finally every slack; when all three stay infeasible, switch to deletion filtering that
@@ -95,7 +95,7 @@ public static class LinearLegacyIisCompute {
     /// Compute a linear IIS model with the legacy elastic and deletion filtering.
     /// </summary>
     /// <remarks>
-    /// 弹性模型固定使用"至少 2 个非零松弛、阈值取 <see cref="IisConfig.SlackTolerance"/>"的指示约束，与 Kotlin 一致。
+    /// 弹性模型固定使用"至少 2 个非零松弛、阈值取 <see cref="IisConfig.SlackTolerance"/>"的指示约束，与 一致。
     /// The elastic model always carries the indicator constraints "at least 2 nonzero slacks with the
     /// <see cref="IisConfig.SlackTolerance"/> threshold", matching Kotlin.
     /// </remarks>

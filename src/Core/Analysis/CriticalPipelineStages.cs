@@ -28,7 +28,7 @@ public sealed record StageDecision(bool Runs, string? Reason)
 /// 关键约束分析流水线的阶段决策 / The stage decisions of the critical-constraint analysis pipeline.
 /// </summary>
 /// <remarks>
-/// 移植自 `CriticalConstraintAnalysisPipeline.analyze` 里每个阶段的"跑 / 不跑"三元判断。
+/// `CriticalConstraintAnalysisPipeline.analyze` 里每个阶段的"跑 / 不跑"三元判断。
 /// **真正求解的部分由调用方完成**，这一段只决定"这一步做不做、不做怎么说"。
 ///
 /// Ported from the run/skip triads at the head of each stage in `CriticalConstraintAnalysisPipeline.analyze`. **The solving belongs to the caller**; this part only decides whether a
@@ -167,7 +167,7 @@ public static class CriticalPipelineStages
     /// <param name="limit">上限 / The limit.</param>
     /// <returns>候选约束的顺序 / The candidate constraint order.</returns>
     /// <remarks>
-    /// **这是 `rankConstraintCandidates` 的移植。** 顺序只有一条规则：
+    /// **这是 `rankConstraintCandidates` 的实现。** 顺序只有一条规则：
     /// **有效性排序存在时它优先**，否则退到漏斗短名单，**两者都没有就是空。**
     ///
     /// **有效性优先是有意的**：漏斗只按对偶阈值分档，**而有效性排序是实测出来的**——

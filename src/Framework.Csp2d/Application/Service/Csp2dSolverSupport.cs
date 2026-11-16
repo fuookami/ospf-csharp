@@ -1,6 +1,5 @@
 // 二维套裁的装配与恢复：候选生成、主问题装配、解恢复 / Assembly and recovery: candidate generation, master assembly and solution recovery.
-// 与固定 Kotlin 的纯函数部分对应（求解器入口见 `Csp2dMilpSolver`/`Csp2dColumnGenerationSolver`）。
-// The pure-function part of the pinned Kotlin: .
+// 的纯函数部分对应（求解器入口见 `Csp2dMilpSolver`/`Csp2dColumnGenerationSolver`）。
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 // 分区到合格设施的显式归属组件 / Explicit partition assignments to eligible facilities.
-// 与固定 Kotlin （6822 字节）对应。
 
 using System;
 using System.Collections.Generic;

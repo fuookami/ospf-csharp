@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Error;
 /// **ONNX 插件的结构化错误** / The ONNX plugin's structured errors.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的（13 个变体）。**与"随便抛个异常"的差别在于上下文：**
+/// （13 个变体）。**与"随便抛个异常"的差别在于上下文：**
 /// **节点名、张量名、形状三者能拼回一条可定位的消息**——**一个只写"推理失败"的错误，在真实模型上等于没有信息。**
 ///
 /// 每个变体携带自己的 `ErrorCode`，让调用方既能按类别分派、也能取回结构化对象。

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **输入界 → 模型约束：闭区间，不是开区间** / Bounds become constraints, closed rather than open.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 里"选项的界 → 模型的界"这一步。**C# 侧变量的 `Range` 由类型常量给出、逐变量没有设置入口，**
+/// 里"选项的界 → 模型的界"这一步。**C# 侧变量的 `Range` 由类型常量给出、逐变量没有设置入口，**
 /// **所以界只能表达为约束——而这不是退路：求解器最终看到的就是约束。**
 ///
 /// Syncs the "options bounds → model bounds" step. **A C# variable's `Range` comes from the type's constants and has no per-variable setter, so bounds can only be

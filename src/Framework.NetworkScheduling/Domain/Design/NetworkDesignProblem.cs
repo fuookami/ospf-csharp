@@ -1,5 +1,4 @@
 // 网络建设问题数据层 / The data layer of a network design problem.
-// 与固定 Kotlin （5875 字节）的数据部分、 的
 // `NetworkConstructionSolution` 对应。
 // The data portion of the: and `NetworkConstructionSolution` from
 //.

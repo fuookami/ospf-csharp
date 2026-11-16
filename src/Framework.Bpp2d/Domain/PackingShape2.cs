@@ -1,7 +1,7 @@
 // 二维装载形状抽象 / 2D packing shape abstractions.
-// 与固定 Kotlin 对应。对应 BPP3D 的 `PackingShape3`（Cuboid + Cylinder），
+// 对应。对应 BPP3D 的 `PackingShape3`（Cuboid + Cylinder），
 // 二维侧提供矩形与圆形两种形状。
-// The pinned Kotlin: BPP3D's `PackingShape3` (Cuboid + Cylinder)
+// BPP3D's `PackingShape3` (Cuboid + Cylinder)
 // counterpart for 2D, with rectangle and circle shapes.
 //
 // 面积口径：`Area` 是**实际占用面积**（圆为 πr²，矩形为 w·h），`BoundingArea` 是**外接矩形面积**。两者在矩形上相等、
@@ -37,7 +37,7 @@ public enum PackingShape2Type {
 /// <remarks>
 /// 声明为抽象 record 而非接口 + 实现，使调用方可以穷尽分支而不需要 <c>else</c>——与sealed interface 同义。
 /// Declared as an abstract record rather than an interface plus implementations so callers can exhaust the branches
-/// without an <c>else</c>, matching its sealed interface.
+/// without an <c>else</c>, matching sealed interface.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 public abstract record PackingShape2<V>

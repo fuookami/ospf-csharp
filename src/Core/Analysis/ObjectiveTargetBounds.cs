@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 目标值到 CP 整数边界的精确映射 / The exact mapping from an objective target to a CP integer bound.
 /// </summary>
 /// <remarks>
-/// **这是 `TargetFeasibilityAnalyzer.targetIntegerBound` 的移植。**
+/// **这是 `TargetFeasibilityAnalyzer.targetIntegerBound` 的实现。**
 ///
 /// **舍入方向是全部价值所在：**
 ///

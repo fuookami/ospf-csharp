@@ -1,5 +1,4 @@
 // 搜索注册表 / The search registry.
-// 与固定 Kotlin （43259 B）的类骨架、组件字典、注册与查询方法、
 // 以及内建组件注册对应；算法的装配与策略查询留到后续批次。
 // The class skeleton, the component dictionaries, the register and
 // lookup methods, and the built-in component registrations. Algorithm assembly and the policy lookups follow in later batches.

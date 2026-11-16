@@ -1,5 +1,4 @@
 // 岛屿运行器 / The island runner.
-// 与固定 Kotlin （4493 B）对应。
 
 using System;
 using System.Collections.Generic;

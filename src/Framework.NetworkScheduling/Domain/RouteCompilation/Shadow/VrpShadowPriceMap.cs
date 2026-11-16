@@ -1,5 +1,4 @@
 // 路线编译影子价格键与映射 / Route-compilation shadow-price keys and map.
-// 与固定 Kotlin 、
 // （102 行）对应。
 // ,,.
 //

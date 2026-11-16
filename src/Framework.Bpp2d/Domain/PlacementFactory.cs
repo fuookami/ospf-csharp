@@ -1,5 +1,4 @@
 // 物品域：放置工厂与物品合并 / Item domain: placement factory and item merger.
-// 与固定 Kotlin 与（84 行）对应。
 // And.
 
 using System;

@@ -1,6 +1,4 @@
 // 分区列生成的服务循环 / The partition column generation service loop.
-// 与固定 Kotlin 的 LP 阶段对应。
-// The LP phase of the pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

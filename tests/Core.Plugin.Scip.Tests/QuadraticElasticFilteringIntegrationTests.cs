@@ -22,8 +22,8 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Scip;
 /// **二次弹性过滤的三层递进，用真实 SCIP 验证** / The three-tier quadratic elastic filter, verified against real SCIP.
 /// </summary>
 /// <remarks>
-/// **— 我一直以"无求解器"为由拒绝移植这三个函数。 证明那个前提是错的**，
-/// 这里据此把 `RelaxSpecificComponents` 与 `PerformElasticFiltering` 移植过来。
+/// **— 我一直以"无求解器"为由拒绝实现这三个函数。 证明那个前提是错的**，
+/// 这里据此把 `RelaxSpecificComponents` 与 `PerformElasticFiltering` 实现过来。
 ///
 /// 判据用的模型（两层递进的关键）：
 ///

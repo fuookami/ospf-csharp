@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 冲突解释的纯函数部分 / The pure part of conflict explanation.
 /// </summary>
 /// <remarks>
-/// 移植自 `ConflictAnalyzer` 的 `sourceOf` 与 `groupSummaries`。**两个种子策略（原生 IIS、假设式）没搬。**
+/// `ConflictAnalyzer` 的 `sourceOf` 与 `groupSummaries`。**两个种子策略（原生 IIS、假设式）没搬。**
 ///
 /// Ported from `sourceOf` and `groupSummaries` of `ConflictAnalyzer`. **The two seed strategies (native IIS, assumption-based) are not implemented.**
 /// </remarks>

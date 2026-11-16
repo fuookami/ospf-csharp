@@ -1,5 +1,4 @@
 // 超启发式配置 / Hyper-heuristic configuration.
-// 与固定 Kotlin （8838 B）对应。
 
 using System;
 using System.Collections.Generic;

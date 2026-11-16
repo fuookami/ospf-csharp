@@ -1,6 +1,4 @@
 // 一维装箱领域模型 / One-dimensional packing domain model.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Concept;

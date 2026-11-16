@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **两个一次式相乘：合并同类项必须做对** / Two first-degree forms multiplied: merging like terms has to be right.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `Mul`／`MatMul` 在 `Quadratic` 模式下的那一半。**一次域里 `Mul` 只允许"变量乘常数"，'
+/// `Mul`／`MatMul` 在 `Quadratic` 模式下的那一半。**一次域里 `Mul` 只允许"变量乘常数"，'
 /// **而两个含变量的式子相乘不再是多项式一次——硬塞进一次域只能得到一个错误的结果，而它照常可解。**
 ///
 /// Syncs the `Quadratic`-mode half of `Mul` and `MatMul`. **In the first-degree domain Mul only allows a variable times a constant, while two forms that both carry variables

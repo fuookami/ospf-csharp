@@ -1,5 +1,4 @@
 // 求解器错误规范化 / Solver error normalization.
-// 与固定 Kotlin 
 // 里的 `errorCodeErrorOf` / `errorCodeErrorsOf` 对应。
 // .
 

@@ -1,5 +1,4 @@
 // 简单块与复杂块生成 / Simple and complex block generation.
-// 与固定 Kotlin 与
 //（106 行）对应。
 // And.
 //

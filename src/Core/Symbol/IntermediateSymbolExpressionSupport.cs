@@ -89,7 +89,6 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     /// 是否以中间变量实现（默认否）/ Whether the symbol is realized through an intermediate variable (default false).
     /// </summary>
     /// <remarks>
-    /// 同步 Kotlin 2e72a17c：开启后，约束与目标引用一个辅助变量，另加一条 `aux == 定义式` 的等式约束，
     /// 而不是把定义表达式原地展开到每处使用。须在符号加入模型之前设置。
     ///
     /// Syncs inlining the definition at every use site. Set it before the symbol is added to a model.
@@ -335,7 +334,7 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
 
     /// <summary>是否以中间变量实现（默认否）/ Whether the symbol is realized through an intermediate variable (default false).</summary>
     /// <remarks>
-    /// 同步 Kotlin 2e72a17c，与 LinearExpressionSymbol 的同名开关一致；开启后用 RealizationConstraint 取回等式加入模型。
+    /// 与 LinearExpressionSymbol 的同名开关一致；开启后用 RealizationConstraint 取回等式加入模型。
     /// Syncs </remarks>
     public bool UseIntermediateVariable { get; set; }
 

@@ -1,5 +1,4 @@
 // 通用冲突对枚举 / Generic conflicting-pair enumeration.
-// 与固定 Kotlin 的
 // 双循环为每个执行器上的每对任务生成冲突项：`conflict(executor, tasks[i], tasks[j])`。
 // `TaskTimeConflictConstraint` 是它在时间维度上的特例。
 //

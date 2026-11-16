@@ -1,5 +1,4 @@
 // 决策的归并与观测 / Merging and observing one decision.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.commitOutcome(outcome)`：
 // 归并候选、算奖励、构造 `SelectionTransition`、交给选择策略观测。
 // Merge the candidates, compute the
 // reward, build the `SelectionTransition` and hand it to the selection policy.

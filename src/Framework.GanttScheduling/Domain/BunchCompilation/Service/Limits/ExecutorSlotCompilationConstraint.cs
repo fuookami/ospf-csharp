@@ -1,6 +1,4 @@
 // 执行器-时隙编译约束 / Executor-slot compilation constraint.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

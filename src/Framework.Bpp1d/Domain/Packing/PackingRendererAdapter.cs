@@ -1,6 +1,4 @@
 // 一维渲染适配 / One-dimensional render adapter.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Infrastructure;

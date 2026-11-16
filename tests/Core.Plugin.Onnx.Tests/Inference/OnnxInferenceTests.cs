@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Inference;
 /// **推理层：真跑一个模型，而不是“接口有了”** / The inference layer actually runs a model.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxInference`。**判据用运行时真跑一个手工编码的最小模型（`z = x + y`），与手算对照——**
+/// `OnnxInference`。**判据用运行时真跑一个手工编码的最小模型（`z = x + y`），与手算对照——**
 /// **“包装了运行时”和“真的算对了”是两件事，只有后者值得写成判据。**
 ///
 /// Syncs `OnnxInference`. **The criteria actually run a hand-encoded minimal model and compare with hand arithmetic — “the runtime is wrapped” and “it computed the

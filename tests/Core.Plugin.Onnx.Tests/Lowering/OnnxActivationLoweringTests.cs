@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **精确激活算子的代数化简** / Algebraic simplification of the exact activations.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation` 精确那一半。**判据钉的是"哪些情形可以化简成纯仿射"，而这关系到正确性：**
+/// `OnnxActivation` 精确那一半。**判据钉的是"哪些情形可以化简成纯仿射"，而这关系到正确性：**
 /// **化简判错会让模型多加约束（对偶值不可解释），或不化简而引入一个从不触发的分段结构。**
 ///
 /// Syncs the exact half of `OnnxActivation`. **The criteria pin which cases collapse to pure affine form, and that is about correctness: a wrong judgement adds

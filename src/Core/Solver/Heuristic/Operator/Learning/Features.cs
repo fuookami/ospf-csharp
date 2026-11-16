@@ -1,5 +1,4 @@
 // 搜索特征与奖励策略 / Search features and reward policies.
-// 与固定 Kotlin （5029 B）与（4868 B）对应。
 // And (4868 B).
 
 using System;

@@ -45,7 +45,7 @@ public sealed class LocalSearchUpdateTests {
         }
     }
 
-    /// <summary>列出全部已移植的局部搜索算子 / Enumerate every implemented local-search operator.</summary>
+    /// <summary>列出全部已实现的局部搜索算子 / Enumerate every implemented local-search operator.</summary>
     private static IEnumerable<ISolutionUpdate> AllUpdates() => new ISolutionUpdate[] {
         new MutationUpdate(new UniformMutation()),
         new NeighborhoodUpdate(new RandomPerturbation()),

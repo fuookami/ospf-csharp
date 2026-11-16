@@ -1,5 +1,4 @@
 // 路径编译上下文 / Path compilation context.
-// 与固定 Kotlin （5133 字节）中的上下文类对应。
 // The context class of the: .
 
 using System;

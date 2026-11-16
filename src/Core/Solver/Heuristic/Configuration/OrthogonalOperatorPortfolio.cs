@@ -1,5 +1,4 @@
 // 正交算子组合 / The orthogonal operator portfolio.
-// 与固定 Kotlin （2996 B）对应。
 
 using System;
 using System.Collections.Generic;

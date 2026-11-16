@@ -355,7 +355,7 @@ internal static class ScipLinearNativeSolver {
 
     /// <summary>
     /// 对偶提取模式：关闭预处理与启发式并固定单线程，使原始约束保留自己的 LP 行，从而可按行顺序读取逐行对偶；
-    /// 与 Kotlin 的 LP 配置一致（Kotlin 在 configuration 回调里做同样的设置）。
+    /// LP 配置在 `configuration` 回调里设置。
     /// Dual extraction mode: presolving and heuristics are off with a single thread, so every original constraint keeps
     /// its own LP row and row duals can be read in row order; this matches the Kotlin LP configuration, which applies the
     /// same settings in its configuration callback.

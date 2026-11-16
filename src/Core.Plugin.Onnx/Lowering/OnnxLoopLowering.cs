@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **`Loop` 真的展开：同一条接线，多一层"把上一轮结果写回种子"** / Loop unrolled: the same wiring plus one step.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerLoop` 落地形态。**`If` 只跑一次体，`Loop` 跑 `trip` 次，而每一轮的输入是上一轮的输出——** '
+/// `lowerLoop` 落地形态。**`If` 只跑一次体，`Loop` 跑 `trip` 次，而每一轮的输入是上一轮的输出——** '
 /// **这就是它与 `If` 的全部差别，接线完全一样：压作用域、灌种子、走体、弹作用域。**
 ///
 /// **每一轮都必须用干净的作用域：** **若复用上一层，第二轮会看见第一轮的中间结果，** **而那种错不会报错——只是某一项用了上一轮的值，'

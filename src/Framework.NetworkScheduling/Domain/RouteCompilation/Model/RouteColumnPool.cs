@@ -1,5 +1,4 @@
 // 路线列池 / Route column pool.
-// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

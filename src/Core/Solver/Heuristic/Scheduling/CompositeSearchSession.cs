@@ -1,5 +1,4 @@
 // 复合搜索会话 / The composite search session.
-// 与固定 Kotlin （9339 B）对应。
 
 using System;
 using System.Collections.Generic;

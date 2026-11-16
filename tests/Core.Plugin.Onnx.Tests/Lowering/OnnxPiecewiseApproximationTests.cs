@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **分段近似：切分策略是独立可验的数学** / Segmentation is independently verifiable mathematics.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 里分段那一半。**判据钉三件容易静默出错的事：**
+/// 里分段那一半。**判据钉三件容易静默出错的事：**
 /// **① 断点均匀且端点精确落界；② 近似在每个断点上与实际函数相等；③ "形式有限、实际无界"的边界被拒绝。**
 ///
 /// Syncs the piecewise half of. **Three things that fail silently are pinned: breakpoints are uniform and land exactly on the bounds,

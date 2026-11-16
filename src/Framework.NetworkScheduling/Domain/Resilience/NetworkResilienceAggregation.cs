@@ -1,5 +1,4 @@
 // 韧性域：场景与连通聚合 / Resilience domain: the scenario and connectivity aggregation.
-// 与固定 Kotlin （15146 字节）对应。
 
 using System;
 using System.Collections.Generic;

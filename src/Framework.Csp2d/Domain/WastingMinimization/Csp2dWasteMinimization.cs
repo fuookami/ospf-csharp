@@ -1,6 +1,4 @@
 // 余料最小化与余料汇总 / Waste minimisation and remnant summarisation.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;

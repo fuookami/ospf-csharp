@@ -1,5 +1,4 @@
 // 换型时间的读取 / Reading a switch time back.
-// 与固定 Kotlin 的 `switchTimeQuantity` 对应：
 // `evaluate(...) ?: switchTime[from, to].toLinearPolynomial.constant`。
 // `evaluate(...) ?: switchTime[from, to].toLinearPolynomial.constant`.
 

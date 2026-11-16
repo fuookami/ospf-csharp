@@ -1,5 +1,4 @@
 // Branch-and-Price 应用模型 / Branch-and-Price application models.
-// 与固定 Kotlin （2018 字节）、（1008 字节）、
 //（521 字节）、（1599 字节）对应。
 // ,,
 // and.

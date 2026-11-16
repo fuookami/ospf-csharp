@@ -1,5 +1,4 @@
 // VRP 距离计算 / VRP distance calculation.
-// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

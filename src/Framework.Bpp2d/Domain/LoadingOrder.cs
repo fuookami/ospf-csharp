@@ -1,5 +1,4 @@
 // 装箱上下文与装载顺序 / Packing context and loading order.
-// 与固定 Kotlin 与
 // 对应。
 // And.
 

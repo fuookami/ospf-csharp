@@ -1,5 +1,5 @@
 // 一次派发的执行 / Executing one dispatch.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.execute(dispatch)`。
+// `HyperHeuristicRun.execute(dispatch)`。
 // .
 
 using System;

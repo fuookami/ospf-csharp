@@ -1,5 +1,4 @@
 // 自动接受与自适应接受 / Automatic and adaptive acceptance.
-// 与固定 Kotlin （4164 B）与（4765 B）对应。
 // And (4765 B).
 
 using System;

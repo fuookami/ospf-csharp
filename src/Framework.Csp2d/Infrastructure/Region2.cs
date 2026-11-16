@@ -1,6 +1,4 @@
 // 二维裁切区域 / A two-dimensional cutting region.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

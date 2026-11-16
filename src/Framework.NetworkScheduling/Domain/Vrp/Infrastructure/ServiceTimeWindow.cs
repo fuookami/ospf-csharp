@@ -1,5 +1,4 @@
 // VRPTW 基础设施：行驶时间与服务时间窗 / VRPTW infrastructure: travel time and service time window.
-// 与固定 Kotlin 、（41 行）对应。
 // And.
 //
 // **时间类型的映射**：`kotlin.time.Duration` 与 `kotlin.time.Instant`，C# 侧用标准库 `TimeSpan` 与

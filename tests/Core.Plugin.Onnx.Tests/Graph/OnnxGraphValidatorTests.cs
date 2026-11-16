@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Graph;
 /// **图的可用性：验，不是排** / Usability is validated, not sorted.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `parseGraphBody`。**ONNX 要求节点已按拓扑序排列，所以这里只验。** **排一遍会把次序错乱的图悄悄"修好"，**
+/// `parseGraphBody`。**ONNX 要求节点已按拓扑序排列，所以这里只验。** **排一遍会把次序错乱的图悄悄"修好"，**
 /// **于是模型算出的东西与导出时想表达的不一致，而两条路径都"成功"了。**
 ///
 /// Syncs `parseGraphBody`. **ONNX requires topological order, so this only validates. Sorting would quietly "fix" a mis-ordered graph, and what the model computes

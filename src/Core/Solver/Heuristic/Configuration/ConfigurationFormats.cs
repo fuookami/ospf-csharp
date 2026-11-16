@@ -1,5 +1,4 @@
 // 配置格式 / Configuration formats.
-// 与固定 Kotlin （7389 B）的 **JSON 路径**对应。
 // **JSON path**.
 
 using System;

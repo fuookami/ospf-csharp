@@ -1,5 +1,4 @@
 // 韧性域：连通要求与故障场景 / Resilience domain: connectivity requirements and failure scenarios.
-// 与固定 Kotlin （6557 字节）中的要求与场景类型对应。
 // The requirement and scenario types of the: .
 
 using System;

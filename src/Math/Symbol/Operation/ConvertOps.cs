@@ -34,7 +34,7 @@ public static class MonomialConvertOps {
 
     /// <summary>
     /// 尝试将二次单项式降阶为线性单项式 / Try to demote quadratic monomial to linear.
-    /// 返回 null 而非 Result（Kotlin toLinearMonomialOrNull 对应）。
+    /// 返回 null 而非 Result。
     /// </summary>
     /// <returns>线性单项式，若为真正的二次项则返回 null / Linear monomial, or null if truly quadratic.</returns>
     public static LinearMonomial<T>? ToLinearMonomialOrNull<T>(this QuadraticMonomial<T> m)
@@ -62,7 +62,7 @@ public static class MonomialConvertOps {
 
     /// <summary>
     /// 尝试将规范单项式降阶为线性单项式 / Try to demote canonical monomial to linear.
-    /// 返回 null 而非 Result（Kotlin toLinearMonomialOrNull 对应）。
+    /// 返回 null 而非 Result。
     /// </summary>
     /// <returns>线性单项式，若次数不为 1 则返回 null / Linear monomial, or null if degree is not 1.</returns>
     public static LinearMonomial<T>? ToLinearMonomialOrNull<T>(this CanonicalMonomial<T> m)
@@ -82,7 +82,7 @@ public static class MonomialConvertOps {
 
     /// <summary>
     /// 尝试将规范单项式降阶为二次单项式 / Try to demote canonical monomial to quadratic.
-    /// 返回 null 而非 Result（Kotlin toQuadraticMonomialOrNull 对应）。
+    /// 返回 null 而非 Result。
     /// </summary>
     /// <returns>二次单项式，若次数超过 2 则返回 null / Quadratic monomial, or null if degree exceeds 2.</returns>
     public static QuadraticMonomial<T>? ToQuadraticMonomialOrNull<T>(this CanonicalMonomial<T> m)

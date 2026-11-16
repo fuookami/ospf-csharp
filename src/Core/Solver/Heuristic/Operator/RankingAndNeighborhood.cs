@@ -1,5 +1,4 @@
 // 排序、适应度评估与邻域算子 / Ranking, fitness evaluation and neighbourhood operators.
-// 与固定 Kotlin 、
 // 对应。
 // , and.
 

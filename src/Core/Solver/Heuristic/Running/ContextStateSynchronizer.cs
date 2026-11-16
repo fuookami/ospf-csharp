@@ -1,5 +1,4 @@
 // 上下文状态同步器 / The cross-context state synchroniser.
-// 与固定 Kotlin （7769 B）对应。
 
 using System;
 using System.Collections.Generic;

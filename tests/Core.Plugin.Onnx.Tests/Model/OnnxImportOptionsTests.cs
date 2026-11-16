@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Model;
 /// **导入选项是"能不能表达"的边界，不是调参** / Import options bound what is expressible, they do not tune.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxImportOptions`。**每一条选项错了的表现都是"模型跑不通"或更糟——"跑通了但是另一个模型"。**
+/// `OnnxImportOptions`。**每一条选项错了的表现都是"模型跑不通"或更糟——"跑通了但是另一个模型"。**
 ///
 /// Syncs `OnnxImportOptions`. **Every wrong option shows up as "the model does not run" or worse, "it runs and it is a different model".**
 /// </remarks>

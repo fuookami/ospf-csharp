@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 冲突分析的前置门控 / The preflight gates for conflict analysis.
 /// </summary>
 /// <remarks>
-/// **这是 `ConflictAnalyzer.analyze(session, target, options)` 前三道门控的移植。**
+/// **这是 `ConflictAnalyzer.analyze(session, target, options)` 的前三道门控。**
 ///
 /// 三道门的顺序是**刻意**的：
 ///
@@ -88,7 +88,7 @@ public static class ConflictAnalysisPreflight
     /// <param name="matrix">能力矩阵 / The capability matrix.</param>
     /// <returns>拒绝的原因，或可用的抽取层次 / The refusal, or the usable extraction tier.</returns>
     /// <remarks>
-    /// **这是 `ConflictAnalyzer.analyze(snapshot, target, options, capabilityMatrix)` 前三道门控的移植。**
+    /// **这是 `ConflictAnalyzer.analyze(snapshot, target, options, capabilityMatrix)` 的前三道门控。**
     ///
     /// **顺序不能换：先查选项，再查快照，最后才看能力层次。**
     ///

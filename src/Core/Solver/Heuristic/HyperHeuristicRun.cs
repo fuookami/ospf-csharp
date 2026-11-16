@@ -1,5 +1,4 @@
 // 超启发式运行 / The hyper-heuristic run.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun` 的单线程主体：
 // 选动作 → 分配额度 → 执行 → 归并 → 记账 → 决策，加上 `run` 循环与 `result`。
 // Single-threaded body: pick an action, allocate an
 // allowance, execute, merge, account, decide — plus the `run` loop and `result`.

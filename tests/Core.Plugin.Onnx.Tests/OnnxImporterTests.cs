@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests;
 /// **单一入口：步骤次序本身就是契约** / The single entry point, where the order is the contract.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxFunctionalModel` 主干：**解析 → 图校验 → 前置检查 → 界解析 → 仿射求值。**
+/// `OnnxFunctionalModel` 主干：**解析 → 图校验 → 前置检查 → 界解析 → 仿射求值。**
 /// **同一份坏模型可能同时触发三处错误，报告哪一处决定了调用方能否一次改对**——所以判据不只验"会不会失败"，还验"先报哪一处"。
 ///
 /// Syncs the trunk: **parse → graph validation → preflight → bounds → affine evaluation.** **One bad model can trip three checks at once, and which one is reported

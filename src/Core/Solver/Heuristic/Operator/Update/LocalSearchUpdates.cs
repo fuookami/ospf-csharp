@@ -1,5 +1,4 @@
 // 局部搜索更新算子（此前）/ Local-search update operators (first set).
-// 与固定 Kotlin （11735 B）的前三个实现对应。
 // The first three implementations of the: .
 
 using System;

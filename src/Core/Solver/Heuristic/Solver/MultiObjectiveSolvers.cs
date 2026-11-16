@@ -1,5 +1,4 @@
 // 多目标求解器 / The multi-objective solvers.
-// 与固定 Kotlin （6491 B）对应。
 
 using System;
 using System.Collections.Generic;

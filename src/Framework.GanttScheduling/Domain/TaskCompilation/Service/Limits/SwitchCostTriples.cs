@@ -1,5 +1,4 @@
 // 换型代价的三元组枚举 / Triple enumeration for switch cost.
-// 与固定 Kotlin 的
 // 三重循环：每个执行器、每对任务各一条开关代价项。
 // A triple loop: one switch-cost term per executor and per ordered task pair.
 

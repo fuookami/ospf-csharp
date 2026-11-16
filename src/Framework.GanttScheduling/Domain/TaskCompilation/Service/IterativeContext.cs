@@ -1,5 +1,4 @@
 // 迭代上下文的两阶段注册 / Two-phase registration of the iterative context.
-// 与固定 Kotlin 的 `register`
 // 与 `columnAmount` 对应。其余方法全是纯转发，逻辑在 `IterativeTaskCompilationAggregation`。
 // Mirrors `register` and `columnAmount`'s. Everything else there is pure
 // forwarding; the logic lives in `IterativeTaskCompilationAggregation`.

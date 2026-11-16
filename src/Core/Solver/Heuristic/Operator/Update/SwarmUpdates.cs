@@ -1,5 +1,4 @@
 // 群智能类更新算子 / Swarm-intelligence update operators.
-// 与固定 Kotlin （7617 B）对应。
 
 using System;
 using System.Collections.Generic;

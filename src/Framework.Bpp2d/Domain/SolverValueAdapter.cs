@@ -1,5 +1,4 @@
 // 求解器数值适配 / Solver value adapter.
-// 与固定 Kotlin 对应。
 //
 // `Bpp2dSolverAmount` 已在 earlier 随 `LayerAssignmentMath` 落地，这里补齐其余三项并把四个函数归到同一个静态类，
 // 便于调用方按心智模型找到它们。

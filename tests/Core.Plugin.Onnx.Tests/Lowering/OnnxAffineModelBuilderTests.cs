@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **仿射多项式 → 线性模型：变量与目标是两份独立的真相** / Assembling a polynomial into a linear model.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxFunctionalModel` 里"仿射目标 → 线性模型"那一小段。**覆盖范围明确有限：只有仿射链。**
+/// `OnnxFunctionalModel` 里"仿射目标 → 线性模型"那一小段。**覆盖范围明确有限：只有仿射链。**
 ///
 /// Syncs the "affine objective → linear model" fragment. **Coverage is deliberately narrow: affine chains only.**
 /// </remarks>

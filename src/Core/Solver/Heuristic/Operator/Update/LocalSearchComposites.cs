@@ -1,5 +1,4 @@
 // 局部搜索更新算子（此前：模式搜索与组合器）/ Local-search update operators (pattern search and composites).
-// 与固定 Kotlin （11735 B）的后四个实现对应。
 // The last four implementations of the: .
 
 using System;

@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **只改形状、不改表达式的那组算子** / The operators that change the shape and leave the expression alone.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxShapeOperators` 在逐节点求值里的那一半。**这一组算子的共同点是"数值一个都不动"：** '
+/// `OnnxShapeOperators` 在逐节点求值里的那一半。**这一组算子的共同点是"数值一个都不动"：** '
 /// **`Reshape`／`Transpose`／`Flatten`／`Squeeze`／`Unsqueeze` 只是换了个说法，而仿射表达式本身与形状无关。**
 ///
 /// **正因为"数值不动"，它们的错最容易漏：** **元素个数对不上时不会报错，只是后面某个算子按错的维度去接，**

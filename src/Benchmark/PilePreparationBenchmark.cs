@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// 对内置货物的真实堆叠入口计时，不复制算法 / Time the production pile entry point without replicating its algorithm.
 /// </summary>
 /// <remarks>
-/// 但**仓库内的 C# `ItemMerger.MergePiles` 是简化移植**：
+/// 但**这里的 `ItemMerger.MergePiles` 是简化实现**：
 /// 它只比较底面尺寸与总高，**不读 `PackageAttribute.MaxLayer`、也不读 `restWeight`**。因此 `Scenario` 参数在 C# 侧
 /// 只改变夹具（层数上限 1 或 4），**对被测路径没有影响**——这一点由 `PilePreparationBenchmarkTests` 显式断言，
 /// 而不是假装场景区分有效。真实分层合并仍列 P9 缺口。

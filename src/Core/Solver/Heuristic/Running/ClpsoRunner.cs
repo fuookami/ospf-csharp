@@ -1,5 +1,4 @@
 // 综合学习粒子群运行器 / The comprehensive-learning particle-swarm runner.
-// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

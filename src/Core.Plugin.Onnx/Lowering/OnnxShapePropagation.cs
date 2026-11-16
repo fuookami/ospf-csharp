@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **沿节点推形状**：没有声明形状的张量也能知道它有几个元素 / Inferring shapes along the nodes, so an undeclared tensor still tells how many elements it holds.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `materializeShapes`：**降阶之前先把形状补齐，** **因为"这个张量有几个元素"决定了后面每一步能不能按元素走。**
+/// `materializeShapes`：**降阶之前先把形状补齐，** **因为"这个张量有几个元素"决定了后面每一步能不能按元素走。**
 ///
 /// **为什么需要它：** **仿射链只看节点、不看形状。** **输出没有声明形状时，它把一个三元素张量当成一个数，而导入照样成功——**
 /// **调用方拿到的是"看起来没问题"的结果。** **这一层把元素个数推出来，那条路就堵上了。**

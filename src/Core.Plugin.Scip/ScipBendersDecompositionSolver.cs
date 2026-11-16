@@ -283,7 +283,7 @@ public sealed class ScipBendersDecompositionSolver : Framework.Solver.IBendersDe
         }
 
         if (outcome.Report.ProblemStatus == ProblemStatus.Infeasible) {
-            // 与 Kotlin 一致：不可行子问题的 Farkas 乘子来自显式 Farkas 对偶模型，而不是原生逐行乘子。
+            // 不可行子问题的 Farkas 乘子来自显式 Farkas 对偶模型，而不是原生逐行乘子。
             // Like Kotlin: Farkas multipliers for the infeasible sub-problem come from the explicit Farkas dual model,
             // not from native per-row multipliers.
             Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> farkasDuals =

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 取消激活必须改变派生模型 / Deactivation has to change the derived model.
 /// </summary>
 /// <remarks>
-/// **这是 `activeDomains` + `rebindExpression` 的移植，而 C# 侧此前两者都没有。**
+/// **这是 `activeDomains` + `rebindExpression` 的实现，而 C# 侧此前两者都没有。**
 ///
 /// **`EffectiveDomain.Compute` 此后就被判据覆盖，却一个调用方都没有**——
 /// **类型齐了、判据齐了，而删除复验的输入从来没被它改过。**

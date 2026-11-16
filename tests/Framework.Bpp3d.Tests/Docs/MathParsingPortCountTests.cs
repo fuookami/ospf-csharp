@@ -149,8 +149,13 @@ public class MathParsingPortCountTests
             //
             // **26: the matrix dropped the batch-by-batch narration, which took those sentences claiming "N criteria" with it. The criterion is not relaxed — it still requires every count
             // claim to be known — the code just moved with the document.**
-            27,
-            "27 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
+            // **22：** **这一轮把"某一步补了什么"的进度表从矩阵里删掉了**，那些行里顺带写着的"N 条判据"
+            // 也一并消失。**判据不是要求"矩阵里只能有 22 句"，而是"每多一句都得有人知道"。**
+            //
+            // **22: the progress table was removed from the matrix, taking the "N criteria" sentences those rows carried with it. The criterion
+            // does not mean "the matrix may hold only 22 such sentences"; it means every new one has to be noticed.**
+            22,
+            "22 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
             + "this note stops describing reality");
     }
 

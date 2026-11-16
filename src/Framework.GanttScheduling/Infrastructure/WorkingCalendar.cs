@@ -18,7 +18,7 @@ public delegate Quantity<V> CalendarDurationQuantity<V>(V value, PhysicalUnit un
 
 /// <summary>
 /// 工作日历，管理不可用时间和实际时间计算 / Working calendar managing unavailable times and actual time calculations.
-/// 从 kotlin WorkingCalendar.kt WorkingCalendar 类移植。Ported from kotlin WorkingCalendar.kt WorkingCalendar class.
+/// 从 kotlin WorkingCalendar.kt WorkingCalendar 类实现。Ported from kotlin WorkingCalendar.kt WorkingCalendar class.
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 public class WorkingCalendar<V> where V : struct, IRealNumber<V> {

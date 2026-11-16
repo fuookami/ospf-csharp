@@ -1,5 +1,4 @@
 // 离散装载解与其独立复核 / Discrete-loading solution and its solver-independent verification.
-// 与固定 Kotlin 的 `verify` 对应。
 // .
 
 using System.Collections.Generic;

@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Proto;
 /// **本插件依赖的字段号，以及"为什么不需要按版本分支"** / The field numbers this plugin relies on, and why no version branch is needed.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `ir_version` 处理方式。**结论是**不分支**，理由不是"懒得写"，而是 protobuf 的规则本身：**
+/// `ir_version` 处理方式。**结论是**不分支**，理由不是"懒得写"，而是 protobuf 的规则本身：**
 /// **字段号一旦发布就不可改，** **新版本只**追加字段**，不会给既有字段换号。**
 ///
 /// **于是"按版本分支"这件事没有对象：** **同一个字段号在任何版本里都是同一个含义。** '

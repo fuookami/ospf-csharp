@@ -1,5 +1,4 @@
 // 渲染 DTO 与装箱渲染适配 / Render DTOs and the packing render adapter.
-// 与固定 Kotlin 与
 //（147 行）对应。
 // And.
 //

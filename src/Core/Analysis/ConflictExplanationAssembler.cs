@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 冲突解释的组装 / Assembling a conflict explanation.
 /// </summary>
 /// <remarks>
-/// 移植自 `ConflictAnalyzer.analyze` 的收尾部分：把已求出的可行性结果与删除收缩结论拼成一份 `ConflictExplanation`。
+/// `ConflictAnalyzer.analyze` 的收尾部分：把已求出的可行性结果与删除收缩结论拼成一份 `ConflictExplanation`。
 /// **求解与复验由调用方完成**，这一段只负责"怎么说"。
 ///
 /// Ported from the tail of `ConflictAnalyzer.analyze`: it turns the computed feasibility and the deletion-shrink conclusion into a `ConflictExplanation`. **The solve and the checks

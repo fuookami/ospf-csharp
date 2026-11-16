@@ -1,5 +1,4 @@
 // 网络结构与设施分区问题 / Network-structure and facility-partition problem.
-// 与固定 Kotlin （3489 字节）对应。
 
 using System;
 using System.Collections.Generic;

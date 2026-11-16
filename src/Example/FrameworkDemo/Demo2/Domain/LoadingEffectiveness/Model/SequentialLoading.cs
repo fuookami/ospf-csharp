@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// </remarks>
 public sealed class SequentialLoading
 {
-    /// <summary>浮点边界余量：与`NONZERO_TOLERANCE` 一致 / The floating-point margin, matching its `NONZERO_TOLERANCE`.</summary>
+    /// <summary>浮点边界余量：与`NONZERO_TOLERANCE` 一致 / The floating-point margin, matching `NONZERO_TOLERANCE`.</summary>
     private const double NonzeroTolerance = 1e-10;
 
     private readonly IReadOnlyList<Item> _items;

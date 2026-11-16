@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **`Scan` 的展开契约：与 `Loop` 同构，多一个状态量** / The Scan contract: like Loop, plus a carried state.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph.lowerScan`。**`Scan` 与 `Loop` 的差别不在"重复"，而在"重复什么带过去"：**
+/// `OnnxSubgraph.lowerScan`。**`Scan` 与 `Loop` 的差别不在"重复"，而在"重复什么带过去"：**
 /// **`Loop` 带的是它自己声明的累加器；** **`Scan` 带的是**状态量**（state），而扫描长度来自某个输入的首维，不是节点属性。**
 ///
 /// **那个首维是最容易读错的地方：** **扫描长度不在 `Scan` 的节点上说，却在一个输入张量的形状里。** '

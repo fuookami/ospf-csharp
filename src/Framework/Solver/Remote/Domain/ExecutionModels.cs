@@ -31,9 +31,9 @@ public sealed record ExecutionHandle(
 /// 切片结果 / Slice result.
 /// </summary>
 /// <remarks>
-/// 字段按固定 Kotlin `toSliceResult` 的合并结果对齐：结果 artifact 优先，其次任务视图，最后按状态与
+/// 字段按 `toSliceResult` 的合并结果对齐：结果 artifact 优先，其次任务视图，最后按状态与
 /// 可行性回退。未知语义下问题结论／解存在性／证明状态一律为 `UNKNOWN`。
-/// Fields follow the pinned Kotlin `toSliceResult` merge: the result artifact wins, then the task view,
+/// Fields follow the `toSliceResult` merge: the result artifact wins, then the task view,
 /// then status and feasibility fallbacks. Under unknown semantics the problem status, solution presence
 /// and proof status are all `UNKNOWN`.
 /// </remarks>

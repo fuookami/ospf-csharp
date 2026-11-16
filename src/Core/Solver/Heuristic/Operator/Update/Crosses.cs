@@ -1,5 +1,4 @@
 // 交叉算子 / Crossover operators.
-// 与固定 Kotlin （8686 B）对应。
 
 using System;
 using System.Collections.Generic;

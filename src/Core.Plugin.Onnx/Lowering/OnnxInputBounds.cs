@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **输入界的解析与校验** / Resolving and validating the input bounds.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 里"导入选项的界 → 真正能用的界"这一步。**这一层只做判定，不把界写进变量：**
+/// 里"导入选项的界 → 真正能用的界"这一步。**这一层只做判定，不把界写进变量：**
 /// **逐变量界属于模型层（`Range` 由 `NumericConstantsRegistry` 给，逐变量的界要靠模型注册），** **而在插件层假装写好界，
 /// 会让"界没生效"以"近似对了"的面目出现。**
 ///

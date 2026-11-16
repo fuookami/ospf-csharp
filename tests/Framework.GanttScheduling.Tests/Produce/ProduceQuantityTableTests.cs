@@ -44,7 +44,7 @@ public class ProduceQuantityTableTests {
     ///
     /// Four paired points: after registration `Quantity` is **not** a bare `new object` but a table the product can be looked up in, and before registration it **throws** rather than handing
     /// back an empty object; the model really contains `produce_quantity_ (product)` symbols, since building the table without `Add` leaves the solver unable to see it; a product with a demand has
-    /// its range set to `[lower - less, upper + over]` (10, 100, 5, 10 ⇒ `[5, 110]`); and a product without a demand has **no** range, matching its `demand != null` guard rather than an
+    /// its range set to `[lower - less, upper + over]` (10, 100, 5, 10 ⇒ `[5, 110]`); and a product without a demand has **no** range, matching `demand != null` guard rather than an
     /// invented `[0, 0]`.
     /// </remarks>
     [Fact]

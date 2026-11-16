@@ -1,5 +1,5 @@
 // 网络流问题的数据层 / The data layer of a network-flow problem.
-// 与固定 Kotlin （8792 字节）的数据部分对应：`FlowKey`、`CommodityFlow`、`FlowCapacity`、`FlowSlack`、
+// `FlowKey`、`CommodityFlow`、`FlowCapacity`、`FlowSlack`、
 // `FlowProblem`、`FlowSolution`。
 // The data portion of the: `FlowKey`, `CommodityFlow`, `FlowCapacity`, `FlowSlack`,
 // `FlowProblem`, `FlowSolution`.

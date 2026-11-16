@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Solver.Progress;
 /// Progress adapters: adapt solver callbacks to unified progress reporting while preserving the original callbacks.
 /// </summary>
 /// <remarks>
-/// **这是 移植核心类型时漏掉的另一半**：核心类型（`SolverProgressContext` 等）只提供"怎么上报"，
+/// **核心类型之外的另一半**：核心类型（`SolverProgressContext` 等）只提供"怎么上报"，
 /// 适配器提供"从哪里接"。没有适配器，进度上报**存在但无人调用**。
 ///
 /// 三个适配器对应三个函数，**全部保留原回调**：适配后仍会调用 `delegate`，

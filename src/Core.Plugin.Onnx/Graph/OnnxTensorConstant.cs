@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// **归一化后的 ONNX 常量张量** / A normalised ONNX constant tensor.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的。**两种规范化取值并存的理由：**
+/// 。**两种规范化取值并存的理由：**
 /// ONNX 的张量既可能以 `float_data` 存放、也可能以 `int64_data` 存放，**而 dtype 决定该读哪一个。**
 /// **把两者摊平成同一个数组就得在解码时先猜类型**——那是错的：类型是模型自己声明的，不是从内容猜出来的。
 ///

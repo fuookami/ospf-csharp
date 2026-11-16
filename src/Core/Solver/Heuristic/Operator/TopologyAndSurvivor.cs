@@ -1,5 +1,4 @@
 // 种群拓扑、幸存者选择与多样性度量 / Population topology, survivor selection and diversity metrics.
-// 与固定 Kotlin 、
 // 对应。
 // , and.
 

@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **子图控制流的可展开性判定** / Whether a subgraph's control flow can be unrolled.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph`。**做法是"全部展开"：** **`If` 的条件必须是常量、`Loop` 的迭代次数与终止条件必须是常量、
+/// `OnnxSubgraph`。**做法是"全部展开"：** **`If` 的条件必须是常量、`Loop` 的迭代次数与终止条件必须是常量、
 /// `Scan` 的扫描长度必须来自常量——** **于是建模规模随迭代次数线性增长，而这一切都发生在导入期。**
 ///
 /// **那一整套展开依赖降阶上下文（表达式、张量、令牌），还没实现；** **但展开之前的**可展开性判定**是独立的，而它恰好是"能不能导入"的分界线：**

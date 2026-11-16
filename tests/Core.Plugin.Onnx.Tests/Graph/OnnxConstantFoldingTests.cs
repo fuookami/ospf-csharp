@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Graph;
 /// **常量折叠：折错一个数，整条链围着错值优化** / Fold a wrong number and the whole chain optimises around it.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `foldConstant` 与 `Shape` 的静态求值。**折叠的价值是把"由图描述的常数"变成"数本身"，风险是折出一个错的常数——**
+/// `foldConstant` 与 `Shape` 的静态求值。**折叠的价值是把"由图描述的常数"变成"数本身"，风险是折出一个错的常数——**
 /// **那种错会让下游每一步都"成功"。**
 ///
 /// Syncs `foldConstant` and the static `Shape` evaluation. **Folding turns "a constant described by a graph" into "a number"; its risk is folding a wrong one,

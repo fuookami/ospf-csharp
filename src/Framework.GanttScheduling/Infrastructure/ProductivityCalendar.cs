@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
 /// <summary>
 /// 生产力日历，结合工作日历和生产力信息 /
 /// Productivity calendar combining working calendar and productivity information.
-/// 从 kotlin WorkingCalendar.kt ProductivityCalendar 类移植。
+/// 从 kotlin WorkingCalendar.kt ProductivityCalendar 类实现。
 /// Ported from kotlin WorkingCalendar.kt ProductivityCalendar class.
 /// </summary>
 /// <typeparam name="W">时间窗口数值类型 / The time-window numeric type.</typeparam>
@@ -618,7 +618,7 @@ public class ProductivityCalendar<W, Q, P, T, U> : WorkingCalendar<W>
 /// <summary>
 /// 离散生产力日历，使用整数除法进行产量计算 /
 /// Discrete productivity calendar using integer division for quantity calculation.
-/// 从 kotlin WorkingCalendar.kt DiscreteProductivityCalendar 类移植。
+/// 从 kotlin WorkingCalendar.kt DiscreteProductivityCalendar 类实现。
 /// </summary>
 public class DiscreteProductivityCalendar<W, P, T, U> : ProductivityCalendar<W, Fuookami.Ospf.Math.Algebra.Number.UInt64, P, T, U>
     where W : struct, IRealNumber<W>

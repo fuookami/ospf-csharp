@@ -1,5 +1,4 @@
 // 物品领域上下文 / Item domain context.
-// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

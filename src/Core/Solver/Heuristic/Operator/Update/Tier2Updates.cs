@@ -1,5 +1,4 @@
 // 教案-学习、樽海鞘、引力搜索与萤火虫更新 / Teaching-learning, salp-swarm, gravitational-search and firefly updates.
-// 与固定 Kotlin （15155 B）对应。
 
 using System;
 using System.Collections.Generic;

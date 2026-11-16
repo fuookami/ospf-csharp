@@ -1,5 +1,4 @@
 // 网络结构建设费用目标 / Network-structure construction-cost objective.
-// 与固定 Kotlin （1053 字节）对应。
 
 using System;
 using Fuookami.Ospf.Core.Model.Basic;

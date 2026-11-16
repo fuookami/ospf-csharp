@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **算子登记表与导入前的覆盖性检查** / The operator registry and the pre-import coverage check.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 里各算子模块声明的支持集合（`OnnxActivation.OPERATORS`、形状算子、聚合等），**把它们汇总成一处"这张图能不能被表达"的判定。**
+/// 里各算子模块声明的支持集合（`OnnxActivation.OPERATORS`、形状算子、聚合等），**把它们汇总成一处"这张图能不能被表达"的判定。**
 /// **为什么要在降阶之前单独做一次：** **降阶到一半才发现某个算子不支持，模型已经建了一半——** **而那半个模型是可以求解的，**
 /// **于是"部分导入"会以"成功"的面目出现。前置检查让这件事在**建模型之前**就失败。
 ///

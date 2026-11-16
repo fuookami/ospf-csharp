@@ -38,7 +38,7 @@ public static class FixedIntegerLpGates
     /// <param name="backendAvailable">是否有后端且能力已声明 / Whether a backend exists and the capability is declared.</param>
     /// <returns>应当报告的状态，全部通过时为 <c>null</c> / The status to report, or <c>null</c> when the pipeline may continue.</returns>
     /// <remarks>
-    /// **这是 `FixedIntegerLpSensitivityAnalyzer.analyze` 前两道门控的移植。**
+    /// **这是 `FixedIntegerLpSensitivityAnalyzer.analyze` 前两道门控的实现。**
     ///
     /// **顺序不能换。** 固定值投影失败必须先判，因为它是 `Unknown`（**试过了，得不出固定值**），
     /// 而后端/能力缺失是 `Unsupported`（**这条路走不通**）。
@@ -171,7 +171,7 @@ public static class FixedIntegerLpGates
     /// <param name="dualTolerance">判定"这条约束在起作用"的对偶阈值 / The dual threshold for "this constraint is doing work".</param>
     /// <returns>逐约束的敏感性记录 / The per-constraint sensitivity records.</returns>
     /// <remarks>
-    /// **这是 `FixedIntegerLpSensitivityAnalyzer.analyze` 最后那段组装的移植。**
+    /// **这是 `FixedIntegerLpSensitivityAnalyzer.analyze` 最后那段组装的实现。**
     ///
     /// **`LocalEffective` 在没有对偶时是 `null`，不是 `false`。**
     /// 无对偶意味着**后端没给出这个数**，而 `false` 意味着**给出了，且它接近零**。

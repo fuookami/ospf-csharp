@@ -1,5 +1,4 @@
 // 算子共用样板 / Shared boilerplate for operators.
-// 与固定 Kotlin 、 对应。
 // And.
 
 using System;

@@ -1,5 +1,4 @@
 // 策略训练的数据契约与轨迹持久化 / The policy trainer's data contract and trajectory persistence.
-// 与固定 Kotlin （14760 B）里**不依赖求解器**的那一半对应：
 // `TrainingCase` / `TrainingSplit` / `TrainingObservation` / `TrainingReport` / `PolicyEvaluationReport`、
 // `PolicyTrainer.replay` 与 `TrajectoryFiles`。
 // The half of the: that does **not** depend on the solver:

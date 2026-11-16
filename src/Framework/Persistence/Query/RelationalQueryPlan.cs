@@ -1,7 +1,7 @@
 // 关系查询计划容器 / Relational query plan container.
-// 与固定 Kotlin 对应。这里只落地**规范化与结构校验**；表达式深度冻结、
+// 对应。这里只落地**规范化与结构校验**；表达式深度冻结、
 // 表达式循环检测、Join 图关联校验、canonical／hash 分别留到后续批次（见各成员注释）。
-// The pinned Kotlin: . lands **normalization and
+// . lands **normalization and
 // structural validation** only; deep expression freezing, expression-cycle detection, join-graph correlation
 // checking and canonical/hash are deliberately left to later batches (see the member comments).
 
@@ -31,7 +31,7 @@ public sealed record RelationalQueryValidationError(string Field, string Message
 /// **这里刻意未实现**（同名能力，按依赖顺序排在后续批次）：
 /// <list type="bullet">
 /// <item>树级表达式循环检测：C# 表达式节点是不可变记录、只能自底向上构造，结构上无法成环，因此没有对应
-/// 实现——移植过来会是不可达代码。详见 <see cref="RelationalQueryExpressionFreezer"/>。</item>
+/// 实现——照搬过来会是不可达代码。详见 <see cref="RelationalQueryExpressionFreezer"/>。</item>
 /// <item>不可复制 payload 的结构化拒绝：当前对未知 payload 类型原样保留而不是报错。</item>
 /// <item>Join 图关联校验（关联条件必须把被 Join 的数据源与已绑定的数据源关联起来）。</item>
 /// <item><c>canonical</c> / <c>canonicalHash</c> / <c>hash</c>。</item>

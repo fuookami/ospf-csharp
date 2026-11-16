@@ -1,5 +1,4 @@
 // 执行器占用与编译量 / Executor usage and compilation amount.
-// 与固定 Kotlin 的 `xor[e] ≥ xi[task]` 与
 // `executorCompilation[e] = xor[e] + z[e]`（`withExecutorLeisure` 时）对应。
 // Mirrors `xor[e] ≥ xi[task]` and `executorCompilation[e] = xor[e] + z[e]` (when `withExecutorLeisure`)
 //'s.

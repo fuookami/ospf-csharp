@@ -1,5 +1,4 @@
 // 解更新框架与两个最小更新算子 / The solution-update framework and two smallest update operators.
-// 与固定 Kotlin 、
 //、 对应。
 // ,, and.
 

@@ -1,4 +1,4 @@
-// Demo2 预约映射与生物限制的移植测试 / Port tests for Demo2's appointment mapping and biological limits.
+// Demo2 预约映射与生物限制的实现测试 / Port tests for Demo2's appointment mapping and biological limits.
 
 using System.Collections.Generic;
 using FluentAssertions;

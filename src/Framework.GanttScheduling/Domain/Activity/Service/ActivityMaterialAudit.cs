@@ -1,5 +1,4 @@
 // 物料库存审计 / Material inventory audit.
-// 与固定 Kotlin 
 // 的 `levels` / `violations` 对应；`extract` 依赖 `ActivityValueBoundary`，见文末说明。
 // .
 

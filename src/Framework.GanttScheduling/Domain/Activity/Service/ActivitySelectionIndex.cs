@@ -1,5 +1,4 @@
 // 活动候选索引与选择校验 / Activity choice index and selection validation.
-// 与固定 Kotlin 的
 // `variable` / `cancellationVariable` 查询与 `extractSolution` 里的"恰好选一"校验对应。
 // Mirrors the `variable` / `cancellationVariable` lookups and the "exactly one" check inside `extractSolution`
 //'s.

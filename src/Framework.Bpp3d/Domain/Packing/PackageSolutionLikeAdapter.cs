@@ -1,6 +1,4 @@
 // 类包装解决方案到装箱程序的适配 / Adapter from a package-solution-like tree to a packing program.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;

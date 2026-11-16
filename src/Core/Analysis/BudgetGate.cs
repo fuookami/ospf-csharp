@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 预算门控 / The budget gate.
 /// </summary>
 /// <remarks>
-/// **这是 的 `budgetExceeded` 的移植。**
+/// **这是 的 `budgetExceeded` 的实现。**
 ///
 /// 有一行：`budget != null &amp;&amp; System.nanoTime - startedAt &gt;= budget.inWholeNanoseconds`。
 /// **它短到看起来不值得单独成文件，而它有一个容易写反的语义：没有预算就是永不超支。**

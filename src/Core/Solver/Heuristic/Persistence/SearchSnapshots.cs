@@ -1,5 +1,4 @@
 // 搜索快照载体 / Search snapshot carriers.
-// 与固定 Kotlin （4615 B）对应。
 
 using System;
 using System.Collections.Generic;

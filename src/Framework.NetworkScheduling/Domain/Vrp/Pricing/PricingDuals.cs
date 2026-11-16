@@ -1,5 +1,4 @@
 // VRP 定价对偶快照与列系数 / VRP pricing duals and column coefficients.
-// 与固定 Kotlin 、（37 行）对应。
 // And.
 
 using System;

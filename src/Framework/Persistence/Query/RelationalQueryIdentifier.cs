@@ -1,7 +1,7 @@
 // 关系查询标识符与来源解析 / Relational query identifiers and source resolution.
 // 与`quoteIdentifier`／`quoteIdentifierOrFallback`／`definition`／`column` 对应。这部分是 SQL 注入
 // 的实际防线：所有物理表名与列名都必须经过这里，且允许字符集之外的输入一律结构化拒绝。
-// The pinned Kotlin: /`quoteIdentifierOrFallback`/`definition`/`column`. This is
+// /`quoteIdentifierOrFallback`/`definition`/`column`. This is
 // the actual injection defence: every physical table and column name goes through here, and anything outside the
 // permitted shape is rejected structurally.
 

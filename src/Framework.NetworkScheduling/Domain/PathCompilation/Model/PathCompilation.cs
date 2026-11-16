@@ -1,5 +1,4 @@
 // 路径编译模型 / Path compilation model.
-// 与固定 Kotlin （2629 字节）对应。
 
 using System;
 using System.Collections.Generic;

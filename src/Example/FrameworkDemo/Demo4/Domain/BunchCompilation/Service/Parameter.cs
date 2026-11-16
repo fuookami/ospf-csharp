@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Serv
 /// Parameters for column generation master model objective coefficients.
 /// </summary>
 /// <remarks>
-/// 默认值移植自 fsra-proof 基础设施参数。
+/// 默认值取自 fsra-proof 基础设施参数。
 /// Default values derived from fsra-proof infrastructure parameters.
 /// </remarks>
 /// <param name="FleetBalanceSlack">非基地机场车队平衡松弛惩罚 / Fleet balance slack penalty for non-base airports.</param>

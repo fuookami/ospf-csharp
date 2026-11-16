@@ -1,7 +1,7 @@
 // 二维量纲点与向量 / 2D quantity point and vector.
-// 与固定 Kotlin 对应。票量纲几何层只提供矩形、圆与包围盒，没有点位类型；
+// 对应。票量纲几何层只提供矩形、圆与包围盒，没有点位类型；
 // 二维装箱的落点计算需要点位与向量，因此单独补充。
-// The pinned Kotlin: . The quantity geometry layer only ships
+// . The quantity geometry layer only ships
 // rectangles, circles and boxes — no point type — so 2D packing placement needs points and vectors provided
 // separately.
 

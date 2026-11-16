@@ -1,5 +1,5 @@
 // BLA 领域上下文 / BLA domain context.
-// 与固定 Kotlin 对应：把排样算法包成一个可复用的上下文对象，
+// 把排样算法包成一个可复用的上下文对象，
 // 调用方不必自己组装 `BottomUpLeftJustifiedAlgorithm`。
 // Wraps the layout algorithm into a reusable context so callers need not assemble
 // `BottomUpLeftJustifiedAlgorithm` themselves.

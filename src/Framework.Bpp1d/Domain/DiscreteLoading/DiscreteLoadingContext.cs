@@ -1,5 +1,4 @@
 // 离散装载注册与取解入口 / Discrete-loading registration and solution-extraction entry.
-// 与固定 Kotlin 的
 // `register` 与 `extractSolution` 对应（`validate`/`verify` 已在 ）。
 
 using System.Collections.Generic;

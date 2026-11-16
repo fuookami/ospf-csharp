@@ -1,5 +1,4 @@
 // 边界处理、终止判据与接受准则 / Boundary handling, stopping criteria and acceptance rules.
-// 与固定 Kotlin 、
 // 对应。
 // , and.
 

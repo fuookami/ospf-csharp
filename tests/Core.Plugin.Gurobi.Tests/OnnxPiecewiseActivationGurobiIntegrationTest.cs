@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **分段近似的 Sigmoid 真的被求解** / A piecewise-approximated Sigmoid is really solved.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation.approximated`。**判据设计成一个"三种错法都能区分开"的形状：** '
+/// `OnnxActivation.approximated`。**判据设计成一个"三种错法都能区分开"的形状：** '
 /// **正确解在左端点，目标值约 `0.0067`（`sigmoid(-5)`，而且 `-5` 就是第一个断点，插值在那里是精确的）。**
 /// **若近似被丢掉当恒等，最小值是 `-5`；若被换成常数零，最小值是 `0`；若分段漏掉负半轴，最小值会停在 0 附近而不是 0.0067。**
 ///

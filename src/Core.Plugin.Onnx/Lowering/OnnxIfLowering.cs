@@ -10,7 +10,6 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **把 `If` 真的展开：选分支 → 压作用域 → 求值 → 弹作用域** / Actually unroll an If: choose, push, evaluate, pop.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerIf` 的落地形态，把三件东西接起来：**`OnnxIfExpansion` 选分支、`OnnxLoweringContext` 提供作用域、
 /// `OnnxGraphEvaluator` 走分支体。**
 ///
 /// **"子图"在这里不再是一个特殊概念：** **它只是"在子上下文里运行的一张普通图"。** **于是 `Loop`／`Scan` 的展开会复用同一条接线，只多一层"把上一轮结果写回种子"。**

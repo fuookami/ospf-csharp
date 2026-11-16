@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Math.Tests;
 /// 多项式语法核心 / The polynomial grammar core.
 /// </summary>
 /// <remarks>
-/// **移植自固定的语法层。**
+/// **实现自固定的语法层。**
 /// 五条判据对着五个"能编译但语义丢了"的点：优先级、`*` 左结合、`x^0`、负指数、多余输入。
 ///
 /// **Ported from the grammar layer of.** Five criteria for five places where the code can compile with the meaning gone: precedence, left-associative `*`, `x^0`, negative exponents, trailing input.

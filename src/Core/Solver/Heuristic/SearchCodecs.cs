@@ -1,5 +1,4 @@
 // 无损 JSON 编码器组合 / Lossless JSON codec combinators.
-// 与固定 Kotlin （5855 字节）对应。
 
 using System;
 using System.Collections.Generic;

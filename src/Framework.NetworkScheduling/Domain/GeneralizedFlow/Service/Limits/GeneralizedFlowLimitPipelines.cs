@@ -1,5 +1,4 @@
 // 广义流约束管线 / Generalized-flow constraint pipelines.
-// 与固定 Kotlin （2304 字节）、
 //（2032 字节）、（1005 字节）对应。
 // , and
 //.

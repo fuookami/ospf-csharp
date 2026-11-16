@@ -1,6 +1,4 @@
 // 有界候选生成 / Bounded candidate generation.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp1d.Domain.Item.Model;

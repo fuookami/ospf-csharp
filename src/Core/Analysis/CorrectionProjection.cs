@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 冲突解释投影成修正集合的判定 / Verdicts that project a conflict explanation into correction sets.
 /// </summary>
 /// <remarks>
-/// **这是 里三个纯函数的移植。** 三个都不碰求解器：
+/// **这是 里三个纯函数的实现。** 三个都不碰求解器：
 /// 一个判定"这份解释够不够格谈 MCS"，另两个把够格的解释投影成单例修正集合。
 ///
 /// **These are three pure functions.** None touches a solver: one decides whether the explanation qualifies as an MCS, the other two project a
@@ -165,7 +165,7 @@ public static class CorrectionProjection
     /// <param name="policy">策略 / The policy.</param>
     /// <returns>跨目标排序并重新编号的计划 / Plans ordered across targets and renumbered.</returns>
     /// <remarks>
-    /// **这是 `analyzeCriticalityTargets` 里那段纯聚合的移植。** 三道门缺一不可：
+    /// **这是 `analyzeCriticalityTargets` 里那段纯聚合的实现。** 三道门缺一不可：
     /// **目标状态必须是 `Unreachable`**、**报告的目标必须就是冲突的目标**、**冲突必须已验证最小。**
     ///
     /// **第二道门容易被当成冗余删掉。** 它不是：一个报告的 `Conflict` 可以来自另一个目标

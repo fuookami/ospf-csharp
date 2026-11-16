@@ -1,5 +1,4 @@
 // 排列变异算子 / Permutation mutation operators.
-// 与固定 Kotlin 、
 // 对应。
 // , and.
 
@@ -194,7 +193,7 @@ public sealed class InversionMutation : IMutationOperator {
         int end = global::System.Math.Max(first, second);
         var result = new List<V>(solution);
         // 只反转 [start, end) 区间：`end` 是开区间端，与`subList(start, end).reverse` 一致。
-        // Reverse only [start, end): `end` is exclusive, matching its `subList(start, end).reverse`.
+        // Reverse only [start, end): `end` is exclusive, matching `subList(start, end).reverse`.
         result.Reverse(start, end - start);
         return new Solution<V>(result);
     }

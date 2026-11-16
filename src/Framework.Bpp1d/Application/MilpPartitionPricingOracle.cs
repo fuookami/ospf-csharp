@@ -1,5 +1,4 @@
 // 分区局部 MILP 定价器 / The local MILP pricer for one partition.
-// 与固定 Kotlin 的 `MilpPartitionPricingOracle` 对应。
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 // 文化与模因求解器 / The memetic solver.
-// 与固定 Kotlin （6970 B）对应。
 
 using System;
 using System.Collections.Generic;

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **逐节点求值：图第一次被"走过去"** / Node-by-node evaluation: the graph is walked for the first time.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 子图体递归降阶的第一刀。**这一层引入了此前的其它层都没有的东西：** **图被逐节点走过，中间结果留在上下文里。**
+/// 子图体递归降阶的第一刀。**这一层引入了此前的其它层都没有的东西：** **图被逐节点走过，中间结果留在上下文里。**
 /// **那就是子图展开能成立的形式——`If` 选中分支体后，把外层可见张量灌进上下文，再对分支体调用这里。**
 ///
 /// Syncs the first cut of recursive body lowering. **It brings what no earlier layer had: the graph is walked node by node and intermediates stay in the context.** **That is

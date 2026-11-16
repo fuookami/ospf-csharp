@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **逐元素表示：形状 + 每个位置一个表达式** / The per-element representation: a shape plus one expression per position.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxTensorExpr`。**这是清单第 2、3 项共同缺的那一层：** '
+/// `OnnxTensorExpr`。**这是清单第 2、3 项共同缺的那一层：** '
 /// **既有实现每个名字只有一个标量表达式，于是 `Transpose` 的重排无处可写、`Scan` 的运行期切片无处可切。**
 ///
 /// **这一层只做本体，不接线：** **`Transpose` 按坐标重排、`SliceLeading` 沿首维切片，两者都是纯函数，**

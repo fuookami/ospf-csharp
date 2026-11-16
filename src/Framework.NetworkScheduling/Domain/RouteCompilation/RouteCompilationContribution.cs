@@ -1,5 +1,4 @@
 // 路线扩展主问题贡献 / Extra master-problem contributions for route compilation.
-// 与固定 Kotlin （4307 字节）对应。
 
 using System;
 using System.Collections.Generic;

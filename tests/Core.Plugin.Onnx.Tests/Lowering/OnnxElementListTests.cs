@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **逐元素表示：重排与切片算得对** / The per-element representation: the permutation and the slice are computed right.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxTensorExpr`。**判据的落点很直接：** **重排之后"某个位置上是原来哪一个元素"，**
+/// `OnnxTensorExpr`。**判据的落点很直接：** **重排之后"某个位置上是原来哪一个元素"，**
 /// **用元素自身的编号来认——** **而不是用形状（形状对了而元素乱序，正是这一层要防的错）。**
 ///
 /// Syncs `OnnxTensorExpr`. **The criteria land on something direct: after a permutation, "which original element sits at this position", identified by the element's own label — not by the

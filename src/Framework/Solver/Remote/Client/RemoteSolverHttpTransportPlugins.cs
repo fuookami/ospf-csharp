@@ -14,8 +14,8 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<
 
 namespace Fuookami.Ospf.Framework.Solver.Remote.Client;
 
-// 传输插件注册表逐字段对照固定 Kotlin 12fdb587 的 RemoteSolverHttpTransportPlugin.kt。
-// The transport plugin registry mirrors the pinned Kotlin RemoteSolverHttpTransportPlugin.kt.
+// 传输插件注册表逐字段：RemoteSolverHttpTransportPlugin.kt。
+// The transport plugin registry mirrors RemoteSolverHttpTransportPlugin.kt.
 
 /// <summary>
 /// HTTP 传输配置 / HTTP transport config.

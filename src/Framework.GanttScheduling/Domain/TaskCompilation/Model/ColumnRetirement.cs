@@ -1,5 +1,4 @@
 // 列回收的两条规则 / The two rules of column retirement.
-// 与固定 Kotlin 的
 // `xi[task].range.eq(false); model.remove(xi[task])` 对应。
 // .
 

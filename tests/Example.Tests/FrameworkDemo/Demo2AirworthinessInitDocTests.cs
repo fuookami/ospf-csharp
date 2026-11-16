@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// <remarks>
 /// 构造函数那段注释说的是"`Init` 尚未实现期间唯一的入口"。查过之后：`Init` 在（ 起 `AggregationInitializer` 真正构造聚合），
 /// 上游未初始化会明确失败，DTO 校验失败会原样抛出。**两句注释描述的是同一个文件里的两个状态，一句过期了。**
-/// 过期的注释比没有更坏：下一个人会以为"想要 `Init` 得先移植它"，于是绕过它——**而绕过之后 `Aggregation` 的字段来自调用方，
+/// 过期的注释比没有更坏：下一个人会以为"想要 `Init` 得先实现它"，于是绕过它——**而绕过之后 `Aggregation` 的字段来自调用方，
 /// 校验部位的差异就再也不会被发现。**
 ///
 /// The constructor's remarks said "the only entry point while `Init` is unimplemented". Checking: `Init` is there (since then `AggregationInitializer` really builds the
@@ -36,7 +36,7 @@ public class Demo2AirworthinessInitDocTests {
     }
 
     /// <summary>
-    /// **`Init` 真的在，且注释不再说它没移植** / `Init` really exists, and the remarks no longer claim it is unimplemented.
+    /// **`Init` 真的在，且注释不再说它没实现** / `Init` really exists, and the remarks no longer claim it is unimplemented.
     /// </summary>
     /// <remarks>
     /// 四点成对：`public Try Init(` 在源码里 / **不再出现"尚未实现期间唯一的入口"** / 上游守卫还在 / 注释写明"`Init` 早就在了"。

@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Error;
 /// **错误必须带得上定位信息** / An error has to carry enough to locate the fault.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的（13 个变体）。**判据钉两件：**
+/// （13 个变体）。**判据钉两件：**
 /// **① 上下文只在存在时出现（`node=null` 这种占位比不写更糟，它看起来像线索却什么也没说）；**
 /// **② 每个变体携带自己的错误码，调用方既能按类别分派、也能取回结构化对象。**
 ///

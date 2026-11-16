@@ -1,5 +1,4 @@
 // 水循环与海鸥更新算子 / Water-cycle and seagull update operators.
-// 与固定 Kotlin （7905 B）对应。
 
 using System;
 using System.Collections.Generic;

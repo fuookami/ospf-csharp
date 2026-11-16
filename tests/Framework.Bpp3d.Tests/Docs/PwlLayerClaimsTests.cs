@@ -77,7 +77,7 @@ public class PwlLayerClaimsTests
         // **Gurobi detection is present**: it reflects method names without referencing the SDK.
         string gurobi = File.ReadAllText(Path.Combine(root, "src", "Core.Plugin.Gurobi", "GurobiFunctionCapabilities.cs"));
         gurobi.Should().Contain("SetPWLObj").And.Contain("AddGenConstrPWL",
-            "detection is the layer that is already ported, and the matrix now says so");
+            "detection is the layer that already exists, and the matrix now says so");
 
         // **Copt 现在<b>有</b>原生分段文件了。**
         //
@@ -112,7 +112,7 @@ public class PwlLayerClaimsTests
         string root = Root();
         string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
 
-        matrix.Contains("**能力探测已移植**", StringComparison.Ordinal)
+        matrix.Contains("**能力探测已实现**", StringComparison.Ordinal)
             .Should().BeTrue("the detection layer is present and the matrix used to say it was not");
         matrix.Contains("函数**展开层**", StringComparison.Ordinal)
             .Should().BeTrue("the missing layer has to be named as a layer");
@@ -120,7 +120,7 @@ public class PwlLayerClaimsTests
             .Should().BeTrue("the gap needs its size, or nobody can judge it");
         // **"探测未实现"不能再出现**：那是被推翻的那句话。
         // **"Detection not implemented" must not reappear**: that is the retracted sentence.
-        matrix.Contains("原生 PWL/SOS2 能力探测未移植", StringComparison.Ordinal)
+        matrix.Contains("原生 PWL/SOS2 能力探测未实现", StringComparison.Ordinal)
             .Should().BeFalse("that claim was false; leaving it in lets the next batch repeat it");
     }
 

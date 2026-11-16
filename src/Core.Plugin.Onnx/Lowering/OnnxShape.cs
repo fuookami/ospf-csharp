@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **张量的形状算术** / Tensor shape arithmetic.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 里 `OnnxShape` 那一块。**它是 `Transpose`／`Reshape`／`Flatten`／`Concat`／`Split`／
+/// 里 `OnnxShape` 那一块。**它是 `Transpose`／`Reshape`／`Flatten`／`Concat`／`Split`／
 /// `Gather`／`ReduceSum` 全部形状算子的共用底座，而它的错法都属于"不抛异常但算错"：** **步长算错只是索引取到别的元素，
 /// 广播算错只是形状多出一维。**
 ///

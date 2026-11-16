@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 在给定活跃证据下的有效定义域 / The effective domain under a given set of active evidence.
 /// </summary>
 /// <remarks>
-/// **这是 的 `effectiveDomain` / `copyDomain` 的移植。**
+/// **这是 的 `effectiveDomain` / `copyDomain` 的实现。**
 ///
 /// **这段逻辑决定"某个边界是否真的在起作用"，而它有一个不容易看出来的不变量：**
 ///
@@ -121,7 +121,7 @@ public static class EffectiveDomain
     /// <param name="activeSources">活跃证据集合，可为 <c>null</c> / The active evidence, or <c>null</c>.</param>
     /// <returns>变量到有效定义域的映射 / A map from variable to effective domain.</returns>
     /// <remarks>
-    /// **这是 `activeDomains` 的移植，而它此前在 C# 侧没有任何对应物**——
+    /// **这是 `activeDomains` 的实现，而它此前在 C# 侧没有任何对应物**——
     /// **`Compute` 本身此后就被判据覆盖，却一个调用方都没有。**
     ///
     /// **This is the implementation of `activeDomains`, and it had no counterpart on the C# side** — **`Compute` had been covered by criteria since then while having no caller at all.**

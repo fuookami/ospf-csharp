@@ -709,12 +709,12 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     /// <summary>构建 Farkas 对偶模型 / Build the Farkas dual model.</summary>
     /// <remarks>
-    /// 与 Kotlin <c>farkasDual</c> 一致：每个原约束行生成一个带符号的 Farkas 列（<c>&lt;=</c> 非负、<c>&gt;=</c> 非正、
+    /// 每个原约束行生成一个带符号的 Farkas 列（<c>&lt;=</c> 非负、<c>&gt;=</c> 非正、
     /// <c>=</c> 自由），等式行再补正负松弛列把乘子绝对值化；每个有界原列生成上下界对偶列。归一化行强制
     /// Σ rhs·y + Σ lb·μ&lt;sub>lb&lt;/sub> + Σ ub·μ&lt;sub>ub&lt;/sub> = -1，因此可行基不存在时乘子必非零；目标极小化乘子幅度。
     /// 前 m 个列与原约束行同序，可交给 <see cref="TidyDualSolution"/> 取回逐行乘子；Farkas 模型不含原目标，
     /// 因此与 <see cref="Dual"/> 一样只描述不可行性证据。
-    /// Mirrors Kotlin <c>farkasDual</c>: one signed Farkas column per primal row (<c>&lt;=</c> non-negative,
+    /// `farkasDual`: one signed Farkas column per primal row (<c>&lt;=</c> non-negative,
     /// <c>&gt;=</c> non-positive, <c>=</c> free), plus positive/negative slack columns that absolute the multipliers of
     /// equality rows, and bound dual columns for every bounded primal column. The normalization row forces
     /// Σ rhs·y + Σ lb·μ&lt;sub>lb&lt;/sub> + Σ ub·μ&lt;sub>ub&lt;/sub> = -1, so the multipliers cannot all vanish when no feasible
@@ -1010,7 +1010,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     private static string RowName(string name, int row) => string.IsNullOrEmpty(name) ? $"cons{row}" : name;
 
-    // 行松弛只记录来源行的原始索引与原始关系；Kotlin 用 constraints.origins[row] 的 ConstraintInfo 表达同一件事。
+    // 行松弛只记录来源行的原始索引与原始关系；按来源行记录的是 ConstraintInfo 表达同一件事。
     // A row slack records the original index and relation of its source row; Kotlin carries it as the ConstraintInfo
     // stored in constraints.origins[row].
     private static VariableSlack RowSlack(ModelConstraint<LinearConstraintCell> constraints, int row) =>
@@ -1018,13 +1018,13 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     /// <summary>构建可行性模型（最小化人工变量）/ Build the feasibility model (minimize artificial variables).</summary>
     /// <remarks>
-    /// 与 Kotlin <c>feasibility</c> 一致：右端为负的整行取反并反转关系符号，每行改写为等式且右端取绝对值；
+    /// 右端为负的整行取反并反转关系符号，每行改写为等式且右端取绝对值；
     /// 小于等于行新增系数 +1 的松弛列，大于等于行新增系数 -1 的松弛列与系数 +1 的人工列，等式行只新增系数 +1
     /// 的人工列；目标极小化人工列之和，因此最优值为 0 当且仅当原约束系统可行。松弛列与人工列都是连续
     /// [0, +inf)，原变量的边界与类型保持不变。派生行与派生列使用匿名 model-local 身份，且约束批次不承载
-    /// origins、froms 与 priorities，因此这些元数据未复制。与 Kotlin 一致，松弛列会在
+    /// origins、froms 与 priorities，因此这些元数据未复制。松弛列会在
     /// <see cref="VariableSlack.Constraint"/> 中记录来源行的原始索引与原始关系符号，人工列不携带松弛元数据。
-    /// Mirrors Kotlin <c>feasibility</c>: rows with a negative right-hand side are negated and their relation reversed,
+    /// `feasibility`: rows with a negative right-hand side are negated and their relation reversed,
     /// every row becomes an equality with an absolute right-hand side, a less-equal row gains a slack with coefficient
     /// +1, a greater-equal row gains a slack with -1 plus an artificial with +1, an equal row only gains an artificial
     /// with +1, and the objective minimizes the artificial sum, so an optimal value of 0 is exactly feasibility. Slacks
@@ -1139,7 +1139,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     /// <summary>构建弹性模型（允许约束与边界被松弛）/ Build the elastic model (allow constraints and bounds to relax).</summary>
     /// <remarks>
-    /// 与 Kotlin <c>elastic</c> 一致：每行按关系获得 <c>_lb_slack</c>、<c>_ub_slack</c> 或两者，关系符号与右端保持原值，
+    /// 每行按关系获得 <c>_lb_slack</c>、<c>_ub_slack</c> 或两者，关系符号与右端保持原值，
     /// 松弛列以 -1、+1 进入该行；每个非自由且未归一化的变量获得界松弛行 <c>x + s &gt;= lb</c> 与
     /// <c>x - s &lt;= ub</c>，其自身边界放开到无穷并改由这些行表达；目标改为极小化全部松弛之和（含可选 minmax 列），
     /// 原目标单元格全部丢弃。<paramref name="minSlackAmount"/> 为每个松弛建立二值指示列，并加入
@@ -1148,7 +1148,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     /// 派生行与派生列使用匿名 model-local 身份，且约束批次不承载 origins、froms 与 priorities，因此这些元数据未复制；
     /// 行松弛列改用 <see cref="VariableSlack.Constraint"/> 记录来源行的原始索引与原始关系，界松弛列记录被松弛的变量，
     /// IIS 过滤因此可以把松弛回溯到原行或原边界。
-    /// Mirrors Kotlin <c>elastic</c>: every row gets a lower slack, an upper slack or both by relation while keeping its
+    /// `elastic`: every row gets a lower slack, an upper slack or both by relation while keeping its
     /// original sign and right-hand side, with the slacks entering at -1 and +1; every bounded non-normalized variable
     /// gains the bound rows <c>x + s &gt;= lb</c> and <c>x - s &lt;= ub</c> and has its own bounds opened to infinity and
     /// expressed by those rows instead; the objective becomes the minimum of all slacks (plus the optional minmax
@@ -1278,7 +1278,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
                 binaryColumns.Add(binary);
             }
         }
-        // minmax 列最后创建，并同时进入目标列集合，与 Kotlin 的目标顺序一致。
+        // minmax 列最后创建，并同时进入目标列集合，目标顺序如此。
         // The minmax column is created last and joins the priced columns, matching Kotlin's objective order.
         ModelViewVariable? minmax = minmaxSlack
             ? NewSlack("minmax_slack", null)

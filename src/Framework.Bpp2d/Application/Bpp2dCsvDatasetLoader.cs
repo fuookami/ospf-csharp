@@ -1,6 +1,4 @@
 // CSV 数据集形态与表头校验 / CSV dataset shape and header validation.
-// 与固定 Kotlin 的校验部分对应。
-// The validation part of the pinned Kotlin: .
 //
 // 逐行构造 `ActualItem` / `SheetType` 的部分见文末说明。
 // Row-wise construction of `ActualItem` / `SheetType` is scoped out — see the tail note.

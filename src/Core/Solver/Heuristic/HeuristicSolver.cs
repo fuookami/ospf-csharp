@@ -1,5 +1,5 @@
 // 启发式求解器入口 / The heuristic-solver entry points.
-// 与固定 Kotlin （2904 B）对应； 的更早批次已移植。
+// （2904 B）对应； 的对应件在这里。
 // ; is implemented alongside it.
 
 using System;

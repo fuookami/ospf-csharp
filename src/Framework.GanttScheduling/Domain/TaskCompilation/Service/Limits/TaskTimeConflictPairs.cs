@@ -1,6 +1,4 @@
 // 时间冲突约束的任务筛选与冲突对枚举 / Task filtering and conflicting-pair enumeration for the time conflict constraint.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

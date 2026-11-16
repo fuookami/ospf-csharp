@@ -1,6 +1,4 @@
 // 一维装箱指标 / One-dimensional packing indicators.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using Fuookami.Ospf.Framework.Bpp1d.Domain.Item.Model;
 using Fuookami.Ospf.Math.Algebra.Concept;

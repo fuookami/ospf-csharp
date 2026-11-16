@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Proto;
 /// **子图属性的解析：控制流能不能导入，全看这一步** / Parsing the subgraph attribute: it decides whether control flow can be imported at all.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `AttributeProto.g` 读取。**这一条之前是缺的，而缺得很难发现：** **`If`／`Loop`／`Scan` 的分支体就存在这个字段里，'
+/// `AttributeProto.g` 读取。**这一条之前是缺的，而缺得很难发现：** **`If`／`Loop`／`Scan` 的分支体就存在这个字段里，'
 /// **不解析它，子图在文件里有、在内存里没有——** **于是前面所有控制流的展开代码都到不了真实模型。**
 ///
 /// **这类缺口最危险的地方在于它的表现：** **不是"报错"，而是"控制流算子被当作不支持"**——**看起来像"还没做"，其实是"读漏了一个字段"。**

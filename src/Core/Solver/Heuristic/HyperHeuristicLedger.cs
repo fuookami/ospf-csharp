@@ -1,5 +1,4 @@
 // 超启发式运行的计数器与终止判定 / The hyper-heuristic run's ledger and termination decision.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun` 的 `termination` 与 `state`：
 // 两个纯函数，输入是计数器，输出是终止原因与特征输入。
 // Mirrors `termination` and `state` of `HyperHeuristicRun`'s (47241 B): two pure functions
 // turning the counters into a termination reason and the feature input.

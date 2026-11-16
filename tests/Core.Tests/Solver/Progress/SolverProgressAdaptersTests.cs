@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// The progress adapters must **preserve the original callback**, and **must not invoke it when reporting fails**.
 /// </summary>
 /// <remarks>
-/// 移植了核心类型（"怎么上报"），这批移植适配器（"从哪里接"）。**没有适配器，进度上报存在但无人调用**——
+/// 实现了核心类型（"怎么上报"），这批实现适配器（"从哪里接"）。**没有适配器，进度上报存在但无人调用**——
 /// 与 "可达 ≠ 在用"是同一类问题。
 ///
 /// 两条最要紧的语义：

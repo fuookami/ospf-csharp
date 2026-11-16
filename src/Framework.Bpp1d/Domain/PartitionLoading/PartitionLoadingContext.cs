@@ -1,6 +1,4 @@
 // 分区装载生命周期 / Partition-loading lifecycle.
-// 与固定 Kotlin 的装配与加列半边对应。
-// The create/add-column half of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using System.Threading.Tasks;

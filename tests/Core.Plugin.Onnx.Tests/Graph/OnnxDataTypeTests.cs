@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Graph;
 /// **ONNX 数据类型的编号必须与规范一致** / The ONNX data type ids must match the specification.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的。**这里钉的不是"我们的枚举有几个成员"，而是那几个编号是否与 ONNX 规范相同。**
+/// 。**这里钉的不是"我们的枚举有几个成员"，而是那几个编号是否与 ONNX 规范相同。**
 /// **编号写错不会抛异常：** 张量会被当成另一种类型读，数值悄悄变形，**而整条链上看不出任何错误。**
 ///
 /// Syncs. **What is pinned is not "how many members our enum has" but whether those ids match the ONNX specification.** **A wrong id throws

@@ -1,5 +1,4 @@
 // 定价列选择与标签支配策略 / Pricing column selection and label dominance policies.
-// 与固定 Kotlin 、（64 行）对应。
 // And.
 
 using System;

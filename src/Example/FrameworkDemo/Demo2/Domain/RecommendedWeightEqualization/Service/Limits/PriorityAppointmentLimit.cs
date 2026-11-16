@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 5. **另一处还写了 `stowage.stowage[i, j].range.eq(Flt64.zero)`**——那是给符号设界，**紧接着又加了同义的等式约束**。
 ///    两件事都做是冗余但无害的；本仓只加约束（符号的界由注册时决定），并把这条差异记在这里。
 ///
-/// **an item without an appointment may only sit at a position matching its priority depth**. Five things must be copied: **the three skip conditions** —
+/// **an item without an appointment may only sit at a position matching priority depth**. Five things must be copied: **the three skip conditions** —
 /// `!Location.Main` (main deck only), `Cargo.Contains(Virtual)` (virtual cargo is unconstrained) and `appointment.ContainsKey(item)` (appointed items are unconstrained); dropping any
 /// of them adds constraints and cuts off valid solutions; **`StowageNeeded` false is skipped too**, since an unplaceable combination has no variable and the constraint would be a
 /// tautology; **the constraint is `s[i,j] = 0`** (an equality), not `不超过 0`; **`StowageNeeded` is the static method** matching `StowageModel.StowageNeeded(item, position)`; and **another place

@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **降阶上下文：一张名字到表达式的表，加一层作用域** / The lowering context: names bound to expressions, plus scopes.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxLoweringContext` 的最小形态。**它是子图展开的前提：** **`If`／`Loop`／`Scan` 的子图有自己的一张表，
+/// `OnnxLoweringContext` 的最小形态。**它是子图展开的前提：** **`If`／`Loop`／`Scan` 的子图有自己的一张表，
 /// 又必须能看见外层张量——** **"看得见外层、写不进外层"就是作用域要保证的全部。**
 ///
 /// **为什么单独一层而不是一个大字典：** **一个大字典会让子图的中间结果泄漏到外层，** **而泄漏的表现是"外层某处引用到了一个它不该看见的名字"，**

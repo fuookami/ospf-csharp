@@ -1,5 +1,4 @@
 // 一维普通 MILP 入口 / The ordinary BPP1D MILP entry.
-// 与固定 Kotlin 的 `Bpp1dSolveConfig` / `Bpp1dSolution` / `Bpp1dMilp` 对应。
 
 using System.Collections.Generic;
 using System.Threading;

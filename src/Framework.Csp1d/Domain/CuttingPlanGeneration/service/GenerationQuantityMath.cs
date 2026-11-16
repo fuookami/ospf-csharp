@@ -190,7 +190,7 @@ internal static class GenerationQuantityMath {
     /// the two implementations**, which is a cross-language semantic divergence.
     ///
     /// **This is the single implementation of the unit key**: both `GenerationWidthIndex.CanonicalUnitKey` and `CrossContributionProjector.Measure` delegate here,
-    /// matching its "one private fun".
+    /// matching "one private fun".
     /// </remarks>
     public static string UnitKey(PhysicalUnit unit) =>
         unit.Symbol

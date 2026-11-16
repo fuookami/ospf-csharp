@@ -16,8 +16,8 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// | 原话 | 实测 |
 /// | --- | --- |
-/// | `PatternColumnBenchmark` 无法移植：本仓**根本没有 `Framework.Bpp1d`** | **项目在** |
-/// | `GenerationCacheBuildBenchmark` 无法移植：`DFSGenerator` 是 `internal` | **是 `public`** |
+/// | `PatternColumnBenchmark` 没有对应实现：本仓**根本没有 `Framework.Bpp1d`** | **项目在** |
+/// | `GenerationCacheBuildBenchmark` 没有对应实现：`DFSGenerator` 是 `internal` | **是 `public`** |
 /// | `Item.Weight` 不参与任何约束：`BinType.Capacity` 未用于重量限制 | **`BinType.MaxWeight` 参与**，而 `Capacity` **也没有** |
 ///
 /// **三条全错，而三条都是"做不了"这种方向。** 说"做完了"而其实没做，会让人少做一步；

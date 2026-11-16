@@ -145,12 +145,12 @@ dotnet test ospf-csharp.sln -c Release --no-build
 
 本仓库**不**作以下主张：
 
-- **没有性能主张。** 基准套件证明的是"夹具确实走到了目标代码路径"，不证明加速；移植的夹具从不断言耗时。
+- **没有性能主张。** 基准套件证明的是"夹具确实走到了目标代码路径"，不证明加速；这些夹具从不断言耗时。
 - **没有通用互通主张。** 跨语言验证只做过三处：`SerializedSolution`、`RemoteTaskSubmitRequest`、
   `configuration` / `sha256` 摘要。
 - **没有"文件数对齐"主张。** 模块存在不等于能力存在；以能力矩阵为准，不以项目清单为准。
 - 已知缺口（列在 `docs/kotlin-capability-matrix.md` 里）包括：
-  本仓库**根本没有 `Framework.Bpp1d` 项目**，故 `PatternColumnBenchmark` 无法移植；`Infra.Item.Weight`
+  本仓库**根本没有 `Framework.Bpp1d` 项目**，故 `PatternColumnBenchmark` 没有对应实现；`Infra.Item.Weight`
   只透传不参与任何约束；PWL 诊断与形状 DTO 缓存未实现；Demo5 各模块 README 仍缺。
 
 ## 许可证

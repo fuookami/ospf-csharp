@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **`Scan` 契约：长度藏在一个输入的形状里** / The Scan contract: the length hides in an input's shape.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerScan`。**它与 `Loop` 的差别不是"重复"，而是"带过去什么"：** **`Scan` 带状态量，'
+/// `lowerScan`。**它与 `Loop` 的差别不是"重复"，而是"带过去什么"：** **`Scan` 带状态量，'
 /// **且扫描长度来自某个输入的首维，不是节点属性——** **读成"元素总数"会让长度大一个量级，而展开后的模型只是"更慢"，不报错。**
 ///
 /// Syncs `lowerScan`. **The difference from Loop is not repeating but what is carried: Scan carries states, and the scan length comes from an input's leading dimension

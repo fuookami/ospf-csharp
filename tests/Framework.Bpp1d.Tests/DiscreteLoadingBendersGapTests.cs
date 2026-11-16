@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests;
 /// 装载服务里**真实**的 Benders 路径 / The real Benders path inside the loading service.
 /// </summary>
 /// <remarks>
-/// 这里本来要记"框架层 Benders 没移植"，**查下来结论相反**，所以判据改成钉"它其实在"：
+/// 这里本来要记"框架层 Benders 没实现"，**查下来结论相反**，所以判据改成钉"它其实在"：
 ///
 /// ```csharp
 /// private readonly IBendersDecompositionSolver? _bendersSolver;

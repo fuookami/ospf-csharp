@@ -1,5 +1,4 @@
 // "居中"指示量 / The "in between" indicator.
-// 与固定 Kotlin 的 `betweenIn` 构造对应：
 // `if (task1 == task2 || task1 == task3 || task2 == task3) LinearIntermediateSymbol.empty(...)`，
 // 否则取 `frontOf[task1, task3] AND frontOf[task3, task2]`。
 // `betweenIn`: 

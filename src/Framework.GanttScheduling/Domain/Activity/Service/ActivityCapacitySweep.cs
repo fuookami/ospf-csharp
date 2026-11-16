@@ -1,5 +1,4 @@
 // 资源占用扫描 / Resource occupancy sweep.
-// 与固定 Kotlin 的扫描核心对应：
 // 按端点推进增删占用，只重算发生变化的选择，并保留各组原求和顺序。
 // The sweep core of the: advance through endpoints, recompute only the
 // changed choices, and keep each group's original summation order.

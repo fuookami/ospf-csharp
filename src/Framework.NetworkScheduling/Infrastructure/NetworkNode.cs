@@ -4,7 +4,7 @@
 // , and.
 //
 // **这是 P7 的骨架批次**：`network-scheduling` 在是 12 个模块、118 个源文件的独立框架，C# 侧此前**完全没有对应项目**。
-// 这里建立项目、接入解决方案，并移植依赖已闭合的最小一层；其余模块（flow／design／allocation／vrp／resilience／route…）
+// 这里建立项目、接入解决方案，并实现依赖已闭合的最小一层；其余模块（flow／design／allocation／vrp／resilience／route…）
 // 逐批推进。不宣称任何跨语言互通或性能结论——这里只有单元测试。
 // **This is P7's skeleton batch**: in the code `network-scheduling` is a standalone framework of 12 modules and 118
 // source files, and the C# side had **no corresponding project at all**. creates the project, wires it into

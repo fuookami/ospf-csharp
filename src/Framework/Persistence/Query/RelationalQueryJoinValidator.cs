@@ -2,7 +2,7 @@
 // 与`validate` 的 Join 部分及 `containsExactColumnCorrelation`／`containsBooleanConstant` 对应：
 // 校验数据源命名不冲突、关联条件引用的都是已绑定的数据源，并且关联条件里**确实存在**一条目标侧与已绑定侧的
 // 列对列关联。
-// The join section of the pinned Kotlin: plus `containsExactColumnCorrelation` and
+// Plus `containsExactColumnCorrelation` and
 // `containsBooleanConstant`: source naming must not conflict, references must resolve to already bound sources,
 // and the condition must **actually contain** a column-to-column correlation between the joined side and a bound
 // side.

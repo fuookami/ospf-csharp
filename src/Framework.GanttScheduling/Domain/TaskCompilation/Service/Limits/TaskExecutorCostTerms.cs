@@ -1,5 +1,4 @@
 // 任务×执行器成本项 / Task-executor cost terms.
-// 与固定 Kotlin 的
 // 每个任务在每个执行器上各贡献一项代价，全部求和：`tasks.flatMap { executors.map { ... } }`。
 // One cost term per task per executor, summed: `tasks.flatMap { executors.map { ... } }`.
 

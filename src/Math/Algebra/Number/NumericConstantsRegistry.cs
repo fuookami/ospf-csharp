@@ -68,7 +68,7 @@ public static class NumericConstantsRegistry {
 /// <summary>
 /// 伴生常量解析器（反射回退标志）/ Companion constant provider resolver (reflection fallback flag)
 /// <para>
-/// 默认关闭（与 Kotlin 一致）。仅在开启时允许 ForOrNull 扫描注册的程序集。
+/// 默认关闭。仅在开启时允许 ForOrNull 扫描注册的程序集。
 /// </para>
 /// <para>
 /// Default OFF (matching Kotlin). Only when ON may ForOrNull scan registered assemblies.

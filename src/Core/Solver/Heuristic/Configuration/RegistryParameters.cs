@@ -1,5 +1,4 @@
 // 注册表的参数校验 / The registry's parameter validation.
-// 与固定 Kotlin （43259 B）的 `emptyParameters` / `numericParameters` /
 // `validateAlgorithm` 三个纯校验对应。
 // Provides the three pure validators `emptyParameters`, `numericParameters` and `validateAlgorithm`.
 // (43259 B).
@@ -267,7 +266,7 @@ public static class RegistryParameters {
     /// **让整数与小数字面量都算数，字符串一律不算**（与`doubleOrNull` 一致）。
     /// **`JsonValue.TryGetValue&lt;double&gt;` cannot be used directly**: it demands a node that literally stores a `double`, while a configuration
     /// often writes `3` as an integer — so a valid configuration reads as invalid. Converting to `JsonElement` first **accepts both integer and
-    /// fractional literals and still rejects strings**, matching its `doubleOrNull`.
+    /// fractional literals and still rejects strings**, matching `doubleOrNull`.
     /// </remarks>
     /// <param name="node">JSON 节点 / The JSON node.</param>
     /// <param name="value">数值 / The number.</param>

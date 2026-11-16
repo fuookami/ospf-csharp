@@ -1,6 +1,4 @@
 // 分区列生成预算与轨迹 / Partition column generation budget and trace.
-// 与固定 Kotlin 的头部对应。
-// The header of the pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Number;
 

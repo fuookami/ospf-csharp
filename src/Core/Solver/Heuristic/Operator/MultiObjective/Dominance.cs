@@ -1,5 +1,4 @@
 // 多目标支配、非支配排序与参考点 / Multi-objective dominance, non-dominated sorting and reference points.
-// 与固定 Kotlin 、
 // 对应。
 // , and.
 

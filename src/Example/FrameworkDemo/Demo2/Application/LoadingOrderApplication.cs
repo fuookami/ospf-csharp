@@ -11,7 +11,6 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 
 /// <summary>
 /// 装载顺序应用。Loading order application: generates loading order from aircraft context.
-/// Port of Kotlin LoadingOrderAlgorithm / LoadingOrderAlgorithmImpl.
 /// </summary>
 public sealed class LoadingOrderApplication
 {

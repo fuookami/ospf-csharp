@@ -1,6 +1,4 @@
 // 尾板优化器 / Tail sheet optimiser.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

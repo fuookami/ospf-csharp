@@ -1,5 +1,5 @@
 // 受控搜索会话 / A controlled search session.
-// 与固定 Kotlin （19823 B）的 `ControlledSearchSession` 与 `ControlledSnapshot` 对应。
+// `ControlledSearchSession` 与 `ControlledSnapshot` 对应。
 // Mirrors `ControlledSearchSession` and `ControlledSnapshot` 's (19823 B).
 
 using System;

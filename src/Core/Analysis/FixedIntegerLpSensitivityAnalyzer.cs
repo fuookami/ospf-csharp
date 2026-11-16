@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 固定整数 LP 敏感性分析 / Fixed-integer LP sensitivity analysis.
 /// </summary>
 /// <remarks>
-/// **这是 `FixedIntegerLpSensitivityAnalyzer.analyze` 的编排移植。**
+/// **这是 `FixedIntegerLpSensitivityAnalyzer.analyze` 的编排。**
 ///
 /// **它能在没有真实求解器的情况下跑通**：只要给一个 <see cref="IFixedIntegerLpBackend"/> 的假实现，
 /// 整条链路——校验、固定值投影、能力门、求解、敏感性组装——都能走完。

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 见证解的自校验 / Self-validation of a witness solution.
 /// </summary>
 /// <remarks>
-/// **这是 `TargetFeasibilityAnalyzer.validateTargetWitness` 的移植，也是"可达"这个结论唯一的地基。**
+/// **这是 `TargetFeasibilityAnalyzer.validateTargetWitness` 的实现，也是"可达"这个结论唯一的地基。**
 ///
 /// 求解器说"我给你找到了一个解"。**这个解可能不属于这个模型、可能越界、可能违反原始约束、
 /// 也可能根本不满足目标。** 任何一条不查，报出去的 `Reachable` 就是一个没验过的断言。

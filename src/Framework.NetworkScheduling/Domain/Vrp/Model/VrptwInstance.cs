@@ -1,5 +1,4 @@
 // VRPTW 实例 / VRPTW instance.
-// 与固定 Kotlin 对应。
 //
 // 实例是**已通过校验的不可变快照**：构造入口只有 `VrptwValidator`（公开的 `Invoke`）与 `Validated`（内部，给校验器用）。
 // 因此下游拿到的 `VrptwInstance` 一定满足"客户唯一、节点唯一、坐标轴一致、时间窗在业务时间轴内、需求不超过某车型容量"

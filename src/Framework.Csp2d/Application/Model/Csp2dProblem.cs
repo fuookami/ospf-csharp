@@ -1,6 +1,5 @@
 // 二维套裁问题、配置与解 / The 2D cutting stock problem, configuration and solution.
-// 与固定 Kotlin 对应（`sheetConfig` 见文末说明）。
-// The pinned Kotlin: .
+// 对应（`sheetConfig` 见文末说明）。
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Domain.Material.Model;

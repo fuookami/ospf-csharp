@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **带元素列表的绑定让重排与切片真的发生** / A binding with an element list lets the permutation and the slice really happen.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的做法：**每个张量表达式都带 `elements`，所以 `transpose` 与 `sliceLeading` 都有东西可动。**
+/// 做法：**每个张量表达式都带 `elements`，所以 `transpose` 与 `sliceLeading` 都有东西可动。**
 /// **C# 侧此前只有"一个名字一个标量表达式"，这里给绑定加了<b>可选的**元素列表——**可空是有意的：**
 /// **大多数绑定不需要它，于是这一层能逐步接进来，而"有没有元素"也成了一个可判断的事实。**
 ///

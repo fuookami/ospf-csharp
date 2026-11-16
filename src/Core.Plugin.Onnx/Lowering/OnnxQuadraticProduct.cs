@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **两个一次式相乘：进入二次域** / Two first-degree forms multiplied: entering the quadratic domain.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `Mul`／`MatMul` 在 `Quadratic` 导入模式下的那一半。**一次域里 `Mul` 只允许"变量乘常数"，'
+/// `Mul`／`MatMul` 在 `Quadratic` 导入模式下的那一半。**一次域里 `Mul` 只允许"变量乘常数"，'
 /// **而两个含变量的式子相乘不再是多项式一次**——**硬塞进一次域只能得到一个错误的结果，而它照常可解。**
 ///
 /// **合并同类项在这里必须做对：** **`(x+y)(x−y)` 展开出 `x²`、`−y²` 与 `xy`、`−xy` 四项，后两项必须抵消。**

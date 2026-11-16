@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
 /// 基于物理量的生产力，描述时间窗口内的生产能力，产出数量携带单位 /
 /// Quantity-based productivity describing production capacity within a time window,
 /// with production quantities carrying physical units.
-/// 从 kotlin WorkingCalendar.kt QuantityProductivity 类移植。
+/// 从 kotlin WorkingCalendar.kt QuantityProductivity 类实现。
 /// </summary>
 /// <typeparam name="V">数值类型 / The numeric value type.</typeparam>
 /// <typeparam name="T">材料类型 / The material type.</typeparam>

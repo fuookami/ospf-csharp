@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Graph;
 /// **半精度：坑全在次正规数与无穷/NaN 这两条路径上** / Half precision: the traps live on the subnormal and infinity/NaN paths.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxHalfPrecision`。**FP16 常量几乎总是权重与初始值，读错一个不会报错——** '
+/// `OnnxHalfPrecision`。**FP16 常量几乎总是权重与初始值，读错一个不会报错——** '
 /// **只是模型能跑但偏差一点点，而那是很难归因的一类错。**
 ///
 /// Syncs `OnnxHalfPrecision`. **FP16 constants are almost always weights and initialisers, and getting one wrong does not raise — the model runs slightly off, which is hard

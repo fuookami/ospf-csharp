@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **`Loop` 的展开契约：迭代变量、累加器与规模守卫** / The Loop unrolling contract: iteration variable, accumulators, size guard.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph.lowerLoop`。**`If` 只做"选"，`Loop` 要做"重复并且把上一轮的结果带进下一轮"——**
+/// `OnnxSubgraph.lowerLoop`。**`If` 只做"选"，`Loop` 要做"重复并且把上一轮的结果带进下一轮"——**
 /// **于是它多出三件 `If` 没有的东西：迭代变量的绑定、循环携带值（累加器）的初值与更新、以及展开后的规模。**
 ///
 /// **这里只做契约判定，不做展开本身：** **展开需要子图体的递归降阶（把子图节点真正走一遍求值），** **那一步依赖多数算子的降阶路径，还没到。**

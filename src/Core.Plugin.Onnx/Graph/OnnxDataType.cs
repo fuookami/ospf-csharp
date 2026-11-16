@@ -8,7 +8,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// **ONNX 数据类型映射** / ONNX data type mapping.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的。`protoId` 是 `TensorProto.DataType` 的枚举值，**必须与 ONNX 规范一致**——
+/// 。`protoId` 是 `TensorProto.DataType` 的枚举值，**必须与 ONNX 规范一致**——
 /// 它不是我们自己的编号，写错会让读到的模型张量被当成另一种类型，**而那种错误不会抛异常，只会让数值悄悄变形**。
 ///
 /// Synchronises from Kotlin `dee897d2`. `protoId` is the `TensorProto.DataType` enum value and **must match the ONNX specification**: it is

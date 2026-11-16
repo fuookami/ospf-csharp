@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 固定整数 LP 敏感性协议 / The fixed-integer LP sensitivity protocol.
 /// </summary>
 /// <remarks>
-/// **移植的是协议，不是求解**：`FixedIntegerLpBackend` 的求解实现要真实 LP 后端，
+/// **实现的是协议，不是求解**：`FixedIntegerLpBackend` 的求解实现要真实 LP 后端，
 /// 这里只把**不碰后端的那一半**（范围、结果、选项、请求、报告）搬过来，并把边界写清楚。
 ///
 /// 判据钉的都是**某个值不合法时会不会被放过去**，因为这一层的作用就是"让不合法的值进不去"。

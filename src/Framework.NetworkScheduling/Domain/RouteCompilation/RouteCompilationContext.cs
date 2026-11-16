@@ -1,5 +1,4 @@
 // 路线编译上下文 / Route compilation context.
-// 与固定 Kotlin （16530 字节）对应。
 
 using System;
 using System.Collections.Generic;

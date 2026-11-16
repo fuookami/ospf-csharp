@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 /// 远程标识值类型的字符串编解码器工厂 / String converter factory for remote identifier value types.
 /// </summary>
 /// <remarks>
-/// 固定 Kotlin 侧的标识一律是 <c>@JvmInline value class X(val value: String)</c>，序列化为**裸字符串**；
+/// 标识一律是 <c>@JvmInline value class X(val value: String)</c>，序列化为**裸字符串**；
 /// C# 的 <c>readonly record struct X(string Value)</c> 默认会写成 <c>{"value":"…"}</c>，两端无法互通。
 /// 本工厂识别"只有一个公共 <c>Value</c> 字符串属性 + 一个字符串构造参数"的值类型并按裸字符串处理。
 /// Pinned Kotlin identifiers are <c>@JvmInline value class X(val value: String)</c> and serialize as **bare

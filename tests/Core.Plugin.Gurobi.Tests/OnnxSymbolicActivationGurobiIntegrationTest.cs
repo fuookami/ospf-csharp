@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **符号激活真的挂进模型并求解** / A symbolic activation is attached to a model and solved.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的激活降阶在模型层的那一半。**此前 `Relu(x)` 只能拒绝，因为多项式装不下"正部"：**
+/// 激活降阶在模型层的那一半。**此前 `Relu(x)` 只能拒绝，因为多项式装不下"正部"：**
 /// **它是分段线性的，而分段线性不是一次多项式。** **现在它被包成系数为一的单项式，展平器展开成自己的结果多项式。**
 ///
 /// **两条判据成对测，是因为单测一条会说谎：** **只看 `[0,10]` 得 0，一个"总是 0"的实现也通过；'

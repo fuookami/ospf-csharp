@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 多目标 pipeline 运行的完整结果 / The complete result of a multi-target pipeline run.
 /// </summary>
 /// <remarks>
-/// **这是 里 `CriticalityProfileAnalysisResult` 的移植。**
+/// **这是 里 `CriticalityProfileAnalysisResult` 的实现。**
 ///
 /// **各个报告被保留下来**，使调用方无需从汇总 profile 重建目标、扰动与冲突证据就能检查它们。
 ///
@@ -150,7 +150,7 @@ public sealed record CriticalityProfileAnalysisResult(
     /// </summary>
     /// <returns>成功，或结构化错误 / Success, or a structured error.</returns>
     /// <remarks>
-    /// **这是那三道 `require` 的移植。** 它们挡的不是"参数为空"，
+    /// **这是那三道 `require` 的实现。** 它们挡的不是"参数为空"，
     /// **而是"两份列表来自不同的运行"**——
     /// **而那是这个结果类型唯一能错得悄无声息的方式。**
     ///

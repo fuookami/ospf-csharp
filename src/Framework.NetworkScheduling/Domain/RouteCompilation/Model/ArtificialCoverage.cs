@@ -1,5 +1,4 @@
 // Phase-I 人工覆盖变量 / Phase-I artificial coverage variables.
-// 与固定 Kotlin （5500 字节）对应。
 
 using System;
 using System.Collections.Generic;

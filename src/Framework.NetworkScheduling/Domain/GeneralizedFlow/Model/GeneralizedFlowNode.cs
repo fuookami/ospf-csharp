@@ -1,5 +1,4 @@
 // 广义流节点与问题 / Generalized-flow node and problem.
-// 与固定 Kotlin （2212 字节）、（1177 字节）对应。
 // And.
 
 using System;

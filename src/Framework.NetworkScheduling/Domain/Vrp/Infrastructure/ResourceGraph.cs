@@ -1,5 +1,4 @@
 // 车辆资源维度的有向弧 / Directed arc in a vehicle-resource dimension.
-// 与固定 Kotlin 、（58 行）对应。
 // And.
 
 using System;

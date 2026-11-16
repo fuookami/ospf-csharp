@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Scip;
 /// **跨语言互通：C# 侧弹性模型的精确形状** / Cross-language parity: the exact shape of the C# elastic model.
 /// </summary>
 /// <remarks>
-/// **推翻了一条记了很久的结论**："Kotlin 侧不可执行，所以互通测试做不到"。
+/// **推翻了一条记了很久的结论**："不可执行，所以互通测试做不到"。
 /// 实测：`/c/environment/maven/apache-maven-3.10.0` 在机器上，本地仓库 1.1 GB，
 /// `mvn -o -pl ospf-kotlin-core compile` **离线成功**，Kotlin 测试也能跑。
 ///

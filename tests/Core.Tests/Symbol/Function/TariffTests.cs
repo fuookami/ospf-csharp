@@ -159,7 +159,7 @@ public class TariffTests
         // **gap = 0 时断点本身属于<b>低</b>档（与firstOrNull 一致）**，
         // 所以跳降发生在断点<b>之上</b>一点，而不是正好在断点上。
         //
-        // **With gap = 0 the breakpoint itself belongs to the <b>lower</b> tier (matching its firstOrNull)**,
+        // **With gap = 0 the breakpoint itself belongs to the <b>lower</b> tier (matching firstOrNull)**,
         // so the drop happens just <b>above</b> the breakpoint, not on it.
         (Discount(100.001) - Discount(99.999)).Should().BeLessThan(-400.0,
             "crossing into the second tier reprices all units, a fall of roughly 500");

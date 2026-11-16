@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **把一条纯仿射的算子链求值成多项式** / Evaluate a purely affine operator chain into a polynomial.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 降阶层里"逐元素线性算子"那一部分（`Add`／`Sub`／`Neg`／`Identity`／`Cast`／`Mul` 常数）。
+/// 降阶层里"逐元素线性算子"那一部分（`Add`／`Sub`／`Neg`／`Identity`／`Cast`／`Mul` 常数）。
 /// **它是唯一能端到端验证的部分：** **整条链都是仿射时，降阶结果就是一条多项式，可以直接与手算对照，也可以真的丢给求解器。**
 ///
 /// **其余算子（激活、形状、归约）都必须先产生函数符号或改变形状，** **那一步需要模型机制，** **而把"能不能算"与"能不能挂进模型"混在一批里，

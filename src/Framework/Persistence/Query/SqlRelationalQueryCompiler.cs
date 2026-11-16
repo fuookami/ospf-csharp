@@ -1,7 +1,6 @@
 // 纯参数化 SQL 编译器 / Pure parameterized SQL compiler.
 // 与`SqlRelationalQueryCompiler` 对应。不连接数据库、不依赖任何 ORM：只把关系查询计划编译成
 // 参数化 SQL。所有标量字面量都进参数列表，SQL 字符串里不含业务值。
-// The pinned Kotlin: . It opens no connection and depends on no ORM:
 // it compiles a relational query plan into parameterized SQL. Every scalar literal becomes a parameter, so the SQL
 // text carries no business values.
 

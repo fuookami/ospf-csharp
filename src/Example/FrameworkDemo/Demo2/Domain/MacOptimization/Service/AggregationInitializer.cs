@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 /// 3. **上游聚合可能为 null**（起可空），取非空会抛 `NullReferenceException`——那是崩溃不是失败，所以显式守卫。
 ///
 /// **one check** — stowage positions must not be empty — then the five upstream parts are handed to the aggregation as-is. Three things must be copied:
-/// **only the position check**, matching its "MAC optimisation requires at least one stowage position", with no other validation and no DTO translation; **`MACRange` is
+/// **only the position check**, matching "MAC optimisation requires at least one stowage position", with no other validation and no DTO translation; **`MACRange` is
 /// computed by the aggregation**, and the initializer touches no weight data beyond `TotalWeight`; and **the upstream aggregations may be null** (nullable since then), where taking
 /// non-null throws a `NullReferenceException` — a crash rather than a failure — so they are guarded explicitly.
 /// </remarks>

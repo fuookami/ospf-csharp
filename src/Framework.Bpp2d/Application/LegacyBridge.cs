@@ -1,5 +1,4 @@
 // 既有模型到新模型的桥接 / Bridge from the legacy models to the current ones.
-// 与固定 Kotlin 的 `toSheetType` / `toBox2Geometry` 对应。
 // .
 //
 // `toActualItem` / `toLayerPlacement` / `toLayer` / `toLegacyScene` 需要 `ActualItem` 的完整形状体系，

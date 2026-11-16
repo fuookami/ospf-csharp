@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Inference;
 /// **ONNX 推理（用官方运行时）** / ONNX inference through the official runtime.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxInference`。**这一层薄是有意的：** **推理本身由 `Microsoft.ML.OnnxRuntime` 承担，**
+/// `OnnxInference`。**这一层薄是有意的：** **推理本身由 `Microsoft.ML.OnnxRuntime` 承担，**
 /// **而插件该负责的是"边界上的那几件事"——** **输入名与形状的核对、错误的转译、生命周期的收束。**
 /// **把运行时再包一层抽象只会让"到底谁在读这个张量"变成第三个问题。**
 ///

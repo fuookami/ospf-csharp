@@ -1,5 +1,4 @@
 // 运行器状态编解码器 / Runner state codecs.
-// 与固定 Kotlin （9937 B）对应——**只包含不依赖 runner 专有状态的三个工厂**：
 // `population`、`islands`、`trajectory`。
 // — **only the three factories that do not depend on runner-specific
 // state**: `population`, `islands`, `trajectory`.

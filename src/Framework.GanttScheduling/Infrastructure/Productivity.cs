@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;
 /// <summary>
 /// 生产力，描述时间窗口内的生产能力 /
 /// Productivity describing production capacity within a time window.
-/// 从 kotlin WorkingCalendar.kt Productivity 类移植。Ported from kotlin WorkingCalendar.kt Productivity class.
+/// 从 kotlin WorkingCalendar.kt Productivity 类实现。Ported from kotlin WorkingCalendar.kt Productivity class.
 /// </summary>
 /// <typeparam name="Q">产量类型 / The quantity type.</typeparam>
 /// <typeparam name="T">材料类型 / The material type.</typeparam>

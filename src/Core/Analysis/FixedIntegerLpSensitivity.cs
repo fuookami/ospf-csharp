@@ -255,7 +255,7 @@ public sealed record FixedIntegerLpSensitivityReport(
 /// 先降阶再委托的后端适配器 / A backend adapter that lowers first and then delegates.
 /// </summary>
 /// <remarks>
-/// **这是 `LoweredFixedIntegerLpBackend` 的移植，而它此前在 C# 侧完全没有对应物**——
+/// **这是 `LoweredFixedIntegerLpBackend` 的实现，而它此前在 C# 侧完全没有对应物**——
 /// `IFixedIntegerLpBackend` 和 `ConstraintProgrammingToLinearModelLowerer` 都在，
 /// **缺的正是把两者接起来的那一层。**
 ///

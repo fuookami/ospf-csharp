@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **四个近似激活算子的降阶** / Lowering for the four approximated activations.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation` 近似那一半（`Sigmoid`／`Tanh`／`Softplus`／`Elu`）。**这一步把切分策略接到 C# 侧的
+/// `OnnxActivation` 近似那一半（`Sigmoid`／`Tanh`／`Softplus`／`Elu`）。**这一步把切分策略接到 C# 侧的
 /// `UnivariateLinearPiecewiseFunction` 上。**
 /// **契约有三条，每条漏掉都只会在求解阶段表现为"结果不对"：**
 /// **① 断点必须严格递增；② 段数必须等于「断点数 − 1」；③ 边界必须真的有限。**

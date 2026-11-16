@@ -1,6 +1,4 @@
 // 按原序求和 / Sum in original occurrence order.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Number;
 

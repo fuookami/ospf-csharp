@@ -1,7 +1,6 @@
 // 二维装箱标识与物品模型 / 2D packing identifiers and item model.
 // 只实现排样算法真正需要的部分：
 // 编号类型、抽象物品、实际物品，以及"候选形状 / 是否圆形件"两个派生判定。
-// The pinned Kotlin: and, limited to what the layout algorithm actually needs:
 // identifier types, the abstract item, the actual item, and the two derived predicates.
 //
 // **这里的能力边界**：`AbstractItem` 还带 `materialAmounts`（`Map<MaterialKey, UInt64>`）与 `batchNo`

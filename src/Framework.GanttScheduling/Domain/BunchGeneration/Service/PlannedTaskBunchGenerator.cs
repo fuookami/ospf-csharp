@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.BunchGeneration.Service
 /// Planned task bunch generator (stub type, entirely commented out in Kotlin source)
 /// </summary>
 /// <remarks>
-/// 此类在 Kotlin 源码中已被完全注释掉，保留为占位符以备将来实现。
+/// 此类是占位实现符以备将来实现。
 /// 包含拓扑排序和标签设置算法的骨架结构。
 /// This class was entirely commented out in the Kotlin source, kept as a placeholder for future implementation.
 /// Contains topological sort and label-setting algorithm skeleton structure.

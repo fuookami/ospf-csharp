@@ -206,7 +206,7 @@ public sealed class AllUnitsDiscountFunction<V> : IMathFunctionSymbol<V>, IHasRe
         // 与`firstOrNull` 一致。** **正的间隙把区间收成半开，让 one-hot 真正唯一。**
         //
         // **The boundary gap defaults to zero**: **a breakpoint then belongs to two tiers, and `TryEvaluate` takes the
-        // first match, matching its `firstOrNull`.** **A positive gap makes the intervals half-open so the
+        // first match, matching `firstOrNull`.** **A positive gap makes the intervals half-open so the
         // one-hot is genuinely unique.**
         BoundaryGap = boundaryGap ?? converter.Zero;
 

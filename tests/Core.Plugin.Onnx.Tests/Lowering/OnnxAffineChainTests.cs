@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **纯仿射链：唯一能端到端验证的那部分降阶** / The affine chain: the only part of the lowering verifiable end to end.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 降阶层里逐元素线性算子那一部分。**整条链都是仿射时结果就是一条多项式，可以直接与手算对照。**
+/// 降阶层里逐元素线性算子那一部分。**整条链都是仿射时结果就是一条多项式，可以直接与手算对照。**
 /// **其余算子都要产生函数符号或改变形状，那一步需要模型机制**——**把两者混在一批里，会让"能不能算"永远得不到单独的证据。**
 ///
 /// Syncs the elementwise-linear part of the lowering. **When the whole chain is affine the result is one polynomial, directly comparable with hand arithmetic.** **Every

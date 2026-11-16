@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Output;
 /// **输出聚合方式** / How a whole output tensor becomes one scalar.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxAggregation`。**优化模型只能有一个目标值，而 ONNX 输出是张量，**
+/// `OnnxAggregation`。**优化模型只能有一个目标值，而 ONNX 输出是张量，**
 /// **所以"如何把张量折成一个数"是模型语义的一部分，不是后处理细节：** **选 `Mean` 还是 `Sum` 会让同一个模型优化出完全不同的解。**
 ///
 /// Syncs `OnnxAggregation`. **An optimisation model has one objective value while an ONNX output is a tensor, so "how the tensor becomes a number" is part of the

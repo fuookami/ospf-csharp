@@ -1,6 +1,4 @@
 // 二维套裁的求解入口：MILP 路径与列生成路径 / The 2D cutting stock entries: the MILP path and the column generation path.
-// 与固定 Kotlin 的求解器部分对应。
-// The solver part of the pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

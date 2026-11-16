@@ -1,5 +1,4 @@
 // 搜索档案与拥挤距离 / Search archives and crowding distance.
-// 与固定 Kotlin 、
 //、 的 `CrowdingDistance` 对应。
 // ,, and `CrowdingDistance`.
 

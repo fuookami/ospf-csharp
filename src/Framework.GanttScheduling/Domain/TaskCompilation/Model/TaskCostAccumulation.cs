@@ -1,5 +1,4 @@
 // 任务代价的累加 / Accumulation of task cost.
-// 与固定 Kotlin 的 `addColumns` 里
 // `taskCost.flush` + 只对新列追加 `cost(task) * x[task]` 对应。
 // Mirrors `taskCost.flush` followed by appending `cost(task) * x[task]` for the new columns only,
 // inside `addColumns`'s.
@@ -56,7 +55,7 @@ public class TaskCostAccumulation<T> {
     /// <summary>
     /// 当前目标里的代价项 / The cost terms currently in the objective.
     /// </summary>
-    /// <remarks>只有最近一轮，与flush 一致。 / Only the latest round, matching its flush.</remarks>
+    /// <remarks>只有最近一轮，与flush 一致。 / Only the latest round, matching flush.</remarks>
     public IReadOnlyList<Term> Terms => _terms;
 
     /// <summary>目标中保留的迭代数 / How many iterations the objective retains.</summary>

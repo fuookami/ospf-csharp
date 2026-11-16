@@ -1,5 +1,4 @@
 // 破坏—重建搜索会话 / The ruin-and-recreate search session.
-// 与固定 Kotlin （9190 B）对应。
 
 using System;
 using System.Collections.Generic;

@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **把输入界变成模型里的约束** / Turn input bounds into constraints the model can hold.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 里"导入选项的界 → 模型里的界"这一步。**为什么是约束而不是变量属性：**
+/// 里"导入选项的界 → 模型里的界"这一步。**为什么是约束而不是变量属性：**
 /// **C# 侧变量的 `Range` 由类型常量注册表给出（`Continuous.Instance` + `NumericConstantsRegistry`），** **逐变量的界没有设置入口；**
 /// **而在模型里表达"这个变量在 `[a, b]` 内"的常规做法就是两条不等式。**
 ///

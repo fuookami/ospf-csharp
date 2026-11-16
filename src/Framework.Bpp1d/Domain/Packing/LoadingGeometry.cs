@@ -1,6 +1,4 @@
 // 舱位几何与冲突扫描 / Position geometry and conflict sweep.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Concept;

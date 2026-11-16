@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// **常量折叠** / Constant folding.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxGraphParser.foldConstant` 与 `Shape`/`Reshape` 的静态求值。**折叠的价值在于把"由图描述的常数"变成"数本身"，**
+/// `OnnxGraphParser.foldConstant` 与 `Shape`/`Reshape` 的静态求值。**折叠的价值在于把"由图描述的常数"变成"数本身"，**
 /// **而它的风险在于折叠出一个错误的常数——** **那种错会让整条链下游全部围绕一个错值优化，** **而每一步都"成功"。**
 ///
 /// Syncs `foldConstant` and the static evaluation of `Shape`/`Reshape`. **Folding turns "a constant described by a graph" into "a number", and its risk is folding

@@ -1,6 +1,4 @@
 // 二维套裁错误类型 / 2D cutting stock error types.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using Fuookami.Ospf.Utils.Error;
 

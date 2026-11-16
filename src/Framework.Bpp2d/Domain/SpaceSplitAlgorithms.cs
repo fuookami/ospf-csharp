@@ -1,5 +1,4 @@
 // 空间切分搜索与块装载上下文 / Space-splitting search and the block-loading context.
-// 与固定 Kotlin 与
 // （131 行）对应。
 // And.
 //

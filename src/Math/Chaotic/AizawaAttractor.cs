@@ -16,7 +16,7 @@ public sealed record AizawaAttractor<V>(
     where V : struct, IFloatingNumber<V> {
     public Point<Dim3, V> Invoke(Point<Dim3, V> p) {
         V x = p[0]; V y = p[1]; V z = p[2];
-        // 同步 Kotlin 966cafbc：回到标准 Aizawa 式。原实现三处都偏了——
+        // ：回到标准 Aizawa 式。原实现三处都偏了——
         // dx 减的是完整的 dy 而不是 delta*y、dz 的线性项用的是 alpha*x 而不是 alpha*z、
         // 并且把 dz/dy 置换到了第二/三分量。
         // Syncs instead of delta*y, dz's linear term used alpha*x instead of alpha*z, and dz/dy were swapped into the second/third components.

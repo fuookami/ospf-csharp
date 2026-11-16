@@ -1,5 +1,4 @@
 // 网络流聚合与上下文 / Network-flow aggregation and context.
-// 与固定 Kotlin 的 `FlowContext` 类、（19647 字节）对应。
 // Mirrors the `FlowContext` class and the whole of.
 //
 // 聚合持有**每模型独立的注册态**（变量、表达式、松弛、行表），问题本身仍是不可变数据。生命周期被三条规则钉死：

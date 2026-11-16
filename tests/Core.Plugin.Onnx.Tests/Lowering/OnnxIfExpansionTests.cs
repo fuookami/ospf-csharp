@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **`If` 展开：选分支，以及两条容易漏的约束** / Unrolling an If, and two constraints that slip easily.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerIf`。**这是三类控制流里最浅的一类（不需要迭代变量，只需要"选"），** **但它带着一条容易被忽略的约束：'
+/// `lowerIf`。**这是三类控制流里最浅的一类（不需要迭代变量，只需要"选"），** **但它带着一条容易被忽略的约束：'
 /// **两个分支必须产出同样的东西——** **若输出个数不同，选中的是哪一个都会让下游按错的个数去接，而错位之后每个维度都跟着错。**
 ///
 /// Syncs `lowerIf`. **The shallowest of the three (no iteration variable, only a choice), yet it carries an easily-missed constraint: both branches must produce the same

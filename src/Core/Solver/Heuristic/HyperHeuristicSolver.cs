@@ -1,5 +1,4 @@
 // 超启发式求解器的门面 / The hyper-heuristic solver facade.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicSolver` 的 `open` / `invoke`：
 // 预检 → 装配工作单元 → 解析全局组件 → 构造运行 → 可选恢复策略档案 → 跑完 → 汇总结果。
 // Mirrors `HyperHeuristicSolver`'s `open` / `invoke`'s (47241 B): preflight, assemble the workers,
 // resolve the global components, construct the run, optionally restore a policy archive, run it, summarise.

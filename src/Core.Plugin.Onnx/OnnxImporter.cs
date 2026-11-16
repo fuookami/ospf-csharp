@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx;
 /// **导入一个 ONNX 模型的单一入口** / The single entry point for importing an ONNX model.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxFunctionalModel` 里"从字节到可用模型"那条主干。**它把前 17 批的东西按固定次序串起来：**
+/// `OnnxFunctionalModel` 里"从字节到可用模型"那条主干。**它把前 17 批的东西按固定次序串起来：**
 /// **解析 → 图校验 → 前置检查 → 界解析 → 仿射求值 → 模型组装。**
 ///
 /// **次序本身就是契约：** **同一份坏模型可能同时触发三处错误，报告哪一处决定了调用方能否一次改对。** '

@@ -1,5 +1,4 @@
 // 主问题的图案使用量变量集合 / The pattern usage variable set of the master problem.
-// 与固定 Kotlin 的 `Csp2dPatternAssignment` 与 `safeCsp2dPolynomial` 对应。
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;

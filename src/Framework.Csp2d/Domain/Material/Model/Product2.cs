@@ -1,6 +1,5 @@
 // 待裁产品、需求与需求集合 / Products, demands and demand sets.
-// 与固定 Kotlin 对应（单件面积见文件末尾说明）。
-// The pinned Kotlin: .
+// 对应（单件面积见文件末尾说明）。
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Infrastructure;

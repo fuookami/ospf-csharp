@@ -1,6 +1,4 @@
 // 离散装载应用服务 / The discrete-loading application service.
-// 与固定 Kotlin 的 MILP 路径对应。
-// The MILP path of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using System.Threading.Tasks;

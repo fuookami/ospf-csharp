@@ -219,7 +219,6 @@ public sealed class TypedPathBuilder<E, T> {
 
 /// <summary>
 /// 手写谓词 schema / Hand-written predicate schema.
-/// Kotlin abstract class PredicateSchema&lt;E&gt; with protected field(KProperty1).
 /// C# protected Field(Expression&lt;Func&lt;E,T&gt;&gt;) builds a TypedPathBuilder.
 /// </summary>
 public abstract class PredicateSchema<E> {
@@ -229,7 +228,6 @@ public abstract class PredicateSchema<E> {
 
 /// <summary>
 /// 表达式 DSL 入口与便捷构造 / Expression DSL entry + convenience constructors.
-/// Kotlin top-level fns; C# static class.
 /// </summary>
 public static class ExpressionDsl {
     /// <summary>布尔表达式 DSL 入口 / Boolean expression DSL entry.</summary>

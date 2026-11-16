@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 最小阻塞集合 / A minimal blocking set.
 /// </summary>
 /// <remarks>
-/// **这是 里 `MinimalBlockingSet` 的移植。**
+/// **这是 里 `MinimalBlockingSet` 的实现。**
 ///
 /// **它是一个独立类型，不是一个属性。** C# 侧此前只有 `ConflictExplanation.MinimalBlockingSet`
 /// ——那只是一个 `Members` 的别名，**而别名丢掉了"最小性"这件事本身。**

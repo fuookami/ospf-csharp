@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Model;
 /// 余料 `RestMaterialPenalty`、物料成本 `MaterialCostPenalty`（按物料编号的表）。
 ///
 /// **四项惩罚全部可选**，默认 `null`/空表，此时成本就是基础值 `1`。
-/// 所以移植它**不会改变默认行为**，只是把"可配置"这条能力补上。
+/// 所以实现它**不会改变默认行为**，只是把"可配置"这条能力补上。
 ///
 /// Ported from its `Csp1dPricingObjectiveConfig`. It determines **the objective cost of a column during pricing**, and the reduced-cost test is
 /// `dual benefit > objective cost` — **get the cost wrong and the emit decision is wrong**.

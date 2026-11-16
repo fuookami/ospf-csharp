@@ -252,7 +252,7 @@ public sealed class McCormickEnvelopeFunction<V> : IMathFunctionSymbol<V>, IHasR
         // 这里用 monomials + 显式常数，而不是"整条多项式乘系数"——与构造一致。
         //
         // Row = w - leftScale*left - rightScale*right, using monomials plus an explicit constant rather than scaling the
-        // whole polynomial, matching its construction.
+        // whole polynomial, matching construction.
         foreach (LinearMonomial<V> monomial in Left.Monomials) {
             terms.Add(new LinearMonomial<V>(leftScale.Times(monomial.Coefficient).Negate(), monomial.Symbol));
         }

@@ -18,8 +18,8 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// Tests for the unified solver runtime configuration, status numeric contracts and auditable provenance.
 /// </summary>
 /// <remarks>
-/// 对照固定 Kotlin 单一 SolverConfig：所有求解器共用运行参数，供应商专有值走 backend 配置并脱敏。
-/// Mirrors the pinned Kotlin single SolverConfig: every solver shares the runtime parameters while
+/// 单一 `SolverConfig`：所有求解器共用运行参数，供应商专有值走 backend 配置并脱敏。
+/// A single `SolverConfig`: every solver shares the runtime parameters while
 /// vendor-specific values travel in the redacted backend configuration.
 /// </remarks>
 public class SolverConfigContractTest {

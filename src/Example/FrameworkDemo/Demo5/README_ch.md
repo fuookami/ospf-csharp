@@ -40,5 +40,5 @@ dotnet test tests/Example.Tests/Example.Tests.csproj --filter 'FullyQualifiedNam
 
 ## 对齐说明
 
-C# 移植保留了 DTO 形状与求解入口，但本 README **不主张跨语言等价**：只有 `SerializedSolution`、
+本实现保留 DTO 形状与求解入口，但本 README **不主张跨语言等价**：只有 `SerializedSolution`、
 `RemoteTaskSubmitRequest` 与 `configuration`/`sha256` 摘要这三处做过跨实现实测。

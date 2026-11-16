@@ -1,5 +1,4 @@
 // VRPTW 分支定价算法 / The VRPTW branch-and-price algorithm.
-// 与固定 Kotlin （29596 字节）对应。
 
 using System;
 using System.Collections.Generic;

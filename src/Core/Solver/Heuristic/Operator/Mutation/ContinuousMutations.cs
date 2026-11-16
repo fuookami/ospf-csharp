@@ -1,5 +1,4 @@
 // 连续变异算子 / Continuous mutation operators.
-// 与固定 Kotlin （12067 字节）对应。
 
 using System;
 using System.Collections.Generic;

@@ -186,7 +186,7 @@ public abstract record DiagnosticSource
     /// <param name="member">不可行成员 / The infeasible member.</param>
     /// <returns>诊断来源 / The diagnostic source.</returns>
     /// <remarks>
-    /// **这是 `ConflictAnalyzer.sourceOf` 的移植。** 求解器只说"这个约束 / 这个边界 / 这个值域让它不可行"，
+    /// **这是 `ConflictAnalyzer.sourceOf` 的实现。** 求解器只说"这个约束 / 这个边界 / 这个值域让它不可行"，
     /// 冲突分析要的是"哪个诊断来源"。**两套类型各说各话，中间必须有这一次翻译。**
     ///
     /// **This is the implementation of `ConflictAnalyzer.sourceOf`.** The solver says "this constraint / this bound / this domain made it infeasible"; conflict analysis wants "which diagnostic source". **Two type families, and this

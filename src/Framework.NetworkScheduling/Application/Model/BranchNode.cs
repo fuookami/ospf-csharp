@@ -1,5 +1,4 @@
 // 分支决策与分支节点 / Branch decisions and branch nodes.
-// 与固定 Kotlin （5206 字节）、（5822 字节）对应。
 // And.
 
 using System;

@@ -1,7 +1,7 @@
 // 谓词字段过滤提取 / Predicate field filter extraction.
-// 与固定 Kotlin 对应：把简单仓储谓词还原成字段级过滤条件，供轻量仓储复用，
+// 把简单仓储谓词还原成字段级过滤条件，供轻量仓储复用，
 // 免去为每种表达式形态写一遍解析。不支持时返回 null 而不是抛异常或静默丢条件。
-// The pinned Kotlin: simple repository predicates are reduced to
+// Simple repository predicates are reduced to
 // field-level filters so lightweight repositories can reuse them. Unsupported shapes yield null rather than throw or
 // silently drop a condition.
 

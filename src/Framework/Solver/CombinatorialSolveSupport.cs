@@ -61,7 +61,7 @@ public static class CombinatorialSolveSupport {
     ///
     /// The difference is `Stopwatch.GetTimestamp` plus `Stopwatch.GetElapsedTime` in place of `TimeSource.Monotonic.ValueTimeMark`. **The monotonic semantics are the same** (immune to
     /// system clock adjustments); C# simply does not wrap the origin in a type. Cancellation records use `PortableCancellationRecord` (epoch milliseconds), so the comparison is **millisecond-precise**
-    /// rather than `Instant`-precise: a cancellation requested and completed within the same millisecond counts as "not later than completion", matching its choice at that same instant.
+    /// rather than `Instant`-precise: a cancellation requested and completed within the same millisecond counts as "not later than completion", matching choice at that same instant.
     /// </remarks>
     public static SolveAttemptTrace<V> WithAttemptMetadata<V>(
         this SolveAttemptTrace<V> trace,

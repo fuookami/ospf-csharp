@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **子图：能不能展开，是"能不能导入"的分界线** / Whether a subgraph unrolls is the line between importable and not.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph` 的可展开性判定。**展开本身依赖降阶上下文（还没实现），**
+/// `OnnxSubgraph` 的可展开性判定。**展开本身依赖降阶上下文（还没实现），**
 /// **而"一个依赖数据的 `Loop` 若被放过会发生什么"可以独立说清：** **它会按猜出来的次数展开，解看着正常，只是优化的是另一个网络。**
 ///
 /// Syncs the unrollability decision of `OnnxSubgraph`. **The unrolling itself needs the lowering context, not implemented yet, while what happens when a data-dependent Loop

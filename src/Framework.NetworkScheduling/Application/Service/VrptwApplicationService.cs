@@ -1,5 +1,4 @@
 // VRPTW 应用服务 / The VRPTW application service.
-// 与固定 Kotlin （3118 字节）对应。
 
 using System;
 using System.Collections.Generic;

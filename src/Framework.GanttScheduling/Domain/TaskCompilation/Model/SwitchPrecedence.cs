@@ -1,5 +1,4 @@
 // 先后指示量 / Precedence indicator.
-// 与固定 Kotlin 的 `frontOf` 构造对应：
 // `if (task1 == task2) LinearIntermediateSymbol.empty(...)` —— 对角线是**空符号**，即恒零。
 // `frontOf`: 
 // `if (task1 == task2) LinearIntermediateSymbol.empty(...)` — the diagonal is an **empty symbol**, i.e. identically zero.

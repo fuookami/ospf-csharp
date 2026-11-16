@@ -1,5 +1,4 @@
 // ESPPRC 标签、定价请求与定价结果 / ESPPRC label, pricing request and pricing result.
-// 与固定 Kotlin 、（46 行）、（28 行）对应。
 // , and.
 
 using System;

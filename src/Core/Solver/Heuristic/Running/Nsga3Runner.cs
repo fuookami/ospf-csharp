@@ -1,5 +1,4 @@
 // NSGA-III 运行器 / The NSGA-III runner.
-// 与固定 Kotlin （8588 B）对应。
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 // 选择策略 / Selection policies.
-// 与固定 Kotlin （13691 B）对应。
 
 using System;
 using System.Collections.Generic;

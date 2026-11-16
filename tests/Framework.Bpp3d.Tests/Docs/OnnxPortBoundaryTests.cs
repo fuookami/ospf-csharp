@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **ONNX 移植的未实现项必须逐条写清理由与升级路径** / The unmigrated ONNX items need a reason and an upgrade path each.
+/// **ONNX 实现的未实现项必须逐条写清理由与升级路径** / The unmigrated ONNX items need a reason and an upgrade path each.
 /// </summary>
 /// <remarks>
 /// **未实现项若不逐条写清"为什么没做、怎么补上、影响谁"，下一个人只能从代码里猜——** **而猜错的方向通常是"以为已经支持了"。**
@@ -25,14 +25,14 @@ public class OnnxPortBoundaryTests
     public void TheUnmigratedList_ShouldCarryReasonAndUpgradePath() {
         string matrix = File.ReadAllText(Path.Combine(RepositoryRoot(), "docs", "kotlin-capability-matrix.md"));
 
-        matrix.Should().Contain("## ONNX 移植：已完成与未移植（逐项，含理由与升级路径）",
+        matrix.Should().Contain("## ONNX 实现：已完成与未实现（逐项，含理由与升级路径）",
             "the section is the only place that answers \"what did we deliberately not do\"");
-        matrix.Should().Contain("| # | 未移植项 | 为什么没做 | 升级路径 | 影响 |",
+        matrix.Should().Contain("| # | 未实现项 | 为什么没做 | 升级路径 | 影响 |",
             "the table header states the four things every row owes");
 
         // 只扫 ONNX 那一节：矩阵里别处也有 "| 数字 |" 开头的表格，全局扫会抓到它们。
         // Scan only the ONNX section: other tables also start rows with "| number |", and a global scan catches them.
-        int boundary = matrix.IndexOf("## ONNX 移植：已完成与未移植", StringComparison.Ordinal);
+        int boundary = matrix.IndexOf("## ONNX 实现：已完成与未实现", StringComparison.Ordinal);
         boundary.Should().BeGreaterThanOrEqualTo(0);
         string[] rows = matrix.Substring(boundary).Split('\n');
         int counted = 0;
@@ -73,7 +73,7 @@ public class OnnxPortBoundaryTests
     [Fact]
     public void EachReason_ShouldSayWhatItWouldTake() {
         string matrix = File.ReadAllText(Path.Combine(RepositoryRoot(), "docs", "kotlin-capability-matrix.md"));
-        int section = matrix.IndexOf("## ONNX 移植：已完成与未移植", StringComparison.Ordinal);
+        int section = matrix.IndexOf("## ONNX 实现：已完成与未实现", StringComparison.Ordinal);
         section.Should().BeGreaterThanOrEqualTo(0);
         string slice = matrix.Substring(section, System.Math.Min(6000, matrix.Length - section));
 

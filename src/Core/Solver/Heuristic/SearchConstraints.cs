@@ -1,5 +1,4 @@
 // 统一约束处理 / Unified constraint handling.
-// 与固定 Kotlin （11768 字节）对应。
 
 using System;
 using System.Collections.Generic;

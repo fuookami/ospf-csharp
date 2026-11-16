@@ -1,5 +1,4 @@
 // 设施分区约束 / Facility-partition constraints.
-// 与固定 Kotlin （2460 字节）对应。
 
 using System;
 using Fuookami.Ospf.Core.Model.Mechanism;

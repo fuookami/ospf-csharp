@@ -1,5 +1,5 @@
 // 物品与板材需求聚合 / Item and sheet demand aggregation.
-// 与固定 Kotlin 对应，并补齐 `ItemContext` 所需的输入模型。
+// 并补齐 `ItemContext` 所需的输入模型。
 // And supplies the input model `ItemContext` needs.
 //
 // **与 `PackingAggregation` 的区别必须记住**：本类是同名概念的**入参**侧（需求 + 板材上限，随排布推进而消耗），

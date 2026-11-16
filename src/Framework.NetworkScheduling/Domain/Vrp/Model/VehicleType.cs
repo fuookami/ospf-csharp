@@ -1,5 +1,4 @@
 // VRPTW 模型：单位口径、容差与车辆类型 / VRPTW model: unit contract, tolerances and vehicle type.
-// 与固定 Kotlin 、（68 行）、（72 行）对应。
 // , and.
 
 using System;

@@ -1,5 +1,4 @@
 // 初始路线生成器 / Initial route generator.
-// 与固定 Kotlin 对应。
 //
 // 为 RMP 提供初始可行列。启发式：每个客户 × 每种车辆类型生成一条单客户路线，经 `RouteValidator` 独立复核后返回，并过滤与分支
 // 遮罩不兼容的路线。

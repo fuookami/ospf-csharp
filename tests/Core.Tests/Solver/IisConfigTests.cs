@@ -10,8 +10,8 @@ using Fuookami.Ospf.Core.Solver.Iis;
 namespace Fuookami.Ospf.Core.Tests.Solver;
 
 /// <summary>
-/// 不可行诊断配置契约测试，对照固定 Kotlin IISConfig。
-/// Contract tests for the infeasibility diagnostic configuration, mirroring the pinned Kotlin IISConfig.
+/// 不可行诊断配置的契约测试。
+/// Contract tests for the infeasibility diagnostic configuration.
 /// </summary>
 public class IisConfigTests {
     [Fact]
@@ -84,7 +84,7 @@ public class IisConfigTests {
         Assert.Equal(0.25, status.BoundProgress.ToDouble(), 12);
         Assert.Equal(1d / 7d, status.ConstraintProgress.ToDouble(), 12);
         Assert.Equal(0.2, status.TotalProgress.ToDouble(), 12);
-        // 分母为零沿用 IEEE 语义，与 Kotlin 的 Flt64 除法一致。 / Zero denominators keep IEEE semantics, matching Kotlin's Flt64 division.
+        // 分母为零沿用 IEEE 语义，与 的 Flt64 除法一致。 / Zero denominators keep IEEE semantics, matching Kotlin's Flt64 division.
         Assert.True(double.IsInfinity(new IisComputingStatus(0UL, 0UL, 1UL, 0UL).ConstraintProgress.ToDouble()));
         Assert.True(double.IsNaN(new IisComputingStatus(0UL, 0UL, 0UL, 0UL).TotalProgress.ToDouble()));
     }

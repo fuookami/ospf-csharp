@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// Measure geometry validation and DTO preparation through the production renderer entry point, without running a solver.
 /// </summary>
 /// <remarks>
-/// 移植。
+/// 实现。
 ///
 /// **它测的是"守卫 + DTO 构造"这条路径**，不是装箱算法：`sparse` 场景里所有货物互不重叠，守卫走完全量检查；
 /// `denseFirstConflict` 场景里前两件货物放在原点，守卫在**第一个冲突对**就短路返回。

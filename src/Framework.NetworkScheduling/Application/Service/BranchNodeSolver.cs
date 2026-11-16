@@ -1,5 +1,4 @@
 // 单分支节点求解器 / The single branch-node solver.
-// 与固定 Kotlin （22550 字节）对应。
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 // 目标管线 / Objective pipelines.
-// 与固定 Kotlin （938 字节）、
 //（998 字节）、
 //（1053 字节）对应。
 // , and

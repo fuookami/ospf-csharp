@@ -9,7 +9,6 @@ namespace Fuookami.Ospf.Core.Variable;
 /// 二维无符号整数变量组合 / Two-dimensional unsigned-integer variable combination.
 /// </summary>
 /// <remarks>
-/// 与固定 Kotlin 中的 `UIntVariable2` 一一对应。
 ///
 /// **之前它不存在**，而它的一维兄弟 `UIntVariable1`、以及 `BinVariable1/2/3`、`TerVariable1/2`、`IntVariable1`
 /// 都在——这是逐个补齐时漏掉的一个。它挡住的不只是自己：bpp3d 层分配的 `PreciseAssignment` 用 `UIntVariable2`

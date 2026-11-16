@@ -1,5 +1,4 @@
 // 预算分配与调度日志 / Budget allocation and schedule logging.
-// 与固定 Kotlin （995 B）与（7761 B）对应。
 // And (7761 B).
 
 using System;

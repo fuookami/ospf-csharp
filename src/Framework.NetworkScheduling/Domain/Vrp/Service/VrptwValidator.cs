@@ -1,5 +1,4 @@
 // VRPTW 实例一致性校验 / VRPTW instance consistency validation.
-// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

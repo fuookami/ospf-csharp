@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **激活算子的取值语义与属性默认值** / Activation semantics and attribute defaults.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的。**判据钉三件：**
+/// 。**判据钉三件：**
 /// **① 规范写死的默认值（漏掉等于把负半轴压成零）；② 边界处的行为（`x = 0` 归属哪一边）；**
 /// **③ 数值稳定性（`Softplus` 在大输入上不能溢出成无穷）。**
 ///

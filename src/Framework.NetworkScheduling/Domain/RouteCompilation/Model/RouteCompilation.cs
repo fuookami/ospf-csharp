@@ -1,5 +1,4 @@
 // 路线编译模型 / Route compilation model.
-// 与固定 Kotlin （16566 字节）对应。
 
 using System;
 using System.Collections.Generic;

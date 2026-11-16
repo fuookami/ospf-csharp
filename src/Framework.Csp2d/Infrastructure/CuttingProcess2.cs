@@ -1,6 +1,4 @@
 // 二维套裁裁切工艺 / 2D cutting stock process.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Globalization;
 

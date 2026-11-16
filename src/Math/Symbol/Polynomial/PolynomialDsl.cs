@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Fuookami.Ospf.Math.Symbol.Polynomial;
 /// <summary>
-/// 多项式快捷 DSL / Polynomial Quick DSL (Kotlin QuickDsl.kt top-level functions).
+/// 多项式快捷 DSL / Polynomial Quick DSL (顶层函数).
 /// </summary>
 public static class PolynomialDsl {
     /// <summary>从可变多项式转不可变 / Converts mutable polynomial to immutable.</summary>

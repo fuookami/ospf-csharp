@@ -1,5 +1,4 @@
 // 应用服务层 / Application service layer.
-// 与固定 Kotlin （926 字节）、（6780 字节）对应。
 // And.
 
 using System;

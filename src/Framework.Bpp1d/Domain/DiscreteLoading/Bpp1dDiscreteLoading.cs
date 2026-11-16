@@ -1,6 +1,4 @@
 // 一维离散装载几何适配 / One-dimensional discrete-loading geometry adapter.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading;

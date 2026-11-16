@@ -1,5 +1,4 @@
 // 路径编译聚合 / Path compilation aggregation.
-// 与固定 Kotlin （24507 字节）对应。
 
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,4 @@
 // 管线列表生成器与影子价格键安全转换 / Pipeline-list generator and shadow-price-key safe cast.
-// 与固定 Kotlin （2790 字节）、
 //（337 字节）对应。
 // And.
 

@@ -762,8 +762,8 @@ public class RemoteWireContractTest {
 
         string json = solution.Encode();
 
-        // 固定 Kotlin 侧使用 ignoreUnknownKeys = false，计算属性一旦进入 wire 就会被拒绝。
-        // The pinned Kotlin side uses ignoreUnknownKeys = false, so a computed property on the wire is rejected.
+        // 严格解码（`ignoreUnknownKeys = false`）：计算属性一旦进入 wire 就会被拒绝。
+        // Strict decoding (`ignoreUnknownKeys = false`): a computed property on the wire is rejected.
         json.Should().NotContain("claimsExactOptimum");
         json.Should().NotContain("\"present\":false");
     }
@@ -1513,7 +1513,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// <c>SolveFingerprinting.Solver</c> 在固定 Kotlin **没有对应实现**（有 `sha256` 与
+    /// <c>SolveFingerprinting.Solver</c> **没有对应实现**（有 `sha256` 与
     /// `configuration`），因此这是 C# 侧扩展而非同步缺口。本测试锁定其审计值，避免重构时静默改变
     /// 已落库的求解器身份。
     /// <c>SolveFingerprinting.Solver</c> has **no counterpart** (which only

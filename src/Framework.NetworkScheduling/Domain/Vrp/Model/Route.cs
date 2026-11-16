@@ -1,5 +1,4 @@
 // VRPTW 路线与解 / VRPTW route and solution.
-// 与固定 Kotlin 、（19 行）对应。
 // And.
 
 using System;

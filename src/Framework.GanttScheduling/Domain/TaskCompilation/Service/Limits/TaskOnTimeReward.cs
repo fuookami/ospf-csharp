@@ -1,6 +1,4 @@
 // 任务准时奖励 / Task on-time reward.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Number;
 

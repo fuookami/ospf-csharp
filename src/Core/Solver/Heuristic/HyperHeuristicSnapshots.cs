@@ -1,5 +1,5 @@
 // 运行检查点 / Run checkpoints.
-// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`。
+//  `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`。
 // Mirrors `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`'s
 // (47241 B).
 

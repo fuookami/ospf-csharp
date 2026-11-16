@@ -8,8 +8,8 @@ using Fuookami.Ospf.Utils.Functional;
 
 namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 
-// 调度模型逐字段对照固定 Kotlin 12fdb587 的 SchedulingModels.kt；时长一律按毫秒整型编码。
-// Scheduling models mirror the pinned Kotlin SchedulingModels.kt field by field; every duration is encoded as integer milliseconds.
+// 调度模型逐字段：SchedulingModels.kt；时长一律按毫秒整型编码。
+// 调度模型，逐字段：every duration is encoded as integer milliseconds.
 
 /// <summary>调度计费估算 / Estimates used for scheduler accounting.</summary>
 /// <param name="EstimatedRuntimeMs">预估运行时长毫秒 / Estimated runtime in milliseconds.</param>

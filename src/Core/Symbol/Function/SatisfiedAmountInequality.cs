@@ -120,7 +120,7 @@ public class SatisfiedAmountInequalityFunction :
             Flt64? lower = Finite(input.LhsRange.LowerBound.Value);
             Flt64? upper = Finite(input.LhsRange.UpperBound.Value);
             if (lower is null || upper is null) {
-                // 范围无界时不写行，标志保持自由变量，与 Kotlin 一致。
+                // 范围无界时不写行，标志保持自由变量，与 一致。
                 // No row for unbounded ranges; the flag stays free, matching Kotlin.
                 continue;
             }

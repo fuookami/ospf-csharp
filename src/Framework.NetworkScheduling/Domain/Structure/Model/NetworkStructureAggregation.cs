@@ -1,5 +1,4 @@
 // 结构聚合与上下文 / Structure aggregation and context.
-// 与固定 Kotlin （9773 字节）、
 // （4398 字节）对应。
 // And.
 

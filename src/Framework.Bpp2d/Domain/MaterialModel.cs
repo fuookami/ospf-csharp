@@ -1,5 +1,4 @@
 // 物料模型 / Material model.
-// 与固定 Kotlin 对应。
 //
 // 这是解除"物料汇总"阻塞的一批：`IAbstractItem` 的 `materialAmounts` 需要 `MaterialKey`，`Packer` 的物料汇总
 // 一直因此留空。
