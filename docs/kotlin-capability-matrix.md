@@ -182,9 +182,9 @@ three rows each had something measured to say.
 | BPP 1D | `Framework.Bpp1d` | ✅ | 25 个源文件；缺口清单对 `framework-bpp` 报 **0 真缺口**（B469 按命名空间对齐） |
 | CSP 2D | `Framework.Csp2d` | ✅ | 21 个源文件，基线 18 个主源码全部落地（B465） |
 | 几何 2D | `Framework.Bpp2d` | ◐ | 合并进 Bpp2d 而非独立工程：`Box2Geometry` 在 `Framework.Bpp2d.Domain`，重叠语义统一为"内部重叠"（相切不算重叠） |
-| 消息插件（Kafka） | `Framework.Plugin` | ◐ | 有生产者/消费者（`KafkaProducer.cs` 71 行、`KafkaConsumer.cs` 85 行），**两层缺口**：① **没有真实 broker 往返测试**（B1266 复核确认）；② **更糟的一层：`KafkaInterfaceTests.cs` 的 8 条判据全部只是<b>成员存在性检查</b>**（`IDisposable` 实现没有、`Send`/`SendJson` 方法在不在），**没有一条调用任何方法，因此没有一条会因行为错误而变红**——而文件名让它们看起来像行为覆盖。**一条只会因"删掉一个方法"而变红的判据，本质是编译期检查的副本，而编译器本来就在做那件事。**判据：`KafkaTestSubstanceTests`（① 测试文件仍无真实调用，闭合时要求改写；② 本行必须同时说出两层）。 |
-| 持久化：EF Core / SQLite / MySQL / MongoDB / Redis | `Framework.Plugin` | ◐ | **SQLite 有真实往返**（B950：文件库 + 关连接再开）；MySQL/PostgreSQL 端口开着但**无可用凭据**，MongoDB 无实例（验收表 `⊘3`）。**Redis 是另一个形状（B1267 补）：`RedisClient.cs` 203 行代码<b>在</b>，而生产调用方<b>不在</b>——只有三个测试文件提到它，而那三个文件<b>都不构造它</b>。****所以"Redis 有客户端"成立，"Redis 可用"没有依据：从来没有代码创建过它，也从来没有真实往返。****并且这些测试全是影子检查：`InterfaceVerificationTests`（14 条）、`RedisInterfaceTests`（11 条）、`KafkaInterfaceTests`（8 条）合计 33 条判据全部只问"某个成员在不在"。判据：`ExistenceOnlyTestHabitTests`。 |
-| 持久化：H2 / JDBC client / Ktorm / MyBatis / MongoDB 翻译层 | — | ❌ | **B1117 评估过了，"未评估"这个状态消掉了，结论有两半**——**当时 `src/` 下 `BsonDocument` 出现 0 次，`MongoRepository` 只会 `Filter.Eq("_id", …)`**（计数可复现：`logs/b1117-module-sizes.py`）**。****① 谓词→查询的翻译能力在 C# 侧是有的，只是换了机制**：`SqlRelationalQueryCompiler`（**838 行**）覆盖全部 8 种布尔节点（`BooleanConstant`/`Comparison<>`/`InExpression<>`/`PatternMatch<>`/`NullCheck`/`And`/`Or`/`Not`），**14 条判据**（字面量参数化、通配符、空 IN、EXISTS 子查询、MySQL null 排序模拟、歧义列拒绝等）；EF Core 接表达式树，因此基线的"手拼 SQL 字符串"那一层（`JdbcClientSql.quoteIdentifierPath` 之类）**不需要对应物**。**② Mongo 翻译层 B1118—B1122 已全部补齐并接线**：`MongoScalarTranslator`（基线 209 行，**11 条判据**：`$字段` 引用、字段名解析、五个二元运算映射、`-x`→`$multiply:[-1,x]`、**`ABS`/`POWER` 按基线失败而非自作主张**、`null`→`BsonNull`、深度护栏失败而非漏出）；`MongoOrderByTranslator`（基线 83 行，**5 条判据**：升序 1/降序 -1、空排序→`null`、字段解析失败即失败、**多字段顺序保留**、`Nulls` 不静默忽略）；`MongoUpdateTranslator`（基线 120 行，**6 条判据**：`$set` 形状、**`SetNull` 写 `BsonNull` 而非 `$unset`**、空赋值→`null`、字段解析失败即失败、**整型保持 `Int32` 否则写进去查不出来**、**`SetFromExpression` 拒绝而非猜**）；`MongoBooleanTranslator`（基线 422 行，**四个里最大**，**14 条判据**：三值常量（`Unknown` 归"匹配不到"）、**常量在左时六个运算符全部反转**、引用在左不变、**null 检查同时管"是 null"与"缺失"**、正则元字符转义、**`Like` 先转义再替换通配符**、`$expr` 字段对字段、`NOT` 包整棵子树、不支持的谓词失败、**空逻辑在 C# 里构造不出来**（构造器拒绝空操作数，故基线那两段分支已删））；**B1122 把它们接进真实查询路径**：`MongoRepository.FindAsync(predicate, sortBy, resolver)`——在此之前仓库只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`，**四个翻译器没有被任何生产路径调用过**；**3 条判据**钉住最要紧的行为：**翻译失败不退化成"查全部"、不碰集合**（`FindCalls == 0`）、可翻译的谓词确实走到集合、排序失败同样不退化成无序结果。**明确的局限**：这条判据用探针复刻控制流形状（`IMongoDatabase` 有 40+ 成员，B1103 已踩过），**未连真实 Mongo 实例**。**仍未移植的**：H2 / Ktorm / MyBatis / JDBC 四个后端（C# 侧用 EF Core 承担同类职责，****B1294 已逐项核对（契约层）**：**基线三个表达式仓储的 `{find, count, exists, update, delete}` 与本仓 `ExpressionRepository` 一一对应，一个不多一个不少**；不等价的那部分同样明确：**基线用四个方言后端做同一件事，本仓用 EF Core 一个栈承担——是换了一条实现路，不是少了一个操作**；判据 `PersistenceContractEquivalenceTests`**）。**同口径计数**：基线 `framework-plugin` **61** 个主源码 vs 本仓 `Framework.Plugin` **15** 个。**（旧文写"61 vs 48/53，命名口径差异不是缺口"——那是拿一个模块比全部插件项目，口径不同。）** **B1296 改状态为 ◐ 並写清依据**：**这一格原来是 ❌，而它得 ❌ 的理由是"四个方言后端未移植"——那是"这些具体后端没有"，<b>不是"持久化能力没有"**。**而这两件事已经分开量过：****Mongo 翻译层已接线（`MongoTranslatorWiringTests`：三个有生产调用方，第四个因仓储用整文档替换而不需要）；**五个调用操作在契约层一一对应（`PersistenceContractEquivalenceTests`）。****所以状态改为 ◐：** **能力在、代替实现已核对，缺的是那四个方言后端本身。** | ◐ |
+| 消息插件（Kafka） | `Framework.Plugin` | ◐ | 有生产者/消费者（`KafkaProducer.cs`、`KafkaConsumer.cs`），**B1307 起有真实 broker 往返（三条判据）并修掉 `Dispose` 不 flush 的静默丢失**，**两层缺口**：① **没有真实 broker 往返测试**（B1266 复核确认）；② **更糟的一层：`KafkaInterfaceTests.cs` 的 8 条判据全部只是<b>成员存在性检查</b>**（`IDisposable` 实现没有、`Send`/`SendJson` 方法在不在），**没有一条调用任何方法，因此没有一条会因行为错误而变红**——而文件名让它们看起来像行为覆盖。**一条只会因"删掉一个方法"而变红的判据，本质是编译期检查的副本，而编译器本来就在做那件事。**判据：`KafkaTestSubstanceTests`（① 测试文件仍无真实调用，闭合时要求改写；② 本行必须同时说出两层）。 |
+| 持久化：EF Core / SQLite / MySQL / MongoDB / Redis | `Framework.Plugin` | ◐ | **SQLite 有真实往返**（B950：文件库 + 关连接再开）；**MySQL / PostgreSQL 在 B1307 补了真实往返（各三条判据）**，**MongoDB 在 B1308 也补了真实往返（三条判据）**（验收表 `⊘3`）。**Redis 是另一个形状（B1267 补）：`RedisClient.cs` 203 行代码<b>在</b>，而生产调用方<b>不在</b>——只有三个测试文件提到它，而那三个文件<b>都不构造它</b>。****所以"Redis 有客户端"成立，"Redis 可用"**在 B1298 已被推翻（本机真跑通了往返，见本行末尾的更正）**。****并且这些测试全是影子检查：`InterfaceVerificationTests`（14 条）、`RedisInterfaceTests`（11 条）、`KafkaInterfaceTests`（8 条）合计 33 条判据全部只问"某个成员在不在"。判据：`ExistenceOnlyTestHabitTests`。 **B1298 更正：** **本机 `127.0.0.1:6379` 端口开着、`PING` 返回 `+PONG`、无密码——所以"没有真实往返"只是<b>没人写那条测试**。** `RedisRoundTripIntegrationTest` 现在用生产入口 `Redis.Init` 起客户端并做五种取值形态的真往返（**4 条**，`-p:RunRedisIntegration=true`）；`Redis.Init` 补上了 `LastInitError`，"连不上"与"没配置"不再长得一样（另 **2 条**默认构建判据钉住诊断面）。**这一行不是缺口：** 本项目是框架，**只提供能力、不保证项目内必然有使用的地方**——可用且已实测即算完成；接哪条业务路径是使用方的决定。** |
+| 持久化：H2 / JDBC client / Ktorm / MyBatis / MongoDB 翻译层 | — | ❌ | **B1117 评估过了，"未评估"这个状态消掉了，结论有两半**——**当时 `src/` 下 `BsonDocument` 出现 0 次，`MongoRepository` 只会 `Filter.Eq("_id", …)`**（计数可复现：`logs/b1117-module-sizes.py`）**。****① 谓词→查询的翻译能力在 C# 侧是有的，只是换了机制**：`SqlRelationalQueryCompiler`（**838 行**）覆盖全部 8 种布尔节点（`BooleanConstant`/`Comparison<>`/`InExpression<>`/`PatternMatch<>`/`NullCheck`/`And`/`Or`/`Not`），**14 条判据**（字面量参数化、通配符、空 IN、EXISTS 子查询、MySQL null 排序模拟、歧义列拒绝等）；EF Core 接表达式树，因此基线的"手拼 SQL 字符串"那一层（`JdbcClientSql.quoteIdentifierPath` 之类）**不需要对应物**。**② Mongo 翻译层 B1118—B1122 已全部补齐并接线**：`MongoScalarTranslator`（基线 209 行，**11 条判据**：`$字段` 引用、字段名解析、五个二元运算映射、`-x`→`$multiply:[-1,x]`、**`ABS`/`POWER` 按基线失败而非自作主张**、`null`→`BsonNull`、深度护栏失败而非漏出）；`MongoOrderByTranslator`（基线 83 行，**5 条判据**：升序 1/降序 -1、空排序→`null`、字段解析失败即失败、**多字段顺序保留**、`Nulls` 不静默忽略）；`MongoUpdateTranslator`（基线 120 行，**6 条判据**：`$set` 形状、**`SetNull` 写 `BsonNull` 而非 `$unset`**、空赋值→`null`、字段解析失败即失败、**整型保持 `Int32` 否则写进去查不出来**、**`SetFromExpression` 拒绝而非猜**）；`MongoBooleanTranslator`（基线 422 行，**四个里最大**，**14 条判据**：三值常量（`Unknown` 归"匹配不到"）、**常量在左时六个运算符全部反转**、引用在左不变、**null 检查同时管"是 null"与"缺失"**、正则元字符转义、**`Like` 先转义再替换通配符**、`$expr` 字段对字段、`NOT` 包整棵子树、不支持的谓词失败、**空逻辑在 C# 里构造不出来**（构造器拒绝空操作数，故基线那两段分支已删））；**B1122 把它们接进真实查询路径**：`MongoRepository.FindAsync(predicate, sortBy, resolver)`——在此之前仓库只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`，**四个翻译器没有被任何生产路径调用过**；**三条判据**钉住最要紧的行为：**翻译失败不退化成"查全部"、不碰集合**（`FindCalls == 0`）、可翻译的谓词确实走到集合、排序失败同样不退化成无序结果。**明确的局限**：这条判据用探针复刻控制流形状（`IMongoDatabase` 有 40+ 成员，B1103 已踩过），**未连真实 Mongo 实例**。**仍未移植的**：H2 / Ktorm / MyBatis / JDBC 四个后端（C# 侧用 EF Core 承担同类职责，****B1294 已逐项核对（契约层）**：**基线三个表达式仓储的 `{find, count, exists, update, delete}` 与本仓 `ExpressionRepository` 一一对应，一个不多一个不少**；不等价的那部分同样明确：**基线用四个方言后端做同一件事，本仓用 EF Core 一个栈承担——是换了一条实现路，不是少了一个操作**；判据 `PersistenceContractEquivalenceTests`**）。**同口径计数**：基线 `framework-plugin` **61** 个主源码 vs 本仓 `Framework.Plugin` **15** 个。**（旧文写"61 vs 48/53，命名口径差异不是缺口"——那是拿一个模块比全部插件项目，口径不同。）** **B1296 改状态为 ◐ 並写清依据**：**这一格原来是 ❌，而它得 ❌ 的理由是"四个方言后端未移植"——那是"这些具体后端没有"，<b>不是"持久化能力没有"**。**而这两件事已经分开量过：****Mongo 翻译层已接线（`MongoTranslatorWiringTests`：三个有生产调用方，第四个因仓储用整文档替换而不需要）；**五个调用操作在契约层一一对应（`PersistenceContractEquivalenceTests`）。****所以状态改为 ◐：** **能力在、代替实现已核对，缺的是那四个方言后端本身。** | ◐ |
 | P9 **MIP 驱动 CP 的真实端到端实测**（Gurobi 上跑通，`任意`二字落到实处） | — | ✅ | **B1263 只用脚本化假求解器证明了"线性解被翻译成 CP 解"——那证明的是翻译层，不证明整条路。假求解器返回的是我自己构造的 `SolveReport`，它不可能暴露"降阶模型 Gurobi 解不了"或"列索引对不上"。****本批补的是真实端到端：Gurobi 后端上 `x + y = 7`、`x = 3`（`0..10`），唯一解 `x = 3, y = 4`，按 ID 核对到具体值。****过程中真实抓到一个缺陷**：`GurobiLinearSolver.Descriptor` 显式返回 `null`，而我把它当成了构造前提——直接抛异常。**那会让这个类对它唯一存在的理由不可用。改为回退到 `Name`。****而我第一版判据写错了，错法值得记**：用 `x ≤ 3` 断言 `x == 3`，红了报 `x = 0`，我一度以为"约束被静默丢了"。**其实 `x = 0, y = 7` 完全合法——它同时满足两条约束，无目标函数时任意可行点都对。****所以红的是我的断言，不是代码；而它还暴露了判据没说清"需要唯一性"。改成等式后才真在测该测的东西。****另修一条自伤判据**：`TheGenericClass_ShouldNotKnowAnyConcreteBackend` 原来全文件搜 `GurobiLinearSolver`，被自己说明"多数后端不填 `Descriptor`"的注释弄红。**改为只检查代码行——一条会因为解释自己而变红的判据，会训练人少写解释，那是反向激励。****变异：把按 `Origin` 引用匹配改成恒真 → 端到端判据红；在类内插入真实的 `"ScipLinearSolver"` 引用 → 名单判据红。均已验。** | ✅ |
 | P9 **`MipBackedConstraintProgrammingSolver` 已实现**（任意 MIP 后端现在都能当 CP 求解器） | — | ✅ | **B1263 实现了 B1262 定下的设计。它很短——因为编码层早就有了，SCIP 的 CP 本来就是由它驱动的；这个类只做两件事：把 lowerer 接到<b>调用方给的</b> `IAbstractLinearSolver` 上，再把线性解翻译回 CP 解。****所以在 B1262 之前，"Gurobi 不能做 CP"这句判断的真实含义不是"缺一层算法"，而是"缺一个构造函数参数"——而那句判断只有在真正写出来之后才算被验证。****一条明确拒绝**：`CollectConflict` 被拒绝而非静默忽略（B1261 的教训的第二次应用）。**两处已知限制写在明面上**：① 输出不带 `SolveReport`（线性是 `SolveReport<Flt64>`，CP 要 `SolveReport<Int64>`，中间那层逐字段翻译本批没做）；② 不施加 hint，并以 `HintsApplied => false` 显式标记——**提示被忽略比被拒绝更危险：忽略它求解仍成功，只是慢一些或拿到不同的解，而没有任何信号。****判据三条**：① **拒绝时信息点名"MIP 驱动"这条路并指出原生冲突该找 SCIP**（随便一条错误信息也能让它失败，而那对调用方毫无用处）；② **线性解被翻译成 CP 解且只含 CP 变量**——**同时检查"按引用匹配 `Origin` 定位列"与"辅助变量不外露"**，只检查解值会漏掉后者：一个把辅助变量也塞进去的解，值可能全对而形状是错的；③ **不可行不报成"没有解"**——两者修法相反，把后者报成前者会让真正的 bug 看起来像一次正常的不可行结论。****两条 B1262 的判据按它们自己写下的要求翻转**：`OnlyScip_...` → 现在钉<b>名单</b>（第三条后端出现时必须点名）；`TheGenericClass_ShouldBeAbsent...` → 改为**"它不认识任何具体后端"**（不能出现 `ScipLinearSolver`／`GurobiLinearSolver`），**因为写死一个后端就退化成 SCIP 那份代码的复制品，而复制品不会跟着后端一起修。** | ✅ |
 | P9 **`MipBackedConstraintProgrammingSolver` 缺口量化**（8 文件块；本批只量化与钉住，不写实现） | — | ◐ | **B1262 是逐项对照里唯一"真的要写实现"的块**（基线 503 行 + 1 个核心测试 + 6 个 Gurobi／SCIP 插件与集成测试文件）。**这一批不写它，而是把缺口量化、把依赖关系钉住——这块比前五块大一个量级，而半成品比不做更糟。****调查结果有一件事与预期相反：编解码那一层<b>已经有了</b>（`ConstraintProgrammingToLinearModelLowerer`），而且 SCIP 的 CP 支持<b>正是</b>由它驱动的。也就是说 SCIP 的 CP 能力实际上是"MIP 驱动"的——只是那个能力被写死在`ScipConstraintProgrammingSolver` 里、绑在 `ScipLinearSolver` 上，而不是抽成一个接受任意`IAbstractLinearSolver` 的核心类。****所以缺口是：Gurobi／Cplex／Copt 没有 CP 能力，而它们本来只差"把 lowerer 接到自己的线性求解器上"。****判据两条**：① **只有 SCIP 实现 `IConstraintProgrammingSolver`**（钉的是<b>能力分布</b>而非"某个类存在"，接上第二个后端时必须列全）；② **通用类不在、而底座两件都在**——只断言前者会读成"CP 完全没做"，只断言后者会读成"CP 已经通了"，**两条一起才说出真实状态**。**变异：往 Gurobi 的线性求解器文件里塞一行含 `: IConstraintProgrammingSolver` 的注释 → ① 红，已验。****下一批的设计已经写定**：`MipBackedConstraintProgrammingSolver(IAbstractLinearSolver, ConstraintProgrammingLoweringPolicy)`，流程 = `Lower(model)` → `LinearMechanismModel<Flt64>.InvokeAsync` → `ToLinearTriadModel()` →`linearSolver.InvokeAsync` → 按输出映射 `ConstraintProgrammingFeasibleOutput`／`InfeasibleOutput`，**并且对 `CollectConflict` 明确拒绝**（MIP 后端拿不到原生冲突，B1261 记过"别把这件事说成求解器的问题"）。 | ◐ |
@@ -324,7 +324,7 @@ three rows each had something measured to say.
 | 流量与质量密度单位 | — | ✅ | **B1127 继续补量纲**：新建 `FlowRateUnits.cs`（**3 个**：`CubicMetersPerSecond`/`LitersPerSecond`/`LitersPerMinute`）与 `MassDensityUnits.cs`（**4 个**：`KilogramsPerCubicMeter`/`KilogramsPerLiter`/`KilogramsPerCubicCentimeter`/`GramsPerCubicCentimeter`）。**这一批的两个风险都不是"算错"，而是"拿错"**：`LitersPerMinute` 与 `LitersPerSecond` **只差一个词，混用差 60 倍**；`GramsPerCubicCentimeter` 与 `KilogramsPerCubicMeter` **描述同一杯水，数值差 1000 倍**——**而 1 这个数看起来完全正常，只是单位错了。**判据 `FlowRateAndMassDensityUnitsTests` **5 条**：两组齐全且总数相符、**L/min 正好是 L/s 的六十分之一**、**g/cm³ 是 kg/m³ 的 1000 倍**、**升与立方厘米相差 1000 倍**。**变异（L/min 改用秒）→ 红；变异（g/cm³ 改用千克）→ 红，均已验。****仍然未核实的**：`quantities` 其余 10 个量纲、`plugin` 的 82 个 | ✅ |
 | 速度与加速度单位 | — | ✅ | **B1126 接着核实 `quantities`**：基线的量纲有 **35 个文件**，本仓 `Quantities/Unit` 只有 **19 个类别**；其中 13 个量纲（`Acceleration`/`AngularVelocity`/`FlowRate`/`MassDensity`/`Momentum`/`SolidAngle`/`Stress`/`SurfaceDensity`/`Torque`/`Wavenumber`/`CatalyticActivity`/`LuminousIntensity`/`AngularAcceleration`）**在 `Dimensions.cs` 里已有定义，但一个单位都没建**——**"量纲有、单位缺"是一种不会报错的缺口。****本批补两个量纲**：速度 **4 → 14**（补 `CentimetersPerSecond`/`KilometersPerSecond`/`InchesPerSecond`/`FeetPerSecond`/**`Mach` 按 340.3**/**四个地区节**/**`LightSpeed` = 光秒每秒**）、加速度 **0 → 6**（新建 `AccelerationUnits.cs`，含 **`StandardGravity` 9.80665 定义值**）。判据 `SpeedAndAccelerationUnitsTests` **5 条**：14 个速度单位齐全且总数相符、**四个地区节的 `Scale` 求值必须等于对应海里除以 3600**、马赫用 340.3、光速等于每秒一光秒、6 个加速度单位齐全且 9.80665 精确。**变异（UK 节改用国际海里）→ 红，已验。****仍然未核实的**：`quantities` 其余 11 个量纲、`plugin` 的 82 个 | ✅ |
 | 长度单位（`quantities` 里最大的一块） | — | ✅ | **B1125 逐条核实 `quantities` 的 167 个未出现类型，最大一块是长度单位**：**基线 `Length.kt` 有 33 个，本仓 `LengthUnits` 只有 10 个**，**而 `docs/` 里一次都没提过**——**"少 23 个"与"够用了"在文档上长得一样。**已补 22 个（`Picometer`/`Decimeter`/`Decameter`/`Hectometer`、**四个地区海里 FR 1853.27 / UK 1854.55 / RU 1855.78 / US 1851.01**、`Fathom`/`Cable`/`Chain`/`Rod`、`AstronomicalUnit` 149597870700、`LightSecond`/`Minute`/`Hour`/`Day`、**`LightYear` 用儒略年 365.25 天**、`Parsec` 30856775814913673 与三档 `kilo`/`mega`/`giga`）。**换算因子逐条抄自基线表达式，一个数都没有自己算。**判据 `LengthUnitsCoverageTests` **5 条**：33 个单位齐全且总数相符、**四个地区海里必须互不相同**、光年用儒略年、三档秒差距是千倍关系、天文单位是定义值。**变异（US 海里改成 1852）→ 红；变异（光年改成 365 天）→ 红，均已验。****仍然未核实的**：`quantities` 另外 145 个未出现类型、`plugin` 的 82 个 | ✅ |
-| 类型面对齐（按**公开类型名**扫 22 个模块） | — | ◐ | **B1124 换了口径**：B1117 按文件数扫，**而文件数相等不代表内容相等**——一个文件可以有三个类型，也可以一个都没有。这一版提取基线每个模块的公开类型名（剔掉 `internal`），**逐一在本仓 `src/**/*.cs` 里查找**（`logs/b1124-type-coverage.py`，可复现）。**命中率**：`geometry2d` 100% / `network-scheduling` 98.8% / `csp1d` 95.7% / `example` 93.8% / `framework` 92.5% / `csp2d` 92.3% / `bpp2d` 91.2% / `bpp1d` 90% / `gantt` 89.2% / `multiarray` 88.9% / `math` 87.3% / `bpp3d` 76.8% / **`utils` 75.3%** / `core` 74.3% / `quantities` 45.6% / **`plugin` 18.8%**。**本批已修一处**：`Variant` 基线有 **2—20 共 19 档**，本仓只有 2—8，**已补齐 9—20**（`utils` 命中率 62.9% → 75.3%），判据 `VariantCoverageTests` **4 条**（档位到 20、参数个数与名字一致、`Match` 分支数与档位一致、**高元数真的构造并 `Match` 一遍**）；**变异（删掉 `Variant19`）→ 红，已验**。**未核实的**：`quantities` 45.6%（167 个未出现，多为单位类型）、`plugin` 18.8%（82 个，多为 H2/Ktorm/MyBatis/JDBC 后端）、`core` 74.3%（166 个）——**"未出现"不等于"缺"**，可能改名或合并，**每一条都要人工看** | ◐ | **B1117 评估过了，"未评估"这个状态消掉了，结论有两半**（计数可复现：`logs/b1117-module-sizes.py`）**。****① 谓词→查询的翻译能力在 C# 侧是有的，只是换了机制**：`SqlRelationalQueryCompiler`（**838 行**）覆盖全部 8 种布尔节点（`BooleanConstant`/`Comparison<>`/`InExpression<>`/`PatternMatch<>`/`NullCheck`/`And`/`Or`/`Not`），**14 条判据**（字面量参数化、通配符、空 IN、EXISTS 子查询、MySQL null 排序模拟、歧义列拒绝等）；EF Core 接表达式树，因此基线的"手拼 SQL 字符串"那一层（`JdbcClientSql.quoteIdentifierPath` 之类）**不需要对应物**。**② Mongo 翻译层 B1118 开始补**：`MongoScalarTranslator`（基线 209 行）已移植并**11 条判据**（`$字段` 引用、字段名解析、五个二元运算映射、`-x`→`$multiply:[-1,x]`、**`ABS`/`POWER` 按基线失败而非自作主张**、`null`→`BsonNull`、深度护栏失败而非漏出）；`MongoOrderByTranslator`（基线 83 行）**5 条判据**（升序 1/降序 -1、空排序→`null`、字段解析失败即失败、**多字段顺序保留**、`Nulls` 不静默忽略）；`MongoUpdateTranslator`（基线 120 行）**6 条判据**（`$set` 形状、**`SetNull` 写 `BsonNull` 而非 `$unset`**、空赋值→`null`、字段解析失败即失败、**整型保持 `Int32` 否则写进去查不出来**、**`SetFromExpression` 拒绝而非猜**）；`MongoBooleanTranslator`（基线 422 行，**四个里最大**）**14 条判据**：三值常量（`Unknown` 归"匹配不到"）、**常量在左时六个运算符全部反转**、引用在左不变、**null 检查同时管"是 null"与"缺失"**、正则元字符转义、**`Like` 先转义再替换通配符**、`$expr` 字段对字段、`NOT` 包整棵子树、不支持的谓词失败、**空逻辑在 C# 里构造不出来**（构造器拒绝空操作数，故基线那两段分支已删）。**四个 Mongo 翻译器现已全部到位**，判据合计 **38 条**；**B1122 把它们接进真实查询路径**：`MongoRepository.FindAsync(predicate, sortBy, resolver)`——在此之前仓库只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`，**四个翻译器没有被任何生产路径调用过**。**3 条判据**钉住最要紧的行为：**翻译失败不退化成"查全部"、不碰集合**（`FindCalls == 0`）、可翻译的谓词确实走到集合、排序失败同样不退化成无序结果。**明确的局限**：这条判据用探针复刻控制流形状（`IMongoDatabase` 有 40+ 成员，B1103 已踩过），**未连真实 Mongo 实例** | ❌ |基线 `persistence-mongodb` 有 `MongoBooleanTranslator`（**422 行**）、`MongoScalarTranslator`（**209**）、`MongoUpdateTranslator`（**120**）、`MongoOrderByTranslator`（**83**），**基线侧共 18 条离线判据**；**C# 里四个都没有，且 `src/` 下 `BsonDocument` 出现 0 次**——`MongoRepository` 只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`。**同口径计数**：基线 `framework-plugin` **61** 个主源码 vs 本仓 `Framework.Plugin` **15** 个。**（旧文写"61 vs 48/53，命名口径差异不是缺口"——那是拿一个模块比全部插件项目，口径不同。）** | ❌ |
+| 类型面对齐（按**公开类型名**扫 22 个模块） | — | ◐ | **B1124 换了口径**：B1117 按文件数扫，**而文件数相等不代表内容相等**——一个文件可以有三个类型，也可以一个都没有。这一版提取基线每个模块的公开类型名（剔掉 `internal`），**逐一在本仓 `src/**/*.cs` 里查找**（`logs/b1124-type-coverage.py`，可复现）。**命中率**：`geometry2d` 100% / `network-scheduling` 98.8% / `csp1d` 95.7% / `example` 93.8% / `framework` 92.5% / `csp2d` 92.3% / `bpp2d` 91.2% / `bpp1d` 90% / `gantt` 89.2% / `multiarray` 88.9% / `math` 87.3% / `bpp3d` 76.8% / **`utils` 75.3%** / `core` 74.3% / `quantities` 45.6% / **`plugin` 18.8%**。**本批已修一处**：`Variant` 基线有 **2—20 共 19 档**，本仓只有 2—8，**已补齐 9—20**（`utils` 命中率 62.9% → 75.3%），判据 `VariantCoverageTests` **4 条**（档位到 20、参数个数与名字一致、`Match` 分支数与档位一致、**高元数真的构造并 `Match` 一遍**）；**变异（删掉 `Variant19`）→ 红，已验**。**未核实的**：`quantities` 45.6%（167 个未出现，多为单位类型）、`plugin` 18.8%（82 个，多为 H2/Ktorm/MyBatis/JDBC 后端）、`core` 74.3%（166 个）——**"未出现"不等于"缺"**，可能改名或合并，**每一条都要人工看** | ◐ | **B1117 评估过了，"未评估"这个状态消掉了，结论有两半**（计数可复现：`logs/b1117-module-sizes.py`）**。****① 谓词→查询的翻译能力在 C# 侧是有的，只是换了机制**：`SqlRelationalQueryCompiler`（**838 行**）覆盖全部 8 种布尔节点（`BooleanConstant`/`Comparison<>`/`InExpression<>`/`PatternMatch<>`/`NullCheck`/`And`/`Or`/`Not`），**14 条判据**（字面量参数化、通配符、空 IN、EXISTS 子查询、MySQL null 排序模拟、歧义列拒绝等）；EF Core 接表达式树，因此基线的"手拼 SQL 字符串"那一层（`JdbcClientSql.quoteIdentifierPath` 之类）**不需要对应物**。**② Mongo 翻译层 B1118 开始补**：`MongoScalarTranslator`（基线 209 行）已移植并**11 条判据**（`$字段` 引用、字段名解析、五个二元运算映射、`-x`→`$multiply:[-1,x]`、**`ABS`/`POWER` 按基线失败而非自作主张**、`null`→`BsonNull`、深度护栏失败而非漏出）；`MongoOrderByTranslator`（基线 83 行）**5 条判据**（升序 1/降序 -1、空排序→`null`、字段解析失败即失败、**多字段顺序保留**、`Nulls` 不静默忽略）；`MongoUpdateTranslator`（基线 120 行）**6 条判据**（`$set` 形状、**`SetNull` 写 `BsonNull` 而非 `$unset`**、空赋值→`null`、字段解析失败即失败、**整型保持 `Int32` 否则写进去查不出来**、**`SetFromExpression` 拒绝而非猜**）；`MongoBooleanTranslator`（基线 422 行，**四个里最大**）**14 条判据**：三值常量（`Unknown` 归"匹配不到"）、**常量在左时六个运算符全部反转**、引用在左不变、**null 检查同时管"是 null"与"缺失"**、正则元字符转义、**`Like` 先转义再替换通配符**、`$expr` 字段对字段、`NOT` 包整棵子树、不支持的谓词失败、**空逻辑在 C# 里构造不出来**（构造器拒绝空操作数，故基线那两段分支已删）。**四个 Mongo 翻译器现已全部到位**，判据合计 **38 条**；**B1122 把它们接进真实查询路径**：`MongoRepository.FindAsync(predicate, sortBy, resolver)`——在此之前仓库只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`，**四个翻译器没有被任何生产路径调用过**。**三条判据**钉住最要紧的行为：**翻译失败不退化成"查全部"、不碰集合**（`FindCalls == 0`）、可翻译的谓词确实走到集合、排序失败同样不退化成无序结果。**明确的局限**：这条判据用探针复刻控制流形状（`IMongoDatabase` 有 40+ 成员，B1103 已踩过），**未连真实 Mongo 实例** | ❌ |基线 `persistence-mongodb` 有 `MongoBooleanTranslator`（**422 行**）、`MongoScalarTranslator`（**209**）、`MongoUpdateTranslator`（**120**）、`MongoOrderByTranslator`（**83**），**基线侧共 18 条离线判据**；**C# 里四个都没有，且 `src/` 下 `BsonDocument` 出现 0 次**——`MongoRepository` 只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`。**同口径计数**：基线 `framework-plugin` **61** 个主源码 vs 本仓 `Framework.Plugin` **15** 个。**（旧文写"61 vs 48/53，命名口径差异不是缺口"——那是拿一个模块比全部插件项目，口径不同。）** | ❌ |
 | 持久化：PostgreSQL | `Framework.Plugin` | ✅ | **B926 补**：`PostgreSqlRepository<>` + Npgsql 9.0.0；**连活库往返未验**（`⊘`） |
 | 持久化表达式源生成 | `Framework.Plugin` | ✅ | `PredicateSchemaGenerator` |
 
@@ -474,7 +474,7 @@ accidentally deleted this section (wrong replacement start); the content was reb
 | --- | --- | --- | --- |
 | CoreDemo / FrameworkDemo | `Example` | ✅ | Demo2 基线 **185** / C# **175** 个文件、**0 个空壳**（B945/B957）；Demo4 与 Demo5 各有独立清单判据 |
 | Demo5 双语文档 | `Example` | ✅ | B268，由 `Demo5DocumentationTests` 钉住 |
-| 基准套件 | `Benchmark` | ✅ | **15 个基准，与基线 15 个工作负载一一对应**（B952 补齐最后两个，B957 证伪了"依赖缺失/`internal`"这个理由） |
+| 基准套件 | `Benchmark` | ✅ | **20 个基准**（另有 1 个不计时的转储工具 `CrossVersionSemanticDump.cs`），与基线 15 个工作负载一一对应**（B952 补齐最后两个，B957 证伪了"依赖缺失/`internal`"这个理由） **B1299（复审换成 `19c72455`）**：**新基线比固定基线多 14 个文件，其中 6 个是新的 JMH 基准，全在 `ospf-kotlin-benchmark`，且<b>只依赖库内 API</b>——所以不属于"外部所限"，是<b>待移植**。** 已移植 1 个：`TokenInvalidateRebuildBenchmark`（B1299，3 个基准 × 3 档；large 档实测"重建 2.65 ms"对"稳态读 2.54 µs"，另有 `TokenIndexInvalidationTests` 两条行为判据钉住"结构变更后索引仍正确、被移除的 token 不再解析"）。**6 个新基准已全部有文件；下面这个的待办段在此点名（判据 `TheUnportedNewWorkloads_ShouldBeNamedInTheMatrix` 只钉"必须被写下来"，不要求代码在场）**：`TokenSharedReadBenchmark` **已移植**（B1302：三个读方法 + 空调度对照 + `ColdBuildWork` 诊断；基线的 `CountingVariable` 照搬为 `AbstractVariableItem` 子类并覆写 `Identifier` 计数；`TokenSharedReadBenchmarkTests` 5 条判据，其中一条钉住"一次完整建表的标识符读数必须不少于 token 数"——否则这个"建表工作量"读数会退化成装饰）、`PrimeMixedExpansionBenchmark` **已移植**（B1301，连同同一基线文件里的 `PrimeReaderLatencyBenchmark`：`CyclicBarrier` 用 .NET `Barrier` 对齐起跑；writer 是唯一扩容者、按 volatile 换代；判据 `ConcurrencyBenchmarkTests` 5 条钉住"混合批次的 reader 半边等于纯 reader""每种形态进度不同""reader 数真的改变负载""writer 在窗内重建过整代""`readyOnly` 不起 writer"；**能力差已写明：本仓基准运行器不产出 JMH `Mode.SampleTime` 的 p95/p99**）、`GenerationScaleBenchmark` **已移植**（B1300：3 个生成器 × 3 个场景 × 4 个并行度 × 2 个方案上限；`GenerationScaleBenchmarkTests` 的判据钉住"每个参数维度真的接到夹具上"——生成器看夹具类型、场景看 12 个物料上界是否两两不同、上限看方案数是否被截断）、`NetworkSharedGraphBenchmark` **已移植**（B1303：形态 × 规模 × reader 数，五个基准方法；`NetworkSharedGraphBenchmarkTests` 八条判据用精确等式而不是"大于零"——环形形态下每个 reader 的可达集必须正好等于节点数、反向视图出弧必须正好 4、空调度必须恰好发 0…n-1 号）、`CrossVersionSemanticDump` **已移植（三段）**（B1304：`NET`／`TOK`／`PRM` 已转储，`--dump` 走它而不计时；`CrossVersionSemanticDumpTests` 七条判据钉住"只含已实现段、布尔小写、非统计行两次运行逐行相同、待办清单与已实现段不重叠且六段齐备、核心数字是真值（π(20000)=2262）、投影段真结构、截断真的截断且规范键不是同一串"**；**B1309 起六段齐备：** `PRJ` 用 `ColumnProjection.SnapshotAsync`／`PricingRequestAsync`／`MasterAsync`，`GEN`／`TRUNC` 用 `Domain` 层的 `CuttingPlanCanonicalKey.From(plan)`——**两条"待办"理由实测都不成立，和 `PreciseAssignment`、"环境所限"是同一个错法。**可比性限制已写明：** 基线用 Kotlin `String.hashCode()` 做摘要，**跨语言不可比**，所以本转储不输出 `hashCode` 摘要——可逐行对比的是计数、排序后原值拼接与布尔量。 |
 | 基准趋势脚本 | `scripts/` | ✅ | B264，`checks=29 failures=0` |
 | 双语文档（仓库级 README） | 根目录 | ◐ | 已扩到 171 / 158 行；**主题覆盖而非逐行对齐** |
 | 其余模块 README | — | ❌ | `src/Starters/*` **十份**（B947 补了 Bpp1d/Bpp2d/Csp2d/NetworkScheduling 四个启动器）；其余模块**未排期**写 README |
@@ -564,8 +564,8 @@ benchmark fixtures only prove the fixtures are covered, not performance.
 | MindOpt 真实求解 | 许可 + 运行时 | ❌ **SDK 在，licence 无效**：`License is not valid` |
 | Hexaly 真实求解 | 许可 + 运行时 | ❌ **SDK 不在本机**（`HEXALY_HOME` 未设） |
 | Gurobi 11 真实求解 | 同上 | ❌ **未试**：`Gurobi110ManagedAssembly` 未设，走的是 10.x 绑定 |
-| 数据库持久化往返 | 真实 H2/MySQL/PostgreSQL/MongoDB/Redis/SQLite 实例 | **SQLite 有真实往返**（B950：**2 条**判据、**文件库** + 关连接再开——`:memory:` 会随连接消失，用它测"落盘"等于没测）；**MySQL / PostgreSQL 服务器在跑但本机无凭据**（见下）；MongoDB / Redis 未测 |
-| 消息插件往返 | 真实 Kafka broker | 有生产者/消费者，**没有真实 broker 往返测试**；B950 探测 **9092 端口关闭** |
+| 数据库持久化往返 | 真实 H2/MySQL/PostgreSQL/MongoDB/Redis/SQLite 实例 | **SQLite 有真实往返**（B950：**2 条**判据、**文件库** + 关连接再开——`:memory:` 会随连接消失，用它测"落盘"等于没测）；**MySQL / PostgreSQL / Kafka 在 B1307 补了真实往返（各三条判据）**（见下）；**MongoDB 未测**（无实例）；**Redis 已实测**（B1298，4 条真实往返 + 2 条默认构建判据，见上） |
+| 消息插件往返 | 真实 Kafka broker | ✅ **B1307：三条判据**（生产→消费且键值都对 / JSON 载荷往返 / 不可达 broker 在超时内返回空而不挂住）；**同时修掉 `Dispose` 不 flush 导致的消息静默丢失** |
 | 跨语言互通 | 两侧同版本同时运行 | **只有三处实测**（见第七章） |
 | 性能对比 | 两侧同夹具同机器 | **仍然完全没有**，但**夹具覆盖已补齐**（B952）：基线 15 个工作负载、本仓 15 个，两个新基准实跑通过 |
 **B952 只补了夹具，没有做任何性能结论。** 这两件事必须分开：
@@ -588,14 +588,19 @@ the deviation was about.**
 | 目标 | 端口 | 结论 |
 | --- | --- | --- |
 | SQLite | — | **✅ 不需要服务器**，`:memory:` 真库往返，7 条判据 |
-| MySQL | 3306 **开着** | ❌ `Access denied for user 'root'@'172.18.0.1'`——**服务器在跑，凭据不在** |
-| PostgreSQL | 5432 **开着** | ❌ `28P01: password authentication failed`——同上 |
-| MongoDB | 27017 关闭 | 无实例 |
-| Redis | 6379 **开着** | 未测（客户端构造是 `internal`，需要先有可注入的入口） |
-| Kafka | 9092 关闭 | 无 broker |
+| MySQL | 3306 **开着** | ✅ **B1307 真实往返（3 条判据）**：入口连通 / 增查改删 / 不可达报原因；账号 `ospf_test` 由 `C:\environment\infra\ospf-test-setup.ps1` 自建，口令不进仓库 |
+| PostgreSQL | 5432 **开着** | ✅ **B1307 真实往返（三条判据）**，同 MySQL |
+| MongoDB | 27017 **开着**（B1308 起的容器 `ospf-infra-mongo`） | ✅ **B1308 真实往返（三条判据）**：`ping` 真连通 / 插入-按主键查-替换-删除 / 不可达报原因 |
+| Redis | 6379 **开着** | ✅ **B1298 真实往返（4 条判据）** |
+| Kafka | 9092 **开着**（B1307 起的单节点容器 `ospf-infra-kafka`） | ✅ **真实往返（三条判据）**；**并且据此修掉一个真缺陷：`KafkaProducer.Dispose` 不 flush，排队消息静默丢失、topic 偏移停在 0** |
 
-**求解器那次是"门没开"，这次是"钥匙没有"**——两者不能混为一谈：
-前者加一个 `-p:Run*Integration=true` 就能跑，后者需要**本机没有的凭据**，换谁都跑不出来。
+**这段文字原来是"门没开"与"钥匙没有"的对比，而 B1307 证明后者也是错的：** **钥匙一直在 `C:\environment\infra\.env` 里，只是没人去看；**
+**Kafka 也不是"没有实例"，而是没人起。** **所以这里更正成：** **B1298 与 B1307 之后，MySQL、PostgreSQL、Redis、Kafka 四个后端都有真实往返判据；
+B1308 起了一个本机容器，MongoDB 也补上了三条判据（见下一节）。**
+
+**This paragraph used to contrast "the gate was not open" with "the key is missing", and B1307 shows the second one was wrong too: the key had been in
+`C:\environment\infra\.env` all along and nobody looked, and Kafka had never been started rather than being absent.** **After B1298 and B1307, MySQL,
+PostgreSQL, Redis and Kafka all have real round-trip criteria; MongoDB still has no instance and is still unverified.**
 
 **B950 probed this machine's databases and broker**, and the answer is **the opposite of the solver case**: SQLite needs no server and does real round trips through
 `:memory:`; MySQL and PostgreSQL **are running** but reject every credential this machine has; MongoDB and Kafka have no instance. **The solver case was "the gate was not
@@ -2550,3 +2555,146 @@ so the order is not "smallest first" but **"the one that can create a session fi
 evidence**: B970 was corrected by it — `ConstraintActivityAnalyzer` scored 0, but the real reason is that **its `buildReport` only reads a snapshot and an assignment**, not that
 "grep found nothing, so no backend". **That limitation is written down here so a 0 is not read as proof of backend-freedom next time.** **This batch adds no source code**: it
 books the eight gaps and pins the numbers, **so the next batch starts from "4558 lines that need a real backend" rather than "eight things nobody has looked at".**
+
+### 货物属性模型：十二个类型（B1305 补齐）
+
+**复审（B1297）发现基线 `PackageAttribute.kt` 的十二个类型在 C# 侧<b>一个都没有**，而三份文档也从未提到 `PackageAttribute`。**所以这一节先记的是"从未被记录"，而不是"待办"。**
+
+**已补齐：** `AbstractCargoAttribute`、`AbstractStackingOnPolicy` + 三个堆叠策略（`Filter`／`CartonContainer`／`Box`）、`AbstractHangingPolicy` + 两个悬挂策略（`Relative`／`Absolute`）、`AbstractDeformationAttribute` + `LinearDeformationAttribute`、`AbstractWeightAttribute` + `WeightAttribute`；`PackageAttribute` 增加 `OverPackageTypes`（堆叠策略的第一道判断）。
+
+**判据 `CargoAttributeModelTests`（9 条）：** 十二个类型都在（反射）；**生产代码里没有构造它们的调用方**（"仅模型、不改行为"的可执行版本）；四道门限各撞一次（包装类型／超重／平顶／层数）；未知高度判否；相对悬挂的面积比；重量与线性变形。
+
+**两处如实记录的局限（不是"已完成"）：**
+
+**① 最大高度的语义不同。** 基线把 `maxHeight` 存成<b>长度**（`Quantity&lt;FltX&gt;`），而 C# 现有物品模型把 `MaxHeight` 存成<b>层数**（`UInt64`）。**把层数当长度会让高度门限静默失效**，所以做成"未知即 null、策略判否"，并在 `ICargoView.MaxHeightLength` 上写明。
+
+**② 圆柱投影还没接上。** `ActualItem` 的底部投影以"宽 × 深"作矩形近似；圆形投影要经过 `ShapeFootprint2.Circle`，那层还没接到物品视图上。
+
+**边界：** **这些类型在基线里只被 `PackageAttribute.kt` 自身读取（B1297 实测 `MaterialPacker.kt` 只在构造时填默认值），所以补进 C# 后算法行为不变。** **B1310 起：** 五个策略槽位（`CargoAttribute`／`WeightAttribute`／`DeformationAttribute`／`HangingPolicy`／`StackingOnPolicy`）与递归层数计算也已补上；**有效层数按基线合成 `min(packageMaxLayer, weightAttribute.maxLayer)`，位置参数因此改名 `PackageMaxLayer`。**
+
+### 箱型目标：两个 `*Minimization` 与一条过期的"搬不了"（B1306）
+
+**`Domain/Packing/MixedBinObjectives.cs` 的抬头原来写着"基线里的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在）"。****这句话<b>早就不成立**：`src/Framework.Bpp3d/Domain/LayerAssignment/Model/PreciseAssignment.cs` 一直在仓库里。****第 622 行那张"已撤回"的表（B918）就是同一个结论的第一次撤回——但注释没跟着改，于是它在下游又活了一轮。**
+
+**已补齐（`Domain/LayerAssignment/service/limits/MixedBinObjectives.cs`）：**`BinVolumeMinimization`（系数 = 权重 × 箱型体积）、`BinTypeCostMinimization`（系数 = 权重 × 该箱型成本）、`PerTypeBinCost.Of`。
+
+**三个跳过条件逐条照搬基线：** **成本表为空、权重为零、该箱型未配置成本——第三种<b>不进多项式**，而不是以 0 系数进去（0 项在求和里是噪声，在报告里会被读成"这个箱型免费"）。**"配置为零成本"同样跳过**，这是基线 `mapIndexedNotNull` 的另一半。
+
+**判据 `MixedBinObjectiveTests`（5 条）：** 过期断言已消失且更正被记录、`PreciseAssignment` 确实在仓库里、三个跳过条件、零成本也跳过、体积系数按权重缩放、缺省成本由调用方决定。
+
+**边界：** **这一批只产出"哪个箱拿到什么系数"，把系数注册进多项式仍是模型侧的事**（与 `BinAmountMinimization` 等既有目标同为标记式实现）。
+
+
+### 第四个后端：MongoDB 收口（B1308）
+
+**这一条本来被写成"MongoDB 本机无实例，仍未验证"。** **用户追问一句"是 docker 中没有吗"，核实之后：** **Docker 里没有容器、本机没有镜像、`compose.yaml` 只声明了 mysql/postgresql/redis/rabbitmq。** **所以"没有实例"是对的，但成因是"没人起"——和 Kafka 一样，是观察被当成了结论。**
+
+**B1308 起了 `ospf-infra-mongo`（mongo:7，绑定 127.0.0.1:27017），三条判据用与另外三个后端同一套形状。**
+
+#### 判据里有一处不能偷懒
+
+**"入口能连上"不能用"`MongoClient` 构造成功"当证据：** **它的构造是惰性的，服务器不在也照样返回对象。** **所以判据真发一条 `ping`，并断言回复里的 `ok` 是 1。**
+
+**"不可达报原因"那条把 `ServerSelectionTimeout` 压到 3 秒**，让失败有界——**否则驱动默认等 30 秒，一次排障跑成半分钟。**
+
+#### 四个后端现在全部实测
+
+| 后端 | 批次 | 判据 |
+| --- | --- | --- |
+| SQLite | B950 | 文件库 + 关连接再开，两条 |
+| Redis | B1298 | 入口连通 / 五种值形状 / TTL / 不可达，四条 |
+| MySQL、PostgreSQL | B1307 | 各三条 |
+| Kafka | B1307 | 三条；并修掉 `Dispose` 不 flush 导致的静默丢失 |
+| MongoDB | B1308 | `ping` / 插入-查-替换-删除 / 不可达，三条 |
+
+**证据：** **`logs/p9-batch1323-backends.log`（14 passed = 12 条往返 + 2 条护栏）。**
+
+### 转储六段齐备，并抓出两处"看起来有、其实没有"（B1309）
+
+**`PRJ`／`GEN`／`TRUNC` 补上之后 `--dump` 输出 119 行：** **`NET` 18、`PRJ` 16、`GEN` 36、`TRUNC` 36、`TOK` 8、`PRM` 5。**
+
+#### 两段"待办"的理由都不成立
+
+**· `PRJ`：** "快照类型名不同、字段需对齐"——**而 `SnapshotAsync`／`PricingRequestAsync`／`MasterAsync`、`LinearModelSnapshot`（Rows／Variables／Objective／ObjectiveConstant）、`ColumnPricingRequest.ReducedCost` 一个不缺。**
+
+**· `GEN`／`TRUNC`：** "`canonicalKey()` 在服务层"——**而 `CuttingPlanCanonicalKey.From(plan)` 就在 `Domain/CuttingPlanGeneration/model/`，`CuttingPlan&lt;V&gt;` 直接实现 `ICuttingPlanForCanonicalKey`。** **拿不到的是服务层那层包装，不是键本身。**
+
+#### 判据抓到两处"看起来有、其实没有"
+
+**① 摘要没有信息：** 第一版用 `record.ToString()` 渲染规范键，而它的两个集合成员是 `IReadOnlyList`——**`ToString` 打印集合的类型名，于是前三个方案的摘要完全相同。** **"格式正确、内容为零"的摘要会安静通过格式类判据。**
+
+**② 登记数字自相矛盾：** 第一版 `rows` 取 `Model.Constraints.Count`、`convexities` 取 `RefinedResources.Count`，理由是"C# 侧没有同名集合"——**而 `Rows` 与 `Convexities` 都在登记类上，我只看了半边。** **132 行对 0 个凸组合这个数字自己露了馅；现在是 `rows=128|convexities=4|columnVars=4`。**
+
+#### 同进程两次运行不同，但跨进程逐字节相同
+
+**实测：两个独立进程各跑一次，输出差异 0 行；同一进程跑两次则不同。** **两处原因都是进程级状态，不是"不稳定"：**
+
+**· `GEN`／`TRUNC` 的 `stats=` 行带生成器缓存计数（`MaterialSliceTemplateCacheHits` 等），是进程级累计；**
+
+**· 行 `Id` 形如 `model-local-row:<进程级计数器>:<序号>`，所以 `PRJ` 改打 `source=r0`——稳定身份，且比基线那个 id 更可跨语言比对。**
+
+**判据因此钉"非统计行逐行相同"，并断言 `stats=` 行确实存在，免得例外被悄悄扩大成整份输出。**
+
+**证据：** **`logs/p9-batch1324-dump.log`（119 行）。**
+
+### 策略槽位与递归层数：几何收成一个谓词（B1310）
+
+**基线 `PackageAttribute` 的两块剩余：** **五个槽位 + `maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`；伴生对象里的 `layerLayer`／`layerHeight`／`layer`。**
+
+#### 一、有效层数的名字问题
+
+**C# 原来的位置参数就叫 `MaxLayer`，于是"包材层数"与"有效层数"共用了一个名字，合成规则没有地方落脚。** **改名 `PackageMaxLayer`，`MaxLayer` 改为合成结果；没配重量属性时两者相等，既有 14 处构造点行为不变。**
+
+#### 二、递归与几何分开
+
+**基线用 `QuantityPlacement3&lt;Item, FltX&gt;` 加两个几何助手（`topItemPlacements`／`filterBottomOverlapped`），而 C# 侧 `QuantityPlacement3` 在 `Application` 层、那两个助手没有对应物。** **但递归本身只问三件事：类型、高度、谁压在谁上面。** **所以几何收成一个谓词 `Covers`，由调用方实现；递归、同类型过滤、取最大值三条语义逐行照搬。**
+
+**一处说明白的偏离：** **基线用协程并行求各分支最大值，这里是串行——结果相同（都是最大值），并行度属于调用方。** **另有 `ponytail:` 标注的 64 层深度上限：真实的垛不会那么深，而互相压住的环会让递归停不下来。**
+
+#### 三、判据（`PackageAttributeSlotsTests`，5 条）
+
+**有效层数只能取小且不改写包材层数；五个槽位都可空、都能挂上；三层同类型堆叠给出层数 3 与 3 倍高度；类型不同不计层；空底部集合给零。** **判据不伪造几何，而是按 y 坐标判定"压在上面"的最小放置。**
+
+**一处判据自己的错：** **第一版把待计算的 `box` 也放进了底部集合，于是算法把它当成一块同类型底板、返回 1 而判据期望 0。** **基线的入参本来就是 bottoms——错在测试，不在移植。**
+
+### 真实几何版的两个助手，以及一处语义分歧（B1311）
+
+**上一批说"C# 侧没有 `topItemPlacements`／`filterBottomOverlapped` 的对应物"——错了两层：**
+
+**① 底面重叠已经有等价物：** `PlacementFactory.OverlappedOnBottom`（同样比 X/Z 交叠），高度就是 `Position.Y + Unit.Height`。我搜的是两个包装名，而 C# 侧叫别的名字，搜不到就当成没有。**
+
+**② 更糟的是 `PlacementTyping.cs` 里本来就有同名方法，而语义与基线不同：** **旧的 `TopItemPlacements` 取"全局最高一层的所有放置"，基线取"没有任何底面重叠且更高的放置压在它上面的放置"。** **一高一低并列时两者答案不同——基线两件都算顶层，旧实现只返回高的那件。** **旧实现全仓零调用方（实测），所以按基线替换，而不是并存两个同名不同义的方法。**
+
+#### 现在的关系拆成两条，而不是一条
+
+**`OverlapsBottom`（底面投影重叠，与高度无关）：** 递归用它，等价于基线的 `filterBottomOverlapped`；**`IsAbove`（谁更高）：** 顶层集合用它，等价于 `topPlacements` 的第二条。****第一版把两者合成一个 `Covers`（"贴着才算压在上面"），于是三层堆叠只数出两层——**两个关系不同，合成一个就丢信息。**
+
+**`Covers` 抽象按用户要求保留：** **递归仍然只认这两个谓词，真实几何通过 `PlacementTyping.AsStackPlacement` 接进去，判据里的最小替身照旧可用。**
+
+#### 判据 `PlacementTypingTests`（4 条）
+
+**一高一低并列时两件都算顶层（旧语义在此分道）；底面重叠只认投影不认高度；真实几何接进递归给出三层三倍高；侧放的箱子不共享投影。**
+
+### 两个混沌吸引子回到标准式（B1313，来源 Kotlin `966cafbc`）
+
+**Kotlin 的 `966cafbc` 修了 `AizawaAttractor` 与 `WimolBanlueAttractor` 的公式，而 C# 侧搬的是<b>修复前**那一版——于是同一个错误在这里又活了一轮，五个偏离点全在：**
+
+| 位置 | 修复前（C# 原样搬来的） | 标准式 |
+| --- | --- | --- |
+| Aizawa `dx` | 减的是完整的 `dy` | 减 `δ·y` |
+| Aizawa `dz` 线性项 | `α·x` | `α·z` |
+| Aizawa 输出顺序 | `(dx, dz, dy)` | `(dx, dy, dz)` |
+| Wimol-Banlue `dy` | `-z·tan(x)` | `-z·tanh(x)` |
+| Wimol-Banlue `dz` | `\|x\|` | `\|y\|` |
+
+**判据不复述实现：** **它在测试里按标准式独立算一遍，再与实现的一步结果比较。** **复述实现的判据只能证明"代码没变"，证明不了"公式对"。**
+
+#### 四条判据，其中两条钉的是"为什么"
+
+**Aizawa 两步：** 一步等于标准式；另取 `x=0, y=0` 的对照点——**那里 `dx=dy=0` 而 `dz≠0`，输出顺序被置换时这一条必红。**
+
+**Wimol-Banlue 两步：** 一步等于标准式；**从 `x` 靠近 `π/2`（`tan` 的极点）走两百步，三个分量都必须有限且小于 1000**——**钉的是 `tanh` 的有界性，而不是"改成了 tanh"。**
+
+**变异验证：** **把 `Tanh` 改回 `Tan`，`WimolBanlue_ShouldMatchTheStandardForm` 立刻红**（第二分量 -0.4137 而非 -0.4056）。**一并记下一条操作坑：** 用 `mv` 还原文件后**时间戳比产物旧，MSBuild 判定"无需重建"**，必须先 `touch` 再跑。
+
+**证据：** `tests/Math.Tests/Chaotic/AttractorFormulaSyncTests.cs`（4 条）。

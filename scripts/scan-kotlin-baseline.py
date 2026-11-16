@@ -33,7 +33,7 @@ Matching is by **name**, and the C# side names things differently. **These are n
 
 ## 用法 / Usage
 
-    python scripts/scan-kotlin-baseline.py [--kotlin ../ospf-kotlin] [--commit 12fdb587]
+    python scripts/scan-kotlin-baseline.py [--kotlin ../ospf-kotlin] [--commit 966cafbc]
 
 未解释的发现会让退出码非零 / Unexplained findings make the exit code non-zero.
 """
@@ -169,7 +169,7 @@ def main() -> int:
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kotlin", default=os.path.join(root, "..", "ospf-kotlin"))
-    parser.add_argument("--commit", default="12fdb587")
+    parser.add_argument("--commit", default="966cafbc")
     parser.add_argument("--csharp", default=root)
     args = parser.parse_args()
 

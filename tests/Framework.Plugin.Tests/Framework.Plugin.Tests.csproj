@@ -4,6 +4,18 @@
     <AssemblyName>Fuookami.Ospf.Framework.Plugin.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- B1298: Redis 真实往返是 opt-in 集成测试，本机 6379 可用时用 -p:RunRedisIntegration=true 打开。 -->
+    <!-- B1298: the real Redis round-trip is an opt-in integration test, enabled with -p:RunRedisIntegration=true. -->
+    <DefineConstants Condition="'$(RunRedisIntegration)' == 'true'">$(DefineConstants);REDIS_INTEGRATION</DefineConstants>
+    <!-- B1307: MySQL / PostgreSQL / Kafka 的真实往返同样是 opt-in；连接串走环境变量，口令不进仓库。 -->
+    <!-- B1307: the real MySQL / PostgreSQL / Kafka round-trips are opt-in too; connection strings come from environment variables so no secret
+         lands in the repository. -->
+    <DefineConstants Condition="'$(RunMySqlIntegration)' == 'true'">$(DefineConstants);MYSQL_INTEGRATION</DefineConstants>
+    <DefineConstants Condition="'$(RunPostgreSqlIntegration)' == 'true'">$(DefineConstants);POSTGRES_INTEGRATION</DefineConstants>
+    <DefineConstants Condition="'$(RunKafkaIntegration)' == 'true'">$(DefineConstants);KAFKA_INTEGRATION</DefineConstants>
+    <!-- B1308: MongoDB 是第四个真实往返后端，同样 opt-in。 -->
+    <!-- B1308: MongoDB is the fourth real round-trip backend and is opt-in the same way. -->
+    <DefineConstants Condition="'$(RunMongoIntegration)' == 'true'">$(DefineConstants);MONGO_INTEGRATION</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="xUnit" />

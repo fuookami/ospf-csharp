@@ -32,7 +32,7 @@ public sealed record ItemPattern(
 /// 具体的、已实例化的货物，具有完整尺寸和重量。
 /// A concrete, instantiated item with full dimensions and weight.
 /// </summary>
-public sealed class ActualItem : IItemMergeUnit {
+public sealed class ActualItem : IItemMergeUnit, ICargoView {
     public string Id { get; }
     public string Name { get; }
     public Quantity<FltX> Width { get; }
@@ -72,6 +72,39 @@ public sealed class ActualItem : IItemMergeUnit {
 
     /// <summary>体积 / Volume.</summary>
     public Quantity<FltX> Volume => Width.Multiply(Height).Multiply(Depth);
+
+    /// <summary>可以堆在上方的包装类型 / Package types allowed on top.</summary>
+    public IReadOnlySet<PackageType> OverPackageTypes => PackageAttribute.OverPackageTypes;
+
+    /// <summary>
+    /// 底部投影面积 / The bottom footprint area.
+    /// </summary>
+    /// <remarks>
+    /// B1305：以"宽 × 深"作为矩形近似。圆柱形货物的圆形投影要经过 `ShapeFootprint2.Circle`，那层还没接到物品视图上——
+    /// 这是本批明确的局限，写在代码里而不是让悬挂策略悄悄按矩形算。
+    ///
+    /// B1305: width times depth as a rectangular approximation. A cylindrical item's circular footprint would go through `ShapeFootprint2.Circle`,
+    /// which is not wired to the item view yet — an explicit limitation, stated here rather than letting the hanging policies silently assume a
+    /// rectangle.
+    /// </remarks>
+    public Quantity<FltX>? BottomFootprintArea => Width.Multiply(Depth);
+
+    /// <summary>
+    /// 允许的最大高度（长度）：目前未知 / The allowed maximum height as a length: currently unknown.
+    /// </summary>
+    /// <remarks>
+    /// B1305：C# 的物品模型把 `MaxHeight` 存成层数（`UInt64`），而基线是长度（`Quantity&lt;FltX&gt;`）。
+    /// 这里如实返回 null，让堆叠策略的高度门限判否——而不是把层数当长度，让门限静默失效。
+    ///
+    /// B1305: the C# item model keeps `MaxHeight` as a layer count while the baseline keeps a length. Returning null here is the honest answer and
+    /// makes the policies' height gate refuse, rather than treating a layer count as a length and letting the gate silently pass.
+    /// </remarks>
+    public Quantity<FltX>? MaxHeightLength => null;
+
+    /// <summary>底部投影的最小跨度 / The minimum span of the bottom footprint.</summary>
+    /// <remarks>B1305：矩形近似下取宽与深之中较小的那个。/ The smaller of width and depth under the rectangular approximation.</remarks>
+    public Quantity<FltX>? BottomFootprintMinSpan =>
+        Width.Value.ToFlt64().CompareTo(Depth.Value.ToFlt64()) <= 0 ? Width : Depth;
 
     /// <summary>包装类型 / Package type.</summary>
     public PackageType PackageType => PackageAttribute.PackageType;

@@ -16,16 +16,21 @@ public sealed record AizawaAttractor<V>(
     where V : struct, IFloatingNumber<V> {
     public Point<Dim3, V> Invoke(Point<Dim3, V> p) {
         V x = p[0]; V y = p[1]; V z = p[2];
+        // B1313 同步 Kotlin 966cafbc（B311）：回到标准 Aizawa 式。原实现三处都偏了——
+        // dx 减的是完整的 dy 而不是 delta*y、dz 的线性项用的是 alpha*x 而不是 alpha*z、
+        // 并且把 dz/dy 置换到了第二/三分量。
+        // B1313 syncs Kotlin 966cafbc (B311): back to the standard Aizawa form. The previous version deviated in three ways — dx subtracted the whole dy
+        // instead of delta*y, dz's linear term used alpha*x instead of alpha*z, and dz/dy were swapped into the second/third components.
         V dy = Delta.Times(x).Plus(z.Minus(Beta).Times(y));
-        V dx = z.Minus(Beta).Times(x).Minus(dy);
+        V dx = z.Minus(Beta).Times(x).Minus(Delta.Times(y));
         var three = (V)(object)new Flt64(3.0);
         V xy2Term = x.Sqr().Plus(y.Sqr()).Times(x.Constants.One.Plus(Epsilon.Times(z)));
-        V dz = Gamma.Plus(Alpha.Times(x)).Minus(z.Cub().Div(three))
+        V dz = Gamma.Plus(Alpha.Times(z)).Minus(z.Cub().Div(three))
             .Minus(xy2Term).Plus(Zeta.Times(z).Times(x.Cub()));
         return new Point<Dim3, V>(new V[] {
             x.Plus(H.Times(dx)),
-            y.Plus(H.Times(dz)),
-            z.Plus(H.Times(dy))
+            y.Plus(H.Times(dy)),
+            z.Plus(H.Times(dz))
         }, Dim3.Instance);
     }
 

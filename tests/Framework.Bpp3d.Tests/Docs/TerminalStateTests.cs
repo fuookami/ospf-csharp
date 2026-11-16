@@ -33,15 +33,46 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// </remarks>
 public class TerminalStateTests
 {
-    /// <summary>**扫描脚本仍然默认对 `12fdb587`** / The scanner still defaults to `12fdb587`.</summary>
+    /// <summary>**扫描脚本默认对 `966cafbc`** / The scanner defaults to `966cafbc`.</summary>
+    /// <remarks>
+    /// B1314：扫描目标从 `12fdb587` 迁到 `966cafbc`（最新状态）。**这里改的只是"拿哪个提交当对比对象"，**
+    /// 而夹具出处里那些 `12fdb587` 是历史事实，另由 `TheFixtureProvenance_ShouldKeepTheOldBaseline` 钉住不动。
+    ///
+    /// B1314: the scan target moves from `12fdb587` to `966cafbc`. **Only "which commit is compared against" changes here**, while the
+    /// `12fdb587` references in fixture provenance are historical facts, pinned separately by the criterion named above.
+    /// </remarks>
     [Fact]
     public void TheScanner_ShouldStillDefaultToTheFixedBaseline() {
         string root = RepositoryRoot();
         string scanner = File.ReadAllText(System.IO.Path.Combine(root, "scripts", "scan-kotlin-baseline.py"));
 
-        Regex.IsMatch(scanner, @"--commit""\s*,\s*default=""12fdb587""").Should().BeTrue(
-            "the sync is measured against the fixed baseline 12fdb587; a floating default would make every gate compare against a "
-            + "moving target and every past conclusion quietly conditional");
+        Regex.IsMatch(scanner, @"--commit""\s*,\s*default=""966cafbc""").Should().BeTrue(
+            "the sync is measured against 966cafbc; a floating default would make every gate compare against a moving target and every past "
+            + "conclusion quietly conditional");
+    }
+
+    /// <summary>
+    /// **夹具出处仍然写 `12fdb587`：历史不能被"迁移"顺手改掉** /
+    /// Fixture provenance still says `12fdb587`: history must not be rewritten by a migration.
+    /// </summary>
+    /// <remarks>
+    /// **B1314 迁的是"拿哪个提交当对比对象"，不是"这些夹具来自哪个提交"。** **两者在仓里长得一模一样（都是 40 位提交号），
+    /// 而语料、远端线协议、各演示的对齐事实都产自 `12fdb587`——**把它们一起改掉等于伪造出处。** **这条判据钉住这个区分：
+    /// 扫描目标可以往前走，出处不跟着动。**
+    ///
+    /// **What B1314 migrates is "which commit to compare against", not "which commit these fixtures came from".** **The two look identical in the repository
+    /// (both are 40-hex commit ids) while the corpora, remote wire contracts and demo alignment facts were all produced at `12fdb587` — rewriting them would
+    /// forge provenance.** **This criterion pins the distinction: the scan target moves forward, provenance does not follow it.**
+    /// </remarks>
+    [Fact]
+    public void TheFixtureProvenance_ShouldKeepTheOldBaseline() {
+        string root = RepositoryRoot();
+        string provenance = File.ReadAllText(System.IO.Path.Combine(
+            root, "tests", "Framework.Tests", "RemoteFixtures", "README.md"));
+
+        provenance.Should().Contain(
+            "12fdb587",
+            "the remote fixtures were captured at 12fdb587; a provenance note that follows the scan target would be describing a corpus it never had");
     }
 
     /// <summary>**计划里的终态核对一节必须还在，且带着实测数字** / The terminal section must still exist with its measured numbers.</summary>
@@ -56,7 +87,7 @@ public class TerminalStateTests
             "the terminal section is the only place that answers \"what is left\"; deleting it loses that answer");
 
         string slice = plan.Substring(section, System.Math.Min(2000, plan.Length - section));
-        slice.Should().Contain("12fdb587", "the terminal state names the baseline it is terminal against");
+        slice.Should().Contain("966cafbc", "the terminal state names the baseline it is terminal against");
         slice.Should().Contain("0 unexplained", "the scanner's four dimensions each resolve");
         slice.Should().Contain("1316", "the warning count is the measured one");
         slice.Should().Contain(

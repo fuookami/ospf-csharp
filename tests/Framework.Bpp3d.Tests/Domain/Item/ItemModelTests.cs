@@ -20,7 +20,7 @@ public class ItemModelTests {
     public void PackageAttributeShouldStoreAllProperties() {
         var attr = new PackageAttribute(
             PackageType.Box,
-            MaxLayer: new UInt64(5),
+            PackageMaxLayer: new UInt64(5),
             MaxHeight: new UInt64(200),
             MinDepth: new UInt64(10),
             MaxDepth: new UInt64(100),

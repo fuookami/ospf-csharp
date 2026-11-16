@@ -7,9 +7,9 @@ Baseline:
 - Plan: `logs/kotlin-sync-plan.md` (local only, ignored by git)
 - Package version: `1.1.2`（跟基线根的 `pom.xml` 走，不是本仓自定的；判据 `PackagingMetadataTests` 钉住两边一致）
 
-## Current Phase (as of Batch 1297)
+## Current Phase (as of Batch 1314)
 
-**The sync is not complete.** Phases P4 through P8 are closed; **P9 is in progress** (Batches 242–1297).
+**The sync is not complete.** Phases P4 through P8 are closed; **P9 is in progress** (Batches 242–1314).
 The resumable inventory (what is left, the known gaps, and the batch procedure) lives in the handoff
 section at the top of `logs/kotlin-sync-plan.md` (`## 零、截至轮次上限的交接状态`).
 
@@ -7082,13 +7082,13 @@ dotnet build ospf-csharp.sln -c Release --no-restore -t:Rebuild --nologo
 dotnet test  ospf-csharp.sln -c Release --no-build --no-restore
 ```
 
-实测结果（**每次收口后在此更新**；上次更新 Batch 1297）：
+实测结果（**每次收口后在此更新**；上次更新 Batch 1314）：
 
 | Gate | Result |
 |---|---|
 | Release 全方案强制重建 | `0 errors`，`1316` 行既有警告（= **658** 条，每条形如两行；B1028 实测，B588 时是 `1434` 行，此后逐步下降，因为空壳文件的 `IDE0022` 随实现消失） |
-| 默认全方案测试 | `11304 passed` / `1` 项既有 Delaunay skip / `0 failed`（29 个有测试程序集） |
-| 全方案测试（开启 SCIP 集成，`-p:RunScipIntegration=true`） | `11468 passed` / `1` 项既有 Delaunay skip / `0 failed`（多 123 项**真实 SCIP 求解**） |
+| 默认全方案测试 | `11372 passed` / `1` 项既有 Delaunay skip / `0 failed`（29 个有测试程序集） |
+| 全方案测试（开启 SCIP 集成，`-p:RunScipIntegration=true`） | `11536 passed` / `1` 项既有 Delaunay skip / `0 failed`（多 123 项**真实 SCIP 求解**） |
 | `Framework.Csp2d` 进度 | **18 / 18 个主源码文件（全部完成）**：`Ids2`（447）、`Material2`（448）、`Product2`、`Csp2dErrors`（449）、`CuttingProcess2`（450）、`Region2`（451）、`CutTree2`（452）、`Pattern2`（453—454）、`RenderDTO`（455）、`MasterProblem`（456—457）、`Waste`·`Yield`（458）、`Csp2dProblem`（459）、`SheetAssignment`（460）、`PatternGeneration`（461）、`ShelfPatternGenerator2`（462）、`PatternGenerationContext2`（463）、装配与恢复（464）、`Csp2dMilp`·`Csp2dColumnGeneration`（465）。真实 SCIP 端到端已实测（466）、模块 README 已补（467） |
 | `Framework.Bpp1d` 进度 | 17 个文件：`PackingProblem`（414）、`PackingContext.Pack`（415）、`PackingKpi`（416）、`PatternGenerationContext`（417）、`IPackingValueAdapter`（418）、`LoadingGeometry`（419）、`DiscreteLoadingValidator`（420）、`DiscreteLoadingVerify`（421）、`ConflictIndex`（422）、`LoadingAggregation`（423）、`LoadingLimits`（423）、`DiscreteLoadingContext`（424）、`LinkAdditionalWeight`（425）、`Bpp1dDiscreteLoading`（425）、`PatternAssignmentPricing`（426）、`PatternAssignmentModelling`（427）、`PatternAssignmentRemoval`（428）、`Bpp1dMilp`（429）、`Bpp1dColumnGeneration`（430）、`TailBinOptimizer`（431）、`Bpp1dCsvDatasetLoader` 与 `PackingRendererAdapter`（432）、`DiscreteLoadingApplicationService`（433） |
 | `Framework.Bpp1d` 进度 | 16 个文件：`PackingProblem`（414）、`PackingContext.Pack`（415）、`PackingKpi`（416）、`PatternGenerationContext`（417）、`IPackingValueAdapter`（418）、`LoadingGeometry`（419）、`DiscreteLoadingValidator`（420）、`DiscreteLoadingVerify`（421）、`ConflictIndex`（422）、`LoadingAggregation`（423）、`LoadingLimits`（423）、`DiscreteLoadingContext`（424）、`LinkAdditionalWeight`（425）、`Bpp1dDiscreteLoading`（425）、`PatternAssignmentPricing`（426）、`PatternAssignmentModelling`（427） |
@@ -7167,3 +7167,12 @@ JVM 专属，C# 已有等价的 `HttpClientRemoteSolverHttpTransportPlugin`）�
 注：`PortableCheckpointModels.kt` 在固定基线里是 Core 类型的纯 typealias，C# 直接使用 Core 类型
 即为对齐，不算缺口。跨语言实测已覆盖 `SerializedSolution`、`RemoteTaskSubmitRequest` 与配置指纹，
 但调度模型、能力摘要与 CP checkpoint envelope 仍未对跑，不得据此宣称整体互通。
+
+## 扫描目标迁到 `966cafbc`（B1314）
+
+**扫描目标（`scripts/scan-kotlin-baseline.py` 的默认提交）从 `12fdb587` 迁到 `966cafbc`。**
+**夹具出处里的 `12fdb587` 保持不动：** **远端语料、线协议、各演示的对齐事实都产自那个提交，把它们一起改掉等于伪造出处。**
+**判据 `TerminalStateTests.TheFixtureProvenance_ShouldKeepTheOldBaseline` 钉住这个区分——扫描目标可以往前走，出处不跟着动。**
+
+**Payload: the scan target moved; the provenance did not.** **Fixtures, wire contracts and demo alignments were produced at `12fdb587`; rewriting their
+origin to follow the target would forge it.** **A criterion pins the distinction.**

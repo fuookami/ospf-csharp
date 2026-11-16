@@ -151,12 +151,29 @@ public static class Redis {
     private static readonly Dictionary<RedisClientKey, IConnectionMultiplexer> _clients = new();
 
     /// <summary>
+    /// **最近一次初始化失败的原因；成功时为 null** / Why the last initialization failed; null on success.
+    /// </summary>
+    /// <remarks>
+    /// **原实现把异常吞掉只返回 `null`。** **失败原因必须能读出来，否则"环境所限"与"代码没接上"无法区分。**
+    ///
+    /// **The original swallowed the exception and returned `null`.** **The reason has to be readable, or "limited by the
+    /// environment" cannot be told apart from "the code is not wired".**
+    /// </remarks>
+    public static string? LastInitError { get; private set; }
+
+    /// <summary>
     /// 初始化并获取 Redis 客户端 / Initialize and get Redis client.
     /// </summary>
     /// <param name="config">Redis 配置 / Redis configuration</param>
     /// <returns>Redis 客户端实例或 null / Redis client instance or null</returns>
     public static RedisClient? Init(RedisConfig config) {
         lock (_lock) {
+            // **成功路径必须清掉上一次的失败原因。** **否则"上一次连 6399 失败"会一直挂在这里，
+            // 而这一次明明连上了——诊断串一旦会串台，它比没有更糟。**
+            //
+            // **A successful call must clear the previous failure.** **Otherwise a diagnostic about the last unreachable endpoint
+            // keeps hanging around while this call succeeded — a diagnostic that leaks across calls is worse than none.**
+            LastInitError = null;
             if (_clients.TryGetValue(config.Key, out IConnectionMultiplexer? existing)) {
                 return new RedisClient(existing, config.Database);
             }
@@ -173,7 +190,13 @@ public static class Redis {
                 _clients[config.Key] = multiplexer;
                 return new RedisClient(multiplexer, config.Database);
             }
-            catch {
+            catch (Exception ex) {
+                // **B1298：这里原先吞掉异常直接返回 null，于是"连不上"与"没配置"对调用方完全一样。**
+                // **保留一条诊断串，让"为什么没起来"至少可读。**
+                //
+                // **B1298: this used to swallow the exception and return null, making "cannot connect" and "not configured"
+                // indistinguishable. One diagnostic string makes the reason readable.**
+                LastInitError = $"{config.Name}@{string.Join(",", config.Urls)}: {ex.GetType().Name}: {ex.Message}";
                 return null;
             }
         }

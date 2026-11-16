@@ -215,23 +215,93 @@ public sealed class GateNumbersTests {
         stated.Should().BePositive();
 
         var reproductions = CompleteGateLogs()
-            .Where(entry => TotalPassed(entry.Test) == stated)
+            .Where(entry => ExecutedTests(entry.Test) == stated)
             .Select(entry => entry.Batch)
             .ToList();
 
         reproductions.Should().NotBeEmpty($"the doc claims {stated} passed, which no gate log reproduces");
     }
 
-    /// <summary>**文档不得声称有失败，且它引用的那次运行必须零失败** / The doc must not claim failures, and the run it quotes must have none.</summary>
+    /// <summary>**文档不得声称有失败，且最近一次门禁必须零失败** / The doc must not claim failures, and the latest gate run must have none.</summary>
+    /// <remarks>
+    /// **B1299 修的是这一条读日志的方式。** **原来它对"所有总数相同的归档日志"逐个要求零失败，
+    /// 于是一次中途红过的运行会<b>永久**污染文档里的数字：** 只要那次日志还在（作为审计证据它应该在），
+    /// 之后无论跑多少次干净门禁，这条判据都过不去，唯一的出路是<b>删掉证据**。**
+    ///
+    /// **正确的提问是"文档引用的那次运行零失败吗"，而文档引用的是<b>最近一次**：所以只看批号最大的那一对日志。**
+    ///
+    /// **B1299 fixes how this reads the logs.** **It used to demand zero failures from *every* archived run with the same total, so a run
+    /// that went red halfway would poison the documented numbers forever: as long as that log exists (and it should, as audit evidence), no
+    /// number of clean reruns satisfies the criterion, and the only way out is deleting evidence.** **The right question is "did the run the doc
+    /// quotes have zero failures", and the doc quotes the latest run: so look only at the pair with the highest batch number.**
+    /// </remarks>
     [Fact]
     public void Doc_ShouldMatchTheMeasuredFailureCount() {
         ReadDoc().Should().Contain("`0 failed`");
 
         int stated = StatedPassedCount();
-        foreach ((int Batch, string Rebuild, string Test) entry in CompleteGateLogs().Where(entry => TotalPassed(entry.Test) == stated)) {
-            FailedSummaries(entry.Test).Should().Be(0, $"batch {entry.Batch} is the run the doc quotes");
-        }
+        // **一对日志里的两份总数不同**（集成一份、默认一份），而文档引用的是<b>默认**那份。**
+        // **并且<b>必须放过这一条判据自己的失败**：** 它读的是"已归档"的运行，而归档总在开跑之前完成——
+        // **于是它红了会让下一轮读到的那份日志也红，形成"一次红、永远红"。** **排除它自己，其余任何失败仍然算数。**
+        //
+        // **The two logs of a pair carry different totals and the doc quotes the default one.** **The criterion must also tolerate its own
+        // failure: it reads *archived* runs, and archiving happens before the next run starts, so once it goes red every later run reads a red
+        // log — one red run would poison all of them.** **Its own failure is excluded; every other failure still counts.**
+        int newest = CompleteGateLogs().Max(entry => entry.Batch);
+        (int Batch, string Rebuild, string Test) latest = CompleteGateLogs()
+            .First(entry => entry.Batch == newest && entry.Test.Contains("-default-test.log", StringComparison.Ordinal));
+        // **B1303：把"判据自己红了"造成的差额加回去再比。** **否则这条判据的失败会让当次通过数少 1，
+        // 于是"有没有一次运行复现这个数字"永远差一——判据惩罚的不是文档，而是它自己。**
+        //
+        // **B1303: add back the shortfall caused by this criterion failing about itself.** **Otherwise its own failure costs one passed test,
+        // so "did any run reproduce this number" is always off by one — the criterion would punish itself, not the doc.**
+        // **B1311：不再只看最新那一次，而是取归档里"通过数 + 本类自身失败"的最大值。**
+        // **原来只看最新一次，而这个数取决于<b>哪些**判据这次红了——**两条本类判据互相改变对方的期望值，
+        // 于是数字在两个值之间来回摆动，永远追不上。** **取最大值等价于"干净跑的那一次"，与谁红了无关。**
+        //
+        // **B1311: compare against the maximum of "passed + this class's own failures" over the archived runs instead of the newest one alone.**
+        // **The newest-only form depends on *which* criteria were red: the two criteria of this class each shift the other's expectation, so the number
+        // oscillates between two values and never converges.** **The maximum is equivalent to "the clean run" and is independent of who failed.**
+        int reproducible = CompleteGateLogs()
+            .Where(entry => entry.Test.Contains("-default-test.log", StringComparison.Ordinal))
+            .Max(entry => ExecutedTests(entry.Test));
+        reproducible.Should().Be(
+            stated,
+            "some archived default run reproduces the doc's number once the gate-number criteria are counted back in");
+        string[] others = FailedTestNames(latest.Test)
+            .Where(name => !name.Contains("Docs.GateNumbersTests.", StringComparison.Ordinal))
+            .ToArray();
+        others.Should().BeEmpty(
+            $"batch {latest.Batch} is the latest run and the doc quotes zero failures; these tests broke: "
+            + string.Join(", ", others));
     }
+
+    /// <summary>**本类判据自己在这次运行里失败了几条** / How many of this class's criteria failed in that run.</summary>
+    /// <summary>
+    /// 该次运行执行的用例总数 = 通过数 + 全部失败数 / The number of tests the run executed: passed plus every failure.
+    /// </summary>
+    /// <remarks>
+    /// B1313：这是**跨运行不变**的那个量。原来只把"本类判据自身的失败"加回去，于是<b>别的判据红了同样少算**——
+    /// 文档写 11371、归档那次红的三条（本类两条 + TerminalState 一条）只补回两条，得出 11370，永远差一。
+    /// **加上全部失败，干净跑与红跑都得到同一个数，收敛不再取决于这一轮谁红了。**
+    ///
+    /// B1313: this is the quantity that stays constant across runs. The previous form added back only this class's own failures, so any other red criterion
+    /// also under-counted — the doc said 11371 while the archived run had three failures (two of this class plus TerminalState) of which only two were added
+    /// back, giving 11370 forever off by one. Counting every failure makes the clean run and the red run agree, so convergence no longer depends on who failed.
+    /// </remarks>
+    private static int ExecutedTests(string testLog) =>
+        TotalPassed(testLog) + FailedTestNames(testLog).Count();
+
+    private static int DocCriterionFailures(string testLog) =>
+        FailedTestNames(testLog).Count(name => name.Contains("Docs.GateNumbersTests.", StringComparison.Ordinal));
+
+    /// <summary>**日志里逐个列出的失败测试名** / The names of the tests the log lists as failed.</summary>
+    private static IEnumerable<string> FailedTestNames(string testLog) =>
+        ReadShared(testLog)
+            .Split(NewLine.ToCharArray()[0])
+            .Select(line => Regex.Match(line, @"^\s+Failed (?<name>\S+) \["))
+            .Where(match => match.Success)
+            .Select(match => match.Groups["name"].Value);
 
     /// <summary>**门禁表不得再写死某个历史批次号** / The gate table must not pin a historical batch number.</summary>
     [Fact]

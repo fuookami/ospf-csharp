@@ -198,7 +198,7 @@ public class PhaseLedgerTests {
 
         counts.Select(match => int.Parse(match.Groups[1].Value))
             .Should().OnlyContain(count => count == 1316,
-                "1316 is the measured Release rebuild warning-line count as of Batch 1028");
+                "1316 is the measured Release rebuild warning-line count as of Batch 1028; B1311's file-local suppressions do not move it");
     }
 
     /// <summary>**台账的章节号不得重复** / The ledger does not reuse a section number.</summary>

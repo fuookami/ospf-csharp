@@ -130,9 +130,16 @@ public class MathParsingPortCountTests
         //
         // **Measured 29 occurrences (not 55 — that was a first `grep -c` counting <b>lines</b>, and one line can hold two).** **The
         // number is worth recording: I nearly shipped a line count as an occurrence count.**
+        // **B1302：29 → 30。** **多出来的那一处是我在 `TokenSharedReadBenchmark` 的矩阵笔记里
+        // 写的"5 条判据"——它和其余 29 处一样，是<b>没被逐条钉住的计数宣称**。**
+        // **判据照旧报警是对的：** **它不是"矩阵里只能有 29 个这样的句子"，而是"每多一句都得有人知道"。**
+        //
+        // **B1302: 29 to 30.** **The extra one is the "5 criteria" sentence added to the `TokenSharedReadBenchmark` note — like the other 29 it
+        // is a count claim nobody pins one by one.** **The criterion firing is correct: it does not mean "the matrix may hold only 29 such
+        // sentences", it means every new one has to be noticed.**
         total.Should().Be(
-            29,
-            "29 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
+            30,
+            "30 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
             + "this note stops describing reality");
     }
 

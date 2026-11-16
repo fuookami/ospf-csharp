@@ -40,7 +40,7 @@
 | 5.1 | SQLite 默认集成 | `SqliteRepositoryTests` | ✅ |
 | 5.2 | 谓词/关系查询翻译不静默改语义 | `PredicateSchemaGeneratorTests`、`SqlRelationalQueryCompilerTest` | ✅ |
 | 5.3 | MongoDB / Redis / Kafka 的显式集成入口 | **入口齐备**：`MongoRepository<>`（143 行）、`RedisClient`（203 行）、`KafkaProducer`/`KafkaConsumer`。**B1102 补上第一条行为判据**：`RedisConfigRoundTripTests`（2 条，纯序列化、**不需要 Redis 服务**）——**十个字段往返全对**，含最容易悄悄丢的 `MasterName`（丢了下哨兵退化成直连**而连接仍成功**）与 `Database`（错索引读写另一个键空间**而不报错**）；空串/null 返回 `null` 而非抛。**变异（`ToJson` 剔掉两个字段）→ 红，已验。****其余仍是"成员在不在"型**：`RedisInterfaceTests` 10 条、`KafkaInterfaceTests`、`MongoRepository` 3 条结构性判据；**Kafka/Mongo 的行为判据需要真实实例**（见 `⊘3`） | ◐ |
-| 5.4 | 真实数据库与 broker 往返 | **SQLite 已实测**（`SqliteRoundTripTests`：文件库 + 关连接再开，2 条判据）；MySQL/PostgreSQL **服务器在跑但本机无凭据**；MongoDB/Kafka 无实例（见 `⊘3`） | ◐ |
+| 5.4 | 真实数据库与 broker 往返 | **SQLite 已实测**（`SqliteRoundTripTests`：文件库 + 关连接再开，2 条判据）；MySQL/PostgreSQL **服务器在跑但本机无凭据**；MongoDB/Kafka 无实例（见 `⊘3`） | ◐ **Redis 已实测（B1298）**：本机 6379 真实往返 4 条——生产入口起客户端、五种取值形态、TTL 过期、连不上报原因（`-p:RunRedisIntegration=true`）；`Redis.Init` 补 `LastInitError`，另有 2 条默认构建判据钉住诊断面。 |
 | 5.5 | PostgreSQL 仓储与提供程序 | `PostgreSqlRepository<>` + Npgsql 9.0.0；`PostgreSqlRepository_Should_Be_Abstract`、`PostgreSqlProvider_ShouldBeConfiguredWithoutALiveDatabase` | ✅ |
 | 5.6 | PostgreSQL **连活库往返** | 无服务（`⊘3`）——`UseNpgsql` 只证明配置对，不证明连得上 | ⊘ |
 

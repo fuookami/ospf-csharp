@@ -45,7 +45,7 @@ public class PilePreparationBenchmark {
     public void Setup() {
         var attribute = new PackageAttribute(
             PackageType: PackageType.Box,
-            MaxLayer: new UInt64(LayerCap),
+            PackageMaxLayer: new UInt64(LayerCap),
             MaxHeight: new UInt64(5),
             MinDepth: new UInt64(1),
             MaxDepth: new UInt64(5));
