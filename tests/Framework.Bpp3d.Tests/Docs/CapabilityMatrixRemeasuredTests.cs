@@ -253,7 +253,10 @@ public class CapabilityMatrixRemeasuredTests
         string matrix = DocsFile.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
 
         (string Symbol, int Expected)[] gates = [
-            ("SCIP", 46), ("GUROBI", 32), ("CPLEX", 4), ("COPT", 6),
+            // B1333：新增 OnnxAffineEndpointGurobiIntegrationTest（ONNX 仿射链的端到端求解），
+            // GUROBI 门内文件数随之 32 → 33。这是实测事实变了，不是口径变了。
+            // B1333: the endpoint test for the ONNX affine chain adds one gate file, so GUROBI goes 32 -> 33. The measurement changed, not the rule.
+            ("SCIP", 46), ("GUROBI", 33), ("CPLEX", 4), ("COPT", 6),
             ("MINDOPT", 2), ("HEXALY", 1), ("MOSEK", 1),
         ];
 
