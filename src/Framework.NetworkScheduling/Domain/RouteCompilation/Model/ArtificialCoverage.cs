@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.NetworkScheduling.Domain.RouteCompilation.Mode
 /// `sum(a[i])`; Phase II fixes every `a[i]` to zero.
 /// **没有人工变量，列生成的第一阶段就无法在"覆盖不全"时保持可行**：初始列集通常只覆盖部分客户，等式约束会立刻不可行，pricer 也就
 /// 拿不到任何对偶信息。人工变量把缺失的覆盖显式记账，让第一阶段总能给出一个可行基。
-/// 基线写的是 `List&lt;Customer&lt;*&gt;&gt;`（星投影），C# 侧用泛型参数 `V` 表达同一意图：人工覆盖只关心客户标识，不关心具体数值类型。
+/// 用泛型参数 `V` 表达"任意客户类型"（相当于星投影）：人工覆盖只关心客户标识，不关心具体数值类型。
 /// The code declares `List&lt;Customer&lt;*&gt;&gt;` (a star projection); the C# side expresses the same with the generic
 /// parameter `V`: artificial coverage only cares about customer identity, not the numeric type.
 ///
@@ -127,9 +127,9 @@ public sealed class ArtificialCoverage<V> where V : struct, IRealNumber<V> {
     /// 切换到 Phase II：把所有人工变量固定为 0 / Switch to Phase II: fix every artificial variable to zero.
     /// </summary>
     /// <remarks>
-    /// **C# 侧用等式行而不是改写变量的声明值域**。基线通过 `a[i].range.set(零值域)` 实现，但那会追溯性地改动一个已经注册进模型的变量，
-    /// 模型里看不到任何痕迹；显式等式行则是可查询、可解释的。两版语义等价：`a[i] == 0` 与把值域钉成 `[0, 0]` 对求解器是同一件事。
-    /// **The C# side uses equality rows rather than rewriting the variable's declared range.** The code does
+    /// **C# 侧用等式行而不是改写变量的声明值域**：改写值域会追溯性地动一个已经注册进模型的变量，
+    /// 模型里看不到任何痕迹；显式等式行则是可查询、可解释的。两种写法语义等价：`a[i] == 0` 与把值域钉成 `[0, 0]` 对求解器是同一件事。
+    /// **The C# side uses equality rows rather than rewriting the variable's declared range.** Rewriting the range would do
     /// `a[i].range.set(zero range)`, which retroactively changes a variable already registered into the model and leaves no trace in
     /// it; an explicit equality row is queryable and explainable. The semantics are equivalent: `a[i] == 0` and pinning the range to
     /// `[0, 0]` are the same thing to a solver.

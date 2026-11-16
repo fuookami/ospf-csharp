@@ -1,5 +1,4 @@
 // 布谷鸟、蝙蝠、飞蛾扑火与蝗虫更新 / Cuckoo-search, bat, moth-flame and grasshopper updates.
-// 与固定 Kotlin （12879 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -15,21 +14,21 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// 布谷鸟搜索更新 / Cuckoo-search update.
 /// </summary>
 /// <remarks>
-/// **`levySigma` 依赖 Lanczos Γ 近似，必须与基线逐位一致**。指数取 1.0 时公式退化为 1.0、取 2.0 时退化为 `1e-8` 量级，
+/// **`levySigma` 依赖 Lanczos Γ 近似，系数必须逐位固定**。指数取 1.0 时公式退化为 1.0、取 2.0 时退化为 `1e-8` 量级，
 /// 只有默认的 1.5 才给出有意义的 `0.6965745…`。把 `gamma` 换成 `Math.Gamma` 之类"等价"实现会因系数不同而产生
 /// **看起来同样合理的**轨迹，因此这里保留8 个 Lanczos 系数，并用独立实现（Python）算出的黄金向量校验。
-/// **`levySigma` depends on the Lanczos Γ approximation and must match the code bit for bit.** With an exponent of 1.0 the formula
+/// **`levySigma` depends on the Lanczos Γ approximation and its coefficients are pinned bit for bit.** With an exponent of 1.0 the formula
 /// degenerates to 1.0 and with 2.0 it collapses to the `1e-8` scale; only the default 1.5 yields a meaningful `0.6965745…`. Swapping
 /// `gamma` for an "equivalent" implementation such as `Math.Gamma` produces a **plausible-looking but different** trajectory, so the
-/// baseline's eight Lanczos coefficients are kept and checked against golden vectors computed by an independent Python implementation.
+/// eight Lanczos coefficients are kept and checked against golden vectors computed by an independent Python implementation.
 /// **`v` 必须夹到 `1e-12` 以上**。`abs(normal)` 可能恰好为 0（四个均匀数之和恰为 2.0），于是 `u / 0^(1/1.5)` 是除零。
 /// **`v` must be clamped above `1e-12`.** `abs(normal)` can be exactly 0 (four uniform draws summing to 2.0), making
 /// `u / 0^(1/1.5)` a division by zero.
 /// **`normal` 是"四个均匀数之和减 2"**，不是 `sqrt(12/n) * (sum - n/2)` 的标准近似。写成标准形式会改变分布方差，
-/// 步长尺度随之变化，而算法仍然收敛——只是收敛速度与基线不同。
+/// 步长尺度随之变化，而算法仍然收敛——只是收敛速度不同。
 /// **`normal` is "the sum of four uniform draws minus 2"**, not the standard `sqrt(12/n) * (sum - n/2)` approximation. Using the
 /// standard form changes the distribution variance and hence the step scale, while the algorithm still converges — just at a different
-/// rate than the code.
+/// rate.
 /// **放弃巢穴的分支按个体判定，但逐维重建**。`abandoned` 在个体级别抽一次，然后每一维各自均匀重建；把它挪到维度级别会让
 /// 同一只布谷鸟只有部分维度被重建，解处在"半新半旧"的不一致状态。
 /// **The abandonment branch is decided per individual but rebuilt per dimension.** `abandoned` is drawn once per individual and then

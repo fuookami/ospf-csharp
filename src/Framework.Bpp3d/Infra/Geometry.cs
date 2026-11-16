@@ -66,18 +66,18 @@ public sealed record CuboidPackingShape3<V>(QuantityCuboid3<V> Cuboid) : IPackin
 /// <param name="RadiusMin">连续半径下界（可空）/ Continuous radius lower bound (nullable).</param>
 /// <param name="RadiusMax">连续半径上界（可空）/ Continuous radius upper bound (nullable).</param>
 /// <remarks>
-/// **后三个参数在 之前不存在**，它们是基线 `PackageShapeSpec.VerticalCylinder` 的
-/// `radiusWeightFunctionKey / radiusMin / radiusMax` 在 C# 侧的对应物。
+/// **后三个参数是后加的**：`radiusWeightFunctionKey / radiusMin / radiusMax`，
+/// 用于连续半径优化。
 ///
 /// **缺了它会怎样**：`ContinuousRadiusSolverHelpers.PrototypesFromItems` 无法判断"哪些圆柱参与连续半径优化"，
-/// 只能对**所有**竖直圆柱产出原型——那比基线激进，会把列生成推进基线不会进入的分支（已记录该偏差）。
+/// 只能对**所有**竖直圆柱产出原型——那会把列生成推进原本不会进入的分支（已记录该偏差）。
 ///
-/// **The latter three parameters did not exist at first**; they are the C# counterparts of the code
-/// `PackageShapeSpec.VerticalCylinder`'s `radiusWeightFunctionKey / radiusMin / radiusMax`.
+/// **The latter three parameters were added later**: `radiusWeightFunctionKey / radiusMin / radiusMax`,
+/// used by continuous-radius optimisation.
 ///
 /// **What their absence caused**: `ContinuousRadiusSolverHelpers.PrototypesFromItems` could not tell "which cylinders participate in continuous-radius
-/// optimisation", so it produced prototypes for **every** vertical cylinder — more aggressive than the code and pushing column generation down a branch the
-/// baseline would not enter (a deviation recorded).
+/// optimisation", so it produced prototypes for **every** vertical cylinder — more aggressive, pushing column generation down a branch it
+/// would not otherwise enter (a deviation recorded).
 /// </remarks>
 public sealed record CylinderPackingShape3(
     QuantityCylinder3<FltX> Cylinder,

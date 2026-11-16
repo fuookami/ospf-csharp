@@ -29,14 +29,14 @@ public sealed record CuttingPlanDemandContribution<V>(
     /// <remarks>
     /// **委托给 `GenerationQuantityMath.UnitKey`，不再自己写一份。**
     ///
-    /// 这是这里发现的**第五份**单位键实现，而且它用的是 之前那个会落到**空串**的版本——
-    /// 比另外四份更早的分叉。基线 `canonicalUnitKey` 落到 `toString`（即 `量纲(比例)`），
-    /// **从不返回空串**。空串会让两个"未知单位"看起来相同，而基线还能按量纲区分。
+    /// 这是这里发现的**第五份**单位键实现，而且它用的是之前那个会落到**空串**的版本——
+    /// 比另外四份更早的分叉。`canonicalUnitKey` 落到 `toString`（即 `量纲(比例)`），
+    /// **从不返回空串**。空串会让两个"未知单位"看起来相同，而按量纲还能区分。
     ///
-    /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fifth** unit-key implementation found in, and it
-    /// used the pre- version that falls back to the **empty string** — the earliest divergence of all five. The code's `canonicalUnitKey` falls back to
-    /// `toString` (i.e. `dimension(scale)`) and **never returns an empty string**. An empty string makes two "unknown units" look identical, while the code can
-    /// still tell them apart by dimension.
+    /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fifth** unit-key implementation found here, and it
+    /// used the earlier version that falls back to the **empty string** — the earliest divergence of all five. `canonicalUnitKey` falls back to
+    /// `toString` (i.e. `dimension(scale)`) and **never returns an empty string**. An empty string makes two "unknown units" look identical, while dimension
+    /// still tells them apart.
     /// </remarks>
     string ICuttingPlanDemandContributionForCanonicalKey.UnitKey => GenerationQuantityMath.UnitKey(Quantity.Unit);
 

@@ -133,9 +133,9 @@ public sealed class DifferentialCrossTests {
     /// <summary>**恰好两个父代时差值项退化为 0** / With exactly two parents the difference term collapses to zero.</summary>
     /// <remarks>
     /// `parents[2 % 2] == parents[0]`、`parents[3 % 2] == parents[1]`，于是 `first - second` 与 `base` 无关地变成一个固定差值；
-    /// 交叉率 1 时子代全体落在同一个点上。这是基线行为，不是缺陷，但必须显式钉住以免被"顺手修正"。
+    /// 交叉率 1 时子代全体落在同一个点上。这是有意保留的行为，不是缺陷，但必须显式钉住以免被"顺手修正"。
     /// `parents[2 % 2] == parents[0]` and `parents[3 % 2] == parents[1]`, so `first - second` becomes a fixed difference independent of
-    /// `base`; with a crossover rate of 1 every child lands on the same point. Baseline behaviour, not a defect, but it must be pinned so
+    /// `base`; with a crossover rate of 1 every child lands on the same point. Deliberate behaviour, not a defect, but it must be pinned so
     /// nobody "fixes" it by accident.
     /// </remarks>
     [Fact]

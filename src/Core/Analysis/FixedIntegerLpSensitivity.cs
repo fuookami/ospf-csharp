@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 
 /// <summary>敏感性值的作用域 / Scope of a sensitivity value.</summary>
 /// <remarks>
-/// 与基线 `LocalSensitivityScope` 对应，**只有一个成员，而这个成员本身是重点**：
+/// `LocalSensitivityScope` **只有一个成员，而这个成员本身是重点**：
 /// 这里的对偶值**绝不是 MILP 全局影子价格**，它只在"整数变量固定为一个 incumbent 结构"下成立。
 ///
 /// **It has one member, and that member is the point**: these duals are **never global MILP shadow prices**, they hold only under
@@ -79,7 +79,7 @@ public sealed record SensitivityRange(Flt64? Lower = null, Flt64? Upper = null)
 /// </remarks>
 /// <param name="ConstraintId">原始稳定约束 ID / Original stable constraint ID.</param>
 /// <param name="DualValue">固定整数结构下的 LP 对偶值 / LP dual under the fixed-integer pattern.</param>
-/// <param name="Activity">同一基线约束的活动性证据 / Activity evidence for the code constraint.</param>
+/// <param name="Activity">同一约束的活动性证据 / Activity evidence for that constraint.</param>
 /// <param name="LocalEffective">局部对偶值是否超过阈值 / Whether the local dual exceeds the threshold.</param>
 /// <param name="SensitivityRange">可选的有效 RHS 敏感性范围 / Optional valid RHS sensitivity range.</param>
 /// <param name="Scope">敏感性值作用域 / Scope of the sensitivity value.</param>
@@ -183,7 +183,7 @@ public sealed record FixedIntegerLpRequest(
 /// 固定整数 LP 后端 / A fixed-integer LP backend.
 /// </summary>
 /// <remarks>
-/// **这是 里 `fun interface FixedIntegerLpBackend` 的移植。**
+/// **这是 `fun interface FixedIntegerLpBackend` 的 C# 版。**
 ///
 /// **一个方法，一个职责：收到请求、回一个结果或一个错误。** 转储、松弛、对偶提取全部属于实现方，
 /// **接口本身不知道"敏感性"是什么**——所以换一个求解器不需要改这里的任何一个字。

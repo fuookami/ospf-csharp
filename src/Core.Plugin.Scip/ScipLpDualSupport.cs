@@ -19,15 +19,15 @@ namespace Fuookami.Ospf.Core.Plugin.Scip;
 /// mechanism-constraint mapping.
 /// </summary>
 internal static class ScipLpDualSupport {
-    /// <summary>强对偶校验容差，与 Kotlin 基线一致 / Strong-duality tolerance, matching the Kotlin baseline.</summary>
+    /// <summary>强对偶校验容差 / Strong-duality tolerance.</summary>
     private const double Tolerance = 1e-6;
 
     /// <summary>返回与约束行同序的行对偶 / Return row duals aligned with the constraint rows.</summary>
     /// <remarks>
     /// 后端逐行对偶只有在强对偶等式 |Σ rhs·y - objective| ≤ 1e-6 成立时才可信；否则回退到显式对偶模型复核。
-    /// Kotlin 同样在回退时重新求解对偶模型，因此带非零目标常数或界生效的模型都会走到回退分支。
+    /// 回退时重新求解对偶模型，因此带非零目标常数或界生效的模型都会走到回退分支。
     /// Backend row duals are only trusted when the strong-duality equality holds; otherwise the explicit dual model is
-    /// solved instead. Kotlin falls back the same way, so models with a non-zero objective constant or active bounds
+    /// solved instead. So models with a non-zero objective constant or active bounds
     /// take the fallback branch.
     /// </remarks>
     /// <param name="model">已松弛的原始线性模型 / Relaxed primal linear model.</param>

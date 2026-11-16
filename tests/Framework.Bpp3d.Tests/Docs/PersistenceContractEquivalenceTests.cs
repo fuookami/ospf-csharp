@@ -10,12 +10,12 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **五个仓储操作在本仓有一一对应物** / The code's five repository operations map one-to-one.
+/// **五个仓储操作一一对应** / The five repository operations map one-to-one.
 /// </summary>
 /// <remarks>
 /// **矩阵里那格写着"是否等价<B>尚未逐项核对**"。核了，核的是契约层而不是方言层：**
 ///
-/// | 基线（`12fdb587`，三个表达式仓储） | 本仓 `ExpressionRepository&lt;E&gt;` |
+/// | 三个表达式仓储 | 本仓 `ExpressionRepository&lt;E&gt;` |
 /// | --- | --- |
 /// | `find` | `FindAsync` |
 /// | `count` | `CountAsync` |
@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// | `update` | `UpdateAsync` |
 /// | `delete` | `DeleteAsync` |
 ///
-/// **读法：** **、 三个文件的公开方法集合是
+/// **读法：** **三个文件的公开方法集合是
 /// `{find, count, exists, update, delete}`（外加各自的方言私有成员），而这些仓库<b>没有 insert**——
 /// 插入不走表达式仓储。**
 ///
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **钉本仓那五个方法必须还在。** **少一个就是真的丢能力，而被删掉时没有任何别的东西会红。**
 ///
 /// **The matrix says "whether they are equivalent <B>has not been checked item by item</b>". The contract layer was then checked: the
-/// three baseline expression repositories expose `{find, count, exists, update, delete}` and no insert, and `ExpressionRepository`
+/// three expression repositories expose `{find, count, exists, update, delete}` and no insert, and `ExpressionRepository`
 /// exposes exactly those five.** **So what holds is precise: five operations map one-to-one, no more and no less; and what differs is
 /// equally precise: the code uses four dialect backends for one job while this repository uses one stack (EF Core) — a different
 /// road, not a missing operation.** **The criterion pins the five methods: removing one loses a capability and nothing else would

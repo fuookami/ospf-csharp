@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization;
 /// 业载最大化聚合根 / The payload-maximization aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：**只有两个字段**——飞机型号与业载模型。整个子域只有一条管线（`MaxPayloadLimit`），
+/// **只有两个字段**——飞机型号与业载模型。整个子域只有一条管线（`MaxPayloadLimit`），
 /// 没有任何校验，也没有自建的中间符号。
 ///
 /// 为什么只有两个字段：业载最大化的目标就是 `payload.estimatePayload` 本身，而那个符号由 `Payload.Register` 在配载域里建好。

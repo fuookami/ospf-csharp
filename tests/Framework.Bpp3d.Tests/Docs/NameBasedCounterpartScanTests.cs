@@ -34,14 +34,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **三次都是同一个动作：** **用"名字相等"代理"是不是同一个东西"。**
 /// **而 Kotlin 与 C# 的命名习惯不同（`Function` 后缀、`View`／`Item`／`Group` 后缀），
-/// 还有大量 `typealias` 与纯函数文件——<b>名字本来就不该相等**。</b>
+/// 还有大量 `typealias` 与纯函数文件——<b>名字本来就不该相等</b>。
 ///
 /// ### 所以这里不交付"缺多少"，交付"这个数字不可交付"
 ///
 /// **判据断言的是：** **那几个我误判过的名字，在本仓确实有对应物**——
-/// **它防的不是"基线缺什么"，而是"下一次有人（包括我）重新跑同一个脚本，又得出一个数字"。**
+/// **它防的不是"缺了什么"，而是"下一次有人（包括我）重新跑同一个脚本，又得出一个数字"。**
 ///
-/// **The question looked simple: how many baseline types does this repo lack?** **I wrote a script
+/// **The question looked simple: how many types does this repo lack?** **I wrote a script
 /// comparing file stems and declared type names, and the number kept moving: 110 by stem, 155 by exact type name, 133 after
 /// suffix and case tolerance — and spot checks showed every one of them was unusable while looking like a conclusion.**
 ///

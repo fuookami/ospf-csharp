@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service;
 /// 软性安全聚合初始化器 / The soft-security aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**两条校验**，都不做任何 DTO 翻译——
+/// **两条校验**，都不做任何 DTO 翻译——
 /// 软安全完全复用上游的货物、舱位、装载与压舱模型，只额外找一个主甲板。
 ///
 /// | 校验 | 失败条件 |

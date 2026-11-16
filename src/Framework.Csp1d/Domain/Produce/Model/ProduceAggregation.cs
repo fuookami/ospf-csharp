@@ -122,11 +122,11 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
 
         // 构建 canonical key 索引 / Build canonical key index
         _planKeyIndex = new Dictionary<CuttingPlanCanonicalKey, int>();
-        // **基线按 `id` 与 `canonicalKey` **双键**去重**（：
+        // **按 `id` 与 `canonicalKey` **双键**去重**（
         // `candidate.id !in registeredIds && candidate.canonicalKey !in registeredKeys`）。
         // C# 原本**只有键索引**，于是"同 id 不同内容"的两条方案会被同时接受。
         //
-        // **The code dedupes by **two keys**, id and canonicalKey**. C# originally had **only the key index**, so two plans sharing an id but
+        // **Deduplication uses **two keys**, id and canonicalKey**. C# originally had **only the key index**, so two plans sharing an id but
         // differing in content would both be accepted.
         _planIds = new HashSet<string>();
         for (int i = 0; i < cuttingPlans.Count; i++) {
@@ -195,19 +195,19 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
     /// 用初始方案填充需求/物料/设备中间符号 / Populate the demand, material and machine symbols from the initial plans.
     /// </summary>
     /// <remarks>
-    /// 与基线 `PlanBatchTerms` 的 `init` 逐条对应：
+    /// 逐条规则：
     ///
     /// - 每条方案对**它自己的物料**贡献一个系数为 `1` 的单项式；
     /// - 每条方案对**它自己的设备**贡献一个系数为 `1` 的批次单项式；
     /// - 需求贡献**只计入 `demands` 里出现过的（产品 id, 单位）组合**，且**同一方案内同一组合只计一次**；
     /// - 设备产能**只在单位一致且消耗量严格大于零时**计入。
     ///
-    /// 后面两条不是优化，是**基线写明的过滤条件**：不滤的话，一条以厘米计的贡献会被
+    /// 后面两条不是优化，是**明确的过滤条件**：不滤的话，一条以厘米计的贡献会被
     /// 当成毫米计入（系数差 10 倍），而零消耗的单项式会让产能约束失去意义。
     ///
-    /// `PlanBatchTerms.init` clause by clause: one coefficient-1 monomial per plan for **its own material**; one batch monomial for **its own machine**;
+    /// Clause by clause: one coefficient-1 monomial per plan for **its own material**; one batch monomial for **its own machine**;
     /// demand contributions **only for (product id, unit) pairs present in `demands`, and only once per pair within a plan**; machine capacity **only when the unit matches
-    /// and the consumption is strictly positive**. The last two are not optimisations but **explicit baseline filters**: without them a centimetre contribution would count as
+    /// and the consumption is strictly positive**. The last two are not optimisations but **explicit filters**: without them a centimetre contribution would count as
     /// millimetres (a factor of 10) and zero-consumption monomials would make the capacity constraint meaningless.
     /// </remarks>
     private void PopulateInitialSymbols(

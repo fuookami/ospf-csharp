@@ -183,7 +183,7 @@ public sealed class TailBinOptimizer<V>
     /// <param name="result">结果 / The result.</param>
     /// <returns>分数 / The score.</returns>
     /// <remarks>
-    /// **三项口径各按各的，不加总、不换算。** 基线就是这样：
+    /// **三项口径各按各的，不加总、不换算。** 规则就是：
     ///
     /// | 目标 | 每箱计 |
     /// | --- | --- |

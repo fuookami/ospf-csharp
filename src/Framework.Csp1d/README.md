@@ -5,12 +5,9 @@
 1D cutting-stock on top of the OSPF column-generation framework: materials, products, cutting-plan
 generation, and column generation.
 
-Baseline: `ospf-kotlin-framework-csp1d` at Kotlin `12fdb587`.
-
 ## Layout
 
-A single assembly with `Application/`, `Domain/`, and `Infrastructure/`. The baseline splits this into
-several sub-modules; **this project does not mirror that split**.
+A single assembly with `Application/`, `Domain/`, and `Infrastructure/` — split by layer, not by sub-module.
 
 ## What is actually implemented
 
@@ -32,8 +29,8 @@ literally `// Stub implementation: DFS search would go here`, and its tests asse
 So the cache hit KPI is **always zero**: nothing ever populates it. Do not read "the statistics fields exist"
 as "caching works".
 
-The DFS path is genuinely missing: the baseline builds three caches (quantity, width index, slice template)
-and runs a real depth-first search. Porting that is a generator rewrite, not a wiring change.
+The DFS path is genuinely missing: a real depth-first search needs three caches (quantity, width index,
+slice template) plus the search itself. Adding it is a generator rewrite, not a wiring change.
 
 ## Verification
 

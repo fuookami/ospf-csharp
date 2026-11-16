@@ -1,6 +1,4 @@
 // 一维列生成入口：LP 定价循环 / The BPP1D column-generation entry with the LP pricing loop.
-// 与固定 Kotlin 的 `Bpp1dColumnGeneration` 对应。
-// .
 
 using System.Collections.Generic;
 using System.Threading;
@@ -100,10 +98,10 @@ public sealed class Bpp1dColumnGeneration<V>
             return Propagate<V, PatternGenerationResult<V>>(generated);
         }
 
-        // **种子取两轮**：`bestFit` 关一次、开一次。基线就是 `listOf(false, true)`——
+        // **种子取两轮**：`bestFit` 关一次、开一次，即 `listOf(false, true)`——
         // 只留其中一轮会让某些算例的 RMP 起始基不可行。
         //
-        // **Seeds come from two rounds**, with `bestFit` off and then on, exactly as its `listOf(false, true)`; keeping only one can leave the RMP's starting
+        // **Seeds come from two rounds**, with `bestFit` off and then on, i.e. `listOf(false, true)`; keeping only one can leave the RMP's starting
         // basis infeasible.
         var seeds = new List<PackingPattern<V>>();
         foreach (bool bestFit in new[] { false, true }) {

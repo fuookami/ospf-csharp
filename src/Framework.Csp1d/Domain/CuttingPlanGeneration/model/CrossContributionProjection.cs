@@ -9,14 +9,14 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// The cross-contribution projection of one candidate: its **rest width** and its **contribution per product**.
 /// </summary>
 /// <remarks>
-/// 基线 `canCrossContributionDominate` 直接读切割方案的余宽与需求贡献。C# 侧生成收集器是**泛型**，
+/// 判定 `canCrossContributionDominate` 需要切割方案的余宽与需求贡献。C# 侧生成收集器是**泛型**，
 /// 无法直接读那些字段。
 ///
 /// **本类型是绕开那个障碍的最小手段**：判定逻辑只需要"余宽 + 产品贡献表"，不需要整个切割方案。
 /// 把它抽成一个不依赖具体方案类型的投影，判定就能被单独实现、单独测试，
 /// **而不必先给三个空壳生成器加泛型约束**。
 ///
-/// The code's `canCrossContributionDominate` reads the plan's rest width and demand contributions directly. On the C# side the generation collector is
+/// The decision `canCrossContributionDominate` needs the plan's rest width and demand contributions. On the C# side the generation collector is
 /// **generic** and cannot read those fields.
 ///
 /// **This type is the minimal way around that obstacle**: the decision needs only "rest width + contribution table", not the whole plan. Extracting it as

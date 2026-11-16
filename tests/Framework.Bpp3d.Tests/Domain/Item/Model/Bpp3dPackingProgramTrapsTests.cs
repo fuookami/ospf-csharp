@@ -72,7 +72,7 @@ public class Bpp3dPackingProgramTrapsTests {
 
     /// <summary>**同一个文件里两个"重量"字段，一个有单位一个没有** / Two "weight" fields in one file disagree on units.</summary>
     /// <remarks>
-    /// 基线两处都是 `Quantity<V>`（**带单位**）。C# 把 `PackageSolutionLikeQuantity.Weight`
+    /// 两处都应当是 `Quantity<V>`（**带单位**）。C# 把 `PackageSolutionLikeQuantity.Weight`
     /// 压成了**裸 `Flt64`**，于是"5"到底是 5 克还是 5 千克**无从得知**。
     ///
     /// | 类型 | `Weight` 的实际类型 |

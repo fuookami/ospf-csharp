@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 
 /// <summary>**更新赋值 → Mongo `$set` 文档** / Update assignments → a Mongo `$set` document.</summary>
 /// <remarks>
-/// 基线 `MongoUpdateTranslator`（**120 行**）把 `UpdateAssignments` 变成 `Updates.combine(...)`：
+/// 本类把 `UpdateAssignments` 变成 `Updates.combine(...)`：
 /// 每种赋值都落到 `$set`，字段名交给调用方的解析器。
 ///
 /// **更新写错比查询写错更贵**：查询错了重新查一次就好，**更新错了数据已经变了**——
@@ -29,10 +29,10 @@ public static class MongoUpdateTranslator
 {
     /// <summary>把一组赋值翻成 `$set` 文档 / Translate assignments into a `$set` document.</summary>
     /// <remarks>
-    /// **空赋值返回 `null` 而不是 `$set: {}`**：基线原文 `if (assignments.isEmpty) return Ok(null)`。
+    /// **空赋值返回 `null` 而不是 `$set: {}`**：`if (assignments.isEmpty) return Ok(null)`。
     /// **空 `$set` 在 Mongo 里是合法但无意义的更新**，而 `null` 让调用方整个省掉这次写。
     ///
-    /// **Empty assignments return `null`, not `$set: {}`**: the code reads `if (assignments.isEmpty) return Ok(null)`.
+    /// **Empty assignments return `null`, not `$set: {}`**: `if (assignments.isEmpty) return Ok(null)`.
     /// **An empty `$set` is legal but meaningless in Mongo**, while `null` lets the caller skip the write entirely.
     /// </remarks>
     public static Result<BsonDocument?, ErrorCode, Error<ErrorCode>> Translate(
@@ -112,11 +112,11 @@ public static class MongoUpdateTranslator
     private static Result<BsonValue, ErrorCode, Error<ErrorCode>> TranslateExpression(
         UpdateAssignment.SetFromExpression assignment)
     {
-        // **C# 的 `SetFromExpression` 拿的是 `string Expression`，基线拿的是 `ScalarExpression&lt;*&gt;`。**
+        // **`SetFromExpression` 拿的是 `string Expression`，而不是结构化的 `ScalarExpression&lt;*&gt;`。**
         // **这是两种不同的东西**：字符串既可能是常量，也可能是一段没人解析过的表达式源码。
         // **所以这里不猜**——只有能确定是常量的输入才被接受，而字符串无法区分，于是失败。
         //
-        // **C# `SetFromExpression` carries a `string Expression` where the code carries a `ScalarExpression&lt;*&gt;`.
+        // **`SetFromExpression` carries a `string Expression` rather than a structured `ScalarExpression&lt;*&gt;`.
         // **Those are different things**: a string may be a constant or an unparsed expression source.
         // **So this does not guess** — only input known to be a constant is accepted, and a string cannot be distinguished, so it fails.
         return new Failed<BsonValue, ErrorCode, Error<ErrorCode>>(

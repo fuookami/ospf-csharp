@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **`ColdReverseBatch` 单独存在是有原因的：** **反向视图不是"把弧倒过来重排"那么简单，
 /// 它是同一份弧快照配一张方向表——冷批次里重复建出来的反向视图才是这里要量的东西。**
 ///
-/// **Corresponds to the 146-line baseline, complementing `NetworkIndexBuildBenchmark`: that one builds a graph per thread, while here every reader
+/// **Complements `NetworkIndexBuildBenchmark`: that one builds a graph per thread, while here every reader
 /// shares the same graph.** **A cold batch is timed as one operation including construction, dispatch, barrier alignment and completion, with
 /// `DispatchOnly` as the empty-dispatch control under the same protocol.** **`ColdReverseBatch` exists on its own because a reverse view is not
 /// "re-arranging the arcs" — it is the same arc snapshot plus a direction table, and it is the freshly built reverse view inside a cold batch that
@@ -124,10 +124,10 @@ public class NetworkSharedGraphBenchmark
         using var barrier = new Barrier(Readers);
         var workers = new Thread[Readers];
         int[] results = new int[Readers];
-        // **到达顺序号用原子递增分配，和基线一致：** **若改成"线程下标"，屏障对齐后的顺序就不再真实，
+        // **到达顺序号用原子递增分配：** **若改成"线程下标"，屏障对齐后的顺序就不再真实，
         // 而"谁先到"正是并发首读要观察的东西。**
         //
-        // **Arrival ordinals come from an atomic counter, as in the code: using the thread index instead would fabricate an order after the
+        // **Arrival ordinals come from an atomic counter: using the thread index instead would fabricate an order after the
         // barrier, and "who arrived first" is exactly what a concurrent first read is meant to observe.**
         int arrivals = 0;
         for (int slot = 0; slot < Readers; ++slot) {

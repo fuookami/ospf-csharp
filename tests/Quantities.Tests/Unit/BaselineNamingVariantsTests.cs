@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 那 28 个"未出现"的名字，全是拼写差异 / The twenty-eight absent names are all spellings.
 /// </summary>
 /// <remarks>
-/// **扫描器把"名字是否作为子串出现"当作"能力是否具备"，于是 `BitPerSecond`（基线）
+/// **扫描器把"名字是否作为子串出现"当作"能力是否具备"，于是 `BitPerSecond`（旧拼写）
 /// 与 `BitsPerSecond`（本仓）被判成缺失。**
 ///
 /// **这个数字（28）此前一直躺在清单里，看起来像 28 个待办。实际上它们是 0 个待办。**
 ///
 /// **"一个具体数字会让陈旧缺口看起来已经被检查过"——这里就是把那个数字拆开。**
 ///
-/// **The scanner treats "does the name appear as a substring" as "is the capability present", so the code
+/// **The scanner treats "does the name appear as a substring" as "is the capability present", so
 /// `BitPerSecond` against this repo `BitsPerSecond` reads as missing.**
 ///
 /// **That number (28) had been sitting in the inventory looking like twenty-eight items of work. It is zero.**
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 public class BaselineNamingVariantsTests
 {
     /// <summary>
-    /// 基线名字与本仓拼写的对应表 / Baseline names and the spellings this repo uses.
+    /// 旧名字与本仓拼写的对应表 / Old names and the spellings this repo uses.
     /// </summary>
     /// <remarks>
     /// **每一行都是一个需要核对的声明，而不是一个"已知缺失"。**
@@ -92,7 +92,7 @@ public class BaselineNamingVariantsTests
         }
     }
 
-    /// <summary>**没有两个基线名字指向同一个单位** / No two baseline names share one counterpart.</summary>
+    /// <summary>**没有两个旧名字指向同一个单位** / No two old names share one counterpart.</summary>
     /// <remarks>
     /// **如果 `FootPerSecond` 与 `MilePerHour` 都指向 `MilesPerHour`，上一条判据仍然全绿**——
     /// **而那就是"一个单位冒充两个概念"，是这张表能犯的最严重的错。**

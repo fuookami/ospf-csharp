@@ -9,11 +9,11 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 加速度单位 / Acceleration units.
 /// </summary>
 /// <remarks>
-/// **按新建。** 六个加速度单位全部是
+/// **六个加速度单位全部是**
 /// `XPerSecond / Second` 的形状——**"某个速度单位每秒"**，
 /// **所以它们不是各写一个数，而是复用速度单位的定义。**
 ///
-/// **Created from the code.** All six baseline acceleration units take the shape
+/// **All six acceleration units take the shape**
 /// `XPerSecond / Second` — **"a speed unit per second"** —
 /// **so they reuse the speed definitions rather than each carrying a number.**
 /// </remarks>

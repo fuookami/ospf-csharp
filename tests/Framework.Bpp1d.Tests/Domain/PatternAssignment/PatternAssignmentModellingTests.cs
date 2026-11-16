@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// **方案建模半边** / The modelling half of pattern assignment.
 /// </summary>
 /// <remarks>
-/// 对应基线 `register` / `addColumns` / `refresh`。判据点出四处要害：
+/// `register` / `addColumns` / `refresh`。判据点出四处要害：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |

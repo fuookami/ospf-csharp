@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 货物优先级目标 / The item-priority objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把**每个（货物, 舱位）**的
+/// 把**每个（货物, 舱位）**的
 /// `系数 × 绝对优先级系数 × 配载变量` 求和，作为**最大化**目标，名为 `item priority`（带空格）。
 ///
 /// 四处必须沿用：

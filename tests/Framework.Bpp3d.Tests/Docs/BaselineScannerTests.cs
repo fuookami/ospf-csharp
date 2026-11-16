@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// 基线扫描器必须一直在 / The code scanner has to keep existing.
+/// 扫描脚本必须一直在 / The scanner script has to keep existing.
 /// </summary>
 /// <remarks>
 /// **缺口全部来自这个扫描**，而各轮的扫描是**每批临时写一次的 Python**。

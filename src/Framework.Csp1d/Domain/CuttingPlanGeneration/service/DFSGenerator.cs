@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// 与 `FullSumGenerator` 的**唯一差别**：本生成器在**扩展分支时**检查剪枝约束
 /// （`ICuttingPlanConstraint.IsPruning == true` 的那些），而全和生成器只在叶节点检查。
 ///
-/// 这个差别来自基线：`DFSGenerator.dfsSearch` 在每个新切片压栈前调用 `satisfiesPruningConstraints`，
+/// 差别在检查时机：`DFSGenerator.dfsSearch` 在每个新切片压栈前调用 `satisfiesPruningConstraints`，
 /// `FullSumGenerator.fullSumSearch` 没有这一步。
 ///
 /// **搜索逻辑本身完全相同**，所以这里不重复实现，而是把 `applyPruningConstraints` 传 `true`。
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// **The only difference from `FullSumGenerator`**: this generator checks pruning constraints **while expanding** (`ICuttingPlanConstraint.IsPruning == true`),
 /// whereas the full-sum generator checks only at leaves.
 ///
-/// That difference comes from the code: `DFSGenerator.dfsSearch` calls `satisfiesPruningConstraints` before pushing each new slice, and
+/// The difference is when the check runs: `DFSGenerator.dfsSearch` calls `satisfiesPruningConstraints` before pushing each new slice, and
 /// `FullSumGenerator.fullSumSearch` does not.
 ///
 /// **The search logic itself is identical**, so it is not reimplemented here; instead `applyPruningConstraints` is passed as `true`.

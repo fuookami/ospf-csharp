@@ -1,7 +1,7 @@
 // 关系查询表达式冻结 / Relational query expression freezing.
-// 与`freezeBoolean`／`freezeScalar`／`freezeCustomValue` 对应：构造计划时把表达式树深度复制，
+// 构造计划时把表达式树深度复制，
 // 使调用方在构造之后修改自己的容器不再影响计划。
-// The pinned Kotlin: /`freezeScalar`/`freezeCustomValue`: the expression tree
+// The expression tree
 // is deep-copied while constructing the plan, so a caller mutating its own containers afterwards no longer
 // affects the plan.
 
@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// 关系查询表达式冻结器 / Relational query expression freezer.
 /// </summary>
 /// <remarks>
-/// **与一处实质差异**：基线还有 `findExpressionCycle`，因为 Kotlin 的表达式树可以经由可变容器成环。
-/// C# 的表达式节点是不可变记录、只能自底向上构造，**结构上无法成环**，所以这里没有树级循环检测——移植过来
+/// **一处实质差异**：没有 `findExpressionCycle`，因为 C# 的表达式树不会经由可变容器成环。
+/// C# 的表达式节点是不可变记录、只能自底向上构造，**结构上无法成环**，所以这里没有树级循环检测——写出来
 /// 只会是不可达代码。真正可能成环的是自定义 payload 携带的容器，这里用递归深度上限兜住。
 ///
-/// **A substantive difference from the code**: the code also has `findExpressionCycle`, because a Kotlin
-/// expression tree can cycle through mutable containers. C# expression nodes are immutable records built
+/// **A substantive difference**: there is no `findExpressionCycle`. C# expression nodes are immutable records built
+/// bottom-up, so a structural cycle is **impossible** and a tree-level check would be dead code. The real risk is
 /// bottom-up, so a structural cycle is **impossible** and a tree-level check would be dead code. The real risk is
 /// a container inside a custom payload, bounded here by a recursion-depth limit.
 /// </remarks>

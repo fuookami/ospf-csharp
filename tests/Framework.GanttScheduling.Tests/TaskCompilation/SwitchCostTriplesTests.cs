@@ -87,7 +87,7 @@ public class SwitchCostTriplesTests {
     /// **换型时间直接复用提前时间的代价核心** / Switch time reuses the advance-time cost core directly.
     /// </summary>
     /// <remarks>
-    /// 基线这两处形态相同：阈值零 → 全额线性；阈值非零 → 只罚超出部分；系数为空 → 无穷（禁止）。
+    /// 这两处形态相同：阈值零 → 全额线性；阈值非零 → 只罚超出部分；系数为空 → 无穷（禁止）。
     /// 所以要断言的是**同一组输入给出那三个具体答案**，而不是"自己等于自己"——
     /// 后者恒真，什么都没测。
     ///

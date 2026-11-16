@@ -53,12 +53,12 @@ public sealed class PilePreparationBenchmarkTests {
     /// <summary>**当前实现的合并结果与层数上限无关** / The current merger's result is independent of the layer cap.</summary>
     /// <remarks>
     /// 这是一条**记录缺口**的断言，不是"设计正确"的断言：仓库内的 `ItemMerger.MergePiles` 只比较底面尺寸与总高，
-    /// **不读 `PackageAttribute.MaxLayer`、也不读 `restWeight`**。基线期望"层数上限 1 时不可堆叠"，
+    /// **不读 `PackageAttribute.MaxLayer`、也不读 `restWeight`**。设计上期望"层数上限 1 时不可堆叠"，
     /// 而这里两个场景给出相同的堆叠数。**一旦有人补上分层逻辑，这条断言就会失败——那正是它存在的意义**：
     /// 它把"场景参数目前不影响被测路径"钉在门禁里，避免基准被当成"分层合并的耗时证据"。
     ///
     /// This assertion **records a gap**, it does not assert a correct design: the in-repo `ItemMerger.MergePiles` compares only base dimensions and total
-    /// height, **reading neither `PackageAttribute.MaxLayer` nor `restWeight`**. The code expects "layer cap 1 means no stacking", whereas here both
+    /// height, **reading neither `PackageAttribute.MaxLayer` nor `restWeight`**. The design expects "layer cap 1 means no stacking", whereas here both
     /// scenarios yield the same pile count. **Once layered merging lands this assertion fails — and that is exactly its purpose**: it pins "the scenario
     /// parameter currently does not affect the measured path" into the gate so the benchmark cannot be cited as evidence about layered merging.
     /// </remarks>

@@ -36,7 +36,7 @@ public sealed record Flight(
     /// 是否需要复重 / Whether reweighing is needed.
     /// </summary>
     /// <remarks>
-    /// 与基线 `Flight.reweighNeeded` 对齐：**只有预配载**才可能为真，其余模式恒 `false`；预配载下取决于
+    /// **只有预配载**才可能为真，其余模式恒 `false`；预配载下取决于
     /// 始发站是否在 <see cref="ReweighNeededStations"/> 里——而该集合默认为空，所以实际恒 `false`。
     ///
     /// **only predistribution** can be true, every other mode returning `false` unconditionally; under predistribution it depends on whether the source station

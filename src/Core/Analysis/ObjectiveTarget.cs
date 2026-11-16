@@ -95,7 +95,7 @@ public abstract record ObjectiveTarget(
     /// <param name="fraction">相对比例 / The relative fraction.</param>
     /// <returns>下界目标，值为 `baseline × (1 + fraction)` / A lower-bound target valued at `baseline × (1 + fraction)`.</returns>
     /// <remarks>
-    /// **这是 `relativeAtLeast` / `atLeastRelative` 的移植。**
+    /// **同时提供 `relativeAtLeast` / `atLeastRelative` 两个名字，指向同一个实现。**
     ///
     /// **非有限输入必须在构造时就拒绝。** 一个 NaN 的比例会算出一个 NaN 的目标值，
     /// **而那个值此后一路合法地传下去**：`ObjectiveTargetBounds.IntegerBound` 会返回 `null`，

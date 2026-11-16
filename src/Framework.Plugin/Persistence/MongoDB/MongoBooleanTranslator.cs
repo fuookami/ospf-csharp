@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 
 /// <summary>**布尔表达式 → Mongo 过滤器** / Boolean expression → a Mongo filter.</summary>
 /// <remarks>
-/// 基线 `MongoBooleanTranslator`（**422 行**）是四个 Mongo 翻译器里最大、也最容易出错的一个。
+/// 四个 Mongo 翻译器里，这一个最大、也最容易出错。
 /// 标量、排序、更新三个翻译器已就位，这里是最后一个。
 ///
 /// **查询写错不抛异常，它只是答错**——而这一层里有四处"看起来对、实际反了或漏了"的地方：
 /// **反转比较**、**null 与"字段缺失"**、**正则转义顺序**、**不支持的谓词按策略处理**。
 ///
-/// The code's `MongoBooleanTranslator` (**422 lines**) is the largest of the four Mongo translators and the easiest to get wrong.
+/// This translator is the largest of the four Mongo translators and the easiest to get wrong.
 /// The scalar, sort and update translators are in place; this is the last one.
 ///
 /// **A wrong query does not throw; it answers wrongly** — and this layer has four places that look right but are reversed or incomplete:
@@ -182,7 +182,7 @@ public static class MongoBooleanTranslator
         }
 
         // **`null` 常量的比较要按触发器的语义处理，不能当成普通值**：
-        // **基线直接拒绝**（`Null comparison constant is not supported`），
+        // **这里直接拒绝**（`Null comparison constant is not supported`），
         // **因为 Mongo 里 `{f: null}` 会同时匹配"字段是 null"与"字段不存在"**，
         // **而写这个条件的人通常只想表达前者。**
         //

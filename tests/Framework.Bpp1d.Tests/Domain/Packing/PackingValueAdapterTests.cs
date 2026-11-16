@@ -92,7 +92,7 @@ public class PackingValueAdapterTests {
     /// <returns>适配器 / The adapter.</returns>
     /// <remarks>
     /// **必须走接口类型。** `Quantity` 是**默认接口方法**，在具体类上调用**不编译**——
-    /// 与 的 `DiagnosticAnalyzers` 是同一类问题。
+    /// 与 `DiagnosticAnalyzers` 是同一类问题。
     ///
     /// **The interface type is required.** `Quantity` is a **default interface method** and calling it on the concrete class **does not compile** — the same problem as
     /// the earlier `DiagnosticAnalyzers`.

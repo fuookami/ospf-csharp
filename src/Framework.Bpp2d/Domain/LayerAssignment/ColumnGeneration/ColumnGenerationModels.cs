@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// <param name="FinalMilpEnabled">是否启用最终 MILP / Whether the final MILP is enabled.</param>
 /// <param name="ReducedCostTolerance">检验数容差 / The reduced-cost tolerance.</param>
 /// <remarks>
-/// 与的 `ColumnGenerationConfig` 对齐。**默认值就是默认值**：
+/// 对应 `ColumnGenerationConfig`。**默认值就是默认值**：
 /// 迭代 64、每轮 32 列、最终 MILP 开启、容差 `1e-6`。**容差不是零**——浮点检验数永远差一点点，
 /// 用零会让"改进列"永远成立，迭代到上限为止。
 ///
@@ -47,11 +47,11 @@ public sealed record ColumnGenerationConfig(
 /// <param name="ShadowPrices">需求影子价格 / The demand shadow prices.</param>
 /// <param name="AdditionalShadowPrices">附加影子价格 / The additional shadow prices.</param>
 /// <remarks>
-/// 与基线 `ColumnGenerationState` 对齐。**影子价格用 <see cref="DemandModeKey"/> 而不是 `Bpp2dDemandShadowPriceKey`**：
+/// **影子价格用 <see cref="DemandModeKey"/> 而不是 `Bpp2dDemandShadowPriceKey`**：
 /// 前者是求解器边界的字符串键（模式 + 货物 + 单位），后者是模型内部的带载荷值对象。**两层不合并**——
 /// 求解器返回的是字符串，硬塞进值对象要么丢单位、要么在边界上做字符串解析。
 ///
-/// Aligned with its `ColumnGenerationState`. **Shadow prices use <see cref="DemandModeKey"/> rather than `Bpp2dDemandShadowPriceKey`**: the former is the solver boundary's string
+/// **Shadow prices use <see cref="DemandModeKey"/> rather than `Bpp2dDemandShadowPriceKey`**: the former is the solver boundary's string
 /// key (mode + item + unit) and the latter the model's internal value object. **The two layers stay separate** — the solver returns strings, and forcing them into the value object would
 /// either drop the unit or demand string parsing at the boundary.
 /// </remarks>
@@ -93,10 +93,10 @@ public sealed record ColumnGenerationFinalResult(
 /// </summary>
 /// <remarks>
 /// **成员照做**（`InitialColumns` / `RestrictedMasterProblem` / `CandidateFilter` / `FinalMilp` / `SolutionAnalysis`）。
-/// 凭印象写过一版 `Registration` / `LpSolving` / …，与基线不符—— 读回基线源码时发现并改正。
+/// 凭印象写过一版 `Registration` / `LpSolving` / …，与最终阶段不符——读回实现时发现并改正。
 /// 五个阶段正好对应主循环里五个可能失败的位置，多一个少一个都会让失败报告指错地方。
 ///
-/// **Members copied from the code.** wrote a version from memory (`Registration` / `LpSolving` / …) that did not match, and caught it when reading the code source back.
+/// **Members fixed to the five stages.** An earlier version written from memory (`Registration` / `LpSolving` / …) did not match, and was caught when reading the implementation back.
 /// The five stages line up exactly with the five places the main loop can fail, so adding or dropping one would misattribute failures.
 /// </remarks>
 public enum ColumnGenerationFailureStage

@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡管线生成器 / The recommended-weight-equalisation pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：**只建议打板模式**，四条管线顺序固定。
+/// **只建议打板模式**，四条管线顺序固定。
 ///
 /// 四处必须沿用：
 ///

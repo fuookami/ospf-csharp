@@ -24,12 +24,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 两点容易做错：
 ///
-/// 1. **上限那行不带后缀**，下限才带 `_minimum`。看起来应当对称，但基线就是这样；改名会让既有的报告与日志对不上。
+/// 1. **上限那行不带后缀**，下限才带 `_minimum`。看起来应当对称，但现状就是如此；改名会让既有的报告与日志对不上。
 /// 2. **`minPayload` 是构造参数，不是 `Payload` 的字段**。`Payload` 只有 `PlannedPayload` / `MaxPayload` / `ComputedPayload`，
 ///    下限来自运行期参数（调度给的最低业载）。混用会把"计划业载"当成"最低业载"。
 ///
 /// two rows, `estimate_payload ≤ maxPayload` (named `{name}`) and `estimate_payload ≥ minPayload` (named `{name}_minimum`). Two easy mistakes:
-/// (1) **only the lower row carries a suffix** — it looks like it should be symmetric, but this is what the code does and renaming breaks existing reports;
+/// (1) **only the lower row carries a suffix** — it looks like it should be symmetric, but this is what the implementation does and renaming breaks existing reports;
 /// (2) **`minPayload` is a constructor argument, not a `Payload` field** — `Payload` holds `PlannedPayload` / `MaxPayload` / `ComputedPayload` only, and the minimum comes from
 /// a runtime parameter; conflating them turns "planned payload" into "minimum payload".
 /// </remarks>

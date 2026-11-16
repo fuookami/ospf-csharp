@@ -70,7 +70,14 @@ KNOWN_RENAMES = {
 # Every entry needs a tripwire criterion, **so lifting the blocker turns something red**.
 KNOWN_BLOCKERS = {
     "LinearSolverFixedIntegerLpBackend": (
-        "the solver output layer carries no duals; see FixedIntegerLpBlockerTests (B1067)"
+        "the solver output layer carries no duals; see FixedIntegerLpBlockerTests"
+    ),
+    # **弹性过滤要反复解可行性问题**，而这条路径需要能真求解的后端；
+    # 本仓的 `FixedIntegerLpGates` 只做"什么情况下不许下结论"的判定。
+    # Elastic filtering re-solves feasibility; that path needs a backend that really solves, and the
+    # gates here only decide when a conclusion must be withheld.
+    "solveTriad": (
+        "elastic filtering re-solves feasibility; only the gates that withhold conclusions are here"
     ),
 }
 

@@ -97,23 +97,23 @@ public class CrossContributionUnitKeyConsistencyTests {
         );
     }
 
-    /// <summary>**键不得为空**（基线落到 `量纲(比例)`，不是空串）/ The key must not be empty (the code falls back to `dimension(scale)`, not to an empty string).</summary>
+    /// <summary>**键不得为空**（回退到 `量纲(比例)`，不是空串）/ The key must not be empty (it falls back to `dimension(scale)`, not to an empty string).</summary>
     /// <remarks>
-    /// **这一条我在 写错过，改正。** 当时断言的是"两个不同类型的无名单位必须给出**不同**的键"，
-    /// 但查基线后确认：基线 `canonicalUnitKey` 是 `symbol ?: name ?: toString`，
-    /// 而 `toString` 是 `量纲(比例)`——**它不看类型**。两个不同类型的无名单位在基线下
-    /// **确实共享同一个键**。加类型名会让 C# 与基线对同一份输入给出不同的键，那是语义分叉，不是修正。
+    /// **这一条早先写错过，已改正。** 当时断言的是"两个不同类型的无名单位必须给出**不同**的键"，
+    /// 但 `canonicalUnitKey` 是 `symbol ?: name ?: toString`，
+    /// 而 `toString` 是 `量纲(比例)`——**它不看类型**。两个不同类型的无名单位
+    /// **确实共享同一个键**。加类型名会让同一份输入得到不同的键，那是语义分叉，不是修正。
     ///
     /// 真正要守的是：**键不能是空串**。 之前这里落到 `""`，那才是缺陷——空串会让
-    /// "未知单位"与"另一个未知单位"看起来相同，而基线给的是 `量纲(比例)`，能区分量纲。
+    /// "未知单位"与"另一个未知单位"看起来相同，而回退值是 `量纲(比例)`，能区分量纲。
     ///
     /// **I got this one wrong and fixed it.** It then asserted that two differently typed nameless units must produce **different** keys, but the
-    /// baseline's `canonicalUnitKey` is `symbol ?: name ?: toString` and `toString` is `dimension(scale)` — **it does not look at the type**. Two
-    /// differently typed nameless units **do share one key** under the code. Adding the type name makes C# and the code disagree on the same input, which
+    /// `canonicalUnitKey` is `symbol ?: name ?: toString` and `toString` is `dimension(scale)` — **it does not look at the type**. Two
+    /// differently typed nameless units **do share one key**. Adding the type name makes the two disagree on the same input, which
     /// is a semantic divergence, not a fix.
     ///
     /// What actually needs guarding is that the key **is not empty**. Before it fell back to `""`, and that was the defect: an empty string makes "unknown
-    /// unit" look identical to "another unknown unit", whereas the code yields `dimension(scale)` and can still tell dimensions apart.
+    /// unit" look identical to "another unknown unit", whereas the fallback yields `dimension(scale)` and can still tell dimensions apart.
     /// </remarks>
     [Fact]
     public void NamelessUnits_ShouldYieldADimensionBasedKey() {
@@ -130,15 +130,15 @@ public class CrossContributionUnitKeyConsistencyTests {
     /// <summary>**键不同时支配判定必须保守** / The dominance decision must stay conservative across differing keys.</summary>
     /// <remarks>
     /// **这一条也写错了，改正。** 当时用两个**不同类型但换算相同**的无名单位，
-    /// 断言 `Dominates` 返回 `false`。但基线下这两个单位的键**相同**（都是 `量纲(比例)`），
-    /// 因此基线**认为它们可比**——旧断言与基线相反。
+    /// 断言 `Dominates` 返回 `false`。但这两个单位的键**相同**（都是 `量纲(比例)`），
+    /// 因此它们**是可比的**——旧断言与实现相反。
     ///
     /// 改成用**量纲不同**的两个单位（长度 vs 质量），这样键**真的不同**，
     /// 才能验证"键不同 → 不支配"这条保守规则。
     ///
     /// **I got this one wrong too, fixed.** It used two **differently typed but same-conversion** nameless units and asserted `Dominates` returns
-    /// `false`. Under the code those two units have the **same** key (both `dimension(scale)`), so the code **considers them comparable** — the old assertion
-    /// was the opposite of the code.
+    /// `false`. Those two units have the **same** key (both `dimension(scale)`), so they **are comparable** — the old assertion
+    /// was the opposite of the implementation.
     ///
     /// It now uses two units of **different dimensions** (length vs mass), so the keys genuinely differ and the conservative rule "different key → no dominance" can
     /// actually be exercised.

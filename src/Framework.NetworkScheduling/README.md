@@ -4,12 +4,9 @@
 
 Resource-constrained path search and route generation on top of the OSPF framework.
 
-Baseline: `ospf-kotlin-framework-network-scheduling` at Kotlin `12fdb587`.
-
 ## Layout
 
-A single assembly with `Application/`, `Domain/`, and `Infrastructure/`. The baseline splits this into
-several sub-modules; **this project does not mirror that split**.
+A single assembly with `Application/`, `Domain/`, and `Infrastructure/` — split by layer, not by sub-module.
 
 ## What it provides
 
@@ -33,7 +30,7 @@ will silently accept a truncated search.
 
 ## Consumers
 
-`Framework.GanttNetworkScheduling` adapts these paths into business bunches (earlier). Note that
+`Framework.GanttNetworkScheduling` adapts these paths into business bunches. Note that
 This module **already references** `Framework.GanttScheduling`, which is why the bridge lives
 in its own project.
 

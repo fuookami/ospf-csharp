@@ -1,5 +1,4 @@
 // 迭代列剪枝 / Iterative column pruning.
-// 与固定 Kotlin 里
 // 剪枝只做两个纯判定，不触碰模型。
 // Pruning makes two pure decisions and never touches the model.
 
@@ -15,14 +14,14 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// <remarks>
 /// 每一轮从列池里剔除约简成本不再值得一提的列。判定有三条合取，而**第一条的边界方向最容易被写反**：
 ///
-/// 基线写的是 `!(reducedCost(task) ls maximumReducedCost)`，即 `reducedCost >= maximumReducedCost` 时**剔除**。
+/// 判定写的是 `!(reducedCost(task) ls maximumReducedCost)`，即 `reducedCost >= maximumReducedCost` 时**剔除**。
 /// 一个"自然"的实现会写成 `reducedCost > maximumReducedCost`——两者只在**恰好等于**时不同。
 /// 恰好等于的列正是"刚刚够格"的列：写错时它被留在列池里，于是每轮都多扫一遍它，
 /// 而**它永远不会变成有价值的列**。
 ///
 /// Each round drops columns whose reduced cost is no longer worth keeping. The test is a conjunction of three, and **the boundary direction of the first is easiest to invert**:
 ///
-/// the code writes `!(reducedCost(task) ls maximumReducedCost)`, i.e. drop when `reducedCost >= maximumReducedCost`. A "natural" implementation writes
+/// the check is `!(reducedCost(task) ls maximumReducedCost)`, i.e. drop when `reducedCost >= maximumReducedCost`. A "natural" implementation writes
 /// `reducedCost > maximumReducedCost` — the two differ only at **exactly equal**. A column exactly at the boundary is the one that just barely qualifies: with the wrong
 /// comparison it stays in the pool, gets rescanned every round, and **never becomes a column worth having**.
 /// </remarks>
@@ -63,10 +62,10 @@ public static class IterativeColumnPruning {
     /// <remarks>
     /// 只在**列数仍超上限时**衰减，否则原样返回。衰减本身复用 `BunchCompilation` 里已落地的
     /// `NextReducedCostCutoff`——同一段逻辑在 `IterativeAggregation` 里有一份私有拷贝，
-    /// C# 共用一份实现即可。
+    /// 这里共用一份实现即可。
     ///
     /// Decay only when the **column count still exceeds the ceiling**, otherwise return it unchanged. The decay itself reuses the already-landed `NextReducedCostCutoff` from
-    /// `BunchCompilation` — the code keeps a private copy of the same code in `IterativeAggregation`, and C# shares one implementation.
+    /// `BunchCompilation` — `IterativeAggregation` keeps a private copy of the same logic, and this file shares one implementation.
     /// </remarks>
     public static Flt64 NextMaximumReducedCost(
         int remainingAmount,

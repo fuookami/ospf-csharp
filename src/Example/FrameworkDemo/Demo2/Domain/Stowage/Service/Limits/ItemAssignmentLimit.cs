@@ -20,19 +20,19 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 货物装载状态约束 / The item assignment rows.
 /// </summary>
 /// <remarks>
-/// 对齐：按货物状态给 `loaded_{i}` 加一行。
+/// 按货物状态给 `loaded_{i}` 加一行。
 ///
 /// | 状态 | 行 | 含义 |
 /// | --- | --- | --- |
 /// | `Preassigned` / `AdjustmentNeeded` | `loaded_i = 1` | 必须装上 |
 /// | `Optional` | `loaded_i ≤ 1` | 可装可不装 |
-/// | 其余（`Reserved` / `Loaded`） | **不加行** | 基线就是 `else -> {}` |
+/// | 其余（`Reserved` / `Loaded`） | **不加行** | 就是 `else -> {}` |
 ///
-/// 第三行是最容易"顺手补上"的地方：`Reserved` 看起来该有 `loaded_i = 0`，但基线不写。补上会**多一条约束**，而模型仍然可解——
+/// 第三行是最容易"顺手补上"的地方：`Reserved` 看起来该有 `loaded_i = 0`，但这里不写。补上会**多一条约束**，而模型仍然可解——
 /// 这类错误在测试里只能靠"行数"发现，所以在判据里逐状态断言行是否存在。
 ///
 /// One row per item on `loaded_{i}`, tabulated above. The third row is where a well-meaning addition goes wrong: `Reserved` looks like it deserves
-/// `loaded_i = 0`, but the code writes nothing. Adding it produces **one extra constraint** while the model still solves, so a test can only catch it by counting rows —
+/// `loaded_i = 0`, but nothing is written. Adding it produces **one extra constraint** while the model still solves, so a test can only catch it by counting rows —
 /// hence the criteria assert row existence per status.
 /// </remarks>
 public sealed class ItemAssignmentLimit

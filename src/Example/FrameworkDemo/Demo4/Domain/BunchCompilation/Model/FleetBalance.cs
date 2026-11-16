@@ -22,13 +22,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// 机队平衡层 / The fleet balance layer.
 /// </summary>
 /// <remarks>
-/// ：按**检查点**（"型别 × 机场"）给机队计数，每台飞机一个 `z` 变量进表达式，再挂一个
+/// 按**检查点**（"型别 × 机场"）给机队计数，每台飞机一个 `z` 变量进表达式，再挂一个
 /// "不超过该检查点的机数"的负侧松弛。检查点不是随便取的——**在飞的飞机算它要落的机场，不在飞的算它当前所在机场**，
 /// 否则"今晚有多少架这种机型能落在浦东"根本算不出来。
 ///
 /// 判据要小心的两点：检查点按 `(机场, 型别)` **去重**；同一检查点下每台飞机**各占一项**（不是一台飞机一项、也不是共享一个变量）。
 ///
-/// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush` 再累加，所以注册时那些 `z` 项在这一轮会被清掉，
+/// **`AddColumns` 是"换掉"而不是"追加"**：每轮先 `flush` 再累加，所以注册时那些 `z` 项在这一轮会被清掉，
 /// `fleet_l` 变成"这一轮的束各占一项"。C# 的 `Flush` 是空实现，这里显式 `Clear` 再累加——**否则每多一轮就多一批项，
 /// 跑十轮之后同一个束在表达式里出现十次**。
 ///
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// Two things the criteria must watch: checkpoints are **deduplicated** by (airport, minor type); and every aircraft under a checkpoint holds **its own term** (not one term per
 /// aircraft group, and not a shared variable).
 ///
-/// **`AddColumns` replaces rather than appends**: the code flushes before accumulating each round, so the `z` terms from registration are cleared and `fleet_l` becomes "one term
+/// **`AddColumns` replaces rather than appends**: every round flushes before accumulating, so the `z` terms from registration are cleared and `fleet_l` becomes "one term
 /// per bunch of this round". C#'s `Flush` is a no-op, so this clears explicitly before accumulating — **otherwise every extra round adds another batch of terms, and after ten rounds
 /// the same bunch appears ten times in the expression**.
 /// </remarks>

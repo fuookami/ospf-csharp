@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 货物时效管线生成器 / The express-effectiveness pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：**三条条件管线**，且**没有总的模式开关**。
+/// **三条条件管线**，且**没有总的模式开关**。
 ///
 /// 四处必须沿用：
 ///

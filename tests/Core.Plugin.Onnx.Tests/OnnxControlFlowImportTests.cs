@@ -24,12 +24,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests;
 /// **带 `If` 的模型从字节一路走到多项式** / A model with an If walks from bytes all the way to a polynomial.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxLowering` 编排形态。**这一层把三个各自验证过的部分拼成一条路：** '
+/// **这一层把三个各自验证过的部分拼成一条路：**
 /// **解析子图属性 → 导入器识别控制流 → 求值器递归走分支体。**
 ///
 /// **"端到端"该有的意思就在这里：** **不是"每部分都有一条判据"，而是"一个真实模型能从头走通，且结果与手算一致"。**
 ///
-/// Syncs the orchestration shape of `OnnxLowering`. ** joins three separately verified parts into one path: parsing the subgraph attribute, the importer
+/// **This layer joins three separately verified parts into one path**: parsing the subgraph attribute, the importer
 /// recognising control flow, and the evaluator walking the body recursively.**
 ///
 /// **That is what end-to-end has to mean: not "every part has a criterion", but "a real model goes through and the result matches hand arithmetic".**
@@ -317,10 +317,10 @@ public class OnnxControlFlowImportTests
 
     /// <summary>**调用方给出每元素符号时，张量按元素走到底** / With caller-supplied per-element symbols, the tensor stays per element end to end.</summary>
     /// <remarks>
-    /// **这是基线 `inputBindings: Map<String, List<Symbol>>` 在 C# 侧的落地：** **`x` 与 `y` 各给三个符号，**
+    /// **这是 `inputBindings` 式绑定在 C# 侧的落地：** **`x` 与 `y` 各给三个符号，**
     /// **`Add` 就逐位置相加，输出按元素取——不再有"整个张量是一个数"的那一步。**
     ///
-    /// **This is its inputBindings taking shape on the C# side: three symbols for x and three for y, so Add pairs per position and the output is read by element — the
+    /// **This is `inputBindings` taking shape on the C# side: three symbols for x and three for y, so Add pairs per position and the output is read by element — the
     /// "the whole tensor is one number" step is gone.**
     /// </remarks>
     [Fact]

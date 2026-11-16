@@ -33,11 +33,11 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **推荐重量均衡域** / The recommended-weight-equalisation domain.
 /// </summary>
 /// <remarks>
-/// 四条管线：货物顺序（约束）、优先级预约（约束）、重量均衡（约束）、偏差目标（最大化）。判据的重点：**`precDepth` 恒为 0** 这个基线怪癖、
+/// 四条管线：货物顺序（约束）、优先级预约（约束）、重量均衡（约束）、偏差目标（最大化）。判据的重点：**`precDepth` 恒为 0** 这个怪癖、
 /// 有序对的排序键、均衡约束的**两条方向**与**交叉的 `mlw` 系数**。
 ///
 /// Four pipelines: item order (constraint), priority appointment (constraint), weight equalisation (constraint), deviation objective (maximisation). The criteria focus on the
-/// baseline quirk that **`precDepth` is always 0**, the ordered pairs' sort keys, and the equalisation constraint's **two directions** with **crossed `mlw` coefficients**.
+/// quirk that **`precDepth` is always 0**, the ordered pairs' sort keys, and the equalisation constraint's **two directions** with **crossed `mlw` coefficients**.
 /// </remarks>
 public class Demo2RecommendedWeightEqualizationTests {
     private static Item MakeItem(string name, int priority, double weight = 100.0) =>
@@ -127,15 +127,15 @@ public class Demo2RecommendedWeightEqualizationTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. **串好的装载顺序链上，每个节点的 `PrecDepth` 都是 0**——基线取"直接前驱的 `precDepth` 最小值"，而叶子也是 0。
+    /// 1. **串好的装载顺序链上，每个节点的 `PrecDepth` 都是 0**——取的是"直接前驱的 `precDepth` 最小值"，而叶子也是 0。
     /// 2. 因此 `PriorityAppointment.Invoke(任意优先级, 任意可用舱位)` 为真。
     /// 3. `availableDepths` 是 `{0}`，所以即使没有预约，回退也是 `{0}`。
     ///
-    /// 这不是"修好它"的地方：改成真实深度会让 `PriorityAppointmentLimit` 产生基线没有的约束。
+    /// 这不是"修好它"的地方：改成真实深度会让 `PriorityAppointmentLimit` 产生原本没有的约束。
     ///
-    /// Three paired points: **every node on a linked loading-order chain has `PrecDepth` 0**, since the code takes the minimum `precDepth` among direct predecessors and a leaf is
+    /// Three paired points: **every node on a linked loading-order chain has `PrecDepth` 0**, since the minimum `precDepth` among direct predecessors is taken and a leaf is
     /// also 0; therefore `PriorityAppointment.Invoke` is true for any priority and any available position; and `availableDepths` is `{0}`, so even the no-appointment fallback is
-    /// `{0}`. This is not the place to "fix it": real depths would make `PriorityAppointmentLimit` emit constraints the code does not.
+    /// `{0}`. This is not the place to "fix it": real depths would make `PriorityAppointmentLimit` emit constraints it does not emit today.
     /// </remarks>
     [Fact]
     public void PrecDepth_ShouldBeZeroThroughoutTheChain() {

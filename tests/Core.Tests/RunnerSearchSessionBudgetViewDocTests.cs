@@ -17,8 +17,8 @@ namespace Fuookami.Ospf.Core.Tests;
 ///
 /// 两句话的意思完全不同：前者是"这边还没人用"（暗示等有人用了就补），后者是"**架构上就不在那里**"（补了也没人用）。
 ///
-/// The remarks used to say "this implementation's operators have no consumer yet". Checking: the **baseline consumers exist** — `FitnessEvaluator` reads `rejected` to drop a rejected
-/// evaluation and `LocalSearchUpdates` reads `remaining <= 2` to exit early. This implementation detached constraints and budgets from the model in earlier (`SearchConstraints`
+/// The remarks used to say "this implementation's operators have no consumer yet". Checking: the **consumers exist** — `FitnessEvaluator` reads `rejected` to drop a rejected
+/// evaluation and `LocalSearchUpdates` reads `remaining <= 2` to exit early. This implementation detached constraints and budgets from the model earlier (`SearchConstraints`
 /// replaced the model decorator, budgets go through `SearchBudget`), so operators cannot reach either reading and **the caller wraps the whole call in a `SearchBudget`**.
 ///
 /// The two sentences mean very different things: the first is "nobody uses it here yet" (implying it will come back once someone does), the second is "**it is architecturally not

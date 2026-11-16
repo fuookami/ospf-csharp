@@ -60,8 +60,8 @@ public static class SolvingStatusSupport {
     private static readonly INumericConstants<Flt64> _flt64Constants = NumericConstantsRegistry.For<Flt64>();
 
     /// <summary>
-    /// 按 Kotlin 基线计算回调间隙 <code>(obj - bound + precision) / (obj + precision)</code>。
-    /// Compute the callback gap <code>(obj - bound + precision) / (obj + precision)</code> as the Kotlin baseline does.
+    /// 按共享契约计算回调间隙 <code>(obj - bound + precision) / (obj + precision)</code>。
+    /// Compute the callback gap <code>(obj - bound + precision) / (obj + precision)</code>.
     /// </summary>
     /// <param name="obj">当前目标值 / Current objective value.</param>
     /// <param name="bound">当前最优界 / Current best bound.</param>

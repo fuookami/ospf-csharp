@@ -20,18 +20,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 适航安全聚合初始化器 / The airworthiness security aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与逐段对齐。**它是一整片 DTO → 模型的翻译**，没有算法，
+/// 逐段对应：**它是一整片 DTO → 模型的翻译**，没有算法，
 /// 因此最容易出的错不是算错而是**抄漏**：漏掉一个校验、漏掉一个 `min`、把 `maxOf(1.0, …)` 写成 `maxOf(0.0, …)`。
 ///
-/// 四条校验的边界都沿用，包括**看起来重复**的那几条（`payloadUpperBound` 在第二条与第三条各查一次有限性）。基线如此。
+/// 四条校验的边界都沿用，包括**看起来重复**的那几条（`payloadUpperBound` 在第二条与第三条各查一次有限性）。这里同样如此。
 ///
 /// **单位换算因子恒为 1**：`input.lengthUnit`/`weightUnit` 换算成机型单位。本仓的 `RequestDTO` 没有单位字段，
 /// 机型单位固定为英寸/千克，所以因子是 1。若将来 DTO 引入单位，这里是唯一要改的地方。
 ///
-/// Aligned section by section with the code. It is **one long DTO-to-model translation** with no algorithm, so the easy mistake is not miscalculating but **transcribing
+/// Translated section by section. It is **one long DTO-to-model translation** with no algorithm, so the easy mistake is not miscalculating but **transcribing
 /// incompletely**: a dropped validation, a dropped `min`, `maxOf(1.0, …)` written as `maxOf(0.0, …)`. All four validations are copied including the **apparently redundant**
-/// checks (`payloadUpperBound` is finiteness-checked in both the second and the third block) — the code is so written. **The unit conversion factor is always 1**: the
-/// baseline converts through `input.lengthUnit`/`weightUnit` into the aircraft's units, while this implementation's `RequestDTO` carries no unit fields and the aircraft units are fixed at
+/// checks (`payloadUpperBound` is finiteness-checked in both the second and the third block) — the same holds here. **The unit conversion factor is always 1**: the
+/// conversion goes through `input.lengthUnit`/`weightUnit` into the aircraft's units, while this implementation's `RequestDTO` carries no unit fields and the aircraft units are fixed at
 /// inches/kilograms. If the DTO ever gains units, this is the only place to change.
 /// </remarks>
 internal static class AggregationInitializer

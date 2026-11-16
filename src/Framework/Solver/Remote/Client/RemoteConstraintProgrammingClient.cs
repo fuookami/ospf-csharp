@@ -34,11 +34,11 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Client;
 /// 本类当前只覆盖 <c>solve</c>；<c>solveOutput</c>／<c>materialize</c>（稳定整数解物化与全量成员
 /// 校验）尚未实现，调用方应使用 <see cref="SolveAsync"/> 拿到原始协议结果。
 ///
-/// Aligns with the fixed Kotlin baseline's <c>RemoteConstraintProgrammingClient.solve</c>: encode a CP
+/// <c>solve</c>: encode a CP
 /// snapshot without native handles as raw model data (format <c>ospf-cp-snapshot-json</c>), submit it with
 /// task metadata and wait for remote completion.
 ///
-/// Two baseline behaviours are preserved: the scheduling quantum travels through the slice API and is
+/// Two behaviours are preserved: the scheduling quantum travels through the slice API and is
 /// **not** part of the semantic CP configuration (putting it in <see cref="SolvePayload.Config"/> would
 /// pollute the configuration fingerprint), and <c>targetType</c> is always <c>cp</c> with variable and
 /// constraint counts attached as size estimates.
@@ -87,7 +87,7 @@ public sealed class RemoteConstraintProgrammingClient {
     /// 提交 CP snapshot 并等待远端完成 / Submit a CP snapshot and wait for remote completion.
     /// </summary>
     /// <remarks>
-    /// ：snapshot 先经 Core 的 <see cref="ConstraintProgrammingSnapshotCodec"/> 编码；编码失败
+    /// snapshot 先经 Core 的 <see cref="ConstraintProgrammingSnapshotCodec"/> 编码；编码失败
     /// 直接返回结构化错误，不做任何网络请求。时间片必须为正、轮数必须为正，由
     /// <see cref="RemoteSolverClient.SolveAsync"/> 统一校验。
     /// the snapshot is encoded through Core's
@@ -156,7 +156,7 @@ public sealed class RemoteConstraintProgrammingClient {
     /// 提交 CP 模型并物化完整求解输出 / Submit a CP model and materialize the full solver output.
     /// </summary>
     /// <remarks>
-    /// 这是基线 <c>solveOutput</c> 的编排：提交 → 归一化历史结果 → 自一致校验 → 执行绑定校验 → 读工件 →
+    /// 编排顺序：提交 → 归一化历史结果 → 自一致校验 → 执行绑定校验 → 读工件 →
     /// 工件一致性校验 → 三态判定 → 构造 Core 输出。每一步失败都**原样上抛**，不降级成"成功但没有解"。
     ///
     /// 与 <see cref="SolveAsync"/> 的分工：那条路径只提交并返回精简结果（供只要任务标识的调用方）；本方法才

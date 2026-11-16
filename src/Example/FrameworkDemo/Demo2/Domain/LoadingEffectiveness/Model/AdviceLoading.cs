@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 建议装载松弛 / The advised-load slack.
 /// </summary>
 /// <remarks>
-/// 与对齐：每个舱位两个**单侧松弛**符号，衡量"实际装载超出建议值多少"。
+/// 每个舱位两个**单侧松弛**符号，衡量"实际装载超出建议值多少"。
 ///
 /// 五处必须沿用：
 ///
-/// 1. **用 `SlackFunction` 的阈值形式**：基线经 `exampleThresholdSlack` 转成
+/// 1. **用 `SlackFunction` 的阈值形式**：经 `exampleThresholdSlack` 转成
 ///    `SlackFunction(x = 装载量, y = 阈值, withNegative = false, withPositive = true, threshold = true, constraint = true)`。
 ///    **`withNegative = false`** 是关键：带下侧会让松弛在装载量低于建议值时也变大，惩罚方向就反了。
 /// 2. **阈值为 `null` 的舱位给恒零符号**，不是跳过——矩阵维度必须与舱位数一致。
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// `parameter.AdviceLoadWeight` 吸收，所以行为等价；换成"在符号里做换算"会引入一个没有任何消费者的单位路径。
 ///
 /// Two **one-sided** slack symbols per position, measuring how far the actual load exceeds the advised value. Five things must be copied: **the threshold form of
-/// `SlackFunction`** — the code goes through `exampleThresholdSlack`, which becomes `SlackFunction(x = load, y = threshold, withNegative = false, withPositive = true, threshold = true,
+/// `SlackFunction`** — `exampleThresholdSlack` turns it into `SlackFunction(x = load, y = threshold, withNegative = false, withPositive = true, threshold = true,
 /// constraint = true)`, and **`withNegative = false`** is the key, since a lower side would grow the slack when the load is *below* the advice and invert the penalty; **a position with a null
 /// threshold gets a constant-zero symbol** rather than being skipped, since the matrix must match the position count; **the amount slack relaxes `Load.LoadAmount` and the weight slack
 /// `Load.EstimateLoadWeight`**; **the two families are named `advice_amount_slack_{position}` and `advice_weight_slack_{position}`**, relying on the `StowagePosition.ToString` override

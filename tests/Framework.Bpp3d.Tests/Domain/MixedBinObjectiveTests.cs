@@ -20,12 +20,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// **这段代码原来是"搬不了"，理由是依赖 `PreciseAssignment`，而那个类一直在仓库里。** **所以这里的第一件事不是写新代码，
 /// 是<b>把那句过期结论改对**；**判据顺手把它钉住：** **文件里不得再出现"PreciseAssignment（C# 侧不存在）"这类断言。**
 ///
-/// **其余判据钉基线逐条照搬的三个跳过条件：** **成本表为空、权重为零、该箱型未配置成本——第三种<b>不进多项式**，
+/// **其余判据钉住三个跳过条件：** **成本表为空、权重为零、该箱型未配置成本——第三种<b>不进多项式**，
 /// 而不是以 0 系数进去。**
 ///
-/// **This code used to be "cannot be implemented" because of a `PreciseAssignment` dependency that has been in the repository all along.** **So the first job of
+/// **This code used to be "cannot be implemented" because of a `PreciseAssignment` dependency that has been in the repository all along.** **So the first job here
 /// is not new code but correcting that stale conclusion, and a criterion pins it: the file may no longer assert that
-/// `PreciseAssignment` is missing.** **The rest pin its three skip conditions: empty cost table, zero weight, and a type without a configured
+/// `PreciseAssignment` is missing.** **The rest pin the three skip conditions: empty cost table, zero weight, and a type without a configured
 /// cost — the third never enters the polynomial, rather than entering with a coefficient of zero.**
 /// </remarks>
 public class MixedBinObjectiveTests
@@ -89,10 +89,10 @@ public class MixedBinObjectiveTests
 
     /// <summary>**配置为零成本的箱型同样不进多项式** / A type priced at zero is skipped the same way.</summary>
     /// <remarks>
-    /// **这是基线 `mapIndexedNotNull` 的另一半：** **它先判"未配置"，再判"系数为零"，两件事都会让该项消失。**
+    /// **这是 `mapIndexedNotNull` 的另一半：** **它先判"未配置"，再判"系数为零"，两件事都会让该项消失。**
     /// **只判前者会让"配了零价"变成一条 0 系数项，而求和里它是噪声。**
     ///
-    /// **This is the other half of its `mapIndexedNotNull`: it checks "not configured" and then "coefficient is zero", and either removes the
+    /// **This is the other half of `mapIndexedNotNull`: it checks "not configured" and then "coefficient is zero", and either removes the
     /// term.** **Checking only the first would turn "priced at zero" into a zero coefficient, which is noise in the sum.**
     /// </remarks>
     [Fact]

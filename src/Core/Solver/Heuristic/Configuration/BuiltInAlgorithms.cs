@@ -184,15 +184,15 @@ public static class BuiltInAlgorithms {
         var archive = new BestArchive<O, V>(100);
 
         if (PopulationUpdateTypes.Contains(type)) {
- // **earlier 在这里写过一条"22 个种群更新没有 `ISolutionUpdate` 形态"的缺口，那是错的。**
+ // **早先在这里写过一条"22 个种群更新没有 `ISolutionUpdate` 形态"的缺口，那是错的。**
             // 它们一直都在（`Operator/Update/` 下 20 个 + `SinglePointCross`），我只是用 `grep "class X"` 去找，
             // 而它们是 `sealed record`——**用错误的声明形态搜索，得出的"缺失"结论必然是假的**。
             // 这里改为映射表补齐默认工厂，并把那条错误结论从文档里撤回。
             //
- // **earlier recorded a "the 22 population updates have no `ISolutionUpdate`" gap here, and it was wrong.** They had always been there
+ // **An earlier pass recorded a "the 22 population updates have no `ISolutionUpdate`" gap here, and it was wrong.** They had always been there
             // (twenty under `Operator/Update/` plus `SinglePointCross`); I had searched with `grep "class X"` while they are `sealed record`s —
- // **searching with the wrong declaration shape necessarily yields a false "missing"**. fills in the default factories from the
-            // baseline's map and retracts that wrong conclusion from the documents.
+ // **searching with the wrong declaration shape necessarily yields a false "missing"**. This fills in the default factories from the
+            // mapping table and retracts that wrong conclusion from the documents.
             ISolutionUpdate? built = PopulationUpdate(type);
             if (Single(bindings.Update) is ISolutionUpdate bound) {
                 built = bound;

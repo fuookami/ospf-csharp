@@ -94,7 +94,7 @@ public sealed class SearchRegistryTests {
     /// `statelessComponents` 只有两类来源——初始化时硬编码的一份清单，以及 `registerFeatures/Reward/Acceptance/Exchange/Allocator(stateless = true)`
     /// 追加的条目。`registerUpdate(stateless = true)` **不追加**。
     ///
-    /// 也就是说：**"注册时声明无状态"与"恢复后可以就地重建"在本实现（与基线）里不是同一件事**。
+    /// 也就是说：**"注册时声明无状态"与"恢复后可以就地重建"在本实现里不是同一件事**。
     /// 本测试把这条差异钉住，避免后来者以为两者等价而把某个更新算子当成可重建的。
     ///
     /// **There is an easily misjudged fact here that must be recorded**: `Entry.Stateless` (the `stateless` flag passed at registration) **does not
@@ -206,7 +206,7 @@ public sealed class SearchRegistryTests {
             .BeOfType<Ok<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
         registry.Selection(Spec("epsilon-greedy", ("epsilonn", 0.2)), actions, true).Should()
             .BeOfType<Failed<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
-        // **"回退"不是兜底**：表格策略自己只认那七个名字，其它名字一律失败（基线亦然）。
+        // **"回退"不是兜底**：表格策略自己只认那七个名字，其它名字一律失败。
         // **The "fallback" is not a catch-all**: the tabular policy only recognises those seven names; everything else fails (as in the code).
         registry.Selection(Spec("my-selector"), actions, true).Should()
             .BeOfType<Failed<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
@@ -351,7 +351,7 @@ public sealed class SearchRegistryTests {
     /// <summary>**`not-worse` 是默认接受策略，因此必须能构造出来** / `not-worse` is its default acceptance policy and must be constructible.</summary>
     /// <remarks>
  /// **这是对 earlier/226 一次判断的反转**。当时以"注册表不该替问题做主"为由把 `not-worse` 留空，而那条理由站不住：
-    /// `Acceptance` 本来就接收 `SearchProblem`，支配判据与坐标投影就地可得。留空的后果是**基线默认配置根本跑不起来**
+    /// `Acceptance` 本来就接收 `SearchProblem`，支配判据与坐标投影就地可得。留空的后果是**默认配置根本跑不起来**
     /// （`HyperHeuristicConfig` 的 `acceptance` 默认值就是 `not-worse`）。
     ///
  /// **This reverses a decision from earlier/226.** `not-worse` was left out on the grounds that "the registry must not decide for the problem",

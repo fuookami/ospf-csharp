@@ -88,7 +88,7 @@ public class Csp1dMilpSolverProgressTests {
 
     /// <summary>**最终 MILP 的进度必须落在 75—99 带里** / The final MILP's progress must land in the 75—99 band.</summary>
     /// <remarks>
-    /// 基线 把 `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
+    /// 最终 MILP 的进度来自 `progressContext?.phase(75, 99)`。
     ///
     /// **判据用注册回调那条（阶段内 100 → 带内 99）**，理由是实测出来的：
     /// 求解回调的阶段内 99 在带内是 98，**但注册回调先上报、带内已到 99**，

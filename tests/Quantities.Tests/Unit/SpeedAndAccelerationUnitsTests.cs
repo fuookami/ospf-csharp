@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// </remarks>
 public class SpeedAndAccelerationUnitsTests
 {
-    /// <summary>**14 个速度单位都在** / All 14 baseline speed units are present.</summary>
+    /// <summary>**14 个速度单位都在** / All 14 speed units are present.</summary>
     [Fact]
     public void TheSpeedUnits_ShouldCoverTheBaseline()
     {
@@ -126,7 +126,7 @@ public class SpeedAndAccelerationUnitsTests
             "light speed is exactly one light second per second, by definition of the light second");
     }
 
-    /// <summary>**6 个加速度单位都在，且标准重力是定义值** / All 6 baseline accelerations, with standard gravity defined exactly.</summary>
+    /// <summary>**6 个加速度单位都在，且标准重力是定义值** / All 6 accelerations, with standard gravity defined exactly.</summary>
     [Fact]
     public void TheAccelerationUnits_ShouldCoverTheBaseline()
     {

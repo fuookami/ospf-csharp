@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// **修复前**：这个类同样没有构造函数参数，`RightHandSide` 恒返回**空字典**——与 `BinCapacityConstraint` 是同一个空壳形态。
 /// 两个空壳互相掩护：一个被当成"还没接线"，另一个被当成"已经有约定"。
 ///
-/// Ports the **right-hand-side** half of its.
+/// The **right-hand-side** half.
 /// **Before the fix**: this class also had no constructor parameters and `RightHandSide` always returned an **empty dictionary** — the same shell shape
 /// as `BinCapacityConstraint`. The two shells covered for each other: one looked "not yet wired", the other "already has a contract".
 /// </remarks>

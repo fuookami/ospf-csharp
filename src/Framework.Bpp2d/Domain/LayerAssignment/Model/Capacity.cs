@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 装载容量契约 / The load-capacity contract.
 /// </summary>
 /// <remarks>
-/// 与的 `interface Capacity` 对齐。四个成员里两个是 `LinearIntermediateSymbols1&lt;FltX&gt;`——
-/// Kotlin 的 typealias，C# 无法表达（`src/Core/Symbol/SymbolCombination.cs:95`），因此用 `IReadOnlyList&lt;...&gt;`。
-/// **这是本仓第四次同样的处置**（三次各一次），不是随手改的形状。
+/// 四个成员里两个是 `LinearIntermediateSymbols1&lt;FltX&gt;`——
+/// 这是个 typealias，C# 无法表达（`src/Core/Symbol/SymbolCombination.cs:95`），因此用 `IReadOnlyList&lt;...&gt;`。
+/// **这是本仓第四次同样的处置**，不是随手改的形状。
 ///
-/// Aligned with its `interface Capacity`. Two of its four members are `LinearIntermediateSymbols1&lt;FltX&gt;`, a Kotlin typealias C# cannot express, so `IReadOnlyList&lt;...&gt;` is used —
+/// Two of the four members are `LinearIntermediateSymbols1&lt;FltX&gt;`, a typealias C# cannot express, so `IReadOnlyList&lt;...&gt;` is used —
 /// **the fourth time this repository has handled the same problem** , not an ad-hoc shape.
 /// </remarks>
 public interface ICapacity
@@ -48,7 +48,7 @@ public interface ICapacity
 /// 精确装载容量 / The precise load capacity.
 /// </summary>
 /// <remarks>
-/// 与基线 `PreciseLoadCapacity` 对齐：每列两个符号，都由该列的份数变量 `y_i` 线性表出。
+/// 每列两个符号，都由该列的份数变量 `y_i` 线性表出。
 ///
 /// | 符号 | 系数 | 用途 |
 /// | --- | --- | --- |
@@ -66,7 +66,7 @@ public interface ICapacity
 ///    （与变量注册不同，实测过变量注册容忍重名）。
 /// 3. **两个符号组都注册**，只注册一个会让容量约束在另一半上找不到符号。
 ///
-/// Aligned with its `PreciseLoadCapacity`: two symbols per column, both linear in that column's copy variable `y_i`. **Three things must be copied**: **a zero or missing sheet area makes
+/// Two symbols per column, both linear in that column's copy variable `y_i`. **Three things must be copied**: **a zero or missing sheet area makes
 /// the loading-rate coefficient zero** rather than dividing, since a division by zero yields NaN or Infinity that the solver will not reject and will merely turn into a meaningless optimum;
 /// **`Register` is idempotent**, reusing the same symbol objects; and **both symbol groups are registered**, since registering only one leaves the capacity constraint unable to find symbols on
 /// the other half.

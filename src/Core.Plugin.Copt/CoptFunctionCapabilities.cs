@@ -95,12 +95,12 @@ public static class CoptFunctionCapabilities
     /// </summary>
     /// <remarks>
     /// **`GetMethod` 只返回签名完全匹配的那一个，不返回"名字像"的那一个**——
-    /// 这正是它与 `HasMethod` 的区别，也是基线选择它的理由。
+    /// 这正是它与 `HasMethod` 的区别。
     ///
     /// **三个参数类型从 SDK 自己的类型取，而不是硬编码 `typeof(Array)`：**
     /// **`AddSos` 有三个重载（`SosBuilder`、`Var[]`、`VarArray`），只按名字会命中任意一个。**
     ///
-    /// **`GetMethod` returns only the exact signature, never a look-alike name** — that is precisely how it differs from
+    /// `HasMethod`.
     /// `HasMethod` and why the code chose it.
     ///
     /// **The three parameter types come from the SDK's own types rather than a hard-coded `typeof(Array)`: `AddSos` has

@@ -29,8 +29,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <item>离散时间窗的整数变量**尚未接线**，必须显式失败——塞一个 `UInt64` 变量出去会被求解器在注册阶段拒，或者更糟，静默失真。</item>
 /// </list>
 ///
-/// the earlier end times were **constants at the window end**, so the makespan only reflected "when the plan says it ends" and minimising it did nothing. introduces the
-/// baseline's `est` (start-time variable), making the end time `est + duration` and the makespan **pushable by the schedule** for the first time. Three links invert easily:
+/// the earlier end times were **constants at the window end**, so the makespan only reflected "when the plan says it ends" and minimising it did nothing. The `est` start-time variable
+/// makes the end time `est + duration` and the makespan **pushable by the schedule** for the first time. Three links invert easily:
 /// (1) with advance/delay disabled `est` must be **pinned** to the window start — "relaxed" would allow arbitrary movement while looking better; (2) `est` must be **unsigned** —
 /// signed, the "advance allowed" branch sinks to negative infinity and yields a negative makespan; (3) the discrete-window integer variable is **not wired** and must fail
 /// explicitly — shipping a `UInt64` variable gets rejected at registration, or worse, silently distorts.

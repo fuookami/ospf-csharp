@@ -102,20 +102,20 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service {
                 return ok.Value;
             }
 
-            // **这个抛异常与基线等价，不是 C# 的偏离。**
+            // **这个抛异常是唯一可行的表达，不是 C# 的偏离。**
             //
-            // 基线写的是 `(convertSolverValue(...) as Ok).value`——`convertSolverValue` 返回 `Failed` 时，
+            // 若写成 `(convertSolverValue(...) as Ok).value`——`convertSolverValue` 返回 `Failed` 时，
             // `as Ok` 得到 null，`.value` 立刻抛 `ClassCastException` / NPE。
             // C# 抛 `InvalidOperationException` 只是**把同一个失败写得更明确**。
             //
             // 两者的共同限制：**只有 `Flt64` 与 `FltX` 能实例化 CSP1D**，
             // `Int64` / `Flt32` 会在**运行期**炸（确认），而不是在类型层面被挡住。
-            // 这是**基线设计本身的限制**，本仓保持同步、不单方面收紧泛型约束。
+            // 这是**设计本身的限制**，本仓不单方面收紧泛型约束。
             //
-            // **This throw is equivalent to the code, not a C# deviation.** The code writes `(convertSolverValue(...) as Ok).value` — when `convertSolverValue`
-            // returns `Failed`, `as Ok` yields null and `.value` throws immediately. C# throwing `InvalidOperationException` merely **states the same failure more
+            // **This throw is the only viable expression, not a C# deviation.** Writing `(convertSolverValue(...) as Ok).value` would — when `convertSolverValue`
+            // returns `Failed` — yield null from `as Ok` and throw immediately. C# throwing `InvalidOperationException` merely **states the same failure more
             // clearly**. The shared limitation: **only `Flt64` and `FltX` can instantiate CSP1D**; `Int64` / `Flt32` **blow up at runtime** (measured) instead of
-            // being rejected at the type level. That is **the code design's own limitation**; this repository stays in sync and does not tighten the generic constraint
+            // being rejected at the type level. That is **a limitation of the design itself**; this repository does not tighten the generic constraint
             // unilaterally.
             throw new InvalidOperationException(
                 $"Failed to convert solver value {value} to domain type {typeof(V).Name}. " +

@@ -42,7 +42,7 @@ public sealed record FinalAssignmentArtifacts(
 /// 层分配上下文 / The layer-assignment context.
 /// </summary>
 /// <remarks>
-/// 与对齐，**但这里只落 `RegisterRmp`**：
+/// ，**但这里只落 `RegisterRmp`**：
 ///
 /// | 方法 | 状态 |
 /// | --- | --- |
@@ -112,8 +112,8 @@ public sealed class LayerAssignmentContext
             return Fail(loadRegistered);
         }
 
-        // 基线此处还有 `load.register(model)` 注册装载的符号层（超额 / 欠额）； 起本仓也有这一层了。
-        // The code also calls `load.register(model)` here to register the load's symbol layer (over- and under-load); as of this repository has that layer too.
+        // 这里还调用 `load.register(model)` 注册装载的符号层（超额 / 欠额）。
+        // `load.register(model)` registers the load's symbol layer (over- and under-load) as well.
         Try loadSymbols = load.Register(model);
         if (!loadSymbols.IsOk)
         {
@@ -181,7 +181,7 @@ public sealed class LayerAssignmentContext
     /// <param name="enableCapacityConstraint">是否启用容量约束 / Whether the capacity constraint is enabled.</param>
     /// <returns>构件 / The artifacts.</returns>
     /// <remarks>
-    /// 与基线 `registerFinal` 对齐，**顺序不能换**：
+    /// 最终阶段注册，**顺序不能换**：
     ///
     /// 1. **先建精确分配并注册 `y`**——后面三个构件都引用它。
     /// 2. **份数上界由 <see cref="MaxCopies.PerColumn"/> 算出**，不是常数：上界过小会让最终解欠需求，过大只是慢一点。
@@ -254,11 +254,11 @@ public sealed class LayerAssignmentContext
     /// <param name="weight">面积权重 / The area weight.</param>
     /// <returns>注册结果 / The registration result.</returns>
     /// <remarks>
-    /// 与基线 `registerSheetAreaMinimization` 对齐：**只是构造目标再施加**，不额外校验。
+    /// **只是构造目标再施加**，不额外校验。
     /// 权重默认 1（面积为**主**目标）——最终阶段"余料为主、板数与类型成本为次"，
     /// 所以这条必须最先注册，且权重不能被后面的目标盖过。
     ///
-    /// Aligned with its `registerSheetAreaMinimization`: **it constructs the objective and applies it**, nothing more. The weight defaults to 1 because area is the **primary** objective
+    /// **It constructs the objective and applies it**, nothing more. The weight defaults to 1 because area is the **primary** objective
     /// in the final stage ("waste first, sheet count and per-type cost second"), so this must be registered first and must not be outweighed by the objectives after it.
     /// </remarks>
     public Try RegisterSheetAreaMinimization(
@@ -282,11 +282,11 @@ public sealed class LayerAssignmentContext
     /// <param name="coefficient">系数 / The coefficient.</param>
     /// <returns>注册结果 / The registration result.</returns>
     /// <remarks>
-    /// 与基线 `registerSheetAmountMinimization` 对齐。标量系数包成**常量函数** `{ coefficient }`，
+    /// 板材数量最小化。标量系数包成**常量函数** `{ coefficient }`，
     /// 这里同样包一层——`SheetAmountMinimization` 的系数是函数是为了区分"缺失数据"（null）与"零权重"，
     /// 传常量函数正好落在"有数据、权重为常数"。
     ///
-    /// Aligned with its `registerSheetAmountMinimization`. The code wraps a scalar coefficient in a **constant function** `{ coefficient }`, and this does the same: the objective takes
+    /// The scalar coefficient is wrapped in a **constant function** `{ coefficient }`: the objective takes
     /// a function precisely to distinguish **missing data** (null) from **zero weight**, and a constant function lands on "data present, weight constant".
     /// </remarks>
     public Try RegisterSheetAmountMinimization(

@@ -40,11 +40,11 @@ public sealed class PackingRendererAdapter {
     /// cylinder radii.
     /// </summary>
     /// <remarks>
-    /// 移植基线 `toSchema(result, continuousRadiusSelectionResults)` 的第二半。**只有无参版本是不够的**：
+    /// 这是 `toSchema(result, continuousRadiusSelectionResults)` 的第二半。**只有无参版本是不够的**：
     /// 连续半径求解器把半径作为**变量**交给 MILP，选中的值只存在于解向量里；不回写进 DTO，渲染出的圆柱就仍是**标称半径**，
     /// 与实际装箱的体积、装载率都不一致——而两者在类型上完全相同。
     ///
-    /// Ports the second half of its `toSchema(result, continuousRadiusSelectionResults)`. **The parameterless version alone is not enough**:
+    /// This is the second half of `toSchema(result, continuousRadiusSelectionResults)`. **The parameterless version alone is not enough**:
     /// the continuous-radius solver hands the radius to the MILP **as a variable**, so the selected value only exists in the solution vector. Without
     /// writing it back into the DTO, the rendered cylinder keeps its **nominal radius** and disagrees with the actual packed volume and loading rate — while
     /// both look identical in the types.
@@ -191,11 +191,11 @@ public sealed class PackingRendererAdapter {
     /// 取该货物被求解器选中的圆柱半径 / The cylinder radius the solver selected for this item.
     /// </summary>
     /// <remarks>
-    /// 基线先按**变量名**查、再按**唯一键**查（同键多条视为有歧义而放弃）。这里同样先变量名、再货物编号；
+    /// 这里先按**变量名**查、再按**唯一键**查（同键多条视为有歧义而放弃），即先变量名、再货物编号；
     /// **查不到返回 null 而不是编一个数**，调用方退回标称半径。
     ///
-    /// The code looks up by **variable name** first and then by **unique key** (several results sharing a key count as ambiguous and are dropped).
-    /// This does the same — variable name first, then item id — and **returns null rather than inventing a number** when neither hits, letting the caller
+    /// The lookup goes by **variable name** first and then by **unique key** (several results sharing a key count as ambiguous and are dropped).
+    /// It goes variable name first, then item id, and **returns null rather than inventing a number** when neither hits, letting the caller
     /// fall back to the nominal radius.
     /// </remarks>
     /// <param name="item">装箱物品 / Packed item.</param>

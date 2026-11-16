@@ -14,7 +14,6 @@ namespace Fuookami.Ospf.Framework.Solver;
 /// 组合求解的报告支撑 / Report support for combinatorial solving.
 /// </summary>
 /// <remarks>
-/// 与对齐（`withAttemptMetadata` 除外，见下）。
 /// 四处沿用：
 ///
 /// 1. **"有没有 incumbent"要两个条件**：有解对象**且** `SolutionPresence` 不是 `None`——只有解对象不算，可能是个占位。
@@ -42,7 +41,7 @@ public static class CombinatorialSolveSupport {
     /// <param name="completedAt">完成时刻 / The completion instant.</param>
     /// <returns>补齐后的尝试 / The attempt with its metadata filled in.</returns>
     /// <remarks>
-    /// 与基线 `withAttemptMetadata` 对齐。四处沿用：
+    /// 四处沿用：
     ///
     /// 1. **只有报告明确写了 `Cancelled` 才算取消**：`report == null` 不等于取消，它可能是后端根本没形成报告。
     /// 2. **完成时点的取消记录只在"它不晚于完成时刻"时才算数**：晚于完成时刻的取消是**下一次**尝试的事，
@@ -50,17 +49,17 @@ public static class CombinatorialSolveSupport {
     /// 3. **报告为 null 但有取消记录时也记原因**：没有报告又要解释"为什么没有"，只能靠这条。
     /// 4. **耗时由起始时间戳现算**，不从报告里读——报告的耗时可能只覆盖后端内部，不含排队。
     ///
-    /// 与差异：`TimeSource.Monotonic.ValueTimeMark`，这里用 `Stopwatch.GetTimestamp` 加
+    /// 差异：`TimeSource.Monotonic.ValueTimeMark`，这里用 `Stopwatch.GetTimestamp` 加
     /// `Stopwatch.GetElapsedTime`。**单调时钟的语义相同**（不受系统时间调整影响），只是 C# 没有把"起点"包成类型。
     /// 取消记录用 `PortableCancellationRecord`（epoch 毫秒），因此比较是**毫秒精度**而非 `Instant` 精度——
     /// 同一毫秒内请求并完成的取消会被当作"不晚于完成时刻"，与同一瞬间的取舍一致。
     ///
-    /// Aligned with its `withAttemptMetadata`. Four things copied: **only a report that says `Cancelled` counts as a cancellation**, a null report meaning the backend produced no report at all
+    /// Four things copied: **only a report that says `Cancelled` counts as a cancellation**, a null report meaning the backend produced no report at all
     /// rather than a cancellation; **the completion-time cancellation record counts only when it is not later than the completion instant**, since a later one belongs to the next attempt and would make
     /// the cancellation look earlier than it was; **a null report with a cancellation record still records a reason**, the only way to explain why there is no report; and **the elapsed time is computed
     /// from the start timestamp** rather than read from the report, which may cover only the backend's internals and not the queueing.
     ///
-    /// The difference from the code is `Stopwatch.GetTimestamp` plus `Stopwatch.GetElapsedTime` in place of `TimeSource.Monotonic.ValueTimeMark`. **The monotonic semantics are the same** (immune to
+    /// The difference is `Stopwatch.GetTimestamp` plus `Stopwatch.GetElapsedTime` in place of `TimeSource.Monotonic.ValueTimeMark`. **The monotonic semantics are the same** (immune to
     /// system clock adjustments); C# simply does not wrap the origin in a type. Cancellation records use `PortableCancellationRecord` (epoch milliseconds), so the comparison is **millisecond-precise**
     /// rather than `Instant`-precise: a cancellation requested and completed within the same millisecond counts as "not later than completion", matching its choice at that same instant.
     /// </remarks>

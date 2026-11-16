@@ -9,21 +9,21 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Hopfractional 映射（一维，分数阶 Hopf 型）/ The Hopfractional map.
 /// </summary>
 /// <remarks>
-/// 对齐。
+/// Hopfractional 映射的方程：
 ///
 /// <c>x' = p·x·(1 + (k·x)^q) / (1 + (s·x)^q)</c>。
 ///
 /// **`(k·x)^q` 在 `k·x &lt; 0` 且 `q` 非整数时是 NaN**（实数域里负数没有一般的分数次幂）。
-/// **基线不做保护，这里也不做**——**但把这条限制写下来，因为"轨迹突然全变 NaN"会被误当成发散。**
+/// **这里不做保护**——**但把这条限制写下来，因为"轨迹突然全变 NaN"会被误当成发散。**
 ///
 /// **`iterations`（默认 1000）在迭代器里只被保存、从不使用**——与 `Windmi` 的 `g`、`Sprott` 的 `b` 同类。
 ///
-/// The Hopfractional map from the code.
+/// The Hopfractional map.
 ///
 /// <c>x' = p·x·(1 + (k·x)^q) / (1 + (s·x)^q)</c>.
 ///
 /// **`(k·x)^q` is NaN when `k·x &lt; 0` and `q` is not an integer** (a negative base has no general real fractional
-/// power). **The code guards nothing and neither does this** — **but the limit is written down, because "the
+/// power). **Nothing is guarded here** — **but the limit is written down, because "the
 /// trajectory suddenly went all NaN" gets mistaken for divergence.**
 ///
 /// **`iterations` (default 1000) is stored and never used by the iterator** — the same kind as `Windmi`'s `g` and
@@ -65,9 +65,9 @@ public sealed class HopfractionalMapGenerator : IGenerator<Flt64> {
 
     /// <summary>**只被保存、从不使用的迭代次数** / Iteration count, stored and unused.</summary>
     /// <remarks>
-    /// **保留是因为那是签名**——**而"它不影响任何输出"必须可测，否则调用方会以为改它能改结果。**
+    /// **保留是因为它是签名的一部分**——**而"它不影响任何输出"必须可测，否则调用方会以为改它能改结果。**
     ///
-    /// **Kept because it is its signature** — **and "it changes no output" has to be measurable, or a
+    /// **Kept because it is part of the signature** — **and "it changes no output" has to be measurable, or a
     /// caller believes changing it changes the result.**
     /// </remarks>
     public ulong Iterations { get; }

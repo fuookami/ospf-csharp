@@ -100,10 +100,10 @@ public class Csp1dGenerationStrategyProjectionTests {
 
     /// <summary>**投影必须保序，且每个策略一个回调** / The projection must preserve order with one callback per strategy.</summary>
     /// <remarks>
-    /// 顺序有意义：解析规范键时是"**第一个返回非 null 的胜出**"（基线 `firstNotNullOfOrNull`）。
+    /// 顺序有意义：解析规范键时是"**第一个返回非 null 的胜出**"（`firstNotNullOfOrNull`）。
     /// 若投影把顺序打乱，两个策略都返回键时会**取错那一个**——而"非空"判据发现不了。
     ///
-    /// Order matters: key resolution is "**the first non-null wins**" (baseline `firstNotNullOfOrNull`). If the projection reordered, a case with two key-providing
+    /// Order matters: key resolution is "**the first non-null wins**" (`firstNotNullOfOrNull`). If the projection reordered, a case with two key-providing
     /// strategies would **pick the wrong one** — invisible to a "non-empty" criterion.
     /// </remarks>
     [Fact]
@@ -129,10 +129,10 @@ public class Csp1dGenerationStrategyProjectionTests {
 
     /// <summary>**键解析取第一个非 null 的覆盖** / Key resolution takes the first non-null override.</summary>
     /// <remarks>
-    /// 这条钉住 `Resolve` 的语义，也就是基线 `firstNotNullOfOrNull`。
+    /// 这条钉住 `Resolve` 的语义，也就是 `firstNotNullOfOrNull`。
     /// 若实现改成"最后一个胜出"或"任一非 null 就拼串"，判据会红。
     ///
-    /// This pins `Resolve`'s semantics, i.e. its `firstNotNullOfOrNull`. If the implementation switched to "last wins" or concatenated, this would fail.
+    /// This pins `Resolve`'s semantics, i.e. `firstNotNullOfOrNull`. If the implementation switched to "last wins" or concatenated, this would fail.
     /// </remarks>
     [Fact]
     public void Resolve_ShouldTakeTheFirstNonNullOverride() {

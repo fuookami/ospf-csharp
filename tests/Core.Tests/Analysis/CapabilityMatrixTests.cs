@@ -15,11 +15,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 分析能力矩阵 / The analysis capability matrix.
 /// </summary>
 /// <remarks>
-/// 补 `CapabilityMatrix`（基线 297 行）**，它只依赖报告层与 CP 类型，不需要原生后端。
+/// 补 `CapabilityMatrix`**，它只依赖报告层与 CP 类型，不需要原生后端。
 ///
 /// 判据钉的是**推断链**：一个操作能不能用，取决于它的上游能不能用。**这条链错一步，上层就会选一条不存在的路径。**
 ///
-/// **implemented `CapabilityMatrix` (297 baseline lines)**, which needs no native backend. The criteria pin the **inference chain**: whether an operation is usable depends on
+/// **implemented `CapabilityMatrix`**, which needs no native backend. The criteria pin the **inference chain**: whether an operation is usable depends on
 /// whether its upstream is. **One wrong link and the layer above picks a path that does not exist.**
 /// </remarks>
 public class CapabilityMatrixTests {
@@ -112,7 +112,7 @@ public class CapabilityMatrixTests {
 
     /// <summary>**满足性回退只在后端声明了 CP 满足路径时成立** / The fallback needs a declared CP satisfaction path.</summary>
     /// <remarks>
-    /// 基线为此写过一条注释：**从任意模型类型推导，会让只支持线性/MIP 的后端声称一个它兑现不了的回退。**
+    /// 本仓为此写过一条注释：**从任意模型类型推导，会让只支持线性/MIP 的后端声称一个它兑现不了的回退。**
     ///
     /// The code calls this out in a comment: **deriving it from any model type would let a linear/MIP-only backend advertise a fallback it cannot deliver.**
     /// </remarks>

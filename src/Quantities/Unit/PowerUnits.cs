@@ -62,18 +62,18 @@ public static class PowerUnits {
     public static readonly PhysicalUnit NewtonMeterPerSecond = new DerivedUnit(
         Watt.ScaleMultiply(Scale.Invoke(1)), "newton-meter-per-second", "N*m/s");
 
-    /// <summary>**公制马力（735.49875 W，基线叫它 `Horsepower`）** / Metric horsepower.</summary>
+    /// <summary>**公制马力（735.49875 W）** / Metric horsepower.</summary>
     /// <remarks>
-    /// **基线给的是整 735，这里用 735.49875**——**两者差 0.07%，而整 735 是常见的工程近似。**
+    /// **常见写法取整 735，这里用 735.49875**——**两者差 0.07%，而整 735 是常见的工程近似。**
     /// **用精确值是为了让它与机械马力（745.69987）的比值可判据化。**
     ///
-    /// **The code gives a round 735; this uses 735.49875** — **0.07% apart, with the round value a common
+    /// **The common form uses a round 735; this uses 735.49875** — **0.07% apart, with the round value a common
     /// engineering approximation.** **The exact value makes the ratio against mechanical horsepower checkable.**
     /// </remarks>
     public static readonly PhysicalUnit MetricHorsepower = new DerivedUnit(
         Watt.ScaleMultiply(Scale.Invoke(735.49875)), "metric horsepower", "PS");
 
-    /// <summary>**英制马力（= 机械马力 745.69987 W，基线写成 550）** / UK horsepower.</summary>
+    /// <summary>**英制马力（= 机械马力 745.69987 W）** / UK horsepower.</summary>
     /// <remarks>
     /// **550 是 ft·lbf/s 的数值，漏了换算；550 ft·lbf/s = 745.69987 W。**
     /// **所以它与机械马力是同一个值，这里做成本仓 `Horsepower` 的别名。**

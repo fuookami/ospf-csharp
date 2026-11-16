@@ -113,7 +113,7 @@ public class Demo2ExpressEffectivenessTests {
     /// <remarks>
     /// 两点成对：
     ///
-    /// 1. 相对顺序的条件常数与 `strictBoundary` 都是 **1e-10**，即基线 `NONZERO_TOLERANCE` 的值。
+    /// 1. 相对顺序的条件常数与 `strictBoundary` 都是 **1e-10**，即 `NONZERO_TOLERANCE` 的值。
     /// 2. **1e-9 会改变行为**：条件常数与边界同时放大时 `SafeLattice` 仍能通过（因为两者同步走），
     /// 所以只有把这个常量本身钉住才能发现偏差。它是一个**校准旋钮**，不是可以随手改的实现细节。
     ///

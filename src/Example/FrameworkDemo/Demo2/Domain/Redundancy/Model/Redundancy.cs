@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Model;
 /// 三者**不能合并**：`redundancy` 与 `predicateRedundancy` 一个是已装载、一个是规划中的装载，混用会让"备用容量"
 /// 在规划阶段就等于实际值，于是目标函数对决策变量不再敏感。`redundancySlack` 才是目标里那一项。
 ///
-///: `redundancy` is the main-deck capacity minus the main-deck **actual** load, `predicate_redundancy` is the same
+/// `redundancy` is the main-deck capacity minus the main-deck **actual** load, `predicate_redundancy` is the same
 /// minus the **estimated** load, and `redundancy_slack` is the two-sided slack of `redundancy` against `minRedundancy` (a constant zero). The three **must not be merged**:
 /// actual versus planned loading is the whole point, and merging them makes spare capacity equal to the actual value during planning, so the objective stops being sensitive to
 /// the decisions. `redundancySlack` is the term the objective actually uses.
@@ -138,9 +138,9 @@ public sealed class Redundancy
         }
         PredicateRedundancySymbol = predicate;
 
-        // 松弛的右侧是常数零，`withNegative`/`withPositive` 都给 true——基线就是这样：允许 redundancy 低于下界，
+        // 松弛的右侧是常数零，`withNegative`/`withPositive` 都给 true：允许 redundancy 低于下界，
         // 由目标函数去罚它，而不是用硬约束把模型判死。
-        // The slack's right side is the constant zero and both flags are true, exactly as in the code: redundancy may dip below the bound and the objective penalises it,
+        // The slack's right side is the constant zero and both flags are true: redundancy may dip below the bound and the objective penalises it,
         // rather than a hard row declaring the model infeasible.
         var slack = new SlackFunction<Flt64>(
             x: new LinearPolynomial<Flt64>(actual.Polynomial.Monomials, actual.Polynomial.Constant),

@@ -94,7 +94,7 @@ public static class ConflictAnalysisPreflight
     ///
     /// | 顺序 | 一个坏快照 + 一个不可用的后端会报 | 调用方去修 |
     /// | --- | --- | --- |
-    /// | 选项 → 快照 → 层次（基线） | **`IllegalArgument`（快照坏了）** | 修快照 |
+    /// | 选项 → 快照 → 层次 | **`IllegalArgument`（快照坏了）** | 修快照 |
     /// | 层次先行 | `Unsupported`（后端不支持） | **换一个根本不是问题的后端** |
     ///
     /// **The order cannot change: options, then snapshot, then the tier.** A broken snapshot with an unavailable backend reports `IllegalArgument` under the code order and `Unsupported` under a

@@ -85,7 +85,7 @@ public class NativeConstraintEvaluationsTests
     /// **MAX 求值<b>忽略</b> `minimum` 标志** / MAX evaluation <b>ignores</b> the `minimum` flag.
     /// </summary>
     /// <remarks>
-    /// **这是这里最要紧的一条，它记录的是一处<b>基线缺陷</b>。**
+    /// **这是这里最要紧的一条，它记录的是一处<b>已知缺陷</b>。**
     ///
     /// **`NativeMaxData` 带着 `minimum`，`restoreValues` 按它取极值，
     /// 而 `maxEvaluations` <b>没看这个标志</b>——永远取最大值。**
@@ -93,10 +93,10 @@ public class NativeConstraintEvaluationsTests
     /// **所以一个 `minimum = true` 的结构会被拿去和<b>最大值</b>比：** **输入是 `10` 与 `3`，
     /// 结果正确地取了 `3`（最小值），而求值器期望 `10`，于是违反量是 `7`、判为不满足。**
     ///
-    /// **这里<b>沿用</b>以保持与可比性，并把这一点写成判据。**
+    /// **这里<b>沿用</b>该行为以保持可比性，并把这一点写成判据。**
     /// **一个被记录下来的缺陷是"已知债"；一个没人测过的缺陷是"潜伏的错"。**
     ///
-    /// **The batch's key criterion, and it records a <b>baseline defect</b>.**
+    /// **The batch's key criterion, and it records a <b>known defect</b>.**
     ///
     /// **`NativeMaxData` carries `minimum`, `restoreValues` honours it, and `maxEvaluations` <b>does not</b> — it always
     /// takes the maximum.**
@@ -105,7 +105,7 @@ public class NativeConstraintEvaluationsTests
     /// takes `3` (the minimum), the evaluator expects `10`, the violation is `7` and the evaluation is deemed
     /// unsatisfied.**
     ///
- /// ** <b>copies</b> it to stay comparable with the code and turns it into a criterion.** **A recorded
+ /// **This <b>copies</b> the behaviour to stay comparable and turns it into a criterion.** **A recorded
     /// defect is known debt; an untested one is a latent bug.**
     /// </remarks>
     [Fact]

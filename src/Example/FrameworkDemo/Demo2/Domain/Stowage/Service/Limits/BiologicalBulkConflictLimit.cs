@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 生物限制散货冲突 / The biological bulk-conflict rows.
 /// </summary>
 /// <remarks>
-/// 对齐。对每个**可用散货舱位**与每条生物冲突类型对，**三支独立判定**
+/// 对每个**可用散货舱位**与每条生物冲突类型对，**三支独立判定**
 /// （注意：与 `AOGMATBulkConflictLimit` 的三支**互斥**不同，这里三支都跑）：
 ///
 /// | 支 | 舱位已装 | 加的行 |
@@ -31,13 +31,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 ///
 /// 两处极易写错：
 ///
-/// 1. **`any …` 加 `!none …` 不是两个 `any`**。基线写的是"已装里**有一件**含 `type1`"与"已装里**不是全都不含** `type2`"两句的合取，
+/// 1. **`any …` 加 `!none …` 不是两个 `any`**。写法是"已装里**有一件**含 `type1`"与"已装里**不是全都不含** `type2`"两句的合取，
 ///    即"有 type1 且**至少有一件**含 type2"。把 `!none` 读成"没有 type2"（写成 `!any`）会**反过来**——那是第 3 支的条件。
 /// 2. **三支都跑，不 `continue`**。同一个舱位可能同时满足第 1、2 支（已装里既有 type1 又有 type2），此时两个方向的货物都被禁。
 ///
 /// For every **available bulk position** and every biological conflict pair, **three independently evaluated branches** (note: unlike
 /// `AOGMATBulkConflictLimit`'s mutually exclusive three, all three run here), tabulated above. Two easy misreadings: **"`any` plus `!none`" is not "two `any`s"** —
-/// the code writes "has a `type1` and **at least one** `type2`", and reading `!none` as "no `type2`" (i.e. `!any`) inverts it into branch three's condition; and **all three
+/// The writing is "has a `type1` and **at least one** `type2`", and reading `!none` as "no `type2`" (i.e. `!any`) inverts it into branch three's condition; and **all three
 /// branches run without `continue`**, so a position already holding both types satisfies branches one and two at once and both directions are forbidden.
 /// </remarks>
 public sealed class BiologicalBulkConflictLimit

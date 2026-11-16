@@ -91,9 +91,9 @@ internal static class PermutationSupport {
     /// 用注入熵源做 Fisher-Yates 洗牌 / Fisher-Yates shuffle driven by the injected entropy source.
     /// </summary>
     /// <remarks>
-    /// **不用 `Random.Shared` 或语言内置洗牌**。基线此处调用 Kotlin 的 `shuffled`，那走的是全局随机源，与注入熵源无关——
-    /// 结果是"同一份种子重放"在散射变异上失效，而且**只有用到散射变异时才暴露**。C# 版改用注入熵源，属于对有意修正。
-    /// **`Random.Shared` and language-level shuffles are not used.** The code calls Kotlin's `shuffled`, which runs on the
+    /// **不用 `Random.Shared` 或语言内置洗牌**：语言内置的 `shuffled` 走的是全局随机源，与注入熵源无关——
+    /// 结果是"同一份种子重放"在散射变异上失效，而且**只有用到散射变异时才暴露**。C# 版改用注入熵源，属于有意修正。
+    /// **`Random.Shared` and language-level shuffles are not used.** A language-level `shuffled` runs on the
     /// global random source unrelated to the injected entropy — so "replay under the same seed" silently fails for scramble
     /// mutation, and **only surfaces when that operator is in use**. This implementation uses the injected source: a deliberate correction.
     /// </remarks>

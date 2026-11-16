@@ -12,13 +12,11 @@ namespace Fuookami.Ospf.Core.Plugin.Scip.Tests;
 /// **SCIP 的扰动入口给的是原生 CP 求解器** / SCIP's perturbation entry hands back its native CP solver.
 /// </summary>
 /// <remarks>
-/// **这里补的是基线 `scipPerturbationBackend` 的对应物。**
-///
 /// **它与 Gurobi 那一侧<b>有意不同**：**Gurobi 没有自己的 CP 求解器（走 `MipBacked` 套线性后端），
 /// 而 SCIP 有一个原生的 `ScipConstraintProgrammingSolver`。** **两个工厂因此不是同一句话——
 /// 这与那条"同一句话"判据被推翻的理由相同：<b>能力不同，实现就不该假装相同**。
 ///
-/// **The counterpart of `scipPerturbationBackend`.** **It deliberately differs from the Gurobi side: Gurobi has no CP solver of
+/// **It deliberately differs from the Gurobi side: Gurobi has no CP solver of
 /// its own (it goes through `MipBacked` over a linear backend) while SCIP has a native `ScipConstraintProgrammingSolver`.** **So the
 /// two factories are not the same sentence — the same reason the earlier "same sentence" criterion was refuted: different capabilities
 /// must not be made to look alike.**

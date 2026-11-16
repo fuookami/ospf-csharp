@@ -263,7 +263,7 @@ public sealed class GenerationInput<V> where V : struct {
     /// 已存在（已在列池里）的方案 / Plans that already exist (already in the column pool).
     /// </summary>
     /// <remarks>
-    /// **基线 `CuttingPlanGenerationInput.existingPlans` 的对应物。** 定价阶段靠它做去重——
+    /// **已在列池里的方案。** 定价阶段靠它做去重——
     /// **不传的话，定价会把池里已有的方案再报一遍**，于是第一轮就"全部重复"。
     ///
     /// **这解释了 之前观察到的 `reason=AllDuplicates iters=1 priced=0` 的另一半原因**：
@@ -282,27 +282,27 @@ public sealed class GenerationInput<V> where V : struct {
     /// dominance 接受覆盖函数列表 / Dominance acceptance override function list.
     /// </summary>
     /// <remarks>
-    /// **基线 `dominanceAcceptOverrides` 的对应物**，由 `ICsp1dGenerationStrategy.AcceptDominance` 投影而来。
+    /// **支配接受覆盖函数**，由 `ICsp1dGenerationStrategy.AcceptDominance` 投影而来。
     ///
-    /// **语义是「全部通过」**：基线写作 `input.dominanceAcceptOverrides.all { it(plan, existing) }`——
+    /// **语义是「全部通过」**：即 `input.dominanceAcceptOverrides.all { it(plan, existing) }`——
     /// **任何一个返回 false，候选就被拒**。空列表表示不额外过滤。
     ///
-    /// **The counterpart of its `dominanceAcceptOverrides`**, projected from `ICsp1dGenerationStrategy.AcceptDominance`.
+    /// **The dominance acceptance overrides**, projected from `ICsp1dGenerationStrategy.AcceptDominance`.
     ///
-    /// **The semantics are "all must pass"**: the code writes `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **any false rejects the candidate**.
+    /// **The semantics are "all must pass"**: `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **any false rejects the candidate**.
     /// An empty list means no extra filtering.
     /// </remarks>
     /// <summary>
     /// 候选过滤函数列表 / Candidate filter function list.
     /// </summary>
     /// <remarks>
-    /// **基线 `candidateFilters` 的对应物**，由 `ICsp1dGenerationStrategy.AcceptCandidate` 投影而来。
+    /// **候选过滤器**，由 `ICsp1dGenerationStrategy.AcceptCandidate` 投影而来。
     ///
-    /// **语义同样是「全部通过」**：基线写作 `candidateFilters.all { it(plan, input.existingPlans) }`。
+    /// **语义同样是「全部通过」**：即 `candidateFilters.all { it(plan, input.existingPlans) }`。
     /// 注意第二个参数是 **`input.existingPlans`**——同一个钩子在**初始池**（空）与**定价**（当前列池）
     /// 两种上下文下行为不同，这正是它能表达"别跟已有方案撞"的原因。
     ///
-    /// **The counterpart of its `candidateFilters`**, projected from `ICsp1dGenerationStrategy.AcceptCandidate`.
+    /// **The candidate filters**, projected from `ICsp1dGenerationStrategy.AcceptCandidate`.
     ///
     /// **The semantics are also "all must pass"**: the code writes `candidateFilters.all { it(plan, input.existingPlans) }`. Note the second argument is
     /// **`input.existingPlans`** — the same hook behaves differently in the **initial pool** (empty) and **pricing** (current column pool) contexts, which is exactly what

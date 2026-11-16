@@ -18,20 +18,20 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量偏差目标 / The recommended-weight-deviation objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把**全部舱位的偏差变量之和**乘负系数后作为**最大化**目标。
+/// 把**全部舱位的偏差变量之和**乘负系数后作为**最大化**目标。
 ///
 /// 四处必须沿用：
 ///
 /// 1. **是最大化，且系数为负**。写成"最小化偏差"数值上等价，但`maximize` 与下游的目标计数/名称是一套的。
 /// 2. **求和的是 `load.z` 全部舱位**，不筛 `RecommendedWeightNeeded`——偏差变量本身只在需要的舱位上非零。
 /// 3. **目标是单个**，不是每舱位一个。
-/// 4. **目标名就是 `Name`**（`recommended_weight_deviation_objective`），与另外三条管线的"目标名带空格"不同。基线这里传的是 `name`。
+/// 4. **目标名就是 `Name`**（`recommended_weight_deviation_objective`），与另外三条管线的"目标名带空格"不同。这里传的是 `name`。
 ///
 /// The sum of **every position's deviation variable**, scaled by a negative coefficient, becomes a **maximisation** objective. Four things are carried over:
 /// **it is a maximisation with a negative coefficient** — writing "minimise the deviation" is numerically equivalent, but its `maximize` pairs with downstream objective
 /// counting and naming; **the sum covers every `load.z` entry** without filtering on `RecommendedWeightNeeded`, since the deviation variables are already zero where not needed; **it
 /// is a single objective**, not one per position; and **the objective name is `Name` itself** (`recommended_weight_deviation_objective`), unlike the other three pipelines whose
-/// objective names carry spaces — the code passes `name` here.
+/// objective names carry spaces — `name` is passed here.
 /// </remarks>
 internal sealed class RecommendedWeightDeviationObjective
 {

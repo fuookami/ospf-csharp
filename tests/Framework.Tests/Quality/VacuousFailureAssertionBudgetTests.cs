@@ -22,14 +22,14 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// 失败就是被测对象，**这些是正当的**。剩下的分布在框架与示例测试里，多数是"传了个 `null!`/未知 id"这种**单一失败原因**，
 /// 也说得过去；真正危险的是**有多种失败原因**的那些。
 ///
-/// 逐个判断 465 条是人工活，而**存量上涨**是可以自动挡住的：这条判据把基线钉在下面的常量上，
-/// **新加的裸断言会让它红**，逼作者要么补上错误码/消息，要么把这条判据的基线调低——**花钱买下降，不许花钱买上涨**。
+/// 逐个判断 465 条是人工活，而**存量上涨**是可以自动挡住的：这条判据把存量钉在下面的常量上，
+/// **新加的裸断言会让它红**，逼作者要么补上错误码/消息，要么把这条判据的存量调低——**花钱买下降，不许花钱买上涨**。
 ///
 /// This repo has spent real effort repairing "criteria that assert nothing" — the archetype being: an unrelated failure or even a
 /// fatal one satisfies it). A repo-wide scan finds **499** `IsFailed.Should.BeTrue` sites, **458** of which are the **only** assertion about the failure (no
 /// `.Error.Code`, no message check). **374 sit in `Core.Tests`**, which tests the `Result` type itself, where the failure *is* the subject — **legitimate**. The rest
 /// mostly guard single-cause failures (a `null!` argument, an unknown id) and are defensible; the risky ones are those with **several possible failures**. Judging all
-/// 465 by hand is manual work, but **growth** can be blocked automatically: this criterion pins the code to the constant below, so **a new bare assertion reds it**,
+/// 465 by hand is manual work, but **growth** can be blocked automatically: this criterion pins the stock level to the constant below, so **a new bare assertion reds it**,
 /// forcing the author either to pin the error code or message, or to lower the constant — **pay for a decrease, never for an increase**.
 /// </remarks>
 public sealed class VacuousFailureAssertionBudgetTests

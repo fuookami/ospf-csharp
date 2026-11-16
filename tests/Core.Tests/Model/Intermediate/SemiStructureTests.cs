@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 半连续：两条行只在成对时才强制 0 / Two rows force zero only as a pair.
 /// </summary>
 /// <remarks>
-/// 对齐的 `SemiStructure` 与 的
+/// `SemiStructure` 的形状：
 /// `DeferredFunctionFallbackConstraints` 补。
 ///
 /// **指示 = 0 时，上界行只说"不超过 0"、下界行只说"不小于 0"——单独任何一行都只是半边。**

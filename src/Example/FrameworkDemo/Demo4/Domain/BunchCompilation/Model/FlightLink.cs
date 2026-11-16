@@ -22,22 +22,22 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// 航班链接的松弛层 / The flight-link slack layer.
 /// </summary>
 /// <remarks>
-/// ：每条链接一个表达式 `link_k`，再加一个松弛
+/// 每条链接一个表达式 `link_k`，再加一个松弛
 /// `link_slack_k = exampleThresholdSlack(link_k + 0.5·y[前驱] + 0.5·y[后继], 阈值 1, 只有负侧)`。
 ///
 /// 直觉上"链接"该是一条约束，实际是**松弛**：链接是否成立交给目标去压，而不是硬性禁止。两条系数都是 **0.5**——
-/// 一条链接由两个任务共同承担，把它们各算一半，正是基线避免"同一对任务被重复计数"的写法。
+/// 一条链接由两个任务共同承担，把它们各算一半，正是避免"同一对任务被重复计数"的写法。
 ///
 /// **`AddColumns` 找的是"同时含前后两个任务的束"**，系数是 1——分割成本不进这里（它在目标里），
-/// 这里数的只是"这一轮有几个束把这两个任务接在一起"。与基线一样**先清再加**，否则每轮都会把上一轮的项留着。
+/// 这里数的只是"这一轮有几个束把这两个任务接在一起"。**先清再加**，否则每轮都会把上一轮的项留着。
 ///
-/// The code's: one expression `link_k` per link plus a slack
+/// One expression `link_k` per link plus a slack
 /// `link_slack_k = exampleThresholdSlack(link_k + 0.5·y[prev] + 0.5·y[succ], threshold 1, negative side only)`. Intuitively a link is a constraint, but it is actually a **slack**:
 /// whether a link holds is left to the objective rather than forbidden outright. Both coefficients are **0.5** — a link is shared by two tasks, counting each as half is how the
-/// baseline avoids **counting the same pair twice**.
+/// this avoids **counting the same pair twice**.
 ///
 /// **`AddColumns` looks for the bunches holding *both* tasks**, with coefficient 1 — the split cost does not enter here (it belongs in the objective); what is counted is "how many bunches
-/// of this round stitch these two tasks together". Like the code it **clears before adding**, otherwise every round keeps the previous round's terms.
+/// of this round stitch these two tasks together". It **clears before adding**, otherwise every round keeps the previous round's terms.
 /// </remarks>
 public sealed class FlightLink {
     private readonly IReadOnlyList<Link> _links;

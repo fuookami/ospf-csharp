@@ -27,7 +27,7 @@ public enum Bpp2dDemandDomain
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// 与的 `Bpp2dDemandMode` 对齐。六种模式的差别是**按什么聚合**：
+/// `Bpp2dDemandMode` 对齐。六种模式的差别是**按什么聚合**：
 /// 按件数、按面积、按物料，以及"物料 × 件数/面积"三种组合。**它们不是同一件事的别名**——同一批货物按件数聚合与按面积聚合
 /// 得到的合计不同，混用会让需求约束的方向都错。
 ///

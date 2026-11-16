@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **同名不同物：`TaskAssignment` 是中间符号，`Assignment` 是 `x` 变量** / Same name, different things: `TaskAssignment` is the intermediate symbol, `Assignment` is the `x` variable.
 /// </summary>
 /// <remarks>
-/// 基线 `Compilation` 同时有 `x: BinVariable2` 与 `taskAssignment: LinearIntermediateSymbols2`。
+/// `Compilation` 同时有 `x: BinVariable2` 与 `taskAssignment: LinearIntermediateSymbols2`。
 /// 把两者挂在同一个名字上，任何"按任务取分配列"的调用方都会在**跨轮聚合**时分道扬镳——
 /// 那一轮的真变量根本不存在，而中间符号是 `Σ x`。
 ///

@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// | 顺序 | 上限 2 时结果 |
 /// | --- | --- |
-/// | **先去重再截断**（基线） | `[A, B]` → **2 条** |
+/// | **先去重再截断**（本实现） | `[A, B]` → **2 条** |
 /// | **先截断再去重** | 截断留 `[A, A]` → 去重后 **1 条** |
 ///
 /// **§5②'s gap**: the pricing criterion **could not pin the order** because its candidate order was not controllable. Here it is — a custom initial generator yields
@@ -114,7 +114,7 @@ public sealed class Csp1dInitialPlanOrderTests {
     ///
     /// | 实现 | 结果 |
     /// | --- | --- |
-    /// | **先去重再截断**（基线） | `[A, B]` → **2 条** |
+    /// | **先去重再截断**（本实现） | `[A, B]` → **2 条** |
     /// | **先截断再去重** | `[A, A]` → 去重后 **1 条** |
     /// | **根本不截断** | `[A, B, C]` → **3 条** |
     ///

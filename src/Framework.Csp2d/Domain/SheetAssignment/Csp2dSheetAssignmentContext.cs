@@ -1,6 +1,4 @@
 // 板长分配：配置、约束、目标与结果 / Sheet assignment: configuration, constraints, objectives and the result.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -22,11 +20,11 @@ namespace Fuookami.Ospf.Framework.Csp2d.Domain.SheetAssignment;
 /// <param name="MaxConsumedLength">卷材允许的最大消耗长度，为空表示不限 / The maximum allowed consumed coil length; null means unlimited.</param>
 /// <param name="OverLengthWeight">超长惩罚权重，为空表示超长作为硬约束 / The over-length penalty weight; null means over-length is a hard constraint.</param>
 /// <remarks>
-/// **`OverLengthWeight` 与基线一样只作为配置存在**：当前的三条约束与三个目标都不读它。
+/// **`OverLengthWeight` 只作为配置存在**：当前的三条约束与三个目标都不读它。
 /// 保留它是因为**软化的口径是产品需求**（"超一点可以，但要罚"），而软化需要额外的松弛变量，
 /// 那是另一件事，不该在这一层偷偷加。
 ///
-/// **`OverLengthWeight` exists only as configuration, exactly like the code**: none of the three constraints or objectives reads it. It is kept because **a softened
+/// **`OverLengthWeight` exists only as configuration**: none of the three constraints or objectives reads it. It is kept because **a softened
 /// measure is a product requirement** ("a little over is fine but must be penalised"), and softening needs extra slack variables — a separate change that must not be
 /// slipped in at this layer.
 /// </remarks>

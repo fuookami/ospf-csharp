@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 板材容量约束 / The sheet-capacity constraint.
 /// </summary>
 /// <remarks>
-/// 与的 `SheetCapacityConstraint` 对齐：**每列一条** `load_area_i &lt;= 该列板材面积`。
+/// `SheetCapacityConstraint` 对齐：**每列一条** `load_area_i &lt;= 该列板材面积`。
 ///
 /// 三处必须沿用：
 ///

@@ -4,12 +4,9 @@
 
 基于 OSPF 框架的资源受限路径搜索与航线生成。
 
-基线：Kotlin `12fdb587` 的 `ospf-kotlin-framework-network-scheduling`。
-
 ## 目录结构
 
-单一程序集，含 `Application/`、`Domain/`、`Infrastructure/`。基线把它拆成若干子模块；
-**本项目不照搬这个拆分**。
+单一程序集，含 `Application/`、`Domain/`、`Infrastructure/`，按层拆而不是按子模块拆。
 
 ## 提供什么
 

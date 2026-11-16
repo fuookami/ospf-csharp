@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// 把覆盖函数列表折叠成单个 dominance 判据 / Fold override lists into one dominance predicate.
 /// </summary>
 /// <remarks>
-/// **语义必须**：`input.dominanceAcceptOverrides.all { it(plan, existing) }`——
+/// **语义**：`input.dominanceAcceptOverrides.all { it(plan, existing) }`——
 /// **全部通过才接受**，不是"任一通过"。列表为空时返回 null（不额外过滤）。
 ///
 /// **这段逻辑只写一次**，四个生成器共用——否则四处复制的 `All(...)` 迟早会有一处写成 `Any(...)`。
 ///
-/// **The semantics must match the code**: `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **all must pass, not any**. An empty list returns null (no
+/// **The semantics**: `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **all must pass, not any**. An empty list returns null (no
 /// extra filtering).
 ///
 /// **This logic is written once** and shared by the four generators — otherwise one of four copies of `All(...)` would eventually be written as `Any(...)`.
@@ -118,8 +118,7 @@ internal sealed class GenerationCollector<TPlan> {
     /// <param name="dominanceAcceptOverride">自定义 dominance 接受函数 / Custom dominance acceptance function.</param>
     /// <param name="candidateFilter">候选过滤函数；为 null 时不过滤 / Candidate filter; null means no filtering.</param>
     /// <param name="existingPlansForFilter">
-    /// 传给候选过滤的"已有方案"列表，对应基线 `input.existingPlans` / The "existing plans" list passed to the candidate filter, matching its
-    /// `input.existingPlans`.
+    /// 传给候选过滤的"已有方案"列表 / The "existing plans" list passed to the candidate filter.
     /// </param>
     /// <param name="crossContributionProjector">跨贡献投影器；为 null 时跨贡献剪枝不发生 / Cross-contribution projector; when null, cross-contribution pruning does not happen.</param>
     public GenerationCollector(

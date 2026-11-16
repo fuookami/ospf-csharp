@@ -15,19 +15,19 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Model
 /// 横向平衡松弛 / The lateral-balance slack.
 /// </summary>
 /// <remarks>
-/// 与对齐：**一个恒等符号**，名为 `lateral_balance_slack`，注册进模型后由
+/// **一个恒等符号**，名为 `lateral_balance_slack`，注册进模型后由
 /// `LateralBalanceLimit` 作为最小化目标。
 ///
 /// 三处必须沿用：
 ///
-/// 1. **符号的初值是 0，不是变量**。基线 `LinearExpressionSymbol(Flt64, name = …)` 造的是"零多项式 + 名字"，
-///    符号本身由 `model.add` 变成变量。手写成 `new RealVar(...)` 会多一个基线没有的界。
+/// 1. **符号的初值是 0，不是变量**。`LinearExpressionSymbol(Flt64, name = …)` 造的是"零多项式 + 名字"，
+///    符号本身由 `model.add` 变成变量。手写成 `new RealVar(...)` 会多一个界。
 /// 2. **只注册一次**。`if (!::slack.isInitialized)`；重复注册会往模型里塞两个同名符号。
 /// 3. **注册失败要原样返回**，不能吞掉。上游 `Aggregation.Register` 靠这个短路。
 ///
 /// **one identity symbol** named `lateral_balance_slack`, registered into the model and later minimised by `LateralBalanceLimit`. Three things must be
-/// copied: **the symbol's initial value is zero, not a variable** — the code builds "zero polynomial plus a name" and `model.add` turns it into a variable, so hand-writing a
-/// `RealVar` would add a bound the code does not have; **register once**, as its `if (!::slack.isInitialized)` does, since registering twice puts two same-named symbols
+/// copied: **the symbol's initial value is zero, not a variable** — `LinearExpressionSymbol` builds "zero polynomial plus a name" and `model.add` turns it into a variable, so hand-writing a
+/// `RealVar` would add a bound that does not belong; **register once** behind `if (!::slack.isInitialized)`, since registering twice puts two same-named symbols
 /// in the model; and **a failed registration is returned as-is**, never swallowed, because the upstream `Aggregation.Register` short-circuits on it.
 /// </remarks>
 public sealed class LateralBalance

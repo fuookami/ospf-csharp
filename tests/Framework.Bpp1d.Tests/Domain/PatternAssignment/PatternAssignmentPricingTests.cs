@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// **方案定价** / Pattern pricing.
 /// </summary>
 /// <remarks>
-/// 对应基线 `PatternAssignmentContext` 的定价半边：`cost`、`reducedCost`、`reducedCosts`、
+/// `PatternAssignmentContext` 的定价半边：`cost`、`reducedCost`、`reducedCosts`、
 /// `refreshShadowPrice`。判据点出三处要害：
 ///
 /// | 点 | 错法 | 后果 |

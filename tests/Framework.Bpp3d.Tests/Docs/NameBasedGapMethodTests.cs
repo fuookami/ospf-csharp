@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **名字对不上不是证据，只是线索** / A name mismatch is a lead, not evidence.
 /// </summary>
 /// <remarks>
-/// 把基线 `math` 的 320 个文件名与本仓做差，得到 **91 个"缺失"**；逐个查下来**只有 1 个是真的**，
+/// 把 320 个文件名与本仓做差，得到 **91 个"缺失"**；逐个查下来**只有 1 个是真的**，
 /// 其余都在别的文件里（`Einsum`、`CombinatoricsAsync`、`EscapeTime`、`Gamma`、`Beta`）。
 ///
 /// **误报率 98.9%。** 当年放弃逐文件比对时只是"觉得不可靠"，**这里把它量出来了**——

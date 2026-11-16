@@ -1582,10 +1582,10 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 固定 Kotlin 有 5 个路径：<c>POST /api/v1/tasks</c>、<c>GET /api/v1/capabilities</c>、
+    /// 远程协议只有 5 个路径：<c>POST /api/v1/tasks</c>、<c>GET /api/v1/capabilities</c>、
     /// <c>GET /api/v1/tasks/{taskId}</c>、<c>POST.../stop</c>、<c>POST.../resume</c>。
     /// 本测试钉死这 5 个，防止再次自造端点。
-    /// The pinned Kotlin baseline has exactly five paths: <c>POST /api/v1/tasks</c>,
+    /// The remote protocol has exactly five paths: <c>POST /api/v1/tasks</c>,
     /// <c>GET /api/v1/capabilities</c>, <c>GET /api/v1/tasks/{taskId}</c>, <c>POST.../stop</c> and
     /// <c>POST.../resume</c>. This test pins those five so endpoints are not invented again.
     /// </summary>
@@ -2090,7 +2090,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 基线明确规定：**已取消时注册的监听器立即执行**。这条不能反过来——否则一个在取消请求之后才
+    /// 约定是：**已取消时注册的监听器立即执行**。这条不能反过来——否则一个在取消请求之后才
     /// 注册的后端永远不会被中断，求解资源就漏了。
     /// The code states explicitly that a listener **registered after cancellation runs immediately**.
     /// This must not be inverted — otherwise a backend registered after the cancel request would never be
@@ -2395,9 +2395,9 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// wire 模型的身份字段必须与基线同名同默认值：<c>identityScope</c> 默认 <c>MODEL_LOCAL</c>，
+    /// wire 模型的身份字段必须同名同默认值：<c>identityScope</c> 默认 <c>MODEL_LOCAL</c>，
     /// null 字段不写出，<c>identityProvenance</c> 是对象列表。
-    /// The wire models' identity fields must match the code name for name and default for default:
+    /// The wire models' identity fields must line up name for name and default for default:
     /// <c>identityScope</c> defaults to <c>MODEL_LOCAL</c>, null fields are omitted and
     /// <c>identityProvenance</c> is a list of objects.
     /// </summary>

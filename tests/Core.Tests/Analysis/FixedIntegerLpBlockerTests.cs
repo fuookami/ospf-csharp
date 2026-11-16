@@ -28,14 +28,14 @@ public class FixedIntegerLpBlockerTests
 {
     /// <summary>**求解输出层不得出现对偶值** / The solver output layer must carry no dual values.</summary>
     /// <remarks>
-    /// **`LinearSolverFixedIntegerLpBackend` 搬不过来，卡点就在这里**：它要从线性求解的输出里读对偶，
+    /// **`LinearSolverFixedIntegerLpBackend` 现在实现不了，卡点就在这里**：它要从线性求解的输出里读对偶，
     /// **而 C# 的求解输出类型一个对偶字段都没有。**
     ///
-    /// **这条判据红了，说明卡点没了**——那就该去把那个后端搬过来，
+    /// **这条判据红了，说明卡点没了**——那就该去把那个后端实现出来，
     /// **而不是把这条判据改绿。**
     ///
     /// **This is where `LinearSolverFixedIntegerLpBackend` is stuck**: it reads duals out of the linear solve output, **and no C# solver output type has a dual field at all.**
-    /// **When this criterion goes red the blocker is gone** — then go port that backend, **not make this criterion green again.**
+    /// **When this criterion goes red the blocker is gone** — then implement that backend, **not make this criterion green again.**
     /// </remarks>
     [Fact]
     public void TheSolverOutput_ShouldStillCarryNoDuals()
@@ -58,11 +58,11 @@ public class FixedIntegerLpBlockerTests
 
     /// <summary>**只有降阶适配器实现了后端接口** / Only the lowering adapter implements the backend interface.</summary>
     /// <remarks>
- /// `IFixedIntegerLpBackend` 有两个基线实现：降阶适配器**与求解器直连那个（搬不了）**。
+ /// `IFixedIntegerLpBackend` 有两个实现：降阶适配器**与求解器直连那个（这里做不到）**。
     ///
     /// **数清楚"现在有几个实现"比写"还剩一个"可靠**——**"还剩一个"不会告诉你已经变成了两个。**
     ///
-    /// The code has two implementations: the lowering adapter (**implemented**) **and the solver-backed one (not portable here)**.
+    /// There are two implementations: the lowering adapter (**implemented**) **and the solver-backed one (out of reach here)**.
     /// **Counting how many exist is more reliable than writing "one is left"** — **"one is left" never tells you it has become two.**
     /// </remarks>
     [Fact]

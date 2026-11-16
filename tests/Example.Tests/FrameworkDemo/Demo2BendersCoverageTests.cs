@@ -13,25 +13,25 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// </summary>
 /// <remarks>
 /// demo2 域里有 **18 个文件**各定义一次 `registerForBendersMP`（聚合 + 上下文各一份），另有对应的 `registerForBendersSP`
-/// 与 `flushForBendersSP`，共 **54 个函数**（`git grep` 实测，基线 `12fdb587`）。
+/// 与 `flushForBendersSP`，共 **54 个函数**（`git grep` 实测）。
 ///
 /// 本仓实测（反射，见下）：**MP 18 / SP 18 / Flush 12**，共 48。
 ///
 /// 时是 14 / 14 / 8：那时 `StowageContext`、`MacContext`、`LoadingEffectivenessAggregation`、`RedundancyAggregation`
-/// 四处的 MP/SP 都缺，补齐——**MP 与 SP 现在与基线持平（18 / 18）**。
+/// 四处的 MP/SP 都缺，补齐——**MP 与 SP 现在各 18 个**。
 ///
 /// 剩下的 6 个是 **聚合层** 的 flush：它们是 `private fun`（`git cat-file` 实测：`loading_effectiveness`、`redundancy`、`mac` 三处都是 `private`），
-/// **外部根本调不到，基线自己也不用**。所以本仓**故意不移植**——它们是的死代码，不是缺口。
+/// **外部根本调不到，也没有任何调用方**。所以本仓**故意不提供**——它们是死代码，不是缺口。
 /// 判据因此钉 **12**，并在下一条里点名这六个聚合，谁"为了整齐"给它们补上公开 flush，判据会红。
 ///
 /// 这条判据钉的是**当前数字**，不是"应该有的数字"：缺口补上时它会红，**届时把它改成新的数字并在这里写明为什么**——
 /// 这正是本仓对"记录缺口的判据"的用法。
 ///
-/// The code defines these three once in **18 demo2 domain files** (one per aggregation and context), **54 functions** in total (`git grep` on `12fdb587`).
-/// This implementation measures **MP 18 / SP 18 / Flush 12** — 48. At it was 14/14/8; added the four missing sets (`StowageContext`, `MacContext`,
-/// `LoadingEffectivenessAggregation`, `RedundancyAggregation`), so **MP and SP now match the code**. The remaining six are the **aggregation-level** flushes, which
-/// the code declares `private` (measured with `git cat-file` in `loading_effectiveness`, `redundancy` and `mac`): **unreachable from outside and unused by the
-/// baseline itself**, so this implementation **deliberately does not port them** — dead code in the code, not a gap. The criterion therefore pins **12** and names the six
+/// These three are defined once in **18 demo2 domain files** (one per aggregation and context), **54 functions** in total (`git grep`).
+/// This implementation measures **MP 18 / SP 18 / Flush 12** — 48. At first it was 14/14/8; the four missing sets were added (`StowageContext`, `MacContext`,
+/// `LoadingEffectivenessAggregation`, `RedundancyAggregation`), so **MP and SP are now complete**. The remaining six are the **aggregation-level** flushes, which
+/// are `private` (measured with `git cat-file` in `loading_effectiveness`, `redundancy` and `mac`): **unreachable from outside and never called**, so this
+/// implementation **deliberately does not provide them** — dead code, not a gap. The criterion therefore pins **12** and names the six
 /// aggregations below, so anyone who adds a public flush "for tidiness" turns it red.
 /// </remarks>
 public sealed class Demo2BendersCoverageTests

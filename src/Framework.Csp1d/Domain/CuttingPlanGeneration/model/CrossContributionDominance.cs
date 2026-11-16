@@ -9,9 +9,9 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// Cross-contribution dominance: the new plan dominates the old one iff **its rest width is no worse** and **its contribution to every product is no worse**.
 /// </summary>
 /// <remarks>
-/// 逐条对应的 `canCrossContributionDominate`：
+/// 逐条判定：
 ///
-/// | 基线 | 这里 |
+/// | 判据 | 这里 |
 /// | --- | --- |
 /// | 单位不一致时拒绝 | 单位键不同则返回 false |
 /// | 新余宽大于旧余宽时拒绝 | 数值大于则返回 false |
@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// | 全部通过则支配 | 全部通过返回 true |
 ///
 /// **三条规则里最容易写漏的是单位检查**：两个余宽数值可比但单位不同（米 vs 厘米）时，
-/// 按数值比会得出错误结论。基线专门检查它，这里也专门检查它。
+/// 按数值比会得出错误结论。这里专门检查它。
 ///
-/// Line by line against its `canCrossContributionDominate`. **The easiest rule to omit is the unit check**: when two
-/// rest widths are numerically comparable but in different units (metres vs centimetres), comparing numbers alone gives the wrong answer. The code checks
-/// it explicitly, and so does this.
+/// **The easiest rule to omit is the unit check**: when two
+/// rest widths are numerically comparable but in different units (metres vs centimetres), comparing numbers alone gives the wrong answer. This checks
+/// it explicitly.
 /// </remarks>
 public static class CrossContributionDominance {
     /// <summary>

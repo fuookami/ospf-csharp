@@ -175,8 +175,8 @@ public class PrimeMixedExpansionBenchmark
 ///
 /// **Corresponds to the `PrimeReaderLatencyBenchmark` half of the code file.** **The writer is the only expander and it loops the
 /// sequence inside every measurement iteration, rebuilding a whole generation at the ceiling, so expansion pressure spans the window instead
-/// of degrading into steady reads; rebuild cost lands on the writer thread, and readers only load a volatile reference.** **One honest gap: the
-/// baseline uses JMH `Mode.SampleTime` for p95/p99, while this repo's runner only drives BenchmarkDotNet's defaults and produces no sample
+/// of degrading into steady reads; rebuild cost lands on the writer thread, and readers only load a volatile reference.** **One honest gap:
+/// JMH `Mode.SampleTime` yields p95/p99, while this repo's runner only drives BenchmarkDotNet's defaults and produces no sample
 /// percentiles — so what is measured here is "how long a read takes", not "tail latency".** **Ceiling: measuring tail latency needs a SampleTime
 /// equivalent in the runner (BDN has no such mode; it would have to sample per iteration), which is separate work.**
 /// </remarks>

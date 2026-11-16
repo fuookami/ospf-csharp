@@ -185,7 +185,7 @@ public class LoadingLimitsTests {
 
     /// <summary>**禁用舱位上的固定货物仍然建变量** / A fixed cargo on a disabled position still gets its variable.</summary>
     /// <remarks>
-    /// **第一版判据用了"单件超重的固定货物"，跑不起来**：基线 `validate` 的第 11 条
+    /// **第一版判据用了"单件超重的固定货物"，跑不起来**：`validate` 的第 11 条
     /// "固定装载不超容量"**先把它拒了**——所以那种输入**根本到不了建变量这一步**。
     ///
     /// 改用**禁用舱位**：`validate` 允许（不是固定装载超容量），而 `register` 会给该舱位
@@ -196,7 +196,7 @@ public class LoadingLimitsTests {
     /// | **`且`（正确）** | 固定 ⇒ 不跳过 ⇒ 建变量 ⇒ 模型可满足 |
     /// | `或`（错） | 禁用 ⇒ 跳过 ⇒ **不建变量**，但占位变量被钉为 1 ⇒ **模型恒不可行** |
     ///
-    /// **The first version of this criterion used a fixed **overweight** cargo and could not run**: baseline `validate`'s check 11, "fixed load within capacity",
+    /// **The first version of this criterion used a fixed **overweight** cargo and could not run**: `validate`'s check 11, "fixed load within capacity",
     /// **rejects it first**, so that input **never reaches variable creation**. A **disabled position** is used instead: `validate` allows it (it is not an
     /// over-capacity fixed load) while `register` pins that position to `range.eq(true)` because it holds a fixed cargo. The `and` in the skip rule now decides
     /// everything (table above): with `or`, the assignment is skipped, **no variable exists**, yet the occupancy variable is pinned to 1 — **the model becomes

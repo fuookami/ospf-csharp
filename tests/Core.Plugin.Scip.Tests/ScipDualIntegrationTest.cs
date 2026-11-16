@@ -219,8 +219,8 @@ public class ScipDualIntegrationTest {
 
         Result<ColumnsSolver.LpResult, ErrorCode, Error<ErrorCode>> result =
             await new ScipColumnGenerationSolver().SolveLPAsync("dual-infeasible", parent);
-        // 与 Kotlin 基线一致：列生成的 LP 入口只声明“没有 incumbent”，问题结论保留在统一报告里。
-        // Matches the Kotlin baseline: the column-generation LP entry only reports "no incumbent"; the problem
+        // 列生成的 LP 入口只声明“没有 incumbent”，问题结论保留在统一报告里。
+        // The column-generation LP entry only reports "no incumbent"; the problem
         // conclusion stays in the unified report.
         Failed<ColumnsSolver.LpResult, ErrorCode, Error<ErrorCode>> failed =
             Assert.IsType<Failed<ColumnsSolver.LpResult, ErrorCode, Error<ErrorCode>>>(result);

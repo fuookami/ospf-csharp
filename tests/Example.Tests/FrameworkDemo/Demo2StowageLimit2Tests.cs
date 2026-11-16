@@ -269,7 +269,7 @@ public class Demo2StowageLimit2Tests {
         //
         // **一处不可观测已记录**：`AOGMATAppointed` 这个过滤条件在本仓删掉也测不出来——`Enabled` 对 `AOGMATAppointed` 舱位直接拒绝
         // 非航材货物，于是普通散货的 `StowageNeeded` 恒为假，前一行 `!StowageNeeded` 已经把它挡住。也就是说本仓里
-        // "航材指定舱位不放普通散货"由 `Enabled` 负责，这条过滤是**防御性的重复**。基线同样如此（`enabled` 有同一组规则）。
+        // "航材指定舱位不放普通散货"由 `Enabled` 负责，这条过滤是**防御性的重复**（`enabled` 有同一组规则）。
         // **One unobservable recorded**: deleting the `AOGMATAppointed` filter is invisible here — `Enabled` refuses non-AOG cargo outright at such a position, so normal
         // bulk's `StowageNeeded` is identically false and the preceding `!StowageNeeded` already rejects it. In this implementation "an AOG/MAT-appointed position takes no normal bulk"
         // is `Enabled`'s job and this filter is a **defensive duplicate** — the code is the same, its `enabled` carrying the same rules.

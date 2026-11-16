@@ -212,7 +212,7 @@ public class NativeHelperReconstructionTests
     /// </summary>
     /// <remarks>
     /// **这是一处<b>已知的不对称</b>，这里照做不改。**
-    /// **ABS 的辅助列同样是消掉的，但基线没写这条检查；
+    /// **ABS 的辅助列同样是消掉的，但这里没写这条检查；
     /// 单方面加上会让两侧行为分岔。**
     ///
     /// **A <b>known asymmetry</b>, copied from the code.** **ABS helpers are eliminated too, but the code has no

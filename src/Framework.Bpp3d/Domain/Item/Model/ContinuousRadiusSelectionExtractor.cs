@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 把连续半径求解结果装配成"半径选择结果" / Assemble continuous-radius solver results into radius-selection results.
 /// </summary>
 /// <remarks>
-/// 与对齐。四处沿用：
+/// 四处沿用：
 ///
 /// 1. **空输入给空列表**，不是抛错——没有可装配的东西不是失败。
 /// 2. **求解结果里没有的变量名一律跳过**，而不是造一个零半径结果——零半径会被 `Validate` 拒，造出来只会炸在别处。

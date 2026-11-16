@@ -258,18 +258,14 @@ public sealed class KthLargestFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// 前 k 大之和 / The sum of the k largest.
 /// </summary>
 /// <remarks>
-/// 对齐的 `TopKSumFunction`。
-///
 /// **`k = 0` 时结果是常数 0、`k = n` 时是全部之和——两者都跳过排序**，
-/// **于是省掉 n(n−1) 个函数。这是基线就有的优化，不是本仓加的。**
+/// **于是省掉 n(n−1) 个函数。**
 ///
 /// **`k` 的合法范围是 `[0, n]`（**含 n**），与 `KthLargestFunction` 的 `[0, n−1]` 不同**——
 /// **两者边界差一，是因为"前 n 大之和"有意义而"第 n 大"不存在。**
 ///
-/// The sum of the k largest.
-///
 /// **With `k = 0` the result is the constant zero and with `k = n` it is the whole sum — both skip the sort**,
-/// **saving n(n−1) functions. That optimisation comes from the code, not from this repo.**
+/// **saving n(n−1) functions.**
 ///
 /// **The legal range of `k` is `[0, n]` (inclusive of n), unlike `KthLargestFunction`'s `[0, n−1]`** —
 /// **the boundaries differ by one because "the sum of all n" exists while "the n-th largest" does not.**

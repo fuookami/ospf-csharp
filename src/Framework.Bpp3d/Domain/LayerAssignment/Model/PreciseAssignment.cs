@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Model;
 /// 精确层分配 / The precise layer assignment.
 /// </summary>
 /// <remarks>
-/// 与的 `PreciseAssignment` 对齐，四个符号：
+/// `PreciseAssignment` 对齐，四个符号：
 ///
 /// | 符号 | 维度 | 含义 |
 /// | --- | --- | --- |

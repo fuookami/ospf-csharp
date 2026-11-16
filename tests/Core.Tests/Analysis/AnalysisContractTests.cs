@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 跨语言语义契约 / The cross-language semantic contract.
 /// </summary>
 /// <remarks>
-/// `Fixtures/analysis-contract.tsv` 是从固定基线 `12fdb587` **逐字复制**过来的，
-/// **Kotlin 侧由 `AnalysisFixtureContractTest` 断言同一份文件。**
+/// `Fixtures/analysis-contract.tsv` 是**逐字复制**过来的固定夹具，
+/// **夹具即契约。**
 ///
 /// **"跨语言互通只做了一部分"这句话，在此之前没有任何可执行的东西支撑它**——
 /// **现在每一节各有一条判据，而没断言到的节会被点名。**
 ///
-/// `Fixtures/analysis-contract.tsv` is **copied verbatim** , **and the Kotlin side asserts the same file.**
+/// `Fixtures/analysis-contract.tsv` is **copied verbatim** as a fixed fixture: **the fixture is the contract.**
 /// **"Cross-language interop is only partly measured" had nothing executable behind it** — **now each section has a criterion, and any unasserted section is named.**
 /// </remarks>
 public class AnalysisContractTests

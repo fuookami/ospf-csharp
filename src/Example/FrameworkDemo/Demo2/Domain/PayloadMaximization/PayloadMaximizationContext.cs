@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization;
 /// 业载最大化上下文 / The payload-maximization context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**初始化只做一次**（`aggregation` 已初始化就跳过），
+/// **初始化只做一次**（`aggregation` 已初始化就跳过），
 /// **注册先建管线再逐条执行**。
 ///
 /// 一处必须沿用：**初始化是幂等的**。`if (!::aggregation.isInitialized)` 意味着第二次 `init` 不会重建聚合——

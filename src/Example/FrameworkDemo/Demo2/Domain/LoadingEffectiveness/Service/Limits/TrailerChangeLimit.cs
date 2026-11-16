@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 拖车换装目标 / The trailer-change objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把（相邻拖车对 × 相邻舱位对）的换装指示
+/// 把（相邻拖车对 × 相邻舱位对）的换装指示
 /// 加权求和，作为**最小化**目标，名为 `"trailer change"`（带空格）。
 ///
 /// 四点必须沿用：

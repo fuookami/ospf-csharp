@@ -1,6 +1,5 @@
 // 断头台切分树 / Guillotine cut tree.
-// 与固定 Kotlin 对应（`CutOrientation2` 已在 `Region2.cs` 中定义）。
-// The pinned Kotlin: .
+// `CutOrientation2` 已在 `Region2.cs` 中定义 / `CutOrientation2` is defined in `Region2.cs`.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Infrastructure;
@@ -363,9 +362,9 @@ public static class CutTree2Checks {
     /// <param name="sample">面积样本，用于提供零值单位 / An area sample providing the zero unit.</param>
     /// <returns>是否有效 / Whether it is valid.</returns>
     /// <remarks>
-    /// 参数 `sample` 只提供**零值的单位**；基线保留它是因为 Kotlin 侧需要一个同量纲的零来比较。
+    /// 参数 `sample` 只提供**零值的单位**；它被保留是因为比较需要一个同量纲的零。
     ///
-    /// The `sample` parameter only supplies **the unit of the zero value**; the code keeps it because the Kotlin side needs a same-dimension zero to compare.
+    /// The `sample` parameter only supplies **the unit of the zero value**; it is kept because a same-dimension zero is needed to compare.
     /// </remarks>
     public static bool HasPositiveArea<V>(Region2<V> region, Quantity<V> sample)
         where V : struct, IFloatingNumber<V>, IRealNumber<V>, INumberField<V> {

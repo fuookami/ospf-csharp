@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// argmax 给的是“哪个”，不是“多少” / argmax gives which one, not how much.
 /// </summary>
 /// <remarks>
-/// 补 ArgMaxFunction 与 ArgMinFunction（基线 OrderStatistic.kt）。
+/// 补 ArgMaxFunction 与 ArgMinFunction。
 ///
 /// 与 max/min 的区别只有一个，而它足够让人写错：max 给值，argmax 给下标。
 /// 下标是用选择器变量的加权和表达的，第 i 个选择器的系数是 i，第 0 个不参与。

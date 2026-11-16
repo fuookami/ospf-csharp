@@ -73,16 +73,16 @@ public static class HorizontalCylinderSupportCoverage {
     }
 
     /// <summary>
-    /// 水平圆柱是否贴地或被长方体支撑区间完整覆盖（基线同名判据）/ Whether a horizontal cylinder is on the floor or fully covered by cuboid
-    /// support intervals (its criterion of the same name).
+    /// 水平圆柱是否贴地或被长方体支撑区间完整覆盖（同一判据）/ Whether a horizontal cylinder is on the floor or fully covered by cuboid
+    /// support intervals.
     /// </summary>
     /// <remarks>
     /// **与 `HasSufficientSupport` 的区别**：后者按"底面 = 半径、跨度 0..长度"的**局部坐标**衡量，且要求支撑顶面不低于底面；
-    /// 基线按**绝对坐标**衡量，要求支撑顶面与圆柱底面**同高**（差一个都没有意义），并要求支撑线落在支撑体的径向跨度内。
+    /// 这里按**绝对坐标**衡量，要求支撑顶面与圆柱底面**同高**（差一个都没有意义），并要求支撑线落在支撑体的径向跨度内。
     /// 两者在"两块支撑各盖一半"「只碰到圆柱中段」这两种样本上给出相反结论。
     ///
     /// **How this differs from `HasSufficientSupport`**: that one works in **local coordinates** ("bottom = radius, span 0..length") and asks for the
-    /// support top to be no lower than the bottom; the code works in **absolute coordinates**, requires the support top to be **flush** with the
+    /// support top to be no lower than the bottom; this works in **absolute coordinates**, requires the support top to be **flush** with the
     /// cylinder's bottom face and the support line to fall inside the support's radial span. The two disagree on "two supports covering half each" and
     /// "a single narrow contact under the middle".
     /// </remarks>

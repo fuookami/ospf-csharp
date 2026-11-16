@@ -44,13 +44,13 @@ public sealed class GurobiLinearSolver : ILinearSolver {
     /// **是否在主求解中捕获 RHS 敏感性范围** / Whether to capture RHS sensitivity ranges during the primary solve.
     /// </summary>
     /// <remarks>
-    /// **必须&lt;b&gt;在主求解中**捕获，不能事后重解。** **基线记了实测：对同一个 triad 二次求解时 presolve 配置不再生效，
+    /// **必须<b>在主求解中</b>捕获，不能事后重解。** **实测：对同一个 triad 二次求解时 presolve 配置不再生效，
     /// 读回的 `SARHSLow` 会退化成哨兵值（c1 得到 4 而不是 0）。**
     ///
     /// **打开这个开关会把 presolve 关掉**——**因为 `SARHSLow`／`SARHSUp` 在 presolve 打开时是哨兵而不是区间。**
     /// **代价是求解变慢，所以它是个显式开关而不是默认行为。**
     ///
-    /// **Ranges must be captured during the &lt;b&gt;primary&lt;/b&gt; solve, never by re-solving: the code measured that a second solve of
+    /// **Ranges must be captured during the &lt;b&gt;primary&lt;/b&gt; solve, never by re-solving: measurement showed that a second solve of
     /// the same triad no longer honours the presolve configuration and returns sentinel `SARHSLow` values.** **Turning this on
     /// disables presolve, because `SARHSLow`/`SARHSUp` are sentinels rather than ranges when presolve is on — at the cost of a
     /// slower solve, which is why it is an explicit switch.**
@@ -398,18 +398,18 @@ public sealed class GurobiLinearSolver : ILinearSolver {
             // "`SARHSLow` 会退化成 presolve 打开时的哨兵值（c1 得到 4 而不是 0）"。**
             // **所以只有真的要从这次求解里取范围时，才付"关 presolve、求解变慢"这个代价。**
             //
-            // **Presolve must be off for real ranges: with it on, Gurobi returns sentinels rather than ranges** — **its
+            // **Presolve must be off for real ranges: with it on, Gurobi returns sentinels rather than ranges** — **the
             // measurement was that `SARHSLow` degrades to the presolve-on sentinel (c1 yields 4 instead of 0).** **So the cost of a
             // slower solve is paid only when ranges are actually wanted from this solve.**
             if (_captureSensitivityRanges) {
                 // **两个参数缺一不可。**
                 //
-                // **`Presolve = 0` 是基线记下的那个：presolve 打开时读回的是哨兵。**
+                // **`Presolve = 0` 是必需的：presolve 打开时读回的是哨兵。**
                 // **`Method = 1`（对偶单纯形）是实测补上的：** **ranging 属性来自<b>最优基**，
                 // 而 barrier／并发求解不产生基——**那时读 `SARHSLow` 会抛 `GRBException`，
                 // 于是"没有范围"和"没有基"分不清。**
                 //
-                // **Two parameters, neither optional: `Presolve = 0` is its finding (presolve-on returns sentinels), and
+                // **Two parameters, neither optional: `Presolve = 0` is required (presolve-on returns sentinels), and
                 // `Method = 1` (dual simplex) was added from measurement — ranging comes from an <b>optimal basis</b>, which barrier
                 // and concurrent runs do not produce, so the read throws and "no ranges" becomes indistinguishable from "no basis".**
                 GrbModel.Parameters.Presolve = 0;

@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 公共诊断证据允许的稳定来源 / Stable sources allowed in public diagnostic evidence.
 /// </summary>
 /// <remarks>
-/// 与对应。**这个类型刻意不含求解器行、列、生成变量或后端句柄**：
+/// **这个类型刻意不含求解器行、列、生成变量或后端句柄**：
 /// `StableId` 要能当缓存键，也要能跨后端对照——**一旦把行号塞进来，换个后端就对不上了。**
 ///
 /// 补**：这是 `core.analysis` 里**不依赖原生后端**的入口之一。§九第 6 条说该模块缺 18 个文件，

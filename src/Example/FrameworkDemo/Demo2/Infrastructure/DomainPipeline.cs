@@ -61,10 +61,10 @@ public sealed class DomainPipelineContext
     /// 推荐重量均衡上下文 / The recommended-weight-equalization context.
     /// </summary>
     /// <remarks>
-    /// **建议打板独有**：基线 `WeightRecommendationPipelineContext` 用它替换掉全配载的软安全、重心优化、装卸效率三域。
+    /// **建议打板独有**：`WeightRecommendationPipelineContext` 用它替换掉全配载的软安全、重心优化、装卸效率三域。
     /// 本仓的通用上下文一直没有它，于是"建议打板模式"在这个上下文里**仍按七域建模**——形状与真实的建议打板路径不同。
     ///
-    /// **Weight recommendation only**: its context swaps it in for full load's soft security, mac optimization and loading effectiveness. The generic
+    /// **Weight recommendation only**: this context swaps it in for full load's soft security, mac optimization and loading effectiveness. The generic
     /// context here never had it, so "weight recommendation mode" was **still modelled as seven domains** — a different shape from the real weight-recommendation path.
     /// </remarks>
     public RecommendedWeightEqualizationContext RecommendedWeightEqualizationContext { get; } = new();
@@ -196,12 +196,12 @@ public sealed class DomainPipelineContext
         // **三条管线是三种不同的组成，不是一个集合加加减减**：
         // 全配载/预配载七域（软安全、重心优化、装卸效率），建议打板六域（时效、均衡、载荷最大化）。
         // 以前这里只有七域一套，于是"建议打板模式"建出来的模型**和真正的建议打板路径不同形状**——
-        // 指纹表里那个 `54/71/53/2` 就是这种"七域的建议打板"，基线从来不会建它。
+        // 指纹表里那个 `54/71/53/2` 就是这种"七域的建议打板"，而真实的建议打板路径从来不建它。
         //
         // **Three pipelines, three different compositions, not one set plus or minus members**: full load and predistribution take seven domains (soft security,
         // mac optimization, loading effectiveness); weight recommendation takes six (express effectiveness, equalization, payload maximization). Only the seven-domain set
         // used to exist here, so "weight recommendation mode" produced **a different shape from the real path** — the `54/71/53/2` in the fingerprint table was exactly that
-        // "seven-domain weight recommendation", which the code never builds.
+        // "seven-domain weight recommendation", which the real path never builds.
         Try[] registrations = stowageMode == StowageMode.WeightRecommendation
             ? [
                 StowageContext.Register(stowageMode, model),

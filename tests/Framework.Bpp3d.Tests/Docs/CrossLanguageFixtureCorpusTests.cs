@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 只钉了 `RemoteFixtures/` 下那四份，第七节据此写"只有这三处实测"。 一数：**六份逐字节相同**——
 /// `Core.Tests/Fixtures/analysis-fixtures/` 下那两份**同样是逐字节复制**，从来没被算进这句话。
 ///
-/// **4.8 那一行早就写着 checkpoint fixture "与基线逐字节相同"，而第七节还在说四份。** 两处的账对不上，
+/// **4.8 那一行早就写着 checkpoint fixture "与源文件逐字节相同"，而第七节还在说四份。** 两处的账对不上，
 /// 下一个人只会信更保守的那个，然后**重做一遍已经做过的事**。
 ///
 /// pinned only the four under `RemoteFixtures/`, which is why section seven said "only these three are measured". counted **six byte-identical fixtures** — the two

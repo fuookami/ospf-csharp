@@ -383,10 +383,10 @@ public sealed record IndicatorStructure(
     /// </summary>
     /// <remarks>
     /// **把 `≥` 改成 `≤` 并取负右侧，看起来等价，但会让 `_satisfied` / `_violated` 的名字落到相反的行上。**
-    /// **基线选择重新生成，本实现照做——这样名字与语义的对应关系与正极性一致。**
+    /// **这里也重新生成——这样名字与语义的对应关系与正极性一致。**
     ///
     /// **Flipping `≥` to `≤` and negating the right-hand side looks equivalent but lands `_satisfied` and `_violated`
-    /// on the opposite rows.** **The code regenerates, and so does this — keeping the name-to-meaning mapping the
+    /// on the opposite rows.** **This regenerates too — keeping the name-to-meaning mapping the
     /// same as the positive polarity.**
     /// </remarks>
     private Result<IReadOnlyList<LinearInequality<Flt64>>, ErrorCode, Error<ErrorCode>>

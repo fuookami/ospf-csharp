@@ -59,12 +59,12 @@ public sealed record ConflictGroupSummary(string? Group, int Count);
 /// <remarks>
 /// `AvailableEvidence` 是完整的原始激活集合；`Members` 是当前冲突/MUS 候选，**绝不包含目标**。
 ///
-/// 只搬报告侧**：基线第 630 行有 `solver.solve(...)`，第 755 行有 `session.solve(assumptions = ...)`，
-/// 而 `ConflictAnalyzer` 与 `MinimalConflictAnalyzer` 都在这之后。**那部分要真实 CP 后端，没搬也没空跑。**
+/// **只做报告侧**：`solver.solve(...)` 与 `session.solve(assumptions = ...)` 两条路径之后才轮到
+/// `ConflictAnalyzer` 与 `MinimalConflictAnalyzer`。**那部分要真实 CP 后端，没搬也没空跑。**
 ///
-/// `AvailableEvidence` is the complete original activation universe; `Members` is the current conflict/MUS candidate and **never includes the target**. **ports the
-/// report side only**: baseline line 630 has `solver.solve(...)` and line 755 has `session.solve(assumptions = ...)`, and both `ConflictAnalyzer` and `MinimalConflictAnalyzer`
-/// come after them. **That needs a real CP backend, so it was neither implemented nor stubbed.**
+/// `AvailableEvidence` is the complete original activation universe; `Members` is the current conflict/MUS candidate and **never includes the target**. **This covers the
+/// report side only**: `solver.solve(...)` and `session.solve(assumptions = ...)` come first; `ConflictAnalyzer` and `MinimalConflictAnalyzer` run only after them and
+/// **need a real CP backend, so they were neither implemented nor stubbed.**
 /// </remarks>
 /// <param name="Target">固定的目标条件 / Fixed objective target.</param>
 /// <param name="TargetFeasibility">所有证据激活时的初始目标可行性结果 / Initial target-feasibility result with all evidence active.</param>

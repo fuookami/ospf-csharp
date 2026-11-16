@@ -114,10 +114,10 @@ public class Demo2StowageBridgeTests {
             MakeItem("I1", ItemStatus.Optional, ItemLocation.MainDeck, CargoCode.BAL),
             MakeItem("I2", ItemStatus.Optional, ItemLocation.LowNotBulk, CargoCode.BAL),
         };
-        // P1 在低舱、P2 在主舱。基线 `enabled` 只查"主舱位拒下舱货"，**不查**"下舱位拒主舱货"——
-        // 所以 (I1, P1) 是合法的、(I2, P2) 不合法。这条单向性是基线原样，见下一条判据。
-        // P1 is lower, P2 is main. The code `enabled` only checks "a main position refuses lower cargo" and **not** "a lower position refuses main cargo" —
-        // so (I1, P1) is legal and (I2, P2) is not. That one-directionality is the code as written; see the next criterion.
+        // P1 在低舱、P2 在主舱。`enabled` 只查"主舱位拒下舱货"，**不查**"下舱位拒主舱货"——
+        // 所以 (I1, P1) 是合法的、(I2, P2) 不合法。这条单向性是既定行为，见下一条判据。
+        // P1 is lower, P2 is main. `enabled` only checks "a main position refuses lower cargo" and **not** "a lower position refuses main cargo" —
+        // so (I1, P1) is legal and (I2, P2) is not. That one-directionality is as written; see the next criterion.
         var positions = new List<StowagePosition> {
             MakePosition("P1", 1UL, PositionLocation.LowForwardNotBulkLocation),
             MakePosition("P2", 2UL, PositionLocation.NormalMainLocation),
@@ -154,20 +154,20 @@ public class Demo2StowageBridgeTests {
 
 
     /// <summary>
-    /// **"下舱位拒主舱货"这条基线没查** / The code does not check "a lower position refuses main cargo".
+    /// **"下舱位拒主舱货"没有查** / The code does not check "a lower position refuses main cargo".
     /// </summary>
     /// <remarks>
-    /// 基线 `enabled` 只写了一个方向：`this.location.main && item.location.low`（主舱位拒下舱货）。
+    /// `enabled` 只写了一个方向：`this.location.main && item.location.low`（主舱位拒下舱货）。
     /// 反方向 `this.location.low && item.location.main` 只存在于 `ItemLocation.enabledIn(PositionLocation)`，
     /// 而那个方法在 Demo2 里**没有调用方**（这里逐文件搜过）。
     ///
-    /// 结果：主舱货能装进下舱位。这是**基线原样**，不是这里引入的偏差；写在这里是为了让它留档——
-    /// 否则下一个人会以为是移植漏了，然后"顺手修好"，把跨语言行为改掉。
+    /// 结果：主舱货能装进下舱位。这是**既定行为**，不是这里引入的偏差；写在这里是为了让它留档——
+    /// 否则下一个人会以为是漏做了，然后"顺手修好"，把既有行为改掉。
     ///
-    /// The code `enabled` writes only one direction: `this.location.main && item.location.low` (a main position refuses lower cargo). The reverse
+    /// `enabled` writes only one direction: `this.location.main && item.location.low` (a main position refuses lower cargo). The reverse
     /// `this.location.low && item.location.main` exists only in `ItemLocation.enabledIn(PositionLocation)`, and that method has **no caller** anywhere in Demo2 (searched file by
-    /// file in). Consequence: main-deck cargo can go into a lower position. That is **the code as written**, not a divergence introduced here — recorded so the
-    /// next reader does not take it for a implementation slip and "fix" the cross-language behaviour.
+    /// file in). Consequence: main-deck cargo can go into a lower position. That is **as written**, not a divergence introduced here — recorded so the
+    /// next reader does not take it for an implementation slip and "fix" the behaviour.
     /// </remarks>
     [Fact]
     public void StowageNeeded_ShouldRecordTheOneDirectionalBaselineRule() {

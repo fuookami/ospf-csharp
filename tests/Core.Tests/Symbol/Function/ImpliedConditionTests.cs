@@ -187,7 +187,7 @@ public class ImpliedConditionTests
             .BeOfType<Failed<IReadOnlyList<LinearInequality<Flt64>>, ErrorCode, Error<ErrorCode>>>();
     }
 
-    /// <summary>**`lower > 0` 与 `upper < tolerance` 被拒绝** / Both baseline bounds checks hold.</summary>
+    /// <summary>**`lower > 0` 与 `upper < tolerance` 被拒绝** / Both bounds checks hold.</summary>
     /// <remarks>
     /// **这两种情形下 `lowerAdjust` 或 `upperAdjust` 会变成 0 或负数，
     /// 于是门控行的系数消失，前置为假时约束不再松弛。**

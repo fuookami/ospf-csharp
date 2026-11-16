@@ -268,7 +268,7 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
     /// <param name="model">元模型 / Meta model</param>
     /// <returns>操作结果 / Operation result</returns>
     /// <remarks>
-    /// 基线建六样东西：`y`（每任务取消列，锁定的钉成 1）、`bunch_cost`（目标载体）、`task_assignment_*`（**占位**中间符号，由每轮的
+    /// 这里建六样东西：`y`（每任务取消列，锁定的钉成 1）、`bunch_cost`（目标载体）、`task_assignment_*`（**占位**中间符号，由每轮的
     /// `addColumns` 填内容）、`task_compilation_t = y[t]`、`z`（每执行器空闲列，只在 `withExecutorLeisure` 时）、
     /// `executor_compilation_e = z[e]`（无空闲时是常量零）。
     ///
@@ -478,10 +478,10 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
         // with no infinity, and substituting a large finite number would turn "unaffordable column" into "implausibly cheap one".
         for (int index = 0; index < unduplicated.Count; ++index) {
             B bunch = unduplicated[index];
-            // ponytail: 没有求解器成本时系数取 0，基线取 `Flt64.infinity`（永不选择）。十进制 `Flt64` 表达不了无穷，
-            // 取 0 意味着"免费"——这一处与基线**语义不等价**。要等价得引入一个足够大的有限惩罚，或者给 `Flt64` 加无穷。
-            // ponytail: a missing solver cost gets coefficient 0 where the code uses `Flt64.infinity` (never chosen). Decimal `Flt64` cannot express infinity, and 0 means
-            // "free" — this point is **not semantically equivalent** to the code. Equivalence needs a sufficiently large finite penalty, or an infinity for `Flt64`.
+            // ponytail: 没有求解器成本时系数取 0，而理想值是"永不选择"（无穷大）。十进制 `Flt64` 表达不了无穷，
+            // 取 0 意味着"免费"——这一处**语义不等价**。要等价得引入一个足够大的有限惩罚，或者给 `Flt64` 加无穷。
+            // ponytail: a missing solver cost gets coefficient 0 where "never chosen" (infinity) is intended. Decimal `Flt64` cannot express infinity, and 0 means
+            // "free" — this point is **not semantically equivalent**. Equivalence needs a sufficiently large finite penalty, or an infinity for `Flt64`.
             Flt64 cost = bunch.Cost.SolverCostOrNull(Flt64.Zero) ?? Flt64.Zero;
             _taskCost!.AsMutable().AddMonomial(
                 new Fuookami.Ospf.Math.Symbol.Monomial.LinearMonomial<Flt64>(cost, columns[index]));

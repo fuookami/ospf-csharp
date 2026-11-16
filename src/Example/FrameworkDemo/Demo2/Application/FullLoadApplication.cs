@@ -28,10 +28,9 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 
 /// <summary>
-/// 全装载应用。Full load application: orchestrates the full-load stowage optimization pipeline.
-///
-/// Port of Kotlin FullLoadApplication / FullLoadAlgorithm.
-/// Supports both direct MILP and Benders decomposition paths with quality-guarded fallback.
+/// 全装载应用：编排全配载优化管线。
+/// Full load application: orchestrates the full-load stowage optimization pipeline,
+/// supporting both direct MILP and Benders decomposition paths with quality-guarded fallback.
 /// </summary>
 public sealed class FullLoadApplication
 {
@@ -45,11 +44,11 @@ public sealed class FullLoadApplication
     /// 时效效能上下文 / The express-effectiveness context.
     /// </summary>
     /// <remarks>
-    /// **全配载也是七域**：基线 `FullLoadPipelineContext` 的注册清单里有时效与装卸效率，
+    /// **全配载也是七域**：注册清单里有时效与装卸效率，
     /// 本仓的应用路径只有前五个，于是全配载的应用路径是 47 行、管线路径是 52 行——**同一份请求、两种形状**。
-    /// 这与 （预配载漏三域）、 （建议打板漏两域）是同一类缺陷：**漏域不报错，只是少约束**。
+    /// 这与预配载漏三域、建议打板漏两域是同一类缺陷：**漏域不报错，只是少约束**。
     ///
-    /// **Full load is seven domains too**: its `FullLoadPipelineContext` registers express effectiveness and loading effectiveness, while this implementation's
+    /// **Full load is seven domains too**: the registration list carries express effectiveness and loading effectiveness, while this implementation's
     /// application path had only the first five — 47 rows on the application path against 52 on the pipeline path, **one request, two shapes**. Same defect class as 
     /// (predistribution missing three) and (weight recommendation missing two): **a missing domain never errors, it just leaves fewer constraints**.
     /// </remarks>
@@ -274,13 +273,13 @@ public sealed class FullLoadApplication
             // otherwise a caller cannot tell "MILP ran" from "MILP was merely allowed".
             if (request.ResolvedSolvePolicy.BendersFallbackToMilp)
             {
-                // **两种"没走回退"要说成两句不同的话**：基线要求回退**重建一个新模型与新上下文**
-                // （："回退必须创建新模型与上下文"）。而本仓的域上下文是**一次性**的
+                // **两种"没走回退"要说成两句不同的话**：回退要**重建一个新模型与新上下文**
+                // （"回退必须创建新模型与上下文"）。而本仓的域上下文是**一次性**的
                 // （`上下文已经注册`），所以就算调用方给了 MILP 求解器，这条路径也**建不出一个可用的新模型**——
                 // 那是比"没给求解器"更根本的原因，混成一句会让后来的人以为"补个求解器就好了"。
                 //
-                // **Two different reasons, two different sentences**: the code requires the fallback to **rebuild a fresh model and context**
-                // (: "the fallback must create a new model and context"). This implementation's domain contexts are **single-use** (measured in
+                // **Two different reasons, two different sentences**: the fallback must **rebuild a fresh model and context**
+                // ("the fallback must create a new model and context"). This implementation's domain contexts are **single-use** (measured in
                 // with `Context already registered`), so even with a MILP solver supplied this path **cannot build a usable fresh model** — a more fundamental reason
                 // than "no solver was given", and merging the two would make the next reader think "just supply a solver".
                 if (milpSolver is null)
@@ -301,10 +300,10 @@ public sealed class FullLoadApplication
 
         var result = ((Ok<BendersResult, ErrorCode, Error<ErrorCode>>)bendersResult).Value;
 
-        // **状态要报出来**：基线记 `benders_status=…`，本仓此前只在停滞时往备注里塞一句话。
+        // **状态要报出来**：这里记 `benders_status=…`，此前只在停滞时往备注里塞一句话。
         // 现在无论收敛与否都有这一句，**"没收敛"刚不再是件需要从空解向量里猜的事**。
         //
-        // **The status is reported**: the code records `benders_status=…`; this implementation previously only added a sentence when the loop stalled. Now it is
+        // **The status is reported**: `benders_status=…` is recorded; previously a sentence was only added when the loop stalled. Now it is
         // there whether it converged or not, **so "it did not converge" is no longer something to guess from an empty solution vector.**
         notes.Add($"benders_status={result.Status}");
 
@@ -386,13 +385,13 @@ public sealed class FullLoadApplication
         // 这里不再是隐患而是**确定的**：长度对不上就一定错位，对得上也只是碰巧。
         //
         // 所以这条路径交**目标值 + 状态**，分配留空并写明原因。等 demo2 换成框架的
-        // `DiscreteLoadingApplicationService`（已确认那条才是基线路径）之后，分配由框架侧的
+        // `DiscreteLoadingApplicationService`（框架侧的正规路径）之后，分配由框架侧的
         // `MergeBendersValues` 按变量身份合并，**那时才有人负责解码**。
         //
         // **The master solution is not turned into assignments**: `result.Solution` is in master **model token order** (theta plus binaries), while
         // The old decoder read it as "cargo x position". recorded this hazard once (it read out empty assignments then); here it is no longer a hazard
         // but a certainty: a length mismatch always misplaces, and a match is a coincidence. This path therefore hands back **the objective and the status**,
-        // leaves assignments empty and says why. Once demo2 moves to the framework `DiscreteLoadingApplicationService` ( established that as the code
+        // leaves assignments empty and says why. Once demo2 moves to the framework `DiscreteLoadingApplicationService` (the proper framework
         // path), assignments come from the framework's `MergeBendersValues`, merged by variable identity — **that is when someone decodes them**.
         notes.Add($"benders_assignments=not_decoded:master_solution_length={result.Solution.Length}");
         return ResponseDTO.Optimal(result.Obj, assignments: null, notes: notes);
@@ -465,8 +464,8 @@ public sealed class FullLoadApplication
     // **`internal` rather than `private`**: the comparison needs both paths built separately; going through `Execute` would require two solvers, turning a
     // measurement into a solve.
     /// <summary>
-    /// **单模型 Benders 求解**（基线形状）：建一个模型 → 划分 → 交给 `LinearBendersAlgorithm`。
-    /// **Single-model Benders** (the code shape): build one model, partition it, hand it to `LinearBendersAlgorithm`.
+    /// **单模型 Benders 求解**：建一个模型 → 划分 → 交给 `LinearBendersAlgorithm`。
+    /// **Single-model Benders**: build one model, partition it, hand it to `LinearBendersAlgorithm`.
     /// </summary>
     /// <param name="stowageMode">装载模式 / The stowage mode.</param>
     /// <param name="solver">Benders 后端 / The Benders backend.</param>
@@ -480,7 +479,7 @@ public sealed class FullLoadApplication
     /// **成功时不编造分配**（的教训）：`LinearBendersResult` 的取值映射还没做，返回最优值但不返回分配，
     /// 就像旧路径那样把"没解码"写进备注。
     ///
- /// **Not dispatched yet**: `Execute` still takes the two-model route. only makes the "single model plus framework algorithm" chain actually reach the
+ /// **Not dispatched yet**: `Execute` still takes the two-model route. This only makes the "single model plus framework algorithm" chain actually reach the
     /// solver; `Demo2SingleModelSolveTests` measures it and decides when to flip the switch. **No fabricated assignments on success** (the earlier lesson): the value mapping
     /// from `LinearBendersResult` is not done yet, so it returns the optimum without assignments and says "not decoded" in the notes, exactly like the old path.
     /// </remarks>
@@ -518,7 +517,7 @@ public sealed class FullLoadApplication
             // 要接阶段表，得先弄清 `LinearBendersPartition` 对"与行规则不一致的声明"是什么反应——**那是后续的事**。
             //
             // **tried this and measurement rejected it**: declaring a stage table meant the **model never reached the solver** (`MasterCalls == 0`, two criteria red at
-            // once). already measured that declaring stages **does not narrow the recourse**, so the declaration added risk without benefit; it is reverted. Wiring it needs
+            // once). It was already measured that declaring stages **does not narrow the recourse**, so the declaration added risk without benefit; it is reverted. Wiring it needs
             // the answer to "how does the partitioner react to a declaration that disagrees with its row rule" — next step.
             if (partitioned is not Ok<LinearBendersModels, ErrorCode, Error<ErrorCode>> partitionedOk) {
                 notes.Add($"benders_partition_failed: {partitioned}");
@@ -787,7 +786,7 @@ public sealed class FullLoadApplication
     ///
     /// **The same seven-domain registration as `SolveDirectMilp`**, into a model the **caller keeps**: column generation projects against the full model, so the model
     /// must still be alive after registration rather than discarded once solved. **The registration list must match the direct-MILP one** — the two would drift, and
-    /// drift shows up as "column generation finished with seven rows missing", which no result reveals. recorded the same defect class: a missing domain never
+    /// drift shows up as "column generation finished with seven rows missing", which no result reveals. The same defect class is recorded: a missing domain never
     /// errors, it just leaves fewer constraints.
     /// </remarks>
     internal (ResponseDTO Response, RenderDTO? Render) SolvePartitionColumnGeneration(
@@ -808,11 +807,11 @@ public sealed class FullLoadApplication
         foreach (Try registration in registrations) {
             if (registration is Failed<Success, ErrorCode, Error<ErrorCode>> failed) {
                 notes.Add("partition_column_generation_failed: a domain refused to register: " + failed.Error);
-                // **基线这条路径是 `fail(Err(ApplicationFailed, "缺少列生成注册"))`**，
+                // **这条路径是不区分原因地失败（`fail(Err(ApplicationFailed, "缺少列生成注册"))`）**，
                 // 而 `fail` 只把 `ORModelInfeasible` 映射成 `"Infeasible"`、`OREngineSolvingException` 映射成 `"NotConverged"`，
                 // **其余一律 `"Error"`**——**`DomainRegisterFailed` 是本仓自造的。**
                 //
-                // **The code takes `fail(Err(ApplicationFailed, ...))` here**, and `fail` maps only
+                // **This path fails without distinguishing causes (`fail(Err(ApplicationFailed, ...))`)**, and `fail` maps only
                 // `ORModelInfeasible` to `"Infeasible"` and `OREngineSolvingException` to `"NotConverged"`; **everything else is `"Error"` —
                 // `DomainRegisterFailed` was invented here.**
                 return (new ResponseDTO(Succeed: false, Status: "Error", Notes: [.. notes, failed.Error.Message],
@@ -888,7 +887,7 @@ public sealed class FullLoadApplication
     /// **规则是类型**：整数（含二进制）变量必须在主问题，其余是连续追索。 按名字前缀挑，漏了 `empty_between_cargo_*` 的整数辅助变量，
     /// 划分器因此拒绝——**名字会变，类型不会**。
     ///
-    /// **The rule is the type**: integer (including binary) variables belong in the master and everything else is continuous recourse. picked by name prefix, missed
+    /// **The rule is the type**: integer (including binary) variables belong in the master and everything else is continuous recourse. Picking by name prefix missed
     /// the integer auxiliary variables inside `empty_between_cargo_*` and the partitioner refused — **names change, types do not**.
     /// </remarks>
     private static Dictionary<Fuookami.Ospf.Core.Variable.IVariableItem, LinearBendersStage> BuildBendersStages(

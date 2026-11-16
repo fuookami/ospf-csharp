@@ -9,11 +9,11 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 质量守卫配置的合并与归一化 / The quality-guard merge and normalisation.
 /// </summary>
 /// <remarks>
-/// 基线 `resolveQualityGuardConfig` 干两件事：**把 `null` 的字段用默认值补上**，然后**把五个风险权重归一化到和为 1**，
-/// 其余九个标量各自 `coerce` 进合法区间。本仓这块逐行一致，**同样一条判据都没有**。
+/// `resolveQualityGuardConfig` 干两件事：**把 `null` 的字段用默认值补上**，然后**把五个风险权重归一化到和为 1**，
+/// 其余九个标量各自 `coerce` 进合法区间。本仓这块**此前一条判据都没有**。
 ///
-/// The code's resolver does two things: **fill `null` fields from the defaults**, then **normalise the five risk weights to sum to one**, with the other nine
-/// scalars coerced into their valid ranges. This implementation matches line for line (checked) and again **had no criterion at all**.
+/// The resolver does two things: **fill `null` fields from the defaults**, then **normalise the five risk weights to sum to one**, with the other nine
+/// scalars coerced into their valid ranges. This implementation **had no criterion at all** for it.
 ///
 /// **归一化为什么重要**：质量评分是"风险 × 权重"的和。权重没归一化，一个把 `gap` 权重填成 `3.5` 的调用方会**把评分整体放大 10 倍**，
 /// 进而让"评分低于阈值"这条判定永远成立——**症状是守卫从不触发，看起来像"质量一直很好"。**
@@ -98,7 +98,7 @@ public sealed class Demo2BendersQualityGuardTests
     /// **九个标量各自被夹进合法区间** / Each of the nine scalars is coerced into its valid range.
     /// </summary>
     /// <remarks>
-    /// 基线逐项 `coerceAtLeast` / `coerceIn`。**这些夹取不是为了好看**：`iterationPressurePercent = 0` 会让"迭代压力"在第一次迭代就触发，
+    /// 逐项 `coerceAtLeast` / `coerceIn`。**这些夹取不是为了好看**：`iterationPressurePercent = 0` 会让"迭代压力"在第一次迭代就触发，
     /// `trajectoryMinSnapshots = 0` 会让轨迹分析在只有一个快照时也算数——**两种都表现为"守卫过早开火"**，
     /// 而调用方会以为是自己配的阈值不对。
     ///

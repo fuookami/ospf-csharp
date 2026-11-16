@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 压舱物 / Ballast for weight balance.
 /// </summary>
 /// <remarks>
-/// 与对齐。两个符号：
+/// 两个符号：
 ///
 /// | 符号 | 构成 | 何时注册 |
 /// | --- | --- | --- |

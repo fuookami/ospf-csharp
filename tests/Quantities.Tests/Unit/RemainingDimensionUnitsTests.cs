@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// </remarks>
 public class RemainingDimensionUnitsTests
 {
-    /// <summary>**七个量纲的单位都齐** / All seven dimensions have their baseline units.</summary>
+    /// <summary>**七个量纲的单位都齐** / All seven dimensions have their units.</summary>
     [Theory]
     [InlineData(typeof(SolidAngleUnits), "Steradian,SquareDegree")]
     [InlineData(typeof(StressUnits),

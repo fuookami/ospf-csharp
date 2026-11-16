@@ -83,7 +83,7 @@ public class PackageAttributeSlotsTests
         var right = new Placement("box", 1.0, bottom: 2.0);
 
         IReadOnlyList<Placement> bottom = new[] { baseItem, middle, left, right };
-        // 基线 `directBottomItems` 就是 `topItemPlacements`——**给出"这一列里最上面的那些"，不是"最底下的那个"。**
+        // `directBottomItems` 就是 `topItemPlacements`——**给出"这一列里最上面的那些"，不是"最底下的那个"。**
         // 上一版把它理解反了，改成 IsAbove 之后才露出来。
         //
         // `directBottomItems` is `topItemPlacements` — **the topmost items of the column, not the bottom one.** The previous version had it
@@ -103,9 +103,9 @@ public class PackageAttributeSlotsTests
         var baseItem = new Placement("pallet", 1.0, bottom: 0.0);
         var box = new Placement("box", 1.0, bottom: 1.0);
 
-        // 底部集合只装"底下的东西"——把 `box` 自己也放进去会让算法把自身当成一块同类型底板（基线同样如此，它的入参就是 bottoms）。
-        // The bottom set holds what is underneath; including `box` itself would let the algorithm treat it as a same-type layer below (its
-        // parameter is the bottoms, too).
+        // 底部集合只装"底下的东西"——把 `box` 自己也放进去会让算法把自身当成一块同类型底板（它的入参就是 bottoms）。
+        // The bottom set holds what is underneath; including `box` itself would let the algorithm treat it as a same-type layer below, since
+        // its parameter is the bottoms.
         StackLayering.LayerCount(box, new[] { baseItem }).Should().Be(
             UInt64.Zero,
             "the base is a different type, so the baseline skips it and there is no same-type branch to count");
@@ -130,7 +130,7 @@ public class PackageAttributeSlotsTests
 
         public bool OverlapsBottom(IStackPlacement other) =>
             // 底面重叠 = 同一竖向列：替身没有水平坐标，于是同类型即同列。
-            // 基线比的是底面投影，与高度无关；这一条正是被 `OverlapsBottom`／`IsAbove` 分开之后才看清的。
+            // 这里比的是底面投影，与高度无关；这一条正是被 `OverlapsBottom`／`IsAbove` 分开之后才看清的。
             //
             // Footprint overlap means the same vertical column; the double has no horizontal coordinate, so same type is the same column. The code
             // compares bottom footprints regardless of height, which only became clear once `OverlapsBottom` and `IsAbove` were separated.

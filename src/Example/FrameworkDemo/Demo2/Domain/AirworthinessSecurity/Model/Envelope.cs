@@ -159,8 +159,8 @@ public sealed class EnvelopeSide
     public Result<ILinearIntermediateSymbol<Flt64>, ErrorCode, Error<ErrorCode>> Piecewise(LinearExpressionSymbol totalWeightEstimate) {
         ArgumentNullException.ThrowIfNull(totalWeightEstimate);
         if (Points.Count < 2) {
-            // 基线要求至少两点；一点时"折线"退化成常数，而分段函数构造会直接失败。应当在这里拦住，而不是让构造器抛。
-            // The code needs at least two points; with one the polyline degenerates to a constant and the piecewise constructor rejects it. Stop it here rather than letting the
+            // 至少需要两点；一点时"折线"退化成常数，而分段函数构造会直接失败。应当在这里拦住，而不是让构造器抛。
+            // At least two points are required; with one the polyline degenerates to a constant and the piecewise constructor rejects it. Stop it here rather than letting the
             // constructor throw.
             return Results.Failed<ILinearIntermediateSymbol<Flt64>>(new Err<ErrorCode>(
                 ErrorCode.IllegalArgument,
@@ -331,7 +331,7 @@ public sealed class Envelope : IEnvelope
 /// 条件包络 / A conditional envelope.
 /// </summary>
 /// <remarks>
-/// 基线 `ConditionalEnvelope`：同一相位下有两组左右边界，**用哪一个由 `valueCondition` 决定**。三态：
+/// 条件包络：同一相位下有两组左右边界，**用哪一个由 `valueCondition` 决定**。三态：
 ///
 /// * `true` → 第一组；`false` → 第二组；两者都只需把那一组算出来；
 /// * `null` → **条件是决策变量**，得用 `IfThen` 造一个开关再拼：`min = 第二组 + 开关·(第一组 − 第二组)`。
@@ -342,7 +342,7 @@ public sealed class Envelope : IEnvelope
 /// 需要一个 0/1 的条件符号与两套界（条件的取值界、差值界）。界取宽一点只让 Big-M 松弛变弱，**取窄了会把可行解切掉**，
 /// 所以这里凡是拿不到"可用的有限界"就退回**断点范围**（一个必然包含真值的超集）。
 ///
-/// **一处有意简化（`ponytail:`）**：基线对非分段符号还会先试"多项式本身的有限界"，更紧；C# 侧那个助手是
+/// **一处有意简化（`ponytail:`）**：对非分段符号本可先试"多项式本身的有限界"，更紧；但那个助手是
 /// `Core` 的 internal（`BigMValues.FiniteBounds`），示例域拿不到，所以常数符号直接用 `[值, 值]`、其余一律退回断点范围。
 /// 升级路径：把 `FiniteBounds` 提为公开（或搬到 `Math`），再先试紧界。
 ///

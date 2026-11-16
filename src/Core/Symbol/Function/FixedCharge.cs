@@ -23,15 +23,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 固定费用函数：**启用就付固定成本，另按活动量付单位成本** / A fixed charge: pay to activate, then per unit.
 /// </summary>
 /// <remarks>
-/// 对齐基线 Tariff.kt 的 FixedChargeFunction。
-///
 /// 这是“开一台机器要一笔钱，之后每生产一件再付一点”的形状，也就是选址、机组组合、
 /// 批量折扣的起订费那一类模型。
 ///
 /// **它和普通线性成本的区别只在“启用”这一步**：cost = fixedCost · active + unitCost · activity，
 /// 而 active 是 0/1 变量。**少了 active 那一项，模型会说“不启用也免费”，而目标函数看起来完全正常。**
-///
-/// The FixedChargeFunction from the code.
 ///
 /// This is “pay to start a machine, then pay per item” — siting, unit commitment, and the setup fee of
 /// quantity discounts all take this shape.

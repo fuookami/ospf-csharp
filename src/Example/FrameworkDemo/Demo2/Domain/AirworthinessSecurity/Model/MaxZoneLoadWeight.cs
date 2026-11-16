@@ -36,7 +36,7 @@ public sealed record ZoneLoadLimitZone(
 /// 每个机身区域的最大允许载荷重量 / The maximum allowable load weight per fuselage zone.
 /// </summary>
 /// <remarks>
-/// 与对齐。`LimitZone` 持有 `Liferaft?` 对象，
+/// `LimitZone` 持有 `Liferaft?` 对象，
 /// 上限只用到它的**重量**，所以这里直接存重量：持有整个对象会让"救生筏在哪"与"区域装了多少"耦合，而后者才是这个类管的事。
 ///
 /// The code's `LimitZone` holds a `Liferaft?` and the limit only uses its **weight**, so the weight is stored directly: holding the object would

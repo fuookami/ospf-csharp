@@ -79,7 +79,7 @@ public sealed class Demo2DomainFingerprintTests {
     /// 软安全、重心优化、装卸效率——所以这张表的行名与前两张**不同**，不是"同一批域少了几行"。
     ///
     /// 之前这里记的是"与全配载完全相同"，那是**模式还没接通时测出来的假数据**； ~ 之间它记的是"七域的建议打板"
-    /// （`54/71/53/2`），那是**基线从来不建的形状**——通用上下文的 `Register` 只有七域一套。 按模式分开组成之后，
+    /// （`54/71/53/2`），那是**从不存在的形状**——通用上下文的 `Register` 只有七域一套。 按模式分开组成之后，
     /// 这里第一次量到真正的建议打板：`55/64/34/2`，与 `WeightRecommendationApplication` 的 `direct_model=rows55,symbols64,objective2` 一致。
     ///
     /// 另一个形状细节：**均衡域只加符号与目标、不加行**（`50/64/34/0` → `55/64/34/1`）。
@@ -117,10 +117,10 @@ public sealed class Demo2DomainFingerprintTests {
         using var model = new LinearMetaModel<Flt64>();
         Parameter parameter = new();
         // **三条管线是三种组成**：全配载/预配载七域，建议打板六域。步表跟着模式走——
-        // 以前这里一张固定的七域表应付三种模式，于是建议打板那一行量的其实是"七域的建议打板"，基线从来不建它。
+        // 以前这里一张固定的七域表应付三种模式，于是建议打板那一行量的其实是"七域的建议打板"，而那种形状从不构建。
         //
         // **Three pipelines, three compositions**: seven domains for full load and predistribution, six for weight recommendation. The step list follows the mode;
-        // one fixed seven-domain list used to serve all three, so the weight-recommendation row measured a "seven-domain weight recommendation" the code never builds.
+        // one fixed seven-domain list used to serve all three, so the weight-recommendation row measured a "seven-domain weight recommendation" that is never built.
         List<(string Name, Func<Try> Run)> steps = mode == StowageMode.WeightRecommendation
             ? [
                 ("stowage", () => pipeline.StowageContext.Register(mode, model)),
@@ -252,12 +252,12 @@ public sealed class Demo2DomainFingerprintTests {
     [Fact]
     public void Predistribution_ShouldRejectAMissingSpecDuringAssembly() {
         // 把这条判据的落点提前了。** 它原本断言"装配成功、注册阶段才拒"。
-        // 去读基线：`predicateLoadWeightMin == null` 那道守卫**在 `AggregationInitializer` 里**，也就是**装配阶段**。
-        // 所以旧判据钉的是本仓的一处实现偏差（守卫放晚了），不是基线行为。
+        // 读代码可见：`predicateLoadWeightMin == null` 那道守卫**在 `AggregationInitializer` 里**，也就是**装配阶段**。
+        // 所以旧判据钉的是本仓的一处实现偏差（守卫放晚了），不是既定行为。
         //
-        // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Read the code: the
+        // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Reading the code: the
         // `predicateLoadWeightMin == null` guard sits **in `AggregationInitializer`**, i.e. **during assembly**. The old criterion therefore pinned a local deviation
-        // (the guard sat one step late), not its behaviour.
+        // (the guard sat one step late), not established behaviour.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest();
         var pipeline = new DomainPipelineContext();
         Result<Success, ErrorCode, Error<ErrorCode>> assembled = pipeline.Init(request, StowageMode.Predistribution);

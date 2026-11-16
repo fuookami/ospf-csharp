@@ -125,7 +125,7 @@ public class LengthObjectivePipelineTests {
     ///
     /// | 实现 | 结果 |
     /// | --- | --- |
-    /// | 正确（基线 `1 + penalty`） | **1.5** |
+    /// | 正确（`1 + penalty`） | **1.5** |
     /// | `1 * penalty` | 0.5 |
     /// | 直接用 `penalty` | 0.5 |
     /// | 恒 `1` | 1.0 |

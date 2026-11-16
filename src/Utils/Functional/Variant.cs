@@ -191,10 +191,10 @@ public abstract record Variant8<T1, T2, T3, T4, T5, T6, T7, T8> {
 
 /// <summary>**9 选一** / One of 9.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant9<T1, T2, T3, T4, T5, T6, T7, T8, T9> {
@@ -241,10 +241,10 @@ public abstract record Variant9<T1, T2, T3, T4, T5, T6, T7, T8, T9> {
 
 /// <summary>**10 选一** / One of 10.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {
@@ -294,10 +294,10 @@ public abstract record Variant10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> {
 
 /// <summary>**11 选一** / One of 11.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> {
@@ -350,10 +350,10 @@ public abstract record Variant11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> {
 
 /// <summary>**12 选一** / One of 12.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> {
@@ -409,10 +409,10 @@ public abstract record Variant12<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**13 选一** / One of 13.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13> {
@@ -471,10 +471,10 @@ public abstract record Variant13<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**14 选一** / One of 14.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> {
@@ -536,10 +536,10 @@ public abstract record Variant14<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**15 选一** / One of 15.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15> {
@@ -604,10 +604,10 @@ public abstract record Variant15<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**16 选一** / One of 16.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16> {
@@ -675,10 +675,10 @@ public abstract record Variant16<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**17 选一** / One of 17.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17> {
@@ -749,10 +749,10 @@ public abstract record Variant17<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**18 选一** / One of 18.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18> {
@@ -826,10 +826,10 @@ public abstract record Variant18<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**19 选一** / One of 19.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19> {
@@ -906,10 +906,10 @@ public abstract record Variant19<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T
 
 /// <summary>**20 选一** / One of 20.</summary>
 /// <remarks>
-/// **与基线 `Variant{0}` 对应。** 构造后恰好一个分支有值，
+/// 构造后恰好一个分支有值，
 /// **`Match` 要求调用方处理全部 {0} 个分支**——**漏一个编译不过，而不是运行时抛异常。**
 ///
-/// **Corresponds to the code `Variant{0}`.** Exactly one branch carries a value after construction,
+/// Exactly one branch carries a value after construction,
 /// **and `Match` requires the caller to handle all {0}** — **missing one fails to compile rather than throwing at run time.**
 /// </remarks>
 public abstract record Variant20<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20> {

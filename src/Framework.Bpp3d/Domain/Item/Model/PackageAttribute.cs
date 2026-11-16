@@ -64,11 +64,11 @@ public sealed record PackageAttribute(
     /// 有效堆叠层数 = min(包材层数, 重量属性层数) / The effective layer count: the minimum of the package and the weight attribute.
     /// </summary>
     /// <remarks>
-    /// 基线写的是 `val maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`。
+    /// 合成规则是 `maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`。
     /// 原来的位置参数就叫 `MaxLayer`，那会让"包材层数"与"有效层数"共用一个名字，于是这条合成规则没有地方落脚——
     /// 位置参数因此改名 `PackageMaxLayer`，有效层数沿用 `MaxLayer`。没配重量属性时两者相等，既有调用方行为不变。
     ///
-    /// the code writes `val maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`. The positional parameter used to be called
+    /// The composition is `maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`. The positional parameter used to be called
     /// `MaxLayer`, which left the package count and the effective count sharing one name so the composition had nowhere to live — hence the rename.
     /// With no weight attribute configured the two are equal, so existing callers behave exactly as before.
     /// </remarks>

@@ -43,7 +43,7 @@ public sealed record CumulativeCheckPoint(
 /// 某个方向上的累积载荷限制区域 / A zone defining cumulative load limits in one direction.
 /// </summary>
 /// <remarks>
-/// 与对齐。三处容易做错：
+/// 三处容易做错：
 ///
 /// 1. **`AFT` 方向把点表倒序**。倒序之后检查点按"从远到近"排列，累积区间才与前进方向一致；不倒序会让后向累积的每个检查点覆盖错误的舱位集合。
 /// 2. **力臂相同的点先去重再排序**。`distinctBy { toArm }`，保留**第一次出现**的那个；先排序后去重会保留另一个 `maxSum`。
@@ -134,14 +134,14 @@ public sealed class CumulativeLoadLimitZone
             double backArm = positions[j].Coordinate.BackArm;
             double length = backArm - frontArm;
             if (length <= 0.0) {
-                // 跨度为零或为负的舱位没有"重叠比例"可言，基线直接排除。
+                // 跨度为零或为负的舱位没有"重叠比例"可言，直接排除。
                 //
                 // **记录一处不可观测**：这条守卫在 `length == 0` 时其实不改变结果——`overlap` 是
                 // `min(back, end) − max(front, start)`，而 `front == back` 时它必然 `<= 0`，下一行的 `overlap > 0` 已经把它挡掉。
                 // 实测把守卫改成 `if (false)` 判据全绿。它真正起作用的是 `length < 0`（`FrontArm > BackArm` 的畸形舱位），
                 // 那种输入目前没有任何调用方产生，所以只留注释，不伪造判据。
                 //
-                // A position of zero or negative span has no "overlap ratio", so the code drops it. **One unobservable recorded**: at `length == 0` the guard does not change
+                // A position of zero or negative span has no "overlap ratio", so it is dropped. **One unobservable recorded**: at `length == 0` the guard does not change
                 // the outcome — `overlap` is `min(back, end) − max(front, start)`, necessarily `<= 0` when `front == back`, so the next line's `overlap > 0` already rejects it;
                 // replacing the guard with `if (false)` leaves every criterion green (measured). It only matters for `length < 0` (a malformed position with `FrontArm > BackArm`),
                 // which no caller produces today — hence a comment rather than a fabricated criterion.

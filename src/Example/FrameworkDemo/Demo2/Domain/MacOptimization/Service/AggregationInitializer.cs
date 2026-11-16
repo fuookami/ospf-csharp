@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 /// 重心优化聚合初始化器 / The MAC-optimisation aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**一条校验**——配载位置不能为空——然后原样把上游的五个部件
+/// **一条校验**——配载位置不能为空——然后原样把上游的五个部件
 /// 交给聚合。
 ///
 /// 三处必须沿用：

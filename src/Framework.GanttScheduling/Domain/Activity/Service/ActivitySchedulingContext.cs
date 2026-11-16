@@ -1,6 +1,4 @@
 // 活动排程上下文 / Activity scheduling context.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
@@ -18,9 +16,9 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Service;
 /// 上下文是"一次注册"的载体：它持有候选清单，并把 `register` / `validate` / `extractSolution` 三个动作转发给聚合层。
 /// 两处边界值得单独钉住：
 ///
-/// 1. **命名空间必须合法**。基线要求 `[A-Za-z][A-Za-z0-9_]*`，因为这个名字会成为求解器里每条约束名的前缀。
+/// 1. **命名空间必须合法**。要求 `[A-Za-z][A-Za-z0-9_]*`，因为这个名字会成为求解器里每条约束名的前缀。
 ///    放任任意字符串进去，两条不同上下文的约束名可能撞在一起，而求解器只按名字索引——**约束被静默覆盖**。
-/// 2. **候选清单必须是快照**。基线写的是 `choices.toList`，即拷贝一份。若直接持有调用方的列表，
+/// 2. **候选清单必须是快照**。构造时拷贝一份（`choices.toList`）。若直接持有调用方的列表，
 ///    调用方之后一次 `Add` 就会**静默改变这个上下文的候选集**，而上下文没有任何迹象表明自己变了。
 ///
 /// The context carries one registration: it holds the candidate list and forwards `register` / `validate` / `extractSolution` to the aggregation layer. Two boundaries are
@@ -74,7 +72,7 @@ public sealed class ActivitySchedulingContext<V>
     /// <param name="name">命名空间 / The namespace.</param>
     /// <returns>上下文或失败 / The context, or a failure.</returns>
     /// <remarks>
-    /// 与基线 `ActivitySchedulingContext.create` 对齐，**顺序不可换**：
+    /// **顺序不可换**：
     /// 先校验命名空间（否则后面每一步都会带着一个非法前缀），再编译问题（否则聚合层拿不到索引），
     /// 最后才建上下文。**候选清单只收带 placement 的选择**——取消项不是"可排的候选"，
     /// 把它放进 `Choices` 会让调用方以为它排得进去。
@@ -96,9 +94,9 @@ public sealed class ActivitySchedulingContext<V>
                     ((Fatal<Success, ErrorCode, Error<ErrorCode>>)namespaceCheck).Errors);
         }
 
-        // 基线经由 `SchedulingSolverValueAdapter<V>` 做数值转换；C# 侧该类型是静态类且下游固定 `Flt64`，
+        // `SchedulingSolverValueAdapter<V>` 在 C# 侧是静态类且下游固定 `Flt64`，
         // 因此这里只接受 `Flt64` 问题——与聚合层同一个口径。
-        // The code converts through `SchedulingSolverValueAdapter<V>`; in C# that type is static and the downstream is fixed to `Flt64`,
+        // `SchedulingSolverValueAdapter<V>` is static in C# and the downstream is fixed to `Flt64`,
         // so only an `Flt64` problem is accepted here — the same scope as the aggregation layer.
         if (problem is not ActivitySchedulingProblem<Flt64> concrete) {
             return Results.Failed<ActivitySchedulingContext<V>>(new Err<ErrorCode>(

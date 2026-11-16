@@ -1,6 +1,4 @@
 // 活动排程模型 / Activity scheduling model.
-// 与固定 Kotlin 的枚举与值类型对应。
-// The enums and value types in the pinned Kotlin: .
 //
 // `ActivityCompilation`（472 行）尚未实现，见文末说明。
 // `ActivityCompilation` (472 lines) is not yet implemented — see the tail note.

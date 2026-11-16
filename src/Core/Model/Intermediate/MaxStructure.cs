@@ -242,7 +242,7 @@ public sealed record MaxStructure(
             // 也就是 `result ≤ input` 与 `result ≥ input + M(1 − sel)`——正是 MIN 需要的两组行。**
             //
             // **所以一个符号因子就够了，不需要第二套实现。**
-            // **而 Kotlin `generateMinConstraints` 是<b>独立的一段</b>（它自己的消息、
+            // **而 `generateMinConstraints` 完全可以写成<b>独立的一段</b>（它自己的消息、
             // 自己的一遍循环），本仓把它合成了一个实现。合并本身没问题，但合并的时候
             // "方向"这个参数没接上。**
             //
@@ -256,8 +256,8 @@ public sealed record MaxStructure(
             // `result - input >= 0` and `result - input <= M(1 - sel)`; multiplying by -1 gives `result <= input` and
             // `result >= input + M(1 - sel)`, exactly what MIN needs.**
             //
-            // **So one sign suffices, no second implementation.** **The Kotlin baseline has a <b>separate</b>
-            // `generateMinConstraints` with its own message and its own loop; this repo merged the two, which is fine — the
+            // **So one sign suffices, no second implementation.** **A <b>separate</b>
+            // `generateMinConstraints` with its own message and its own loop would be unnecessary; this repo merged the two, which is fine — the
             // merge just did not wire the direction through.**
             bool minimum = Minimum;
             string direction = minimum ? "min" : "max";

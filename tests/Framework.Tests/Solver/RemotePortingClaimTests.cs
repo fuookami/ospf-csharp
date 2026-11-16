@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// <remarks>
 /// **曾有一句"其余 3 个真实缺口共约 1100 行尚未实现"**
 /// （ 339、 339、 480），
-/// **它与同段前文"已完成"直接矛盾，也与源码事实不符——三份都已移植。**
+/// **它与同段前文"已完成"直接矛盾，也与源码事实不符——三份都已实现。**
 ///
 /// **一句话过期了很久，而它<b>不可能被任何行为判据发现</b>：** **所有测试都绿着，
 /// 因为代码是对的；错的是对代码的描述。**
 ///
 /// **所以这里留下的判据不是"行为对"，而是"描述与文件系统一致"。**
 ///
-/// **一条过期的"尚未实现"比一条过期的"已移植"更危险：**
+/// **一条过期的"尚未实现"比一条过期的"已实现"更危险：**
 /// **前者会让下一轮<b>重做一遍</b>，而重做时可能把已有的正确实现覆盖成一份新的。</**
 ///
 /// **A sentence once claimed "three real gaps, about 1100 lines not implemented"**
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 public class RemotePortingClaimTests
 {
     /// <summary>
-    /// **被声明为"已移植"的三个文件必须存在且无空壳标记** /
+    /// **被声明为"已实现"的三个文件必须存在且无空壳标记** /
     /// The three files declared "implemented" must exist and carry no stub markers.
     /// </summary>
     [Theory]
@@ -65,7 +65,7 @@ public class RemotePortingClaimTests
     }
 
     /// <summary>
-    /// **被声明为“已移植”的 IIS 引擎必须存在且无空壳标记** /
+    /// **被声明为“已实现”的 IIS 引擎必须存在且无空壳标记** /
     /// The IIS engines declared implemented must exist and carry no stub markers.
     /// </summary>
     /// <remarks>
@@ -142,7 +142,7 @@ public class RemotePortingClaimTests
     }
 
     /// <summary>
-    /// **CPLEX 的 point-based 回调已移植且接线** / CPLEX's point-based callbacks are implemented and wired.
+    /// **CPLEX 的 point-based 回调已实现且接线** / CPLEX's point-based callbacks are implemented and wired.
     /// </summary>
     /// <remarks>
     /// **核实由两个断言组成，缺一不可：**
@@ -209,7 +209,7 @@ public class RemotePortingClaimTests
     ///
     /// **一个读者扫到第一处就以为所有后端都没有回调，而事实是只有一个没有。**
     ///
-    /// **所以判据必须成对：只钉 CPLEX 已移植，会让人以为 COPT 也已移植；
+    /// **所以判据必须成对：只钉 CPLEX 已实现，会让人以为 COPT 也已实现；
     /// 只钉 COPT 未实现，会让人以为 CPLEX 也没有。**
     ///
     /// **两件事都断言，才能钉住"同一个词在不同后端上结论相反"这个事实。**
@@ -289,22 +289,22 @@ public class RemotePortingClaimTests
 
     /// <summary>
     /// **`SolveFingerprinting` 只有两个入口，所以 C# 的 `Solver`／`Model` 确是扩展** /
-    /// The code's `SolveFingerprinting` has two entries, so the C# `Solver`/`Model` really are extensions.
+    /// `SolveFingerprinting` has only two entries, so the C# `Solver`/`Model` really are extensions.
     /// </summary>
     /// <remarks>
-    /// **这一条<b>核对的是基线</b>，不是 C#——因为那句声明的主语是基线。**
+    /// **这一条<b>核对的是固定提交里的那份文件</b>，不是 C#。**
     ///
-    /// **"`solver`／`model` 指纹入口在固定不存在"这句话，只能用基线来验。**
-    /// **而验证的方式是读固定的 Kotlin 提交（`12fdb587`）的那份文件，不是读工作区——
+    /// **"`solver`／`model` 指纹入口在固定提交里不存在"这句话，只能对着固定提交来验。**
+    /// **而验证的方式是读 `12fdb587` 那个固定提交里的文件，不是读工作区——
     /// 工作区可能已经往前走了。**
     ///
     /// **判据因此读 `git cat-file` 的输出：** **CLAUDE/AGENTS 的口径是"不切换 checkout"，
     /// 而 `cat-file` 正是"不切换也能读固定提交"的手段。**
     ///
-    /// **This one verifies <b>the code</b>, not C#, because the code is the subject of that sentence.**
+    /// **This one verifies <b>a file at a pinned commit</b>, not C#, because that file is the subject.**
     ///
-    /// **"The `solver`/`model` fingerprint entries do not exist" can only be checked against the
-    /// baseline.** **And the way to check is to read that file at the pinned Kotlin commit (`12fdb587`), not the working
+    /// **"The `solver`/`model` fingerprint entries do not exist" can only be checked against
+    /// that file at the pinned commit (`12fdb587`); the way to check is to read it, not the working
     /// tree, which may have moved on.**
     ///
     /// **So the criterion reads `git cat-file` output: the rule is "do not switch checkouts", and `cat-file` is exactly
@@ -324,7 +324,7 @@ public class RemotePortingClaimTests
         baseline.Should().NotContain("fun model(");
     }
 
-    /// <summary>读固定 Kotlin 的一份文件 / Read a file from the reference.</summary>
+    /// <summary>读固定提交的一份文件 / Read a file from the reference.</summary>
     /// <remarks>
     /// **用 `git -C <repo> cat-file -p <commit>:<path>`，不切换 checkout。**
     /// **切换 checkout 会改动另一个工作区，而那是本方向明令禁止的。**

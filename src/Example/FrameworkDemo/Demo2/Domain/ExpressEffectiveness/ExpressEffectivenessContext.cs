@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness;
 /// 货物时效上下文 / The express-effectiveness context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**初始化幂等**，**`Init` 收 `stowageMode`**。
+/// **初始化幂等**，**`Init` 收 `stowageMode`**。
 ///
 /// 与其它子域不同，这里 `Init` 必须知道装载模式——聚合按模式二选一地建子模型，而模式是请求的属性，不是注册时的参数。
 ///

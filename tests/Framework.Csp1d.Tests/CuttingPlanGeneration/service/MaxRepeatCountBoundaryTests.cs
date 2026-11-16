@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 /// 旧实现默认 `limit = 4096`，把手写的"防御性上限"当成了真实语义：
 /// 1mm 宽、10000mm 可用时正确答案是 **10000**，旧实现返回 **4096**，**不报任何错**。
 ///
-/// 基线 `computeMaxRepeatCount` **没有上限**，所以 4096 是一个真实的偏离。
+/// `computeMaxRepeatCount` **没有上限**，所以 4096 是一个真实的偏离。
 /// 但**直接删掉上限会继承死循环**（宽度为零时逐次相加永不推进），所以改成显式零宽守卫。
 ///
 /// 判据分两组：**不截断**（合法大数要算对）与**不死循环**（零宽要立即返回）。
@@ -57,12 +57,12 @@ public class MaxRepeatCountBoundaryTests {
     /// <summary>**零宽必须立即返回 0** / A zero width must return 0 immediately.</summary>
     /// <remarks>
     /// 零宽时逐次相加永不推进——**循环在这里会挂死**。C# 用显式守卫避开，
-    /// 这是**有意优于基线**的一处：死循环不是需要保持的语义。
+    /// 这是**有意改进**的一处：死循环不是需要保持的语义。
     ///
     /// 判据若挂住，说明守卫失效（xUnit 会超时失败，等价于检出）。
     ///
-    /// With a zero width, repeated addition never advances — **its loop hangs here**. C# avoids it with an explicit guard, which is **deliberately better than
-    /// the code**: an infinite loop is not semantics worth preserving.
+    /// With a zero width, repeated addition never advances — **a loop there would hang**. C# avoids it with an explicit guard, which is **deliberately
+    /// better**: an infinite loop is not semantics worth preserving.
     ///
     /// If the criterion hangs, the guard is broken (xUnit fails on timeout, which counts as detected).
     /// </remarks>

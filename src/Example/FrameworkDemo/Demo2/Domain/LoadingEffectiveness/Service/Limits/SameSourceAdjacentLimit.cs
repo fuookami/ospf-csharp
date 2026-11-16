@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同来源相邻目标 / The same-source-adjacency objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把（来源 × 相邻舱位对）的指示
+/// 把（来源 × 相邻舱位对）的指示
 /// 加权求和，作为**最大化**目标，名为 `"same source adjacent"`（带空格）。
 ///
 /// 四点必须沿用：

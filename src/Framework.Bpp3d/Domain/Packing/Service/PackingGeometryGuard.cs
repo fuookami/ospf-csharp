@@ -153,10 +153,10 @@ internal static class PackingGeometryGuard {
     /// 保守的候选配对 / Conservative candidate pairs.
     /// </summary>
     /// <remarks>
-    /// 移植基线 `candidateGeometryPairs`：**含圆柱的配对全部保留**（圆柱判据不是包围盒，扫掠无法剪枝），
+    /// 对应 `candidateGeometryPairs`：**含圆柱的配对全部保留**（圆柱判据不是包围盒，扫掠无法剪枝），
     /// 只对长方体之间用一维扫掠剪掉确定不相交的配对。任何一步无法证明安全都返回 `null`，由调用方退回全配对。
     ///
-    /// Ports its `candidateGeometryPairs`: **every cylinder-related pair is kept** (the cylinder predicate is not a bounding box, so the
+    /// **Every cylinder-related pair is kept** (the cylinder predicate is not a bounding box, so the
     /// sweep cannot prune it) and only box-box pairs are pruned by a one-dimensional sweep. Any step that cannot be proven safe returns `null` and the
     /// caller falls back to the exhaustive pairing.
     /// </remarks>
@@ -434,11 +434,11 @@ internal static class PackingGeometryGuard {
     /// <remarks>
     /// **旧实现是逐对比较**："只要有任意一块支撑的顶面不高于圆柱底面、且在水平上与之重叠，就算有支撑"。
     /// 那会把"两块各盖一半"判成支撑充足之外的情况全都混在一起：真正的问题在于**一根圆柱需要覆盖整条轴线**，
-    /// 而单块支撑只需要盖住其中一段。基线因此改为求支撑区间并集，见 `HorizontalCylinderSupportCoverage.CuboidSupportCoverage`。
+    /// 而单块支撑只需要盖住其中一段。所以这里改为求支撑区间并集，见 `HorizontalCylinderSupportCoverage.CuboidSupportCoverage`。
     ///
     /// **The old implementation compared pairwise**: "if any single support's top is no higher than the cylinder's bottom and overlaps it horizontally,
     /// the cylinder is supported". That conflates every case, because **a cylinder needs its whole axis covered** while one support only covers a
-    /// segment. The code therefore unions the support intervals instead — see `HorizontalCylinderSupportCoverage.CuboidSupportCoverage`.
+    /// segment. So the implementation unions the support intervals instead — see `HorizontalCylinderSupportCoverage.CuboidSupportCoverage`.
     /// </remarks>
     /// <param name="bin">已装箱的箱子 / Packed bin to validate</param>
     /// <param name="source">调用来源标识 / Caller source identifier</param>

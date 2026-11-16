@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// `SolveMILPAsync` must **really wrap the callbacks with the adapters**, not just store `ProgressContext`.
 /// </summary>
 /// <remarks>
-/// 移植了适配器，但 C# 的 `FrameworkSolveOptions` **没有 `ProgressContext` 字段**，
+/// 适配器已经就位，但 C# 的 `FrameworkSolveOptions` **没有 `ProgressContext` 字段**，
 /// 于是适配器**没有可接的位置**。 补上字段并在 `SolveMILPAsync` 里包装。
 ///
 /// **判据不能只看"求解成功"**——那与进度无关。判据要看**上报器有没有收到快照**，
@@ -331,7 +331,7 @@ public class SolveMilpProgressWiringTests {
 
     /// <summary>**主问题阶段必须前后各上报一次** / The master-problem stage must report once before and once after.</summary>
     /// <remarks>
-    /// 基线 `solveLP(metaModel, options)` 在求解前上报 `(MasterLP, 0, 30)`，成功后上报一次收尾。
+    /// 主问题阶段的上报点是：求解前 `(MasterLP, 0, 30)`，成功后一次收尾。
     /// C# 侧原先**没有这个重载**，所以主问题阶段**一次快照都没有**。
     ///
     /// **判据要求恰好两条**，不是"至少一条"：若实现只上报了开始或只上报了结束，

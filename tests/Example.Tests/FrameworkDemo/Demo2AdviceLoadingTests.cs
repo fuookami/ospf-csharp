@@ -238,7 +238,7 @@ public class Demo2AdviceLoadingTests {
     /// 2. 目标位数量不变——`if (monomials.isEmpty) return ok`。
     ///
     /// Two paired points: three positions with **no** `Ala` or `Alw` give **no** objective from either limit, both returning success; and the objective count is unchanged, per the
-    /// baseline's early return.
+    /// early return when no advice exists.
     /// </remarks>
     [Fact]
     public void AdviceObjectives_ShouldSkipWhenNoAdviceExists() {

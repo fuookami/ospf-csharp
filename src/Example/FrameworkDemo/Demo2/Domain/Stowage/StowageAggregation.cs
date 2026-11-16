@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage;
 /// 配载域聚合 / The stowage domain aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：构造时建好 5 个派生模型（配重按机型可空），`Register` 顺序注册。
+/// 构造时建好 5 个派生模型（配重按机型可空），`Register` 顺序注册。
 ///
 /// **三条注册路径的顺序互不相同，这是最容易做错的地方**：
 ///
@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage;
 /// | `RegisterForBendersMP` | 装载 → 载荷 → 业载（**到此为止**） |
 /// | `RegisterForBendersSP` | 业载 → 总重 → 最大装载重量（**没有装载与载荷**） |
 ///
-/// MP 不注册总重与最大装载重量、SP 不注册装载与载荷——看起来像漏了，但基线就是如此。把三者写成同一个方法会出两种故障：
+/// MP 不注册总重与最大装载重量、SP 不注册装载与载荷——看起来像漏了，但事实就是如此。把三者写成同一个方法会出两种故障：
 /// MP 多算两族符号；SP 重复注册装载变量（`Stowage.Register` 对同一对象只允许一次，会直接失败）。
 ///
 /// Five derived models are built in the constructor (the ballast one nullable by aircraft type) and `Register` follows its order.

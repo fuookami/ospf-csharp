@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 优先级顺序限制 / The priority-order constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：**高优先级货物必须占到更靠前的舱位**，
+/// **高优先级货物必须占到更靠前的舱位**，
 /// 用 Big-M 包成一条线性不等式。
 ///
 /// 五处必须沿用：
 ///
-/// 1. **排序键是 `linearLoadingOrder`**，不是 `loadingOrder.order`（后者可能为空）。基线写 `it.base.linearLoadingOrder`。
+/// 1. **排序键是 `linearLoadingOrder`**，不是 `loadingOrder.order`（后者可能为空）。实现写 `it.base.linearLoadingOrder`。
 /// 2. **排名是 `sortedBy(...).withIndex.associate { value to index }`**——`associate` 在**相等键上保留最后一次**。
 ///    写成 `TryAdd`（首次）会让并列舱位的排名不同。注释明确点出了这一点。
 /// 3. **不等式是 `Σ (rank + M)·x[i,p] + Σ (−rank + M)·x[j,p] ≤ 2M`**。两个 `M` 都**加**，不是减。
@@ -76,9 +76,9 @@ internal sealed class PriorityOrderLimit
     /// 舱位排名 / The position ranks.
     /// </summary>
     /// <remarks>
-    /// **`associate` 在相等键上保留最后一次**（基线语义）。这里用"后写覆盖"实现同一条规则。
+    /// **`associate` 在相等键上保留最后一次**。这里用"后写覆盖"实现同一条规则。
     ///
-    /// **`associate` keeps the last entry for equal keys** (its semantics); this overwrites to match.
+    /// **`associate` keeps the last entry for equal keys**; this overwrites to match.
     /// </remarks>
     public IReadOnlyDictionary<StowagePosition, int> Ranks()
     {

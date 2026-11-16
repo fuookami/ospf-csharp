@@ -16,11 +16,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
 /// 编译后的选择变量与成本多项式 / The compiled choice variables and cost polynomial.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivityCompilation` 对齐。**变量索引就是选择顺序**：第 `i` 个选择对应第 `i` 个变量，
+/// **变量索引就是选择顺序**：第 `i` 个选择对应第 `i` 个变量，
 /// 取解时按同一个索引回读——两处若各建一套映射，就会出现"求解成功但排程错位"。
 /// 成本多项式与变量**同源构造**：第 `i` 个变量的系数就是第 `i` 个选择的成本。
 ///
-/// Aligned with its `ActivityCompilation`. **The variable index is the choice order**: the i-th choice maps to the i-th variable and extraction reads back by the same index, whereas two
+/// **The variable index is the choice order**: the i-th choice maps to the i-th variable and extraction reads back by the same index, whereas two
 /// separate mappings would produce "solved successfully, scheduled wrongly". The cost polynomial is built from the **same source**: the i-th variable's coefficient is the i-th choice's cost.
 /// </remarks>
 public sealed class ActivityCompilation
@@ -115,11 +115,11 @@ public sealed record CompiledActivityChoice<V>(
 /// <param name="Capacity">总产能 / The overall capacity.</param>
 /// <param name="Capacities">分时段产能 / The per-period capacities.</param>
 /// <remarks>
-/// 与基线 `CompiledActivityResource` 对齐，重点是 <see cref="CapacityAt"/> 的**优先级**：
+/// 重点是 <see cref="CapacityAt"/> 的**优先级**：
 /// 不可用时段 → **0**（禁止排入），其次分时段产能，最后才回落到总产能。
 /// 三条的顺序不能换：把总产能放在前面，就等于允许在被禁止的时段里排程。
 ///
-/// Aligned with its `CompiledActivityResource`, the point being **the precedence** in <see cref="CapacityAt"/>: an unavailable range yields **zero** (a prohibition), then the per-period
+/// The point is **the precedence** in <see cref="CapacityAt"/>: an unavailable range yields **zero** (a prohibition), then the per-period
 /// capacity applies, and only then the overall one. The order is not interchangeable: putting the overall capacity first would permit scheduling inside a forbidden range.
 /// </remarks>
 public sealed record CompiledActivityResource<V>(

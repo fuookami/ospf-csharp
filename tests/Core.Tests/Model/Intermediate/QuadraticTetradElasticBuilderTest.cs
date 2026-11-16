@@ -134,7 +134,7 @@ public class QuadraticTetradElasticBuilderTest {
         equal.Variables.Count.Should().Be(lessEqual.Variables.Count + 1);
     }
 
-    /// <summary>**没有基线依据的四个变体必须抛错** / The four variants without baseline backing must throw.</summary>
+    /// <summary>**没有实现依据的四个变体必须抛错** / The four variants without an implementation must throw.</summary>
     /// <remarks>
     /// **抛错而不是返回空模型是刻意的**：空模型会静默丢掉全部约束。
     /// 这条判据锁住"不得再退回静默损坏"。

@@ -27,14 +27,14 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟函数物化的整体入口 / The whole entry point for deferred-function materialisation.
 /// </summary>
 /// <remarks>
-/// 补完基线四段函数的最后两段，于是四段现在都在一个函数里。
+/// 补完四段函数的最后两段，于是四段现在都在一个函数里。
 ///
 /// **这里最重要的发现不在"补完"，而在核对第三、四段时才看见的一件事：**
 /// **驱动把区域记录放进<b>返回值</b>，而返回值的唯一消费者是测试——
 /// 于是 `DeferredFunctionConstraintRegions` 在真实路径上永远是空的，
 /// 而第三个过滤条件因此<b>永远不会生效</b>。**
 ///
-/// Completes the last two of its four parts.
+/// Completes the last two of the four parts.
 ///
 /// **The important find here is not the completion but something only visible while checking parts three and four: the
 /// driver put region records in its <b>return value</b>, whose only consumer was tests — so

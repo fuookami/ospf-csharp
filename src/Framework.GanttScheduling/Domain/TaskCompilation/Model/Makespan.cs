@@ -57,7 +57,7 @@ public class Makespan<T, E, A> : IMakespan
     /// <param name="model">元模型 / Meta model</param>
     /// <returns>操作结果 / Operation result</returns>
     /// <remarks>
-    /// 基线：`MaxFunction.fromSymbols(tasks.map { taskTime.estimateEndTime[it] })`（`extra` 时换 `MinMaxFunction`，**取值相同**，
+    /// 完工时间用 `MaxFunction.fromSymbols(tasks.map { taskTime.estimateEndTime[it] })`（`extra` 时换 `MinMaxFunction`，**取值相同**，
     /// 只是多出选择变量以便事后指认是哪个任务决定完工时间——见 <see cref="MakespanValue"/>）。
     ///
     /// 两个必须先失败的情况：
@@ -66,7 +66,7 @@ public class Makespan<T, E, A> : IMakespan
     /// <item>某个任务在表里查不到——跳过它会让完工时间偏小而看不出来。</item>
     /// </list>
     ///
-    /// The code is `MaxFunction.fromSymbols(tasks.map { taskTime.estimateEndTime[it] })` (`MinMaxFunction` when `extra`, **same value**, only adding selector variables to
+    /// The makespan is `MaxFunction.fromSymbols(tasks.map { taskTime.estimateEndTime[it] })` (`MinMaxFunction` when `extra`, **same value**, only adding selector variables to
     /// identify afterwards which task sets the makespan — see <see cref="MakespanValue"/>). Two cases must fail first: the task time offers no end-time table (**no end times, no
     /// makespan**), and a task missing from that table (skipping it shrinks the makespan invisibly).
     /// </remarks>
@@ -101,7 +101,7 @@ public class Makespan<T, E, A> : IMakespan
         }
         if (polynomials.Count == 0) {
             // 没有任务时建不出 `MaxFunction`（它要求至少一个多项式）。空排程的完工时间就是零。
-            // With no tasks the code cannot build a `MaxFunction` either (it requires at least one polynomial). An empty schedule finishes at zero.
+            // With no tasks a `MaxFunction` cannot be built either (it requires at least one polynomial). An empty schedule finishes at zero.
             _makespan = new LinearExpressionSymbol(new MutableLinearPolynomial<Flt64>(null, Flt64.Zero), name: "makespan");
             return linear.Add((IIntermediateSymbol)_makespan);
         }

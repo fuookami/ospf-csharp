@@ -163,11 +163,11 @@ public sealed class CapacityOrderCompilation<A> : ICapacity<A>
             }
         }
 
-        // **占用是从数量算出来的，不是"每个分配占满一个时隙"**。基线：`capacity[e, s]` 求值后经
+        // **占用是从数量算出来的，不是"每个分配占满一个时隙"**：`capacity[e, s]` 求值后经
         // `timeWindow.durationOf(...)` 换回时长。旧写法把每个分配的 `Duration`（= 时隙长度）加起来，
         // 同一时隙里两个动作就会算出"两个时隙的占用"——**数字看着像产能，其实只是动作个数 × 时隙长度**。
         //
-        // **Occupancy is computed from the amounts, not "each allocation fills a slot"**. Baseline: evaluate `capacity[e, s]` and convert back through
+        // **Occupancy is computed from the amounts, not "each allocation fills a slot"**: evaluate `capacity[e, s]` and convert back through
         // `timeWindow.durationOf(...)`. The old form summed every allocation's `Duration` (the slot length), so two actions in one slot reported "two slots of occupancy" —
         // **a number that looks like capacity but is really the action count times the slot length**.
         CapacityLoadExpressions<A>? load = Load ?? (Variables is null ? null : new CapacityLoadExpressions<A>(Variables, _timeWindow));

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness;
 /// 货物时效聚合 / The express-effectiveness aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：**按装载模式二选一**地建 `AbsoluteOrder` 或 `RelativeOrder`，
+/// **按装载模式二选一**地建 `AbsoluteOrder` 或 `RelativeOrder`，
 /// 两者互斥。
 ///
 /// 四处必须沿用：
@@ -25,14 +25,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness;
 /// 1. **预配载 → `AbsoluteOrder`**（相对顺序为 `null`）；**全载 → `RelativeOrder`**（绝对顺序为 `null`）；
 ///    **建议打板 → 两个都是 `null`**。写成"两个都建"会让预配载多出一族反转符号。
 /// 2. **`Register` 只注册 `RelativeOrder`**，不注册 `AbsoluteOrder`——后者是纯函数，没有符号。
-///    这看起来不对称，但基线就是这样：绝对顺序只在目标系数里出现，从不进模型。
+///    这看起来不对称，但事实就是如此：绝对顺序只在目标系数里出现，从不进模型。
 /// 3. **`MustShipIndices` 默认空**。
 /// 4. **`RegisterForBendersSP` 是空操作**。
 ///
 /// **exactly one of `AbsoluteOrder` or `RelativeOrder`** is built, depending on the stowage mode. Four things are carried over: **predistribution →
 /// `AbsoluteOrder`** (relative null), **full load → `RelativeOrder`** (absolute null), **weight recommendation → both null**, since building both would give predistribution a family of
 /// reversal symbols it should not have; **`Register` registers only `RelativeOrder`**, not `AbsoluteOrder`, which is a pure function carrying no symbols — this looks asymmetric but
-/// is what the code does, the absolute order appearing only in objective coefficients and never in the model; **`MustShipIndices` defaults to empty**; and
+/// is what this implementation does, the absolute order appearing only in objective coefficients and never in the model; **`MustShipIndices` defaults to empty**; and
 /// **`RegisterForBendersSP` is a no-op**.
 /// </remarks>
 public sealed class ExpressEffectivenessAggregation

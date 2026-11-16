@@ -257,11 +257,11 @@ internal static class TryChaining {
     /// <param name="next">下一步 / The next step.</param>
     /// <returns>结果 / The result.</returns>
     /// <remarks>
-    /// 对齐基线 `Try.then`：**`Ok` 才执行 `next`**，`Failed` / `Fatal` 原样传播。
+    /// 语义同 `Try.then`：**`Ok` 才执行 `next`**，`Failed` / `Fatal` 原样传播。
     /// 这条语义保证"进度上报失败时**不会**继续调用原回调"——否则一次上报失败会让下游回调
     /// 在错误的时机被调用。
     ///
-    /// Aligns with the code `Try.then`: **only `Ok` runs `next`**; `Failed` / `Fatal` propagate unchanged. This semantics guarantees "when progress reporting
+    /// Semantics as `Try.then`: **only `Ok` runs `next`**; `Failed` / `Fatal` propagate unchanged. This semantics guarantees "when progress reporting
     /// fails, the original callback is **not** invoked" — otherwise a failed report would fire downstream callbacks at the wrong moment.
     /// </remarks>
     public static Result<Success, ErrorCode, Error<ErrorCode>> Then(

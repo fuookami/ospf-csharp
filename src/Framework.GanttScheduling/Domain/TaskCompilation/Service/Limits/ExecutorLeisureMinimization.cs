@@ -53,7 +53,7 @@ public class ExecutorLeisureMinimization<E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 基线：`withExecutorLeisure` 且**给了系数**时最小化 `Σ coefficient(e) * z[e]`。
+    /// `withExecutorLeisure` 且**给了系数**时最小化 `Σ coefficient(e) * z[e]`。
     ///
     /// 注意两层保护，这里都沿用：
     /// <list type="number">
@@ -61,11 +61,11 @@ public class ExecutorLeisureMinimization<E, A>
     /// <item>**没给系数 → 也直接 `Ok`**（`coefficient?.let { … }`）。这一条容易看漏：它意味着"空闲最小化默认不生效"，
     /// 而不是"默认按 1 计成本"。</item>
     /// </list>
-    /// 与基线不同的只有一处：系数提取失败时无穷大，`Flt64` 没有无穷，所以这里失败。
+    /// 一处取舍：系数提取失败本应取无穷大，`Flt64` 没有无穷，所以这里失败。
     ///
-    /// The code minimises `Σ coefficient(e) * z[e]` when `withExecutorLeisure` **and a coefficient is given**. Both of its guards are copied here: leisure disabled → `Ok`
+    /// The method minimises `Σ coefficient(e) * z[e]` when `withExecutorLeisure` **and a coefficient is given**. Both guards are kept: leisure disabled → `Ok`
     /// (`z` does not exist; doing nothing is not a fake application) and **no coefficient → also `Ok`** (`coefficient?.let { … }`). The second is easy to miss: it means "leisure
-    /// minimisation is off by default", not "default to a cost of 1". The only departure is an extraction failure: the code uses infinity, `Flt64` has none, so it fails.
+    /// minimisation is off by default", not "default to a cost of 1". The only departure is an extraction failure: it would need infinity, `Flt64` has none, so it fails.
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);
@@ -73,8 +73,8 @@ public class ExecutorLeisureMinimization<E, A>
         if (!_compilation.WithExecutorLeisure) {
             return Results.Ok<Success>(Results.SuccessInstance);
         }
-        // 没给系数 → 基线什么都不做。这不是"没接线"，是"调用方没要求"。
-        // No coefficient → the code does nothing. That is not "unwired", it is "the caller did not ask".
+        // 没给系数 → 什么都不做。这不是"没接线"，是"调用方没要求"。
+        // No coefficient → nothing is done. That is not "unwired", it is "the caller did not ask".
         if (_coefficient is null) {
             return Results.Ok<Success>(Results.SuccessInstance);
         }

@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **在一个作用域里逐节点求值一张图** / Evaluate a graph node by node inside a scope.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的子图体递归降阶的第一刀。**这一层只覆盖"逐元素仿射"那几个算子（`Identity`／`Cast`／`Add`／`Sub`／`Neg`／`Mul` 常数），**
+/// 子图体递归降阶的第一刀。**这一层只覆盖"逐元素仿射"那几个算子（`Identity`／`Cast`／`Add`／`Sub`／`Neg`／`Mul` 常数），**
 /// **但它引入了前面所有批次都没有的东西：**图是被逐节点走过去的，中间结果留在上下文里**。**
 ///
 /// **这就是子图展开能成立的形式：** **`If` 选中一个分支体之后，把外层可见的张量作为种子灌进上下文，** **再对分支体调用这里——** **于是"子图"不再是一个特殊概念。**
 ///
-/// Syncs the first cut of the recursive body lowering. **It covers only the elementwise affine operators, but it brings something no earlier layer had: the graph is
+/// The first cut of the recursive body lowering. **It covers only the elementwise affine operators, but it brings something no earlier layer had: the graph is
 /// walked node by node and the intermediates stay in the context.**
 ///
 /// **That is the shape subgraph unrolling needs: after `If` picks a branch body, the visible outer tensors seed the context and this runs over the body — so "a subgraph"
@@ -779,11 +779,11 @@ public static class OnnxGraphEvaluator
 
     /// <summary>求值一个 `ReduceSum` / Evaluate a ReduceSum.</summary>
     /// <remarks>
-    /// **轴可以从属性来，也可以从第二个输入（常量整数数组）来：** **基线两条都认，** **而"只认其中一条"会让一半的真实模型导不进来。**
+    /// **轴可以从属性来，也可以从第二个输入（常量整数数组）来：** **两条都要认，** **而"只认其中一条"会让一半的真实模型导不进来。**
     ///
     /// **`keepdims` 默认是 1（保留），与`attributes.int("keepdims", 1L)` 一致。**
     ///
-    /// **The axes may come from the attribute or from the second input (a constant integer array): the code accepts both, and accepting only one would lock out half of the real models.**
+    /// **The axes may come from the attribute or from the second input (a constant integer array): both are accepted, and accepting only one would lock out half of the real models.**
     /// **keepdims defaults to 1, matching its attributes.int("keepdims", 1L).**
     /// </remarks>
     private static string? EvaluateReduceSum(

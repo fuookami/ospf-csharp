@@ -1,8 +1,6 @@
 // 换型时间的取值 / The value of a switch time.
-// 与固定 Kotlin 里 `switchTime` 的
-// `MaskingFunction(x = 时距, mask = thisSwitch)` 构造对应。
-// Mirrors the `MaskingFunction(x = gap, mask = thisSwitch)` construction of `switchTime`
-//'s.
+// 由 `MaskingFunction(x = 时距, mask = thisSwitch)` 构造。
+// Built as `MaskingFunction(x = gap, mask = thisSwitch)`.
 
 using System;
 
@@ -26,7 +24,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 两个任务在时间上重叠时，时距是负的。
 ///
 /// 于是"换型时间"这项代价在重叠排布上会**变成负贡献**，也就是给求解器一个"让任务重叠就更省"的信号。
-/// 正常模型里同一执行器的时间冲突约束会先排除重叠，所以基线没有在这里钳制。
+/// 正常模型里同一执行器的时间冲突约束会先排除重叠，所以这里没有钳制。
 ///
 /// 这里**照做**：不钳制。见下方 `ponytail:` 说明。
 ///
@@ -84,7 +82,7 @@ public static class SwitchTimeValue {
     /// <param name="occurrences">各执行器上的换型指示量之和 / The summed switch indicators over executors.</param>
     /// <returns>是否越界 / Whether the bound is exceeded.</returns>
     /// <remarks>
-    /// 基线给 `thisSwitch` 加了 `≤ 1` 上界：一对任务只可能在**一个**执行器上相邻。
+    /// `thisSwitch` 有 `≤ 1` 上界：一对任务只可能在**一个**执行器上相邻。
     /// 这个上界不要紧——它约束的是"同一对任务在两个执行器上同时换型"，那在指派互斥下本来就不可行。
     ///
     /// The code bounds `thisSwitch` by `≤ 1`: a task pair can be adjacent on **one** executor only. The bound is a no-op under assignment exclusivity — it rules out "the same

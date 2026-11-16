@@ -96,7 +96,7 @@ public class RemainingGapLedgerTests {
 
     /// <summary>**数字与实测一致** / The numbers match the measurement.</summary>
     /// <remarks>
-    /// 行数是这条表唯一可以核对的量。**它一旦和基线不符，整张表就只是印象。**
+    /// 行数是这条表唯一可以核对的量。**它一旦和代码不符，整张表就只是印象。**
     ///
     /// The line counts are the only checkable quantity here. **Once they disagree with the code the whole table is just an impression.**
     /// </remarks>

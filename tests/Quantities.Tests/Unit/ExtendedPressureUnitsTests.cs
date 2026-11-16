@@ -17,15 +17,15 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 补 5 个压力单位：`Hectopascal` / `StandardAtmosphericPressure` /
 /// `MeterMercury` / `InchOfMercury` / `Millibar`。
 ///
-/// **其中 `MeterMercury` 没有照做，因为公式与它自己的注释矛盾**：
-/// 基线写 `标准大气压 × 0.76`，得到 77007 Pa，于是 mmHg = 77.007 Pa；
-/// **而基线自己在上方注释里写着 "1 mmHg ≈ 133.322 Pa"。**
+/// **其中 `MeterMercury` 没有沿用旧公式，因为那个公式与它自己的注释矛盾**：
+/// 旧公式写 `标准大气压 × 0.76`，得到 77007 Pa，于是 mmHg = 77.007 Pa；
+/// **而同一份注释在上方写着 "1 mmHg ≈ 133.322 Pa"。**
 ///
 /// **0.76 米的汞柱恰好压出一个标准大气压，所以要从大气压"除"回 0.76 米（133322.37 Pa），不是乘。**
 /// 本仓按注释与物理事实实现，并让 mmHg 由 mHg 派生，使"千分之一"成为恒等式。
 ///
-/// **`MeterMercury` is not copied from the code, because the code formula contradicts its own comment**.
-/// the code writes "standard atmosphere times 0.76", yielding 77007 Pa and so mmHg = 77.007 Pa,
+/// **`MeterMercury` does not copy the old formula, because that formula contradicts its own comment**.
+/// the old formula writes "standard atmosphere times 0.76", yielding 77007 Pa and so mmHg = 77.007 Pa,
 /// **while its comment just above says "1 mmHg is about 133.322 Pa".**
 ///
 /// **A column of mercury 0.76 m tall weighs out exactly one standard atmosphere, so the atmosphere is divided back
@@ -61,9 +61,9 @@ public class ExtendedPressureUnitsTests
 
     /// <summary>**毫米汞柱约 133.322 Pa** / A millimetre of mercury is about 133.322 Pa.</summary>
     /// <remarks>
-    /// **这条钉的是基线自己的注释**——**而沿用公式会得到 77.007，与它自己的注释差 42%。**
+    /// **这条钉的是注释与实现的一致性**——**而沿用旧公式会得到 77.007，与注释差 42%。**
     ///
-    /// **This pins its own comment** — **and copying its formula yields 77.007, 42% off that comment.**
+    /// **This pins comment against implementation** — **and copying the old formula yields 77.007, 42% off that comment.**
     /// </remarks>
     [Fact]
     public void TheMillimeterOfMercury_ShouldBeAboutOneThirtyThreePascals()
@@ -133,7 +133,7 @@ public class ExtendedPressureUnitsTests
             "the two names denote the same pressure, and they must not drift apart");
     }
 
-    /// <summary>**单位清单（加上本仓原有的两个）** / The unit list covers the code plus two.</summary>
+    /// <summary>**单位清单（加上本仓原有的两个）** / The unit list covers the ten expected names plus the two this repo already had.</summary>
     [Fact]
     public void TheUnitList_ShouldCoverTheBaseline()
     {

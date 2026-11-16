@@ -140,7 +140,7 @@ public class GateScriptContractTests
             $"{name} has to archive into a batch-numbered name, or the evidence cannot be matched");
     }
 
-    /// <summary>**门禁必须先跑基线扫描** / The gate has to scan the code first.</summary>
+    /// <summary>**门禁必须先跑扫描脚本** / The gate has to scan the code first.</summary>
     /// <remarks>
     /// **"少搬了一个类型"和"编译不过"是两类问题**：前者编译是过得去的。
     /// **所以扫描必须在编译之前，而且它自己的失败不能被后面的成功掩盖。**

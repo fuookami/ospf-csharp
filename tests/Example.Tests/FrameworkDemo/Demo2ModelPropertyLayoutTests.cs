@@ -12,11 +12,11 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **模型属性在 C# 里挂在哪个类型上** / Which type each baseline model property lives on here.
+/// **模型属性在 C# 里挂在哪个类型上** / Which type each model property lives on here.
 /// </summary>
 /// <remarks>
-/// **这里的结论是一个测量方法失败，不是一次移植。** 想照 / 的办法，把基线
-///// 的 `val` 与 C# 同**文件**的属性做差集。
+/// **这里的结论是一个测量方法失败，不是一次移植。** 早先试过的办法是
+///// 把源侧的 `val` 与 C# 同**文件**的属性做差集。
 /// 连修五轮（`Is` 前缀、record 位置参数、末位参数、枚举成员、嵌套类）**仍然大面积误报**——
 /// 因为这个代码库把模型的属性拆进了嵌套类型：`PositionShape.Length`、`ItemOrder.CarBoard`、`ItemLocation.IsNormalMain`。
 ///
@@ -73,10 +73,10 @@ public class Demo2ModelPropertyLayoutTests
 
     /// <summary>**舱位标签的派生判定挂在 `ItemLocation` 上** / The derived location predicates live on `ItemLocation`.</summary>
     /// <remarks>
-    /// 基线写 `val normalMain = main && !head && !tail` 这种**派生属性**，本仓用 `Is` 前缀。
+    /// `normalMain = main && !head && !tail` 这种**派生属性**在这里用 `Is` 前缀。
     /// **派生属性和它的原始标签必须同时存在**：只留标签，判定就得在调用方重复一遍。
     ///
-    /// The code writes derived properties like `val normalMain = main && !head && !tail`; this implementation uses an `Is` prefix. **The derived property and the raw tags
+    /// Derived properties like `normalMain = main && !head && !tail` use an `Is` prefix here. **The derived property and the raw tags
     /// have to coexist** — keeping only the tags would push the predicate into every caller.
     /// </remarks>
     [Fact]
@@ -91,7 +91,7 @@ public class Demo2ModelPropertyLayoutTests
 
     /// <summary>**一处真实差异：单位标签没有搬过来** / One real difference: the unit labels did not come across.</summary>
     /// <remarks>
-    /// 基线 `AircraftModel` 上有 `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`，而本仓**一个都没有**：
+    /// 参考侧 `AircraftModel` 上有 `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`，而本仓**一个都没有**：
     /// `LinearDensityLimit` 用的是裸 `double MaxLinearDensity = 500.0`。
     ///
     /// **今天这不改变任何数值**——两边都从头到尾不做单位换算，同一个隐式单位。**但"隐式"就是隐患**：

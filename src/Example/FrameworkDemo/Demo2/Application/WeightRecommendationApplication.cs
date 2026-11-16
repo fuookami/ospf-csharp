@@ -20,7 +20,6 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 
 /// <summary>
 /// 建议打板应用。Weight recommendation application: orchestrates the weight recommendation optimization pipeline.
-/// Port of Kotlin WeightRecommendationApplication / WeightRecommendationAlgorithmImpl.
 /// </summary>
 public sealed class WeightRecommendationApplication
 {
@@ -28,7 +27,7 @@ public sealed class WeightRecommendationApplication
     private readonly StowageContext _stowageContext = new();
     private readonly MacContext _macContext = new();
     private readonly AirworthinessSecurityContext _airworthinessSecurityContext = new();
-    // **基线这一条管线不是"全配载的七域"**：它注册的是配载、重心、适航、时效、**推荐重量均衡**、载荷最大化——
+    // **这一条管线不是"全配载的七域"**：它注册的是配载、重心、适航、时效、**推荐重量均衡**、载荷最大化——
     // 没有软安全、没有重心优化、没有装卸效率。均衡那个域**是这条模式的全部意义**（推荐的重量要摊平），
     // 以前它带着 `Init` 里的 `TODO` 一直没接上，于是"建议打板"其实只是"最大化载荷"。
     //
@@ -87,7 +86,7 @@ public sealed class WeightRecommendationApplication
             return (ResponseDTO.NoSolution("BendersNotWiredForMode", notes), null);
         }
 
-        // TODO: Port solveWithMILP and solveWithBendersAlgorithm from Kotlin
+        // TODO: Implement solveWithMILP and solveWithBendersAlgorithm
 
         // **求解器由调用方带进来**：默认全量测试不能依赖可选后端；没带就明确说"未接线"，
         // **不是"未实现"**——装配与求解链路在本仓早已可用（先接线了全配载）。

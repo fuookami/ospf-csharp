@@ -96,10 +96,10 @@ public static class DeviationConstraintRows {
             }
             Flt64 planned = timeBoundary.ValueOf(scheduled.Start);
             // **行必须带影子价格键**：对偶是求解器按行返回的，管线要认回自己那一行只能靠行上的 `args`。
-            // 基线这里是 `args = Task{Delay,Advance}TimeShadowPriceKey(task)`；少了它，提取器读一张永远空的表，
+            // 这里给行挂 `args = Task{Delay,Advance}TimeShadowPriceKey(task)`；少了它，提取器读一张永远空的表，
             // 列生成按零价格挑列**且不报错**。
             //
-            // **The row must carry a shadow-price key**: duals come back per row, so recognising its own row requires the `args` on the row. The code passes
+            // **The row must carry a shadow-price key**: duals come back per row, so recognising its own row requires the `args` on the row. The row carries
             // `args = Task{Delay,Advance}TimeShadowPriceKey(task)`; without it the extractor reads a forever-empty table and column generation selects at zero prices **without raising**.
             Fuookami.Ospf.Framework.Model.ShadowPriceKey key = direction == DeviationDirection.Delay
                 ? new TaskDelayTimeShadowPriceKey<E, A>(task)

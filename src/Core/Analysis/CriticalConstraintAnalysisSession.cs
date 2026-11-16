@@ -97,10 +97,10 @@ public sealed class CriticalConstraintAnalysisSession : IDisposable
     /// <summary>不可变基线及 session 输入的校验结果 / Validation result for the immutable baseline and session inputs.</summary>
     public Try Validation { get; }
 
-    /// <summary>分析器使用的基线 snapshot 兼容别名 / Compatibility alias for analyzers that call the code simply snapshot.</summary>
+    /// <summary>分析器使用的基线 snapshot 兼容别名 / Compatibility alias for analyzers that call it simply snapshot.</summary>
     public ConstraintProgrammingModelSnapshot Snapshot => BaselineSnapshot;
 
-    /// <summary>基线目标值兼容别名 / Compatibility alias for the code objective.</summary>
+    /// <summary>基线目标值兼容别名 / Compatibility alias for the baseline objective.</summary>
     public Flt64? BaselineObjective => BaselineObjectiveValue;
 
     /// <summary>session 是否已释放分析缓存 / Whether this session has released its analysis caches.</summary>

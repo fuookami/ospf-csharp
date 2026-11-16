@@ -75,7 +75,7 @@ internal static class IisStructuralSupport {
     /// <param name="relatedRows">关联约束行 / Related constraint rows.</param>
     /// <returns>按变量索引升序的关联变量 / Related variables in ascending index order.</returns>
     /// <remarks>
-    /// **标记规则（与基线逐条对应）**：
+    /// **标记规则**：
     ///
     /// | 来源 | 下界标记 | 上界标记 |
     /// | --- | --- | --- |
@@ -144,15 +144,15 @@ internal static class IisStructuralSupport {
     /// 第 2 条是**成对丢弃**：二次项 `(i, j)` 只要有一端被裁掉，整个二次项都不能留——
     /// 留下半截会让重映射后的矩阵指向不存在的列。
     ///
-    /// **与差异（有意）**：身份信息拆成五条并行列表
-    /// （`ids` / `identityScopes` / `identityOrigins` / `identityProvenance`），
+    /// **有意差异**：不必拆成五条并行列表
+    /// （`ids` / `identityScopes` / `identityOrigins` / `identityProvenance` 那样的五份数据），
     /// C# 的 `ModelElementIdentity` 把 Kind / Id / Scope / Origin / Provenance
     /// **打包在一个记录里**，所以这里只需**按行索引过滤一个列表**，
     /// 不需要逐条对齐五份数据。
     ///
     /// With **two discard rules** (above). Rule 2 is a **paired discard**: if either end of a quadratic term `(i, j)` is
-    /// trimmed, the whole term must go — keeping half would leave the remapped matrix pointing at a non-existent column. **Deliberate difference from the code**: the
-    /// baseline splits identity into five parallel lists, while C#'s `ModelElementIdentity` **bundles** Kind / Id / Scope / Origin / Provenance, so this only has to
+    /// trimmed, the whole term must go — keeping half would leave the remapped matrix pointing at a non-existent column. **Deliberate difference**: identity need not be
+    /// split into five parallel lists, because C#'s `ModelElementIdentity` **bundles** Kind / Id / Scope / Origin / Provenance, so this only has to
     /// **filter one list by row index** instead of aligning five.
     /// </remarks>
     public static QuadraticConstraintBatch FilterConstraintByRowIndex(

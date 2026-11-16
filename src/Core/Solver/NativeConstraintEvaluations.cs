@@ -49,11 +49,11 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **It always takes `maxOrNull`, so a `minimum = true` structure is compared against the <b>maximum</b>.**
 ///
-/// **This is not a deviation of this repository but a <b>baseline defect</b>**: **`NativeMaxData` carries the `minimum`
+/// **This is a <b>known defect</b> rather than a deviation of this repository**: **`NativeMaxData` carries the `minimum`
 /// flag and `restoreValues` honours it (`minOrNull`/`maxOrNull`), while `maxEvaluations` does not — the same data is
 /// interpreted two ways on two paths.**
 ///
-/// ** <b>copies</b> it to stay comparable with the code and turns it into a criterion, making "a minimum
+/// **This <b>copies</b> the behaviour to stay comparable and turns it into a criterion, making "a minimum
 /// structure evaluated as a maximum" a recorded fact rather than a latent bug.**
 /// </remarks>
 public static class NativeConstraintEvaluations

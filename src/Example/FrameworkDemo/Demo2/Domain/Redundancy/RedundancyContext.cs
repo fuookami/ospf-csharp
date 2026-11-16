@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy;
 /// 冗余上下文 / The redundancy context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**初始化幂等**，`Init` **不收 `stowageMode`**（冗余的聚合与模式无关，
+/// **初始化幂等**，`Init` **不收 `stowageMode`**（冗余的聚合与模式无关，
 /// 模式只在生成管线时用）。
 ///
 /// 这一点与装载效能上下文**不同**：那边 `Init` 必须收模式，因为聚合要按模式二选一地建子模型；这边两个子模型无条件都建。
@@ -101,8 +101,8 @@ public sealed class RedundancyContext
                 "冗余上下文尚未初始化 / the redundancy context is not initialised"));
         }
 
-        // **先注册子模型（冗余 → 纵向平衡），再走生成器（纵向平衡 → 冗余）**：两侧顺序相反是基线自带的。
-        // **Register the sub-models (redundancy, then balance), then run the generator (balance, then redundancy)**: the two opposite orders are its own.
+        // **先注册子模型（冗余 → 纵向平衡），再走生成器（纵向平衡 → 冗余）**：两侧顺序相反是既有设计。
+        // **Register the sub-models (redundancy, then balance), then run the generator (balance, then redundancy)**: the two opposite orders are deliberate.
         Try registered = Aggregation.Register(model);
         if (!registered.IsOk)
         {

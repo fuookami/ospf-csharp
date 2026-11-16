@@ -92,9 +92,9 @@ public class SwitchTimeMinimization<T, E, A>
     /// defect raises nothing, crashes nothing and merely skews the result — the hardest kind to find.
     ///
     /// **阈值分支**：阈值非零时先建 `switch_time_threshold_（from）_（to）` 再最小化其正部。与延迟 / 提前目标同形，
-    /// 复用 `ThresholdSlack`；**系数在松弛外面乘**，与基线 `coefficient * slack.positiveSlackPolynomial` 一致。
-    /// **The threshold branch**: with a non-zero threshold the code builds `switch_time_threshold_ (from)_(to)` first and minimises its positive part, the same shape as the delay and advance
-    /// objectives and reusing `ThresholdSlack`; **the coefficient multiplies outside the slack**, matching its `coefficient * slack.positiveSlackPolynomial`.
+    /// 复用 `ThresholdSlack`；**系数在松弛外面乘**（`coefficient * slack.positiveSlackPolynomial`）。
+    /// **The threshold branch**: with a non-zero threshold it first builds `switch_time_threshold_(from)_(to)` and minimises its positive part, the same shape as the delay and advance
+    /// objectives and reusing `ThresholdSlack`; **the coefficient multiplies outside the slack** (`coefficient * slack.positiveSlackPolynomial`).
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);

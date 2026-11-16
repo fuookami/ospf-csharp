@@ -24,12 +24,12 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 建议打板的管线不是"全配载的七域" / The weight-recommendation pipeline is not "full load's seven domains".
 /// </summary>
 /// <remarks>
-/// 基线 `WeightRecommendationPipelineContext` 注册的是：配载、重心、适航、**时效**、**推荐重量均衡**、载荷最大化——
+/// `WeightRecommendationPipelineContext` 注册的是：配载、重心、适航、**时效**、**推荐重量均衡**、载荷最大化——
 /// **没有**软安全、重心优化、装卸效率。本仓以前只注册前三个加载荷最大化，`Init` 里还留着
 /// `// TODO: RecommendedWeightEqualizationContext`，于是"建议打板"其实只是"最大化载荷"。
 ///
 /// The code's `WeightRecommendationPipelineContext` registers stowage, mac, airworthiness, **express effectiveness**, **recommended-weight equalization** and
-/// payload maximization — **no** soft security, mac optimization or loading effectiveness. The port used to register the first three plus payload maximization and left
+/// payload maximization — **no** soft security, mac optimization or loading effectiveness. This implementation used to register the first three plus payload maximization and left
 /// `// TODO: RecommendedWeightEqualizationContext` in `Init`, so "weight recommendation" was really just "maximise payload".
 /// </remarks>
 public sealed class Demo2WeightRecommendationPipelineTests

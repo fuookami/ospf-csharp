@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 
 /// <summary>**标量表达式 → Mongo 聚合值** / Scalar expression → Mongo aggregation value.</summary>
 /// <remarks>
-/// 基线 `MongoScalarTranslator`（**209 行**）做的是把 `ScalarExpression` 变成聚合管道里能用的 `BsonValue`：
+/// 本类把 `ScalarExpression` 变成聚合管道里能用的 `BsonValue`：
 /// 引用变 `$field`，常量原样，一元/二元运算变 `$multiply`/`$add`/`$divide` 之类的文档。
 ///
 /// **不支持的运算必须失败，不能返回 null 或原样**——`$power` 就是一个例子：
@@ -107,9 +107,9 @@ public static class MongoScalarTranslator
             case UnaryOperator.Positive:
                 return operand;
 
-            // **`ABS` 不支持**——Mongo 有 `$abs`，但基线没接，**这里跟着基线失败而不是自作主张**。
-            // **The code does not support `ABS` either** — Mongo has `$abs` but the code never wired it,
-            // **and this fails with the code rather than inventing support.**
+            // **`ABS` 不支持**——Mongo 有 `$abs`，但这里没接，**于是直接失败而不是自作主张**。
+            // **`ABS` is not supported** — Mongo has `$abs` but it is not wired here,
+            // **so the translation fails rather than inventing support.**
             case UnaryOperator.Abs:
                 return Failure("ABS 一元标量表达式不支持 / ABS unary scalar expression is not supported");
 
@@ -130,8 +130,8 @@ public static class MongoScalarTranslator
             BinaryOperator.Multiply => "$multiply",
             BinaryOperator.Divide => "$divide",
             BinaryOperator.Modulo => "$mod",
-            // **`POWER` 基线不支持**：`$pow` 存在，但二元运算符映射里没有它。
-            // **`POWER` is unsupported in the code**: `$pow` exists, but its binary map omits it.
+            // **`POWER` 不支持**：`$pow` 存在，但二元运算符映射里没有它。
+            // **`POWER` is unsupported**: `$pow` exists, but the binary map omits it.
             BinaryOperator.Power => null,
             _ => null,
         };
@@ -160,10 +160,10 @@ public static class MongoScalarTranslator
         int depth)
     {
         // **函数名映射按清单来**：接了少数几个，其余一律失败。
-        // **多接一个就是多一个"本仓比基线多"的地方，而那不是同步。**
+        // **多接一个就多一处超出既定清单的行为。**
         //
-        // **Function names follow its list**: the code wired only a few and fails the rest.
-        // **Wiring an extra one is a place where this repo does more than the code, and that is not synchronisation.**
+        // **Function names follow a fixed list**: only a few are wired and the rest fail.
+        // **Wiring an extra one would go beyond that list.**
         string? mongoOperator = function.Name.ToUpperInvariant() switch
         {
             "ABS" => "$abs",
@@ -193,10 +193,10 @@ public static class MongoScalarTranslator
         }
 
         // **单参数函数写成标量而不是数组**：`$abs: "$x"` 与 `$abs: ["$x"]` 在 Mongo 里都合法，
-        // **但基线对单参数写标量**，两边形状不同会让管道比较失效。
+        // **但这里对单参数写标量**，两边形状不同会让管道比较失效。
         //
         // **A single-argument function is written as a scalar, not an array**: Mongo accepts both `$abs: "$x"` and
-        // `$abs: ["$x"]`, **but the code writes a scalar**, and differing shapes break pipeline comparison.
+        // `$abs: ["$x"]`, **but a scalar is written here**, and differing shapes break pipeline comparison.
         return Ok(arguments.Count == 1
             ? new BsonDocument(mongoOperator, arguments[0])
             : new BsonDocument(mongoOperator, arguments));

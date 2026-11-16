@@ -17,18 +17,18 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// `RemoteFixtures/README.md` 写着四份 fixture"从固定 Kotlin `12fdb587` 逐字节复制"。
 /// **这句话此前没有任何判据守护**：fixture 被谁改一个空格，跨语言证据就悄悄失效，
 /// 而 `RemoteWireContractTest` 的几十条解码判据**照样全绿**——它们测的是"这份文件能解码"，
-/// **不是"这份文件来自基线"**。
+/// **不是"这份文件是原样副本"**。
 ///
 /// 这里把四个 SHA-256 钉住。**换 fixture 必须同时改这里**，那时就会有人问"新文件从哪来"——
 /// 这正是要的：**来源变化必须是显式动作，不能是顺手一改。**
 ///
 /// The README says these four fixtures are byte-for-byte copies of the pinned Kotlin `12fdb587` fixtures, and **nothing guarded that claim**: a stray space edited into
 /// one of them silently voids the cross-language evidence while the dozens of decoding criteria **stay green**, because they test "this file decodes", **not "this file
-/// came from the code"**. These four SHA-256 values are now pinned. **Replacing a fixture means editing this file too**, and at that point somebody asks where the new
+/// is the original copy"**. These four SHA-256 values are now pinned. **Replacing a fixture means editing this file too**, and at that point somebody asks where the new
 /// file came from — which is the point: **a provenance change has to be an explicit act, not an incidental edit.**
 /// </remarks>
 public class RemoteFixtureProvenanceTests {
-    /// <summary>四份 fixture 的基线哈希 / The code hashes of the four fixtures.</summary>
+    /// <summary>四份 fixture 的固定哈希 / The pinned hashes of the four fixtures.</summary>
     /// <remarks>
     /// 实测来源：`git -C D:/workspace/ospf/ospf-kotlin cat-file -p 12fdb587:ospf-kotlin-framework/src/test/resources/fixtures/<name>`
     /// 与本地文件逐字节比对（`python logs/b951-fixtures.py`）。**四个都 SAME。**

@@ -151,16 +151,16 @@ public class ContinuousRadiusPrototypesFromItemsTest {
 
     /// <summary>**没有半径权重函数键的圆柱不产出原型** / A cylinder without a radius weight-function key yields no prototype.</summary>
     /// <remarks>
-    /// 这是 恢复的**基线门控**：`continuousRadiusSelectionResult` 在该键为 null 时返回 null，
+    /// 这是**门控**：`continuousRadiusSelectionResult` 在该键为 null 时返回 null，
     /// 于是无键圆柱**不进入**连续半径路径。
     ///
     /// 因为 C# 形状模型还没有这个键，只能对所有竖直圆柱产出原型，并在文档里记下偏差。
     /// **现在门控回来了，这条测试锁住它。**
     ///
-    /// This is the **baseline gate** restored: its `continuousRadiusSelectionResult` returns null when the key is null, so a keyless
+    /// This is the **gate** restored: `continuousRadiusSelectionResult` returns null when the key is null, so a keyless
     /// cylinder **stays out** of the continuous-radius path.
     ///
-    /// could only produce prototypes for every vertical cylinder because the C# shape model lacked the key, and it recorded that deviation. **The gate is
+    /// The earlier code could only produce prototypes for every vertical cylinder because the C# shape model lacked the key, and it recorded that deviation. **The gate is
     /// back now, and this test pins it.**
     /// </remarks>
     [Fact]

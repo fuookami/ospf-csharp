@@ -372,9 +372,9 @@ internal static class ScipLinearNativeSolver {
     }
 
     /// <summary>
-    /// 按行顺序读取约束对偶值，使用与 Kotlin 基线相同的 SCIPgetDualSolVal 原语；LP 模式已关闭预处理与启发式，
+    /// 按行顺序读取约束对偶值，使用 SCIPgetDualSolVal 原语；LP 模式已关闭预处理与启发式，
     /// 因此原始约束仍有有效的逐行对偶。
-    /// Read constraint dual values in row order with the same SCIPgetDualSolVal primitive as the Kotlin baseline; LP mode
+    /// Read constraint dual values in row order with the SCIPgetDualSolVal primitive; LP mode
     /// keeps presolving and heuristics off, so the original constraints still carry valid per-row duals.
     /// </summary>
     private static Result<Success, ErrorCode, Error<ErrorCode>> ExtractDuals(

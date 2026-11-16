@@ -92,10 +92,10 @@ public sealed class BenchmarkRunOptionsTests {
 
     /// <summary>**清空后为空串时退回 `all`，而 `.*` 得到 `"."`** / An empty result falls back to `all`, while `.*` yields `"."`.</summary>
     /// <remarks>
-    /// **`.*` 得到的不是 `all`**：`.` 属于保留字符、`*` 被替换成 `_`，修剪下划线后剩 `.`。这与基线
+    /// **`.*` 得到的不是 `all`**：`.` 属于保留字符、`*` 被替换成 `_`，修剪下划线后剩 `.`。这与
     /// `raw.replace(Regex("[^A-Za-z0-9._-]"), "_").trim('_')` 的结果一致——**测试最初写成 `all` 是抄错了期望，不是实现错**。
     ///
-    /// **`.*` does not yield `all`**: `.` is a retained character and `*` becomes `_`, leaving `.` after trimming underscores. This matches its
+    /// **`.*` does not yield `all`**: `.` is a retained character and `*` becomes `_`, leaving `.` after trimming underscores. This matches
     /// `raw.replace(Regex("[^A-Za-z0-9._-]"), "_").trim('_')` — **the test originally expected `all`, which was a copied expectation, not an
     /// implementation bug**.
     /// </remarks>

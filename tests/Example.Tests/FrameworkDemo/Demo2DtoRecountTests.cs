@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 public class Demo2DtoRecountTests
 {
     /// <summary>
-    /// 基线 12 个有引用的记录，本仓必须有同名类型 / The 12 referenced baseline records must each have a same-named type here.
+    /// 12 个有引用的记录，本仓必须有同名类型 / The 12 referenced records must each have a same-named type here.
     /// </summary>
     [Fact]
     public void EveryReferencedBaselineDto_ShouldHaveATypeInThePort() {
@@ -68,12 +68,12 @@ public class Demo2DtoRecountTests
         foreach (string present in new[] { "LengthUnitInput", "DeckLocationInput", "LoadingSpaceInput" }) {
             names.Should().Contain(present, present + " is referenced in the baseline and is ported here");
         }
-        // `WeightUnitInput` 从"必须没有"移到"必须有"。** 判据自己写着"缺口补上时它会红，届时把它移进必须存在那一组"——
-        // 缺口在 补上了：`LoadingContextFactory` 用 `input.WeightUnit` 建舱位承重与问题声明（基线 就是这么做的）。
+        // `WeightUnitInput` 从"必须没有"移到"必须有"。判据自己写着"缺口补上时它会红，届时把它移进必须存在那一组"——
+        // 缺口已经补上了：`LoadingContextFactory` 用 `input.WeightUnit` 建舱位承重与问题声明。
         //
         // **moves `WeightUnitInput` from "must be absent" to "must be present".** The criterion itself said "it turns red once the gap closes, and that is
         // when it moves into the must-exist group" — the gap closed: `LoadingContextFactory` uses `input.WeightUnit` for the position capacity and the
-        // problem declaration, exactly as the code does at.
+        // problem declaration.
         names.Should().Contain("WeightUnitInput",
             "it is referenced twice in the baseline and now has a consumer here, so its absence would be the gap");
         names.Should().NotContain("LoadingGeometryInput",

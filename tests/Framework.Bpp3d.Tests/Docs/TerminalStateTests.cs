@@ -15,20 +15,20 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// <remarks>
 /// **整条链的三个锚点钉在一起：**
 ///
-/// 1. **扫描脚本的默认提交** 必须是固定基线 `12fdb587` —— **否则"对全量同步"这句话就没有主语**；
+/// 1. **扫描脚本的默认提交** 必须是固定的对比提交 `12fdb587` —— **否则"对全量同步"这句话就没有主语**；
 /// 2. **状态文档里的门禁数字** 必须是真实跑出来的（这一条已由 `GateNumbersTests` 覆盖，这里只钉它确实在场）；
 /// 3. **计划里的终态核对一节** 不许被删 —— **它是"还剩什么"的唯一入口**。
 ///
 /// ### 为什么第 1 条最要紧
 ///
 /// **"全量同步"永远是对某个全量同步。** **如果脚本的默认提交漂了（`HEAD`、`master`、或者某个新 tag），
-/// 那么每次门禁都在拿一个<b>移动的</b>基线去比，而所有历史结论会悄悄变成"对某个当时的提交成立"。**
-/// **这条判据把默认值钉在常量上：换基线必须改这一行，而改它就会红。**
+/// 那么每次门禁都在拿一个<b>移动的</b>对比提交去比，而所有历史结论会悄悄变成"对某个当时的提交成立"。**
+/// **这条判据把默认值钉在常量上：换对比提交必须改这一行，而改它就会红。**
 ///
-/// **Pins the chain's three anchors: the scanner defaults to the fixed baseline `12fdb587` (otherwise "full sync" has no
+/// **Pins the chain's three anchors: the scanner defaults to the pinned commit `12fdb587` (otherwise "full sync" has no
 /// subject), the status document states the measured gate numbers (already covered by `GateNumbersTests`, pinned here for presence),
 /// and the plan's terminal section may not be deleted (it is the only entry point to "what is left").** **The first matters most:
-/// a full sync is always a full sync against <b>some</b> baseline, and a default that drifts to `HEAD` or a moving tag makes every
+/// a full sync is always a full sync against <b>some</b> commit, and a default that drifts to `HEAD` or a moving tag makes every
 /// gate compare against a moving target while every historical conclusion quietly becomes "true for whatever commit it was then".**
 /// </remarks>
 public class TerminalStateTests

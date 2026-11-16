@@ -46,9 +46,9 @@ namespace Fuookami.Ospf.Benchmark;
 /// 那不是跨语言可比的值。 所以本转储不输出 `hashCode` 摘要；可逐行对比的字段是计数、排序后原样拼接的取值、
 /// 以及布尔量。 含 `hashCode` 的行在跨语言 diff 里只能各自记录、不能互比——这一点写在这里，而不是留给下一个人发现。
 ///
-/// Corresponds to the 335-line baseline. Its purpose is not timing but a line-by-line diff of two runs: network reachability and
+/// Its purpose is not timing but a line-by-line diff of two runs: network reachability and
 /// strongly connected components, reverse-view consistency, token indices, the primality cache — every line a deterministic value from a production
-/// entry point. dumps three sections: `NET`, `TOK`, `PRM`. The other three are *pending*, not absent: the `Pending` constant states
+/// entry point. It dumps three sections: `NET`, `TOK`, `PRM`. The other three are *pending*, not absent: the `Pending` constant states
 /// why each is not implemented yet, and a criterion pins that the pending list never overlaps what is implemented and always carries a reason.
 /// One comparability limit must be stated: its digests use Kotlin's `String.hashCode`, which is not comparable across languages, so
 /// this dump emits no `hashCode` digest; the diffable fields are counts, sorted raw values and booleans. Lines built on `hashCode` can only be
@@ -275,10 +275,10 @@ public static class CrossVersionSemanticDump
     private static string SortedDigest(IEnumerable<string> values) =>
         string.Join(";", values.OrderBy(value => value, StringComparer.Ordinal));
 
-    /// <summary>布尔量渲染成小写：基线输出 `true`／`false`，而 `bool.ToString` 给的是 `True`／`False`——
+    /// <summary>布尔量渲染成小写：约定输出 `true`／`false`，而 `bool.ToString` 给的是 `True`／`False`——
     /// 逐行 diff 会把每一行都算成差异。
     ///
-    /// Booleans render lowercase: the code prints `true`/`false` while `bool.ToString` gives `True`/`False`, which would make every
+    /// Booleans render lowercase: the wire form is `true`/`false` while `bool.ToString` gives `True`/`False`, which would make every
     /// line look different in a line-by-line diff.</summary>
     ///
     /// <param name="value">布尔值 / The boolean.</param>
@@ -461,7 +461,7 @@ public static class CrossVersionSemanticDump
     /// `Domain/CuttingPlanGeneration/model/`，`CuttingPlan&lt;V&gt;` 直接实现 `ICuttingPlanForCanonicalKey`——
     /// 拿不到的是服务层那层包装，不是键本身。 第三次同一种错法。
     ///
-    /// 两处有意偏离基线，都写在这里：
+    /// 两处有意的取舍，都写在这里：
     /// ① `hashCode` 是 Java/Kotlin 的字符串哈希，跨语言不可比，这里改用规范键文本的排序后原样拼接（与 `NET`／`TOK`／`PRM` 同一个选择）；
     /// ② `orderDigest` 对顺序敏感，这里给的是"按到达顺序拼接后的摘要"，同样只用于同语言两次运行比对。
     ///
@@ -493,7 +493,7 @@ public static class CrossVersionSemanticDump
         }
     }
 
-    /// <summary>固定生成夹具：8 个商品、12 种物料（与基线逐项相同）/ The fixed generation fixture: eight products, twelve materials, identical to the code.</summary>
+    /// <summary>固定生成夹具：8 个商品、12 种物料（逐项固定）/ The fixed generation fixture: eight products, twelve materials.</summary>
     /// <param name="scenario">场景 / The scenario.</param>
     /// <returns>生成输入 / The generation input.</returns>
     private static GenerationInput<Flt64> GenerationInputOf(string scenario) {

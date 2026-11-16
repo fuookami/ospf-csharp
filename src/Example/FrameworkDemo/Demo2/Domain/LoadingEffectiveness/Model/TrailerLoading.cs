@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 拖车换装与绕行指示 / The trailer-change and trailer-circling indicators.
 /// </summary>
 /// <remarks>
-/// 与对齐，两个矩阵：
+/// 两个矩阵：
 ///
 /// | 矩阵 | 维度 | 含义 |
 /// | --- | --- | --- |
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///
 /// 七处必须沿用：
 ///
-/// 1. **`orderedTrailers` 只收"至少有一件货在本次装载里"的拖车**（基线 `filter { trailer.items.any { it in items } }`），
+/// 1. **`orderedTrailers` 只收"至少有一件货在本次装载里"的拖车**（`filter { trailer.items.any { it in items } }`），
 ///    再按 `顺序` 后按 `名字` 排序，最后 `zipWithNext` 取相邻对。
 /// 2. **`orderedItemsInTrailers` 是每个拖车内部的货物全组合**，且**不排序、不按顺序过滤**（与 `SequentialLoading` 不同）。
 /// 3. **`trailer_change` 的条件是交叉的**：`load(trailer2, pos1) + load(trailer1, pos2) − 2 + ε`——
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 6. **`trailer_circling` 有恒零退化分支**（不可放置的组合），`trailer_change` 没有。
 /// 7. `ε = NONZERO_TOLERANCE = 1e-10`，`strictBoundary` **也取这个 ε**（：0.5 会被 `SafeLattice` 拒绝）。
 ///
-/// Aligned with the code, two matrices: `trailer_change` over (ordered trailer pair × adjacent position pair) meaning the two adjacent positions carry **different trailers'** cargo, and
+/// Two matrices:
 /// `trailer_circling` over (ordered item pair within a trailer × adjacent position pair) meaning two items of one trailer were placed **the wrong way round**. Seven things must be
 /// copied: **`orderedTrailers` keeps only trailers with at least one item in this load**, sorted by order then name, then `zipWithNext`; **`orderedItemsInTrailers` is the full combination
 /// within each trailer, neither sorted nor filtered by sequence** (unlike `SequentialLoading`); **`trailer_change`'s condition is crossed** — `load(trailer2, pos1) + load(trailer1, pos2) − 2

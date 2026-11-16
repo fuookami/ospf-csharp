@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 适航安全域聚合 / The airworthiness security domain aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐。它在构造时就建好四个派生模型，`Register` 再把它们逐个注册进模型：
+/// 它在构造时就建好四个派生模型，`Register` 再把它们逐个注册进模型：
 ///
 /// | 派生模型 | 何时建 | 备注 |
 /// | --- | --- | --- |
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **`MaxCLIM` 的两个前提**。只看"点表非空"会在窄体机上建一个永远用不到的 CLIM；只看"宽体"会在空点表时抛异常。
 /// 2. **注册顺序**。线性密度 → 表面密度 → `MaxCLIM` → `MinLowPayload` → 包络。顺序决定了模型里符号的排列，按序号引用约束的报告依赖它。
-/// 3. **`RegisterForBendersSP` 就是 `Register`**，`RegisterForBendersMP` 是**空操作**（基线 `return ok`）。两者看起来该做别的事，但基线就是如此——沿用，并在测试里钉住。
+/// 3. **`RegisterForBendersSP` 就是 `Register`**，`RegisterForBendersMP` 是**空操作**（`return ok`）。两者看起来该做别的事，但这里就是如此——沿用，并在测试里钉住。
 ///
 /// Four derived models are built in the constructor and registered by `Register`, tabulated above. Three easy mistakes: (1) **`MaxCLIM` needs both
 /// conditions** — testing only the point list builds a CLIM on a narrow body, testing only the wide-body flag throws on an empty list; (2) **the registration order** is linear
@@ -208,10 +208,10 @@ public sealed class AirworthinessSecurityAggregation
     /// <remarks>
     /// 顺序照做：线性密度 → 表面密度 → `MaxCLIM`（若有）→ `MinLowPayload` → 包络。
     ///
-    /// `stowageMode` 在这条路径上**没有被用到**——`register` 也收它，只往 `registerForBendersSP` 传。保留参数是为了与基线签名一致。
+    /// `stowageMode` 在这条路径上**没有被用到**——`register` 也收它，只往 `registerForBendersSP` 传。保留参数是为了与聚合层的调用形状一致。
     ///
-    /// The order follows the code. `stowageMode` is **unused** on this path — the code accepts it too and only forwards it in `registerForBendersSP`. The parameter stays
-    /// for signature parity.
+    /// The order is fixed. `stowageMode` is **unused** on this path — `register` accepts it too and only forwards it in `registerForBendersSP`. The parameter stays
+    /// to match the aggregation's call shape.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model) {
         ArgumentNullException.ThrowIfNull(model);
@@ -252,10 +252,10 @@ public sealed class AirworthinessSecurityAggregation
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线就是 `return ok`。这个签名看起来该加 Benders 割，但适航安全域的约束全是原问题的，主问题不需要额外的行。沿用。
+    /// 实现就是 `return ok`。这个签名看起来该加 Benders 割，但适航安全域的约束全是原问题的，主问题不需要额外的行。
     ///
-    /// The code is `return ok`. The signature suggests it should add Benders cuts, but every airworthiness security constraint belongs to the original problem and the master
-    /// needs no extra rows. Copied as-is.
+    /// The body is `return ok`. The signature suggests it should add Benders cuts, but every airworthiness security constraint belongs to the original problem and the master
+    /// needs no extra rows.
     /// </remarks>
     public Try RegisterForBendersMP(LinearMetaModel<Flt64> model) {
         ArgumentNullException.ThrowIfNull(model);
@@ -270,7 +270,7 @@ public sealed class AirworthinessSecurityAggregation
     /// <param name="solution">主问题的解 / The solution from the master problem.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线就是 `return register(stowageMode, model)`，**忽略 `solution`**。看起来该按解固定某些变量，但适航约束是原问题的硬约束，子问题只是重加一遍。
+    /// 实现就是 `return register(stowageMode, model)`，**忽略 `solution`**。看起来该按解固定某些变量，但适航约束是原问题的硬约束，子问题只是重加一遍。
     ///
     /// `return register(stowageMode, model)` **ignores `solution`**. It looks like it should fix variables to the master's answer, but airworthiness constraints
     /// are hard constraints of the original problem and the sub-problem merely re-adds them.

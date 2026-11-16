@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <list type="number">
 /// <item>**方向写反**：`≤` 变 `≥`，两边通常都有可行解，求解成功、结果偏了；</item>
 /// <item>**约束的符号错了**：行绑的是 `estEnd`，绑成 `est` 就等于在约束开始时间，工期一变结论全错；</item>
-/// <item>**任务筛选反了**：开关开着时基线保留的是"**不**允许移动"的任务。</item>
+/// <item>**任务筛选反了**：开关开着时保留的是"**不**允许移动"的任务。</item>
 /// </list>
 ///
 /// The rows are `estEnd ≤ lastEnd` / `estEnd ≥ earliestEnd` — a **mirrored pair**; swapping them keeps the model feasible and merely slides the plan. Three silent failures:
@@ -116,7 +116,7 @@ public class EndConstraintTests {
 
     /// <summary>**开关开着 → 只保留"不允许移动"的任务** / With the switch on only the immovable tasks are kept.</summary>
     /// <remarks>
-    /// 与 的超最大约束同一处反直觉：开关打开反而收紧范围。但与那一批不同，这里**不跳过**任何行——`estEnd` 对不动任务照样存在。
+    /// 与超最大约束同一处反直觉：开关打开反而收紧范围。但与那一批不同，这里**不跳过**任何行——`estEnd` 对不动任务照样存在。
     /// 判据：开关开着时只有 T2（不许延迟）拿到行，T1（允许延迟）没有。
     ///
     /// The same counter-intuitive point as : turning the switch on narrows the set. Unlike that batch, however, **no row is skipped** — `estEnd` exists for an immovable task

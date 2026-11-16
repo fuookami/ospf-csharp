@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **把符号输入的激活变成模型层认得的函数符号** / Turn an activation over a symbolic input into a function symbol the model layer understands.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的激活降阶在模型层的那一半。**此前 `Relu(x)` 只能拒绝，因为多项式装不下"正部"这件事：**
+/// 激活降阶在模型层的那一半。**此前 `Relu(x)` 只能拒绝，因为多项式装不下"正部"这件事：**
 /// **它是分段线性的，而分段线性不是一次多项式。** **框架给的路是把函数包成系数为一的单项式——** '
 /// **`LinearFunctionSymbolAdapter` 实现了 `ILinearIntermediateSymbol`，展平时会把它展开成自己的结果多项式。**
 ///
@@ -87,7 +87,7 @@ public static class OnnxSymbolicActivation
         new(Flt64.One, symbol);
 
     /// <summary>
-    /// 用分段线性近似表达一个非线性激活（对齐基线 `approximated`）/ Express a non-linear activation through a piecewise-linear approximation.
+    /// 用分段线性近似表达一个非线性激活 / Express a non-linear activation through a piecewise-linear approximation.
     /// </summary>
     /// <param name="opType">算子类型 / The operator type.</param>
     /// <param name="input">线性输入 / The linear input.</param>
@@ -105,11 +105,11 @@ public static class OnnxSymbolicActivation
     /// **Four things follow the code: a bound beyond 1e6 is treated as missing; lower == upper collapses to a constant instead of building a function; the breakpoints are
     /// uniform with exact interpolation at them (not a fit); and the interval is the one the model itself is constrained by.**
     ///
-    /// **一处实现手段**上的差异，语义相同：** **基线从输入自己取界（`finiteBounds`），`BigMValues` 在 C# 侧是 `internal`，插件调不到；'
-    /// **而本插件里界只有唯一来源 `OnnxBounds`——模型约束正是由它生成，** **所以传进来的区间与基线取到的那个是同一份数，不是第二份。**
+    /// **取界的来源**：`BigMValues` 在 C# 侧是 `internal`，插件调不到；
+    /// **而本插件里界只有唯一来源 `OnnxBounds`——模型约束正是由它生成，** **所以传进来的区间与模型约束用的是同一份数，不是第二份。**
     ///
-    /// **One difference in the mechanism, not the meaning: the code takes the bounds from the input (finiteBounds), and BigMValues is internal on the C# side so the plugin
-    /// cannot call it; but OnnxBounds is the plugin's only source of bounds and the model's constraints are generated from it, so the interval passed in is the same number
+    /// **The bounds come from `OnnxBounds`: BigMValues is internal on the C# side so the plugin
+    /// cannot call it, but OnnxBounds is the plugin's only source of bounds and the model's constraints are generated from it, so the interval passed in is the same number
     /// rather than a second copy.**
     ///
     /// **Why taking the bounds from the input matters: a caller-supplied range and the model's constraints are two different things, and the model solves either way — the
@@ -134,10 +134,10 @@ public static class OnnxSymbolicActivation
         if (bounds is null || !bounds.Validate(out string? boundFailure)) {
             return new Result(null, null, "输入没有有限界，无法做分段近似 / the input carries no finite bounds, so it cannot be approximated");
         }
-        // 界优先取输入变量**自己注册的范围**（与基线 `finiteBounds` 同一个来源）；
+        // 界优先取输入变量**自己注册的范围**；
         // 变量没有有限范围时才用传入的 `OnnxBounds`，并把它注册上去——否则分段函数构造时看不到界。
         //
-        // Bounds come from the range the input variables carry themselves (the same source as its finiteBounds); the supplied OnnxBounds is used and registered
+        // Bounds come from the range the input variables carry themselves; the supplied OnnxBounds is used and registered
         // only when a variable has no finite range, because the piecewise constructor cannot see a bound that was never registered.
         (double registeredLower, double registeredUpper, bool fromVariables) = RegisteredBounds(input);
         if (fromVariables) {

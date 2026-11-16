@@ -408,7 +408,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     /// <returns>与约束行同序的对偶值或错误 / Row-aligned dual values or an error.</returns>
     // <summary>对偶解按约束身份整理成表 / Tidy the dual solution into a table keyed by constraint identity.</summary>
     // <remarks>
-    // **基线 `tidyDualSolution` 返回 `Map&lt;Constraint, Flt64>`：对偶模型走 `dualOrigin`，普通模型走
+    // **返回 `Map&lt;Constraint, Flt64>`：对偶模型走 `dualOrigin`，普通模型走
     // `constraints.origins`。**
     //
  // **C# 的视图不持有约束对象引用，所以能给的 key 是
@@ -429,7 +429,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     //
     // **A C# view holds no constraint object references (a recorded representation difference), so the best key
     // available is `ConstraintId` — which, when present, is exactly the identity content of its key: the
-    // baseline expresses "which row" with an object reference, C# expresses the same thing with an identity string.**
+    // the original expresses "which row" with an object reference, C# expresses the same thing with an identity string.**
     //
     // **A dual model (`Dual`) resolves through `DualOrigin.RowIndex`, because its rows are the primal's columns and its
     // dual variables record "which row I came from" — the first real use of the field.**
@@ -463,7 +463,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         // **界对偶列与松弛列不是任何一行的对偶，它们本来就不该进这张表——
         // 而它们之所以不会进，是因为它们的对偶值不在前 `rows` 个位置上（`TidyDualSolution` 只截前 `rows` 个）。**
         //
-        // **The code's two branches converge here into one:** **on a dual model `dualOrigin` records which row a
+        // **The two branches converge here into one:** **on a dual model `dualOrigin` records which row a
         // variable is the dual of, while on a row-aligned model position `index` *is* the row.** **They converge because
         // both answer "which row does this value belong to", differing only in where the row number is stored — on the
         // variable, or in the position.** **So use `DualOrigin` when present and fall back to `index`; no third
@@ -580,9 +580,9 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             }
             string rowName = constraints.Names[row];
             // **对偶变量记录它的来源行与那一行的关系。**
-            // **这正是基线 `dualOrigin` 承载的信息，只是在扁平视图里用行号表达而不是对象引用。**
-            // **a dual variable records its origin row and that row's relation — exactly what its
-            // `dualOrigin` carries, expressed as a row index rather than an object reference in a flat view.**
+            // **同样的信息在扁平视图里用行号表达，而不是对象引用。**
+            // **a dual variable records its origin row and that row's relation, expressed as a row index
+            // rather than an object reference in a flat view.**
             dualVariables.Add(new ModelViewVariable(
                 index: row,
                 lowerBound: lower,
@@ -804,8 +804,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             dualVariables.Add(column);
             return column;
         }
-        // **取源元素身份。基线 `derivedDiscriminator` 的语义是
-        // "源 ID 为空则用 model-local 判别串，否则用稳定判别串"，这里沿用。**
+        // **取源元素身份。`derivedDiscriminator` 的语义是
+        // "源 ID 为空则用 model-local 判别串，否则用稳定判别串"。**
         //
         // **`RowSource` 取第 `row` 行约束的身份，`ColumnSource` 取第 `col` 个原变量的身份。**
         // **两者都返回 `(身份, 命名空间, schema)` 三元组，因为 C# 把后两个字段放在视图变量/约束上而不是身份上，
@@ -813,7 +813,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         //
         // **`RowSource` 越界时退化为 `null` 而不是伪造：源行没有身份时不该造一个。**
         //
-        // **read the source element's identity. The code's `derivedDiscriminator` means "model-local
+        // **read the source element's identity. `derivedDiscriminator` means "model-local
         // discriminator when the source id is null, stable one otherwise", copied here.** **Both lookups return
         // `(identity, namespace, schema)`, because C# keeps the last two on the view variable/constraint rather than on
         // the identity, the same layer where the code keeps them on `Variable`.** **`RowSource` degrades to `null`
@@ -828,8 +828,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             ModelViewVariable primal = Variables[col];
             return (primal.Identity, primal.IdentityNamespace, primal.IdentitySchemaVersion);
         }
-        // **基线 `derivedDiscriminator(sourceId, stable, modelLocal)`：源 ID 为空时用 model-local 那个。**
-        // **The code's `derivedDiscriminator(sourceId, stable, modelLocal)`: model-local when the source id is null.**
+        // **`Discriminator(sourceId, stable, modelLocal)`：源 ID 为空时用 model-local 那个。**
+        // **`Discriminator(sourceId, stable, modelLocal)`: model-local when the source id is null.**
         string Discriminator(string? sourceId, string stable, string modelLocal) =>
             sourceId is null ? modelLocal : stable;
 
@@ -859,8 +859,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
                 continue;
             }
             string name = RowName(constraints.Names[row], row);
-            // **基线：等式行的正负松弛按 `index / 2` 找到它所属的那一行，判别串为 `row:positive`／`row:negative`。**
-            // **Baseline: an equality row's positive/negative slack maps back through `index / 2` to its row, with
+            // **等式行的正负松弛按 `index / 2` 找到它所属的那一行，判别串为 `row:positive`／`row:negative`。**
+            // **An equality row's positive/negative slack maps back through `index / 2` to its row, with
             // discriminator `row:positive` / `row:negative`.**
             string? rowSourceId = RowSource(row).Identity?.Id.Value;
             positiveSlacks[row] = NewColumn(
@@ -888,8 +888,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             if (variable.Free) {
                 continue;
             }
-            // **基线：界 Farkas 列的源是<b>原变量</b>，判别串为 `col:lower`／`col:upper`。**
-            // **Baseline: a bound Farkas column's source is the <b>primal variable</b>, with discriminator
+            // **界 Farkas 列的源是<b>原变量</b>，判别串为 `col:lower`／`col:upper`。**
+            // **A bound Farkas column's source is the <b>primal variable</b>, with discriminator
             // `col:lower` / `col:upper`.**
             string? colSourceId = ColumnSource(col).Identity?.Id.Value;
             string colText = col.ToString(CultureInfo.InvariantCulture);

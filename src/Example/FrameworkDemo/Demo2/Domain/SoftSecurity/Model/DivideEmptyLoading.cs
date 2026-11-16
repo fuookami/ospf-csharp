@@ -31,10 +31,10 @@ public sealed record PositionPair(int First, int Second);
 /// 分隔空载装载模型 / The divide-empty-loading model.
 /// </summary>
 /// <remarks>
-/// 与对齐：为每对相邻舱位建立**三个**中间符号，度量"两舱之间被空载隔开"的程度，
+/// 为每对相邻舱位建立**三个**中间符号，度量"两舱之间被空载隔开"的程度，
 /// 由 `DivideEmptyLoadingLimit` 作为目标函数最小化。
 ///
-/// 相邻对的构造（基线伴生对象）：按 `location.location` 分组，**组内按 `loadingOrder.order` 排序后 `zipWithNext`**——
+/// 相邻对的构造：按 `location.location` 分组，**组内按 `loadingOrder.order` 排序后 `zipWithNext`**——
 /// 只连相邻的两个，不做全组合。同一甲板内不挨着的两个舱位之间不存在"中间"，连起来会造出无意义的惩罚项。
 ///
 /// 三族符号的表达式（`p` 是相邻对下标，`position1`/`position2` 是该对的两端）：
@@ -108,9 +108,9 @@ public sealed class DivideEmptyLoading
     /// <param name="positions">舱位 / The positions.</param>
     /// <returns>相邻对 / The adjacent pairs.</returns>
     /// <remarks>
-    /// 与基线伴生对象一致：**按甲板分组、组内按装载顺序排序、取相邻的两个**。组内只有一个舱位时不产生任何对。
+    /// 构造方式：**按甲板分组、组内按装载顺序排序、取相邻的两个**。组内只有一个舱位时不产生任何对。
     ///
-    /// Matches the code companion: **group by deck, sort by loading order within each group, then take consecutive pairs**. A group of one yields nothing.
+    /// **Group by deck, sort by loading order within each group, then take consecutive pairs**. A group of one yields nothing.
     /// </remarks>
     public static IReadOnlyList<PositionPair> BuildAdjacentPositions(IReadOnlyList<StowagePosition> positions)
     {

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// </summary>
 /// <remarks>
 /// 把 `NativeIndicatorData` 与 `NativeMaskingData` 接进 `NativeFingerprint`，
-/// 补齐基线 schema 阶梯里此前缺席的九个分支。
+/// 补齐 schema 阶梯里此前缺席的九个分支。
 ///
 /// Wires the indicator and masking types into the fingerprint, completing the nine previously absent schema rungs.
 /// </remarks>

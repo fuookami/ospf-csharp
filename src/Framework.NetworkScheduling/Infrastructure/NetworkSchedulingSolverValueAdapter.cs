@@ -1,11 +1,10 @@
 // 网络调度数值适配 / Network-scheduling numeric adapter.
-// 与固定 Kotlin 对应。
 //
 // 这一层的职责是**把"领域数值"与"求解器数值"的边界收在一处**：领域侧用泛型 `V` 保持精度，求解器侧固定为 `Flt64`。
-// 基线注释明确要求"只在进入 solver 边界时才调用 normalize"——本实现保留这条约束并写进接口文档。
+// 约束是"只在进入 solver 边界时才调用 normalize"——这条约束写进接口文档。
 // This layer's job is to **funnel the boundary between domain numbers and solver numbers into one place**: the domain side
-// keeps precision via generic `V`, the solver side is fixed at `Flt64`. The code explicitly requires calling
-// `normalize` **only at the solver boundary**; this implementation keeps that constraint and documents it on the interface.
+// keeps precision via generic `V`, the solver side is fixed at `Flt64`. The rule is to call
+// `normalize` **only at the solver boundary**, and the interface documents it.
 
 using System;
 using Fuookami.Ospf.Math.Algebra.Concept;

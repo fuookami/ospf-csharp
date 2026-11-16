@@ -75,7 +75,7 @@ public class Demo2AircraftDomainTests {
     /// </remarks>
     [Fact]
     public void PhysicalNeighbourCalculator_ShouldRespectTheSameSideBranch() {
-        // **实测出来的基线形状，三条都很反直觉，逐条钉住**：
+        // **实测出来的形状，三条都很反直觉，逐条钉住**：
         //
         // 1. **"同线且不同侧"分支不可达**：它要求 `onSameLine`（内含"都在左"）与 `!onSameSide`（不同侧）同时成立，
         // 而"都在左"与"不同侧"互斥。所以**左右两侧的舱位永不物理相邻**（实测 `left+right partial -> 0`）。
@@ -83,7 +83,7 @@ public class Demo2AircraftDomainTests {
         //    （实测 `left+left identical -> 0`）。
         // 3. **部分重叠才相邻**（实测 `left+left partial -> 1`、`right+right partial -> 1`）。
         //
-        // 三条都沿用。修好第 1 条会凭空造出基线没有的邻接，那会让下游的 `BiologicalAdjacentLimit` 变严格——
+        // 三条都沿用。修好第 1 条会凭空造出目前不存在的邻接，那会让下游的 `BiologicalAdjacentLimit` 变严格——
         // 而它已经在别的批次行为钉过了。
         //
         // **The code's shape, measured, with three counter-intuitive facts pinned**: the "colinear and opposite sides" branch is **unreachable** (it needs `onSameLine`, which

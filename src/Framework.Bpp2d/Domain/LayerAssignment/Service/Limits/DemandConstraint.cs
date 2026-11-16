@@ -21,8 +21,6 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 需求约束 / The demand constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐。
-///
 /// 三处必须沿用：
 ///
 /// 1. **下界是必须的**：`load[i] &gt;= demand[i]`。只注册上界会让"最小化"退化成"什么都不装"——目标值最小、
@@ -31,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 ///    （`{name}_{tag}_lb_{i}` / `{name}_{tag}_ub_{i}`）。
 /// 3. **`tag` 来自需求模式**（`item_amount` / `item_area`），不是索引——用索引做 tag 会让两个模式的行同名冲突。
 ///
-/// **与一处形状差异**：基线从 `load.load[i] as Symbol` 取装载符号，本仓的 `Load` 类型（求解器符号层）
+/// **一处形状差异**：装载符号本该从 `load.load[i] as Symbol` 取，本仓的 `Load` 类型（求解器符号层）
 /// 尚未落地，所以这条约束直接收 `IReadOnlyList&lt;ILinearIntermediateSymbol&lt;Flt64&gt;&gt;`——**装载向量本身就是符号表**，
 /// 收它而不是伪造一个 `Load`。等 `Load` 落地后本类只需换构造参数。
 ///
@@ -39,7 +37,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// degenerate to shipping nothing while the model still looks perfectly normal; **the upper bound is optional**, registered only when `UpperBound` is set, with different names per
 /// direction (`{name}_{tag}_lb_{i}` / `{name}_{tag}_ub_{i}`); and **the tag comes from the demand mode** (`item_amount` / `item_area`) rather than the index, which would collide.
 ///
-/// **One structural difference**: the code reads load symbols via `load.load[i] as Symbol`, but this repository's `Load` (the solver-symbol layer) is not yet implemented, so this
+/// **One structural difference**: load symbols would come from `load.load[i] as Symbol`, but this repository's `Load` (the solver-symbol layer) is not yet implemented, so this
 /// constraint takes an `IReadOnlyList&lt;ILinearIntermediateSymbol&lt;Flt64&gt;&gt;` directly — **the load vector is itself a symbol table**, so taking it beats fabricating a `Load`. Once `Load`
 /// lands, only this constructor needs to change.
 /// </remarks>

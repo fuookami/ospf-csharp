@@ -1,6 +1,5 @@
 // 物料、设备与副产物 / Materials, machines and by-products.
-// 与固定 Kotlin 对应（几何与校验部分见文件末尾说明）。
-// The pinned Kotlin: .
+// 几何与校验部分的说明见文件末尾 / Geometry and validation notes are at the end of the file.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Infrastructure;
@@ -34,10 +33,10 @@ public enum Material2Kind {
 /// <param name="AvailableBatches">可用卷数/张数 / The available coil or sheet count.</param>
 /// <param name="MinRemnantArea">最小可用余料面积 / The minimum usable remnant area.</param>
 /// <remarks>
-/// **`height` 为空就是卷材**，没有额外的模式字段——基线就是靠这一个可空值区分条带排样与定尺排样。
+/// **`height` 为空就是卷材**，没有额外的模式字段——就靠这一个可空值区分条带排样与定尺排样。
 /// 多一个枚举字段就有两个真值来源，而它们**迟早会不一致**。
 ///
-/// **A null `height` *is* the coil mode**; there is no separate mode field — the code distinguishes strip packing from fixed-size packing by that one nullable value alone.
+/// **A null `height` *is* the coil mode**; there is no separate mode field — that one nullable value alone distinguishes strip packing from fixed-size packing.
 /// A second enum field would give two sources of truth, and they **eventually disagree**.
 /// </remarks>
 public sealed record Material2<V>(
@@ -181,7 +180,7 @@ public sealed record Costar2<V>(
     /// `false` 表示不旋转、`true` 表示旋转 90°。**不允许旋转时只返回一项**——
     /// 返回两项会让排样把"旋转后的同一块件"当成另一个选择，**白白翻倍搜索空间**。
     ///
-    /// `false` means unrotated and `true` means rotated 90 degrees, matching the code. **A non-rotatable piece yields exactly one entry**: two entries would let
+    /// `false` means unrotated and `true` means rotated 90 degrees. **A non-rotatable piece yields exactly one entry**: two entries would let
     /// nesting treat "the same piece, rotated" as a separate choice and **double the search space for nothing**.
     /// </remarks>
     public IReadOnlyList<bool> Orientations() =>

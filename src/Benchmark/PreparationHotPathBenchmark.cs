@@ -31,14 +31,14 @@ namespace Fuookami.Ospf.Benchmark;
 /// </summary>
 /// <remarks>
 ///
-/// **基线最后一个基准 `handleConstraintProgrammingSolution`（`bulkSolutionWithSharedOwner`）
+/// **`handleConstraintProgrammingSolution`（`bulkSolutionWithSharedOwner`）那个基准
 /// 依赖 `ManualTokenList.tokensInSolver.reversed` 构造"逆序共享 owner"**；C# 侧 `TokensInSolver` 是
 /// **按 `SolverIndex` 升序计算的只读属性**，没有"按注册逆序"的入口。这里保留单项与批量注册两个基准，
 /// **不写一个不会真正逆序的替代夹具**——那会让"重复存在性扫描"这一被测行为消失，而基准仍然跑得出数字。
 /// 缺口留在 P9 台账。
 ///
-/// **The code's `bulkSolutionWithSharedOwner` relies on `ManualTokenList.tokensInSolver.reversed` to build a "reverse-shared owner"**; on the C# side
-/// `TokensInSolver` is **a read-only property computed in `SolverIndex` ascending order**, with no way to register in reverse. keeps the
+/// **The `bulkSolutionWithSharedOwner` benchmark relies on `ManualTokenList.tokensInSolver.reversed` to build a "reverse-shared owner"**; on the C# side
+/// `TokensInSolver` is **a read-only property computed in `SolverIndex` ascending order**, with no way to register in reverse. This class keeps the
 /// single-item and batch registration benchmarks and **does not write a stand-in that never actually reverses** — that would make the "repeated
 /// existence scan" behaviour disappear while the benchmark still produces numbers. The gap stays on the P9 ledger.
 /// </remarks>

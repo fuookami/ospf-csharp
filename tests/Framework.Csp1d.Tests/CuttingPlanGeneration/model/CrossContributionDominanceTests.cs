@@ -1,4 +1,4 @@
-// 跨贡献 dominance 判定的移植测试 / Port tests for the cross-contribution dominance decision.
+// 跨贡献 dominance 判定的测试 / Tests for the cross-contribution dominance decision.
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -8,17 +8,17 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.model;
 
 /// <summary>
-/// <see cref="CrossContributionDominance.Dominates"/> 必须逐条对应基线 `canCrossContributionDominate`。
-/// <see cref="CrossContributionDominance.Dominates"/> must match the code `canCrossContributionDominate` rule for rule.
+/// <see cref="CrossContributionDominance.Dominates"/> 的判定规则如下，必须逐条成立。
+/// <see cref="CrossContributionDominance.Dominates"/> follows the rule below, point for point.
 /// </summary>
 /// <remarks>
-/// 基线判定：新方案支配旧方案当且仅当**余宽不劣**且**对每个产品的贡献不劣**，且**单位一致**。
+/// 判定：新方案支配旧方案当且仅当**余宽不劣**且**对每个产品的贡献不劣**，且**单位一致**。
 /// 记录"跨贡献剪枝仍然不会发生"——这里把判定本身补上。
 ///
 /// **每条规则单独一条测试**：合并断言时，某条规则写漏了也不会被看见。
 ///
-/// The code decides dominance iff **the rest width is no worse**, **every product contribution is no worse**, and **units agree**. recorded that
-/// "cross-contribution pruning still never happens" — the decision itself.
+/// Dominance holds iff **the rest width is no worse**, **every product contribution is no worse**, and **units agree**. The record that
+/// "cross-contribution pruning still never happens" is about the decision itself, which is filled in here.
 ///
 /// **One test per rule**: with merged assertions, an omitted rule goes unnoticed.
 /// </remarks>
@@ -94,7 +94,7 @@ public class CrossContributionDominanceTests {
     /// <summary>**余宽单位不同 → 不支配** / Different rest-width units → does not dominate.</summary>
     /// <remarks>
     /// 这是**最容易写漏的一条**：3 厘米与 5 米按数值比会得出"3 更小、支配"，而实际 3 厘米远小于 5 米但**单位不可比**。
-    /// 基线专门检查单位，本判据专门钉住它。
+    /// 本实现专门检查单位，本判据专门钉住它。
     ///
     /// This is **the easiest rule to omit**: comparing 3 centimetres against 5 metres numerically says "3 is smaller, dominates", yet the units are not
     /// comparable. The code checks units explicitly and this criterion pins it.

@@ -15,12 +15,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 离散条件的格点计算：合并同变量系数、判整数性、求步长、证平移安全 / Lattice arithmetic for discrete conditions.
 /// </summary>
 /// <remarks>
-/// 对齐的 `effectiveDiscreteConditionMonomials`、
+/// `effectiveDiscreteConditionMonomials`、
 /// `isIntegerValuedDiscreteConditionNumber`、`discreteConditionCoefficientGcd`、
-/// `hasSafeDiscreteShiftProof` 四个辅助函数补。
+/// `hasSafeDiscreteShiftProof` 四个辅助函数。
 ///
-/// **补这里的直接原因是一个已发现的缺口**：** `ProveShift` 只检查了
-/// "步长 ≥ δ"，而基线还要检查"常数到<b>会被误判那一侧</b>的最近格点距离 ≥ δ"。**
+/// **这里的直接原因是一个已发现的缺口**：** `ProveShift` 只检查了
+/// "步长 ≥ δ"，还应该检查"常数到<b>会被误判那一侧</b>的最近格点距离 ≥ δ"。**
 /// **前者是必要条件，不是充分条件。**
 ///
 /// **反例**：**`p = 2x + 1`、`δ = 1`。步长是 2，`2 ≥ 1` 通过。**
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 而 `−2 > −2` 是假、`−2 ≥ 0` 也是假。**
 /// **再看 `p` 取 `1`：两边都真。所以这个例子也安全。**
 ///
-/// **结论：我上面构造的反例都不成立。** **个余数检查挡的是什么？**
+/// **结论：我上面构造的反例都不成立。** **那这个余数检查挡的是什么？**
 /// **是 `p = 3x + 2`、`δ = 2`：取值 `2 + 3ℤ = …, −1, 2, 5, …`。**
 /// **`GE` 平移后要求 `p > −2`，于是 `p = −1` <b>满足</b>`p > −2`；**
 /// **而 `p ≥ 0` 对 `p = −1` 是<b>假</b>。**

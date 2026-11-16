@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 从物品清单产出需求项 / Build demand entries from an item list.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationApplicationService.demandEntries` 对齐。四处必须沿用：
+/// 四处必须沿用：
 ///
 /// 1. **件数需求总是加**：面积需求是"额外"的一条，不是替代。只登记面积需求会让件数约束消失，
 ///    排出来的板材件数可以少到任意——件数守恒就没人管了。
@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 ///    错位会让影子价格安到另一条需求上（的教训）。
 /// 4. **每个物品各出一条（或两条）**，不去重、不合并：同一个物品出现两次是数据问题，不是这里该收拾的。
 ///
-/// Aligned with its `demandEntries`. Four things are carried over: **the amount demand is always added**, since the area one is an extra rather than a replacement and dropping the
+/// Four things are carried over: **the amount demand is always added**, since the area one is an extra rather than a replacement and dropping the
 /// amount constraint leaves sheet counts unbounded; **the area demand is per-piece bounding area times the count**, using `BoundingArea` rather than `Area`, because a circle's `Area` is the circle
 /// itself while what it occupies on a sheet is its bounding box; **both entries share the item's id in "amount then area" order**, since that order fixes the demand constraint's index and a
 /// mismatch would attach the shadow price to the wrong demand (the lesson); and **each item contributes one or two entries** with no deduplication or merging, duplicate items being a data

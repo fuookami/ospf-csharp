@@ -23,22 +23,22 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// </summary>
 /// <remarks>
 /// 每个航班任务、每个舱位一个**表达式符号**，内容是"各任务束在这一舱位上提供的座位数 × 该束的列变量"。
-/// 这是，C# 侧一直没有——于是"这一轮的编排到底运了多少人/多少货"根本没有量可读。
+/// 这个层此前一直没有——于是"这一轮的编排到底运了多少人/多少货"根本没有量可读。
 ///
-/// 两条规则必须照基线：
+/// 两条规则：
 ///
 /// * **容量为零的束不进表达式**（座位数或货量是 0 的束对这条表达式没有贡献，加进去只会拖长展开）；
 /// * **列变量按"去重后的顺序"取**，用 `Compilation.ColumnItem(iteration, bunch)` 而不是自己数一遍入参顺序。
 ///
-/// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush` 再加，C# 的 `Flush` 是空实现，所以这里显式 `Clear`。
+/// **`AddColumns` 是"换掉"而不是"追加"**：每轮先 `Flush` 再加，而 `Flush` 是空实现，所以这里显式 `Clear`。
 /// 不做这一步，跑十轮之后同一个束会在表达式里出现十次——解上未必立刻错，展开是十倍的项。
 ///
-/// Each flight task and cabin gets one **expression symbol** whose content is "the seats each bunch offers in that cabin multiplied by that bunch's column variable". The code has
-///; the C# side had nothing, so "how many passengers or how much cargo this round really moves" was simply unreadable. Two rules follow the code: **zero-capacity
+/// Each flight task and cabin gets one **expression symbol** whose content is "the seats each bunch offers in that cabin multiplied by that bunch's column variable". The expression layer
+/// was missing entirely, so "how many passengers or how much cargo this round really moves" was simply unreadable. Two rules: **zero-capacity
 /// bunches stay out of the expression** (they contribute nothing and only lengthen expansion), and **column variables come from the deduplicated order**, via
 /// `Compilation.ColumnItem(iteration, bunch)` rather than recounting the argument order.
 ///
-/// **`AddColumns` replaces rather than appends**: the code flushes before adding each round, but C#'s `Flush` is a no-op, so this clears explicitly. Without that step, ten rounds
+/// **`AddColumns` replaces rather than appends**: each round flushes before adding, but `Flush` is a no-op, so this clears explicitly. Without that step, ten rounds
 /// would put the same bunch into the expression ten times — the solution may not break immediately, but the expansion grows tenfold.
 /// </remarks>
 public sealed class FlightCapacity {

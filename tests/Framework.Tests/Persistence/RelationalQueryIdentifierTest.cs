@@ -81,7 +81,7 @@ public sealed class RelationalQueryIdentifierTest {
         Quote("  jobs  ", RelationalQueryDialect.Sqlite).Should().Be("\"jobs\"");
 
     /// <summary>
-    /// 空注册表时逻辑名**就是**物理表名（基线行为）；这个方向反了会让默认配置变成"全部拒绝"。
+    /// 空注册表时逻辑名**就是**物理表名；这个方向反了会让默认配置变成"全部拒绝"。
     /// With an empty registry the logical name **is** the physical table; reversing this would make the default
     /// configuration reject everything.
     /// </summary>

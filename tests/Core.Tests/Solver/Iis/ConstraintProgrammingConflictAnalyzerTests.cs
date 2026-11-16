@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Iis;
 /// CP 冲突分析器 / The CP conflict analyzer.
 /// </summary>
 /// <remarks>
-/// 对齐基线补这个分析器。**按经验先查依赖，结果又是"只差适配器"：
+/// 补这个分析器。**按经验先查依赖，结果又是"只差适配器"：
 /// `IConstraintProgrammingSolver`、`ConstraintProgrammingInfeasibleOutput`、`SolveDiagnostics.InfeasibilityEvidence`、
 /// `CollectConflict`／`ShrinkConflict` 全都在。**
 ///

@@ -244,16 +244,16 @@ public class ReducedCostPricingGeneratorTests {
     /// **本段最初还写过一条"真实隐患"，那是错的，已更正。** 原文称
     /// `DerivedPhysicalUnit.ToString` 是 `Symbol ?? ""`——**归属错了**：`DerivedPhysicalUnit`
     /// **并不覆盖 `ToString`**，它继承基类的三回退。写成 `Symbol ?? ""` 的是 **`AnonymousPhysicalUnit`**，
-    /// 而那与基线**逐字相同**（基线 `override fun toString = symbol ?: ""`）。
+    /// 而那**逐字相同**：`toString` 就是 `symbol ?: ""`。
     ///
-    /// 所以"匿名单位无 symbol 无 name 时键为空串、两个不同单位共键"**是基线行为，不是偏离**。
+    /// 所以"匿名单位无 symbol 无 name 时键为空串、两个不同单位共键"**是既定行为，不是缺陷**。
     /// 这一点现在由 `UnitKeyConvergenceTests.AnonymousUnit_ShouldKeyAsTheBaselineDoes` 钉住。
     ///
     /// **This paragraph also once claimed a "real hazard" that was wrong and is corrected here.** It said `DerivedPhysicalUnit.ToString` was `Symbol ?? ""` — **wrong
     /// attribution**: `DerivedPhysicalUnit` **does not override `ToString`** and inherits the base's three-step fallback. The `Symbol ?? ""` version belongs to
-    /// **`AnonymousPhysicalUnit`**, and that is **byte-for-byte identical** to the code (`override fun toString = symbol ?: ""`).
+    /// **`AnonymousPhysicalUnit`**, and its `ToString` is exactly `symbol ?: ""`.
     ///
-    /// So "a symbol-less, nameless anonymous unit keys to an empty string, letting two distinct units collide" is **baseline behaviour, not a divergence**. It is now
+    /// So "a symbol-less, nameless anonymous unit keys to an empty string, letting two distinct units collide" is **established behaviour, not a defect**. It is now
     /// pinned by `UnitKeyConvergenceTests.AnonymousUnit_ShouldKeyAsTheBaselineDoes`.
     ///
     /// **The criterion was written to kill a mutant that turned out to be semantically equivalent.** Writing the unit key as `Symbol ?? ToString` (**dropping the
@@ -299,9 +299,9 @@ public class ReducedCostPricingGeneratorTests {
             "the name is the second fallback, so the lookup must use \"name-only-unit\"");
     }
 
-    /// <summary>**单位键必须与基线 `shadowPriceUnitSymbol` 一致（含第三条回退）** / The unit key must match its `shadowPriceUnitSymbol`, third fallback included.</summary>
+    /// <summary>**单位键取 `shadowPriceUnitSymbol`（含第三条回退）** / The unit key must match its `shadowPriceUnitSymbol`, third fallback included.</summary>
     /// <remarks>
-    /// 基线：`unit.symbol ?: unit.name ?: unit.toString`。
+    /// 取值：`unit.symbol ?: unit.name ?: unit.toString`。
     ///
     /// **这里曾经写成 `Symbol ?? Name ?? string.Empty`**——前两条一致，**第三条落空串**。
     /// 后果：所有"既无 symbol 又无 name"的单位**共用一个键**，`(产品, "")` 会让**不同单位的对偶价格互相命中**，
@@ -361,7 +361,7 @@ public class ReducedCostPricingGeneratorTests {
     /// | 过滤位置 | 定价报 | 终止原因 |
     /// | --- | --- | --- |
     /// | **定价器里** | 0 条 | `PricingConverged` |
-    /// | **列生成侧**（基线） | N 条 | `AllDuplicates` |
+    /// | **列生成侧** | N 条 | `AllDuplicates` |
     ///
     /// 所以**定价器必须报出**池里已有的方案——过滤是下游的事。判据随之反转。
     ///
@@ -763,7 +763,7 @@ public class ReducedCostPricingGeneratorTests {
     /// <remarks>
     /// **这是"减成本"的实质判据**，也是 那版实现**没有**的一步。
     ///
-    /// 把基线 `SimplePricingGenerator` 的语义（"对偶价为正就出列"）写进了
+    /// 把"对偶价为正就出列"的语义写进了
     /// **`ReducedCostPricingGenerator`** 这个类——**类名和语义对不上**。
     /// `ReducedCostPricingGenerator` 是**包装器**：enumerator 枚举候选，
     /// 再按 `benefit > objectiveCost` 过滤（`objectiveCost` 基础值是 **1**）。

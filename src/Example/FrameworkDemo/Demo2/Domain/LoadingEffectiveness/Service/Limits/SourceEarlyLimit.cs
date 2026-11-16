@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同来源早装限制 / The same-source early-loading constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：**同一来源的多件货物至少有一件装进前段舱位**。
+/// **同一来源的多件货物至少有一件装进前段舱位**。
 ///
 /// 五处必须沿用：
 ///

@@ -206,7 +206,7 @@ public class Demo2LoadTests {
     /// **`load_amount` 的上界是舱位的 `mla`** / `load_amount` is bounded by the position's `mla`.
     /// </summary>
     /// <remarks>
-    /// 基线给装载量加了 `range.leq(mla)`。少了这一行，一个 3 槽位舱位里装 5 件在模型层面完全合法——五个二元 `stowage`
+    /// 这里给装载量加了 `range.leq(mla)`。少了这一行，一个 3 槽位舱位里装 5 件在模型层面完全合法——五个二元 `stowage`
     /// 变量各自为 1，加起来就是 5，"件数上限"只在报告里被当成常识，不在模型里。
     ///
     /// The code bounds the amount by `range.leq(mla)`. Without it a 3-slot position holding 5 pieces is perfectly legal: five binary `stowage` variables each set to one sum to

@@ -12,13 +12,13 @@ namespace Fuookami.Ospf.Math.Symbol.Tests.Expression.Parser;
 /// </summary>
 /// <remarks>
 /// **这批的起点是一次误判。** 我用文件名差集看到 `ScalarParser` 不在，**就以为整条表达式解析栈都不在**，
-/// 于是照着基线写了一份 `Token`/`Lexer`——**而 `Token.cs`/`Lexer.cs`/`Parser.cs` 一直就躺在同一个目录里。**
+/// 于是凭空写了一份 `Token`/`Lexer`——**而 `Token.cs`/`Lexer.cs`/`Parser.cs` 一直就躺在同一个目录里。**
 ///
 /// **真正缺的是标量那一层，以及词法器里的算术运算符。** 这批补后者。
 ///
-/// ** starts from a misjudgement.** The filename diff said `ScalarParser` was absent, **and I took that to mean the whole expression stack was absent**,
-/// so I wrote a `Token`/`Lexer` from the code — **while `Token.cs`/`Lexer.cs`/`Parser.cs` had been sitting in that same directory all along.**
-/// **What is actually missing is the scalar layer, plus the arithmetic operators in the lexer.** adds the latter.
+/// **The starting point was a misjudgement.** The filename diff said `ScalarParser` was absent, **and I took that to mean the whole expression stack was absent**,
+/// so I wrote a `Token`/`Lexer` from scratch — **while `Token.cs`/`Lexer.cs`/`Parser.cs` had been sitting in that same directory all along.**
+/// **What is actually missing is the scalar layer, plus the arithmetic operators in the lexer.** The lexer carries the latter.
 /// </remarks>
 public class ExpressionLexerArithmeticTests
 {

@@ -127,7 +127,7 @@ public class Demo2ClosingLimitsTests {
     /// **压舱重量：名字写死，方向是 `GE`** / Ballast weight: the name is hard-coded and the direction is `GE`.
     /// </summary>
     /// <remarks>
-    /// 名字必须是字面量 `ballast_weight_limit`，**不带** `name` 前缀（基线写死）。方向是 `ballast_weight ≥ min_ballast_weight`。
+    /// 名字必须是字面量 `ballast_weight_limit`，**不带** `name` 前缀（名字写死）。方向是 `ballast_weight ≥ min_ballast_weight`。
     ///
     /// The name must be the literal `ballast_weight_limit` with **no** `name` prefix (the code hard-codes it), and the direction is
     /// `ballast_weight ≥ min_ballast_weight`.

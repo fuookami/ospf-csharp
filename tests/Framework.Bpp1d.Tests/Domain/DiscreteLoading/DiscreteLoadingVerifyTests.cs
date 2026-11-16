@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **离散装载解复核** / Solver-independent discrete-loading verification.
 /// </summary>
 /// <remarks>
-/// 对应基线 `DiscreteLoadingContext.verify` 的九类复核。**这一块是本模块最值得移植的**：
+/// `DiscreteLoadingContext.verify` 的九类复核。**这一块是本模块最值得独立实现的**：
 /// 不依赖求解器、不依赖元模型，只用问题定义就能把"求解器说可行"独立复核一遍。
 /// 没有它，求解器或其适配层的任何一处错误都会**直接变成对外结论**。
 ///

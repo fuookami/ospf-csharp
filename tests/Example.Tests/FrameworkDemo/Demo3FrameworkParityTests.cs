@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// <remarks>
 /// **记着"Demo3 仍绕过 `Csp1dColumnGeneration`"。** 这里查清了它到底是什么：
 ///
-/// | 项 | 基线 | C# |
+/// | 项 | 参照实现 | C# |
 /// | --- | --- | --- |
 /// | Demo3 怎么求解 | `Csp1dColumnGeneration` + `NSameGenerator` + `ReducedCostPricingGenerator` | **手写 LP + 手写背包** |
 /// | 定价子问题 | 精确求解（框架） | **贪心启发式**（源码里写着 `Greedy heuristic`） |

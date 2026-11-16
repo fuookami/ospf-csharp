@@ -23,11 +23,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **`FixedValue` 与两个 `Possible` 是<b>冗余的</b>**：
 /// **`FixedValue` 非空时，恰好一个 `Possible` 为真。**
-/// **基线仍然两个都存**，因为**读的一方常常只关心其中一个，
+/// **这里仍然两个都存**，因为**读的一方常常只关心其中一个，
 /// 而"从 `FixedValue` 推回去"要多一次空判断。**
 /// **冗余在这里换来的是调用点的直接性——这不是可以随便删的东西。**
-///
-/// Following its `DiscreteConditionLinearization`.
 ///
 /// **Five fields, two of which say whether a branch survives**.
 ///
@@ -37,7 +35,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// - **`TrueBranchPossible` / `FalseBranchPossible`**: whether each branch is still alive
 ///
 /// **`FixedValue` and the two `Possible` flags are <b>redundant</b>**: **when `FixedValue` is set exactly one
-/// `Possible` is true.** **The code keeps both anyway**, because **callers usually care about just one of them,
+/// `Possible` is true.** **Both are kept anyway**, because **callers usually care about just one of them,
 /// and deriving it from `FixedValue` costs an extra null check.** **The redundancy buys directness at the call site —
 /// not something to delete casually.**
 /// </remarks>

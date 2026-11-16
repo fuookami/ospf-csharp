@@ -69,7 +69,7 @@ public class NativeFingerprintTests
     /// <remarks>
     /// **这是这里最有内容的一条。**
     ///
-    /// **基线阶梯的十三个分支里这里可达五个：** **`binary-logic-1` → `semi-1` → `max-1` →
+    /// **阶梯的十三个分支里这里可达五个：** **`binary-logic-1` → `semi-1` → `max-1` →
     /// `abs-1` / `pwl-abs-1`。**
     ///
     /// **要测的不是"某一个分支对不对"，而是<b>相邻两个同时非空时谁赢</b>——

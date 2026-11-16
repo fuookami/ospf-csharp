@@ -5,13 +5,10 @@
 2D cutting stock on top of the OSPF column-generation framework: materials, products, patterns, cut
 trees, sheet assignment, pattern generation, and two solver entry points.
 
-Baseline: `ospf-kotlin-framework-csp2d` at Kotlin `12fdb587`.
-
 ## Layout
 
-A single assembly with `Application/`, `Domain/`, and `Infrastructure/`. The baseline splits this into
-several sub-modules (material model, produce, waste, yield, sheet assignment, pattern generation,
-application); **this project does not mirror that split**.
+A single assembly with `Application/`, `Domain/`, and `Infrastructure/` — split by layer. The material model,
+pattern generation, cut trees and sheet assignment all live in one `Domain/`, so they share types directly.
 
 Geometry (`Region2`, `Placement2`, `QuantityPoint2`, `Box2Geometry`) is borrowed from `Framework.Bpp2d`
 rather than duplicated — bin packing already owns it.
@@ -20,7 +17,7 @@ rather than duplicated — bin packing already owns it.
 
 | Capability | Status |
 | --- | --- |
-| Material / product / pattern / plan model, ids and validation | ✅ all 18 baseline main sources ported |
+| Material / product / pattern / plan model, ids and validation | ✅ 18 model sources, ids and validation included |
 | Cut tree: two-stage and three-stage guillotine, stage rules | ✅ `CutTree2` with real `Validate` against placements |
 | Region cutting with kerf | ✅ `Region2.Cut`, non-positive kerf treated as zero |
 | Pattern generators: shelf (`Freeform` / two-stage) and three-stage | ✅ real row packing, prefixes, per-process cut trees |
@@ -35,7 +32,7 @@ rather than duplicated — bin packing already owns it.
 Column generation here appends patterns against the **residual demand**, not against the LP dual
 prices. `LpResult.DualSolution` is already within reach, so wiring the dual-driven pricing is a
 next step rather than a rewrite — but **until it is wired, "column generation" here means residual-driven
-repricing**, and the baseline says the same thing in the same words.
+repricing**.
 
 Do not read "there is a column generation class" as "reduced-cost pricing works".
 
@@ -65,5 +62,5 @@ dotnet test tests/Framework.Csp2d.Tests/Framework.Csp2d.Tests.csproj -c Release 
 defines nothing — the `SCIP_INTEGRATION` constant is set at **build** time, so those cases would silently
 disappear instead of failing.
 
-No claim of cross-language equivalence and no claim of performance improvement: nothing here was
-benchmarked against the Kotlin implementation.
+No claim of cross-language equivalence and no claim of performance improvement: nothing here has been
+benchmarked.

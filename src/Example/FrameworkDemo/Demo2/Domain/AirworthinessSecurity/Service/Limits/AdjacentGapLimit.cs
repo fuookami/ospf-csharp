@@ -29,12 +29,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **两行方向相反**。这是 `|load[p] − load[p+1]| ≤ 间隙` 的两半；只加一行时只限制了单向，重心可以单侧堆到超出间隙。
 /// 2. **`pos` 与 `neg` 的后缀**。两行同名时"第 2 条约束不可行"不知道是哪一侧。
-/// 3. **相邻指舱位表的顺序**，不是按力臂排序。基线直接用 `positions[p]` / `positions[p+1]`——顺序由调用方给定，本类不改写它。
+/// 3. **相邻指舱位表的顺序**，不是按力臂排序。直接用 `positions[p]` / `positions[p+1]`——顺序由调用方给定，本类不改写它。
 /// 4. **`positions.Count - 1` 次，不是 `Count` 次**。取到 `Count` 会越界。
 ///
 /// two rows per adjacent pair, `load[p] − load[p+1] ≤ gap` (`_pos_`) and `load[p+1] − load[p] ≤ gap` (`_neg_`). Four easy mistakes: (1) **the two rows go
 /// opposite ways** — together they are `|load[p] − load[p+1]| ≤ gap`, and one alone bounds only one direction, so weight can pile up on one side past the gap; (2) **the `pos` / `neg`
-/// suffixes**, or "constraint 2 is infeasible" does not say which side; (3) **adjacent means the position list's order**, not an arm sort — the code indexes `positions[p]` and
+/// suffixes**, or "constraint 2 is infeasible" does not say which side; (3) **adjacent means the position list's order**, not an arm sort — indexing `positions[p]` and
 /// `positions[p+1]` directly and leaves the order to the caller; (4) **`Count - 1` pairs**, not `Count`, or it overruns.
 /// </remarks>
 internal sealed class AdjacentGapLimit

@@ -25,14 +25,14 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// * `operationTime[a, s] = 单位加工时长 · Σ_顺序位 x[a, s, o]`；
 /// * `capacity[e, s] = Σ_{执行器为 e 的动作} operationTime[a, s]`。
 ///
-/// 这一点差别很关键： 的 `CapacityUsageVariables` 建的是**自由变量**，它和数量之间没有任何行相连，
-/// 所以"占用 ≤ 可用时长"对数量没有任何约束力—— 正是因此撤掉了那条判据。这里改成表达式，
+/// 这一点差别很关键：早先的 `CapacityUsageVariables` 建的是**自由变量**，它和数量之间没有任何行相连，
+/// 所以"占用 ≤ 可用时长"对数量没有任何约束力——正是因此撤掉了那条判据。这里改成表达式，
 /// 容量约束就真的压到数量上。
 ///
 /// 单位加工时长按规则取：**离散动作且有 `BatchDuration` 时用它，否则取时间窗刻度（= 1）**。
-/// （的注释说 C# 接口没有 `BatchDuration`——那是错的，它从 B4xx 起就在，只是没人用。）
+/// （早先的注释说 C# 接口没有 `BatchDuration`——那是错的，它从 B4xx 起就在，只是没人用。）
 ///
-/// In the code `capacity[e, s]` is **not a free variable** but an expression derived from the amounts: `operationTime[a, s] = unit processing time · sum of x[a, s, o]` and
+/// `capacity[e, s]` is **not a free variable** but an expression derived from the amounts: `operationTime[a, s] = unit processing time · sum of x[a, s, o]` and
 /// `capacity[e, s] = sum of operationTime[a, s]` over the actions of executor `e`. That difference matters: the earlier `CapacityUsageVariables` builds **free variables** with no row tying
 /// them to the amounts, so "occupancy within available duration" constrains nothing — which is exactly why removed that criterion. Expressed this way the capacity constraint really
 /// presses on the amounts.
@@ -105,10 +105,10 @@ public sealed class CapacityLoadExpressions<A>
         for (int action = 0; action < _actions.Count; ++action) {
             for (int slot = 0; slot < _slots.Count; ++slot) {
                 // **单位加工时长**：离散动作且有批次时长就用它，否则取时间窗刻度（= 1）。
-                // 少了这一层，`x` 的单位就是"件"而不是"时长"，一个时隙只能装 1 件——那不是基线语义。
+                // 少了这一层，`x` 的单位就是"件"而不是"时长"，一个时隙只能装 1 件——那不是想要的语义。
                 //
                 // **The unit processing time**: a discrete action with a batch duration uses it, otherwise the window scale (1). Without this layer `x` is measured in pieces rather
-                // than durations, so one slot holds exactly one piece — not its semantics.
+                // than durations, so one slot holds exactly one piece — not the semantics intended.
                 Flt64 unit = _actions[action].Discrete && _actions[action].BatchDuration is { } batch
                     ? _timeWindow.ValueOf(batch)
                     : _timeWindow.ValueOf(_timeWindow.Interval);

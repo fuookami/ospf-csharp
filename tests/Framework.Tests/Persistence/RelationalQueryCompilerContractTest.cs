@@ -117,8 +117,8 @@ public sealed class RelationalQueryCompilerContractTest {
     }
 
     /// <summary>
-    /// 方言枚举必须覆盖基线全部取值——少一个会让某个后端无法声明自己，只能静默落到别的方言。
-    /// The dialect enum must cover every baseline value; a missing one would leave a backend unable to declare
+    /// 方言枚举必须覆盖约定的全部取值——少一个会让某个后端无法声明自己，只能静默落到别的方言。
+    /// The dialect enum must cover every defined value; a missing one would leave a backend unable to declare
     /// itself and silently falling back to another dialect.
     /// </summary>
     [Fact]
@@ -130,8 +130,8 @@ public sealed class RelationalQueryCompilerContractTest {
     }
 
     /// <summary>
-    /// 编译错误类别必须覆盖基线全部取值，且每一类都能承载字段与原因——否则下游只能靠字符串匹配分类。
-    /// Error categories must cover every baseline value and each must carry field and reason; otherwise downstream
+    /// 编译错误类别必须覆盖约定的全部取值，且每一类都能承载字段与原因——否则下游只能靠字符串匹配分类。
+    /// Error categories must cover every defined value and each must carry field and reason; otherwise downstream
     /// can only classify by string matching.
     /// </summary>
     [Fact]

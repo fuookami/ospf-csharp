@@ -19,19 +19,19 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// 箱装载顺序约束 / The bin loading-order constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：**相邻两个同型箱之间**加两条单调约束。
+/// **相邻两个同型箱之间**加两条单调约束。
 ///
 /// 五点必须沿用：
 ///
 /// 1. **从 `i = 1` 开始**——`i = 0` 没有前一个箱可比。
-/// 2. **只在相邻两箱形状相同时才加**（基线 `bins[i].shape == bins[i - 1].shape`）。不同型的箱之间没有先后可言，
+/// 2. **只在相邻两箱形状相同时才加**（`bins[i].shape == bins[i - 1].shape`）。不同型的箱之间没有先后可言，
 ///    硬加会让解凭空受限。
 /// 3. **两条约束**：`v[i-1] &gt;= v[i]`（用到第 i 个箱就必须用到第 i-1 个）与 `volume[i-1] &gt;= volume[i]`。
 /// 4. **都是 `Comparison.GE`**，方向写反会让"后面的箱先用"成为可能。
 /// 5. 命名：`{name}_{i-1}_{i}` 与 `{name}_volume_{i-1}_{i}`。
 ///
 /// Two monotonicity rows between **adjacent same-shape bins**. Five things must be copied: **the loop starts at `i = 1`**, since bin 0 has no predecessor;
-/// **rows are added only when adjacent shapes match** (its `bins[i].shape == bins[i - 1].shape`), because different-shaped bins have no ordering and forcing one would
+/// **rows are added only when adjacent shapes match** (`bins[i].shape == bins[i - 1].shape`), because different-shaped bins have no ordering and forcing one would
 /// restrict the solution for no reason; **there are two rows**, `v[i-1] &gt;= v[i]` (using bin i requires using bin i-1) and `volume[i-1] &gt;= volume[i]`; **both are `Comparison.GE`**, and
 /// reversing them would let later bins be used first; and the names are `{name}_{i-1}_{i}` and `{name}_volume_{i-1}_{i}`.
 /// </remarks>

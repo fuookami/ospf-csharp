@@ -21,9 +21,9 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **不支持的运算必须失败，不能"看起来没这回事"** / An unsupported operator has to fail, not quietly vanish.
 /// </summary>
 /// <remarks>
-/// 基线 `MongoScalarTranslator`（**209 行**）把标量表达式翻成聚合管道里的值。
-/// **C# 侧四个 Mongo 翻译器一个都没有**（`src/` 下 `BsonDocument` 出现 0 次），
-/// **而基线侧这四件共 18 条离线判据——全部不需要 Mongo 实例。** 这里补第一个。
+/// `MongoScalarTranslator` 把标量表达式翻成聚合管道里的值。
+/// **C# 侧四个 Mongo 翻译器此前一个都没有**（`src/` 下 `BsonDocument` 出现 0 次），
+/// **而参考侧这四件共 18 条离线判据——全部不需要 Mongo 实例。** 这里补第一个。
 ///
 /// **为什么"失败"这件事本身要钉**：把不支持的运算返回 `null` 或原样，
 /// **查询会返回一个错误的结果集，而调用方以为查对了**——
@@ -131,12 +131,11 @@ public class MongoScalarTranslatorTests
 
     /// <summary>**不支持的运算必须失败，且给出理由** / An unsupported operator fails with a reason.</summary>
     /// <remarks>
-    /// **`ABS` 与 `POWER` 在都不支持**（Mongo 有 `$abs`/`$pow`，基线没接）。
-    /// **这里跟着基线失败，不自作主张补上**——**多接一个就是多一个"本仓比基线多"的地方，而那不是同步。**
+    /// **`ABS` 与 `POWER` 都不支持**（Mongo 有 `$abs`/`$pow`，这里没接）。
+    /// **于是直接失败，不自作主张补上**——**多接一个就多一处超出既定清单的行为。**
     ///
-    /// **`ABS` and `POWER` are both unsupported in the code** (Mongo has `$abs`/`$pow`; the code never wired them).
-    /// **This fails with the code rather than inventing support** — **wiring an extra one is a place where this repo
-    /// does more than the code, and that is not synchronisation.**
+    /// **`ABS` and `POWER` are both unsupported** (Mongo has `$abs`/`$pow`; neither is wired here).
+    /// **So the translation fails rather than inventing support** — **wiring an extra one would go beyond the fixed list.**
     /// </remarks>
     [Fact]
     public void TheUnsupportedOperators_ShouldFailRatherThanVanish()

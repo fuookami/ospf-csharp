@@ -70,7 +70,7 @@ public class SheetObjectiveRegistrationTests {
     /// 1. 默认权重 → 目标多项式里面积单项的系数是 **1**。
     /// 2. 传 `2.5` → 同一单项的系数是 **2.5**（不是 1）。**只看"注册成功"测不到这一点**，必须读系数。
     /// 3. 目标名落在模型里，是默认的 `sheet_area_minimization`。
-    /// 4. **重复注册不报错而是叠加**（实测：`AddObject` 容忍重名，与 的变量容忍同类），
+    /// 4. **重复注册不报错而是叠加**（实测：`AddObject` 容忍重名，与变量容忍同类），
     /// 所以调用方不能重复注册——这是风险而不是功能。
     ///
     /// Four paired points: the default weight gives an area monomial coefficient of **1**; passing `2.5` gives **2.5** rather than 1, which **a mere success check cannot detect** because it never

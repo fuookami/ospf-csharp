@@ -187,9 +187,9 @@ public class Csp1dPricingPolicyWiringTests {
 
     /// <summary>**配置里的惩罚必须到达定价器的 `ObjectiveConfig`** / The configured penalties must reach the pricing generator's `ObjectiveConfig`.</summary>
     /// <remarks>
-    /// **记的缺口**：`ObjectiveConfig` 在生产路径上**恒为 null**，成本永远只有基础值 1。
-    /// 基线 `pricingObjectiveConfig(resolvedConfig)` 从 `lengthConfig.batchMinPenalty` 与
-    /// `wasteConfig` 的三个惩罚项取值（见）。
+    /// **记下的缺口**：`ObjectiveConfig` 在生产路径上**恒为 null**，成本永远只有基础值 1。
+    /// 接线就是 `pricingObjectiveConfig(resolvedConfig)`：从 `lengthConfig.batchMinPenalty` 与
+    /// `wasteConfig` 的三个惩罚项取值。
     ///
     /// 判据用**捕获定价输入**的方式：一个只记录 `input` 的定价替身，然后断言
     /// `ObjectiveConfig` 里那四个字段**等于配置里设的值**。
@@ -197,8 +197,8 @@ public class Csp1dPricingPolicyWiringTests {
     /// **断言具体数值，不是"非 null"**：把它接成 `new Csp1dPricingObjectiveConfig<V>` 也能过"非 null"，
     /// 但那样**四个惩罚全是 null**，等于没接。
     ///
-    /// **The gap recorded**: `ObjectiveConfig` was **always null on the production path**, so the cost was always the base 1. The code
-    /// `pricingObjectiveConfig(resolvedConfig)` reads `lengthConfig.batchMinPenalty` and the three waste penalties.
+    /// **The gap recorded**: `ObjectiveConfig` was **always null on the production path**, so the cost was always the base 1. The wiring is
+    /// `pricingObjectiveConfig(resolvedConfig)`: it reads `lengthConfig.batchMinPenalty` and the three waste penalties.
     ///
     /// The criterion **captures the pricing input**: a pricing double that only records `input`, then asserts the four `ObjectiveConfig` fields **equal the configured
     /// values**.
@@ -290,7 +290,7 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// 所以第一轮定价就报出 1 条同键列，`DeduplicatePlans` 把它滤掉，`addedPlans` 为空 → `AllDuplicates`。
     ///
-    /// **这正是基线 的场景**——那里是"定价返回初始方案的副本"。
+    /// **这正是"定价返回初始方案的副本"的场景**。
     ///
     /// 断言 `FinalPlanCount == InitialPlanCount`：**重复列绝不能真的加进去**，
     /// 否则"报了重复却还是加进去了"也会绿。
@@ -303,7 +303,7 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// So the first pricing round already reports one same-key column, `DeduplicatePlans` filters it, `addedPlans` is empty, and the run ends as `AllDuplicates`.
     ///
-    /// **That is precisely its scenario** at — "pricing returns a copy of the initial plan".
+    /// **That is precisely the scenario**: "pricing returns a copy of the initial plan".
     ///
     /// It asserts `FinalPlanCount == InitialPlanCount`: **a duplicate column must never actually be added**, or "reported a duplicate but added it anyway" would also pass.
     /// </remarks>

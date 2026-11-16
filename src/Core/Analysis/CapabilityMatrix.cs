@@ -11,8 +11,8 @@ namespace Fuookami.Ospf.Core.Analysis;
 
 /// <summary>后端支持可以被调度的分析操作 / Analysis operations whose backend support can be dispatched.</summary>
 /// <remarks>
-/// 与的 `AnalysisCapability` 逐成员对应，**顺序也一致**。
-/// Mirrors `AnalysisCapability` in the code, member for member and in order.
+/// `AnalysisCapability` 逐成员对应，**顺序也一致**。
+/// Mirrors `AnalysisCapability` member for member and in order.
 /// </remarks>
 public enum AnalysisCapability
 {
@@ -59,17 +59,17 @@ public enum CapabilitySupport
 /// 用于分析调度、与求解器无关的能力矩阵 / Solver-neutral capability matrix used by analysis dispatch.
 /// </summary>
 /// <remarks>
-/// 与对应。**基础标志映射 `SolverCapabilities`，分析能力映射允许后端适配器覆盖某一阶段**——
+/// **基础标志映射 `SolverCapabilities`，分析能力映射允许后端适配器覆盖某一阶段**——
 /// 因为有些阶段的可用性取决于通用求解器描述符推断不出的细节。
 ///
-/// 补**：它不依赖原生后端（只依赖报告层与 CP 类型），所以能独立移植。
-/// **一处刻意的保守**：`FallbackSatisfactionOnly` **只在后端声明了 CP 满足路径时才成立**。基线为此写过一条注释——
+/// **它不依赖原生后端（只依赖报告层与 CP 类型），所以能独立实现与测试。**
+/// **一处刻意的保守**：`FallbackSatisfactionOnly` **只在后端声明了 CP 满足路径时才成立**：
 /// 从任意模型类型推导，会让只支持线性/MIP 的后端**声称一个它兑现不了的回退**。
 ///
 /// **The primitive flags mirror `SolverCapabilities`, and the analysis map lets a backend adapter override a stage**
-/// because some stages depend on details the generic descriptor cannot infer. ****: it needs no native backend, only the report and CP types. **One deliberate
+/// because some stages depend on details the generic descriptor cannot infer. **It needs no native backend, only the report and CP types.** **One deliberate
 /// conservatism**: `FallbackSatisfactionOnly` **holds only when the backend declares a CP satisfaction path** — deriving it from any model type would let a linear/MIP-only
-/// backend **advertise a fallback it cannot deliver**, which the code calls out in a comment.
+/// backend **advertise a fallback it cannot deliver**.
 /// </remarks>
 /// <param name="ModelTypes">支持的求解器模型类型 / Supported solver model types.</param>
 /// <param name="NativeAssumptionSolving">是否原生支持 assumption 求解 / Whether assumption solving is native.</param>

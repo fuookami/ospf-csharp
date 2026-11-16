@@ -13,16 +13,16 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 列的检验数 / The reduced cost of a column.
 /// </summary>
 /// <remarks>
-/// 与的 `layerReducedCost` 对齐：`检验数 = 该列实际面积 × 面积系数 − Σ(需求影子价格 × 该列对该需求的系数)`。
+/// `检验数 = 该列实际面积 × 面积系数 − Σ(需求影子价格 × 该列对该需求的系数)`。
 ///
 /// 三处必须沿用：
 ///
 /// 1. **影子价格为零的需求直接跳过**：乘零不改变结果，但会让"没有定价的需求"和"定价为零的需求"在求和里混在一起，
 ///    排查时看不出差别。
 /// 2. **系数用 `LayerDemandCoefficient`**，不是件数：面积需求下件数完全不对（已记档同一处）。
-/// 3. **没有影子价格的需求跳过**（`continue`），不按零参与——缺失与零是两回事，与 的教训相同。
+/// 3. **没有影子价格的需求跳过**（`continue`），不按零参与——缺失与零是两回事。
 ///
-/// Aligned with its `layerReducedCost`: `reduced cost = the column's actual area × the area coefficient − Σ(demand shadow price × that column's coefficient for the demand)`. Three
+/// `reduced cost = the column's actual area × the area coefficient − Σ(demand shadow price × that column's coefficient for the demand)`. Three
 /// things must be copied: **demands with a zero shadow price are skipped**, since multiplying by zero changes no total but blurs "unpriced demand" against "demand priced at zero" when
 /// debugging; **the coefficient comes from `LayerDemandCoefficient`** rather than the unit count, which is simply wrong for area demands (recorded); and **demands without a shadow price
 /// are skipped** rather than entering as zero, since missing and zero differ — the same lesson.
@@ -57,10 +57,10 @@ public static class ReducedCost
                 continue;
             }
             // ponytail: **零价格/缺价的跳过在数值上不可观测**——`0 × 有限系数 = 0`，加进去结果一模一样。
-            // 保留它是为了与基线逐条对齐，并在系数万一非有限时避免 `0 × ∞ = NaN` 污染整个求和。
+            // 保留它是为了保持逐条对应，并在系数万一非有限时避免 `0 × ∞ = NaN` 污染整个求和。
             // 想让它可观测，得让 `LayerDemandCoefficient` 返回非有限值，而它现在只能返回面积或件数，做不到。
             // ponytail: **the zero/unpriced skips are numerically unobservable** — `0 × finite coefficient = 0`, so including them leaves the total identical. They are kept for parity with the
-            // baseline and to avoid `0 × ∞ = NaN` poisoning the sum if a coefficient were ever non-finite. Making them observable would require `LayerDemandCoefficient` to return a non-finite
+            // code path and to avoid `0 × ∞ = NaN` poisoning the sum if a coefficient were ever non-finite. Making them observable would require `LayerDemandCoefficient` to return a non-finite
             // value, which it cannot do today (it returns an area or a count).
             if (price.ToFlt64().ToDouble() == 0.0)
             {
@@ -79,10 +79,10 @@ public static class ReducedCost
     /// <param name="shadowPrices">字符串键的影子价格 / The string-keyed shadow prices.</param>
     /// <returns>值对象键的影子价格 / The value-object-keyed shadow prices.</returns>
     /// <remarks>
-    /// 与基线 `shadowPriceKeysOf` 对齐。**只保留需求项里出现过的键**：求解器可能返回额外的键（比如松弛变量的），
+    /// **只保留需求项里出现过的键**：求解器可能返回额外的键（比如松弛变量的），
     /// 全部收下会让检验数里混进不相关的价格。**找不到就跳过**，不按零补。
     ///
-    /// Aligned with its `shadowPriceKeysOf`. **Only keys present in the demand entries survive**: the solver may return extras such as slack-variable prices, and taking them all would
+    /// **Only keys present in the demand entries survive**: the solver may return extras such as slack-variable prices, and taking them all would
     /// mix unrelated prices into the reduced cost. **A missing key is skipped**, not filled with zero.
     /// </remarks>
     public static IReadOnlyDictionary<Bpp2dDemandShadowPriceKey, FltX> ShadowPriceKeysOf(
@@ -97,7 +97,7 @@ public static class ReducedCost
         {
             // **复用 `DemandConstraint.ModeTag`**，不自己拼字符串：两处各写一份会让键在某一侧悄悄不匹配
             // （第一次用 `ToString.ToLowerInvariant`，得到 `itemamount` 而不是 `item_amount`，价格全查不到）。
-            // **Reuse `DemandConstraint.ModeTag`** rather than formatting here: two copies of the mapping let the key silently mismatch on one side. first used
+            // **Reuse `DemandConstraint.ModeTag`** rather than formatting here: two copies of the mapping let the key silently mismatch on one side. The first version used
             // `ToString.ToLowerInvariant`, which yields `itemamount` instead of `item_amount`, so no price was ever found.
             var modeKey = new DemandModeKey(
                 Service.Limits.DemandConstraint.ModeTag(entry.Mode), entry.ItemId.Value);
@@ -115,7 +115,7 @@ public static class ReducedCost
 /// 检验数筛选器 / The reduced-cost filter.
 /// </summary>
 /// <remarks>
-/// 与基线 `reducedCostFilter` 对齐：给每个候选列算检验数，**只留检验数小于负容差的**（真正能改进目标的），
+/// 给每个候选列算检验数，**只留检验数小于负容差的**（真正能改进目标的），
 /// 并按检验数升序排（最负的在前，先被用上）。
 ///
 /// 两处必须沿用：

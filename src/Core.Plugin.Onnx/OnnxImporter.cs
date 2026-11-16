@@ -91,11 +91,11 @@ public static class OnnxImporter
     /// <param name="inputBindings">输入名到符号列表的绑定，长度等于元素数 / bindings from input name to a symbol list of length equal to the element count.</param>
     /// <returns>导入结果 / The result.</returns>
     /// <remarks>
-    /// 对齐基线 `load(bytes, inputBindings: Map&lt;String, List&lt;Symbol&gt;&gt;, options)`：**张量拆成每元素符号是调用方的事，**
+    /// 入口接收 `inputBindings`（输入名到符号列表）：**张量拆成每元素符号是调用方的事，**
     /// **导入器不去猜命名。** **这一入口开启之后，多元素输出按 `OutputElements`／`Output(index)` 取，**
     /// **而旧入口在没有符号列表的情况下仍然明确拒绝多元素输出——** **它没有表达这件事的地方。**
     ///
-    /// Syncs its `load(bytes, inputBindings: Map&lt;String, List&lt;Symbol&gt;&gt;, options)`: **splitting a tensor into per-element symbols is the caller's job, and the importer
+    /// **The entry takes `inputBindings` (input name to symbol list)**: **splitting a tensor into per-element symbols is the caller's job, and the importer
     /// does not guess names.** **With this entry a multi-element output is read through OutputElements / Output(index), while the old entry keeps refusing a multi-element output —
     /// it has nowhere to express it.**
     /// </remarks>
@@ -399,10 +399,10 @@ public static class OnnxImporter
             context.TryBind(entry.Key, perElement[0], elements.Shape, out _, list);
         }
 
-        // 调用方给的符号列表直接变成元素列表：**这就是基线 inputBindings 的落地形态，**
+        // 调用方给的符号列表直接变成元素列表：**这就是 inputBindings 的落地形态，**
         // **之后逐元素运算、形状算子、`Scan` 全程按元素走，不再回到"一个数"。**
         //
-        // The caller's symbol lists become element lists directly: **this is the code inputBindings taking shape here, and from this point elementwise operators, shape operators
+        // The caller's symbol lists become element lists directly: **this is inputBindings taking shape here, and from this point elementwise operators, shape operators
         // and Scan all stay per element instead of collapsing back to one number.**
         if (bindings is not null) {
             foreach (KeyValuePair<string, IReadOnlyList<RealVar>> entry in bindings) {

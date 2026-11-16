@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **逐元素算子按元素配对，而不是把整个张量当成一个数** / Elementwise operators pair by element instead of treating a tensor as one number.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `lowerElementwiseBinary`：**每个张量是 `OnnxTensorExpr(shape, elements)`，所以"加"天然就是逐位置加。**
+/// **每个张量是 `OnnxTensorExpr(shape, elements)`，所以"加"天然就是逐位置加。**
 /// **C# 侧此前把多元素张量压成一个标量表达式——** **那在数学上是一个错误但自洽的表示，一旦两个不同形状的多元素张量相遇就会把两个不同的东西相加。**
 ///
 /// **判据读的是中间绑定：** **图输出多元素时会明确拒绝（按元素取输出还没接），而中间结果仍留在上下文里，**
 /// **所以"配对对不对"可以直接看，而不是只能断言"失败了"。**
 ///
-/// Syncs `lowerElementwiseBinary`: **in the code every tensor is OnnxTensorExpr(shape, elements), so "add" is per position by construction.** The C# side used to collapse a
+/// **Every tensor is `OnnxTensorExpr(shape, elements)`, so "add" is per position by construction.** The C# side used to collapse a
 /// multi-element tensor into one scalar expression — **a self-consistent but mathematically wrong representation that adds two different things the moment two differently shaped
 /// multi-element tensors meet.**
 ///

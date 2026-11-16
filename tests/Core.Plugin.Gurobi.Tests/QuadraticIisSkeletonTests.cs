@@ -21,10 +21,10 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 /// **二次 IIS 入口存在、但显式报告未实现** / The quadratic IIS entry exists but reports "unimplemented" explicitly.
 /// </summary>
 /// <remarks>
-/// **定位到最大单块缺失**：基线 `computeLegacyIIS` 有 **846 行 / 12 个函数**，
-/// C# 侧**一行都没有**。 建立了**类型与入口骨架**，本判据钉住它的行为契约。
+/// **定位到最大单块缺失**：完整的 `computeLegacyIIS` 一开始没有实现，
+/// 这里先建立了**类型与入口骨架**，本判据钉住它的行为契约。
 ///
-/// **为什么先建骨架而不是直接移植**：
+/// **为什么先建骨架而不是一步实现**：
 ///
 /// | 前提 | 状态 |
 /// | --- | --- |
@@ -38,9 +38,9 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 /// **overturned the "no solver" premise**: SCIP 9.2 is available and drove the full flow through it, so this file now pins the **post-implementation
 /// contract** rather than an "unimplemented" placeholder.
 ///
-/// **located the largest single missing block**: its `computeLegacyIIS` is **846 lines / 12 functions** with **nothing** on the C# side. built the
-/// **types and entry skeleton**, and this criterion pins its behavioural contract. **Why a skeleton rather than a direct port** (table above): the elastic builder and a
-/// structural reference exist, but **a real quadratic solver does not**, so a full port **cannot be verified here**. The skeleton's value is turning "unimplemented" from a
+/// **located the largest single missing block**: a full `computeLegacyIIS` was missing entirely; this file built the
+/// **types and entry skeleton**, and this criterion pins its behavioural contract. **Why a skeleton rather than a complete implementation** (table above): the elastic builder and a
+/// structural reference exist, but **a real quadratic solver does not**, so a full implementation **cannot be verified here**. The skeleton's value is turning "unimplemented" from a
 /// **doc note** into a **compilable, assertable structure that later batches can fill in**.
 /// </remarks>
 public class QuadraticIisSkeletonTests {
@@ -104,9 +104,9 @@ public class QuadraticIisSkeletonTests {
             "pointing callers at the linear implementation was only correct while the quadratic one was a skeleton");
     }
 
-    /// <summary>**证据来源枚举与基线同名同义** / The evidence-source enum matches the code by name and meaning.</summary>
+    /// <summary>**证据来源枚举的命名与语义一致** / The evidence-source enum's names match their meanings.</summary>
     /// <remarks>
-    /// 基线先跑弹性过滤，失败才跑删除过滤。枚举值的**顺序**因此有意义：
+    /// 本实现先跑弹性过滤，失败才跑删除过滤。枚举值的**顺序**因此有意义：
     /// `ElasticFilter` 在前。若将来实现时把顺序搞反，诊断信息会误导。
     ///
     /// The code runs the elastic filter first and the deletion filter only on failure, so the enum **order** matters: `ElasticFilter` comes first. Getting it backwards

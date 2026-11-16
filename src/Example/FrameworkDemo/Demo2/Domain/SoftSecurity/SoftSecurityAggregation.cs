@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity;
 /// 软性安全聚合根 / The soft-security aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：七个上游模型 + 一个自建的 `DivideEmptyLoading`。
+/// 七个上游模型 + 一个自建的 `DivideEmptyLoading`。
 ///
 /// 三处必须沿用：
 ///

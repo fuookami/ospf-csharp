@@ -8,8 +8,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 货物作业顺序 / The item's operational sequence.
 /// </summary>
 /// <remarks>
-/// 与基线 `Item.order`（`loading_effectiveness` 侧读取的三个时刻）对齐。三个时刻**各自可空**，
-/// 而不是合成一个"阶段"枚举——基线就是三个独立可空字段，且**它们的出现顺序有业务含义**：
+/// 对应 `Item.order` 的三个时刻（`loading_effectiveness` 侧读取）。三个时刻**各自可空**，
+/// 而不是合成一个"阶段"枚举——就是三个独立可空字段，且**它们的出现顺序有业务含义**：
 /// 站坪 → 上车 → 复重。
 ///
 /// 三条限制按这个顺序做**前缀判定**：
@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///
 /// 三个字段**必须保持可空**：把它们改成非空布尔会让"尚未发生"与"发生在第 0 秒"混为一谈。
 ///
-/// Aligned with its three nullable instants. The three instants are **independently nullable** rather than collapsed into one stage enum — the code keeps three
+/// Three nullable instants. They are **independently nullable** rather than collapsed into one stage enum — three
 /// separate nullable fields and **their order carries business meaning**: hardstand → car board → reweighed. The two relevant limits then test them as **prefixes**:
 /// `ItemAheadLoadLimit` fires when any item satisfies "already on the hardstand", "already on the hardstand or boarded", or "any of the three"; and `ItemReweighNeededLimit` puts
 /// into the objective only items **without a reweigh instant**. All three fields **must stay nullable**: making them non-nullable booleans would conflate "has not happened" with

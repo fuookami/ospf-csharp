@@ -116,10 +116,10 @@ public class ProduceAggregationDemandMonomialTests {
 
     /// <summary>**初始方案也必须填充中间符号**——第一轮 LP 靠它 / Initial plans must populate the intermediate symbols — the first LP depends on it.</summary>
     /// <remarks>
-    /// **记的缺口**："初始方案的贡献单项式仍不登记"，并误以为"查基线后确认 `addInitialPlans` 只登记 id/键，两边一致"。
+    /// **记的缺口**："初始方案的贡献单项式仍不登记"，并误以为"`addInitialPlans` 只登记 id/键"。
     ///
     /// **那是错的。** `register` 在 `addInitialPlans` **之后**还会建 `PlanBatchTerms`
-    ///，用它填 `demandQuantity` / `materialQuantity` /
+    /// 用它填 `demandQuantity` / `materialQuantity` /
     /// `machineBatchQuantity` / `machineCapacityQuantity`。C# **完全没有这个类**
     /// （`grep PlanBatchTerms` 零命中），构造阶段只建空符号。
     ///

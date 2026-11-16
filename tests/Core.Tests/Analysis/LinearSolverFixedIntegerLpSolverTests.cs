@@ -65,7 +65,7 @@ public class LinearSolverFixedIntegerLpSolverTests
     /// Duals appear only where the mapping is unique; everything else is omitted.
     /// </summary>
     /// <remarks>
-    /// **基线原话：** **「仅当某个原始约束恰好对应唯一降阶行时才给出值」，
+    /// **规则：** **「仅当某个原始约束恰好对应唯一降阶行时才给出值」，
     /// 且「降阶辅助行及无法唯一归属原始来源的行不会进入返回的对偶映射」。**
     ///
     /// **第一版实现是「后写覆盖先写」，于是对应两行的约束会拿到第二行的对偶——
@@ -73,7 +73,7 @@ public class LinearSolverFixedIntegerLpSolverTests
     ///
     /// **三种输入断言三件事：唯一归属→保留；对应两行→丢弃；无原始来源→丢弃。**
     ///
-    /// **The code says a value is given only when an original constraint corresponds to a unique lowered row, and that helper
+    /// **A value is given only when an original constraint corresponds to a unique lowered row, and that helper
     /// rows and rows without a unique original do not enter the map.** **The first implementation let later writes overwrite
     /// earlier ones, so a two-row constraint received the second row's dual — a plausible number with the wrong owner — and this
     /// criterion caught it.** **Three inputs assert three things: unique → kept; two rows → dropped; no original → dropped.**

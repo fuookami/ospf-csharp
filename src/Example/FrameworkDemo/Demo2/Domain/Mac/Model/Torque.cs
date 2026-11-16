@@ -100,10 +100,10 @@ public sealed class Torque
     /// </summary>
     /// <returns>力矩 / The torque.</returns>
     /// <remarks>
-    /// 基线写的是 `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`：**先取重力，再乘力臂**。顺序不能反——先乘力臂会把"重量×力臂"
+    /// 写法是 `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`：**先取重力，再乘力臂**。顺序不能反——先乘力臂会把"重量×力臂"
     /// 当成重量去求重力（差一个 g），而两者数值相差近十倍，看不出是量纲错，只会得到一个偏大十倍的力矩。
     ///
-    /// The code writes `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`: **gravity first, then the arm**. The order matters — multiplying the arm first feeds
+    /// Written as `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`: **gravity first, then the arm**. The order matters — multiplying the arm first feeds
     /// "weight × arm" to the gravity conversion (off by g), and the two differ by nearly an order of magnitude, so it reads as a plausible torque rather than a unit error.
     /// </remarks>
     public double DryOperatingTorque() => TorqueOf(_fuselage.Dow, _fuselage.BalancedArm);

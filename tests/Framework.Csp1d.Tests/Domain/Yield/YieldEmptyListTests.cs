@@ -20,8 +20,8 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 /// **"没有欠产"是空列表，不是 null** / "No deficit" is an empty list, not null.
 /// </summary>
 /// <remarks>
-/// 发现的偏离**：基线 `YieldModelingResult` 的两个字段是 `List<...> = emptyList`——
-/// **永不为 null**。C# 原本是 `Count > 0 ? list : null`，把空列表变成了 null。
+/// 发现的偏离**：`YieldModelingResult` 的两个字段应当是 `List<...> = emptyList`——
+/// **永不为 null**。这里原本是 `Count > 0 ? list : null`，把空列表变成了 null。
 ///
 /// 后果：调用方拿到 null 只能猜是"没有"还是"没算"。
 /// **这正是 在余料代理那里刚批评过的同一类混淆**（"没有数据"与"零浪费"必须分开），

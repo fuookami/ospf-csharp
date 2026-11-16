@@ -143,14 +143,14 @@ public static class RemoteSolverReportMapping {
     /// 组装线性／二次的 incumbent 报告 / Assemble the linear/quadratic incumbent report.
     /// </summary>
     /// <remarks>
-    /// 的四条判定：不可行直接报 `ORModelInfeasible`（带上后端给的消息）；没有稳定解时走
+    /// 四条判定：不可行直接报 `ORModelInfeasible`（带上后端给的消息）；没有稳定解时走
     /// <see cref="ToEmptySolutionOutput"/>；稳定解本身不可行同样报 `ORModelInfeasible`；解长度必须等于模型
     /// 变量数——长度不符说明拿到的解不是这个模型的问题，不能截断或补零凑数。
     ///
     /// 目标值与间隙都遵循"**稳定解优先、切片结果回退**"。目标值两侧都没有时**报错而不是填 0**——0 是一个
     /// 合法目标值，拿它当"未知"会让下游误以为目标就是零。
     ///
-    /// Four baseline decisions: infeasible reports `ORModelInfeasible` (carrying the backend's message); a
+    /// Four decisions: infeasible reports `ORModelInfeasible` (carrying the backend's message); a
     /// missing stable solution goes to <see cref="ToEmptySolutionOutput"/>; an infeasible stable solution also
     /// reports `ORModelInfeasible`; and the solution length must equal the model's variable count, since a
     /// different length means the solution answers another problem and must not be truncated or zero-padded.
@@ -323,11 +323,11 @@ public static class RemoteSolverReportMapping {
     /// 组装 CP 求解报告 / Assemble the CP solve report.
     /// </summary>
     /// <remarks>
-    /// 与基线 <c>toReport</c> 对应，但目标值类型是 <c>Int64</c>：CP 的目标是精确整数，不能经过浮点。
+    /// 目标值类型是 <c>Int64</c>，不走浮点：CP 的目标是精确整数，不能经过浮点。
     /// 与线性／二次版本的关键差别是诊断：CP 的诊断里带不可行证据，解析失败时**上抛而不是吞掉**，否则下游会
     /// 把"解析失败"读成"没有证据"。
     ///
-    /// Corresponds to its <c>toReport</c> but with an <c>Int64</c> objective type, since a CP
+    /// The objective type is <c>Int64</c>, since a CP
     /// objective is an exact integer and must not pass through floating point. The key difference from the
     /// linear/quadratic variants is diagnostics: CP diagnostics carry infeasibility evidence and a parse
     /// failure is **propagated rather than swallowed**, otherwise downstream would read "parse failed" as "no

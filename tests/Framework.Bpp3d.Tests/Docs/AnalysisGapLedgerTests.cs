@@ -13,17 +13,17 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 分析能力缺口的三口径账 / The three-way accounting of the analysis gap.
 /// </summary>
 /// <remarks>
-/// **此前那一行写的是"由 3 个增至 18 个，仍缺 3（基线 21）"**。这个口径混了"文件数"和"覆盖的基线文件数"：
-/// 有三个基线文件里的类型被拆成了单独的 C# 文件，**文件数涨了，覆盖数没涨**。
+/// **此前那一行写的是"由 3 个增至 18 个，仍缺 3（源文件 21）"**。这个口径混了"文件数"和"覆盖的源文件数"：
+/// 有三个源文件里的类型被拆成了单独的 C# 文件，**文件数涨了，覆盖数没涨**。
 ///
 /// 按实测重记，分开三种：整文件搬完、只搬报告侧、完全未动。**两个方向都错过一次——
 /// 写成"缺 3"低估了 Gurobi，写成"缺 6 个文件"又高估了 SCIP。**
 ///
-/// 判据钉的是**口径本身**：文档三个类别的数量必须加起来等于基线文件总数，且每一类点名的文件都存在。
+/// 判据钉的是**口径本身**：文档三个类别的数量必须加起来等于源文件总数，且每一类点名的文件都存在。
 ///
-/// **The row used to read "3 → 18 files, 3 still missing (baseline 21)"**, which conflated file count with baseline files covered: three baseline types were split into
-/// separate C# files, so **the file count rose while the coverage did not.** re-measures into three categories. **Both directions were wrong once — "3 missing"
-/// understated Gurobi, "6 files missing" overstated SCIP.** These criteria pin **the accounting itself**: the three category counts must sum to the code total, and every
+/// **The row used to read "3 → 18 files, 3 still missing (source 21)"**, which conflated file count with source files covered: three source types were split into
+/// separate C# files, so **the file count rose while the coverage did not.** The ledger re-measures into three categories. **Both directions were wrong once — "3 missing"
+/// understated Gurobi, "6 files missing" overstated SCIP.** These criteria pin **the accounting itself**: the three category counts must sum to the source total, and every
 /// named file must exist.
 /// </remarks>
 public class AnalysisGapLedgerTests {

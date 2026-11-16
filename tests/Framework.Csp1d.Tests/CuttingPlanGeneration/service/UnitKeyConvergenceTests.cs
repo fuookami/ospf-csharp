@@ -15,8 +15,8 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 
 /// <summary>
-/// 单位键必须**只有一份实现**，且与基线 `symbol ?: name ?: toString` 逐字一致。
-/// The unit key must have **exactly one implementation**, byte-for-byte with its `symbol ?: name ?: toString`.
+/// 单位键必须**只有一份实现**，取值为 `symbol ?: name ?: toString`。
+/// The unit key must have **exactly one implementation**, yielding `symbol ?: name ?: toString`.
 /// </summary>
 /// <remarks>
 /// 这里在 `Framework.Csp1d` 里查出**五份**单位键实现：
@@ -29,12 +29,12 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 /// | 4 | `CrossContributionProjector.Measure` | **空串** |
 /// | 5 | `CuttingPlanDemandContribution` 的 `UnitKey` | **空串** |
 ///
-/// 五份各写一遍，**任何一份与基线分叉都会让"同一单位"在不同代码路径上判成不同结果，
+/// 五份各写一遍，**任何一份分叉都会让"同一单位"在不同代码路径上判成不同结果，
 /// 而不会有任何测试发现**。第 4、5 份甚至停在了更早的、会返回空串的版本。
 ///
 /// 现在全部委托给 `GenerationQuantityMath.UnitKey`。
 ///
-/// found **five** unit-key implementations in `Framework.Csp1d` (table above). With five copies, **any one diverging from the code makes "the same
+/// found **five** unit-key implementations in `Framework.Csp1d` (table above). With five copies, **any one diverging makes "the same
 /// unit" resolve differently on different code paths, and no test would notice**. Copies 4 and 5 had even stalled at the earlier empty-string version.
 ///
 /// All of them now delegate to `GenerationQuantityMath.UnitKey`.
@@ -59,11 +59,11 @@ public class UnitKeyConvergenceTests {
 
     /// <summary>**无名单位必须落到 `ToString`，不得是空串** / A nameless unit must fall back to `ToString`, never to an empty string.</summary>
     /// <remarks>
-    /// 这正是第 4、5 份实现的缺陷：它们返回空串。基线返回 `量纲(比例)`。
-    /// 空串会让两个**不同量纲**的未知单位看起来相同，而基线能按量纲区分。
+    /// 这正是第 4、5 份实现的缺陷：它们返回空串。正确取值是 `量纲(比例)`。
+    /// 空串会让两个**不同量纲**的未知单位看起来相同，而 `量纲(比例)` 能按量纲区分。
     ///
-    /// This is exactly the defect in copies 4 and 5: they returned an empty string. The code returns `dimension(scale)`. An empty string makes two unknown units
-    /// of **different dimensions** look identical, while the code can tell them apart.
+    /// This is exactly the defect in copies 4 and 5: they returned an empty string. The right value is `dimension(scale)`. An empty string makes two unknown units
+    /// of **different dimensions** look identical, while `dimension(scale)` can tell them apart.
     /// </remarks>
     [Fact]
     public void NamelessUnit_ShouldFallBackToItsStringRepresentation() {
@@ -75,7 +75,7 @@ public class UnitKeyConvergenceTests {
         GenerationQuantityMath.UnitKey(length).Should().NotBe(GenerationQuantityMath.UnitKey(mass));
     }
 
-    /// <summary>**匿名单位的单位键（第三回退落空串）** / The anonymous unit's key matches the code (third fallback lands on an empty string).</summary>
+    /// <summary>**匿名单位的单位键（第三回退落空串）** / The anonymous unit's key, whose third fallback lands on an empty string.</summary>
     /// <remarks>
     /// 三处一起看才准：
     ///
@@ -87,21 +87,21 @@ public class UnitKeyConvergenceTests {
     /// **`AnonymousPhysicalUnit` 的 `toString` 是 `symbol ?: ""`**——它**既不回退到 name，也不渲染量纲**。
     /// 于是"既无 symbol 又无 name 的匿名单位"的单位键就是**空串**，两个不同的匿名单位**共用一个键**。
     ///
-    /// **这是行为，不是 C# 的偏离。** 这里一开始把 `Symbol ?? ""` 记在 `DerivedPhysicalUnit` 名下
+    /// **这是既定行为。** 这里一开始把 `Symbol ?? ""` 记在 `DerivedPhysicalUnit` 名下
     /// 并标为"C# 的真实隐患"——**两处都错了**：`DerivedPhysicalUnit` 并不覆盖 `ToString`（它继承基类），
-    /// 而 `AnonymousPhysicalUnit` 的写法与基线**逐字相同**。
+    /// 而 `AnonymousPhysicalUnit` 的写法**逐字就是** `symbol ?: ""`。
     ///
     /// 判据钉住这两点，**防止将来有人把 `AnonymousPhysicalUnit.ToString` "修"成基类的三回退**——
-    /// 那会让 C# 与基线分叉，而且**没有任何现有判据会发现**。
+    /// 那会改变既定行为，而且**没有任何现有判据会发现**。
     ///
-    /// The three baselines must be read together (snippet above).
+    /// The three rules must be read together (snippet above).
     ///
     /// **`AnonymousPhysicalUnit`'s `toString` is `symbol ?: ""`** — it **neither falls back to the name nor renders the dimension**. So a symbol-less, nameless anonymous
     /// unit's key is **an empty string**, and two distinct anonymous units **share one key**.
     ///
- /// **That is its behaviour, not a C# divergence.** initially attributed `Symbol ?? ""` to `DerivedPhysicalUnit` and labelled it "a real C#
+ /// **That is established behaviour.** `Symbol ?? ""` was initially attributed to `DerivedPhysicalUnit` and labelled it "a real C#
     /// hazard" — **wrong on both counts**: `DerivedPhysicalUnit` does not override `ToString` (it inherits the base), and `AnonymousPhysicalUnit`'s version is
-    /// **byte-for-byte identical** to the code.
+    /// **byte-for-byte `symbol ?: ""`**.
     ///
     /// The criteria pin both facts, **preventing someone from "fixing" `AnonymousPhysicalUnit.ToString` into the base's three-step fallback** — that would diverge
     /// from the code, and **no existing criterion would notice**.

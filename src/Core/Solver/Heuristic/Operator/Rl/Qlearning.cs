@@ -1,8 +1,6 @@
 // 强化学习算子 / Reinforcement-learning operators.
-// 与`operator/rl/` 下的、
-//、 对应（README 与基线测试不移植）。
-// ,,,,,
-// and (the READMEs and the code test file are not implemented).
+// 与 `operator/rl/` 下的算子一一对应（README 与测试不入仓）。
+// One-to-one with the operators under `operator/rl/` (the READMEs and the test file are not carried over).
 
 using System;
 using System.Collections.Generic;
@@ -116,9 +114,9 @@ public sealed class QTable {
     /// <param name="state">状态下标 / The state index.</param>
     /// <returns>动作价值 / The action values.</returns>
     /// <remarks>
-    /// **返回的是拷贝而不是活视图**。基线写 `entries[state].toList`；返回活视图会让调用方持有的"价值快照"在后续更新后
+    /// **返回的是拷贝而不是活视图**。实现写的是 `entries[state].toList`；返回活视图会让调用方持有的"价值快照"在后续更新后
     /// 静默变化，而选择器读到的值与它决策时的值不再一致。
-    /// **A copy is returned, not a live view.** The code writes `entries[state].toList`; a live view makes the caller's "value
+    /// **A copy is returned, not a live view.** It writes `entries[state].toList`; a live view makes the caller's "value
     /// snapshot" change silently after later updates, so the selector reads values that no longer match what it decided on.
     /// </remarks>
     public IReadOnlyList<Flt64> ValuesOf(int state) {

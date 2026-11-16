@@ -256,7 +256,7 @@ public class Demo2MacOptimizationTests {
     /// </remarks>
     [Fact]
     public void LongitudinalBalanceLimit_ShouldPickTheCoefficientByType() {
-        // **这条判据只能测"三分支各自可达"，测不出系数数值**：三个松弛符号都是恒零多项式（基线就是
+        // **这条判据只能测"三分支各自可达"，测不出系数数值**：三个松弛符号都是恒零多项式（这里用的就是
         // `LinearExpressionSymbol(Flt64, name = …)`），所以乘任何系数都得到零多项式，目标里**没有单项式**。
         // 强行断言系数会让判据依赖一个不存在的单项式——实测抛 `ArgumentOutOfRangeException`。
         // 系数是否真的被用上，在 `LongitudinalBalance` 之外的路径（`MacRangeC` 等参数解析）里没有别的可观察面，

@@ -85,7 +85,7 @@ public class ConditionNormalizationTests
     /// **`δ = 0` 时 `TrueLower = FalseUpper = 0`，于是"给定一个点，它算真还是假"没有答案——
     /// 而模型仍然可行，因为指示约束两边都能满足。**
     ///
-    /// **基线报错。判据必须验证这个报错，而不只是"返回了失败"**——
+    /// **这里报错。判据必须验证这个报错，而不只是"返回了失败"**——
     /// **因为它是"正间隔"规则在起作用，而不是别的检查先挡住了。**
     ///
     /// **This is the most important criterion here.**
@@ -215,7 +215,7 @@ public class ConditionNormalizationTests
     /// **与两个分支都不相交时无解** / A range meeting neither branch has no solution.
     /// </summary>
     /// <remarks>
-    /// **基线报错而不是返回"两个都是 `false`"——后者会让调用方以为"条件恒假"，
+    /// **这里报错而不是返回"两个都是 `false`"——后者会让调用方以为"条件恒假"，
     /// 而实际是"这个范围不合法"。**
     ///
     /// **这个情形构造起来不平凡**：**`GT` 下真分支是 `q ≥ 1`、假分支是 `q ≤ 0`，

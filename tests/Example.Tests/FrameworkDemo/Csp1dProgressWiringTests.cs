@@ -27,10 +27,10 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// CSP1D column generation must support progress reporting, and **both** cancellation mechanisms must take effect.
 /// </summary>
 /// <remarks>
-/// 基线 `Csp1dColumnGeneration.solve` 与 `solveWithTrace` 都收 `progressContext` 参数，
+/// `Csp1dColumnGeneration.solve` 与 `solveWithTrace` 都收 `progressContext` 参数，
 /// 并在 4 处调用 `progressContext?.throwIfCancelled`。
 ///
-/// C# 侧 接入了 `CancellationToken`， / / 移植了整套进度上报与适配器，
+/// 本仓接入了 `CancellationToken`，也实现了整套进度上报与适配器，
 /// **但 CSP1D 链路一个都没接**——所以进度上报在 CSP1D 里**完全不生效**。
 ///
 /// **两套取消机制必须一起生效**：`cancellationToken` 与 `progressContext.IsCancelled` **语义相同、来源不同**，
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// `Csp1dColumnGeneration.solve` and `solveWithTrace` both take a `progressContext` parameter and call `progressContext?.throwIfCancelled` at four
 /// points.
 ///
-/// wired `CancellationToken` into the C# side and / / implemented the whole reporting system and adapters, **but the CSP1D chain got none of it** — so
+/// The C# side wires `CancellationToken` and implements the whole reporting system and adapters, **but the CSP1D chain got none of it** — so
 /// progress reporting **does not work at all** inside CSP1D.
 ///
 /// **Both cancellation mechanisms must take effect together**: `cancellationToken` and `progressContext.IsCancelled` are **semantically identical but sourced
@@ -110,10 +110,10 @@ public class Csp1dProgressWiringTests {
         reporter.Snapshots.Should().BeEmpty();
     }
 
-    /// <summary>**进度序列必须与基线数值一致** / The snapshot sequence must match its numbers.</summary>
+    /// <summary>**进度序列必须取固定数值** / The snapshot sequence must match the pinned numbers.</summary>
     /// <remarks>
-    /// **/ 的数值是我自拟的（开场 60、收尾 100），不是。** 这批核对了基线
-    /// 的 4 处 `reportProgress`，拿到真实数值：
+    /// **早先自拟的数值（开场 60、收尾 100）是错的。** 逐处核对 4 处
+    /// `reportProgress`，拿到真实数值：
     ///
     /// | 位置 | 阶段 | 子阶段 | 阶段内 | 总体 |
     /// | --- | --- | --- | --- | --- |
@@ -125,7 +125,7 @@ public class Csp1dProgressWiringTests {
     /// **收尾上界是 99，不是 100**——最终 MILP 拿的是 `phase(75, 99)`，所以进度**永远到不了 100**。
     /// 这条如实断言 99。
     ///
- /// **/the earlier numbers were my own invention (opening 60, closing 100), not its.** checked its four `reportProgress` calls and took
+ /// **The earlier numbers were my own invention (opening 60, closing 100), and they were wrong.** Four `reportProgress` calls were checked and the
     /// the real values (table above).
     ///
     /// **The ceiling is 99, not 100** — its final MILP gets `phase(75, 99)`, so progress **never reaches 100**. This asserts 99 honestly.
@@ -142,19 +142,19 @@ public class Csp1dProgressWiringTests {
             progressContext: context);
 
         reporter.Snapshots.Should().HaveCountGreaterThanOrEqualTo(2);
-        // 开场：初始列（基线 :194）
+        // 开场：初始列
         reporter.Snapshots[0].Stage.Id.Value.Should().Be("COLUMN_GENERATION");
         reporter.Snapshots[0].SubStage!.Key.Should().Be("initial_columns");
         reporter.Snapshots[0].ProgressInStage.Should().Be(0);
         reporter.Snapshots[0].OverallProgress.Should().Be(15);
-        // 收尾：基线 `phase(75, 99)` 的上界
+        // 收尾：`phase(75, 99)` 的上界
         reporter.Snapshots[^1].ProgressInStage.Should().Be(100);
         reporter.Snapshots[^1].OverallProgress.Should().Be(99);
     }
 
     /// <summary>**迭代中段必须上报定价快照** / The mid-iteration pricing snapshot must be reported.</summary>
     /// <remarks>
-    /// 基线 :470 在每轮 LP 求解后上报 `(pricing_iteration, 阶段内 40)`，总体进度落在迭代区间内（20—75）。
+    /// 每轮 LP 求解后上报 `(pricing_iteration, 阶段内 40)`，总体进度落在迭代区间内（20—75）。
     /// 没有它，长时间求解的区间 20—75 **完全没有中间反馈**。
     ///
     /// **这条判据的能力边界**：它验证"快照存在且阶段内是 40"，**不验证区间的算术**。
@@ -187,7 +187,7 @@ public class Csp1dProgressWiringTests {
 
     /// <summary>**LP 主问题的进度必须被 `phase` 重映射进迭代带** / The LP master's progress must be remapped into the iteration band by `phase`.</summary>
     /// <remarks>
-    /// 基线 `:383` 把 `progressContext?.phase(iterationStart, iterationEnd)` 传给 `solveLpMaster`。
+    /// `progressContext?.phase(iterationStart, iterationEnd)` 传给 `solveLpMaster`。
     ///
     /// **判据靠"独立数值被替换掉"来区分**： 让 `SolveLPAsync(metaModel, options)` 在上报
     /// `(MasterLp, 0, **30**)` 与 `(MasterLp, 100, **40**)`——那是它**脱离父级单独算**的数字。
@@ -198,7 +198,7 @@ public class Csp1dProgressWiringTests {
     /// 断言"不存在 30/40"而不是"等于某个带内值"——**带内值依赖迭代上限**（`iterationLimitBound`），
     /// 钉死具体数字会让判据随 fixture 变化而碎。
     ///
-    /// The code's `:383` passes `progressContext?.phase(iterationStart, iterationEnd)` to `solveLpMaster`.
+    /// `progressContext?.phase(iterationStart, iterationEnd)` is passed to `solveLpMaster`.
     ///
     /// **The criterion discriminates via "the standalone numbers are replaced"**: made `SolveLPAsync(metaModel, options)` report `(MasterLp, 0, **30**)` and
     /// `(MasterLp, 100, **40**)` — computed **standalone, without a parent**. Once `phase` wraps it, those become band-relative values, and **neither 30 nor 40 should
@@ -229,7 +229,7 @@ public class Csp1dProgressWiringTests {
 
     /// <summary>**最终 MILP 的进度必须落在 75—99 带里** / The final MILP's progress must land in the 75—99 band.</summary>
     /// <remarks>
-    /// 基线 `:753` 把 `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
+    /// `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
     ///
     /// **曾说这条"观测不到"，理由是"`Register` 阶段就失败、走不到求解器"——那个结论是错的。**
     /// 最初只是读代码推断，没有实际跑到那里。实测：完整 CSP1D 流程**确实到达最终 MILP**，

@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **这个区别决定了两件事**：**① 断点上误差恰好为零；② 段中间有误差，且段数越少误差越大。**
 /// **所以"抽查几个断点"永远看不出段数不够。**
 ///
-/// **The `ExpFunction` from its.**
+/// **`ExpFunction`.**
 ///
 /// **`exp` is not linear, so what this provides is not "the exponential" but "a piecewise-linear approximation of it
 /// over a given interval".**

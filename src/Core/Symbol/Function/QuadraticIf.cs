@@ -22,14 +22,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次条件的三件套共用的桥接步骤 / The bridging step shared by the three quadratic-condition functions.
 /// </summary>
 /// <remarks>
-/// 对齐、 补三个类。
-///
 /// **三个类都只做一件事**：**把二次多项式桥接成一个新的实变量 `y`（等式 `y − p = 0`），
 /// 然后把 `y` 交给<b>已有的</b>线性 `IfFunction`/`IfThenFunction`/`IfInFunction`。**
 ///
 /// **所以它们不是"二次的分支编码"，而是"二次输入 → 线性分支"的适配器。**
 /// **分支编码本身没有任何新增**——**新增的只有那条桥接等式与一个变量。**
-/// **这正是基线 `QuadraticFunctionSymbol.createFunction(inputs)` 的含义**：
+/// **`QuadraticFunctionSymbol.createFunction(inputs)` 的含义正是如此**：
 /// **`inputs` 已经是线性多项式了。**
 ///
 /// **`y` 必须是无界 `RealVar`**：**条件可能取到负值**，
@@ -42,7 +40,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **So they are not "quadratic branch encodings" but "quadratic input → linear branch" adapters.**
 /// **Nothing about the branch encoding is new** — **only the bridge equality and one variable are.**
-/// **That is what its `QuadraticFunctionSymbol.createFunction(inputs)` means**: **`inputs` are already
+/// **That is what `QuadraticFunctionSymbol.createFunction(inputs)` means**: **`inputs` are already
 /// linear by then.**
 ///
 /// **`y` must be an unbounded `RealVar`**: **the condition can take negative values**,
@@ -180,13 +178,10 @@ internal static class QuadraticBridging
 /// 二次条件的 <c>If</c>：桥接后交给线性 `IfFunction` / A quadratic-condition `If`, bridged into the linear one.
 /// </summary>
 /// <remarks>
-/// 对齐。
 ///
 /// **本类不含任何分支编码**：**它只加一个桥接变量与一条等式，然后把桥接变量交给 `IfFunction`。**
 /// **判据必须验证这一点**：**辅助变量 = 桥接变量 + `IfFunction` 自己的辅助变量**，
 /// **而 `ResultPolynomial` 与"用同一桥接变量构造的 `IfFunction`"的完全相同。**
-///
-/// Following its.
 ///
 /// **This class holds no branch encoding**: **it adds one bridge variable and one equality, then hands the bridge to
 /// `IfFunction`.** **The criterion must check that**: **the helpers are the bridge plus `IfFunction`'s own, and the
@@ -306,9 +301,8 @@ public sealed class QuadraticIfFunction : IMathFunctionSymbol<Flt64>, IHasResult
 /// 二次条件的 <c>IfThen</c>：桥接后交给线性 `IfThenFunction` / A quadratic-condition `IfThen`, bridged.
 /// </summary>
 /// <remarks>
-/// 对齐。
 ///
-/// Following its. **One bridge per polynomial.**
+/// **One bridge per polynomial.**
 /// </remarks>
 public sealed class QuadraticIfThenFunction : IMathFunctionSymbol<Flt64>, IHasResultPolynomial<Flt64> {
     private readonly QuadraticPolynomial<Flt64> _condition;
@@ -438,13 +432,12 @@ public sealed class QuadraticIfThenFunction : IMathFunctionSymbol<Flt64>, IHasRe
 /// 二次输入的区间判断 <c>IfIn</c>：桥接后交给线性 `IfInFunction` / A quadratic-input `IfIn`, bridged.
 /// </summary>
 /// <remarks>
-/// 对齐。
 ///
 /// **本类与 `QuadraticInStepRangeFunction` 的区别**：
 /// **后者的容差带返回 `null`（"不知道"），而本类在对 `lower`/`upper` 的判断上不做容差——
 /// 它把整件事交给 `IfInFunction` 的 `strictBoundary` 与 `delta`。**
 ///
-/// Following its. **One bridge.**
+/// **One bridge.**
 ///
 /// **The difference from `QuadraticInStepRangeFunction`**: **that one returns `null` inside a tolerance band
 /// ("unknown"), while this one applies no tolerance to the `lower`/`upper` decision — it defers the whole matter to

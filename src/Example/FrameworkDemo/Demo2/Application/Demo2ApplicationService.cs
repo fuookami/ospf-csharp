@@ -31,9 +31,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 /// **The code puts all three `Execute` paths behind this facade** (`Demo2ApplicationService.solve`); and wired them separately — each runs,
 /// **but together they have no single entry point**. Callers dispatch on `StowageMode` instead of switching over three application classes themselves.
 ///
-/// ** only dispatches**; it does not move its orchestration. Heartbeats, column generation, the Benders quality guard and `render` stay
-/// out. That baseline method is **a 130-line orchestrator**, and dragging its shell over here would only produce an empty frame where every method returns
-/// "not implemented" — **an empty shell is the worst kind of gap**. Dispatch first; the rest lands per baseline item, one criterion each.
+/// **The facade only dispatches**; it does not move the orchestration. Heartbeats, column generation, the Benders quality guard and `render` stay
+/// out. The full orchestration is **a 130-line method**, and dragging its shell over here would only produce an empty frame where every method returns
+/// "not implemented" — **an empty shell is the worst kind of gap**. Dispatch first; the rest lands item by item, one criterion each.
 ///
 /// The code's "partition column generation and Benders cannot both be enabled" check **cannot move**: this implementation's `SolvePolicy` has no
 /// `PartitionColumnGeneration` field (part of the whole-domain `infrastructure/dto` gap). **The input the check needs does not exist, and writing a fake check
@@ -70,7 +70,7 @@ public static class Demo2ApplicationService {
         ArgumentNullException.ThrowIfNull(request);
 
         // **心跳回调不是装饰**：它把"还在跑"与"已经结束"分开报，长跑求解没有它，调用方只能等或者超时。
-        // 这里在分派前后各发一次，****：开跑前一次 `RunningHeartBeat`，收尾一次 `FinnishHeartBeat`。
+        // 这里在分派前后各发一次：开跑前一次 `RunningHeartBeat`，收尾一次 `FinnishHeartBeat`。
         //
         // **The heartbeat callbacks are not decoration**: the code uses them to report "still running" separately from "finished", and without them a caller of
         // a long solve can only wait or time out. One is emitted before dispatch and one at the end, **matching the code**.
@@ -225,7 +225,7 @@ public static class Demo2ApplicationService {
     /// </remarks>
     private static ErrorCode CodeOf(string? status) => status switch {
         "UnknownStowageMode" or "InitFailed" or "UnsupportedAircraft" => ErrorCode.IllegalArgument,
-        // **基线 `fail` 只产出三个状态**：`ORModelInfeasible` → `"Infeasible"`、
+        // **`fail` 只产出三个状态**：`ORModelInfeasible` → `"Infeasible"`、
         // `OREngineSolvingException` → `"NotConverged"`、**其余 → `"Error"`**。
         // **本仓曾经自造 `DirectSolveFailed`/`DomainRegisterFailed`/`ModelBuildFailed` 三个，
         // 而搜不到它们——全部产出点已改回三个状态。**

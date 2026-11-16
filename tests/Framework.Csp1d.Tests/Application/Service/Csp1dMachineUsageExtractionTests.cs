@@ -169,13 +169,13 @@ public class Csp1dMachineUsageExtractionTests {
 
     /// <summary>**单位与设备产能不一致的消耗不得计入** / A consumption whose unit differs from the machine's capacity must not be counted.</summary>
     /// <remarks>
-    /// 基线：`if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`。
+    /// 判定就是 `if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`。
     ///
     /// 少了这个判断，**以厘米计的消耗会被直接当成毫米累加**——数值差 10 倍且毫无提示。
     /// 判据断言"该设备没有任何用量记录"，而不是"用量为零"：`mapNotNull`，
     /// 没有匹配项时**整条设备不出现**。
     ///
-    /// Baseline: `if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`. Without it, **a centimetre consumption would be summed as
+    /// The guard is `if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`. Without it, **a centimetre consumption would be summed as
     /// millimetres** — a factor of 10 with no warning. The criterion asserts "no usage record for this machine" rather than "usage is zero": the code uses
     /// `mapNotNull`, so with no matching entry **the machine does not appear at all**.
     /// </remarks>

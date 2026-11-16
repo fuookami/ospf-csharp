@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡上下文 / The recommended-weight-equalisation context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**初始化幂等**，**注册先建管线再逐条执行**。
+/// **初始化幂等**，**注册先建管线再逐条执行**。
 ///
 /// 与 `MacOptimizationContext` 一样，`Register` **接收 `stowageMode`**——生成器只认建议打板模式，其他模式返回空列表。
 ///

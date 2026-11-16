@@ -19,18 +19,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy;
 /// 冗余聚合 / The redundancy aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：**两个子模型**，注册时**先冗余、后实验纵向平衡**。
+/// **两个子模型**，注册时**先冗余、后实验纵向平衡**。
 ///
 /// 顺序是行为：两者都会往同一个模型上写，先写的先占位，交换会让解在退化情形下不同。
 ///
-/// **一处刻意的参数删减**：基线还把 `aircraftModel`、`flight`、`payload` 传进来，但两个子模型的 C# 实现在 落地时
+/// **一处刻意的参数删减**：完整签名还会带上 `aircraftModel`、`flight`、`payload`，但两个子模型的 C# 实现在落地时
 /// 只用到货物、舱位与装载量（`payload` 用于 `Redundancy` 的总容量，本仓的 `Redundancy` 直接从 `mlw` 求和），所以这里
 /// **不接没有消费者的参数**。
 ///
 /// **two sub-models**, registered **redundancy first, then the experimental longitudinal balance**. The order is behaviour — both write to the same model and
 /// the first one takes its slots, so swapping them changes the solution in degenerate cases.
 ///
-/// **One deliberate parameter omission**: the code also takes `aircraftModel`, `flight` and `payload`, but the C# sub-models landed read only the items, positions and loads
+/// **One deliberate parameter omission**: the full signature also takes
 /// (the code uses `payload` for `Redundancy`'s total capacity while this implementation sums `mlw` directly), so this implementation **does not accept parameters with no consumer**.
 /// </remarks>
 public sealed class RedundancyAggregation

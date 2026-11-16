@@ -1,7 +1,4 @@
 // 对称特征分解、岛屿迁移与约束排序 / Symmetric eigendecomposition, island migration and constraint ranking.
-// 与固定 Kotlin 、
-// 对应。
-// , and.
 
 using System;
 using System.Collections.Generic;
@@ -20,9 +17,9 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// 对称特征分解结果 / A symmetric-eigendecomposition result.
 /// </summary>
 /// <remarks>
-/// **`vectors` 是"每项一个特征向量"，不是矩阵的行**。基线显式转置过；按行读取会让调用方拿到的"主方向"其实是另一组正交基，
+/// **`vectors` 是"每项一个特征向量"，不是矩阵的行**。这里显式转置过；按行读取会让调用方拿到的"主方向"其实是另一组正交基，
 /// 而每个向量仍然满足正交归一性，**检查向量本身完全看不出异常**。
-/// **`vectors` holds one eigenvector per entry, not the matrix's rows.** The code transposes explicitly; reading them as rows gives
+/// **`vectors` holds one eigenvector per entry, not the matrix's rows.** The transpose is explicit here; reading them as rows gives
 /// the caller "principal directions" that are actually a different orthonormal basis while every vector still looks orthonormal —
 /// **inspecting the vectors alone reveals nothing**.
 /// </remarks>
@@ -293,10 +290,10 @@ public sealed class RingMigration<ObjValue, V>(double rate) : IIslandMigration<O
                 migrated.Add(islands[index]);
                 continue;
             }
-            // **保留的是 `local` 的"最优部分"（前段），被替换的是末尾的"最差部分"**。基线写 `local.dropLast(amount)`，
+            // **保留的是 `local` 的"最优部分"（前段），被替换的是末尾的"最差部分"**。这里写 `local.dropLast(amount)`，
             // 即丢掉末尾；写成 `local.Take(local.Count - amount)` 在这里恰好等价，但若误取 `Skip(amount)` 就会丢掉**最优个体**
             // 而保留最差——岛屿的最优值单调变差，而规模与迁移率完全正常。
-            // **The retained part is `local`'s best prefix and the replaced part is the worst suffix.** The code writes
+            // **The retained part is `local`'s best prefix and the replaced part is the worst suffix.** This writes
             // `local.dropLast(amount)`, i.e. drop the tail; `Take(local.Count - amount)` is equivalent here, but `Skip(amount)` would drop
             // the **best** individuals and keep the worst — the island's best value degrades monotonically while size and migration
             // rate look perfectly normal.
@@ -420,9 +417,9 @@ public sealed record ConstraintAssessment<T>(T Value, Flt64 Objective, Flt64 Vio
 /// **ε shrinks to 0 across the horizon so the ordering transitions from "violation first" to "objective first".** A fixed ε keeps the
 /// algorithm prioritizing feasibility forever and prevents late-stage refinement inside the feasible region; an ε of 0 from the start
 /// looks only at the objective and floods the early stages with infeasible solutions.
-/// **`av == bv` 时也按目标值比较**。两个违反量相同时按违反量比较没有意义（相等），而基线显式把这种情况并入目标值分支——
+/// **`av == bv` 时也按目标值比较**。两个违反量相同时按违反量比较没有意义（相等），所以显式把这种情况并入目标值分支——
 /// 少了这个条件，排序会退化成"保持原序"，看起来只是"稳定排序"。
-/// **Equal violations also compare by objective.** Comparing by violation is meaningless when both are equal, and the code folds
+/// **Equal violations also compare by objective.** Comparing by violation is meaningless when both are equal, so that case is folded
 /// that case into the objective branch; without it the sort degenerates into "keep the input order", which merely looks like a stable
 /// sort.
 /// **`epsilon` 的夹取在指数之前**：`(1 - step/horizon)` 夹到 `[0, 1]`，避免 `step &gt; horizon` 时出现负底数的幂。

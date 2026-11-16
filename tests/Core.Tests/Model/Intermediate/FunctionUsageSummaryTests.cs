@@ -81,12 +81,12 @@ public class FunctionUsageSummaryTests
     /// **`Nested` 优先于 `External`** / `Nested` outranks `External`.
     /// </summary>
     /// <remarks>
-    /// **两个都成立时基线报 `Nested`。**
+    /// **两个都成立时报 `Nested`。**
     /// **这条单独立一个判据，是因为"先判 `Nested` 还是先判 `External`"是
     /// 一个只有在两者<b>同时</b>为真时才看得出的差别。**
     /// **只测单独情形的话，两种顺序都能通过。**
     ///
-    /// **The code reports `Nested` when both hold.**
+    /// **`Nested` is reported when both hold.**
     /// **This gets its own criterion because "check `Nested` first or `External` first" is a difference visible only when
     /// <b>both</b> are true.** **Testing the single cases alone passes under either order.**
     /// </remarks>

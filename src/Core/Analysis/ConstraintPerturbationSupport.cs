@@ -21,10 +21,10 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 扰动分析的纯函数部分 / The pure part of perturbation analysis.
 /// </summary>
 /// <remarks>
-/// 移植自 `ConstraintPerturbationAnalyzer` 的几个 private helper：`requestedDeltas`、`objectiveImprovement`、
-/// `classifyOutcome`、`aggregateStatus`。**求解循环与阈值二分没搬。**
+/// 几个纯 helper：`requestedDeltas`、`objectiveImprovement`、
+/// `classifyOutcome`、`aggregateStatus`。**求解循环与阈值二分不在本类。**
 ///
-/// Ported from the private helpers of `ConstraintPerturbationAnalyzer`. **The solve loop and the threshold bisection are not implemented.**
+/// The pure helpers: `requestedDeltas`, `objectiveImprovement`, `classifyOutcome` and `aggregateStatus`. **The solve loop and the threshold bisection are not here.**
 ///
 /// **这四个函数决定了"一次扰动算不算证据"，而它们是纯的——所以能一次钉死。**
 /// **These four decide whether a perturbation counts as evidence, and they are pure — so they can be pinned down in one go.**

@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Test.Benchmark;
 /// </summary>
 /// <remarks>
 /// **这是一个 diff 工具，所以它最大的风险不是"算错"，而是<b>说得比做得多**：** **待办段被当成已转储、
-/// 或者输出了跨语言不可比的值（比如 Kotlin 的 `hashCode`）而被当成可比。** **四类判据分别钉：**
+/// 或者输出了跨语言不可比的值（比如对象的默认 `hashCode`）而被当成可比。** **四类判据分别钉：**
 ///
 /// **① 输出只含已实现段的前缀；② 每行都有段前缀且不含大写布尔（小写）；③ 同一进程内两次运行<b>逐字符相同**；
 /// **④ 待办清单与已实现段不重叠，且每条都写了理由。**
@@ -45,9 +45,9 @@ public sealed class CrossVersionSemanticDumpTests
 
     /// <summary>**每行都有段前缀，且布尔量是小写的** / Every line has a prefix and booleans are lowercase.</summary>
     /// <remarks>
-    /// **大写布尔是真实的跨语言陷阱：** **`bool.ToString` 给 `True`，基线给 `true`——逐行 diff 会把每一行都算成差异。**
+    /// **大写布尔是真实的跨语言陷阱：** **`bool.ToString` 给 `True`，而转储要求 `true`——逐行 diff 会把每一行都算成差异。**
     ///
-    /// **A capitalised boolean is a real cross-language trap: `bool.ToString` gives `True` while the code gives `true`, so a line-by-line diff
+    /// **A capitalised boolean is a real cross-language trap: `bool.ToString` gives `True` while the dump writes `true`, so a line-by-line diff
     /// reports every line as different.**
     /// </remarks>
     [Fact]

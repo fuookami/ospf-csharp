@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **基准夹具的缺口不会报错** / A missing benchmark raises nothing.
 /// </summary>
 /// <remarks>
-/// 数了一遍：基线 `ospf-kotlin-benchmark` 有 **15** 个工作负载，本仓 `src/Benchmark` 只有 **13**——
+/// 数了一遍：`ospf-kotlin-benchmark` 有 **15** 个工作负载，本仓 `src/Benchmark` 只有 **13**——
 /// 缺 `GenerationCacheBuildBenchmark` 与 `PatternColumnBenchmark`。
 ///
 /// **这种缺口不会让任何东西变红**，它只是让"性能没测过"看起来像"没需求"。所以这里把数量钉住：
@@ -23,17 +23,17 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// </remarks>
 public class BenchmarkCoverageTests
 {
-    /// <summary>15 个工作负载，本仓一个都不能少 / All 15 baseline workloads must exist here.</summary>
+    /// <summary>15 个工作负载，本仓一个都不能少 / All 15 reference workloads must exist here.</summary>
     /// <remarks>
-    /// 名字是（去扩展名），本仓的类名与之一致——**这本身就是一种对照**：改了名字就该有人问为什么。
+    /// 名字取自参考清单（去扩展名），本仓的类名与之一致——**这本身就是一种对照**：改了名字就该有人问为什么。
     ///
-    /// The names are its (extension stripped) and this repo's classes match them — **that is itself a check**: a rename should raise a question.
+    /// The names come from the reference list (extension stripped) and this repo's classes match them — **that is itself a check**: a rename should raise a question.
     /// </remarks>
     /// <summary>
     /// **还没实现的 5 个新工作负载必须被点名声明** / No workload from 19c72455 may remain unimplemented.
     /// </summary>
     /// <remarks>
-    /// **`19c72455` 的 6 个新基准已经全部移植；`CrossVersionSemanticDump` 的三段（`PRJ`／`GEN`／`TRUNC`）仍是待办，必须写在能力矩阵里。**
+    /// **`19c72455` 的 6 个新基准已经全部实现；`CrossVersionSemanticDump` 的三段（`PRJ`／`GEN`／`TRUNC`）仍是待办，必须写在能力矩阵里。**
     /// **"没有数"与"数过了但还没搬"是两件事：后者会在下一个人读到它时被安排，前者只会被当成不存在。**
     ///
     /// **判据只读文档，不要求代码在场**——所以它不会因为"还没搬"而红，只会因为"没写下来"而红。
@@ -91,8 +91,8 @@ public class BenchmarkCoverageTests
             "ProjectionIndexBuildBenchmark",
             "SharedPrimeReadBenchmark",
             "SymbolCombineBenchmark",
-            // **`19c72455` 比固定基线多出 6 个工作负载，逐个移植时加到这里。**
-            // **`19c72455` carries six more workloads than the fixed baseline; each lands here as it is implemented.**
+            // **`19c72455` 比固定参考多出 6 个工作负载，逐个实现时加到这里。**
+            // **`19c72455` carries six more workloads than the pinned reference; each lands here as it is implemented.**
             "TokenInvalidateRebuildBenchmark",
             "GenerationScaleBenchmark",
             // **这一个文件里有两个类：`PrimeMixedExpansionBenchmark` 与 `PrimeReaderLatencyBenchmark`。**
@@ -124,14 +124,14 @@ public class BenchmarkCoverageTests
     public void TheTwoNewBenchmarks_ShouldCarryTheirParameters() {
         string root = Root();
         string generation = File.ReadAllText(Path.Combine(root, "src", "Benchmark", "GenerationCacheBuildBenchmark.cs"));
-        // 三个场景名/ the three scenario names match the code
+        // 三个场景名 / the three scenario names match the reference
         foreach (string scenario in new[] { "equivalent", "distinct", "custom" }) {
             generation.Should().Contain("\"" + scenario + "\"",
                 "the scenario name has to match the baseline, or a comparison would silently compare different fixtures");
         }
 
         string pattern = File.ReadAllText(Path.Combine(root, "src", "Benchmark", "PatternColumnBenchmark.cs"));
-        // 三种规模（256 / 512 / 1024 列）/ the three scales match the code (256 / 512 / 1024 columns)
+        // 三种规模（256 / 512 / 1024 列）/ the three scales match the reference (256 / 512 / 1024 columns)
         pattern.Should().Contain("512").And.Contain("1024").And.Contain("256");
     }
 

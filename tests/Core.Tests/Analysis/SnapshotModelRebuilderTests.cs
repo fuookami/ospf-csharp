@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 快照重建器 / The snapshot rebuilder.
 /// </summary>
 /// <remarks>
-/// **这批搬的是 `ConstraintProgrammingSnapshotBuilder.buildModel` 的普通路径**（全部成员激活）。
-/// 选择性停用证据的值域重绑、区间变量、目标过滤**没搬，而且遇到就报错**。
+/// **这里实现的是 `ConstraintProgrammingSnapshotBuilder.buildModel` 的普通路径**（全部成员激活）。
+/// 选择性停用证据的值域重绑、区间变量、目标过滤**没有实现，而且遇到就报错**。
 ///
-/// ** ports the ordinary path of `buildModel`** (every member active). Domain rebinding when evidence is deactivated, interval variables and objective filtering are
+/// **This implements the ordinary path of `buildModel`** (every member active). Domain rebinding when evidence is deactivated, interval variables and objective filtering are
 /// **not implemented, and each one is an error rather than a silent omission**.
 /// </remarks>
 public class SnapshotModelRebuilderTests {
@@ -98,13 +98,13 @@ public class SnapshotModelRebuilderTests {
 
     /// <summary>**拿不回变量就报错，不要像样跳过** / A variable that cannot be recovered is an error, not a skip.</summary>
     /// <remarks>
-    /// 基线 `continue` 的依据是"该变量完全没被引用"。**而这里"找不到"是"我们没能从 AST 里收出来"**——
+    /// `continue` 的依据是"该变量完全没被引用"。**而这里"找不到"是"我们没能从 AST 里收出来"**——
     /// 两件事，跳过就是把后者当成前者。
     ///
     /// 构造方式：注册一个变量、**不为它注册任何表达式**。它是合法的快照成员，
     /// 但重建器没有任何地方能把它找回来。
     ///
-    /// The code `continue`s on "referenced nowhere". **A miss here means "we could not recover it from the AST"** — different facts. Constructed by registering a
+    /// It `continue`s on "referenced nowhere". **A miss here means "we could not recover it from the AST"** — different facts. Constructed by registering a
     /// variable and **no expression for it**: a legitimate snapshot member the rebuilder has nowhere to find.
     /// </remarks>
     [Fact]

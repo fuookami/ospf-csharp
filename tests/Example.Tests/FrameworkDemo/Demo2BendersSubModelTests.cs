@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// <remarks>
 /// 把子问题也接上了：配载与适航安全各自往子模型里注册，实测 **29 行 / 25 个符号 / 0 个目标**。
 /// 主问题是 **11 / 50 / 4**。**两者的注册都发生在建模型阶段，不在迭代循环里**，
-/// 因为本仓的两处子问题注册**根本不读那个解参数**（`StowageAggregation` 的签名里连都没有）。
+/// 因为本仓的两处子问题注册**根本不读那个解参数**（`StowageAggregation` 的签名里连这个参数都没有）。
 ///
 /// 这个前提单独钉了一条判据（反射）：**签名一变，那条就红**——那时必须把子问题注册挪进循环，而不是继续在循环外假装。
 ///
@@ -113,7 +113,7 @@ public sealed class Demo2BendersSubModelTests
     /// **适航安全那处收了解、但只是转发** / The airworthiness one accepts a solution only to forward it.
     /// </summary>
     /// <remarks>
-    /// 它有三个参数（`mode, model, solution`），和基线一致；但它的实现转给聚合的 `Register(mode, model)`，**解被丢掉**。
+    /// 它有三个参数（`mode, model, solution`），但它的实现转给聚合的 `Register(mode, model)`，**解被丢掉**。
     /// 这条钉住"签名有、语义没有"这个事实，免得有人看到三个参数就以为"这个域真的会用解"。
     ///
     /// 这里用**反射 + 调用计数**做不到（会需要构造完整上下文），所以只钉签名与文档的对应关系，并在上面的

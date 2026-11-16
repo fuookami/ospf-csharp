@@ -33,11 +33,11 @@ ospf-csharp 是 [ospf](https://github.com/fuookami/ospf) 的 C# / .NET 10 实现
 | `Fuookami.Ospf.Benchmark` | BenchmarkDotNet 基准测试（12 个基准类、54 个基准） | ✅ 完成 |
 | `Fuookami.Ospf.Starters.*` | NuGet 元包（Core、Bpp3d、Csp1d、Framework、GanttScheduling） | ✅ 完成 |
 
-表中状态为 2026 年 6 月的迁移快照；相对固定 Kotlin 基线的当前同步状态以 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md) 为准。
+表中状态是一份快照；本仓当前提供什么，以 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md) 为准。
 
 ## 架构
 
-当前 Kotlin 同步基线与能力状态见 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md)。
+当前能力状态见 [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md)。
 
 框架采用分层架构：
 
@@ -151,7 +151,7 @@ dotnet test ospf-csharp.sln -c Release --no-build
 - **没有"文件数对齐"主张。** 模块存在不等于能力存在；以能力矩阵为准，不以项目清单为准。
 - 已知缺口（列在 `docs/kotlin-capability-matrix.md` 里）包括：
   本仓库**根本没有 `Framework.Bpp1d` 项目**，故 `PatternColumnBenchmark` 无法移植；`Infra.Item.Weight`
-  只透传不参与任何约束；基线的 PWL 诊断与形状 DTO 缓存未移植；Demo5 各模块 README 与迁移指南仍缺。
+  只透传不参与任何约束；PWL 诊断与形状 DTO 缓存未实现；Demo5 各模块 README 仍缺。
 
 ## 许可证
 

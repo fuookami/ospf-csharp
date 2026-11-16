@@ -173,7 +173,7 @@ public class BunchSchedulingExecutionResourceUsage<R, C, V>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 对应基线 `BunchSchedulingExecutionResourceUsage.register`：先给每个时间槽建 `quantity` 符号（常数是资源的初始数量，
+    /// 先给每个时间槽建 `quantity` 符号（常数是资源的初始数量，
     /// 范围是 `[下界 − 不足, 上界 + 超量]`），再按槽建超量 \/ 不足两组松弛。
     ///
     /// **范围必须设**：不设范围时 `ExpressionRange` 是全域，松弛可以取到任意大，超量约束就失去了意义——

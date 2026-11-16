@@ -1,7 +1,7 @@
 // 二维板材形状与容器几何 / 2D sheet shape and container geometry.
-// 与固定 Kotlin 对应。板材是二维装箱的容器，对应 BPP3D 的 `Container3Shape`；
+// 板材是二维装箱的容器，对应 BPP3D 的 `Container3Shape`；
 // 二维容器只需宽、高与可用面积。
-// The pinned Kotlin: a sheet is the 2D packing container mirroring
+// A sheet is the 2D packing container mirroring
 // BPP3D `Container3Shape`, needing only width, height and usable area.
 
 using System;
@@ -65,10 +65,10 @@ public sealed record Sheet2Shape<V>(Quantity<V> Width, Quantity<V> Height)
     /// 板材面积 / Sheet area.
     /// </summary>
     /// <remarks>
-    /// 基线与 C# 常用写法都允许直接在实现类型上取 `area`／`originBox`。C# 若用"默认接口成员 + 同名公开成员"
+    /// C# 常用写法允许直接在实现类型上取 `area`／`originBox`。C# 若用"默认接口成员 + 同名公开成员"
     /// 的写法，接口调用会分派到类成员从而**无限递归**，因此这里把两者都声明为接口成员、由实现类型给出唯一实现。
     ///
-    /// Both the code and ordinary C# usage read `area`/`originBox` on the concrete type. Combining a
+    /// Ordinary C# usage reads `area`/`originBox` on the concrete type. Combining a
     /// default interface member with a same-named public member makes the interface call dispatch back to the class
     /// member and **recurse forever**, so both are plain interface members with a single implementation here.
     /// </remarks>

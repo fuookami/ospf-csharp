@@ -328,7 +328,7 @@ public class Demo2SecurityAggregationTests {
         // 任何断言都区分不出"提前返回"与"继续跑但逐个失败"。实测三个 `_ = x;` 变异全部存活。
         //
         // 要让它可观测，得让某个后续步骤**不依赖**前面失败的那个输入（例如给一个只有表面密度能过的模型），而那与本类
-        // "全部派生模型共享同一组装载符号"的结构冲突。因此保留基线写法，并在此记录它没有被判据覆盖。
+        // "全部派生模型共享同一组装载符号"的结构冲突。因此保留现在的写法，并在此记录它没有被判据覆盖。
         //
         // **One unobservable recorded**: replacing `if (!density.IsOk) return density;` with `_ = density;` lets the surface density and low payload **fail in turn** (they need
         // the same load and total weight symbols), so `IsOk` stays `false` and neither clears its symbol on failure — all three symbols are `null` either way and no assertion can

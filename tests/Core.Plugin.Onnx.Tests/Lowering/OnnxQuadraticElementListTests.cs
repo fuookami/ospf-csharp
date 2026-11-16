@@ -21,10 +21,10 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **二次域的元素列表：两侧含变量的矩阵乘** / The second-degree element list: a matrix product with variables on both sides.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `OnnxDegreeMode`：**次数是"整次导入"的属性，而不是逐节点的判断。** **所以这里是独立的表示，** '
+/// **次数是"整次导入"的属性，而不是逐节点的判断。** **所以这里是独立的表示，**
 /// **只在一处产生——两侧都含变量的矩阵乘。**
 ///
-/// Syncs `OnnxDegreeMode`: **the degree is a property of the whole import rather than a per-node decision.** Hence a separate representation, **produced in exactly one place: a matrix product
+/// **The degree is a property of the whole import rather than a per-node decision.** Hence a separate representation, **produced in exactly one place: a matrix product
 /// with variables on both sides.**
 /// </remarks>
 public class OnnxQuadraticElementListTests

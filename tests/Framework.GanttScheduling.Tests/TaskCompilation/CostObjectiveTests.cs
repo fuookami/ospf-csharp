@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <item>**只遍历任务自己启用的执行器**：那些不可用组合本来被钉成 0，漏掉它们无害；但反过来"只遍历启用的"会让另一些组合**完全不计成本**，
 /// 解依旧可行、目标依旧是个正常数；</item>
 /// <item>**成本提取失败静默取 0**：那个任务对目标不产生任何压力，看起来像"它很便宜"；</item>
-/// <item>**执行器成本在没有提取器时照样加目标**：基线明确"没给提取器就什么都不做"，多出来的目标会改变解。</item>
+/// <item>**执行器成本在没有提取器时照样加目标**：本应"没给提取器就什么都不做"，多出来的目标会改变解。</item>
 /// </list>
 ///
 /// Three silent failures: (1) **iterating only the executors a task enables** — unavailable pairs are pinned to 0 so missing them is harmless, but some pairs then end up
@@ -90,10 +90,10 @@ public class CostObjectiveTests {
 
     /// <summary>**执行器成本：没给提取器就不加目标** / The executor cost: no extractor, no objective.</summary>
     /// <remarks>
-    /// 基线写的是 `coefficient?.let { … }`。这一支必须**成对**测：只测"给了提取器有目标"会让"总是加目标"通过，
+    /// 该分支只在提取器非 null 时才加目标。这一支必须**成对**测：只测"给了提取器有目标"会让"总是加目标"通过，
     /// 只测"没给提取器没目标"会让"永远不加"通过。
     ///
-    /// The code is `coefficient?.let { … }`. This branch must be tested **as a pair**: "with an extractor there is an objective" alone passes if one is always added, and
+    /// The branch exists only when the extractor is non-null. It must be tested **as a pair**: "with an extractor there is an objective" alone passes if one is always added, and
     /// "without one there is none" alone passes if none is ever added.
     /// </remarks>
     [Fact]

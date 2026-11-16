@@ -1,5 +1,5 @@
 // 任务-执行器分配变量的值域收紧 / Value-range tightening of the task-executor assignment variables.
-// 与固定 Kotlin 的 `register` 里那段 `x[task, executor].range.eq(...)` 对应。
+// 每个 (task, executor) 组合一条值域约束：`x[task, executor].range.eq(...)`。
 // One range constraint per (task, executor) pair: `x[task, executor].range.eq(...)`.
 
 using System;
@@ -32,7 +32,7 @@ public readonly record struct AssignmentRange(double Low, double High) {
 /// 模型的规模主要由 `任务数 × 执行器数` 决定，而**大部分组合本来就不可能**：任务只接某几个执行器，
 /// 或者执行器已经由外部排班定死。把这些组合的值域收紧到固定值，等于告诉求解器"这里不用搜"。
 ///
-/// 规则来自基线 `register`，共三条，但**顺序有讲究**：
+/// 规则共三条，但**顺序有讲究**：
 ///
 /// 1. 执行器不在任务的可用执行器集合里 → 固定为 `0`（禁止）。
 /// 2. 任务的执行器已定且不允许改变：
@@ -46,13 +46,13 @@ public readonly record struct AssignmentRange(double Low, double High) {
 /// Model size is dominated by `task count × executor count`, and **most combinations are impossible to begin with**: a task accepts only certain executors, or the executor has
 /// been fixed by an external roster. Tightening those combinations to a single value tells the solver "no search here".
 ///
-/// The rules come from its `register`, three of them, but **order matters**:
+/// There are three rules, but **order matters**:
 ///
 /// 1. The executor is not among the task's enabled executors → fix to `0` (forbidden).
 /// 2. The task's executor is fixed and may not change: the one that matches → fix to `1` (required) when the task cannot be cancelled, otherwise leave `0..1` (cancellable,
 ///    decided by the optimisation); every other executor → fix to `0`.
 ///
-/// **Rule 2 overrides rule 1**: the code writes `0` from the enabled set first, then writes `1` for "executor is fixed", so **the later write wins**. A fixed executor absent
+/// **Rule 2 overrides rule 1**: the implementation writes `0` from the enabled set first, then writes `1` for "executor is fixed", so **the later write wins**. A fixed executor absent
 /// from the task's enabled set still ends up pinned to `1`. An implementation treating the two as an intersection would leave that task **both forbidden and required** — the model
 /// becomes infeasible, and the only message is "infeasible".
 /// </remarks>

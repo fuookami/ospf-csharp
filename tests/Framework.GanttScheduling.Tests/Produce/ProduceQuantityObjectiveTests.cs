@@ -195,8 +195,8 @@ public class ProduceQuantityObjectiveTests {
     /// 三点成对：
     ///
     /// 1. `ProduceQuantityMinimization` 传空列表 → **仍加**一个目标（名字 `produce quantity`，零项）。
-    /// 2. `ProduceOverQuantityMinimization` 传空列表 → **一个目标都不加**（基线外层有 `if (materials.isNotEmpty)`）。
-    /// 3. 两者的差别**不是笔误**：基线就是这样写的，判据把这个不对称钉住。
+    /// 2. `ProduceOverQuantityMinimization` 传空列表 → **一个目标都不加**（外层有 `if (materials.isNotEmpty)`）。
+    /// 3. 两者的差别**不是笔误**：本来就是这样写的，判据把这个不对称钉住。
     ///
     /// Three paired points: `ProduceQuantityMinimization` with an empty list **still adds** an objective (named `produce quantity`, with no terms); `ProduceOverQuantityMinimization` with an empty
     /// list adds **no objective at all**, matching its `if (materials.isNotEmpty)`; and the difference is **not a typo** — that is how the code is written, and the criterion pins the

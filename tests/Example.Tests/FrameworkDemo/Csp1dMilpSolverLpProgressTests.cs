@@ -24,15 +24,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// `Csp1dMilpSolver.SolveLPAsync` must really solve and forward the progress context to the framework layer.
 /// </summary>
 /// <remarks>
-/// 只覆盖了 `SolveAsync`，`SolveLPAsync` 一直零覆盖。** 这批补上，并顺带发现它**不收进度上下文**——
-/// 而基线 `solveLP(input, extensions, progressContext)` **收**。
+/// 只覆盖了 `SolveAsync`，`SolveLPAsync` 一直零覆盖。这批补上，并顺带发现它**不收进度上下文**。
 ///
 /// **零覆盖的危险在这里很具体**：`SolveLPAsync` 是列生成主问题每轮都要走的路，
 /// 它若悄悄退化成空壳（比如返回空的影子价格表），**上游只会看到"定价不产列、迅速收敛"**，
 /// 而那恰好与"真的收敛了"外观相同。
 ///
-/// **covered only `SolveAsync`; `SolveLPAsync` had zero coverage.** This adds it and found it **accepted no progress context** — while the code
-/// `solveLP(input, extensions, progressContext)` **does**.
+/// **Only `SolveAsync` was covered; `SolveLPAsync` had zero coverage.** It adds coverage for `SolveLPAsync` and found the method **accepts no progress context**.
 ///
 /// **The danger of zero coverage is concrete here**: `SolveLPAsync` is the path the master problem takes every round, and if it quietly degraded into a shell (say
 /// returning an empty shadow-price table), **upstream would only see "pricing yields nothing, converges quickly"** — which looks exactly like **genuine convergence**.

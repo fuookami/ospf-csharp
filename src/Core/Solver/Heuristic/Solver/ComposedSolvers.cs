@@ -1,7 +1,6 @@
 // 组合求解器工厂 / The composed-solver factories.
-// 与固定 Kotlin （75223 B）的本文件全部工厂对应；该文件共约 35 个工厂，分批推进。
-// The first three groups of factories in the: , which holds roughly 35 factories
-// and is being implemented in batches.
+// 按算子组合的工厂，共约 35 个，分批推进。
+// The composed-operator factories, roughly 35 of them, implemented in batches.
 
 using System;
 using System.Collections.Generic;
@@ -16,12 +15,12 @@ using Fuookami.Ospf.Math.Algebra.Number;
 namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 
 /// <remarks>
-/// **本类是基线启发式插件的直接对应物：** **／ 等文件里各只有一个工厂函数，
-/// 没有类——所以"基线对应物"是这里的 35 个入口，而不是 `Core.Plugin.Heuristic` 里的 `HeuristicAlgorithm` 子类**
+/// **本类承载 35 个组合入口：** 每个算法文件里只有一个工厂函数，
+/// 没有类——所以按算子组合的入口在这里，而不是 `Core.Plugin.Heuristic` 里的 `HeuristicAlgorithm` 子类**
 /// （后者是 C# 侧的等价算法封装面，同样保留、且每个都被测试构造）。
 ///
-/// **This class is its direct counterpart : each baseline file such as / holds a single
-/// factory function and no classes, so the code counterpart is these 35 entry points rather than the `HeuristicAlgorithm`
+/// **This class carries the 35 composition entry points**: each algorithm file holds a single
+/// factory function and no classes, so the entry points live here rather than in the `HeuristicAlgorithm`
 /// subclasses in `Core.Plugin.Heuristic`** (those are C#'s equivalent algorithm surface, also kept, and each is constructed by a
 /// test).
 /// </remarks>
@@ -918,7 +917,7 @@ public static class ComposedSolvers {
             size,
             memorySize,
             pBestRate,
-            // ：规模随时间线性缩到 5%。
+            // 规模随时间线性缩到 5%。
             // The size shrinks linearly down to 5%.
             sizeRatio ?? new LinearSource(Flt64.One, new Flt64(0.05), 100UL),
             minimumSize));

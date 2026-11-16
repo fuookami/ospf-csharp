@@ -5,8 +5,7 @@
 本示例把网络调度框架接到可选的 Gurobi 或 SCIP 列生成求解器上。它接受 Demo17 与 Solomon 风格实例，
 携带显式的时间与节点上限，并返回框架求解状态以及航线级的时序、装载、距离与成本明细。
 
-对应基线 `ospf-kotlin-example/.../framework_demo/demo5/`
-（`Application.kt`、`infrastructure/Solver.kt`、`infrastructure/adapter/*`）。
+这是一个通过求解器工厂驱动框架的示例：在调度域之上给出航线级的时序、装载、距离与成本明细。
 
 ## 目录结构
 
@@ -21,9 +20,9 @@
 
 ## 求解器选择
 
-`Demo5SolverFactory` 显式枚举后端。**未知名称直接失败并指名它**；基线的
-`when (...) { "scip" -> …; else -> Gurobi }` 会**静默退回 Gurobi**，于是拼错一个名字（`"gruobi"`）
-要到后端不可用时才以一个不相关的失败形式暴露。名称大小写不敏感。
+`Demo5SolverFactory` 显式枚举后端。**未知名称直接失败并指名它**；一个兜底的 `else` 分支会
+**静默退回 Gurobi**，于是拼错一个名字（`"gruobi"`）要到后端不可用时才以一个不相关的失败形式暴露。
+名称大小写不敏感。
 
 ## 运行方式
 

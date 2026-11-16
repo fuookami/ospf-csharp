@@ -56,7 +56,7 @@ public sealed class SymmetricEigenTests {
     /// <summary>**特征向量正交归一** / The eigenvectors are orthonormal.</summary>
     /// <remarks>
     /// 每个向量自身正交归一这件事**在向量取错时也成立**，所以必须同时检查不同向量之间的内积为 0，才能确认它们真的构成
-    /// 一组特征基。基线显式转置过，按行读取会得到另一组正交基——只查单个向量看不出任何异常。
+    /// 一组特征基。按行读取会得到另一组正交基——只查单个向量看不出任何异常。
     /// A vector being unit length **holds even when the vectors are wrong**, so distinct vectors' inner products must also be checked
     /// to confirm they really form an eigenbasis. The code transposes explicitly; reading rows gives a different orthonormal basis
     /// and inspecting single vectors reveals nothing.
@@ -339,11 +339,11 @@ public sealed class ConstraintRankingTests {
         var ranking = new StochasticRanking(0.0);
         // **两个候选的违反量必须都是 0**。判据是 `a.violation == 0 && b.violation == 0`，即"两者都完全可行"，
         // 而不是"两者都不超过某个阈值"。第一版给了 0.8 与 0.2 两个非零违反量，于是 `bothFeasible` 为假、走抽签分支，
-        // 断言因此失败——**是我的夹具违背了基线语义，不是实现有问题**。
+        // 断言因此失败——**是我的夹具违背了语义，不是实现有问题**。
         //
         // 两个违反量都为 0 时，"按目标值"与"按违反量"会给出同一顺序（违反量相等），所以无法用它们区分两种判据；
         // 这条测试的作用是钉住"概率 0 时可行解仍按目标值排序"，而不是区分判据。
-        // **Both violations must be 0.** predicate is `a.violation == 0 && b.violation == 0`, i.e. "both fully feasible",
+        // **Both violations must be 0.** The predicate is `a.violation == 0 && b.violation == 0`, i.e. "both fully feasible",
         // not "both below some threshold". The first version used 0.8 and 0.2, so `bothFeasible` was false, the draw branch ran and the
         // assertion failed — **the fixture contradicted its semantics, not the implementation**.
         //

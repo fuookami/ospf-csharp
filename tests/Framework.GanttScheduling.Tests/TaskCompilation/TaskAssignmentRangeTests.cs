@@ -73,7 +73,7 @@ public class TaskAssignmentRangeTests {
     /// **第 2 条覆盖第 1 条：已定但不可用的执行器最终仍被钉成必须** / Rule 2 overrides rule 1: a fixed executor that is not enabled still ends up required.
     /// </summary>
     /// <remarks>
-    /// 这是基线最容易读错的一处。判据必须用"已定 + 不在可用集合 + 不允许取消"这种输入，
+    /// 这是代码里最容易读错的一处。判据必须用"已定 + 不在可用集合 + 不允许取消"这种输入，
     /// 并把期望钉在**必须**——若实现取交集，这里会得到"禁止"，与"必须"正好相反。
     ///
     /// This is the easiest part of the code to misread. The fixture must use "fixed + not enabled + cannot cancel" and pin the expectation to **required** — an

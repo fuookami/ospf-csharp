@@ -149,7 +149,7 @@ public class QuadraticMaskingFunctionTests
     public void TheSetMask_ShouldPassTheValueThrough()
     {
         // **`MaskingFunction` 读的是<b>桥接变量</b>，不是原始输入。**
-        // **所以喂值时必须给桥接变量——否则它读到"没有这个符号"，而基线规则是"读不到掩码给零、
+        // **所以喂值时必须给桥接变量——否则它读到"没有这个符号"，而这里的规则是"读不到掩码给零、
         // 读不到输入给 `null`"。**
         //
         // **`MaskingFunction` reads the <b>bridge variable</b>, not the original input.**

@@ -73,10 +73,10 @@ public static class RemoteCpResultArtifact {
     /// 的骨架：无 <c>resultRef</c> 时返回 <c>null</c>（不是错误——旧后端可能不下发）；有引用但
     /// 未配置对象存储、对象不存在、读取抛错，都各自给出结构化错误，而不是当成"没有结果"。
     ///
-    /// **刻意未实现：摘要复算。** Kotlin 的 `Json { encodeDefaults = true }` 序列化后取 SHA-256，
+    /// **刻意未实现：摘要复算。** 摘要取自 `Json { encodeDefaults = true }` 序列化后的 SHA-256，
     /// 该规范化形式对 `SerializedSolution` 的**字段声明顺序**、默认值集合、`Flt64` 自定义序列化与枚举
-    /// 命名都敏感。我无法在本环境运行基线，因此无法验证 C# 复现出的字节与基线逐字节相同。若照自己对
-    /// 字段顺序的理解实现复算，一旦顺序假设有误，就会把**合法的**基线产物判为损坏——这比不校验更糟。
+    /// 命名都敏感。本环境无法运行对端实现，因此无法验证 C# 复现出的字节与之逐字节相同。若照自己对
+    /// 字段顺序的理解实现复算，一旦顺序假设有误，就会把**合法的**产物判为损坏——这比不校验更糟。
     /// 因此这里只做与格式无关的校验：结构完善性、v2 标记与 schema 版本冲突、以及工件声明的摘要与原始结果
     /// 声明的摘要一致。**摘要复算在跨语言实测完成前不作为能力宣称。**
     ///
@@ -84,11 +84,11 @@ public static class RemoteCpResultArtifact {
     /// a legacy backend may not emit one; a reference without configured storage, a missing object and a
     /// failed read each produce a structured error instead of being treated as "no result".
     ///
-    /// **Deliberately not implemented: digest recomputation.** The code serializes with Kotlin's
-    /// `Json { encodeDefaults = true }` and hashes that; the canonical form is sensitive to the **declaration
+    /// **Deliberately not implemented: digest recomputation.** The digest is the SHA-256 of a
+    /// `Json { encodeDefaults = true }` serialization; that canonical form is sensitive to the **declaration
     /// order** of `SerializedSolution`'s fields, its default-value set, `Flt64`'s custom serializer and enum
-    /// naming. The code cannot be executed here, so C# reproducing its bytes cannot be verified. Guessing
-    /// the field order and shipping a recomputation would, if the guess is wrong, reject *valid* baseline
+    /// naming. The other implementation cannot be executed here, so C# reproducing its bytes cannot be verified. Guessing
+    /// the field order and shipping a recomputation would, if the guess is wrong, reject *valid*
     /// artifacts — worse than not checking at all. Only format-independent checks are performed: structural
     /// completeness, v2 markers versus legacy schema, and agreement between the artifact's declared digest
     /// and the one declared by the raw result. Digest recomputation is **not** claimed as a capability until

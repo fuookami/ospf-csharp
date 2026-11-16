@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 死区之内没有反应，之外按超出量增长 / No response inside the band, linear in the excess outside it.
 /// </summary>
 /// <remarks>
-/// 补 DeadZoneFunction（基线 CompositeFunctions.kt），形状是 max(|x| - delta, 0)。
+/// 补 DeadZoneFunction，形状是 max(|x| - delta, 0)。
 ///
 /// 这个形状有三处容易写错，而三处都不会报错：
 /// ① 死区之内返回的是 |x| 而不是 0；② 负的一侧忘了取绝对值；③ delta 为负时死区“消失”而没人发现。

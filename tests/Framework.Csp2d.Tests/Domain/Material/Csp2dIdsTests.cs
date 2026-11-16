@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Material;
 public class Csp2dIdsTests {
     /// <summary>**四个生产对象编号共享同一实现，语义只在接口上区分** / The four production-object identifiers share one implementation; the distinction lives in the interfaces.</summary>
     /// <remarks>
-    /// 同一个字符串可以同时是产品、物料、设备、副产物编号。**这不是偷懒，是基线口径**：它们在领域里是同一类"生产对象"，
+    /// 同一个字符串可以同时是产品、物料、设备、副产物编号。**这不是偷懒，是本仓的约定**：它们在领域里是同一类"生产对象"，
     /// 拆成四个类只会让每次调用多写一次转换。
     ///
-    /// One string can be a product, a material, a machine and a by-product identifier at once. **This is its convention, not laziness**: they are one class of
+    /// One string can be a product, a material, a machine and a by-product identifier at once. **This is the convention here, not laziness**: they are one class of
     /// "production object" in the domain, and four classes would only force a conversion at every call site.
     /// </remarks>
     [Fact]

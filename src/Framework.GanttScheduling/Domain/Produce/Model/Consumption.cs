@@ -78,7 +78,7 @@ public abstract class AbstractConsumption<C>(
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 对应基线 `Produce.refresh` / `Consumption.refresh`：遍历超量 / 不足两张表，把每行的对偶值按它的 `args` 累加进映射。
+    /// 遍历超量 / 不足两张表，把每行的对偶值按它的 `args` 累加进映射。
     /// 四处必须沿用：
     ///
     /// 1. **只有挂键的行才有价格**：没挂键的行静默跳过，不是错误（`when` 没有 `else`）。
@@ -86,17 +86,17 @@ public abstract class AbstractConsumption<C>(
     /// 3. **对偶表里没有该行时什么都不做**，不能当成零价写进去——零价会被后续过滤掉，看起来像"算过"。
     /// 4. **表未建立时跳过整段**，不是失败：`refresh` 可能在注册之前被调用。
     ///
-    /// **取价入口与基线不同**：基线从**符号的 `args`** 取键，而 C# 的 `IIntermediateSymbol.Args` 是从 `Parent` 派生的只读属性
-    /// （`IntermediateSymbol.cs:37`），`LinearFunctionSymbolAdapter` 也不接受 parent，符号建好之后挂不上去。 已经把键挂在**约束行**上，
-    /// 而行正是对偶值的来源，所以这里按行取键——等价且更直接。这也是本方法**必须收模型**的原因：行只能从模型里枚举。
+    /// **取价入口是约束行**：`IIntermediateSymbol.Args` 是从 `Parent` 派生的只读属性
+    /// （`IntermediateSymbol.cs:37`），`LinearFunctionSymbolAdapter` 也不接受 parent，符号建好之后挂不上去。所以键挂在**约束行**上，
+    /// 而行正是对偶值的来源，按行取键更直接。这也是本方法**必须收模型**的原因：行只能从模型里枚举。
     ///
-    /// And `Consumption.refresh`: walk the over and less tables and accumulate each row's dual value into the map by its `args`. Four things are carried over:
+    /// Walk the over and less tables and accumulate each row's dual value into the map by its `args`. Four things are carried over:
     /// **only a row carrying a key has a price** and a row without one is skipped silently rather than being an error (its `when` has no `else`); **prices accumulate per key**, since one
     /// key can be hit by several rows and the code uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as
-    /// "already computed"; and **a table that was never built skips the whole block** instead of failing, since `refresh` may run before registration. **The key's entry point differs from the
-    /// baseline**: the code reads it from **the symbol's `args`**, while C#'s `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and
-    /// `LinearFunctionSymbolAdapter` takes no parent, so it cannot be attached after construction. already attaches the key to the **constraint row**, which is what the dual value is keyed by, so
-    /// this reads it from the row — equivalent and more direct. That is also why this method **must take the model**: rows can only be enumerated from it.
+    /// "already computed"; and **a table that was never built skips the whole block** instead of failing, since `refresh` may run before registration. **The key is read from the
+    /// constraint row**: `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and
+    /// `LinearFunctionSymbolAdapter` takes no parent, so it cannot be attached after construction. The key therefore sits on the **constraint row**, which is what the dual value is keyed by, so
+    /// reading it from the row is more direct. That is also why this method **must take the model**: rows can only be enumerated from it.
     /// </remarks>
     public virtual Try Refresh(object shadowPriceMap, object model, object shadowPrices) {
         ArgumentNullException.ThrowIfNull(shadowPriceMap);
@@ -201,11 +201,11 @@ public sealed class BunchSchedulingConsumption<C> : AbstractConsumption<C>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 与基线 `BunchSchedulingConsumption.register` 一致：先建 `consumption_quantity_（C）` 符号表并设范围，再补超量 / 不足两表。
-    /// **符号表建在排序后的列表上**，与基线 `sortedBy { it.first.index }` 一致——不排序的话索引与位置不对应，范围会设到别的Material上。
+    /// 先建 `consumption_quantity_（C）` 符号表并设范围，再补超量 / 不足两表。
+    /// **符号表建在排序后的列表上**——不排序的话索引与位置不对应，范围会设到别的Material上。
     ///
-    /// Matches its `BunchSchedulingConsumption.register`: build the `consumption_quantity_ (item)` table with its ranges first, then the over/less tables. **The table is built over the sorted
-    /// list**, matching its `sortedBy { it.first.index }`; without the sort the index and the position disagree and a range lands on the wrong item.
+    /// Build the `consumption_quantity_ (item)` table with its ranges first, then the over/less tables. **The table is built over the sorted
+    /// list**; without the sort the index and the position disagree and a range lands on the wrong item.
     /// </remarks>
     public override Try Register(object model) {
         ArgumentNullException.ThrowIfNull(model);

@@ -1,6 +1,4 @@
 // 广义流的解与 solver 容差 / Generalized-flow solution and solver tolerances.
-// 与固定 Kotlin （2714 字节）、（1335 字节）对应。
-// And.
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +77,7 @@ public sealed record GeneralizedFlowSolverTolerance(
     Flt64 AbsoluteTolerance,
     Flt64 RelativeTolerance) {
     /// <summary>
-    /// 使用基线默认值（绝对、相对各 1e-7）/ Use the code defaults (1e-7 absolute and relative).
+    /// 默认容差（绝对、相对各 1e-7）/ The defaults are 1e-7 absolute and relative.
     /// </summary>
     public GeneralizedFlowSolverTolerance() : this(new Flt64(1e-7), new Flt64(1e-7)) {
     }

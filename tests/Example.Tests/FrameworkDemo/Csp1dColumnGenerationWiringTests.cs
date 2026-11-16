@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// `Csp1dColumnGeneration` must **actually invoke** the injected generators, not merely store them in fields.
 /// </summary>
 /// <remarks>
-/// 基线 demo3 把 **`NSameGenerator` 当初始生成器、`FullSumGenerator` 当定价枚举器**注入
+/// 示例 demo3 把 **`NSameGenerator` 当初始生成器、`FullSumGenerator` 当定价枚举器**注入
 /// `Csp1dColumnGeneration`，由它驱动整个列生成流程。
 ///
 /// C# 侧这两个注入点都存在（构造函数第 2、3 个参数），`_initialGenerator` 与 `_pricingGenerator`
@@ -129,7 +129,7 @@ public class Csp1dColumnGenerationWiringTests {
 
     /// <summary>**已取消的令牌必须让求解立即抛出** / An already-cancelled token must make the solve throw immediately.</summary>
     /// <remarks>
-    /// 基线 `Csp1dColumnGeneration` 在 4 个可中断边界调用 `progressContext?.throwIfCancelled`。
+    /// `Csp1dColumnGeneration` 在 4 个可中断边界调用 `progressContext?.throwIfCancelled`。
     /// **C# 侧原先一个检查点都没有**——`grep CancellationToken` 在该文件里零命中。
     ///
     /// 后果不是"取消得慢"，而是**取消根本不生效**：调用方 `Cancel` 之后，
@@ -178,11 +178,11 @@ public class Csp1dColumnGenerationWiringTests {
 
     /// <summary>**注入的定价生成器必须被调用** / The injected pricing generator must be invoked.</summary>
     /// <remarks>
-    /// 基线 demo3 的定价枚举器是 `FullSumGenerator`，通过 `ReducedCostPricingGenerator` 包装注入。
+    /// 示例 demo3 的定价枚举器是 `FullSumGenerator`，通过 `ReducedCostPricingGenerator` 包装注入。
     /// 这条单独钉住 `pricingGenerator` 这条注入点——**它与 `initialGenerator` 是两个独立的注入点**，
     /// 只验证一个就下结论，正是本项目反复出现的"修好一条路径、兄弟路径保持原样"。
     ///
-    /// The code demo3's pricing enumerator is `FullSumGenerator`, injected through a `ReducedCostPricingGenerator` wrapper. This pins the `pricingGenerator`
+    /// The sample demo3's pricing enumerator is `FullSumGenerator`, injected through a `ReducedCostPricingGenerator` wrapper. This pins the `pricingGenerator`
     /// injection point separately — **it is independent of `initialGenerator`**, and validating only one is exactly the recurring "fix one path, leave the siblings
     /// untouched" pattern in this project.
     /// </remarks>

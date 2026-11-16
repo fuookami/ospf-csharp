@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 相对优先级反转 / The relative priority reversals.
 /// </summary>
 /// <remarks>
-/// 与对齐：为**每个（有序货物对, 有序舱位对）组合**造一个中间符号，
+/// 为**每个（有序货物对, 有序舱位对）组合**造一个中间符号，
 /// 表示"这一对是否被反着放"。
 ///
 /// 五处必须沿用：
@@ -42,9 +42,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// </remarks>
 public sealed class RelativeOrder
 {
-    /// <summary>浮点边界余量 / The floating-point boundary tolerance</summary>
     /// <summary>
-    /// 浮点边界余量：与`NONZERO_TOLERANCE` 一致 / The floating-point margin, matching its `NONZERO_TOLERANCE`.
+    /// 浮点边界余量，`1e-10` / The floating-point boundary margin, `1e-10`.
     /// </summary>
     private const double NonzeroTolerance = 1e-10;
 
@@ -160,12 +159,12 @@ public sealed class RelativeOrder
                         first.Polynomial.Constant + second.Polynomial.Constant - new Flt64(2.0) + new Flt64(NonzeroTolerance));
                     // **`strictBoundary` 取默认值 `NONZERO_TOLERANCE = 1e-10`**，不是 0.5。
                     //
-                    // 基线 `IfFunction` 的 `strictBoundary` 缺省为 `converter.intoValue(Flt64(NONZERO_TOLERANCE))`，
+                    // 构造 `IfFunction` 时这里传入 `converter.intoValue(Flt64(NONZERO_TOLERANCE))`——
                     // 语义是**真假分支之间的业务间隔**（Big-M 的 gap），不是判定阈值。取 0.5 会把整个取值区间
                     // `{−2+ε, −1+ε, ε}` 压到边界下方，`SafeLattice` 因此拒绝。实测 1e-12/1e-11/1e-10 都能构造，
                     // 1e-9 及以上全部失败——即上界就是 `ε = NONZERO_TOLERANCE` 本身。
                     //
-                    // **`strictBoundary` uses its default `NONZERO_TOLERANCE = 1e-10`**, not 0.5. In the code `IfFunction`'s `strictBoundary` defaults to
+                    // **`strictBoundary` here is `NONZERO_TOLERANCE = 1e-10`**, not 0.5. The call passes
                     // `converter.intoValue(Flt64(NONZERO_TOLERANCE))` and means the **business gap between the true and false branches** (the Big-M gap), not a decision threshold. A value
                     // of 0.5 pushes the whole value range `{−2+ε, −1+ε, ε}` below the boundary, so `SafeLattice` rejects it. Measured, 1e-12, 1e-11 and 1e-10 all construct while 1e-9 and
                     // above all fail — the ceiling is `ε = NONZERO_TOLERANCE` itself.

@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **"误差在断点处为零"是一个陷阱**：**线性插值在每个断点处与真实函数完全重合**，
 /// **所以"抽查几个断点"永远测不出段数不足。**
 ///
-/// **三处必须检查，而基线三处都检查了**：
+/// **三处必须检查**：
 /// **① 输入非有限；② 输入落在 `[breakpoints.first, breakpoints.last]` 之外；③ 真实值非有限。**
 /// **漏掉 ① 会让 `NaN` 一路传到误差计算里，而 `NaN` 与任何数比较都是 `false`，
 /// 于是"误差过大"的判据<b>静默通过</b>。**
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **"The error is zero at the breakpoints" is a trap**: **linear interpolation coincides exactly with the true
 /// function at every breakpoint**, **so "spot-check a few breakpoints" can never reveal too few segments.**
 ///
-/// **Three things must be checked, and the code checks all three**.
+/// **Three things must be checked**.
 /// **① non-finite input; ② input outside `[breakpoints.first, breakpoints.last]`; ③ non-finite true value.**
 /// **Skipping ① lets `NaN` flow into the error computation, and `NaN` compares `false` against everything, so an
 /// "error too large" criterion <b>passes silently</b>.**

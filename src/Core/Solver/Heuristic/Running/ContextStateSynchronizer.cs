@@ -202,8 +202,8 @@ public sealed class ContextStateSynchronizer<ObjValue, V>
         var result = new List<ClpsoParticle<ObjValue, V>>(synced.Count);
         for (int index = 0; index < synced.Count; index++) {
             ParticleState<ObjValue, V> particle = synced[index];
-            // 学习对象全部取该粒子自己的下标——基线这里捕获的是外层下标，不是列表元素下标。
-            // The exemplars all take the particle's own index — the code captures the outer index here, not the element index.
+            // 学习对象全部取该粒子自己的下标，而不是外层下标。
+            // The exemplars all take the particle's own index, not the outer index.
             var exemplars = new List<int>(particle.Individual.Solution.Count);
             for (int axis = 0; axis < particle.Individual.Solution.Count; axis++) {
                 exemplars.Add(index);

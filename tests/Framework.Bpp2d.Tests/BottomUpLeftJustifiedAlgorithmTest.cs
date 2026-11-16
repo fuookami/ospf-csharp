@@ -129,9 +129,9 @@ public sealed class BottomUpLeftJustifiedAlgorithmTest {
     /// the item skipped.
     /// </summary>
     /// <remarks>
-    /// 这是**基线候选点生成方式的固有限制**，不是 C# 移植偏差：`feasiblePoints` 同样只产出角点，
+    /// 这是**候选点生成方式的固有限制**，不是本实现的偏差：`feasiblePoints` 同样只产出角点，
     /// 刀缝只参与可行性判定、不参与候选点偏移。如实记录，避免把它当成"实现得更好"或悄悄删掉这条测试。
-    /// This is an inherent limitation of its candidate generation, not a implementation deviation: its
+    /// This is an inherent limitation of the candidate generation, not an implementation deviation: the
     /// `feasiblePoints` likewise emits only corners and the kerf only participates in the feasibility test. It is
     /// recorded honestly rather than "improved away" or dropped from the suite.
     /// </remarks>

@@ -66,16 +66,16 @@ public class Demo2InfeasibleResponseTests
     /// **这条防的是"把整个失败分支都改成 NoSolution"**：那会让真正的后端故障
     /// **伪装成"模型不可行"**，而那是**更难查**的那一种。
     ///
-    /// **状态名照基线**： 的非不可行分支返回 `ResponseDTO(request, error)`，
+    /// **状态名照搬**：非不可行分支返回 `ResponseDTO(request, error)`，
     /// 而那个构造函数写死 `status = "Error"`、`notes = listOf(error.message)`。
-    /// **`"DirectSolveFailed"` 是本仓自造的**（搜不到），**所以它不是可以钉的基线行为。**
+    /// **`"DirectSolveFailed"` 是本仓自造的**（搜不到），**所以它不是可以钉的预期行为。**
     ///
     /// **This guards against rewriting the whole failure branch as `NoSolution`**: that would disguise a real backend fault
     /// **as "the model is infeasible"**, the **harder** of the two to diagnose.
     ///
-    /// **The status name follows the code**: the non-infeasible branch of returns `ResponseDTO(request, error)`,
+    /// **The status name follows the contract**: the non-infeasible branch returns `ResponseDTO(request, error)`,
     /// and that constructor hard-codes `status = "Error"` and `notes = listOf(error.message)`.
-    /// **`"DirectSolveFailed"` was invented by this implementation** (it appears nowhere in the code), **so it is not baseline behaviour to pin.**
+    /// **`"DirectSolveFailed"` was invented by this implementation** (it appears nowhere in the code), **so it is not expected behaviour to pin.**
     /// </remarks>
     [Theory]
     [InlineData(ErrorCode.OREngineSolvingException)]

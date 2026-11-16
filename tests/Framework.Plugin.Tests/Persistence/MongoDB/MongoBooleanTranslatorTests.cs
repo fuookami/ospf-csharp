@@ -17,12 +17,12 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **查询写错不抛异常，它只是答错** / A wrong query does not throw; it answers wrongly.
 /// </summary>
 /// <remarks>
-/// 基线 `MongoBooleanTranslator`（**422 行**），四个 Mongo 翻译器里最后一个、也最容易错的一个。
+/// 四个 Mongo 翻译器里，这一个最后完成、也最容易错。
 ///
 /// **这一层有四处"看起来对、实际反了或漏了"的地方，四条判据分别钉住：**
 /// 反转比较、null 与缺失、正则转义顺序、空 `or`。
 ///
-/// The code's `MongoBooleanTranslator` (**422 lines**), the last and most error-prone of the four Mongo translators.
+/// This translator is the last and most error-prone of the four Mongo translators.
 ///
 /// **This layer has four places that look right but are reversed or incomplete, and four criteria pin them:**
 /// reversed comparisons, null versus missing, regex escaping order, and empty `or`.
@@ -167,8 +167,8 @@ public class MongoBooleanTranslatorTests
 
     /// <summary>**空逻辑在 C# 里根本构造不出来** / An empty logical cannot even be constructed in C#.</summary>
     /// <remarks>
-    /// 基线 `translateAnd` 与 `translateOr` 都有一段"操作数为空"的分支（空 `and` 恒真、空 `or` 匹配不到），
-    /// **因为 Kotlin 的 `AndExpression` 允许空列表。**
+    /// 若操作数允许为空，`translateAnd` 与 `translateOr` 就得各有一段"操作数为空"的分支（空 `and` 恒真、空 `or` 匹配不到），
+    /// **因为只有允许空列表的 `AndExpression` 才会走到那里。**
     ///
     /// **C# 的 `AndExpression` / `OrExpression` 构造函数直接拒绝空操作数**（实测
     /// `ArgumentException: And expression requires at least one operand`），
@@ -176,12 +176,12 @@ public class MongoBooleanTranslatorTests
     ///
     /// **这条判据钉的是那个约束本身**：谁把构造函数的检查去掉，"空逻辑"就会从"不可能"变成"未处理"。
     ///
-    /// `translateAnd` and `translateOr` both have an "operands are empty" branch (empty `and` is always true,
-    /// empty `or` matches nothing), **because Kotlin's `AndExpression` allows an empty list.**
+    /// `translateAnd` and `translateOr` would each need an "operands are empty" branch (empty `and` is always true,
+    /// empty `or` matches nothing), **if an empty operand list could exist here.**
     ///
     /// **The C# `AndExpression` / `OrExpression` constructors reject empty operands outright** (measured:
     /// `ArgumentException: And expression requires at least one operand`),
-    /// **so the two branches written after the code are unreachable here — they were deleted rather than left as dead code.**
+    /// **so those two branches are unreachable here — they were deleted rather than left as dead code.**
     ///
     /// **This pins the constraint itself**: remove the constructor check and "empty logical" goes from impossible to unhandled.
     /// </remarks>

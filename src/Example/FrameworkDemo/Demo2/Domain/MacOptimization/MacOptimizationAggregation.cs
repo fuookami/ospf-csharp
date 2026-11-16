@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization;
 /// 重心优化聚合 / The MAC-optimisation aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：**自建三个模型**（`MACRange`、`LongitudinalBalance`、`LateralBalance`），
+/// **自建三个模型**（`MACRange`、`LongitudinalBalance`、`LateralBalance`），
 /// 上游只取飞机型号、公式、总重、扭矩与安定面。
 ///
 /// 三处必须沿用：

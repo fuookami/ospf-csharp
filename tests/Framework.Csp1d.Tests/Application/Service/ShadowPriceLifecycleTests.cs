@@ -307,9 +307,9 @@ public class ShadowPriceLifecycleTests {
     /// <remarks>
     /// **记的缺口**："`Int64` / `Flt32` 实例化 CSP1D 会在运行期抛异常，这里只记录未修"。
     ///
-    /// 这里查了基线：`extractFromDualSolution` 写的是
+    /// 这里的 `extractFromDualSolution` 写的是
     /// `(convertSolverValue(...) as Ok).value`——`Failed` 时 `as Ok` 得 null、`.value` 立刻抛。
-    /// **所以抛异常与基线等价，不是 C# 偏离。**
+    /// **所以抛异常是既有语义，不是 C# 偏离。**
     ///
     /// 这条判据钉住的是**异常信息的质量**：抛异常时至少要**说出类型名**，
     /// 否则用户拿到 `InvalidOperationException` 却不知道是 `Int64` 还是 `Flt32` 的问题。
@@ -320,8 +320,8 @@ public class ShadowPriceLifecycleTests {
     /// | 抛但不带类型名 | **判据红**（信息缺失） |
     /// | 抛且带类型名 | **绿** |
     ///
- /// **the earlier gap**: "`Int64` / `Flt32` blow up at runtime; recorded but not fixed". read the code: `extractFromDualSolution` writes
-    /// `(convertSolverValue(...) as Ok).value`, so `Failed` yields null and `.value` throws — **the throw is baseline parity, not a C# deviation**. This criterion pins
+ /// **the earlier gap**: "`Int64` / `Flt32` blow up at runtime; recorded but not fixed". `extractFromDualSolution` writes
+    /// `(convertSolverValue(...) as Ok).value`, so `Failed` yields null and `.value` throws — **the throw is the existing behaviour, not a C# deviation**. This criterion pins
     /// **the quality of the message**: it must at least **name the type**, or users get an `InvalidOperationException` without knowing whether `Int64` or `Flt32` is at
     /// fault (table above).
     /// </remarks>

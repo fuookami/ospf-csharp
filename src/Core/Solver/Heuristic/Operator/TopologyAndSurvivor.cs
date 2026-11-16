@@ -344,7 +344,7 @@ public sealed class MeanPairwiseDistance : IDiversityMetric {
                 pairs++;
             }
         }
-        // **这是"平均欧氏距离"，不是"距离的均方根"**。基线写 `accumulated / pairs`，即先逐对取欧氏距离再求平均；
+        // **这是"平均欧氏距离"，不是"距离的均方根"**：代码是 `accumulated / pairs`，即先逐对取欧氏距离再求平均；
         // 先累加平方再开方得到的是 RMS，两者在距离分布不均匀时差异显著——而两种值都是"合理的正数"，
         // **只看数值大小完全看不出用了哪一个**。此前这里误写成 RMS 且未记录偏离，已改正。
         // **This is the mean Euclidean distance, not the root of the mean squared distance.** The code writes `accumulated / pairs`,

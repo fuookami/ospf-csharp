@@ -1,6 +1,4 @@
 // 产能列选择约束 / Capacity column selection constraint.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;
@@ -25,11 +23,11 @@ public sealed record CapacityColumnSelectionShadowPriceKey<E>(E Executor, TimeRa
 /// </summary>
 /// <typeparam name="E">执行器类型 / Executor type.</typeparam>
 /// <remarks>
-/// **`Groups` 是"需要恰好一个"的活动组合子集，不是全笛卡尔积**。基线默认取全积，但允许显式传入更小的集合：
+/// **`Groups` 是"需要恰好一个"的活动组合子集，不是全笛卡尔积**。默认取全积，但允许显式传入更小的集合：
 /// 不可用的执行器、零长度时隙、以及被外部排班排除的组合都不该被要求"恰好选一列"。
 /// 若把它当成全积，一个本该空着的组合会**强制**求解器塞进一列，于是产能被凭空占用。
 ///
-/// **`Groups` is the active subset that needs "exactly one", not the full Cartesian product.** The code defaults to the full product but accepts a smaller explicit set:
+/// **`Groups` is the active subset that needs "exactly one", not the full Cartesian product.** It defaults to the full product but accepts a smaller explicit set:
 /// unavailable executors, zero-length slots and combinations excluded by an external roster must not be required to pick a column. Treating it as the full product **forces**
 /// the solver to fill a combination that should stay empty, consuming capacity out of thin air.
 ///
@@ -37,7 +35,7 @@ public sealed record CapacityColumnSelectionShadowPriceKey<E>(E Executor, TimeRa
 /// 而**组外的组合必须跳过**——它们本来就不需要覆盖。两条规则的差别正是这里的核心。
 ///
 /// **A missing expression inside the group must fail**: as with `ExecutorSlotCompilationConstraint`, skipping removes the coverage requirement. And **combinations outside the
-/// group must be skipped** — they need no coverage to begin with. The difference between those two rules is the heart of.
+/// group must be skipped** — they need no coverage to begin with. The difference between those two rules is the heart of the class.
 /// </remarks>
 public sealed class CapacityColumnSelectionConstraint<E>
     where E : Executor {

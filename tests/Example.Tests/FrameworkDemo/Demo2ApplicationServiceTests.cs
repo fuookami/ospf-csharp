@@ -34,11 +34,11 @@ public sealed class Demo2ApplicationServiceTests {
     [InlineData(StowageMode.Predistribution)]
     [InlineData(StowageMode.WeightRecommendation)]
     public void Solve_ShouldDispatchToTheRealPath(StowageMode mode) {
-        // **预配载要用带谓词规格的请求**： 补上基线"预配载必须有下限"的校验后，
-        // 全配载形状的请求会在装配阶段被拒——**那是基线行为，不是没接上路径**。
+        // **预配载要用带谓词规格的请求**： 有了"预配载必须有下限"的校验后，
+        // 全配载形状的请求会在装配阶段被拒——**那是既定行为，不是没接上路径**。
         //
-        // **Predistribution needs the request carrying the predicate spec**: once added its "predistribution requires a bound" check, a
-        // full-load-shaped request is refused during assembly — **its behaviour, not an unwired path**.
+        // **Predistribution needs the request carrying the predicate spec**: with the "predistribution requires a bound" check, a
+        // full-load-shaped request is refused during assembly — **established behaviour, not an unwired path**.
         RequestDTO request = mode == StowageMode.Predistribution
             ? AircraftLoadingDemo.CreatePredistributionSampleRequest()
             : AircraftLoadingDemo.CreateSampleRequest();
@@ -125,14 +125,14 @@ public sealed class Demo2ApplicationServiceTests {
 
     /// <summary>**三个自造状态不许再被产出** / The three invented statuses must not come back.</summary>
     /// <remarks>
-    /// **`DirectSolveFailed`、`DomainRegisterFailed`、`ModelBuildFailed` 在基线 `12fdb587` 里一次都不出现**——
+    /// **`DirectSolveFailed`、`DomainRegisterFailed`、`ModelBuildFailed` 是自造的状态**——
     /// 它们是本仓发明的，而产出 `Infeasible` / `NotConverged` / `Error` 三个。
     ///
     /// **这条判据钉的是"没有产出点"**，不是"映射表里没有名字"：
     /// **一个没人产出的字符串留在 `CodeOf` 里，会让它看起来像一条真实分支**——
     /// **而它真正的作用只是让旧判据继续通过。**
     ///
-    /// **They appear nowhere in baseline `12fdb587`** — this implementation invented them, and the code emits only
+    /// **They are invented here and appear nowhere in the wire contract** — only
     /// `Infeasible` / `NotConverged` / `Error`.
     ///
     /// **What this pins is "no producer"**, not "no name in the mapping table":

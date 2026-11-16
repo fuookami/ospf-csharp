@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 自适应调参表与二进制变量数 / The adaptive tuning table and the binary-variable count.
 /// </summary>
 /// <remarks>
-/// `BendersStrategy.tuneAdaptiveConfig` 在是一张**按问题规模分档的表**：迭代上限加 0/8/16/32/64，
-/// 容差取底线与档位下限的较大者，两个停滞窗口各按档取值。本仓这块**已经是基线原样**，
+/// `BendersStrategy.tuneAdaptiveConfig` 是一张**按问题规模分档的表**：迭代上限加 0/8/16/32/64，
+/// 容差取底线与档位下限的较大者，两个停滞窗口各按档取值。本仓这块**就是如此**，
 /// 这批判据把它钉住——**它此前一条判据都没有**，改错一个数字不会有任何东西变红。
 ///
 /// `tuneAdaptiveConfig` is **a size-banded table**: iterations get +0/8/16/32/64, tolerance becomes the larger of the configured value and the
-/// band's floor, and the two stall windows take a band value. This implementation's version **is already its, line for line** (checked) and had **no
+/// band's floor, and the two stall windows take a band value. This implementation's version **is exactly that** and had **no
 /// criterion at all** — a single changed digit would not have turned anything red.
 /// </remarks>
 public sealed class Demo2BendersSizingTests
@@ -92,9 +92,9 @@ public sealed class Demo2BendersSizingTests
     /// **二进制变量数求和，不按乘积** / The binary-variable count follows its sum, not a product.
     /// </summary>
     /// <remarks>
-    /// 把这条判据翻面了。** 它原本钉的是"`CargoInput` 仍然没有 `AllowedPositions`"这个**前提**，
+    /// **把这条判据翻面了。** 它原本钉的是"`CargoInput` 仍然没有 `AllowedPositions`"这个**前提**，
     /// 并写明"字段一落地它就红，届时必须把 `BendersStrategy.ResolveSolveMode` 那一行改成种求和"。
-    /// **字段在 落地，判据应声变红，那一行也照它说的改了。**
+    /// **字段一落地，判据应声变红，那一行也照它说的改了。**
     ///
     /// 现在它钉的是**求和本身**：限制过的请求必须得到比乘积**更小**的数。少了这一条，
     /// "改成求和"可以退化成"换个写法的乘积"，而两者在无限制请求上完全一样——**判据会照样绿**。
@@ -146,7 +146,7 @@ public sealed class Demo2BendersSizingTests
     /// <summary>    /// **阈值比较用的是调参后的那个数** / The threshold comparison uses the tuned number.
     /// </summary>
     /// <remarks>
-    /// 基线比较的是 `tunedAdaptive.minBinaryVariables`（调参不走阈值，所以数值上等于配置值），而不是某个常数。
+    /// 比较的是 `tunedAdaptive.minBinaryVariables`（调参不走阈值，所以数值上等于配置值），而不是某个常数。
     /// 判据钉两端：低于阈值 → 落回 MILP 并写明理由；达到阈值 → 走 Benders。
     ///
     /// The code compares against `tunedAdaptive.minBinaryVariables` (tuning does not rewrite the threshold, so it equals the configured value), not a constant.

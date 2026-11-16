@@ -210,7 +210,7 @@ public class Demo2MaxLoadWeightModelTests {
     /// 三种取值都是**数值**（`position.mlw(zfw)` 返回 `Quantity`），不是关于决策变量的表达式。把它写成含单项式的
     /// 符号会让"最大装载重量"变成可优化的量——那与"规格"是两件事，而求解器会很乐意把规格调到对自己有利的位置。
     ///
-    /// All three baseline values are **numbers** (`position.mlw(zfw)` returns a `Quantity`), not expressions over decision variables. Making it carry monomials would turn a
+    /// All three values are **numbers** (`position.mlw(zfw)` returns a `Quantity`), not expressions over decision variables. Making it carry monomials would turn a
     /// specification into something the solver may optimise, and the solver would happily move the spec wherever it likes.
     /// </remarks>
     [Fact]

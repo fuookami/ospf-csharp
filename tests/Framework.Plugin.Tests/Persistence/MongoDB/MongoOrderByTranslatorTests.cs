@@ -15,12 +15,12 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **排序错了不报错，只是顺序不对** / A wrong sort does not throw; it only orders wrongly.
 /// </summary>
 /// <remarks>
-/// 基线 `MongoOrderByTranslator`（**83 行**）。补齐了标量翻译器，这里补排序。
+/// 本仓的 `MongoOrderByTranslator`（**83 行**）。标量翻译器已补，这里补排序。
 ///
 /// **为什么排序值得单独钉**：**分页建立在顺序之上。**
 /// 顺序不稳或方向反了，第 2 页会重复或漏掉第 1 页的记录——**而查询本身"成功"了。**
 ///
-/// The code's `MongoOrderByTranslator` (**83 lines**). added the scalar translator; sorting.
+/// This repo's `MongoOrderByTranslator` (**83 lines**). The scalar translator came first; this file covers sorting.
 ///
 /// **Why sorting deserves its own criteria**: **paging is built on order.**
 /// Unstable or reversed order makes page 2 repeat or skip records from page 1 — **while the query itself "succeeded".**
@@ -52,10 +52,10 @@ public class MongoOrderByTranslatorTests
     /// <summary>**空排序返回 `null`，不是空文档** / An empty sort returns `null`, not an empty document.</summary>
     /// <remarks>
     /// **空 `$sort: {}` 在 Mongo 里合法但无意义**，而 `null` 让调用方整个省掉这个阶段。
-    /// **基线原文是 `return Ok(null)`。**
+    /// **这里写的是 `return Ok(null)`。**
     ///
     /// **An empty `$sort: {}` is legal but meaningless in Mongo**, while `null` lets the caller drop the stage entirely.
-    /// **The code reads `return Ok(null)`.**
+    /// **It writes `return Ok(null)`.**
     /// </remarks>
     [Fact]
     public void TheEmptySort_ShouldBeNull()
@@ -116,7 +116,7 @@ public class MongoOrderByTranslatorTests
 
     /// <summary>**`Nulls` 不能静默忽略** / `Nulls` must not be ignored silently.</summary>
     /// <remarks>
-    /// C# 的 `SortItem` 比基线多一个 `NullsOrder? Nulls`，**而排序翻译器不看它**。
+    /// C# 的 `SortItem` 带着一个 `NullsOrder? Nulls`，**而排序翻译器不看它**。
     ///
     /// **静默忽略一个调用方明确设置的选项，比不支持更糟**：
     /// **调用方以为它生效了，于是不会去查为什么 null 排在前面。**

@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Framework.Model.Symbol;
 /// <typeparam name="T">数值类型 / The numeric type.</typeparam>
 /// <typeparam name="TType">变量类型 / The variable type.</typeparam>
 /// <remarks>
-/// 与基线 `VariableAdapter` 对齐。**这是"别名"的载体**：外层变量与内层变量是同一决策的两个门面，
+/// **这是"别名"的载体**：外层变量与内层变量是同一决策的两个门面，
 /// 求解器只认一个，建模者按另一面写约束。
 ///
-/// Aligned with its `VariableAdapter`. **It carries an alias**: the outer and inner variables are two faces of the same decision, the solver honouring one while the modeller writes
+/// **It carries an alias**: the outer and inner variables are two faces of the same decision, the solver honouring one while the modeller writes
 /// constraints against the other.
 /// </remarks>
 public sealed record VariableAdapter<T, TType>

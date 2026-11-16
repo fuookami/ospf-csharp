@@ -33,7 +33,7 @@ public sealed record Bpp2dShadowPriceArguments(
 ///
 /// **Deliberately does not derive from the shared `AbstractShadowPriceMap`** for the reason recorded: that base class's key holds only a `Type` with no room for a payload, so
 /// `ToKey` collapses the mode and item id (measured: two additions collapsed to one). This class keeps its own `Dictionary&lt;Bpp2dDemandShadowPriceKey, Flt64&gt;` keyed by a **value
-/// object with its own equality**. Three baseline semantics are copied: **the same key accumulates** rather than overwriting, since one demand is priced repeatedly across iterations;
+/// object with its own equality**. Three semantics are kept: **the same key accumulates** rather than overwriting, since one demand is priced repeatedly across iterations;
 /// **an unregistered key returns null** rather than zero, which would read as "a known shadow price of zero"; and `Invoke` **sums** the registered extractors.
 /// </remarks>
 public sealed class Bpp2dShadowPriceMap

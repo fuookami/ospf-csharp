@@ -1,6 +1,4 @@
 // 混合箱型目标与余料统计 / Mixed bin-type objectives and waste statistics.
-// 与固定 Kotlin 的纯函数部分对应。
-// The pure-function part of the pinned Kotlin: .
 //
 // **更正：** **这里原来写着"的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在）"，
 // 而那句话早就不成立了——`src/Framework.Bpp3d/Domain/LayerAssignment/Model/PreciseAssignment.cs` 就在仓库里。**
@@ -20,10 +18,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing;
 /// 余料统计 / Waste statistics.
 /// </summary>
 /// <remarks>
-/// **余料是统计量，不是优化目标**：基线文件头明确写了这一点。体积浪费不能直接当目标，因为需求体积固定时
+/// **余料是统计量，不是优化目标**：体积浪费不能直接当目标，因为需求体积固定时
 /// "少用体积" 与 "少用箱子" 并不总是等价——把余料当目标会在边界上选出一个装得更满但用了更多箱子的解。
 ///
-/// **Waste is a statistic, not an objective**: the code file header says so explicitly. Volume waste cannot be the objective directly, because with a fixed demanded
+/// **Waste is a statistic, not an objective**: volume waste cannot be the objective directly, because with a fixed demanded
 /// volume "using less volume" and "using fewer bins" are not always equivalent — optimising waste can pick a solution that packs tighter yet uses more bins.
 /// </remarks>
 public static class BinWaste {

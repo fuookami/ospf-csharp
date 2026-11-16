@@ -75,8 +75,8 @@ public class Demo2ColumnGenerationWiringTests
 #if SCIP_INTEGRATION
     /// <summary>**真后端上整条链跑通** / The whole chain completes on a real backend.</summary>
     /// <remarks>
-    /// **时这条判据钉的是"停在哪"**：链跑到收尾复核就失败，`目标引用缺少变量值`。
-    /// 补上 `MetaModel.ObjectiveSnapshot`（基线一直有，C# 一直缺），这条**应声翻面**——现在必须是 `Optimal`。
+    /// **这条判据钉的是"停在哪"**：链跑到收尾复核就失败，`目标引用缺少变量值`。
+    /// 补上 `MetaModel.ObjectiveSnapshot`（此前一直缺），这条**应声翻面**——现在必须是 `Optimal`。
     ///
     /// **这正是"缺口变成判据、补上时判据翻面"的用法**： 写下停点，补上之后它立刻红了，
     /// 提醒我改判据而不是让它默默绿着。

@@ -287,10 +287,10 @@ public class BunchTaskTimeTests {
     /// **束的 `estEnd` 就是 `est`，不加工期** / A bunch's `estEnd` is its `est`, with no duration added.
     /// </summary>
     /// <remarks>
-    /// 任务调度时间那支加，这一支不加（基线如此：束内成员的结束时间就是共用的开始时刻）。判据用的任务**自带工期**（时间窗 2 小时），再比两个多项式——
+    /// 任务调度时间那支加，这一支不加（这是约定：束内成员的结束时间就是共用的开始时刻）。判据用的任务**自带工期**（时间窗 2 小时），再比两个多项式——
     /// 若这里也加工期，差值会正好是一个工期，而"束的完工时间"会在屏幕上多出一段。
     ///
-    /// Task scheduling time adds the duration; this branch does not (its shape: members of a bunch finish at the shared start instant). The criterion gives the task a
+    /// Task scheduling time adds the duration; this branch does not (members of a bunch finish at the shared start instant). The criterion gives the task a
     /// **duration** and then compares the two polynomials — if this branch added it too, the difference would be exactly one duration and every bunch's finish would grow on screen.
     /// </remarks>
     [Fact]

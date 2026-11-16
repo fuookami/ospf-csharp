@@ -102,10 +102,10 @@ public sealed class Aggregation
         if (result.IsFailed) {
             return result;
         }
-        // **顺序照基线**：taskTime → flow → fleetBalance → flightLink → flightCapacity。
+        // **顺序固定**：taskTime → flow → fleetBalance → flightLink → flightCapacity。
         // 任何一步失败就整体失败——半装的聚合在求解时表现为"约束莫名不紧"，比直接失败难查得多。
         //
-        // **The order follows the code**: taskTime, flow, fleetBalance, flightLink, flightCapacity. A failure anywhere aborts the whole registration — a half-wired aggregation shows
+        // **The order is fixed**: taskTime, flow, fleetBalance, flightLink, flightCapacity. A failure anywhere aborts the whole registration — a half-wired aggregation shows
         // up at solve time as "the constraint is mysteriously slack", much harder to diagnose than a straight failure.
         Try taskTime = TaskTime.Register(model);
         if (taskTime.IsFailed) {

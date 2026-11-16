@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 配载管线列表生成器 / The stowage pipeline list generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：按装载模式与两个重量标志组装 11—14 条约束管线。**无条件的是 11 条**，第 4、5 条各按一个标志加，第 12 条按模式加。**顺序是基线顺序**，
+/// 按装载模式与两个重量标志组装 11—14 条约束管线。**无条件的是 11 条**，第 4、5 条各按一个标志加，第 12 条按模式加。**顺序固定**，
 /// 其中两条是条件性的：
 ///
 /// | 位置 | 管线 | 条件 |
@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 2. **第 12 条只在预配载模式加**。它在全配载模式下也会"成功"运行，但约束的是"怎么装"，那在一次性装载里没有意义。
 /// 3. **第 11 与 13 用的邻接类型不同**：ELD 用 `Physics`，生物相邻用 `IndirectPhysics`。用同一个会让其中一族约束落在错误的邻接上。
 ///
-/// 11 to 14 pipelines assembled by stowage mode and the two weight flags — **eleven unconditional**, the fourth and fifth each gated on one flag, the twelfth on the mode — **in its order**, tabulated above. Three easy mistakes: **the two conditional pipelines test
+/// 11 to 14 pipelines assembled by stowage mode and the two weight flags — **eleven unconditional**, the fourth and fifth each gated on one flag, the twelfth on the mode — **in a fixed order**, tabulated above. Three easy mistakes: **the two conditional pipelines test
 /// different conditions** — the fourth looks at `PredicateWeightNeeded` and the fifth at `RecommendedWeightNeeded`, and sharing one condition adds or drops a symbol family; **the
 /// twelfth is added only in predistribution mode** (it "succeeds" in full-load mode too, but constrains *how* to load, which is meaningless for a one-shot load); and **the eleventh
 /// and thirteenth use different neighbour types** — `Physics` for ELD and `IndirectPhysics` for the biological adjacency, and sharing one puts a whole family of constraints on the

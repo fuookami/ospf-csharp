@@ -52,7 +52,7 @@ public static class EndConstraintRows {
     /// **哪些任务被约束**（照做，包括它看起来反了的地方）：给了目标结束时间，并且——只有在对应方向全局开关**开着**时——
     /// **不**允许移动的那些。开关打开时被约束的正是"本来就不许动"的任务；关掉开关才约束所有给了目标的任务。
     ///
-    /// 与 的超最大约束不同，这里**不跳过**任何行：`estEnd` 对每个任务都存在（不动任务的 `estEnd` 只是被窗口夹住），
+    /// 与超最大约束不同，这里**不跳过**任何行：`estEnd` 对每个任务都存在（不动任务的 `estEnd` 只是被窗口夹住），
     /// 所以"不许动"的任务照样能收到一条有内容的行。
     ///
     /// **Which tasks are constrained** (copied from the code, including the part that looks inverted): those carrying a target end, and — only when the corresponding global

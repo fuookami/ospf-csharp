@@ -129,7 +129,7 @@ public class StrictPositiveTests
     /// <remarks>
     /// **常数项与 0 同侧时安全**（**`c ≥ 0` 时 `p ≥ 0` 恒成立**），
     /// **而常数项落在 `(−δ, 0)` 里时不安全。**
-    /// **这是基线给出的全部保证：这种情形下等价性没有被证明，只是没有被证伪。**
+    /// **这是代码给出的全部保证：这种情形下等价性没有被证明，只是没有被证伪。**
     ///
     /// **A constant on the same side of zero is safe** (with `c ≥ 0`, `p ≥ 0` holds outright), **while one inside
     /// `(−δ, 0)` is not.** **That is all the code guarantees: the equivalence is not proved there, merely not

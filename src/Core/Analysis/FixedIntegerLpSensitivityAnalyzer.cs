@@ -62,7 +62,7 @@ public sealed class FixedIntegerLpSensitivityAnalyzer
     /// 分析一个快照 / Analyze one snapshot.
     /// </summary>
     /// <param name="snapshot">模型快照 / The model snapshot.</param>
-    /// <param name="solution">基线 CP 解 / The code CP solution.</param>
+    /// <param name="solution">基线 CP 解 / The baseline CP solution.</param>
     /// <param name="baselineObjective">基线目标值 / The baseline objective.</param>
     /// <param name="capabilityMatrix">能力矩阵 / The capability matrix.</param>
     /// <param name="options">选项 / The options.</param>

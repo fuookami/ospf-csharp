@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 这个模型**可解**——只是每列都可以随便选：`xor` 不再被下界约束住（执行器使用免费）、
 /// 同一任务的两轮列可以同时被选中（跨轮冲突消失）。答案合法，代价低得离谱。
 ///
-/// 基线同样如此（`addColumns` 的约束只加进传给它的那个模型），所以这里**不修**，只钉住：
+/// 这是既有行为（`addColumns` 的约束只加进传给它的那个模型），所以这里**不修**，只钉住：
 /// 调用方换模型之后必须自己再跑一遍 `AddColumns`（或等后续提供重放）。
 ///
 /// `ReattachTo` moves the **symbols** to a new model, but the `xor[e] ≥ x[t]` rows and the cross-round conflicts added by `AddColumns` are **model rows** and do not follow.

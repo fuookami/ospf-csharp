@@ -1,6 +1,6 @@
 // 关系查询执行统计 / Relational query execution statistics.
-// 与固定 Kotlin 对应。本文件只保存不可变审计数据，不执行数据库。
-// The pinned Kotlin: . This file stores immutable audit data
+// 本文件只保存不可变审计数据，不执行数据库。
+// This file stores immutable audit data
 // only and never executes a database.
 
 using System;
@@ -15,13 +15,13 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// <remarks>
 /// 耗时用**纳秒**保存，便于调用方保留高精度计时；失败执行同样记录计划信息。
 ///
-/// **与一处语言差异**：基线另有 `typealias RelationalQueryStatsRecorder`。C# 没有可导出的类型别名，
+/// **一处语言差异**：`typealias RelationalQueryStatsRecorder` 无法提供。C# 没有可导出的类型别名，
 /// 因此不提供该简写——调用方用完整类型名，或在自己的文件里写 `using` 别名。这不是缺口。
 ///
 /// The duration is kept in **nanoseconds** so callers retain timing precision; failed executions retain plan
 /// information too.
 ///
-/// **One language difference**: the code also has `typealias RelationalQueryStatsRecorder`. C# has no
+/// **One language difference**: there is no `typealias RelationalQueryStatsRecorder`. C# has no
 /// exportable type alias, so the shorthand is not provided — callers use the full name or a `using` alias in
 /// their own file. That is not a gap.
 /// </remarks>

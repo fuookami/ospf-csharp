@@ -16,9 +16,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 装载效能管线生成器 / The loading-effectiveness pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：**十二条管线的条件与顺序**，这里已全部落地。
+/// **十二条管线的条件与顺序**，这里已全部落地。
 ///
-/// 顺序（基线原样）：提前装载、预留 → 复重（条件） → 同来源相邻、同目的地相邻 → 建议数量、建议重量（条件） →
+/// 顺序：提前装载、预留 → 复重（条件） → 同来源相邻、同目的地相邻 → 建议数量、建议重量（条件） →
 /// 顺序反转（条件） → 拖车换装、拖车绕行（条件） → 优先级顺序（无条件） → 同来源早装（条件）。
 ///
 /// 四条加成条件最容易写错：

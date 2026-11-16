@@ -17,9 +17,9 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// RHS 扰动派生 / Deriving a perturbed RHS.
 /// </summary>
 /// <remarks>
-/// 移植自 `deriveRhsSnapshot`。**三种"不能扰动"都显式返回原因，不给一份没改过的快照。**
+/// **三种"不能扰动"都显式返回原因，不给一份没改过的快照。**
 ///
-/// Ported from `deriveRhsSnapshot`. **All three "cannot perturb" cases return a reason instead of an unchanged snapshot.**
+/// **All three "cannot perturb" cases return a reason instead of an unchanged snapshot.**
 /// </remarks>
 public class RhsPerturbationTests {
     private static ConstraintProgrammingModelSnapshot Fixture(out ConstraintId constraintId) {

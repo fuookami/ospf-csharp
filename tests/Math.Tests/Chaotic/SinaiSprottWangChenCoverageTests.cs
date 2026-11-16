@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// 环面用取小数部分，不是取绝对值 / The torus uses the fractional part, not the absolute value.
 /// </summary>
 /// <remarks>
-/// 补 `SinaiMap` / `SprottAttractor` / `WangChenAttractor` 与它们的迭代器（基线同名）。
+/// 覆盖 `SinaiMap` / `SprottAttractor` / `WangChenAttractor` 与它们的迭代器。
 ///
 /// **三个映射各有自己的坑，而三处都不会报错**：
 /// ① Sinai 的 `mod 1` 是取小数部分——**绝对值会把环面的左侧折到右侧**；
@@ -75,7 +75,7 @@ public class SinaiSprottWangChenTests
 
     /// <summary>**Sprott 的参数 `b` 不影响轨迹** / The Sprott `b` does not move the trajectory.</summary>
     /// <remarks>
-    /// **基线声明 `b` 而公式里没有它。保留它是因为那是签名，但"它无效"必须可测**——
+    /// **`b` 被声明而公式里没有它。保留它是因为那是签名，但"它无效"必须可测**——
     /// **否则下一个人会去调 `b` 并以为在调系统。**
     ///
     /// **The code declares `b` and the equations ignore it. It stays because it is the signature, but "it does

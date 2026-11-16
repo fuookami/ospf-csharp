@@ -121,7 +121,7 @@ public class BinaryLogicStructureTests
     /// </summary>
     /// <remarks>
     /// **这是本方向第五条"实测为负"的发现，而它<b>不是</b>我的实现缺陷——
-    /// 基线 `BinaryLogicStructure` 的 XOR 编码在 `n ≥ 3` 时本来就松弛。**
+    /// `BinaryLogicStructure` 的 XOR 编码在 `n ≥ 3` 时本来就松弛。**
     ///
     /// **我按真值表逐组核对过：`n = 1` 与 `n = 2` 精确，`n = 3` 与 `n = 4` 都多接受赋值。**
     /// **`n = 3` 时唯一多出的是 `(1,1,1,0)`。**
@@ -137,7 +137,7 @@ public class BinaryLogicStructureTests
     /// 一个断言"XOR 完全正确"的判据在这里会失败，而失败的原因不在我的代码。**
     ///
     /// **This is the direction's fifth "measured negative" finding, and it is <b>not</b> a defect in my implementation —
-    /// its XOR encoding is already slack at `n ≥ 3`.**
+    /// the XOR encoding is already slack at `n ≥ 3`.**
     ///
     /// **Checked against the truth table: exact at `n = 1` and `n = 2`, over-accepting at `n = 3` and `n = 4`.** **At
     /// `n = 3` the only extra assignment is `(1,1,1,0)`.**

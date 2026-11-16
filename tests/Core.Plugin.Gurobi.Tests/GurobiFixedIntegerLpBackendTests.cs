@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// Gurobi's end is connected, and "no ranges" is a stated boundary.
 /// </summary>
 /// <remarks>
-/// **这里接的是基线 `gurobiFixedIntegerLpBackend` 的对应物。**
+/// **这里接的是 Gurobi 的定整数线性规划后端。**
 ///
-/// **它必须<b>不**自己实现求解：** **基线原话是"复用与后端无关的 `LinearSolverFixedIntegerLpBackend`，
+/// **它必须<b>不**自己实现求解：** **要求是"复用与后端无关的 `LinearSolverFixedIntegerLpBackend`，
 /// Gurobi 只额外提供原生 ranging 钩子，两端共用同一条经测试的实现路径"。**
 /// **所以判据测的是<b>串联关系**，不是"这个类做了什么"。**
 ///
-/// **This connects the counterpart of its `gurobiFixedIntegerLpBackend`.** **It must not implement solving itself:
+/// **This connects the Gurobi fixed-integer LP backend.** **It must not implement solving itself:
 /// the code says the backend-neutral layer is reused and Gurobi adds only a ranging hook, with both backends sharing one
 /// tested path.** **So the criteria test the <em>composition</em>, not "what this class does".**
 /// </remarks>
@@ -49,11 +49,11 @@ public class GurobiFixedIntegerLpBackendTests
     /// <remarks>
     /// **判据断言返回类型的<b>名字**，因为"是否复用同一条路径"这件事在类型上就看得见：**
     /// **如果哪天有人在这里写一个新的 `GurobiFixedIntegerLpSolver`，
-    /// 那意味着两个后端从此走两条路径——而基线明确说过不存在重复逻辑。**
+    /// 那意味着两个后端从此走两条路径——而这里的前提正是"不存在重复逻辑"。**
     ///
     /// **The criterion checks the returned type's <b>name</b>, because "is the same path reused" is visible in the type: if
-    /// someone ever writes a new `GurobiFixedIntegerLpSolver` here, the two backends would take two paths — and the code
-    /// explicitly says there is no duplicated logic.**
+    /// someone ever writes a new `GurobiFixedIntegerLpSolver` here, the two backends would take two paths — while the
+    /// premise is that no logic is duplicated.**
     /// </remarks>
     [Fact]
     public void TheFactory_ShouldReturnTheSharedLayer() {

@@ -85,10 +85,10 @@ public class TaskDelayTimeMinimization<T, E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 基线：`taskTime.delayEnabled` 时最小化 `Σ coefficient(task) * delayTime[task]`，任务集由
+    /// `taskTime.delayEnabled` 时最小化 `Σ coefficient(task) * delayTime[task]`，任务集由
     /// `TimeDeviationSelection.Select`（全局开关 + 任务开关 + **有排定时间**）筛出。
     ///
-    /// 三处与基线不同，都是"无法表达"而不是"换个说法"：
+    /// 以下三处都是"无法表达"而不是"换个说法"：
     /// <list type="number">
     /// <item>延迟未启用时返回 `Ok`——**保留**：那条目标本就不存在，无事可做不是"假装做了"；</item>
     /// <item>系数提取失败时无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败；</item>

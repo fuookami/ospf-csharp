@@ -10,19 +10,19 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Windmi 吸引子（三维，七个参数）/ The Windmi attractor.
 /// </summary>
 /// <remarks>
-/// 对齐。
+/// Windmi 吸引子的方程：
 ///
 /// <c>dx = a(y−x) + d·xz</c>，<c>dy = bx − xz + fy</c>，<c>dz = cz + xy − e·x²</c>。
 ///
-/// **基线声明了八个参数，而 `g`（默认 0.5）从未出现在任何一条方程里。**
+/// **八个参数都声明了，而 `g`（默认 0.5）从未出现在任何一条方程里。**
 /// **这与 `SprottAttractor` 的 `b` 是同一类：参数存在、签名保留、但无人使用。**
 /// **判据会钉住"改 g 不改变轨迹"，以免下一个人把它当成旋钮。**
 ///
-/// The Windmi attractor from the code.
+/// The Windmi attractor.
 ///
 /// <c>dx = a(y−x) + d·xz</c>, <c>dy = bx − xz + fy</c>, <c>dz = cz + xy − e·x²</c>.
 ///
-/// **The code declares eight parameters, and `g` (default 0.5) appears in no equation.**
+/// **Eight parameters are declared, and `g` (default 0.5) appears in no equation.**
 /// **This is the same kind as `SprottAttractor`'s `b`: present in the signature, used by nothing.**
 /// **A criterion pins "changing g does not move the trajectory", so nobody treats it as a dial.**
 /// </remarks>

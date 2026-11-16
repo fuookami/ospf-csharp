@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **存在但没点名的缺口，和点名但不存在的缺口一样会让盘点失真** / A gap that exists but is never named distorts the inventory just as much.
 /// </summary>
 /// <remarks>
-/// 数了两侧：基线 `core/analysis/` **19** 个主源码 + **2** 个插件分析器 = **21**；C# `Core/Analysis/` **3** 个、插件分析器 **0** ⇒ **缺 18**。
+/// 数了两侧：`core/analysis/` **19** 个主源码 + **2** 个插件分析器 = **21**；`Core/Analysis/` **3** 个、插件分析器 **0** ⇒ **缺 18**。
 ///
 /// **此前没有任何一行记录。** 状态文档里 `core.analysis` 只在一个长句子里出现过一次，那句列的是 "criticality profile"——
 /// **恰好是三个已搬过来的类型之一。**
@@ -27,7 +27,7 @@ public class AnalysisGapInventoryTests
 {
     /// <summary>**C# 侧只有三个类型** / Only three types exist here.</summary>
     /// <remarks>
-    /// 这条钉的是**本仓的清单**，不是：补进来一个，判据就红，**逼着改文档**。
+    /// 这条钉的是**本仓的清单**：补进来一个，判据就红，**逼着改文档**。
     /// 这正是"存在但没点名"这类缺口的修法——**让数字有判据看着**。
     ///
     /// This pins **this repo's inventory**, not its: implementation one turns it red and **forces the document to change**, which is the repair for a gap that exists

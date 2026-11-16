@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// </code>
 ///
 /// 位置参数依次为：包含正则、数据集标签、fork 数、预热轮数、测量轮数、结果格式、结果文件。
-/// **不给参数时退回全部基准 + `small` + 单轮**，与基线默认一致。
+/// **不给参数时退回全部基准 + `small` + 单轮**。
 ///
 /// The positional arguments are: inclusion regex, dataset label, fork count, warmup iterations, measurement iterations, result format, result file.
 /// **With no arguments it falls back to all benchmarks + `small` + a single round**, matching the code defaults.

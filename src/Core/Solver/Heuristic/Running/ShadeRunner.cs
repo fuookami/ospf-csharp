@@ -76,9 +76,9 @@ public sealed record ShadeMemory(
     /// 采样一组参数 / Sample one parameter set.
     /// </summary>
     /// <remarks>
-    /// **抽取顺序是"槽下标 → 权重扰动 → 三次交叉率扰动"**，共五次。改动顺序不改变分布，却让同一随机流下的轨迹与基线不同。
+    /// **抽取顺序是"槽下标 → 权重扰动 → 三次交叉率扰动"**，共五次。改动顺序不改变分布，却会改变同一随机流下的轨迹。
     /// **The draw order is "slot index → weight perturbation → three cross-rate perturbations"**, five draws in total. Changing the order
-    /// alters no distribution yet makes the trajectory under the same random stream differ from the code.
+    /// alters no distribution yet changes the trajectory under the same random stream.
     /// **权重扰动后若 ≤ 0 则回退到槽内原值**，而不是截断到 0：截断会让差分权重停在 0，
     /// **于是变异向量退化成"父代 + 0"，整个种群停止移动**。
     /// **A perturbation that lands ≤ 0 falls back to the slot's value** rather than clamping to 0: clamping parks the differential weight at

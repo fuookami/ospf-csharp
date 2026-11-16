@@ -29,12 +29,12 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// </remarks>
 public class LengthUnitsCoverageTests
 {
-    /// <summary>**33 个长度单位都在** / All 33 baseline length units are present.</summary>
+    /// <summary>**33 个长度单位都在** / All 33 length units are present.</summary>
     /// <remarks>
-    /// **清单沿用，不是照"我们记得的"抄**：
+    /// **清单来自实现，不是照"我们记得的"抄**：
     /// **四个地区海里（FR/UK/RU/US）与三个秒差距档（kilo/mega/giga）最容易在凭记忆列举时被漏掉。**
     ///
-    /// **The list is copied from the code, not from memory**.
+    /// **The list comes from the implementation, not from memory**.
     /// **the four regional nautical miles (FR/UK/RU/US) and the three parsec scales are the easiest to miss.**
     /// </remarks>
     [Fact]
@@ -103,10 +103,10 @@ public class LengthUnitsCoverageTests
 
     /// <summary>**光年用儒略年 365.25 天** / The light year uses the Julian year of 365.25 days.</summary>
     /// <remarks>
-    /// **基线写的是 `LightDay * 365.25`**，**不是 365 天，也不是 365.2425**。
+    /// **用的是 `LightDay * 365.25`**，**不是 365 天，也不是 365.2425**。
     /// **三者差 0.0069%**——**在光年的量级上就是 6.5 亿公里。**
     ///
-    /// **The code writes `LightDay * 365.25`**, **not 365 days and not 365.2425**.
+    /// **The implementation uses `LightDay * 365.25`**, **not 365 days and not 365.2425**.
     /// **The three differ by 0.0069%** — **which at a light year is about 650 million kilometres.**
     /// </remarks>
     [Fact]

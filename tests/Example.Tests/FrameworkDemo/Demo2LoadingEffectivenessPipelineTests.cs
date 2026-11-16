@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **装载效能管线编排** / The loading-effectiveness pipeline ordering.
 /// </summary>
 /// <remarks>
-/// 判据的重点：**三条条件管线各自的条件**、**`reweighNeeded` 恒假**这个基线怪癖、以及**七条无法构建的管线被显式列出**。
+/// 判据的重点：**三条条件管线各自的条件**、**`reweighNeeded` 恒假**这个怪癖、以及**七条无法构建的管线被显式列出**。
 ///
 /// The criteria focus on **each conditional pipeline's condition**, the code quirk that **`reweighNeeded` is always false**, and **the seven unbuildable pipelines being listed
 /// explicitly**.
@@ -111,7 +111,7 @@ public class Demo2LoadingEffectivenessPipelineTests {
     /// 三点成对：
     ///
     /// 1. 预配载下**也是 `false`**——集合为空，`contains` 恒假。所以 `ItemReweighNeededLimit` 在**永不触发**。
-    /// 2. 其余两种模式恒 `false`（基线写死）。
+    /// 2. 其余两种模式恒 `false`（写死）。
     /// 3. 配置入口**保留着**：静态集合是空的但可变，不是把 `false` 硬编码进判定。
     ///
     /// Three paired points: under predistribution it is **also false**, because the empty set never contains anything, so `ItemReweighNeededLimit` **never fires** in the code; the

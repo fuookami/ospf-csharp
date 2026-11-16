@@ -120,7 +120,7 @@ public class CheckpointWireContractTests
     /// **契约的 `[provenance-field]` 一节只列到 6**（`solverId` … `threadCount`），
     /// **而有 10 个**：多了 `randomSeed`、`deterministic`、`environmentSummary`。
     ///
-    /// **所以"契约只到 6"不是 C# 的问题，是契约自己没跟上基线。**
+    /// **所以"契约只到 6"不是 C# 的问题，是契约自己没跟上代码。**
     /// **这条判据只钉前 7 个（契约里的 0—6）**——**多出来的三个是契约的缺口，不是我该"改回去"的东西。**
     /// **把它写下来，是为了让下一个人知道"7 与 10 不一致"是已知的、有出处的。**
     ///

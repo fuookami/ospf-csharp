@@ -117,19 +117,19 @@ public class CapabilityMatrixRemeasuredTests
     /// 矩阵四之二写"**1** 个空壳（`Domain/Aircraft/Model/FlightPhase.cs`）"。**这里去读了那个文件**：
     /// 它是 `public enum FlightPhase { ZeroFuel, TakeOff, Landing }`——**三个成员，一个不缺，能编译、能引用。**
     ///
-    /// **它不是空壳，是"没有对应基线文件"的枚举。** 矩阵那个词把两件事混在一起了：
+    /// **它不是空壳，是"没有对应源文件"的枚举。** 矩阵那个词把两件事混在一起了：
     ///
     /// | 情形 | 该叫什么 |
     /// | --- | --- |
-    /// | 类型存在、成员齐全、没有基线对应物 | **本仓新增**，不是缺口 |
+    /// | 类型存在、成员齐全、没有源侧对应物 | **本仓新增**，不是缺口 |
     /// | 类型存在、成员为空或只有 `TODO` | **空壳** |
     ///
     /// 判据因此钉**真正的空壳定义**（成员为零），并**单独钉住 `FlightPhase` 有它的三个成员**——
     /// 这样"补上成员"或"删掉成员"都会红，而"矩阵叫它空壳"这件事不会再被当成事实传下去。
     ///
  /// The matrix calls `FlightPhase.cs` a shell. ** read the file**: it is `public enum FlightPhase { ZeroFuel, TakeOff, Landing }` — **three members, none
-    /// missing, compiles and is referenced.** It is not a shell but **an enum with no baseline counterpart**, and the matrix's word conflated two cases: a type that exists
-    /// with all its members and no baseline original is **an addition, not a gap**; a type with no members or only `TODO`s is **a shell**. The criterion therefore pins the
+    /// missing, compiles and is referenced.** It is not a shell but **an enum with no source counterpart**, and the matrix's word conflated two cases: a type that exists
+    /// with all its members and no source original is **an addition, not a gap**; a type with no members or only `TODO`s is **a shell**. The criterion therefore pins the
     /// **real** definition (zero members) and separately pins that `FlightPhase` keeps its three members, so adding or dropping one reddens — and the claim that the matrix
     /// calls it a shell stops being passed on as fact.
     /// </remarks>
@@ -242,7 +242,7 @@ public class CapabilityMatrixRemeasuredTests
     ///
     /// 计数口径：`.cs` 文件里出现 `<SYMBOL>_INTEGRATION`，且**只含该符号**（`CapabilityMatrixTests` 自己也同时提到 SCIP 与 Gurobi）。
     ///
-    /// The ninth section lists a file count per solver plugin. counted them and found **SCIP under-reported by 36 (10 → 46)** — and SCIP is **the one backend
+    /// The ninth section lists a file count per solver plugin. Counting them found **SCIP under-reported by 36 (10 → 46)** — and SCIP is **the one backend
     /// that really runs in this environment**. **Under-reporting what was verified is as harmful as exaggerating, just in the other direction.** Counted as: a `.cs`
     /// file containing `<SYMBOL>_INTEGRATION` and **only that symbol** (`CapabilityMatrixTests` itself mentions both SCIP and Gurobi).
     /// </remarks>

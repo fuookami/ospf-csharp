@@ -13,13 +13,13 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 目标可行性报告 / The target feasibility report.
 /// </summary>
 /// <remarks>
-/// 只搬报告，不搬分析器**：基线第 673 行有一处真正的 `solver.solve(model, options)`，
+/// **只实现报告，不实现分析器**：分析器那一侧有真正的 `solver.solve(model, options)`，
 /// 之前还有重建可变模型的 builder。**那部分需要真实 CP 后端，没搬也没空跑。**
 ///
 /// 判据钉的是**四个状态不许互相冒充**：`Reachable` / `Unreachable` 是结论，
 /// `Unknown` / `Unsupported` 是"没结论"的两种原因。
 ///
-/// **The report and not the analyzer is implemented**: baseline line 673 has a real `solver.solve(model, options)` and a builder that rebuilds a mutable model before it.
+/// **The report and not the analyzer is implemented**: the analyzer side has a real `solver.solve(model, options)` and a builder that rebuilds a mutable model before it.
 /// **That needs a real CP backend, so it was neither implemented nor stubbed.** The criteria pin that **the four statuses may not impersonate one another**.
 /// </remarks>
 public class TargetFeasibilityReportTests {

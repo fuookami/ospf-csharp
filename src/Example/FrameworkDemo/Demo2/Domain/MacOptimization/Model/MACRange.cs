@@ -69,9 +69,9 @@ public sealed class MACRange
     /// <param name="totalWeight">总重 / The total weight.</param>
     /// <returns>MAC 范围 / The MAC range.</returns>
     /// <remarks>
-    /// 与基线 `MACRange.invoke` 对齐。**四个固定 MAC 值**：`A = -1`、`OPT = 0`、`B = 1`、`C = 2`（不是对称的 `-1/0/1`——`C` 在 `2`）。
+    /// **四个固定 MAC 值**：`A = -1`、`OPT = 0`、`B = 1`、`C = 2`（不是对称的 `-1/0/1`——`C` 在 `2`）。
     ///
-    /// **参考重量的三级回退**照做：`ComputedTotalWeight[TakeOff]` → `MaxTotalWeight[TakeOff]` → `1`（机型重量单位）。
+    /// **参考重量的三级回退**：`ComputedTotalWeight[TakeOff]` → `MaxTotalWeight[TakeOff]` → `1`（机型重量单位）。
     /// 第三级不能省：前两级都缺时若取 0，扭矩恒为 0，整个平衡优化退化成恒等式而**不报任何错**。
     ///
     /// **Four fixed MAC values**: `A = -1`, `OPT = 0`, `B = 1`, `C = 2` — not the symmetric `-1/0/1`, since `C` sits at `2`. The **three-level fallback for
@@ -98,12 +98,12 @@ public sealed class MACRange
             (MACRangeType.C, 2.0),
         }) {
             double balancedArm = formula.BalancedArm(mac);
-            // **重力 × 臂长**。基线写 `aircraftModel.gravity(referenceWeight) * balancedArm` 再 `.to(torqueUnit)`，那是"力 × 长度"。
+            // **重力 × 臂长**。写法是 `aircraftModel.gravity(referenceWeight) * balancedArm` 再 `.to(torqueUnit)`，那是"力 × 长度"。
             // 本仓 `Gravity` 的量纲是 N（kg·m/s²），而 `TorqueUnit` 是 kgf·in，两者**不能直接换算**（`To` 返回 null，实测）。
             // 这里按 kgf 数值语义计算：`kg × 9.80665 / 9.80665 = kg`，即千克力数值等于千克数，再乘英寸臂长得到 kgf·in。
             // 这是数值等价，不是量纲等价——记录在此，避免后来者以为是笔误。
             //
-            // **Gravity times arm.** The code writes `aircraftModel.gravity(referenceWeight) * balancedArm` then `.to(torqueUnit)`, i.e. force times length. This implementation's `Gravity`
+            // **Gravity times arm.** The formula is `aircraftModel.gravity(referenceWeight) * balancedArm` then `.to(torqueUnit)`, i.e. force times length. This implementation's `Gravity`
             // has dimension N (kg·m/s²) while `TorqueUnit` is kgf·in, and the two **do not convert** (`To` returns null, measured). The kgf value is computed numerically instead:
             // `kg × 9.80665 / 9.80665 = kg`, so the kilogram-force value equals the kilogram count, times the inch arm gives kgf·in. This is numerical equivalence, not dimensional —
             // recorded here so it is not mistaken for a typo.

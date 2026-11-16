@@ -52,7 +52,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// **这两者只在 <b>`p` 的取值落在步长为 `δ` 的格点上</b>时相同**——
 /// **因为没有落在 `(−δ, 0)` 里的格点。**
 ///
-/// **所以当 `δ ≠ 1` 时，基线要求"证明 `δ` 与 `p` 的格点对齐"**，
+/// **所以当 `δ ≠ 1` 时，需要"证明 `δ` 与 `p` 的格点对齐"**，
 /// **证不出来就拒绝**。**`δ = 1` 时不需要证：整数变量的步长本来就是 1。**
 ///
 /// **这个拒绝很重要**：**`δ = 0.5` 而变量是整数的情形下，
@@ -185,7 +185,7 @@ public static class StrictPositiveTransformation
     ///
     /// **条件 ① 不成立时（有非整数系数、或变量不是整数型），退回一个更弱的检查**：
     /// **常数项必须与 0 同侧或离得够远**（`GE` 时 `c ≥ 0` 或 `c ≤ −δ`）。
-    /// **这个退化检查较弱，但它是基线给出的全部保证**——
+    /// **这个退化检查较弱，但它是这里给出的全部保证**——
     /// **也就是说这种情形下"等价性"并没有被真正证明，只是没有被证伪。**
     ///
     /// **`GT`/`LT` need no proof** (they do not shift) and **pass immediately.**
@@ -194,7 +194,7 @@ public static class StrictPositiveTransformation
     /// then the lattice spacing is their greatest common divisor; ② `δ` must not exceed that spacing.**
     ///
     /// **When ① fails, a weaker check applies**: **the constant must sit on the same side of zero or far enough away**
-    /// (`c ≥ 0` or `c ≤ −δ` for `GE`). **That check is weak, but it is all the code guarantees** —
+    /// (`c ≥ 0` or `c ≤ −δ` for `GE`). **That check is weak, but it is the only guarantee given** —
     /// **the equivalence is not proved there, merely not disproved.**
     /// </remarks>
     private static Result<Success, ErrorCode, Error<ErrorCode>> ProveShift(

@@ -68,10 +68,10 @@ public sealed class Demo2BendersQualityReasonTests
     /// **超时压过迭代压力** / Overtime outranks iteration pressure.
     /// </summary>
     /// <remarks>
-    /// 间隙只到"弱"（未超守卫），时间超守卫，迭代也到压力线。基线先报时间：**时间是不会自己变好的那个**，
+    /// 间隙只到"弱"（未超守卫），时间超守卫，迭代也到压力线。这里先报时间：**时间是不会自己变好的那个**，
     /// 迭代还能再来一轮，时间不能。
     ///
-    /// The gap is only "weak" (inside the guard), the time is over the guard and the iteration pressure is on. The code reports time first: **time is the one
+    /// The gap is only "weak" (inside the guard), the time is over the guard and the iteration pressure is on. Time is reported first: **time is the one
     /// that does not improve by itself**.
     /// </remarks>
     [Fact]
@@ -90,10 +90,10 @@ public sealed class Demo2BendersQualityReasonTests
     /// **迭代压力压过轨迹停滞** / Iteration pressure outranks a stagnant trajectory.
     /// </summary>
     /// <remarks>
-    /// 迭代已到 `iterationPressurePercent`（95 ≥ 90），快照也确实停滞。基线报迭代压力：
+    /// 迭代已到 `iterationPressurePercent`（95 ≥ 90），快照也确实停滞。这里报迭代压力：
     /// **"已经跑满预算"比"每步进步很小"更能解释结果**，前者是原因，后者是症状。
     ///
-    /// Iterations have reached the pressure line (95 ≥ 90) and the snapshots really are stagnant. The code reports iteration pressure: **"the budget is
+    /// Iterations have reached the pressure line (95 ≥ 90) and the snapshots really are stagnant. Iteration pressure is reported: **"the budget is
     /// exhausted" explains the outcome better than "each step improved little"** — the former is the cause, the latter the symptom.
     /// </remarks>
     [Fact]
@@ -114,11 +114,11 @@ public sealed class Demo2BendersQualityReasonTests
     /// **轨迹停滞压过割效率低** / A stagnant trajectory outranks low cut efficiency.
     /// </summary>
     /// <remarks>
-    /// 迭代没到压力线（20 / 100），快照停滞，且割密度也低（1/20 = 0.05 < 0.25）。基线报轨迹：
+    /// 迭代没到压力线（20 / 100），快照停滞，且割密度也低（1/20 = 0.05 < 0.25）。这里报轨迹：
     /// **轨迹说的是"主问题目标已经不动了"，割密度说的是"割产出少"** —— 而目标不动更接近结论。
     ///
-    /// Iterations did not reach the pressure line (20 / 100), the snapshots are stagnant and the cut density is low too (1/20 = 0.05 < 0.25). The code reports
-    /// the trajectory: **"the master objective has stopped moving" is closer to the conclusion than "cuts are scarce."**
+    /// Iterations did not reach the pressure line (20 / 100), the snapshots are stagnant and the cut density is low too (1/20 = 0.05 < 0.25). The trajectory is
+    /// reported: **"the master objective has stopped moving" is closer to the conclusion than "cuts are scarce."**
     /// </remarks>
     [Fact]
     public void AStagnantTrajectory_ShouldOutrankLowCutEfficiency() {
@@ -162,7 +162,7 @@ public sealed class Demo2BendersQualityReasonTests
     /// </summary>
     /// <remarks>
     /// 这是**整条链最关键的一道闸**：间隙 `0.001` 低于弱门槛 `2e-3`，其余信号全部"很差"（时间超、迭代到压力线、割密度极低、快照完全停滞）。
-    /// 基线返回 `null`——**质量可接受**。
+    /// 这里返回 `null`——**质量可接受**。
     ///
     /// 这道闸是"守卫会自己关掉自己"的唯一入口。漏了它，任何一个长跑都会因为"时间超了"被判为质量不足，
     /// **而症状是"Benders 一启用就被判质量差"**——读者会去调阈值，而不是去查这道闸。

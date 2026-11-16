@@ -1051,8 +1051,8 @@ public class ScipLinearIntegrationTest {
             Assert.True(double.IsFinite(status.BestBound!.Value.ToDouble()));
             Assert.True(status.Time >= TimeSpan.Zero);
             Assert.NotNull(status.SolverCallBack);
-            // 间隙沿用 Kotlin 基线公式，不额外归一化目标方向。
-            // The gap keeps the pinned Kotlin formula and is not renormalised for the objective direction.
+            // 间隙用 `SolvingStatusSupport.Gap` 的公式，不额外归一化目标方向。
+            // The gap uses the `SolvingStatusSupport.Gap` formula and is not renormalised for the objective direction.
             Assert.Equal(
                 SolvingStatusSupport.Gap(status.Obj, status.PossibleBestObj).ToDouble(),
                 status.Gap.ToDouble(),

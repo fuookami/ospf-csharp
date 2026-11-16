@@ -18,18 +18,18 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// A placement that takes part in stacking: only its type, its height and who sits on whom.
 /// </summary>
 /// <remarks>
-/// 基线直接用 `QuantityPlacement3&lt;Item, FltX&gt;`，并调用 `topItemPlacements`／`filterBottomOverlapped` 两个几何助手。
-/// C# 侧 `QuantityPlacement3` 在 `Application` 层，那两个助手没有对应物——**而递归本身与几何无关：它只问三件事。**
-/// 所以这里把几何收成一个谓词 `Covers`，由调用方按自己的几何实现；**递归、同类型过滤、取最大值这三条语义逐行照搬基线。**
+/// 完整的堆叠计算要用 `QuantityPlacement3&lt;Item, FltX&gt;` 加 `topItemPlacements`／`filterBottomOverlapped` 两个几何助手。
+/// 本仓 `QuantityPlacement3` 在 `Application` 层，这两个助手在这里没有对应物——**而递归本身与几何无关：它只问三件事。**
+/// 所以这里把几何收成一个谓词 `Covers`，由调用方按自己的几何实现；**递归、同类型过滤、取最大值这三条语义保持不变。**
 ///
-/// the code uses `QuantityPlacement3&lt;Item, FltX&gt;` plus the geometry helpers `topItemPlacements` and `filterBottomOverlapped`. On the C#
-/// side `QuantityPlacement3` lives in the `Application` layer and neither helper exists — while the recursion itself is independent of geometry: it asks
+/// Full stacking would use `QuantityPlacement3&lt;Item, FltX&gt;` plus the geometry helpers `topItemPlacements` and `filterBottomOverlapped`. Here
+/// `QuantityPlacement3` lives in the `Application` layer and neither helper exists — while the recursion itself is independent of geometry: it asks
 /// three things. So the geometry is reduced to one predicate, `Covers`, supplied by the caller, and the recursion, the same-type filter and the maximum
 /// are implemented line for line.
 /// </remarks>
 public interface IStackPlacement
 {
-    /// <summary>物品类型（基线比较的是 `bottomItem.type == item.type`）/ The item type, which the code compares for equality.</summary>
+    /// <summary>物品类型（比较的是 `bottomItem.type == item.type`）/ The item type, compared for equality.</summary>
     string ItemType { get; }
 
     /// <summary>该放置的高度 / The placement's height.</summary>
@@ -39,11 +39,11 @@ public interface IStackPlacement
     /// 底面投影是否与另一放置重叠 / Whether the bottom footprint overlaps the other placement's.
     /// </summary>
     /// <remarks>
-    /// **基线递归里用的是 `filterBottomOverlapped`——只比底面投影，不看高度。**
+    /// **递归里只比底面投影，不看高度。**
     /// 第一版把它写成"贴着才算压在上面"，于是三层堆叠只数出两层：`top` 与 `base` 之间隔着一层，就不再相连。
     /// **名字现在说它真正做的事，而不是我猜的意图。**
     ///
-    /// **The recursion uses `filterBottomOverlapped`, which compares bottom footprints only and ignores height. The first version wrote it
+    /// **The recursion compares bottom footprints only and ignores height. The first version wrote it
     /// as "touching counts as sitting on top", so a three-high stack counted as two: the top and the base are separated by a layer and stopped connecting.
     /// The name now says what it does rather than what I assumed.
     /// </remarks>
@@ -55,10 +55,10 @@ public interface IStackPlacement
     /// 是否比另一放置更高（含底面重叠的判定由调用方组合）/ Whether this placement stands higher than the other.
     /// </summary>
     /// <remarks>
-    /// 顶层集合需要"底面重叠**且更高**"这一对关系（基线 `topPlacements` 的第二条），而递归只需要底面重叠。
+    /// 顶层集合需要"底面重叠**且更高**"这一对关系，而递归只需要底面重叠。
     /// 两个关系分开给出，是因为把"更高"塞进重叠关系会让"谁在谁上面"和"谁与谁同列"混成一件事——第一版就是这样丢掉一层的。
     ///
-    /// the top set needs "footprints overlap AND this one is higher" (its second condition) while the recursion needs plain overlap. They
+    /// the top set needs "footprints overlap AND this one is higher" while the recursion needs plain overlap. They
     /// are separate because folding "higher" into overlap conflates "who is above whom" with "who shares a column" — which is how the first version lost a
     /// layer.
     /// </remarks>
@@ -71,11 +71,11 @@ public interface IStackPlacement
 /// 递归计算货物在底部集合中的堆叠层数与高度 / Recursively compute the stacking layer count and height inside a set of bottom placements.
 /// </summary>
 /// <remarks>
-/// 与基线 `PackageAttribute` 的伴生对象对应：`layerLayer`（层数）、`layerHeight`（高度）与把它们一并算出的 `layer`。
-/// **协程并行取各分支的最大值；这里串行**——结果相同（都是最大值），而并行度属于调用方的事。
+/// 输出三样：`layerLayer`（层数）、`layerHeight`（高度）与把它们一并算出的 `layer`。
+/// **这里串行取各分支的最大值**——结果相同（都是最大值），而并行度属于调用方的事。
 ///
-/// 's companion object: `layerLayer` (count), `layerHeight` (height) and `layer` computing both. **The code runs the branches
-/// concurrently and takes the maximum; this runs them in sequence** — the result is the same (a maximum), and parallelism is the caller's business.
+/// Three outputs: `layerLayer` (count), `layerHeight` (height) and `layer` computing both. **This runs the branches
+/// in sequence and takes the maximum** — the result is the same (a maximum), and parallelism is the caller's business.
 /// </remarks>
 public static class StackLayering
 {

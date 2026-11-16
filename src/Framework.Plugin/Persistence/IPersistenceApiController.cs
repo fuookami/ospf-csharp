@@ -82,7 +82,7 @@ public interface IPersistenceApiController {
     /// <param name="syncResponse">立即返回的同步响应 / The synchronous response returned at once</param>
     /// <returns>同步响应 / The synchronous response</returns>
     /// <remarks>
-    /// 与基线 `MongoPersistenceApiController.persistenceApiImpl` 的第二个重载对齐。三处沿用：
+    /// 三处行为：
     ///
     /// 1. **同步响应与处理结果可以是不同类型**（`TSyncRep` 与 `TRep` 各一个）：
     ///    典型用法是先回一个"已受理"的轻响应，处理完再把完整结果回调出去。
@@ -92,7 +92,7 @@ public interface IPersistenceApiController {
     /// 3. **落库仍是尽力而为**：Mongo 未配置时整条持久化路径静默跳过，处理与回调照常。
     ///    让持久化失败打断业务处理，是把日志问题升级成业务问题。
     ///
-    /// Aligned with the second overload of its `MongoPersistenceApiController.persistenceApiImpl`. Three things copied: **the synchronous response and the processed result may be of
+    /// Three things are fixed here: **the synchronous response and the processed result may be of
     /// different types** (`TSyncRep` and `TRep`), the typical use being to acknowledge at once and push the full result later, whereas merging them would force a choice between "answer immediately"
     /// and "answer with the real result"; **`process` runs in the background without blocking the return**, so the caller gets exactly the `syncResponse` it passed in regardless of whether
     /// processing has finished; and **persistence stays best-effort**, the whole path being skipped silently when Mongo is unconfigured while processing and the callback proceed, since letting a

@@ -135,7 +135,7 @@ public class GenerationDominanceOverrideTests {
 
     /// <summary>**全部通过的覆盖不改变产出** / Overrides that all pass leave the output unchanged.</summary>
     /// <remarks>
-    /// 基线语义是 `all { it(plan, existing) }`；全 true 时应当**一条都不少**。
+    /// 语义是 `all { it(plan, existing) }`；全 true 时应当**一条都不少**。
     /// 若实现把"有覆盖"当成"全拒"，这条会红。
     ///
     /// The code semantics is `all { it(plan, existing) }`; with all true **nothing may be lost**. If the implementation treated "has overrides" as "reject
@@ -167,7 +167,7 @@ public class GenerationDominanceOverrideTests {
     ///
     /// | 实现 | 结果 |
     /// | --- | --- |
-    /// | `All(...)`（基线） | **0 条** |
+    /// | `All(...)`（正确） | **0 条** |
     /// | `Any(...)`（错误） | 与不带覆盖相同 |
     ///
     /// 若只放一个"恒 false"的覆盖，`All` 与 `Any` 都会拒，**区分不出来**。

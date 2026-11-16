@@ -630,7 +630,7 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
         // **可行性阶段的目标只有人工短缺项。**
         //
-        // 基线 `setObjective` 第一件事就是这个分支，并且**提前返回**：
+        // `setObjective` 第一件事就是这个分支，并且**提前返回**：
         //
         // ```
         // if (feasibilityPhase) {
@@ -791,12 +791,12 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
         // **与 `ExtractSolution` 同一处取整规则：四舍五入，不是截断。**
         //
-        // 只修了 `ExtractSolution`，**漏了这里**。基线两处都是 `roundToLong`，
+        // 只修了 `ExtractSolution`，**漏了这里**。两处都该四舍五入，
         // C# 两处都是 `(long)`——所以修一处等于没修：`SolutionAmount` 是
         // **waste 结果（余宽、余料、物料成本）的唯一入口**，截断会让这些指标系统性偏低。
         //
-        // **Same rounding rule as `ExtractSolution`: round, not truncate.** fixed only `ExtractSolution` and **missed this one**. Both baseline sites are
-        // `roundToLong` and both C# sites were `(long)`, so fixing one changed nothing: `SolutionAmount` is **the only entry point for the waste results** (trim width,
+        // **Same rounding rule as `ExtractSolution`: round, not truncate.** fixed only `ExtractSolution` and **missed this one**. Both sites should round and
+        // both C# sites were `(long)`, so fixing one changed nothing: `SolutionAmount` is **the only entry point for the waste results** (trim width,
         // rest material, material cost), and truncation makes all of them systematically low.
         return new UInt64((ulong)System.Math.Max((long)System.Math.Round(value.Value, MidpointRounding.AwayFromZero), 0));
     }

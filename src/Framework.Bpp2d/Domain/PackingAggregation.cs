@@ -1,18 +1,18 @@
 // 二维装箱聚合 / 2D packing aggregation.
-// 与固定 Kotlin 对应：三维侧的 `PackedBin` 在二维侧成为 `PackedSheet`
+// 三维侧的 `PackedBin` 在二维侧成为 `PackedSheet`
 // （一块板材及其上的放置），聚合结果再与物料汇总、附加信息一起构成 `PackingResult`。
 // The 3D `PackedBin` becomes `PackedSheet` (one sheet plus its placements), and the
 // aggregation together with the material summary and extra info forms `PackingResult`.
 //
 // **两处类型替换，写在文件头而不是让调用方猜**：
-//   1. 基线 `PackedSheet.type` 是 `SheetType<FltX>`（带板材类型编码、批次等仓储语义），该类型未实现；这里用
+//   1. `PackedSheet.type` 是 `SheetType<FltX>`（带板材类型编码、批次等仓储语义），该类型未实现；这里用
 //      `Sheet2Shape<FltX>`——聚合只需要宽、高与面积，恰好是该类型的全部内容。
-//   2. 基线 `MaterialSummary.material` 是 `MaterialKey`（未实现的开放类），这里用物料编号文本 `MaterialNo`。
+//   2. `MaterialSummary.material` 是 `MaterialKey`（未实现的开放类），这里用物料编号文本 `MaterialNo`。
 //      用值对象而非裸 `string`，这样"物料编号"不会和别的字符串参数互相串位。
-// **Two type substitutions, stated here rather than left for the caller to guess**: (1) its
+// **Two type substitutions, stated here rather than left for the caller to guess**:
 // `PackedSheet.type` is `SheetType<FltX>` (carrying type code and batch/inventory semantics) which is not implemented;
 // `Sheet2Shape<FltX>` is used instead, since aggregation needs only width, height and area — exactly its contents.
-// (2) `MaterialSummary.material` is its `MaterialKey`, implemented in earlier alongside `Material`.
+// (2) `MaterialSummary.material` is `MaterialKey`, which landed earlier alongside `Material`.
 
 using System;
 using System.Collections.Generic;

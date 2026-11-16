@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 建议装载数量目标 / The advised-load-amount objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把**有建议数量**的舱位的数量松弛
+/// 把**有建议数量**的舱位的数量松弛
 /// 加权求和，作为**最小化**目标，名为 `"advice load amount"`（带空格）。
 ///
 /// 四点必须沿用：
@@ -31,8 +31,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 4. **系数按舱位取**，不是按舱位下标。
 ///
 /// The amount slacks of positions **carrying an advised amount** are weighted and summed into a **minimisation** named `"advice load amount"` (with a space).
-/// Four things are carried over: **it is `Minimum`**; **the name has a space**; **only positions with a non-null `Ala` are collected**, and **an empty collection adds no objective** (the
-/// baseline's early return) — "empty" meaning no position carries an advice, not that there are no positions; and **the coefficient is taken per position**, not per index.
+/// Four things are carried over: **it is `Minimum`**; **the name has a space**; **only positions with a non-null `Ala` are collected**, and **an empty collection adds no objective** —
+/// "empty" meaning no position carries an advice, not that there are no positions; and **the coefficient is taken per position**, not per index.
 /// </remarks>
 internal sealed class AdviceLoadAmountLimit
 {

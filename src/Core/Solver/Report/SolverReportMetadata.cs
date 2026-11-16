@@ -12,10 +12,10 @@ namespace Fuookami.Ospf.Core.Solver.Report;
 /// 由求解器配置构造可审计的快照与运行来源 / Build auditable snapshots and provenance from solver configuration.
 /// </summary>
 /// <remarks>
-/// 时间与间隙等数值统一使用不变文化的十进制秒文本；Kotlin 基线使用 Duration 文本（如 "30s"），
-/// 因此跨语言的配置指纹尚未对齐，属 P4 互通项。
-/// Time and gap values use invariant decimal-second text; the Kotlin baseline emits Duration text ("30s"),
-/// so configuration fingerprints are not yet identical across languages and remain a P4 interop item.
+/// 时间与间隙等数值统一使用不变文化的十进制秒文本；Duration 文本（如 "30s"）不在这个形状里，
+/// 因此配置指纹尚未互通，属 P4 互通项。
+/// Time and gap values use invariant decimal-second text rather than Duration text ("30s"),
+/// so configuration fingerprints are not yet interoperable and remain a P4 interop item.
 /// </remarks>
 public static class SolverReportMetadata {
     /// <summary>构造脱敏配置快照 / Build a redacted configuration snapshot.</summary>

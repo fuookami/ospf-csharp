@@ -58,16 +58,16 @@ public class TaskOnTimeMaximization<T, E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 基线：最大化 `coefficient × Σ_t OnTime[t]`，目标名 `task on time`。任务集就是构造时给的那批——**不再按任务开关过滤**，
+    /// 最大化 `coefficient × Σ_t OnTime[t]`，目标名 `task on time`。任务集就是构造时给的那批——**不再按任务开关过滤**，
     /// 因为"允许移动"与"准时"是两件事：一个允许延迟的任务照样该被奖励准时完工，它的 `on_time` 在开关关着时只是常量零。
     ///
-    /// 基线还有 `threshold` 分支（先建 `thresholdSlack` 再优化它的截断部分）。C# 的构造函数**没有 threshold 参数**，
-    /// `ThresholdSlack` 只是纯函数，所以只有阈值 0 这一支。
+    /// 阈值非零时先建 `thresholdSlack`，再最大化**它的截断部分**（"奖到阈值为止"）；阈值为 0 时目标就是加权和本身。
+    /// 两条分支都在 `Invoke` 里。
     ///
     /// The code maximises `coefficient × Σ_t OnTime[t]`, objective name `task on time`. The task set is the one given at construction — **no per-task re-filtering**,
     /// because "may move" and "on time" are different things: a task allowed to delay still deserves credit for finishing on time, its `on_time` merely being constant zero when
-    /// the switch is off. The code's `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
-    /// function — so only the zero-threshold path exists.
+    /// the switch is off. A non-zero threshold builds a `thresholdSlack` and maximises **its capped part** ("rewarded up to the threshold"); with a zero threshold the objective
+    /// is the weighted sum itself. Both branches live in `Invoke`.
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);

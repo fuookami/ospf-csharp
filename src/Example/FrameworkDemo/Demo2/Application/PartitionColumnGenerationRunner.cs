@@ -104,9 +104,9 @@ internal static class PartitionColumnGenerationRunner
         notes.Add($"partition_solver={solver.Name}");
 
         // **没收敛也要说清楚**：`LpConverged` 为假时交回去的整数解**不是全局最优**，
-        // 状态照基线写 `RestrictedFeasible`，别让人以为拿的是最优解。
+        // 状态写 `RestrictedFeasible`，别让人以为拿的是最优解。
         //
-        // **A non-converged run says so**: when `LpConverged` is false the integer solution is **not globally optimal**, so the status follows the code as
+        // **A non-converged run says so**: when `LpConverged` is false the integer solution is **not globally optimal**, so the status reads
         // `RestrictedFeasible` rather than letting anyone read the answer as optimal.
         string status = outcome.LpConverged ? outcome.Loading.Status : "RestrictedFeasible";
         if (!outcome.LpConverged)

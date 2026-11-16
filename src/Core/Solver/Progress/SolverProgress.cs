@@ -115,10 +115,10 @@ public sealed record SolverProgressSnapshot(
     /// <returns>收敛后的快照 / The clamped snapshot.</returns>
     /// <remarks>
     /// `ResolvedStageLabel` / `ResolvedSubStageLabel` 为 null 时**按默认值补上**：
-    /// 基线这两个属性的默认值是 `stage.fallbackLabel` 与 `subStage?.renderDefault`，
+    /// 这两个属性的默认值是 `stage.fallbackLabel` 与 `subStage?.renderDefault`，
     /// 而 C# 的可选参数不能引用其它参数，所以在属性访问处补。
     ///
-    /// When null, **the code defaults are supplied**: the code defaults these to `stage.fallbackLabel` and `subStage?.renderDefault`, but C# optional
+    /// When null, **the default values are supplied**: they default to `stage.fallbackLabel` and `subStage?.renderDefault`, but C# optional
     /// parameters cannot reference other parameters, so it is done at the property accessor instead.
     /// </remarks>
     public SolverProgressSnapshot Normalized() => this with {
@@ -205,11 +205,11 @@ public sealed class SolverProgressContext {
     /// 在可中断边界检查取消状态 / Check cancellation state at an interruptible boundary.
     /// </summary>
     /// <remarks>
-    /// 基线抛 `CancellationException`；C# 的对应物是 `OperationCanceledException`，
+    /// 这里抛的是 `OperationCanceledException`，
     /// 它也是 `CancellationToken.ThrowIfCancellationRequested` 抛出的同一类型——
     /// **这样两套取消机制对调用方是同一种异常**。
     ///
-    /// The code throws `CancellationException`; the C# counterpart is `OperationCanceledException`, the same type
+    /// This throws `OperationCanceledException`, the same type
     /// `CancellationToken.ThrowIfCancellationRequested` throws — **so both cancellation mechanisms surface as one exception type to callers**.
     /// </remarks>
     public void ThrowIfCancelled() {

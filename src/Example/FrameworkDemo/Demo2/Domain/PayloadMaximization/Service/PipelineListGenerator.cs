@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization.S
 /// 业载最大化管线列表生成器 / The payload-maximization pipeline list generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：**恒返回一条**管线，**不看装载模式**。
+/// **恒返回一条**管线，**不看装载模式**。
 ///
 /// 三处必须沿用：
 ///

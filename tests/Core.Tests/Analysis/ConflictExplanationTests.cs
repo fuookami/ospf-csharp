@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 冲突解释 / The conflict explanation.
 /// </summary>
 /// <remarks>
-/// 只搬报告侧**：基线第 630 行有 `solver.solve(...)`、第 755 行有 `session.solve(assumptions =...)`，
-/// `ConflictAnalyzer` 与 `MinimalConflictAnalyzer` 都在其后。**那部分要真实 CP 后端，没搬也没空跑。**
+/// **只实现报告侧**：`ConflictAnalyzer` 与 `MinimalConflictAnalyzer` 都要真实 CP 后端，
+/// **所以既没有实现，也没有留空跑版本。**
 ///
 /// 判据钉的每一条，**都是"报告看起来有结论，但证据撑不住"的形状**。
 ///
-/// **The report side only is implemented**: baseline line 630 has `solver.solve(...)` and line 755 has `session.solve(assumptions =...)`, with both analyzers after them.
-/// **That needs a real CP backend, so it was neither implemented nor stubbed.** Every criterion here blocks a shape where **the report looks concluded but the evidence does not
+/// **Only the report side is implemented**: `ConflictAnalyzer` and `MinimalConflictAnalyzer` need a real CP backend,
+/// **so they were neither implemented nor stubbed.** Every criterion here blocks a shape where **the report looks concluded but the evidence does not
 /// carry it**.
 /// </remarks>
 public class ConflictExplanationTests {

@@ -45,10 +45,10 @@ public static class GurobiFunctionCapabilities
     /// <param name="version">SDK 版本；`null` 表示未探测 / SDK version; `null` means not probed.</param>
     /// <returns>能力声明 / The capability declaration.</returns>
     /// <remarks>
-    /// **方法名匹配，不是签名匹配**——这是与一处**较弱证据**：基线校验返回类型与参数类型，这里只校验名字存在。
+    /// **方法名匹配，不是签名匹配**——**较弱证据**：完整校验要连返回类型与参数类型一起查，这里只校验名字存在。
     /// 记成 `ponytail:` 天花板：升级路径是等托管程序集可用时（`GurobiAvailability` 为真）再检查参数类型。
     ///
-    /// **By method name, not by signature** — a **weaker form of evidence** than the code, which checks return and parameter types. Recorded as a `ponytail:` ceiling:
+    /// **By method name, not by signature** — a **weaker form of evidence** than checking return and parameter types too. Recorded as a `ponytail:` ceiling:
     /// the upgrade path is to check parameter types once the managed assembly is guaranteed present.
     /// </remarks>
     public static FunctionSolverCapabilities Detect(Type? modelType = null, string? version = null)

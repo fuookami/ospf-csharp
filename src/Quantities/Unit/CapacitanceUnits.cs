@@ -8,14 +8,14 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 电容单位 / Capacitance units.
 /// </summary>
 /// <remarks>
-/// **补齐基线单位。**法拉系列写在 里，但声明的是 `Capacitance` 量纲**——
+/// **补齐电容单位。** 法拉系列此前没有独立文件，而它声明的是 `Capacitance` 量纲**——
 /// **电荷是 C，电容是 C/V，两者不是同一个量。**
 ///
 /// **跟着文件名会把它建成电荷单位，跟着声明的量纲才对**——
 /// **所以这里独立成文件，并且用 `Coulomb.Divide(Volt)` 让量纲自己算出来**，
 /// **而不是手写一个"看起来是电容"的包装。**
 ///
-/// Created. **The code writes the farad family inside but declares
+/// Created. **The farad family declares
 /// `Capacitance`** — **charge is coulombs, capacitance is coulombs per volt, and they differ.**
 ///
 /// **Following the file name builds charge units; following the declared quantity is right** —

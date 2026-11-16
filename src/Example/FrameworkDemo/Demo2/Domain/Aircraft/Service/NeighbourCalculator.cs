@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// 物理邻接计算器 / The physical-neighbour calculator.
 /// </summary>
 /// <remarks>
-/// 与的 `PhysicalNeighbourCalculator` 对齐：同一甲板内**两两组合**，按两条规则判定：
+/// 同一甲板内**两两组合**，按两条规则判定：
 ///
 /// | 情形 | 判定 |
 /// | --- | --- |
@@ -114,7 +114,7 @@ internal static class PhysicalNeighbourCalculator
 /// 间接物理邻接计算器 / The indirect-physics neighbour calculator.
 /// </summary>
 /// <remarks>
-/// 与基线 `IndirectPhysicsNeighbourCalculator` 对齐。结果 = **全部物理邻接**（类型换成 `IndirectPhysics`）+ **"共邻"补出的新对**。
+/// 结果 = **全部物理邻接**（类型换成 `IndirectPhysics`）+ **"共邻"补出的新对**。
 ///
 /// 补对的条件（四个同时成立）：
 ///

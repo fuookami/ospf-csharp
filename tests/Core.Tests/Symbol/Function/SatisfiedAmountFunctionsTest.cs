@@ -389,8 +389,8 @@ public class SatisfiedAmountFunctionsTest {
         );
         any.HelperVariables.Select(variable => variable.Name).Should().Equal(
             "satineq-any_u_0", "satineq-any_u_1", "satineq-any_y");
-        // 基线仅约束 y=1 => count 在区间内；区间内不强制 y=1。
-        // Baseline only requires y=1 => count in range; membership does not force y=1.
+        // 仅约束 y=1 => count 在区间内；区间内不强制 y=1。
+        // The constraint only requires y=1 => count in range; membership does not force y=1.
         IsFeasible(anyModel, Values(
             (x, 0.0), (any.FlagVars[0], 0.0), (any.FlagVars[1], 1.0), (any.AmountFlagVar!, 1.0)))
             .Should().BeTrue();

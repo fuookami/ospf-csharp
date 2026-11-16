@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// MAC（平均气动弦百分比）模型 / The mean aerodynamic chord percentage model.
 /// </summary>
 /// <remarks>
-/// 与对齐。`Register` 把 `<c>mac</c>` 符号注册进模型，取值来自**起飞**指数符号经公式换算：
+/// `Register` 把 `<c>mac</c>` 符号注册进模型，取值来自**起飞**指数符号经公式换算：
 ///
 /// 1. **起飞总重已知**：`mac = formula.mac(index_takeoff, tow)`，指数符号保持线性（每个系数与常数项各算一遍）。
-/// 2. **起飞总重未知**：`mac` 是**常数零**。基线就是 `LinearExpressionSymbol(Flt64.zero)`——不是"跳过"，也不是"报错"。
+/// 2. **起飞总重未知**：`mac` 是**常数零**，即 `LinearExpressionSymbol(Flt64.zero)`——不是"跳过"，也不是"报错"。
 ///
 /// 两处容易做错：
 ///
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 ///    重复 `Add` 同一个符号由模型决定成败，本类不额外拦。
 ///
 /// `Register` puts the <c>mac</c> symbol into the model from the **take-off** index symbol through the formula: with a known take-off total weight
-/// `mac = formula.mac(index_takeoff, tow)` keeping the index linear, and without one `mac` is the **constant zero** — the code literally builds `LinearExpressionSymbol(Flt64.zero)`,
+/// `mac = formula.mac(index_takeoff, tow)` keeping the index linear, and without one `mac` is the **constant zero** — literally `LinearExpressionSymbol(Flt64.zero)`,
 /// it is neither skipped nor an error. Two easy mistakes: (1) **only the take-off phase is consulted**, both `computedTotalWeight[TakeOff]` and `index[TakeOff]`, with no loop over
 /// phases; (2) **registration is idempotent** — the code guards with `if (!::mac.isInitialized)`; this builds the symbol once but **adds it every call**, leaving duplicate-add
 /// semantics to the model rather than second-guessing them here.

@@ -24,11 +24,11 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **它保留变量表，丢掉全部约束和目标，然后当作成功返回。** 调用方拿到的模型**看起来合法**
 /// （有变量、有名字），但**一条约束都不剩**——求解它会得到任意可行解，而且没有任何报错。
 ///
-/// 现在：**只保留有基线依据的 `BuildElasticModel`，并且真正实现**。
+/// 现在：**只保留 `BuildElasticModel`，并且真正实现**。
 ///
-/// **删掉了另外四个变体**（下界弹性、上界弹性、二值松弛、minmax 松弛）：基线
-/// **只有 `buildElasticModel` 一个函数**，那四个名字在
-/// **根本不存在**。它们是 C# 侧臆造的 API——没有基线对应、没有生产调用方，
+/// **删掉了另外四个变体**（下界弹性、上界弹性、二值松弛、minmax 松弛）：
+/// **只有 `BuildElasticModel` 一个函数**，那四个名字
+/// **根本不存在**。它们是 C# 侧臆造的 API——没有对应物、没有生产调用方，
 /// **唯一的"用户"是我为它们写的那条 `VariantsWithoutBaselineBacking_ShouldThrow` 测试**。
 /// 留着它们等于维护四个永远抛错的公开方法，还附一条测试去断言"它们确实抛错"。
 ///
@@ -39,11 +39,11 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// objective, and returns as if it succeeded**. The caller receives a model that **looks legitimate** (variables, a name) but **retains not a single
 /// constraint** — solving it yields an arbitrary feasible point with no error anywhere.
 ///
-/// Now: **only `BuildElasticModel`, the one with baseline backing, remains, and it is genuinely implemented.**
+/// Now: **only `BuildElasticModel` remains, and it is genuinely implemented.**
 ///
-/// **deleted the other four variants** (lower-bound elasticity, upper-bound elasticity, binary slack, minmax slack): the code
-/// has **exactly one function, `buildElasticModel`**, and those four names **do not exist there at all**. They were invented
-/// on the C# side — no baseline counterpart, no production caller, and **their only "user" was the `VariantsWithoutBaselineBacking_ShouldThrow` test I wrote for
+/// **deleted the other four variants** (lower-bound elasticity, upper-bound elasticity, binary slack, minmax slack): this class
+/// has **exactly one function, `BuildElasticModel`**, and those four names **do not exist at all**. They were invented
+/// on the C# side — no counterpart, no production caller, and **their only "user" was the `VariantsWithoutBaselineBacking_ShouldThrow` test I wrote for
 /// them**. Keeping them meant maintaining four public methods that always throw, plus a test asserting that they do throw.
 /// </remarks>
 internal static class QuadraticTetradElasticBuilder {

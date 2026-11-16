@@ -54,9 +54,9 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// **没有校验 `L > 0`，而这不是遗漏**：**`materializeFallbackConstraints` 里也不校验。**
 /// **但 `L ≤ 0` 会让"半连续"退化成"普通有界变量"——
 /// 因为那时指示 = 1 的区间本身包含 0，"要么 0 要么 ≥ L"就没有区分力。**
-/// **本实现不做基线没有的校验，但把这个后果写在这里。**
+/// **本实现不做额外的校验，但把这个后果写在这里。**
 ///
-/// Following its `SemiStructure`.
+/// Following the same encoding as `SemiStructure`.
 ///
 /// **Semi-continuous means "either zero or inside `[L, U]`".**
 /// **Two rows, and <b>they force zero only as a pair</b>:**
@@ -90,15 +90,15 @@ public sealed record SemiStructure(
     /// 物化 fallback 约束 / Materialize the fallback constraints.
     /// </summary>
     /// <remarks>
-    /// **基线返回 `Ret&lt;DeferredFunctionFallbackConstraints&gt;` 并经过 `convertPwlConstraintsToFlt64`，**
-    /// **那个转换器存在的理由是 `SemiStructure` 在对 `V` 泛型，而约束列表要落到 `Flt64`。**
+    /// **物化接口直接返回 `DeferredFunctionFallbackConstraints`，没有 `convertPwlConstraintsToFlt64` 这一步，**
+    /// **转换只在结构对 `V` 泛型、而约束列表要落到 `Flt64` 时才需要。**
     ///
     /// **本实现是 `Flt64` 专用的（与 `IndicatorStructure`、`AbsStructure`、`MaxStructure` 一致），
     /// 所以行<b>本来就是</b> `Flt64`——转换是恒等，这里不做一次假转换。**
     /// **这个差别写在方法注释里，而不是悄悄省掉一个调用。**
     ///
-    /// **The code returns `Ret&lt;DeferredFunctionFallbackConstraints&gt;` through `convertPwlConstraintsToFlt64`, and
-    /// that converter exists because its `SemiStructure` is generic over `V` while the constraint list must
+    /// **The materialisation returns `DeferredFunctionFallbackConstraints` directly, with no
+    /// `convertPwlConstraintsToFlt64` step; that converter is only needed when a structure is generic over `V` while the list must
     /// land on `Flt64`.**
     ///
     /// **This implementation is `Flt64`-only (consistent with `IndicatorStructure`, `AbsStructure` and `MaxStructure`), so

@@ -152,7 +152,7 @@ public class CancelAndLeisureMinimizationTests {
             .Should().Equal(new[] { "z_0", "z_1" });
     }
 
-    /// <summary>**没给系数 → 什么都不加（基线默认关闭）** / No coefficient adds nothing — off by default in the code.</summary>
+    /// <summary>**没给系数 → 什么都不加（默认关闭）** / No coefficient adds nothing — off by default in the code.</summary>
     /// <remarks>
     /// 这条判据钉的是**默认行为**：空闲最小化不生效。第一版如果照直觉写成"没给系数就按 1 计价"，
     /// 这里会红。`coefficient?.let { … }`，跳过。

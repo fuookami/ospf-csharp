@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 板数最小化目标 / The sheet-amount minimisation objective.
 /// </summary>
 /// <remarks>
-/// 与的 `SheetAmountMinimization` 对齐：把每层的份数变量 `y_i` 按系数放进目标。
+/// 把每层的份数变量 `y_i` 按系数放进目标。
 ///
 /// **系数是一个函数而不是常数**（`coefficient: (Layer) -> FltX`）。这样同一份代码既能做"每层权重相同"，
 /// 也能做"按板材类型成本加权"——`SheetTypeCostMinimization` 就是后者。把它写成常数会逼出第二个类。
@@ -29,13 +29,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 1. **`y` 未注册就失败**，与 `AreaMinimization` 同一口径（"返回 ok 但目标为空"是最难查的一类缺陷）。
 /// 2. **零系数项被跳过**（`safeLinearPolynomial` 处理全零的情形）：零系数项留着不影响最优解，
 ///    但会让目标多项式里塞满无效项，求解器日志无法阅读。
-/// 3. **全部系数为零时目标为空**，这仍是成功——基线如此，且"所有层都不要"是合法输入。
+/// 3. **全部系数为零时目标为空**，这仍是成功，且"所有层都不要"是合法输入。
 ///
-/// Aligned with its `SheetAmountMinimization`: it puts each layer's copy variable `y_i` into the objective with a coefficient. **The coefficient is a function rather than a constant**
+/// It puts each layer's copy variable `y_i` into the objective with a coefficient. **The coefficient is a function rather than a constant**
 /// (its `coefficient: (Layer) -> FltX`), which lets one implementation cover both uniform weighting and per-sheet-type costing — `SheetTypeCostMinimization` is the latter — while a
 /// constant would force a second class. Three details: **an unregistered `y` fails**, matching `AreaMinimization`, since "returns ok with an empty objective" is the hardest defect class to
-/// find; **zero-coefficient terms are skipped** as the code does through `safeLinearPolynomial`, since keeping them changes no optimum but fills the polynomial with dead terms and makes
-/// solver logs unreadable; and **an all-zero coefficient set yields an empty objective** while still succeeding, as in the code, because "use no layer" is a legitimate input.
+/// find; **zero-coefficient terms are skipped** as `safeLinearPolynomial` does, since keeping them changes no optimum but fills the polynomial with dead terms and makes
+/// solver logs unreadable; and **an all-zero coefficient set yields an empty objective** while still succeeding, because "use no layer" is a legitimate input.
 /// </remarks>
 public sealed class SheetAmountMinimization
 {
@@ -129,7 +129,7 @@ public sealed class SheetAmountMinimization
 /// 板材面积最小化目标 / The sheet-area minimisation objective.
 /// </summary>
 /// <remarks>
-/// 与的 `SheetAreaMinimization` 对齐：每层的系数是 **`weight × 该层板材面积`**，
+/// 对应 `SheetAreaMinimization`：每层的系数是 **`weight × 该层板材面积`**，
 /// 目标是把"用的板材总面积"压到最小。
 ///
 /// **跳过两类层**（`mapIndexedNotNull` 表达）：
@@ -226,10 +226,10 @@ public sealed class SheetAreaMinimization
 /// 板材类型成本最小化目标 / The sheet-type cost minimisation objective.
 /// </summary>
 /// <remarks>
-/// 与的 `SheetTypeCostMinimization` 对齐：按**板材类型**查成本表，把 `weight × cost` 作为该层的系数。
+/// 对应 `SheetTypeCostMinimization`：按**板材类型**查成本表，把 `weight × cost` 作为该层的系数。
 ///
 /// **它是 `SheetAmountMinimization` 的一个系数实现，不是一个新算法**——判据证明的是同一件事：系数由"层 → 数"的函数给出。
-/// 本类只负责那个函数，目标本身复用 <see cref="SheetAmountMinimization"/>。这是 把系数做成函数的直接收益。
+/// 本类只负责那个函数，目标本身复用 <see cref="SheetAmountMinimization"/>。这是把系数做成函数的直接收益。
 ///
 /// 三处跳过，各有不同含义：
 ///
@@ -237,13 +237,13 @@ public sealed class SheetAreaMinimization
 /// 2. **成本表里没有该类型**：跳过而**不是按零计**。按零计等于"这个类型免费"，会把求解器推向未定价的类型。
 /// 3. **乘积为零**（`weight` 为 0 或成本为 0）：跳过。
 ///
-/// 另外**成本表为空或 `weight` 为零时整条目标不建**（基线 `return ok`），且**成功返回**——"没有成本要考虑"是合法输入。
+/// 另外**成本表为空或 `weight` 为零时整条目标不建**（`return ok`），且**成功返回**——"没有成本要考虑"是合法输入。
 ///
-/// Aligned with its `SheetTypeCostMinimization`: it looks up a cost by **sheet type** and uses `weight × cost` as that layer's coefficient. **It is a coefficient implementation for
+/// It looks up a cost by **sheet type** and uses `weight × cost` as that layer's coefficient. **It is a coefficient implementation for
 /// `SheetAmountMinimization`, not a new algorithm** — the criterion proves the same thing, that the coefficient comes from a "layer to number" function — and this class only supplies that
 /// function while the objective reuses `SheetAmountMinimization`, the direct payoff of making the coefficient a function. Three skips with distinct meanings: **a layer without a sheet
 /// type** has no `TypeCode` to look up; **a type missing from the cost table is skipped rather than priced at zero**, since zero would mean "this type is free" and push the solver toward
-/// unpriced types; and **a zero product** (zero `weight` or zero cost) is skipped. Additionally, **an empty cost table or a zero `weight` builds no objective at all** (its
+/// unpriced types; and **a zero product** (zero `weight` or zero cost) is skipped. Additionally, **an empty cost table or a zero `weight` builds no objective at all** (
 /// `return ok`) and **still succeeds**, because "there is no cost to consider" is a legitimate input.
 /// </remarks>
 public static class SheetTypeCostMinimization

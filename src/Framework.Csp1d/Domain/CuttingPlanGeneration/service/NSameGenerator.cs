@@ -109,22 +109,22 @@ public sealed class NSameGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
     /// <param name="input">生成输入 / Generation input.</param>
     /// <param name="collector">收集器 / Collector.</param>
     /// <remarks>
-    /// 对应基线 `NSameGenerator.generateMaterial`：**遍历需求 → 产品宽度 → 数量**，
+    /// **遍历需求 → 产品宽度 → 数量**，
     /// 每个组合产出一个**单切片方案**（"N 个相同切片"）。
     ///
     /// 与三点差异，均已记录：
     ///
-    /// | 基线 | 这里 | 原因 |
+    /// | 完整做法 | 这里 | 原因 |
     /// | --- | --- | --- |
     /// | `GenerationQuantityCache` 加速重复宽度 | 直接算 | 缓存类存在但**没有工厂**，构造需要 4 个委托；先用直接算法，缓存留待后续 |
     /// | `allAmount` 时枚举 1..maxAmount | 仅 `maxAmount` | 枚举需要 `maxAmount` 的数值类型无关算法，先用最省事的 |
     /// | 并行按物料分任务 | 串行 | 并行需要合并报告的完整语义，先用串行保证正确 |
     ///
-    /// **这些差异都让能力变弱而不让结果变错**：产出的方案是基线结果的子集，且每条都经过约束检查。
+    /// **这些差异都让能力变弱而不让结果变错**：产出的方案是完整做法的子集，且每条都经过约束检查。
     ///
     /// **walk demands → product widths → amounts**, emitting one **single-slice plan** ("N same
-    /// slices") per combination. The three differences from the code are recorded above; **all of them make the capability weaker without making results
-    /// wrong** — the emitted plans are a subset of its, each still passing the constraint checks.
+    /// slices") per combination. The three differences are recorded above; **all of them make the capability weaker without making results
+    /// wrong** — the emitted plans are a subset, each still passing the constraint checks.
     /// </remarks>
     private void GenerateForMaterial(
         Material<V> material,

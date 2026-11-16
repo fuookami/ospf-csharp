@@ -32,7 +32,6 @@ public sealed class CrowdingDistanceTests {
         double.IsFinite(distances[1]).Should().BeTrue("中间点距离有限 / the middle point has a finite distance");
     }
 
-    /// <summary>两个及以下个体全部无穷远 / Two or fewer individuals are all infinitely distant.</summary>
     /// <summary>**中间点的拥挤距离有确定的数值** / The middle point's crowding distance has a determinate value.</summary>
     /// <remarks>
     /// **这条补的是验收表 8.4 说的那个缺口：前面只查了"中间点有限"，而"有限"对 0.5 和 200 一视同仁。**

@@ -39,7 +39,7 @@ public sealed class RelationalQueryExecutionStatsTest {
     }
 
     /// <summary>
-    /// 失败记录**仍然**要保存计划信息——这正是基线注释强调的点：失败也要能回溯到计划。
+    /// 失败记录**仍然**要保存计划信息——这正是代码注释强调的点：失败也要能回溯到计划。
     /// A failure record **still** keeps plan information, which is exactly what the code comment stresses.
     /// </summary>
     [Fact]

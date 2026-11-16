@@ -19,18 +19,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 配载聚合初始化器 / The stowage aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**先校验，再翻译**。校验顺序沿用，因为它们互相依赖——
+/// **先校验，再翻译**。校验顺序沿用，因为它们互相依赖——
 /// "货物名唯一"必须在"舱位引用的货物都存在"之前，"最大件数"必须在"已装件数不超上限"之前。
 ///
 /// **本仓 DTO 缺四组字段**，所以一部分校验无从写起（不是省略，是没有输入）：`PositionInput` 只有名字、最大重量与两个力臂，
 /// 没有 `spaceId`/`maxLoadCount`/`loadedItems`/`ala`/`alw`/`predicateLoadWeightMin`/`geometry`/`partitionId`，
-/// `CargoInput` 也没有 `order`/`deckLocation`/`allowedPositions`。对应的基线校验（件数、已装货物、实际装载量、预配载下限、
+/// `CargoInput` 也没有 `order`/`deckLocation`/`allowedPositions`。对应的校验（件数、已装货物、实际装载量、预配载下限、
 /// 顺序区间）因此**全部缺席**，预配载模式在本仓也无法被满足。这是一处真实的能力缺口，已进差距表。
 ///
-/// **validate first, then translate**, with the validation order copied because they depend on each other. **The DTO here lacks four field groups**,
+/// **validate first, then translate**, with the validation order fixed because they depend on each other. **The DTO here lacks four field groups**,
 /// so part of its validation cannot be written (not omitted, but without input): `PositionInput` carries only a name, a maximum weight and two arms — no
 /// `spaceId`/`maxLoadCount`/`loadedItems`/`ala`/`alw`/`predicateLoadWeightMin`/`geometry`/`partitionId` — and `CargoInput` has no `order`/`deckLocation`/`allowedPositions`.
-/// The matching baseline validations (counts, loaded items, actual loads, the predistribution floor, the order range) are therefore **all absent**, and predistribution mode
+/// The matching validations (counts, loaded items, actual loads, the predistribution floor, the order range) are therefore **all absent**, and predistribution mode
 /// cannot be satisfied here. That is a real capability gap, recorded in the gap table.
 /// </remarks>
 internal static class AggregationInitializer
@@ -90,18 +90,18 @@ internal static class AggregationInitializer
             if ((ulong)(position.LoadedItems?.Count ?? 0) > position.MaxLoadCount) {
                 return Fail($"已装载件数超过舱位上限 / loaded items exceed the position cap: {position.Name}");
             }
-            // **两条谓词装载重量下限校验**。的是 `predicateLoadWeightMin`（一个 `Double?`），
+            // **两条谓词装载重量下限校验**。请求侧给的是 `predicateLoadWeightMin`（一个 `Double?`），
             // 本仓的对应物是三元组 `PredicateLoadWeight`，所以看的是 `Min` 那一端：
             //
             // 1. **非有限、为负、或大于舱位上限就拒**——这三个数进去，谓词重量的松弛右端就是一个非法区间，
             //    而求解器只会报"不可行"，**不会告诉你是哪一端写错了**；
-            // 2. **预配载模式下缺这份规格就拒**——基线明写 `stowageMode == Predistribution && any { it == null }` 就失败。
+            // 2. **预配载模式下缺这份规格就拒**——`stowageMode == Predistribution` 且任一舱位缺规格就失败。
             //    缺规格时那两条软目标会悄悄消失，**模式照跑，只是不再是预配载**。
             //
-            // **The code's two predicate-lower-bound checks** . The code uses `predicateLoadWeightMin` (a `Double?`); this implementation's counterpart is the
+            // **Two predicate-lower-bound checks**. The request side carries `predicateLoadWeightMin` (a `Double?`); this implementation's counterpart is the
             // `PredicateLoadWeight` triple, so it looks at the `Min` end: reject a non-finite, negative, or above-cap value — those make the slack right-hand side an
-            // illegal interval and the solver only says "infeasible", **never which end is wrong**; and reject a missing spec in predistribution mode, which the
-            // baseline states outright. Without the spec the two soft objectives quietly vanish, **and the mode still runs — just no longer as predistribution**.
+            // illegal interval and the solver only says "infeasible", **never which end is wrong**; and reject a missing spec in predistribution mode.
+            // Without the spec the two soft objectives quietly vanish, **and the mode still runs — just no longer as predistribution**.
             if (position.PredicateLoadWeight is { } predicate) {
                 if (!double.IsFinite(predicate.Min) || predicate.Min < 0.0 || predicate.Min > position.MaxWeight) {
                     return Fail($"谓词装载重量下限非法 / illegal predicate load weight lower bound: {position.Name}");
@@ -144,8 +144,8 @@ internal static class AggregationInitializer
                         : cargo.Priority <= 2
                             ? CargoPriorityCategory.Low
                             : CargoPriorityCategory.Normal),
-                // 基线对所有货物都给 `GENERAL`，不看输入。
-                // The code gives every cargo `GENERAL`, ignoring the input.
+                // 所有货物都给 `GENERAL`，不看输入。
+                // Every cargo gets `GENERAL`, ignoring the input.
                 cargoType: CargoType.FromName("GENERAL"),
                 source: cargo.Source,
                 destination: cargo.Destination,
@@ -161,12 +161,12 @@ internal static class AggregationInitializer
                 // **always main deck**, so lower-deck cargo counted as main-deck cargo — and "lower-deck cargo cannot go on the main deck" is exactly what the deck
                 // filter expresses, **which was false from the start**.
                 location: cargo.DeckLocation == DeckLocationInput.Main ? ItemLocation.MainDeck : ItemLocation.LowNotBulk,
-                // **装载顺序来自请求**。基线 `ItemOrder(order = UInt8(it.toUByte))`，本仓对应字段叫 `Sequence`
-                // （`byte?`，与`UInt8` 同宽）。之前恒不传，**等于所有货物在顺序约束上彼此无差别**。
+                // **装载顺序来自请求**。对应字段叫 `Sequence`
+                // （`byte?`）。之前恒不传，**等于所有货物在顺序约束上彼此无差别**。
                 // **顺序超出 `byte` 范围就拒**，不静默截断：截断会让两件不同的货拿到同一个顺序，**而那是"无顺序差别"换了个样子**。
                 //
-                // **The loading order comes from the request** . The code writes `ItemOrder(order = UInt8(...))`; this implementation's field is `Sequence`
-                // (`byte?`, the same width as its `UInt8`). Omitting it made **every cargo indistinguishable to the order constraints**. **A sequence
+                // **The loading order comes from the request**. The field is `Sequence`
+                // (`byte?`). Omitting it made **every cargo indistinguishable to the order constraints**. **A sequence
                 // outside the `byte` range is refused, never truncated**: truncation would give two different cargos the same order, **which is "no order" wearing a
                 // different hat**.
                 order: cargo.Order is { } requestedOrder
@@ -192,10 +192,10 @@ internal static class AggregationInitializer
                 status: status,
                 mlw: new MaxLoadWeightLimit(requestPosition.MaxWeight),
                 // **最大装载件数来自请求**。之前的"保守值 1"让一个能装 20 件的舱位只能装 1 件——
-                // **不报错，只是把可行解砍掉一大半**。基线还校验 `<= 0` 要拒（见下面那道前置校验）。
+                // **不报错，只是把可行解砍掉一大半**。`<= 0` 同样要拒（见下面那道前置校验）。
                 //
                 // **The maximum item count comes from the request** . The old "conservative 1" let a position that holds 20 items hold 1 — **no error, just most
-                // of the solution space gone**. The code also rejects `<= 0` (see the pre-check below).
+                // of the solution space gone**. A `<= 0` value is also rejected (see the pre-check below).
                 mla: requestPosition.MaxLoadCount,
                 // **规格来自请求**：以前恒写 `null`，于是预配载模式下 `PredicateLoadWeightLimit` 必然报"缺少规格"。
                 // 三个端点逐个映射，不做"取一个数代表全部"的简化。

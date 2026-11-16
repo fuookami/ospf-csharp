@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 非精确层分配 / The imprecise layer assignment.
 /// </summary>
 /// <remarks>
-/// 与的 `ImpreciseAssignment` 对齐。它是
+/// `ImpreciseAssignment` 对齐。它是
 /// `Load`、`Capacity`、`Objectives` 与十余条 `Limits` 的共同前置：没有它，后几块连变量都拿不到。
 ///
 /// 四处必须沿用：

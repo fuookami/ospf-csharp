@@ -5,13 +5,11 @@
 Gantt-style task scheduling on top of the OSPF framework: tasks, executors, time slots, bunch
 generation, and the scheduling lifecycle.
 
-Baseline: `ospf-kotlin-framework-gantt-scheduling` at Kotlin `12fdb587`.
-
 ## Layout
 
-A single assembly with `Application/`, `Domain/`, and `Infrastructure/`. The baseline splits this into
-many sub-modules (26 READMEs); **this project does not mirror that split**, so those READMEs are not a
-checklist against these three directories.
+A single assembly with `Application/`, `Domain/`, and `Infrastructure/` — split by layer, not by sub-module.
+Task models, bunch generation, productivity models and the application services share one assembly, so their
+types reference each other without a project-per-concern fan-out.
 
 ## What it provides
 
@@ -24,16 +22,16 @@ checklist against these three directories.
 
 ## Known gaps
 
-**Still to be audited.** earlier work recorded that the Gantt task-bundle compilation, executor/task
+**Still to be audited.** It has been recorded that the Gantt task-bundle compilation, executor/task
 constraints, and cancellation targets still contain empty implementations, and that Demo4 does not register
 the bundle cost pipeline. Those notes have not been re-verified in this session, so treat them as
 **unconfirmed** rather than current.
 
-The `Framework.GanttNetworkScheduling` bridge (earlier) is a separate project, because
+The `Framework.GanttNetworkScheduling` bridge is a separate project, because
 `Framework.NetworkScheduling` already references this module.
 
 Demo4's `FlightTaskBunchGenerator` runs its own hand-written label search rather than the shared path
-search kernel. That is a **structural divergence from the baseline, not a missing call** — see
+search kernel. That is a **deliberate structural choice, not a missing call** — see
 `docs/kotlin-capability-matrix.md`.
 
 ## Verification

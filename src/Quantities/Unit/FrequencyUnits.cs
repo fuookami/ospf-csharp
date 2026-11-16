@@ -19,11 +19,11 @@ public static class FrequencyUnits {
 
     /// <summary>**每小时次数（1/3600 Hz）** / Cycle per hour.</summary>
     /// <remarks>
-    /// **基线写的是 `Hertz * Second.to(Hour)`，而 `Second.to(Hour)` 是"一秒折合多少小时" = 1/3600。**
+    /// **定义是 `Hertz * Second.to(Hour)`，而 `Second.to(Hour)` 是"一秒折合多少小时" = 1/3600。**
     /// **所以这个单位比赫兹小 3600 倍，而不是大 3600 倍——**
     /// **"每小时一次"当然比"每秒一次"慢，方向必须是除。**
     ///
-    /// **The code writes `Hertz * Second.to(Hour)`, and `Second.to(Hour)` is "how many hours one second is"
+    /// **The definition is `Hertz * Second.to(Hour)`, and `Second.to(Hour)` is "how many hours one second is"
     /// = 1/3600.** **So this unit is 3600 times smaller than the hertz, not larger** —
     /// **once per hour is obviously slower than once per second, so the direction has to be a division.**
     /// </remarks>

@@ -12,16 +12,16 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **哨兵不是区间** / A sentinel is not a range.
 /// </summary>
 /// <remarks>
-/// **这里补的是基线 `captureSensitivityRanges` 的对应物：在主求解里读 `SARHSLow`／`SARHSUp`。**
+/// **这里钉的是灵敏度区间的折算：在主求解里读 `SARHSLow`／`SARHSUp`。**
 ///
 /// **而这些属性有两个陷阱，都&lt;b&gt;不会抛异常、只会给出看起来合法的数字**：**
 ///
-/// 1. **presolve 打开时返回的是哨兵**（基线实测：`c1` 得到 4 而不是 0）
+/// 1. **presolve 打开时返回的是哨兵**（实测：`c1` 得到 4 而不是 0）
 /// 2. **无界的一侧返回的是 `±inf`，而 `-inf` 与一个有限数在"取较小值"的运算里长得一样**
 ///
 /// **所以折算层必须有判据，否则"读到数了"和"读到区间了"永远分不清。**
 ///
-/// **This fills the counterpart of its `captureSensitivityRanges`.** **Those attributes have two traps, neither of which
+/// **This pins the sentinel-to-range mapping.** **Those attributes have two traps, neither of which
 /// throws and both of which yield plausible-looking numbers: presolve-on returns sentinels (the code measured c1 yielding 4
 /// instead of 0), and an unbounded side returns `±inf`, which behaves like a finite number in a min/max.** **So the folding layer
 /// needs criteria, or "read a number" and "read a range" can never be told apart.**

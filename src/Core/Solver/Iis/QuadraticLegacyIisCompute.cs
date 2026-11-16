@@ -39,9 +39,9 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// | --- | --- |
 /// | `LinearIisModel` | 本类型 |
 /// | `LinearLegacyIisCompute.ComputeLegacyIISAsync` | `QuadraticLegacyIisCompute.ComputeLegacyIISAsync` |
-/// | 490 行 | 612 行（基线 846） |
+/// | 490 行 | 612 行 |
 ///
-/// **"612 对 846"这组数字<b>不</b>等于"还缺 234 行"：** C# 用了不同的类型与错误表达，
+/// **行数<b>不</b>等于"还缺多少"：** C# 用了不同的类型与错误表达，
 /// **行数不是可比单位。能比的是入口与函数覆盖，而不是行数。**
 ///
 /// **once recorded this as the "largest single missing block"** — its `computeLegacyIIS`
@@ -51,7 +51,7 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// stub-marker count is zero.** **"Only a skeleton" was a stale
 /// conclusion and has been removed.**
 ///
-/// **"612 vs 846" does <b>not</b> mean "234 lines remain": C# uses different types and error expression, so line
+/// **Line counts do <b>not</b> mean "how much remains": C# uses different types and error expression, so line
 /// counts are not a comparable unit. Entry points and function coverage are.**
 /// establishes the **types and entry skeleton** rather than attempting the whole port at once (see the comparison table above).
 /// </remarks>
@@ -90,7 +90,7 @@ public enum QuadraticIisEvidenceSource {
 /// **二次 IIS 计算入口（骨架，未实现）** / Quadratic IIS entry point (skeleton, unimplemented).
 /// </summary>
 /// <remarks>
-/// **本类刻意不实现算法。** 基线 `computeLegacyIIS` 的完整流程是：
+/// **本类刻意不实现算法。** 完整流程是：
 ///
 /// 1. `model.elastic` 构建弹性模型；
 /// 2. 统计弹性边界约束数与弹性约束数；
@@ -121,17 +121,14 @@ public static class QuadraticLegacyIisCompute {
     /// <remarks>
     /// 对应`relaxSpecificComponents`。**关键差异（有意）**：
     ///
-    /// 基线**直接改写** `elasticModel.variables[i]._upperBound`，C# 的 `ModelViewVariable.UpperBound` **是只读的**。
+    /// `ModelViewVariable.UpperBound` **是只读的**，无法原地改写上界。
     /// 所以这里**按调整后的上界重建一个模型**再求解——语义等价（带松弛的变量上界置 `+∞` 或 `0`），
     /// 但**不修改调用方的模型**，因此不会把脏状态留在原对象上。
     ///
-    /// **基线为什么可以这么写**：Kotlin 侧每次 `performElasticFiltering` 都重新 `model.elastic`，
-    /// 改的是**新建的**弹性模型。C# 重建比"打开只读性"更安全，代价是一次模型构造。
+    /// 重建比"打开只读性"更安全，代价是一次模型构造。
     ///
-    /// With one **deliberate difference**: the code **mutates** `elasticModel.variables[i]._upperBound`, while C#'s
-    /// `UpperBound` is **read-only**. So this **rebuilds a model with the adjusted upper bounds** and solves that — semantically equivalent (relaxed variables get `+∞`
-    /// or `0`) but **the caller's model is left untouched**, so no dirty state leaks. The code can mutate because it re-creates the elastic model per call; rebuilding is
-    /// safer than loosening readonly-ness, at the cost of one model construction.
+    /// `UpperBound` is **read-only**, so this **rebuilds a model with the adjusted upper bounds** and solves that — semantically equivalent (relaxed variables get `+∞`
+    /// or `0`) but **the caller's model is left untouched**, so no dirty state leaks. Rebuilding is safer than loosening readonly-ness, at the cost of one model construction.
     /// </remarks>
     public static async Task<Result<QuadraticElasticFilterResult, ErrorCode, Error<ErrorCode>>> RelaxSpecificComponentsAsync(
         IQuadraticTetradModelView elasticModel,
@@ -316,8 +313,7 @@ public static class QuadraticLegacyIisCompute {
     ///
     /// 走完之后，活跃集合就是**最小松弛集**——每条都是"IIS 的证据"。
     ///
-    /// **与一处差异**：基线直接改写 `candidate._upperBound` 再原地重解；
-    /// 这里**每次探测重建模型**（`UpperBound` 只读），因此用 `closed` 集合显式记住
+    /// **每次探测重建模型**（`UpperBound` 只读），因此用 `closed` 集合显式记住
     /// "哪些列当前处于关闭状态"，语义与原地改写等价。
     ///
     /// **one by one** push a candidate slack's **upper bound to `0`** (i.e. "turn that relaxation off") and re-solve

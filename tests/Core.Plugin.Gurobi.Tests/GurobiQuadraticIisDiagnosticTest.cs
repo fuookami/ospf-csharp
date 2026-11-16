@@ -22,12 +22,12 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// The Gurobi quadratic native IIS: `computeIIS` on the real backend, with members from `IISQConstr`.
 /// </summary>
 /// <remarks>
-/// 补完了 Gurobi 三个基线分析器的最后一个。**
+/// 补完了 Gurobi 三个分析器的最后一个。
 ///
 /// 这个文件的核心判据是**成员真的从二次行里来**：把 `IISQConstr` 写成 `IISConstr`，
 /// 每一行都会读到 0，于是返回"没有成员"——而那条错误信息看起来像"这个模型没有不可行子系统"。
 ///
-/// **completes the last of Gurobi's three baseline analyzers.** The central criterion here is that **members really come from quadratic rows**: writing `IISConstr` instead of
+/// **completes the last of Gurobi's three analyzers.** The central criterion here is that **members really come from quadratic rows**: writing `IISConstr` instead of
 /// `IISQConstr` reads 0 for every row and returns "no members" — an error that reads like "this model has no infeasible subsystem".
 /// </remarks>
 public class GurobiQuadraticIisDiagnosticTest {
@@ -137,8 +137,8 @@ public class GurobiQuadraticIisDiagnosticTest {
     /// | `x*y >= 10` | 交叉项对非负变量不是半正定的 |
     /// | `x²+y² >= 10` | 二次型本身是凸的，**但 `>=` 的可行域是球外，整体非凸** |
     ///
-    /// **"凸二次"不等于"凸约束"**——方向决定可行域凸不凸。这也是基线为什么不设 `NonConvex`：
-    /// 它只处理凸的那一侧。所以判据也只用凸的那一侧，**不为了测试方便去改后端的参**。
+    /// **"凸二次"不等于"凸约束"**——方向决定可行域凸不凸。这也是本实现不设 `NonConvex` 的原因：
+    /// 本实现只处理凸的那一侧。所以判据也只用凸的那一侧，**不为了测试方便去改后端的参**。
     ///
     /// **This shape is dictated by the backend, not picked at random.** Two attempts were refused by Gurobi with the same reason, "Q matrix is not positive semi-definite":
     /// the cross term `x*y` is not PSD over non-negative variables, and `x²+y² >= 10` has a convex quadratic form but **a non-convex feasible region (outside the ball)**.

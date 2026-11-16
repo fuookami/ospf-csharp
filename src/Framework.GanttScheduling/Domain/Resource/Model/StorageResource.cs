@@ -243,19 +243,19 @@ public class BunchSchedulingStorageResourceUsage<E, R, C, V>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 对应基线 `BunchSchedulingStorageResourceUsage.register` 的组合式数量：**初始量 + 供应 − 消耗**。
+    /// 组合式数量：**初始量 + 供应 − 消耗**。
     /// 与执行资源不同，存储的数量不是一个"已知的起点"而是三段的代数和——供应来自资源的固定供应
     /// （`FixedSupplyIn`），消耗由调用方按时间给出。
     ///
-    /// 's combined quantity for storage: **initial + supply - consumption**. Unlike an execution resource, storage's quantity is not a known starting point but the
+    /// The combined quantity for storage: **initial + supply - consumption**. Unlike an execution resource, storage's quantity is not a known starting point but the
     /// algebra of three pieces — supply comes from the resource's fixed supply (`FixedSupplyIn`) and consumption is given per time by the caller.
     ///
     /// <para>
-    /// **天花板：执行器维度的供应没有接。** 基线还有一张 `executorSupply`（三维：策略 × 资源 × 时间），
+    /// **天花板：执行器维度的供应没有接。** 另有一张 `executorSupply`（三维：策略 × 资源 × 时间），
     /// 由任务编译层的子类填充；C# 侧既没有那个子类，也没有它的消费者，先只按资源的固定供应算。
     /// 升级路径：等任务编译层真的用上存储资源时，把那张表加进来并在此处求和。
     ///
-    /// **Ceiling: the executor dimension of supply is not wired.** The code also has an `executorSupply` table (three dimensions: policy x resource x time) filled by subclasses in the
+    /// **Ceiling: the executor dimension of supply is not wired.** An `executorSupply` table (three dimensions: policy x resource x time) filled by subclasses in the
     /// task-compilation layer; the C# side has neither that subclass nor a consumer for it, so only the resource's fixed supply is counted. Upgrade path: once the task-compilation layer
     /// really uses storage resources, add that table and sum it here.
     /// </para>
@@ -284,8 +284,8 @@ public class BunchSchedulingStorageResourceUsage<E, R, C, V>
         if (_quantityTable is null) {
             var quantities = new Dictionary<StorageResourceTimeSlot<R, C, V>, ILinearIntermediateSymbol<Flt64>>();
             foreach (StorageResourceTimeSlot<R, C, V> slot in TimeSlots) {
-                // 基线算的是"从头到本槽结束"这一段内的供应，不是本槽自己的长度。
-                // The code counts supply over the span from the window's start to this slot's end, not over the slot's own length.
+                // 算的是"从头到本槽结束"这一段内的供应，不是本槽自己的长度。
+                // Supply is counted over the span from the window's start to this slot's end, not over the slot's own length.
                 V suppliedValue = slot.Resource.FixedSupplyIn(new TimeRange(_windowStart, slot.Time.End));
                 Flt64 supplied = suppliedValue is Flt64 direct ? direct : new Flt64(Convert.ToDouble(suppliedValue));
                 Flt64 consumed = _cost is null ? Flt64.Zero : _cost(slot);

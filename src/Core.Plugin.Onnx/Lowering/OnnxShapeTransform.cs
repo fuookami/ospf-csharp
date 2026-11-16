@@ -32,7 +32,7 @@ public static class OnnxShapeTransform
     /// **会改变元素顺序的算子** / The operators that change the element order.
     /// </summary>
     /// <remarks>
-    /// 对齐基线 `OnnxShapeOperators`：**`reshape`／`flatten` 原样带着 `input.elements`，而 `transpose` 会按坐标重排元素。**
+    /// **`reshape`／`flatten` 原样带着 `input.elements`，而 `transpose` 会按坐标重排元素。**
     /// **这一层每个绑定只有一个标量表达式加一个形状，没有逐元素列表——** **所以"重排"在这里无处可写。**
     ///
     /// **不写"无处可写"的后果是静默的：** **形状换了、表达式没换，** **下游若按位置去接（`MatMul`、`Concat`），**
@@ -51,9 +51,9 @@ public static class OnnxShapeTransform
     /// <summary>
     /// **按位置消费张量的算子** / The operators that consume a tensor positionally.
     /// **其中 `Conv`／`MaxPool`／`AveragePool` 只用于判断"下游会不会按位置读"，本身并未实现；** '
-    /// **基线 `dee897d2` 也没有实现它们。**
+    /// **这里也没有实现它们。**
     ///
-    /// **Of these, Conv, MaxPool and AveragePool serve only to decide whether a downstream reads positionally; they are not implemented here, and the code does not implement them either.**
+    /// **Of these, Conv, MaxPool and AveragePool serve only to decide whether a downstream reads positionally; they are not implemented here.**
     /// </summary>
     /// <remarks>
     /// **重排只有在被这些算子读到的时候才是可见的：** **它们按"第几个元素"取值，** **而逐元素的加法、激活、`Reshape` 都不看位置。**

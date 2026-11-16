@@ -25,7 +25,7 @@ public class PluginRatingReasonTests
 {
     /// <summary>**求解器插件表里没有空备注** / No empty remark in the plugin table.</summary>
     /// <remarks>
-    /// 只看第三节那张表。``➖`` 的行允许为空吗？**不允许**：那两行写明了"基线本身未实现"，说明空着从来不是这个表想要的样子。
+    /// 只看第三节那张表。``➖`` 的行允许为空吗？**不允许**：那两行写明了"代码本身未实现"，说明空着从来不是这个表想要的样子。
     ///
     /// Scoped to section three. Do the ``➖`` rows get to stay empty? **No**: those two state "the code itself does not implement it", which shows the table never
     /// wanted empty cells in the first place.

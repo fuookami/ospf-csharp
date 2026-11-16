@@ -9,23 +9,23 @@ namespace Fuookami.Ospf.Core.Solver.Function;
 /// 插件可探测的原生数学接口 / Native mathematical interfaces detectable by plugins.
 /// </summary>
 /// <remarks>
-/// **与基线 的 `enum class FunctionNativeCapability` 的关系需要说准确：**
-/// **个枚举有 15 个成员——9 个是<b>能力</b>，6 个是<b>位置修饰</b>**
+/// **与 `FunctionNativeCapability` 的关系需要说准确：**
+/// **那个枚举有 15 个成员——9 个是<b>能力</b>，6 个是<b>位置修饰</b>**
 /// **（`ObjectiveOnly`／`ConstraintOnly`／`ObjectiveAndConstraint`／`Nested`／`External`／`Unused`）。**
 /// **本枚举只有那 9 个能力；6 个修饰在 `FunctionUsageLocation` 里，那是合理的拆分。**
 /// **所以下面这句话原来是"逐一对应，成员名与顺序一致"，而那会让下一个读者去核一个<b>永远不会相等的集合</b>。**
 ///
-/// **The relation to its `enum class FunctionNativeCapability` must be stated exactly : the code enum
+/// **The relation to `FunctionNativeCapability` must be stated exactly: that enum
 /// has 15 members — 9 <b>capabilities</b> and 6 <b>positional qualifiers</b> — while this one holds only the 9, with the
 /// qualifiers living in `FunctionUsageLocation`.** **That split is reasonable; what was wrong was claiming the member sets
 /// match one-to-one, which invites a reader to verify a set that can never be equal.**
 ///
 /// **另外必须记住：这份表在本仓<b>还没有任何一端连着实际</b>** ——
 /// **`src/` 里没有任何一处调用原生构造方法，`Supports(...)` 的生产调用方也为零。**
-/// **它现在记录的只是"基线认为这些能力可以被原生表达"，而不是"本仓用得上"。**
+/// **它现在记录的只是"这些能力可以被原生表达"，而不是"本仓用得上"。**
 ///
 /// **And remember: this table <b>touches reality at neither end</b> here — no native constructor is called anywhere in
-/// `src/`, and `Supports(...)` has no production caller.** **It records what the code considers natively expressible, not
+/// `src/`, and `Supports(...)` has no production caller.** **It records what is natively expressible, not
 /// what this repo uses.**
 /// </remarks>
 public enum FunctionNativeCapability
@@ -62,13 +62,13 @@ public enum FunctionNativeCapability
 /// 某个求解器**声称**支持的接口集合 / The set of interfaces a solver **claims** to support.
 /// </summary>
 /// <remarks>
-/// 与基线 的 `data class FunctionSolverCapabilities` 对应。
+/// **这份记录只是声明，不构成选择求解器的依据。**
 ///
 /// **`Version` 可以为 `null`**，而且它必须可以为 `null`：SDK 不在时"不知道版本"和"版本是空字符串"
 /// 是两件事，前者是**未探测**，后者是**探测到了空值**。把两者混起来，报告上就会写着"支持 0 项，版本 ''"，
 /// 读者无法区分"这台机器没有 SDK"和"这个 SDK 什么都不支持"。
 ///
-/// Corresponds to its `data class FunctionSolverCapabilities`. **`Version` may be `null`**, and it must be: with no SDK present, "the version is unknown"
+/// **`Version` may be `null`**, and it must be: with no SDK present, "the version is unknown"
 /// and "the version is the empty string" are different facts — the first is **not probed**, the second is **probed and found empty**. Merging them would make a report
 /// read "supports 0 capabilities, version ''", leaving the reader unable to tell "no SDK here" from "this SDK supports nothing".
 /// </remarks>

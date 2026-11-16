@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **约简成本恰好等于阈值时该列被剔除；固定与保留的列优先** / A column exactly at the threshold is dropped, and fixed or kept columns take precedence.
 /// </summary>
 /// <remarks>
-/// 基线写的是 `!(reducedCost(task) ls maximumReducedCost)`，即 `>=` 时**剔除**。一个"自然"的实现写成 `>`，
+/// 代码写的是 `!(reducedCost(task) ls maximumReducedCost)`，即 `>=` 时**剔除**。一个"自然"的实现写成 `>`，
 /// 两者只在**恰好等于**时不同。恰好等于的列正是"刚刚够格"的列：写错时它被留在列池里，
 /// 每轮多扫一遍，而**它永远不会变成有价值的列**。
 ///

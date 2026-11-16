@@ -27,8 +27,7 @@ dotnet add package Fuookami.Ospf.Starters.GanttNetworkScheduling
 
 ### 注意
 
-基线 Kotlin 里这一层是 `gantt-scheduling-domain-network-context` 一个 72 行的类。
-本包把它单独成包，是因为 `Framework.NetworkScheduling` **本来就引用**
+桥接单独成包，是因为 `Framework.NetworkScheduling` **本来就引用**
 `Framework.GanttScheduling`，把桥接塞进 `Framework.GanttScheduling` 会形成循环引用。
 
 ---
@@ -62,7 +61,5 @@ and joint vehicle routing and rostering.
 
 ### Note
 
-In the Kotlin baseline this layer is a single 72-line class inside
-`gantt-scheduling-domain-network-context`. It is its own package here because
-`Framework.NetworkScheduling` **already references** `Framework.GanttScheduling`, so putting the bridge on
-`Framework.GanttScheduling` would close a reference cycle.
+The bridge is its own package because `Framework.NetworkScheduling` **already references**
+`Framework.GanttScheduling`, so putting it on `Framework.GanttScheduling` would close a reference cycle.

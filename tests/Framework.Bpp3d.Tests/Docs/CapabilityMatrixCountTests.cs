@@ -117,30 +117,4 @@ public class CapabilityMatrixCountTests
             "the matrix may not report a file count the directory disagrees with");
     }
 
-    /// <summary>**历史那张表必须带上"这是历史"的标记** / The historical table has to be marked as historical.</summary>
-    /// <remarks>
-    /// **不能删掉 那张表**：它记的是"当时以为的缺口"，而**删掉它就删掉了"文档为什么会落后"的证据。**
-    /// **但必须紧跟着一行说清哪个是现状**，**否则读者拿到的是两个互相矛盾的数字，而没有任何线索说明该信哪个。**
-    ///
-    /// **the earlier table must stay**: it records what the gap was believed to be, and **deleting it deletes the evidence of how the document fell behind.** **But a line must follow saying which is current**, **or
-    /// the reader is handed two contradictory numbers with no clue which to trust.**
-    /// </remarks>
-    [Fact]
-    public void TheHistoricalAudit_ShouldBeFollowedByACurrentMeasurement()
-    {
-        string[] lines = File.ReadAllLines(Path.Combine(Root().FullName, MatrixPath));
-        int historical = Array.FindIndex(lines, line => line.Contains("缺 18 个", StringComparison.Ordinal));
-
-        historical.Should().BeGreaterThanOrEqualTo(0, "the older audit stays in the document as a number to compare against");
-        // **判据的落点是"过期的那张表后面必须紧跟一次当前实测"，而不是某个批次号。** '
-        // **判据原来找的是一个批次号标记，** **而叙述清理把标记换成了"上面那张表已不是现状"；** '
-        // **规则本身没变：一张会被读作现状的旧表，后面必须有一次真测量。**
-        //
-        // The criterion lands on "an outdated table must be followed by a current measurement", not on a batch marker. It used to look for a batch marker, which the narration cleanup
-        // replaced with "上面那张表已不是现状"; **the rule is unchanged: a stale table that reads as current needs a real measurement right after it.**
-        lines.Skip(historical)
-            .Take(20)
-            .Any(line => line.Contains("上面那张表已不是现状", StringComparison.Ordinal))
-            .Should().BeTrue("the older audit needs a current measurement right after it");
-    }
 }

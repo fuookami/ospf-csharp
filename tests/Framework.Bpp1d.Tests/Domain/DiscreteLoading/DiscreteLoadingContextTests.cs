@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **离散装载的注册与取解** / Registration and solution extraction.
 /// </summary>
 /// <remarks>
-/// 对应基线 `DiscreteLoadingContext.register`（前半段）与 `extractSolution`。四条拒绝条件：
+/// 对应 `DiscreteLoadingContext.register`（前半段）与 `extractSolution`。四条拒绝条件：
 ///
 /// | 条件 | 若放过 | 后果 |
 /// | --- | --- | --- |
@@ -293,7 +293,7 @@ public class DiscreteLoadingContextTests {
     /// <param name="model">元模型 / The meta model.</param>
     /// <param name="context">上下文 / The context.</param>
     /// <remarks>
-    /// **必须先置零，再用具体用例覆盖。** 基线要求**每一个**分配/占位/布局变量都有值——
+    /// **必须先置零，再用具体用例覆盖。** 取解要求**每一个**分配/占位/布局变量都有值——
     /// 不置零的话，没赋值的变量会让取解以 `DataNotFound` 失败，**于是"非二元值被拒"那条判据会因为
     /// 错误的原因变绿**：它是失败了，但失败在"缺值"而不是"非二元"。
     /// 这是"判据通过但没证明要证明的事"的又一例。

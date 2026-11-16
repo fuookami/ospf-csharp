@@ -49,7 +49,7 @@
 绊线 `SymbolicParsingGapTests` 的方向是反的：**缺口还是缺口时它绿，补上了它红**——
 **红了才是提醒"这里那句缺口该改了"。**
 
-**Notation: a missing file name is a lead, not evidence.** Differencing the baseline's file names against this repo's sources reports many "missing" entries that are simply renamed
+**Notation: a missing file name is a lead, not evidence.** Differencing two file-name sets reports many "missing" entries that are simply renamed
 elsewhere, and it also misses whole missing layers. **The decision therefore takes three levels: file-name match (a lead), whether the word appears anywhere in this repo's sources (a
 stronger lead), and whether the capability has an implementation and criteria (the only evidence).** The `SymbolicParsingGapTests` tripwire runs the other way round: it is green while the
 gap exists and red once it is closed, so red is the reminder that this section needs updating.
@@ -107,7 +107,7 @@ and then hits the wall while writing a constraint with a `Sin` in it.
 
 **checked section three row by row.** The SCIP row claimed "no real native solving was measured" — **false**: the gate runs `Scip.Tests` with **149 passing**, covering duals, CP,
 Benders reports, IIS and a cross-language elastic parity test. The Mosek / MindOpt / Hexaly rows left the remark **empty** while all three carry real code (1388 / 3009 / 2619
-lines) and are blocked on a licence or SDK, each with a measured error string. And Gurobi 11 is **four classes delegating to Gurobi**, not a copy of the baseline's 22 files.
+lines) and are blocked on a licence or SDK, each with a measured error string. And Gurobi 11 is **four classes delegating to Gurobi**, not a separate copy.
 **An empty remark is harder to catch than a wrong one**: a wrong one gets checked — that is how and found theirs — **while an empty one reads as "nothing to say"**, and these
 three rows each had something measured to say.
 
@@ -331,7 +331,7 @@ written. **Writing the former up as the latter makes the work look far bigger th
 `--check` 现在打 `short=1 empty_types=0`，**行尾阈值只管前者**——它管的是长度告警，不是能力缺口。
 
 **correction**: this row used to say **one** shell. read the file: it is `public enum FlightPhase { ZeroFuel, TakeOff, Landing }` — **three members, none missing,
-compiles and is referenced**. It is **not a shell but an enum added here** (the baseline has no counterpart). The word conflated two cases: complete type with no baseline
+compiles and is referenced**. It is **not a shell but an enum added here** (no counterpart elsewhere). The word conflated two cases: complete type with no counterpart
 original = **an addition**; a type body with no members = **a shell**. `ThereShouldBeNoEmptyTypeBodies` pins the latter and `TheFlightPhaseEnum_ShouldKeepItsMembers` the
 three members of the former.
 
@@ -491,9 +491,9 @@ accounts disagree, and the next reader trusts the more conservative one and **re
 
 **除此之外没有任何跨语言互通或性能结论。** 基准夹具只证明"夹具被覆盖"，不证明性能。
 
-**measured how strong each of the three pieces of evidence is** and pinned the claim that the fixtures come from the baseline. Before that claim was
+**measured how strong each of the three pieces of evidence is** and pinned the claim that the fixtures are the recorded ones. Before that claim was
 **unguarded**: one edited space would void the cross-language evidence while every decoding criterion stayed green, because they test "this file decodes", **not "this file
-came from the baseline"**. Four SHA-256 values now pin it. **Apart from these three there is no cross-language interoperation or performance conclusion** — the
+is the recorded one"**. Four SHA-256 values now pin it. **Apart from these three there is no cross-language interoperation or performance conclusion** — the
 benchmark fixtures only prove the fixtures are covered, not performance.
 
 ## 八、外部未验收项（**单列，不计入上表定级**）
@@ -588,7 +588,7 @@ conservatism but **assuming a closed door is locked without trying the handle**:
 
 **pins down what item 3 really is.** It used to say only "no `PWL` in `PackingRendererAdapter`, the radius result never reaches rendering" — **a symptom, not the
 size of the gap**. Measured: the piecewise **symbols** exist here and Demo2 really uses them; the **function expansion layer** (`FunctionExpansion.kt`, **576 lines**)
-is **entirely absent** — `Core/Solver/Function/` holds only a capability declaration — and the plugins have no native writes (Copt 22, Cplex 6 in the baseline), while
+is **entirely absent** — `Core/Solver/Function/` holds only a capability declaration — and the plugins have no native writes (22 for Copt, 6 for Cplex), while
 Gurobi has only **detection**. **"Detection not ported" conflated three things**, and detection is the easiest layer and is already here. A vague "not ported" lets the
 next person believe adding reflection is enough — **which is exactly the layer that is not missing.**
 
@@ -653,189 +653,36 @@ prove "explicitly unavailable without an SDK", and Lingo/OptVerse have no gate a
 confused them.** It cannot be completed here because what is missing is **external licences and SDKs, not code** — and a fake backend verifies nothing, which is
 exactly the defect class recorded. So it stays in section eight, **never marked ✅**.
 
-### 偏差 **`core.analysis` 在文档里只出现过一次，而那一次说的是"criticality profile"**
+### 偏差 **`Core/Analysis` 提供什么、不提供什么**
 
-数了两侧：
-
-| 侧 | 文件数 | 说明 |
-| --- | --- | --- |
-| `core/analysis/` | **19** | `ActivityEvidence`、`ConflictAnalyzer`、`ConstraintActivityAnalyzer`、`TargetFeasibilityAnalyzer`、`FixedIntegerLpSensitivity`… |
-| 插件分析器 | **2** | `GurobiCriticalConstraintAnalysis.kt`、`ScipCriticalConstraintAnalysis.kt` |
-| C# `Core/Analysis/` | **3** | `AnalysisStatus`、`CriticalityProfile`、`ObjectiveTarget` |
-| C# 插件分析器 | **2** | **Gurobi 的 RHS 区间已实现**（主求解里 `Presolve = 0` + `Method = 1` 读 `SARHSLow`／`SARHSUp`，按行序配对，`±inf`／`NaN`／哨兵折算成无边），**真跑判据 `GurobiSensitivityRangeIntegrationTest` 断言区间夹住 RHS**；**扰动已两端接入**（`GurobiPerturbationBackend` 走 `MipBacked` 套线性后端，`ScipPerturbationBackend` 给原生 CP 求解器；判据 `GurobiPerturbationIntegrationTest` 真跑并断言观测列表非空）；**SCIP 的区间仍为 0，且已写成公开常量。** | **框架侧 8 个文件全在**：`CriticalConstraintAnalysisOptions`／`…Report`／`…ReportBuilder`／`…FullReport`／`CriticalAnalysisReports`／`ConstraintPerturbationPipeline`／`…Report`／`…Support`，能力枚举有 `FixedIntegerLpSensitivity`，报告结构有 `FixedIntegerLpSensitivityReport` 字段。**缺的是后端那 6 个公开函数**：`GurobiCriticalConstraintAnalysis.kt`（3 个）与`ScipCriticalConstraintAnalysis.kt`（3 个）——固定整数 LP 灵敏度采集、扰动后端、以及把两者编排成 pipeline 的入口。**它们全部要真实求解器的对偶值或边界重解，所以缺它们等于"这套框架目前没有任何后端接得上"。**判据：`CriticalConstraintBackendGapTests`。** |
-
-**缺 18 个，其中一个插件分析器都没有。**
-**上面那张表已不是现状。当前实测：**
-
-| 侧 | 文件数 | 说明 |
-| --- | --- | --- |
-| `core/analysis/` | **19** | 由 `scripts/scan-kotlin-baseline.py` 从固定提交 `12fdb587` 的 `git ls-tree` 现算，不写死 |
-| C# `src/Core/Analysis/` | **53**（含 `LinearSolverFixedIntegerLpSolver`） | 文件名多于，**因为 Kotlin 的 `object`/`companion object` 成员在 C# 里落成独立静态类** |
-| 名字未解析数 | **0** | 门禁第一步每批都跑，四个维度（函数/类/枚举/属性）全部解析 |
-
-**"缺 18 个"这句话现在是假的**，而且它是那种**读起来像个已交代的欠账**的假：
-**没有人会去核实一个写着具体数字的缺口，因为数字让它看起来很核实过了。**
-
-**The table above is a measurement, not the current state.** Current: the baseline count is derived at gate time from `git ls-tree` of the pinned commit rather than hardcoded, C# holds 52 files (**more than the baseline, because Kotlin `object`/`companion object` members land as separate static classes in C#**), and the gate's first step reports zero unresolved names across four dimensions.
-**"18 missing" is now false, and false in the way that reads as an accounted debt** — **nobody checks a gap that carries a specific number, because the number makes it look already checked.**
-
-**这个缺口此前没有任何一行记录。** 状态文档里 `core.analysis` 只在一个长句子里出现过一次，那句列出的是
-"criticality profile"——**恰好是三个已经搬过来的类型之一。** 换句话说：文档点名的那部分在，
-**没被点名的那 18 个不在，而文档没说。**
-
-**为什么这条值得单列**：它不是"某个模块差一点"，而是**一个整块能力在盘点里隐形了**。
-撤掉的那两条假缺口是"点了名但不存在"；这一条正相反——**存在，但没点名**。
-两种都会让工作量判断失真，方向相反而已。
-
-**为什么只记录不补**：18 个文件里 `ConflictAnalyzer`/`ConstraintActivityAnalyzer`/`TargetFeasibilityAnalyzer`
-都依赖各求解器的原生证据（IIS、活动约束、扰动重解），**而这类证据只有真实后端给得出**。
-把它们先写成不碰后端的空跑版本，正是本仓反复拒绝的那种"看起来有了"。
-
-**补了不依赖原生后端的三个**：`ActivityStatus`（6 个成员，顺序）、`ActivityEvidence`（13 个字段，**浮点值与 `Int64` 精确字符串并存**）、`DiagnosticSource`（6 种来源 + `AsInfeasibilityMember` 投影）。
-C# 的 `Core/Analysis/` 因此由 **3 个增至 6 个**，缺口由 18 收窄到 **15**。
-
-**为什么只做这三个**：剩下 15 个里 `ConflictAnalyzer`/`ConstraintActivityAnalyzer`/`TargetFeasibilityAnalyzer` 等
-都要 IIS、活动约束、扰动重解这类**只有真实后端给得出**的证据。**先把不依赖后端的做完，是唯一不需要假装的一步。**
-
-**又补了 `ConstraintActivityReport`**：`ConstraintActivity` / `ActivityGroupSummary` / 报告本体。
-它只依赖 那三个类型，**同样不需要原生后端**。`Core/Analysis/` 因此由 **6 个增至 7 个**，缺口 **15 → 14**。
-
-**一条判据自己的教训**：第一次变异把查找改成"匹配 `null`"，**判据没红**——因为查找走的是已经过滤过的
-`ConstraintActivities`，那个分支永远走不到。改成让它走 `Activities`（未过滤），**红了**。
-**"变异没咬住"有两种可能：判据太弱，或者变异点根本不可达。** 后者更危险，因为它看起来像判据是好的。
-
-**又补了 `CapabilityMatrix`**：`AnalysisCapability`（13 项）、`CapabilitySupport`（3 档）、
-矩阵本体与 `From(SolverCapabilities)` 构造、`UnsupportedDeclaredCpFeatures` 判定。`Core/Analysis/` **7 → 8**，缺口 **14 → 13**。
-
-**这一行钉的是推断链**：一个操作能不能用取决于它的上游能不能用——`AdaptivePerturbation` 跟着 `RhsPerturbation`、
-`Mus` 跟着 `Conflict`。**链上错一步，上层就会选一条不存在的路径。**
-
-**一处刻意的保守**（原本就写明了）：`FallbackSatisfactionOnly` 只在后端**声明了 CP 满足路径**时才成立。
-从任意模型类型推导，会让只支持线性/MIP 的后端**声称一个它兑现不了的回退**。
-
-**补了 `FixedIntegerLpSensitivity` 的协议半边**：`LocalSensitivityScope`、`SensitivityRange`、
-`LocalConstraintSensitivity`、`FixedIntegerLpSolveResult`、`FixedIntegerLpSensitivityOptions`、
-`FixedIntegerLpRequest`、`FixedIntegerLpSensitivityReport`。`Core/Analysis/` **8 → 9**，缺口 **13 → 12**。
-
-**只搬了不碰后端的那一半**：求解实现（`solveTriad`、`solveDual`、`LoweredFixedIntegerLpSolver`）**要真实 LP 后端**，
-没有搬，也没有写一个空跑的 `FixedIntegerLpBackend` 实现。**接口本身没搬**——没有实现者的接口只是装饰。
-
-**这一层的职责是"让不合法的值进不去"**：范围下界不得大于上界、端点必须有限、`NaN` 阈值要被拒、
-目标值与对偶值必须有限。**只查有限性会让 `[5, 3]` 通过，而它覆盖的区间是空的。**
-
-**补了 `DiagnosticActivation`**：`ActivationState`、`DiagnosticActivation`、
-`ConflictExtractionTier`（含三档选择）与 `DiagnosticActivationSet`。`Core/Analysis/` **9 → 10**，缺口 **12 → 11**。
-
-**这一行钉的是证据边界**：哪些来源算"在场"、后端返回的成员里哪些能穿过这层。
-**回映必须以激活集合为唯一来源**——反过来的写法（遍历后端成员再反查）会把**求解器自造的辅助元素**放进公开报告。
-
-**三档选择的硬要求**：`Conditional` **不许冒充原生**。只有 `IsNative` 或显式 `Supported` 才进前两级；
-否则一个"可能支持"的声明会让上层走一条**实际没实现的**路径。
-
-**补了 `CriticalConstraintAnalysisReport` 的漏斗块**（里的前 340 行左右）：`CandidateTier`、
-`CandidateFunnelConfig`、`ConstraintCandidate`、`CandidateFunnelRanking` 与 `classifyCandidate`/`buildCandidateFunnel`。
-`Core/Analysis/` **10 → 11**，缺口 **11 → 10**。
-
-**只搬了漏斗**：另外两块要 `ConstraintPerturbationReport` 与 `ConflictExplanation`，
-这两个都住在**带后端求解**的文件里。**没搬的部分没有空跑版本。**
-
-**判据钉的是"没有证据就不许分层"**：active 但没有对偶 → `Unclassified`（**不是 TierB**），
-`Violated`/`Unknown` → `Unclassified`。**把"未知"读成"不重要"，会让一份没有证据的报告给出结论。**
-
-**补了 `ConstraintActivityAnalyzer` 的核心**：整数比较的精确松弛、变量两侧边界、
-稀疏值域、`AllDifferent` 的自然 margin、组汇总。`Core/Analysis/` **11 → 12**，缺口 **10 → 9**。
-
-**只搬纯计算入口**：三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
-那一层还没搬，**没搬的重载没有空跑版本**。
-
-**判据钉的是"精确值分类、标量值展示"这条分工**：分类用 `BigInteger` 精确算，标量只用于展示。
-`9007199254740993` 走一趟 `double` 会变成 `9007199254740992`——**作为约束边界那是两个不同的模型。**
-
-**`Unknown` 与 `Inactive` 是两件事**：前者是"没证据"，后者是"有证据且不活跃"。
-合并会让一份没有解的报告看起来像"模型很松"。
-
-**补了 `CorrectionRecommendation` 的前 325 行**：`RelaxabilityPolicy`、`CorrectionCandidate`、
-`RelaxationCost`、`CorrectionSet`、`AlternativeImprovementPlan` 与四个构造器。`Core/Analysis/` **12 → 13**，缺口 **9 → 8**。
-
-**尾部约 110 行没搬**：它们要 `ConflictExplanation`，而它住在**带后端求解**的 `ConflictAnalyzer.kt` 里。
-**没搬的那部分没有空跑版本。**
-
-**判据钉的是两件"说了就不能反悔"的事**：
-
-| 承诺 | 边界 |
+| 侧 | 文件数 |
 | --- | --- |
-| "这是最小修正集" | **策略一旦截断输入，最小性必须降级**——删除验证只覆盖截断前的全集 |
-| "按成本排序" | **总成本必须与成员一致**，否则排序给出成员解释不了的顺序 |
+| C# `src/Core/Analysis/` | **53** |
 
-**还有一条容易漏的**：权重与松弛各自有限、乘积溢出时成本是 `Infinity`，按成本排序会**把它排到最后**——
-**看起来像"最便宜的方案"。**
+**提供**（`src/Core/Analysis/`，**53** 个文件）：分析状态与能力矩阵（`AnalysisStatus`、`CapabilityMatrix`、
+`CriticalityProfile`、`ObjectiveTarget`／`ObjectiveTargetBounds`）、约束活动（`ConstraintActivityAnalyzer`、
+`ConstraintActivityReport`、`ActivityStatus`、`ActivityEvidence`）、冲突与最小阻塞集（`ConflictEvidenceSupport`、
+`MinimalBlockingSet`、`NativeConflictSeed`、`ConflictExplanation`、`ConflictDeletionCheck`）、扰动（
+`ConstraintPerturbationPipeline`、`ConstraintPerturbationReport`）、临界约束分析（`CriticalConstraintAnalysisSession`、
+`CriticalConstraintAnalysisReport`）、目标可达性（`TargetFeasibilityAnalyzer`、`TargetFeasibilityReport`、
+`TargetOutputStatus`）、定整数灵敏度（`FixedIntegerLpSensitivity`、`FixedIntegerLpGates`、
+`LinearSolverFixedIntegerLpSolver`）、修正建议（`CorrectionRecommendation`、`CorrectionProjection`）与
+定义域处理（`EffectiveDomain`）。
 
-**ported the first 325 lines of `CorrectionRecommendation`**: the policy, the candidate, the cost, the correction set, the improvement plan and the four builders.
-`Core/Analysis/` goes from **12 to 13** and the gap from 9 to **8**. **The last ~110 lines did not come over**: they need `ConflictExplanation`, which lives inside the
-**backend-solving** `ConflictAnalyzer.kt`, and **nothing was stubbed in their place.** The criteria pin **two claims that cannot be taken back**: **"this is a minimal correction
-set"** must be downgraded **the moment the policy truncates the input** (deletion verification only covered the untruncated universe), and **"ranked by cost"** requires **the total
-to agree with the members**. **One more easy-to-miss case**: when each factor is finite but the product overflows, the cost is `Infinity`, and a cost ranking puts it **last** —
-**which reads as "the cheapest option".**
-**ported the core of `ConstraintActivityAnalyzer`** (566 baseline lines): exact slack for integer comparisons, both variable bounds, sparse domains, the natural
-`AllDifferent` margin and the group summaries. `Core/Analysis/` goes from **11 to 12** and the gap from 10 to **9**. **Only the pure entry point came over**: the baseline's three
-`analyze(session, …)` overloads need `CriticalConstraintAnalysisSession` (cache and lifecycle), which is not ported yet, and **the missing overloads were not stubbed**.
-**The criteria pin "classify exactly, display a scalar"**: classification uses `BigInteger`, the scalar is for display. `9007199254740993` through a `double` becomes
-`9007199254740992` — **as a constraint boundary those are two different models.** **`Unknown` and `Inactive` are different things**: no evidence versus evidence of inactivity,
-and merging them makes a report with no solution look like "the model is loose".
-**ported the funnel block of `CriticalConstraintAnalysisReport`** — roughly the first 340 of its 872 baseline lines. `Core/Analysis/` goes from **10 to 11** and the gap from
-11 to **10**. **Only the funnel came over**: the other two blocks need `ConstraintPerturbationReport` and `ConflictExplanation`, both of which live inside files that **do solve on a
-backend**, and **nothing was stubbed in their place**. **The criteria pin "no evidence, no tier"**: active without a dual is `Unclassified` (**not TierB**), and `Violated`/`Unknown`
-stay `Unclassified`. **Reading "unknown" as "unimportant" lets a report with no evidence produce a verdict.**
-**added `DiagnosticActivation` (316 baseline lines)**: the activation state, the activation record, `ConflictExtractionTier` with its three-tier selection, and the activation
-set. `Core/Analysis/` goes from **9 to 10** and the gap from 12 to **11**. **What the criteria pin is the evidence boundary**: which sources count as present, and which backend
-members may cross it. **Remapping has to be driven by the activation set alone** — walking the backend members and looking them up lets **a solver-made auxiliary element** into a
-public report. **The three-tier selection has a hard requirement**: `Conditional` **never masquerades as native**; only `IsNative` or an explicit `Supported` reaches the first two
-tiers, or a "might support" declaration sends the layer above down **a path that is not implemented.**
-**ported the protocol half of `FixedIntegerLpSensitivity`**: the scope, the range, the per-constraint sensitivity, the solve result, the options, the request and the
-report. `Core/Analysis/` goes from **8 to 9** and the gap from 13 to **12**. **Only the half that touches no backend came over**: the baseline's solving side (`solveTriad`,
-`solveDual`, `LoweredFixedIntegerLpSolver`) **needs a real LP solver**, so it was neither ported nor stubbed — **and the hook interface itself was not ported either, because an
-interface with no implementer is decoration.** **This layer's job is keeping invalid values out**: the lower end must not exceed the upper, endpoints must be finite, a `NaN`
-threshold is refused, objectives and duals must be finite. **Checking finiteness alone lets `[5, 3]` through, and the interval it covers is empty.**
-**added `CapabilityMatrix` (297 baseline lines)**: `AnalysisCapability` (thirteen), `CapabilitySupport` (three levels), the matrix with its `From(SolverCapabilities)`
-constructor and the `UnsupportedDeclaredCpFeatures` verdict. `Core/Analysis/` goes from **7 to 8** and the gap from 14 to **13**. **What the criteria pin is the inference chain**:
-whether an operation is usable depends on its upstream — `AdaptivePerturbation` follows `RhsPerturbation`, `Mus` follows `Conflict` — and **one wrong link makes the layer above
-pick a path that does not exist.** **One deliberate conservatism the baseline already spelled out**: `FallbackSatisfactionOnly` holds only when the backend **declares a CP
-satisfaction path**; deriving it from any model type would let a linear/MIP-only backend **advertise a fallback it cannot deliver.**
-**added `ConstraintActivityReport` (126 baseline lines)** — `ConstraintActivity`, `ActivityGroupSummary` and the report itself. It depends only on 's three types and
-**equally needs no native backend**, so `Core/Analysis/` goes from **6 to 7** and the gap from 15 to **14**. **A lesson from the criterion itself**: the first mutation made the
-lookup "match `null`" and **stayed green**, because the lookup walks the already-filtered `ConstraintActivities` and that branch is unreachable. Routing it through the unfiltered
-`Activities` **turned it red**. **"The mutation did not bite" has two causes: the criterion is weak, or the mutation point is unreachable** — and the latter is more dangerous,
-because it looks like the criterion works.
-**added the three that need no native backend**: `ActivityStatus` (six members in the baseline order), `ActivityEvidence` (thirteen fields, **the float and the exact
-`Int64` spelling side by side**) and `DiagnosticSource` (six source kinds plus the `AsInfeasibilityMember` projection). `Core/Analysis/` therefore goes from **3 to 6**, and the
-gap narrows from 18 to **15**. **Why only these three**: the remaining fifteen depend on IIS, active constraints or perturbation re-solving — evidence **only a real backend
-produces**. **Doing the backend-free ones first is the only step that needs no pretending.**
-**counted both sides.** The baseline has **19** files under `core/analysis/` plus **2** plugin analyzers; C# has **3** under `Core/Analysis/` and **0** plugin analyzers
-— **18 missing, not one plugin analyzer among the present ones.** The gap had **no row anywhere**: `core.analysis` appeared once in the status document inside a long
-sentence whose list named "criticality profile" — **one of the three types that were ported**. In other words the named part is present, **the unnamed 18 are not, and the
-document did not say so.** retracted two gaps that were named but did not exist; this is the opposite shape — **it exists and was never named**, and both distort the
-judgement of the work. ** records it and does not port it**: the three pattern analyzers depend on native evidence (IIS, active constraints, perturbation
-re-solving) that only a real backend produces, and a backend-free stub for them is exactly the "it looks like it is there" this repository keeps refusing.
+**不提供**：**模式类分析器（IIS、活动约束、扰动重解）需要真实后端产出的原生证据**。
+把它们写成不碰后端的空跑版本，正是本仓反复拒绝的那种"看起来有了"——**报出一个分析结果，
+而那个结果不是任何求解器算出来的。** 需要这条能力时，前置条件是有一个能产出原生证据的后端，
+而不是先补一个占位实现。
 
-#### 四、一个缺口标记的两种过期方式
+**一条判据的教训**：缺口标记的通病是**钉住一个现象，却以为钉住了整条推理**。
+`QuadraticSolver_ShouldExposeNoDiagnosticAnalyzersByDefault` 的因果链表有四行，原先只钉住第 4 行
+（"二次 `DiagnosticAnalyzers` 返回空"），而第 3 行（"没有二次 legacy IIS 实现"）早已不成立——
+判据一句话都没说。现在的写法要求**那个分析器真的是原生 IIS**，并且**同时**钉"实现存在"与"调用方不存在"：
+只钉前者会被读成"这条路通了"。
 
-留下一个判据 `QuadraticSolver_ShouldExposeNoDiagnosticAnalyzersByDefault`，注释写着
-"若将来实现二次 IIS，判据会红，提醒同步更新文档"。**它确实红了。**
+**一条自我作废的判据**：`QuadraticSolver_ShouldExposeNoDiagnosticAnalyzersByDefault` 的注释写明
+"若将来实现二次 IIS，判据会红，提醒同步更新文档"。**它后来确实红了**——那正是它设计要发生的事。
 
-但它那个文件的因果链表有四行，**只有第 4 行被钉住**：
-
-| 行 | 的说法 | 现在 |
-| --- | --- | --- |
-| 2 | `Elastic()` 只有测试调用 | **仍成立**（调用它的是 `QuadraticLegacyIisCompute`，而后者没有 src 调用方） |
-| 3 | C# 没有二次 legacy IIS | **不成立**：`QuadraticLegacyIisCompute.cs` 已存在，三个入口 |
-| 4 | 二次 `DiagnosticAnalyzers` 返回空 | **不成立**：起返回原生 IIS 分析器 |
-
-**第 3 行早就变了，判据一句话都没说。** 这是缺口标记的通病——**钉住一个现象，却以为钉住了整条推理。**
-
-改写时保留了原有的锋芒：不只断言"列表非空"，还要求**那个分析器真的是原生 IIS**；
-另一条同时钉"实现存在"和"调用方不存在"——**只钉前者会读成"这条路通了"**。
-
-变异（给 `QuadraticLegacyIisCompute` 加一个 src 引用）→ 1 红。
 
 ### **二值性不是数值边界**
 
@@ -2041,7 +1888,7 @@ collectExpressionVariables(snapshot.expressions.map { it.expression }, sourceVar
 > `buildModel` 从表达式 AST 里**找回**原来的 `IVariableItem` 对象。所以"只能猜类型"这个结论是错的。
 > 细节见附录十一。**本附录保留原文以便对照，结论以附录十一为准。**
 >
-> **correction: this appendix had the causality backwards.** The type name indeed has no parser, but **the baseline never takes that path** — `buildModel` *recovers* the
+> **correction: this appendix had the causality backwards.** The type name indeed has no parser, but **that path is never taken** — `buildModel` *recovers* the
 > original `IVariableItem` objects from the expression AST. The conclusion "it can only guess the type" was wrong. See appendix eleven; this text is kept for comparison.
 
 
@@ -2454,7 +2301,7 @@ nothing while the report reads "analysis complete, nothing found"**; **a growth 
 an improvement biases the whole report toward "perturbation works".** **One alias is easy to get wrong**: `RemovalEffective` only answers for a removal — returning `false` for an
 RHS perturbation **reads as "the perturbation did nothing" when the real meaning is "this field does not apply".**
 
-**ported `TargetFeasibilityReport` and not the analyzer**: baseline line 673 is a real `solver.solve(model, options)` and the `ConstraintProgrammingSnapshotBuilder` before it
+**`TargetFeasibilityReport` exists without the analyzer**: the analyzer needs a real `solver.solve(model, options)` plus the `ConstraintProgrammingSnapshotBuilder` before it
 rebuilds a mutable model. **That needs a real CP backend, so it was neither ported nor stubbed.** `Core/Analysis/` goes from **14 to 15** and the gap from 7 to **6**. **The report
 pins that the four statuses may not impersonate one another**, and **`Reachable` is not the same as proven** — a solution found within a time limit only shows the target
 **may** be reachable.

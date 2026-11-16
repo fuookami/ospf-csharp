@@ -203,7 +203,7 @@ public class NativePiecewiseReportTests
     ///
     /// **所以查找必然命中，`no valid segment` 是死代码。**
     ///
-    /// **基线保留了它，本仓库沿用。判据不改这一点，而是<b>把不可达本身记下来</b>，
+    /// **这里保留了它。判据不改这一点，而是<b>把不可达本身记下来</b>，
     /// 并抽样验证这个结论——一个没有判据的"死代码"下次读代码时会被当成"还有情形没处理"。**
     ///
     /// **This is the direction's seventh "untestable" finding, and this one can be <b>proved</b>, not merely "not

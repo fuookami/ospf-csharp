@@ -82,7 +82,7 @@ public sealed class MinLowPayload
     /// <remarks>
     /// 四条分支照做：只有一点 → 那点；不高于首点 → 首点；不低于末点 → 末点；否则在相邻两点间**线性插值**。
     ///
-    /// 注意这与 的 `MaxLoadWeightLimit` 是**相反的**：那里是阶跃（段内恒定），这里是插值（段内线性）。两者都是做法，差异来自数据本身——
+    /// 注意这与 `MaxLoadWeightLimit` 是**相反的**：那里是阶跃（段内恒定），这里是插值（段内线性）。两者都是做法，差异来自数据本身——
     /// 最大装载重量是按图表给出的阶梯规格，最小低载荷是一条连续的边界曲线。**不要因为"看着不一致"就把其中一个改成另一个的样子。**
     ///
     /// Four branches as in the code: one point → that point; not above the first → the first; not below the last → the last; otherwise **linear interpolation** between

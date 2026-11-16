@@ -120,14 +120,14 @@ public sealed record GeneratedMilpSampleMetadata<V>(
 /// 离线学习观测：不携带生产求解控制指令 / An offline learning observation, carrying no production solve controls.
 /// </summary>
 /// <remarks>
-/// **"不携带生产求解控制指令"这句话是基线写在类型上的约束，不是一个偶然的性质。**
+/// **"不携带生产求解控制指令"是写在类型上的约束，不是一个偶然的性质。**
 /// **它意味着这个类型只能拿来<b>看</b>，不能拿来<b>指挥</b>下一次求解——
 /// 而一旦它被读进配置，那条边界就没了。**
 ///
 /// **本仓没有任何地方消费它，所以这条约束现在是靠"没有消费者"成立的。
 /// 而在有消费者那一天，必须先回答"它能不能影响配置"这个问题。**
 ///
-/// **"Carrying no production solve controls" is a constraint the code states on the type, not an accident.** **It
+/// **"Carrying no production solve controls" is a constraint stated on the type, not an accident.** **It
 /// means the type may only be <b>observed</b>, never used to <b>drive</b> another solve — and the moment it is read into a
 /// configuration that boundary is gone.**
 ///
@@ -158,7 +158,7 @@ public sealed record OfflineSolveObservation<V>(
 /// 纯输入输出的批量实验运行器 / A pure input-output batch experiment runner.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BatchSolveExperimentRunner`。
+/// `BatchSolveExperimentRunner` 的对应实现。
 ///
 /// **两条确定性保证是这一块的全部价值，而它们都写在签名之外的约定里：**
 ///

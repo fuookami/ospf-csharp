@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 三套吨、两套盎司、两套加仑：名字只差一点，量差很多 / Three tons, two ounces, two gallons: close names, far values.
 /// </summary>
 /// <remarks>
-/// 补 Time(2) / Mass(12) / Volume(16) 共 30 个单位（基线 Time.kt / Mass.kt / Volume.kt）。
+/// 补 Time(2) / Mass(12) / Volume(16) 共 30 个单位。
 ///
 /// 这里的风险集中在"同名不同量"：
 /// 长吨 2240 磅 / 短吨 2000 磅 / 公吨 1000 千克；

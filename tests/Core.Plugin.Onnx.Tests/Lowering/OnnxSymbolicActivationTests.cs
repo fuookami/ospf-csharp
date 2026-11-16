@@ -13,13 +13,13 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 
 /// <summary>
-/// **分段近似：的六处行为** / The piecewise approximation and the six behaviours aligned with the code.
+/// **分段近似的行为** / The piecewise approximation and its behaviours.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation.approximated`。**的四处：** **超过 1e6 的界按"缺少有效范围"处理；'
+/// **四处行为：** **超过 1e6 的界按"缺少有效范围"处理；
 /// **`lower == upper` 直接塌缩成常数；断点均匀且在断点上<b>精确插值**（不是拟合）；分段数区间 `2..1024`、缺省 `8`。**
 ///
-/// Syncs `approximated`. **Four things follow the code: a bound beyond 1e6 counts as missing; lower == upper collapses to a constant; breakpoints are uniform with exact
+/// **Four behaviours: a bound beyond 1e6 counts as missing; lower == upper collapses to a constant; breakpoints are uniform with exact
 /// interpolation; and the segment range is 2..1024 with a default of 8.**
 /// </remarks>
 public class OnnxSymbolicActivationTests
@@ -39,9 +39,9 @@ public class OnnxSymbolicActivationTests
 
     /// <summary>**分段数超出 `2..1024` 被拒绝** / A segment count outside 2..1024 is refused.</summary>
     /// <remarks>
-    /// **与基线同一个区间、同一个缺省：** **缺省变成 32 会让"同一份模型在两边得到不同的近似"，** **而两边的答案都能求解——只是差在没人会对的第三位小数上。**
+    /// **区间与缺省都固定为 `2..1024` 与 `8`：** **换个缺省会让同一份模型得到不同的近似，而两种答案都能求解——只是差在没人会对的第三位小数上。**
     ///
-    /// **Same range and same default as the code: a default of 32 would let the same model be approximated differently on the two sides, and both answers solve — they just
+    /// **The range is `2..1024` and the default `8`: a different default would let the same model be approximated differently, and both answers solve — they just
     /// differ in a decimal place nobody checks.**
     /// </remarks>
     [Fact]

@@ -74,11 +74,11 @@ public sealed class Demo2BendersWiringTests
     /// **请求 Benders 但阈值没到 → 走 MILP 是正确行为，不是缺陷** / Asking for Benders below the threshold falls back to MILP by design.
     /// </summary>
     /// <remarks>
-    /// 这条与上面两条划清界限：**低于阈值回落是基线明写的**（`Benders requested but skipped: binary_variables=… &lt; threshold=…`），
-    /// 而"本路径没接线"是**移植缺口**。两种都要说清楚，但**不能混成一句**——否则读者分不清"我调阈值就能用"还是"这条路径根本不行"。
+    /// 这条与上面两条划清界限：**低于阈值回落是明写的**（`Benders requested but skipped: binary_variables=… &lt; threshold=…`），
+    /// 而"本路径没接线"是**接线缺口**。两种都要说清楚，但**不能混成一句**——否则读者分不清"我调阈值就能用"还是"这条路径根本不行"。
     ///
     /// This draws the line: **falling back below the threshold is its own behaviour** (with the `Benders requested but skipped` note), while "this
-    /// path has no wiring" is **a port gap.** Both must be stated, but **never as the same message** — otherwise the reader cannot tell "raising the threshold
+    /// path has no wiring" is **a wiring gap.** Both must be stated, but **never as the same message** — otherwise the reader cannot tell "raising the threshold
     /// helps" from "this path simply cannot do it."
     /// </remarks>
     [Fact]
@@ -159,14 +159,14 @@ public sealed class Demo2BendersWiringTests
     /// 而两个注册路径的符号是重叠的（`Payload` 两边都注册）。
     ///
     /// 这条判据钉住**分歧本身**，这样下次有人以为这只是接线时，判据会把这两句话摆在他面前。
-    /// 它不钉"哪个对"——对的是边，本仓这边是待改的。
+    /// 它不钉"哪个对"，只钉这份分歧本身。
     ///
-    /// The code at is `LinearBendersPartition.build(registration.model, registration.bendersStages)`: **one registered model
-    /// plus an explicit stage table**. The port's `LinearBendersPartition.BuildAsync(model, stages)` has the same shape. demo2 instead runs on **two models**, each
+    /// The partition is `LinearBendersPartition.build(registration.model, registration.bendersStages)`: **one registered model
+    /// plus an explicit stage table**. This repo's `LinearBendersPartition.BuildAsync(model, stages)` has the same shape. demo2 instead runs on **two models**, each
     /// registered and assembled separately, and the two cannot be joined directly — `BuildAsync` has no "give me two models" overload. So replacing demo2's path is
     /// not wiring, it is **merging the two models into one**, and the two registration paths overlap in their symbols (`Payload` is registered by both). This criterion
-    /// pins **the divergence itself**, so the next reader who assumes it is a wiring job gets both sentences in front of them. It does not decide which is right — the
-    /// baseline is right and this implementation is the one to change.
+    /// pins **the divergence itself**, so the next reader who assumes it is a wiring job gets both sentences in front of them. It does not decide which is right, only that the
+    /// divergence is visible.
     /// </remarks>
     [Fact]
     public void TheStructuralDivergence_ShouldStayVisible() {
@@ -183,11 +183,11 @@ public sealed class Demo2BendersWiringTests
                 directory.FullName, "src", "Example", "FrameworkDemo", "Demo2", "Application", "FullLoadApplication.cs");
             if (global::System.IO.File.Exists(candidate)) {
                 string code = StripComments(candidate);
-                // **同一个文件里有两条构建路径，之后分派走的是单模型那条**：`demo2_full_load_single` 是基线形状、也是现在的分派；
+                // **同一个文件里有两条构建路径，之后分派走的是单模型那条**：`demo2_full_load_single` 是**与框架形状一致的那条**、也是现在的分派；
                 // `demo2_full_load_master` / `_sub` 仍在（对照判据还用得上），但**不再被分派调用**。这里按**名字**数，而不是数前缀——
                 // 前缀计数在 当天就红了一次，红的原因是"多了一条正确的路径"。
                 //
-                // **Two construction paths live in one file, and since then dispatch takes the single-model one**: `demo2_full_load_single` is the code shape and what
+                // **Two construction paths live in one file, and since then dispatch takes the single-model one**: `demo2_full_load_single` is the single-model shape and what
                 // dispatch uses; `demo2_full_load_master` / `_sub` remain (the comparison criteria still need them) but **are no longer called by dispatch**. Counted **by
                 // name**, not by prefix — the prefix count went red the day landed, and it went red because **a correct path had been added**.
                 //

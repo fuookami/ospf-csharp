@@ -131,8 +131,6 @@ public interface IDeferredFunctionFallbackTarget
 /// **它与"读得有、写不出"是同一族、方向相反：** **那里缺的是一个实现，
 /// 这里是实现齐全而<b>没有入口</b>。** **后者的判据必须是"谁调用了它"，而不是"它对不对"。**
 ///
-/// **Aligned with its.**
-///
 /// **What is missing here is not a capability but <b>the wiring</b>.** **The driver, the
 /// transaction, the rollback and five materializers — and they were called only from tests, never from product
 /// code.**
@@ -207,7 +205,7 @@ public sealed class LinearMechanismFallbackTarget : IDeferredFunctionFallbackTar
 /// **延迟物化的入口判定** / The entry decision for deferred materialisation.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `materializeMechanismFunctionFallbacks` 的<b>第一个守卫</b>。
+/// 这里是延迟物化的<b>第一个守卫</b>。
 ///
 /// **个函数有四段，这里只做第一段，理由写明：**
 ///
@@ -341,7 +339,7 @@ public static class DeferredFunctionMaterializationGate
 /// **延迟函数物化的整体入口** / The whole entry point for deferred-function materialisation.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `materializeMechanismFunctionFallbacks` 剩余的两段（第三段的逐结构校验、第四段的复制并物化）。
+/// 这里是剩余的两段（第三段的逐结构校验、第四段的复制并物化）。
 ///
 /// **四段现在全在，而且它们在一个函数里：**
 ///
@@ -451,10 +449,10 @@ public static class DeferredFunctionMaterialization
             model,
             nativeFunctionKeys ?? new HashSet<VariableItemKey>());
         if (pending.Count == 0) {
-            // **没有待处理结构时返回<b>原模型</b>，不是副本：基线同样如此，
-            // 而理由是这样调用方可以用引用相等判断"有没有发生物化"。**
-            // **With nothing pending the <b>source</b> comes back, not a copy: the code does the same, and the reason is
-            // that a caller can then use reference equality to tell whether materialisation happened.**
+            // **没有待处理结构时返回<b>原模型</b>，不是副本，
+            // 这样调用方可以用引用相等判断"有没有发生物化"。**
+            // **With nothing pending the <b>source</b> comes back, not a copy, so
+            // a caller can use reference equality to tell whether materialisation happened.**
             return Results.Ok(model);
         }
 

@@ -145,11 +145,11 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// <param name="model">元模型 / Meta model</param>
     /// <returns>操作结果 / Operation result</returns>
     /// <remarks>
-    /// 这里只实现**没有任务时间**的那一支（基线自己的 `taskTime == null` 分支）：换型指示 = 两个分配列同时为 1，
+    /// 这里只实现**没有任务时间**的那一支（`taskTime == null` 分支）：换型指示 = 两个分配列同时为 1，
     /// 且 `task1` 计划上紧跟在 `task2` 之前。有任务时间的那一支要用 `frontOf` / `betweenIn` 两层 `IfFunction` / `AndFunction`
     /// 组合，属于独立一批的量——**所以它显式失败**，而不是悄悄退化成无时间分支（那会假设计划顺序就是真实顺序）。
     ///
- /// implements only the **no-task-time** branch (its own `taskTime == null` path): the indicator is "both assignment columns are 1 and `task1`
+ /// This implements only the **no-task-time** branch (`taskTime == null` path): the indicator is "both assignment columns are 1 and `task1`
     /// immediately precedes `task2` in the plan". The task-time branch needs `frontOf` / `betweenIn` built from two layers of `IfFunction` / `AndFunction` and is a batch of its
     /// own — **so it fails explicitly** instead of quietly degrading to the no-time branch (which would assume the planned order is the real order).
     /// </remarks>
@@ -460,7 +460,7 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// **一处越界**：`betweenIn` 是 3 维，但它的构造 lambda 读的是 `v[1] / v[2] / v[3]`（`v` 只有 0..2）。
     /// 语义（以及它自己的命名 `between_in_{task3}_{task1}_{task2}`）指向 `v[0]`，即"中间那个任务"，这里按**语义**实现并记录。
     ///
-    /// **A baseline out-of-range**: `betweenIn` is 3-dimensional but its lambda reads `v[1] / v[2] / v[3]` (with `v` holding only 0..2). Both the intent and its own
+    /// **An out-of-range access**: `betweenIn` is 3-dimensional, and reading `v[1] / v[2] / v[3]` (with `v` holding only 0..2) goes out of range. Both the intent and its own
     /// naming `between_in_{task3}_{task1}_{task2}` point at `v[0]`, the middle task, so this follows the **intent** and records the deviation.
     /// </remarks>
     private Try BuildBetweenIn(IAbstractLinearMetaModel<Flt64> linear) {

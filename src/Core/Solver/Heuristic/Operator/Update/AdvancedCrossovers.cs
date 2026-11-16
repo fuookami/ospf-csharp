@@ -1,5 +1,4 @@
 // 进阶交叉算子 / Advanced crossover operators.
-// 与固定 Kotlin （9530 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -85,10 +84,10 @@ public sealed record SimulatedBinaryCross(Flt64 DistributionIndex) : ICross {
 /// <remarks>
 /// **只产一个子代**，且 `parents[0]` 是目标向量、`parents[1]` 是基向量、`parents[2 % n]` 与 `parents[3 % n]` 是差分对。
 /// 父代不足两个时**原样返回全部父代**（不是空列表）；父代只有两个或三个时取模复用同一个个体，差分项退化为 0，
-/// 变异量随之消失——这是基线行为，不是缺陷，但意味着**少样本时差分交叉实际等于无操作**。
+/// 变异量随之消失——这是既定行为，不是缺陷，但意味着**少样本时差分交叉实际等于无操作**。
 /// **Exactly one child**, with `parents[0]` the target vector, `parents[1]` the base, and `parents[2 % n]` / `parents[3 % n]` the
 /// difference pair. With fewer than two parents **all parents are returned unchanged** (not an empty list); with two or three parents
-/// the modulo reuses the same individual and the difference term collapses to 0, so the mutation vanishes — baseline behaviour, not a
+/// the modulo reuses the same individual and the difference term collapses to 0, so the mutation vanishes — established behaviour, not a
 /// defect, but it means **differential crossover is effectively a no-op on small samples**.
 /// </remarks>
 /// <param name="DifferentialWeight">差分权重 / The differential weight.</param>
@@ -243,7 +242,7 @@ public sealed class OrderCross : ICross {
 /// when visited, so the next time the walk returns there `!assigned[index]` is false and the loop exits. The iteration count is thus
 /// naturally bounded by the solution length.
 /// **`guard &lt;= size` is its second line of defence and is redundant here**: loosening the bound to `size * 4` still passes
-/// the tests because `assigned` terminates the loop first. It is kept only for baseline fidelity; calling it "the thing that prevents
+/// the tests because `assigned` terminates the loop first. It is kept only as a second line of defence; calling it "the thing that prevents
 /// the infinite loop" would be inaccurate.
 /// **`firstIndices` 记录的是每个值在另一来源中的首次出现位置**（`putIfAbsent`）。用最后一次出现会让环的走向完全不同，
 /// 而子代仍是一个合法排列——错误只在收敛速度上体现。

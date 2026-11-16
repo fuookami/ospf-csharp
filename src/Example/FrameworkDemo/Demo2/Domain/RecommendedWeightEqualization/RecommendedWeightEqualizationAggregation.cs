@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡聚合 / The recommended-weight-equalisation aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：**六个上游部件 + 一个自建模型**（`PriorityAppointment`）。
+/// **六个上游部件 + 一个自建模型**（`PriorityAppointment`）。
 ///
 /// 三处必须沿用：
 ///

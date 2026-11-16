@@ -6,8 +6,8 @@ This demo wires the network-scheduling framework to a selectable Gurobi or SCIP 
 solver. It accepts Demo17 and Solomon-style instances, carries explicit time and node limits, and
 returns framework solve statuses with route-level timing, load, distance and cost details.
 
-Corresponds to the baseline `ospf-kotlin-example/.../framework_demo/demo5/`
-(`Application.kt`, `infrastructure/Solver.kt`, `infrastructure/adapter/*`).
+A demo that drives the framework through a solver factory: route-level timing, load, distance and
+cost reporting on top of the scheduling domain.
 
 ## Layout
 
@@ -23,9 +23,8 @@ Corresponds to the baseline `ospf-kotlin-example/.../framework_demo/demo5/`
 ## Solver selection
 
 `Demo5SolverFactory` enumerates the backends explicitly. An **unknown name fails and names itself**;
-the baseline's `when (...) { "scip" -> …; else -> Gurobi }` silently falls back to Gurobi, so a typo
-(`"gruobi"`) only surfaces later as an unrelated backend-unavailable failure. Names are
-case-insensitive.
+a catch-all `else` branch would silently fall back to Gurobi, leaving a typo (`"gruobi"`) to surface later
+as an unrelated backend-unavailable failure. Names are case-insensitive.
 
 ## Running
 

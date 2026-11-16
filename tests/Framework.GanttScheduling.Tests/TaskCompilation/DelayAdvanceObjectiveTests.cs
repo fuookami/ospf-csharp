@@ -276,7 +276,7 @@ public class DelayAdvanceObjectiveTests {
 
     /// <summary>**取消与延迟同时启用 → 偏移量乘上 `task_compilation` 掩码** / Cancellation plus delay → the deviation is masked by `task_compilation`.</summary>
     /// <remarks>
-    /// 被取消掉的任务不该累计偏移量，所以基线写 `delay_time = pos × taskCompilation`。C# 的 `MaskingFunction` 在 才做实。
+    /// 被取消掉的任务不该累计偏移量，所以这里写 `delay_time = pos × taskCompilation`：`MaskingFunction` 负责把掩码乘上去。
     ///
     /// 这条判据盯的是"**掩码真的乘上去了**"：符号必须是 `MaskingWithPolyMaskFunction` 的适配器（内部自带一个二值 `m`），
     /// 而不是裸的 `est_slack_*_pos`。只看"注册成功"会让"忘了乘掩码"通过——而忘了乘之后解同样合法，只是被取消的任务也在计费。

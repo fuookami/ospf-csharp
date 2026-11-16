@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
 /// 编译后的问题：选择、索引、资源、行 / The compiled problem: choices, indices, resources and rows.
 /// </summary>
 /// <remarks>
-/// 与基线 `CompiledActivityProblem` 对齐。**索引表与取消表是两条不同的映射**：
+/// **索引表与取消表是两条不同的映射**：
 /// <see cref="Indices"/> 只收**已有排程**的选择（键是那个排程），<see cref="Cancellations"/> 只收**没有排程**的活动
 /// （键是活动）。一个选择恰好落在其中一边，不会两边都有。
 ///
-/// Aligned with its `CompiledActivityProblem`. **The index table and the cancellation table are two different mappings**: <see cref="Indices"/> takes only choices that **already have a
+/// **The index table and the cancellation table are two different mappings**: <see cref="Indices"/> takes only choices that **already have a
 /// placement** (keyed by that placement) while <see cref="Cancellations"/> takes only activities that **have none** (keyed by the activity). Each choice lands on exactly one side.
 /// </remarks>
 public sealed class CompiledActivityProblem<V>
@@ -130,11 +130,11 @@ public sealed class CompiledActivityProblem<V>
 /// 把编译后的问题展开成线性行 / Expand a compiled problem into linear rows.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivitySchedulingRows.rows` 对齐，覆盖**选择行 / 冻结行 / 存在性行 / 依赖行 / 附加行**五类。
+/// 覆盖**选择行 / 冻结行 / 存在性行 / 依赖行 / 附加行**五类。
 /// 产能行与物料行分别由 `ActivityCapacitySweep` 与 `ActivityMaterialRows` 提供（两者都已有独立判据），
 /// 由聚合层拼接——这里不重复实现。
 ///
-/// Aligned with its `ActivitySchedulingRows.rows`, covering **selection, frozen, presence, dependency and extra** rows. Capacity and material rows come from `ActivityCapacitySweep` and
+/// Covers **selection, frozen, presence, dependency and extra** rows. Capacity and material rows come from `ActivityCapacitySweep` and
 /// `ActivityMaterialRows` (both already carrying their own criteria) and are stitched together by the aggregation layer, so they are not re-implemented here.
 /// </remarks>
 public static class ActivitySchedulingRowBuilder {
@@ -285,7 +285,7 @@ public static class ActivitySchedulingRowBuilder {
 /// 把一行注册进模型 / Register one row into a model.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivityRowPipeline` 对齐。三处沿用：
+/// 三处沿用：
 ///
 /// 1. **系数与边界都要查有限性**——无穷大在建模阶段就该拒，而不是交给求解器。
 /// 2. **上下界相等时只注册一条等式**，注册两条不等式会让求解器多一层判断，且浮点下可能自相矛盾。

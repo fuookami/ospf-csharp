@@ -5,13 +5,11 @@
 2D bin packing (rectangle/sheet) on top of the OSPF column-generation framework: items, sheets,
 layer assignment, layer generation, packing, and rendering.
 
-Baseline: `ospf-kotlin-framework-bpp2d` at Kotlin `12fdb587`.
-
 ## Layout
 
-A single assembly with one `Domain/` directory (41 source files). The baseline splits this into
-several sub-modules; **this project does not mirror that split**, so the baseline's per-module READMEs are
-not a checklist against this directory.
+A single assembly with one `Domain/` directory (41 source files): items, sheets, layer assignment,
+layer generation, packing and rendering all live together, so their types reference each other without a
+project-per-concern fan-out.
 
 Notable files:
 
@@ -30,7 +28,7 @@ Notable files:
 
 `LayerGenerationContext` ranks candidate layers by a caller-supplied `ScoreByShadowPrice` function
 (`Func<Layer<V>, Bpp2dLayerGenerationRequest<V>, V>`), falling back to descending area when no scorer is
-supplied. This is the strongly typed pattern that `Framework.Bpp3d` copied in earlier — Bpp3d previously
+supplied. `Framework.Bpp3d` uses the same strongly typed pattern — it previously
 carried an unread `object?` placeholder.
 
 ## Verification

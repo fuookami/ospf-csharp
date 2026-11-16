@@ -42,7 +42,7 @@ public sealed record UnsymmetricalLinearDensityLimitLine(
 /// 定义不对称线性密度限制的区域 / A zone defining unsymmetrical linear density limits.
 /// </summary>
 /// <remarks>
-/// 与对齐。三处容易做错：
+/// 三处容易做错：
 ///
 /// 1. **每条曲线点生成两行**：{code}+1·左 −1·右 &lt;= lhs{/code} 与 {code}−1·左 +1·右 &lt;= rhs{/code}。这是"左比右多不超过 lhs、右比左多不超过 rhs"的两半，
 ///    只生成一行时只限制单侧不对称。

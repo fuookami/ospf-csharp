@@ -12,10 +12,10 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 固定整数 LP 三阶段求解的门控 / The gates of the fixed-integer LP three-stage solve.
 /// </summary>
 /// <remarks>
-/// **这是 的 `solveTriad` 里四道判定的移植。** 求解本身要真实 LP 后端，
+/// **这是三阶段求解前的四道判定。** 求解本身要真实 LP 后端，
 /// **但"什么情况下不许下结论"是纯判定**，可以单独搬、单独测。
 ///
-/// **These are the four verdicts inside `solveTriad`.** The solve itself needs a real LP backend, **but "when must we not conclude anything" is pure judgement**, portable and testable on its own.
+/// **These are the four verdicts before the three-stage solve.** The solve itself needs a real LP backend, **but "when must we not conclude anything" is pure judgement**, portable and testable on its own.
 ///
 /// **四道门，每一道挡的都是"把没证出来的东西说成证出来了"：**
 ///
@@ -148,10 +148,10 @@ public static class FixedIntegerLpGates
     /// <returns>原始约束到区间的映射 / A map from original constraint to range.</returns>
     /// <remarks>
  /// **直接转发到 `ProvenanceDualMapping.MapRanges`**，因为规则完全一样。
-    /// **这里单开一个名字，是为了让 `solveTriad` 的读法贴近基线**：那一行写的就是
+    /// **这里单开一个名字，是为了让调用点直接读出规则**：那一行写的就是
     /// "多行 lowering 不得冒充单个约束的范围"。
     ///
-    /// **It forwards to `ProvenanceDualMapping.MapRanges`** because the rule is identical (implemented). **The separate name keeps `solveTriad` readable against the code**, which
+    /// **It forwards to `ProvenanceDualMapping.MapRanges`** because the rule is identical (implemented). **The separate name makes the call site read as the rule itself**, which
     /// says at that line "a multi-row lowering must not impersonate a single constraint's range".
     /// </remarks>
     public static IReadOnlyDictionary<ConstraintId, SensitivityRange> RemapSingleRowRanges<T>(

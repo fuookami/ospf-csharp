@@ -207,7 +207,7 @@ public class Demo2SequentialLoadingTests {
     /// 2. 目标位数量不变——`if (monomials.isEmpty) return ok` 不能省。
     ///
     /// Two paired points: one item with a sequence gives no ordered pair, so **no objective** is added and success is returned; and the objective count is unchanged, since the
-    /// baseline's early return must not be dropped.
+    /// early return must not be dropped.
     /// </remarks>
     [Fact]
     public void ItemOrderReverseLimit_ShouldSkipEmptySets() {

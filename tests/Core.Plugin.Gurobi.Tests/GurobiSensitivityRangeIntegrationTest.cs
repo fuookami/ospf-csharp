@@ -49,8 +49,8 @@ public class GurobiSensitivityRangeIntegrationTest
         // **"固定整数 LP"也正是这个意思：整数部分被<b>固定住**，剩下的才是 LP。**
         //
         // **It has to be continuous: the first version used `BinVar` and went red for a good reason — Gurobi only supplies
-        // `SARHSLow`/`SARHSUp` for a <b>pure LP</b>, and throws on a MIP.** **That is exactly what "fixed-integer LP" means in the
-        // baseline: the integer part is <b>fixed</b>, leaving an LP.**
+        // `SARHSLow`/`SARHSUp` for a <b>pure LP</b>, and throws on a MIP.** **That is exactly what "fixed-integer LP" means:
+        // the integer part is <b>fixed</b>, leaving an LP.**
         // **两个变量，而且一个都不固定。**
         //
         // **第二版固定了一个变量为 0，于是 Gurobi 模型变成 `vars=0`——约束退化成常数，

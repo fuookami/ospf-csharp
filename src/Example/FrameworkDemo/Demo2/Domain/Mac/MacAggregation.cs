@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac;
 /// MAC 域聚合 / The MAC domain aggregation.
 /// </summary>
 /// <remarks>
-/// 与对齐：构造时建好力矩、MAC 与按配置索引的水平安定面，`Register` 依次注册三者。
+/// 构造时建好力矩、MAC 与按配置索引的水平安定面，`Register` 依次注册三者。
 ///
 /// **三条路径与配载域的不一样**（配载域是 MP 少注册、SP 换一套）：
 ///
@@ -90,7 +90,7 @@ public sealed class MacAggregation
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
     /// `stowageMode` 在这条路径上**没有被用到**——`register` 收它，只往下传给水平安定面；而 C# 侧的 `HorizontalStabilizer.Register`
-    /// 没有这个参数（`stowageMode` 影响的是限值约束，不在这里）。保留参数是为了与基线签名一致。
+    /// 没有这个参数（`stowageMode` 影响的是限值约束，不在这里）。保留参数是为了签名一致。
     ///
     /// `stowageMode` is **unused** on this path: the code accepts it and forwards it to the horizontal stabilizers, while the C# `HorizontalStabilizer.Register` has no such
     /// parameter (the mode affects the limit constraints, which live elsewhere). The parameter stays for signature parity.
@@ -134,10 +134,10 @@ public sealed class MacAggregation
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线就是 `return ok`。**这与配载域相反**：那边的 SP 会注册业载/总重/最大装载重量。看起来该对称，但两个域在就是不一样。
+    /// 这里就是 `return ok`。**这与配载域相反**：那边的 SP 会注册业载/总重/最大装载重量。看起来该对称，但两个域在就是不一样。
     ///
-    /// The code is `return ok`. **This is the opposite of the stowage domain**, whose sub-problem does register the payload, total weight and maximum load weight. It looks
-    /// like it should be symmetric; in the code it is not.
+    /// This is `return ok`. **This is the opposite of the stowage domain**, whose sub-problem does register the payload, total weight and maximum load weight. It looks
+    /// like it should be symmetric; in practice it is not.
     /// </remarks>
     public Try RegisterForBendersSP(StowageMode stowageMode, LinearMetaModel<Flt64> model) {
         ArgumentNullException.ThrowIfNull(model);

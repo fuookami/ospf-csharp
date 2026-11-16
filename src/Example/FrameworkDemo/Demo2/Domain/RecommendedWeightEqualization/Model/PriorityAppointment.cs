@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 优先级预约 / The priority appointment.
 /// </summary>
 /// <remarks>
-/// 与对齐：把**每个货物优先级**映射到一组"可放置的装载顺序深度"。
+/// 把**每个货物优先级**映射到一组"可放置的装载顺序深度"。
 ///
 /// 三处必须沿用：
 ///
@@ -128,12 +128,12 @@ public sealed class PriorityAppointment
     /// <param name="candidate">待查元素 / The candidate.</param>
     /// <returns>是否包含 / Whether contained.</returns>
     /// <remarks>
-    /// 用 `ReferenceEquals` 而不是 `Contains`：`Item` 与 `StowagePosition` 的相等语义由各自的实现决定，而基线这里判的是
+    /// 用 `ReferenceEquals` 而不是 `Contains`：`Item` 与 `StowagePosition` 的相等语义由各自的实现决定，而这里要判的是
     /// "这个对象在不在那个列表里"（`item in items` 走的是 `equals`，但两个列表来自同一个聚合，成员是同一批对象）。
     /// 按引用判更严格，且不会因为两个 `Id` 相同的不同对象而误判——那是本仓 `Position` 按 `Id` 判等埋下的坑。
     ///
-    /// `ReferenceEquals` rather than `Contains`: the equality semantics of `Item` and `StowagePosition` are their own business, while the code asks "is this object in that
-    /// list" (Kotlin's `in` uses `equals`, but both lists come from one aggregation and hold the same instances). Reference identity is stricter and avoids the trap this implementation's
+    /// `ReferenceEquals` rather than `Contains`: the equality semantics of `Item` and `StowagePosition` are their own business, while this asks "is this object in that
+    /// list" (`in` uses `equals`, but both lists come from one aggregation and hold the same instances). Reference identity is stricter and avoids the trap this implementation's
     /// `Position` sets by comparing on `Id`, where two distinct objects with one `Id` would pass.
     /// </remarks>
     private static bool Contains<T>(IReadOnlyList<T> source, T candidate)

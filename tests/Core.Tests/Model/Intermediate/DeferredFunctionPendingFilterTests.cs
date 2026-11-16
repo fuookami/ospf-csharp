@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟结构的集合与待处理过滤 / The deferred-structure collection and the pending filter.
 /// </summary>
 /// <remarks>
-/// 补三样缺失状态里的第二样：`DeferredFunctionStructures`，以及基线四段函数的第二段。
+/// 补三样缺失状态里的第二样：`DeferredFunctionStructures`，以及四段函数的第二段。
 ///
 /// **这一段只实现了三个条件中的两个，第三个依赖仍缺的 `DeferredFunctionConstraintRegions`。**
 /// **而"缺一个条件"的正确写法与"缺三个条件"不同：** **前者要给一个能被看到的开关。**

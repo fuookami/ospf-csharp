@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Gurobi;
 ///
 /// | 事实 | 当时的证据 |
 /// | --- | --- |
-/// | **有**生产调用 `model.elastic` | 基线源码 |
+/// | **有**生产调用 `model.elastic` | 另一份实现的源码 |
 /// | C# 的 `Elastic` **只有测试调用** | `grep '\.Elastic' src` 零命中 |
 /// | C# **没有** `ComputeLegacyIISAsync` 的二次版本 | `src/Core/Solver/Iis/` 只有 `LinearLegacyIisCompute.cs` |
 /// | 于是 `DiagnosticAnalyzers` 二次版**返回空** | 接口默认方法 `Array.Empty` |
@@ -42,7 +42,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Gurobi;
 /// 但它**只钉了第 4 行**：第 3 行早就变了、第 2 行的原因也换了，**判据一句话都没说**。
 /// 这是缺口标记的通病——**钉住一个现象，却以为钉住了整条推理。**
 ///
-/// recorded this chain (table one). **After the earlier re-check, two of its four rows no longer hold**: `QuadraticLegacyIisCompute.cs` now exists with three entry points, and the
+/// This file recorded this chain (table one). **After the earlier re-check, two of its four rows no longer hold**: `QuadraticLegacyIisCompute.cs` now exists with three entry points, and the
 /// quadratic `DiagnosticAnalyzers` now returns a native IIS analyzer. **Row 2 still holds**: `Elastic` is only called by `QuadraticLegacyIisCompute`, which has **no src
 /// caller**. **The observation at the end of the chain survives** — `Elastic` still has no production entry — but the reason is no longer "quadratic IIS is unimplemented":
 /// quadratic IIS goes through the backend's native `computeIIS`, not through elasticization. **That path still has only tests walking it.** The old criterion pinned the gap's

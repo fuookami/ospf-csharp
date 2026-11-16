@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service;
 /// 软性安全管线列表生成器 / The soft-security pipeline list generator.
 /// </summary>
 /// <remarks>
-/// 与对齐。**四个条件，四个不同判据**：
+/// **四个条件，四个不同判据**：
 ///
 /// | 管线 | 条件 |
 /// | --- | --- |

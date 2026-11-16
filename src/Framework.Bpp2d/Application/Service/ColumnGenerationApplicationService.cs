@@ -23,10 +23,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Application.Service;
 /// <param name="Packing">装箱结果 / The packing result.</param>
 /// <param name="Kpi">装箱指标 / The packing indicators.</param>
 /// <remarks>
-/// 与基线 `ColumnGenerationApplicationResponse` 对齐：**三块分开**——列生成给了什么、装成了什么、装得好不好。
+/// **三块分开**——列生成给了什么、装成了什么、装得好不好。
 /// 合成一个对象会让调用方无法只取其中一块（比如只想看 KPI 的报表）。
 ///
-/// Aligned with its `ColumnGenerationApplicationResponse`: **three separate parts** — what column generation produced, what packing made of it, and how good the packing is. Merging
+/// **Three separate parts** — what column generation produced, what packing made of it, and how good the packing is. Merging
 /// them would leave a caller unable to take just one, such as a report that only wants the KPIs.
 /// </remarks>
 public sealed record ColumnGenerationApplicationResponse(
@@ -53,7 +53,7 @@ public delegate Task<Result<ColumnGenerationResult, ErrorCode, Error<ErrorCode>>
 /// 列生成应用服务 / The column-generation application service.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationApplicationService.solve` 对齐，五步：
+/// 五步：
 ///
 /// 1. 从请求装出执行器组。
 /// 2. 用候选生成器产出**种子列**——首次 LP 必须可行，空变量模型的 RMP 会直接不可行、拿不到对偶解。

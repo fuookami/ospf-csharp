@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic;
 /// 组件规格的默认值 / The default component specs.
 /// </summary>
 /// <remarks>
-/// **这些默认值不是"随便挑的合理值"，而是基线 `HyperHeuristicConfig` 的构造默认值**。写错一个，
+/// **这些默认值不是"随便挑的合理值"，而是 `HyperHeuristicConfig` 的构造默认值**。写错一个，
 /// 预检会认为"配置缺字段"，而用户手里那份配置其实完全合法——**报错指向配置，问题却在默认值表里**。
 ///
-/// **These defaults are not "reasonable picks" but the code `HyperHeuristicConfig`'s constructor defaults.** Get one wrong and the preflight
+/// **These defaults are not "reasonable picks" but `HyperHeuristicConfig`'s constructor defaults.** Get one wrong and the preflight
 /// reports "the configuration is missing a field" while the user's configuration is in fact entirely legal — **the error points at the configuration
 /// while the problem sits in the default table**.
 /// </remarks>

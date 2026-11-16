@@ -16,8 +16,8 @@
 // entry point** (`AnalyzeSheets`) and the flat-placement one (`Analyze` / `AnalyzeSheet`). Both share one slicing
 // algorithm; only how the occupied regions are obtained differs.
 //
-// **单位前提**：所有量值必须使用同一单位。基线同样按原始数值比较，因此这不是新增限制，而是把既有前提写明。
-// **Unit precondition**: every quantity must use one unit. The code also compares raw values, so this documents an
+// **单位前提**：所有量值必须使用同一单位。实现同样按原始数值比较，因此这不是新增限制，而是把既有前提写明。
+// **Unit precondition**: every quantity must use one unit. The implementation also compares raw values, so this documents an
 // existing precondition rather than adding one.
 
 using System;
@@ -62,8 +62,8 @@ public static class FreeSpaceAnalyzer {
     /// 分析一组板材实例的余料，板材名称按序号生成 / Analyse a set of sheet instances, naming them by index.
     /// </summary>
     /// <remarks>
-    /// 这是与基线签名一致的**正规入口**：占用区域由 `Sheet → SheetLayer → Layer → Placement2` 逐层展开得到。
-    /// This is the **proper entry point** matching the code signature: occupied regions come from unfolding
+    /// 这是**正规入口**：占用区域由 `Sheet → SheetLayer → Layer → Placement2` 逐层展开得到。
+    /// This is the **proper entry point**: occupied regions come from unfolding
     /// `Sheet → SheetLayer → Layer → Placement2`.
     /// </remarks>
     /// <param name="sheets">已装箱板材 / Packed sheets.</param>

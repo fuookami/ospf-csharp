@@ -19,11 +19,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// <param name="IsWithinEnvelope">是否在包络内 / Whether it lies inside the envelope.</param>
 /// <param name="SelectionSource">选择来源 / The selection source.</param>
 /// <remarks>
-/// 与基线 `PWLRadiusSelectionMetadata` 对齐。**两个体积函数分开**：`ActualVolume` 用实际半径平方，
+/// **两个体积函数分开**：`ActualVolume` 用实际半径平方，
 /// `PwlVolume` 用求解器那个（近似值）——这样报表能同时给出"真实体积"与"模型以为的体积"，
 /// 两者的差就是逼近误差带来的偏差。
 ///
-/// Aligned with its `PWLRadiusSelectionMetadata`. **The two volume helpers stay apart**: `ActualVolume` uses the actual squared radius and `PwlVolume` the solver's approximated one, so a
+/// **The two volume helpers stay apart**: `ActualVolume` uses the actual squared radius and `PwlVolume` the solver's approximated one, so a
 /// report can show both the true volume and the one the model believed, whose difference is the bias introduced by the approximation.
 /// </remarks>
 public sealed record PWLRadiusSelectionMetadata(
@@ -79,11 +79,11 @@ public sealed record PWLRadiusSelectionMetadata(
 /// <param name="Source">来源 / The source.</param>
 /// <param name="PwlMetadata">分段逼近元数据 / The piecewise metadata.</param>
 /// <remarks>
-/// 与基线 `CylinderRadiusSelectionResult` 对齐。**四条不变量各有其意**：键不为空（否则结果无法回指）、
+/// **四条不变量各有其意**：键不为空（否则结果无法回指）、
 /// 变量名与来源若给出则不为空（空字符串等于"给了个没用的名字"）、**选中半径必须为正**
 /// （零或负半径不是选择结果，是求解出错）。
 ///
-/// Aligned with its `CylinderRadiusSelectionResult`. **Each of the four invariants has a reason**: the key must be non-blank, since a result without one cannot be traced back; a supplied
+/// **Each of the four invariants has a reason**: the key must be non-blank, since a result without one cannot be traced back; a supplied
 /// variable name or source must be non-blank, an empty string being as good as a useless name; and **the selected radius must be positive**, zero or negative being a solve failure rather than a
 /// selection.
 /// </remarks>

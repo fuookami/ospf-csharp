@@ -18,14 +18,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡约束 / The recommended-weight-equalisation constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：对**每一对需要推荐重量的舱位**加**两条**互相制约的约束。
+/// 对**每一对需要推荐重量的舱位**加**两条**互相制约的约束。
 ///
 /// 五处必须沿用：
 ///
 /// 1. **两条约束，方向相反**：`z[j1] 不超过 z[j2] + mlw1 × actualLoaded[j2]` 与 `z[j2] 不超过 z[j1] + mlw2 × actualLoaded[j1]`。
 ///    只加一条会让偏差单向无界。
 /// 2. **松弛项的系数是"另一个舱位的 `mlw`"**，不是自己的。写反会让两个舱位的容量张冠李戴。
-/// 3. **`j2` 严格大于 `j1`**，避免同一对加两次。基线写的是 `j2` 不大于 `j1` 时跳过。
+/// 3. **`j2` 严格大于 `j1`**，避免同一对加两次。写法是 `j2` 不大于 `j1` 时跳过。
 /// 4. **两个舱位都必须 `RecommendedWeightNeeded`**。只判一个会让另一个舱位被迫承担均衡。
 /// 5. **约束名带两个舱位**，且第二条把顺序反过来（`_${position2}_${position1}`），否则两条同名。
 ///

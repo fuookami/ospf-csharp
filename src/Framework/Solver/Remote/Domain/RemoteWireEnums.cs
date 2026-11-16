@@ -372,7 +372,7 @@ public static class RemoteWireEnums {
 /// </summary>
 /// <remarks>
 /// 用于可缺省的枚举字段：缺失或未识别均写出 null，不伪造值。
-/// Used for baseline enum fields that may be absent: missing or unrecognized values write null instead of a fabricated value.
+/// Used for wire enum fields that may be absent: missing or unrecognized values write null instead of a fabricated value.
 /// </remarks>
 /// <typeparam name="TEnum">枚举类型 / Enum type.</typeparam>
 public sealed class RemoteNullableWireEnumConverter<TEnum> : JsonConverter<TEnum?>
@@ -475,27 +475,27 @@ public sealed class RemoteWireEnumConverter<TEnum> : JsonConverter<TEnum>
 /// 通用 wire 枚举名映射 / Generic wire enum-name mapping.
 /// </summary>
 /// <remarks>
-/// 不可行证据的五个维度（以及 <c>BoundSide</c>）在固定 Kotlin 的 wire 名是**枚举成员原名**
-/// （`Lower`、`Verified`、`Exact`、`Complete`、`Irreducible`、`NotChecked`），因为基线直接用
+/// 不可行证据的五个维度（以及 <c>BoundSide</c>）在 wire 上的名字是**枚举成员原名**
+/// （`Lower`、`Verified`、`Exact`、`Complete`、`Irreducible`、`NotChecked`），因为对端直接用
 /// `valueOf(name)` 比较，并不做大小写转换。因此这里不能按 SCREAMING_SNAKE 转换——那会让
 /// `Verified` 变成 `VERIFIED` 而对不上。
 ///
 /// 唯一需要显式映射的是 <c>NativeIis</c>／<c>NativeIIS</c>：C# 按 .NET 命名惯例写作 `NativeIis`，
-/// 基线写作 `NativeIIS`，两者在 wire 上必须统一到拼写，否则该来源的证据会被判为无效。
+/// wire 上写作 `NativeIIS`，两者必须统一到拼写，否则该来源的证据会被判为无效。
 ///
 /// The five infeasibility-evidence axes (and <c>BoundSide</c>) use the **raw enum member name** on the
 /// wire (`Lower`, `Verified`, `Exact`, `Complete`, `Irreducible`,
-/// `NotChecked`) because the code compares with `valueOf(name)` and never changes case. Converting to
+/// `NotChecked`) because the other side compares with `valueOf(name)` and never changes case. Converting to
 /// SCREAMING_SNAKE here would break that (`Verified` would become `VERIFIED`).
 ///
 /// The only explicit mapping needed is <c>NativeIis</c>/<c>NativeIIS</c>: C# follows .NET naming
-/// (`NativeIis`) while the code writes `NativeIIS`, so the wire form must use the code spelling or
+/// (`NativeIis`) while the wire form is `NativeIIS`, so the wire spelling must be `NativeIIS` or
 /// that evidence source would be rejected as invalid.
 /// </remarks>
 public static class RemoteWireEnumNames {
     private static readonly System.Collections.Generic.Dictionary<string, string> WireSpellings =
         new(StringComparer.Ordinal) {
-            // C# 成员名 → 基线 wire 名 / C# member name → baseline wire name.
+            // C# 成员名 → wire 名 / C# member name → wire name.
             ["NativeIis"] = "NativeIIS",
         };
 

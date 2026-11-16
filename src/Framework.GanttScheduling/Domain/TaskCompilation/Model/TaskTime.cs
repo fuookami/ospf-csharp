@@ -37,10 +37,10 @@ public abstract class TaskTime {
     /// <remarks>
     /// **为什么要有这个非泛型入口**：约束类拿到的任务列表是 `IAbstractTask&lt;E, A&gt;`，而 `IEstimateStartTime&lt;T&gt;`
     /// 里的字典是**不协变**的——`TaskSchedulingTaskTime&lt;TestTask, …&gt;` 并不是 `IEstimateStartTime&lt;IAbstractTask&lt;…&gt;&gt;`。
-    /// Kotlin 那边能直接写是因为 `T` 是声明处协变；C# 只能让实现方自己按键查一次。
+    /// 若 `T` 是声明处协变就能直接写；C# 只能让实现方自己按键查一次。
     ///
     /// **Why a non-generic entry point**: the constraint classes hold `IAbstractTask&lt;E, A&gt;` while the dictionary inside `IEstimateStartTime&lt;T&gt;` is **invariant** —
-    /// `TaskSchedulingTaskTime&lt;TestTask, …&gt;` is not an `IEstimateStartTime&lt;IAbstractTask&lt;…&gt;&gt;`. Kotlin writes it directly because `T` is declaration-site covariant;
+    /// `TaskSchedulingTaskTime&lt;TestTask, …&gt;` is not an `IEstimateStartTime&lt;IAbstractTask&lt;…&gt;&gt;`. A declaration-site covariant `T` would allow it directly;
     /// in C# the implementation does the lookup itself.
     /// </remarks>
     public virtual bool TryEstimateStart(object task, out object? symbol) {
@@ -540,12 +540,12 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
             // 没有时间窗的任务：`est` / `estEnd` 照建（它们来自钩子，与时间窗无关），但**没有"偏离计划"可言**——
             // 计划开始未知，偏移、超最大偏移、准时、结束时间偏移全会指向一个不存在的东西。给常量零并在符号名上说清楚。
             // 这道坎原来写成了硬失败：`TaskTimeImpl.register` 对 `time == null` 是直接跳过，而任务束/迭代那两支的
-            // 任务本来就可能没有时间窗。要求"必须有时间窗"是本实现在抽取钩子时**多加的**限制，不是基线行为。
+            // 任务本来就可能没有时间窗。要求"必须有时间窗"是本实现在抽取钩子时**多加的**限制。
             //
             // A task without a time window still gets `est` / `estEnd` (they come from the hook and do not depend on the window), but there is **no "deviation from plan"** — the
             // planned start is unknown, so deviation, over-max, on-time and end-time deviation would all point at something that does not exist. A constant zero is built and
-            // named as such. This used to be a hard failure: its `TaskTimeImpl.register` simply skips `time == null`, and the bunch/iterative branches legitimately
-            // carry tasks without a window. Demanding a window was a restriction **added** here when the hook was extracted, not baseline behaviour.
+            // named as such. This used to be a hard failure: `register` can simply skip `time == null`, and the bunch/iterative branches legitimately
+            // carry tasks without a window. Demanding a window was a restriction **added** here when the hook was extracted.
             if (task.Time is null) {
                 var zeroSlack = new LinearExpressionSymbol(
                     new Fuookami.Ospf.Math.Symbol.Polynomial.MutableLinearPolynomial<Flt64>(
@@ -1005,7 +1005,7 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
     /// 常量零而不是"跳过"：`OnTime` / `NotOnTime` 是**和**，少一项与该项为零在数值上是同一件事，但前者会让
     /// `taskTime.onTime[task]` 在 `OnTime` 表里缺席，目标函数取符号时会炸。
     ///
-    /// 死区来自基线：`not_on_last_end_time` 只在**整整晚一个时间窗**时才为 1（`afterWindowDurationValue`），
+    /// 死区：`not_on_last_end_time` 只在**整整晚一个时间窗**时才为 1（`afterWindowDurationValue`），
     /// `not_on_earliest_end_time` 只在**整整早一个时间窗**时才为 1（`beforeWindowDurationValue`）。沿用，不改成 `1 − on`。
     ///
     /// Each direction is a real indicator only when the switch is on, the task may move, and the task carries a target time; otherwise it is **constant zero** (not skipped):
@@ -1255,7 +1255,7 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
 /// 之前这里是 `Try Register(...) => Results.Ok(...)`：模型里什么都没有，而调用方以为时间已注册。
 ///
 /// **Shares all eight tables** with task scheduling time (deviation, over-max, on-time, end-time deviation): those depend only on "what is each task's `est`", not on where it comes
-/// from. This class overrides only the source of `est` — an iterative task has **no independent start-time variable**, so `est` is identically zero. branch is the
+/// from. This class overrides only the source of `est` — an iterative task has **no independent start-time variable**, so `est` is identically zero. That branch is the
 /// same: both `estimate_start_time` and `estimate_end_time` are "constant zero when there is no redundancy", and `estEnd` does **not** add the duration here (unlike task
 /// scheduling time). A redundancy range **fails outright** in the code ("the withRedundancy path is not implemented"), copied verbatim. This used to be
 /// `Try Register(...) => Results.Ok(...)`: nothing in the model while the caller believed the time was registered.

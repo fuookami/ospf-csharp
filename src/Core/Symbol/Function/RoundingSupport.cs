@@ -68,7 +68,7 @@ internal static class RoundingSupport {
         V fraction = value.Minus(floor);
         V twiceFraction = fraction.Plus(fraction);
         V two = converter.One.Plus(converter.One);
-        // 求值按点取偶，模型中点则向上 / Evaluation uses baseline ties-to-even; the model rounds ties up.
+        // 求值按点取偶，模型中点则向上 / Evaluation rounds ties to even; the model rounds ties up.
         bool roundUp = twiceFraction.Gr(converter.One) ||
             (twiceFraction.Eq(converter.One) && !floor.Rem(two).Eq(converter.Zero));
         V result = roundUp ? floor.Plus(converter.One) : floor;

@@ -42,7 +42,6 @@ public class SymbolicParsingGapTests
     }
 
     /// <summary>`src/Math/Symbol/Parse/` 里的源码 / The sources under the parse folder.</summary>
-    /// <summary>两个解析目录 / Both parsing directories.</summary>
     /// <remarks>
     /// **`Parse/` 是多项式那一侧，`Expression/Parser/` 是表达式那一侧。**
     /// **此前这里只扫前者，于是"表达式解析不在"这条判据从来没看过表达式解析的代码。**

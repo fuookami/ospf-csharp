@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **回收走的是"整池"而不是"本轮"** / Retirement walks the whole pool, not just this round.
 /// </summary>
 /// <remarks>
-/// 基线对**所有**已移除任务做"固定为 0 + 摘变量"，不是只处理本轮新删的。
+/// 这里对**所有**已移除任务做"固定为 0 + 摘变量"，不是只处理本轮新删的。
 /// 只处理本轮的话，早先被删的列仍在模型里可被选中——它们只是从聚合表里消失了。
 ///
 /// The code pins and drops **every** removed task, not only this round's. Handling only this round leaves earlier retirements still selectable in the model — they merely

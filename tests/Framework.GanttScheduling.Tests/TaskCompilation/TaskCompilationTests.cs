@@ -273,7 +273,7 @@ public class TaskCompilationTests {
     /// **锁定覆盖"不允许取消"** / The lock overrides "cancel disabled".
     /// </summary>
     /// <remarks>
-    /// 一个任务既 `CancelEnabled = false` 又被锁定：基线先写 0 再写 1，**后写的赢**，结果是 1。
+    /// 一个任务既 `CancelEnabled = false` 又被锁定：这里先写 0 再写 1，**后写的赢**，结果是 1。
     /// 反过来写成"不允许取消优先"会得到 0——模型于是取消了一个**明确要求保留**的任务。
     ///
     /// A task with `CancelEnabled = false` that is also locked: the code writes 0 then 1, **the later write wins**, giving 1. Getting the order wrong yields 0 — the model then
@@ -720,7 +720,7 @@ public class TaskCompilationTests {
         var minimization = new ExecutorCostMinimization<Executor, AssignmentPolicy<Executor>>(
             executors, compilation);
         ((IMetaConstraintGroup)minimization).Name.Should().Be("executor_cost_minimization");
-        // 基线写的是 `coefficient?.let { … }`：**没给提取器就什么都不做**，那是语义而不是漏接线。
+        // 这里写的是 `coefficient?.let { … }`：**没给提取器就什么都不做**，那是语义而不是漏接线。
         // The code is `coefficient?.let { … }`: with no extractor it does nothing, and that is semantics rather than missing wiring.
         minimization.Invoke(new object()).IsOk.Should().BeTrue(
             "without an extractor the executor cost does not exist, so even a non-model is not an error");
@@ -735,7 +735,7 @@ public class TaskCompilationTests {
     /// **`ExecutorLeisureMinimization` 已接线，非模型仍然失败** / Wired as of，a non-model still fails.
     /// </summary>
     /// <remarks>
-    /// 必须**给系数**才走到模型检查：没给系数时基线直接 `Ok`（`coefficient?.let { … }`），
+    /// 必须**给系数**才走到模型检查：没给系数时直接 `Ok`（`coefficient?.let { … }`），
     /// 于是这条判据若不给系数，永远看不到 `IllegalArgument`。
     ///
     /// A coefficient is **required** to reach the model check: without one the code returns `Ok` (`coefficient?.let { … }`), so a criterion that omits it would never see

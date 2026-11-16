@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Model
 /// 纵向平衡松弛 / The longitudinal-balance slacks.
 /// </summary>
 /// <remarks>
-/// 与对齐：**按装载模式注册不同的松弛集合**。
+/// **按装载模式注册不同的松弛集合**。
 ///
 /// | 装载模式 | 注册哪些松弛 |
 /// | --- | --- |

@@ -283,23 +283,23 @@ public class Csp1dLengthBoundDerivationTests {
             "nothing triggers an over-length variable: no penalty, no bound, no maxOverProduceLength");
     }
 
-    /// <summary>**没有需求时不建长度变量**——，不是缺口 / No demand means no length variables — consistent with the code, not a gap.</summary>
+    /// <summary>**没有需求时不建长度变量**——这不是缺口 / No demand means no length variables — that is not a gap.</summary>
     /// <remarks>
     /// **这里一开始把这个当成缺口，是错的。**
     ///
-    /// 基线 `LengthAggregation` 的 `assignedLength` / `overLength` 都是
+    /// `LengthAggregation` 的 `assignedLength` / `overLength` 都是
     /// **`demands.mapIndexed`** ——**按需求索引**。没有需求 ⇒ 没有变量 ⇒ 没有约束，
     /// 哪怕边界推导阶段能从切割方案的贡献里找到那个产品。
     ///
     /// 所以 `ResolveDefaultLengthBounds` 里"从贡献找产品"那段**只影响推导出的配置值**，
-    /// 而配置值在**没有需求时根本用不上**。C# 。
+    /// 而配置值在**没有需求时根本用不上**。
     ///
     /// **判据记录这个一致性**：它防止下一个人"顺手"把变量改成按产品建。
     ///
- /// ** first recorded this as a gap — that was wrong.** The code's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
+ /// **This was first recorded as a gap — that was wrong.** The code's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
     /// No demand means no variables and no constraints, even though the derivation step can find the product from a plan's contribution. So the "find the product from a
-    /// contribution" branch in `ResolveDefaultLengthBounds` **only affects the derived config values**, which are **unused when there is no demand**. C# matches the
-    /// baseline, and this criterion records that consistency — it stops the next person from "helpfully" switching the variables to be per-product.
+    /// contribution" branch in `ResolveDefaultLengthBounds` **only affects the derived config values**, which are **unused when there is no demand**. The C# side matches that
+    /// shape, and this criterion records that consistency — it stops the next person from "helpfully" switching the variables to be per-product.
     /// </remarks>
     [Fact]
     public async Task SolveAsync_ShouldNotCreateLengthVariablesWithoutADemand() {

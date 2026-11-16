@@ -18,17 +18,17 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// </summary>
 /// <remarks>
 /// **这是产能调度一直缺的装配点。** `ICapacitySchedulingContext` 从 B4xx 起就在，但**没有任何实现**——
-/// 于是 的决策变量、 的排序变量、的三族约束、 的成本目标、 的资源用量表
+/// 于是决策变量、排序变量、三族约束、成本目标与资源用量表
 /// 全是"零件齐了、没装起来"。一个没有实现的接口比没有接口更糟：它让人以为整条链路已经能跑。
 ///
-/// 装配顺序照基线：**先建变量、再建约束、最后建目标**。顺序不能换——约束里引用的符号必须已经在模型里，
+/// 装配顺序：**先建变量、再建约束、最后建目标**。顺序不能换——约束里引用的符号必须已经在模型里，
 /// 目标也一样；反过来会把"符号不在模型里"变成运行期错误，而不是注册期失败。
 ///
 /// **This is the assembly point capacity scheduling has been missing.** `ICapacitySchedulingContext` has existed since B4xx with **no implementation at all**, so the earlier decision variables,
-/// the earlier order variables, /the earlier three constraint families, the earlier cost objective and the earlier resource usage table were all "parts present, never assembled". An interface with no
+/// the earlier order variables, the earlier three constraint families, the earlier cost objective and the earlier resource usage table were all "parts present, never assembled". An interface with no
 /// implementation is worse than no interface: it makes readers believe the whole chain already runs.
 ///
-/// The wiring order follows the code — **variables first, then constraints, then the objective**. The order matters: symbols the constraints reference must already be in the model, and
+/// The wiring order is **variables first, then constraints, then the objective**. The order matters: symbols the constraints reference must already be in the model, and
 /// the same holds for the objective; reversing it turns "the symbol is not in the model" into a runtime error instead of a registration-time failure.
 /// </remarks>
 /// <typeparam name="A">生产动作类型 / Production action type</typeparam>

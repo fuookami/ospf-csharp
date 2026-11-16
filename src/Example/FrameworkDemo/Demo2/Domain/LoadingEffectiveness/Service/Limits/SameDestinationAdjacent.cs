@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同目的地相邻目标 / The same-destination-adjacency objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把（目的地 × 相邻舱位对）的指示
+/// 把（目的地 × 相邻舱位对）的指示
 /// 加权求和，作为**最大化**目标，名为 `"same destination adjacent"`（带空格）。
 ///
 /// 四点必须沿用：

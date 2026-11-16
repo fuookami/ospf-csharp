@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 装载契约 / The load contract.
 /// </summary>
 /// <remarks>
-/// 与的 `interface Load` 对齐。六个成员里 `Load` / `OverLoad` / `LessLoad`
+/// 六个成员里 `Load` / `OverLoad` / `LessLoad`
 /// 在`LinearExpressionSymbols1` / `LinearIntermediateSymbols1`——Kotlin 的 typealias，C# 无法表达
 /// （`src/Core/Symbol/SymbolCombination.cs:95`），因此这里用 `IReadOnlyList&lt;...&gt;`。这是本仓第三次同样的处置，
 /// 不是随手改的形状。
@@ -52,7 +52,7 @@ public interface ILoad
 /// 非精确装载 / The imprecise load.
 /// </summary>
 /// <remarks>
-/// 与基线 `ImpreciseLoad` 对齐。它是 `DemandConstraint` 等约束真正要的东西：**每个需求一项装载变量**，
+/// 它是 `DemandConstraint` 等约束真正要的东西：**每个需求一项装载变量**，
 /// 且每项是"候选列 × 该列对该需求的系数"的线性和。
 ///
 /// 三处必须沿用：
@@ -158,7 +158,7 @@ public sealed class ImpreciseLoad : ILoad
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 对应基线 `AbstractLoad.register`。四点沿用：
+    /// 四点沿用：
     ///
     /// 1. **按开关懒建，且只建一次**：重复建会把 `over_load_0` 变成两个不同符号。
     /// 2. **超额 / 欠额的初值是"当前`load`的拷贝"**，不是新变量——它们表达的是"这个需求现在被超/欠了多少"，

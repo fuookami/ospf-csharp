@@ -293,10 +293,10 @@ public interface IColumnGenerationSolver {
     /// MILP 求解结果（区分可行与不可行）/ MILP solve result, distinguishing feasible from infeasible.
     /// </summary>
     /// <remarks>
-    /// 与基线 `MILPSolveResult` 对齐。**分成两个分支而不是"结果 + 布尔标志"**：不可行时根本没有解向量，
+    /// **分成两个分支而不是"结果 + 布尔标志"**：不可行时根本没有解向量，
     /// 用标志位就要么给一个空解（下游会当成"零解"读）要么让字段可空（下游每处都要判空）。
     ///
-    /// Aligned with its `MILPSolveResult`. **Two branches rather than "a result plus a boolean flag"**: an infeasible solve has no solution vector at all, so a flag would either
+    /// **Two branches rather than "a result plus a boolean flag"**: an infeasible solve has no solution vector at all, so a flag would either
     /// supply an empty solution that downstream reads as "all zeros" or force every downstream site to null-check.
     /// </remarks>
     interface MilpSolveResult {
@@ -313,9 +313,9 @@ public interface IColumnGenerationSolver {
     /// LP 求解结果（区分可行与不可行）/ LP solve result, distinguishing feasible from infeasible.
     /// </summary>
     /// <remarks>
-    /// 与基线 `LPResultWithStatus` 对齐。理由同 <see cref="MilpSolveResult"/>。
+    /// 理由同 <see cref="MilpSolveResult"/>。
     ///
-    /// Aligned with its `LPResultWithStatus`, for the same reason as <see cref="MilpSolveResult"/>.
+    /// For the same reason as <see cref="MilpSolveResult"/>.
     /// </remarks>
     interface LpResultWithStatus {
         /// <summary>可行解 / A feasible solution.</summary>

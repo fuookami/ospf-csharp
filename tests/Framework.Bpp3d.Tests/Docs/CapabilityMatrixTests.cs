@@ -249,11 +249,11 @@ public sealed class CapabilityMatrixTests {
     public void CapabilityMatrix_ShouldNotClaimUnverifiedBackendBehaviour() {
         string matrix = ReadMatrix();
         // `Lingo` 与 `OptVerse` 也必须在这一列里**。它们此前不在断言表中，而文档里已经有它们的行——
-        // 于是"把它们标成 ✅"这件事**没有任何判据会红**。这两个与其余八个还不同：**基线本身未实现**，
+        // 于是"把它们标成 ✅"这件事**没有任何判据会红**。这两个与其余八个还不同：**这里本来就没有实现**，
         // C# 侧是**不实现 `ILinearSolver` 的占位类型**，所以它们连"无 SDK 时显式失败"都不该假装有。
         //
-        // `Lingo` and `OptVerse` belong in this list too.** They were missing while the document already had rows for them — so marking them ✅ would
-        // **turn nothing red**. They also differ from the other eight: **the code itself does not implement them**, and the C# side is a **placeholder that does not
+        // **`Lingo` and `OptVerse` belong in this list too.** They were missing while the document already had rows for them — so marking them ✅ would
+        // **turn nothing red**. They also differ from the other eight: **nothing here implements them**, and the C# side is a **placeholder that does not
         // implement `ILinearSolver`**, so they must not even pretend to have "an explicit failure without an SDK".
         string[] plugins = {
             "| Gurobi |", "| Gurobi 11 |", "| SCIP |", "| CPLEX |",
@@ -269,10 +269,10 @@ public sealed class CapabilityMatrixTests {
         }
         matrix.Should().Contain("没有验证有 SDK 时的实际求解行为");
 
-        // **两个占位后端必须自己说出来**：它们的行要写"基线本身未实现 … 不声明求解能力"，
+        // **两个占位后端必须自己说出来**：它们的行要写"未实现 … 不声明求解能力"，
         // 而不是混在"◐ 接口在、能力子集"里——**"没实现"和"实现了但没验证"是两件事**，混在一起等于把前者说成后者。
         //
-        // **The two placeholder backends must say so themselves**: their rows must read "the code itself does not implement this … declares no solving capability",
+        // **The two placeholder backends must say so themselves**: their rows must read "not implemented here … declares no solving capability",
         // not blend into "◐ interface present, capability subset" — **"not implemented" and "implemented but unverified" are different**, and blending them upgrades the former
         // into the latter.
         foreach (string placeholder in new[] { "| Lingo |", "| OptVerse |" }) {

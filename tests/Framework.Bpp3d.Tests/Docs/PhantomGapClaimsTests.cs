@@ -16,10 +16,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// | 原话 | 实测 |
 /// | --- | --- |
 /// | **PWL 诊断**未实现 | `framework-bpp1d`/`framework-bpp3d` 的 `main` 里 **`pwl` 零次** |
-/// | **shape-DTO 缓存**未实现 | 基线**任何地方**都没有 shape 缓存；`cache` 只出现在基准名与 README 散文里 |
+/// | **shape-DTO 缓存**未实现 | 源码里**任何地方**都没有 shape 缓存；`cache` 只出现在基准名与 README 散文里 |
 ///
 /// **两条都点了一个不存在的东西。** 这种"缺口"比漏记更坏：它列在待办里，谁去补都会先花一批时间
-/// 找那个不存在的能力，**而找到之后只能得出"没有"** —— 与 的 `BinType.Capacity` 是同一个形状，第三次。
+/// 找那个不存在的能力，**而找到之后只能得出"没有"** —— 与 `BinType.Capacity` 那处是同一个形状，第三次。
 ///
 /// checked the last two "not implemented" notes: the BPP modules have **zero** `pwl` in `main`, and the code has **no shape cache anywhere**. **Both named something
 /// that does not exist**, which is worse than a missing entry: it sits on the to-do list, and whoever picks it up spends a batch looking for it — **and can only

@@ -27,7 +27,7 @@ public class SwitchTimeValueTests {
     /// </summary>
     /// <remarks>
     /// 这条钉住"照做"这个决定：钳到 0 会让这里返回 0。钳制看起来更"安全"，
-    /// 但它与基线不同，而这个差异只在重叠排布上显现——正常模型里时间冲突约束已经排除了重叠。
+    /// 但它与照做的结果不同，而这个差异只在重叠排布上显现——正常模型里时间冲突约束已经排除了重叠。
     /// 记下这个 ceiling 比悄悄改掉更有价值。
     ///
     /// This pins the "copy the code" decision: clamping would return 0 here. Clamping looks "safer" but differs from the code, and the difference only shows on

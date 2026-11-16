@@ -102,18 +102,18 @@ public sealed class PositionStatus
     }
 
     /// <summary>
-    /// 按状态码推导舱位状态（对齐基线 `PositionStatus.invoke`）/ Derive the status from the code (mirrors the code `PositionStatus.invoke`).
+    /// 按状态码推导舱位状态 / Derive the status from the status code.
     /// </summary>
     /// <param name="location">舱位所属区域 / The position location</param>
     /// <param name="code">状态码 / The status code</param>
     /// <param name="stowageMode">装载模式 / The stowage mode</param>
     /// <returns>舱位状态 / The position status</returns>
     /// <remarks>
-    /// 逐条对齐基线：`available = code != Loaded / code != Reserved`；`stowageNeeded = code == Unloaded || code == Preassigned`；
+    /// 推导规则：`available = code != Loaded / code != Reserved`；`stowageNeeded = code == Unloaded || code == Preassigned`；
     /// `adjustmentNeeded = code == Preassigned`；**谓词/推荐重量只在"可用 / 要装载决策 / 主舱"且模式匹配时才为真**——
     /// 三个条件缺一不可，少判一个就会给下舱或已装载的舱位生成没有意义的重量变量。
     ///
-    /// Member for member with the code: `available = code != Loaded / code != Reserved`; `stowageNeeded = code == Unloaded || code == Preassigned`;
+    /// The rules: `available = code != Loaded / code != Reserved`; `stowageNeeded = code == Unloaded || code == Preassigned`;
     /// `adjustmentNeeded = code == Preassigned`; and **the predicate/recommended weight flags are true only when "available / decision needed / main deck"**
     /// and the mode matches — all three conditions are required, and dropping one fabricates meaningless weight variables for lower-deck or loaded positions.
     /// </remarks>
@@ -136,22 +136,22 @@ public sealed class PositionStatus
 /// 装载位置最大装载重量（支持分段线性）/ Position maximum load weight, with piecewise-linear support.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `PositionMaximumLoadWeight`。它有两种形态：**单一常数**（最常见）与**按零油重分段的阶跃**——
+/// 它有两种形态：**单一常数**（最常见）与**按零油重分段的阶跃**——
 /// 后者是因为同一个舱位在轻载和重载时的允许装载量不同，重载时要给别的舱位留余量。
 ///
-/// 与三处差异，都记在这里而不是埋着：
+/// 三处差异，都记在这里而不是埋着：
 ///
 /// 1. **阶跃而不是插值**。那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**被注释掉了**，实际生效的是
-///    `invoke(zfw)` 里的分段查找（`zfw` 落在哪段就用哪段的 `mlw`）。C# 沿用**生效的那一条**，不沿用注释掉的那条。
-/// 2. **构造时校验段序**。基线 `assert(piecewise.isNotEmpty)` 在 Kotlin 里默认关闭；C# 的 `ArgumentOutOfRangeException`
+///    `invoke(zfw)` 里的分段查找（`zfw` 落在哪段就用哪段的 `mlw`）。C# 只实现**生效的那一条**，不实现注释掉的那条。
+/// 2. **构造时校验段序**。裸 `assert` 在 Release 下默认关闭；C# 的 `ArgumentOutOfRangeException`
 ///    在 Release 下也生效。分段为空是调用方错误，静默接受会得到一个"永远返回 0"的规格。
-/// 3. **`mlw` 取各段最大值**，与基线 `maxWithThreeWayComparatorOrNull` 一致；段按 `minZfw` 升序排。
+/// 3. **`mlw` 取各段最大值**（按三路比较取最大）；段按 `minZfw` 升序排。
 ///
 /// Two forms: a **single constant** (the common case) and a **step function by zero-fuel weight** — the same position allows less when the aircraft is
-/// heavier, leaving room for other positions. Three recorded divergences: (1) it is a **step, not an interpolation** — its smooth
-/// `UnivariateLinearPiecewiseFunction` path is **commented out**, and what actually runs is the segment lookup in `invoke(zfw)`; C# copies what runs. (2) Segment order is
-/// validated in the constructor — its `assert` is off by default in Kotlin while C#'s `ArgumentOutOfRangeException` fires in Release too. (3) `mlw` is the maximum
-/// across segments, and segments are sorted by `minZfw`, both as in the code.
+/// heavier, leaving room for other positions. Three recorded divergences: (1) it is a **step, not an interpolation** — the smooth
+/// `UnivariateLinearPiecewiseFunction` path is **not implemented**, and what actually runs is the segment lookup in `invoke(zfw)`. (2) Segment order is
+/// validated in the constructor — a bare `assert` would be off in Release, while C#'s `ArgumentOutOfRangeException` fires there too. (3) `mlw` is the maximum
+/// across segments, and segments are sorted by `minZfw`.
 /// </remarks>
 public sealed class MaxLoadWeightLimit
 {
@@ -246,11 +246,11 @@ public sealed class MaxLoadWeightLimit
 /// <param name="Min">允许的最小值 / The allowed minimum.</param>
 /// <param name="Max">允许的最大值 / The allowed maximum.</param>
 /// <remarks>
-/// 逐条对齐基线 `PositionPredicateLoadWeight` 的**三元组**。C# 之前把它压成一个 `double?`，于是两处用量都丢了：
+/// 这里是**三元组**。之前它被压成一个 `double?`，于是两处用量都丢了：
 /// 一处要 `max`（`y` 的上界，见 `PredicateLoadWeightLimit`），一处要 `min`（谓词重量松弛的右端）。
 /// 压成单个值时那个数字到底代表哪一端，读代码看不出来——补成三元组就是为了让"是哪一端"成为类型的一部分。
 ///
-/// 's **triple**. C# had flattened it into a single `double?`, losing both uses in the code: one needs `max` (the upper bound on `y`, in
+/// A **triple**. It had been flattened into a single `double?`, losing both uses: one needs `max` (the upper bound on `y`, in
 /// `PredicateLoadWeightLimit`) and one needs `min` (the right-hand side of the predicate weight slack). A single number does not say which end it is — the triple makes "which end"
 /// part of the type.
 /// </remarks>

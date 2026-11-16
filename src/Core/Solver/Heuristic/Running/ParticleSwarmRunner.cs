@@ -52,10 +52,10 @@ public sealed record ParticleState<ObjValue, V>(
 /// **而检查点里记录的"历史最优"其实只是"最近一个等价解"**。
 /// **The personal best updates only on strict improvement.** Using "not worse" lets an equivalent solution repeatedly overwrite it, **so the
 /// "historical best" recorded in a checkpoint is really just "the most recent equivalent solution"**.
-/// **两个随机数按"个人项在前、社会项在后"的顺序抽取**。颠倒顺序不会改变分布，却会让同一随机流下的轨迹与基线不同，
+/// **两个随机数按"个人项在前、社会项在后"的顺序抽取**。颠倒顺序不会改变分布，却会改变同一随机流下的轨迹，
 /// **而差异无法从结果里归因**。
-/// **The two random draws happen in the order personal-then-social.** Swapping them changes no distribution, yet makes the trajectory under
-/// the same random stream differ from the code, **and the difference cannot be attributed from the result**.
+/// **The two random draws happen in the order personal-then-social.** Swapping them changes no distribution, yet changes the trajectory under
+/// the same random stream, **and the difference cannot be attributed from the result**.
 /// </remarks>
 /// <typeparam name="ObjValue">目标值类型 / The objective-value type.</typeparam>
 /// <typeparam name="V">值类型 / The value type.</typeparam>

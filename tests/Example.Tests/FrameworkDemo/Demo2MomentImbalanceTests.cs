@@ -221,10 +221,10 @@ public class Demo2MomentImbalanceTests {
     /// **缺纵向力矩符号时明确失败** / A missing longitudinal torque symbol fails explicitly.
     /// </summary>
     /// <remarks>
-    /// 成对：同一个限制在注册过力矩的模型上成功，在没注册过的模型上失败并说明是**哪个阶段**。基线这里是 `!!`，
-    /// 会抛空指针；C# 侧改成返回失败，错误消息带阶段名。
+    /// 成对：同一个限制在注册过力矩的模型上成功，在没注册过的模型上失败并说明是**哪个阶段**。
+    /// 空引用会抛异常；这里返回失败，错误消息带阶段名。
     ///
-    /// Paired: the same limit succeeds on a model with the torque registered and fails on one without, naming the **phase**. The code uses `!!` and throws; this returns a
+    /// Paired: the same limit succeeds on a model with the torque registered and fails on one without, naming the **phase**. A null dereference would throw; this returns a
     /// failure whose message carries the phase.
     /// </remarks>
     [Fact]

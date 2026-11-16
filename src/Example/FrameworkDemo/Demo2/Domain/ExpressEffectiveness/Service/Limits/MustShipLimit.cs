@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 必须发货约束 / The must-ship constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：**每个必须发货的货物**，其在**全部舱位**上的配载变量之和等于 1。
+/// **每个必须发货的货物**，其在**全部舱位**上的配载变量之和等于 1。
 ///
 /// 四处必须沿用：
 ///

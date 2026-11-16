@@ -17,17 +17,17 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 放置类型工具 / Placement typing utilities.
 /// </summary>
 /// <remarks>
-/// 与基线三个文件对应：（`topItemPlacements`／`bottomItemPlacements`）、
+/// 三个几何助手：（`topItemPlacements`／`bottomItemPlacements`）、
 ///（`topPlacements`／`bottomPlacements`）、（`filterBottomOverlapped`）。
 ///
 /// **这里原有的 `TopItemPlacements` 取的是"全局最高一层的所有放置"，**
-/// 而基线取的是"没有任何底面重叠且更高的放置压在它上面的放置"。 两者在一高一低的货堆上给出不同答案：
-/// 基线两件都算顶层（谁也不压谁），旧实现只返回高的那件——于是矮的那件被当成"被压住的"，而它上面其实什么都没有。
+/// 现在取的是"没有任何底面重叠且更高的放置压在它上面的放置"。 两者在一高一低的货堆上给出不同答案：
+/// 现在两件都算顶层（谁也不压谁），旧实现只返回高的那件——于是矮的那件被当成"被压住的"，而它上面其实什么都没有。
 /// 旧实现全仓零调用方，所以这次直接替换，而不是并存两个同名不同义的方法。
 ///
-/// Corresponds to three baseline files. **The old `TopItemPlacements` returned "every placement on the globally
+/// Three geometry helpers: membership (`topItemPlacements`/`bottomItemPlacements`), ordered (`topPlacements`/`bottomPlacements`) and filtering (`filterBottomOverlapped`). **The old `TopItemPlacements` returned "every placement on the globally
 /// highest layer" while the code returns "every placement that no overlapping placement sits above". The two disagree on an uneven stack: the
-/// baseline counts both as top (neither covers the other) while the old one returned only the taller — so the short one was treated as covered when
+/// current code counts both as top (neither covers the other) while the old one returned only the taller — so the short one was treated as covered when
 /// nothing was on it. The old implementation had zero callers (measured), so it is replaced rather than kept as a same-name-different-meaning
 /// twin.
 /// </remarks>
@@ -50,9 +50,9 @@ public static class PlacementTyping {
     /// 顶面放置：没有任何"底面重叠且更高"的放置压在其上 / Top placements: nothing overlapping its footprint sits higher.
     /// </summary>
     /// <remarks>
-    /// 与基线 `topPlacements` 逐行对应，含那条严格比较 `placement1.maxY ls placement2.maxY`——同层重叠的两件货彼此都算顶层。
+    /// 实现与 `TopPlacements` 一致，含那条严格比较 `placement1.maxY ls placement2.maxY`——同层重叠的两件货彼此都算顶层。
     ///
-    /// Line for line with its `topPlacements`, including the strict comparison: two items on the same layer, overlapping or not, cover neither.
+    /// Line for line with `TopPlacements`, including the strict comparison: two items on the same layer, overlapping or not, cover neither.
     /// </remarks>
     /// <param name="placements">放置列表 / The placements.</param>
     /// <returns>顶面放置 / The top placements.</returns>
@@ -80,7 +80,7 @@ public static class PlacementTyping {
     /// <summary>
     /// 底面放置：没有"底面重叠且下沿更低"的放置垫在其下 / Bottom placements: nothing overlapping its footprint has a lower bottom edge.
     ///
-    /// 基线这里比较的是放置的 `.y`（下沿），与 `topPlacements` 比 `maxY` 不同——两处不是同一个量，照搬时不能统一成一个。
+    /// 这里比较的是放置的 `.y`（下沿），与 `TopPlacements` 比 `maxY` 不同——两处不是同一个量，不能统一成一个。
     /// </summary>
     /// <param name="placements">放置列表 / The placements.</param>
     /// <returns>底面放置 / The bottom placements.</returns>
@@ -105,7 +105,7 @@ public static class PlacementTyping {
         return bottoms;
     }
 
-    /// <summary>顶面放置，按集合成员筛（基线 `topItemPlacements`）/ Top placements, filtered by membership.</summary>
+    /// <summary>顶面放置，按集合成员筛 / Top placements, filtered by membership.</summary>
     /// <param name="placements">放置列表 / The placements.</param>
     /// <returns>顶面放置 / The top placements.</returns>
     public static IReadOnlyList<QuantityPlacement3<ActualItem, FltX>> TopItemPlacements(
@@ -114,7 +114,7 @@ public static class PlacementTyping {
         return placements.Where(tops.Contains).ToList();
     }
 
-    /// <summary>底面放置，按集合成员筛（基线 `bottomItemPlacements`）/ Bottom placements, filtered by membership.</summary>
+    /// <summary>底面放置，按集合成员筛 / Bottom placements, filtered by membership.</summary>
     /// <param name="placements">放置列表 / The placements.</param>
     /// <returns>底面放置 / The bottom placements.</returns>
     public static IReadOnlyList<QuantityPlacement3<ActualItem, FltX>> BottomItemPlacements(
@@ -124,7 +124,7 @@ public static class PlacementTyping {
     }
 
     /// <summary>
-    /// 底面投影与目标重叠的放置（基线 `filterBottomOverlapped`）/ Placements whose bottom footprint overlaps the target.
+    /// 底面投影与目标重叠的放置 / Placements whose bottom footprint overlaps the target.
     /// </summary>
     /// <param name="placements">候选放置 / The candidates.</param>
     /// <param name="target">目标放置 / The target.</param>

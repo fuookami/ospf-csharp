@@ -38,12 +38,12 @@ public abstract record PredicateTranslation<T> where T : class {
 /// 不支持的谓词详情 / Unsupported predicate detail.
 /// </summary>
 /// <remarks>
-/// 与基线 `UnsupportedPredicateDetail` 对齐。**策略决定错误码，不是决定错误消息**：
+/// **策略决定错误码，不是决定错误消息**：
 /// `FailFast` → `IllegalArgument`（调用方写错了谓词）、`ClientFilter` → `ApplicationFailed`（后端做不到，但换个后端可以）、
 /// `AlwaysFalse` → `ApplicationError`（后端做不到，且已按"恒假"降级）。
 /// 三个码分别指向三种不同的处置，合并成一个码会让调用方无从判断该改代码还是该换后端。
 ///
-/// Aligned with its `UnsupportedPredicateDetail`. **The policy decides the error code, not just the message**: `FailFast` gives `IllegalArgument` (the caller wrote a predicate the backend
+/// **The policy decides the error code, not just the message**: `FailFast` gives `IllegalArgument` (the caller wrote a predicate the backend
 /// cannot take), `ClientFilter` gives `ApplicationFailed` (this backend cannot, another can) and `AlwaysFalse` gives `ApplicationError` (this backend cannot and has degraded to a constant false).
 /// Three codes point at three different reactions, and merging them would leave the caller unable to tell whether to change the code or the backend.
 /// </remarks>
@@ -100,11 +100,11 @@ public sealed record UnsupportedPredicateDetail(
 /// 谓词翻译的失败传播与降级 / Failure propagation and degradation for predicate translation.
 /// </summary>
 /// <remarks>
-/// 与基线 `propagateFailure` / `withAlwaysFalseUnsupported` 对齐。**`AlwaysFalse` 是唯一会被吞掉的策略**：
+/// **`AlwaysFalse` 是唯一会被吞掉的策略**：
 /// 调用方显式声明"这个谓词后端做不到时按恒假处理"，其余两种必须原样传播——
 /// 把 `FailFast` 也降级成恒假会让"写错了谓词"变成"查询结果为空"，最难查的一种。
 ///
-/// Aligned with its `propagateFailure` / `withAlwaysFalseUnsupported`. **`AlwaysFalse` is the only policy that gets swallowed**: the caller has explicitly said "treat this predicate as
+/// **`AlwaysFalse` is the only policy that gets swallowed**: the caller has explicitly said "treat this predicate as
 /// constant false when the backend cannot take it", while the other two must propagate untouched — degrading `FailFast` to constant false would turn "the predicate was written wrongly" into "the
 /// query returned nothing", the hardest kind to diagnose.
 /// </remarks>

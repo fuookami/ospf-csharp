@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 
-// 任务与载荷模型逐字段对照固定 Kotlin 12fdb587 的 TaskModels.kt；时长一律按毫秒整型编码。
-// Task and payload models mirror the pinned Kotlin TaskModels.kt field by field; every duration is encoded as integer milliseconds.
+// 任务与载荷模型逐字段定义；时长一律按毫秒整型编码。
+// Task and payload models are defined field by field; every duration is encoded as integer milliseconds.
 
 /// <summary>任务复杂度 / Task complexity.</summary>
 public enum TaskComplexity {
@@ -104,7 +104,7 @@ public enum NormalizedModelType {
 /// </summary>
 /// <remarks>
 /// 引用、内联线性、内联二次与原始字节四种模式互斥；<see cref="ModelType"/> 顺序推断。
-/// Reference, inline linear, inline quadratic and raw-bytes modes are exclusive; <see cref="ModelType"/> infers in baseline order.
+/// Reference, inline linear, inline quadratic and raw-bytes modes are exclusive; <see cref="ModelType"/> infers in that order.
 /// </remarks>
 /// <param name="Ref">模型对象引用 / Model object reference.</param>
 /// <param name="LinearModel">内联线性模型 / Inline linear model.</param>
@@ -174,9 +174,9 @@ public sealed record SolverConfig(
 /// 远程任务提交请求 / Remote task submit request.
 /// </summary>
 /// <remarks>
-/// 逐字段对照固定 Kotlin `RemoteTaskSubmitRequest`；`deadline` 以 <c>deadlineEpochMs</c> 整型 epoch
+/// `deadline` 以 <c>deadlineEpochMs</c> 整型 epoch
 /// 毫秒编码，其余调度字段与 <see cref="SchedulingRequest"/> 同源。
-/// RemoteTaskSubmitRequest: `deadline` is encoded as an integer
+/// `deadline` is encoded as an integer
 /// <c>deadlineEpochMs</c> epoch-millisecond value, and the remaining scheduling fields share
 /// <see cref="SchedulingRequest"/> as their source.
 /// </remarks>

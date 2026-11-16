@@ -23,7 +23,7 @@ public sealed record SecurityPipeline(string Name, Func<LinearMetaModel<Flt64>, 
 /// 按装载模式生成适航安全约束管线 / Generate the airworthiness security constraint pipeline by stowage mode.
 /// </summary>
 /// <remarks>
-/// 逐条对齐的 **14 条**（11 条无条件 + 3 条条件）。顺序是基线顺序，
+/// 逐条对齐的 **14 条**（11 条无条件 + 3 条条件）。顺序固定，
 /// 报告按序号引用约束时依赖它；**必须沿用，不能按类型名排序**：
 ///
 /// | # | 管线 | 条件 |
@@ -47,12 +47,12 @@ public sealed record SecurityPipeline(string Name, Func<LinearMetaModel<Flt64>, 
 ///
 /// 1. **两个条件分支在中间**（第 5 与第 13/14），不是全堆在末尾。把条件项挪到末尾会改变 6—12 的序号。
 /// 2. **条件看的是聚合字段是否为 `null`**，不是装载模式；装载模式只传给 `horizontal_stabilizer_limit`。
-/// 3. **`UnsymmetricalLinearDensityLimit` 不在这个列表里**。类存在，但基线没有把它接进管线——沿用，别顺手加。
+/// 3. **`UnsymmetricalLinearDensityLimit` 不在这个列表里**。类存在，但没有把它接进管线——沿用，别顺手加。
 ///
-/// 's **fourteen** pipelines (eleven unconditional plus three conditional) in its order, tabulated above; reports that reference
+/// **Fourteen** pipelines (eleven unconditional plus three conditional) in a fixed order, tabulated above; reports that reference
 /// constraints by index depend on it, so it is copied verbatim rather than sorted by type name. Three easy mistakes: (1) **the conditional branches sit in the middle**
 /// (row 5 and rows 13/14), not at the end — moving them renumbers rows 6 to 12; (2) **the conditions test whether the aggregation's field is `null`**, not the stowage mode,
-/// which only reaches `horizontal_stabilizer_limit`; (3) **`UnsymmetricalLinearDensityLimit` is not in this list** — the class exists but the code never wires it in, so
+/// which only reaches `horizontal_stabilizer_limit`; (3) **`UnsymmetricalLinearDensityLimit` is not in this list** — the class exists but is never wired in, so
 /// it is copied as-is rather than added.
 /// </remarks>
 internal sealed class PipelineListGenerator

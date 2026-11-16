@@ -13,13 +13,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 分区列生成的两条策略校验 / The two partition column-generation policy checks.
 /// </summary>
 /// <remarks>
-/// 基线 `SolvePolicy` 有三个字段，本仓一直只有前两个。**第三个存在与否不是"整洁度问题"**：它是
-/// "分区列生成与 Benders 不能同时启用"那条校验的**唯一输入**。输入不在时写成校验只能是假的，
-/// 所以本仓此前明确记着"搬不了"； 把字段补上，校验随之落地。
+/// `SolvePolicy` 有三个字段。**第三个存在与否不是"整洁度问题"**：它是
+/// "分区列生成与 Benders 不能同时启用"那条校验的**唯一输入**。输入不在时，校验只能是假的，
+/// 所以此前明确记着"搬不了"；补上字段后，校验随之落地。
 ///
-/// The code's `SolvePolicy` has three fields; this implementation had two. **Whether the third exists is not a tidiness question**: it is the **only input** to the
+/// `SolvePolicy` has three fields; this implementation had two. **Whether the third exists is not a tidiness question**: it is the **only input** to the
 /// "partition CG and Benders cannot both be enabled" check. With no input, that check could only be faked, which is why this implementation recorded it as "cannot move";
-/// adds the field and the check lands with it.
+/// The field is added and the check lands with it.
 /// </remarks>
 public sealed class Demo2SolvePolicyTests
 {
@@ -74,7 +74,7 @@ public sealed class Demo2SolvePolicyTests
         ResponseDTO response = Demo2ApplicationService.Solve(request, StowageMode.FullLoad).Response;
 
         response.Succeed.Should().BeFalse();
-        // 换了状态码**： 的 `NotYetPorted` 是错的——注册一直都在，分区配置在 落地，
+        // **换了状态码**：原来的 `NotYetPorted` 是错的——注册一直都在，分区配置也已落地，
         // 分派现在只缺**求解器**。说"未实现"会把人送去查模型，而真正缺的是调用方没给后端。
         // **changed the status code**: the earlier `NotYetPorted` was wrong — the registration was always there and the partition configuration landed, so the
         // dispatch now lacks only a **solver**. Saying "not implemented" sends people to inspect the model when the caller simply supplied no backend.
@@ -154,7 +154,7 @@ public sealed class Demo2SolvePolicyTests
     /// </summary>
     /// <remarks>
     /// 顺序是有意义的：`Unknown` 机型 + 策略互斥同时成立时，报哪一个决定了调用方先去改什么。
-    /// 基线报机型，**先改策略的人会白改一遍**。这条判据钉的就是那个顺序。
+    /// 这里报机型，**先改策略的人会白改一遍**。这条判据钉的就是那个顺序。
     ///
     /// The order matters: with `Unknown` **and** a policy conflict both present, which one is reported decides what the caller fixes first. The code reports the
     /// aircraft, so **someone who fixed the policy first would have wasted the effort**. This criterion pins that order.

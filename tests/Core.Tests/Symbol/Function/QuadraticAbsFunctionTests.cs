@@ -140,7 +140,7 @@ public class QuadraticAbsFunctionTests
 
     /// <summary>**结果多项式是 `−resultVar`** / The result polynomial is `−resultVar`.</summary>
     /// <remarks>
-    /// **基线 `polynomial` 是 `−1 · resultVar`**：**因为 `resultVar = min(−p, 0)`，
+    /// **`polynomial` 是 `−1 · resultVar`**：**因为 `resultVar = min(−p, 0)`，
     /// 而正部是它的相反数。** **漏掉这个负号会让结果多项式与 `ResultVar` 同号，即负部。**
     ///
     /// **`polynomial` is `−1 · resultVar`**: **since `resultVar = min(−p, 0)` and the positive part is

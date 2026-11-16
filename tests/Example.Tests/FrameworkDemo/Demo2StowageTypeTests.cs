@@ -111,11 +111,11 @@ public class Demo2StowageTypeTests {
     }
 
     /// <summary>
-    /// **舱位类型码与基线逐项对齐** / The position type codes match the code member for member.
+    /// **舱位类型码逐项固定** / The position type codes are pinned member for member.
     /// </summary>
     /// <remarks>
     /// 名字就是规则的开关：把 `CopyItemForbidden` 之类差一个字母的名字写进来不会报错，只会让那条规则永远不成立。
-    /// 因此这里连**数量**一起钉（基线 7 项）。
+    /// 因此这里连**数量**一起钉（7 项）。
     ///
     /// The names are the rules' switches: a near-miss spelling never fails to compile, it just makes that rule never fire. The **count** is pinned too (7 in the code).
     /// </remarks>

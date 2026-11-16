@@ -5,8 +5,6 @@
 3D bin packing on top of the OSPF column-generation framework: items, bins, layer assignment,
 layer generation, packing, and rendering.
 
-Baseline: `ospf-kotlin-framework-bpp3d` at Kotlin `12fdb587`.
-
 ## Layout
 
 Four directories, split by layer rather than by problem family:

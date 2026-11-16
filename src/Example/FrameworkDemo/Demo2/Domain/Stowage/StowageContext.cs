@@ -121,10 +121,10 @@ public sealed class StowageContext
     /// <param name="model">线性元模型 / Linear meta model</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// **基线这一层是纯转发**：`StowageContext.registerForBendersMP` 只调 `aggregation.registerForBendersMP`，没有任何自己的逻辑。
+    /// **这一层是纯转发**：`RegisterForBendersMP` 只调 `aggregation.RegisterForBendersMP`，没有任何自己的逻辑。
     /// 本仓此前没有它，于是 `StowageContext` 在 Benders 覆盖表上算"缺一套"。
     ///
-    /// **This layer is a pure forwarder in the code** : the context only delegates to the aggregation. It was missing here, which is why
+    /// **This layer is a pure forwarder**: the context only delegates to the aggregation. It was missing here, which is why
     /// `StowageContext` counted as "one set short" in the Benders coverage table.
     /// </remarks>
     public Try RegisterForBendersMP(StowageMode stowageMode, LinearMetaModel<Flt64> model)
@@ -187,10 +187,10 @@ public sealed class StowageContext
     /// <param name="solution">主问题解 / The master-problem solution</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// **基线这里是个怪处，沿用并记下来**：`flushForBendersSP` 的转发目标是 `aggregation.registerForBendersSP`，**不是某个 flush**。
+    /// **这里是个怪处，沿用并记下来**：`RegisterForBendersSP` 的转发目标是 `aggregation.registerForBendersSP`，**不是某个 flush**。
     /// 换句话说"刷新"在配载域等同于"再注册一次子问题"。看起来像笔误，但**没有证据支持改写它**，所以沿用。
     ///
-    /// **This is the code quirk, copied and named**: the flush forwards to `aggregation.registerForBendersSP`, **not to any flush** — "flush" here means
+    /// **This is a quirk, copied and named**: the flush forwards to `aggregation.registerForBendersSP`, **not to any flush** — "flush" here means
     /// "register the sub-problem again". It looks like a typo, but **there is no evidence to rewrite it** , so it is copied.
     /// </remarks>
     public Try FlushForBendersSP(StowageMode stowageMode, LinearMetaModel<Flt64> model, IReadOnlyList<double> solution)

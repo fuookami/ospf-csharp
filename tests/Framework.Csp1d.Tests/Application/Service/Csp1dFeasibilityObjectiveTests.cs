@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **可行性阶段的目标只能有人工短缺项** / The feasibility phase's objective must contain only the artificial-deficit terms.
 /// </summary>
 /// <remarks>
-/// 发现**：基线 `setObjective` 第一件事就是 `if (feasibilityPhase) { … return }`，
+/// 发现**：`setObjective` 第一件事就是 `if (feasibilityPhase) { … return }`，
 /// 只放 yield 目标、命名为 `csp1d_phase_one`。
 ///
 /// C# **完全没有这个分支**：`_feasibilityPhase` 只被传给 yield 聚合，`SetObjective` 从未读过它。

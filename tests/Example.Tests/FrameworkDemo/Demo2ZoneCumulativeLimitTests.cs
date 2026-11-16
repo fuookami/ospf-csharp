@@ -443,7 +443,7 @@ public class Demo2ZoneCumulativeLimitTests {
     /// **累积：跨度为零的舱位不参与** / Cumulative: a zero-span position does not contribute.
     /// </summary>
     /// <remarks>
-    /// 舱位的 `BackArm == FrontArm` 时长度为 0，基线直接排除（否则重叠比例是除零）。判据钉住它不出现在任何检查点的 `Parts` 里。
+    /// 舱位的 `BackArm == FrontArm` 时长度为 0，这里直接排除（否则重叠比例是除零）。判据钉住它不出现在任何检查点的 `Parts` 里。
     ///
     /// When `BackArm == FrontArm` the length is zero and the code drops the position (otherwise the ratio divides by zero). The criterion pins that it appears in no
     /// checkpoint's `Parts`.

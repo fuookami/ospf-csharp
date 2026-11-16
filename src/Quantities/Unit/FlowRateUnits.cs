@@ -8,10 +8,10 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 流量单位 / Flow rate units.
 /// </summary>
 /// <remarks>
-/// **按新建。** 三个流量单位全部是 `体积 / 时间`，
+/// 三个流量单位全部是 `体积 / 时间`，
 /// **所以它们复用体积与时间单位，不各写一个数。**
 ///
-/// **Created from the code.** All three baseline flow units are `volume / time`,
+/// **All three flow units are `volume / time`** —
 /// **so they reuse the volume and time units rather than each carrying a number.**
 /// </remarks>
 public static class FlowRateUnits

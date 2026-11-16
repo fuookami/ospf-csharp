@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Symbol.Expression;
 /// 表达式树变换 / Expression tree transformation.
 /// </summary>
 /// <remarks>
-/// 与对应：**只重建节点，不改变求值语义，也不越过共享模型边界。**
+/// **只重建节点，不改变求值语义，也不越过共享模型边界。**
 ///
 /// **后序**：子节点先变换，当前节点最后交给回调。顺序不是细节——前序版本会让回调看到一个**子节点还没变过**的树，
 /// 于是"把所有 `x` 换成 `y`"会漏掉嵌套在深处的那些。
@@ -38,7 +38,7 @@ public static class ExpressionTransform
     /// <remarks>
     /// 叶子节点原样交出——**回调仍然会看到它们**，因为它接的是"重建后的节点"，不只是"重建后的内部节点"。
     /// Leaves are passed through unchanged — **the callback still sees them**, because it receives the rebuilt node, not only the rebuilt interior.
-    /// **本仓没有 `ScalarConditional`**：条条件分支在这里没有对应物，**刻意不凭空造一个**。
+    /// **本仓没有 `ScalarConditional`**：条件分支在这里没有对应物，**刻意不凭空造一个**。
     /// **There is no `ScalarConditional` here**: its conditional branch has no counterpart, and none is invented.
     /// </remarks>
     public static ScalarExpression<T> Transform<T>(
@@ -71,14 +71,14 @@ public static class ExpressionTransform
     /// <param name="transformer">节点变换器 / The node transformer.</param>
     /// <returns>变换后的表达式 / The transformed expression.</returns>
     /// <remarks>
-    /// **这是基线 `BooleanExpression.transform` 那个重载，此前缺着。**
+    /// **这是 `BooleanExpression.transform` 那个重载，此前缺着。**
     /// 它做的是**两步**：先把标量节点按原样重走一遍（`it`），再把布尔结构交给变换器。
     /// **第一步看起来什么都没改，但它保证标量子树先被重建**——
     /// **省掉它，变换器拿到的仍然是原来那些标量实例，而"变换"就成了只改外壳。**
     /// **一步用星投影（`ScalarExpression&lt;*&gt;`）；C# 没有星投影，所以要一个类型参数，**
     /// **而它不能瞎填：填 `decimal` 会让 `Comparison&lt;double&gt;` 落进叶子分支，"重建"就成了空转。**
     ///
-    /// **This is the code `BooleanExpression.transform` overload, missing formerly.**
+    /// **This is the `BooleanExpression.transform` overload, missing formerly.**
     /// It does **two** things: first it walks the scalar nodes through unchanged (`it`), then hands the boolean structure to the transformer.
     /// **The first step looks like it changes nothing, but it guarantees the scalar subtrees are rebuilt first** —
     /// **skip it and the transformer still receives the original scalar instances, so "transform" only changes the shell.**
@@ -146,7 +146,7 @@ public static class ExpressionTransform
     /// <returns>变换后的表达式 / The transformed expression.</returns>
     /// <remarks>
     /// **只重建 `And`/`Or`/`Not`**：其余节点原样交出——这一层不改变 `Comparison`、`InExpression`、`PatternMatch` 的**布尔身份**。
-    /// **Only `And`/`Or`/`Not` are rebuilt**: everything else passes through as the code does — this layer does not change the **boolean identity** of a comparison,
+    /// **Only `And`/`Or`/`Not` are rebuilt**: everything else passes through unchanged — this layer does not change the **boolean identity** of a comparison,
     /// membership or pattern match.
     /// </remarks>
     public static BooleanExpression TransformBooleans(

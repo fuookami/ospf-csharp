@@ -35,12 +35,12 @@ public class ReducedCostCutoffTests {
     /// </summary>
     /// <remarks>
     /// 输入要选**两条路径都高于 5 下限**的，否则下限钳制会把差异抹平：
-    /// `7.9` 走基线得 `floor(7.9)=7 → 14/3=4`，被钳到 `5`；浮点路径得 `(long)5.266=5`，也是 `5`——两条路径不可区分。
-    /// `10.9` 才是判别点：基线 `floor → 10 → 20/3=6`，浮点 `(long)7.266=7`，差 1 且都在下限之上。
+    /// `7.9` 走向下取整得 `floor(7.9)=7 → 14/3=4`，被钳到 `5`；浮点路径得 `(long)5.266=5`，也是 `5`——两条路径不可区分。
+    /// `10.9` 才是判别点：`floor → 10 → 20/3=6`，浮点 `(long)7.266=7`，差 1 且都在下限之上。
     ///
     /// The input must keep **both paths above the floor of 5**, or the clamp erases the difference:
-    /// `7.9` gives `floor(7.9)=7 → 14/3=4` on the code path, clamped to `5`, and `(long)5.266=5` on the floating path — also `5`, indistinguishable.
-    /// `10.9` is the discriminating point: baseline `floor → 10 → 20/3=6` versus floating `(long)7.266=7`, off by one and both above the floor.
+    /// `7.9` gives `floor(7.9)=7 → 14/3=4` on the floor-first path, clamped to `5`, and `(long)5.266=5` on the floating path — also `5`, indistinguishable.
+    /// `10.9` is the discriminating point: `floor → 10 → 20/3=6` versus floating `(long)7.266=7`, off by one and both above the floor.
     /// </remarks>
     [Fact]
     public void RemoveColumns_ShouldFloorBeforeScaling()

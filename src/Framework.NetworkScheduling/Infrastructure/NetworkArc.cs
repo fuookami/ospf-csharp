@@ -139,12 +139,12 @@ public sealed class CapacityBounds<V>(Quantity<V> lower, Quantity<V> upper) wher
     /// <remarks>
     /// 四条校验按此顺序：量纲一致 → 非负 → 上界可换算 → 下界不大于上界。
     /// **量纲检查必须最先做**：若上下界量纲不同，后续所有数值比较都失去意义，先比数值会得到一个"看起来合理"的错误结论。
-    /// **上界按原单位保存**：基线校验时把上界换算到下界单位比较，但**存的是原始上界**。若存换算后的值，调用方拿到的
+    /// **上界按原单位保存**：校验时把上界换算到下界单位比较，但**存的是原始上界**。若存换算后的值，调用方拿到的
     /// `Upper` 单位会与他传入的不同，下游再按自己期望的单位读就会错。
     /// Four checks in this order: same dimension → non-negative → upper convertible → lower not above upper.
     /// **The dimension check must come first**: with mismatched dimensions every later numeric comparison is meaningless,
     /// and comparing values first yields a "plausible-looking" wrong conclusion. **The upper bound is stored in its original
-    /// unit**: the code converts only for the comparison, so storing the converted value would hand callers an `Upper`
+    /// unit**: only the comparison converts, so storing the converted value would hand callers an `Upper`
     /// in a different unit than they passed and mislead downstream reading it in their expected unit.
     /// </remarks>
     /// <param name="lower">下界（非负）/ Lower bound (non-negative).</param>

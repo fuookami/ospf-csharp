@@ -27,10 +27,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo5;
 /// **The customer count must fall inside `1..available`.** An out-of-range count fails instead of truncating, because truncation turns "give me 100
 /// customers" into "5 customers" silently, **while the instance name still says `demo17-100`**.
 ///
-/// **与数据规模偏离**：基线 `Demo17` 有 100 个需求节点与 2 个不同的车辆规格；仓库内的 C# `Demo17` 是简化版
+/// **与数据规模偏离**：标准 `Demo17` 有 100 个需求节点与 2 个不同的车辆规格；仓库内的 C# `Demo17` 是简化版
 /// （5 个需求节点、3 辆同规格车）。适配逻辑一致，规模不同——这里不为凑数字去编造 100 个节点。
 ///
-/// **Scale divergence from the code**: the code `Demo17` has 100 demand nodes and two distinct vehicle specifications; the in-repo C# `Demo17`
+/// **Scale divergence**: the standard `Demo17` has 100 demand nodes and two distinct vehicle specifications; the in-repo C# `Demo17`
 /// is the simplified version (5 demand nodes, 3 identically specified vehicles). The adaptation logic matches, the scale does not — not
 /// invent 100 nodes just to match a count.
 /// </remarks>

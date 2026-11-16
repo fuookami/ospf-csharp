@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Infrastructure;
 /// 建议重量管线上下文 / The weight-recommendation pipeline context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**七个上下文、固定的初始化顺序、固定的注册顺序**。
+/// **七个上下文、固定的初始化顺序、固定的注册顺序**。
 ///
 /// 两条顺序都必须沿用，且**两者不一样**：
 ///
@@ -89,7 +89,7 @@ public sealed class WeightRecommendationPipelineContext
         // **必须逐步短路**：把它们塞进数组字面量会**先全部求值**再逐个检查，第一个失败时后面六步已经跑过，
         // 上下文被改了一半。每一次 `when` 都是当场返回。
         // **Must short-circuit step by step**: packing them into an array literal **evaluates all of them first** and only then checks, so a first-step failure would still leave the
-        // remaining six contexts half-initialised. Every baseline `when` returns on the spot.
+        // remaining six contexts half-initialised. Every step returns on the spot.
         Try step = AircraftContext.Init(request);
         if (!step.IsOk)
         {

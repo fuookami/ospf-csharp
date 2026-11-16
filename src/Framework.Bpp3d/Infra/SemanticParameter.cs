@@ -19,11 +19,11 @@ public sealed record PackagePattern(string Code) {
     /// <param name="other">用于判断包含关系的另一个包装模式 / Another package pattern to check containment against.</param>
     /// <returns>此模式是否为对方的前缀 / Whether this pattern is a prefix of the other.</returns>
     /// <remarks>
-    /// **方向是"我是对方的前缀"，不是"对方是我的前缀"**。基线写的是 `ano.code.startsWith(code)`：
+    /// **方向是"我是对方的前缀"，不是"对方是我的前缀"**：
     /// 短模式 `A` 属于长模式 `AB`，反过来不成立。写成 `Code.StartsWith(other.Code)` 会把包含关系整个颠倒，
     /// 而这类错误**在两侧字符串等长时完全看不出来**，只在真实的长短层级里才暴露。
     ///
-    /// **The direction is "I am a prefix of the other", not "the other is a prefix of me"**. The code writes `ano.code.startsWith(code)`: the short pattern `A`
+    /// **The direction is "I am a prefix of the other", not "the other is a prefix of me"**: the short pattern `A`
     /// belongs to the long pattern `AB`, never the reverse. Writing `Code.StartsWith(other.Code)` inverts the containment entirely, and **such a bug is invisible
     /// whenever both strings are the same length** — it only surfaces in a real short/long hierarchy.
     /// </remarks>

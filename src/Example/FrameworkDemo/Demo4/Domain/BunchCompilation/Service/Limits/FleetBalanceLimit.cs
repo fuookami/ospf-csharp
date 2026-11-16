@@ -128,8 +128,8 @@ public sealed class FleetBalanceLimit
             }
         }
 
-        // 目标：`Σ 系数 × slack`。系数在**多项式外面**乘，与基线 `coefficient(...) * slack[l]` 一致。
-        // The objective: `Σ coefficient × slack`, multiplied **outside** the polynomial, matching its `coefficient(...) * slack[l]`.
+        // 目标：`Σ 系数 × slack`。系数在**多项式外面**乘，即 `coefficient(...) * slack[l]`。
+        // The objective: `Σ coefficient × slack`, multiplied **outside** the polynomial, as in `coefficient(...) * slack[l]`.
         var monomials = new List<LinearMonomial<Flt64>>();
         Flt64 constant = Flt64.Zero;
         for (int index = 0; index < limits.Count; ++index) {

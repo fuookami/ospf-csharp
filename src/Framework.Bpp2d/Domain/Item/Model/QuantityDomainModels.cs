@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.Item.Model;
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// 与的 `QuantityItemShape` 对齐：**两种形状**，
+/// 对应 `QuantityItemShape`：**两种形状**，
 /// 矩形与圆。这个类型存在的理由是"外部数据只给量纲，不给解算器形状"——转换是**单独一步**，不塞进构造函数。
 ///
 /// 两个转换方法分工：<see cref="ToShape"/> 保留 `V`，<see cref="ToFltXShape"/> 换成解算器用的 `FltX`。
@@ -87,10 +87,10 @@ public abstract record QuantityItemShape<V> where V : struct, IFloatingNumber<V>
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// 与基线 `QuantityItem` 对齐。**`ToModel` 会丢掉不在物料目录里的物料**（基线 `mapNotNull { materialCatalog[no]?.let { … } }`），
+/// **`ToModel` 会丢掉不在物料目录里的物料**（`mapNotNull { materialCatalog[no]?.let { … } }`），
 /// 而不是报错——外部数据里多出来的物料编号是常态，报错会让整批请求失败。
 ///
-/// Aligned with its `QuantityItem`. **`ToModel` drops materials absent from the catalogue** (its `mapNotNull { materialCatalog[no]?.let { … } }`) rather than
+/// **`ToModel` drops materials absent from the catalogue** (`mapNotNull { materialCatalog[no]?.let { … } }`) rather than
 /// failing, because extra material numbers in external data are normal and erroring would fail the whole batch.
 /// </remarks>
 /// <param name="Id">货物编号 / The item id.</param>
@@ -149,10 +149,10 @@ public sealed record QuantityItem<V>(
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// 与基线 `QuantityLayerPlacement` 对齐。**旋转要落到形状上**：基线 `if (rotated) fltXShape.rotated else fltXShape`，
+/// **旋转要落到形状上**：`if (rotated) fltXShape.rotated else fltXShape`，
 /// 所以 `Rotated` 不只是记录用的标记，它会换掉形状本身。只把标记传下去而形状不动，解算器看到的还是未旋转的那一件。
 ///
-/// Aligned with its `QuantityLayerPlacement`. **Rotation lands on the shape**: the code does `if (rotated) fltXShape.rotated else fltXShape`, so `Rotated` rewrites the
+/// **Rotation lands on the shape**: `if (rotated) fltXShape.rotated else fltXShape`, so `Rotated` rewrites the
 /// shape rather than merely recording a flag. Passing the flag through without rotating would leave the solver looking at the unrotated piece.
 /// </remarks>
 /// <param name="Shape">量纲形状 / The quantity shape.</param>

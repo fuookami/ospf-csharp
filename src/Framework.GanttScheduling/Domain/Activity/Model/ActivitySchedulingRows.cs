@@ -1,7 +1,5 @@
 // 活动排程的线性行 / Linear rows of an activity schedule.
-// 与固定 Kotlin 里的
-// `CompiledActivityRow`，以及 里的存在性行构造对应。
-//.
+// 包含 `CompiledActivityRow` 与存在性行的构造 / Contains `CompiledActivityRow` and the presence-row construction.
 
 using System;
 using System.Collections.Generic;
@@ -51,12 +49,12 @@ public static class ActivityPresenceRow {
     /// <param name="to">被减一侧的候选：下标为空表示固定事实 / The side being subtracted; a null index denotes a fixed fact.</param>
     /// <returns>线性行 / The linear row.</returns>
     /// <remarks>
-    /// 参数顺序与基线 `requirePresence(from, to, suffix)` 一致：`from` 的系数取 `+1`，`to` 的系数取 `−1`，
+    /// 参数顺序：`from` 的系数取 `+1`，`to` 的系数取 `−1`，
     /// 上界为 `−(from 中固定事实数 − to 中固定事实数)`。
     ///
     /// **两侧都有固定事实时，常数会互相抵消**：这正是"已完成的前驱与已完成的后续之间无需再约束"的表达。
     ///
-    /// The argument order matches its `requirePresence(from, to, suffix)`: `from` gets `+1`, `to` gets `−1`, and the upper bound is
+    /// The argument order is `from` then `to`: `from` gets `+1`, `to` gets `−1`, and the upper bound is
     /// `−(fixed facts in from − fixed facts in to)`.
     ///
     /// **When both sides carry fixed facts the constants cancel**, which is exactly how "no constraint is needed between an executed predecessor and an executed successor" is

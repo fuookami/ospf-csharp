@@ -147,7 +147,7 @@ public sealed class ShadeRunnerTests {
 
     /// <summary>**规模缩减保留最优的个体** / A size reduction keeps the best individuals.</summary>
     /// <remarks>
-    /// 基线保留的是"最优"而不是"最近"或"随机"，这正是"规模缩减"而非"随机淘汰"的意义。
+    /// 保留的是"最优"而不是"最近"或"随机"，这正是"规模缩减"而非"随机淘汰"的意义。
     /// The code keeps the best, not the most recent nor a random subset; that is what makes it a size reduction rather than random
     /// culling.
     /// </remarks>

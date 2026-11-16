@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Model;
 /// 带类型的建模积木 / Typed modelling building blocks.
 /// </summary>
 /// <remarks>
-/// 与对齐。**这一族存在的理由是"把建模动作变成值"**：
+/// **这一族存在的理由是"把建模动作变成值"**：
 /// `Expr` / `Weight` 产出值，`Constraint` / `Objective` 产出值，最后由子类的 `Build` 一次性注册进模型。
 /// 好处是同一套建模代码可以对不同后端产出不同的东西（LP 注册、校验、打印、导出）。
 ///

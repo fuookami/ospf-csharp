@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization;
 /// 重心优化上下文 / The MAC-optimisation context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**初始化幂等**（已初始化就跳过），**注册先建管线再逐条执行**。
+/// **初始化幂等**（已初始化就跳过），**注册先建管线再逐条执行**。
 ///
 /// 与 `SoftSecurityContext` 不同，这里的 `Register` **接收 `stowageMode`**——因为纵/横松弛的注册集合随模式变化。
 /// 少传一个模式会让建议打板下也注册两个纵向松弛，而那里一个都不注册。

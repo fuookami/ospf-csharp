@@ -96,24 +96,24 @@ public static class CrossContributionProjector {
     /// <param name="quantity">物理量 / Quantity.</param>
     /// <returns>度量 / The measure.</returns>
     /// <remarks>
-    /// **单位键走唯一实现 `GenerationQuantityMath.UnitKey`，与基线逐字一致。**
+    /// **单位键走唯一实现 `GenerationQuantityMath.UnitKey`。**
     ///
-    /// 之前这里落到空串，改成 `类型全名|ToString`——**那一步是错的**：基线
-    /// `canonicalUnitKey` 是 `symbol ?: name ?: toString`，**不看类型**。加类型名会让 C# 与基线
-    /// 对同一份输入给出不同的键。
+    /// 之前这里落到空串，改成 `类型全名|ToString`——**那一步是错的**：
+    /// `canonicalUnitKey` 是 `symbol ?: name ?: toString`，**不看类型**。加类型名会让
+    /// 同一份输入得到不同的键。
     ///
     /// 同时撤回那一步并收敛实现：本处与 `GenerationWidthIndex.CanonicalUnitKey` 都委托到
-    /// `GenerationQuantityMath.UnitKey`，与基线"只有一个 private fun"一致。
+    /// `GenerationQuantityMath.UnitKey`，因此只有一个实现。
     ///
-    /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`, byte-for-byte with the code.** Before this fell back to
-    /// the empty string, and changed it to `full type name|ToString` — **that step was wrong**: its `canonicalUnitKey` is
-    /// `symbol ?: name ?: toString` and **never looks at the type**. Adding the type name makes C# and the code disagree on the same input.
+    /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`.** Before this fell back to
+    /// the empty string, and changed it to `full type name|ToString` — **that step was wrong**: `canonicalUnitKey` is
+    /// `symbol ?: name ?: toString` and **never looks at the type**. Adding the type name makes the same input key differently.
     ///
     /// both reverts that step and collapses the implementation: this and `GenerationWidthIndex.CanonicalUnitKey` delegate to `GenerationQuantityMath.UnitKey`,
     /// matching its "one private fun".
     ///
     /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`.** Before this fell back to the empty string and changed
-    /// it to `full type name|ToString` — but **three copies each writing it out** was the real problem. collapses it into one: both this and
+    /// it to `full type name|ToString` — but **three copies each writing it out** was the real problem. This collapses it into one: both this and
     /// `GenerationWidthIndex.CanonicalUnitKey` delegate there.
     ///
     /// `CrossContributionDominance.Dominates` conservatively returns "does not dominate" on **mismatched** unit keys; collapsing them turns "incomparable" into

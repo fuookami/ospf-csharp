@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 货物时效聚合初始化器 / The express-effectiveness aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**一条校验**（上游非空）+ **一条派生规则**（必须发货下标）。
+/// **一条校验**（上游非空）+ **一条派生规则**（必须发货下标）。
 ///
 /// 三处必须沿用：
 ///
@@ -66,10 +66,10 @@ internal static class AggregationInitializer
     /// 派生必须发货下标 / Derive the must-ship indices.
     /// </summary>
     /// <remarks>
-    /// **优先级不小于 8 的货物下标**（基线 `mapIndexedNotNull { index, cargo -> index.takeIf { cargo.priority >= 8 } }`）。
+    /// **优先级不小于 8 的货物下标**（`mapIndexedNotNull { index, cargo -> index.takeIf { cargo.priority >= 8 } }`）。
     /// 单独成方法是**为了让它可被测**：上一版的判据自己重算了一遍期望值而没调用被测代码，结果"阈值改成 7"的变异存活。
     ///
-    /// **The indices of items whose priority is at least 8** (its `mapIndexedNotNull`). It is a separate method **so that it can be tested**: the previous version's criterion
+    /// **The indices of items whose priority is at least 8**. It is a separate method **so that it can be tested**: the previous version's criterion
     /// recomputed the expectation itself without calling the code under test, and a mutant changing the threshold to 7 survived.
     /// </remarks>
     /// <param name="input">请求 DTO / The request DTO.</param>

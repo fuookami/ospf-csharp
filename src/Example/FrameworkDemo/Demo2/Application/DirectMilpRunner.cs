@@ -113,14 +113,14 @@ internal static class DirectMilpRunner
     /// <param name="message">求解器返回的错误文字 / The message the solver returned.</param>
     /// <returns>公开响应 / The public response.</returns>
     /// <remarks>
-    /// **基线 `solverFailureResponse` 里的那条分支，此前本仓没有。**
+    /// **`solverFailureResponse` 里的那条分支，此前本仓没有。**
     /// 原来的代码不看错误码，**一律报 `DirectSolveFailed`**——于是调用方看到的是"求解出错了"，
     /// 而**真相是"这个模型不可行"**：**前者让人去查后端，后者让人去查模型。**
     ///
     /// **照措辞**：状态为 `NoSolution`，并追加一句说明**已经映射过**，
     /// 否则同一个响应里的 `DirectSolveFailed` 诊断会让人以为失败没有被解释。
     ///
-    /// **The branch from its `solverFailureResponse` was missing here.**
+    /// **The branch `solverFailureResponse` needs was missing here.**
     /// The old code never looked at the code and **reported `DirectSolveFailed` for everything** — so the caller saw "the solve went wrong",
     /// **when the truth was "this model is infeasible"**: **the first sends somebody to the backend, the second to the model.**
     ///

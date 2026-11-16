@@ -76,9 +76,9 @@ public static class ProvenanceDualMapping
     /// <returns>映射结果 / The mapping.</returns>
     /// <remarks>
     /// **`rowOrigins` 用 `ElementAtOrDefault` 而不是索引器**：两个列表长度不一致时，
-    /// 索引器会抛异常，而基线取 `getOrNull` —— **短的那一侧只是"这行没有来源"，不是错误。**
+    /// 索引器会抛异常，而 `ElementAtOrDefault` 取不到时给 `default` —— **短的那一侧只是"这行没有来源"，不是错误。**
     ///
-    /// **`rowOrigins` uses `ElementAtOrDefault` rather than the indexer**: when the two lists differ in length the indexer throws, while the code takes `getOrNull` — **the short side
+    /// **`rowOrigins` uses `ElementAtOrDefault` rather than the indexer**: when the two lists differ in length the indexer throws, while `ElementAtOrDefault` yields `default` — **the short side
     /// simply means "this row has no origin", not an error.**
     /// </remarks>
     private static IReadOnlyDictionary<ConstraintId, TValue> Map<T, TValue>(

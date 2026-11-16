@@ -1,6 +1,4 @@
 // 方案定价：目标系数、影子价格与检验数 / Pattern pricing: objective coefficients, shadow prices and reduced costs.
-// 与固定 Kotlin 的定价半边对应。
-// The pricing half of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Basic;
@@ -331,8 +329,8 @@ public sealed class PatternAssignmentContext<V>
                 return added;
             }
             // **目标只挂一个来源：聚合符号。逐列再挂一份会把它算两次。**
-            // 基线 `register` 挂符号、`addColumns` 再逐列挂一项——而基线挂符号时**符号已被展开成当时的（空）列池**，
-            // 所以逐列那份额外挂在目标里，符号本身贡献为零。
+            // 若 `register` 挂符号、`addColumns` 再逐列挂一项，而挂符号时**符号已被展开成当时的（空）列池**，
+            // 那么逐列那份额外挂在目标里，符号本身贡献为零。
             //
             // **C# 侧不会在注册时展开符号**（实测：一列 `I1=4`、成本 1，SCIP 报目标 **2**，
             // 也就是符号那一份与逐列那一份都在）。**所以这里只保留符号这一份。**
@@ -423,11 +421,11 @@ public sealed class PatternAssignmentContext<V>
     /// 三种口径：`BinCount` 恒为 **1**（数箱数）；`ConsumedLength` 是**箱长换算到米**；
     /// `Cost` 是箱单价。
     ///
-    /// **与一处偏离**：基线写 `bin.length.convertTo(Meter)!!`——**断言一定换算成功，失败就抛**。
-    /// 这里返回 `Result`：箱长的量纲不兼容是**可查的错误**，不该变成空指针异常。
+    /// **换算失败的处理**：`bin.length.convertTo(Meter)` 若断言一定成功、失败就抛，
+    /// 量纲不兼容就变成异常。这里返回 `Result`：那本是一个**可查的错误**，不该变成空指针异常。
     ///
-    /// Three metrics: `BinCount` is always **1** (counting bins), `ConsumedLength` is the **bin length in metres**, `Cost` is the unit bin cost. **One deviation from the
-    /// baseline**: it writes `bin.length.convertTo(Meter)!!` — asserting the conversion always succeeds and throwing otherwise. This returns a `Result`, because an
+    /// Three metrics: `BinCount` is always **1** (counting bins), `ConsumedLength` is the **bin length in metres**, `Cost` is the unit bin cost. **How a failed conversion is
+    /// handled**: `bin.length.convertTo(Meter)` asserting success would turn an incompatible dimension into an exception. This returns a `Result`, because an
     /// incompatible length dimension is a **checkable error** and must not become a null-reference exception.
     /// </remarks>
     public Result<Flt64, ErrorCode, Error<ErrorCode>> Cost(PackingPattern<V> pattern) {
@@ -566,7 +564,7 @@ public sealed class PatternAssignmentContext<V>
         // **这条兜底分支通过公开接口走不到。** `RefreshShadowPrice` 已经拒绝了任何非有限价格，
         // 而 `_shadowPrice` 只有它一个写入点，所以 `allFinite` 恒真。
         // **这里没为它写判据**——写一条"绕过守卫再调用"的判据只能测到构造函数，测不到真实路径，
-        // 那是"判据通过但没证明要证明的事"。**如实记录为不可达分支**（与 的物料溢出分支同类）。
+        // 那是"判据通过但没证明要证明的事"。**如实记录为不可达分支**（与物料溢出分支同类）。
         //
         // **This fallback is unreachable through the public API.** `RefreshShadowPrice` already rejects any non-finite price and `_shadowPrice` has no other writer, so
         // `allFinite` is always true. **No criterion covers it** — a criterion that bypasses the guard only exercises the constructor, not the real path,
@@ -729,10 +727,10 @@ public sealed class PatternAssignmentContext<V>
 
         // **不需要 `RemoveObjectiveTerms`。** 把目标改成**单一来源**（聚合符号），
         // 而 `Refresh` 已经按剩余列池重建了符号内容——逐列目标项根本不存在，没有东西可清。
-        // 移植时用的那条 API 在这里变成多余的一步。**删掉，不留"以防万一"的调用。**
+        // 那条 API 在这里变成多余的一步。**删掉，不留"以防万一"的调用。**
         //
-        // **`RemoveObjectiveTerms` is not needed.** made the objective a **single source** (the aggregate symbol) and `Refresh` already rebuilds its contents from the
-        // remaining pool, so per-column objective terms no longer exist and there is nothing to clear. The call implemented becomes a redundant step here.
+        // **`RemoveObjectiveTerms` is not needed.** The objective has a **single source** (the aggregate symbol) and `Refresh` already rebuilds its contents from the
+        // remaining pool, so per-column objective terms no longer exist and there is nothing to clear.
         foreach (UIntVar variable in variables) {
             model.Remove(variable);
         }

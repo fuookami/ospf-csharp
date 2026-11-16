@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **更新写错比查询写错更贵** / A wrong update costs more than a wrong query.
 /// </summary>
 /// <remarks>
-/// 基线 `MongoUpdateTranslator`（**120 行**）。补齐标量、排序，这里补更新。
+/// 本仓的 `MongoUpdateTranslator`（**120 行**）。标量与排序已补，这里补更新。
 ///
 /// **查询错了重新查一次就好，更新错了数据已经变了**——**而没有备份的地方，改错的值不会自己回来。**
 ///
-/// The code's `MongoUpdateTranslator` (**120 lines**). Added the scalar translator, sorting and updates.
+/// This repo's `MongoUpdateTranslator` (**120 lines**). Scalar translation and sorting came first; this file covers updates.
 ///
 /// **A wrong query can be run again; a wrong update has already changed the data** — **and where there is no backup,
 /// a wrong value does not come back.**
@@ -65,10 +65,10 @@ public class MongoUpdateTranslatorTests
     /// <summary>**空赋值返回 `null`，不是空 `$set`** / Empty assignments return `null`, not an empty `$set`.</summary>
     /// <remarks>
     /// **空 `$set: {}` 在 Mongo 里是合法但无意义的写**，而 `null` 让调用方整个省掉这次写。
-    /// **基线原文是 `return Ok(null)`。**
+    /// **这里写的是 `return Ok(null)`。**
     ///
     /// **An empty `$set: {}` is a legal but meaningless write in Mongo**, while `null` lets the caller skip it entirely.
-    /// **The code reads `return Ok(null)`.**
+    /// **It writes `return Ok(null)`.**
     /// </remarks>
     [Fact]
     public void TheEmptyAssignments_ShouldBeNull()
@@ -117,13 +117,13 @@ public class MongoUpdateTranslatorTests
 
     /// <summary>**`SetFromExpression` 拒绝而不是猜** / `SetFromExpression` refuses rather than guesses.</summary>
     /// <remarks>
-    /// **C# 的 `SetFromExpression` 拿的是 `string Expression`，基线拿的是 `ScalarExpression&lt;*&gt;`。**
+    /// **C# 的 `SetFromExpression` 拿的是 `string Expression`，而不是 `ScalarExpression&lt;*&gt;`。**
     /// **字符串既可能是常量，也可能是一段没人解析过的表达式源码**——
     /// **猜它是常量，就是把一段未验证的文本当成数据写进库里。**
     ///
     /// **接受 `ScalarConstant`**，其余 `assignmentFailure(..., "expression is not supported")`。
     ///
-    /// **C# `SetFromExpression` carries a `string Expression` where the code carries a `ScalarExpression&lt;*&gt;`.**
+    /// **C# `SetFromExpression` carries a `string Expression` rather than a `ScalarExpression&lt;*&gt;`.**
     /// **A string may be a constant or unparsed expression source** —
     /// **guessing it is a constant writes unvalidated text into the database as data.**
     ///

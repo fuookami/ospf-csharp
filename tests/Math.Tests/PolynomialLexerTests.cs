@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Math.Tests;
 /// 多项式词法分析器 / The polynomial lexer.
 /// </summary>
 /// <remarks>
-/// **移植自固定基线 `12fdb587` 的（281 行）。**
+/// **这批补的是一份词法器（281 行）。**
 /// 三条行为各一条判据，**因为它们是"能编译但语义丢了"的那几种**：
 /// 末尾 `End`、孤立小数点、孤立 `!`。
 ///
-/// **Ported at the reference.** Three behaviours get a criterion each, **because these are the ones that compile fine with the meaning gone**: the trailing `End`, a lone decimal point,
+/// **A lexer (281 lines).** Three behaviours get a criterion each, **because these are the ones that compile fine with the meaning gone**: the trailing `End`, a lone decimal point,
 /// a lone `!`.
 /// </remarks>
 public class PolynomialLexerTests

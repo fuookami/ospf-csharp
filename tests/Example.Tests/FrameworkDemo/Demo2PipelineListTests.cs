@@ -170,7 +170,7 @@ public class Demo2PipelineListTests {
             .Single(constraint => constraint.Name == name);
 
     /// <summary>
-    /// **11 条无条件管线，顺序逐字对齐基线** / Eleven unconditional pipelines in its exact order.
+    /// **11 条无条件管线，顺序逐字固定** / Eleven unconditional pipelines in their exact order.
     /// </summary>
     /// <remarks>
     /// 顺序是**协议**：报告按序号引用约束。按类型名排序会得到另一套编号且看起来完全正常。

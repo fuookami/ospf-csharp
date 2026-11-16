@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Adapter;
 /// 见 <c>IBasicModelView.IdentityNamespace</c>／<c>IdentitySchemaVersion</c>，这里已作为默认接口成员
 /// 补齐（不破坏任何现有实现）。
 ///
-/// Aligns with the fixed Kotlin baseline <c>OspfRemoteModelSerializer</c>. This class currently provides
+/// The remote model serializer. This class currently provides
 /// the **identity gate**: a model element's identity metadata must pass
 /// <see cref="IsValidRemoteIdentity"/> before any remote serialization, and a failure rejects
 /// serialization outright rather than best-effort serializing an incomplete identity.
@@ -44,7 +44,7 @@ public static class OspfRemoteModelSerializer {
     /// 序列化线性三元模型 / Serialize a linear triad model.
     /// </summary>
     /// <remarks>
-    /// ：先做**整模型身份校验**（C# 对应 <c>ValidateIdentity</c>，它会拒绝混用多个命名空间或
+    /// 先做**整模型身份校验**（C# 对应 <c>ValidateIdentity</c>，它会拒绝混用多个命名空间或
     /// schema 的模型），再逐元素过身份闸门，任一失败即拒绝序列化。模型级命名空间取自约束批次——
     /// 因为整模型校验已保证全部元素共用同一套命名空间与 schema，取任一处都等价。
     /// validate the whole model's identity first (C#'s <c>ValidateIdentity</c>,
@@ -128,7 +128,7 @@ public static class OspfRemoteModelSerializer {
             }
             string name = rowIndex < constraints.Names.Count ? constraints.Names[rowIndex] : string.Empty;
             serializedConstraints.Add(new SerializedConstraint(
-                // ：空名称回退为 cons<rowIndex>。
+                // 空名称回退为 cons<rowIndex>。
                 // An empty name falls back to cons<rowIndex>.
                 Name: string.IsNullOrEmpty(name) ? $"cons{rowIndex}" : name,
                 Sign: ToSerializedSign(constraints.Signs[rowIndex]),
@@ -179,7 +179,7 @@ public static class OspfRemoteModelSerializer {
     /// 身份作用域转 wire 代码 / Convert an identity scope to its wire code.
     /// </summary>
     /// <remarks>
-    /// ：wire 上是大写下划线代码（<c>MODEL_LOCAL</c>／<c>STABLE</c>），不是 C# 的成员名。
+    /// wire 上是大写下划线代码（<c>MODEL_LOCAL</c>／<c>STABLE</c>），不是 C# 的成员名。
     /// the wire carries upper-case underscore codes (<c>MODEL_LOCAL</c>/<c>STABLE</c>),
     /// not the C# member names.
     /// </remarks>
@@ -241,12 +241,12 @@ public static class OspfRemoteModelSerializer {
     /// 序列化二次四元模型 / Serialize a quadratic tetrad model.
     /// </summary>
     /// <remarks>
-    /// ：整模型身份校验 → 逐元素身份闸门 → 组装。二次单元按列的**两个**索引拆分：C# 用
+    /// 整模型身份校验 → 逐元素身份闸门 → 组装。二次单元按列的**两个**索引拆分：C# 用
     /// <c>Col2 &lt; 0</c> 哨兵值表示线性项（Kotlin 用可空 <c>colIndex2</c>），因此线性项进入
     /// <c>LinearCells</c>、其余进入 <c>QuadraticCells</c>，与<c>colIndex2 == null</c> 判定等价。
     ///
-    /// ：同一个约束行会**同时**出现在 <c>linearConstraints</c> 与 <c>quadraticConstraints</c>
-    /// 两个列表里，前者只带线性项、后者带全部项——这是基线行为，不是重复。
+    /// 同一个约束行会**同时**出现在 <c>linearConstraints</c> 与 <c>quadraticConstraints</c>
+    /// 两个列表里，前者只带线性项、后者带全部项——这是有意为之，不是重复。
     ///
     /// validate the whole model's identity, gate each element, then assemble.
     /// Quadratic cells split on the two column indices: C# uses a <c>Col2 &lt; 0</c> sentinel for linear
@@ -255,7 +255,7 @@ public static class OspfRemoteModelSerializer {
     ///
     /// The same constraint row appears in **both** <c>linearConstraints</c> and
     /// <c>quadraticConstraints</c>: the former carries only its linear terms and the latter all terms. That
-    /// is baseline behaviour, not duplication.
+    /// is deliberate, not duplication.
     /// </remarks>
     /// <param name="model">二次四元模型视图 / Quadratic tetrad model view.</param>
     /// <returns>序列化二次模型 / Serialized quadratic model.</returns>
@@ -425,7 +425,7 @@ public static class OspfRemoteModelSerializer {
     /// 序列化为远程模型数据 / Serialize into remote model data.
     /// </summary>
     /// <remarks>
-    /// ：线性模型包成 <c>ModelData.Linear</c>、二次模型包成 <c>ModelData.Quadratic</c>、
+    /// 线性模型包成 <c>ModelData.Linear</c>、二次模型包成 <c>ModelData.Quadratic</c>、
     /// CP snapshot 包成 <c>ModelData.Raw</c>（格式 <c>ospf-cp-snapshot-json</c>）。序列化失败原样上抛，
     /// 不产出空载荷。
     /// a linear model becomes <c>ModelData.Linear</c>, a quadratic model becomes

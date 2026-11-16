@@ -11,18 +11,18 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// **调度模型与能力摘要的字段名必须与固定基线逐个相同** / Scheduling-model and capability wire names must match the reference field by field.
+/// **调度模型与能力摘要的字段名必须逐个符合 wire 约定** / Scheduling-model and capability wire names must match the reference field by field.
 /// </summary>
 /// <remarks>
 /// `12fdb587` **没有为这两组类型提供 wire fixture**（`src/test/resources/fixtures/` 里只有 remote-cp/linear 的四个文件），
 /// 所以"逐字节往返"这条路走不通。但**字段名是能核的**：Kotlin 的 `@SerialName` 与属性名就是 wire 上的事实，可以直接从固定提交里读出来。
 ///
-/// 这一条因此只声明**名称一致性**，不声明"能互相解码"——后者要等基线提供 fixture。
+/// 这一条因此只声明**名称一致性**，不声明"能互相解码"——后者要等参考侧提供 fixture。
 /// **把能核的和不能核的分开说，是这个项目反复吃过的教训**。
 ///
-/// The pinned Kotlin baseline `12fdb587` **provides no wire fixture for these two groups** (only the four remote-cp/linear files), so a byte-level round trip is not
+/// The pinned commit `12fdb587` **provides no wire fixture for these two groups** (only the four remote-cp/linear files), so a byte-level round trip is not
 /// available. **Field names are still checkable**: Kotlin's `@SerialName` and property names are the wire facts and can be read straight out of the pinned commit. This
-/// criterion therefore claims **name parity only**, not "each side can decode the other" — that needs a baseline fixture. **Separating the checkable from the uncheckable is
+/// criterion therefore claims **name parity only**, not "each side can decode the other" — that needs a reference fixture. **Separating the checkable from the uncheckable is
 /// a lesson this project learned the hard way** (the earlier project-name misjudgement, the earlier reference equality read as "not a partition").
 ///
 /// 来源 / Source:
@@ -111,7 +111,7 @@ public class RemoteSchedulingWireNameTests {
             "schemaVersion", "protocolVersions", "supportedModelTypes", "supportsPortableCheckpoint", "supportsNativeCheckpoint");
     }
 
-    /// <summary>**基线没有 fixture，这件事必须写下来** / The absence of a baseline fixture must be on record.</summary>
+    /// <summary>**没有 fixture，这件事必须写下来** / The absence of a wire fixture must be on record.</summary>
     /// <remarks>
     /// 名字一致**不等于**两端能互相解码：数值表示（`Duration` 序列化成整型毫秒还是 ISO 文本）、集合与空值策略都可能不同。
     /// 这条判据存在的意义是**拦住"名字对了就宣布互通"**。

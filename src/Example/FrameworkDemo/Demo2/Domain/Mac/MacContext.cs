@@ -76,10 +76,10 @@ public sealed class MacContext
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 与基线 `mac/MacContext.register` 一致：**只委托聚合**，不再自己判断模式。 之前这个方法缺失，
+    /// **只委托聚合**，不再自己判断模式。 之前这个方法缺失，
     /// 所以跨域编排里 `macContext.register` 那一步无处可调。
     ///
-    /// **it only delegates to the aggregation** and does not re-decide the mode. Before this method was missing, so the cross-domain orchestration's
+    /// **It only delegates to the aggregation** and does not re-decide the mode. Before this the method was missing, so the cross-domain orchestration's
     /// `macContext.register` step had nothing to call.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model)
@@ -131,11 +131,11 @@ public sealed class MacContext
     /// <param name="solution">主问题解 / The master-problem solution</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// **基线这一层与配载域不同**：MAC 的 `flushForBendersSP` 是**空实现**，而且**不收模式**（签名就是 `(model, solution)`）。
-    /// 两处不一致是基线自带的，沿用而不是统一——**统一需要证据，这里没有。**
+    /// **这一层与配载域不同**：MAC 的 `flushForBendersSP` 是**空实现**，而且**不收模式**（签名就是 `(model, solution)`）。
+    /// 两处不一致是既有的，沿用而不是统一——**统一需要证据，这里没有。**
     ///
-    /// **Unlike the stowage domain** : MAC flush is a **no-op** and **takes no stowage mode** — the signature is `(model, solution)`. The two
-    /// domains disagree in the code; it is copied rather than unified, because **unifying needs evidence and there is none.**
+    /// **Unlike the stowage domain**: MAC flush is a **no-op** and **takes no stowage mode** — the signature is `(model, solution)`. The two
+    /// domains disagree as written; it is kept rather than unified, because **unifying needs evidence and there is none.**
     /// </remarks>
     public Try FlushForBendersSP(LinearMetaModel<Flt64> model, IReadOnlyList<double> solution) =>
         Results.Ok<Success>(Results.SuccessInstance);

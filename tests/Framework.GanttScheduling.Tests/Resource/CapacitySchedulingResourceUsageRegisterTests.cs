@@ -259,10 +259,10 @@ public class CapacitySchedulingResourceUsageRegisterTests {
     /// </summary>
     /// <remarks>
     /// 三点成对：`BuildTimeSlots` 在基类里出现 / 两个子类里**都不出现**/
-    /// 两个子类仍各自存在且名字不同（对齐两个类，不能合并成一个）。
+    /// 两个子类仍各自存在且名字不同（对应两个类，不能合并成一个）。
     ///
     /// Three paired points: `BuildTimeSlots` appears in the base class; it appears in **neither** subclass (before the two were byte-identical, and one edit forgetting the other was
-    /// certain); and both subclasses still exist with different names (they mirror two baseline classes and must not collapse into one).
+    /// certain); and both subclasses still exist with different names (they mirror two distinct roles and must not collapse into one).
     /// </remarks>
     [Fact]
     public void SlotCutting_ShouldLiveInOnePlace() {

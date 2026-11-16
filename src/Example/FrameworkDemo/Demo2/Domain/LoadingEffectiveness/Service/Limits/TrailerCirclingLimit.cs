@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 拖车绕行目标 / The trailer-circling objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：把（拖车内货物对 × 相邻舱位对）的绕行指示
+/// 把（拖车内货物对 × 相邻舱位对）的绕行指示
 /// 加权求和，作为**最小化**目标，名为 `"trailer circling"`（带空格）。
 ///
 /// 四点必须沿用：

@@ -45,7 +45,7 @@ public sealed record RemoteTaskActionProvenance(
 /// 任务操作的取消事实 / Cancellation record reported by a task action.
 /// </summary>
 /// <remarks>
-/// ：未知的 <paramref name="Origin"/> 落到 <c>CancellationSource.Other</c>，且此时**必须**
+/// 未知的 <paramref name="Origin"/> 落到 <c>CancellationSource.Other</c>，且此时**必须**
 /// 保留原始文本作为 <c>WireOrigin</c>——否则 <c>external</c> 与 <c>backend</c> 会在写回时都变成
 /// <c>Other</c> 的规范代码而失真。
 /// an unknown <paramref name="Origin"/> lands in <c>CancellationSource.Other</c>,
@@ -97,10 +97,10 @@ public sealed record RemoteTaskActionCancellation(
 /// 远程任务动作响应 / Remote task action response.
 /// </summary>
 /// <remarks>
-/// 只解析恢复/停止身份校验与调度透传所需的字段；基线 action 结构里其余字段（统计、诊断、取消链、
+/// 只解析恢复/停止身份校验与调度透传所需的字段；其余字段（统计、诊断、取消链、
 /// 祖先 provenance 等）尚未映射，不得据此认为已完整对齐。
 /// Only the fields needed for resume/stop identity validation and scheduling propagation are mapped; the
-/// remaining baseline action fields (statistics, diagnostics, cancellation chain, ancestor provenance, …)
+/// remaining action fields (statistics, diagnostics, cancellation chain, ancestor provenance, …)
 /// are not mapped yet, so this is not full parity.
 /// </remarks>
 /// <param name="TaskId">任务标识 / Task identifier.</param>
@@ -186,7 +186,7 @@ public sealed record RemoteTaskActionView(
     /// 是否携带未知结果语义 / Whether any outcome semantic is unknown.
     /// </summary>
     /// <remarks>
-    /// ：状态、切片结果、终止原因、解存在性、证明状态或调度结果中任一为 <c>UNKNOWN</c>，
+    /// 状态、切片结果、终止原因、解存在性、证明状态或调度结果中任一为 <c>UNKNOWN</c>，
     /// 就视为语义未知；此时**不得**再推断可行性或最优性，只允许把结果标记为未知。
     /// if the status, slice outcome, termination reason, solution presence, proof
     /// status or scheduling outcome is <c>UNKNOWN</c>, the semantics are unknown and feasibility or
@@ -218,7 +218,7 @@ public sealed record RemoteTaskActionView(
     /// <remarks>
     /// 未知语义恒为 <see cref="SliceOutcome.Unknown"/>；否则顺序取显式结果，再按状态与可行性回退。
     /// Under unknown semantics this is always <see cref="SliceOutcome.Unknown"/>; otherwise the explicit
-    /// outcome wins, then the status and feasibility decide in baseline order.
+    /// outcome wins, then the status and feasibility decide in that order.
     /// </remarks>
     public SliceOutcome InferredOutcome {
         get {
@@ -242,10 +242,10 @@ public sealed record RemoteTaskActionView(
     /// 推断终止原因 / Infer the termination reason.
     /// </summary>
     /// <remarks>
-    /// 的回退链：未知语义 → <c>UNKNOWN</c>；否则显式原因优先；<c>STOPPED</c> →
+    /// 回退链：未知语义 → <c>UNKNOWN</c>；否则显式原因优先；<c>STOPPED</c> →
     /// <c>CANCELLED</c>；<c>FAILED</c> → 取非 <c>COMPLETED</c> 的显式原因，缺省 <c>BACKEND_FAILURE</c>；
     /// 其余情况缺失时，若结果为 <c>COMPLETED</c> 则 <c>COMPLETED</c>，否则 <c>TIME_LIMIT</c>。
-    /// Baseline fallback chain: unknown semantics yield <c>UNKNOWN</c>; otherwise the explicit reason
+    /// Fallback chain: unknown semantics yield <c>UNKNOWN</c>; otherwise the explicit reason
     /// wins; <c>STOPPED</c> maps to <c>CANCELLED</c>; <c>FAILED</c> takes a non-<c>COMPLETED</c> explicit
     /// reason and defaults to <c>BACKEND_FAILURE</c>; anything else defaults to <c>COMPLETED</c> when the
     /// outcome is completed and to <c>TIME_LIMIT</c> otherwise.
@@ -323,7 +323,7 @@ public sealed record RemoteTaskActionView(
     /// 合并为规范切片结果 / Merge into the canonical slice result.
     /// </summary>
     /// <remarks>
-    /// ：结果 artifact（<paramref name="result"/>）优先，其次本任务视图，最后按状态推断。
+    /// 结果 artifact（<paramref name="result"/>）优先，其次本任务视图，最后按状态推断。
     /// <c>Completed</c> 只在状态已知且为 <c>COMPLETED</c>／<c>FAILED</c>／<c>STOPPED</c> 时为真。
     /// the result artifact (<paramref name="result"/>) wins, then this task view,
     /// then status inference. <c>Completed</c> is true only when the status is known and is
@@ -414,8 +414,8 @@ public sealed record RemoteTaskActionView(
             FingerprintSchemas: result is null
                 ? IdentityFingerprintSchemas()
                 : Merge(IdentityFingerprintSchemas(), result.FingerprintSchemas),
-            // provenance：视图侧在前，artifact 覆盖同名键（与基线 putAll 顺序一致）。
-            // Provenance: the view side first, then the artifact overwrites by key (baseline putAll order).
+            // provenance：视图侧在前，artifact 覆盖同名键。
+            // Provenance: the view side first, then the artifact overwrites by key.
             Provenance: result is null ? Provenance : Merge(Provenance, result.Provenance));
     }
 
@@ -439,7 +439,7 @@ public sealed record RemoteTaskActionView(
     /// 身份指纹合并视图 / Merged identity fingerprints view.
     /// </summary>
     /// <remarks>
-    /// ：先取显式 <c>fingerprints</c>，再用三个平铺指纹覆盖同名键，最后让调度决策里的
+    /// 先取显式 <c>fingerprints</c>，再用三个平铺指纹覆盖同名键，最后让调度决策里的
     /// <c>model</c> 指纹胜出——顺序决定优先级，不允许两处静默给出不同值。
     /// start from the explicit <c>fingerprints</c>, then overwrite by the three flat
     /// fingerprint fields, and finally let the scheduling decision's <c>model</c> fingerprint win. The
@@ -491,7 +491,7 @@ public sealed record RemoteTaskActionView(
     /// 是否已观测到任何结果信息 / Whether any result information has been observed.
     /// </summary>
     /// <remarks>
-    /// ：终态、状态未知、任一结果字段存在、或存在未知语义，都算"已观测"；否则调用方应得到
+    /// 终态、状态未知、任一结果字段存在、或存在未知语义，都算"已观测"；否则调用方应得到
     /// null 而不是一个空结果。
     /// a terminal status, an unknown status, any populated result field or unknown
     /// semantics all count as observed; otherwise the caller gets null rather than an empty result.
@@ -511,7 +511,7 @@ public sealed record RemoteTaskActionView(
     /// 与所选检查点的身份差异字段 / Identity fields that disagree with the selected checkpoint.
     /// </summary>
     /// <remarks>
-    /// ：`taskId` 必须相等；`tenantId`、`runId`、`attemptId` 与三个指纹必须存在且相等；
+    /// `taskId` 必须相等；`tenantId`、`runId`、`attemptId` 与三个指纹必须存在且相等；
     /// 缺失也算不一致，不允许"缺失即通过"。
     /// `taskId` must match; `tenantId`, `runId`, `attemptId` and all three
     /// fingerprints must be present and equal. A missing value counts as a mismatch — absence never passes.

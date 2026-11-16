@@ -189,8 +189,6 @@ public sealed class NormalizedMathematicalModel
 /// 归一化模型的标识一致性校验 / Identity consistency for a normalized model.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `validateNormalizedIdentityMetadata`。
-///
 /// **它挡的是"同一个模型里出现两个命名空间"**。
 ///
 /// **为什么必须挡**：**命名空间会被写进指纹。** **如果变量说 `A`、某个约束说 `B`，
@@ -202,8 +200,6 @@ public sealed class NormalizedMathematicalModel
 ///
 /// **空白串按"没说"处理**——**`""` 与 `null` 都表示"没有指定"，
 /// 把空白串当成一个命名空间会让 `""` 与 `"A"` 被判为不一致，而那是一种无意义的失败。**
-///
-/// Following its `validateNormalizedIdentityMetadata`.
 ///
 /// **It blocks "two namespaces inside one model".**
 ///

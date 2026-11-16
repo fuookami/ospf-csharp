@@ -49,9 +49,9 @@ public sealed record MultiObjectiveResult<V>(
 /// Applying it to the offspring makes exploration depend entirely on the crossover's output, **and once that output degenerates (e.g.
 /// identical parents) the population has no new direction at all**.
 /// **最后一层用拥挤距离逐个挑最大的**，而不是按距离排序后取前若干个。逐次挑选在距离有并列时行为不同，
-/// 基线取的是"每次剩余集合里的最大者"，本实现照做。
+/// 本实现取的是"每次剩余集合里的最大者"。
 /// **The last layer picks the largest crowding distance one at a time**, not "sort by distance and take the first few". Repeated selection
-/// behaves differently on ties, and the code picks "the maximum of the remaining set" each time; this implementation follows it.
+/// behaves differently on ties, and this implementation picks "the maximum of the remaining set" each time.
 /// **"按约束分组选幸存者"由构造参数 `constraints` 接进来**。`constraintSurvivors` 先向模型要约束处理器，
 /// 有则按可行组分组选择、或按随机排序取前 `amount` 个；本实现把处理器放在问题旁边而非模型上（既定形状差异，见 `SearchConstraints`），
 /// 所以由调用方构造 `ConstrainedSearch` 传进来。**不传时退回纯拥挤距离**，与接线前的行为一致。
@@ -171,10 +171,10 @@ public class Nsga2Runner<V>
         }
         var entries = new List<IIndividual<IReadOnlyList<Flt64>, V>>(state);
         entries.AddRange(await Breed(model, iteration, state));
-        // **有约束处理就走分组选择，没有就走纯拥挤距离**（接线）：基线 `advance` 调的正是 `constraintSurvivors`，
+        // **有约束处理就走分组选择，没有就走纯拥挤距离**（接线）：`advance` 调的正是 `constraintSurvivors`，
         // 而本实现此前把处理器挡在运行器外面，**等于每一代都丢弃了可行性信息**——不可行的个体照样能靠拥挤距离活下来。
         //
-        // **With constraint handling, survivors are picked per feasibility group; without it, by crowding distance alone** (wired): the code `advance`
+        // **With constraint handling, survivors are picked per feasibility group; without it, by crowding distance alone** (wired): `advance`
         // calls `constraintSurvivors`, and this implementation kept the handler outside the runner — **so every generation discarded feasibility information**, and infeasible
         // individuals survived on crowding distance just the same.
         return Constraints is null

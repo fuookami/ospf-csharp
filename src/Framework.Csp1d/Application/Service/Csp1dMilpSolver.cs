@@ -155,8 +155,8 @@ public sealed class Csp1dMilpSolver {
         }
 
         // 求解 MILP / Solve MILP
-        // 走带 options 的重载，把进度上下文送进框架层——基线 `Csp1dMilpSolver.solve(..., progressContext)` 正是这样做的。
-        // Use the options overload so the progress context reaches the framework layer — exactly what its `Csp1dMilpSolver.solve(..., progressContext)` does.
+        // 走带 options 的重载，把进度上下文送进框架层。
+        // Use the options overload so the progress context reaches the framework layer.
         Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult = await _solver.SolveMILPAsync(
             model,
             new Framework.Solver.FrameworkSolveOptions {
@@ -236,8 +236,8 @@ public sealed class Csp1dMilpSolver {
         }
 
         // 求解 LP / Solve LP
-        // 走带 options 的重载，把进度上下文送进框架层——基线 `Csp1dMilpSolver.solveLP(input, extensions, progressContext)` 正是这样做的。
-        // Use the options overload so the progress context reaches the framework layer — exactly what its `solveLP(input, extensions, progressContext)` does.
+        // 走带 options 的重载，把进度上下文送进框架层。
+        // Use the options overload so the progress context reaches the framework layer.
         Result<IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>> lpSolveResult = await _solver.SolveLPAsync(
             model,
             new Framework.Solver.FrameworkSolveOptions {
@@ -307,10 +307,10 @@ public sealed class Csp1dMilpSolver {
     /// <param name="lengthConfig">长度配置 / Length config.</param>
     /// <returns>零元，无法确定时为 null / The additive identity, or null when it cannot be determined.</returns>
     /// <remarks>
-    /// **来源顺序与基线逐条对应**：需求值 → 超长惩罚 → 总长惩罚 → 批次最小惩罚。
-    /// 基线写的是 `?:` 链，所以**第一个非 null 的零元**胜出。
+    /// **来源顺序固定**：需求值 → 超长惩罚 → 总长惩罚 → 批次最小惩罚。
+    /// 取值来自一条 `?:` 链，所以**第一个非 null 的零元**胜出。
     ///
-    /// **The source order mirrors the code clause by clause**: demand value, over-length penalty, total-length penalty, batch-min penalty. The code uses a `?:`
+    /// **The source order is fixed**: demand value, over-length penalty, total-length penalty, batch-min penalty. The lookup is a `?:`
     /// chain, so **the first non-null identity wins**.
     /// </remarks>
     private static V? ResolveAdditiveZero<V>(
@@ -423,16 +423,16 @@ public sealed class Csp1dMilpSolver {
         }
 
         foreach (string productId in lengthConfig.DynamicProductIds) {
-            // **没有需求的产品也要处理。** 基线不跳过它们：产品可以从**切割方案的贡献**里找到，
+            // **没有需求的产品也要处理。** 它们不被跳过：产品可以从**切割方案的贡献**里找到，
             // 找不到时下界退到 `zero`。C# 原本 `continue`，于是这类产品的边界**永远推不出来**。
             //
-            // **Products without a demand must be handled too.** The code does not skip them: the product is found from a **cutting plan's contribution**, and the
+            // **Products without a demand must be handled too.** They are not skipped: the product is found from a **cutting plan's contribution**, and the
             // lower bound falls back to `zero`. C# originally did `continue`, so such products **never got bounds at all**.
             demandsByProduct.TryGetValue(productId, out List<ProductDemand<V>>? productDemands);
             productDemands ??= new List<ProductDemand<V>>();
 
             // 产品来源顺序：需求优先，其次方案的贡献。
-            // Product source order matches the code: demand first, then a plan's contribution.
+            // Product source order: demand first, then a plan's contribution.
             Product<V>? product = productDemands.Count > 0 ? productDemands[0].Product : null;
             if (product is null) {
                 foreach (CuttingPlan<V> plan in input.CuttingPlans) {
@@ -447,11 +447,11 @@ public sealed class Csp1dMilpSolver {
 
             // **下界的来源是 `zero`，不是需求量。**
             //
-            // 基线：`if (productId !in derivedLowerBounds && zero != null) derivedLowerBounds[productId] = zero`。
+            // 规则：`if (productId !in derivedLowerBounds && zero != null) derivedLowerBounds[productId] = zero`。
             // C# 原本推导成**需求最小值**——**那是一个上界式的假设**：把下界抬到 60mm
             // 会让"分配长度为 0"这个合法解**被排除**。
             //
-            // **The lower bound comes from `zero`, not from a demand quantity.** The code assigns `zero`. C# derived **the minimum demand** — **an upper-bound-style
+            // **The lower bound comes from `zero`, not from a demand quantity.** Here `zero` is assigned; the earlier C# derived **the minimum demand** — **an upper-bound-style
             // assumption**: raising the lower bound to 60mm **excludes the legitimate solution "assigned length = 0"**.
             if (!newLower.ContainsKey(productId)) {
                 V? zero = ResolveAdditiveZero(productDemands, lengthConfig);

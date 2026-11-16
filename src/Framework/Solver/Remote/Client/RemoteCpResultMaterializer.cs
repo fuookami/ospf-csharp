@@ -56,7 +56,7 @@ public static class RemoteCpResultMaterializer {
     /// the stable solution matches this snapshot.
     /// </summary>
     /// <remarks>
-    /// 与基线 `solveOutput` 的判定顺序一致：
+    /// 判定顺序：
     /// 1. 不可行 + 问题状态 `INFEASIBLE` + 终止原因 `COMPLETED` → **不可行**（有明确"不存在解"的结论）。
     /// 2. 其余不可行 → **未知**（不能把"没算完"当成"无解"）。
     /// 3. 可行但没有稳定解：若 snapshot 里存在变量或 interval，说明解本应被物化却缺失 → 报错，而不是
@@ -65,12 +65,12 @@ public static class RemoteCpResultMaterializer {
     ///    返回的解不是同一个问题）、每个值必须落在其值域内、interval 集合必须一致且满足其定义。
     ///
     /// **不在这里构造 Core 输出记录**：`ConstraintProgrammingFeasibleOutput` 需要一个
-    /// `SolveReport&lt;Int64&gt;`，而 C# 的 `SolverProvenance` 与形状不同
+    /// `SolveReport&lt;Int64&gt;`，而 C# 的 `SolverProvenance` 形状不同
     /// （`Descriptor`+`Configuration` 对比 `nativeVersion`/`effectiveParameters`/`threadCount`/…），
-    /// 如何把provenance 字段落进 C# 结构是一个 **Core 设计决定**，不该由远程适配层顺手发明。
+    /// 如何把 provenance 字段落进 C# 结构是一个 **Core 设计决定**，不该由远程适配层顺手发明。
     /// 因此本方法只做判定与校验，输出记录留给调用方；这样不会产出"字段缺失但看起来成功"的对象。
     ///
-    /// The decision order matches the code: infeasible with `INFEASIBLE` and `COMPLETED` is a proven
+    /// The decision order:
     /// infeasibility; any other infeasible result is **unknown**, because "did not finish" must not be
     /// reported as "no solution exists"; a feasible result without a stable solution is an error whenever
     /// the snapshot actually has variables or intervals, since the solution should have been materialized
@@ -80,9 +80,9 @@ public static class RemoteCpResultMaterializer {
     /// satisfying its definition.
     ///
     /// **The Core output record is not built here**: `ConstraintProgrammingFeasibleOutput` needs a
-    /// `SolveReport&lt;Int64&gt;`, and C#'s `SolverProvenance` has a different shape from its
+    /// `SolveReport&lt;Int64&gt;`, and C#'s `SolverProvenance` has a different shape
     /// (`Descriptor`+`Configuration` versus `nativeVersion`/`effectiveParameters`/`threadCount`/…). Deciding
-    /// how its provenance fields map onto the C# structure is a **Core design decision** that the
+    /// how provenance fields map onto the C# structure
     /// remote adapter must not invent on the side, so this method only classifies and validates. That keeps
     /// it from producing a successfully-typed object with silently missing fields.
     /// </remarks>

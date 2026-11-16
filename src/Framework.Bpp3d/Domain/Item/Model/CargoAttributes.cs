@@ -17,17 +17,17 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 货物属性模型：堆叠、悬挂、变形、重量 / The cargo attribute model: stacking, hanging, deformation, weight.
 /// </summary>
 /// <remarks>
-/// 补齐里的 12 个类型。 复审发现它们在 C# 侧一个都没有，
+/// 补齐这 12 个类型。 复审发现它们在 C# 侧一个都没有，
 /// 而三份文档也从未提到 `PackageAttribute`——所以这不是"待办"，是"从未被记录"。
 ///
-/// 一句话说明这次补齐的边界： 这些类型在只被 自身读取，没有任何生产判定依赖它们
-/// （实测： 只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
+/// 一句话说明这次补齐的边界： 这些类型只被自身读取，没有任何生产判定依赖它们
+/// （实测：只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
 /// 判据 `CargoAttributeModelTests` 钉住这一点：十二个类型都在，而 `src/` 里没有生产代码构造它们。
 ///
-/// Fills in the twelve types from its. The review found none of them on the C# side, and none of
-/// the three documents ever mentioned `PackageAttribute` — so this is not "pending", it was never recorded. One sentence on the boundary: in the
-/// baseline these types are read only inside itself and no production decision depends on them (measured that
-/// merely stamps default values while constructing an attribute). So implementation them changes no algorithm, and a criterion pins
+/// Fills in the twelve types from the source side. The review found none of them on the C# side, and none of
+/// the three documents ever mentioned `PackageAttribute` — so this is not "pending", it was never recorded. One sentence on the boundary: these
+/// types are read only within themselves and no production decision depends on them (measured that
+/// merely stamps default values while constructing an attribute). So implementing them changes no algorithm, and a criterion pins
 /// exactly that: all twelve types exist while no production code in `src/` constructs them.
 /// </remarks>
 public interface ICargoAttributeMarker {
@@ -39,10 +39,10 @@ public interface AbstractCargoAttribute : ICargoAttributeMarker {
 
 /// <summary>策略比较用的货物视图 / The cargo view the policies compare against.</summary>
 /// <remarks>
-/// 基线直接用 `ItemView`。 这里收窄成"策略真正读到的那些成员"，有两个好处： `ActualItem` 只要实现这几个属性，
+/// 这里收窄成"策略真正读到的那些成员"，有两个好处： `ActualItem` 只要实现这几个属性，
 /// 而判据可以造一个最小替身来验证策略逻辑，不必构造整个物品模型。
 ///
-/// The code uses `ItemView` directly. Narrowing to the members the policies actually read has two benefits: `ActualItem` only has to
+/// Narrowing to the members the policies actually read has two benefits: `ActualItem` only has to
 /// expose these, and a criterion can build a minimal double to exercise the policy logic without constructing the whole item model.
 /// </remarks>
 public interface ICargoView {
@@ -224,9 +224,9 @@ public sealed record BoxStackingOnPolicy(
 /// <summary>悬挂策略接口 / The hanging policy interface.</summary>
 public interface AbstractHangingPolicy {
     /// <summary>
-    /// 判断 `item` 能否挂在 `bottomSupport` 上。 基线比的是"投影面积减去支撑面积"与一个允许的悬挂面积。
+    /// 判断 `item` 能否挂在 `bottomSupport` 上。 比的是"投影面积减去支撑面积"与一个允许的悬挂面积。
     ///
-    /// Decide whether `item` may hang over `bottomSupport`: the code compares the footprint area minus the supported area against an allowed
+    /// Decide whether `item` may hang over `bottomSupport`: the footprint area minus the supported area is compared against an allowed
     /// hanging area.
     /// </summary>
     /// <param name="item">待放置的货物 / The item being placed.</param>

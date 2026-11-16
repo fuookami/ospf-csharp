@@ -26,9 +26,9 @@ public sealed record AnalysisBaselineSummary(
 /// 关键约束分析的完整报告 / The full critical-constraint analysis report.
 /// </summary>
 /// <remarks>
-/// 移植自 `CriticalConstraintAnalysisReport`。**这是基线分析器里最后一个报告类型。**
+/// 对应 `CriticalConstraintAnalysisReport`。**这是分析器报告里最后一个类型。**
 ///
-/// Ported from `CriticalConstraintAnalysisReport`. **This is the last report type among the code analysers.**
+/// Corresponds to `CriticalConstraintAnalysisReport`. **This is the last report type among the analysers.**
 /// </remarks>
 /// <param name="Baseline">基线摘要 / The baseline summary.</param>
 /// <param name="Activity">约束活跃度报告 / The constraint activity report.</param>

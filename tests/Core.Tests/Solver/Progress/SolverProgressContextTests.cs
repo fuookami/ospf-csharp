@@ -50,10 +50,10 @@ public class SolverProgressContextTests {
 
     /// <summary>**进度只增不减** / Progress never decreases.</summary>
     /// <remarks>
-    /// 基线 `MonotonicProgressState.accept` 取 `max(上次值, 本次值)`。若实现直接透传快照，
+    /// `MonotonicProgressState.accept` 取 `max(上次值, 本次值)`。若实现直接透传快照，
     /// 进度条会**倒退**——这在长时间求解里是明显可见的错误，但"上报成功"的判据不会发现。
     ///
-    /// The code's `MonotonicProgressState.accept` takes `max(last, current)`. If the implementation passed the snapshot through unchanged, the progress bar would
+    /// `MonotonicProgressState.accept` takes `max(last, current)`. If the implementation passed the snapshot through unchanged, the progress bar would
     /// **go backwards** — an obvious error in long solves that a "reporting succeeded" criterion would never catch.
     /// </remarks>
     [Fact]
@@ -125,10 +125,10 @@ public class SolverProgressContextTests {
 
     /// <summary>**已取消时一次都不上报** / When cancelled, nothing is reported at all.</summary>
     /// <remarks>
-    /// 基线 `report` 的第一行就是 `throwIfCancelled`。**顺序很重要**：若先上报再检查取消，
+    /// `report` 的第一行就是 `throwIfCancelled`。**顺序很重要**：若先上报再检查取消，
     /// 已取消之后仍会有快照流出去，下游会看到本不该发生的进度。
     ///
-    /// The code's `report` starts with `throwIfCancelled`. **Order matters**: if it reported before checking, snapshots would still flow out after cancellation and
+    /// `report` starts with `throwIfCancelled`. **Order matters**: if it reported before checking, snapshots would still flow out after cancellation and
     /// downstream would see progress that should not have happened.
     /// </remarks>
     [Fact]
@@ -154,11 +154,11 @@ public class SolverProgressContextTests {
         subStage.RenderDefault().Should().Be("第 3 轮 / 共 16 轮");
     }
 
-    /// <summary>**内置阶段目录必须与基线逐项一致** / The built-in stage catalog must match the code item by item.</summary>
+    /// <summary>**内置阶段目录必须逐项固定** / The built-in stage catalog must be pinned item by item.</summary>
     /// <remarks>
-    /// 基线 `SolverStages` 有 9 项。少一项或 id 拼错，下游的 `messageKey` 就会指向不存在的键。
+    /// `SolverStages` 有 9 项。少一项或 id 拼错，下游的 `messageKey` 就会指向不存在的键。
     ///
-    /// The code `SolverStages` has 9 entries. A missing entry or a misspelled id would make downstream `messageKey`s point at keys that do not exist.
+    /// `SolverStages` has 9 entries. A missing entry or a misspelled id would make downstream `messageKey`s point at keys that do not exist.
     /// </remarks>
     [Fact]
     public void SolverStages_ShouldMatchTheBaselineCatalog() {

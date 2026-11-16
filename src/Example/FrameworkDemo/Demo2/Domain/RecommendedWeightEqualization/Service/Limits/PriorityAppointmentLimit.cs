@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 优先级预约约束 / The priority-appointment constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：**没有预约的货物只能落在与其优先级深度匹配的舱位上**。
+/// **没有预约的货物只能落在与其优先级深度匹配的舱位上**。
 ///
 /// 五处必须沿用：
 ///
@@ -32,14 +32,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 2. **`StowageNeeded` 为假也跳过**：不可放置的组合本来就没有变量，加约束会造出恒真式。
 /// 3. **约束是 `s[i,j] = 0`**（等式），不是 `不超过 0`。用不等式会允许负值——而配载变量是二元的，负值不可能，但等式更贴合语义。
 /// 4. **`StowageNeeded` 用的是静态方法**，与 `StowageModel.StowageNeeded(item, position)` 一致。
-/// 5. **基线还写了 `stowage.stowage[i, j].range.eq(Flt64.zero)`**——那是给符号设界，**紧接着又加了同义的等式约束**。
+/// 5. **另一处还写了 `stowage.stowage[i, j].range.eq(Flt64.zero)`**——那是给符号设界，**紧接着又加了同义的等式约束**。
 ///    两件事都做是冗余但无害的；本仓只加约束（符号的界由注册时决定），并把这条差异记在这里。
 ///
 /// **an item without an appointment may only sit at a position matching its priority depth**. Five things must be copied: **the three skip conditions** —
 /// `!Location.Main` (main deck only), `Cargo.Contains(Virtual)` (virtual cargo is unconstrained) and `appointment.ContainsKey(item)` (appointed items are unconstrained); dropping any
 /// of them adds constraints and cuts off valid solutions; **`StowageNeeded` false is skipped too**, since an unplaceable combination has no variable and the constraint would be a
-/// tautology; **the constraint is `s[i,j] = 0`** (an equality), not `不超过 0`; **`StowageNeeded` is the static method** matching `StowageModel.StowageNeeded(item, position)`; and **the
-/// baseline also writes `stowage.stowage[i, j].range.eq(Flt64.zero)`** — bounding the symbol — **immediately followed by an equivalent equality constraint**. Both is redundant but
+/// tautology; **the constraint is `s[i,j] = 0`** (an equality), not `不超过 0`; **`StowageNeeded` is the static method** matching `StowageModel.StowageNeeded(item, position)`; and **another place
+/// also writes `stowage.stowage[i, j].range.eq(Flt64.zero)`** — bounding the symbol — **immediately followed by an equivalent equality constraint**. Both is redundant but
 /// harmless; this implementation adds only the constraint (bounds are decided at registration) and records the difference here.
 /// </remarks>
 internal sealed class PriorityAppointmentLimit

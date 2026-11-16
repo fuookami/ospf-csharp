@@ -14,9 +14,9 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 /// **二维影子价格映射** / The 2D shadow price map.
 /// </summary>
 /// <remarks>
-/// 判据的重点：**模式与物品都参与键**（这里存在的理由就是共享基类把这两项折叠掉了），以及**累加、空键返回 null、提取器求和**三条基线语义。
+/// 判据的重点：**模式与物品都参与键**（这里存在的理由就是共享基类把这两项折叠掉了），以及**累加、空键返回 null、提取器求和**三条语义。
 ///
-/// The criteria focus on **both mode and item taking part in the key** — the whole reason exists is that the shared base class collapsed those two — plus the three baseline
+/// The criteria focus on **both mode and item taking part in the key** — the whole reason exists is that the shared base class collapsed those two — plus three
 /// semantics: accumulation, null for an unregistered key, and summing extractors.
 /// </remarks>
 public class Bpp2dShadowPriceMapTests {

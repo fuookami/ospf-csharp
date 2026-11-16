@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 预留货物目标 / The item-reserve objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：最小化 `Σ (−c × loaded[i] + c)`，
+/// 最小化 `Σ (−c × loaded[i] + c)`，
 /// 也就是最小化（常数 − 已装载量）。注意**每件货物都带一个常数 `+c`**，所以这个目标的**常数项非零**。
 ///
 /// 四处必须沿用：

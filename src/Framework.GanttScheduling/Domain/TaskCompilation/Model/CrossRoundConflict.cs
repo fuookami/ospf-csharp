@@ -1,8 +1,5 @@
 // 跨轮冲突约束的生成条件 / When a cross-round conflict constraint is emitted.
-// 与固定 Kotlin 的
-// `if (task1 != task2 && conflict(task1, task2)) { xi[task1] + x[other][task2] ≤ 1 }` 对应。
-// Mirrors `if (task1 != task2 && conflict(task1, task2)) { xi[task1] + x[other][task2] ≤ 1 }`
-//'s.
+// 生成条件：`task1 != task2 && conflict(task1, task2)` 时加 `xi[task1] + x[other][task2] ≤ 1`。
 
 using System;
 
@@ -21,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 ///
 /// 另有一处需要记录的细节：`task1 != task2` 比的是**任务的相等性**，不是在比"是不是同一个变量"。
 /// 于是同一个任务出现在**不同轮次**时也会被跳过，那两列之间**不加互斥**。
-/// 这是基线原样；见下方 `ponytail:` 说明。
+/// 当前行为如此；见下方 `ponytail:` 说明。
 ///
 /// Column generation adds a batch of columns per round, and **conflicts must hold across all rounds**: if this round's first task excludes any second task from any earlier round,
 /// a `xi[task1] + x[other][task2] ≤ 1` row is added.
@@ -30,7 +27,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// are **the same variable**, the row degenerates to `2x ≤ 1`, and **every column is forced to 0** — the schedule is infeasible, or feasible with nothing done.
 ///
 /// One detail worth recording: `task1 != task2` compares **task equality**, not "is it the same variable". So the same task appearing in **different rounds** is skipped too, and no
-/// exclusion is added between those two columns. This is the code verbatim; see the `ponytail:` note below.
+/// exclusion is added between those two columns. This is the current behaviour; see the `ponytail:` note below.
 /// </remarks>
 public static class CrossRoundConflict {
     /// <summary>

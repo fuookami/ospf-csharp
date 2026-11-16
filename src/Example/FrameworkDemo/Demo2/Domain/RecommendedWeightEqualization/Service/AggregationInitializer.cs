@@ -13,16 +13,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡聚合初始化器 / The recommended-weight-equalisation aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**没有任何校验**，直接原样搬九个上游部件。
+/// **没有任何校验**，直接原样搬九个上游部件。
 ///
 /// 三处必须沿用：
 ///
-/// 1. **零校验**。`return Ok(Aggregation(...))`，一条判断都没有。加校验会让某些基线能跑通的请求在这里失败。
+/// 1. **零校验**。`return Ok(Aggregation(...))`，一条判断都没有。加校验会让某些本来能跑通的请求在这里失败。
 /// 2. **预约映射取内层字典** `StowageAggregation.Appointment.Mapping`。
 /// 3. **`Ballast` 原样透传**（可为 `null`）。本仓的聚合不持有它——它在这里一次都没被读，见 `PriorityAppointment.From` 的说明。
 ///
 /// **no validation at all**, just the nine upstream parts copied across. Three things must be copied: **zero checks** — the code is a bare
-/// `return Ok(Aggregation(...))`, and adding any would fail requests the code accepts; **the appointment map is the inner dictionary**
+/// `return Ok(Aggregation(...))`, and adding any would fail requests that work today; **the appointment map is the inner dictionary**
 /// `StowageAggregation.Appointment.Mapping`; and **`Ballast` is passed through** (nullable) — this implementation's aggregation does not hold it, since it is never read here (see
 /// `PriorityAppointment.From`).
 /// </remarks>

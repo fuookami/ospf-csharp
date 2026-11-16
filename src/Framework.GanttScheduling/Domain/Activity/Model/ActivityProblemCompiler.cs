@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
 /// 把问题编译成求解输入 / Compile a problem into solver input.
 /// </summary>
 /// <remarks>
-/// 与基线 `prepareActivityProblem` 对齐，固定为 `Flt64`（理由同 <see cref="ActivitySchedulingAggregation"/>）。
+/// 固定为 `Flt64`（理由同 <see cref="ActivitySchedulingAggregation"/>）。
 ///
 /// **这一层的职责是"在建模之前把不合法的问题挡掉"，不是"尽量修好它"**：所有检查都返回
 /// <see cref="ErrorCode.IllegalArgument"/> 加一句点名哪个身份不合法的消息，而不是抛异常。
 /// 一条检查都不省略，因为每一条对应一种"求解器会给出一份看起来正常的错解"的输入。
 ///
-/// Aligned with its `prepareActivityProblem`, fixed to `Flt64` (for the same reason as <see cref="ActivitySchedulingAggregation"/>).
+/// Fixed to `Flt64` (for the same reason as <see cref="ActivitySchedulingAggregation"/>).
 ///
 /// **This layer's job is to reject an illegal problem before modelling, not to repair it**: every check returns <see cref="ErrorCode.IllegalArgument"/> with a message naming the offending identity
 /// rather than throwing, and none is omitted, because each one corresponds to an input on which the solver would return a plausible-looking wrong answer.

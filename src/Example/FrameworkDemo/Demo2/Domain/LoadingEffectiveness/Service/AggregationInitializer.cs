@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 装载效能聚合初始化器 / The loading-effectiveness aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**六条校验** + **四项派生**。
+/// **六条校验** + **四项派生**。
 ///
 /// 六条校验，顺序照做：拖车名非空 → 拖车名唯一 → 顺序在 `0..255` → 同车内货物不重复 →
 /// 每件货最多属于一辆车 → 拖车引用的货物必须存在。

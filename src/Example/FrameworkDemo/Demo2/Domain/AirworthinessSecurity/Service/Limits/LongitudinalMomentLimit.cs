@@ -28,14 +28,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **这里是 `_minimum` 在前**。`PayloadLimit` 是先上限后下限、且上限不带后缀；这一个两个都带后缀、顺序也相反。
 ///    两个文件的对称性不一样，沿用各自的样子。
-/// 2. **`min` / `max` 是构造参数**，不是 `Torque` 的字段。基线从 `targetLongitudinalMoment ± maxLongitudinalMomentDeviation`
+/// 2. **`min` / `max` 是构造参数**，不是 `Torque` 的字段。它们由 `targetLongitudinalMoment ± maxLongitudinalMomentDeviation`
 ///    算出来再传进来，本类只负责用它建两行。
 /// 3. **缺符号时明确失败**。`torque.longitudinalTorque[phase]!!` 会抛 `NullPointerException`；
 /// C# 侧改成返回 `ApplicationFailed` 并说明是哪个阶段。
 ///
 /// **two rows per flight phase**, `longitudinal_torque_{phase} ≥ min` (named `{name}_{phase}_minimum`) then `≤ max` (`..._maximum`).
 /// Three easy mistakes: (1) **`_minimum` comes first here** — `PayloadLimit` adds the upper row first and only the lower row carries a suffix, whereas this one suffixes both and
-/// reverses the order; the two files are not symmetric and each is copied as written; (2) **`min` / `max` are constructor arguments**, not `Torque` fields — the code derives
+/// reverses the order; the two files are not symmetric and each is copied as written; (2) **`min` / `max` are constructor arguments**, not `Torque` fields — they are derived
 /// them from `targetLongitudinalMoment ± maxLongitudinalMomentDeviation` and only builds the rows here; (3) **a missing symbol fails explicitly** — its `!!` throws an
 /// NPE, while this returns `ApplicationFailed` naming the phase.
 /// </remarks>

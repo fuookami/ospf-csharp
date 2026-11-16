@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// </summary>
 /// <remarks>
 /// 起 `ExecutorCapacityResult.TotalDuration` 是把每个分配的 `Duration`（= 时隙长度）加起来。同一时隙里两个动作就会报
-/// "两个时隙的占用"——**数字看着像产能，其实只是动作个数乘以时隙长度**。基线不是这么算的：
+/// "两个时隙的占用"——**数字看着像产能，其实只是动作个数乘以时隙长度**。以前不是这么算的：
 /// `capacity[e, s]` 求值后经 `timeWindow.durationOf(...)` 换回时长。
 ///
 /// 现在从数量直接算：`占用 = Σ 单位加工时长 × 数量`，再换回时长。

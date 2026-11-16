@@ -5,7 +5,7 @@ using System;
 
 namespace Fuookami.Ospf.Math.Symbol.Serde;
 /// <summary>
-/// 符号身份序列化工具（前向声明，a later phase 完整移植）/ Symbol identity serde helpers (forward-declared; a later phase owns full module).
+/// 符号身份序列化工具（前向声明，完整实现留给后续阶段）/ Symbol identity serde helpers (forward-declared; the full module comes later).
 /// </summary>
 internal static class SymbolIdentitySerde {
     /// <summary>将符号序列化为标识字符串 / Serialize symbol to identifier string.</summary>
@@ -26,10 +26,10 @@ internal static class SymbolIdentitySerde {
             return NamedSymbol.Of(identifier["name:".Length..]);
         }
 
-        // **基线对非前缀标识符走 `defaultSymbolOf(identifier)`，即"按名字建一个普通符号"。**
+        // **非前缀标识符走 `defaultSymbolOf(identifier)`，即"按名字建一个普通符号"。**
         // **此前这里直接抛异常，而多项式解析出来的记号全是这种标识符。**
         // **缺的不是 hex/JSON 那几段（那些确实留给 a later phase），缺的是最简单的那个回退。**
-        // **The code routes unprefixed identifiers to `defaultSymbolOf(identifier)`.**
+        // **Unprefixed identifiers route to `defaultSymbolOf(identifier)`.**
         // **This used to throw, and every identifier a polynomial parse produces is one of those.**
         return NamedSymbol.Of(identifier);
     }

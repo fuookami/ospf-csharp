@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 报告侧的两个纯函数 / The two pure functions on the report side.
 /// </summary>
 /// <remarks>
-/// 补完 的报告侧**：`buildEffectivenessRanking` 与 `summarizeGroups`。
+/// 补完报告侧**：`buildEffectivenessRanking` 与 `summarizeGroups`。
 /// 两者都不碰后端。报告构造器仍缺。
 ///
-/// **completes the report side of.** Neither function touches a backend; the report builder is still missing.
+/// **This completes the report side.** Neither function touches a backend; the report builder is still missing.
 /// </remarks>
 public class CriticalAnalysisReportsTests {
     private static ConstraintPerturbationObservation Observation(
@@ -209,7 +209,7 @@ public class CriticalAnalysisReportsTests {
         summaries[0].ActiveInstances.Should().Be(1);
     }
 
-    /// <summary>**基线与缺省都不炸** / The code check and the empty case do not throw.</summary>
+    /// <summary>**基线与缺省都不炸** / A NaN baseline and the empty case do not throw.</summary>
     [Fact]
     public void TheEdgeCases_ShouldBeHandled() {
         CriticalAnalysisReports

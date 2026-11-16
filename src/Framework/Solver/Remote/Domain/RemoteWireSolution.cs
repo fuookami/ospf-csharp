@@ -112,9 +112,9 @@ public sealed record SerializedSolution {
     /// 是否为可声明的精确最优结论 / Whether an exact optimum may be claimed.
     /// </summary>
     /// <remarks>
-    /// 以基线为准：<c>optimal</c> 是权威字段，且必须可行、携带非 NONE 证明状态、解存在性为 OPTIMAL。
+    /// 规则是：<c>optimal</c> 是权威字段，且必须可行、携带非 NONE 证明状态、解存在性为 OPTIMAL。
     /// 间隙为 0 或解存在性单独都不是充分条件；字段缺失一律不推断为最优。
-    /// Baseline rule: <c>optimal</c> is authoritative and must be feasible, carry a non-NONE proof status
+    /// Rule: <c>optimal</c> is authoritative and must be feasible, carry a non-NONE proof status
     /// and report OPTIMAL presence. Neither a zero gap nor the presence value alone is sufficient, and absent fields never infer optimality.
     /// </remarks>
     /// <returns>是否声明精确最优 / Whether an exact optimum is claimed.</returns>

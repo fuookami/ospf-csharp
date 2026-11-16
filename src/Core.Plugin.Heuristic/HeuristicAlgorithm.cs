@@ -18,13 +18,13 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic;
 /// </summary>
 /// <remarks>
 /// <para>
-/// **两套并存的面，必须说清谁对应基线：**
-/// **`ospf-kotlin-core-plugin-heuristic` 里没有任何类—— 只有一个 `fun islandGenetic(...)`，
-/// 只有一个 `fun harmonySearch(...)`。**
+/// **两套并存的面，必须说清各自的定位：**
+/// **算法本体只有函数形式——只有一个 `islandGenetic(...)`，
+/// 只有一个 `harmonySearch(...)`。**
 /// </para>
 /// <para>
-/// **所以：本基类与它的 6 个子类不是移植来的，是 C# 侧等价的算法封装面；
-/// 而真正的基线对应物在 `ComposedSolvers`（35 个入口，与基线工厂函数一一对应）。**
+/// **所以：本基类与它的 6 个子类是 C# 侧的算法封装面；
+/// 而按算子组合的入口在 `ComposedSolvers`（35 个入口，与工厂函数一一对应）。**
 /// </para>
 /// <para>
 /// **两者都保留是有意的：组合函数给"按算子拼"的用法，类给"带策略对象的算法实例"的用法。
@@ -32,10 +32,10 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic;
 /// 因为它是区分"算法"与"桩"的、不需要读实现的判据。**
 /// </para>
 /// <para>
-/// **Two surfaces coexist, and which one mirrors the code must be stated: the code plugin has no classes —
-/// holds only `fun islandGenetic(...)`, only `fun harmonySearch(...)`.**
-/// **So this base class and its six subclasses were not implemented; they are C#'s equivalent algorithm surface, while the real
-/// baseline counterpart is `ComposedSolvers` (35 entry points).**
+/// **Two surfaces coexist, and each one's role must be stated: the algorithm bodies are plain functions —
+/// only `islandGenetic(...)`, only `harmonySearch(...)`.**
+/// **So this base class and its six subclasses are C#'s algorithm surface, while the per-operator
+/// composition entry points live in `ComposedSolvers` (35 entry points).**
 /// **Keeping both is deliberate, and every subclass must be constructed by some test — that invariant lives in
 /// `AlgorithmClassesShouldBeTestedTests`, because it distinguishes an algorithm from a stub without reading the
 /// implementation.**

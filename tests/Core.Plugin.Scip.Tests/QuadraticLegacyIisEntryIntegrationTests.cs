@@ -106,16 +106,16 @@ public class QuadraticLegacyIisEntryIntegrationTests {
     /// **Why not through `ComputeLegacyIISAsync`**: measured, the elastic filter rescues **every** model (even contradictory bounds `x ∈ [20, 10]` return `feasible=True`)
     /// because the elastic model relaxes bounds too. So the full entry point **never reaches** deletion filtering.
     ///
-    /// **查证：这是基线行为，不是 C# 偏差。** 同样给
+    /// **查证：这是算法本身的行为，不是 C# 偏差。** 同样给
     /// **每个有界变量**加 `ElasticLowerBound` / `ElasticUpperBound` 松弛行，入口结构也完全相同
-    /// （弹性过滤命中即返回，否则才走删除过滤）。所以"删除分支几乎不可达"是**基线固有的性质**，
+    /// （弹性过滤命中即返回，否则才走删除过滤）。所以"删除分支几乎不可达"是**算法固有的性质**，
     /// C# 忠实还原了它——**这里不改代码**，只把这个事实钉下来。
     ///
     /// This therefore calls `PerformDeletionFilteringAsync` **directly**; the entry point's deletion branch **stays uncovered**, recorded honestly.
     ///
-    /// **verified this is baseline behaviour, not a C# deviation**: its also adds `ElasticLowerBound` /
+    /// **verified this is the algorithm's behaviour, not a C# deviation**: it also adds `ElasticLowerBound` /
     /// `ElasticUpperBound` slack rows for **every bounded variable**, and the entry structure is identical (elastic filter returns on success, deletion runs only otherwise).
-    /// So "the deletion branch is nearly unreachable" is **inherent to the code**, faithfully reproduced here — **no code change in**, just the fact pinned down.
+    /// So "the deletion branch is nearly unreachable" is **inherent to the algorithm**, faithfully reproduced here — **no code change in**, just the fact pinned down.
     /// </remarks>
     [Fact]
     public async Task PerformDeletionFilteringAsync_ShouldKeepOnlyTheNecessarySlack() {

@@ -67,7 +67,7 @@ public interface IHeuristicSolver<ObjValue, V>
 /// </summary>
 /// <remarks>
 /// **`HeuristicResult.BestSolution` 在本实现里是"解向量"而不是`Solution` 包装**。这是更早批次（PSO 求解器）定下的形状，
-/// 已有消费者依赖它，因此这里**沿用而不改动**。差异写在类型注释里，不假装与基线逐字段一致。
+/// 已有消费者依赖它，因此这里**沿用而不改动**。差异写在类型注释里，不假装逐字段一致。
 /// **`HeuristicResult.BestSolution` is "the solution vector" here rather than its `Solution` wrapper.** That shape was fixed by
 /// an earlier change (the PSO solver) and existing consumers depend on it, so it **stays unchanged**. The difference is recorded
 /// here rather than being passed off as field-for-field compatible.

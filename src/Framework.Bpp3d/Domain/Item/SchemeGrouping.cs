@@ -1,14 +1,12 @@
 // 方案分组：按图样归并物品 / Scheme grouping: merge items by pattern.
-// 对应固定 Kotlin 中 `Scheme` 的分组与排序行为。
-// Grouping and ordering behaviour: 
+// 分组与排序行为。
+// Grouping and ordering behaviour.
 //
-// **与一处结构差异**：基线 `Scheme` 在 `init` 块里做分组，分组结果作为构造期算好的 `patternedItems` 字段；
-// C# 的 `Schema<V>` 是纯数据 record（`BatchNo` + `PatternedItems`），没有构造期逻辑。这里把分组抽成**独立纯函数**
+// **结构上的取舍**：`Schema<V>` 是纯数据 record（`BatchNo` + `PatternedItems`），没有构造期逻辑。这里把分组抽成**独立纯函数**
 // `SchemeGrouping.GroupByPattern`，而不是给 record 加 init 逻辑——record 的值语义要求构造只做赋值，混入计算会让
 // `Equals`／`GetHashCode` 与"实际内容"脱节。
-// **One structural difference from the code**: its `Scheme` groups inside an `init` block and stores the
-// result in a construction-time `patternedItems` field, whereas C#'s `Schema<V>` is a pure data record with no
-// construction-time logic. extracts the grouping into a **standalone pure function**
+// **A structural choice**: `Schema<V>` is a pure data record with no construction-time logic, so the grouping
+// is extracted into a **standalone pure function**
 // `SchemeGrouping.GroupByPattern` instead of adding init logic to the record: record value semantics require construction
 // to only assign, and mixing in computation would divorce `Equals` / `GetHashCode` from the actual content.
 
@@ -30,11 +28,11 @@ public static class SchemeGrouping {
     /// 按图样归并物品，组内按重量升序 / Group items by pattern, ordering within groups by ascending weight.
     /// </summary>
     /// <remarks>
-    /// 两条规则都来自基线：
+    /// 两条规则：
     /// 1. **先按重量升序排序再分组**——因此每组内部天然有序，重件在后。后续层生成按顺序取件时，轻件先上，重件压底。
     /// 2. **同图样归入同一组，组按首次出现顺序排列**。插入序列表实现，因此"首次出现"就是排序后第一个该图样物品的位置。
     ///
-    /// Two rules, both from the code:
+    /// Two rules:
     /// 1. **Sort by ascending weight before grouping** — each group is therefore internally ordered with heavier items last.
     /// Layer generation taking items in order puts light items on top and heavy ones at the bottom.
     /// 2. **Same pattern joins the same group, groups follow first-appearance order.** The code uses an insertion-ordered
@@ -66,7 +64,7 @@ public static class SchemeGrouping {
     /// 计算物品的图样键 / Compute an item's pattern key.
     /// </summary>
     /// <remarks>
-    /// **图样由批次号、仓库与包装属性共同决定**，三者任一不同就视为不同图样。这是 C# 侧对基线 `ItemPattern` 的等价表达：
+    /// **图样由批次号、仓库与包装属性共同决定**，三者任一不同就视为不同图样。等价于一个独立的 `ItemPattern` 值对象：
     /// 独立的 `ItemPattern` record，C# 的 `Item&lt;V&gt;` 是扁平结构，因此在此把同样的字段组合成键。
     /// 用字符串签名而不是直接以 `PackageAttribute` 作字典键——已有三次"深值对象做字典键"失效的先例。
     ///

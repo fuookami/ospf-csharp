@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 /// 重心优化管线生成器 / The MAC-optimisation pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：**先看装载模式**，再按"纵 → 横（宽体才）→ 安定面"的顺序装配。
+/// **先看装载模式**，再按"纵 → 横（宽体才）→ 安定面"的顺序装配。
 ///
 /// 五处必须沿用：
 ///
-/// 1. **`WithMacOptimization` 为假时返回空列表**（不是失败）。基线 `return Ok(emptyList)`。
+/// 1. **`WithMacOptimization` 为假时返回空列表**（不是失败），即 `return Ok(emptyList)`。
 /// 2. **顺序固定**：纵向、横向、安定面。改顺序会改变目标在 `MetaSubObjects` 里的位置，而下游按位置取值。
 /// 3. **横向只对宽体机加**：`LateralBalance` 为 `null` 时跳过。
 /// 4. **纵向系数三分支**：`C` 点 → `MacRangeC`； → ` LongitudinalBalance`；其余 → `LongitudinalBalance`。

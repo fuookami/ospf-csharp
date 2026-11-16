@@ -33,13 +33,13 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 ///
 /// 实测发现它**没有任何调用方**：每条管线都**显式覆写 `refresh`** 并调用它，
 /// 而 C# 保留默认实现、**没有覆写**。这两份是**等价实现**，所以 C# 这份是
-/// **从基线继承的死代码**。
+/// **一直未被调用的死代码**。
 ///
 /// 判据的价值不在于"证明它有用"，而在于**证明它若被误接上也不会出错**：
 /// 用同一组约束与对偶，分别走两条路径，**结果必须完全相同**。
 ///
-/// **the earlier gap**: "`RefreshByKeyAsArgs` has no criteria". Measuring showed it **has no callers**: every baseline pipeline explicitly overrides `refresh` to call it, while C#
-/// kept the default and **added no overrides** — the two are equivalent implementations in the code, so this copy is **dead code inherited from it**. The criterion's
+/// **the earlier gap**: "`RefreshByKeyAsArgs` has no criteria". Measuring showed it **has no callers**: a pipeline could override `refresh` to call it, while this code
+/// keeps the default and **adds no overrides** — the two are equivalent implementations, so this copy is **dead code**. The criterion's
 /// value is not proving it useful but proving **it would be harmless if someone wired it up**: run both paths over the same constraints and duals, and the results must
 /// be **identical**.
 /// </remarks>
@@ -70,18 +70,18 @@ public class RefreshByKeyAsArgsEquivalenceTests {
     /// 而真实映射是 `AbstractShadowPriceMap&lt;AbstractCsp1dShadowPriceArguments, 自己&gt;`。
     /// **参数类型对不上，任何类型参数组合都过不了约束。**
     ///
-    /// 所以这份静态方法是**从基线继承的死代码**：每条管线都显式覆写 `refresh` 调它，
-    /// C# 保留默认实现、没有覆写，于是它**永远不可能被调用**。
+    /// 所以这份静态方法是**死代码**：要调用它就得显式覆写 `refresh`，
+    /// 而本仓保留默认实现、没有覆写，于是它**永远不可能被调用**。
     ///
     /// **判据的价值**：它把"反射也过不了"这件事**固化成可运行的证据**，
     /// 而不是留在某人的记忆里。若将来有人"修好"这个签名，这条判据会**变红**，
     /// 提醒他们重新审视——那时它就不再是死代码了。
     ///
- /// **the earlier gap**: "`RefreshByKeyAsArgs` has no criteria". the conclusion is stronger than "nobody calls it" (table above): `grep` finds zero callers, an adapter
+ /// **The earlier gap**: "`RefreshByKeyAsArgs` has no criteria". The conclusion is stronger than "nobody calls it" (table above): `grep` finds zero callers, an adapter
     /// **does not compile** (`TMap`'s self-referential constraint is incompatible), and reflection throws **`VerificationException`** because `Csp1dDefaultShadowPriceMap`
     /// violates the `TMapT` constraint. The signature demands `ICGPipeline&lt;object, object, TMapT&gt;` with `TMapT : AbstractShadowPriceMap&lt;object, TMapT&gt;`, while the real map is
-    /// `AbstractShadowPriceMap&lt;AbstractCsp1dShadowPriceArguments, itself&gt;` — **no type argument satisfies both**. So this static method is **dead code inherited from the
-    /// baseline**: there every pipeline overrode `refresh` to call it, while C# kept the default and added no overrides, making it **permanently uncallable**. **The
+    /// `AbstractShadowPriceMap&lt;AbstractCsp1dShadowPriceArguments, itself&gt;` — **no type argument satisfies both**. So this static method is **dead code**: calling it
+    /// needs an override of `refresh`, while this code keeps the default and adds no overrides, making it **permanently uncallable**. **The
     /// criterion's value** is turning "even reflection fails" into **runnable evidence** instead of a memory. If someone later "fixes" the signature, this criterion **turns
     /// red** and forces a re-review — at which point it is no longer dead code.
     /// </remarks>

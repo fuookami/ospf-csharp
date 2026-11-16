@@ -16,17 +16,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service;
 /// 冗余管线生成器 / The redundancy pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与对齐：**只在预配载给管线，其余模式给空表**。
+/// **只在预配载给管线，其余模式给空表**。
 ///
 /// 两点必须沿用：
 ///
 /// 1. **`stowageMode != Predistribution` 直接返回空表**——不是"少加几条"，是一条都不加。冗余只在预配载阶段有意义。
 /// 2. **顺序是纵向平衡在前、冗余在后**，与`pipelines.add` 顺序一致；与 `Aggregation.Register` 的注册顺序**相反**，
-///    这种不一致是基线自带的。
+///    这种不一致是既有设计。
 ///
 /// **pipelines exist only under predistribution**, with an empty list otherwise. Two things must be copied: **anything but predistribution returns an empty
 /// list** — not "fewer pipelines" but none, since redundancy only matters during predistribution; and **the balance comes before redundancy**, matching its `pipelines.add`
-/// order, which is the **reverse** of `Aggregation.Register`'s order — an inconsistency the code owns and this implementation copies.
+/// order, which is the **reverse** of `Aggregation.Register`'s order — an inconsistency kept as is.
 /// </remarks>
 internal sealed class PipelineListGenerator
 {

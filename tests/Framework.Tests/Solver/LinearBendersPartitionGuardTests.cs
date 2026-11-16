@@ -111,8 +111,8 @@ public class LinearBendersPartitionGuardTests
     /// **Row ownership: a row of decisions only goes to master, a row touching recourse goes to sub.**
     /// </summary>
     /// <remarks>
-    /// 这是基线 `LinearBendersPartition.build` 的分行规则（12fdb587）：`target = if (cells.all { it.token.variable in decisions }) master else sub`。
-    /// **变量一律镜像进子问题**，于是"收窄追索"靠的是行，不是变量——本仓 曾把这一点读成"结构上限"，其实**两边的规则一致**。
+    /// 这是 `LinearBendersPartition.build` 的分行规则：`target = if (cells.all { it.token.variable in decisions }) master else sub`。
+    /// **变量一律镜像进子问题**，于是"收窄追索"靠的是行，不是变量——这里曾把这一点读成"结构上限"，其实**规则一致**。
     /// 这条判据把规则钉在行为上：主问题的行数必须等于"只含决策变量的行"条数。
     ///
     /// This is its row rule (`LinearBendersPartition.build`, 12fdb587): `target = if (cells.all { it.token.variable in decisions }) master else sub`.

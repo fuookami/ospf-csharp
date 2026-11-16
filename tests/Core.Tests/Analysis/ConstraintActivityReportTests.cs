@@ -12,11 +12,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 活动性报告 / The activity report.
 /// </summary>
 /// <remarks>
-/// 补 `ConstraintActivityReport`（基线 126 行）**，它只依赖 补的三个类型，不需要原生后端。
+/// **实现了 `ConstraintActivityReport`**，它只依赖先前的三个类型，不需要原生后端。
 ///
 /// 判据钉的是**分类边界**：哪些记录算约束、哪些算变量、组汇总统计谁。**这三条错了，报告仍然"能跑"，只是数字全对不上。**
 ///
-/// **implemented `ConstraintActivityReport` (126 baseline lines)**, which depends only on the earlier three types and needs no native backend. The criteria pin the **classification
+/// **This implements `ConstraintActivityReport`**, which depends only on the earlier three types and needs no native backend. The criteria pin the **classification
 /// boundaries** — which records are constraints, which are variables, and what the group summaries count. **Get these wrong and the report still runs, with every number off.**
 /// </remarks>
 public class ConstraintActivityReportTests {

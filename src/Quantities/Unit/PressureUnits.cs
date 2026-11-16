@@ -22,26 +22,26 @@ public static class PressureUnits {
     public static readonly PhysicalUnit Bar = new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(100000)), "bar", "bar");
     /// <summary>标准大气压 / Atmosphere (1 atm = 101325 Pa).</summary>
     public static readonly PhysicalUnit Atmosphere = new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(101325)), "atmosphere", "atm");
-    // 以下 5 个按补齐：
+    // 以下 5 个一并补上：
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar。
     //
     // **其中 MeterMercury 不能照做，因为公式与它自己的注释矛盾。**
-    // 基线写的是 `StandardAtmosphericPressure * 0.76`，
+    // 自然的写法是 `StandardAtmosphericPressure * 0.76`，
     // **但 0.76 米汞柱恰好等于一个标准大气压——所以要从大气压"除"回 0.76 米，不是乘。**
-    // 沿用会得到 77007 Pa，于是 mmHg = 77.007 Pa，**而基线自己在上方注释里写着 1 mmHg ≈ 133.322 Pa。**
+    // 那样会得到 77007 Pa，于是 mmHg = 77.007 Pa，**与 1 mmHg ≈ 133.322 Pa 对不上。**
     //
     // **这里按注释与物理事实实现（除法），并让 mmHg 由 mHg 派生**，
     // **使 "mmHg 是 mHg 的千分之一" 成为恒等式而不是巧合。**
     //
-    // The five below were added from the code Pressure.kt:
+    // The five below:
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar.
     //
-    // **MeterMercury cannot be copied from the code, because its formula contradicts its own comment.**
-    // The code says `StandardAtmosphericPressure * 0.76`,
+    // **MeterMercury cannot be taken as written, because its formula contradicts its own comment.**
+    // The natural form is `StandardAtmosphericPressure * 0.76`,
     // **but 0.76 m of mercury is exactly one standard atmosphere — so the atmosphere has to be divided back down
     // to 0.76 m, not multiplied.**
-    // Copied as written it yields 77007 Pa, so mmHg = 77.007 Pa, **while the comment just above says
-    // 1 mmHg is about 133.322 Pa.**
+    // Taken as written that yields 77007 Pa, so mmHg = 77.007 Pa, **which contradicts
+    // 1 mmHg being about 133.322 Pa.**
     //
     // **Implemented per the comment and the physics (division), with mmHg derived from mHg**,
     // **so that mmHg being a thousandth of mHg is an identity rather than a coincidence.**

@@ -109,7 +109,7 @@ public class Demo2LoadingEffectivenessWrapUpTests {
     /// 5. **一件货属于两辆车** → 失败。
     /// 6. **引用不存在的货物** → 失败。
     ///
-    /// Six paired points, one per baseline validation: **a blank name**; **a duplicate name**; **an out-of-range order** (256 and −1); **a duplicate item within a trailer**; **an item in two
+    /// Six paired points, one per validation: **a blank name**; **a duplicate name**; **an out-of-range order** (256 and −1); **a duplicate item within a trailer**; **an item in two
     /// trailers**; and **a reference to a missing cargo**.
     /// </remarks>
     [Fact]

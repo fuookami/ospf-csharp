@@ -16,24 +16,24 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 跨语言纯函数用例 / The cross-language pure-function cases.
 /// </summary>
 /// <remarks>
-/// `Fixtures/analysis-cases.tsv` 是从固定基线 `12fdb587` **逐字复制**来的，
-/// **Kotlin 侧断言同一份文件。** 这些函数不依赖 backend，**所以契约要求两端逐字一致。**
+/// `Fixtures/analysis-cases.tsv` 是**逐字复制**来的固定夹具，
+/// 这些函数不依赖 backend，**所以夹具即契约，改动它就是改契约。**
 ///
 /// **每一节要么有判据，要么被 `TheUncoveredSections_ShouldBeNamed` 点名。**
 /// **"没断言"与"断言过"必须看得出区别**——**否则一张越来越短的用例表和一张全绿的表无法区分。**
 ///
-/// `Fixtures/analysis-cases.tsv` is **copied verbatim** , **and the Kotlin side asserts the same file.** These functions need no backend, **so the contract requires both sides to agree
-/// exactly.** **Every section either has a criterion or is named by `TheUncoveredSections_ShouldBeNamed`.** **"Not asserted" has to look different from "asserted"** — **otherwise a shrinking case table is
+/// `Fixtures/analysis-cases.tsv` is **copied verbatim** as a fixed fixture. These functions need no backend, **so the fixture is the contract: changing it changes the contract.**
+/// **Every section either has a criterion or is named by `TheUncoveredSections_ShouldBeNamed`.** **"Not asserted" has to look different from "asserted"** — **otherwise a shrinking case table is
 /// indistinguishable from a fully green one.**
 /// </remarks>
 public class AnalysisCasesTests
 {
     /// <summary>尚未断言的节，连同原因 / Sections not yet asserted, with the reason.</summary>
     /// <remarks>
-    /// **这份名单是判据的一部分，不是注释。** 每搬一节就从这里删一项，
+    /// **这份名单是判据的一部分，不是注释。** 每补一节就从这里删一项，
     /// **而 `TheUncoveredSections_ShouldBeNamed` 会因为名单和文件对不上而红。**
     ///
-    /// **This list is part of the criterion, not a comment.** Porting a section removes one entry, **and the coverage criterion goes red when the list and the file disagree.**
+    /// **This list is part of the criterion, not a comment.** Implementing a section removes one entry, **and the coverage criterion goes red when the list and the file disagree.**
     /// </remarks>
     private static readonly string[] NotYetAsserted = [];
 
@@ -449,7 +449,7 @@ public class AnalysisCasesTests
     /// <remarks>
     /// **一张越来越短的用例表和一张全绿的表，从测试结果上看不出来。**
     /// 这条判据把差距写成名单，**并让名单与文件不一致时变红**——
-    /// **搬完一节就得改名单，这是唯一能强制"覆盖在长"的机制。**
+    /// **补完一节就得改名单，这是唯一能强制"覆盖在长"的机制。**
     ///
     /// **A shrinking case table and a fully green one look identical in the results.** This criterion writes the gap as a list **and goes red when the list and the file disagree** — **implementation a section forces an edit,
     /// and that is the only mechanism that makes coverage grow.**

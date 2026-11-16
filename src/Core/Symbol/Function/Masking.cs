@@ -116,10 +116,10 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
 
     /// <inheritdoc/>
     /// <remarks>
-    /// `mask` 读不到 → **零**（基线如此）；`mask = 0` → 零；否则是输入的值。
+    /// `mask` 读不到 → **零**；`mask = 0` → 零；否则是输入的值。
     /// 第一条容易被写成"读不到就 `null`"——那会把"掩码未知"变成"结果未知"，而掩码本身是个决策变量。
     ///
-    /// A missing `mask` → **zero** (as in the code); `mask = 0` → zero; otherwise the input's value. The first rule is easy to write as "missing means `null`" — which turns
+    /// A missing `mask` → **zero**; `mask = 0` → zero; otherwise the input's value. The first rule is easy to write as "missing means `null`" — which turns
     /// "the mask is unknown" into "the result is unknown", while the mask is a decision variable.
     /// </remarks>
     public V? Evaluate(IReadOnlyDictionary<ISymbol, V> values) => TryEvaluate(values).Value;

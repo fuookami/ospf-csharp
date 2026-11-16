@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 以它为系数的约束仍在、以它为系数的目标项仍在——**都不报错**，因为变量已被固定为 0。
 ///
 /// 这就是"行为对、模型脏"：解不变，但任何按符号表遍历模型的下游（导出、审计、二次求解）
-/// 都会看到悬空引用。这里提供的是**观测**，不是修复——清理会让模型偏离固定基线。
+/// 都会看到悬空引用。这里提供的是**观测**，不是修复——清理会改变既定的模型行为。
 ///
 /// `remove(item)` is one line: `tokens.remove(item)`. So after retirement the constraints using it as a coefficient remain, and so do the objective terms —
 /// **neither raises anything**, because the variable is already pinned to 0.
@@ -107,15 +107,15 @@ public class RetirementResidueTests {
     }
 
     /// <summary>
-    /// **`RemoveObjectiveTerms` 能清掉残留，但基线不调它** / `RemoveObjectiveTerms` clears the residue, but the code does not call it.
+    /// **`RemoveObjectiveTerms` 能清掉残留，但这里不调它** / `RemoveObjectiveTerms` clears the residue, but nothing calls it.
     /// </summary>
     /// <remarks>
-    /// 这条判据的作用是钉住"工具存在、而基线选择不用"这个事实：
-    /// 若哪天有人在 `RemoveColumns` 里顺手加上清理，这里会变绿，而**回收后的模型会开始偏离固定基线**——
+    /// 这条判据的作用是钉住"工具存在、而这里选择不用"这个事实：
+    /// 若哪天有人在 `RemoveColumns` 里顺手加上清理，这里会变绿，而**回收后的模型会开始偏离既定行为**——
     /// 上游的 `RetirementResidueTests` 仍然会指出偏离发生了什么。
     ///
-    /// The point of this criterion is to pin the fact that "the tool exists and the code chooses not to use it": if someone later adds the cleanup to `RemoveColumns`, this goes
-    /// green while **the post-retirement model starts diverging ** — and the criteria above still say what the divergence is.
+    /// The point of this criterion is to pin the fact that "the tool exists and nothing chooses to use it": if someone later adds the cleanup to `RemoveColumns`, this goes
+    /// green while **the post-retirement model starts diverging** — and the criteria above still say what the divergence is.
     /// </remarks>
     [Fact]
     public void RemoveObjectiveTerms_ShouldClearTheResidue() {

@@ -79,10 +79,10 @@ public static class SnapshotModelRebuilder
         foreach (ConstraintProgrammingVariableSnapshot definition in snapshot.Variables) {
             if (!recovered.TryGetValue(definition.Id, out IVariableItem? variable)) {
                 model.Dispose();
-                // **不能像样 `continue`**：基线跳过的依据是"该变量完全没被引用"，
+                // **不能照旧 `continue`**：跳过的依据是"该变量完全没被引用"，
                 // 而这里"找不到"是"我们没能从 AST 里收出来"——**两件事，跳过就是把后者当成前者。**
                 //
-                // **This must not `continue` the way the code does**: the code skips on "the variable is referenced nowhere", while a miss here means "we could not
+                // **This must not `continue` here**: the skip case is "the variable is referenced nowhere", while a miss here means "we could not
                 // recover it from the AST". **Those are different facts, and skipping conflates them.**
                 return Fail($"无法从快照找回变量 {definition.Id.Value} / Cannot recover variable {definition.Id.Value} from the snapshot");
             }
@@ -203,11 +203,11 @@ public static class SnapshotModelRebuilder
     /// **取整方向不是细节**：&gt;= 用向上取整、&lt;= 用向下取整，**取错方向就等于把门槛放低一格**，
     /// 而报告照样会给出一个像样的结论。
     ///
-    /// **只在派生模型里注册目标那个 objective**（基线如此）：多注册其余 objective 不会让求解出错，
+    /// **只在派生模型里注册目标那个 objective**：多注册其余 objective 不会让求解出错，
     /// **但会让"这份派生模型是为哪个目标造的"这件事变得含糊。**
     ///
     /// **The rounding direction is not a detail**: &gt;= rounds up and &lt;= rounds down; **the wrong way lowers the bar by one unit**, and the report still produces a
-    /// plausible-looking conclusion. **Only the target objective is registered in the derived model** (as in the code): registering the rest would not break the solve,
+    /// plausible-looking conclusion. **Only the target objective is registered in the derived model**: registering the rest would not break the solve,
     /// **but it would blur which objective the derived model was built for.**
     /// </remarks>
     public static Result<DerivedModel, ErrorCode, Error<ErrorCode>> RebuildWithTarget(

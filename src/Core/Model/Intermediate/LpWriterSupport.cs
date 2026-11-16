@@ -160,7 +160,7 @@ internal static class LpWriterSupport {
     /// <summary>追加 Bounds 块 / Append the Bounds block.</summary>
     /// <param name="builder">目标缓冲区 / Destination buffer.</param>
     /// <param name="variables">模型变量 / Model variables.</param>
-    /// <param name="literalInfinity">是否按字面无穷判断（二次基线）/ Whether to test literal infinity (quadratic baseline).</param>
+    /// <param name="literalInfinity">是否按字面无穷判断（二次模型）/ Whether to test literal infinity (quadratic model).</param>
     public static void AppendBounds(
         StringBuilder builder,
         IReadOnlyList<ModelViewVariable> variables,

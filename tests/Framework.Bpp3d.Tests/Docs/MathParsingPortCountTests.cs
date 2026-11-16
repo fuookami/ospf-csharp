@@ -145,7 +145,7 @@ public class MathParsingPortCountTests
         // **31 back to 30.** **Rewriting the second row for list semantics removed the "298 criteria rely on it" sentence —** that really was a count claim, so the drop moves
         // the number too, instead of leaving the assertion in place pretending nothing changed.
         total.Should().Be(
-            // **26：** **矩阵里删掉了大批"某某批补了什么"的叙述，** **连带带走了那些顺带写着"N 条判据"的句子。** **判据本身不放宽——它照旧要求"每一处计数宣称都得有人知道"，只是基线随文档一起降到 26。**
+            // **26：** **矩阵里删掉了大批"某某批补了什么"的叙述，** **连带带走了那些顺带写着"N 条判据"的句子。** **判据本身不放宽——它照旧要求"每一处计数宣称都得有人知道"，只是数字随文档一起降到 26。**
             //
             // **26: the matrix dropped the batch-by-batch narration, which took those sentences claiming "N criteria" with it. The criterion is not relaxed — it still requires every count
             // claim to be known — the code just moved with the document.**

@@ -20,10 +20,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// 水平安定面 / A horizontal stabilizer.
 /// </summary>
 /// <remarks>
-/// 与对齐。本类只承担**配平查找**与**配平符号**：
+/// 本类只承担**配平查找**与**配平符号**：
 ///
 /// 1. **配平值按起飞重量取最近点**（`minByOrNull { |tow − 给定重量| }`），不是插值。空点表时取 0。
-/// 2. **`trim` 是零多项式符号**（基线就是 `LinearExpressionSymbol(Flt64.zero, …)`）。配平在同样没有真正接上查表结果，
+/// 2. **`trim` 是零多项式符号**（`LinearExpressionSymbol(Flt64.zero, …)`）。配平同样没有真正接上查表结果，
 ///    所以 `At` 是一个**独立可用**的查表函数，而 `TrimSymbol` 恒为零。这是现状，不是本实现的退让——沿用并在此记录。
 /// 3. **警告松弛（`warnSlack`）未实现**，见下方 `ponytail:` 说明。
 ///
@@ -48,11 +48,11 @@ public sealed class HorizontalStabilizer
         /// </summary>
         /// <returns>角度文本 / The angle text.</returns>
         /// <remarks>
-        /// **必须重写**。基线 `Key.toString` 返回 `angle.toString`，而 C# 侧原先用 `record` 的默认输出
+        /// **必须重写**。`Key.ToString` 返回 `angle.ToString()`，而 C# 侧原先用 `record` 的默认输出
         /// （`Key { Angle = …, ThrustDrate = … }`）。后果不是"名字难看"：`HorizontalStabilizerLimit` 把 `Key` 拼进目标名
         /// `"horizontal stabilizer {key}"`，默认输出会让**每个目标名都带 95 个字符的类型名**，下游按名字取目标全部落空。
         ///
-        /// **This override is required.** The code's `Key.toString` returns `angle.toString`, while the C# side used the record's default output. The consequence is not cosmetic:
+        /// **This override is required.** `Key.ToString` returns `angle.ToString()`, while the C# side used the record's default output. The consequence is not cosmetic:
         /// `HorizontalStabilizerLimit` interpolates the `Key` into the objective name `"horizontal stabilizer {key}"`, so the default output puts a 95-character type dump in every
         /// objective name and downstream lookups by name all miss.
         /// </remarks>
@@ -115,9 +115,9 @@ public sealed class HorizontalStabilizer
     /// <param name="takeOffWeight">起飞重量 / The take-off weight.</param>
     /// <returns>配平值 / The trim value.</returns>
     /// <remarks>
-    /// 取**最近点**，不是插值。空点表时返回 0（基线 `?.trim ?: Flt64.zero`）。
+    /// 取**最近点**，不是插值。空点表时返回 0（`?.trim ?: Flt64.zero`）。
     ///
-    /// The **nearest** point, not an interpolation. An empty table yields 0, matching its `?.trim ?: Flt64.zero`.
+    /// The **nearest** point, not an interpolation. An empty table yields 0 (`?.trim ?: Flt64.zero`).
     /// </remarks>
     public double At(double takeOffWeight) {
         if (_points.Count == 0) {
@@ -205,9 +205,9 @@ public sealed class HorizontalStabilizer
                 } else {
                     // **都没有**：恒零符号（是这样，不是"不注册"）。
                     // **Neither**: a constant-zero symbol, as the code does — not "skip registration".
-                    // **恒零分支是普通符号**，不是函数符号——基线这里写的就是 `LinearExpressionSymbol`。
+                    // **恒零分支是普通符号**，不是函数符号——这里建的就是 `LinearExpressionSymbol`。
                     // 用 adapter 包一个普通符号在类型上就通不过，也不该硬凑。
-                    // **The constant-zero branch is a plain symbol**, not a function symbol — the code writes a `LinearExpressionSymbol` here. Wrapping a plain symbol in the
+                    // **The constant-zero branch is a plain symbol**, not a function symbol — a `LinearExpressionSymbol` is built here. Wrapping a plain symbol in the
                     // adapter does not typecheck, and should not be forced.
                     WarnSlack = new LinearExpressionSymbol(
                         new MutableLinearPolynomial<Flt64>(constant: Flt64.Zero),
@@ -223,12 +223,11 @@ public sealed class HorizontalStabilizer
     }
 
     /// <summary>配平警告松弛 / The trim warning slack</summary>
-    /// <summary>配平警告松弛 / The trim warning slack</summary>
     /// <remarks>
-    /// **类型是 `ISymbol`**：三个分支造的是 `LinearFunctionSymbolAdapter<Flt64>`（函数符号），第四个造的是 `LinearExpressionSymbol`（普通符号），
+    /// **类型是 `ISymbol`**：三个分支造的是 `LinearFunctionSymbolAdapter&lt;Flt64&gt;`（函数符号），第四个造的是 `LinearExpressionSymbol`（普通符号），
     /// `warnSlack` 也是这样两种类型混用。统一成 `IIntermediateSymbol` 让 `model.Add(IIntermediateSymbol)` 都能吃下。
     ///
-    /// **The type is `IIntermediateSymbol`**: three branches build a `LinearFunctionSymbolAdapter<Flt64>` (a function symbol) and the fourth builds a `LinearExpressionSymbol` (a plain one), which
+    /// **The type is `IIntermediateSymbol`**: three branches build a `LinearFunctionSymbolAdapter&lt;Flt64&gt;` (a function symbol) and the fourth builds a `LinearExpressionSymbol` (a plain one), which
     /// is how its `warnSlack` also mixes the two. `IIntermediateSymbol` keeps both acceptable to `model.Add(IIntermediateSymbol)`.
     /// </remarks>
     public IIntermediateSymbol? WarnSlack { get; private set; }

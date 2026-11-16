@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 把 `Enabled` 从恒真壳改成真判断时，留了两条**查不了**的规则：`item.uld.code !in enabledULDs` 与 `taboo[item]` 的编号区间。
 /// 原因是 C# 的 `Item` 没有 `Uld`、`StowagePosition` 没有 `Taboo`。这里把这两个前置补上，两条规则随即落地。
 ///
-/// 同时 `Item` 补了 `Id`，装载矩阵的决策键从"名称"改成"身份"——基线一直如此，C# 之前用名称，**同名两件货会共用一列**。
+/// 同时 `Item` 补了 `Id`，装载矩阵的决策键从"名称"改成"身份"——按身份才是对的，C# 之前用名称，**同名两件货会共用一列**。
 ///
 /// When turned `Enabled` from an always-true shell into a real decision, two rules stayed **uncheckable**: `item.uld.code !in enabledULDs` and the `taboo[item]` number range,
 /// because C#'s `Item` had no `Uld` and `StowagePosition` had no `Taboo`. adds those prerequisites and the rules follow. `Item` also gains an `Id`, so the stowage
-/// matrix keys by identity instead of name — as the code always did; keying by name made **two items with the same name share a column**.
+/// matrix keys by identity instead of name; keying by name made **two items with the same name share a column**.
 /// </remarks>
 public class Demo2UldRulesTests {
     private static Item MakeItem(string name, ULD? uld, string id = "", string destination = "SHA") =>
@@ -129,10 +129,10 @@ public class Demo2UldRulesTests {
     /// **名称不合规范时不命中，也不抛异常** / A malformed name is a non-hit, not an exception.
     /// </summary>
     /// <remarks>
-    /// 基线对短名称调 `substring(3, 8)` 会抛异常。一条读不懂的集装器号不该让整份配载崩掉，而"不命中"与"名称不合规范"
+    /// 直接对短名称调 `substring(3, 8)` 会抛异常。一条读不懂的集装器号不该让整份配载崩掉，而"不命中"与"名称不合规范"
     /// 在禁忌检查上是同一个结果。这条是**刻意的差异**，写在这里而不是埋着。
     ///
-    /// The code throws on `substring(3, 8)` for a short name. An unreadable ULD number should not bring the whole stowage run down, and "no hit" is the same outcome as
+    /// Calling `substring(3, 8)` on a short name would throw. An unreadable ULD number should not bring the whole stowage run down, and "no hit" is the same outcome as
     /// "malformed name" for taboo purposes. This is a **deliberate divergence**, recorded rather than hidden.
     /// </remarks>
     [Fact]

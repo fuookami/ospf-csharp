@@ -2,10 +2,8 @@
 
 [中文](README_ch.md)
 
-The bridge between network path search and Gantt business bunches.
-
-Baseline: `ospf-kotlin-framework-gantt-scheduling/gantt-scheduling-domain-network-context` at Kotlin
-`12fdb587` (one 72-line class, `NetworkBunchGenerationContext`).
+The bridge between network path search and Gantt business bunches: one context class,
+`NetworkBunchGenerationContext`, and the completion translation it performs.
 
 ## Why this is a separate project
 
@@ -15,8 +13,8 @@ Baseline: `ospf-kotlin-framework-gantt-scheduling/gantt-scheduling-domain-networ
 Framework.NetworkScheduling.csproj → Framework.GanttScheduling.csproj
 ```
 
-Adding the bridge to `Framework.GanttScheduling` would close a reference cycle. In the baseline it is a separate module anyway,
-so this project exists for the same reason.
+Adding the bridge to `Framework.GanttScheduling` would close a reference cycle, so it lives in its own
+project.
 
 ## What it does
 
@@ -41,8 +39,8 @@ read a search that **might still have better columns** as "definitely none".
 ## What this does not do
 
 Demo4's `FlightTaskBunchGenerator` does **not** use this bridge — it runs its own 248-line label search.
-That is a structural divergence from the baseline and cannot be verified for result equivalence, so it was
-recorded rather than rewritten. See `docs/kotlin-capability-matrix.md`.
+That is a deliberate structural choice, not a missing call, and it cannot be verified for result
+equivalence, so it is recorded rather than rewritten. See `docs/kotlin-capability-matrix.md`.
 
 ## Verification
 

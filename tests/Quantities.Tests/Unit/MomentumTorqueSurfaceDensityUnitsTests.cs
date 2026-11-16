@@ -36,7 +36,7 @@ public class MomentumTorqueSurfaceDensityUnitsTests
                 "the baseline declares exactly one momentum unit");
     }
 
-    /// <summary>**两个力矩单位都在** / Both baseline torque units are present.</summary>
+    /// <summary>**两个力矩单位都在** / Both torque units are present.</summary>
     [Fact]
     public void TheTorqueUnits_ShouldCoverTheBaseline()
     {

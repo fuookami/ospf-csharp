@@ -1,11 +1,10 @@
 // 层生成器与组合上下文 / Layer generators and the composite context.
-// 与固定 Kotlin 对应。
 //
 // earlier 闭合了 `block_loading` 域，这里随即补上三个块装载生成器（`BlLocalLayerGenerator`／
-// `BlGlobalLayerGenerator`／`SpaceSplitLayerGenerator`），`DefaultGenerators` 至此（八个）。
+// `BlGlobalLayerGenerator`／`SpaceSplitLayerGenerator`），`DefaultGenerators` 至此齐全（八个）。
 // earlier closed the `block_loading` domain, so the three block-loading generators
-// (`BlLocalLayerGenerator` / `BlGlobalLayerGenerator` / `SpaceSplitLayerGenerator`); `DefaultGenerators` now matches the
-// baseline (eight).
+// (`BlLocalLayerGenerator` / `BlGlobalLayerGenerator` / `SpaceSplitLayerGenerator`); `DefaultGenerators` is now
+// complete (eight).
 
 using System;
 using System.Collections.Generic;

@@ -91,10 +91,10 @@ internal static class RelationalQueryIdentifier {
     /// 解析来源定义 / Resolve a source definition.
     /// </summary>
     /// <remarks>
-    /// 注册表为空时把逻辑名当作物理表名（基线行为）；注册表非空时**只允许白名单内的来源**，未知来源返回 null。
+    /// 注册表为空时把逻辑名当作物理表名（既有行为）；注册表非空时**只允许白名单内的来源**，未知来源返回 null。
     /// 这个分支方向不能反：反了就等于空注册表变成"全部拒绝"、非空注册表变成"全部放行"。
     ///
-    /// With an empty registry the logical name doubles as the physical table name (baseline behaviour); a
+    /// With an empty registry the logical name doubles as the physical table name (existing behaviour); a
     /// non-empty registry **only allows allowlisted sources** and returns null for anything else. The branch
     /// direction must not be reversed, or an empty registry would reject everything and a populated one would
     /// accept everything.

@@ -56,7 +56,7 @@ public sealed class CoptCapabilityDeclarationTests
     /// **声明的证据还在这两个文件里** / The evidence for these claims still lives in these two files.
     /// </summary>
     /// <remarks>
-    /// 与 的"行为判据必须仍在调用入口"同一个思路：**声明还在，而验证它的判据被删了**，是最难发现的一类空壳。
+    /// 与"行为判据必须仍在调用入口"同一个思路：**声明还在，而验证它的判据被删了**，是最难发现的一类空壳。
     ///
     /// The same idea as the earlier "the behavioural criteria must still call the entries": **the claim survives while the criterion that checks it is deleted** is the hardest
     /// kind of empty shell to notice.

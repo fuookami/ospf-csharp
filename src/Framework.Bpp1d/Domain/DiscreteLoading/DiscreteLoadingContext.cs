@@ -56,8 +56,8 @@ public sealed class DiscreteLoadingContext<V>
     /// 而`DiscreteLoadingContext` 本来就公开 `problem` 与 `adapter`。这里补上同样的两个只读属性，
     /// **不在组合层塞一份重复的输入副本**。
     ///
-    /// **The composition layer (partition loading) needs it for partition ownership, occupancy conflicts, layout compatibility and weight-unit conversion**, and the
-    /// baseline's `DiscreteLoadingContext` already exposes `problem` and `adapter`. The same two read-only properties are added here rather than keeping a duplicate
+    /// **The composition layer (partition loading) needs it for partition ownership, occupancy conflicts, layout compatibility and weight-unit conversion**, and
+    /// `DiscreteLoadingContext` already exposes `problem` and `adapter`. The same two read-only properties are added here rather than keeping a duplicate
     /// copy of the input in the composition layer.
     /// </remarks>
     public DiscreteLoadingProblem<V> Problem => _problem;
@@ -125,7 +125,7 @@ public sealed class DiscreteLoadingContext<V>
     /// | 附加重量非负 | `additional &gt;= 0` | 外部塞进一个**负**表达式，就能在容量行里**抵消**真实载荷 |
     /// | 容量联动 | `weights_p + additional &lt;= capacity_p · occupied_p` | 附加重量**不受容量约束**，可以无限追加 |
     ///
-    /// **第一条与 的"货物重量非负"、 的"附加重量非负"是同一种病**：
+    /// **第一条与"货物重量非负"、"附加重量非负"是同一种病**：
     /// 负值在求和里抵消正项，让一个超载方案"看起来"合规，而**求解器不会报错**。
     /// 区别是这一层是**对外的接口**——调用方自己传来的表达式，因此这里的守卫尤其重要。
     ///
@@ -178,7 +178,7 @@ public sealed class DiscreteLoadingContext<V>
     /// <param name="additionalWeights">附加重量的已提取值，单位同问题 / Extracted additional weights in the problem unit.</param>
     /// <returns>已验证解或失败 / Verified solution or failure.</returns>
     /// <remarks>
-    /// **与一处有意差异**：基线接收 `values: List&lt;Flt64&gt;` 并靠 `tokens.indexOf(variable)` 取下标，
+    /// **有一处有意差异**：`values: List&lt;Flt64&gt;` 与 `tokens.indexOf(variable)` 那种下标取法都不需要，
     /// 这里直接读 `model.Tokens.Find(variable)?.DoubleResult`——**同一份数据，少一个参数**，
     /// 且与 `Csp1dProduceContext` 已有的取解方式一致（同一套管线里求解器把结果写回 token）。
     ///

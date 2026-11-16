@@ -430,7 +430,7 @@ public static class DeferredFunctionStructures
     //
     // **所以这条路在符号那一侧就断了：不是投影没写，是符号没保留物化需要的东西。**
     // 补它要先在 `XorFunction` 里把二元输入存下来，那是另一件事（会牵动 XOR 的急切约束生成）。
- // **而 XOR 在 n ≥ 3 时本身还有一条基线缺陷，所以这一处不急着动。**
+ // **而 XOR 在 n ≥ 3 时本身还有一条已知缺陷，所以这一处不急着动。**
     //
     // **`Xor` has no projection, and that is a finding rather than an omission: `XorFunction` stores only
     // `Polynomials`, `ResultVar`, `IndicatorVars`, `SideVars`, `Tolerance` and `StrictBoundary`, while
@@ -438,7 +438,7 @@ public static class DeferredFunctionStructures
     //
     // **So the road is cut on the symbol side: the projection is not missing, the symbol did not keep what
     // materialisation needs.** Restoring it means storing the binary inputs in `XorFunction`, which is another change (it
-    // touches XOR's eager row generation). **And XOR already carries a baseline defect at n >= 3 (recorded), so
+    // touches XOR's eager row generation). **And XOR already carries a known defect at n >= 3 (recorded), so
     // this is not urgent.**
 
     /// <summary>四种逻辑投影共用的 body / The body shared by the four logic projections.</summary>

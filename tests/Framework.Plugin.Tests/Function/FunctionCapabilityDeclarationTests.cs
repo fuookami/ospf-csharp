@@ -106,15 +106,15 @@ public class FunctionCapabilityDeclarationTests
     }
 
     /// <summary>
-    /// **枚举与对应关系必须说准确** / The enum's relation to the code must be stated exactly.
+    /// **枚举与能力表的对应关系必须说准确** / The enum's relation to the capability table must be stated exactly.
     /// </summary>
     /// <remarks>
     /// **这一条防的是"顺手把它删掉"这种修法。** **那份表之所以值得留，是因为它记录了
-    /// "基线认为这些能力可以被原生表达"，这个事实本身有用。** **要修的是<b>它的意思被读错</b>，不是把表删了。**
+    /// "这些能力可以被原生表达"，这个判断本身有用。** **要修的是<b>它的意思被读错</b>，不是把表删了。**
     ///
     /// ### 而"逐一对应"这句话本身也不准确
     ///
-    /// **个枚举有 <b>15</b> 个成员：9 个是能力，6 个是<b>位置修饰</b>**
+    /// **这个枚举有 <b>15</b> 个成员：9 个是能力，6 个是<b>位置修饰</b>**
     /// （`ObjectiveOnly`／`ConstraintOnly`／`ObjectiveAndConstraint`／`Nested`／`External`／`Unused`）。
     ///
     /// **本仓的 `FunctionNativeCapability` 只有那 9 个能力——而它的文档注释写着"逐一对应，成员名与顺序一致"。**
@@ -127,10 +127,10 @@ public class FunctionCapabilityDeclarationTests
     /// **所以这条判据现在钉的是<b>准确的对应关系</b>：9 个能力在这里、6 个修饰在那里。**
     /// **一句需要打折的"一致"，比一句明确的分工更糟。**
     ///
-    /// **This guards against the fix being "just delete it".** **The table is worth keeping because it records that the
-    /// baseline considers these capabilities natively expressible.**
+    /// **This guards against the fix being "just delete it".** **The table is worth keeping because it records the judgement that
+    /// these capabilities are natively expressible.**
     ///
-    /// **But "one member at a time" is itself inexact: the code enum has <b>15</b> members — 9 capabilities and 6
+    /// **But "one member at a time" is itself inexact: the enum has <b>15</b> members — 9 capabilities and 6
     /// <b>positional qualifiers</b> — while this repo's `FunctionNativeCapability` has only the 9, with a doc comment claiming
     /// names and order match one-to-one.** **The 6 qualifiers are not lost, they live in `FunctionUsageSummary`, which is a
     /// reasonable split.** **But "one member at a time" invites the next reader to verify a set that can <b>never</b> be equal.**

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Client;
 /// 远程 wire 结果到本地报告的映射 / Mapping from remote wire results to local reports.
 /// </summary>
 /// <remarks>
-/// 最优判定沿用固定基线：<c>solutionPresence == OPTIMAL</c> 且 <c>proofStatus != NONE</c>。
+/// 最优判定：<c>solutionPresence == OPTIMAL</c> 且 <c>proofStatus != NONE</c>。
 /// 间隙为 0 不足以声明最优；未知枚举一律按未知处理，绝不推断为成功。
 /// Optimality follows the reference: <c>solutionPresence == OPTIMAL</c> and <c>proofStatus != NONE</c>.
 /// A zero gap is insufficient to claim optimality, and unknown enum values stay unknown rather than becoming success.
@@ -105,7 +105,7 @@ public static class RemoteReportMapping {
     /// 解析带索引的远程 issue 字段 / Parse indexed remote issue fields.
     /// </summary>
     /// <remarks>
-    /// ：字段形如 <c>&lt;prefix&gt;.&lt;index&gt;.code|category|message|details.&lt;key&gt;</c>；
+    /// 字段形如 <c>&lt;prefix&gt;.&lt;index&gt;.code|category|message|details.&lt;key&gt;</c>；
     /// 索引按数值升序；缺失 code/category/message 或类别无法识别都返回 `ORSolutionInvalid`；
     /// 任何以 <c>&lt;prefix&gt;.</c> 开头但不匹配该形状的键都判为畸形字段，不静默忽略。
     /// fields look like
@@ -178,7 +178,7 @@ public static class RemoteReportMapping {
     /// 解析远程诊断 / Parse remote diagnostics.
     /// </summary>
     /// <remarks>
-    /// ：只允许 <c>infeasibility.</c>／<c>warning.</c>／<c>error.</c> 前缀，未知前缀返回
+    /// 只允许 <c>infeasibility.</c>／<c>warning.</c>／<c>error.</c> 前缀，未知前缀返回
     /// `ORSolutionInvalid`；警告与错误分别按带索引形式解析。
     /// only <c>infeasibility.</c>/<c>warning.</c>/<c>error.</c> prefixes are
     /// allowed and an unknown prefix yields `ORSolutionInvalid`; warnings and errors are parsed from their
@@ -243,7 +243,7 @@ public static class RemoteReportMapping {
     /// 解析不可行证据 / Parse infeasibility evidence.
     /// </summary>
     /// <remarks>
-    /// ：没有任何 <c>infeasibility.</c> 字段时返回 null；五个枚举字段全部必填且必须逐字匹配，
+    /// 没有任何 <c>infeasibility.</c> 字段时返回 null；五个枚举字段全部必填且必须逐字匹配，
     /// 五个列表字段是 JSON 数组编码的字符串，畸形即失败。`variableBoundRefs` 与 `members` 里的
     /// <c>bound:</c> 形式共用 <c>id:Side</c> 编码，用最后一个冒号切分，因此变量标识本身可以含冒号。
     /// no <c>infeasibility.</c> field yields null; all five enum fields are
@@ -533,7 +533,7 @@ public static class RemoteReportMapping {
     /// 计算模型指纹 / Compute the model fingerprint.
     /// </summary>
     /// <remarks>
-    /// ：对 snapshot 的规范化编码取 SHA-256，输出小写十六进制。指纹绑定的是**编码后的字节**，
+    /// 对 snapshot 的规范化编码取 SHA-256，输出小写十六进制。指纹绑定的是**编码后的字节**，
     /// 因此它同时约束了模型内容与编码方式——任一处不同都会得到不同的指纹。
     /// SHA-256 over the snapshot's canonical encoding, as lower-case hex. The
     /// fingerprint binds the **encoded bytes**, so it constrains both the model content and the encoding;
@@ -558,11 +558,11 @@ public static class RemoteReportMapping {
     /// 计算配置指纹 / Compute the configuration fingerprint.
     /// </summary>
     /// <remarks>
-    /// ：把有效配置拼成"长度前缀 + 键 + 长度前缀 + 值"的规范化串后取 SHA-256。长度前缀让拼接
+    /// 把有效配置拼成"长度前缀 + 键 + 长度前缀 + 值"的规范化串后取 SHA-256。长度前缀让拼接
     /// 无歧义（否则 <c>a</c>+<c>bc</c> 与 <c>ab</c>+<c>c</c> 会撞车），空值编码为长度 <c>-1</c>，
     /// <c>solverParams</c> 按 key 排序后逐对展开。
     ///
-    /// ：<c>threads</c> 缺失时取 <see cref="DefaultRemoteCpThreads"/>，因此"未指定线程数"与
+    /// <c>threads</c> 缺失时取 <see cref="DefaultRemoteCpThreads"/>，因此"未指定线程数"与
     /// "指定为 8"得到相同指纹——这与后端实际行为一致（未指定就用 8）。
     ///
     /// the effective configuration is flattened into length-prefixed key/value pairs
@@ -625,7 +625,7 @@ public static class RemoteReportMapping {
     /// 3. **配置指纹**：v2+ 且带观测时，配置指纹必须与本次请求一致——否则无法把结果归因于这组超参数。
     /// 4. v1 结果允许缺模型指纹，但一旦给出就必须一致。
     ///
-    /// ：上述"是否带观测"的判定决定了要求的严格程度，因此纯后端故障（无观测）不会被误判为
+    /// 上述"是否带观测"的判定决定了要求的严格程度，因此纯后端故障（无观测）不会被误判为
     /// 串台。
     ///
     /// This is the critical cross-talk guard of the whole remote path: a plausible-looking result may
@@ -724,16 +724,16 @@ public static class RemoteReportMapping {
     /// 的宽严规则：v2+ 要求工件字段**逐一相等**；v1 工件允许缺省（字段为 null），但一旦给出就
     /// 必须相等。这反映了历史后端可能不下发全部字段，而新后端必须完整。
     ///
-    /// 与一处字段差异（不是放宽）：基线比较 `serialized.optimal != result.optimal` 两个布尔；C# 的
+    /// 一处字段差异（不是放宽）：工件与结果两边都有 optimal 布尔时可直接比较；C# 的
     /// <see cref="SliceResult"/> 没有独立 optimal 布尔，最优性由 <see cref="SliceResult.SolutionPresence"/>
     /// 编码，因此改为比较「工件的 optimal」与「原始结果的存在性是否为 OPTIMAL」，语义等价。
     ///
     /// There are two sources of truth here: the raw result returned by the backend and the stable-solution
     /// artifact in storage. They **must** agree, otherwise it is impossible to tell which one the caller is
-    /// being handed, so a disagreement is rejected rather than silently resolved either way. As in the
-    /// baseline, v2+ requires field-by-field equality while a v1 artifact may omit fields (null) but must
-    /// match on any field it does carry. One field differs without being loosened: the code compares two
-    /// `optimal` booleans, while C#'s <see cref="SliceResult"/> has no separate optimal flag because
+    /// being handed, so a disagreement is rejected rather than silently resolved either way. For v2+ this
+    /// requires field-by-field equality while a v1 artifact may omit fields (null) but must
+    /// match on any field it does carry. One field differs without being loosened: the artifact and the raw result
+    /// each carry an `optimal` boolean elsewhere, while C#'s <see cref="SliceResult"/> has no separate optimal flag because
     /// <see cref="SliceResult.SolutionPresence"/> encodes it, so the artifact's optimal flag is compared
     /// against "presence is OPTIMAL" — semantically the same check.
     /// </remarks>
@@ -894,7 +894,7 @@ public static class RemoteReportMapping {
     /// 合法化历史 1.0 结果的证明状态 / Normalize a legacy 1.0 result's proof status.
     /// </summary>
     /// <remarks>
-    /// ：<c>1.0</c> 结果若是"不可行 + 已完成 + 未给证明状态"，说明它来自一个早于证明字段的
+    /// <c>1.0</c> 结果若是"不可行 + 已完成 + 未给证明状态"，说明它来自一个早于证明字段的
     /// 后端，此时记为 <c>CLAIMED</c> 而不是 <c>NONE</c>——否则"明确没有证明"与"该字段不存在"会被混为
     /// 一谈。这里不加强任何结论，只补足缺失的语义。
     /// a <c>1.0</c> result that is infeasible, completed and carries no proof status
@@ -921,7 +921,7 @@ public static class RemoteReportMapping {
     /// 校验远端 CP 原始结果自相一致 / Validate that a raw remote CP result is self-consistent.
     /// </summary>
     /// <remarks>
-    /// 与基线 <c>validateRawResult</c> 逐条对应。这些检查的共同目的是：**宁可拒绝一个矛盾的结果，也不要
+    /// 逐条校验。这些检查的共同目的是：**宁可拒绝一个矛盾的结果，也不要
     /// 把一个自相矛盾的结论交给下游**。
     /// - schema 主版本必须是 1 或 2（未来主版本一律拒绝，不做"尽力解读"）。
     /// - 可行性必须与问题状态、最优性、证明状态、解存在性一致：可行 ⇔ `FEASIBLE`；不可行不得声称最优；
@@ -942,7 +942,7 @@ public static class RemoteReportMapping {
     /// match the schema keys with non-blank values; exact and floating objectives may not coexist;
     /// <c>bestBound</c>/<c>gap</c> must parse as numbers; and a result reference must be paired with an
     /// artifact digest. This operates on C#'s <see cref="SliceResult"/>, which carries every relevant
-    /// baseline field, so it aligns by field rather than by the (differently shaped) type name.
+    /// field, so it aligns by field rather than by the (differently shaped) type name.
     /// </remarks>
     /// <param name="slice">切片结果 / Slice result.</param>
     /// <returns>校验结果 / Validation result.</returns>

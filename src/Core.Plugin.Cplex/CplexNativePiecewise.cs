@@ -53,13 +53,13 @@ internal static class CplexNativePiecewise
     /// **前置校验：在写入任何东西之前跑完一整遍** / Validate up front, before anything is written.
     /// </summary>
     /// <remarks>
-    /// **五条，全部来自基线，且顺序也沿用**（先数结构、再查数值、再查递增、再查映射、最后查重复）。
+    /// **五条，顺序固定**（先数结构、再查数值、再查递增、再查映射、最后查重复）。
     ///
     /// **"断点严格递增"这一条尤其值得单独看：** **它不是"数据好看"的要求，而是 SOS2 的<b>前提</b>。**
     /// **SOS2 说"至多两个相邻 λ 非零"，而"相邻"是由断点数组的<b>下标</b>定义的；
     /// 一组乱序断点会让"相邻"指向错误的两个点，于是插值在错误的区间上进行——模型可解，折线是错的。**
     ///
-    /// **Five checks, all from the code and in the same order: structure, finiteness, monotonicity, mapping,
+    /// **Five checks, in a fixed order: structure, finiteness, monotonicity, mapping,
     /// duplicates.**
     ///
     /// **"Strictly increasing" deserves its own note: it is not a tidiness requirement but a <b>precondition of

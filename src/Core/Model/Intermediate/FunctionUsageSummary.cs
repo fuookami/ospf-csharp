@@ -27,7 +27,7 @@ public enum FunctionInputShape {
 
 /// <summary>分段连接处的连续性 / Continuity at segment boundaries.</summary>
 /// <remarks>
-/// 对齐基线 `PiecewiseContinuity`。
+/// 三种状态：连续、不连续、未知。
 ///
 /// **`Discontinuous` 与 `Unknown` 是两件事**：**前者是"知道有断点"，后者是"没查过"。**
 /// **把后者当后者处理会拒绝本可展开的函数；把前者当后者处理会生成一条断点处的错误行。**
@@ -49,7 +49,7 @@ public enum PiecewiseContinuity {
 
 /// <summary>函数结果的使用位置 / Where a function result is used.</summary>
 /// <remarks>
-/// 对齐基线 `FunctionUsageLocation`。
+/// 结果的使用位置按"被引用优先"排序。
 ///
 /// **`Nested` 与 `External` 排在 `ObjectiveAndConstraint` <b>之前</b>，顺序是有意义的**：
 /// **一个既出现在目标又出现在约束、同时被别的结构引用的函数，
@@ -94,7 +94,7 @@ public enum FunctionUsageLocation {
 ///
 /// **`RequiresResultVariable` 里 `(InObjective &amp;&amp; InConstraint)` 是<b>冗余</b>的**：
 /// **`InConstraint` 已经覆盖了它。**
-/// **基线保留它，因为它把"同时出现在两边"这个具体情形写在了表达式里——
+/// **这里保留它，因为它把"同时出现在两边"这个具体情形写在了表达式里——
 /// 读的人不必回去看 `InConstraint` 是否包含了那一支。**
 /// **这种冗余不是错误，但必须标出来，否则后来的人会以为漏了条件。**
 ///

@@ -11,13 +11,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 只写字段必须**在声明处**说清楚，不许靠下一个人去猜 / Write-only fields must be explained where they are declared.
 /// </summary>
 /// <remarks>
-/// 本仓已经因为"没人读的输入"踩过两次： 把 `weightUnit` 记成缺口（后来发现不读），
+/// 本仓已经因为"没人读的输入"踩过两次：把 `weightUnit` 记成缺口（后来发现不读），
 /// 发现请求里的两个推荐优先级**真的**被丢掉。两次都说明一件事：**"这个字段有没有读者"必须能查、能写下来。**
 ///
 /// 这里把两处只写字段的结论钉在源码文本上：**结论消失或措辞被删掉时会变红**，逼着下一个人重新做一次同样的调查，
 /// 而不是把"看起来没用到"当成"可以接一条规则上去"。
 ///
-/// The port has been bitten twice by "an input with no reader": recorded `weightUnit` as a gap (the code does not read it either), and found that the two
+/// This implementation has been bitten twice by "an input with no reader": recorded `weightUnit` as a gap (the code does not read it either), and found that the two
 /// recommendation priorities really were dropped. Both say the same thing: **whether a field has a reader has to be checkable and written down**. This pins the two
 /// write-only conclusions to the source text: **removing them turns it red**, forcing the next person to redo the investigation instead of reading "looks unused" as
 /// "safe to attach a rule to".
@@ -41,8 +41,8 @@ public sealed class Demo2WriteOnlyFieldTests
     /// 请求里的 `weightUnit` 必须**有人读**，不能是只写字段 / The request's `weightUnit` must have a reader, never be write-only.
     /// </summary>
     /// <remarks>
-    /// 把这条判据的结论翻了过来，因为它的前提是错的。** 原话写着「基线从不读 `request.weightUnit`」，
-    /// 于是钉"字段不要存在"。 实际读下去发现三处：
+    /// 把这条判据的结论翻了过来，因为它的前提是错的。** 原话写着「`request.weightUnit` 从不被读」，
+    /// 于是钉"字段不要存在"。实际读下去发现三处：
     /// 舱位承重按 `input.weightUnit.unit` 取单位；机型默认 `weightUnit = Kilogram`；
     /// 聚合时又用 `aggregation.aircraftModel.weightUnit` 覆盖。
     ///

@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **`Scan` 真的展开：长度取自首维，每轮喂一个切片** / Scan unrolled: length from the leading dimension, one slice per round.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerScan` 落地形态。**接线与 `Loop` 一样，多出来的只有"每轮多喂一个切片"：**
+/// `lowerScan` 的落地形态。**接线与 `Loop` 一样，多出来的只有"每轮多喂一个切片"：**
 /// **`Scan` 的每一轮都从一个被逐轮切片的输入里取第 `i` 片，** **而那个片在展开后就是第 `i` 轮的一个独立绑定。**
 ///
 /// **切片个数必须等于扫描长度：** **少给会让最后几轮拿到空绑定，多给会让多出来的切片被静默丢弃——** **两者都不会报错，只是模型的最后几轮或前几轮算的是别的东西。**
 ///
-/// Syncs the concrete `lowerScan`. **The wiring matches Loop; the one addition is a slice per round: Scan reads round `i`'s slice from a per-round-sliced input, and after
+/// The concrete `lowerScan`. **The wiring matches Loop; the one addition is a slice per round: Scan reads round `i`'s slice from a per-round-sliced input, and after
 /// unrolling that slice is simply an independent binding for round `i`.**
 ///
 /// **The slice count must equal the scan length: too few leaves the last rounds with nothing, too many silently discards the extra — neither throws, the model just
@@ -49,10 +49,10 @@ public static class OnnxScanLowering
     /// <param name="constants">常量表 / The constant table.</param>
     /// <returns>展开结果 / The result.</returns>
     /// <remarks>
-    /// **这一入口存在的理由，是"长度与切片都来自那个张量本身"：** **长度取首维（与基线 `lowerScan` 一致），第 `i` 片取 `SliceLeading(i)`。** '
+    /// **这一入口存在的理由，是"长度与切片都来自那个张量本身"：** **长度取首维，第 `i` 片取 `SliceLeading(i)`。** '
     /// **切片之后每轮的输入可以含变量——** **这正是"运行期切片"与"常量数组切片"的差别：** **前者切的是表达式，后者切的是数。**
     ///
-    /// **The reason this entry exists is that both the length and the slices come from that tensor: the length is the leading dimension (as in its lowerScan) and round i
+    /// **The reason this entry exists is that both the length and the slices come from that tensor: the length is the leading dimension and round i
     /// takes SliceLeading(i).** **A sliced round input may carry variables — that is exactly the difference between runtime slicing and slicing a constant array: one cuts expressions,
     /// the other cuts numbers.**
     /// </remarks>

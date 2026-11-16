@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 /// 远端可移植 checkpoint 编解码 / Remote portable checkpoint codec.
 /// </summary>
 /// <remarks>
-/// 与固定基线一致：本类型只做转发，字段顺序、schema 规范化、string-map 排序与摘要全部由 Core 的
+/// 本类型只做转发：字段顺序、schema 规范化、string-map 排序与摘要全部由 Core 的
 /// <see cref="ConstraintProgrammingCheckpointCodec"/> 决定，框架侧不再维护第二份字段列表或摘要算法。
 /// 解码入口刻意分开：<see cref="DecodeOrNull"/> 只接受当前 schema，历史格式迁移必须显式走
 /// <see cref="DecodeCompatibleOrNull"/>。

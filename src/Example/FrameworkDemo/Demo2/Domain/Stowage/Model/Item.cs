@@ -155,11 +155,11 @@ public sealed class Item
 
     /// <summary>货物标识 / Item identifier</summary>
     /// <remarks>
-    /// 基线 `Item.id` 是**标识**，`toString` 也返回它；C# 早期只有 `Name`，于是装载矩阵用名称做键，
+    /// `Id` 是**标识**；C# 早期只有 `Name`，于是装载矩阵用名称做键，
     /// 同名两件货会共用一列。`Id` 与 `Name` 分开是为了让"显示用的名字"和"身份"不再纠缠。
     /// 不给 `id` 时回落到名称，老调用方一行都不用改——但**同名两件货仍然会共用一列**，这是回落口径的已知上限。
     ///
-    /// `Item.id` is the identity (its `toString` returns it too); C# only had `Name`, so the stowage matrix keyed by name and two items sharing a name shared a
+    /// `Id` is the identity; C# only had `Name`, so the stowage matrix keyed by name and two items sharing a name shared a
     /// column. Splitting `Id` from `Name` separates "display label" from "identity". Omitting `id` falls back to the name so existing callers need no change — but **two items with
     /// the same name still share a column**, a known ceiling of that fallback.
     /// </remarks>
@@ -167,9 +167,9 @@ public sealed class Item
 
     /// <summary>集装器 / The unit load device</summary>
     /// <remarks>
-    /// 基线 `enabled` 有两条规则要用它（`enabledULDs` 与禁忌区间），此前 C# 的 `Item` 没有 `Uld`，两条都无从查起。
+    /// `enabled` 的两条规则要用它（`enabledULDs` 与禁忌区间），此前 C# 的 `Item` 没有 `Uld`，两条都无从查起。
     ///
-    /// The code's `enabled` needs it for two rules (the `enabledULDs` check and the taboo range); C#'s `Item` had no `Uld`, so neither could be checked.
+    /// `enabled` needs it for two rules (the `enabledULDs` check and the taboo range); C#'s `Item` had no `Uld`, so neither could be checked.
     /// </remarks>
     public ULD? Uld { get; }
     /// <summary>重量 / Weight (kg)</summary>

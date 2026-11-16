@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service;
 /// 冗余聚合初始化器 / The redundancy aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与对齐：**无校验**，全部字段直取配载聚合。
+/// **无校验**，全部字段直取配载聚合。
 ///
 /// 这里一条校验都没有（不像装载效能那边有六条拖车校验），所以本仓也不加。加校验会让合法请求被拒，
 /// 而条路径从来不会拒。

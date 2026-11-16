@@ -56,7 +56,7 @@ public sealed record BendersResult(
 /// <summary>
 /// Benders 分解求解器。Orchestrates the Benders decomposition iteration loop.
 ///
-/// Port of Kotlin BendersSolver: master/sub solve, cut generation, convergence check.
+/// The iteration loop: master/sub solve, cut generation, convergence check.
 /// </summary>
 public static class BendersSolver
 {
@@ -277,14 +277,14 @@ public static class BendersSolver
         // 一个"成功"的结果配一个**空解向量**，而 `Obj` 是最后一次主问题目标。调用方拿到它之后
         // `BuildAssignments` 按"货 × 舱位"去读一个零长向量，**读出空分配**，而响应看起来是成功的。
         //
-        // 基线不是这样：它把 `LinearBendersAlgorithm` 的结果原样映射（`master.tokens.tokensInSolver` 逐个取值），
-        // 并把 `result.status` 记成备注 `benders_status=…`。这里对齐：**解照交、状态照报**，
+        // 这里把 `LinearBendersAlgorithm` 的结果原样映射（`master.tokens.tokensInSolver` 逐个取值），
+        // 并把 `result.status` 记成备注 `benders_status=…`。**解照交、状态照报**，
         // 让"是否收敛"成为诊断里的一句话，而不是藏在空向量里。
         //
         // **An unconverged run still hands back the last master solution**: it used to return `Array.Empty<double>` — a "successful" result carrying an
         // **empty solution vector** while `Obj` held the last master objective. `BuildAssignments` then reads zero-length data through the cargo × position layout
-        // and **produces empty assignments**, with the response looking successful. The code does not do that: it maps `LinearBendersAlgorithm`'s values
-        // through `master.tokens.tokensInSolver` and records `result.status` as `benders_status=…`. This aligns: **hand back the solution, report the status**, so
+        // and **produces empty assignments**, with the response looking successful. This maps `LinearBendersAlgorithm`'s values
+        // through `master.tokens.tokensInSolver` and records `result.status` as `benders_status=…`. **Hand back the solution, report the status**, so
         // "did it converge" is a sentence in the diagnostics instead of something hidden in an empty vector.
         long finalTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTime;
         double finalObj = bestObj ?? 0.0;

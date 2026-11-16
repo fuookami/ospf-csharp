@@ -14,20 +14,20 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// <remarks>
 /// 补角度(4+2 别名) / 力(2) / 功率(4)。
 ///
-/// **两处基线问题**：
-/// ① 基线写 `RightAngle = Radian / 4.0`，**而直角是 π/2 弧度**——正确的式子是 `RoundAngle / 4`；
-/// ② 基线写 `UKHorsepower = Watt * 550`，**而 550 是 ft·lbf/s 的数值，漏了换算**
+/// **两处取值错误**：
+/// ① 常见写法 `RightAngle = Radian / 4.0` 是错的，**而直角是 π/2 弧度**——正确的式子是 `RoundAngle / 4`；
+/// ② 常见写法 `UKHorsepower = Watt * 550` 是错的，**而 550 是 ft·lbf/s 的数值，漏了换算**
 ///    （550 × 0.3048 × 4.4482216152605 = 745.69987 W）。
 ///
 /// **一处同名不同值**：`Horsepower` 是 735 W（公制），本仓的是 745.69987 W（机械），
 /// **同一个 `hp` 符号，差 1.4%。**
 ///
-/// **Two baseline problems**.
-/// ① the code writes `RightAngle = Radian / 4.0`, **while a right angle is pi/2** — correct is `RoundAngle / 4`;
-/// ② the code writes `UKHorsepower = Watt * 550`, **and 550 is the ft-lbf/s figure with the conversion dropped**
+/// **Two wrong values in circulation**.
+/// ① the common `RightAngle = Radian / 4.0` is wrong, **while a right angle is pi/2** — correct is `RoundAngle / 4`;
+/// ② the common `UKHorsepower = Watt * 550` is wrong, **and 550 is the ft-lbf/s figure with the conversion dropped**
 ///    (550 x 0.3048 x 4.4482216152605 = 745.69987 W).
 ///
-/// **One same-name-different-value case**: baseline `Horsepower` is 735 W (metric), this repo's is 745.69987 W
+/// **One same-name-different-value case**: the metric `Horsepower` is 735 W, this repo's is 745.69987 W
 /// (mechanical), **same `hp` symbol, 1.4% apart.**
 /// </remarks>
 public class AngleForcePowerUnitsTests
@@ -35,11 +35,11 @@ public class AngleForcePowerUnitsTests
     /// <summary>**90 度恰好是一个直角** / Ninety degrees is exactly one right angle.</summary>
     /// <remarks>
     /// **这是这里最强的一条判据**：**它把 `Degree`（来自周角）与 `RightAngle`（来自周角四等分）钉在一起。**
-    /// **基线写 `Radian / 4` 时，这条会红成 14.3 度对 90 度。**
+    /// **若写成 `Radian / 4`，这条会红成 14.3 度对 90 度。**
     /// **而"`Gradian` 是直角的百分之一"那条仍会绿**——**因为两者一起错，比值不动。**
     ///
-    /// **The strongest criterion in**: **it pins `Degree` (from the full turn) against `RightAngle`
-    /// (from quartering the turn).** **With its `Radian / 4` it goes red at 14.3 degrees against 90.**
+    /// **The strongest criterion here**: **it pins `Degree` (from the full turn) against `RightAngle`
+    /// (from quartering the turn).** **With a `Radian / 4` definition it goes red at 14.3 degrees against 90.**
     /// **And "'Gradian' is a hundredth of a right angle" would still pass** — **both go wrong together and the ratio
     /// does not move.**
     /// </remarks>
@@ -70,10 +70,10 @@ public class AngleForcePowerUnitsTests
 
     /// <summary>**百分度是直角的百分之一（π/200）** / A gradian is a hundredth of a right angle.</summary>
     /// <remarks>
-    /// **这条单独不能发现个错误**——**所以它必须与"90 度 = 直角"一起存在。**
+    /// **这条单独不能发现那处错误**——**所以它必须与"90 度 = 直角"一起存在。**
     /// **这也是这里的一个方法论要点：由错误派生出的单位，比值判据永远是绿的。**
     ///
-    /// **This alone cannot catch the code error** — **so it has to sit beside "90 degrees = one right angle".**
+    /// **This alone cannot catch the wrong value** — **so it has to sit beside "90 degrees = one right angle".**
     /// **That is the methodological point here: for a unit derived from a wrong one, ratio criteria stay green.**
     /// </remarks>
     [Fact]
@@ -84,7 +84,7 @@ public class AngleForcePowerUnitsTests
             global::System.Math.PI / 200.0, 1e-12);
     }
 
-    /// <summary>**毫弧度是弧度的千分之一，基线拼写指向同一个对象** / Milliradian, and the spellings agree.</summary>
+    /// <summary>**毫弧度是弧度的千分之一，两种拼写指向同一个对象** / Milliradian, and the spellings agree.</summary>
     [Fact]
     public void TheMilliradianAndSpellings_ShouldBehave()
     {
@@ -113,10 +113,10 @@ public class AngleForcePowerUnitsTests
 
     /// <summary>**UK 马力等于机械马力，而不是 550 W** / UK horsepower is mechanical, not 550 W.</summary>
     /// <remarks>
-    /// **基线写 550，那是 ft·lbf/s 的数值。** **550 × 0.3048 × 4.4482216152605 = 745.69987 W。**
+    /// **550 是 ft·lbf/s 的数值。** **550 × 0.3048 × 4.4482216152605 = 745.69987 W。**
     /// **这条判据同时钉住"值正确"与"是别名而非新对象"。**
     ///
-    /// **The code writes 550, which is the ft-lbf/s figure.** **550 x 0.3048 x 4.4482216152605 = 745.69987 W.**
+    /// **550 is the ft-lbf/s figure.** **550 x 0.3048 x 4.4482216152605 = 745.69987 W.**
     /// **This pins both "the value is right" and "it is an alias, not a new object".**
     /// </remarks>
     [Fact]

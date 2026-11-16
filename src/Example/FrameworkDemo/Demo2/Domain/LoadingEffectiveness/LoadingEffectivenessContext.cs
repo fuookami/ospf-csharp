@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness;
 /// 装载效能上下文 / The loading-effectiveness context.
 /// </summary>
 /// <remarks>
-/// 与对齐：**初始化幂等**，**`Init` 收 `stowageMode`**，
+/// **初始化幂等**，**`Init` 收 `stowageMode`**，
 /// 注册时先派生四个子模型再生成十二条管线。
 ///
 /// **一处刻意的参数删减**：`init` 还收 `aircraftContext`，但本仓的 `AggregationInitializer` 用不到飞机的任何量

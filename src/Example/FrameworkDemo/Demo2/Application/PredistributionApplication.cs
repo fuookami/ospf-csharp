@@ -22,7 +22,6 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 
 /// <summary>
 /// 预配载应用。Predistribution application: orchestrates the predistribution stowage optimization pipeline.
-/// Port of Kotlin PredistributionApplication / PredistributionAlgorithmImpl.
 /// </summary>
 public sealed class PredistributionApplication
 {
@@ -43,10 +42,10 @@ public sealed class PredistributionApplication
     /// 冗余上下文 / The redundancy context.
     /// </summary>
     /// <remarks>
-    /// **预配载独有的第八个域**：基线 `PredistributionPipelineContext` 在全配载七域之后再注册它。
+    /// **预配载独有的第八个域**：在全配载七域之后再注册它。
     /// 这个域在本仓早就写完了却从没接线，于是预配载少了六个符号、两个目标。
     ///
-    /// **The eighth domain, predistribution only**: the code registers it after full load's seven. The domain had long been finished here but never wired, so
+    /// **The eighth domain, predistribution only**: it is registered after full load's seven. The domain had long been finished here but never wired, so
     /// predistribution was missing six symbols and two objectives.
     /// </remarks>
     private readonly RedundancyContext _redundancyContext = new();
@@ -99,7 +98,7 @@ public sealed class PredistributionApplication
             return (ResponseDTO.NoSolution("BendersNotWiredForMode", notes), null);
         }
 
-        // TODO: Port solveWithMILP and solveWithBendersAlgorithm from Kotlin
+        // TODO: Implement solveWithMILP and solveWithBendersAlgorithm
 
         // **求解器由调用方带进来**：默认全量测试不能依赖可选后端；没带就明确说"未接线"，
         // **不是"未实现"**——装配与求解链路在本仓早已可用（先接线了全配载）。

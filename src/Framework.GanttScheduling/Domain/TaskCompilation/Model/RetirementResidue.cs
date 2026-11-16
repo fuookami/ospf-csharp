@@ -1,7 +1,7 @@
 // 回收后的残留引用 / Residual references after a variable is retired.
-// 与固定 Kotlin 的 `tokens.remove(item)` 对应：
+// `remove(item)` 只有一行 `tokens.remove(item)`：
 // `remove` **只摘变量**，不动约束与目标项。
-// its `remove` **drops the variable only**, leaving constraints and objective terms alone.
+// `remove` **drops the variable only**, leaving constraints and objective terms alone.
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// （导出、审计、二次求解）都会看到悬空引用。
 ///
 /// 照做就**不能**顺手清理：`removeColumns` 不调 `RemoveObjectiveTerms`，
-/// 加了会让解的行为（乃至求解器看到的模型）偏离固定基线。所以这里提供的是**观测**，
+/// 加了会改变解的行为（乃至求解器看到的模型）。所以这里提供的是**观测**，
 /// 不是修复——让这份偏离被看见、被断言，而不是变成一条静默的 ceiling。
 ///
 /// `remove(item)` is one line: `tokens.remove(item)`. So after a column variable is retired:
@@ -43,8 +43,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// Neither raises anything: the variable is already pinned to 0, so the constraints stay satisfiable and the objective terms are identically 0. In other words **the behaviour is
 /// right while the model content is dirty** — dirty enough that any downstream walking the model by symbol table (export, audit, re-solve) sees a dangling reference.
 ///
-/// Copying the code means this **cannot** be cleaned up on the side: its `removeColumns` does not call `RemoveObjectiveTerms`, and adding it would move the
-/// solution behaviour (and the model the solver sees) away . So what is offered here is **observation, not repair** — so the divergence is seen and
+/// Cleaning this up on the side is **not** an option: `removeColumns` does not call `RemoveObjectiveTerms`, and adding it would move the
+/// solution behaviour (and the model the solver sees). So what is offered here is **observation, not repair** — so the divergence is seen and
 /// asserted instead of turning into a silent ceiling.
 /// </remarks>
 public static class RetirementResidue {

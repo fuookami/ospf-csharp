@@ -30,9 +30,7 @@ public sealed record NativePiecewiseData(
 /// Validate a PWL structure and convert it into solver-independent primitive data.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐的 `prepareNativePiecewise`。
-///
-/// **这一层<b>不</b>碰求解器边界与 fallback 选择变量的使用情况**（基线注释明说"有意不处理"）。
+/// **这一层<b>不</b>碰求解器边界与 fallback 选择变量的使用情况**（有意不处理）。
 /// **它只回答一个问题：这个结构能不能被翻译成一组 `x/y` 断点。**
 ///
 /// **断点必须<b>严格</b>递增：`x[i-1] >= x[i]` 即拒。**

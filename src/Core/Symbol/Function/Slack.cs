@@ -118,9 +118,9 @@ public sealed class SlackFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynom
         if (converter is null) {
             throw new ArgumentNullException(nameof(converter));
         }
-        // 基线 `require(withNegative || withPositive)`：两个方向都关掉的"松弛"是**恒等于零**的假符号，
+        // `require(withNegative || withPositive)`：两个方向都关掉的"松弛"是**恒等于零**的假符号，
         // 却仍然返回 `Ok`——调用方以为拿到了一条松弛。
-        // The code's `require(withNegative || withPositive)`: a "slack" with both directions off is a **constant zero** fake symbol that still returns `Ok` — the caller believes it
+        // `require(withNegative || withPositive)`: a "slack" with both directions off is a **constant zero** fake symbol that still returns `Ok` — the caller believes it
         // got a slack.
         if (!withNegative && !withPositive) {
             throw new ArgumentException(

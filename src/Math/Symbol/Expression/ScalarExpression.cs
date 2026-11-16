@@ -8,7 +8,7 @@ using System.Linq;
 namespace Fuookami.Ospf.Math.Symbol.Expression;
 /// <summary>
 /// 标量表达式 / Scalar Expression.
-/// Kotlin sealed interface ScalarExpression&lt;out T&gt;; C# abstract record (out variance dropped).
+/// `ScalarExpression&lt;T&gt;` 的抽象 record（协变已去掉）/ The abstract record for `ScalarExpression&lt;T&gt;`, with variance dropped.
 /// </summary>
 public abstract record ScalarExpression<T> {
     /// <summary>表达式类型名 / Expression type name.</summary>
@@ -146,7 +146,7 @@ public sealed record ScalarCustom<T>(object Value, string? Description = null) :
 
 /// <summary>
 /// 标量表达式工厂 / Scalar Expression Factory.
-/// Kotlin object; C# static class. 便捷构造方法 / Convenient constructors.
+/// 静态类；便捷构造方法 / A static class with convenient constructors.
 /// </summary>
 public static class ScalarExpressionFactory {
     /// <summary>创建常量表达式 / Create constant expression.</summary>
@@ -218,12 +218,12 @@ public sealed record ScalarConditional<T>(
 /// <param name="Expr">被包的布尔表达式 / The wrapped boolean expression.</param>
 /// <remarks>
 /// **这是 `ScalarBoolean`，而它在整个解析器里只有一个用途**：让比较/逻辑的结果能沿着标量那条链继续往上走，
-/// **到三元与 `if-then-else` 那里再被拆回布尔**（基线 `unwrapBoolean` / `extractBooleanCondition`）。
+/// **到三元与 `if-then-else` 那里再被拆回布尔**（`unwrapBoolean` / `extractBooleanCondition`）。
 ///
 /// **这一层不能省**：没有它，"比较的结果"就没法当成"三元条件"传上去，
 /// **而标量链上每一层都只认 `ScalarExpression`。**
 ///
-/// **In the code this is `ScalarBoolean`, and it has exactly one purpose**: letting a comparison or logical result travel up the scalar chain,
+/// **This is `ScalarBoolean`, and it has exactly one purpose**: letting a comparison or logical result travel up the scalar chain,
 /// **then be unwrapped back to a boolean at the ternary and `if-then-else` layers.**
 /// **The layer cannot be skipped**: without it a comparison result cannot be passed as a ternary condition,
 /// **and every layer of the scalar chain accepts only `ScalarExpression`.**

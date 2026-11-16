@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 于是中间量是「无穷」而不是一个数**——**最终结果仍然是 0（正确），但中间量已经不可信，
 /// 而任何在中间量上做判断的代码（例如"是否有限"）会在这里做出错误决定。**
 ///
-/// The logistic curve from its.
+/// The logistic curve.
 ///
 /// <c>σ(z) = 1 / (1 + e^(−z))</c> with <c>z = k(x − m)</c> (`k` the steepness, `m` the midpoint).
 ///

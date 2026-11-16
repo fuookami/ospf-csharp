@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 执行器目标项的代价 / Cost of an executor objective term.
 /// </summary>
 /// <remarks>
-/// 基线写的是 `coefficient?.let { ... }` 套 `it(e) ?: Flt64.infinity`。这里有**三种状态**，
+/// 系数提取器可以缺席、可以给出 `null`、也可以给出数值。这里有**三种状态**，
 /// 而它们看起来只差一个 `?`：
 ///
 /// | 情形 | 含义 | 行为 |
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 把"没配置"当成"禁止"，一个没打算惩罚任何人的调用方会**让所有执行器都不可选**；
 /// 把"不可定价"当成"权重一"，本该禁止的选项变得很便宜。
 ///
-/// The code writes `coefficient?.let { ... }` around `it(e) ?: Flt64.infinity`. There are **three states** that differ by one `?`:
+/// An absent extractor, one that yields `null` and one that yields a number: there are **three states** that differ by one `?`:
 ///
 /// | Case | Meaning | Behaviour |
 /// | --- | --- | --- |

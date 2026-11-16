@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 ///
 /// **三处沿用而不是"顺手改好"**：
 /// 1. 第三级排序键是 `id.toString`，即**字符串字典序**——`"10"` 排在 `"2"` 前面。看着像 bug，但它是行为，
-///    改了会让同一批输入的输出顺序与基线不同；要改得先确认调用方不依赖这个顺序。
-/// 2. 顺序号转成字符串再转回整数（`order.toString.toInt`）——**等价于直接比数值**，保留这个形状是为了读代码时能一眼对上基线。
+///    改了会让同一批输入的输出顺序改变；要改得先确认调用方不依赖这个顺序。
+/// 2. 顺序号转成字符串再转回整数（`order.toString.toInt`）——**等价于直接比数值**，保留这个形状是为了读代码时能一眼看出它与数值比较等价。
 /// 3. `status` 恒为 `"Optimal"`，由被调用的 DTO 工厂写死。
 ///
 /// **一处必须偏离**：`_loadingOrder` 是 `lateinit`，读得太早会抛 `UninitializedPropertyAccessException`；本仓把它建成可空的，
@@ -32,11 +32,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// line as `"{id}: {spaceName} (order={order})"`.
 ///
 /// **Three things copied rather than "fixed while at it"**: (1) the third key is `id.toString`, i.e. **lexicographic** — `"10"` sorts before `"2"`. It looks
-/// like a bug, but it is the code behaviour, and changing it makes the same input produce a different order than the code; that change needs a confirmed
-/// promise from callers first. (2) the order number is stringified then parsed back — **equivalent to a numeric compare**, kept only so this reads side by side
-/// with the code. (3) `status` is always the literal `"Optimal"`, hard-coded in the DTO factory.
+/// like a bug, but it is the behaviour, and changing it makes the same input produce a different order; that change needs a confirmed
+/// promise from callers first. (2) the order number is stringified then parsed back — **equivalent to a numeric compare**, kept only for the visual correspondence
+/// to the original expression. (3) `status` is always the literal `"Optimal"`, hard-coded in the DTO factory.
 ///
-/// **One deliberate divergence**: its `_loadingOrder` is `lateinit`, so reading it too early throws `UninitializedPropertyAccessException`; this implementation
+/// **One deliberate divergence**: `_loadingOrder` is `lateinit`, so reading it too early throws `UninitializedPropertyAccessException`; this implementation
 /// models it as nullable, and here that becomes an **explicit error** instead of a crash — an error code plus the position's name beats a stack trace.
 /// </remarks>
 public sealed class LoadingOrderOutputExporter

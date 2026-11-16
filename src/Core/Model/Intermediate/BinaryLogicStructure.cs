@@ -148,12 +148,12 @@ public sealed record BinaryLogicStructure(
                     }
 
                     // **`Σinput − result ≤ n − 1`，即 `result ≥ Σinput − n + 1`。**
-                    // **基线写的是 `Σinput − n·result ≥ 1 − n`，而那一行的系数与右侧都不对：
+                    // **原式 `Σinput − n·result ≥ 1 − n` 的系数与右侧都不对：
                     // 它在"全 0 输入、result = 1"时给出 `0 − 2 ≥ −1`（假，正确拒绝），
                     // 却在"两个 1、result = 0"时给出 `2 − 0 ≥ −1`（真，错误接受）。**
                     //
                     // **`Σinput − result ≤ n − 1`, i.e. `result ≥ Σinput − n + 1`.**
-                    // **The code wrote `Σinput − n·result ≥ 1 − n`, whose coefficient and right-hand side are both
+                    // **The old formula was `Σinput − n·result ≥ 1 − n`, whose coefficient and right-hand side are both
                     // wrong: it rejects "all zeros, result one" but accepts "two ones, result zero".**
                     rows.Add(new LinearInequality<Flt64>(
                         Lhs: Polynomial(SumOfInputs(one).Append(
@@ -176,10 +176,10 @@ public sealed record BinaryLogicStructure(
                     }
 
                     // **`result − Σinput ≤ 0`，即 `result ≤ Σinput`。**
-                    // **基线写的是 `Σinput − result ≤ 0`，方向反了——那一行说的是 `result ≥ Σinput`。**
+                    // **原式 `Σinput − result ≤ 0` 方向反了——它说的是 `result ≥ Σinput`。**
                     //
                     // **`result − Σinput ≤ 0`, i.e. `result ≤ Σinput`.**
-                    // **The code wrote `Σinput − result ≤ 0`, the direction reversed — that says
+                    // **The old formula was `Σinput − result ≤ 0`, the direction reversed — it says
                     // `result ≥ Σinput`.**
                     rows.Add(new LinearInequality<Flt64>(
                         Lhs: Polynomial(new[] {

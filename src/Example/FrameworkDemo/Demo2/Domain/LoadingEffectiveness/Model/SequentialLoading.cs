@@ -21,12 +21,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 顺序装载反转 / The sequential-loading reversals.
 /// </summary>
 /// <remarks>
-/// 与对齐：为**每个（有序货物对, 有序舱位对）**造一个中间符号，
+/// 为**每个（有序货物对, 有序舱位对）**造一个中间符号，
 /// 表示"这一对的装载先后被反了"。
 ///
 /// 六处必须沿用：
 ///
-/// 1. **只收"有装载顺序"的货物**（基线 `filter { it.order?.order != null }`），并按 `顺序升序` 再按 `Id` 排序。
+/// 1. **只收"有装载顺序"的货物**（`filter { it.order?.order != null }`），并按 `顺序升序` 再按 `Id` 排序。
 /// 2. **有序对是全组合**，谓词是**严格小于**（顺序小的在前）。
 /// 3. **有序舱位对由调用方传入**（聚合算好的），不在本类里重算。
 /// 4. **条件多项式是 `s[i1,j2] + s[i2,j1] − 2 + ε`**，`ε = NONZERO_TOLERANCE = 1e-10`，
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///    这依赖 `Item` 与 `StowagePosition` 的 `ToString` 覆写（补上），否则全部重名。
 ///
 /// One intermediate symbol per (ordered item pair, ordered position pair), meaning "this pair was loaded the wrong way round". Six things must be copied:
-/// **only items carrying a loading sequence are kept** (its filter), sorted by sequence then `Id`; **ordered pairs are all combinations** under a strict less-than
+/// **only items carrying a loading sequence are kept**, sorted by sequence then `Id`; **ordered pairs are all combinations** under a strict less-than
 /// predicate; **the ordered position pairs come from the caller** rather than being recomputed here; **the condition is `s[i1,j2] + s[i2,j1] − 2 + ε`** with `ε = NONZERO_TOLERANCE
 /// = 1e-10`, and `strictBoundary` **also takes that ε** — it is the true/false gap, not a threshold, and 0.5 is rejected by `SafeLattice` (measured); **an unplaceable combination
 /// gets a constant-zero symbol** rather than being skipped; and **the name carries three elements**, which relies on the `ToString` overrides added.

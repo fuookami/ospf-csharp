@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Benchmark.Tests;
 /// </summary>
 /// <remarks>
 /// 这三个基准**原本就有测试**，但那些测试问的是"构造对不对"（节点是不是四出边、行数是不是变量数的一半），
-/// **没有一条问"规模参数有没有进到被测路径"**。 的教训是：夹具变了、被测路径没变，测出来的趋势就是假的。
+/// **没有一条问"规模参数有没有进到被测路径"**。教训是：夹具变了、被测路径没变，测出来的趋势就是假的。
 /// 所以这里只加一个判据：**被测方法返回的计数必须随参数单调增长**。
 ///
 /// These three benchmarks **already had tests**, but those asked "is the construction right" (does every node have four outgoing arcs, is the row count
@@ -126,7 +126,7 @@ public sealed class BenchmarkScaleValidityExtraTests {
     /// <summary>**Benders 基准的规模必须真的进到被测路径** / The Benders benchmark's scale must reach the measured path.</summary>
     /// <remarks>
     /// 用多轮基准量到：`BendersSolve` 三档 **45.4 / 47.1 / 45.6 µs，分配完全相同（129.16 KB）**——
-    /// 夹具**丢掉了 `Dataset`**，三档测的是同一条路径。这正是 / 记过两次的那类错误，**第三次**。
+    /// 夹具**丢掉了 `Dataset`**，三档测的是同一条路径。这正是记过两次的那类错误，**第三次**。
     ///
     /// 判据不看耗时（耗时判据会抖），而是看**主问题变量数**：`Dataset` 变了它必须跟着变。
     /// 修复后 `small=4 / medium=6 / large=8`。
@@ -360,8 +360,8 @@ public sealed class BenchmarkScaleValidityExtraTests {
         largeFromList.Should().BeLessThan(smallFromList,
             "measured: this value shrinks as the tier grows, so it must never be used as a scale signal");
 
-        // **`dump sparse rows` 返回 NaN——基线自带**：它把 ±∞ 累加进 checksum（基线 `walkSparseRowsAndBounds` 逐字如此）。
-        // **`dump sparse rows` returns NaN and the code does too**: it adds ±∞ into the checksum (its `walkSparseRowsAndBounds` does exactly this).
+        // **`dump sparse rows` 返回 NaN 是既有行为**：它把 ±∞ 累加进 checksum（`walkSparseRowsAndBounds` 逐字如此）。
+        // **`dump sparse rows` returns NaN, and that is the established behaviour**: it adds ±∞ into the checksum (`walkSparseRowsAndBounds` does exactly this).
         SparseRows("small").Should().Be(double.NaN,
             "measured: adding ±∞ makes the checksum NaN; it cannot carry a scale signal");
 

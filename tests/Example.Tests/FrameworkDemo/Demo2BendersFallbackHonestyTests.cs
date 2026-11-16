@@ -54,13 +54,13 @@ public sealed class Demo2BendersFallbackHonestyTests
 
     /// <summary>**`BendersFailed` 这条分支也要有人钉** / The `BendersFailed` branch needs a pin too.</summary>
     /// <remarks>
-    /// **`BendersFailed` 是自造状态**（基线 `12fdb587` 里搜不到），而它**此前没有任何判据**：
+    /// **`BendersFailed` 是自造状态**（后端状态里搜不到），而它**此前没有任何判据**：
     /// **判据只钉了 `benders_failed_without_milp_fallback` 那一条。**
     ///
     /// **两条分支的差别是有意义的**：一条是"策略允许回退但没有 MILP 可退"，
     /// **另一条是"回退也没成，彻底失败"**——**合并成一个状态，调用方就分不清"该补后端"还是"该看模型"。**
     ///
-    /// **`BendersFailed` is an invented status** (absent from baseline `12fdb587`) **with no criterion at all** —
+    /// **`BendersFailed` is an invented status** (absent from the backend's statuses) **with no criterion at all** —
     /// **only `benders_failed_without_milp_fallback` was pinned.**
     ///
     /// **The distinction matters**: one says "the policy allows a fallback but there is no MILP to fall back to",
@@ -109,7 +109,7 @@ public sealed class Demo2BendersFallbackHonestyTests
     /// **两种"没走回退"必须是两句话** / The two reasons not to fall back must be two sentences.
     /// </summary>
     /// <remarks>
-    /// 基线要求回退**重建一个新模型与新上下文**；本仓的域上下文是**一次性**的。
+    /// 本仓的回退要求**重建一个新模型与新上下文**；而域上下文是**一次性**的。
     /// 所以"调用方没给 MILP 求解器"和"给了求解器也建不出新模型"是**两个不同的原因**，混成一句会让后来的人以为补个求解器就好了。
     ///
     /// The code requires the fallback to **rebuild a fresh model and context**; this implementation's domain contexts are **single-use** (measured). So "no MILP solver

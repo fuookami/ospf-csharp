@@ -151,7 +151,7 @@ public class BunchSchedulingConnectionResourceUsage<R, C, V>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 对应基线 `BunchSchedulingConnectionResourceUsage.register`：每个时间槽的 `quantity` 是一个以资源初始数量为常数的符号，范围取
+    /// 每个时间槽的 `quantity` 是一个以资源初始数量为常数的符号，范围取
     /// `[下界 − 不足, 上界 + 超量]`；超量 \/ 不足两张表交给共用的 `ResourceUsageSlackHelper`。
     ///
     /// 与执行资源的形状相同、与存储的不同（存储是三段代数和）。**连接资源在 `invoke` 时另按"任务与槽的关联量"挂项**，
@@ -159,7 +159,7 @@ public class BunchSchedulingConnectionResourceUsage<R, C, V>
     ///
     /// Each time slot's `quantity` is a symbol constant at the resource's initial quantity, ranged over
     /// `[lower - less, upper + over]`; the over and less tables go through the shared `ResourceUsageSlackHelper`. The shape matches the execution resource and differs from storage
-    /// (which is a three-part algebra). **The code's connection resource attaches terms by "the task-slot relation quantity" at `invoke` time**, which belongs to the assembly pipeline
+    /// (which is a three-part algebra). **The connection resource attaches terms by "the task-slot relation quantity" at `invoke` time**, which belongs to the assembly pipeline
     /// rather than to `register`.
     /// </remarks>
     public Try Register(object model) {

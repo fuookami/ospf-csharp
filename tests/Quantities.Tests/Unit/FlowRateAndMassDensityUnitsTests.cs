@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// </remarks>
 public class FlowRateAndMassDensityUnitsTests
 {
-    /// <summary>**三个流量单位都在** / All three baseline flow units are present.</summary>
+    /// <summary>**三个流量单位都在** / All three flow units are present.</summary>
     [Fact]
     public void TheFlowRateUnits_ShouldCoverTheBaseline()
     {
@@ -66,7 +66,7 @@ public class FlowRateAndMassDensityUnitsTests
             "a litre per minute is one sixtieth of a litre per second");
     }
 
-    /// <summary>**四个质量密度单位都在** / All four baseline mass-density units are present.</summary>
+    /// <summary>**四个质量密度单位都在** / All four mass-density units are present.</summary>
     [Fact]
     public void TheMassDensityUnits_ShouldCoverTheBaseline()
     {

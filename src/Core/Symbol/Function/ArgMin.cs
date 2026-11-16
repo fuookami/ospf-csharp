@@ -22,15 +22,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **返回最小值所在的下标，而不是最小值本身** / Return the index of the minimum, not the minimum.
 /// </summary>
 /// <remarks>
-/// 对齐基线 OrderStatistic.kt 的 ArgMinFunction。
-///
 /// **`argmin` 与 `max` 的区别只有一个，而它足够让人写错**：
 /// **`max` 给的是值，`argmin` 给的是"哪个"。** 而这里的"哪个"是**用选择器变量的加权和**表达的——
 /// **下标 i 的系数就是 i**（0 号选择器不参与，因为它的系数是 0）。
 ///
 /// **所以结果多项式的常数项必须是 0**：**下标 0 对应"全是零"，而它不能靠常数项表达。**
-///
-/// The ArgMinFunction from its OrderStatistic.kt.
 ///
 /// **`argmin` differs from `max` in exactly one way, and that is enough to get wrong**.
 /// **`max` gives the value, `argmin` gives "which one".** And "which one" is expressed **as a weighted sum of the

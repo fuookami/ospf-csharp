@@ -41,7 +41,7 @@ internal static class ThresholdSlack {
     /// <param name="slack">建出的松弛 / The built slack.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 对应基线 `thresholdSlack(...)`：`withNegative = false`、`withPositive = true`、`threshold = true`、`constraint = true`。
+    /// 四个开关：`withNegative = false`、`withPositive = true`、`threshold = true`、`constraint = true`。
     ///
     /// **`withNegative = false` 是这三个开关里最要紧的**：带下侧会让松弛在**低于**阈值时也变大，
     /// 于是"超出阈值的部分"变成"与阈值的距离"，两个方向的目标都会算错。判据必须能分别钉住这三个开关。
@@ -84,9 +84,9 @@ internal static class ThresholdSlack {
     /// <param name="slack">阈值松弛 / The threshold slack.</param>
     /// <returns>正部多项式 / The positive-part polynomial.</returns>
     /// <remarks>
-    /// `withNegative = false` 让 `ResultPolynomial` 里只剩 `pos` 那一项，所以它本身就是正部。基线叫 `positiveSlackPolynomial`。
+    /// `withNegative = false` 让 `ResultPolynomial` 里只剩 `pos` 那一项，所以它本身就是正部。
     ///
-    /// `withNegative = false` leaves only the `pos` term in `ResultPolynomial`, so that polynomial *is* the positive part; the code calls it `positiveSlackPolynomial`.
+    /// `withNegative = false` leaves only the `pos` term in `ResultPolynomial`, so that polynomial *is* the positive part.
     /// </remarks>
     public static LinearPolynomial<Flt64> PositivePart(LinearFunctionSymbolAdapter<Flt64> slack) {
         ArgumentNullException.ThrowIfNull(slack);
@@ -100,7 +100,7 @@ internal static class ThresholdSlack {
     /// <param name="x">被松弛的多项式 / The polynomial being slacked.</param>
     /// <returns>截断多项式 / The capped polynomial.</returns>
     /// <remarks>
-    /// 基线 `polyX` = `x + neg - pos`；`withNegative = false` 时负部不存在，于是这里是 **`x - pos`**，即"至多到阈值为止"的那个值。
+    /// `polyX` = `x + neg - pos`；`withNegative = false` 时负部不存在，于是这里是 **`x - pos`**，即"至多到阈值为止"的那个值。
     /// 与正部**不是同一个东西**：正部在阈值以下是 0，截断部在阈值以下是 `x` 本身。奖励类目标要的是截断部。
     ///
     /// `polyX` is `x + neg - pos`; with `withNegative = false` there is no negative part, so this is **`x - pos`** — the value capped at the threshold. It is **not** the same as the

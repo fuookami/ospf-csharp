@@ -22,14 +22,14 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Domain.Produce;
 /// / `ProduceAggregation.AddColumns` must dedupe by both `id` and `canonicalKey`.
 /// </summary>
 /// <remarks>
-/// **记的缺口**写着"`ProduceAggregation._planKeyIndex` 仍用默认键"。查基线后发现**那半句判断是错的**：
-/// 基线 用的正是 **`candidate.canonicalKey`（默认键）**，
-/// 所以 C# 在这里用默认键****，不是缺口。
+/// **记的缺口**写着"`ProduceAggregation._planKeyIndex` 仍用默认键"。查代码后发现**那半句判断是错的**：
+/// `ProduceAggregation` 用的正是 **`candidate.canonicalKey`（默认键）**，
+/// 所以 C# 在这里用默认键，不是缺口。
 ///
 /// **但同一条语句里还有第二个条件**：`candidate.id !in registeredIds`。C# 原本**只有键索引**，
 /// 于是"同 id、不同内容"的两条方案会被**同时接受**——这才是真缺口。
 ///
-/// **the earlier ledger entry** said "`ProduceAggregation._planKeyIndex` still uses the default key". Checking the code showed **that half was wrong**: the code at
+/// **the earlier ledger entry** said "`ProduceAggregation._planKeyIndex` still uses the default key". Checking the code showed **that half was wrong**: the code
 /// uses exactly **`candidate.canonicalKey` (the default key)**, so C# matches the code there and it is not a gap.
 ///
 /// **But that same statement has a second condition**: `candidate.id !in registeredIds`. C# originally had **only the key index**, so two plans sharing an id but differing
@@ -84,7 +84,7 @@ public class ProduceAggregationDedupTests {
     ///
     /// | 实现 | 结果 |
     /// | --- | --- |
-    /// | 基线（双键） | **0 条被接受** |
+    /// | 双键 | **0 条被接受** |
     /// | 仅键索引 | **1 条被接受** |
     ///
     /// The pool already holds `id = "p1"` (product A). The new column is **also `"p1"` but for product B** — a different canonical key, **only the id collides**

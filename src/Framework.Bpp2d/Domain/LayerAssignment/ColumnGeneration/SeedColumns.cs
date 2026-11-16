@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 种子列构造 / Seed-column construction.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationApplicationService.seedColumns` 对齐。三处必须沿用：
+/// 三处必须沿用：
 ///
 /// 1. **种子状态是"迭代 0 + 空列"**：种子阶段与已有列无关，把当前列传进去会让第一次生成受上一轮影响，
 ///    而种子恰恰是"从零开始的初始列"。
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 3. **结果去重**：生成器可能对同一形状给出多个等价列，重复列在 RMP 里只会让约束矩阵多一列而目标相同。
 ///    `Layer` 是值相等对象（`Equals` 比板材类型、形状与件数），所以 `Distinct` 是真的按值去重。
 ///
-/// Aligned with its `seedColumns`. Three things must be copied: **the seed state is "iteration 0 with empty columns"**, since the seed stage is independent of existing columns and
+/// Three things must be copied: **the seed state is "iteration 0 with empty columns"**, since the seed stage is independent of existing columns and
 /// passing the current ones in would let the first generation inherit the previous round, whereas seeding means the initial columns from scratch; **the config carries the caller's two limits**
 /// (iteration limit and per-round column limit) rather than the executor defaults, because seeding and column generation share one budget and mixing them would exceed the caller's allowance on the
 /// very first round; and **results are deduplicated**, since a generator may emit several equivalent columns for one shape and a duplicate only adds a column to the RMP matrix with an identical

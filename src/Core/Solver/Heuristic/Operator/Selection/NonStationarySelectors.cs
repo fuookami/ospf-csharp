@@ -80,7 +80,7 @@ public sealed record CreditState(
 /// Following
 /// **`adaptive-pursuit` 在全更新率（`rate == 1`）时直接取目标值**。理由写的是"避免消去误差跌破概率下界"，但在双精度下
 /// `p + 1.0*(target - p)` 与 `target` 算术上完全相同——变异测试删掉这条捷径后测试**仍然通过**，是**等价变异**。
-/// 保留它是为了与基线逐字一致；把它说成"防止了数值下溢"会是假的。
+/// 保留它是因为它与原式在双精度下等价；把它说成"防止了数值下溢"会是假的。
 /// **`adaptive-pursuit` assigns the target directly at full rate (`rate == 1`).** Going through `p + rate*(target - p)` can dip below
 /// the probability floor through cancellation error while the probabilities still sum to roughly 1, so it goes undetected.
 /// **恢复时的校验比常规实现更严**：概率和必须在 `1e-9` 内、每个概率必须落在 `[minimumProbability, 1]`、
@@ -225,7 +225,7 @@ public class NonStationarySelector : ISelectionPolicy {
             }
             mask.Add(action);
         }
-        // **按 `actions` 的原序过滤掩码**，而不是按 `available` 的顺序。基线写 `actions.filter { it in available }`；
+        // **按 `actions` 的原序过滤掩码**，而不是按 `available` 的顺序，即 `actions.filter { it in available }`；
         // 用 `available` 的顺序会让 `maxBy` 在并列时选出不同动作，而两种顺序下的分数完全相同。
         // **The mask is filtered in `actions` order**, not `available` order. The code writes `actions.filter { it in available }`;
         // using `available` order makes `maxBy` pick a different action on ties while both orders have identical scores.

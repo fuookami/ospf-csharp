@@ -21,9 +21,9 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **`Scan` 真的展开：每轮多喂一个切片** / Scan unrolled: one slice per round.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `lowerScan` 落地形态。**接线与 `Loop` 一样，多出来的只有"每轮多喂一个切片"。**
+/// **接线与 `Loop` 一样，多出来的只有"每轮多喂一个切片"。**
 ///
-/// Syncs the concrete `lowerScan`. **The wiring matches Loop; the one addition is a slice per round.**
+/// **The wiring matches Loop; the one addition is a slice per round.**
 /// </remarks>
 public class OnnxScanLoweringTests
 {
@@ -241,7 +241,7 @@ public class OnnxScanLoweringTests
     ///
     /// **This proves the contract already accepts runtime values: a round's slice is just a binding, and a binding may carry an expression with variables.** **So what Scan lacks is
     /// not "can it hold a variable" but "how does the import time cut a multi-element tensor into one slice per round" — that needs the per-element representation (the
-    /// baseline's sliceLeading), which is the same checklist item.**
+    /// `sliceLeading`), which is the same checklist item.**
     /// </remarks>
     [Fact]
     public void SymbolicSlices_ShouldCarryTheirCoefficients() {

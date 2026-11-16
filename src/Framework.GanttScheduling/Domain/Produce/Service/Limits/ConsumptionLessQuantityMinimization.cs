@@ -57,10 +57,10 @@ public sealed class ConsumptionLessQuantityMinimization<C> : IPipeline<object>
     /// <inheritdoc/>
     /// <remarks>
     /// 阈值 0 时直接计费数量符号，非零时建一条**自带约束**的阈值松弛再计费它的正部；系数在松弛外面乘。
-    /// 空列表时**连目标都不加**（基线外层有 `if (materials.isNotEmpty)`）。
+    /// 空列表时**连目标都不加**（外层有 `if (materials.isNotEmpty)`）。
     ///
     /// A zero threshold charges the quantity symbol itself; a non-zero one builds a threshold slack that **carries its own rows** and charges its positive part, with the coefficient multiplying
-    /// outside the slack. An empty list adds **no objective at all** (the code wraps these in `if (materials.isNotEmpty)`).
+    /// outside the slack. An empty list adds **no objective at all** (wrapped in `if (materials.isNotEmpty)`).
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);

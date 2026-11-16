@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.ConstraintProgrammingDemo;
 /// </summary>
 /// <remarks>
 /// **对应的 `DirectConstraintProgrammingDemo`**。
-/// **Mirrors `DirectConstraintProgrammingDemo` from its.**
+/// **`DirectConstraintProgrammingDemo`.**
 /// </remarks>
 public static class DirectConstraintProgrammingDemo {
     /// <summary>构造并求解一个小型全异模型 / Build and solve a small all-different model.</summary>
@@ -296,8 +296,8 @@ public static class LogicBasedBendersDemo {
         int masterCalls = 0;
         Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> MasterSolver(
             LinearMetaModel<Flt64> model) {
-            // **第一轮给 0 触发冲突割，第二轮给 1 收敛**：这正是基线示例的脚本化主问题。
-            // **Round one returns 0 to trigger a conflict cut, round two returns 1 to converge**: this is its scripted master.
+            // **第一轮给 0 触发冲突割，第二轮给 1 收敛**：脚本化的主问题。
+            // **Round one returns 0 to trigger a conflict cut, round two returns 1 to converge**: the master is scripted.
             Flt64 value = masterCalls++ == 0 ? Flt64.Zero : Flt64.One;
             return Task.FromResult(Results.Ok(new SolveReport<Flt64> {
                 ProblemStatus = ProblemStatus.Feasible,

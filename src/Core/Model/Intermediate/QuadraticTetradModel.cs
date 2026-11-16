@@ -275,14 +275,14 @@ public sealed class QuadraticTetradModel : BasicQuadraticTetradModel, IQuadratic
     /// ```
     ///
     /// C# 侧原先只有静态的 `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)`，
-    /// **模型自己没有 `Elastic`**——于是个公开入口在 C# 里**根本不存在**，
+    /// **模型自己没有 `Elastic`**——于是那个公开入口在 C# 里**根本不存在**，
     /// 外部只能直接调 `internal` 的静态构建器（而它连 `penalty` 都要自己传）。
     ///
-    /// 这里把入口补上。**惩罚系数固定为 `1.0`**，因为基线 `elastic` 无参、`buildElasticModel` 也不收惩罚，
+    /// 这里把入口补上。**惩罚系数固定为 `1.0`**，因为 `elastic` 无参、`buildElasticModel` 也不收惩罚，
     /// 惩罚是构建器内部的常量；C# 静态方法收 `elasticPenalty` 是为了测试能验证惩罚确实进了目标，
-    /// 而 `Elastic` 必须地**不暴露它**。
+    /// 而 `Elastic` 故意**不暴露它**。
     ///
-    /// **In the code `buildElasticModel` is an extension function on the model, called by `QuadraticTetradModel.elastic`** (snippet above).
+    /// **`buildElasticModel` is an extension function on the model, called by `QuadraticTetradModel.elastic`** (snippet above).
     ///
     /// The C# side originally had only the static `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)` and **the model had no `Elastic`** — so
     /// its public entry point **did not exist in C# at all**, and callers had to reach an `internal` static builder (which even made them supply

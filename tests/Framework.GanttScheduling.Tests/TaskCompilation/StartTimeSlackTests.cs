@@ -149,7 +149,7 @@ public class StartTimeSlackTests {
 
     /// <summary>**全局开关关掉时，任务级开关不生效** / A task-level flag does nothing while the global switch is off.</summary>
     /// <remarks>
-    /// 基线写的是 `advanceEnabled && task.advanceEnabled`——**两个都要开**。写成 `||` 会让"任务允许提前"单独生效，
+    /// 代码写的是 `advanceEnabled && task.advanceEnabled`——**两个都要开**。写成 `||` 会让"任务允许提前"单独生效，
     /// 于是全局开关形同虚设；而结果只是多了几个变量，看不出错。
     ///
     /// The code writes `advanceEnabled && task.advanceEnabled` — **both must be on**. Writing `||` lets a task-level flag alone take effect, making the global switch

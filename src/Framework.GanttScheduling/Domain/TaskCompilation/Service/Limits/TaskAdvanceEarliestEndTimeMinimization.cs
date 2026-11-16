@@ -77,13 +77,13 @@ public class TaskAdvanceEarliestEndTimeMinimization<T, E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 基线：`AdvanceEarliestEndTimeEnabled` 时最小化 `Σ coefficient(task) × AdvanceEarliestEndTime[task]`，目标名 `task advance earliest end time`；开关关着时任务集为空，目标不存在。
+    /// `AdvanceEarliestEndTimeEnabled` 时最小化 `Σ coefficient(task) × AdvanceEarliestEndTime[task]`，目标名 `task advance earliest end time`；开关关着时任务集为空，目标不存在。
     /// 任务集是构造时给的那批里"允许提前且给了最早结束时间"的那些——两项都不满足的任务贡献的是常量零。
     ///
     /// 系数提取失败时无穷大；`Flt64` 没有无穷，所以这里失败。`threshold` 分支仍未实现（构造函数没有 threshold 参数）。
     ///
-    /// The code minimises `Σ coefficient(task) × AdvanceEarliestEndTime[task]` when `AdvanceEarliestEndTimeEnabled`, objective name `task advance earliest end time`; with the switch off the set is empty and the objective
-    /// does not exist. It covers the tasks that may early and carry a earliest end time — the rest contribute a constant zero. An extraction failure uses infinity in the code and
+    /// This minimises `Σ coefficient(task) × AdvanceEarliestEndTime[task]` when `AdvanceEarliestEndTimeEnabled`, objective name `task advance earliest end time`; with the switch off the set is empty and the objective
+    /// does not exist. It covers the tasks that may early and carry a earliest end time — the rest contribute a constant zero. An extraction failure uses infinity and
     /// `Flt64` has none, so it fails here. The `threshold` branch is still unimplemented (no threshold parameter).
     /// </remarks>
     public Try Invoke(object model) {

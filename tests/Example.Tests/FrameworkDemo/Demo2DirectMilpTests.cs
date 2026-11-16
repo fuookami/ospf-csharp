@@ -19,8 +19,8 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 三点成对（默认全量，不依赖后端）：`solver_path` 诊断码是 `milp_direct` / 没带求解器时状态是 **`MilpSolverNotSupplied`** /
 /// 备注里**不再出现** `NotYetPorted`。
 ///
-/// 第二点最关键：它把"没带后端"与"没移植"区分开。 之前这条路径一律返回 `NotYetPorted`——**而模型装配与求解链路
-/// 早就都在本仓可用了**，那句状态码会把一个接线工作说成一个移植缺口。
+/// 第二点最关键：它把"没带后端"与"未实现"区分开。之前这条路径一律返回 `NotYetPorted`——**而模型装配与求解链路
+/// 早就都在本仓可用了**，那句状态码会把一个接线工作说成一个实现缺口。
 ///
 /// Three paired points, in the default suite and without any backend: the `solver_path` diagnostic is `milp_direct`; the status without a solver is
 /// **`MilpSolverNotSupplied`**; and `NotYetPorted` **no longer appears** in the notes. The second point matters most: it separates "no backend supplied" from
@@ -51,7 +51,7 @@ public sealed class Demo2DirectMilpTests {
     [InlineData("weight-recommendation")]
     public void OtherPaths_ShouldSayTheSolverIsMissingInsteadOfNotPorted(string path) {
         // **预配载要用带谓词规格的请求**： 补上"预配载必须有下限"校验之后，
-        // 用全配载形状的请求跑预配载会在装配阶段就被拒——**那正是基线行为**，不是回归。
+        // 用全配载形状的请求跑预配载会在装配阶段就被拒——**那正是设计行为**，不是回归。
         //
         // **Predistribution needs the request that carries the predicate spec**: once added its "predistribution requires a bound" check,
         // running a full-load-shaped request through it is refused during assembly — **which is its behaviour**, not a regression.
@@ -92,8 +92,8 @@ public sealed class Demo2DirectMilpTests {
         ResponseDTO response = new PredistributionApplication().Execute(request, milpSolver: solver).Response;
 
         response.Succeed.Should().BeFalse("the full-load sample carries no predicate load weight specification");
-        // 把拒绝点提前到装配阶段**：去读基线，那道守卫就在 `AggregationInitializer` 里。
-        // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物，不是基线行为。
+        // 把拒绝点提前到装配阶段**：那道守卫就在 `AggregationInitializer` 里。
+        // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物，不是设计行为。
         //
         // **moves the refusal to assembly**: the code keeps that guard in `AggregationInitializer`. The old `DomainRegisterFailed` pinned a local
         // deviation (the guard sat a step late), not its behaviour.

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 提前装载目标 / The item-ahead-load objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：**把已进入作业流程的货物尽早装上**，
+/// **把已进入作业流程的货物尽早装上**，
 /// 也就是最大化"已作业货物"的装载量——写法是最小化 `Σ coefficient × loaded[i]`，系数由调用方给（默认 1，
 /// 目标名 `"item ahead load"`）。
 ///
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 1. **三个前缀谓词按顺序找第一个成立的**：`任一货物已站坪` → `任一已站坪或已上车` → `任一三者皆有`。
 ///    找到**第一个**就停（`find`），不是三个都加。
 /// 2. **一条都不成立时不加目标**（`if (predicate != null)`），返回成功。零多项式目标会占掉一个目标位。
-/// 3. **是 `Minimum`**，不是 `Maximum`。基线写 `minimize`。
+/// 3. **是 `Minimum`**，不是 `Maximum`。写法是 `minimize`。
 /// 4. **目标名带空格**：`"item ahead load"`，与管线名 `item_ahead_load_limit` 不同。
 /// 5. **求和面向全部货物**，不是只面向满足谓词的那几件——谓词只决定"要不要加这条目标"。
 ///

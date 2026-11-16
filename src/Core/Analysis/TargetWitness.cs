@@ -51,11 +51,11 @@ public static class TargetWitness
     /// <param name="solution">求解器报出的解 / The solution the solver reported.</param>
     /// <returns>问题描述，或 <c>null</c> 表示通过 / The problem, or <c>null</c> when it holds up.</returns>
     /// <remarks>
-    /// **`snapshot` 必须是求解时那份，不是份。** 删除复验求解的是选择性重建的模型，
-    /// 它的值域和激活约束与基线不同——**拿基线校验重建模型的解，会把合法的解判成越界。**
+    /// **`snapshot` 必须是求解时那份，不是重建的那份。** 删除复验求解的是选择性重建的模型，
+    /// 它的值域和激活约束与原来不同——**拿原来的快照校验重建模型的解，会把合法的解判成越界。**
     ///
-    /// **`snapshot` has to be the one that was solved, not the code.** Deletion checks solve a selectively rebuilt model whose domains and active constraints differ from the code — **validating
-    /// the rebuilt model's solution against the code reports a legitimate solution as out of domain.**
+    /// **`snapshot` has to be the one that was solved, not the rebuilt one.** Deletion checks solve a selectively rebuilt model whose domains and active constraints differ from the original — **validating
+    /// the rebuilt model's solution against the original reports a legitimate solution as out of domain.**
     /// </remarks>
     public static string? Validate(
         ConstraintProgrammingModelSnapshot snapshot,

@@ -97,7 +97,7 @@ public class SolverProgressPhaseTests {
     /// **这条判据的另一处能力边界**：`Phase` 里的 `Math.Clamp` **没有独立可证伪性**。
     /// 变异（去掉 `Phase` 的夹取）**存活**——因为**子上下文自己的 `AcceptMonotonic` 已经夹过**
     /// `ProgressInStage`（`SolverProgressContext.AcceptMonotonic` 里对 `inStage` 做了 `Clamp(..., 0, 100)`），
-    /// 走到 `Phase` 的上报器时值已在区间内。**冗余**，与 的 `Normalized`、 的取消检查点同型。
+    /// 走到 `Phase` 的上报器时值已在区间内。**冗余**，与 `Normalized`、取消检查点同型。
     ///
     /// **Another limit of this criterion**: the `Math.Clamp` inside `Phase` **has no independent falsifiability**. The mutation (removing `Phase`'s clamp)
     /// **survives** — the sub-context's own `AcceptMonotonic` already clamps `ProgressInStage` (`Clamp(..., 0, 100)` on `inStage`), so the value is already in range by

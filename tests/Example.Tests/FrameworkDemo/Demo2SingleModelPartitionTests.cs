@@ -85,7 +85,7 @@ public sealed class Demo2SingleModelPartitionTests
             models.Master.Tokens.Tokens.Count.Should().Be(12);
             // **实测**：来源 11 行 → 主 14 行、子 19 行。
             // 主多出来的 3 行是 theta 与目标相关的行；**子有 19 行**，说明行确实被切开来了——
-            // 基线同样会为非决策变量补 `bound_lb_/bound_ub_` 边界行，本仓也这么做。
+            // 这里同样会为非决策变量补 `bound_lb_/bound_ub_` 边界行。
             //
             // **Measured **: 11 source rows become 14 master and 19 sub. The master gains rows for theta and the objective; **the sub has nineteen rows**, so the
             // rows really are split — the code likewise adds `bound_lb_/bound_ub_` rows for non-decision variables, and this implementation does the same.

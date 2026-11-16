@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **"没配置提取器"与"该执行器不可定价"是两件事** / "No extractor configured" and "this executor cannot be priced" are different things.
 /// </summary>
 /// <remarks>
-/// 基线写的是 `coefficient?.let {... }` 套 `it(e) ?: Flt64.infinity`，看起来只差一个 `?`。
+/// 代码写的是 `coefficient?.let {... }` 套 `it(e) ?: Flt64.infinity`，看起来只差一个 `?`。
 /// 混为一谈会出两种相反的错：把"没配置"当成"禁止"会让**所有执行器都不可选**；
 /// 把"不可定价"当成"权重一"会让本该禁止的选项变得很便宜。
 ///

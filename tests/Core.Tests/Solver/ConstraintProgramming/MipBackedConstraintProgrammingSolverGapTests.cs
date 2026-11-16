@@ -27,8 +27,8 @@ namespace Fuookami.Ospf.Core.Tests.Solver.ConstraintProgramming;
 ///
 /// **缺口因此是：** **Gurobi／Cplex／Copt 没有 CP 能力，而它们本来只差"把 lowerer 接到自己的线性求解器上"。**
 ///
-/// The only "a real implementation is needed" block of the survey (baseline
-///, 503 lines). ** does not write it; it sizes the gap and pins the
+/// The only "a real implementation is needed" block of the survey (503 lines).
+/// **This does not write it; it sizes the gap and pins the
 /// dependency relation — because this block is an order of magnitude larger than the previous five, and a half-finished one
 /// would be worse than none.**
 ///

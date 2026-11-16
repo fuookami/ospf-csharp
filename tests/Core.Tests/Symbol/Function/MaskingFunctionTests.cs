@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **掩码函数从空壳变成真函数** / The masking function goes from an empty stub to a real function.
 /// </summary>
 /// <remarks>
-/// 原来的 `MaskingFunction` / `MaskingWithPolyMaskFunction` 与 的 `SlackFunction` 同一个病：
+/// 原来的 `MaskingFunction` / `MaskingWithPolyMaskFunction` 与 `SlackFunction` 同一个病：
 /// `Evaluate` 恒 `null`、`RegisterConstraints` 恒 `Ok`、`HelperVariables` 为空数组，而它们出现在
 /// `FunctionSymbolRegistrationTest` 的列表里，于是"注册通过"这条判据一直绿着。
 ///

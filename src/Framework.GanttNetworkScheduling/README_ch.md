@@ -2,11 +2,8 @@
 
 [English](README.md)
 
-网络路径搜索与甘特业务任务束之间的桥接。
-
-基线：Kotlin `12fdb587` 的
-`ospf-kotlin-framework-gantt-scheduling/gantt-scheduling-domain-network-context`
-（一个 72 行的类 `NetworkBunchGenerationContext`）。
+网络路径搜索与甘特业务任务束之间的桥接：一个上下文类 `NetworkBunchGenerationContext`，
+以及它所做的完成状态翻译。
 
 ## 为什么是独立项目
 
@@ -16,7 +13,7 @@
 Framework.NetworkScheduling.csproj → Framework.GanttScheduling.csproj
 ```
 
-把桥接塞进 `Framework.GanttScheduling` 会形成循环引用。基线里它本来就是独立模块，所以这个项目存在的理由相同。
+把桥接塞进 `Framework.GanttScheduling` 会形成循环引用，所以它单独成一个项目。
 
 ## 做什么
 
@@ -41,7 +38,7 @@ Framework.NetworkScheduling.csproj → Framework.GanttScheduling.csproj
 ## 不做什么
 
 Demo4 的 `FlightTaskBunchGenerator` **没有**用这个桥接——它跑自己那 248 行标签搜索。
-这是与基线的结构分叉，且无法验证结果一致，所以只记录、不重写。
+这是有意的结构选择，不是漏调用；它无法验证结果一致，所以只记录、不重写。
 见 `docs/kotlin-capability-matrix.md`。
 
 ## 验证

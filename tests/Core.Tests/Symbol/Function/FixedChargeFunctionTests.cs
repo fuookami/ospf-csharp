@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 不启用是免费的，但只有“启用”这一步才收固定成本 / Inactive is free, and only activation pays the fixed cost.
 /// </summary>
 /// <remarks>
-/// 补 FixedChargeFunction（基线 Tariff.kt）。形状是
+/// 补 FixedChargeFunction。形状是
 /// cost = fixedCost · active + unitCost · activity，active 是 0/1。
 ///
 /// 它和普通线性成本只差一个激活项，而少了那一项模型会说“不启用也免费”——

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service.
 /// 建议压舱重量目标 / The advised-ballast-weight objective.
 /// </summary>
 /// <remarks>
-/// 与对齐：**当且仅当**存在建议压舱重量时，建立一个
+/// **当且仅当**存在建议压舱重量时，建立一个
 /// **只有负偏差**的阈值松弛（`withNegative = true`、`withPositive = false`），并把它作为**最小化目标**——即"实际压舱不超过建议值"。
 ///
 /// 四处必须沿用：

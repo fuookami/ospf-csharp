@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Math.MultiArray;
 /// 多维数组的按轴归约 / Axis reductions for multi-dimensional arrays.
 /// </summary>
 /// <remarks>
-/// 移植（12922 B）里的归约族：
+/// 归约族：
 /// `sumAll`、`sumAxis(Safe)`、`sumAxes(Safe)`、`cumsumAxis(Safe)`。
 ///
 /// **两条路径**：形状是 `Shape1..Shape4` / `DynShape` 且步长与存储顺序一致时走**进位直通**（不逐元素求坐标）；
 /// 其余形状走**通用路径**（逐元素取向量、再去掉被归约的轴算目标下标）。两条路径必须给出相同结果——
 /// 这正是配套测试要钉住的东西。
 ///
-/// Ports the reduction family from the code: `sumAll`, `sumAxis(Safe)`, `sumAxes(Safe)`, `cumsumAxis(Safe)`.
+/// The reduction family: `sumAll`, `sumAxis(Safe)`, `sumAxes(Safe)`, `cumsumAxis(Safe)`.
 /// **Two paths**: when the shape is `Shape1..Shape4` / `DynShape` and the strides match the storage order it takes the **carry fast path** (no
 /// per-element coordinate computation); every other shape takes the **general path** (fetch the vector, drop the reduced axes, compute the target
 /// index). Both paths must agree — that is exactly what the companion tests pin down.
@@ -91,8 +91,8 @@ public static class AxisReductions {
         }
 
         if (axes.Count == 0) {
-            // **零个轴不是"归约成标量"**：基线语义是"什么都不归约，只换成 DynShape 的副本"。
-            // **Zero axes is not "reduce to a scalar"**: the code semantics are "reduce nothing, just return a DynShape copy".
+            // **零个轴不是"归约成标量"**：语义是"什么都不归约，只换成 DynShape 的副本"。
+            // **Zero axes is not "reduce to a scalar"**: the semantics are "reduce nothing, just return a DynShape copy".
             MultiArray<T, DynShape> copy = MultiArray<T, DynShape>.Factory.NewBy(
                 DynShape.Invoke(dimensions),
                 (index, _) => source[index]);

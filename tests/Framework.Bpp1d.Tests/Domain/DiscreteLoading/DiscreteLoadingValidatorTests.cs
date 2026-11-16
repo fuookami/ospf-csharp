@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **离散装载输入校验** / Discrete-loading input validation.
 /// </summary>
 /// <remarks>
-/// 对应基线 `DiscreteLoadingContext.validate` 的十一类校验。判据挑出**最隐蔽的三条**：
+/// `DiscreteLoadingContext.validate` 的十一类校验。判据挑出**最隐蔽的三条**：
 ///
 /// | # | 校验 | 为什么隐蔽 |
 /// | --- | --- | --- |

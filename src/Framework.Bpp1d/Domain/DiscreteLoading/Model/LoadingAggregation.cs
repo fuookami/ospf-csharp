@@ -1,6 +1,6 @@
 // 稀疏求解器注册构件 / Sparse solver registration artifacts.
-// 与固定 Kotlin 对应，
-// 并把基线 `DiscreteLoadingContext.register` 里的"建变量 + 累计表达式"三圈提到这里复用。
+// 与 `DiscreteLoadingContext` 对应，
+// 并把 `DiscreteLoadingContext.register` 里的"建变量 + 累计表达式"三圈提到这里复用。
 // And lifts the "create variables, accumulate expressions" loops of
 // `DiscreteLoadingContext.register` into a reusable builder.
 
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading.Model;
 /// **`assignments` 只包含合法组合**，永不补全笛卡尔积——与 `AllowedAssignments` 的语义一致。
 /// **`assignments` holds legal pairs only** and never completes a Cartesian product, matching `AllowedAssignments`.
 ///
-/// **聚合由调用方持有**：基线挂在 `DiscreteLoadingContext` 实例上，这里由调用者 `new` 一份再传进
+/// **聚合由调用方持有**：它不挂在 `DiscreteLoadingContext` 实例上，而由调用者 `new` 一份再传进
 /// <see cref="Build{V}"/>。**不放静态属性**——静态状态会让两个并发建模互相覆盖，而且比多写一行难查得多。
 /// </remarks>
 public sealed class LoadingAggregation {

@@ -23,14 +23,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 货物顺序约束 / The item-order constraint.
 /// </summary>
 /// <remarks>
-/// 与对齐：**优先级高与优先级低的一对货物，不能分别落在"后与前"的一对舱位上**。
+/// **优先级高与优先级低的一对货物，不能分别落在"后与前"的一对舱位上**。
 ///
 /// 四处必须沿用：
 ///
 /// 1. **两个排序键不同**：货物按 `优先级降序` 再按 `Id 升序`；舱位按 `装载顺序升序` 再按 `Id 字符串升序`。
 ///    第二级的 `Id` 是**打破平局**用的——只按主键排会让同优先级的货物顺序取决于列表原序。
 /// 2. **有序对是"全组合"**：`orderedPairs` 生成所有满足谓词的 `(a, b)`，不是相邻对。少一半约束会让高优先级货物仍可后置。
-/// 3. **下标用"首次出现"**：同一对象在列表里出现两次时取第一次。用 `IndexOf` 也行，但基线写的是显式的首次出现表。
+/// 3. **下标用"首次出现"**：同一对象在列表里出现两次时取第一次。用 `IndexOf` 也行，这里用的是显式的首次出现表。
 /// 4. **约束是 `s[i1,j2] + s[i2,j1] 不超过 1`**：两个"反向放置"之和至多 1，即最多允许其中一个。
 ///
 /// **a higher-priority and a lower-priority item must not land in a "later and earlier" pair of positions**. Four things are carried over: **the two sort keys

@@ -33,11 +33,11 @@ This project is a 1:1 migration from [ospf-kotlin](https://github.com/fuookami/o
 | `Fuookami.Ospf.Benchmark` | BenchmarkDotNet benchmarks (54 benchmarks in 12 classes) | ✅ Complete |
 | `Fuookami.Ospf.Starters.*` | NuGet metapackages (Core, Bpp3d, Csp1d, Framework, GanttScheduling) | ✅ Complete |
 
-The status column records the June 2026 migration snapshot. Current parity against the fixed Kotlin baseline is tracked in [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md).
+The status column is a snapshot; what this repository provides today is tracked in [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md).
 
 ## Architecture
 
-The current Kotlin synchronization baseline and capability status are tracked in [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md).
+Current capability status is tracked in [docs/kotlin-capability-matrix.md](docs/kotlin-capability-matrix.md).
 
 The framework follows a layered architecture:
 
@@ -159,10 +159,9 @@ What this repository does **not** claim:
   `SerializedSolution`, `RemoteTaskSubmitRequest`, and the `configuration` / `sha256` digest.
 - **No "file count parity" claim.** A module existing is not the same as its capabilities existing; the
   capability map is the authority, not the project list.
-- Known gaps (listed in `docs/kotlin-capability-matrix.md`) include: `Framework.Bpp1d` does not exist here at all, so
-  `PatternColumnBenchmark` cannot be ported; `Infra.Item.Weight` is carried but takes part in no
-  constraint; the baseline's PWL diagnostics and shape-DTO cache are unported; Demo5 module READMEs and a
-  migration guide are still missing.
+- Known gaps (listed in `docs/kotlin-capability-matrix.md`) include: `Framework.Bpp1d` is present but
+  `PatternColumnBenchmark` has no implementation here; `Infra.Item.Weight` is carried but takes part in no
+  constraint; PWL diagnostics and the shape-DTO cache are not implemented; Demo5 module READMEs are still missing.
 
 ## License
 

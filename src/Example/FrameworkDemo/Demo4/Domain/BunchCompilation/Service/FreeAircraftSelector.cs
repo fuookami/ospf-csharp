@@ -36,20 +36,20 @@ public sealed record FreeAircraftSelectorConfiguration(
 /// 自由飞机选择器 / The free-aircraft selector.
 /// </summary>
 /// <remarks>
-/// ：每轮列生成开头，从"当前没被占用"的飞机里放出若干架，让定价子问题有东西可选。
+/// 每轮列生成开头，从"当前没被占用"的飞机里放出若干架，让定价子问题有东西可选。
 /// 四道放行：**检验数高**（值的飞机先放）、**成本高**（贵的束先放）、**换机次数多**（改动大的先放）、**随机**（打散，防局部最优）。
 ///
 /// 两条容易写错的规则：**禁忌表**——放过一次的飞机在后续通道里要被跳过（否则第二、三通道立刻把同一架再放一次，等于只有一个通道）；
 /// 禁忌表**容量固定**，满了先踢最早的那条。还有一道小门槛：**`Indexed` 的飞机才放**，没入索引的飞机拿不到列。
 ///
-/// **一处有意偏离基线**：通道上限为 0 时**一架都不放**。`freeByStrategy` 是先加再判上限，上限 0 时会放出一架；
+/// **一处有意的行为选择**：通道上限为 0 时**一架都不放**。`freeByStrategy` 是先加再判上限，上限 0 时会放出一架；
 /// 那样"关掉某个通道"就没法表达，而默认配置全是 3，实际行为不受影响。
 ///
 /// **天花板：检验数由调用方给。** `shadowPriceMap.reducedCost(bunch)` 在 C# 的影子价格映射上没有对应成员，
 /// 所以这里收一个"束到检验数"的函数，缺省恒零——**恒零意味着第一通道一架都不放**，其余三道照常。
 /// 升级路径：等影子价格映射补上 `ReducedCost` 之后改成默认从映射取。
 ///
-/// The code's runs at the start of each column-generation round: it releases aircraft from those currently unoccupied so the pricing subproblem has
+/// Runs at the start of each column-generation round: it releases aircraft from those currently unoccupied so the pricing subproblem has
 /// candidates. Four passes: **high reduced cost** (valuable aircraft first), **high cost** (expensive bunches first), **many aircraft changes** (biggest disruption first), **random**
 /// (to break local optima).
 ///
@@ -57,10 +57,10 @@ public sealed record FreeAircraftSelectorConfiguration(
 /// aircraft again and the selector degenerates into one pass; and the tabu list has a **fixed capacity**, dropping the oldest entry first. One more small gate: **only `Indexed`
 /// aircraft are released**, since an unindexed aircraft has no column to attach to.
 ///
-/// **One deliberate deviation from the code**: a pass cap of 0 releases nothing. The code's `freeByStrategy` adds first and checks the cap afterwards, so a cap of 0 releases one
+/// **One deliberate behaviour choice**: a pass cap of 0 releases nothing. `freeByStrategy` adds first and checks the cap afterwards, so a cap of 0 releases one
 /// aircraft; that makes "switch this pass off" inexpressible, and since every default is 3 the real behaviour is unchanged.
 ///
-/// **Ceiling: the reduced cost comes from the caller.** The code's `shadowPriceMap.reducedCost(bunch)` has no counterpart on C#'s shadow-price map, so this takes a
+/// **Ceiling: the reduced cost comes from the caller.** `shadowPriceMap.reducedCost(bunch)` has no counterpart on C#'s shadow-price map, so this takes a
 /// a bunch-to-reduced-cost delegate defaulting to zero — **zero means the first pass releases nothing**, while the other three run as usual. Upgrade path: read it from the map once the
 /// map grows a `ReducedCost`.
 /// </remarks>

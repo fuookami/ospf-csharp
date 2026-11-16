@@ -1,6 +1,4 @@
 // 图案生成请求、结果与纯函数助手 / Pattern generation requests, results and pure-function helpers.
-// 与固定 Kotlin 对应。
-// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

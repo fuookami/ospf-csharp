@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 列生成算法 / The column-generation algorithm.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationAlgorithm` 对齐。**循环里六件事的顺序不能换**：
+/// **循环里六件事的顺序不能换**：
 ///
 /// 1. **先查时间上限**，再求解——反了会让最后一步超时后才被记成"因时间结束"。
 /// 2. **没有 RMP 求解器就 break**，不报错：它当正常结束，因为只跑初始列也是一种用法。
@@ -30,10 +30,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 ///
 /// 另外两处口径：
 ///
-/// - **`FinalMilpEnabled` 为真但求解器为空时静默跳过**（基线如此），`FinalSolved` 保持 `false`；
+/// - **`FinalMilpEnabled` 为真但求解器为空时静默跳过**，`FinalSolved` 保持 `false`；
 /// - **失败分析器的返回值参与错误合并**：分析器失败 → 把它的错误也拼进去，而不是丢掉原错误。
 ///
-/// Aligned with its `ColumnGenerationAlgorithm`. **The order of six things inside the loop must not change**: the time limit is checked **before** solving, or the final step would
+/// **The order of six things inside the loop must not change**: the time limit is checked **before** solving, or the final step would
 /// be recorded as time-terminated only after overrunning; **a missing RMP solver breaks rather than failing**, as the code treats it as a normal ending because running only the initial
 /// columns is a valid use; **the solve result is stored before the request is built**, since the shadow prices are that request's input and reversing it would use the previous round's
 /// prices; **an empty candidate set breaks without counting an iteration**, so `Iterations` only advances when real columns arrive; **deduplication happens after merging**, because
@@ -278,9 +278,9 @@ public sealed class ColumnGenerationAlgorithm
     /// <param name="cancellationToken">取消令牌 / The cancellation token.</param>
     /// <returns>失败 / The failure.</returns>
     /// <remarks>
-    /// **分析器失败时把它的错误也拼进去**，不丢掉原错误——只要有一个错误就报 `Failed`，多个报 `Fatal`（基线口径）。
+    /// **分析器失败时把它的错误也拼进去**，不丢掉原错误——只要有一个错误就报 `Failed`，多个报 `Fatal`。
     ///
-    /// **When the analyser fails, its errors are appended** rather than dropping the originals: one error yields `Failed`, several yield `Fatal`, per the code.
+    /// **When the analyser fails, its errors are appended** rather than dropping the originals: one error yields `Failed`, several yield `Fatal`.
     /// </remarks>
     private async Task<Result<T, ErrorCode, Error<ErrorCode>>> FailedAsync<T>(
         ColumnGenerationFailureStage stage,

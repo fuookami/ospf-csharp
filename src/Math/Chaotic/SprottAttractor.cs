@@ -10,20 +10,20 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Sprott 吸引子（三维离散 / 显式欧拉）/ The Sprott attractor.
 /// </summary>
 /// <remarks>
-/// 对齐。
+/// Sprott 吸引子的方程：
 ///
 /// <c>dx = a(y−x)</c>，<c>dy = y(c−x) − y</c>，<c>dz = xy − cz</c>，然后 <c>x += h·dx</c>。
 ///
-/// **基线声明了参数 `b`（默认 28.0）而公式里从未使用它。**
-/// **这不是笔误可以推断的地方**——**保留它是因为那是签名**，
+/// **参数 `b`（默认 28.0）声明了，但公式里从未使用它。**
+/// **这不是笔误可以推断的地方**——**保留它是因为它是签名的一部分**，
 /// **但判据会钉住"改 b 不改变轨迹"这件事**，**以免下一个人以为 b 有效而调它。**
 ///
-/// The Sprott attractor from the code.
+/// The Sprott attractor.
 ///
 /// <c>dx = a(y−x)</c>, <c>dy = y(c−x) − y</c>, <c>dz = xy − cz</c>, then <c>x += h·dx</c>.
 ///
-/// **The code declares a parameter `b` (default 28.0) that the equations never use.**
-/// **This is not a place to infer a typo** — **it is kept because it is its signature**,
+/// **The parameter `b` (default 28.0) is declared but never used by the equations.**
+/// **This is not a place to infer a typo** — **it is kept because it is part of the signature**,
 /// **but a criterion pins "changing b does not move the trajectory", so nobody tunes it believing it matters.**
 /// </remarks>
 public sealed record SprottAttractor<V>(V A, V B, V C, V H) : IExtractor<Point<Dim3, V>, Point<Dim3, V>>

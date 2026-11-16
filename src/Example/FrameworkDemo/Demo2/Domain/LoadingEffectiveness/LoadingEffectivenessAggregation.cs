@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness;
 /// 装载效能聚合 / The loading-effectiveness aggregation.
 /// </summary>
 /// <remarks>
-/// 与的**基础部分**对齐：相邻舱位对、有序舱位对、来源与目的地集合、
+/// 只实现**基础部分**：相邻舱位对、有序舱位对、来源与目的地集合、
 /// 以及 `PriorityOrderLimit` / `SourceEarlyLimit` 所需的两项派生量。
 ///
 /// **这里只落地不依赖 `IfFunction` 的部分**。五个子模型里有四个（`SequentialLoading`、
@@ -141,9 +141,9 @@ public sealed class LoadingEffectivenessAggregation
 
     /// <summary>相邻装载指示（无条件建）/ The adjacency indicators (always built)</summary>
     /// <remarks>
-    /// 基线**无条件**构造它，与装载模式无关；其余三个子模型都是按模式二选一。
+    /// **无条件**构造它，与装载模式无关；其余三个子模型都是按模式二选一。
     ///
-    /// The code builds this **unconditionally**, independent of stowage mode; the other three sub-models are chosen by mode.
+    /// Built **unconditionally**, independent of stowage mode; the other three sub-models are chosen by mode.
     /// </remarks>
     public TransferAdjacentLoading? TransferAdjacentLoading { get; private set; }
 
@@ -160,10 +160,10 @@ public sealed class LoadingEffectivenessAggregation
     /// 派出四个子模型 / Derive the four sub-models.
     /// </summary>
     /// <remarks>
-    /// 与基线 `Aggregation` 的 `when (stowageMode)` 一致：**`TransferAdjacentLoading` 无条件**，
+    /// 按 `stowageMode` 分派：**`TransferAdjacentLoading` 无条件**，
     /// `AdviceLoading` 与 `SequentialLoading` 只在预配载，`TrailerLoading` 只在全载。建议打板三种模型全空。
     ///
-    /// Matches its `when (stowageMode)`: **`TransferAdjacentLoading` unconditionally**, `AdviceLoading` and `SequentialLoading` only under predistribution, `TrailerLoading` only
+    /// Dispatch on `stowageMode`: **`TransferAdjacentLoading` unconditionally**, `AdviceLoading` and `SequentialLoading` only under predistribution, `TrailerLoading` only
     /// under full load, with weight recommendation leaving all three null.
     /// </remarks>
     /// <param name="load">装载模型 / The load model.</param>
@@ -245,8 +245,8 @@ public sealed class LoadingEffectivenessAggregation
             }
         }
 
-        // **走生成器**，与基线同一条路径：条件与顺序集中在一处，`Register` 不再重复判断。
-        // **Goes through the generator**, the same path as the code: conditions and order live in one place and `Register` does not re-decide them.
+        // **走生成器**：条件与顺序集中在一处，`Register` 不再重复判断。
+        // **Goes through the generator**: conditions and order live in one place and `Register` does not re-decide them.
         Result<IReadOnlyList<Func<LinearMetaModel<Flt64>, Try>>, ErrorCode, Error<ErrorCode>> generated =
             new Service.PipelineListGenerator(this).Invoke(stowageMode, parameter);
         if (generated is Failed<IReadOnlyList<Func<LinearMetaModel<Flt64>, Try>>, ErrorCode, Error<ErrorCode>> failed)
@@ -365,8 +365,8 @@ public sealed class LoadingEffectivenessAggregation
     /// <param name="model">线性元模型 / Linear meta model</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// 基线注释写得很直白："装卸效率的约束进主问题"，实现就是 `register(...)`。
-    /// **The code says it plainly**: "loading effectiveness constraints go into the master problem" — the implementation is `register(...)`.
+    /// "装卸效率的约束进主问题"，实现就是 `register(...)`。
+    /// "Loading effectiveness constraints go into the master problem" — the implementation is `register(...)`.
     /// </remarks>
     public Try RegisterForBendersMP(StowageMode stowageMode, LinearMetaModel<Flt64> model) =>
         Register(stowageMode, new Parameter(), model);
@@ -375,7 +375,7 @@ public sealed class LoadingEffectivenessAggregation
     /// <param name="model">线性元模型 / Linear meta model</param>
     /// <param name="solution">主问题解 / The master-problem solution</param>
     /// <returns>执行结果 / Execution result</returns>
-    /// <remarks>基线原文："装卸效率不参与子问题"。 / The code: "loading effectiveness does not contribute to the sub problem".</remarks>
+    /// <remarks>"装卸效率不参与子问题"。 / "Loading effectiveness does not contribute to the sub problem".</remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model, IReadOnlyList<double> solution) =>
         Results.Ok<Success>(Results.SuccessInstance);
 

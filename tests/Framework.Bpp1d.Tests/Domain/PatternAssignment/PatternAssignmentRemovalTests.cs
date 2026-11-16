@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 public class PatternAssignmentRemovalTests {
     /// <summary>**删列后目标项真的消失** / Removing a column really drops its objective term.</summary>
     /// <remarks>
-    /// 基线依赖 `removeObjectiveTerms(variables)`。 曾把"清完目标为空"**读成"什么都没清"**，
+    /// 删列依赖 `removeObjectiveTerms(variables)`。曾把"清完目标为空"**读成"什么都没清"**，
     /// 因而判定该 API 无效、把 `removeColumns` 记为缺口。**实测证明它有效**（一个目标里两项，移除一项后只剩另一项）。
     /// 这条判据把那个结论钉住。
     ///

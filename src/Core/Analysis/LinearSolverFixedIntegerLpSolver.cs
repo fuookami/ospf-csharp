@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// Solve a fixed-integer LP with an existing linear solver and return duals keyed by original constraint ID.
 /// </summary>
 /// <remarks>
-/// **这是 里 `LinearSolverFixedIntegerLpBackend` 的核心那一步，
+/// **这是 `LinearSolverFixedIntegerLpBackend` 的核心一步，
 /// 而此前 C# 侧&lt;b&gt;一个生产实现都没有**：&lt;/b&gt;
 ///
 /// - `IFixedIntegerLpBackend`、`LoweredFixedIntegerLpBackend`、`ILoweredFixedIntegerLpSolver` **都在**
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **所以"框架齐了、后端空着"要说得更准一层：**
 /// **空的不止是 6 个插件函数，中间还缺这一层。补上它，两个插件就只剩"接哪根线"的问题。**
 ///
-/// ### 语义边界（照基线，不自行放宽）
+/// ### 语义边界（不自行放宽）
 ///
 /// - **对偶只按&lt;b&gt;原始约束稳定 ID** 暴露；对不上唯一原始约束的行一律不出现**
 /// - **对偶是 incumbent 作用域下的局部边际价值，不是 MILP 全局影子价格**
@@ -111,13 +111,13 @@ public sealed class LinearSolverFixedIntegerLpSolver : ILoweredFixedIntegerLpSol
 
             // **只有"已证最优"才给 `Reachable`。**
             //
-            // **基线原话是"只有真正形成最优解时才升格为 `Reachable`，受限求解的 incumbent 保持 `Unknown`"。**
+            // **规则是"只有真正形成最优解时才升格为 `Reachable`，受限求解的 incumbent 保持 `Unknown`"。**
             // **所以这里<b>不能**用 `ToAnalysisStatus` 单独决定——它不看解的存在性与最优性证明，
             // 而 `ProblemStatus.Feasible` 在有 incumbent 时也会是 Feasible。**
             //
             // **判据：`SolutionPresence.Optimal` 才查 `ToAnalysisStatus`，其余一律 `Unknown`。**
             //
-            // **Only a proven optimum becomes `Reachable`: the code says the status rises only when an optimum is really
+            // **Only a proven optimum becomes `Reachable`: the rule is that the status rises only when an optimum is really
             // formed, while a restricted-solve incumbent stays `Unknown`.** **So `ToAnalysisStatus` cannot decide alone — it
             // ignores solution presence and optimality, and `ProblemStatus.Feasible` is also returned when only an incumbent
             // exists.** **The rule here: only `SolutionPresence.Optimal` consults `ToAnalysisStatus`; everything else is

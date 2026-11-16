@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 电流、电压、电阻互相定义，缺一个另外两个就站不住 / The electrical trio defines each other.
 /// </summary>
 /// <remarks>
-/// **新建 `CurrentUnits`**（的四个单位本仓一个都没有独立文件），
-/// 并补 `Voltage.Megavolt` 与 `Resistance` 的基线命名别名 `Kiloohm`/`Megaohm`。
+/// **新建 `CurrentUnits`**（它的四个单位本仓一个都没有独立文件），
+/// 并补 `Voltage.Megavolt` 与 `Resistance` 的别名拼写 `Kiloohm`/`Megaohm`。
 ///
 /// **为什么三个一起补**：`Volt = Watt / Ampere`、`Ohm = Volt / Ampere`——
 /// **缺了电流，电压与电阻的推导无从谈起。**
 ///
 /// Creates `CurrentUnits` (none of its four current units had a file here)
-/// and adds `Voltage.Megavolt` plus the code spellings `Kiloohm`/`Megaohm`.
+/// and adds `Voltage.Megavolt` plus the alias spellings `Kiloohm`/`Megaohm`.
 ///
 /// **Why all three at once**: the code defines `Volt = Watt / Ampere` and `Ohm = Volt / Ampere` —
 /// **without current, the voltage and resistance derivations have nothing to stand on.**
@@ -54,7 +54,7 @@ public class ElectricalUnitsTests
             "an alias must point at the base, not at a copy of it");
     }
 
-    /// <summary>**基线命名的电阻别名指向同一个值** / The code resistance spellings agree.</summary>
+    /// <summary>**两种电阻拼写别名指向同一个值** / The two resistance spellings agree.</summary>
     /// <remarks>
     /// **`Kiloohm` 与 `Kilohm`、`Megaohm` 与 `Megohm` 必须完全相等。**
     /// **写成两个独立的 `DerivedUnit` 会"数值相等而对象不同"——**、
@@ -129,7 +129,7 @@ public class ElectricalUnitsTests
             $"{unitClass.Name} has to cover the baseline's unit list");
     }
 
-    /// <summary>**电阻清单同时含本仓旧名与基线名** / Resistance carries both spellings.</summary>
+    /// <summary>**电阻清单同时含本仓旧名与别名** / Resistance carries both spellings.</summary>
     [Fact]
     public void TheResistanceList_ShouldCarryBothSpellings()
     {

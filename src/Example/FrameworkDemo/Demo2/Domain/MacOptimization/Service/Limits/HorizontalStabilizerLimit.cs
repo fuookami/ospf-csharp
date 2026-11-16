@@ -18,19 +18,19 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 /// 水平安定面警告松弛目标 / The horizontal-stabilizer warning-slack objectives.
 /// </summary>
 /// <remarks>
-/// 与对齐：**每个安定面一个目标**（不是合并成一个），
+/// **每个安定面一个目标**（不是合并成一个），
 /// 名称为 `"horizontal stabilizer {key}"`。
 ///
 /// 四处必须沿用：
 ///
-/// 1. **每个安定面单独一个目标**。这与 `LongitudinalBalanceLimit` 相反（那里是合并成一个），因为基线就是这么写的——
+/// 1. **每个安定面单独一个目标**。这与 `LongitudinalBalanceLimit` 相反（那里是合并成一个）——
 ///    安定面的警告边界各自独立，合并会让模型用一个安定面的松弛去抵消另一个。
 /// 2. **目标名带安定面键**。用固定名会让多个目标同名，`MetaSubObjects` 里就分不清哪个是哪个。
 /// 3. **系数按安定面键取**：`coefficient(key)`。
 /// 4. **任一安定面缺 `WarnSlack` 就明确失败**。恒零符号是"上下界都没有"时的**正常**产物，而 `null` 说明根本没注册。
 ///
 /// **one objective per stabilizer** (not merged), named `"horizontal stabilizer {key}"`. Four things are carried over: **one objective per stabilizer**, the
-/// opposite of `LongitudinalBalanceLimit`'s merge, because the code does it this way — stabilizer warning boundaries are independent and merging would let one stabilizer's slack
+/// opposite of `LongitudinalBalanceLimit`'s merge — stabilizer
 /// offset another's; **the name carries the stabilizer key**, since a fixed name would make several objectives indistinguishable in `MetaSubObjects`; **the coefficient is taken per
 /// key**; and **a stabilizer with no `WarnSlack` is an explicit failure** — a constant-zero symbol is its *normal* product when neither bound exists, whereas `null` means it
 /// was never registered at all.

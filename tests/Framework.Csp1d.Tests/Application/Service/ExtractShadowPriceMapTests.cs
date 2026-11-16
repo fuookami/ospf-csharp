@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// 这个方法在**没有 model** 时用：直接读 `constraint.Origin.Args`，不走 CGPipeline refresh。
 /// 两条路径必须给出一致结果，否则**定价阶段的 reduced cost 取决于走了哪条路**。
 ///
-/// 这里同时删掉了一个**只写不读**的 `Csp1dDefaultShadowPriceMap`（基线与 C# 都有，
+/// 这里同时删掉了一个**只写不读**的 `Csp1dDefaultShadowPriceMap`（
 /// 每轮迭代白写一次、从不被读取或返回）。**删除不改变行为**，只是清理。
 ///
 /// **the earlier gap**: "the `converter` production code passes has no criteria". This method is used **when there is no model**: it reads `constraint.Origin.Args` directly

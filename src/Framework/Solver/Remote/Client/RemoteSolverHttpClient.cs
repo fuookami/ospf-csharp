@@ -45,7 +45,7 @@ public sealed record RemoteSolverHttpResponse(
 /// 远程求解器 HTTP 恢复模式 / Remote solver HTTP resume mode.
 /// </summary>
 /// <remarks>
-/// ：规范端点只支持服务端最新检查点；指定检查点恢复明确不支持。
+/// 规范端点只支持服务端最新检查点；指定检查点恢复明确不支持。
 /// The canonical endpoint only supports the server's latest checkpoint; checkpoint-specific resume is explicitly unsupported.
 /// </remarks>
 public enum RemoteSolverHttpResumeMode {
@@ -139,7 +139,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 查询服务端能力和协议版本 / Probe server capabilities and protocol versions.
     /// </summary>
     /// <remarks>
-    /// 与固定基线一致：<c>GET /api/v1/capabilities</c>，响应为 <c>{code, message, data}</c> 信封。
+    /// <c>GET /api/v1/capabilities</c>，响应为 <c>{code, message, data}</c> 信封。
     /// <c>GET /api/v1/capabilities</c> with a <c>{code, message, data}</c> envelope.
     /// </remarks>
     /// <returns>能力摘要或结构化错误 / Capability summary or a structured error.</returns>
@@ -198,8 +198,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     public async Task<Result<ExecutionHandle, ErrorCode, Error<ErrorCode>>> StartAsync(
         SolvePayload payload, TaskId taskId, SliceId sliceId, NodeId nodeId, TenantId tenantId,
         CancellationToken cancellationToken = default) {
-        // 基线语义：CP 载荷提交前必须先探测能力，能力不符直接拒绝，不上传载荷。
-        // Baseline semantics: a CP payload must probe capabilities before submission; a mismatch rejects without uploading.
+        // CP 载荷提交前必须先探测能力，能力不符直接拒绝，不上传载荷。
+        // A CP payload must probe capabilities before submission; a mismatch rejects without uploading.
         if (payload.ModelData.ModelType == NormalizedModelType.Cp) {
             Result<RemoteSolverCapabilities, ErrorCode, Error<ErrorCode>> probed =
                 await ProbeCapabilitiesAsync();
@@ -230,7 +230,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
                     + $"models={string.Join(',', capabilities.SupportedModelTypes ?? Array.Empty<string>())}"));
             }
         }
-        // ：先把载荷写入对象存储，再用返回的引用提交；没有存储端口时不得静默合成路径。
+        // 先把载荷写入对象存储，再用返回的引用提交；没有存储端口时不得静默合成路径。
         // Upload the payload first and submit the returned reference; without a
         // storage port the path must not be fabricated silently.
         Result<ObjectRef, ErrorCode, Error<ErrorCode>> uploaded =
@@ -278,8 +278,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
             element.TryGetProperty("accepted", out JsonElement acceptedElement) &&
             acceptedElement.ValueKind == JsonValueKind.True;
         if (!accepted || responseStatus is null || !RemoteWireEnums.TryParseTaskStatus(responseStatus, out _)) {
-            // 基线语义：未受理或状态未知都是非法状态转换，且不产出句柄。
-            // Baseline semantics: a rejected or unknown status is an invalid state transition and yields no handle.
+            // 未受理或状态未知都是非法状态转换，且不产出句柄。
+            // A rejected or unknown status is an invalid state transition and yields no handle.
             return Results.Failed<ExecutionHandle>(new Err<ErrorCode>(
                 ErrorCode.ApplicationError,
                 string.IsNullOrWhiteSpace(ReadString(view, "message"))
@@ -338,8 +338,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
             return new Failed<ExecutionHandle, ErrorCode, Error<ErrorCode>>(
                 new Err<ErrorCode>(ErrorCode.ApplicationFailed, $"Resume failed: {response.Body}"));
         }
-        // 基线语义：恢复响应必须保留所选检查点的身份，任一字段不符即拒绝，避免静默恢复成别的运行。
-        // Baseline semantics: the resume action must preserve the selected checkpoint identity; any
+        // 恢复响应必须保留所选检查点的身份，任一字段不符即拒绝，避免静默恢复成别的运行。
+        // The resume action must preserve the selected checkpoint identity; any
         // mismatch rejects, so a silent resume into a different run is impossible.
         RemoteTaskActionView? action = TryDecodeAction(response.Body);
         if (action is null) {
@@ -389,7 +389,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 把原始诊断字段解析成强类型诊断 / Parse raw diagnostics fields into typed diagnostics.
     /// </summary>
     /// <remarks>
-    /// ：诊断字段解析失败时**不产出半个结果**——把解析原因写进结果消息并保留原始字段，
+    /// 诊断字段解析失败时**不产出半个结果**——把解析原因写进结果消息并保留原始字段，
     /// 而不是静默丢弃或抛异常。原始 <c>Diagnostics</c> 字典始终保留，下游仍可看到未经解释的内容。
     /// a diagnostics parse failure never yields a half-built result — the reason is
     /// recorded in the message while the raw fields are kept, rather than being silently dropped or
@@ -427,7 +427,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 读取远程任务视图 / Read a remote task view.
     /// </summary>
     /// <remarks>
-    /// ：任务观测一律通过 <c>GET /api/v1/tasks/{taskId}</c>，不另设 await／checkpoint／result
+    /// 任务观测一律通过 <c>GET /api/v1/tasks/{taskId}</c>，不另设 await／checkpoint／result
     /// 端点。返回 null 表示服务端已无该任务。
     /// task observations always go through
     /// <c>GET /api/v1/tasks/{taskId}</c>; there is no separate await/checkpoint/result endpoint. A null
@@ -466,7 +466,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     public async Task<Result<SliceResult, ErrorCode, Error<ErrorCode>>> AwaitSliceEndAsync(
         ExecutionHandle handle, TimeSpan quantum,
         CancellationToken cancellationToken = default) {
-        // ：时间片只用于校验必须为正；轮询靠固定间隔，请求本身不带 quantum。
+        // 时间片只用于校验必须为正；轮询靠固定间隔，请求本身不带 quantum。
         // The quantum only has to be positive; polling uses a fixed interval and
         // the request itself carries no quantum.
         if (quantum <= TimeSpan.Zero) {
@@ -486,7 +486,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
             }
             RemoteTaskActionView? view = viewResult.Value;
             if (view is null) {
-                // ：任务已不存在属于失败，不是"仍在运行"。
+                // 任务已不存在属于失败，不是"仍在运行"。
                 // A missing task is a failure, not "still running".
                 return Results.Failed<SliceResult>(new Err<ErrorCode>(
                     ErrorCode.ApplicationFailed,
@@ -502,7 +502,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
             }
             var elapsed = TimeSpan.FromMilliseconds(System.Environment.TickCount64 - startedAt);
             if (status is Domain.TaskStatus.Completed or Domain.TaskStatus.Failed or Domain.TaskStatus.Stopped) {
-                // ：终态时合并结果 artifact（若已产出），artifact 优先于任务视图。
+                // 终态时合并结果 artifact（若已产出），artifact 优先于任务视图。
                 // A terminal state merges the result artifact when produced, and the
                 // artifact wins over the task view.
                 Result<SerializedSolution?, ErrorCode, Error<ErrorCode>> artifact =
@@ -572,7 +572,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 导出检查点引用 / Export the checkpoint reference.
     /// </summary>
     /// <remarks>
-    /// ：没有独立的导出端点——读取任务视图并返回其 <c>latestCheckpointRef</c>。任务不存在
+    /// 没有独立的导出端点——读取任务视图并返回其 <c>latestCheckpointRef</c>。任务不存在
     /// 或尚未产出检查点时返回 null，与失败区分。
     /// there is no dedicated export endpoint — read the task view and return its
     /// <c>latestCheckpointRef</c>. A missing task or an unproduced checkpoint returns null, which stays
@@ -600,7 +600,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 取回最终求解结果 / Fetch the final solve result.
     /// </summary>
     /// <remarks>
-    /// ：先读任务视图；视图无任何观测时返回 null。有 <c>latestResultRef</c> 且配置了对象存储
+    /// 先读任务视图；视图无任何观测时返回 null。有 <c>latestResultRef</c> 且配置了对象存储
     /// 时取回 artifact 并合并（artifact 优先），否则仅凭视图构造结果。合并逻辑复用
     /// <see cref="RemoteTaskActionView.ToSliceResult"/>，不在此处重写回退链。
     /// read the task view first and return null when it carries no observation at
@@ -651,7 +651,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 取回已验证的结果 artifact / Fetch the verified result artifact.
     /// </summary>
     /// <remarks>
-    /// ：空响应体或未产出都返回 null（表示"尚未产出"），不当作失败；解码失败或协议校验失败
+    /// 空响应体或未产出都返回 null（表示"尚未产出"），不当作失败；解码失败或协议校验失败
     /// 则返回结构化错误，不产出半个结果。
     /// an empty body or an unproduced artifact returns null ("not produced yet")
     /// rather than a failure, while a decode or protocol-validation failure returns a structured error
@@ -715,7 +715,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 停止远程任务并确认终态 / Stop a remote task and confirm a terminal state.
     /// </summary>
     /// <remarks>
-    /// ：受理后轮询任务视图直到终态，最多 <c>StopConfirmationAttempts</c> 次；
+    /// 受理后轮询任务视图直到终态，最多 <c>StopConfirmationAttempts</c> 次；
     /// 只有 <c>STOPPED</c> 或 <c>COMPLETED</c> 才返回 true。幂等：已处于终态时直接成功。
     /// After acceptance, poll the task view up to <c>StopConfirmationAttempts</c> times until
     /// terminal; only <c>STOPPED</c> or <c>COMPLETED</c> returns true. Idempotent: an already-terminal task succeeds.
@@ -760,7 +760,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 上传求解载荷 / Upload a solve payload.
     /// </summary>
     /// <remarks>
-    /// ：没有对象存储端口时明确失败，不合成路径假装已上传。载荷按 `*Ms` 整型时长序列化。
+    /// 没有对象存储端口时明确失败，不合成路径假装已上传。载荷按 `*Ms` 整型时长序列化。
     /// Without an object-storage port this fails explicitly instead of fabricating
     /// a path and pretending the payload was uploaded. The payload serializes with integer `*Ms` durations.
     /// </remarks>
@@ -783,7 +783,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
         byte[] bytes = System.Text.Encoding.UTF8.GetBytes(
             JsonSerializer.Serialize(payload, RemoteWireJson.Options));
         ObjectPath path = _payloadPathProvider(taskId, sliceId, tenantId);
-        // ：把 taskId／sliceId／tenantId 作为对象元数据一并写入。
+        // 把 taskId／sliceId／tenantId 作为对象元数据一并写入。
         // Write taskId/sliceId/tenantId as object metadata alongside the payload.
         var metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
             ["taskId"] = taskId.Value,
@@ -804,11 +804,11 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 恢复前加载并校验租户范围内的 v2 检查点 / Load and verify a tenant-scoped v2 checkpoint before resume.
     /// </summary>
     /// <remarks>
-    /// 逐项对照固定基线：路径必须是 <c>&lt;tenant&gt;/checkpoint/&lt;task&gt;/&lt;checkpointId&gt;</c>
+    /// 逐项核对：路径必须是 <c>&lt;tenant&gt;/checkpoint/&lt;task&gt;/&lt;checkpointId&gt;</c>
     /// 且不含 <c>.</c>/<c>..</c>；envelope 必须是 schema <c>3.0</c>、<c>sourceFormat = "v2"</c>、身份字段
     /// 齐全、<c>runId</c> 等于任务标识、<c>attemptId</c> 是路径检查点标识的前缀；随后把载荷声明的
     /// model/configuration/solver 指纹与 envelope 逐项比对，任一不符即拒绝。
- /// the path must be
+ /// The path must be
     /// <c>&lt;tenant&gt;/checkpoint/&lt;task&gt;/&lt;checkpointId&gt;</c> with no <c>.</c>/<c>..</c>
     /// segment; the envelope must be schema <c>3.0</c> with <c>sourceFormat = "v2"</c>, complete identity
     /// fields, <c>runId</c> equal to the task id, and an <c>attemptId</c> that prefixes the path checkpoint
@@ -982,9 +982,9 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 默认请求标识派生 / Default request-id derivation.
     /// </summary>
     /// <remarks>
-    /// 基线由调用方注入 `requestIdProvider`；未注入时按 task/slice/tenant 派生一个确定性标识，
+    /// 请求标识可由调用方注入 `requestIdProvider`；未注入时按 task/slice/tenant 派生一个确定性标识，
     /// 使同一提交可重试且不会因随机值产生重复任务。
-    /// The code injects `requestIdProvider`; without one, a deterministic identifier is derived from
+    /// The caller may inject `requestIdProvider`; without one, a deterministic identifier is derived from
     /// task/slice/tenant so a retried submission stays idempotent instead of spawning a duplicate task.
     /// </remarks>
     private static RequestId DefaultRequestId(TaskId taskId, SliceId sliceId, TenantId tenantId) =>
@@ -1013,7 +1013,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// </summary>
     /// <remarks>
     /// 任务视图与停止响应都把字段放在 <c>{code, message, data}</c> 信封内。
-    /// Baseline task views and stop responses carry their fields inside a <c>{code, message, data}</c> envelope.
+    /// Task views and stop responses carry their fields inside a <c>{code, message, data}</c> envelope.
     /// </remarks>
     /// <param name="body">响应体 / Response body.</param>
     /// <param name="name">字段名 / Field name.</param>

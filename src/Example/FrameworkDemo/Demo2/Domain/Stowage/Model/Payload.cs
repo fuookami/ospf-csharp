@@ -97,10 +97,10 @@ public sealed class Payload
     /// <param name="recommended">是否取推荐重量 / Whether to take the recommended weight.</param>
     /// <returns>重量多项式 / The weight polynomial.</returns>
     /// <remarks>
-    /// `FullLoad` 下"推荐"也用实际重量（基线注释：可选货物只按实际分配计重，固定货物也只计一次），其余模式按调用方给的
+    /// `FullLoad` 下"推荐"也用实际重量（可选货物只按实际分配计重，固定货物也只计一次），其余模式按调用方给的
     /// `recommended` 取。**先判 `FullLoad`**，因为它是唯一会推翻 `recommended` 的模式。
     ///
-    /// Under `FullLoad` the "recommended" figure also uses the actual weights (its comment: optional cargo counts once through actual assignments, fixed cargo once);
+    /// Under `FullLoad` the "recommended" figure also uses the actual weights (optional cargo counts once through actual assignments, fixed cargo once);
     /// every other mode honours the caller's `recommended`. `FullLoad` is checked **first** because it is the only mode that overrides `recommended`.
     /// </remarks>
     public LinearPolynomial<Flt64> Weights(StowageMode mode, bool mainDeckOnly, bool lowerHoldOnly, bool recommended) {

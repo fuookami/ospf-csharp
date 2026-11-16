@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// CVaR 是尾部平均，不是平均值，也不是分位点 / CVaR is a tail average, not a mean and not a quantile.
 /// </summary>
 /// <remarks>
-/// 补 CvarFunction（基线 Cvar.kt）。
+/// 补 CvarFunction。
 /// 定义是 min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ]。
 ///
 /// 三个容易混淆的量：**平均值**（全部情景）、**VaR**（一个分位点）、**CVaR**（尾部平均）。

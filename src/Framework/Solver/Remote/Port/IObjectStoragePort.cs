@@ -24,10 +24,10 @@ public interface IObjectStoragePort {
     /// 上传对象并附带元数据 / Put an object together with metadata.
     /// </summary>
     /// <remarks>
-    /// 固定 Kotlin <c>storage.put(path, bytes, metadata)</c> 会把 <c>taskId</c>／<c>sliceId</c>／
+    /// <c>storage.put(path, bytes, metadata)</c> 会把 <c>taskId</c>／<c>sliceId</c>／
     /// <c>tenantId</c> 作为对象元数据一起写入。本重载用**默认接口方法**提供，故现有实现无需改动即可
     /// 继续编译；未覆写时元数据不会被持久化，有能力的实现应覆写它。
-    /// The pinned Kotlin baseline's <c>storage.put(path, bytes, metadata)</c> writes <c>taskId</c>,
+    /// <c>storage.put(path, bytes, metadata)</c> writes <c>taskId</c>,
     /// <c>sliceId</c> and <c>tenantId</c> as object metadata. This overload is a **default interface
     /// method**, so existing implementations keep compiling unchanged; without an override the metadata is
     /// not persisted, and a capable implementation should override it.

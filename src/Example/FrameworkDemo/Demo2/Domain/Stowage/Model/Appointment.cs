@@ -10,18 +10,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// Appointment mapping between items and positions, representing pre-assigned stowage relationships that must be respected during optimisation.
 /// </summary>
 /// <remarks>
-/// 移植。
-///
-/// **一处基线没有的语义差异**：`Position` 是 `data class`（值相等），
+/// **一处语义差异**：`Position` 是 `data class`（值相等），
 /// C# 的 `Position` 是 `sealed class` 且**没有重写 `Equals`/`GetHashCode`**（引用相等）。
 /// 因此这里的字典以**对象标识**为键：两个字段完全相同但分别构造的 `Position`
-/// 在本实现里是两个不同的键，在是同一个。依赖值相等的调用方必须复用同一个 `Position` 实例。
+/// 在本实现里是两个不同的键，在值相等下是同一个键。依赖值相等的调用方必须复用同一个 `Position` 实例。
 ///
-/// Ports its.
-///
-/// **One semantic difference the code does not have**: its `Position` is a `data class` (value equality), while C#'s `Position` is a
+/// **One semantic difference**: a `data class` `Position` has value equality, while C#'s `Position` is a
 /// `sealed class` that **does not override `Equals`/`GetHashCode`** (reference equality). So these maps key on **object identity**: two separately
-/// constructed `Position`s with identical fields are two different keys here and one key in the code. A caller relying on value equality must reuse
+/// constructed `Position`s with identical fields are two different keys here and one key under value equality. A caller relying on value equality must reuse
 /// the same `Position` instance.
 /// </remarks>
 public sealed class Appointment

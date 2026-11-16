@@ -46,13 +46,13 @@ public static class OverMaxConstraintRows {
     /// <param name="name">约束名前缀 / The constraint-name prefix.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// **哪些任务被约束**（照做，包括它看起来反了的地方）：给了最大允许量，并且——只有在对应方向全局开关**开着**时——
+    /// **哪些任务被约束**（包括它看起来反了的地方）：给了最大允许量，并且——只有在对应方向全局开关**开着**时——
     /// **不**允许移动的那些。也就是说开关打开时真正被约束的是"本来就不许动"的任务，而对它们偏移量恒为零，行是**恒真的**；
-    /// 开关关着时反而约束所有给了上限的任务。这个不对称是，不是可以顺手改的地方——改了会让约束悄悄多绑一批任务。
+    /// 开关关着时反而约束所有给了上限的任务。这个不对称是刻意的，不是可以顺手改的地方——改了会让约束悄悄多绑一批任务。
     ///
-    /// **Which tasks are constrained** (copied from the code, including the part that looks inverted): those carrying a maximum, and — only when the corresponding global
+    /// **Which tasks are constrained** (including the part that looks inverted): those carrying a maximum, and — only when the corresponding global
     /// switch is **on** — the ones that may **not** move. So with the switch on the constrained tasks are exactly the immovable ones, whose deviation is identically zero and
-    /// whose row is **always true**; with the switch off every task carrying a maximum is constrained. The asymmetry is its, and not something to "fix" quietly —
+    /// whose row is **always true**; with the switch off every task carrying a maximum is constrained. The asymmetry is deliberate, and not something to "fix" quietly —
     /// changing it would silently bind an extra set of tasks.
     /// </remarks>
     public static Try Add<E, A>(
@@ -97,10 +97,10 @@ public static class OverMaxConstraintRows {
 
             string rowName = name + "_" + task.Id;
             // **行必须带影子价格键**：对偶是求解器按行返回的，管线要认回自己那一行只能靠行上的 `args`。
-            // 基线这里是 `args = TaskOverMax{Delay,Advance}ShadowPriceKey(task)`；少了它，提取器读的是一张永远空的表，
+            // 这里给行挂 `args = TaskOverMax{Delay,Advance}ShadowPriceKey(task)`；少了它，提取器读的是一张永远空的表，
             // 于是列生成按零价格挑列而且不报错——**行加了、键没挂**是最难发现的那种半接线。
             //
-            // **The row must carry a shadow-price key**: duals come back per row, so recognising its own row requires the `args` on the row. The code passes
+            // **The row must carry a shadow-price key**: duals come back per row, so recognising its own row requires the `args` on the row. The row carries
             // `args = TaskOverMax{Delay,Advance}ShadowPriceKey(task)` here; without it the extractor reads a forever-empty table and column generation selects at zero prices without raising —
             // **the row is added but the key is not attached**, which is the hardest kind of half-wiring to notice.
             Fuookami.Ospf.Framework.Model.ShadowPriceKey key = delay

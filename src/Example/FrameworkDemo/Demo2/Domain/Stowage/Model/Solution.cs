@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 配载方案。Stowage solution with cargo-position assignments.
 /// </summary>
 /// <remarks>
-/// 与对齐：三张表——**货物→舱位的分配**、**谓词装载重量**、**推荐装载重量**。
+/// 三张表——**货物→舱位的分配**、**谓词装载重量**、**推荐装载重量**。
 /// 后两张只含"变量为正"的舱位，因为零意味着该舱位不使用这个模式，把它放进结果会让下游误以为有值。
 ///
 /// Three tables — **item-to-position assignments**, **predicate load weights** and **recommended load weights**. The latter two hold only positions whose

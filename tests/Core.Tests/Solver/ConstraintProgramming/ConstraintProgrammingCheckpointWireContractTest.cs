@@ -277,12 +277,12 @@ public class ConstraintProgrammingCheckpointWireContractTest {
 
     private static string[] FieldNames(string section) =>
         Rows(section).Select(row => row[1]).ToArray();
-    /// <summary>**fixture 必须逐字节来自固定基线** / The fixture must come  byte for byte.</summary>
+    /// <summary>**fixture 必须逐字节固定** / The fixture must be fixed byte for byte.</summary>
     /// <remarks>
     /// 之前，这一节只证明"C# 能解码、能重编码、能复算摘要"——**却没人核对过 fixture 本身是不是**。
     /// 一份被本地改过的 fixture 能让这三件事全部通过，同时证明不了任何跨语言事实。
     ///
-    /// 现在钉住的是**来源**：`checkpoint-envelope-v3.json` 与固定基线 `12fdb587` 的
+    /// 现在钉住的是**来源与具体字节**：`checkpoint-envelope-v3.json` 必须是
     /// **一个固定的字节序列**：1555 字节、摘要 `3f2d2f49…`、LF 换行。**字节数也是判据的一部分**：
     /// 只比摘要会放过"改了内容但摘要字段没跟着改"的本地副本。
     ///

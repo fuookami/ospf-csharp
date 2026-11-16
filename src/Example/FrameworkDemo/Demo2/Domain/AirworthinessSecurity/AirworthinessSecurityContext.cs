@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 适航安全上下文 / Context for managing airworthiness and safety constraints across aircraft, stowage, and MAC domains.
 /// </summary>
 /// <remarks>
-/// 与对齐。它把"建聚合"与"往模型里注册"分成两步：
+/// 它把"建聚合"与"往模型里注册"分成两步：
 ///
 /// 1. <see cref="Init"/> 建聚合（起可用，见 <see cref="AggregationInitializer"/>）。
 /// 2. <see cref="Register"/> 用聚合注册约束——**已实现**，顺序是聚合注册 → 生成管线 → 逐条执行。
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **`Register` 是两步，不是一步**。只调 `aggregation.Register` 不会加任何约束行（聚合只注册符号），真正成行的是后面那 14 条管线。
 ///    漏掉第二步会得到一个"注册成功、一行约束都没有"的模型。
-/// 2. **`RegisterForBendersMP` 是空操作**，基线就是 `return ok`，且**不转发**给聚合的同名方法。转发与不转发在等价（聚合那个也是空操作），沿用不转发。
+/// 2. **`RegisterForBendersMP` 是空操作**，就是 `return ok`，且**不转发**给聚合的同名方法。转发与不转发在等价（聚合那个也是空操作），沿用不转发。
 /// 3. **`RegisterForBendersSP` 就是 `Register`**，忽略 `solution`；`FlushForBendersSP` 是空操作。
 ///
 /// It splits "build the aggregation" from "register into the model": `Init` is **still missing here** (see
@@ -59,11 +59,11 @@ public sealed class AirworthinessSecurityContext
     /// <param name="aggregation">适航安全聚合 / The airworthiness security aggregation.</param>
     /// <remarks>
     /// **两条入口并存：`Init` 从上游聚合建，这个构造直接收现成的聚合**（依赖注入、或调用方已经建好了）。有 `init` 一条，
-    /// 多出来的这条不是"等移植的临时通道"——**`Init` 早就在了**（起 `AggregationInitializer` 真正构造聚合），
+    /// 多出来的这条不是"临时通道"——**`Init` 早就在了**（起 `AggregationInitializer` 真正构造聚合），
     /// 所以这里不再有"唯一入口"这种说法。
     ///
     /// **Two entry points coexist: `Init` builds from the upstream aggregations, this constructor takes a ready-made one** (dependency injection, or a caller that already
-    /// built it). The code has only `init`; the extra one is not a "temporary channel waiting for the implementation" — **`Init` has been there since then**, so there is no
+    /// built it). The extra one is not a "temporary channel waiting for the implementation" — **`Init` has been there all along**, so there is no
     /// "only entry point" left to speak of.
     /// </remarks>
     public AirworthinessSecurityContext(AirworthinessSecurityAggregation aggregation) {

@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **经验证的团覆盖** / The verified clique cover.
 /// </summary>
 /// <remarks>
-/// 对应基线 `ConflictIndex.build`。**两个不可让步的性质**，方向相反，都要测：
+/// `ConflictIndex.build` 上**两个不可让步的性质**，方向相反，都要测：
 ///
 /// | 性质 | 若被破坏 | 后果 |
 /// | --- | --- | --- |

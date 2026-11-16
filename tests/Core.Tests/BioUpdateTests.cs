@@ -107,7 +107,7 @@ public sealed class ArithmeticOptimizationUpdateTests {
     ///
     /// **这条断言是"防护有效"而非"防护必要"的证据，且它的变异测试是等价变异**：把 `Math.Clamp(probability, 1e-6, 1)` 删掉后
     /// 测试**仍然通过**，因为 `ClampTo` 已经吸收了非有限值。我试过三种夹具（最优 5.0、最优 0.0、确定性熵源），都无法区分——
-    /// 结论是这个夹紧在本实现里不承担可观测职责，保留它只是为了。**真正提供保证的是 `ClampTo` 的非有限值清洗**。
+    /// 结论是这个夹紧在本实现里不承担可观测职责。**真正提供保证的是 `ClampTo` 的非有限值清洗**。
     ///
     /// 把这个写成"防止除零的关键"会是假的；如实记录等价变异才是准确的做法。
     /// The probability appears in a denominator: `best / probability * scale`. At probability 0 that expression yields `NaN` (`0/0`) or
@@ -116,7 +116,7 @@ public sealed class ArithmeticOptimizationUpdateTests {
     /// **This assertion is evidence that the guard works, not that it is necessary, and its mutation test is an equivalent mutant**.
     /// removing `Math.Clamp(probability, 1e-6, 1)` still passes because `ClampTo` already absorbs the non-finite value. Three fixtures
     /// were tried (best at 5.0, best at 0.0, a deterministic entropy source) and none could distinguish them — the conclusion is that the
-    /// clamp carries no observable duty here and is kept only for baseline fidelity. **The actual guarantee comes from
+    /// clamp carries no observable duty here. **The actual guarantee comes from
     /// `ClampTo`'s non-finite sanitization.**
     ///
     /// Writing this up as "the critical thing that prevents division by zero" would be false; recording the equivalent mutant is the

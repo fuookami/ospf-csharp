@@ -11,7 +11,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **目标只保留最近一轮的代价项；这不是笔误，是基线原样** / The objective keeps only the latest round's cost terms, which is the code verbatim rather than a typo.
+/// **目标只保留最近一轮的代价项；这不是笔误，是有意如此** / The objective keeps only the latest round's cost terms, which is deliberate rather than a typo.
 /// </summary>
 /// <remarks>
 /// `addColumns` 每次都先 `taskCost.flush`，然后只对本次新增的列追加 `cost × x[task]`。
@@ -53,11 +53,11 @@ public class TaskCostAccumulationTests {
     /// </summary>
     /// <remarks>
     /// 这条是"沿用 flush"的凭据，而且**能失败**：若实现改成累积（`AddRange` 而不 `Clear`），
-    /// 两轮之后会得到三项。累积其实更"对"，但它与基线不同，这个差异只在多轮列生成时显现，
+    /// 两轮之后会得到三项。累积其实更"对"，但这里没有采用，这个差异只在多轮列生成时显现，
     /// 且目标值偏小而**不报错**。
     ///
     /// This is the evidence for copying the flush, and it **can fail**: an accumulating implementation (`AddRange` without `Clear`) leaves three entries after two rounds.
-    /// Accumulating is arguably more correct, but it differs from the code, and the difference only shows across rounds as a too-small objective with **no error**.
+    /// Accumulating is arguably more correct, but it is not what happens here, and the difference only shows across rounds as a too-small objective with **no error**.
     /// </remarks>
     [Fact]
     public void AddRound_ShouldNotRetainThePreviousRound() {

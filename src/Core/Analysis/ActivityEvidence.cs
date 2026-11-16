@@ -7,8 +7,8 @@ namespace Fuookami.Ospf.Core.Analysis;
 
 /// <summary>原始模型报告边界的证据类型 / Evidence kind used at the original-model report boundary.</summary>
 /// <remarks>
-/// 与的 `ActivityEvidenceKind` 逐成员对应。
-/// Mirrors `ActivityEvidenceKind` in its, member for member.
+/// 逐成员对应 `ActivityEvidenceKind`。
+/// 逐成员对应 `ActivityEvidenceKind` / One member per `ActivityEvidenceKind`.
 /// </remarks>
 public enum ActivityEvidenceKind
 {
@@ -32,7 +32,7 @@ public enum ActivityEvidenceKind
 /// 原始模型一条活动性记录的证据 / Original-model evidence for one activity record.
 /// </summary>
 /// <remarks>
-/// 与对应。**数值以 `double` 暴露以便报告互操作，同时保留 `Int64` 的精确字符串**——
+/// **数值以 `double` 暴露以便报告互操作，同时保留 `Int64` 的精确字符串**——
 /// 调用方不该把舍入过的浮点值再拿去做 CP 输入。这条不是洁癖：`9007199254740993` 走一趟 `double` 就变成
 /// `9007199254740992`，**而两者作为约束边界是完全不同的两个模型。**
 ///

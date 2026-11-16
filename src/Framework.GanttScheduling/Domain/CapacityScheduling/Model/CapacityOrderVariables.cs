@@ -114,11 +114,11 @@ public sealed class CapacityOrderVariables<A>
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>成功或失败 / Success or failure.</returns>
     /// <remarks>
-    /// 每格 `x` 的上界来自 `action.upperBound(slot, timeWindow)`——**这是基线 `register` 里唯一一处业务上界**，
+    /// 每格 `x` 的上界来自 `action.upperBound(slot, timeWindow)`——**这是 `register` 里唯一一处业务上界**，
     /// 少了它，`OrderConstraint` 的 `x ≤ M · b` 就只能猜一个 `M`，猜大了解松弛、猜小了切掉可行解。
     /// `b` 不需要额外设置：`BinVariable3` 的值域本来就是 0/1。
     ///
-    /// Each `x` cell's upper bound comes from `action.upperBound(slot, timeWindow)` — **the only business upper bound in its `register`**. Without it,
+    /// Each `x` cell's upper bound comes from `action.upperBound(slot, timeWindow)` — **the only business upper bound in `register`**. Without it,
     /// `OrderConstraint` could only guess the big-M linking factor: too large relaxes the model, too small cuts off feasible solutions. `b` needs nothing extra; `BinVariable3`
     /// already ranges over 0 and 1.
     /// </remarks>

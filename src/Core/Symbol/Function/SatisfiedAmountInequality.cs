@@ -22,21 +22,21 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 
 /// <summary>
 /// 约束满足数量函数 / Satisfied amount over constraint inputs.
-/// <para>对应 Kotlin <c>SatisfiedAmountInequalityFunction&lt;V&gt;</c>：每个输入约束一个二值标志 <c>u[i]</c>；
+/// <para>每个输入约束一个二值标志 <c>u[i]</c>；
 /// 无 <c>amount</c> 时结果为 <c>sum(u)</c>，给定 <c>amount</c> 区间时结果为二值 <c>y</c>，
 /// 由两行把 <c>y</c> 与满足数量区间关联。归一化左侧范围不含 0 时标志按平凡真值固定。</para>
-/// <para>Mirrors Kotlin <c>SatisfiedAmountInequalityFunction&lt;V&gt;</c>: one binary flag per input
+/// <para>One binary flag per input
 /// constraint; the result is <c>sum(u)</c> without <c>amount</c>, otherwise the binary <c>y</c> linked to
 /// the satisfied-count range by two rows. Flags are fixed trivially when the normalized lhs range
 /// excludes zero.</para>
 /// <para>注意：注册使用零带蕴含，而求值按比较符号计数；二者不是双向等价。
-/// Note: baseline registration uses a zero-band implication, while evaluation counts by comparison;
+/// Note: registration uses a zero-band implication, while evaluation counts by comparison;
 /// these are not equivalent. The count-range output also only implies membership when y=1.</para>
 /// </summary>
 public class SatisfiedAmountInequalityFunction :
     IMathFunctionSymbol<Flt64>,
     IHasResultPolynomial<Flt64> {
-    /// <summary>Kotlin 基线默认容差 / Default epsilon of the Kotlin baseline.</summary>
+    /// <summary>默认容差 / Default epsilon.</summary>
     internal static readonly Flt64 DefaultEpsilon = new(1e-6);
 
     private readonly IReadOnlyList<IVariableItem> _helperVariables;
@@ -192,7 +192,7 @@ public class SatisfiedAmountInequalityFunction :
         return IndicatorSupport.AddConstraints(model, constraints);
     }
 
-    /// <summary>按生成零带蕴含行，不按 sign 改写 / Emit baseline zero-band implication rows without rewriting by sign.</summary>
+    /// <summary>按生成零带蕴含行，不按 sign 改写 / Emit zero-band implication rows without rewriting by sign.</summary>
     private Result<
         IReadOnlyList<LinearInequality<Flt64>>,
         ErrorCode,
@@ -342,9 +342,9 @@ public sealed class AtLeastInequalityFunction : SatisfiedAmountInequalityFunctio
 
 /// <summary>
 /// 非全满足函数：不能同时满足所有约束（<c>amount = [1, n-1]</c>）；单约束时无区间，
-/// 结果退化为满足计数，与 Kotlin 一致。
+/// 结果退化为满足计数。
 /// Not-all function: not every constraint can be satisfied (<c>amount = [1, n-1]</c>); a single input
-/// drops the range and the symbol falls back to raw counting, matching Kotlin.
+/// drops the range and the symbol falls back to raw counting.
 /// </summary>
 public sealed class NotAllFunction : SatisfiedAmountInequalityFunction {
     public NotAllFunction(
