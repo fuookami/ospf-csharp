@@ -61,3 +61,17 @@
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
+
+###############################################################################
+# 字节级夹具必须保持 LF。
+#
+# 这些文件被判据按 sha256 逐字节比对；`core.autocrlf=true` 会把它们检出成 CRLF，
+# 于是"内容没变"也会让判据红。声明成 `-text` 之后 git 不再做换行转换。
+#
+# Byte-level fixtures must stay LF: criteria compare their sha256 against a
+# pinned digest, so any line-ending translation turns a correct file red.
+###############################################################################
+*.tsv -text
+# 远程互通夹具：判据按 sha256 比对，同样不能转换换行。
+# The remote wire fixtures are compared by sha256, so they are not converted either.
+tests/Framework.Tests/RemoteFixtures/** -text
