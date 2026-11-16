@@ -156,6 +156,79 @@ public class OnnxScanLoweringTests
             new[] { "final" }).IsOk.Should().BeFalse("the body receives the state first, then the slice");
     }
 
+    /// <summary>**多状态各自累加，互不串线** / Multiple states accumulate separately.</summary>
+    /// <remarks>
+    /// **两个状态用同一条切片、但走不同的运算：** **若实现只保留"一个状态"的形状，第二个状态会被第一个覆盖，'
+    /// **而模型照常展开、照常求解——只是第二个状态的值其实是第一个。**
+    ///
+    /// **Two states share one slice but take different operations: an implementation that only really keeps one state lets the second overwrite the first, and the model still
+    /// unrolls and still solves — the second state's value is simply the first's.**
+    /// </remarks>
+    [Fact]
+    public void MultipleStates_ShouldAccumulateSeparately() {
+        var context = new OnnxLoweringContext();
+
+        // state_a += slice；state_b -= slice。三个切片 1、2、3。
+        OnnxGraph body = new OnnxGraph(
+            "body",
+            new[] {
+                Node("Add", "a_in", "slice_in", "a_out"),
+                Node("Sub", "b_in", "slice_in", "b_out"),
+            },
+            Array.Empty<OnnxTensor>(),
+            new[] { new OnnxValueInfo("a_in", 1, Array.Empty<OnnxDimension>()),
+                    new OnnxValueInfo("b_in", 1, Array.Empty<OnnxDimension>()),
+                    new OnnxValueInfo("slice_in", 1, Array.Empty<OnnxDimension>()) },
+            new[] { new OnnxValueInfo("a_out", 1, Array.Empty<OnnxDimension>()),
+                    new OnnxValueInfo("b_out", 1, Array.Empty<OnnxDimension>()) },
+            Array.Empty<OnnxValueInfo>());
+
+        OnnxScanLowering.Result result = OnnxScanLowering.Lower(
+            new OnnxScanExpansion.ScanNode(body, 3, 3, 2, 2, 2, 2),
+            context,
+            new[] { Constant(0.0), Constant(10.0) },
+            new[] { Constant(1.0), Constant(2.0), Constant(3.0) },
+            new[] { "a_in", "b_in", "slice_in" },
+            new[] { "final_a", "final_b" });
+
+        result.IsOk.Should().BeTrue(result.Failure);
+        result.FinalStates![0].Expression.Constant.ToDouble().Should().Be(6.0, "0 + 1 + 2 + 3");
+        result.FinalStates![1].Expression.Constant.ToDouble().Should().Be(4.0,
+            "10 - 1 - 2 - 3; the first state's 6 appearing here would mean the states were not kept apart");
+    }
+
+    /// <summary>**多状态的就地更新体也能展开** / A multi-state in-place body unrolls as well.</summary>
+    [Fact]
+    public void MultipleInPlaceStates_ShouldUnroll() {
+        var context = new OnnxLoweringContext();
+
+        OnnxGraph body = new OnnxGraph(
+            "body",
+            new[] {
+                Node("Add", "a_in", "slice_in", "a_in"),
+                Node("Sub", "b_in", "slice_in", "b_in"),
+            },
+            Array.Empty<OnnxTensor>(),
+            new[] { new OnnxValueInfo("a_in", 1, Array.Empty<OnnxDimension>()),
+                    new OnnxValueInfo("b_in", 1, Array.Empty<OnnxDimension>()),
+                    new OnnxValueInfo("slice_in", 1, Array.Empty<OnnxDimension>()) },
+            new[] { new OnnxValueInfo("a_in", 1, Array.Empty<OnnxDimension>()),
+                    new OnnxValueInfo("b_in", 1, Array.Empty<OnnxDimension>()) },
+            Array.Empty<OnnxValueInfo>());
+
+        OnnxScanLowering.Result result = OnnxScanLowering.Lower(
+            new OnnxScanExpansion.ScanNode(body, 2, 2, 2, 2, 2, 2),
+            context,
+            new[] { Constant(0.0), Constant(10.0) },
+            new[] { Constant(1.0), Constant(2.0) },
+            new[] { "a_in", "b_in", "slice_in" },
+            new[] { "out_a", "out_b" });
+
+        result.IsOk.Should().BeTrue(result.Failure);
+        result.FinalStates![0].Expression.Constant.ToDouble().Should().Be(3.0, "0 + 1 + 2");
+        result.FinalStates![1].Expression.Constant.ToDouble().Should().Be(7.0, "10 - 1 - 2");
+    }
+
     private static OnnxScanExpansion.ScanNode Node(long length, OnnxGraph body) =>
         new(body, length, length, 1, 1, 1, 1);
 

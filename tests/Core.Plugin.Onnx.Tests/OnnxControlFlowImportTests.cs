@@ -6,6 +6,7 @@ using System.Text;
 using FluentAssertions;
 using Fuookami.Ospf.Core.Plugin.Onnx;
 using Fuookami.Ospf.Core.Plugin.Onnx.Model;
+using Fuookami.Ospf.Core.Plugin.Onnx.Proto;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Math.Symbol.Monomial;
@@ -182,6 +183,35 @@ public class OnnxControlFlowImportTests
         imported.Failure.Should().Contain("常量");
     }
 
+    /// <summary>**带两个状态的 `Scan` 从字节走到多项式** / A two-state Scan walks from bytes to a polynomial.</summary>
+    /// <remarks>
+    /// **多状态在本地已支持，但"本地支持"与"从一个真实模型里读得出两个状态"是两件事：** **后者还依赖导入器把"
+    /// **节点输入里的状态个数"与"体的输入个数"对上。**
+    ///
+    /// **Multi-state works locally, but "works locally" and "two states can be read out of a real model" are different claims: the latter also needs the importer to line up
+    /// the node's state count with the body's input count.**
+    /// </remarks>
+    [Fact]
+    public void ATwoStateScanModel_ShouldImportBothStates() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            TwoStateScanModelBytes(new[] { 1.0f, 2.0f }),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> {
+                    ["x"] = new OnnxBounds(-1.0, 1.0),
+                    ["y"] = new OnnxBounds(-1.0, 1.0),
+                }));
+
+        imported.IsOk.Should().BeTrue(imported.Failure);
+        // 第一个图输出是状态 a：初值 0，每轮加一个切片，两轮之后是常数 3，且完全不涉及 x、y。
+        // 状态 b（y + 2x）的算术由本地那条多状态判据负责——导入器只交出一个多项式。
+        //
+        // The first graph output is state a: it starts at 0, gains one slice per round, so it ends as the constant 3 and touches neither x nor y. The arithmetic of state b
+        // (y + 2x) belongs to the local multi-state criterion, since the importer hands back a single polynomial.
+        imported.Polynomial!.Constant.ToDouble().Should().Be(3.0, "0 + 1 + 2");
+        imported.Polynomial.Monomials.Should().BeEmpty("state a never involves x or y");
+    }
+
     // ---- 手工编码的模型 ----
 
     private static OnnxImporter.Imported ImportModel(float condition, bool conditionIsInitializer = true, int elseOutputs = 1) {
@@ -296,6 +326,46 @@ public class OnnxControlFlowImportTests
             VarintField(2, 1),
             BytesField(4, packed.ToArray()),
             StringField(8, name));
+    }
+
+    private static byte[] TwoStateScanModelBytes(float[] slices) {
+        // body(a_in, b_in, slice_in) -> a = a_in + slice_in、b = b_in + x（x 来自外层）。
+        // body(a_in, b_in, slice_in) -> a = a_in + slice_in and b = b_in + x, with x visible from the enclosing scope.
+        byte[] body = Concat(
+            Encoding.UTF8.GetBytes(string.Empty),
+            BytesField(1, Concat(StringField(1, "a_in"), StringField(1, "slice_in"), StringField(2, "a_out"), StringField(4, "Add"))),
+            BytesField(1, Concat(StringField(1, "b_in"), StringField(1, "x"), StringField(2, "b_out"), StringField(4, "Add"))),
+            StringField(2, "body"),
+            BytesField(11, ValueInfo("a_in")),
+            BytesField(11, ValueInfo("b_in")),
+            BytesField(11, ValueInfo("slice_in")),
+            BytesField(12, ValueInfo("a_out")),
+            BytesField(12, ValueInfo("b_out")));
+
+        return Concat(
+            VarintField(1, 8),
+            BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+            BytesField(7, Concat(
+                // 两个状态就要有两个输出名；把 b 排在前面，因为导入器只取第一个图输出。
+                // Two states need two output names; b comes first because the importer takes the first graph output.
+                BytesField(1, Concat(
+                    StringField(1, "zero"),
+                    StringField(1, "y"),
+                    StringField(1, "slices"),
+                    // 输出必须按状态顺序（a 在前、b 在后）：ONNX 按位置对齐。
+                    // Outputs follow the state order (a first, b second): ONNX aligns by position.
+                    StringField(2, "out_a"),
+                    StringField(2, "out_b"),
+                    StringField(4, "Scan"),
+                    BytesField(5, Attribute("body", body)),
+                    VarintField(9, 2))),
+                StringField(2, "g"),
+                BytesField(5, ConstantTensor("zero", 0.0f)),
+                BytesField(5, ConstantTensorArray("slices", slices)),
+                BytesField(11, ValueInfo("x")),
+                BytesField(11, ValueInfo("y")),
+                BytesField(12, ValueInfo("out_a")),
+                BytesField(12, ValueInfo("out_b")))));
     }
 
     private static byte[] PlainModelBytes() => Concat(

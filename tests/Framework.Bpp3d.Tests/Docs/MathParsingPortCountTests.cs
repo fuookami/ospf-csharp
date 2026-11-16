@@ -137,9 +137,14 @@ public class MathParsingPortCountTests
         // **B1302: 29 to 30.** **The extra one is the "5 criteria" sentence added to the `TokenSharedReadBenchmark` note — like the other 29 it
         // is a count claim nobody pins one by one.** **The criterion firing is correct: it does not mean "the matrix may hold only 29 such
         // sentences", it means every new one has to be noticed.**
+        // **B1356：一度变成 31，又回到 30。** **那一处"3 条判据"写在未移植清单的 `Scan` 行里，'
+        // **而那一行随后被改写成"运行期切片"，句子随之消失。** **留这段话，是因为"数字动过又回来"和"从没动过"是两件事。**
+        //
+        // **B1356: it briefly became 31 and went back to 30.** **The "3 criteria" sentence lived in the Scan row of the unmigrated list, and that row was rewritten into
+        // "runtime slices", taking the sentence with it.** **The note stays because "the number moved and came back" is not the same as "it never moved".**
         total.Should().Be(
             30,
-            "30 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
+            "31 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
             + "this note stops describing reality");
     }
 

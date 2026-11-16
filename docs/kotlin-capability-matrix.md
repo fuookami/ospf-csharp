@@ -2756,7 +2756,7 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 | --- | --- | --- | --- | --- |
 | 1 | **符号输入的激活**（`Relu`／`Sigmoid`／… 接变量） | 需要函数符号（分段线性／正部），那要挂进 `MechanismModel` | 用 `OnnxApproximationLowering` 产出的 `UnivariateLinearPiecewiseFunction` 与 `PositivePartFunction`，在 `OnnxModelAttachment` 那一层注册 | 带激活的图目前只能在常量输入上折叠；**逐节点求值遇到符号输入的激活会明确拒绝，不静默返回输入** |
 | 2 | **形状算子的模型改写**（`Reshape`／`Transpose`／`Concat`／`Split`／`Gather`／`ReduceSum`） | 形状推导已全部落地，**改写模型形状需要重建变量与列号**，属模型层 | 在 `OnnxModelAttachment` 之后加一步重排；形状算术（`OnnxShape`／`OnnxShapeOperators`）已可直接复用 | 逐节点求值里没有这些算子；形状推导、约束对齐判据不受影响 |
-| 3 | **`Scan` 的多状态与多扫描输入** | 端到端已支持单状态 + 常量切片数组；多状态与运行期切片未做 | 把 `slices` 扩展成每轮一组切片，循环体输入名按状态数偏移 | 多状态的 `Scan` 目前会被判据拒绝（明确报错，不静默） |
+| 3 | **`Scan` 的运行期切片**（扫描输入不是常量张量） | 端到端要求扫描输入是常量张量，因为导入期必须知道扫描长度 | 让每轮的切片可以是新的符号变量（`Binding` 已支持），长度改由输入形状给出 | **多状态已支持（B1356，含端到端两状态）**；非常量扫描输入会被明确拒绝 |
 | 4 | **回调适配**（`OnnxCallbackAdapter` 377 行）／**降阶模型对象**（`OnnxFunctionalModel` 615 行）／**张量元信息**（`OnnxTensorInfo`） | 这三者是 C# 侧**以不同形式存在**的同一件事：回调在 C# 里是委托与 `Result`，降阶模型是 `OnnxAffineModelBuilder` 的产物，张量元信息合在 `OnnxLoweringContext.Binding`。**没有为了对齐文件名而另造一层。** | 若要逐名对齐，各自薄薄地加一层包装 | 使用方按 C# 侧的类型工作；**名称不同不等于能力缺失** | | 本插件只读它、不按版本分支（字段号在各版本稳定） | 若将来某版本改动字段语义，在 `OnnxModelParser` 加版本判定 | 无（记录在案，避免"以为检查了版本"） |
 | 5 | **`ModelProto.ir_version` 的版本分支** | 本插件只读它、不按版本分支（字段号在各版本稳定） | 若将来某版本改动字段语义，在 `OnnxModelParser` 加版本判定 | 无（**记录在案，避免"以为检查了版本"**） |
 
