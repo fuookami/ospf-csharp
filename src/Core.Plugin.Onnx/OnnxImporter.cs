@@ -112,7 +112,7 @@ public static class OnnxImporter
         //
         // A graph with control flow goes through node-by-node evaluation: an If body has to be walked recursively, while the affine chain looks at nodes and not at
         // subgraphs. Both paths end in the same LinearPolynomial, so the return type is unchanged.
-        if (HasControlFlow(graph)) {
+        if (NeedsEvaluator(graph)) {
             return ImportThroughEvaluator(graph, variables);
         }
 
@@ -124,9 +124,41 @@ public static class OnnxImporter
         return new Imported(chain.Polynomial, variables, null, null);
     }
 
-    private static bool HasControlFlow(OnnxGraph graph) {
+    private static IReadOnlyList<int> DeclaredShape(OnnxGraph graph, string name) {
+        foreach (OnnxValueInfo input in graph.Inputs) {
+            if (input.Name != name) {
+                continue;
+            }
+            var shape = new List<int>(input.Shape.Count);
+            foreach (OnnxDimension dimension in input.Shape) {
+                if (dimension.Value is not long value) {
+                    // 动态维在导入期没有确定值；留空比猜一个值安全。
+                    // A dynamic dimension has no value at import time; leaving it empty is safer than guessing one.
+                    return Array.Empty<int>();
+                }
+                shape.Add((int)value);
+            }
+            return shape;
+        }
+        return Array.Empty<int>();
+    }
+
+    /// <summary>
+    /// 这张图是否必须走逐节点求值 / Whether this graph has to go through node-by-node evaluation.
+    /// </summary>
+    /// <remarks>
+    /// **判断依据是"仿射链不认识这些算子"，不是"这些算子叫控制流"：** **`Reshape` 不是控制流，**
+    /// **但它同样需要逐节点走一遍才能换形状。** **按名字列举会漏掉新接进来的算子，按"谁认识"判断则不会。**
+    ///
+    /// **The test is "the affine chain does not know these operators", not "these are called control flow": Reshape is not control flow, yet it also needs a node-by-node
+    /// walk to change the shape.** **Enumerating names misses each newly wired operator; asking "who knows it" does not.**
+    /// </remarks>
+    private static bool NeedsEvaluator(OnnxGraph graph) {
         foreach (OnnxNode node in graph.Nodes) {
-            if (node.OpType == "If" || node.OpType == "Loop" || node.OpType == "Scan") {
+            if (OnnxShapeTransform.Operators.Contains(node.OpType)) {
+                return true;
+            }
+            if (node.OpType is "If" or "Loop" or "Scan") {
                 return true;
             }
         }
@@ -139,7 +171,12 @@ public static class OnnxImporter
             var polynomial = new LinearPolynomial<Flt64>(
                 new[] { new LinearMonomial<Flt64>(Flt64.One, entry.Value) },
                 Flt64.Zero);
-            context.TryBind(entry.Key, polynomial, Array.Empty<int>(), out _);
+            // 形状要用图里声明的：`Reshape`／`Squeeze` 的守恒检查没有形状就无从谈起，
+            // 而"空形状"会让任何多元素的重塑都判成元素个数不符。
+            //
+            // The shape comes from what the graph declares: Reshape and Squeeze cannot check conservation without one, and an empty shape makes every multi-element reshape look
+            // like a mismatch.
+            context.TryBind(entry.Key, polynomial, DeclaredShape(graph, entry.Key), out _);
         }
 
         // 常量初值必须交给求值器：`If` 的条件常常是一个 initializer，
@@ -148,6 +185,7 @@ public static class OnnxImporter
         // Initialisers have to reach the evaluator: an If condition is often an initializer, which is neither a variable nor a node output and exists only as a constant.
         var constants = new Dictionary<string, double>(StringComparer.Ordinal);
         var arrays = new Dictionary<string, IReadOnlyList<double>>(StringComparer.Ordinal);
+        var intArrays = new Dictionary<string, IReadOnlyList<long>>(StringComparer.Ordinal);
         foreach (OnnxTensor initializer in graph.Initializers) {
             if (initializer.Name is null) {
                 continue;
@@ -164,10 +202,13 @@ public static class OnnxImporter
             }
             else if (initializer.Int64Data is { Count: > 0 } integers) {
                 constants[initializer.Name] = integers[0];
+                // 整数数组同样整份留下：`Reshape` 的目标形状、`Transpose` 的置换轴都可能是它们。
+                // Integer arrays survive whole as well: a Reshape target or a Transpose permutation can be one.
+                intArrays[initializer.Name] = new List<long>(integers);
             }
         }
 
-        OnnxGraphEvaluator.Result evaluated = OnnxGraphEvaluator.Evaluate(graph, context, constants, arrays);
+        OnnxGraphEvaluator.Result evaluated = OnnxGraphEvaluator.Evaluate(graph, context, constants, arrays, intArrays);
         if (!evaluated.IsOk) {
             return new Imported(
                 null,

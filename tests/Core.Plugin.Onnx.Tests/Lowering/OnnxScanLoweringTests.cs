@@ -169,7 +169,7 @@ public class OnnxScanLoweringTests
         var context = new OnnxLoweringContext();
 
         // state_a += slice；state_b -= slice。三个切片 1、2、3。
-        OnnxGraph body = new OnnxGraph(
+        var body = new OnnxGraph(
             "body",
             new[] {
                 Node("Add", "a_in", "slice_in", "a_out"),
@@ -202,7 +202,7 @@ public class OnnxScanLoweringTests
     public void MultipleInPlaceStates_ShouldUnroll() {
         var context = new OnnxLoweringContext();
 
-        OnnxGraph body = new OnnxGraph(
+        var body = new OnnxGraph(
             "body",
             new[] {
                 Node("Add", "a_in", "slice_in", "a_in"),

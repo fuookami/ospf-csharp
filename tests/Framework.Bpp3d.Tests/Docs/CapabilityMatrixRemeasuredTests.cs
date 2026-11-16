@@ -259,7 +259,16 @@ public class CapabilityMatrixRemeasuredTests
             // B1337：新增 OnnxModelAttachmentGurobiIntegrationTest（ONNX 仿射结果挂进 LinearMetaModel 求解），
             // GUROBI 门内文件数 33 → 34。
             // B1337: the attachment test adds one gate file, so GUROBI goes 33 -> 34.
-            ("SCIP", 46), ("GUROBI", 34), ("CPLEX", 4), ("COPT", 6),
+                        // B1357：新增 OnnxSymbolicActivationGurobiIntegrationTest（符号激活挂进模型并求解），
+            // GUROBI 门内文件数 34 → 35。
+            // B1357: the symbolic-activation test adds one gate file, so GUROBI goes 34 -> 35.
+                        // B1360：新增 OnnxQuadraticObjectiveGurobiIntegrationTest（二次目标挂进元模型并求解），
+            // GUROBI 门内文件数 35 → 36。
+            // B1360: the quadratic-objective test adds one gate file, so GUROBI goes 35 -> 36.
+                        // B1361：新增 OnnxPiecewiseActivationGurobiIntegrationTest（分段近似的 Sigmoid 挂进模型并求解），
+            // GUROBI 门内文件数 36 → 37。
+            // B1361: the piecewise-activation test adds one gate file, so GUROBI goes 36 -> 37.
+            ("SCIP", 46), ("GUROBI", 37), ("CPLEX", 4), ("COPT", 6),
             ("MINDOPT", 2), ("HEXALY", 1), ("MOSEK", 1),
         ];
 

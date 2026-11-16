@@ -212,6 +212,41 @@ public class OnnxControlFlowImportTests
         imported.Polynomial.Monomials.Should().BeEmpty("state a never involves x or y");
     }
 
+    /// <summary>**带 `Reshape` 的模型从字节走到多项式** / A model with a Reshape walks from bytes to a polynomial.</summary>
+    /// <remarks>
+    /// **`Reshape` 不动数值，所以要证明的是"它没把数值弄丢"：** **导入成功、且 `x` 的系数仍是 1。** '
+    /// **若形状检查写错（比如把目标当成元素个数），这里会以一个"元素个数不符"失败——** **而那正是它在真实模型里该拦下的东西。**
+    ///
+    /// **Reshape moves no value, so what has to be shown is that it lost none: the import succeeds and x still has coefficient 1.** **Were the shape check wrong (taking the
+    /// target for a count, say), this fails with a mismatch — which is exactly what it should stop on a real model.**
+    /// </remarks>
+    [Fact]
+    public void AReshapeModel_ShouldImport() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            ReshapeModelBytes(),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }));
+
+        imported.IsOk.Should().BeTrue(imported.Failure);
+        CoefficientOf(imported.Polynomial!, "x").Should().Be(1.0, "a reshape moves positions and not values");
+        imported.Polynomial!.Monomials.Should().HaveCount(1);
+    }
+
+    /// <summary>**元素个数不守恒的 `Reshape` 在导入期被拒绝** / A count-changing reshape is refused at import.</summary>
+    [Fact]
+    public void ACountChangingReshape_ShouldBeRefusedAtImport() {
+        OnnxImporter.Imported imported = OnnxImporter.Import(
+            ReshapeModelBytes(target: new long[] { 4 }),
+            new OnnxImportOptions(
+                mode: OnnxImportMode.Linear,
+                inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }));
+
+        imported.IsOk.Should().BeFalse("six elements cannot become four");
+        imported.Stage.Should().Be("evaluate");
+        imported.Failure.Should().Contain("Reshape");
+    }
+
     // ---- 手工编码的模型 ----
 
     private static OnnxImporter.Imported ImportModel(float condition, bool conditionIsInitializer = true, int elseOutputs = 1) {
@@ -316,6 +351,32 @@ public class OnnxControlFlowImportTests
             BytesField(7, Concat(parts.ToArray())));
     }
 
+    // int64 常量张量：TensorProto 字段 2 = data_type（7 是 INT64），字段 7 = int64_data（packed varint）。
+    // An int64 constant tensor: field 2 is data_type (7 means INT64) and field 7 is the packed int64 data.
+    private static byte[] ConstantTensorArray(string name, long[] values) {
+        var packed = new List<byte>();
+        foreach (long value in values) {
+            packed.AddRange(Varint((ulong)value));
+        }
+        return Concat(
+            VarintField(1, values.Length),
+            VarintField(2, 7),
+            BytesField(7, packed.ToArray()),
+            StringField(8, name));
+    }
+
+    // 多维输入声明：PropertyProto.shape 里逐维给 dim_value。
+    // A multi-dimensional input declaration: one dim_value per dimension.
+    private static byte[] ValueInfo2(string name, params int[] dimensions) {
+        var dims = new List<byte[]>();
+        foreach (int dimension in dimensions) {
+            dims.Add(BytesField(1, VarintField(1, dimension)));
+        }
+        return Concat(
+            StringField(1, name),
+            BytesField(2, BytesField(1, Concat(VarintField(1, 1), BytesField(2, Concat(dims.ToArray()))))));
+    }
+
     private static byte[] ConstantTensorArray(string name, float[] values) {
         var packed = new List<byte>(values.Length * 4);
         foreach (float value in values) {
@@ -367,6 +428,16 @@ public class OnnxControlFlowImportTests
                 BytesField(12, ValueInfo("out_a")),
                 BytesField(12, ValueInfo("out_b")))));
     }
+
+    private static byte[] ReshapeModelBytes(long[]? target = null) => Concat(
+        VarintField(1, 8),
+        BytesField(8, Concat(StringField(1, ""), VarintField(2, 13))),
+        BytesField(7, Concat(
+            Node("Reshape", new[] { "x", "shape" }, "out"),
+            StringField(2, "g"),
+            BytesField(5, ConstantTensorArray("shape", target ?? new long[] { 2, 3 })),
+            BytesField(11, ValueInfo2("x", 2, 3)),
+            BytesField(12, ValueInfo("out")))));
 
     private static byte[] PlainModelBytes() => Concat(
         VarintField(1, 8),

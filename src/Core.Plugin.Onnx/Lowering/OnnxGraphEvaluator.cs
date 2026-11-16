@@ -63,6 +63,7 @@ public static class OnnxGraphEvaluator
     /// <param name="context">上下文（提供外层可见的张量）/ The context supplying the enclosing tensors.</param>
     /// <param name="constants">常量名到标量值的映射 / The mapping from constant names to scalar values.</param>
     /// <param name="constantArrays">常量名到数组值的映射（`Scan` 用）/ The mapping from constant names to arrays, used by Scan.</param>
+    /// <param name="constantIntArrays">常量名到整数数组的映射（`Reshape` 的目标形状用）/ The mapping from constant names to integer arrays, used by Reshape targets.</param>
     /// <returns>求值结果 / The result.</returns>
     /// <remarks>
     /// **中间结果留在上下文里，且由调用方负责作用域：** **这里既不看也不动 `PushScope`／`PopScope`，** **于是"分支体的中间结果不外泄"这件事只由一个地方保证，**
@@ -75,12 +76,20 @@ public static class OnnxGraphEvaluator
         OnnxGraph graph,
         OnnxLoweringContext context,
         IReadOnlyDictionary<string, double>? constants = null,
-        IReadOnlyDictionary<string, IReadOnlyList<double>>? constantArrays = null) {
+        IReadOnlyDictionary<string, IReadOnlyList<double>>? constantArrays = null,
+        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays = null) {
         foreach (OnnxNode node in graph.Nodes) {
             if (node.OpType == "If") {
                 string? ifFailure = EvaluateIf(node, context, constants);
                 if (ifFailure is not null) {
                     return new Result(null, ifFailure, node.Name);
+                }
+                continue;
+            }
+            if (OnnxShapeTransform.Operators.Contains(node.OpType)) {
+                string? shapeFailure = EvaluateShape(node, context, constantIntArrays);
+                if (shapeFailure is not null) {
+                    return new Result(null, shapeFailure, node.Name);
                 }
                 continue;
             }
@@ -275,6 +284,86 @@ public static class OnnxGraphEvaluator
         return new OnnxLoweringContext.Binding(
             new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), new Flt64(value)),
             operands[0].Shape);
+    }
+
+    /// <summary>
+    /// 求值一个只改形状的算子：表达式原样带过，形状按规则重算 / Evaluate a shape-only operator: the expression passes through and the shape is recomputed.
+    /// </summary>
+    /// <remarks>
+    /// **"表达式原样带过"是有意的：** **`Reshape`／`Transpose` 不动数值，它们动的是"这个值排在第几个"。** '
+    /// **当前这一层每个绑定只带一个标量表达式与一个形状，所以形状换了而表达式不换——** **而这恰好也说明：若哪天表达式变成逐元素向量，这一层必须重写。**
+    ///
+    /// **"Passing the expression through" is deliberate: Reshape and Transpose do not move values, they move which position a value sits in.** **Each binding here holds one
+    /// scalar expression plus a shape, so the shape changes and the expression does not — which also means this layer has to be rewritten the day an expression becomes a
+    /// per-element vector.**
+    /// </remarks>
+    private static string? EvaluateShape(
+        OnnxNode node,
+        OnnxLoweringContext context,
+        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays) {
+        if (node.Inputs.Count == 0 || !context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding input)) {
+            return "形状算子 '" + node.OpType + "' 的输入不在上下文里 / the shape operator's input is not in the context";
+        }
+        if (node.Outputs.Count != 1) {
+            return "形状算子 '" + node.OpType + "' 输出不是单个 / the shape operator does not produce exactly one output";
+        }
+
+        IReadOnlyList<int>? target = null;
+        if (node.OpType == "Reshape") {
+            if (node.Inputs.Count < 2) {
+                return "'Reshape' 缺少目标形状输入 / the reshape has no target input";
+            }
+            if (constantIntArrays is null || !constantIntArrays.TryGetValue(node.Inputs[1], out IReadOnlyList<long>? raw)) {
+                return "'Reshape' 的目标形状必须是常量张量 / the Reshape target has to be a constant tensor";
+            }
+            var converted = new List<int>(raw.Count);
+            foreach (long value in raw) {
+                converted.Add((int)value);
+            }
+            target = converted;
+        }
+
+        IReadOnlyList<int>? perm = null;
+        IReadOnlyList<int>? axesAttribute = null;
+        foreach (OnnxAttribute attribute in node.Attributes) {
+            if (attribute.Name == "perm" && attribute.Integers is { Count: > 0 } permValues) {
+                perm = ToInts(permValues);
+            }
+            if (attribute.Name == "axes" && attribute.Integers is { Count: > 0 } axesValues) {
+                axesAttribute = ToInts(axesValues);
+            }
+            if (attribute.Name == "axis" && attribute.Integer is long axisValue) {
+                axesAttribute = new[] { (int)axisValue };
+            }
+        }
+
+        OnnxShapeTransform.Result transformed = OnnxShapeTransform.Compute(
+            node.OpType,
+            input.Shape,
+            target,
+            perm,
+            axesAttribute);
+        if (!transformed.IsOk) {
+            return "'" + node.OpType + "' 的形状计算失败：" + transformed.Failure;
+        }
+        // 负的维度只可能来自 -1 推断；推断后仍是负说明目标形状本身有问题。
+        // A negative dimension can only come from the -1 inference; still negative afterwards means the target itself is wrong.
+        foreach (int dimension in transformed.Shape!) {
+            if (dimension < 0) {
+                return "'" + node.OpType + "' 得到负的维度 " + dimension + " / the operator produced a negative dimension";
+            }
+        }
+        return context.TryRebind(node.Outputs[0], input.Expression, transformed.Shape!, out string? bindFailure)
+            ? null
+            : bindFailure;
+    }
+
+    private static IReadOnlyList<int> ToInts(IReadOnlyList<long> values) {
+        var result = new List<int>(values.Count);
+        foreach (long value in values) {
+            result.Add((int)value);
+        }
+        return result;
     }
 
     /// <summary>

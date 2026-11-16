@@ -40,6 +40,14 @@ public class OnnxPortBoundaryTests
             if (!Regex.IsMatch(row, @"^\| \d+ \|")) {
                 continue;
             }
+            // 划掉的行是"已补做"：它们留在表里是为了让"曾经没做、后来做了"有迹可循，
+            // 而"为什么没做"那一格对它们已经无意义——跳过比要求它们编一个理由更诚实。
+            //
+            // A struck-through row is "landed": it stays in the table so that "once missing, later done" is traceable, and the "why not" cell no longer means anything for it.
+            // Skipping is more honest than making it invent a reason.
+            if (row.Contains("~~", StringComparison.Ordinal)) {
+                continue;
+            }
             ++counted;
             string[] cells = row.Split('|');
             cells.Length.Should().BeGreaterThanOrEqualTo(6, "a row needs the four content cells: " + row);
@@ -48,10 +56,10 @@ public class OnnxPortBoundaryTests
             cells[4].Trim().Length.Should().BeGreaterThan(8, "the upgrade path cannot be left empty: " + row);
             cells[5].Trim().Length.Should().BeGreaterThan(4, "the impact has to be stated: " + row);
         }
-        counted.Should().BeGreaterThanOrEqualTo(5,
-            "the KNOWN unmigrated items are: activation on symbolic input, shape-operator model rewriting, "
+        counted.Should().BeGreaterThanOrEqualTo(4,
+            "the KNOWN unmigrated items are: shape-operator model rewriting, "
             + "multi-state Scan, the name-level parity that is deliberately not a goal, and the ir_version branch that is not taken "
-            + "(in-place loop bodies left the list in B1355, which is why this count can only go down when a batch lands one)");
+            + "(in-place loop bodies left in B1355 and the approximated activations in B1361, which is why this count only goes down when a batch lands one)");
     }
 
     /// <summary>**每一项的动机写在文档里的那一条，与它对应** / Each reason names what it would take, not merely "not done".</summary>
@@ -69,9 +77,12 @@ public class OnnxPortBoundaryTests
         section.Should().BeGreaterThanOrEqualTo(0);
         string slice = matrix.Substring(section, System.Math.Min(6000, matrix.Length - section));
 
-        slice.Should().Contain("`MechanismModel`", "the activation gap is a model-layer gap, and naming the layer is the whole point");
-        slice.Should().Contain("TryRebind", "the in-place limitation has a concrete upgrade with a name");
+        // 用词跟着清单走：每补做一项，清单里那句话就会被改写成"已完成 + 剩下什么"，所以这里钉的是<b>当下还成立**的升级路径。
+        // The wording follows the list: each landed batch rewrites its sentence into "done, and this remains", so this pins the upgrade paths that still hold.
         slice.Should().Contain("函数符号", "the missing piece is stated in the same words the refusal message uses");
+        slice.Should().Contain("分段线性", "Sigmoid and Tanh are refused because they are not piecewise linear, and that reason is the upgrade path");
+        slice.Should().Contain("OnnxPiecewiseApproximation", "the remaining activations have a named route, not a shrug");
+        slice.Should().Contain("TryRebind", "the completed paragraph keeps the in-place story, so the mechanism is still findable");
     }
 
     private static string RepositoryRoot() {

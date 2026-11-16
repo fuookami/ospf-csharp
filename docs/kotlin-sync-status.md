@@ -7,9 +7,9 @@ Baseline:
 - Plan: `logs/kotlin-sync-plan.md` (local only, ignored by git)
 - Package version: `1.1.2`（跟基线根的 `pom.xml` 走，不是本仓自定的；判据 `PackagingMetadataTests` 钉住两边一致）
 
-## Current Phase (as of Batch 1356)
+## Current Phase (as of Batch 1361)
 
-**The sync is not complete.** Phases P4 through P8 are closed; **P9 is in progress** (Batches 242–1356).
+**The sync is not complete.** Phases P4 through P8 are closed; **P9 is in progress** (Batches 242–1361).
 The resumable inventory (what is left, the known gaps, and the batch procedure) lives in the handoff
 section at the top of `logs/kotlin-sync-plan.md` (`## 零、截至轮次上限的交接状态`).
 
@@ -7082,13 +7082,13 @@ dotnet build ospf-csharp.sln -c Release --no-restore -t:Rebuild --nologo
 dotnet test  ospf-csharp.sln -c Release --no-build --no-restore
 ```
 
-实测结果（**每次收口后在此更新**；上次更新 Batch 1356）：
+实测结果（**每次收口后在此更新**；上次更新 Batch 1361）：
 
 | Gate | Result |
 |---|---|
 | Release 全方案强制重建 | `0 errors`，`1316` 行既有警告（= **658** 条，每条形如两行；B1028 实测，B588 时是 `1434` 行，此后逐步下降，因为空壳文件的 `IDE0022` 随实现消失） |
-| 默认全方案测试 | `11630 passed` / `1` 项既有 Delaunay skip / `0 failed`（29 个有测试程序集） |
-| 全方案测试（开启 SCIP 集成，`-p:RunScipIntegration=true`） | `11794 passed` / `1` 项既有 Delaunay skip / `0 failed`（多 123 项**真实 SCIP 求解**） |
+| 默认全方案测试 | `11654 passed` / `1` 项既有 Delaunay skip / `0 failed`（29 个有测试程序集） |
+| 全方案测试（开启 SCIP 集成，`-p:RunScipIntegration=true`） | `11818 passed` / `1` 项既有 Delaunay skip / `0 failed`（多 123 项**真实 SCIP 求解**） |
 | `Framework.Csp2d` 进度 | **18 / 18 个主源码文件（全部完成）**：`Ids2`（447）、`Material2`（448）、`Product2`、`Csp2dErrors`（449）、`CuttingProcess2`（450）、`Region2`（451）、`CutTree2`（452）、`Pattern2`（453—454）、`RenderDTO`（455）、`MasterProblem`（456—457）、`Waste`·`Yield`（458）、`Csp2dProblem`（459）、`SheetAssignment`（460）、`PatternGeneration`（461）、`ShelfPatternGenerator2`（462）、`PatternGenerationContext2`（463）、装配与恢复（464）、`Csp2dMilp`·`Csp2dColumnGeneration`（465）。真实 SCIP 端到端已实测（466）、模块 README 已补（467） |
 | `Framework.Bpp1d` 进度 | 17 个文件：`PackingProblem`（414）、`PackingContext.Pack`（415）、`PackingKpi`（416）、`PatternGenerationContext`（417）、`IPackingValueAdapter`（418）、`LoadingGeometry`（419）、`DiscreteLoadingValidator`（420）、`DiscreteLoadingVerify`（421）、`ConflictIndex`（422）、`LoadingAggregation`（423）、`LoadingLimits`（423）、`DiscreteLoadingContext`（424）、`LinkAdditionalWeight`（425）、`Bpp1dDiscreteLoading`（425）、`PatternAssignmentPricing`（426）、`PatternAssignmentModelling`（427）、`PatternAssignmentRemoval`（428）、`Bpp1dMilp`（429）、`Bpp1dColumnGeneration`（430）、`TailBinOptimizer`（431）、`Bpp1dCsvDatasetLoader` 与 `PackingRendererAdapter`（432）、`DiscreteLoadingApplicationService`（433） |
 | `Framework.Bpp1d` 进度 | 16 个文件：`PackingProblem`（414）、`PackingContext.Pack`（415）、`PackingKpi`（416）、`PatternGenerationContext`（417）、`IPackingValueAdapter`（418）、`LoadingGeometry`（419）、`DiscreteLoadingValidator`（420）、`DiscreteLoadingVerify`（421）、`ConflictIndex`（422）、`LoadingAggregation`（423）、`LoadingLimits`（423）、`DiscreteLoadingContext`（424）、`LinkAdditionalWeight`（425）、`Bpp1dDiscreteLoading`（425）、`PatternAssignmentPricing`（426）、`PatternAssignmentModelling`（427） |

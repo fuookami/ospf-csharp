@@ -2726,6 +2726,8 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 - **降阶层：** `OnnxOperatorRegistry`（算子表与前置检查）、`OnnxActivationLowering`（精确算子化简）、`OnnxApproximationLowering`（近似算子切分与符号）、`OnnxInputBounds`（界判定）、`OnnxAffineChain`（仿射链求值）、`OnnxAffineModelBuilder`（仿射 → 线性模型）；
 - **模型层：** `OnnxBoundsConstraints`（输入界 → 闭区间约束对）+ `OnnxModelAttachment`（挂进 `LinearMetaModel` 并走框架管线求解，已在 Gurobi 上验证界真的生效）。
 - **`If` 落地接线：** `OnnxIfLowering`（选分支 + 压/弹作用域 + 走分支体，输出绑在外层；失败也弹作用域）。
+- **分段激活：** `OnnxSymbolicActivation.Piecewise`（`Sigmoid`／`Tanh`／`Softplus`／`Elu`，对齐基线的界来源、1e6 上限、退化为常数与均匀插值）；Gurobi 上最小值 `sigmoid(-5)`。
+- **符号激活（`Relu`）：** `OnnxSymbolicActivation` 把正部包成系数为一的单项式，"先登记函数符号、后展平"的顺序由 `OnnxModelAttachment` 保证；Gurobi 上两条成对判据验证（负半轴 0、正半轴 2）。
 - **激活的常量折叠：** 八个激活算子在常量输入上折叠；**符号输入明确拒绝**（需要函数符号，属模型层）。
 - **逐节点求值：** `OnnxGraphEvaluator`（在上下文里走一张图，覆盖 Identity/Cast/Add/Sub/Neg/Mul-常数，中间结果留在上下文里；作用域由调用方负责）。
 - **降阶上下文：** `OnnxLoweringContext`（名字 → 表达式/形状，作用域读外写内、遮蔽与泄漏边界）。
@@ -2735,9 +2737,15 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 - **`Loop` 契约：** `OnnxLoopExpansion`（次数常量、携带值四个数目必须一致、展开规模预算 10000 节点）。
 - **`If` 展开：** `OnnxIfExpansion`（常量条件选分支、按位置对齐输出、分支与声明个数必须一致）。
 - **子图判定：** `OnnxSubgraphPolicy`（`If`/`Loop`/`Scan` 的可展开性、254/256 上限、嵌套按乘积）；**展开本身未移植**。
+- **二次目标：** `OnnxQuadraticProduct` 的乘积经 `QuadraticFlattenData` 挂进 `QuadraticMetaModel` 并求解；`(x−3)²` 在 `[0,10]` 上最小 0、`[5,10]` 上最小 4（成对判据）。
+- **二次乘积：** `OnnxQuadraticProduct`（两个一次式相乘成 `QuadraticPolynomial`，按无序对合并同类项）；**挂进元模型未做**。
+- **形状算子：** `OnnxShapeTransform`（`Reshape`／`Transpose`／`Flatten`／`Squeeze`／`Unsqueeze`，含元素个数守恒与负轴换算；`Concat` 需逐元素表示，仍未支持）。
 - **端到端：** 带 `If` 的模型从字节 → 解析 → 前置检查 → 求值 → 多项式，条件真/假各走一条、与手算一致；**导入器对含控制流的图自动转入求值路径**；`If`／`Loop`／`Scan` 均可从字节走到多项式，求值路径按符号合并同名项（`x + x` 不会变成两列）。
 - **推理：** `OnnxInference`（接 `Microsoft.ML.OnnxRuntime`，只做输入名/形状核对、错误转译与生命周期收束；用手工编码的 `z = x + y` 模型真跑对照手算）。
 - **单一入口：** `OnnxImporter`（解析 → 图校验 → 前置检查 → 界解析 → 仿射求值，失败时报告发生在哪一步）。
+- **二次目标：** `OnnxQuadraticProduct` 的乘积经 `QuadraticFlattenData` 挂进 `QuadraticMetaModel` 并求解；`(x−3)²` 在 `[0,10]` 上最小 0、`[5,10]` 上最小 4（成对判据）。
+- **二次乘积：** `OnnxQuadraticProduct`（两个一次式相乘成 `QuadraticPolynomial`，按无序对合并同类项）；**挂进元模型未做**。
+- **形状算子：** `OnnxShapeTransform`（`Reshape`／`Transpose`／`Flatten`／`Squeeze`／`Unsqueeze`，含元素个数守恒与负轴换算；`Concat` 需逐元素表示，仍未支持）。
 - **端到端：** 一个 ONNX 图经仿射链组装成线性模型后**真的被求解器解出**，最优值与手算一致（`OnnxAffineEndpointGurobiIntegrationTest`）。
 
 **判据 131 条**（ONNX 测试工程）**+ 2 条端到端求解判据**，覆盖"不抛异常却会读错/算错"的那一类错误。
@@ -2754,10 +2762,11 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 
 | # | 未移植项 | 为什么没做 | 升级路径 | 影响 |
 | --- | --- | --- | --- | --- |
-| 1 | **符号输入的激活**（`Relu`／`Sigmoid`／… 接变量） | 需要函数符号（分段线性／正部），那要挂进 `MechanismModel` | 用 `OnnxApproximationLowering` 产出的 `UnivariateLinearPiecewiseFunction` 与 `PositivePartFunction`，在 `OnnxModelAttachment` 那一层注册 | 带激活的图目前只能在常量输入上折叠；**逐节点求值遇到符号输入的激活会明确拒绝，不静默返回输入** |
-| 2 | **形状算子的模型改写**（`Reshape`／`Transpose`／`Concat`／`Split`／`Gather`／`ReduceSum`） | 形状推导已全部落地，**改写模型形状需要重建变量与列号**，属模型层 | 在 `OnnxModelAttachment` 之后加一步重排；形状算术（`OnnxShape`／`OnnxShapeOperators`）已可直接复用 | 逐节点求值里没有这些算子；形状推导、约束对齐判据不受影响 |
+| 1 | ~~其余激活的符号输入（`Sigmoid`／`Tanh`／`Softplus`／`Elu`）~~ **已补做（B1361）** | — | 按基线的 `approximated`（`OnnxPiecewiseApproximation` + `UnivariateLinearPiecewiseFunction`）走分段线性：界从变量自己取、`>1e6` 视作缺失、`lower == upper` 塌缩成常数、断点均匀且在断点上精确插值 | **已支持**：分段 `Sigmoid` 在 Gurobi 上求解，最小值 `sigmoid(-5) ≈ 0.0067` |
+| 2 | **形状算子的模型改写**（**本行指出的是"改模型形状"这一步**；形状算子本身已端到端。改写要重建变量与列号，而**函数符号的登记顺序在改写后仍需成立**）（变量与列号重排；**形状算子本身已端到端**，本行指"改模型形状"这一步）（`Reshape`／`Transpose`／`Concat`／`Split`／`Gather`／`ReduceSum`） | 形状推导已全部落地，**改写模型形状需要重建变量与列号**，属模型层 | 在 `OnnxModelAttachment` 之后加一步重排；形状算术（`OnnxShape`／`OnnxShapeOperators`）已可直接复用 | 逐节点求值里没有这些算子；形状推导、约束对齐判据不受影响 |
 | 3 | **`Scan` 的运行期切片**（扫描输入不是常量张量） | 端到端要求扫描输入是常量张量，因为导入期必须知道扫描长度 | 让每轮的切片可以是新的符号变量（`Binding` 已支持），长度改由输入形状给出 | **多状态已支持（B1356，含端到端两状态）**；非常量扫描输入会被明确拒绝 |
-| 4 | **回调适配**（`OnnxCallbackAdapter` 377 行）／**降阶模型对象**（`OnnxFunctionalModel` 615 行）／**张量元信息**（`OnnxTensorInfo`） | 这三者是 C# 侧**以不同形式存在**的同一件事：回调在 C# 里是委托与 `Result`，降阶模型是 `OnnxAffineModelBuilder` 的产物，张量元信息合在 `OnnxLoweringContext.Binding`。**没有为了对齐文件名而另造一层。** | 若要逐名对齐，各自薄薄地加一层包装 | 使用方按 C# 侧的类型工作；**名称不同不等于能力缺失** | | 本插件只读它、不按版本分支（字段号在各版本稳定） | 若将来某版本改动字段语义，在 `OnnxModelParser` 加版本判定 | 无（记录在案，避免"以为检查了版本"） |
+| 4 | **非目标：逐名对齐**——**回调适配**（`OnnxCallbackAdapter` 377 行）／**降阶模型对象**（`OnnxFunctionalModel` 615 行）／**张量元信息**（`OnnxTensorInfo`） | **非目标，不是缺口。** 这三者是 C# 侧**以不同形式存在**的同一件事：回调在 C# 里是委托与 `Result`，降阶模型是 `OnnxAffineModelBuilder` 的产物，张量元信息合在 `OnnxLoweringContext.Binding`。**没有为了对齐文件名而另造一层。** | 若要逐名对齐，各自薄薄地加一层包装 | 使用方按 C# 侧的类型工作；**名称不同不等于能力缺失** | | 本插件只读它、不按版本分支（字段号在各版本稳定） | 若将来某版本改动字段语义，在 `OnnxModelParser` 加版本判定 | 无（记录在案，避免"以为检查了版本"） |
 | 5 | **`ModelProto.ir_version` 的版本分支** | 本插件只读它、不按版本分支（字段号在各版本稳定） | 若将来某版本改动字段语义，在 `OnnxModelParser` 加版本判定 | 无（**记录在案，避免"以为检查了版本"**） |
+| 6 | ~~二次目标挂进元模型并求解~~ **已补做（B1360）** | — | 二次的 `AddObject` 在 `QuadraticMetaModel` 上；`ToQuadraticTetradModel` 的 `fixedVariables` 是"待固定"而非"参考点" | **已支持**：`(x−3)²` 在 `[0,10]` 上最小 0（x=3）、在 `[5,10]` 上最小 4，两条 Gurobi 判据成对验证 |
 
 **已完成的部分（供对照，不重复叙述细节）：** 数据层（`OnnxDataType`／`OnnxHalfPrecision`／`OnnxError`／`OnnxTensorConstant`／`ProtoReader`／`OnnxModelParser`（含 `AttributeProto.g` 子图解析））、语义层（切分策略／激活语义／形状算术与六个算子／图校验／常量折叠／输出聚合／导入选项）、降阶层（算子表与前置检查／精确算子化简／近似算子降阶／界判定与界约束／仿射链／模型组装／模型挂接）、推理层（`OnnxInference`，用运行时真跑 `z = x + y` 对照手算）、控制流（三份契约 + 三条展开接线，**含就地更新的循环体：`TryRebind` 区分"声明"与"覆盖"**）、单一入口（`OnnxImporter`，按固定次序报告失败发生在哪一步）。

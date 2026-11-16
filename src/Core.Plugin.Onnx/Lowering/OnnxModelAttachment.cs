@@ -11,7 +11,9 @@ using Fuookami.Ospf.Math.Symbol;
 using Fuookami.Ospf.Math.Symbol.Inequality;
 using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
+using Fuookami.Ospf.Core.Symbol;
 using Fuookami.Ospf.Core.Symbol.Flatten;
+using Fuookami.Ospf.Core.Symbol.Function;
 
 namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 
@@ -48,15 +50,37 @@ public static class OnnxModelAttachment
     /// <param name="bounds">输入区间 / The input ranges.</param>
     /// <param name="category">优化方向 / The optimisation direction.</param>
     /// <param name="name">目标名 / The objective name.</param>
+    /// <param name="functions">要在展平前登记的函数符号 / Function symbols to register before flattening.</param>
     /// <returns>挂接结果 / The result.</returns>
     public static Attached Attach(
         LinearMetaModel<Flt64> model,
         LinearPolynomial<Flt64> polynomial,
         IReadOnlyDictionary<string, OnnxBounds> bounds,
         ObjectCategory category = ObjectCategory.Minimum,
-        string name = "onnx-affine") {
+        string name = "onnx-affine",
+        IReadOnlyList<IIntermediateSymbol>? functions = null) {
         var variables = new Dictionary<string, RealVar>(StringComparer.Ordinal);
+
+        // 多项式里可能装的不是变量而是函数符号（`Relu` 这类）：那时需要界的是<b>函数的输入变量</b>，
+        // 而不是函数自己的名字——按名字去要界，会因为找不到 "relu" 的区间而失败。
+        //
+        // A polynomial may carry a function symbol (Relu and the like) instead of a variable: what needs bounds then is the function's input variables, not the function's own
+        // name — asking for a bound under that name fails with "no range for relu".
         foreach (LinearMonomial<Flt64> monomial in polynomial.Monomials) {
+            if (monomial.Symbol is IMathFunctionSymbol<Flt64> function) {
+                foreach (ISymbol input in function.InputSymbols ?? Array.Empty<ISymbol>()) {
+                    if (input is RealVar inputVariable && !variables.ContainsKey(inputVariable.Name)) {
+                        if (!bounds.TryGetValue(inputVariable.Name, out OnnxBounds? inputRange)) {
+                            return new Attached(null, "变量 '" + inputVariable.Name + "' 缺少区间 / the variable has no range");
+                        }
+                        if (!inputRange.Validate(out string? rangeFailure)) {
+                            return new Attached(null, "变量 '" + inputVariable.Name + "' 的" + rangeFailure);
+                        }
+                        variables[inputVariable.Name] = inputVariable;
+                    }
+                }
+                continue;
+            }
             string key = monomial.Symbol.Name;
             if (variables.ContainsKey(key)) {
                 continue;
@@ -80,6 +104,19 @@ public static class OnnxModelAttachment
         foreach (RealVar variable in variables.Values) {
             if (!model.Add(variable).IsOk) {
                 return new Attached(null, "变量 '" + variable.Name + "' 无法注册 / the variable could not be registered");
+            }
+        }
+
+        // ①b 函数符号（`Relu` 这类）必须在展平之前登记：展平器会检查令牌表里有没有它，
+        // 没有就报"函数符号未注册"——顺序反了，激活就永远挂不上。
+        //
+        // ①b Function symbols (Relu and the like) have to be registered before flattening: the flattener checks the token table and reports "function symbol is not
+        // registered" otherwise — flipped order means the activation can never be attached.
+        if (functions is not null) {
+            foreach (IIntermediateSymbol function in functions) {
+                if (!model.Add(function).IsOk) {
+                    return new Attached(null, "函数符号 '" + function.Name + "' 无法注册 / the function symbol could not be registered");
+                }
             }
         }
 
