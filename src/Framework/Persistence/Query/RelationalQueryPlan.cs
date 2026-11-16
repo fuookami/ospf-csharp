@@ -1,7 +1,7 @@
 // 关系查询计划容器 / Relational query plan container.
-// 与固定 Kotlin 基线 `RelationalQueryPlan.kt` 对应。这里只落地**规范化与结构校验**；表达式深度冻结、
+// 与固定 Kotlin 对应。这里只落地**规范化与结构校验**；表达式深度冻结、
 // 表达式循环检测、Join 图关联校验、canonical／hash 分别留到后续批次（见各成员注释）。
-// Mirrors the pinned Kotlin baseline's `RelationalQueryPlan.kt`. lands **normalization and
+// The pinned Kotlin: . lands **normalization and
 // structural validation** only; deep expression freezing, expression-cycle detection, join-graph correlation
 // checking and canonical/hash are deliberately left to later batches (see the member comments).
 
@@ -28,7 +28,7 @@ public sealed record RelationalQueryValidationError(string Field, string Message
 /// **已实现**：构造时的空白裁剪与只读化、表达式深度冻结（含自定义 payload 复制）、结构校验（名称／别名、
 /// Join 数量与深度、投影数量、分页、空列引用）。
 ///
-/// **这里刻意未实现**（基线的同名能力，按依赖顺序排在后续批次）：
+/// **这里刻意未实现**（同名能力，按依赖顺序排在后续批次）：
 /// <list type="bullet">
 /// <item>树级表达式循环检测：C# 表达式节点是不可变记录、只能自底向上构造，结构上无法成环，因此没有对应
 /// 实现——移植过来会是不可达代码。详见 <see cref="RelationalQueryExpressionFreezer"/>。</item>
@@ -202,13 +202,13 @@ public sealed class RelationalQueryPlan {
     /// <remarks>
     /// 数据源命名必须无歧义（名称不得与任何别名相同、不得重复），关联条件必须引用已绑定的数据源，并且**确实
     /// 存在**一条目标侧与已绑定侧之间的列对列关联——否则该 Join 退化成笛卡尔积，行数会静默膨胀。
-    /// 相关语义与基线一致：`AND` 任一支路满足即可，`OR` 要求每个分支都保留关联，`NOT` 递归检查；
+    /// 相关语义：`AND` 任一支路满足即可，`OR` 要求每个分支都保留关联，`NOT` 递归检查；
     /// 关联条件里出现布尔常量直接拒绝（`WHERE true` 式的 Join 就是笛卡尔积）。
     ///
     /// Source naming must be unambiguous (no name equal to any alias, no duplicates), conditions must reference
     /// already bound sources, and a column-to-column correlation between the joined side and a bound side must
     /// **actually exist** — otherwise the join degrades into a cross product and the row count silently inflates.
-    /// The semantics match the baseline: `AND` needs any branch, `OR` needs every branch, `NOT` recurses, and a
+    /// The semantics match the code: `AND` needs any branch, `OR` needs every branch, `NOT` recurses, and a
     /// boolean constant in the condition is rejected outright (a `WHERE true` join is a cross product).
     /// </remarks>
     /// <returns>校验结果 / Validation result.</returns>

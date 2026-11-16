@@ -1,7 +1,6 @@
 // 换型时间的读取 / Reading a switch time back.
-// 与固定 Kotlin 基线 `task_compilation/model/Switch.kt` 的 `switchTimeQuantity` 对应：
+// 与固定 Kotlin 的 `switchTimeQuantity` 对应：
 // `evaluate(...) ?: switchTime[from, to].toLinearPolynomial.constant`。
-// Mirrors `switchTimeQuantity` in the pinned baseline's `task_compilation/model/Switch.kt`:
 // `evaluate(...) ?: switchTime[from, to].toLinearPolynomial.constant`.
 
 namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;

@@ -85,7 +85,7 @@ public class BunchSchedulingTaskTime<B, T, E, A> : TaskSchedulingTaskTime<T, E, 
     /// <remarks>
     /// **任务束的 `est` 是一个束共用的位移**，不是每任务一个变量——那正是"束"的意思：束内成员同起同止。
     /// 给了冗余范围时这个位移就是冗余量 `est_redundancy`（范围 ±冗余值；任务给了时间时，不许提前的钉 `≥ 0`、不许延迟的钉 `≤ 0`）；
-    /// 没给冗余范围时它就是常量零。`estEnd` 与 `est` **相同**（基线在这一支不加工期）。
+    /// 没给冗余范围时它就是常量零。`estEnd` 与 `est` **相同**（这一支不加工期）。
     ///
     /// 本类因此只重写这一个方法，八张表（偏移、超最大偏移、准时、结束时间偏移）全部由 `TaskSchedulingTaskTime` 提供：
     /// 那些表只依赖"每个任务的 `est` 是什么"，与 `est` 从哪来无关。之前本类自己实现了四张表、缺了另外四张——
@@ -95,7 +95,7 @@ public class BunchSchedulingTaskTime<B, T, E, A> : TaskSchedulingTaskTime<T, E, 
     ///
     /// **A bunch's `est` is one displacement shared by the whole bunch**, not a variable per task — that is what "bunch" means: members start and end together. With a redundancy
     /// range that displacement is the redundancy amount (bounded by ± the value; with per-task clamps when the task has a time); without one it is constant zero. `estEnd` is
-    /// **identical** to `est` (the baseline does not add the duration in this branch). This class therefore overrides only this method, and all eight tables (deviation, over-max,
+    /// **identical** to `est` (the code does not add the duration in this branch). This class therefore overrides only this method, and all eight tables (deviation, over-max,
     /// on-time, end-time deviation) come from `TaskSchedulingTaskTime`: they depend only on "what is each task's `est`", not on where it comes from. Previously this class built
     /// four of the eight itself — a state that looks like "some time expressions exist", which is harder to notice than an outright failure. Mixing the two schemes (creating a
     /// variable per task here too) dissolves the implicit "members of a bunch start and end together" constraint while the solution stays feasible and the objective looks fine.

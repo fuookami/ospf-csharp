@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger;
 /// 乘客域对象聚合 / The passenger domain aggregation.
 /// </summary>
 /// <remarks>
-/// 基线 `passenger/Aggregation.kt`：把取消、变更、人数三块装起来，注册顺序就是**取消 → 变更 → 人数**。
+/// ：把取消、变更、人数三块装起来，注册顺序就是**取消 → 变更 → 人数**。
 ///
 /// 顺序不是随意的：人数表达式引用取消与变更的变量项，**先建人数再建变量，引用就落空**——而落空的表现是
 /// "表达式里少了那些项，解出来的人数看起来正常"。所以这一层的判据不看"注册成功"，看**表达式里真的有变更项**。
@@ -26,13 +26,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger;
 /// **一处推迟**：基线还把 `timeWindow` / `time` / `capacity` 三个外部对象装进聚合，但它们只被 6 条限制拿去用。
 /// C# 的限制层会自己接收依赖，这里不提前存三个只有后续批次才读的字段。**装好一个字段没人读，就是给下一个人留一个"看起来在用"的假象。**
 ///
-/// The baseline's `passenger/Aggregation.kt` assembles cancellation, change and amount, in the registration order **cancel, change, amount**.
+/// The code's assembles cancellation, change and amount, in the registration order **cancel, change, amount**.
 ///
 /// The order is not arbitrary: the amount expressions reference the cancellation and change variable items, so **building the amounts before the variables leaves those references
 /// dangling** — and the symptom is "the expressions are missing those terms while the solved head count looks normal". The criterion here therefore does not check "registration
 /// succeeded" but **that the change terms really appear in the expressions**.
 ///
-/// **One deferral**: the baseline also carries `timeWindow`, `time` and `capacity`, but only the six limits read them. The C# limits take their dependencies directly, so three fields that
+/// **One deferral**: the code also carries `timeWindow`, `time` and `capacity`, but only the six limits read them. The C# limits take their dependencies directly, so three fields that
 /// nobody reads until a later batch are not stored here. **Storing a field nobody reads leaves the next reader with the illusion that it is used.**
 /// </remarks>
 public sealed class Aggregation {

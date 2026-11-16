@@ -97,10 +97,10 @@ public sealed class CriticalConstraintAnalysisSession : IDisposable
     /// <summary>不可变基线及 session 输入的校验结果 / Validation result for the immutable baseline and session inputs.</summary>
     public Try Validation { get; }
 
-    /// <summary>分析器使用的基线 snapshot 兼容别名 / Compatibility alias for analyzers that call the baseline simply snapshot.</summary>
+    /// <summary>分析器使用的基线 snapshot 兼容别名 / Compatibility alias for analyzers that call the code simply snapshot.</summary>
     public ConstraintProgrammingModelSnapshot Snapshot => BaselineSnapshot;
 
-    /// <summary>基线目标值兼容别名 / Compatibility alias for the baseline objective.</summary>
+    /// <summary>基线目标值兼容别名 / Compatibility alias for the code objective.</summary>
     public Flt64? BaselineObjective => BaselineObjectiveValue;
 
     /// <summary>session 是否已释放分析缓存 / Whether this session has released its analysis caches.</summary>
@@ -274,7 +274,7 @@ public sealed class CriticalConstraintAnalysisSession : IDisposable
 
     /// <summary>当 session 基线无效时返回结构化失败 / Return a structured failure when a session baseline is invalid.</summary>
     /// <param name="session">分析会话 / The analysis session.</param>
-    /// <returns>失败结果，基线有效时为 <c>null</c> / The failure, or <c>null</c> when the baseline is valid.</returns>
+    /// <returns>失败结果，效时为 <c>null</c> / The failure, or <c>null</c> when the code is valid.</returns>
     internal static Try? InvalidSessionResult(CriticalConstraintAnalysisSession session) =>
         session.Validation.IsOk ? null : session.Validation;
 

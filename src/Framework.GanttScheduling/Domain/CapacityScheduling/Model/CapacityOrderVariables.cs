@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// 产能排序的决策变量层 / The capacity-order decision-variable layer.
 /// </summary>
 /// <remarks>
-/// 基线的 `CapacityOrderCompilation` 在 `register` 里建两个三维量：
+/// `CapacityOrderCompilation` 在 `register` 里建两个三维量：
 ///
 /// * `x[动作, 时隙, 顺序位]`——加工**数量**（非负整数），每格上界是 `action.upperBound(slot, timeWindow)`；
 /// * `b[动作, 时隙, 顺序位]`——**是否选中**（二元）。
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// `OrderConstraint` 的三条约束（每位置至多一个动作、`b` 与 `x` 的上下界关联）全部建在这两个量上。C# 侧两个量都是 `null`，
 /// 所以那个 `Invoke` 只能写 `=> Ok`。这里把量建起来，后续才能建行。
 ///
-/// The baseline's `CapacityOrderCompilation` builds two three-dimensional quantities in `register`: `x[action, slot, order position]`, the processed **amount** (non-negative integer)
+/// The code's `CapacityOrderCompilation` builds two three-dimensional quantities in `register`: `x[action, slot, order position]`, the processed **amount** (non-negative integer)
 /// with a per-cell upper bound of `action.upperBound(slot, timeWindow)`, and `b[action, slot, order position]`, **whether it is selected** (binary). `OrderConstraint`'s three
 /// constraint families (at most one action per position; linking `b` and `x` from below and above) are all built on these two quantities. Both are `null` on the C# side, which is why
 /// that `Invoke` can only be `=> Ok`. builds the quantities so the next one can build the rows.
@@ -118,7 +118,7 @@ public sealed class CapacityOrderVariables<A>
     /// 少了它，`OrderConstraint` 的 `x ≤ M · b` 就只能猜一个 `M`，猜大了解松弛、猜小了切掉可行解。
     /// `b` 不需要额外设置：`BinVariable3` 的值域本来就是 0/1。
     ///
-    /// Each `x` cell's upper bound comes from `action.upperBound(slot, timeWindow)` — **the only business upper bound in the baseline's `register`**. Without it,
+    /// Each `x` cell's upper bound comes from `action.upperBound(slot, timeWindow)` — **the only business upper bound in its `register`**. Without it,
     /// `OrderConstraint` could only guess the big-M linking factor: too large relaxes the model, too small cuts off feasible solutions. `b` needs nothing extra; `BinVariable3`
     /// already ranges over 0 and 1.
     /// </remarks>

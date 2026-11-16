@@ -1,6 +1,6 @@
 // VRPTW 模型：单位口径、容差与车辆类型 / VRPTW model: unit contract, tolerances and vehicle type.
-// 与固定 Kotlin 基线 `VrptwUnits.kt`（55 行）、`VrptwTolerances.kt`（68 行）、`VehicleType.kt`（72 行）对应。
-// Mirrors the pinned baseline's `VrptwUnits.kt`, `VrptwTolerances.kt` and `VehicleType.kt`.
+// 与固定 Kotlin 、（68 行）、（72 行）对应。
+// , and.
 
 using System;
 using Fuookami.Ospf.Framework.NetworkScheduling.Infrastructure;

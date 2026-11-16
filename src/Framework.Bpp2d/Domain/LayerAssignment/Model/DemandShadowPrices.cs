@@ -15,10 +15,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 从对偶解里取出需求影子价格 / Extract demand shadow prices from a dual solution.
 /// </summary>
 /// <remarks>
-/// 与基线的影子价格链路对齐：RMP 求解完 LP 后，把每条需求约束的对偶值按 `(模式, 物品)` 收进影子价格表，
+/// 与影子价格链路对齐：RMP 求解完 LP 后，把每条需求约束的对偶值按 `(模式, 物品)` 收进影子价格表，
 /// 列生成的检验数再按这张表算。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **取下界那条约束的对偶值**（`_lb_`），不是上界。需求约束是"装载 ≥ 需求量"，
 ///    下界才是"多装一件能省多少成本"的边际值；上界说的是另一件事。
@@ -27,8 +27,8 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 3. **键用 `DemandConstraint.ModeTag`**，不自己拼字符串——两处各写一份会让键悄悄不匹配（的教训）。
 /// 4. **索引与需求项一致**：约束名里的下标就是需求项在清单里的位置。
 ///
-/// Aligned with the baseline's shadow-price chain: after the RMP solves the LP, each demand constraint's dual value goes into the shadow-price table keyed by `(mode, item)`, and the column
-/// generation's reduced cost reads that table. Four things must be copied: **take the lower-bound constraint's dual** (`_lb_`), not the upper one, since a demand constraint reads "load ≥ demand"
+/// Aligned with its shadow-price chain: after the RMP solves the LP, each demand constraint's dual value goes into the shadow-price table keyed by `(mode, item)`, and the column
+/// generation's reduced cost reads that table. Four things are carried over: **take the lower-bound constraint's dual** (`_lb_`), not the upper one, since a demand constraint reads "load ≥ demand"
 /// and only the lower bound is the marginal value of loading one more unit, while the upper bound says something else entirely — getting it backwards flips the sign of every reduced cost and
 /// selects columns in the wrong direction; **skip missing entries** rather than filling zero, since a demand without a dual never entered the model and zero would claim its price is zero; **key
 /// with `DemandConstraint.ModeTag`** rather than formatting here, because two copies of the mapping let the key silently mismatch (the lesson); and **the index matches the demand entry's

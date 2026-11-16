@@ -29,8 +29,8 @@ public sealed class RelationalQueryPlanTypesTest {
         cardinality.IsToMany().Should().Be(expected);
 
     /// <summary>
-    /// 默认值与基线一致：16 个 Join、16 层深度、128 个投影；分页不设上限且不跳过。
-    /// Defaults match the baseline: 16 joins, depth 16, 128 projections; pagination is unbounded and skips
+    /// 默认值：16 个 Join、16 层深度、128 个投影；分页不设上限且不跳过。
+    /// Defaults match the code: 16 joins, depth 16, 128 projections; pagination is unbounded and skips
     /// nothing.
     /// </summary>
     [Fact]

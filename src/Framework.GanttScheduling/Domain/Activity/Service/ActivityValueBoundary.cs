@@ -1,7 +1,7 @@
 // 活动数值转换边界 / The activity value conversion boundary.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../ActivityCompilation.kt` 里的
+// 与固定 Kotlin 里的
 // `ActivityValueBoundary` 对应。
-// Mirrors `ActivityValueBoundary` in the pinned Kotlin baseline's `ActivityCompilation.kt`.
+// .
 
 using System;
 using Fuookami.Ospf.Math.Algebra.Concept;

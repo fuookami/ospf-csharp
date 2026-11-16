@@ -1,8 +1,8 @@
 // 注册表的参数校验 / The registry's parameter validation.
-// 与固定 Kotlin 基线 `configuration/SearchRegistry.kt`（43259 B）的 `emptyParameters` / `numericParameters` /
+// 与固定 Kotlin （43259 B）的 `emptyParameters` / `numericParameters` /
 // `validateAlgorithm` 三个纯校验对应。
-// Mirrors the three pure validators `emptyParameters`, `numericParameters` and `validateAlgorithm` from the pinned baseline's
-// `configuration/SearchRegistry.kt` (43259 B).
+// Provides the three pure validators `emptyParameters`, `numericParameters` and `validateAlgorithm`.
+// (43259 B).
 
 using System;
 using System.Collections.Generic;
@@ -264,10 +264,10 @@ public static class RegistryParameters {
     /// <remarks>
     /// **不能直接用 `JsonValue.TryGetValue&lt;double&gt;`**：它要求节点里存的就是 `double`，
     /// 而配置里的 `3` 常常是整数——于是"合法配置"被判成非法。这里先转成 `JsonElement` 再读，
-    /// **让整数与小数字面量都算数，字符串一律不算**（与基线的 `doubleOrNull` 一致）。
+    /// **让整数与小数字面量都算数，字符串一律不算**（与`doubleOrNull` 一致）。
     /// **`JsonValue.TryGetValue&lt;double&gt;` cannot be used directly**: it demands a node that literally stores a `double`, while a configuration
     /// often writes `3` as an integer — so a valid configuration reads as invalid. Converting to `JsonElement` first **accepts both integer and
-    /// fractional literals and still rejects strings**, matching the baseline's `doubleOrNull`.
+    /// fractional literals and still rejects strings**, matching its `doubleOrNull`.
     /// </remarks>
     /// <param name="node">JSON 节点 / The JSON node.</param>
     /// <param name="value">数值 / The number.</param>

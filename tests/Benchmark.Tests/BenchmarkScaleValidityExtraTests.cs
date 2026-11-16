@@ -361,7 +361,7 @@ public sealed class BenchmarkScaleValidityExtraTests {
             "measured: this value shrinks as the tier grows, so it must never be used as a scale signal");
 
         // **`dump sparse rows` 返回 NaN——基线自带**：它把 ±∞ 累加进 checksum（基线 `walkSparseRowsAndBounds` 逐字如此）。
-        // **`dump sparse rows` returns NaN and the baseline does too**: it adds ±∞ into the checksum (the baseline's `walkSparseRowsAndBounds` does exactly this).
+        // **`dump sparse rows` returns NaN and the code does too**: it adds ±∞ into the checksum (its `walkSparseRowsAndBounds` does exactly this).
         SparseRows("small").Should().Be(double.NaN,
             "measured: adding ±∞ makes the checksum NaN; it cannot carry a scale signal");
 

@@ -1,12 +1,12 @@
 // 底部向上左对齐算法 / Bottom-up left-justified algorithm.
-// 与固定 Kotlin 基线 `bpp2d/domain/bla/service/BottomUpLeftJustifiedAlgorithm.kt` 对应，但收敛为二维：在板材平面上
+// 与固定 Kotlin 对应，但收敛为二维：在板材平面上
 // 依次放置物品，每次都选择最低且最靠左的可行点。
-// Mirrors the pinned Kotlin baseline: items are placed on the sheet plane, always choosing the lowest then leftmost
+// Items are placed on the sheet plane, always choosing the lowest then leftmost
 // feasible point.
 //
 // 输入为 `IAbstractItem`；圆形件不参与 BLA（圆形没有"向左下推挤"的语义），会被**显式跳过**并记入
 // `SkippedCircleItems`。earlier 之前 C# 侧只有矩形物料，跳过列表恒为空；现在物料模型已能表达圆形件，
-// 跳过语义与基线一致。
+// 跳过语义。
 // Input is `IAbstractItem`. Circle items do not participate in BLA (circles have no "push to bottom-left" semantics);
 // they are **explicitly skipped** and recorded in `SkippedCircleItems`. Before earlier C# only had rectangle items
 // and the skip list was always empty; the item model can now express circles, so the skip semantics match the

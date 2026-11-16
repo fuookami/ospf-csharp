@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// the earlier order variables, /the earlier three constraint families, the earlier cost objective and the earlier resource usage table were all "parts present, never assembled". An interface with no
 /// implementation is worse than no interface: it makes readers believe the whole chain already runs.
 ///
-/// The wiring order follows the baseline — **variables first, then constraints, then the objective**. The order matters: symbols the constraints reference must already be in the model, and
+/// The wiring order follows the code — **variables first, then constraints, then the objective**. The order matters: symbols the constraints reference must already be in the model, and
 /// the same holds for the objective; reversing it turns "the symbol is not in the model" into a runtime error instead of a registration-time failure.
 /// </remarks>
 /// <typeparam name="A">生产动作类型 / Production action type</typeparam>

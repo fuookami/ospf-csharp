@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// **不支持的运算必须失败，不能返回 null 或原样**——`$power` 就是一个例子：
 /// **把不支持的运算悄悄当成"没这回事"，查询会返回一个错误的结果集，而调用方以为查对了。**
 ///
-/// The baseline's `MongoScalarTranslator` (**209 lines**) turns a `ScalarExpression` into a `BsonValue` usable inside
+/// The code's `MongoScalarTranslator` (**209 lines**) turns a `ScalarExpression` into a `BsonValue` usable inside
 /// an aggregation pipeline: references become `$field`, constants pass through, unary/binary operators become
 /// `$multiply`/`$add`/`$divide` documents.
 ///
@@ -29,10 +29,10 @@ public static class MongoScalarTranslator
 {
     /// <summary>把一个标量表达式翻成 Mongo 值 / Translate one scalar expression into a Mongo value.</summary>
     /// <remarks>
-    /// **`resolveFieldName` 由调用方给**：基线把它做成构造参数，因为文档字段名与模型属性名常常不同
+    /// **`resolveFieldName` 由调用方给**：它做成构造参数，因为文档字段名与模型属性名常常不同
     /// （前者带前缀、或做过下划线转换）。**在这里写死属性名，等于假设两者永远相同。**
     ///
-    /// **`resolveFieldName` comes from the caller**: the baseline takes it as a constructor parameter because
+    /// **`resolveFieldName` comes from the caller**: the code takes it as a constructor parameter because
     /// document field names and model property names often differ (prefixing, snake_case conversion).
     /// **Hard-coding the property name here would assume the two are always identical.**
     /// </remarks>
@@ -107,9 +107,9 @@ public static class MongoScalarTranslator
             case UnaryOperator.Positive:
                 return operand;
 
-            // **`ABS` 基线也不支持**——Mongo 有 `$abs`，但基线没接，**这里跟着基线失败而不是自作主张**。
-            // **The baseline does not support `ABS` either** — Mongo has `$abs` but the baseline never wired it,
-            // **and this fails with the baseline rather than inventing support.**
+            // **`ABS` 不支持**——Mongo 有 `$abs`，但基线没接，**这里跟着基线失败而不是自作主张**。
+            // **The code does not support `ABS` either** — Mongo has `$abs` but the code never wired it,
+            // **and this fails with the code rather than inventing support.**
             case UnaryOperator.Abs:
                 return Failure("ABS 一元标量表达式不支持 / ABS unary scalar expression is not supported");
 
@@ -130,8 +130,8 @@ public static class MongoScalarTranslator
             BinaryOperator.Multiply => "$multiply",
             BinaryOperator.Divide => "$divide",
             BinaryOperator.Modulo => "$mod",
-            // **`POWER` 基线不支持**：`$pow` 存在，但基线的二元运算符映射里没有它。
-            // **`POWER` is unsupported in the baseline**: `$pow` exists, but the baseline's binary map omits it.
+            // **`POWER` 基线不支持**：`$pow` 存在，但二元运算符映射里没有它。
+            // **`POWER` is unsupported in the code**: `$pow` exists, but its binary map omits it.
             BinaryOperator.Power => null,
             _ => null,
         };
@@ -159,11 +159,11 @@ public static class MongoScalarTranslator
         Func<string, string> resolveFieldName,
         int depth)
     {
-        // **函数名映射按基线的清单来**：基线只接了少数几个，其余一律失败。
+        // **函数名映射按清单来**：接了少数几个，其余一律失败。
         // **多接一个就是多一个"本仓比基线多"的地方，而那不是同步。**
         //
-        // **Function names follow the baseline's list**: the baseline wired only a few and fails the rest.
-        // **Wiring an extra one is a place where this repo does more than the baseline, and that is not synchronisation.**
+        // **Function names follow its list**: the code wired only a few and fails the rest.
+        // **Wiring an extra one is a place where this repo does more than the code, and that is not synchronisation.**
         string? mongoOperator = function.Name.ToUpperInvariant() switch
         {
             "ABS" => "$abs",
@@ -196,7 +196,7 @@ public static class MongoScalarTranslator
         // **但基线对单参数写标量**，两边形状不同会让管道比较失效。
         //
         // **A single-argument function is written as a scalar, not an array**: Mongo accepts both `$abs: "$x"` and
-        // `$abs: ["$x"]`, **but the baseline writes a scalar**, and differing shapes break pipeline comparison.
+        // `$abs: ["$x"]`, **but the code writes a scalar**, and differing shapes break pipeline comparison.
         return Ok(arguments.Count == 1
             ? new BsonDocument(mongoOperator, arguments[0])
             : new BsonDocument(mongoOperator, arguments));

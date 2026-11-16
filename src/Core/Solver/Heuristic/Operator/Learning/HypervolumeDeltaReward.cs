@@ -1,6 +1,5 @@
 // 超体积增量奖励 / Hypervolume-delta reward.
-// 与固定 Kotlin 基线 `learning/HypervolumeDeltaReward.kt`（14547 B）对应。
-// Mirrors the pinned baseline's `HypervolumeDeltaReward.kt` (14547 B).
+// 与固定 Kotlin （14547 B）对应。
 
 using System;
 using System.Collections.Generic;

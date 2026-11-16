@@ -1,7 +1,7 @@
 // 边界处理、终止判据与接受准则 / Boundary handling, stopping criteria and acceptance rules.
-// 与固定 Kotlin 基线 `operator/boundary/BoundaryHandler.kt`、`operator/stopping/StoppingCriterion.kt`、
-// `operator/acceptance/Acceptance.kt` 对应。
-// Mirrors the pinned baseline's `BoundaryHandler.kt`, `StoppingCriterion.kt` and `Acceptance.kt`.
+// 与固定 Kotlin 、
+// 对应。
+// , and.
 
 using System;
 using Fuookami.Ospf.Core.Model.Callback;

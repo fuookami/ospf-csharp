@@ -101,11 +101,11 @@ public class ImpreciseLoadRegisterTests {
     /// 三点成对：
     ///
     /// 1. 注册那一刻 `over_load_i` 的多项式 **与 `load_i` 相同**——表达的是"这个需求现在被超/欠了多少"。
-    /// 2. 追加新列之后 `load_0` 的项数**增加**，而 `over_load_0` **不变**——基线就是这样，这里照抄并记档。
+    /// 2. 追加新列之后 `load_0` 的项数**增加**，而 `over_load_0` **不变**——基线就是这样，这里沿用并记档。
     /// 3. 拷贝是**深拷贝**：`load_0` 后续 `Flush` 不会清空 `over_load_0` 的多项式。
     ///
     /// Three paired points: at registration `over_load_i`'s polynomial **equals `load_i`'s**, expressing by how much the demand is currently over-supplied; after appending new columns `load_0`'s term
-    /// count **grows** while `over_load_0`'s **does not**, which is the baseline's behaviour, copied and recorded here; and the copy is **deep**, so a later `Flush` on `load_0` does not clear
+    /// count **grows** while `over_load_0`'s **does not**, which is its behaviour, copied and recorded here; and the copy is **deep**, so a later `Flush` on `load_0` does not clear
     /// `over_load_0`'s polynomial.
     /// </remarks>
     [Fact]

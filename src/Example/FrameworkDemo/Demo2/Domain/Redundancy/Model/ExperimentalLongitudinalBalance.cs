@@ -20,12 +20,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Model;
 /// 实验纵向平衡 / Experimental longitudinal balance.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/redundancy/model/ExperimentalLongitudinalBalance.kt`：把**主甲板**各舱位的纵向力矩加起来，
+/// 逐条对齐：把**主甲板**各舱位的纵向力矩加起来，
 /// 实际与推荐各一个，再取两者之差的双侧松弛。
 ///
 /// 与冗余的差别是**只加主甲板**：下货舱的力矩不进纵向平衡（它由别的约束管），把全部舱位加起来会让平衡量随下舱装载一起漂。
 ///
-/// Mirrors the baseline: sum the longitudinal torque over the **main deck only**, once for actual and once for estimated, then take the two-sided slack of the difference. The
+/// sum the longitudinal torque over the **main deck only**, once for actual and once for estimated, then take the two-sided slack of the difference. The
 /// difference from redundancy is "main deck only": the lower holds' torque is handled by other rows, and adding every position makes the balance drift with lower-hold loading.
 /// </remarks>
 public sealed class ExperimentalLongitudinalBalance

@@ -1,6 +1,6 @@
 // 物品域：放置工厂与物品合并 / Item domain: placement factory and item merger.
-// 与固定 Kotlin 基线 `item/model/PlacementFactory.kt`（96 行）与 `item/service/ItemMerger.kt`（84 行）对应。
-// Mirrors the pinned baseline's `PlacementFactory.kt` and `ItemMerger.kt`.
+// 与固定 Kotlin 与（84 行）对应。
+// And.
 
 using System;
 using System.Collections.Generic;
@@ -134,9 +134,9 @@ public sealed class ItemMerger<V> where V : struct, IFloatingNumber<V> {
     /// </summary>
     /// <remarks>
     /// 合并键相同的物品累加件数，代表物品取**第一个出现**的实例——因此顺序决定合并后哪个物品编号留在结果里，
-    /// 这里用有序字典保留首次出现顺序，与基线一致。
+    /// 这里用有序字典保留首次出现顺序。
     /// Items sharing a merge key accumulate amounts and the representative is the **first occurrence**, so ordering decides
-    /// which item id survives; an insertion-ordered dictionary preserves first-appearance order, matching the baseline.
+    /// which item id survives; an insertion-ordered dictionary preserves first-appearance order, matching the code.
     /// </remarks>
     /// <param name="items">物品与件数 / Items and their amounts.</param>
     /// <returns>合并后的物品与件数 / Merged items and amounts.</returns>

@@ -106,7 +106,7 @@ public class FunctionCapabilityDeclarationTests
     }
 
     /// <summary>
-    /// **枚举与基线的对应关系必须说准确** / The enum's relation to the baseline must be stated exactly.
+    /// **枚举与对应关系必须说准确** / The enum's relation to the code must be stated exactly.
     /// </summary>
     /// <remarks>
     /// **这一条防的是"顺手把它删掉"这种修法。** **那份表之所以值得留，是因为它记录了
@@ -114,7 +114,7 @@ public class FunctionCapabilityDeclarationTests
     ///
     /// ### 而"逐一对应"这句话本身也不准确
     ///
-    /// **基线那个枚举有 <b>15</b> 个成员：9 个是能力，6 个是<b>位置修饰</b>**
+    /// **个枚举有 <b>15</b> 个成员：9 个是能力，6 个是<b>位置修饰</b>**
     /// （`ObjectiveOnly`／`ConstraintOnly`／`ObjectiveAndConstraint`／`Nested`／`External`／`Unused`）。
     ///
     /// **本仓的 `FunctionNativeCapability` 只有那 9 个能力——而它的文档注释写着"逐一对应，成员名与顺序一致"。**
@@ -130,7 +130,7 @@ public class FunctionCapabilityDeclarationTests
     /// **This guards against the fix being "just delete it".** **The table is worth keeping because it records that the
     /// baseline considers these capabilities natively expressible.**
     ///
-    /// **But "one member at a time" is itself inexact: the baseline enum has <b>15</b> members — 9 capabilities and 6
+    /// **But "one member at a time" is itself inexact: the code enum has <b>15</b> members — 9 capabilities and 6
     /// <b>positional qualifiers</b> — while this repo's `FunctionNativeCapability` has only the 9, with a doc comment claiming
     /// names and order match one-to-one.** **The 6 qualifiers are not lost, they live in `FunctionUsageSummary`, which is a
     /// reasonable split.** **But "one member at a time" invites the next reader to verify a set that can <b>never</b> be equal.**

@@ -28,11 +28,11 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// 所以判据要同时回答两个问题：
 ///
 /// 1. **算得对不对**（`Flt64` 下的功能正确性）；
-/// 2. **单位不一致时会不会静默混加**（基线的两个 `continue` 就是干这个的）。
+/// 2. **单位不一致时会不会静默混加**（两个 `continue` 就是干这个的）。
 ///
 /// `ExtractMachineUsages` has always been **the only extraction path without a criterion** (noted). It multiplies and adds via `(V)(dynamic)a * (V)(dynamic)b`
 /// with **no compile-time type checking**, so the criteria must answer two questions: **is the arithmetic right** for `Flt64`, and **does a unit mismatch get silently
-/// summed** (the baseline's two `continue`s exist for exactly that).
+/// summed** (its two `continue`s exist for exactly that).
 /// </remarks>
 public class Csp1dMachineUsageExtractionTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -172,11 +172,11 @@ public class Csp1dMachineUsageExtractionTests {
     /// 基线：`if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`。
     ///
     /// 少了这个判断，**以厘米计的消耗会被直接当成毫米累加**——数值差 10 倍且毫无提示。
-    /// 判据断言"该设备没有任何用量记录"，而不是"用量为零"：基线是 `mapNotNull`，
+    /// 判据断言"该设备没有任何用量记录"，而不是"用量为零"：`mapNotNull`，
     /// 没有匹配项时**整条设备不出现**。
     ///
     /// Baseline: `if (machineCapacity != null && consumption.unit != machineCapacity.unit) return@fold acc`. Without it, **a centimetre consumption would be summed as
-    /// millimetres** — a factor of 10 with no warning. The criterion asserts "no usage record for this machine" rather than "usage is zero": the baseline uses
+    /// millimetres** — a factor of 10 with no warning. The criterion asserts "no usage record for this machine" rather than "usage is zero": the code uses
     /// `mapNotNull`, so with no matching entry **the machine does not appear at all**.
     /// </remarks>
     [Fact]

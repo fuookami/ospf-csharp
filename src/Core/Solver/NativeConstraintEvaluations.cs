@@ -15,9 +15,9 @@ namespace Fuookami.Ospf.Core.Solver;
 /// native 结构的约束求值 / Constraint evaluation for the native structures.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `absEvaluations` 与 `maxEvaluations`。
+/// 对齐的 `absEvaluations` 与 `maxEvaluations`。
 ///
-/// **两个求值器之间有两处不对称，都照抄基线并在判据里钉住。**
+/// **两个求值器之间有两处不对称，都照做并在判据里钉住。**
 ///
 /// **第一处：容差的来源不同。**
 ///
@@ -32,15 +32,15 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **它永远取 `inputs.maxOrNull`，所以一个 `minimum = true` 的结构会被拿去和<b>最大值</b>比。**
 ///
-/// **这不是本仓库的偏差，是<b>基线的缺陷</b>：** **`NativeMaxData` 带着 `minimum` 标志，
+/// **这不是本仓库的偏差，是<b>缺陷</b>：** **`NativeMaxData` 带着 `minimum` 标志，
 /// `restoreValues` 也按它取极值（`if (structure.minimum) minOrNull else maxOrNull`），
 /// 而 `maxEvaluations` 却没看这个标志。**
 /// **同一份数据在两条路径上被解释成两种含义。**
 ///
-/// **这里<b>照抄</b>以保持与基线的可比性，并把这一点写成判据，
+/// **这里<b>沿用</b>以保持与可比性，并把这一点写成判据，
 /// 让"最小值的结构被当成最大值来评"成为一个被记录的事实而不是一个潜伏的错。**
 ///
-/// **Two asymmetries between the evaluators, both copied from the baseline and pinned by criteria.**
+/// **Two asymmetries between the evaluators, both copied from the code and pinned by criteria.**
 ///
 /// **First, the tolerance source differs**: **ABS converts `PIECEWISE_TOLERANCE` through the helper, MAX uses the literal
 /// `1e-6`.** **Numerically identical, structurally different: changing the constant moves ABS and not MAX.**
@@ -53,7 +53,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// flag and `restoreValues` honours it (`minOrNull`/`maxOrNull`), while `maxEvaluations` does not — the same data is
 /// interpreted two ways on two paths.**
 ///
-/// ** <b>copies</b> it to stay comparable with the baseline and turns it into a criterion, making "a minimum
+/// ** <b>copies</b> it to stay comparable with the code and turns it into a criterion, making "a minimum
 /// structure evaluated as a maximum" a recorded fact rather than a latent bug.**
 /// </remarks>
 public static class NativeConstraintEvaluations
@@ -159,8 +159,8 @@ public static class NativeConstraintEvaluations
                 return Fail("MAX result token is missing");
             }
 
-            // **基线在这里<b>不</b>看 `minimum`，永远取最大。照抄。**
-            // **The baseline does <b>not</b> consult `minimum` here and always takes the maximum. Copied.**
+            // **这里<b>不</b>看 `minimum`，永远取最大。沿用。**
+            // **The code does <b>not</b> consult `minimum` here and always takes the maximum. Copied.**
             double extreme = double.NegativeInfinity;
             foreach (double input in inputs) {
                 if (input > extreme) {

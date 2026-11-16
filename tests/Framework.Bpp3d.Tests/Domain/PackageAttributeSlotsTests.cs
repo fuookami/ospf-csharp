@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// The two pieces filled in: the five policy slots (with the effective layer composition) and the recursive layer computation.
 /// </summary>
 /// <remarks>
-/// 基线里这两块分别是 `PackageAttribute` 的字段与它伴生对象里的 `layerLayer`／`layerHeight`／`layer`。
+/// 这两块分别是 `PackageAttribute` 的字段与它伴生对象里的 `layerLayer`／`layerHeight`／`layer`。
 /// 前者的语义是"有效层数 = min(包材层数, 重量属性层数)"，后者是"沿着'谁压在谁上面'递归取最大值"。
 /// 判据各钉住一半：层数合成能变小、递归在同类型链上给出正确的层数与高度、类型不同则不叠。
 ///
-/// In the baseline these are the fields of `PackageAttribute` and its companion's `layerLayer`/`layerHeight`/`layer`. The former means "effective layers =
+/// In the code these are the fields of `PackageAttribute` and its companion's `layerLayer`/`layerHeight`/`layer`. The former means "effective layers =
 /// min(package layers, weight-attribute layers)" and the latter "recurse along who-covers-whom and take the maximum". The criteria pin each half: the
 /// composition can only lower, the recursion gives the right count and height on a same-type chain, and different types do not stack.
 /// </remarks>
@@ -69,10 +69,10 @@ public class PackageAttributeSlotsTests
     /// <summary>**递归层数：三层同类型堆叠给出层数 3、高度 3 倍** / A three-high same-type stack gives layer 3 and three times the height.</summary>
     /// <remarks>
     /// **构造方式值得看：** **判据不伪造几何，而是用一个按 y 坐标判定的最小放置——**"谁压在谁上面"就是 `Bottom >= Top` 且类型相同，
-    /// 这正是基线的 `filterBottomOverlapped` 在最简单情形下的语义。** 上层放两件、它们再压住一件、那件再压住底座。**
+    /// 这正是`filterBottomOverlapped` 在最简单情形下的语义。** 上层放两件、它们再压住一件、那件再压住底座。**
     ///
     /// **The construction is worth reading: the criterion does not fake geometry but uses a minimal placement ordered by y — "sits on top" means the
-    /// bottom's base is at or above the top's top, which is the baseline's `filterBottomOverlapped` in the simplest case.** **Two items on the second
+    /// bottom's base is at or above the top's top, which is its `filterBottomOverlapped` in the simplest case.** **Two items on the second
     /// level, one item under them, and that one on the base.**
     /// </remarks>
     [Fact]
@@ -86,7 +86,7 @@ public class PackageAttributeSlotsTests
         // 基线 `directBottomItems` 就是 `topItemPlacements`——**给出"这一列里最上面的那些"，不是"最底下的那个"。**
         // 上一版把它理解反了，改成 IsAbove 之后才露出来。
         //
-        // The baseline's `directBottomItems` is `topItemPlacements` — **the topmost items of the column, not the bottom one.** The previous version had it
+        // `directBottomItems` is `topItemPlacements` — **the topmost items of the column, not the bottom one.** The previous version had it
         // backwards, which the `IsAbove` split exposed.
         StackLayering.DirectBottomItems(bottom).Should().HaveCount(2, "the two items on the second level are the ones with nothing above them");
 
@@ -104,7 +104,7 @@ public class PackageAttributeSlotsTests
         var box = new Placement("box", 1.0, bottom: 1.0);
 
         // 底部集合只装"底下的东西"——把 `box` 自己也放进去会让算法把自身当成一块同类型底板（基线同样如此，它的入参就是 bottoms）。
-        // The bottom set holds what is underneath; including `box` itself would let the algorithm treat it as a same-type layer below (the baseline's
+        // The bottom set holds what is underneath; including `box` itself would let the algorithm treat it as a same-type layer below (its
         // parameter is the bottoms, too).
         StackLayering.LayerCount(box, new[] { baseItem }).Should().Be(
             UInt64.Zero,
@@ -132,7 +132,7 @@ public class PackageAttributeSlotsTests
             // 底面重叠 = 同一竖向列：替身没有水平坐标，于是同类型即同列。
             // 基线比的是底面投影，与高度无关；这一条正是被 `OverlapsBottom`／`IsAbove` 分开之后才看清的。
             //
-            // Footprint overlap means the same vertical column; the double has no horizontal coordinate, so same type is the same column. The baseline
+            // Footprint overlap means the same vertical column; the double has no horizontal coordinate, so same type is the same column. The code
             // compares bottom footprints regardless of height, which only became clear once `OverlapsBottom` and `IsAbove` were separated.
             other is Placement placement &&
             string.Equals(placement.ItemType, ItemType, StringComparison.Ordinal);

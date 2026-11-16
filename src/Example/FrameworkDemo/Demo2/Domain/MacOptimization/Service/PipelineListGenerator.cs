@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 /// 重心优化管线生成器 / The MAC-optimisation pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与基线 `mac_optimization/service/PipelineListGenerator.kt` 对齐：**先看装载模式**，再按"纵 → 横（宽体才）→ 安定面"的顺序装配。
+/// 与对齐：**先看装载模式**，再按"纵 → 横（宽体才）→ 安定面"的顺序装配。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
 /// 1. **`WithMacOptimization` 为假时返回空列表**（不是失败）。基线 `return Ok(emptyList)`。
 /// 2. **顺序固定**：纵向、横向、安定面。改顺序会改变目标在 `MetaSubObjects` 里的位置，而下游按位置取值。
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 ///    第二分支的机型判定用的是 `aggregation.AircraftModel.Type == `，**不是**"窄体机"—— 走第三分支。
 /// 5. **安定面恒加**，即使字典为空（那时是零个目标，但管线本身在列表里）。
 ///
-/// Aligned with the baseline: **the stowage mode is checked first**, then the pipelines are assembled longitudinal → lateral (wide-body only) → stabilizers. Five things must be copied:
+/// **the stowage mode is checked first**, then the pipelines are assembled longitudinal → lateral (wide-body only) → stabilizers. Five things must be copied:
 /// **a false `WithMacOptimization` yields an empty list**, not a failure; **the order is fixed**, since changing it moves the objectives within `MetaSubObjects` and downstream reads
 /// them by position; **lateral is added only for a wide-body** (`LateralBalance` null is skipped); **the longitudinal coefficient has three branches** — `C` → `MacRangeC`, →
 /// ` LongitudinalBalance`, everything else → `LongitudinalBalance`, and the middle branch tests the type for **specifically**, not "narrow-body", so a takes the third

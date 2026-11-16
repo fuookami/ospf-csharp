@@ -1,6 +1,6 @@
 // 离散装载输入校验 / Discrete-loading input validation.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的 `validate` 对应。
-// Mirrors `validate` from the pinned Kotlin baseline's `bpp/domain/discrete_loading/DiscreteLoadingContext.kt`.
+// 与固定 Kotlin 的 `validate` 对应。
+// .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading.Model;
@@ -31,11 +31,11 @@ namespace Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading;
 /// **这里只移植 `validate`**，不移植 `register`：后者要把整个问题写成线性元模型
 /// （`BinVar`、`LinearPolynomial`、布局选择组约束），属于下一层的接线工作。
 ///
-/// **`validate` 本身价值很高**：基线里它承担了 11 类校验，任何一条漏掉都会让
+/// **`validate` 本身价值很高**：它承担了 11 类校验，任何一条漏掉都会让
 /// **不可行或非法的输入进入建模阶段**，而建模阶段的失败信息离根因很远。
 ///
-/// **Only `validate` is ported here**, not `register`: the latter turns the whole problem into a linear meta model (`BinVar`, `LinearPolynomial`, layout-group
-/// constraints) and belongs to the next wiring layer. **`validate` is valuable on its own**: the baseline performs eleven kinds of checks there, and missing any one
+/// **Only `validate` is implemented here**, not `register`: the latter turns the whole problem into a linear meta model (`BinVar`, `LinearPolynomial`, layout-group
+/// constraints) and belongs to the next wiring layer. **`validate` is valuable on its own**: the code performs eleven kinds of checks there, and missing any one
 /// lets **infeasible or illegal input reach the modelling stage**, where the failure message is far from the root cause.
 /// </remarks>
 public sealed class DiscreteLoadingValidator<V>
@@ -66,7 +66,7 @@ public sealed class DiscreteLoadingValidator<V>
     /// </summary>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 十一类校验，按基线的顺序：
+    /// 十一类校验，按顺序：
     ///
     /// | # | 校验 | 漏掉的后果 |
     /// | --- | --- | --- |
@@ -85,7 +85,7 @@ public sealed class DiscreteLoadingValidator<V>
     /// **第 8 条最隐蔽**：负重量在 `Σ weight ≤ maxWeight` 里会**抵消**其他货物，
     /// 让一个超载方案"看起来"满足容量。它不会让求解器报错。
     ///
-    /// Eleven checks in the baseline's order (table above). **Check 8 is the subtlest**: a negative weight **cancels** other cargo in `Σ weight &lt;= maxWeight`, making an
+    /// Eleven checks in its order (table above). **Check 8 is the subtlest**: a negative weight **cancels** other cargo in `Σ weight &lt;= maxWeight`, making an
     /// overloaded plan look feasible — and the solver never complains.
     /// </remarks>
     public Try Validate() {
@@ -166,10 +166,10 @@ public sealed class DiscreteLoadingValidator<V>
             }
             // **负容量会被两处拦下**：这里，以及下面的"固定装载不超容量"（`0 > 负数` 恒真）。
             // 所以单独禁用这一处**不会**让负容量通过——实测确认，那不是判据不足，是**真实的冗余防护**。
-            // 基线也是这样写的，保留双重保护。
+            // 是这样写的，保留双重保护。
             //
             // **A negative capacity is caught in two places**: here and the "fixed load within capacity" check below (`0 > negative` is always true). Disabling this one
-            // alone therefore does **not** let a negative capacity through — measured, and that is **genuine redundant protection**, not a weak criterion. The baseline
+            // alone therefore does **not** let a negative capacity through — measured, and that is **genuine redundant protection**, not a weak criterion. The code
             // is written the same way, so the double guard is kept.
             if (capacityOk.Value.CompareTo(Flt64.Zero) < 0 || position.MaxCount == 0) {
                 return Invalid($"capacity {position.Id}");
@@ -257,7 +257,7 @@ public sealed class DiscreteLoadingValidator<V>
     /// 只用问题定义与归一化后的容量/重量，就能把"求解器说这个解可行"独立复核一遍。
     /// 没有它，求解器或其适配层的任何一处错误都会**直接变成对外结论**。
     ///
-    /// 九类复核，按基线的顺序：
+    /// 九类复核，按顺序：
     ///
     /// | # | 复核 | 漏掉的后果 |
     /// | --- | --- | --- |
@@ -387,10 +387,10 @@ public sealed class DiscreteLoadingValidator<V>
 
             // **禁用舱位有两处拦截**：这里，以及下面那条"禁用舱位不得装未固定的货物"。
             // 单独删掉这一处**不会**让非法解通过——实测确认，那是**真实的冗余防护**，不是判据不足。
-            // 基线也是两处都写，保留双重保护。
+            // 是两处都写，保留双重保护。
             //
             // **A disabled position is guarded in two places**: here and the "disabled position may only carry fixed cargo" check below. Deleting this one alone does
-            // **not** let an illegal solution through — measured, so it is **genuine redundant protection**, not a weak criterion. The baseline guards both, so both
+            // **not** let an illegal solution through — measured, so it is **genuine redundant protection**, not a weak criterion. The code guards both, so both
             // are kept.
             if (!position.Enabled && solution.OccupiedPositions.Contains(position.Id)) {
                 if (position.FixedOccupied) {

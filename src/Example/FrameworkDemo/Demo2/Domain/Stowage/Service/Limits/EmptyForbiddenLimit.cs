@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 禁止放空舱位 / The "no empty position" rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/EmptyForbiddenLimit.kt`：对每个**可用且带 `EmptyForbidden` 类型码**的舱位加一行 `estimate_loaded_j = 1`。
+/// 对齐：对每个**可用且带 `EmptyForbidden` 类型码**的舱位加一行 `estimate_loaded_j = 1`。
 ///
 /// 两个条件都要查。少查"可用"会给本来就不用的舱位加强制装载，直接让模型不可行；少查类型码会给所有舱位都强制装载。
 /// 后者在舱位比货物多时立刻不可行，是这两条里更常见的那种错。
 ///
-/// Aligned with the baseline: one row `estimate_loaded_j = 1` per position that is **available and carries the `EmptyForbidden` code**. Both conditions matter. Dropping
+/// One row `estimate_loaded_j = 1` per position that is **available and carries the `EmptyForbidden` code**. Both conditions matter. Dropping
 /// "available" forces loading into positions nobody uses and makes the model infeasible outright; dropping the code forces loading everywhere. The latter turns infeasible as soon
 /// as there are more positions than items and is the more common of the two mistakes.
 /// </remarks>

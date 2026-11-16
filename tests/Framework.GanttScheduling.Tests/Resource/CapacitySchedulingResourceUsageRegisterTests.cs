@@ -22,13 +22,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 /// **容量调度的资源用量：显式失败而不是静默 `Ok`** / Capacity scheduling's resource usage: an explicit failure, not a silent `Ok`.
 /// </summary>
 /// <remarks>
-/// 基线的 `register` 只做一件事：把子类填好的 `quantity` 表加进模型。那张表的内容是
+/// `register` 只做一件事：把子类填好的 `quantity` 表加进模型。那张表的内容是
 /// `Σ_action usedBy(action, slot.time) × x(action, slot)`——**要决策变量**。
 ///
 /// C# 侧还没有那个变量：`IterativeCapacityCompilation.LocateColumnDecision` 返回的是 `new object` 占位，不是符号。
 /// 没有变量就没法填表；返回 `Ok` 等于告诉每个调用方"已经接好了"，而表里什么都没有、容量永远不紧、模型照样可解。
 ///
-/// The baseline's `register` does one thing: add the `quantity` table its subclass already filled, and that table holds
+/// The code's `register` does one thing: add the `quantity` table its subclass already filled, and that table holds
 /// `sum over actions of usedBy(action, slot.time) times x(action, slot)` — **it needs decision variables**. The C# side does not have them:
 /// `IterativeCapacityCompilation.LocateColumnDecision` returns a `new object` placeholder rather than a symbol. Without variables the table cannot be filled, and returning `Ok` would tell every
 /// caller it is wired while the table holds nothing, capacity is never tight and the model stays solvable.
@@ -259,7 +259,7 @@ public class CapacitySchedulingResourceUsageRegisterTests {
     /// </summary>
     /// <remarks>
     /// 三点成对：`BuildTimeSlots` 在基类里出现 / 两个子类里**都不出现**/
-    /// 两个子类仍各自存在且名字不同（对齐基线那两个类，不能合并成一个）。
+    /// 两个子类仍各自存在且名字不同（对齐两个类，不能合并成一个）。
     ///
     /// Three paired points: `BuildTimeSlots` appears in the base class; it appears in **neither** subclass (before the two were byte-identical, and one edit forgetting the other was
     /// certain); and both subclasses still exist with different names (they mirror two baseline classes and must not collapse into one).

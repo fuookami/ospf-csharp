@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// 航班链接的松弛层 / The flight-link slack layer.
 /// </summary>
 /// <remarks>
-/// 基线 `FlightLink.kt`：每条链接一个表达式 `link_k`，再加一个松弛
+/// ：每条链接一个表达式 `link_k`，再加一个松弛
 /// `link_slack_k = exampleThresholdSlack(link_k + 0.5·y[前驱] + 0.5·y[后继], 阈值 1, 只有负侧)`。
 ///
 /// 直觉上"链接"该是一条约束，实际是**松弛**：链接是否成立交给目标去压，而不是硬性禁止。两条系数都是 **0.5**——
@@ -31,13 +31,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// **`AddColumns` 找的是"同时含前后两个任务的束"**，系数是 1——分割成本不进这里（它在目标里），
 /// 这里数的只是"这一轮有几个束把这两个任务接在一起"。与基线一样**先清再加**，否则每轮都会把上一轮的项留着。
 ///
-/// The baseline's `FlightLink.kt`: one expression `link_k` per link plus a slack
+/// The code's: one expression `link_k` per link plus a slack
 /// `link_slack_k = exampleThresholdSlack(link_k + 0.5·y[prev] + 0.5·y[succ], threshold 1, negative side only)`. Intuitively a link is a constraint, but it is actually a **slack**:
 /// whether a link holds is left to the objective rather than forbidden outright. Both coefficients are **0.5** — a link is shared by two tasks, counting each as half is how the
 /// baseline avoids **counting the same pair twice**.
 ///
 /// **`AddColumns` looks for the bunches holding *both* tasks**, with coefficient 1 — the split cost does not enter here (it belongs in the objective); what is counted is "how many bunches
-/// of this round stitch these two tasks together". Like the baseline it **clears before adding**, otherwise every round keeps the previous round's terms.
+/// of this round stitch these two tasks together". Like the code it **clears before adding**, otherwise every round keeps the previous round's terms.
 /// </remarks>
 public sealed class FlightLink {
     private readonly IReadOnlyList<Link> _links;
@@ -94,10 +94,10 @@ public sealed class FlightLink {
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>成功或失败 / Success or failure.</returns>
     /// <remarks>
-    /// **没有链接时什么都不建**（与基线一致的提前返回）。构建一次之后不再重建：重建会让同一个链接在模型里
+    /// **没有链接时什么都不建**（的提前返回）。构建一次之后不再重建：重建会让同一个链接在模型里
     /// 出现两个符号，求解时它们各自取值、彼此无关。
     ///
-    /// **No links build nothing** (an early return matching the baseline). The tables are built once and never rebuilt: rebuilding would put two symbols for the same link into the model,
+    /// **No links build nothing** (an early return matching the code). The tables are built once and never rebuilt: rebuilding would put two symbols for the same link into the model,
     /// each taking its own value at solve time.
     /// </remarks>
     public Try Register(IAbstractLinearMetaModel<Flt64> model) {
@@ -181,7 +181,7 @@ public sealed class FlightLink {
             if (monomials.Count == 0) {
                 continue;
             }
-            // 先清再加，等价于基线的 `flush` / Clear, then add — the equivalent of the baseline's `flush`.
+            // 先清再加，等价于`flush` / Clear, then add — the equivalent of its `flush`.
             MutableLinearPolynomial<Flt64> mutable = expression.AsMutable();
             mutable.Clear();
             mutable.Add(new LinearPolynomial<Flt64>(monomials.ToArray(), Flt64.Zero));
@@ -191,13 +191,13 @@ public sealed class FlightLink {
     }
 
     /// <remarks>
-    /// **取消变量是从编译对象的表里取的**：取不到就不加那一项（而不是加一个系数 0.5 的空符号）。基线的 `y[task]` 就在这里。
+    /// **取消变量是从编译对象的表里取的**：取不到就不加那一项（而不是加一个系数 0.5 的空符号）。`y[task]` 就在这里。
     ///
     /// 表里存的是**变量项**（`CombinationVariableItem`），不是中间符号——按中间符号去转，会一条都转不中，
     /// 于是两个 0.5 项**静默消失**，松弛退化成"只有链接本身"。这类"转不中就跳过"的写法最容易被当成正确的容错。
     ///
     /// **The cancellation variable comes from the compilation's table**: when it is absent that term is simply not added (rather than adding a 0.5 monomial over an empty symbol).
-    /// That is the baseline's `y[task]`. The table holds **variable items** (`CombinationVariableItem`), not intermediate symbols — casting to the latter matches nothing, so both 0.5
+    /// That is its `y[task]`. The table holds **variable items** (`CombinationVariableItem`), not intermediate symbols — casting to the latter matches nothing, so both 0.5
     /// terms **silently vanish** and the slack degenerates to "the link alone". This "skip when the cast fails" shape is the easiest thing to mistake for correct fault tolerance.
     /// </remarks>
     private Fuookami.Ospf.Math.Symbol.ISymbol? CancellationOf(FlightTask task) =>

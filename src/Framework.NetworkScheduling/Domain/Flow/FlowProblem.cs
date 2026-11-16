@@ -1,7 +1,7 @@
 // 网络流问题的数据层 / The data layer of a network-flow problem.
-// 与固定 Kotlin 基线 `FlowContext.kt`（8792 字节）的数据部分对应：`FlowKey`、`CommodityFlow`、`FlowCapacity`、`FlowSlack`、
+// 与固定 Kotlin （8792 字节）的数据部分对应：`FlowKey`、`CommodityFlow`、`FlowCapacity`、`FlowSlack`、
 // `FlowProblem`、`FlowSolution`。
-// Mirrors the data portion of the pinned baseline's `FlowContext.kt`: `FlowKey`, `CommodityFlow`, `FlowCapacity`, `FlowSlack`,
+// The data portion of the: `FlowKey`, `CommodityFlow`, `FlowCapacity`, `FlowSlack`,
 // `FlowProblem`, `FlowSolution`.
 //
 // 注册态（变量、表达式、松弛）不在这一层，由 `FlowAggregation` 持有：同一份问题可以被多个模型复用、并行求解、重放。

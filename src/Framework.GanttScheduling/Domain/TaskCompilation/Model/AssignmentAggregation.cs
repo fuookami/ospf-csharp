@@ -1,8 +1,8 @@
 // 分配/编译聚合的重写规则 / Rewrite rules for the assignment and compilation aggregates.
-// 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的
+// 与固定 Kotlin 的
 // `assign.flush += sum(thisTasks.map { xi[it] })` 两段（分别按 `(key, executor)` 与 `key` 分组）对应。
 // Mirrors the two `assign.flush += sum(thisTasks.map { xi[it] })` blocks (grouped by `(key, executor)` and by `key`)
-// in the pinned baseline's `task_compilation/model/Compilation.kt`.
+//'s.
 
 using System;
 

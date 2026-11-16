@@ -1,6 +1,6 @@
 // 一维渲染适配 / One-dimensional render adapter.
-// 与固定 Kotlin 基线 `bpp1d/domain/packing/PackingRendererAdapter.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `PackingRendererAdapter.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Infrastructure;

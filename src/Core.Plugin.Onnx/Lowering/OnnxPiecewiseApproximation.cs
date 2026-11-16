@@ -9,12 +9,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **分段线性近似的切分策略** / The segmentation policy for piecewise-linear approximation.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation.kt` 里"分段近似"那一半。**降阶本身（把节点接进多项式与中间符号）依赖的是一整套模型机制，
-/// 还没移植；**但切分策略是独立可验的数学**，而它恰好也是**最容易静默出错的地方**：** 段数、边界与斜率算法之一写错，
+/// 同步 Kotlin `dee897d2` 的 里"分段近似"那一半。**降阶本身（把节点接进多项式与中间符号）依赖的是一整套模型机制，
+/// 还没实现；**但切分策略是独立可验的数学**，而它恰好也是**最容易静默出错的地方**：** 段数、边界与斜率算法之一写错，
 /// 得到的近似仍然"看起来像 Sigmoid"，只是偏离了真实曲线。**
 ///
-/// Syncs the piecewise-approximation half of `OnnxActivation.kt`. **Lowering a node into polynomials and intermediate symbols needs the whole model machinery,
-/// which is not ported yet; the segmentation policy, however, is independently verifiable mathematics — and exactly where a silent error lives: a wrong segment
+/// Syncs the piecewise-approximation half of. **Lowering a node into polynomials and intermediate symbols needs the whole model machinery,
+/// which is not implemented yet; the segmentation policy, however, is independently verifiable mathematics — and exactly where a silent error lives: a wrong segment
 /// count, bound or slope formula still looks like a sigmoid, it just drifts from the true curve.**
 /// </remarks>
 public static class OnnxPiecewiseApproximation

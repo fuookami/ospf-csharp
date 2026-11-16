@@ -17,11 +17,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.BunchCompilation;
 /// **只有"非空分配"的任务进入已分配列表** / Only tasks carrying a non-empty assignment count as assigned.
 /// </summary>
 /// <remarks>
-/// 转换的判据来自基线的 `TaskSolution.Companion.invoke`：遍历所有任务束里的任务，只有当任务的分配策略**非空**时才计入已分配。
+/// 转换的判据来自`TaskSolution.Companion.invoke`：遍历所有任务束里的任务，只有当任务的分配策略**非空**时才计入已分配。
 /// 把"在某个任务束里出现过"当成"已分配"，会把**排上了但没有执行者与时间**的任务报成已排产——
 /// 而这类任务恰恰是需要被重新安排的那些。
 ///
-/// The criterion follows the baseline's `TaskSolution.Companion.invoke`: walk every task in every bunch and count it as assigned only when its assignment policy is **non-empty**.
+/// The criterion follows its `TaskSolution.Companion.invoke`: walk every task in every bunch and count it as assigned only when its assignment policy is **non-empty**.
 /// Treating "appears in some bunch" as "assigned" reports tasks that **have neither an executor nor a time** as already scheduled — and those are exactly the ones that still
 /// need arranging.
 /// </remarks>

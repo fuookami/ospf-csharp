@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// In-range gives `x`, clearly outside gives zero, **the tolerance band gives `null`**.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticInStepRange.kt` 把空壳换成真实编码。
+/// 对齐把空壳换成真实编码。
 ///
 /// **三段语义**：
 ///
@@ -44,9 +44,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **`y` 由 `inside` 掩码**：**`inside = 1` 时 `y = x`、`inside = 0` 时 `y = 0`。**
 ///
-/// Replaces a stub with the real encoding, following the baseline's `QuadraticInStepRange.kt`.
+/// Replaces a stub with the real encoding, following its.
 ///
-/// **Three-way semantics**:
+/// **Three-way semantics**.
 ///
 /// | Input | Result |
 /// | --- | --- |
@@ -56,7 +56,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **The third case is the point**: **inside the band the input is neither "in" nor "clearly out", so
 /// it returns `null` — "unknown" rather than a guess.**
-/// **Folding the band into either side destroys "clearly out"**:
+/// **Folding the band into either side destroys "clearly out"**.
 /// **into "in" and a slightly out-of-range `x` returns the out-of-range value; into "out" and everything near the
 /// boundary returns zero.**
 ///

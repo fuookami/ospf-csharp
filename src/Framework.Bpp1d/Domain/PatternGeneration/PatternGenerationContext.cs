@@ -1,6 +1,6 @@
 // 有界候选生成 / Bounded candidate generation.
-// 与固定 Kotlin 基线 `bpp1d/domain/pattern_generation/PatternGenerationContext.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp1d/domain/pattern_generation/PatternGenerationContext.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp1d.Domain.Item.Model;
@@ -164,12 +164,12 @@ public sealed class PatternGenerationContext<V>(IPatternPolicy<V>? policy = null
                 // 首次迭代在 `bins` 为空时新建一个箱并只放一件，产出的正是同一个单件方案。
                 // 所以删掉这行**不改变结果**——变异存活是**真实的等价变异**，不是判据不够。
                 //
-                // 保留它是为了**与基线逐行对应**：基线也这么写。删掉会减少一次 `Add` 调用，
+                // 保留它是为了**与基线逐行对应**：这么写。删掉会减少一次 `Add` 调用，
                 // 但也会让后续对照基线时多一处"为什么这里不一样"的疑问。
                 //
                 // **This line overlaps with the loop below**: the loop always runs at least once (`Amount >= 1`, zero already excluded) and its first iteration creates a
                 // fresh bin holding exactly one piece — the same singleton. Deleting this line **does not change the result**, so the surviving mutant is a **genuine
-                // equivalent mutant**, not a weak criterion. It is kept to **mirror the baseline line for line**; removing it would only save one `Add` call while adding
+                // equivalent mutant**, not a weak criterion. It is kept to **mirror the code line for line**; removing it would only save one `Add` call while adding
                 // a "why is this different" question for the next reader.
                 var singleton = new PackingPattern<V>(bin.Id, new Dictionary<string, ulong> { [item.Id] = 1 });
                 Add(patterns, order, singleton);

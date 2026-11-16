@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 全种类指纹：快路径与阶梯 / The fast path and the ladder.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint`。
+/// 对齐的 `nativeFingerprint`。
 ///
 /// Adds </remarks>
 public class NativeFingerprintTests
@@ -80,7 +80,7 @@ public class NativeFingerprintTests
     ///
     /// **The batch's most substantive criterion.**
     ///
-    /// **Five of the baseline's thirteen branches are reachable here: `binary-logic-1` → `semi-1` → `max-1` →
+    /// **Five of its thirteen branches are reachable here: `binary-logic-1` → `semi-1` → `max-1` →
     /// `abs-1` / `pwl-abs-1`.**
     ///
     /// **What needs testing is <b>who wins when two neighbours are both non-empty</b>, because the most likely mistake in a
@@ -315,7 +315,7 @@ public class NativeFingerprintTests
     /// <remarks>
     /// **这是一条<b>缺口判据</b>：它断言的是一个"不存在"。**
     ///
-    /// **基线的阶梯有十三个分支，这里只有五个可达。另外八个
+    /// **阶梯有十三个分支，这里只有五个可达。另外八个
     /// （`masking-1`、`masking-2`、`indicator-2..8`）的前提是指示器或遮盖非空，
     /// 而这两个列表在本签名下不存在。**
     ///
@@ -325,7 +325,7 @@ public class NativeFingerprintTests
     ///
     /// **A <b>gap criterion</b>: it asserts an absence.**
     ///
-    /// **The baseline ladder has thirteen branches; five are reachable here.** **The other eight presuppose indicators or
+    /// **The code ladder has thirteen branches; five are reachable here.** **The other eight presuppose indicators or
     /// maskings, which this signature does not carry.**
     ///
     /// **So those eight are <b>missing</b>, not folded in.** **The criterion enumerates every schema this implementation can

@@ -11,13 +11,13 @@ namespace Fuookami.Ospf.Core.Variable;
 /// <remarks>
 /// **更正**： 说这个目录是"重建器的前置件"，**那个判断是错的。**
 ///
-/// 基线的 `buildModel` **不从 `TypeName` 重建变量**：它遍历快照的表达式 AST，把里面的
+/// `buildModel` **不从 `TypeName` 重建变量**：它遍历快照的表达式 AST，把里面的
 /// `IVariableItem` 引用**原样收出来**再用。所以重建器不需要"造变量"，需要的是"找回变量"
 /// ——**而这条路上没有类型名。**
 ///
 /// 这个目录仍然有用（报告、校验、跨语言对照），但**它不是重建器的前置件**。
 ///
-/// **correction**: claimed this catalog is the rebuilder's prerequisite. **That was wrong.** The baseline's `buildModel` **does not rebuild variables from
+/// **correction**: claimed this catalog is the rebuilder's prerequisite. **That was wrong.** The code's `buildModel` **does not rebuild variables from
 /// `TypeName`**: it walks the snapshot's expression AST and reuses the `IVariableItem` references found there. A rebuilder therefore does not *create* variables, it *finds*
 /// them — **and no type name appears on that path.** The catalog stays useful for reporting, verification and cross-language comparison, but **it is not the rebuilder's
 /// prerequisite.**
@@ -83,13 +83,13 @@ public static class VariableTypeCatalog
     /// <returns>是否造出 / Whether the name resolved to a variable.</returns>
     /// <remarks>
     /// **`RegisterVariable` 要的是变量实例，不是一个类型对象**；这个工厂能造出一个，
-    /// **但基线的做法不是造，是找回**：新建的对象 `Identifier` / `Key` 都不同，注册进去就是另一个变量。
+    /// **但做法不是造，是找回**：新建的对象 `Identifier` / `Key` 都不同，注册进去就是另一个变量。
     /// **更正见类型说明。**
     ///
     /// **认不出就返回 `false`，不兜底造一个连续型**：一个错的变量类型不报错，只是让整数模型按 LP 求解，
     /// **解出来了、值不对、没有一行日志说它换过类型。**
     ///
-    /// **`RegisterVariable` takes a variable instance, not a type object**, and this factory can supply one — **but that is not what the baseline does**: the baseline *finds* the original variable objects in the expression AST, and a new object is not the same variable (`Identifier` / `Key` differ, so it registers as another one). **See the type remarks for the correction.** **An unrecognised name returns
+    /// **`RegisterVariable` takes a variable instance, not a type object**, and this factory can supply one — **but that is not what the code does**: the code *finds* the original variable objects in the expression AST, and a new object is not the same variable (`Identifier` / `Key` differ, so it registers as another one). **See the type remarks for the correction.** **An unrecognised name returns
     /// `false` with no fallback**: a wrong variable type raises nothing, it just lets an integer model be solved as an LP — **solved, wrong, and with no log line saying the type
     /// changed.**
     /// </remarks>

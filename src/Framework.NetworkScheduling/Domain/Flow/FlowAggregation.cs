@@ -1,6 +1,6 @@
 // 网络流聚合与上下文 / Network-flow aggregation and context.
-// 与固定 Kotlin 基线 `FlowContext.kt` 的 `FlowContext` 类、`FlowAggregation.kt`（19647 字节）对应。
-// Mirrors the `FlowContext` class from `FlowContext.kt` and the whole of `FlowAggregation.kt`.
+// 与固定 Kotlin 的 `FlowContext` 类、（19647 字节）对应。
+// Mirrors the `FlowContext` class and the whole of.
 //
 // 聚合持有**每模型独立的注册态**（变量、表达式、松弛、行表），问题本身仍是不可变数据。生命周期被三条规则钉死：
 // 同一模型重复注册必须选项一致；不可跨模型复用；失败后不可复用。

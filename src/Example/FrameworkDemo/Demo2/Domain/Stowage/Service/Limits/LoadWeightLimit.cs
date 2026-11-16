@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 舱位装载重量上限 / The per-position load weight cap.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/LoadWeightLimit.kt`：对每个**可用**舱位加一行 `estimate_load_weight_j ≤ max_load_weight_j`。
+/// 对齐：对每个**可用**舱位加一行 `estimate_load_weight_j ≤ max_load_weight_j`。
 ///
 /// 右边取的是 `MaxLoadWeight` 的**符号**，不是 `EffectiveMlw` 的标量。两者在分段线性时不同：符号是按零油重分段的阶跃，
 /// 标量是当前零油重下的一个取值。用标量会让整架飞机在重载下被同一个上限卡住。
 ///
-/// Aligned with the baseline: one row `estimate_load_weight_j ≤ max_load_weight_j` per **available** position. The right-hand side is `MaxLoadWeight`'s **symbol**, not the
+/// One row `estimate_load_weight_j ≤ max_load_weight_j` per **available** position. The right-hand side is `MaxLoadWeight`'s **symbol**, not the
 /// `EffectiveMlw` scalar. They differ under piecewise linearity: the symbol is a step keyed by zero-fuel weight while the scalar is one value at the current zero-fuel weight;
 /// using the scalar pins the whole aircraft to one cap regardless of loading.
 /// </remarks>

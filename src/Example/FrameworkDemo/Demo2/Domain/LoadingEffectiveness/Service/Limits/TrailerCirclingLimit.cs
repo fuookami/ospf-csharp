@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 拖车绕行目标 / The trailer-circling objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/TrailerCirclingLimit.kt` 对齐：把（拖车内货物对 × 相邻舱位对）的绕行指示
+/// 与对齐：把（拖车内货物对 × 相邻舱位对）的绕行指示
 /// 加权求和，作为**最小化**目标，名为 `"trailer circling"`（带空格）。
 ///
-/// 四点必须照抄：
+/// 四点必须沿用：
 ///
 /// 1. **是 `Minimum`**。
 /// 2. **目标名带空格**：`"trailer circling"`。
@@ -30,8 +30,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 4. **系数是交叉的**：`coefficient(position2, item1)`、`coefficient(position1, item2)`——与
 ///    `ItemOrderReverseLimit`、`ItemPriorityReverseLimit` 同一写法。
 ///
-/// Aligned with the baseline: the (item pair within a trailer × adjacent position pair) circling indicators weighted and summed into a **minimisation** named `"trailer circling"` (with a
-/// space). Four things must be copied: **it is `Minimum`**; **the name has a space**; **an empty set returns success without an objective**; and **the coefficient is crossed** —
+/// The (item pair within a trailer × adjacent position pair) circling indicators weighted and summed into a **minimisation** named `"trailer circling"` (with a
+/// space). Four things are carried over: **it is `Minimum`**; **the name has a space**; **an empty set returns success without an objective**; and **the coefficient is crossed** —
 /// `coefficient(position2, item1)` and `coefficient(position1, item2)`, the same form as `ItemOrderReverseLimit` and `ItemPriorityReverseLimit`.
 /// </remarks>
 internal sealed class TrailerCirclingLimit

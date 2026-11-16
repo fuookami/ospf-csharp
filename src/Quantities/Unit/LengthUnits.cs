@@ -29,20 +29,20 @@ public static class LengthUnits {
     /// <summary>海里 / Nautical mile (1 nmi = 1852 m).</summary>
     public static readonly PhysicalUnit NauticalMile = new DerivedUnit(SIBaseUnits.Meter, Scale.Invoke(1852), "nautical mile", "nmi");
 
-    // **以下 22 个单位按基线 `Length.kt` 补齐。**
+    // **以下 22 个单位按补齐。**
     //
-    // **基线有 33 个长度单位，本仓原来只有 10 个**，而 `docs/` 里一次都没提过这件事——
+    // **33 个长度单位，本仓原来只有 10 个**，而 `docs/` 里一次都没提过这件事——
     // **"少 23 个"与"够用了"在文档上长得一样。**
     //
-    // **换算因子逐条抄自基线 `Length.kt` 的 `DerivedPhysicalUnit(... * Scale...)` 表达式**，
+    // **换算因子逐条抄自的 `DerivedPhysicalUnit(... * Scale...)` 表达式**，
     // **一个数都没有自己算**：单位换算错了不会报错，只会让"5 海里"变成别的长度。
     //
-    // **The 22 units below were added from the baseline `Length.kt`.**
+    // **The 22 units below were added from the code.**
     //
-    // **The baseline has 33 length units and this repo had 10**, and `docs/` never mentioned it —
+    // **The code has 33 length units and this repo had 10**, and `docs/` never mentioned it —
     // **"23 short" and "good enough" look the same in a document.**
     //
-    // **Every factor is copied from the baseline's `DerivedPhysicalUnit(... * Scale...)` expressions**,
+    // **Every factor is copied from its `DerivedPhysicalUnit(... * Scale...)` expressions**,
     // **with no number recomputed here**: a wrong conversion does not throw, it just makes "5 nautical miles" a different length.
 
     /// <summary>皮米 / Picometer.</summary>
@@ -93,10 +93,10 @@ public static class LengthUnits {
     public static readonly PhysicalUnit LightDay = new DerivedUnit(SIBaseUnits.Meter, Scale.Invoke(299792458.0 * 86400), "light day", "ld");
     /// <summary>光年 / Light year.</summary>
     /// <remarks>
-    /// **基线用的是儒略年 365.25 天**（`LightDay * 365.25`），**不是 365 天也不是 365.2425**。
+    /// **的是儒略年 365.25 天**（`LightDay * 365.25`），**不是 365 天也不是 365.2425**。
     /// **三者差 0.0069%**——**在光年的量级上就是 6.5 亿公里。**
     ///
-    /// **The baseline uses the Julian year of 365.25 days** (`LightDay * 365.25`), **not 365 and not 365.2425**.
+    /// **The code uses the Julian year of 365.25 days** (`LightDay * 365.25`), **not 365 and not 365.2425**.
     /// **The three differ by 0.0069%** — **which at a light year is about 650 million kilometres.**
     /// </remarks>
     public static readonly PhysicalUnit LightYear = new DerivedUnit(SIBaseUnits.Meter, Scale.Invoke(299792458.0 * 86400 * 365.25), "light year", "ly");

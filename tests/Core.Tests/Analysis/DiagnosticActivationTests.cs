@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 判据钉的是**证据边界**：哪些来源被认为"在场"、后端返回的成员里哪些能穿过这层。
 /// **这层漏一个，求解器生成的辅助元素就会出现在公开报告里。**
 ///
-/// **ported `DiagnosticActivation` (316 baseline lines)**. The criteria pin the **evidence boundary**: which sources count as present, and which backend members may cross
+/// **implemented `DiagnosticActivation` (316 baseline lines)**. The criteria pin the **evidence boundary**: which sources count as present, and which backend members may cross
 /// it. **One leak here and a solver-generated auxiliary element shows up in a public report.**
 /// </remarks>
 public class DiagnosticActivationTests {
@@ -152,10 +152,10 @@ public class DiagnosticActivationTests {
 
     /// <summary>**`put` 覆盖而不是追加，所以重复来源根本构造不出来** / `put` replaces, so a duplicate cannot be built at all.</summary>
     /// <remarks>
-    /// 基线用"构造后再校验"来防重复。这里 `Put` 先删同源再追加，**重复在入口就不可能存在**——
+    /// "构造后再校验"来防重复。这里 `Put` 先删同源再追加，**重复在入口就不可能存在**——
     /// 校验因此永远通过。**这一点要说清楚，否则那条校验看起来像在防一件不可能发生的事。**
     ///
-    /// The baseline guards duplicates by validating after the fact. Here `Put` removes the same source first, so **a duplicate cannot exist at the entry point** and the
+    /// The code guards duplicates by validating after the fact. Here `Put` removes the same source first, so **a duplicate cannot exist at the entry point** and the
     /// validation therefore always passes. **Say that out loud, or the check looks like it guards something that cannot happen.**
     /// </remarks>
     [Fact]

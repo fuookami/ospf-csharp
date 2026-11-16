@@ -18,10 +18,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service.Li
 /// 最小化按系数加权的冗余松弛 / Minimise the coefficient-weighted redundancy slack.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `service/limits/RedundancyLimit.kt`：`minimize(coefficient × redundancySlack)`。
-/// 系数是**调用时求值**的（基线是 `coefficient:  -> Flt64`），因为参数对象在管线构建之后还会被改。
+/// 对齐：`minimize(coefficient × redundancySlack)`。
+/// 系数是**调用时求值**的（`coefficient:  -> Flt64`），因为参数对象在管线构建之后还会被改。
 ///
-/// Mirrors the baseline: `minimize(coefficient × redundancySlack)`. The coefficient is **evaluated at invoke time** (the baseline takes `coefficient:  -> Flt64`) because the
+/// `minimize(coefficient × redundancySlack)`. The coefficient is **evaluated at invoke time** (the code takes `coefficient:  -> Flt64`) because the
 /// parameter object keeps being updated after the pipeline list is built.
 /// </remarks>
 public sealed class RedundancyLimit
@@ -77,10 +77,10 @@ public sealed class RedundancyLimit
 /// 最小化按系数加权的实验纵向平衡松弛 / Minimise the coefficient-weighted experimental longitudinal balance slack.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `service/limits/ExperimentalLongitudinalBalanceLimit.kt`。与冗余目标的形状完全一样，只是取的松弛不同——
+/// 对齐。与冗余目标的形状完全一样，只是取的松弛不同——
 /// 所以"两条管线其实是一条"这种错能编译、能跑，只是纵向平衡再也不被优化。
 ///
-/// Mirrors the baseline. The shape is identical to the redundancy objective with a different slack, so collapsing the two into one compiles and runs — it just stops
+/// The shape is identical to the redundancy objective with a different slack, so collapsing the two into one compiles and runs — it just stops
 /// optimising the longitudinal balance.
 /// </remarks>
 public sealed class ExperimentalLongitudinalBalanceLimit

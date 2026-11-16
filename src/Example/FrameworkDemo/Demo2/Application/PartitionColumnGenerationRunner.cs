@@ -98,15 +98,15 @@ internal static class PartitionColumnGenerationRunner
         }
 
         PartitionColumnGenerationOutcome<Flt64> outcome = solvedOk.Value;
-        // 备注格式照抄基线：`partition_columns={n};iterations={m};root_lp_converged={bool}`。
-        // The note follows the baseline verbatim.
+        // 备注格式照做：`partition_columns={n};iterations={m};root_lp_converged={bool}`。
+        // The note follows the code verbatim.
         notes.Add($"partition_columns={outcome.ColumnCount};iterations={outcome.Trace.Count};root_lp_converged={outcome.LpConverged}");
         notes.Add($"partition_solver={solver.Name}");
 
         // **没收敛也要说清楚**：`LpConverged` 为假时交回去的整数解**不是全局最优**，
         // 状态照基线写 `RestrictedFeasible`，别让人以为拿的是最优解。
         //
-        // **A non-converged run says so**: when `LpConverged` is false the integer solution is **not globally optimal**, so the status follows the baseline as
+        // **A non-converged run says so**: when `LpConverged` is false the integer solution is **not globally optimal**, so the status follows the code as
         // `RestrictedFeasible` rather than letting anyone read the answer as optimal.
         string status = outcome.LpConverged ? outcome.Loading.Status : "RestrictedFeasible";
         if (!outcome.LpConverged)

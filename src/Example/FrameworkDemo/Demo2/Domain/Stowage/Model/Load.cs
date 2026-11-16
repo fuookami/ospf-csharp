@@ -26,10 +26,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 装载模型 / The load model.
 /// </summary>
 /// <remarks>
-/// 基线 `demo2/domain/stowage/model/Load.kt` 共 585 行。这里落**此前**：`y`（推荐装载重量）、`z`（推荐装载数量）、
+/// 共 585 行。这里落**此前**：`y`（推荐装载重量）、`z`（推荐装载数量）、
 /// `load_amount_{舱位}`（该舱位装了几件）、`full_{舱位}`（该舱位是否装满）。未落部分逐条记在 <see cref="Register"/> 的注释里。
 ///
-/// The baseline `Load.kt` is 585 lines. lands the **first slice**: `y` (recommended load weight), `z` (recommended load count), `load_amount_{position}` and
+/// The code is 585 lines. lands the **first slice**: `y` (recommended load weight), `z` (recommended load count), `load_amount_{position}` and
 /// `full_{position}`. What is not landed is listed on <see cref="Register"/>.
 /// </remarks>
 public sealed class Load
@@ -168,14 +168,14 @@ public sealed class Load
     /// <param name="itemIndices">货物下标，保留调用方顺序及重复项 / Item indices, keeping the caller's order and duplicates.</param>
     /// <returns>按舱位下标的装载量符号 / The amount symbols by position index.</returns>
     /// <remarks>
-    /// 两条与基线一致的规矩：**同一舱位只建一个符号**，**顺序保留**（调用方的顺序与重复项照抄，因为基线用 {code}List&lt;Int&gt;{/code} 而不是 {code}Set{/code}）。
+    /// 两条的规矩：**同一舱位只建一个符号**，**顺序保留**（调用方的顺序与重复项沿用，因为{code}List&lt;Int&gt;{/code} 而不是 {code}Set{/code}）。
     ///
-    /// 基线的 `if (!amounts.containsKey(position))` 守卫**没有搬过来**：C# 的字典索引赋值本来就按 key 覆盖，去掉守卫后重复下标得到的仍是同一个
-    /// key 下的同一个值，差别只是少构造一次——那是个不可观测的差异，没有判据能钉住它，也就不该留一行只能靠"照抄基线"来自证合理的代码。
+    /// `if (!amounts.containsKey(position))` 守卫**没有搬过来**：C# 的字典索引赋值本来就按 key 覆盖，去掉守卫后重复下标得到的仍是同一个
+    /// key 下的同一个值，差别只是少构造一次——那是个不可观测的差异，没有判据能钉住它，也就不该留一行只能靠"照做"来自证合理的代码。
     ///
-    /// Two rules carried over: **one symbol per position** and **order preserved** (the caller's order and duplicates kept, because the baseline takes a {code}List&lt;Int&gt;{/code}, not a {code}Set{/code}).
-    /// The baseline's `if (!amounts.containsKey(position))` guard was **not** carried over: a C# dictionary assignment already replaces by key, so a repeated index lands on the same
-    /// key with the same value either way — the only difference is one fewer construction, which is unobservable, so leaving a line justified solely by "the baseline has it" would
+    /// Two rules carried over: **one symbol per position** and **order preserved** (the caller's order and duplicates kept, because the code takes a {code}List&lt;Int&gt;{/code}, not a {code}Set{/code}).
+    /// The code's `if (!amounts.containsKey(position))` guard was **not** carried over: a C# dictionary assignment already replaces by key, so a repeated index lands on the same
+    /// key with the same value either way — the only difference is one fewer construction, which is unobservable, so leaving a line justified solely by "the code has it" would
     /// be worse than dropping it.
     /// </remarks>
     public IReadOnlyDictionary<int, LinearExpressionSymbol> LoadAmountsOf(
@@ -283,14 +283,14 @@ public sealed class Load
     /// <remarks>
     /// 顺序照基线：**先**变量（`y`、`z`），**再** `load_amount`（要用 `stowage`），**最后** `full`（要用 `load_amount`）。`Load` 是 `Stowage` 的下游，自己不建矩阵。
     ///
-    /// 与基线的一处刻意差异：基线给"不需要该状态"的舱位建零范围变量**并仍然加进模型**；C# 只把需要的加进模型。
+    /// 与一处刻意差异：基线给"不需要该状态"的舱位建零范围变量**并仍然加进模型**；C# 只把需要的加进模型。
     /// 零范围的变量加进去对模型没有任何作用，只会让求解规模虚增——差异记在这里而不是埋着。
     ///
     /// 尚未落地 / Not landed yet：`predicate_load_weight_slack`、`estimateLoadWeight`/`actualLoadWeight`/`estimateLoaded`/`actualLoaded`、
     /// `loadEstimateLongitudinalTorque`/`loadActualLongitudinalTorque`/`loadLateralTorque`/`loadCLIM`/`loadIndex`。
     ///
-    /// Order follows the baseline: **variables first**, **then** `load_amount` (needs `stowage`), **last** `full` (needs `load_amount`). `Load` is downstream of `Stowage` and
-    /// does not build the matrix. One deliberate divergence: the baseline creates zero-range variables for positions that do not need the status **and still adds them**; C# only adds
+    /// Order follows the code: **variables first**, **then** `load_amount` (needs `stowage`), **last** `full` (needs `load_amount`). `Load` is downstream of `Stowage` and
+    /// does not build the matrix. One deliberate divergence: the code creates zero-range variables for positions that do not need the status **and still adds them**; C# only adds
     /// the needed ones — a zero-range variable contributes nothing and merely inflates the model.
     /// </remarks>
     public Try Register(LinearMetaModel<Flt64> model) {
@@ -298,15 +298,15 @@ public sealed class Load
         // **同一个模型上重复注册是空操作**：符号对象已经建好并进去了，再建一遍会撞名字、还会让旧引用失效。
         // 基线允许重复 `add`，所以这里也必须允许——**否则"配载 + 装载效能"这种正常组合根本跑不起来**。
         // **Re-registering into the same model is a no-op**: the symbols are already built and in, and rebuilding them collides on names and invalidates old references.
-        // The baseline tolerates a repeated `add`, so this must too — **otherwise a normal "stowage + loading effectiveness" combination cannot run at all**.
+        // The code tolerates a repeated `add`, so this must too — **otherwise a normal "stowage + loading effectiveness" combination cannot run at all**.
         if (_registeredIn is not null && ReferenceEquals(_registeredIn, model)) {
             return Results.Ok<Success>(Results.SuccessInstance);
         }
         _registeredIn = null;
-        // `y`/`z` **无条件构建**：基线里它们不在任何 `if` 里，`if (withMultiLoadingSchema)` 只包 `estimateLoadWeight`。
-        // 曾把它们包进守卫（判断错了），结果是"谓词重量松弛"在单方案下拿不到 `y`——而基线那段松弛同样不看方案。
+        // `y`/`z` **无条件构建**：它们不在任何 `if` 里，`if (withMultiLoadingSchema)` 只包 `estimateLoadWeight`。
+        // 曾把它们包进守卫（判断错了），结果是"谓词重量松弛"在单方案下拿不到 `y`——而段松弛同样不看方案。
         // **无条件**还有一层原因：`y`/`z` 的范围按舱位状态钉过零，单方案下它们本来就是常数零，不会虚增求解规模。
-        // `y`/`z` are **built unconditionally**: in the baseline they sit inside no `if` at all, and `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly
+        // `y`/`z` are **built unconditionally**: in the code they sit inside no `if` at all, and `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly
         // put them under the guard, which left the predicate weight slack without a `y` under the single schema — and that slack does not depend on the schema either.
         // `y`/`z` also have their ranges pinned to zero per position status, so under the single schema they are constants that inflate nothing.
         {
@@ -354,7 +354,7 @@ public sealed class Load
                 name: "load_amount_" + _positions[j].Name);
             // 基线给装载量加了 `range.leq(mla)`：件数上限是**舱位规格**，不是靠 `stowage` 的二元变量碰巧凑出来的。
             // 少了这一行，一个 3 槽位舱位里装 5 件在模型层面完全合法——二元变量各自为 1，加起来就是 5。
-            // The baseline bounds the amount by `range.leq(mla)`: the piece limit is a **position specification**, not something the binary `stowage` variables happen to imply.
+            // The code bounds the amount by `range.leq(mla)`: the piece limit is a **position specification**, not something the binary `stowage` variables happen to imply.
             // Without it a 3-slot position holding 5 pieces is perfectly legal in the model — five binaries set to one and the sum is five.
             Result<ValueRange<Flt64>, ErrorCode, Error<ErrorCode>> amountRange =
                 ValueRange<Flt64>.Of(Flt64.Zero, new Flt64(_positions[j].Mla));
@@ -374,7 +374,7 @@ public sealed class Load
             LinearExpressionSymbol amount = _loadAmount[j];
             if (!position.Status.Available) {
                 // 不可用的舱位永远满（基线 `LinearExpressionSymbol(Flt64.one)`）：它不参与装载，别让别的行去用它的容量。
-                // An unavailable position is always full (the baseline's `LinearExpressionSymbol(Flt64.one)`), so no other row may use its capacity.
+                // An unavailable position is always full (its `LinearExpressionSymbol(Flt64.one)`), so no other row may use its capacity.
                 var full = new LinearExpressionSymbol(
                     new MutableLinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), Flt64.One),
                     name: "full_" + position.Name);
@@ -386,8 +386,8 @@ public sealed class Load
                 continue;
             }
             if (position.Mla == 1UL) {
-                // 一个位的舱位：装满即装了（基线的 `LinearExpressionSymbol(loadAmount[j], Flt64, ...)`）。
-                // A single-slot position: full means loaded (the baseline's `LinearExpressionSymbol(loadAmount[j], Flt64, ...)`).
+                // 一个位的舱位：装满即装了（`LinearExpressionSymbol(loadAmount[j], Flt64, ...)`）。
+                // A single-slot position: full means loaded (its `LinearExpressionSymbol(loadAmount[j], Flt64, ...)`).
                 var full = new LinearExpressionSymbol(
                     new MutableLinearPolynomial<Flt64>(amount.Polynomial.Monomials, amount.Polynomial.Constant),
                     name: "full_" + position.Name);
@@ -422,7 +422,7 @@ public sealed class Load
         // 谓词装载重量松弛：`y` 与"该舱位需要的谓词下界"之间的双侧差。**每舱位一份，与多装载方案无关**——
         // 基线这一段也不在 `if (withMultiLoadingSchema)` 里。
         // The predicate load-weight slack: the two-sided gap between `y` and the lower bound this position needs. **One per position, independent of the multi-loading schema** —
-        // the baseline's block is not inside `if (withMultiLoadingSchema)` either.
+        // its block is not inside `if (withMultiLoadingSchema)` either.
         _predicateLoadWeightSlack.Clear();
         _predicateLoadWeightSlackFunction.Clear();
         for (int j = 0; j < _positions.Count; ++j) {
@@ -451,7 +451,7 @@ public sealed class Load
 
             // 右端两支（基线同构）：需要装载决策时，下界要乘"该舱位装了几件"——空舱位没有下界要求；
             // 不需要决策时右端就是那个常数下界。
-            // Two right-hand branches, as in the baseline: when a stowage decision is needed the bound multiplies "how many pieces this position holds" (an empty position has no
+            // Two right-hand branches, as in the code: when a stowage decision is needed the bound multiplies "how many pieces this position holds" (an empty position has no
             // lower bound), otherwise the bound is that constant.
             var right = new MutableLinearPolynomial<Flt64>();
             double min = position.Plw.Min;
@@ -483,8 +483,8 @@ public sealed class Load
             _predicateLoadWeightSlackFunction[j] = slackFunction;
         }
 
-        // 推荐装载重量：只有多装载方案才有（基线那个 if 也在这里）。项是实际重量 + 谓词松弛 y + 推荐数量 z。
-        // The estimated load weight exists only under the multi-schema (the baseline's `if` is here). Its terms are the actual weights plus the predicate slack `y` plus the
+        // 推荐装载重量：只有多装载方案才有（个 if 也在这里）。项是实际重量 + 谓词松弛 y + 推荐数量 z。
+        // The estimated load weight exists only under the multi-schema (its `if` is here). Its terms are the actual weights plus the predicate slack `y` plus the
         // recommended count `z`.
         _estimateLoadWeight.Clear();
         if (WithMultiLoadingSchema && Y is not null && Z is not null) {
@@ -625,7 +625,7 @@ public sealed class Load
         }
 
         // CLIM 只在宽体上存在（基线 `if (aircraftModel.wideBody)`）。窄体建出来会多一族无人约束的力臂符号。
-        // CLIM exists only on wide bodies (the baseline's `if (aircraftModel.wideBody)`). Building it on a narrow body adds an unconstrained arm family.
+        // CLIM exists only on wide bodies (its `if (aircraftModel.wideBody)`). Building it on a narrow body adds an unconstrained arm family.
         _clim.Clear();
         if (_aircraftModel is not null && _aircraftModel.WideBody) {
             for (int j = 0; j < _positions.Count; ++j) {
@@ -679,7 +679,7 @@ public sealed class Load
         // **无条件**（基线不在任何 `if` 里）： 曾把它包进 `if (WithMultiLoadingSchema)`，于是单方案下 `load_amount` 的容量
         // 联动整段消失——而单方案恰恰是最常用的那种。
         // Link the y/z weight **into the kernel's capacity row**: without it the slack is hundreds of kilograms the capacity row never sees.
-        // **Unconditionally** (the baseline has no `if` here): wrapped this in `if (WithMultiLoadingSchema)`, so under the single schema the whole capacity link vanished — and the
+        // **Unconditionally** (the code has no `if` here): wrapped this in `if (WithMultiLoadingSchema)`, so under the single schema the whole capacity link vanished — and the
         // single schema is the common case.
         if (Y is not null && Z is not null) {
             for (int j = 0; j < _positions.Count; ++j) {
@@ -746,11 +746,11 @@ public sealed class Load
     /// <param name="arm">力臂（英寸）/ The arm in inches.</param>
     /// <returns>千克力·英寸每千克 / Kilogram-force inches per kilogram.</returns>
     /// <remarks>
-    /// 基线是 `gravity(Quantity(one, weightUnit)) * longitudinalArm`——**先**把 1 千克变成力，**再**乘力臂量（英寸），得到力矩量，
+    /// `gravity(Quantity(one, weightUnit)) * longitudinalArm`——**先**把 1 千克变成力，**再**乘力臂量（英寸），得到力矩量，
     /// 最后换算到 `torqueUnit`。顺序反了（先换算再乘）会拿"力/质量"去对"力×长度"做量纲检查，直接失败。
-    /// 基线的 `item.weight` 是带单位的量；C# 的 `Item.Weight` 是无单位 `double`，这里按 `weightUnit`（千克）解读，与 `y`/`z` 一致。
+    /// `item.weight` 是带单位的量；C# 的 `Item.Weight` 是无单位 `double`，这里按 `weightUnit`（千克）解读，与 `y`/`z` 一致。
     ///
-    /// The baseline is `gravity(Quantity(one, weightUnit)) * longitudinalArm` — turn one kilogram into a force **first**, then multiply by the arm quantity (inches) to get a
+    /// The code is `gravity(Quantity(one, weightUnit)) * longitudinalArm` — turn one kilogram into a force **first**, then multiply by the arm quantity (inches) to get a
     /// torque, and finally convert to `torqueUnit`. Doing it the other way round asks the dimensionality check to accept force/mass against force×length, which fails. The
     /// baseline's `item.weight` is a unit-carrying quantity; C#'s `Item.Weight` is a bare `double`, interpreted here as `weightUnit` (kilograms), consistent with `y`/`z`.
     /// </remarks>

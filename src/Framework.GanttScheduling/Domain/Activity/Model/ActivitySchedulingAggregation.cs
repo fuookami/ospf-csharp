@@ -39,22 +39,22 @@ public sealed record ActivitySchedule<W>(
 /// 活动排程聚合：注册、校验、取解 / The activity scheduling aggregation: register, validate, extract.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivitySchedulingAggregation` 对齐。三处照抄：
+/// 与基线 `ActivitySchedulingAggregation` 对齐。三处沿用：
 ///
 /// 1. **只能注册一次**：第二次注册给出具体错误，而不是静默返回成功——静默成功会让调用方以为新模型被建好了。
 /// 2. **`minimizeCost` 为真时要求模型是最小化**，为假时**根本不注册成本目标**——两件事，不是一个开关的两种写法。
 /// 3. **`ExtractSolution` 要求模型就是注册时那个实例**（引用相等），别人的模型解不出来。
 ///
-/// 与基线的差异：基线是 `ActivitySchedulingAggregation` 的泛型版本，这里**固定为 `Flt64`**。
+/// 与差异：`ActivitySchedulingAggregation` 的泛型版本，这里**固定为 `Flt64`**。
 /// 原因不是省事，而是**下游全是 `Flt64`**：`ActivityCompilation` 的变量是 `BinVar`、行系数是 `Flt64`、
 /// 模型是 `LinearMetaModel` 的 `Flt64` 实例。参数化 `V` 只会让 `CompiledActivityProblem` 的泛型版本与
 /// `ActivityCompilation` 之间多出一个永远走不到的分支。**真需要别的数值类型时，连编译层一起参数化。**
 ///
-/// Aligned with the baseline's `ActivitySchedulingAggregation`. Three things copied: **registration happens once**, a second attempt reporting a concrete error rather than silently succeeding, since a
+/// Aligned with its `ActivitySchedulingAggregation`. Three things copied: **registration happens once**, a second attempt reporting a concrete error rather than silently succeeding, since a
 /// silent success would leave the caller believing a new model had been built; **`minimizeCost` requires a minimisation model when true and registers no cost objective at all when false**, two
 /// separate things rather than two spellings of one switch; and **`ExtractSolution` requires the very model instance that was registered** (reference equality).
 ///
-/// The difference from the baseline is that this is **fixed to `Flt64`** while the baseline is generic over `V`. That is not a shortcut but a consequence of **the whole downstream being `Flt64`**:
+/// The difference from the code is that this is **fixed to `Flt64`** while the code is generic over `V`. That is not a shortcut but a consequence of **the whole downstream being `Flt64`**:
 /// `ActivityCompilation` 的变量是 `BinVar`, the row coefficients are `Flt64` and the model is `LinearMetaModel` 的 `Flt64` 实例. Parameterising `V` would only add a branch between
 /// `CompiledActivityProblem` 的泛型版本 and `ActivityCompilation` that can never be taken. **When another numeric type is genuinely needed, parameterise the compilation layer along with it.**
 /// </remarks>

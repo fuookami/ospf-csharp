@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Material;
 /// **产品方向、需求口径与重复产品** / Product orientations, demand units and duplicate products.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Product2.kt`。单件面积（`area`）与逐条需求的几何校验按既有原则推迟——它们都需要
+/// 对应。单件面积（`area`）与逐条需求的几何校验按既有原则推迟——它们都需要
 /// `Quantity&lt;V&gt;` 的乘法或 `quantityIsPositive`。
 ///
-/// Mirrors the baseline `Product2.kt`. The single-piece area and the per-demand geometry validation are scoped out under the established rule — both need
+///. The single-piece area and the per-demand geometry validation are scoped out under the established rule — both need
 /// `Quantity&lt;V&gt;` multiplication or `quantityIsPositive`.
 /// </remarks>
 public class Product2Tests {

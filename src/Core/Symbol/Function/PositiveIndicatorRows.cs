@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Positive-indicator rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BigM.kt` 的 `positiveIndicatorConstraints`、`safePositiveIndicatorConstraints`、
+/// 对齐的 `positiveIndicatorConstraints`、`safePositiveIndicatorConstraints`、
 /// `relaxBigM` 补。
 ///
 /// **两行，方向相反，而两侧用的 Big-M <b>不是同一个数</b>**：
@@ -32,17 +32,17 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`_positive_lb` 用的是 `bigM + |tolerance|`，不是 `bigM`——这个差别<b>只在指示 = 0 时</b>显现。**
 ///
 /// **推导**：**下界行要的是 `poly ≥ tolerance − M·(1 − ind)`，即 `poly ≥ (tolerance − M) + M·ind`。**
-/// **如果照抄 `M`，指示 = 0 时得到 `poly ≥ tolerance − M`——那是 `−M` <b>加上一个 tolerance</b>，
+/// **如果沿用 `M`，指示 = 0 时得到 `poly ≥ tolerance − M`——那是 `−M` <b>加上一个 tolerance</b>，
 /// 比 `−M` 更松。**
 /// **用 `M + |tol|` 则让指示 = 0 时恰好是 `poly ≥ −M`，也就是"刚好不约束"。**
 ///
 /// **所以这条不是风格差异，是<b>松弛得刚好</b>与<b>多松一个 tolerance</b> 的差异。**
 /// **它不会让模型错——两种写法都允许所有合法解——但会让松弛变松，而且看不出原因。**
 ///
-/// Following the baseline's `positiveIndicatorConstraints`, `safePositiveIndicatorConstraints` and
+/// Following its `positiveIndicatorConstraints`, `safePositiveIndicatorConstraints` and
 /// `relaxBigM`.
 ///
-/// **Two rows, opposite directions, and the two sides do <b>not</b> use the same Big-M**:
+/// **Two rows, opposite directions, and the two sides do <b>not</b> use the same Big-M**.
 ///
 /// | Row | Coefficient | indicator = 0 | indicator = 1 |
 /// | --- | --- | --- | --- |

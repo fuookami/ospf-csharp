@@ -69,7 +69,7 @@ public record IisConfig {
         return Results.OkInstance;
     }
 
-    /// <summary>按 Kotlin 基线的 CPU 规模启发式推导默认线程数 / Derive the default thread count from the Kotlin CPU-size heuristic.</summary>
+    /// <summary>按 Kotlin CPU 规模启发式推导默认线程数 / Derive the default thread count from the Kotlin CPU-size heuristic.</summary>
     /// <param name="processorCount">可用处理器数 / Available processor count.</param>
     /// <returns>默认线程数 / Default thread count.</returns>
     private static ulong DefaultThreadCount(int processorCount) =>

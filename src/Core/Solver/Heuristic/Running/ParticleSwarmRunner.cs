@@ -1,6 +1,5 @@
 // 粒子群运行器 / The particle-swarm runner.
-// 与固定 Kotlin 基线 `runner/ParticleSwarmRunner.kt` 对应。
-// Mirrors the pinned baseline's `runner/ParticleSwarmRunner.kt`.
+// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;
@@ -56,7 +55,7 @@ public sealed record ParticleState<ObjValue, V>(
 /// **两个随机数按"个人项在前、社会项在后"的顺序抽取**。颠倒顺序不会改变分布，却会让同一随机流下的轨迹与基线不同，
 /// **而差异无法从结果里归因**。
 /// **The two random draws happen in the order personal-then-social.** Swapping them changes no distribution, yet makes the trajectory under
-/// the same random stream differ from the baseline, **and the difference cannot be attributed from the result**.
+/// the same random stream differ from the code, **and the difference cannot be attributed from the result**.
 /// </remarks>
 /// <typeparam name="ObjValue">目标值类型 / The objective-value type.</typeparam>
 /// <typeparam name="V">值类型 / The value type.</typeparam>

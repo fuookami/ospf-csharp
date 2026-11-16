@@ -18,14 +18,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 总重模型 / The total weight model.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/TotalWeight.kt`：每个飞行阶段一份**推荐**与一份**实际**符号；
+/// 逐条对齐：每个飞行阶段一份**推荐**与一份**实际**符号；
 /// 总重 = 业载 + 干操作重量 + 救生筏重量 + （起飞/着陆阶段的）燃油重量，**零油重阶段不加燃油**；
 /// 已经有**已计算总重**的阶段直接取那个常数，不再按公式拼。
 ///
 /// 第三条容易被忽略：`computedTotalWeight` 一旦给出，推荐总重就退化成常数。这不是优化而是语义——某些阶段的总重是
 /// 外部给定的（比如已配平算出来的），不该被业载的决策变量牵着走。
 ///
-/// Mirrors the baseline: one recommended and one actual symbol per flight phase; total weight = payload + dry operating weight + liferaft + fuel (take-off and landing only,
+/// one recommended and one actual symbol per flight phase; total weight = payload + dry operating weight + liferaft + fuel (take-off and landing only,
 /// **not** zero-fuel); and a phase that already has a **computed total weight** takes that constant instead of the formula. The third point is easy to miss: once
 /// `computedTotalWeight` is given, the recommended total degenerates into a constant. That is semantics, not an optimisation — some phases' totals come from outside (a trimmed
 /// figure, say) and should not be dragged around by the payload decisions.
@@ -85,10 +85,10 @@ public sealed class TotalWeight
     /// <param name="payloadPolynomial">业载多项式 / The payload polynomial.</param>
     /// <returns>总重多项式 / The total weight polynomial.</returns>
     /// <remarks>
-    /// 基线里"加燃油"只对 `TakeOff`／`Landing` 成立，`ZeroFuel` 什么都不加——这正是"零油重"的定义。写成"总是加燃油"
+    /// "加燃油"只对 `TakeOff`／`Landing` 成立，`ZeroFuel` 什么都不加——这正是"零油重"的定义。写成"总是加燃油"
     /// 会让零油重凭空重出一次起飞油量，而它同时是 `MaxLoadWeight` 分段线性规格的输入。
     ///
-    /// The baseline adds fuel only for `TakeOff` / `Landing` and nothing for `ZeroFuel` — that IS the definition of zero fuel. Adding fuel unconditionally would make zero-fuel
+    /// The code adds fuel only for `TakeOff` / `Landing` and nothing for `ZeroFuel` — that IS the definition of zero fuel. Adding fuel unconditionally would make zero-fuel
     /// weight carry a take-off fuel load out of nowhere, and that figure is also the input to `MaxLoadWeight`'s piecewise specification.
     /// </remarks>
     public LinearPolynomial<Flt64> TotalWeightPolynomial(FlightPhase phase, LinearPolynomial<Flt64> payloadPolynomial) {

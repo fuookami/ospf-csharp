@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// </summary>
 /// <remarks>
 /// 每个航班任务、每个舱位一个**表达式符号**，内容是"各任务束在这一舱位上提供的座位数 × 该束的列变量"。
-/// 基线里这是 `FlightCapacity.kt`，C# 侧一直没有——于是"这一轮的编排到底运了多少人/多少货"根本没有量可读。
+/// 这是，C# 侧一直没有——于是"这一轮的编排到底运了多少人/多少货"根本没有量可读。
 ///
 /// 两条规则必须照基线：
 ///
@@ -33,12 +33,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush` 再加，C# 的 `Flush` 是空实现，所以这里显式 `Clear`。
 /// 不做这一步，跑十轮之后同一个束会在表达式里出现十次——解上未必立刻错，展开是十倍的项。
 ///
-/// Each flight task and cabin gets one **expression symbol** whose content is "the seats each bunch offers in that cabin multiplied by that bunch's column variable". The baseline has
-/// `FlightCapacity.kt`; the C# side had nothing, so "how many passengers or how much cargo this round really moves" was simply unreadable. Two rules follow the baseline: **zero-capacity
+/// Each flight task and cabin gets one **expression symbol** whose content is "the seats each bunch offers in that cabin multiplied by that bunch's column variable". The code has
+///; the C# side had nothing, so "how many passengers or how much cargo this round really moves" was simply unreadable. Two rules follow the code: **zero-capacity
 /// bunches stay out of the expression** (they contribute nothing and only lengthen expansion), and **column variables come from the deduplicated order**, via
 /// `Compilation.ColumnItem(iteration, bunch)` rather than recounting the argument order.
 ///
-/// **`AddColumns` replaces rather than appends**: the baseline flushes before adding each round, but C#'s `Flush` is a no-op, so this clears explicitly. Without that step, ten rounds
+/// **`AddColumns` replaces rather than appends**: the code flushes before adding each round, but C#'s `Flush` is a no-op, so this clears explicitly. Without that step, ten rounds
 /// would put the same bunch into the expression ten times — the solution may not break immediately, but the expansion grows tenfold.
 /// </remarks>
 public sealed class FlightCapacity {
@@ -121,7 +121,7 @@ public sealed class FlightCapacity {
                     var monomials = new List<LinearMonomial<Flt64>>();
                     CollectPassenger(bunches, row.Key, cabin.Key, iteration, monomials);
                     if (monomials.Count > 0) {
-                        // 先清再加，等价于基线的 `flush` / Clear, then add — the equivalent of the baseline's `flush`.
+                        // 先清再加，等价于`flush` / Clear, then add — the equivalent of its `flush`.
                         MutableLinearPolynomial<Flt64> mutable = cabin.Value.AsMutable();
                         mutable.Clear();
                         mutable.Add(new LinearPolynomial<Flt64>(monomials.ToArray(), Flt64.Zero));

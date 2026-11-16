@@ -22,22 +22,22 @@ public static class PressureUnits {
     public static readonly PhysicalUnit Bar = new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(100000)), "bar", "bar");
     /// <summary>标准大气压 / Atmosphere (1 atm = 101325 Pa).</summary>
     public static readonly PhysicalUnit Atmosphere = new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(101325)), "atmosphere", "atm");
-    // 以下 5 个按基线 `Pressure.kt` 补齐：
+    // 以下 5 个按补齐：
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar。
     //
-    // **其中 MeterMercury 不能照抄基线，因为基线的公式与它自己的注释矛盾。**
+    // **其中 MeterMercury 不能照做，因为公式与它自己的注释矛盾。**
     // 基线写的是 `StandardAtmosphericPressure * 0.76`，
     // **但 0.76 米汞柱恰好等于一个标准大气压——所以要从大气压"除"回 0.76 米，不是乘。**
-    // 照抄会得到 77007 Pa，于是 mmHg = 77.007 Pa，**而基线自己在上方注释里写着 1 mmHg ≈ 133.322 Pa。**
+    // 沿用会得到 77007 Pa，于是 mmHg = 77.007 Pa，**而基线自己在上方注释里写着 1 mmHg ≈ 133.322 Pa。**
     //
     // **这里按注释与物理事实实现（除法），并让 mmHg 由 mHg 派生**，
     // **使 "mmHg 是 mHg 的千分之一" 成为恒等式而不是巧合。**
     //
-    // The five below were added from the baseline Pressure.kt:
+    // The five below were added from the code Pressure.kt:
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar.
     //
-    // **MeterMercury cannot be copied from the baseline, because its formula contradicts its own comment.**
-    // The baseline says `StandardAtmosphericPressure * 0.76`,
+    // **MeterMercury cannot be copied from the code, because its formula contradicts its own comment.**
+    // The code says `StandardAtmosphericPressure * 0.76`,
     // **but 0.76 m of mercury is exactly one standard atmosphere — so the atmosphere has to be divided back down
     // to 0.76 m, not multiplied.**
     // Copied as written it yields 77007 Pa, so mmHg = 77.007 Pa, **while the comment just above says
@@ -52,11 +52,11 @@ public static class PressureUnits {
 
     /// <summary>**标准大气压（101325 Pa）** / Standard atmospheric pressure.</summary>
     /// <remarks>
-    /// **与 `Atmosphere` 数值相同而名字不同**：基线用这个名字，本仓原来用 `Atmosphere`。
-    /// **两个都保留，因为汞柱单位的推导要读起来像基线的公式。**
+    /// **与 `Atmosphere` 数值相同而名字不同**：这个名字，本仓原来用 `Atmosphere`。
+    /// **两个都保留，因为汞柱单位的推导要读起来像公式。**
     ///
-    /// **Same value as `Atmosphere`, different name**: the baseline uses this one, this repo used `Atmosphere`.
-    /// **Both stay, so the mercury derivations read like the baseline formula.**
+    /// **Same value as `Atmosphere`, different name**: the code uses this one, this repo used `Atmosphere`.
+    /// **Both stay, so the mercury derivations read like the code formula.**
     /// </remarks>
     public static readonly PhysicalUnit StandardAtmosphericPressure =
         new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(101325)), "standard atmosphere", "atm");

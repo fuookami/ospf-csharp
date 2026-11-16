@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 提前装载目标 / The item-ahead-load objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/ItemAheadLoadLimit.kt` 对齐：**把已进入作业流程的货物尽早装上**，
-/// 也就是最大化"已作业货物"的装载量——基线的写法是最小化 `Σ coefficient × loaded[i]`，系数由调用方给（默认 1，
+/// 与对齐：**把已进入作业流程的货物尽早装上**，
+/// 也就是最大化"已作业货物"的装载量——写法是最小化 `Σ coefficient × loaded[i]`，系数由调用方给（默认 1，
 /// 目标名 `"item ahead load"`）。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
 /// 1. **三个前缀谓词按顺序找第一个成立的**：`任一货物已站坪` → `任一已站坪或已上车` → `任一三者皆有`。
 ///    找到**第一个**就停（`find`），不是三个都加。
@@ -33,9 +33,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 4. **目标名带空格**：`"item ahead load"`，与管线名 `item_ahead_load_limit` 不同。
 /// 5. **求和面向全部货物**，不是只面向满足谓词的那几件——谓词只决定"要不要加这条目标"。
 ///
-/// Aligned with the baseline: **items already in the operational flow should be loaded early**. Five things must be copied: **the three prefix predicates are tried in order and the
-/// first that holds wins** — any item on the hardstand, then any on the hardstand or boarded, then any with all three — since the baseline's `find` stops at the first, rather than
-/// adding all three; **when none holds, no objective is added** (the baseline's `if (predicate != null)`), returning success, because a zero-polynomial objective would take up a slot;
+/// **items already in the operational flow should be loaded early**. Five things must be copied: **the three prefix predicates are tried in order and the
+/// first that holds wins** — any item on the hardstand, then any on the hardstand or boarded, then any with all three — since its `find` stops at the first, rather than
+/// adding all three; **when none holds, no objective is added** (its `if (predicate != null)`), returning success, because a zero-polynomial objective would take up a slot;
 /// **it is `Minimum`**, not `Maximum`; **the name has a space**, `"item ahead load"`; and **the sum covers every item**, since the predicate only decides whether to add the objective.
 /// </remarks>
 internal sealed class ItemAheadLoadLimit
@@ -72,9 +72,9 @@ internal sealed class ItemAheadLoadLimit
     /// 三个前缀谓词 / The three prefix predicates.
     /// </summary>
     /// <remarks>
-    /// 顺序有意义：越靠后的谓词越宽。基线用 `find` 取**第一个**成立的。
+    /// 顺序有意义：越靠后的谓词越宽。`find` 取**第一个**成立的。
     ///
-    /// The order matters: later predicates are wider. The baseline's `find` takes the **first** that holds.
+    /// The order matters: later predicates are wider. The code's `find` takes the **first** that holds.
     /// </remarks>
     public static IReadOnlyList<Func<Item, bool>> Predicates { get; } = new Func<Item, bool>[]
     {

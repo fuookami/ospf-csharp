@@ -23,7 +23,7 @@ public sealed record PackagePattern(string Code) {
     /// 短模式 `A` 属于长模式 `AB`，反过来不成立。写成 `Code.StartsWith(other.Code)` 会把包含关系整个颠倒，
     /// 而这类错误**在两侧字符串等长时完全看不出来**，只在真实的长短层级里才暴露。
     ///
-    /// **The direction is "I am a prefix of the other", not "the other is a prefix of me"**. The baseline writes `ano.code.startsWith(code)`: the short pattern `A`
+    /// **The direction is "I am a prefix of the other", not "the other is a prefix of me"**. The code writes `ano.code.startsWith(code)`: the short pattern `A`
     /// belongs to the long pattern `AB`, never the reverse. Writing `Code.StartsWith(other.Code)` inverts the containment entirely, and **such a bug is invisible
     /// whenever both strings are the same length** — it only surfaces in a real short/long hierarchy.
     /// </remarks>

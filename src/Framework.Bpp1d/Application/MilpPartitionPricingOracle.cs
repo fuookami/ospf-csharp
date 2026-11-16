@@ -1,6 +1,5 @@
 // 分区局部 MILP 定价器 / The local MILP pricer for one partition.
-// 与固定 Kotlin 基线 `application/PartitionColumnGenerationApplicationService.kt` 的 `MilpPartitionPricingOracle` 对应。
-// Mirrors the baseline's `MilpPartitionPricingOracle`.
+// 与固定 Kotlin 的 `MilpPartitionPricingOracle` 对应。
 
 using System;
 using System.Collections.Generic;
@@ -42,11 +41,11 @@ public interface IPartitionPricingOracle<V>
 /// 用完整模型的顺序去索引会**静默把值配给错误的决策**——而错配后的检验数看起来仍然正常。
 ///
 /// **这里没有给"最优凭证"足够强的判据**：`FeasibleSolverOutput` 没有状态字段，也没有 `BestBound`，
-/// 所以用 `Gap` 代替基线的 `SolverStatus.Optimal` 且 `|cost - bestBound| &lt;= 1e-6`。**这是等价替换，不是实测等价。**
+/// 所以用 `Gap` 代替`SolverStatus.Optimal` 且 `|cost - bestBound| &lt;= 1e-6`。**这是等价替换，不是实测等价。**
 ///
 /// **Values are located through `model.Tokens.IndexOf`; a missing one is a failure.** The local model's token order differs from the full model's, so indexing by the
 /// full-model order would **silently pair values with the wrong decisions** — and the resulting reduced costs still look normal. **The optimality certificate is not
-/// strongly criterion-backed here**: `FeasibleSolverOutput` has neither a status field nor a `BestBound`, so `Gap` stands in for the baseline's
+/// strongly criterion-backed here**: `FeasibleSolverOutput` has neither a status field nor a `BestBound`, so `Gap` stands in for its
 /// `SolverStatus.Optimal` 且 `|cost - bestBound| &lt;= 1e-6`. **That is an equivalent substitution, not a measured equivalence.**
 /// </remarks>
 public sealed class MilpPartitionPricingOracle<V> : IPartitionPricingOracle<V>

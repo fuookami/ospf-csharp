@@ -1,8 +1,8 @@
 // 关系查询 Join 图校验 / Relational query join-graph validation.
-// 与固定 Kotlin 基线 `validate` 的 Join 部分及 `containsExactColumnCorrelation`／`containsBooleanConstant` 对应：
+// 与`validate` 的 Join 部分及 `containsExactColumnCorrelation`／`containsBooleanConstant` 对应：
 // 校验数据源命名不冲突、关联条件引用的都是已绑定的数据源，并且关联条件里**确实存在**一条目标侧与已绑定侧的
 // 列对列关联。
-// Mirrors the join section of the pinned Kotlin baseline's `validate` plus `containsExactColumnCorrelation` and
+// The join section of the pinned Kotlin: plus `containsExactColumnCorrelation` and
 // `containsBooleanConstant`: source naming must not conflict, references must resolve to already bound sources,
 // and the condition must **actually contain** a column-to-column correlation between the joined side and a bound
 // side.

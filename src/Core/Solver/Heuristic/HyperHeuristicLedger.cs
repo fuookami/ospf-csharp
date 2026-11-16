@@ -1,7 +1,7 @@
 // 超启发式运行的计数器与终止判定 / The hyper-heuristic run's ledger and termination decision.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun` 的 `termination` 与 `state`：
+// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun` 的 `termination` 与 `state`：
 // 两个纯函数，输入是计数器，输出是终止原因与特征输入。
-// Mirrors `termination` and `state` of `HyperHeuristicRun` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B): two pure functions
+// Mirrors `termination` and `state` of `HyperHeuristicRun`'s (47241 B): two pure functions
 // turning the counters into a termination reason and the feature input.
 
 using System;
@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic;
 /// **终止判定的顺序就是语义**。它是"多条互不相同的停止条件同时成立时报哪一个"的唯一约定，而**报哪一个会改变调用方看到的东西**：
 /// 超时与预算耗尽在报告里是两件事，前者说明环境慢、后者说明搜索用完了额度。
 ///
-/// 基线的顺序（本类照抄）：
+/// 顺序（本类沿用）：
 /// 1. 诊断非空 → `Failed`（有错误就不该报"跑完了"）；
 /// 2. 外部停止 → `Stopped`（人叫停的优先级高于预算）；
 /// 3. 评估额度用尽 → `EvaluationLimit`；
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic;
 /// and **which one wins changes what the caller sees**: a timeout and an exhausted budget are different reports — the first says the environment was
 /// slow, the second says the search spent its allowance.
 ///
-/// The baseline's order, copied here: diagnostics → `Failed`, stopped → `Stopped`, evaluation allowance → `EvaluationLimit`, steps → `StepLimit`,
+/// The code's order, copied here: diagnostics → `Failed`, stopped → `Stopped`, evaluation allowance → `EvaluationLimit`, steps → `StepLimit`,
 /// decisions → `StepLimit` (**decisions and steps share a reason, because to the caller both mean "ran out of turns"**), time → `TimeLimit`,
 /// every worker disabled → `NoCandidate`, otherwise `null` (this slice finished normally).
 /// </remarks>

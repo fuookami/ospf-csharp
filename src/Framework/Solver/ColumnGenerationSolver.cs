@@ -149,7 +149,7 @@ public interface IColumnGenerationSolver {
     /// <param name="options">框架求解选项 / Framework solve options.</param>
     /// <returns>LP 求解结果 / LP solve result.</returns>
     /// <remarks>
-    /// **基线的 `solveLP(metaModel, options)` 是主问题阶段的入口**，它在求解**前后各上报一次**进度，
+    /// **`solveLP(metaModel, options)` 是主问题阶段的入口**，它在求解**前后各上报一次**进度，
     /// 并用适配器把回调包装成 `MasterLP` 阶段：
     ///
     /// ```
@@ -163,7 +163,7 @@ public interface IColumnGenerationSolver {
     /// C# 侧原先**没有这个重载**，只有带 `name` 的那个——所以主问题阶段
     /// **既没有阶段快照，也没有 `MasterLP` 的适配包装**。这是 只接了一条路径的直接原因。
     ///
-    /// **The baseline's `solveLP(metaModel, options)` is the master-problem entry point**; it reports progress **once before and once after** the solve and wraps the
+    /// **The code's `solveLP(metaModel, options)` is the master-problem entry point**; it reports progress **once before and once after** the solve and wraps the
     /// callbacks with the adapters under the `MasterLP` stage (snippet above).
     ///
     /// The C# side **had no such overload**, only the one taking `name` — so the master-problem stage had **neither a stage snapshot nor `MasterLP` adapter
@@ -212,11 +212,11 @@ public interface IColumnGenerationSolver {
     /// <param name="solvingStatusCallBack">求解回调 / The solving callback.</param>
     /// <returns>带状态的结果 / The result with status.</returns>
     /// <remarks>
-    /// **默认实现只在可行时包一层**：基线的默认实现也是"调 `solveMILP`，成功包 `Feasible`"，
-    /// 它**不产生 `Infeasible`**——那要具体求解器报告不可行性才有意义。所以这里如实照抄，
+    /// **默认实现只在可行时包一层**：默认实现也是"调 `solveMILP`，成功包 `Feasible`"，
+    /// 它**不产生 `Infeasible`**——那要具体求解器报告不可行性才有意义。所以这里如实沿用，
     /// 而不是假装能检测不可行。
     ///
-    /// **The default implementation only wraps a feasible outcome**: the baseline's default also calls `solveMILP` and wraps success in `Feasible`, and it **never produces `Infeasible`** — that
+    /// **The default implementation only wraps a feasible outcome**: its default also calls `solveMILP` and wraps success in `Feasible`, and it **never produces `Infeasible`** — that
     /// requires a concrete solver reporting infeasibility. This copies that honestly rather than pretending to detect infeasibility.
     /// </remarks>
     async Task<Result<MilpSolveResult, ErrorCode, Error<ErrorCode>>> SolveMILPWithStatusAsync(
@@ -296,7 +296,7 @@ public interface IColumnGenerationSolver {
     /// 与基线 `MILPSolveResult` 对齐。**分成两个分支而不是"结果 + 布尔标志"**：不可行时根本没有解向量，
     /// 用标志位就要么给一个空解（下游会当成"零解"读）要么让字段可空（下游每处都要判空）。
     ///
-    /// Aligned with the baseline's `MILPSolveResult`. **Two branches rather than "a result plus a boolean flag"**: an infeasible solve has no solution vector at all, so a flag would either
+    /// Aligned with its `MILPSolveResult`. **Two branches rather than "a result plus a boolean flag"**: an infeasible solve has no solution vector at all, so a flag would either
     /// supply an empty solution that downstream reads as "all zeros" or force every downstream site to null-check.
     /// </remarks>
     interface MilpSolveResult {
@@ -315,7 +315,7 @@ public interface IColumnGenerationSolver {
     /// <remarks>
     /// 与基线 `LPResultWithStatus` 对齐。理由同 <see cref="MilpSolveResult"/>。
     ///
-    /// Aligned with the baseline's `LPResultWithStatus`, for the same reason as <see cref="MilpSolveResult"/>.
+    /// Aligned with its `LPResultWithStatus`, for the same reason as <see cref="MilpSolveResult"/>.
     /// </remarks>
     interface LpResultWithStatus {
         /// <summary>可行解 / A feasible solution.</summary>

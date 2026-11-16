@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 水平安定面配平上下界 / The bounds on horizontal stabilizer trim.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/HorizontalStabilizerLimit.kt`。每个安定面配置最多**三行**，且取值随装载模式变化：
+/// 逐条对齐。每个安定面配置最多**三行**，且取值随装载模式变化：
 ///
 /// | 行 | 模式 | 关系 | 名称后缀 |
 /// | --- | --- | --- | --- |
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 3. **常规下界总是加**（只要 `minTrim` 非空），与模式无关。它是硬边界，警告只是额外的收紧。
 /// 4. **上界与下界各自判断 `null`**，`maxTrim` 为空时连警告上界也不加。
 ///
-/// Mirrors the baseline. Up to **three rows** per stabilizer configuration with mode-dependent values, tabulated above. Four easy mistakes: (1) **the recommended-mode upper
+/// Up to **three rows** per stabilizer configuration with mode-dependent values, tabulated above. Four easy mistakes: (1) **the recommended-mode upper
 /// bound takes `warnMaxTrim ?? maxTrim`** while the **suffix** is `_warn_ub` only when `warnMaxTrim` really exists — a `??` for the value and a null test for the name are two
 /// different conditions, and using one for both produces a `_warn_ub` row with no warning value; (2) **the warning lower bound is recommended-mode only** and does **not** replace
 /// the regular one — both can be present; (3) **the regular lower bound is always added** when `minTrim` is non-null, regardless of mode, because it is the hard limit and the

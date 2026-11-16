@@ -20,10 +20,10 @@ namespace Fuookami.Ospf.Core.Tests;
 public sealed class HyperHeuristicPreflightTests {
     /// <summary>**只有必填字段的配置必须能通过预检** / A configuration with only the required fields must pass.</summary>
     /// <remarks>
-    /// 这条测试守的是**默认值表**：`HyperHeuristicConfig` 的六个可选组件都为空时，预检必须用基线的默认值填充。
+    /// 这条测试守的是**默认值表**：`HyperHeuristicConfig` 的六个可选组件都为空时，预检必须用默认值填充。
     /// 默认值写错一个，用户那份完全合法的配置就会报"缺字段"——**而错误指向配置，问题在默认值表里**。
     ///
-    /// This test guards the **default table**: with all six optional components empty, the preflight must fill in the baseline's defaults. Get one
+    /// This test guards the **default table**: with all six optional components empty, the preflight must fill in its defaults. Get one
     /// default wrong and a perfectly legal user configuration reports a missing field — **the error points at the configuration while the problem sits
     /// in the default table**.
     /// </remarks>

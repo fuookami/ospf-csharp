@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 这个前提单独钉了一条判据（反射）：**签名一变，那条就红**——那时必须把子问题注册挪进循环，而不是继续在循环外假装。
 ///
 /// wires the sub-problem too: stowage and airworthiness each register into it, measured at **29 rows / 25 symbols / 0 objectives**; the master is **11 / 50 /
-/// 4**. **Both registrations happen while building the models, not inside the iteration loop**, because neither sub registration in this port reads the
+/// 4**. **Both registrations happen while building the models, not inside the iteration loop**, because neither sub registration here reads the
 /// solution argument (the `StowageAggregation` signature has no such parameter). That premise gets its own reflection criterion: **change the signature and it
 /// reds**, at which point the sub registration must move into the loop instead of pretending outside it.
 /// </remarks>
@@ -119,7 +119,7 @@ public sealed class Demo2BendersSubModelTests
     /// 这里用**反射 + 调用计数**做不到（会需要构造完整上下文），所以只钉签名与文档的对应关系，并在上面的
     /// 形状判据里证明"解没被用"——**两处子问题注册都在循环外、只跑一次，若其中一处真的读了空列表，29 行这个数字就会变。**
     ///
-    /// It takes three parameters (`mode, model, solution`) like the baseline, but forwards to the aggregation's `Register(mode, model)`, **dropping the solution**.
+    /// It takes three parameters (`mode, model, solution`) like the code, but forwards to the aggregation's `Register(mode, model)`, **dropping the solution**.
     /// A real behavioural check would need a fully built context, so this pins the signature-to-documentation correspondence, while the shape criterion above proves
     /// the solution is unused — **both registrations run once, outside the loop; if either read the empty list, the 29 would change.**
     /// </remarks>

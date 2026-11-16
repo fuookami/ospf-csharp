@@ -16,14 +16,14 @@ namespace Fuookami.Ospf.Benchmark;
 /// 真实 DFS 的物料缓存构建：等价物料、不同物料、自定义策略回退 / Real DFS cache build: equivalent materials, distinct materials, custom-strategy fallback.
 /// </summary>
 /// <remarks>
-/// 补齐**：基线 `GenerationCacheBuildBenchmark.kt`（75 行）一直有，本仓 `src/Benchmark` 只有 13 个基准，
+/// 补齐**：一直有，本仓 `src/Benchmark` 只有 13 个基准，
 /// 缺的正是这一个和 `PatternColumnBenchmark`。**基准夹具的缺口不会报错，只会让"性能没测过"看起来像"没需求"。**
 ///
 /// 三个场景的差别全在**物料宽度上界**：`equivalent` 让 12 个物料上界相同（可互相替换），`distinct` 给每个加
 /// `index * 0.01`（互不可替换），`custom` 另外加一条恒真的自定义策略。**这三条走生成器里不同的剪枝路径**，
 /// 所以夹具必须区分——只跑一个场景等于只测了一条路。
 ///
-/// fills a gap**: the baseline's `GenerationCacheBuildBenchmark.kt` (75 lines) has always existed while this repo had only 13 benchmarks. **A missing benchmark
+/// fills a gap**: its (75 lines) has always existed while this repo had only 13 benchmarks. **A missing benchmark
 /// raises nothing; it just makes "performance was never measured" look like "performance was never needed".** The three scenarios differ only in the **materials'
 /// width upper bound** and take different pruning paths through the generator, so running one scenario measures one path.
 /// </remarks>
@@ -103,10 +103,10 @@ public class GenerationCacheBuildBenchmark {
 
     /// <summary>恒真的自定义策略 / An always-satisfied custom policy.</summary>
     /// <remarks>
-    /// 基线在 `custom` 场景里塞一个 `isSatisfied` 恒为 `true` 的匿名约束。**它不是装饰**：
+    /// `custom` 场景里塞一个 `isSatisfied` 恒为 `true` 的匿名约束。**它不是装饰**：
     /// 生成器要为每条约束走一次判定，多一条就多一次虚调用——**这正是要计时的那部分。**
     ///
-    /// The baseline adds an anonymous constraint whose `isSatisfied` is always `true`. **It is not decoration**: the generator consults every constraint on every
+    /// The code adds an anonymous constraint whose `isSatisfied` is always `true`. **It is not decoration**: the generator consults every constraint on every
     /// candidate, so one more is one more virtual call — **which is exactly the part being timed.**
     /// </remarks>
     private sealed class AlwaysSatisfiedConstraint : ICuttingPlanConstraint<Flt64> {

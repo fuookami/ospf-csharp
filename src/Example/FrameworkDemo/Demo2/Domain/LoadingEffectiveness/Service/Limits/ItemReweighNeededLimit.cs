@@ -19,20 +19,20 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 待复重货物目标 / The item-reweigh-needed objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/ItemReweighNeededLimit.kt` 对齐：最小化**尚未复重**货物的装载量，
+/// 与对齐：最小化**尚未复重**货物的装载量，
 /// 即尽量先装已复重的货物。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
-/// 1. **只有"没有复重时刻"的货物进目标**（基线的 `mapIndexedNotNull` 对 `reweighed != null` 返回 `null` 跳过）。
+/// 1. **只有"没有复重时刻"的货物进目标**（`mapIndexedNotNull` 对 `reweighed != null` 返回 `null` 跳过）。
 ///    写反会让已复重的货物也被压后。
 /// 2. **整件货物没有 `order` 也算"尚未复重"**——基线判的是 `item.order?.reweighed == null`，`order` 为 `null` 时该式也为真。
 /// 3. **是 `Minimum`**，目标名带空格：`"item reweigh needed"`。
 /// 4. **不判空集合**：即使所有货物都已复重，仍然加一个（可能为空的）目标。这与 `ItemAheadLoadLimit` 的早退**不同**。
 ///
-/// Aligned with the baseline: minimise the loaded amount of items **not yet reweighed**, i.e. load the already-reweighed ones first. Four things must be copied: **only items without
-/// a reweigh instant enter the objective** (the baseline's `mapIndexedNotNull` returns null for `reweighed != null`), and inverting it would push reweighed items back too; **an item
-/// with no `order` at all also counts as not-yet-reweighed**, since the baseline tests `item.order?.reweighed == null`, which is true when `order` is null; **it is `Minimum`** with a
+/// Minimise the loaded amount of items **not yet reweighed**, i.e. load the already-reweighed ones first. Four things are carried over: **only items without
+/// a reweigh instant enter the objective** (its `mapIndexedNotNull` returns null for `reweighed != null`), and inverting it would push reweighed items back too; **an item
+/// with no `order` at all also counts as not-yet-reweighed**, since the code tests `item.order?.reweighed == null`, which is true when `order` is null; **it is `Minimum`** with a
 /// spaced name, `"item reweigh needed"`; and **there is no empty-set guard** — even when every item is reweighed the objective is still added, which **differs** from
 /// `ItemAheadLoadLimit`'s early return.
 /// </remarks>

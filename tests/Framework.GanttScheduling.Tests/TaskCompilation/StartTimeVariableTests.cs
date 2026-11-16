@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </summary>
 /// <remarks>
 /// 的结束时间是**窗口结束点的常量**——完工时间因此只反映"计划什么时候结束"，最小化它等于什么都没做。
-/// 这里引入基线里的 `est`（开始时间变量），结束时间变成 `est + 时长`，完工时间才第一次**可被排程推动**。
+/// 这里引入的 `est`（开始时间变量），结束时间变成 `est + 时长`，完工时间才第一次**可被排程推动**。
 ///
 /// 这条链上有三处特别容易反：
 /// <list type="number">
@@ -211,10 +211,10 @@ public class StartTimeVariableTests {
 
     /// <summary>**离散时间窗必须失败，不能塞一个整数变量出去** / A discrete window must fail rather than ship an integer variable.</summary>
     /// <remarks>
-    /// 基线在离散窗口上用 `UIntVariable1`。`UIntVar` 的缺省上界是 `ulong.MaxValue`（换成 double 是 1.8e19，
+    /// 离散窗口上用 `UIntVariable1`。`UIntVar` 的缺省上界是 `ulong.MaxValue`（换成 double 是 1.8e19，
     /// 超过 binary64 精确整数上界 2^53），求解器注册阶段就会拒。在边界换算做对之前，**宁可报错**。
     ///
-    /// The baseline uses `UIntVariable1` on discrete windows. `UIntVar`'s default upper bound is `ulong.MaxValue` (1.8e19 as a double, beyond binary64's exact-integer limit of
+    /// The code uses `UIntVariable1` on discrete windows. `UIntVar`'s default upper bound is `ulong.MaxValue` (1.8e19 as a double, beyond binary64's exact-integer limit of
     /// 2^53), which the solver rejects at registration. Until the bound conversion is right, **failing is better**.
     /// </remarks>
     [Fact]

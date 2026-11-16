@@ -17,9 +17,9 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 public sealed class Demo5SolverFactoryTests {
     /// <summary>**未知求解器名失败并指名它** / An unknown solver name fails and names itself.</summary>
     /// <remarks>
-    /// 基线是 `else -> Gurobi`——写错一个名字会**静默拿到 Gurobi**，而错误要到后端不可用时才以一个无关的失败形式出现。
+    /// `else -> Gurobi`——写错一个名字会**静默拿到 Gurobi**，而错误要到后端不可用时才以一个无关的失败形式出现。
     ///
-    /// The baseline is `else -> Gurobi` — a typo **silently gets Gurobi**, and the mistake only surfaces later as an unrelated backend-unavailable
+    /// The code is `else -> Gurobi` — a typo **silently gets Gurobi**, and the mistake only surfaces later as an unrelated backend-unavailable
     /// failure.
     /// </remarks>
     [Fact]

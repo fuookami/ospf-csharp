@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// <remarks>
 /// 这是 `build(snapshot, target)` 的移植：重建模型，再追加一条目标约束。
 ///
-/// The port of `build(snapshot, target)`: rebuild the model, then append a target constraint.
+/// The implementation of `build(snapshot, target)`: rebuild the model, then append a target constraint.
 /// </remarks>
 public class DerivedModelTests {
     private static ConstraintProgrammingModel BuildModel() {

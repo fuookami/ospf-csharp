@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 基线对**所有**已移除任务做"固定为 0 + 摘变量"，不是只处理本轮新删的。
 /// 只处理本轮的话，早先被删的列仍在模型里可被选中——它们只是从聚合表里消失了。
 ///
-/// The baseline pins and drops **every** removed task, not only this round's. Handling only this round leaves earlier retirements still selectable in the model — they merely
+/// The code pins and drops **every** removed task, not only this round's. Handling only this round leaves earlier retirements still selectable in the model — they merely
 /// vanished from the aggregate tables.
 /// </remarks>
 public class IterativeRemoveColumnsTests {

@@ -34,8 +34,8 @@ public sealed record CuttingPlanDemandContribution<V>(
     /// **从不返回空串**。空串会让两个"未知单位"看起来相同，而基线还能按量纲区分。
     ///
     /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fifth** unit-key implementation found in, and it
-    /// used the pre- version that falls back to the **empty string** — the earliest divergence of all five. The baseline's `canonicalUnitKey` falls back to
-    /// `toString` (i.e. `dimension(scale)`) and **never returns an empty string**. An empty string makes two "unknown units" look identical, while the baseline can
+    /// used the pre- version that falls back to the **empty string** — the earliest divergence of all five. The code's `canonicalUnitKey` falls back to
+    /// `toString` (i.e. `dimension(scale)`) and **never returns an empty string**. An empty string makes two "unknown units" look identical, while the code can
     /// still tell them apart by dimension.
     /// </remarks>
     string ICuttingPlanDemandContributionForCanonicalKey.UnitKey => GenerationQuantityMath.UnitKey(Quantity.Unit);

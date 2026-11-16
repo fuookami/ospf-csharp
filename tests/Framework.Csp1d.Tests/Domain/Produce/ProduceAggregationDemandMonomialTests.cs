@@ -118,15 +118,15 @@ public class ProduceAggregationDemandMonomialTests {
     /// <remarks>
     /// **记的缺口**："初始方案的贡献单项式仍不登记"，并误以为"查基线后确认 `addInitialPlans` 只登记 id/键，两边一致"。
     ///
-    /// **那是错的。** 基线的 `register` 在 `addInitialPlans` **之后**还会建 `PlanBatchTerms`
-    /// （`PlanBatchTerms.kt`），用它填 `demandQuantity` / `materialQuantity` /
+    /// **那是错的。** `register` 在 `addInitialPlans` **之后**还会建 `PlanBatchTerms`
+    ///，用它填 `demandQuantity` / `materialQuantity` /
     /// `machineBatchQuantity` / `machineCapacityQuantity`。C# **完全没有这个类**
     /// （`grep PlanBatchTerms` 零命中），构造阶段只建空符号。
     ///
     /// 后果是**第一轮 LP 的需求与物料约束左边恒为零**——求解器会认为"什么都不做就已满足全部需求"。
     ///
-    /// **The gap recorded** ("initial plans' contribution monomials are still unregistered") also wrongly assumed "the baseline's `addInitialPlans` only registers
-    /// ids/keys, so both sides agree". **That was wrong.** The baseline's `register` builds `PlanBatchTerms` (`PlanBatchTerms.kt`) **after** `addInitialPlans` and fills the
+    /// **The gap recorded** ("initial plans' contribution monomials are still unregistered") also wrongly assumed "its `addInitialPlans` only registers
+    /// ids/keys, so both sides agree". **That was wrong.** The code's `register` builds `PlanBatchTerms` **after** `addInitialPlans` and fills the
     /// four symbol families from it. C# **has no such class at all** (`grep PlanBatchTerms` finds nothing) and its constructor only creates empty symbols.
     ///
     /// The consequence: **the first LP's demand and material constraints have an identically zero left side** — the solver believes doing nothing already satisfies every demand.
@@ -160,10 +160,10 @@ public class ProduceAggregationDemandMonomialTests {
 
     /// <summary>**同一方案内同一（产品, 单位）只计一次** / A repeated (product, unit) pair within one plan counts once.</summary>
     /// <remarks>
-    /// 基线的 `seen` 集合就是干这个的。少了它，一条方案里写两次同样的贡献，
+    /// `seen` 集合就是干这个的。少了它，一条方案里写两次同样的贡献，
     /// **需求约束的系数会翻倍**——解看起来更"够"，实际不够。
     ///
-    /// The baseline's `seen` set does exactly this. Without it, writing the same contribution twice in one plan **doubles the demand coefficient** — the solution looks
+    /// The code's `seen` set does exactly this. Without it, writing the same contribution twice in one plan **doubles the demand coefficient** — the solution looks
     /// better satisfied than it is.
     /// </remarks>
     [Fact]
@@ -196,12 +196,12 @@ public class ProduceAggregationDemandMonomialTests {
 
     /// <summary>**单位不匹配的贡献不得计入** / A contribution whose unit does not match must not be counted.</summary>
     /// <remarks>
-    /// 基线的条件是两个等号：`contribution.product.id == demand.product.id && contribution.quantity.unit == demand.quantity.unit`。
+    /// 条件是两个等号：`contribution.product.id == demand.product.id && contribution.quantity.unit == demand.quantity.unit`。
     ///
     /// 若实现只比较产品 id，一条**以厘米为单位**的贡献会被当成**毫米**的贡献计入，
     /// **系数差 10 倍而毫无提示**。这条判据钉住那个单位比较。
     ///
-    /// The baseline requires both: `contribution.product.id == demand.product.id && contribution.quantity.unit == demand.quantity.unit`. If the implementation compared only
+    /// The code requires both: `contribution.product.id == demand.product.id && contribution.quantity.unit == demand.quantity.unit`. If the implementation compared only
     /// the product id, a contribution in **centimetres** would count as one in **millimetres** — **a factor of 10 with no warning**. This pins the unit comparison.
     /// </remarks>
     [Fact]

@@ -1,6 +1,6 @@
 // 活动排程上下文 / Activity scheduling context.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../ActivitySchedulingContext.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `ActivitySchedulingContext.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
@@ -26,9 +26,9 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Service;
 /// The context carries one registration: it holds the candidate list and forwards `register` / `validate` / `extractSolution` to the aggregation layer. Two boundaries are
 /// worth pinning:
 ///
-/// 1. **The namespace must be legal.** The baseline requires `[A-Za-z][A-Za-z0-9_]*` because that name becomes the prefix of every constraint name in the solver. Letting
+/// 1. **The namespace must be legal.** The code requires `[A-Za-z][A-Za-z0-9_]*` because that name becomes the prefix of every constraint name in the solver. Letting
 ///    arbitrary strings through lets two different contexts collide on constraint names, and the solver indexes by name alone — **constraints are silently overwritten**.
-/// 2. **The candidate list must be a snapshot.** The baseline writes `choices.toList`, a copy. Holding the caller's list directly means one later `Add` by the caller
+/// 2. **The candidate list must be a snapshot.** The code writes `choices.toList`, a copy. Holding the caller's list directly means one later `Add` by the caller
 ///    **silently changes this context's candidate set**, with the context showing no sign of having changed.
 /// </remarks>
 public sealed class ActivitySchedulingContext<V>
@@ -79,7 +79,7 @@ public sealed class ActivitySchedulingContext<V>
     /// 最后才建上下文。**候选清单只收带 placement 的选择**——取消项不是"可排的候选"，
     /// 把它放进 `Choices` 会让调用方以为它排得进去。
     ///
-    /// Aligned with the baseline's `ActivitySchedulingContext.create`, **the order is not interchangeable**: validate the namespace first (otherwise every later step carries an illegal prefix), then
+    /// Aligned with its `ActivitySchedulingContext.create`, **the order is not interchangeable**: validate the namespace first (otherwise every later step carries an illegal prefix), then
     /// compile the problem (otherwise the aggregation has no indices), and only then build the context. **The candidate list takes only choices that carry a placement**, since a cancellation is not a
     /// schedulable candidate and putting it in `Choices` would tell the caller it can be placed.
     /// </remarks>
@@ -98,7 +98,7 @@ public sealed class ActivitySchedulingContext<V>
 
         // 基线经由 `SchedulingSolverValueAdapter<V>` 做数值转换；C# 侧该类型是静态类且下游固定 `Flt64`，
         // 因此这里只接受 `Flt64` 问题——与聚合层同一个口径。
-        // The baseline converts through `SchedulingSolverValueAdapter<V>`; in C# that type is static and the downstream is fixed to `Flt64`,
+        // The code converts through `SchedulingSolverValueAdapter<V>`; in C# that type is static and the downstream is fixed to `Flt64`,
         // so only an `Flt64` problem is accepted here — the same scope as the aggregation layer.
         if (problem is not ActivitySchedulingProblem<Flt64> concrete) {
             return Results.Failed<ActivitySchedulingContext<V>>(new Err<ErrorCode>(
@@ -173,10 +173,10 @@ public sealed class ActivitySchedulingContext<V>
     /// <param name="name">命名空间 / The namespace.</param>
     /// <returns>成功或非法命名空间的失败 / Success, or a failure for an illegal namespace.</returns>
     /// <remarks>
-    /// 规则与基线一致：**首字符必须是字母**，其余只能是字母、数字、下划线。首字符不允许数字，因为这个名字会直接拼进约束名，
+    /// 规则：**首字符必须是字母**，其余只能是字母、数字、下划线。首字符不允许数字，因为这个名字会直接拼进约束名，
     /// 而 `0_selection` 这样的名字在某些后端会被解析成别的东西。
     ///
-    /// The rule matches the baseline: **the first character must be a letter**, the rest letters, digits or underscores. A leading digit is refused because the name goes
+    /// The rule matches the code: **the first character must be a letter**, the rest letters, digits or underscores. A leading digit is refused because the name goes
     /// straight into constraint names, and a name like `0_selection` gets parsed as something else by some backends.
     /// </remarks>
     public static Result<Success, ErrorCode, Error<ErrorCode>> ValidateNamespace(string? name) {

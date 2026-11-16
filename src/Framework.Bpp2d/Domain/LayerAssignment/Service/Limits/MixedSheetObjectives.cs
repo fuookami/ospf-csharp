@@ -1,9 +1,9 @@
 // 混合板材目标 / Mixed sheet objectives.
-// 与固定 Kotlin 基线 `bpp2d/domain/layer_assignment/service/limits/MixedSheetObjectives.kt` 的纯函数部分对应。
-// Mirrors the pure-function part of the pinned Kotlin baseline's `MixedSheetObjectives.kt`.
+// 与固定 Kotlin 的纯函数部分对应。
+// The pure-function part of the pinned Kotlin: .
 //
-// 基线里的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在），见文末说明。
-// The baseline's two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the C# side — see the tail note.
+// 的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在），见文末说明。
+// The code's two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the C# side — see the tail note.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;
@@ -80,10 +80,10 @@ public static class MixedSheetObjectives {
     /// <param name="defaultCost">未配置类型的缺省成本 / The default cost for unconfigured types.</param>
     /// <returns>以列为输入的成本函数 / The cost function taking a column.</returns>
     /// <remarks>
-    /// **"列没有板材类型"与"板材类型不在价目表里"都落回缺省成本**：基线的 `layer.sheet?.let { ... } ?: default` 把两种情形合并了，
+    /// **"列没有板材类型"与"板材类型不在价目表里"都落回缺省成本**：`layer.sheet?.let { ... } ?: default` 把两种情形合并了，
     /// 这里保持同样的口径。若前者给零，一个还没绑定板材的列会在成本上免费，求解器于是偏爱它。
     ///
-    /// **Both "the column has no sheet type" and "the type is absent from the price table" fall back to the default**: the baseline's `layer.sheet?.let { ... } ?: default`
+    /// **Both "the column has no sheet type" and "the type is absent from the price table" fall back to the default**: its `layer.sheet?.let { ... } ?: default`
     /// merges the two, and the same convention is kept here. Returning zero for the former would make an unbound column free, and the solver would then prefer it.
     /// </remarks>
     public static System.Func<Layer<FltX>, FltX> PerTypeCost(

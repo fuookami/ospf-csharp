@@ -15,10 +15,10 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 求解器未知输出里的见证解 / The witness carried by a solver's "unknown" output.
 /// </summary>
 /// <remarks>
-/// **未知输出可以带回一个候选解**，而基线用它做一件很有分寸的事：
+/// **未知输出可以带回一个候选解**，而它做一件很有分寸的事：
 /// **候选解若通过完整校验，就把状态从 `Unknown` 提升为 `Reachable`。**
 ///
-/// **An unknown output may carry a candidate solution**, and the baseline does something careful with it: **if the candidate passes full validation, the status is promoted from `Unknown` to `Reachable`.**
+/// **An unknown output may carry a candidate solution**, and the code does something careful with it: **if the candidate passes full validation, the status is promoted from `Unknown` to `Reachable`.**
 ///
 /// **两个方向都不能松：**
 ///

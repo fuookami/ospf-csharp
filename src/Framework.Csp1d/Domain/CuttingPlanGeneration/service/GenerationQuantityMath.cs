@@ -122,15 +122,15 @@ internal static class GenerationQuantityMath {
     /// 而旧实现在 4096 处停下、**不报任何错**。基线 `computeMaxRepeatCount` **没有上限**，所以这是一个真实偏离。
     ///
     /// **为什么不能简单删掉上限**：宽度为零时，逐次相加永远不推进，基线自己也会死循环。
-    /// 所以改成**显式的零/负宽守卫**（直接返回 0）——既去掉截断，又不继承基线的死循环。
+    /// 所以改成**显式的零/负宽守卫**（直接返回 0）——既去掉截断，又不继承死循环。
     ///
     /// Implemented as **repeated addition plus a sign check** rather than division, because the value type is generic and division would need an extra arithmetic member.
     ///
     /// **The default cap used to be `4096`, which silently truncated legitimate results**: with a 1mm width and 10000mm available the correct answer is 10000, but the
-    /// old implementation stopped at 4096 **without reporting anything**. The baseline's `computeMaxRepeatCount` has **no cap**, so this was a real divergence.
+    /// old implementation stopped at 4096 **without reporting anything**. The code's `computeMaxRepeatCount` has **no cap**, so this was a real divergence.
     ///
-    /// **Why the cap cannot simply be deleted**: with a zero width, repeated addition never advances and the baseline itself loops forever. So instead there is an
-    /// **explicit zero/negative-width guard** returning 0 — removing the truncation without inheriting the baseline's infinite loop.
+    /// **Why the cap cannot simply be deleted**: with a zero width, repeated addition never advances and the code itself loops forever. So instead there is an
+    /// **explicit zero/negative-width guard** returning 0 — removing the truncation without inheriting its infinite loop.
     /// </remarks>
     public static ulong MaxRepeatCount<V>(Quantity<V> width, Quantity<V> remaining, IQuantityArithmetic<V> arithmetic, ulong limit = ulong.MaxValue)
         where V : struct, IComparable<V> {
@@ -174,23 +174,23 @@ internal static class GenerationQuantityMath {
     /// 而 Kotlin 的 `toString` 本身就是 `symbol ?: name ?: "${dimensionSymbol}(${scale})"`。
     ///
     /// **曾在这里加过 `GetType.FullName`，那是错的，撤回。** 当时的理由是两个不同类型、
-    /// 但换算规则相同的单位会撞成同一个键——**而那正是基线的行为**：基线只看符号/名称/量纲+比例，
+    /// 但换算规则相同的单位会撞成同一个键——**而那正是行为**：看符号/名称/量纲+比例，
     /// **不看类型**。C# 侧加类型名会让两个基线认为"同一单位"的单位在 C# 变成"不同单位"，
     /// 也就是**同一份输入在两种实现下得到不同的键**，这属于跨语言语义分叉。
     ///
     /// **这是单位键的唯一实现**：`GenerationWidthIndex.CanonicalUnitKey` 与
     /// `CrossContributionProjector.Measure` 都委托到这里，与基线"只有一个 private fun"一致。
     ///
-    /// **Byte-for-byte parity with the baseline**: the baseline's `PhysicalUnit.canonicalUnitKey` is `symbol ?: name ?: toString`, and Kotlin's `toString` is
+    /// **Byte-for-byte parity with the code**: its `PhysicalUnit.canonicalUnitKey` is `symbol ?: name ?: toString`, and Kotlin's `toString` is
     /// itself `symbol ?: name ?: "${dimensionSymbol}(${scale})"`.
     ///
     /// **once added `GetType.FullName` here; that was wrong and reverts it.** The reasoning then was that two differently typed units with the same
-    /// conversion rule collide on one key — **and that is exactly the baseline's behaviour**: it looks only at symbol/name/dimension+scale, **never at the type**.
-    /// Adding the type name on the C# side makes two units the baseline considers "the same" become "different", i.e. **the same input yields different keys under
+    /// conversion rule collide on one key — **and that is exactly its behaviour**: it looks only at symbol/name/dimension+scale, **never at the type**.
+    /// Adding the type name on the C# side makes two units the code considers "the same" become "different", i.e. **the same input yields different keys under
     /// the two implementations**, which is a cross-language semantic divergence.
     ///
     /// **This is the single implementation of the unit key**: both `GenerationWidthIndex.CanonicalUnitKey` and `CrossContributionProjector.Measure` delegate here,
-    /// matching the baseline's "one private fun".
+    /// matching its "one private fun".
     /// </remarks>
     public static string UnitKey(PhysicalUnit unit) =>
         unit.Symbol

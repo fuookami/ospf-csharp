@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// CPLEX 的原生能力探测 / Native capability detection for CPLEX.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CplexFunctionCapabilities.kt`（44 行）补，与同批的 `CoptFunctionCapabilities` 同源。
+/// 对齐补，与同批的 `CoptFunctionCapabilities` 同源。
 ///
 /// **CPLEX 的探测与 COPT 有一处<b>实质</b>差别，而它不是笔误：**
 ///

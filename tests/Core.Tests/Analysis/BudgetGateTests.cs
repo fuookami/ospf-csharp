@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 预算门控 / The budget gate.
 /// </summary>
 /// <remarks>
-/// **没有预算就是永不超支**，而"恰好等于预算"算超支（基线用 `>=`）。
+/// **没有预算就是永不超支**，而"恰好等于预算"算超支（`>=`）。
 /// **这两行是本类全部的价值**，也是唯一容易写反的地方。
 ///
-/// **No budget means never exceeded**, and "exactly the budget" counts as exceeded (the baseline uses `>=`). **Those two rows are the whole value here**, and the only easy inversion.
+/// **No budget means never exceeded**, and "exactly the budget" counts as exceeded (the code uses `>=`). **Those two rows are the whole value here**, and the only easy inversion.
 /// </remarks>
 public class BudgetGateTests {
     /// <summary>**没有预算 = 永不超支** / No budget means never exceeded.</summary>
@@ -35,9 +35,9 @@ public class BudgetGateTests {
 
     /// <summary>**恰好等于预算算超支** / Exactly the budget counts as exceeded.</summary>
     /// <remarks>
-    /// 基线用 `>=`。改成 `>` 会让"刚好用完预算"的那一次**多跑一次求解**——而它正是最后那一次。
+    /// `>=`。改成 `>` 会让"刚好用完预算"的那一次**多跑一次求解**——而它正是最后那一次。
     ///
-    /// The baseline uses `>=`. Changing it to `>` lets the solve that exactly spends the budget **run again** — and it is precisely the last one.
+    /// The code uses `>=`. Changing it to `>` lets the solve that exactly spends the budget **run again** — and it is precisely the last one.
     /// </remarks>
     [Fact]
     public void TheExactBudget_ShouldBeExceeded() {

@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 证明判定与分析侧纯投影 / Proof gating and the analysis-side pure projections.
 /// </summary>
 /// <remarks>
-/// 补 `ConstraintProgrammingAnalysisBackends.kt`（270 行）里不需要求解器的部分**：
+/// 补（270 行）里不需要求解器的部分**：
 /// 两个证明判定、assumption 映射、固定值投影、后端失败传播。
 ///
 /// **没搬的是 `ConstraintProgrammingPerturbationBackend` 本身**：它要 `solver.CreateSession(model, options)` 与
 /// `session.Solve(hints)`，**那是真实后端**。
 ///
-/// **The parts of `ConstraintProgrammingAnalysisBackends.kt` (270 lines) that need no solver is ported**: the two proof gates, the assumption mapper, the fixed-value projection and
+/// **The parts of (270 lines) that need no solver is implemented**: the two proof gates, the assumption mapper, the fixed-value projection and
 /// the backend-failure propagation. **What did not come over is `ConstraintProgrammingPerturbationBackend` itself**, which needs `solver.CreateSession(model, options)` and
 /// `session.Solve(hints)` — **that is a real backend.**
 /// </remarks>
@@ -128,7 +128,7 @@ public static class ConstraintProgrammingAnalysisBackends
         solution?.Values ?? new Dictionary<VariableId, Int64>();
 
     /// <summary>
-    /// 派生 LP 目标与基线目标的一致性校验 / Validate that a derived LP objective matches the baseline.
+    /// 派生 LP 目标与基线目标的一致性校验 / Validate that a derived LP objective matches the code.
     /// </summary>
     /// <param name="baseline">基线目标值 / Baseline objective value.</param>
     /// <param name="derived">派生目标值 / Derived objective value.</param>
@@ -136,12 +136,12 @@ public static class ConstraintProgrammingAnalysisBackends
     /// <returns>两个目标值是否一致 / Whether the objective values agree.</returns>
     /// <remarks>
     /// **任一侧为 `null` 都返回 `false`**：没有基线目标时"一致"无从谈起，返回 `true` 会让一份
-    /// 没有可比对象的报告声称"派生目标与基线一致"。
+    /// 没有可比对象的报告声称"派生目标"。
     ///
     /// **容差按量级缩放**：目标值在 `1e6` 量级时，绝对容差 `1e-9` 严苛到永远不成立。
     ///
     /// **`null` on either side returns `false`**: with no baseline objective there is nothing to agree with, and returning `true` would let a report with nothing to compare claim
-    /// "the derived objective matches the baseline". **The tolerance scales with magnitude**: at an objective around `1e6` an absolute `1e-9` is strict enough to never hold.
+    /// "the derived objective matches the code". **The tolerance scales with magnitude**: at an objective around `1e6` an absolute `1e-9` is strict enough to never hold.
     /// </remarks>
     public static bool ObjectivesAgree(Flt64? baseline, Flt64? derived, double tolerance) {
         if (baseline is not { } leftValue || derived is not { } rightValue) {

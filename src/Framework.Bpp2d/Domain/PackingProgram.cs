@@ -1,11 +1,10 @@
 // 物品域：排样程序 / Item domain: packing programs.
-// 与固定 Kotlin 基线 `item/model/PackingProgram.kt`（79 行）对应。
-// Mirrors the pinned baseline's `PackingProgram.kt`.
+// 与固定 Kotlin 对应。
 //
-// **这里不含 `ItemContext`**：它的 `aggregate` 依赖基线的 `Aggregation`（需求 + 板材上限的**入参**容器），而 C# 侧同名
+// **这里不含 `ItemContext`**：它的 `aggregate` 依赖`Aggregation`（需求 + 板材上限的**入参**容器），而 C# 侧同名
 // 概念 `PackingAggregation` 是**出参**结果类型（装 `PackedSheet` 的容器），两者语义不同。移植 `ItemContext` 需要先补齐
 // `Aggregation` 输入模型，留下批，不在这里硬套一个语义错位的类型。
-// **`ItemContext` is not covered here**: its `aggregate` needs the baseline's `Aggregation` (an **input** container of
+// **`ItemContext` is not covered here**: its `aggregate` needs its `Aggregation` (an **input** container of
 // demands and sheet limits), whereas the C# type of that name is an **output** result holding `PackedSheet`s — different
 // semantics. Porting `ItemContext` requires the `Aggregation` input model first, so it waits; not force a
 // semantically mismatched type.
@@ -20,9 +19,9 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 排样程序：描述一种在板材上重复排布的形状组合 / Packing program: a repeated shape combination on a sheet.
 /// </summary>
 /// <remarks>
-/// `Amount` 在基线上是**构造时算好的值**而非属性：程序一旦建成就不可变，件数不该随访问而重算，也不该因为
+/// `Amount` 在是**构造时算好的值**而非属性：程序一旦建成就不可变，件数不该随访问而重算，也不该因为
 /// `PerRowAmount` 被改而与实际排布脱节。
-/// In the baseline `Amount` is **computed once at construction** rather than a property: a program is immutable once built,
+/// In the code `Amount` is **computed once at construction** rather than a property: a program is immutable once built,
 /// its amount should not be recomputed on each access, nor drift from the real layout if `PerRowAmount` changed.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>

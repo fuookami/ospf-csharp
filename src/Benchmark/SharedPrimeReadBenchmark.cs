@@ -10,7 +10,6 @@ namespace Fuookami.Ospf.Benchmark;
 /// 多 reader 共享已建表的生产素性查询，不测后台预热 / Production primality reads sharing a ready table, not background warmup.
 /// </summary>
 /// <remarks>
-/// 与基线 `SharedPrimeReadBenchmark.kt`（923 B）对应。
 ///
 /// **建表在计时外，读线程只查询已覆盖范围**。查询值一旦超出 `Setup` 建好的范围，每次读都会走"扩展筛法"，
 /// 于是这个基准就从"共享读"变成了"扩展写"——**两者数量级不同，而断言/日志里看不出来**。

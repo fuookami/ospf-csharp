@@ -1,13 +1,13 @@
 // 层分配模型：聚合、需求、检验数 / Layer assignment model: aggregation, demand and reduced cost.
-// 与固定 Kotlin 基线 `layer_assignment/model/LayerAggregation.kt`（95 行）、`Load.kt` 的需求部分、
-// `ShadowPriceMap.kt` 的键与 `ReducedCost.kt`（91 行）对应。
-// Mirrors the pinned baseline's `LayerAggregation.kt`, the demand portion of `Load.kt`, the key in `ShadowPriceMap.kt`
-// and `ReducedCost.kt`.
+// 与固定 Kotlin 、 的需求部分、
+// 的键与（91 行）对应。
+// , the demand portion of, the key
+// and.
 //
 // **这里不含求解器符号层**：`Load`／`Capacity`／`Assignment`／`Objectives` 需要列生成求解器的线性符号与模型机制
 // （`LinearExpressionSymbols1` 等）。这里只移植**不依赖求解器**的那部分：聚合管理、需求结构、检验数计算。
 // **The solver-symbol layer is not covered here**: `Load` / `Capacity` / `Assignment` / `Objectives` need the column
-// generation solver's linear symbols and model machinery. Only the **solver-independent** portion is ported here:
+// generation solver's linear symbols and model machinery. Only the **solver-independent** portion is implemented here:
 // aggregation management, demand structures and reduced-cost computation.
 
 using System;
@@ -193,12 +193,12 @@ public sealed record Bpp2dAssignmentDemandEntry(
 /// 需求影子价格键 / Demand shadow price key.
 /// </summary>
 /// <remarks>
-/// **与基线的一处结构差异**：基线让该键继承框架的 `ShadowPriceKey`，而 `Framework.Bpp2d` 目前不引用
+/// **与一处结构差异**：基线让该键继承框架的 `ShadowPriceKey`，而 `Framework.Bpp2d` 目前不引用
 /// `Framework` 项目（`Framework.Csp1d` 才有该引用）。本类因此是**独立的值对象**，自带 `Equals`／`GetHashCode`。
 /// 语义不受影响（相等性只看需求种类与物品编号），但若要接入共享的 `AbstractShadowPriceMap`，需先给
 /// `Framework.Bpp2d` 加上对 `Framework` 的项目引用，再让本类继承 `ShadowPriceKey`。
 ///
-/// **One structural difference from the baseline**: the baseline derives this key from the framework's `ShadowPriceKey`,
+/// **One structural difference from the code**: the code derives this key from the framework's `ShadowPriceKey`,
 /// while `Framework.Bpp2d` does not reference the `Framework` project today (only `Framework.Csp1d` does). This class is
 /// therefore a **standalone value object** with its own `Equals` / `GetHashCode`. Semantics are unaffected (equality
 /// looks only at demand kind and item id), but wiring it into the shared `AbstractShadowPriceMap` would require adding a

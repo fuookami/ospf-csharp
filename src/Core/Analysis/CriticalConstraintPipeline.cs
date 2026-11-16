@@ -64,7 +64,7 @@ public static class CriticalConstraintPipeline
     /// <param name="snapshot">基线快照 / The baseline snapshot.</param>
     /// <param name="objectiveId">目标标识 / The objective identity.</param>
     /// <param name="baselineObjective">基线目标值 / The baseline objective value.</param>
-    /// <param name="baselineProvenOptimal">基线是否已证明最优 / Whether the baseline was proven optimal.</param>
+    /// <param name="baselineProvenOptimal">否已证明最优 / Whether the code was proven optimal.</param>
     /// <param name="target">目标条件，可为 <c>null</c> / The target, or <c>null</c>.</param>
     /// <param name="options">分析选项 / The analysis options.</param>
     /// <param name="backends">注入的阶段实现 / The injected stage implementations.</param>

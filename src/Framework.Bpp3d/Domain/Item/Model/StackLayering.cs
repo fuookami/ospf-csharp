@@ -22,14 +22,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// C# 侧 `QuantityPlacement3` 在 `Application` 层，那两个助手没有对应物——**而递归本身与几何无关：它只问三件事。**
 /// 所以这里把几何收成一个谓词 `Covers`，由调用方按自己的几何实现；**递归、同类型过滤、取最大值这三条语义逐行照搬基线。**
 ///
-/// the baseline uses `QuantityPlacement3&lt;Item, FltX&gt;` plus the geometry helpers `topItemPlacements` and `filterBottomOverlapped`. On the C#
+/// the code uses `QuantityPlacement3&lt;Item, FltX&gt;` plus the geometry helpers `topItemPlacements` and `filterBottomOverlapped`. On the C#
 /// side `QuantityPlacement3` lives in the `Application` layer and neither helper exists — while the recursion itself is independent of geometry: it asks
 /// three things. So the geometry is reduced to one predicate, `Covers`, supplied by the caller, and the recursion, the same-type filter and the maximum
-/// are ported line for line.
+/// are implemented line for line.
 /// </remarks>
 public interface IStackPlacement
 {
-    /// <summary>物品类型（基线比较的是 `bottomItem.type == item.type`）/ The item type, which the baseline compares for equality.</summary>
+    /// <summary>物品类型（基线比较的是 `bottomItem.type == item.type`）/ The item type, which the code compares for equality.</summary>
     string ItemType { get; }
 
     /// <summary>该放置的高度 / The placement's height.</summary>
@@ -58,7 +58,7 @@ public interface IStackPlacement
     /// 顶层集合需要"底面重叠**且更高**"这一对关系（基线 `topPlacements` 的第二条），而递归只需要底面重叠。
     /// 两个关系分开给出，是因为把"更高"塞进重叠关系会让"谁在谁上面"和"谁与谁同列"混成一件事——第一版就是这样丢掉一层的。
     ///
-    /// the top set needs "footprints overlap AND this one is higher" (the baseline's second condition) while the recursion needs plain overlap. They
+    /// the top set needs "footprints overlap AND this one is higher" (its second condition) while the recursion needs plain overlap. They
     /// are separate because folding "higher" into overlap conflates "who is above whom" with "who shares a column" — which is how the first version lost a
     /// layer.
     /// </remarks>
@@ -72,9 +72,9 @@ public interface IStackPlacement
 /// </summary>
 /// <remarks>
 /// 与基线 `PackageAttribute` 的伴生对象对应：`layerLayer`（层数）、`layerHeight`（高度）与把它们一并算出的 `layer`。
-/// **基线用协程并行取各分支的最大值；这里串行**——结果相同（都是最大值），而并行度属于调用方的事。
+/// **协程并行取各分支的最大值；这里串行**——结果相同（都是最大值），而并行度属于调用方的事。
 ///
-/// Mirrors the baseline's companion object: `layerLayer` (count), `layerHeight` (height) and `layer` computing both. **The baseline runs the branches
+/// 's companion object: `layerLayer` (count), `layerHeight` (height) and `layer` computing both. **The code runs the branches
 /// concurrently and takes the maximum; this runs them in sequence** — the result is the same (a maximum), and parallelism is the caller's business.
 /// </remarks>
 public static class StackLayering

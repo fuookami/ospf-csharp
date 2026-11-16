@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 多目标 pipeline 运行的完整结果 / The complete result of a multi-target pipeline run.
 /// </summary>
 /// <remarks>
-/// **这是 `CriticalityProfile.kt` 里 `CriticalityProfileAnalysisResult` 的移植。**
+/// **这是 里 `CriticalityProfileAnalysisResult` 的移植。**
 ///
 /// **各个报告被保留下来**，使调用方无需从汇总 profile 重建目标、扰动与冲突证据就能检查它们。
 ///
@@ -41,9 +41,9 @@ public sealed record CriticalityProfileAnalysisResult(
     /// 与 <see cref="Reports"/> 同义的兼容名 / A compatibility name for <see cref="Reports"/>.
     /// </summary>
     /// <remarks>
-    /// **基线里这是一个 `get` 别名。** 保留它是因为调用方读的是"目标报告"这个意图。
+    /// **这是一个 `get` 别名。** 保留它是因为调用方读的是"目标报告"这个意图。
     ///
-    /// **The baseline has this as a `get` alias.** It is kept because the caller reads the intent "target reports".
+    /// **The code has this as a `get` alias.** It is kept because the caller reads the intent "target reports".
     /// </remarks>
     public IReadOnlyList<CriticalConstraintAnalysisReport> TargetReports => Reports;
 
@@ -150,7 +150,7 @@ public sealed record CriticalityProfileAnalysisResult(
     /// </summary>
     /// <returns>成功，或结构化错误 / Success, or a structured error.</returns>
     /// <remarks>
-    /// **这是基线里那三道 `require` 的移植。** 它们挡的不是"参数为空"，
+    /// **这是那三道 `require` 的移植。** 它们挡的不是"参数为空"，
     /// **而是"两份列表来自不同的运行"**——
     /// **而那是这个结果类型唯一能错得悄无声息的方式。**
     ///
@@ -158,7 +158,7 @@ public sealed record CriticalityProfileAnalysisResult(
     /// **错位一位不会抛异常，只会让结论看着依然合理**：
     /// **状态来自 A 号目标，阻塞集合来自 B 号目标，而两者都合法。**
     ///
-    /// **This is the port of the three `require` guards in the baseline.** They do not guard against empty arguments — **they guard against two lists coming from different runs**, **which is the one way this result type can be silently wrong.**
+    /// **This is the implementation of the three `require` guards in the code.** They do not guard against empty arguments — **they guard against two lists coming from different runs**, **which is the one way this result type can be silently wrong.**
     /// Classification, the blocking summary, and the repair advice all pair reports and observations **by position**.
     /// **One step of misalignment raises nothing; it only makes the conclusion look reasonable**: **status from target A, blocking set from target B, both valid.**
     /// </remarks>

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
 /// <see cref="Indices"/> 只收**已有排程**的选择（键是那个排程），<see cref="Cancellations"/> 只收**没有排程**的活动
 /// （键是活动）。一个选择恰好落在其中一边，不会两边都有。
 ///
-/// Aligned with the baseline's `CompiledActivityProblem`. **The index table and the cancellation table are two different mappings**: <see cref="Indices"/> takes only choices that **already have a
+/// Aligned with its `CompiledActivityProblem`. **The index table and the cancellation table are two different mappings**: <see cref="Indices"/> takes only choices that **already have a
 /// placement** (keyed by that placement) while <see cref="Cancellations"/> takes only activities that **have none** (keyed by the activity). Each choice lands on exactly one side.
 /// </remarks>
 public sealed class CompiledActivityProblem<V>
@@ -134,7 +134,7 @@ public sealed class CompiledActivityProblem<V>
 /// 产能行与物料行分别由 `ActivityCapacitySweep` 与 `ActivityMaterialRows` 提供（两者都已有独立判据），
 /// 由聚合层拼接——这里不重复实现。
 ///
-/// Aligned with the baseline's `ActivitySchedulingRows.rows`, covering **selection, frozen, presence, dependency and extra** rows. Capacity and material rows come from `ActivityCapacitySweep` and
+/// Aligned with its `ActivitySchedulingRows.rows`, covering **selection, frozen, presence, dependency and extra** rows. Capacity and material rows come from `ActivityCapacitySweep` and
 /// `ActivityMaterialRows` (both already carrying their own criteria) and are stitched together by the aggregation layer, so they are not re-implemented here.
 /// </remarks>
 public static class ActivitySchedulingRowBuilder {
@@ -144,7 +144,7 @@ public static class ActivitySchedulingRowBuilder {
     /// <param name="data">编译后的问题 / The compiled problem.</param>
     /// <returns>行列表 / The rows.</returns>
     /// <remarks>
-    /// 三处照抄：
+    /// 三处沿用：
     ///
     /// 1. **选择行上下界都是 1**——每个活动恰好选一个模式，写成"至多 1"会允许一个都不选。
     /// 2. **冻结行只在 `Frozen` 时产生**，且上下界都是 1（钉死那一个选择）。
@@ -285,13 +285,13 @@ public static class ActivitySchedulingRowBuilder {
 /// 把一行注册进模型 / Register one row into a model.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivityRowPipeline` 对齐。三处照抄：
+/// 与基线 `ActivityRowPipeline` 对齐。三处沿用：
 ///
 /// 1. **系数与边界都要查有限性**——无穷大在建模阶段就该拒，而不是交给求解器。
 /// 2. **上下界相等时只注册一条等式**，注册两条不等式会让求解器多一层判断，且浮点下可能自相矛盾。
 /// 3. **变量取自 `compilation.Variables[index]`**，索引与变量同源。
 ///
-/// Aligned with the baseline's `ActivityRowPipeline`. Three things copied: **both coefficients and bounds are checked for finiteness**, since infinity belongs rejected at modelling time rather than
+/// Aligned with its `ActivityRowPipeline`. Three things copied: **both coefficients and bounds are checked for finiteness**, since infinity belongs rejected at modelling time rather than
 /// handed to the solver; **equal bounds register a single equality**, because two inequalities cost the solver an extra decision and can contradict each other in floating point; and **variables come
 /// from `compilation.Variables[index]`**, keeping index and variable from one source.
 /// </remarks>

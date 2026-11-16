@@ -122,13 +122,13 @@ public class ExecutorCompilationConstraint<E, A>
     /// <inheritdoc/>
     /// <remarks>
     /// **这一条以前只做校验、不加任何行**：它检查表里有没有每个执行器的编译表达式，然后返回 `Ok`。
-    /// 基线的 `invoke` 是 `model.addConstraint(executorCompilation[executor] eq 1, args = ExecutorCompilationShadowPriceKey(executor))`——
+    /// `invoke` 是 `model.addConstraint(executorCompilation[executor] eq 1, args = ExecutorCompilationShadowPriceKey(executor))`——
     /// 也就是**每个执行器必须恰好被编译一次**这条要求本身。少了它，执行器编译量可以取任意值（包括零），
     /// 于是"某个班次一个人都没上"不会在目标值上留痕迹，只让实际产出低于计划。
     ///
     /// 三件事一起做：**缺表达式就失败**（原来那半段）、**加 `= 1` 的行**、**行上挂键**。
     ///
-    /// **This used to validate only and add no row**: it checked that every executor had a compiled expression and returned `Ok`. The baseline's `invoke` is
+    /// **This used to validate only and add no row**: it checked that every executor had a compiled expression and returned `Ok`. `invoke` is
     /// `model.AddConstraint(executorCompilation[executor] eq 1, args = ExecutorCompilationShadowPriceKey(executor))` — the requirement itself, that **each executor is compiled exactly once**.
     /// Without it the compiled quantity may take any value (zero included), so "one shift uses nobody" leaves no trace in the objective and merely makes output fall short of plan. Three things now
     /// happen together: **fail on a missing expression** (the half that existed), **add the `= 1` row**, and **attach the key to the row**.

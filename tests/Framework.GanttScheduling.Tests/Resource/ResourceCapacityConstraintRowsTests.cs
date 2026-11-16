@@ -28,11 +28,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 /// 这条管线以前是 `public Try Invoke(object model) => Results.Ok&lt;Success&gt;(...)`——一行都不加。
 /// 上一个批次把数量 \/ 超量 \/ 不足三张表补齐，这里才轮到它们派上用场。
 ///
-/// 三件必须照抄基线：**`polyX` 不是数量本身**（有松弛时左端是 `x − pos` / `x + neg`）、
+/// 三件必须照做：**`polyX` 不是数量本身**（有松弛时左端是 `x − pos` / `x + neg`）、
 /// **没有松弛时退回数量**、**数量表没注册就失败**（当成零数量会让容量永远不紧，模型照样可解）。
 ///
 /// This pipeline used to be `Invoke(object model) => Ok` — not a single row. the previous step built the quantity / over / less tables; this one is where they finally pay off. Three things must
-/// be copied from the baseline: **`polyX` is not the quantity itself** (with a slack the left side is `x - pos` / `x + neg`), **fall back to the quantity when there is no slack**, and **fail
+/// be copied from the code: **`polyX` is not the quantity itself** (with a slack the left side is `x - pos` / `x + neg`), **fall back to the quantity when there is no slack**, and **fail
 /// when the quantity table was never registered** (treating it as quantity zero leaves capacity never tight while the model stays solvable).
 /// </remarks>
 public class ResourceCapacityConstraintRowsTests {

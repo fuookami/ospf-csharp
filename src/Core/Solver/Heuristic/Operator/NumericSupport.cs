@@ -1,6 +1,6 @@
 // 算子共用样板 / Shared boilerplate for operators.
-// 与固定 Kotlin 基线 `core/solver/heuristic/operator/Ordering.kt`、`operator/NumericSupport.kt` 对应。
-// Mirrors the pinned baseline's `core/solver/heuristic/operator/Ordering.kt` and `operator/NumericSupport.kt`.
+// 与固定 Kotlin 、 对应。
+// And.
 
 using System;
 using System.Collections.Generic;

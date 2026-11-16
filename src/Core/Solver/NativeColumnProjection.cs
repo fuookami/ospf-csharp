@@ -15,9 +15,9 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 把模型的变量列与 token 列对齐成"键 → 列号" / Align a model's variable columns with its token columns into key → column.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeColumns`。
+/// 对齐的 `nativeColumns`。
 ///
-/// **基线的签名是 `nativeColumns(model: LinearTriadModel)`，但函数体只用到两个东西：
+/// **签名是 `nativeColumns(model: LinearTriadModel)`，但函数体只用到两个东西：
 /// `model.variables` 与 `model.tokensInSolver`。**
 /// **所以这里<b>不</b>绑定具体模型类型，而是接收这两个列表——** **这不只是"更方便"：
 /// 它让这一格可以被独立测，而不是必须造一个完整模型。**
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// **两列长度相同、键各自唯一，但顺序不一样——那么按列号取到的值属于另一个变量。**
 /// **这种错位不会让任何一步报错，只会让报告里的数字张冠李戴。**
 ///
-/// **The baseline's signature is `nativeColumns(model: LinearTriadModel)` but the body uses only two things:
+/// **signature is `nativeColumns(model: LinearTriadModel)` but the body uses only two things:
 /// `model.variables` and `model.tokensInSolver`.** **So this does <b>not</b> bind to a concrete model type but takes those
 /// two lists — not merely convenient: it lets the cell be tested on its own instead of requiring a whole model.**
 ///

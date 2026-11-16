@@ -10,7 +10,7 @@ using Fuookami.Ospf.Core.Solver.Iis;
 namespace Fuookami.Ospf.Core.Tests.Solver;
 
 /// <summary>
-/// 不可行诊断配置契约测试，对照固定 Kotlin 基线的 IISConfig。
+/// 不可行诊断配置契约测试，对照固定 Kotlin IISConfig。
 /// Contract tests for the infeasibility diagnostic configuration, mirroring the pinned Kotlin IISConfig.
 /// </summary>
 public class IisConfigTests {

@@ -37,7 +37,7 @@ public static class NativeConflictSeed
     /// <param name="cancellationToken">调用方取消令牌 / Caller cancellation token.</param>
     /// <returns>种子，或 <c>null</c> / The seed, or <c>null</c>.</returns>
     /// <remarks>
-    /// **只传约束类的 activation id，不传边界/值域的。** 这是基线里一段很容易被"顺手补全"的推理：
+    /// **只传约束类的 activation id，不传边界/值域的。** 这是一段很容易被"顺手补全"的推理：
     /// 每个后端都保证为约束建 activation，**但当原始边界已经等于安全基础值域时，后端可以省略那条 activation**——
     /// 把这些 id 强行传进去，**一次合法的原生请求会变成"未知 id"的建模错误。**
     ///

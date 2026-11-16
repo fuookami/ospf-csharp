@@ -190,10 +190,10 @@ public class DelayAdvanceObjectiveTests {
 
     /// <summary>**全局开关关掉时整条目标不存在，返回 `Ok` 而不加分对象** / With the global switch off the objective does not exist: `Ok` with no sub-objective.</summary>
     /// <remarks>
-    /// 基线的 `delayEnabled` 为假时列表是空的，于是最小化一个空多项式——**这里选择不加目标**。
+    /// `delayEnabled` 为假时列表是空的，于是最小化一个空多项式——**这里选择不加目标**。
     /// 区别在于"凭空多出一条恒零目标"会让后续读目标数量的人困惑。
     ///
-    /// The baseline's list is empty when `delayEnabled` is false, so it minimises an empty polynomial — **here no objective is added**. The difference is that a
+    /// list is empty when `delayEnabled` is false, so it minimises an empty polynomial — **here no objective is added**. The difference is that a
     /// phantom constant-zero objective confuses whoever counts the objectives later.
     /// </remarks>
     [Fact]
@@ -215,10 +215,10 @@ public class DelayAdvanceObjectiveTests {
 
     /// <summary>**系数提取失败必须报错，不能静默用 1** / A failed extraction must fail, not silently use 1.</summary>
     /// <remarks>
-    /// 基线用 `Flt64.infinity` 兜底；`Flt64` 没有无穷。**静默退回 1 会把"计费未知"变成"计费 1"**，
+    /// `Flt64.infinity` 兜底；`Flt64` 没有无穷。**静默退回 1 会把"计费未知"变成"计费 1"**，
     /// 而目标看上去完全正常。
     ///
-    /// The baseline falls back to `Flt64.infinity`; `Flt64` has none (the same limit). **Silently falling back to 1 turns "unknown charge" into "charge 1"** while the objective
+    /// The code falls back to `Flt64.infinity`; `Flt64` has none (the same limit). **Silently falling back to 1 turns "unknown charge" into "charge 1"** while the objective
     /// looks perfectly normal.
     /// </remarks>
     [Fact]
@@ -281,7 +281,7 @@ public class DelayAdvanceObjectiveTests {
     /// 这条判据盯的是"**掩码真的乘上去了**"：符号必须是 `MaskingWithPolyMaskFunction` 的适配器（内部自带一个二值 `m`），
     /// 而不是裸的 `est_slack_*_pos`。只看"注册成功"会让"忘了乘掩码"通过——而忘了乘之后解同样合法，只是被取消的任务也在计费。
     ///
-    /// A cancelled task must not accrue deviation, so the baseline writes `delay_time = pos × taskCompilation`. C#'s `MaskingFunction` only became real. The criterion
+    /// A cancelled task must not accrue deviation, so the code writes `delay_time = pos × taskCompilation`. C#'s `MaskingFunction` only became real. The criterion
     /// targets "**the mask is really applied**": the symbol must be a `MaskingWithPolyMaskFunction` adapter (carrying its own binary `m`), not a bare `est_slack_*_pos`. Checking
     /// only "registration succeeded" would let a missing mask through — and without it the solution is still legal, just with cancelled tasks being charged too.
     /// </remarks>

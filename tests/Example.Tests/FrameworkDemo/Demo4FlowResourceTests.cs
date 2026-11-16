@@ -20,13 +20,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// </summary>
 /// <remarks>
 /// Demo4 的 `Flow` 此前是个**普通类**：有 `Id`/`Airport`/`Scene`/`Capacities`，却不继承 `ConnectionResource`，所以**当不了资源**，
-/// 也就装不进 `BunchSchedulingConnectionResourceUsage`。基线里它是 `ConnectionResource&lt;FlowControl, FltX&gt;`，而它的容量类型
+/// 也就装不进 `BunchSchedulingConnectionResourceUsage`。它是 `ConnectionResource&lt;FlowControl, FltX&gt;`，而它的容量类型
 /// `FlowControl` 本身也必须是 `AbstractResourceCapacity`——两者缺一，整条链路就断。
 ///
 /// **一个"长得像资源、但不是资源"的类，比完全没有这个类更难发现。**
 ///
 /// Demo4's `Flow` used to be a **plain class**: it had `Id`/`Airport`/`Scene`/`Capacities` but did not derive from `ConnectionResource`, so **it could not serve as a resource** and could not
-/// be wired into `BunchSchedulingConnectionResourceUsage`. In the baseline it is a `ConnectionResource&lt;FlowControl, FltX&gt;`, and its capacity type `FlowControl` must itself be an
+/// be wired into `BunchSchedulingConnectionResourceUsage`. In the code it is a `ConnectionResource&lt;FlowControl, FltX&gt;`, and its capacity type `FlowControl` must itself be an
 /// `AbstractResourceCapacity` — with either piece missing the chain breaks. **A class that looks like a resource without being one is harder to spot than a missing class.**
 /// </remarks>
 public class Demo4FlowResourceTests {
@@ -53,9 +53,9 @@ public class Demo4FlowResourceTests {
     /// </summary>
     /// <remarks>
     /// 四点成对：`Flow` 是 `ConnectionResource`（编译期就钉住，写成运行时断言是为了让人读到时明白意图）/
-    /// 名称沿用基线的 `ICAO_flow` / `FlowControl` 是 `IAbstractResourceCapacity` / 容量的上下界就是规则的额度（下界 0、上界 3）。
+    /// 名称沿用`ICAO_flow` / `FlowControl` 是 `IAbstractResourceCapacity` / 容量的上下界就是规则的额度（下界 0、上界 3）。
     ///
-    /// Four paired points: `Flow` is a `ConnectionResource` (the compiler pins it; the runtime assertion is there so readers see the intent); the name follows the baseline's
+    /// Four paired points: `Flow` is a `ConnectionResource` (the compiler pins it; the runtime assertion is there so readers see the intent); the name follows its
     /// `ICAO_flow`; `FlowControl` is an `IAbstractResourceCapacity`; and the capacity bounds are the rule's allowance (lower 0, upper 3).
     /// </remarks>
     [Fact]

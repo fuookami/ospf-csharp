@@ -1,7 +1,7 @@
 // 二维量纲点与向量 / 2D quantity point and vector.
-// 与固定 Kotlin 基线 `geometry2d/QuantityPoint2.kt` 对应。票量纲几何层只提供矩形、圆与包围盒，没有点位类型；
+// 与固定 Kotlin 对应。票量纲几何层只提供矩形、圆与包围盒，没有点位类型；
 // 二维装箱的落点计算需要点位与向量，因此单独补充。
-// Mirrors the pinned Kotlin baseline's `geometry2d/QuantityPoint2.kt`. The quantity geometry layer only ships
+// The pinned Kotlin: . The quantity geometry layer only ships
 // rectangles, circles and boxes — no point type — so 2D packing placement needs points and vectors provided
 // separately.
 
@@ -17,12 +17,12 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// 二维量纲向量 / 2D quantity vector.
 /// </summary>
 /// <remarks>
-/// **与基线的一处刻意差异**：基线的 `plus`／`minus` 直接返回 <c>QuantityVector2</c>，维度不匹配时只能抛异常；
+/// **与一处刻意差异**：`plus`／`minus` 直接返回 <c>QuantityVector2</c>，维度不匹配时只能抛异常；
 /// C# 这里返回结果类型，让调用方拿到结构化错误。<see cref="QuantityArithmetic"/> 的 `Plus`／`Minus` 会抛
 /// <c>ArgumentException</c>，本类型**刻意不复用它**——几何计算里一个量纲写错不该让整个排样崩掉，而应作为可处理的
 /// 失败返回。
 ///
-/// **A deliberate difference from the baseline**: the baseline's `plus`/`minus` return <c>QuantityVector2</c> and can
+/// **A deliberate difference from the code**: its `plus`/`minus` return <c>QuantityVector2</c> and can
 /// only throw on a dimension mismatch; these return a result type so callers get a structured failure.
 /// <see cref="QuantityArithmetic"/>'s `Plus`/`Minus` throw <c>ArgumentException</c> and are **deliberately not
 /// reused** here: a single wrong dimension in a geometry computation should be a handleable failure, not a crash.

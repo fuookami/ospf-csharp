@@ -1,6 +1,6 @@
 // 不读取模型行的独立排程复核 / Independent schedule validation without reading generated model rows.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../ActivityScheduleValidator.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `ActivityScheduleValidator.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;

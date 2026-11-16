@@ -1,13 +1,13 @@
 // 板材与层模型 / Sheet and layer model.
-// 与固定 Kotlin 基线 `bpp2d/domain/item/model/Sheet.kt`（123 行）与 `Layer.kt`（199 行）对应：
+// 与固定 Kotlin 与（199 行）对应：
 // 层是一块板材上的排样单元，由若干二维放置组成；`SheetLayer` 组合多个层，`Sheet` 是一块板材实例。
-// Mirrors the pinned baseline: a layer is a packing unit on one sheet made of 2D placements; `SheetLayer` combines
+// A layer is a packing unit on one sheet made of 2D placements; `SheetLayer` combines
 // layers and `Sheet` is one sheet instance.
 //
 // **这是解除 Bpp2d 业务层阻塞的关键一批**：`layer_generation`／`layer_assignment`／物料汇总／`Sheet` 重载都卡在
 // 这四个类型上。移植它们之后，先前刻意用"扁平放置列表"替代 `Sheet` 的地方可以补回正规入口。
 // ** unblocks the Bpp2d business layer**: `layer_generation`, `layer_assignment`, the material summary and
-// the `Sheet` overloads were all stuck on these four types. With them ported, places that deliberately used a flat
+// the `Sheet` overloads were all stuck on these four types. With them implemented, places that deliberately used a flat
 // placement list instead of `Sheet` can regain their proper entry point.
 
 using System;

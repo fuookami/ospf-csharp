@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 值还原：五路查找的顺序就是语义 / The five-way lookup order is the semantics.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `restoreValues` 与 `maxInputValues`。
+/// 对齐的 `restoreValues` 与 `maxInputValues`。
 ///
 /// Adds </remarks>
 public class NativeValueRestorationTests
@@ -159,12 +159,12 @@ public class NativeValueRestorationTests
     /// MAX selectors follow the largest value, taking the first on a tie.
     /// </summary>
     /// <remarks>
-    /// **基线的 `inputs.indexOf(inputs.maxOrNull!!)` 取的是<b>第一个</b>极值。**
+    /// **`inputs.indexOf(inputs.maxOrNull!!)` 取的是<b>第一个</b>极值。**
     ///
     /// **并列时选哪一支不影响目标值（两支一样大），但它影响求解器看到的
     /// 选择变量值——而那是可复现性的一部分：同一个解必须重建出同一组选择列。**
     ///
-    /// **The baseline's `indexOf(maxOrNull)` takes the <b>first</b> extreme.**
+    /// **The code's `indexOf(maxOrNull)` takes the <b>first</b> extreme.**
     ///
     /// **On a tie the choice does not change the objective, but it does change the selector values the solver sees — and
     /// that is part of reproducibility: one solution must reconstruct one selector set.**

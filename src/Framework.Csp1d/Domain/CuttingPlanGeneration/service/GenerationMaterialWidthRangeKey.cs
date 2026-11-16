@@ -78,7 +78,7 @@ internal static class GenerationMaterialWidthRangeKeyExtensions {
     /// "同一单位"在不同代码路径上判成不同结果，而**不会有任何测试发现**。
     ///
     /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fourth** unit-key implementation found in; with
-    /// four copies, any one diverging from the baseline makes "the same unit" resolve differently on different code paths, and **no test would notice**.
+    /// four copies, any one diverging from the code makes "the same unit" resolve differently on different code paths, and **no test would notice**.
     /// </remarks>
     private static string CanonicalUnitKey(PhysicalUnit unit) => GenerationQuantityMath.UnitKey(unit);
 }

@@ -1,6 +1,5 @@
 // 破坏—重建算子 / The ruin-and-recreate operators.
-// 与固定 Kotlin 基线 `operator/neighborhood/RuinRecreate.kt`（10361 B）对应。
-// Mirrors the pinned baseline's `operator/neighborhood/RuinRecreate.kt` (10361 B).
+// 与固定 Kotlin （10361 B）对应。
 
 using System;
 using System.Collections.Generic;

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Test.Benchmark;
 /// **这是一个 diff 工具，所以它最大的风险不是"算错"，而是<b>说得比做得多**：** **待办段被当成已转储、
 /// 或者输出了跨语言不可比的值（比如 Kotlin 的 `hashCode`）而被当成可比。** **四类判据分别钉：**
 ///
-/// **① 输出只含已实现段的前缀；② 每行都有段前缀且不含大写布尔（基线是小写）；③ 同一进程内两次运行<b>逐字符相同**；
+/// **① 输出只含已实现段的前缀；② 每行都有段前缀且不含大写布尔（小写）；③ 同一进程内两次运行<b>逐字符相同**；
 /// **④ 待办清单与已实现段不重叠，且每条都写了理由。**
 ///
 /// **It is a diff tool, so its greatest risk is not a wrong number but claiming more than it does: a deferred section presented as dumped, or a
@@ -47,7 +47,7 @@ public sealed class CrossVersionSemanticDumpTests
     /// <remarks>
     /// **大写布尔是真实的跨语言陷阱：** **`bool.ToString` 给 `True`，基线给 `true`——逐行 diff 会把每一行都算成差异。**
     ///
-    /// **A capitalised boolean is a real cross-language trap: `bool.ToString` gives `True` while the baseline gives `true`, so a line-by-line diff
+    /// **A capitalised boolean is a real cross-language trap: `bool.ToString` gives `True` while the code gives `true`, so a line-by-line diff
     /// reports every line as different.**
     /// </remarks>
     [Fact]

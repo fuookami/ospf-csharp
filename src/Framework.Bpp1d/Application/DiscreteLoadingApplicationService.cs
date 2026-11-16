@@ -1,6 +1,6 @@
 // 离散装载应用服务 / The discrete-loading application service.
-// 与固定 Kotlin 基线 `bpp/application/DiscreteLoadingApplicationService.kt` 的 MILP 路径对应。
-// Mirrors the MILP path of the pinned Kotlin baseline's `DiscreteLoadingApplicationService.kt`.
+// 与固定 Kotlin 的 MILP 路径对应。
+// The MILP path of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -85,7 +85,7 @@ public sealed record DiscreteLoadingSolveResult<V>(
 /// </summary>
 /// <typeparam name="V">领域数值 / Domain number.</typeparam>
 /// <remarks>
-/// **这里只做 MILP 路径，Benders 路径未移植。** 基线有两条路径，`preferBenders` 时先试 Benders、
+/// **这里只做 MILP 路径，Benders 路径未实现。** 两条路径，`preferBenders` 时先试 Benders、
 /// 失败后可回退。Benders 那半边的依赖（`LinearBendersPartition.BuildAsync`、`LinearBendersAlgorithm`、
 /// `LinearBendersResult`）**C# 侧都在**，但这里预算不够把两条路径都做完——**所以显式拒绝 `preferBenders`，
 /// 而不是静默走 MILP**。静默降级会让调用方以为拿到了 Benders 的轨迹与终止原因。
@@ -94,7 +94,7 @@ public sealed record DiscreteLoadingSolveResult<V>(
 /// 必须一致（相对容差 `1e-6`）。少了它，一个**模型与求解器错位**的错误会被当成正常结果返回——
 /// 那类错误最难在业务侧发现，因为结果"看起来合理"。
 ///
-/// **Only the MILP path is ported here; the Benders path is not.** The baseline tries Benders first when `preferBenders` is set and may fall back. All the Benders
+/// **Only the MILP path is implemented here; the Benders path is not.** The code tries Benders first when `preferBenders` is set and may fall back. All the Benders
 /// dependencies exist on the C# side, but the budget did not cover both paths — **so `preferBenders` is refused explicitly rather than silently degraded**, which
 /// would let callers believe they hold a Benders trace and termination reason. **The objective re-check in `finish` is the most important part**: the solver's
 /// objective must agree with one **recomputed from the full model** (relative tolerance `1e-6`), because otherwise a **model/solver mismatch** is returned as a
@@ -171,7 +171,7 @@ public sealed class DiscreteLoadingApplicationService<V>
         }
 
         // **回退必须拿到全新的模型与上下文。** 工厂复用同一个实例会让"回退"实际还在用被 Benders 改过的模型——
-        // 而结果看上去正常。基线的这条判断在这里同样必要。
+        // 而结果看上去正常。这条判断在这里同样必要。
         //
         // **The fallback must receive a fresh model and context.** Reusing one instance through the factory would mean the "fallback" still works on the model
         // Benders already mutated — and the result would look normal.
@@ -277,14 +277,14 @@ public sealed class DiscreteLoadingApplicationService<V>
 
         // **目标子项必须先展平到变量级**：`MetaSubObjects` 的单项式里可以有**表达式符号**
         // （`stowage_{i}_{j}` 这类 `LinearExpressionSymbol`），它们本身不是变量、也不在解表里。
-        // 基线用的是 `model.objectiveSnapshot`，那一步就是展平；C# 这边一直缺这一步，于是只要某个域的目标
+        // 的是 `model.objectiveSnapshot`，那一步就是展平；C# 这边一直缺这一步，于是只要某个域的目标
         // 引用表达式符号，这里就报"目标引用缺少变量值"——**报的措辞还会让人去查解表，而解表是全的**。
         //
         // 复现： 把分区列生成接上之后，真 SCIP 后端跑完链，停在这一句上（`rows52,symbols76`）。
         //
         // **Objective sub-objects must be flattened to variable level first**: a monomial inside `MetaSubObjects` may carry an **expression symbol**
-        // (`LinearExpressionSymbol` such as `stowage_{i}_{j}`), which is not a variable and is not in the solution table. The baseline goes through
-        // `model.objectiveSnapshot`, and that step *is* the flattening; this port never had it, so any domain objective referencing an expression symbol failed here
+        // (`LinearExpressionSymbol` such as `stowage_{i}_{j}`), which is not a variable and is not in the solution table. The code goes through
+        // `model.objectiveSnapshot`, and that step *is* the flattening; this implementation never had it, so any domain objective referencing an expression symbol failed here
         // with "missing objective variable" — **a message that sends you to inspect the solution table, which is complete**.
         // Reproduced: with partition column generation wired, the real SCIP backend ran the chain and stopped exactly here (`rows52,symbols76`).
         Flt64 evaluated = Flt64.Zero;
@@ -399,10 +399,10 @@ public sealed class DiscreteLoadingApplicationService<V>
     /// <returns>值或失败 / Values or failure.</returns>
     /// <remarks>
     /// **缺一个值就是失败，不是 0。** Benders 只合并它认识的那些变量；把它不认识的位置填 0 会让
-    /// 一个"没装东西"的解看起来可行。基线在这里也是直接 `Failed(DataNotFound)`。
+    /// 一个"没装东西"的解看起来可行。这里也是直接 `Failed(DataNotFound)`。
     ///
     /// **A missing value is a failure, never zero.** Benders merges only the variables it knows; filling the rest with 0 would make a "loads nothing" solution look
-    /// feasible. The baseline fails with `DataNotFound` here too.
+    /// feasible. The code fails with `DataNotFound` here too.
     /// </remarks>
     internal static Result<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>> MergeBendersValues(
         LinearMetaModel<Flt64> model,

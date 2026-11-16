@@ -27,13 +27,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </summary>
 /// <remarks>
 /// 两条编译约束以前**只做校验、不加任何行**：检查表里有没有每个条目，然后返回 `Ok`。
-/// 基线的 `invoke` 是 `model.addConstraint(x[item] eq 1, args =...ShadowPriceKey(item))`——也就是"每个条目恰好编译一次"这条要求本身。
+/// `invoke` 是 `model.addConstraint(x[item] eq 1, args =...ShadowPriceKey(item))`——也就是"每个条目恰好编译一次"这条要求本身。
 /// 少了它，编译量可以取任意值（包括零），排程照样"成功"，只在产出上悄悄缩水。
 ///
 /// 两条都还带着一个**已记录的垫层**：`CompilationTable.Build` 填的是 `new object`，占位对象进不了模型，
 /// 所以真正建行要等那张表交出真变量。判据因此**自己造真符号**——能力本身必须被钉住，不能靠垫层缺席来"通过"。
 ///
-/// Both constraints used to **validate only and add no row**: check that the table has every item, then return `Ok`. The baseline's `invoke` is
+/// Both constraints used to **validate only and add no row**: check that the table has every item, then return `Ok`. `invoke` is
 /// `model.addConstraint(x[item] eq 1, args =...ShadowPriceKey(item))` — the requirement itself, that **each item is compiled exactly once**. Without it the compiled quantity may take any
 /// value (zero included) while the schedule still "succeeds", quietly shrinking output. Both also carry a **recorded ceiling**: `CompilationTable.Build` fills `new object`, and a placeholder
 /// cannot enter a model, so real rows await a table that hands out real variables. The criteria therefore **mint real symbols themselves** — the capability must be pinned rather than "passing"

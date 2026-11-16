@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 适航安全上下文 / Context for managing airworthiness and safety constraints across aircraft, stowage, and MAC domains.
 /// </summary>
 /// <remarks>
-/// 与基线 `AirworthinessSecurityContext.kt` 对齐。它把"建聚合"与"往模型里注册"分成两步：
+/// 与对齐。它把"建聚合"与"往模型里注册"分成两步：
 ///
 /// 1. <see cref="Init"/> 建聚合（起可用，见 <see cref="AggregationInitializer"/>）。
 /// 2. <see cref="Register"/> 用聚合注册约束——**已实现**，顺序是聚合注册 → 生成管线 → 逐条执行。
@@ -28,14 +28,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **`Register` 是两步，不是一步**。只调 `aggregation.Register` 不会加任何约束行（聚合只注册符号），真正成行的是后面那 14 条管线。
 ///    漏掉第二步会得到一个"注册成功、一行约束都没有"的模型。
-/// 2. **`RegisterForBendersMP` 是空操作**，基线就是 `return ok`，且**不转发**给聚合的同名方法。转发与不转发在基线里等价（聚合那个也是空操作），照抄不转发。
+/// 2. **`RegisterForBendersMP` 是空操作**，基线就是 `return ok`，且**不转发**给聚合的同名方法。转发与不转发在等价（聚合那个也是空操作），沿用不转发。
 /// 3. **`RegisterForBendersSP` 就是 `Register`**，忽略 `solution`；`FlushForBendersSP` 是空操作。
 ///
-/// Aligned with the baseline. It splits "build the aggregation" from "register into the model": `Init` is **still missing here** (see
+/// It splits "build the aggregation" from "register into the model": `Init` is **still missing here** (see
 /// <see cref="AggregationInitializer"/>), and `Register` is implemented as aggregate-register then generate pipelines then run each. Three easy
 /// mistakes: (1) **`Register` is two steps** — calling only `aggregation.Register` adds no constraint row (the aggregation registers symbols) and the fourteen pipelines are what
 /// become rows, so skipping the second step yields a model that registered "successfully" with not one constraint in it; (2) **`RegisterForBendersMP` is a no-op** (`return ok`) and
-/// does **not** forward to the aggregation's same-named method — forwarding and not forwarding are equivalent because that one is a no-op too, so the baseline's form is copied;
+/// does **not** forward to the aggregation's same-named method — forwarding and not forwarding are equivalent because that one is a no-op too, so its form is copied;
 /// (3) **`RegisterForBendersSP` is just `Register`**, ignoring `solution`, and `FlushForBendersSP` is a no-op.
 /// </remarks>
 public sealed class AirworthinessSecurityContext
@@ -46,9 +46,9 @@ public sealed class AirworthinessSecurityContext
     /// 构造未初始化的上下文 / Construct an uninitialised context.
     /// </summary>
     /// <remarks>
-    /// 基线是 `lateinit var aggregation`，正常路径是 <see cref="Init"/>。这个无参构造保留给该路径。
+    /// `lateinit var aggregation`，正常路径是 <see cref="Init"/>。这个无参构造保留给该路径。
     ///
-    /// The baseline uses `lateinit var aggregation` and the normal path is <see cref="Init"/>; this constructor is kept for it.
+    /// The code uses `lateinit var aggregation` and the normal path is <see cref="Init"/>; this constructor is kept for it.
     /// </remarks>
     public AirworthinessSecurityContext() {
     }
@@ -58,12 +58,12 @@ public sealed class AirworthinessSecurityContext
     /// </summary>
     /// <param name="aggregation">适航安全聚合 / The airworthiness security aggregation.</param>
     /// <remarks>
-    /// **两条入口并存：`Init` 从上游聚合建，这个构造直接收现成的聚合**（依赖注入、或调用方已经建好了）。基线只有 `init` 一条，
+    /// **两条入口并存：`Init` 从上游聚合建，这个构造直接收现成的聚合**（依赖注入、或调用方已经建好了）。有 `init` 一条，
     /// 多出来的这条不是"等移植的临时通道"——**`Init` 早就在了**（起 `AggregationInitializer` 真正构造聚合），
     /// 所以这里不再有"唯一入口"这种说法。
     ///
     /// **Two entry points coexist: `Init` builds from the upstream aggregations, this constructor takes a ready-made one** (dependency injection, or a caller that already
-    /// built it). The baseline has only `init`; the extra one is not a "temporary channel waiting for the port" — **`Init` has been there since then**, so there is no
+    /// built it). The code has only `init`; the extra one is not a "temporary channel waiting for the implementation" — **`Init` has been there since then**, so there is no
     /// "only entry point" left to speak of.
     /// </remarks>
     public AirworthinessSecurityContext(AirworthinessSecurityAggregation aggregation) {
@@ -84,11 +84,11 @@ public sealed class AirworthinessSecurityContext
     /// <param name="input">请求 DTO / Request DTO</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// 与基线一致：**已初始化过就不再重建**。 起 `AggregationInitializer` 真正构造聚合，失败只可能来自 DTO 校验
-    /// （没有舱位、上限为负、包线区间反了等），而不是"尚未移植"。
+    /// ：**已初始化过就不再重建**。 起 `AggregationInitializer` 真正构造聚合，失败只可能来自 DTO 校验
+    /// （没有舱位、上限为负、包线区间反了等），而不是"尚未实现"。
     ///
-    /// As in the baseline, **an existing aggregation is not rebuilt**. Since `AggregationInitializer` really builds the aggregation, so a failure can only come from DTO
-    /// validation (no positions, a negative limit, an inverted envelope interval) rather than "not ported yet".
+    /// **an existing aggregation is not rebuilt**. Since `AggregationInitializer` really builds the aggregation, so a failure can only come from DTO
+    /// validation (no positions, a negative limit, an inverted envelope interval) rather than "not implemented yet".
     /// </remarks>
     public Try Init(AircraftContext aircraftContext, StowageContext stowageContext, MacContext macContext, RequestDTO input) {
         ArgumentNullException.ThrowIfNull(aircraftContext);
@@ -169,10 +169,10 @@ public sealed class AirworthinessSecurityContext
     /// <param name="model">线性元模型 / Linear meta model</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// 基线是 `return ok`，而且**不转发**给聚合的 `registerForBendersMP`。两者在基线里都是空操作，所以"转发"看不出区别——但转发会让将来聚合那边一改就悄悄改变这里的行为。
+    /// `return ok`，而且**不转发**给聚合的 `registerForBendersMP`。两者在都是空操作，所以"转发"看不出区别——但转发会让将来聚合那边一改就悄悄改变这里的行为。
     /// 不转发是更保守的读法。
     ///
-    /// The baseline is `return ok` and does **not** forward to the aggregation's `registerForBendersMP`. Both are no-ops there, so forwarding looks identical — but forwarding
+    /// The code is `return ok` and does **not** forward to the aggregation's `registerForBendersMP`. Both are no-ops there, so forwarding looks identical — but forwarding
     /// would silently change this behaviour the day the aggregation's version grows. Not forwarding is the more conservative reading.
     /// </remarks>
     public Try RegisterForBendersMP(LinearMetaModel<Flt64> model) {

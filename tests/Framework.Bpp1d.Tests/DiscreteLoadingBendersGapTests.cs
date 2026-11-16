@@ -21,15 +21,15 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests;
 /// return await new LinearBendersAlgorithm(_bendersSolver).SolveAsync(models, config.Benders);
 /// ```
 ///
-/// 同一批还查清一件更要紧的事：基线的 demo2 里那份 `infrastructure/BendersSolver.kt` **只有测试在调**
+/// 同一批还查清一件更要紧的事：demo2 里那份 **只有测试在调**
 /// （`git grep "BendersSolver.solve" 12fdb587 -- '*.kt'` 的三个调用点全在 `src/test/` 下），
 /// 生产路径是这里的 `DiscreteLoadingApplicationService` + `bendersSolver`。
-/// **也就是说，本仓 demo2 在 `FullLoadApplication` 里手搓的那套主子模型，不是基线的生产路径。**
+/// **也就是说，本仓 demo2 在 `FullLoadApplication` 里手搓的那套主子模型，不是生产路径。**
 ///
-/// set out to record "the framework Benders path is not ported" and **found the opposite**, so the criteria pin that it exists (snippet above). The same
-/// batch settled something more important: the baseline's demo2 `infrastructure/BendersSolver.kt` **is called only from tests** (all three call sites live under
+/// set out to record "the framework Benders path is not implemented" and **found the opposite**, so the criteria pin that it exists (snippet above). The same
+/// batch settled something more important: its demo2 **is called only from tests** (all three call sites live under
 /// `src/test/`), and production goes through `DiscreteLoadingApplicationService` plus `bendersSolver`. **So the master/sub models demo2 hand-rolls in
-/// `FullLoadApplication` are not the baseline's production path.**
+/// `FullLoadApplication` are not its production path.**
 /// </remarks>
 public sealed class DiscreteLoadingBendersGapTests
 {
@@ -58,7 +58,7 @@ public sealed class DiscreteLoadingBendersGapTests
     /// **如果哪天有人把它改成"接了参数但不用"**（本仓记录过的那种空壳缺陷），这条判据会红。
     ///
     /// Reflection cannot see a method body, so the source is read: this line must be `new LinearBendersAlgorithm(_bendersSolver)`. **If someone ever turns it back
-    /// into "accept the parameter and ignore it"** — the empty-shell defect this port has recorded — this criterion reds.
+    /// into "accept the parameter and ignore it"** — the empty-shell defect this implementation has recorded — this criterion reds.
     /// </remarks>
     [Fact]
     public void TheService_ShouldDriveTheSharedBendersAlgorithm() {

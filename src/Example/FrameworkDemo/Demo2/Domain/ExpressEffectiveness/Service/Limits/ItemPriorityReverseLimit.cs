@@ -20,10 +20,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 相对优先级反转目标 / The relative-priority-reversal objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/service/limits/ItemPriorityReverseLimit.kt` 对齐：把**每个（货物对, 舱位对）**的反转符号按系数加权求和，
+/// 与对齐：把**每个（货物对, 舱位对）**的反转符号按系数加权求和，
 /// 作为**最小化**目标，名为 `item priority reverse`。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
 /// 1. **是 `Minimum`**，与 `ItemPriorityLimit` 的 `Maximum` 相反。
 /// 2. **目标名带空格**：`"item priority reverse"`。
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 ///    第一项是 `(position2, item1)`，不是 `(position1, item1)`。
 /// 5. **只收有符号的组合**：符号缺失说明注册顺序错了，直接失败，而不是跳过。
 ///
-/// Aligned with the baseline: the reversal symbols weighted by their coefficients are summed into a **minimisation** objective named `item priority reverse`. Five things must be copied:
+/// The reversal symbols weighted by their coefficients are summed into a **minimisation** objective named `item priority reverse`. Five things must be copied:
 /// **it is `Minimum`**, the opposite of `ItemPriorityLimit`'s `Maximum`; **the objective name has a space**; **an empty set returns success without adding an objective**, since the
 /// baseline's `if (monomials.isEmpty) return ok` must not be dropped, or a zero-polynomial objective would take up a slot; **the coefficient is taken per pair of (position, item)** —
 /// `coefficient(position2 to item1, position1 to item2)`, with the **crossed** ordering, the first being `(position2, item1)` rather than `(position1, item1)`; and **only pairs with
@@ -129,7 +129,7 @@ internal sealed class ItemPriorityReverseLimit
         symbol switch
         {
             LinearExpressionSymbol plain => plain.Polynomial.Monomials,
-            // 函数符号（`IfFunction` 的适配器）没有可直接展成的多项式；基线的 `sum(...)` 会走符号自己的展开。
+            // 函数符号（`IfFunction` 的适配器）没有可直接展成的多项式；`sum(...)` 会走符号自己的展开。
             // 本仓尚未实现那条展开路径，所以在这里**明确失败**，而不是当成零。
             _ => throw new NotSupportedException("function symbols cannot be flattened here"),
         };

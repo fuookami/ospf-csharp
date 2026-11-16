@@ -15,15 +15,15 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 /// **列生成数据结构** / The column-generation data structures.
 /// </summary>
 /// <remarks>
-/// 判据的重点：**配置默认值照抄基线**（尤其容差不是零）、**两个"因上限结束"的标记不合并**、以及**影子价格两层的键不混用**。
+/// 判据的重点：**配置默认值照做**（尤其容差不是零）、**两个"因上限结束"的标记不合并**、以及**影子价格两层的键不混用**。
 /// 这三条都是"看起来能用、错起来无声"的地方。
 ///
-/// The criteria focus on **the config defaults matching the baseline** (especially the tolerance not being zero), **the two "stopped at a limit" flags staying separate**, and **the two
+/// The criteria focus on **the config defaults matching the code** (especially the tolerance not being zero), **the two "stopped at a limit" flags staying separate**, and **the two
 /// shadow-price key layers not being mixed**. All three are places that look fine and fail silently.
 /// </remarks>
 public class ColumnGenerationModelsTests {
     /// <summary>
-    /// **默认值照抄基线，容差不是零** / The defaults match the baseline, and the tolerance is not zero.
+    /// **默认值照做，容差不是零** / The defaults match the code, and the tolerance is not zero.
     /// </summary>
     /// <remarks>
     /// 三点成对：

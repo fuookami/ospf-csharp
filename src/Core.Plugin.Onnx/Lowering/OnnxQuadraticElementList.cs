@@ -12,13 +12,13 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **逐元素列表的二次版本** / The second-degree version of the per-element list.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `dee897d2` 的 `OnnxDegreeMode`：**基线是按"整次导入的模式"决定元素装在哪个次数域里，** **而不是逐节点判断。** '
+/// 对齐基线 `dee897d2` 的 `OnnxDegreeMode`：**按"整次导入的模式"决定元素装在哪个次数域里，** **而不是逐节点判断。** '
 /// **所以这里也是一个独立的表示，** **而不是让同一个列表有时装一次、有时装二次。**
 ///
 /// **它只在一处产生：** **两侧都含变量的矩阵乘。** **其余情形（一侧常量、逐元素运算、形状算子）仍然走一次域，** '
 /// **因为那才是它们的自然次数——** **把常量乘常量也升到二次只会让模型白白多出一层。**
 ///
-/// Syncs `OnnxDegreeMode`: **the baseline decides at import time which degree domain the elements live in, not per node.** So this is a separate representation rather than one list that sometimes
+/// Syncs `OnnxDegreeMode`: **the code decides at import time which degree domain the elements live in, not per node.** So this is a separate representation rather than one list that sometimes
 /// holds linear and sometimes quadratic terms.
 ///
 /// **It is produced in exactly one place: a matrix product with variables on both sides.** Everything else (one constant side, elementwise operators, shape operators) stays in the first-degree

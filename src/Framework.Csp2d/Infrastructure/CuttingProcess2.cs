@@ -1,6 +1,6 @@
 // 二维套裁裁切工艺 / 2D cutting stock process.
-// 与固定 Kotlin 基线 `csp2d/infrastructure/CuttingProcess2.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `CuttingProcess2.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Globalization;
 

@@ -100,10 +100,10 @@ public class TaskExecutorCostTermsTests {
     /// **缺省系数 `1` 让目标和等于任数量** / A default coefficient of 1 makes the objective equal the assignment count.
     /// </summary>
     /// <remarks>
-    /// 这不是"有意义的成本"，而是基线的占位值。任务都不可取消时目标和是个常数（什么都没优化）；
+    /// 这不是"有意义的成本"，而是占位值。任务都不可取消时目标和是个常数（什么都没优化）；
     /// 一旦有任务可取消，最小化它就变成**尽可能多取消**。判据把这件事算一遍，让后来的人一眼看到危险。
     ///
-    /// This is not a meaningful cost but the baseline's placeholder. With nothing cancellable the sum is a constant (optimising nothing); as soon as cancellation is allowed,
+    /// This is not a meaningful cost but its placeholder. With nothing cancellable the sum is a constant (optimising nothing); as soon as cancellation is allowed,
     /// minimising it means **cancel as much as possible**. The criterion computes it so the hazard is visible at a glance.
     /// </remarks>
     [Fact]

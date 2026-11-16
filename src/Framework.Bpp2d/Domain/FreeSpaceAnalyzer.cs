@@ -1,7 +1,7 @@
 // 余料分析 / Remnant analysis.
-// 与固定 Kotlin 基线 `bpp2d/domain/packing/service/FreeSpaceAnalyzer.kt` 对应：排样终态需要知道每块板材上还剩哪些
+// 与固定 Kotlin 对应：排样终态需要知道每块板材上还剩哪些
 // 可用矩形区域，供余料入库或后续工单复用。本分析器按「水平切片」把已用区域从板材中扣掉，输出互不重叠的自由矩形。
-// Mirrors the pinned baseline: at the final packing state, 2D packing needs to know which rectangular regions remain
+// At the final packing state, 2D packing needs to know which rectangular regions remain
 // usable on each sheet. This analyser subtracts occupied regions by horizontal slices and reports pairwise disjoint
 // free rectangles.
 //
@@ -17,7 +17,7 @@
 // algorithm; only how the occupied regions are obtained differs.
 //
 // **单位前提**：所有量值必须使用同一单位。基线同样按原始数值比较，因此这不是新增限制，而是把既有前提写明。
-// **Unit precondition**: every quantity must use one unit. The baseline also compares raw values, so this documents an
+// **Unit precondition**: every quantity must use one unit. The code also compares raw values, so this documents an
 // existing precondition rather than adding one.
 
 using System;
@@ -63,7 +63,7 @@ public static class FreeSpaceAnalyzer {
     /// </summary>
     /// <remarks>
     /// 这是与基线签名一致的**正规入口**：占用区域由 `Sheet → SheetLayer → Layer → Placement2` 逐层展开得到。
-    /// This is the **proper entry point** matching the baseline signature: occupied regions come from unfolding
+    /// This is the **proper entry point** matching the code signature: occupied regions come from unfolding
     /// `Sheet → SheetLayer → Layer → Placement2`.
     /// </remarks>
     /// <param name="sheets">已装箱板材 / Packed sheets.</param>

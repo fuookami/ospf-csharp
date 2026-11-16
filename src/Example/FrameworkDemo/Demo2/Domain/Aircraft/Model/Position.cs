@@ -143,7 +143,7 @@ public sealed class PositionCoordinate
     /// 那两者要先归一化，因为它们比较的是**两个区间**，而这里比的是一个点与本坐标，前提是本坐标的前后臂本身就是有序的。
     /// 如果哪天有坐标的前臂大于后臂，用它切出的限制线会全部落空——那正是"切不出线"该有的表现，而不是悄悄换一套区间。
     ///
-    /// **Not normalised**: it compares "front ≤ arm ≤ back" directly, as the baseline's `on(arm)` does. That is deliberately different from <see cref="Between"/> and
+    /// **Not normalised**: it compares "front ≤ arm ≤ back" directly, as its `on(arm)` does. That is deliberately different from <see cref="Between"/> and
     /// <see cref="WithIntersectionWith"/>, which normalise because they compare **two ranges**; here a point is compared to this coordinate, on the premise that this coordinate's
     /// own front and back arms are already ordered. A coordinate with a reversed pair would produce no limit lines at all — which is the right behaviour for "cannot be cut into
     /// lines", rather than quietly swapping in a different range.
@@ -191,7 +191,7 @@ public sealed class PositionCoordinate
 /// 面积错一点重量就错一片。基线同样是 `declaredArea ?: (length * width)`。
 ///
 /// <see cref="Area"/> prefers the declared value: a real position's usable area can differ a lot from length × width (cut corners, rails, ULD lock space), and surface density is
-/// **weight per area**, so a wrong area skews everything. The baseline likewise uses `declaredArea ?: (length * width)`.
+/// **weight per area**, so a wrong area skews everything. The code likewise uses `declaredArea ?: (length * width)`.
 /// </remarks>
 public sealed record PositionShape(double Length, double Width, double Volume, double? DeclaredArea = null)
 {
@@ -225,11 +225,11 @@ public sealed class Position
 
     /// <summary>装载顺序对象 / The loading-order object</summary>
     /// <remarks>
-    /// 基线里 `Position._loadingOrder` 是**可后置赋值**的：初始化器先造出全部舱位，再按装载顺序串起前后驱。
+    /// `Position._loadingOrder` 是**可后置赋值**的：初始化器先造出全部舱位，再按装载顺序串起前后驱。
     /// C# 侧原先没有这个属性，于是 `NeighbourCalculator` 的拓扑分支无法落地。这里补成可写属性，默认 `null`。
     ///
-    /// In the baseline `Position._loadingOrder` is **assigned after construction**: the initializer builds every position, then links predecessors and successors in loading order.
-    /// The C# side had no such property, which is why the topological neighbour branch could not be ported. It is writable here and defaults to `null`.
+    /// In the code `Position._loadingOrder` is **assigned after construction**: the initializer builds every position, then links predecessors and successors in loading order.
+    /// The C# side had no such property, which is why the topological neighbour branch could not be implemented. It is writable here and defaults to `null`.
     /// </remarks>
     public LoadingOrder? LoadingOrder { get; set; }
 
@@ -263,16 +263,16 @@ public sealed class Position
     /// 两个 `Id` 相同的位置对象会被当成不同的键，集合查找、去重、邻接关系全部悄悄出错。
     ///
     /// 基线 `data class` 比较的是**全部构造参数**，其中 `coordinate` 是普通 `class`（引用相等）、
-    /// `shape` 与 `location` 是 `data class`（值相等）。但 `Id` 在基线里标注为"唯一标识"，
-    /// **同 `Id` 必然同其余字段**，所以按 `Id` 比较与基线的可观察行为一致，且更简单。
+    /// `shape` 与 `location` 是 `data class`（值相等）。但 `Id` 在标注为"唯一标识"，
+    /// **同 `Id` 必然同其余字段**，所以按 `Id` 比较与可观察行为一致，且更简单。
     ///
-    /// **The baseline `Position` is a `data class`; the C# side was a `sealed class` without `Equals`/`GetHashCode`**, so every collection keyed by
+    /// **The code `Position` is a `data class`; the C# side was a `sealed class` without `Equals`/`GetHashCode`**, so every collection keyed by
     /// `Position` (`LoadingOrder.DirectPrec`, `Appointment`, …) compared by reference — two position objects with the same `Id` became distinct keys, and
     /// lookups, de-duplication and adjacency all silently broke.
     ///
-    /// The baseline `data class` compares **all constructor parameters**, of which `coordinate` is a plain `class` (reference equality) while `shape` and
-    /// `location` are `data class`es (value equality). But `Id` is documented as the unique identifier in the baseline, and **the same `Id` implies the same
-    /// everything else**, so comparing by `Id` matches the baseline's observable behaviour and is simpler.
+    /// The code `data class` compares **all constructor parameters**, of which `coordinate` is a plain `class` (reference equality) while `shape` and
+    /// `location` are `data class`es (value equality). But `Id` is documented as the unique identifier in the code, and **the same `Id` implies the same
+    /// everything else**, so comparing by `Id` matches its observable behaviour and is simpler.
     /// </remarks>
     public override bool Equals(object? obj) => obj is Position other && Id == other.Id;
 

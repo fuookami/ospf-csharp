@@ -11,15 +11,15 @@ namespace Fuookami.Ospf.Core.Tests;
 /// **NSGA-II 运行器的说明与代码一致** / The NSGA-II runner's remarks match the code.
 /// </summary>
 /// <remarks>
-/// 说明原来说"没有移植模型自带约束分组这条路径"。查过之后：**能力在**——`SearchConstraints.SelectSurvivors` 就是基线的
-/// `constraintSurvivors`（随机排序取前 n、其余按可行组分组选择），一字不差；缺的是**运行器不去接它**，因为本移植把处理器放在
+/// 说明原来说"没有实现模型自带约束分组这条路径"。查过之后：**能力在**——`SearchConstraints.SelectSurvivors` 就是
+/// `constraintSurvivors`（随机排序取前 n、其余按可行组分组选择），一字不差；缺的是**运行器不去接它**，因为本实现把处理器放在
 /// 问题旁边而不是模型上。所以缺口是"接不上"，不是"没有"。
 ///
 /// 两者对调用方的意思完全不同：前者意味着"你自己包一层就行"，后者意味着"你得不到这个能力"。**说明写错方向，人会白写一遍。**
 ///
-/// The remarks used to claim "the model-carried constraint grouping path is not ported". Checking shows the **capability is there** —
-/// `SearchConstraints.SelectSurvivors` is exactly the baseline's `constraintSurvivors` (stochastic ranking takes the top n; otherwise per feasibility group),
-/// with the same logic. What is missing is that **the runner does not call it**, because this port keeps the handler next to the problem rather than on the model.
+/// The remarks used to claim "the model-carried constraint grouping path is not implemented". Checking shows the **capability is there** —
+/// `SearchConstraints.SelectSurvivors` is exactly its `constraintSurvivors` (stochastic ranking takes the top n; otherwise per feasibility group),
+/// with the same logic. What is missing is that **the runner does not call it**, because this implementation keeps the handler next to the problem rather than on the model.
 /// So the gap is "not wired", not "absent".
 ///
 /// Those two mean very different things to a caller: the first says "wrap it yourself", the second says "you cannot have it". **A remark pointing the wrong way
@@ -43,9 +43,9 @@ public class Nsga2ConstraintSelectionDocTests {
     /// **说明里点名能力在哪，且不再说它没有** / The remarks name where the capability lives and no longer claim it is absent.
     /// </summary>
     /// <remarks>
-    /// 三点成对：出现 `SelectSurvivors` / **不再出现"没有移植"** / 出现"接不上"（缺口的方向写清楚）。
+    /// 三点成对：出现 `SelectSurvivors` / **不再出现"没有实现"** / 出现"接不上"（缺口的方向写清楚）。
     ///
-    /// Three paired points: `SelectSurvivors` appears; **"没有移植" is gone**; and "接不上" is there, naming the direction of the gap.
+    /// Three paired points: `SelectSurvivors` appears; **"没有实现" is gone**; and "接不上" is there, naming the direction of the gap.
     /// </remarks>
     [Fact]
     public void Remarks_ShouldNameTheCapabilityInsteadOfDenyingIt() {

@@ -44,10 +44,10 @@ public static class ParsedPolynomialLowering
     /// <returns>规范多项式 / The canonical polynomial.</returns>
     /// <remarks>
     /// **记号是"按名字"的，所以这里把名字包成 `NamedSymbol`。**
-    /// **这不是权宜：** 基线在这一步也是 `symbolOf(name)`，**名字是唯一身份，来源不参与。**
+    /// **这不是权宜：** 这一步也是 `symbolOf(name)`，**名字是唯一身份，来源不参与。**
     /// **唯一的差别是 C# 之前没有任何按名字标识的符号类型，`SymbolOfSerializedIdentifier` 于是对所有名字抛异常。**
     ///
-    /// **Terms are name-keyed, so this wraps each name in a `NamedSymbol`.** **That is not a stopgap:** the baseline does `symbolOf(name)` at this same step, **and the name is the whole identity; provenance takes no part.**
+    /// **Terms are name-keyed, so this wraps each name in a `NamedSymbol`.** **That is not a stopgap:** the code does `symbolOf(name)` at this same step, **and the name is the whole identity; provenance takes no part.**
     /// **The only difference is that C# had no name-identified symbol at all, so `SymbolOfSerializedIdentifier` threw for every name.**
     /// </remarks>
     public static CanonicalPolynomial<T> ToCanonicalPolynomial<T>(this ParsedPolynomial<T> parsed)
@@ -71,20 +71,20 @@ public static class ParsedPolynomialLowering
 /// 多项式语法分析器 / The polynomial grammar parser.
 /// </summary>
 /// <remarks>
-/// 从固定基线 `12fdb587` 的 `symbol/parse/PolynomialParser.kt`（622 行）移植**语法核心**。
-/// 基线那一层还负责把它落到 `CanonicalPolynomial`/`LinearInequality` 上，
-/// **而 C# 侧的符号是 `ISymbol` 接口族、没有基线那个 `Symbol(id)` 记录**，
+/// 从固定基线 `12fdb587` 的（622 行）移植**语法核心**。
+/// 一层还负责把它落到 `CanonicalPolynomial`/`LinearInequality` 上，
+/// **而 C# 侧的符号是 `ISymbol` 接口族、没有个 `Symbol(id)` 记录**，
 /// 所以这里只做**按名字记幂次**的中间结果——**难点（优先级、结合性、一元负号、幂）全在这里，而它不需要符号体系就能测。**
 ///
-/// Ports the **grammar core** of `PolynomialParser.kt` (622 lines). The baseline layer also lowers onto `CanonicalPolynomial` and the inequality types,
-/// **and C# has an `ISymbol` interface family instead of the baseline's `Symbol(id)` record**, so stops at symbol-name powers —
+/// Ports the **grammar core** of (622 lines). The code layer also lowers onto `CanonicalPolynomial` and the inequality types,
+/// **and C# has an `ISymbol` interface family instead of its `Symbol(id)` record**, so stops at symbol-name powers —
 /// **the hard part (precedence, associativity, unary minus, exponentiation) is all here, and it is testable without the symbol system.**
 ///
 /// 优先级：`expression`（`+`/`-`，左结合）→ `term`（`*`，左结合）→ `power`（`^`）→ `factor`（一元负号、数字、标识符、括号）。
-/// **`^` 不递归**：基线的指数后面只接一个数字，**所以 `2^3^2` 是语法错误而不是右结合。**
+/// **`^` 不递归**：指数后面只接一个数字，**所以 `2^3^2` 是语法错误而不是右结合。**
 ///
 /// Precedence: `expression` (`+`/`-`, left) → `term` (`*`, left) → `power` (`^`) → `factor` (unary minus, number, identifier, parens).
-/// **`^` does not recurse**: the baseline puts a single number after the exponent, **so `2^3^2` is a syntax error rather than right-associative.**
+/// **`^` does not recurse**: the code puts a single number after the exponent, **so `2^3^2` is a syntax error rather than right-associative.**
 /// </remarks>
 public sealed class PolynomialParser<T>
     where T : struct, IRing<T>

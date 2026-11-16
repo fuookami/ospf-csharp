@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 两者只在**恰好等于**时不同。恰好等于的列正是"刚刚够格"的列：写错时它被留在列池里，
 /// 每轮多扫一遍，而**它永远不会变成有价值的列**。
 ///
-/// The baseline writes `!(reducedCost(task) ls maximumReducedCost)`, i.e. drop at `>=`. A "natural" implementation writes `>`, and the two differ only at **exactly equal**.
+/// The code writes `!(reducedCost(task) ls maximumReducedCost)`, i.e. drop at `>=`. A "natural" implementation writes `>`, and the two differ only at **exactly equal**.
 /// A column exactly at the boundary is the one that just barely qualifies: with the wrong comparison it stays in the pool, gets rescanned every round, and **never becomes a
 /// column worth having**.
 /// </remarks>

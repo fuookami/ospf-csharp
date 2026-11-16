@@ -19,18 +19,18 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// 撤掉的两条是"点了名但不存在"；这一条正相反——**存在，但没被点名。** 两种都会让工作量判断失真。
 ///
-/// counted both sides: the baseline has **19** files under `core/analysis/` plus **2** plugin analyzers (= **21**); C# has **3** under `Core/Analysis/` and **0**
+/// counted both sides: the code has **19** files under `core/analysis/` plus **2** plugin analyzers (= **21**); C# has **3** under `Core/Analysis/` and **0**
 /// plugin analyzers ⇒ **18 missing**, and this had **no row anywhere**. `core.analysis` appeared once in a long status sentence whose list named "criticality profile" —
-/// **one of the three that were ported.** retracted two gaps that were named but did not exist; this is the opposite shape — **it exists and was never named.**
+/// **one of the three that were implemented.** retracted two gaps that were named but did not exist; this is the opposite shape — **it exists and was never named.**
 /// </remarks>
 public class AnalysisGapInventoryTests
 {
     /// <summary>**C# 侧只有三个类型** / Only three types exist here.</summary>
     /// <remarks>
-    /// 这条钉的是**本仓的清单**，不是基线的：补进来一个，判据就红，**逼着改文档**。
+    /// 这条钉的是**本仓的清单**，不是：补进来一个，判据就红，**逼着改文档**。
     /// 这正是"存在但没点名"这类缺口的修法——**让数字有判据看着**。
     ///
-    /// This pins **this repo's inventory**, not the baseline's: porting one turns it red and **forces the document to change**, which is the repair for a gap that exists
+    /// This pins **this repo's inventory**, not its: implementation one turns it red and **forces the document to change**, which is the repair for a gap that exists
     /// but is never named — **give the number a criterion to watch it.**
     /// </remarks>
     [Fact]
@@ -42,7 +42,7 @@ public class AnalysisGapInventoryTests
         string[] files = Directory.GetFiles(folder, "*.cs").Select(Path.GetFileNameWithoutExtension).ToArray()!;
         // 把它从 3 改到 6**：这条判据的作用是"补进来就红，逼着改文档"，所以它必须跟着改。
         // 每次改这个数字都要同时改矩阵第九节第 6 条，否则两处账对不上。
-        // **moved it from 3 to 6**: the criterion exists so that "porting one turns it red and forces the document to change", so it moves with the code.
+        // **moved it from 3 to 6**: the criterion exists so that "implementation one turns it red and forces the document to change", so it moves with the code.
         // Every change here has to move the matrix row too, or the two accounts disagree.
         // **它从 52 改到 53**，而这一格不是"又多了一个需要原生后端的分析器"：
         // **它是把"已就绪的框架"与"两个插件后端"接起来的那个中间层
@@ -61,10 +61,10 @@ public class AnalysisGapInventoryTests
 
     /// <summary>**一个插件分析器都没有** / Not one plugin analyzer.</summary>
     /// <remarks>
-    /// 基线有 `GurobiCriticalConstraintAnalysis.kt` 与 `ScipCriticalConstraintAnalysis.kt`。两者的证据来源都是**真实后端**（IIS / 活动约束），
+    /// 与。两者的证据来源都是**真实后端**（IIS / 活动约束），
     /// 所以 C# 侧没有——**这不是忘了，是还没有那条路径。**
     ///
-    /// The baseline has `GurobiCriticalConstraintAnalysis.kt` and `ScipCriticalConstraintAnalysis.kt`, both of whose evidence comes from a **real backend** (IIS, active
+    /// The code has and, both of whose evidence comes from a **real backend** (IIS, active
     /// constraints), which is why this repo has neither — **not an oversight, but a path that does not exist yet.**
     /// </remarks>
     [Fact]

@@ -31,7 +31,7 @@ public enum GanttRenderTaskCategory {
 /// 与基线 `GanttRenderSubTaskDTO` 对齐。**类别是字符串而不是枚举**——子任务的类别由报表方定义，
 /// 强制成枚举会把"用户自定义类别"这条路堵死；顶层任务的类别才是枚举。
 ///
-/// Aligned with the baseline's `GanttRenderSubTaskDTO`. **The category is a string rather than an enum**: a sub-task's category is the reporting side's to define, and forcing an enum would block
+/// Aligned with its `GanttRenderSubTaskDTO`. **The category is a string rather than an enum**: a sub-task's category is the reporting side's to define, and forcing an enum would block
 /// user-defined categories. Only the top-level task's category is an enum.
 /// </remarks>
 public sealed record GanttRenderSubTaskDTO(
@@ -76,11 +76,11 @@ public sealed record GanttRenderSubTaskDTO(
 /// <param name="Info">附加信息 / Extra information.</param>
 /// <param name="SubTasks">子任务 / The sub-tasks.</param>
 /// <remarks>
-/// 与基线 `GanttRenderTaskDTO` 对齐。三处照抄：**计划时刻与实际时刻分开**（两个可空、两个必填——
+/// 与基线 `GanttRenderTaskDTO` 对齐。三处沿用：**计划时刻与实际时刻分开**（两个可空、两个必填——
 /// 排程没排出来时计划时刻就是 null，不能拿实际时刻冒充）；**必填的只有名称/类别/执行者/实际起止**；
 /// **其余集合一律可空且给出空默认**，序列化时不必区分"没给"与"空"。
 ///
-/// Aligned with the baseline's `GanttRenderTaskDTO`. Three things copied: **scheduled and actual instants are kept apart** (two nullable, two mandatory — an unscheduled task has no scheduled
+/// Aligned with its `GanttRenderTaskDTO`. Three things copied: **scheduled and actual instants are kept apart** (two nullable, two mandatory — an unscheduled task has no scheduled
 /// start, and the actual one must not stand in for it); **only name, category, executor and the actual range are mandatory**; and **every other collection is nullable with an empty default**,
 /// so serialisation need not distinguish "unset" from "empty".
 /// </remarks>

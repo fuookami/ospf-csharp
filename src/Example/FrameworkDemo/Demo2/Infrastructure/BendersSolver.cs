@@ -283,7 +283,7 @@ public static class BendersSolver
         //
         // **An unconverged run still hands back the last master solution**: it used to return `Array.Empty<double>` — a "successful" result carrying an
         // **empty solution vector** while `Obj` held the last master objective. `BuildAssignments` then reads zero-length data through the cargo × position layout
-        // and **produces empty assignments**, with the response looking successful. The baseline does not do that: it maps `LinearBendersAlgorithm`'s values
+        // and **produces empty assignments**, with the response looking successful. The code does not do that: it maps `LinearBendersAlgorithm`'s values
         // through `master.tokens.tokensInSolver` and records `result.status` as `benders_status=…`. This aligns: **hand back the solution, report the status**, so
         // "did it converge" is a sentence in the diagnostics instead of something hidden in an empty vector.
         long finalTimeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTime;

@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 推荐装载重量约束 / The recommended load weight row.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/RecommendLoadWeightLimit.kt`：给每个"需要决策**且**需要推荐重量"的舱位加一行
+/// 对齐：给每个"需要决策**且**需要推荐重量"的舱位加一行
 ///
 /// <c>z_j + mlw_j · actualLoaded_j ≤ mlw_j</c>
 ///
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 ///
 /// 两个条件都要查：`stowageNeeded || adjustmentNeeded` **且** `recommendedWeightNeeded`。只看后者会给一个不参与决策的舱位加行。
 ///
-/// Aligned with the baseline: for every position that both **takes a decision** and **needs a recommended weight**, add <c>z_j + mlw_j · actualLoaded_j ≤ mlw_j</c>. It is a
+/// For every position that both **takes a decision** and **needs a recommended weight**, add <c>z_j + mlw_j · actualLoaded_j ≤ mlw_j</c>. It is a
 /// **coupling row**: the recommended quantity shares one cap with the actual load weight. `z ≤ mlw` alone is not enough — the real weight plus the recommendation is what the
 /// position has to carry. Without it `z` drifts to `mlw`, the recommendation overloads on top of the actual load, and the solver never complains. Both conditions matter: only
 /// checking the latter adds a row for a position that takes no decision at all.

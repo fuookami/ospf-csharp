@@ -187,11 +187,11 @@ public class BunchTaskTimeTests {
     /// **迭代列仍然明确失败，不静默成功** / The iteration columns still fail loudly instead of silently succeeding.
     /// </summary>
     /// <remarks>
-    /// 基线的 `addColumns` 要把 `valueOf(time.start) * xi[bunch]` 累加到 `est` / `estEnd`，而 `xi` 是编译层的"每轮列变量"——
+    /// `addColumns` 要把 `valueOf(time.start) * xi[bunch]` 累加到 `est` / `estEnd`，而 `xi` 是编译层的"每轮列变量"——
     /// 本仓的 `BunchCompilation` 没有那一层。之前这里返回 `Ok`，而唯一调用方又把返回值丢掉：于是"列没加上"与"加上了"在代码里完全一样。
     /// 现在明确失败，且调用方检查返回值。
     ///
-    /// The baseline's `addColumns` accumulates `valueOf(time.start) * xi[bunch]` into `est` / `estEnd`, and `xi` is the compilation layer's per-round column variable — which
+    /// The code's `addColumns` accumulates `valueOf(time.start) * xi[bunch]` into `est` / `estEnd`, and `xi` is the compilation layer's per-round column variable — which
     /// `BunchCompilation` lacks. This used to return `Ok` while the only caller discarded the result, so "columns not added" and "added" were identical in code. It now fails
     /// loudly and the caller checks the result.
     /// </remarks>
@@ -220,11 +220,11 @@ public class BunchTaskTimeTests {
     /// **离散时间窗上的任务束时间可以注册** / Bunch time registers on a discrete window too.
     /// </summary>
     /// <remarks>
-    /// 离散窗口的守卫属于"建开始时间变量"那一支——基线用 `UIntVariable1`，本仓还没有整数开始时间变量。
+    /// 离散窗口的守卫属于"建开始时间变量"那一支——`UIntVariable1`，本仓还没有整数开始时间变量。
     /// 但任务束的 `est` 是**连续位移**（`est_redundancy`），与整数开始时刻无关；Demo4 的束时间窗恰恰是离散的。
     /// 把守卫放在共用循环里会把这条本来能注册的路径挡住，而且报的是"开始时间变量没接线"，指向完全无关的地方。
     ///
-    /// The discrete-window guard belongs to the "build start-time variables" branch — the baseline uses `UIntVariable1`, and this repository has no integer start-time variable yet.
+    /// The discrete-window guard belongs to the "build start-time variables" branch — the code uses `UIntVariable1`, and this repository has no integer start-time variable yet.
     /// A bunch's `est` is a **continuous displacement** (`est_redundancy`) unrelated to integer start instants, and Demo4's bunch window is discrete. Putting the guard in the
     /// shared loop blocks a path that does register, and reports "the start-time variable is not wired", pointing somewhere entirely unrelated.
     /// </remarks>
@@ -290,7 +290,7 @@ public class BunchTaskTimeTests {
     /// 任务调度时间那支加，这一支不加（基线如此：束内成员的结束时间就是共用的开始时刻）。判据用的任务**自带工期**（时间窗 2 小时），再比两个多项式——
     /// 若这里也加工期，差值会正好是一个工期，而"束的完工时间"会在屏幕上多出一段。
     ///
-    /// Task scheduling time adds the duration; this branch does not (the baseline's shape: members of a bunch finish at the shared start instant). The criterion gives the task a
+    /// Task scheduling time adds the duration; this branch does not (its shape: members of a bunch finish at the shared start instant). The criterion gives the task a
     /// **duration** and then compares the two polynomials — if this branch added it too, the difference would be exactly one duration and every bunch's finish would grow on screen.
     /// </remarks>
     [Fact]

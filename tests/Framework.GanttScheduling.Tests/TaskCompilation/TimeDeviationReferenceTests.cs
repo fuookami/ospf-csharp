@@ -1,10 +1,10 @@
 // 四种时间偏移目标的门槛判据 / Criteria for the four time-deviation objectives' reference quantities.
-// 对应固定 Kotlin 基线 `task_compilation/service/limits/` 里的四件：
+// 对应`task_compilation/service/limits/` 里的四件：
 // TaskAdvanceTimeMinimiaztion.kt advanceEnabled + scheduledTime  != null
 // TaskAdvanceEarliestEndTimeMinimization advanceEnabled + earliestEndTime != null
 // TaskDelayTimeMinimization delayEnabled   + scheduledTime  != null
 // TaskDelayLastEndTimeMinimization delayEnabled   + lastEndTime    != null
-// Mirrors the four classes in the pinned baseline's `task_compilation/service/limits/`, whose filters are exactly the table above.
+// The four classes in the: , whose filters are exactly the table above.
 
 using System;
 using System.Collections.Generic;

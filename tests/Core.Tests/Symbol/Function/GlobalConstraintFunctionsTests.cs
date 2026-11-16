@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 全局约束的门面：三个入口的校验强度不一样 / The three entry points validate unequally.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `GlobalConstraintFunctions.kt`。
+/// 对齐。
 ///
 /// **这是一个纯门面，所以它的价值不在逻辑，而在"哪里做校验"。**
 ///
@@ -36,7 +36,7 @@ public class GlobalConstraintFunctionsTests
     /// **不是漏了，是三个 `Create` 各自校验自己的参数。
     /// 在外层再包一层只会给每条错误消息多一层翻译。**
     ///
-    /// **This criterion and the next together describe the façade's shape**:
+    /// **This criterion and the next together describe the façade's shape**.
     /// **`AllDifferent` goes through `CreateAllDifferent` (which checks non-emptiness), while `NoOverlap` goes through
     /// its own `Create`.**
     ///

@@ -26,10 +26,10 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **适航安全管线列表** / The airworthiness security pipeline list.
 /// </summary>
 /// <remarks>
-/// 基线是 14 条：11 条无条件 + 3 条条件（压舱重量 / CLIM / 相邻间隙）。判据只钉**顺序与条件位置**——
+/// 14 条：11 条无条件 + 3 条条件（压舱重量 / CLIM / 相邻间隙）。判据只钉**顺序与条件位置**——
 /// 报告按序号引用约束，把这些项挪到末尾就是在改约束的编号。
 ///
-/// The baseline has fourteen pipelines: eleven unconditional plus three conditional (ballast, CLIM, adjacent gap). The criteria pin **order and where the conditionals sit** —
+/// The code has fourteen pipelines: eleven unconditional plus three conditional (ballast, CLIM, adjacent gap). The criteria pin **order and where the conditionals sit** —
 /// reports reference constraints by index, so moving those entries renumbers the constraints.
 /// </remarks>
 public class Demo2PipelineListTests {
@@ -170,7 +170,7 @@ public class Demo2PipelineListTests {
             .Single(constraint => constraint.Name == name);
 
     /// <summary>
-    /// **11 条无条件管线，顺序逐字对齐基线** / Eleven unconditional pipelines in the baseline's exact order.
+    /// **11 条无条件管线，顺序逐字对齐基线** / Eleven unconditional pipelines in its exact order.
     /// </summary>
     /// <remarks>
     /// 顺序是**协议**：报告按序号引用约束。按类型名排序会得到另一套编号且看起来完全正常。

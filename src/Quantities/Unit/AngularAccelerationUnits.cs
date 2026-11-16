@@ -8,13 +8,13 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 角加速度单位 / Angular acceleration units.
 /// </summary>
 /// <remarks>
-/// **按基线 `AngularAcceleration.kt` 新建，2 个单位。**
+/// **按新建，2 个单位。**
 ///
 /// **它们全部基于刚建的 `AngularVelocityUnits`**——
 /// **所以这两个文件必须一起存在**：**单独发布角加速度而漏掉角速度，编译不过，
 /// 而那正是"依赖关系把顺序钉住了"的好处。**
 ///
-/// **Created from the baseline `AngularAcceleration.kt`, two units.**
+/// **Created from the code, two units.**
 ///
 /// **Both are built on the `AngularVelocityUnits` added in the same batch** —
 /// **so the two files have to exist together**: **shipping angular acceleration without angular velocity does not compile,

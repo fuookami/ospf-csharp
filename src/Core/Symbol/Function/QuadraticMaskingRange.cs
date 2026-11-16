@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次掩码：<c>y = z · p</c>，<c>z</c> 为二值 / Quadratic masking: `y = z · p` with a binary `z`.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMaskingRange.kt` 把原本的<b>空壳</b>换成真实编码。
+/// 对齐把原本的<b>空壳</b>换成真实编码。
 ///
 /// **五条约束**：
 ///
@@ -42,9 +42,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **这也是本类与 `MaskingFunction` 的差别**：**后者是一位线性掩码，前者接受二次多项式 `p`。**
 ///
-/// Replaces a stub with the real encoding, following the baseline's `QuadraticMaskingRange.kt`.
+/// Replaces a stub with the real encoding, following its.
 ///
-/// **Five rows**:
+/// **Five rows**.
 ///
 /// | Row | Content | Effect |
 /// | --- | --- | --- |

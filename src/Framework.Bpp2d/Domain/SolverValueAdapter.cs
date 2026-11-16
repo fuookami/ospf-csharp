@@ -1,11 +1,10 @@
 // 求解器数值适配 / Solver value adapter.
-// 与固定 Kotlin 基线 `layer_assignment/model/SolverValueAdapter.kt`（56 行）对应。
-// Mirrors the pinned baseline's `SolverValueAdapter.kt`.
+// 与固定 Kotlin 对应。
 //
 // `Bpp2dSolverAmount` 已在 earlier 随 `LayerAssignmentMath` 落地，这里补齐其余三项并把四个函数归到同一个静态类，
-// 便于调用方按基线的心智模型找到它们。
+// 便于调用方按心智模型找到它们。
 // `Bpp2dSolverAmount` landed with `LayerAssignmentMath` in earlier; the remaining three and groups all
-// four in one static class so callers find them the way the baseline's mental model expects.
+// four in one static class so callers find them the way its mental model expects.
 
 using System;
 using Fuookami.Ospf.Math.Algebra.Number;

@@ -161,13 +161,13 @@ public class Demo2StowageLimitTests {
     ///
     /// 1. `Preassigned` 与 `AdjustmentNeeded` 各有一行，比较符是 `EQ`、右端常数 1。
     /// 2. `Optional` 有一行，比较符是 `LE`。
-    /// 3. `Reserved` 与 `Loaded` **没有行**（基线的 `else -> {}`）。
+    /// 3. `Reserved` 与 `Loaded` **没有行**（`else -> {}`）。
     /// 4. 行名带货物名，能按名字定位。
     ///
     /// 第 3 点是关键：`Reserved` 看起来该有 `loaded_i = 0`，补上会让约束表多一行而模型照样可解。
     ///
     /// Four paired points: `Preassigned` and `AdjustmentNeeded` each get a row with `EQ` and a constant 1; `Optional` gets one with `LE`; `Reserved` and `Loaded` get **none**
-    /// (the baseline's `else -> {}`); and the row names carry the item name so they can be located. Point three is the crux: `Reserved` looks like it deserves
+    /// (its `else -> {}`); and the row names carry the item name so they can be located. Point three is the crux: `Reserved` looks like it deserves
     /// `loaded_i = 0`, and adding it yields one extra row while the model still solves.
     /// </remarks>
     [Fact]

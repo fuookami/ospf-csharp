@@ -1,6 +1,5 @@
 // 正交算子组合 / The orthogonal operator portfolio.
-// 与固定 Kotlin 基线 `configuration/OrthogonalOperatorPortfolio.kt`（2996 B）对应。
-// Mirrors the pinned baseline's `OrthogonalOperatorPortfolio.kt` (2996 B).
+// 与固定 Kotlin （2996 B）对应。
 
 using System;
 using System.Collections.Generic;

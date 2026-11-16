@@ -143,7 +143,7 @@ public class ExtendedTimeMassVolumeUnitsTests
             "a litre is defined as one cubic decimetre");
     }
 
-    /// <summary>**三个类别的单位清单与基线一致** / All three categories match the baseline list.</summary>
+    /// <summary>**三个类别的单位清单** / All three categories match the code list.</summary>
     [Theory]
     [InlineData(typeof(TimeUnits),
         "Nanosecond,Microsecond,Millisecond,Minute,Hour,Day,Week,Year")]

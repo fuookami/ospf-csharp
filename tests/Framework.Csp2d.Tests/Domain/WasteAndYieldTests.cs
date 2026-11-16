@@ -22,9 +22,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain;
 /// **余料汇总与超产上界** / Remnant summarisation and over-production bounds.
 /// </summary>
 /// <remarks>
-/// 对应基线 `WasteContext.kt` 与 `YieldContext.kt`。两者都只差 `produce` 层的类型， 之后才可落地。
+/// 对应与。两者都只差 `produce` 层的类型， 之后才可落地。
 ///
-/// Mirrors the baseline `WasteContext.kt` and `YieldContext.kt`. Both only needed the `produce` layer, which landed—.
+/// and. Both only needed the `produce` layer, which landed—.
 /// </remarks>
 public class WasteAndYieldTests {
     /// <summary>**阈值以物料目录为准** / The catalogue threshold wins over the pattern's own material.</summary>

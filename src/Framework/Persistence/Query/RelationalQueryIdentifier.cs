@@ -1,7 +1,7 @@
 // 关系查询标识符与来源解析 / Relational query identifiers and source resolution.
-// 与固定 Kotlin 基线 `quoteIdentifier`／`quoteIdentifierOrFallback`／`definition`／`column` 对应。这部分是 SQL 注入
+// 与`quoteIdentifier`／`quoteIdentifierOrFallback`／`definition`／`column` 对应。这部分是 SQL 注入
 // 的实际防线：所有物理表名与列名都必须经过这里，且允许字符集之外的输入一律结构化拒绝。
-// Mirrors the pinned Kotlin baseline's `quoteIdentifier`/`quoteIdentifierOrFallback`/`definition`/`column`. This is
+// The pinned Kotlin: /`quoteIdentifierOrFallback`/`definition`/`column`. This is
 // the actual injection defence: every physical table and column name goes through here, and anything outside the
 // permitted shape is rejected structurally.
 
@@ -21,11 +21,11 @@ internal static class RelationalQueryIdentifier {
     /// 引用标识符 / Quote an identifier.
     /// </summary>
     /// <remarks>
-    /// 规则与基线一致：裁剪空白；空串或含 NUL 拒绝；按 <c>.</c> 分段，**任何空分段都拒绝**（`a..b`、`.a`、`a.`
+    /// 规则：裁剪空白；空串或含 NUL 拒绝；按 <c>.</c> 分段，**任何空分段都拒绝**（`a..b`、`.a`、`a.`
     /// 都是畸形标识符而不是"可以忽略的错误"）；每段用方言引号包裹并**把引号本身加倍**——不加倍的话，标识符里
     /// 的一个引号就能闭合引用串、把后续内容变成 SQL。
     ///
-    /// Rules match the baseline: trim; reject empty or NUL-containing input; split on <c>.</c> and reject **any empty
+    /// Rules match the code: trim; reject empty or NUL-containing input; split on <c>.</c> and reject **any empty
     /// segment** (`a..b`, `.a`, `a.` are malformed identifiers, not "harmless mistakes"); wrap each segment in the
     /// dialect quote and **double the quote character inside** — without doubling, a single quote inside an
     /// identifier closes the quoted string and turns the remainder into SQL.

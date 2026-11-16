@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **The row used to read "3 → 18 files, 3 still missing (baseline 21)"**, which conflated file count with baseline files covered: three baseline types were split into
 /// separate C# files, so **the file count rose while the coverage did not.** re-measures into three categories. **Both directions were wrong once — "3 missing"
-/// understated Gurobi, "6 files missing" overstated SCIP.** These criteria pin **the accounting itself**: the three category counts must sum to the baseline total, and every
+/// understated Gurobi, "6 files missing" overstated SCIP.** These criteria pin **the accounting itself**: the three category counts must sum to the code total, and every
 /// named file must exist.
 /// </remarks>
 public class AnalysisGapLedgerTests {
@@ -84,7 +84,7 @@ public class AnalysisGapLedgerTests {
             "the one untouched baseline file has to be named");
 
         // **C# 侧那三个拆分文件必须真的存在**，否则"报告已补"是在说一个不存在的文件。
-        // **The three split-out C# files have to exist**, or "the report is ported" describes a file that is not there.
+        // **The three split-out C# files have to exist**, or "the report is implemented" describes a file that is not there.
         string root = RepositoryRoot();
         foreach (string file in new[] { "TargetFeasibilityReport", "ConstraintPerturbationReport", "ConflictExplanation" }) {
             File.Exists(Path.Combine(root, AnalysisDir, $"{file}.cs"))
@@ -94,12 +94,12 @@ public class AnalysisGapLedgerTests {
 
     /// <summary>**有理由的差异不是缺口** / A divergence with a reason is not a gap.</summary>
     /// <remarks>
-    /// SCIP 侧此前被记成"部分"。基线那个文件只有**一个类**，C# 有同名同类实现，
+    /// SCIP 侧此前被记成"部分"。个文件只有**一个类**，C# 有同名同类实现，
     /// 两处差异（线程数与后端配置不下发）**是 C# 自己写明了理由的**。
     ///
     /// **把有理由的差异记成缺口，和把缺口记成完成一样，都会让工作量判断失真。**
     ///
-    /// The SCIP side used to be recorded as "partial". The baseline file holds **one class**, and C# has the same class with two divergences (thread count and backend
+    /// The SCIP side used to be recorded as "partial". The code file holds **one class**, and C# has the same class with two divergences (thread count and backend
     /// configuration not applied) **whose reasons are written down in C# itself.** **Recording a reasoned divergence as a gap distorts the workload the same way
     /// recording a gap as done does.**
     /// </remarks>
@@ -142,7 +142,7 @@ public class AnalysisGapLedgerTests {
             "the linear native IIS is implemented now, and the declaration has to follow the implementation");
         // **两个 IIS 类一个都没有 C# 文件**，而 Farkas 那个有——方向相反的断言必须同时存在，
         // 否则"部分已搬"这句话本身无法被证伪。
-        // **Neither IIS class has a C# file, while the Farkas one does** — the two assertions must coexist, or "partly ported" cannot be falsified.
+        // **Neither IIS class has a C# file, while the Farkas one does** — the two assertions must coexist, or "partly implemented" cannot be falsified.
         foreach (string analyzer in new[] { "GurobiQuadraticNativeIISAnalyzer" }) {
             Directory.EnumerateFiles(Path.Combine(root, "src/Core.Plugin.Gurobi"), $"{analyzer}.cs")
                 .Should().BeEmpty(

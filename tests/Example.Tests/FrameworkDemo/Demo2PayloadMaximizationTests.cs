@@ -170,7 +170,7 @@ public class Demo2PayloadMaximizationTests {
         // `estimate_loaded` 加权求和而成，而每个 `estimate_loaded` 都没有常数项），于是"乘"与"不乘"得到同一个 0。
         // 保留断言（它对 0 也成立，将来估计业载带上常数时会立刻生效），并在此记录变异体存活的原因。
         //
-        // **The constant is scaled too** — **but this is unobservable in this port**: measured, `estimate_payload`'s constant is identically zero (it is a weighted sum of each
+        // **The constant is scaled too** — **but this is unobservable here**: measured, `estimate_payload`'s constant is identically zero (it is a weighted sum of each
         // position's `estimate_loaded`, none of which carries a constant), so scaling and not scaling both give 0. The assertion stays (true for 0, and it takes effect the moment the
         // estimated payload gains a constant), with the mutation survivor's cause recorded here.
         estimate.Polynomial.Constant.ToDouble().Should().Be(0.0,
@@ -303,11 +303,11 @@ public class Demo2PayloadMaximizationTests {
     /// **初始化幂等：第二次不重建聚合** / Initialisation is idempotent: a second call does not rebuild the aggregation.
     /// </summary>
     /// <remarks>
-    /// 基线的 `if (!::aggregation.isInitialized)` 意味着第二次 `init` 保留原聚合。重建会把上一次的符号引用丢掉，而模型里还挂着那些符号。
+    /// `if (!::aggregation.isInitialized)` 意味着第二次 `init` 保留原聚合。重建会把上一次的符号引用丢掉，而模型里还挂着那些符号。
     ///
     /// 判据用**反射**确认 `Aggregation` 的实例身份：只断言"两次都成功"会让"每次都重建"的变异存活（实测存活过一次），因为重建同样返回成功。
     ///
-    /// The baseline's `if (!::aggregation.isInitialized)` means a second `init` keeps the original aggregation; rebuilding would drop the previous symbol references while the model
+    /// The code's `if (!::aggregation.isInitialized)` means a second `init` keeps the original aggregation; rebuilding would drop the previous symbol references while the model
     /// still holds them. The criterion checks `Aggregation`'s **instance identity** via reflection: asserting only "both succeed" lets a "rebuild every time" mutant survive (measured
     /// once), since rebuilding also succeeds.
     /// </remarks>

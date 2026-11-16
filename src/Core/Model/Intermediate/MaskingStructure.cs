@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 由现有二值 mask 门控的数值结果 / A numeric result gated by an existing binary mask.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `MaskingStructure.kt` 的 `MaskingStructure`。
+/// 对齐的 `MaskingStructure`。
 ///
 /// **mask 列可能是<b>共享</b>的，而共享决定了谁保留它。**
 ///
@@ -31,13 +31,13 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 ///
 /// **定义行是 `mask − definition = 0`，而且它排在条件值的行<b>之前</b>。** **顺序本身不是语义
 /// （等式在哪都一样），但如果有人按下标切行、或者按"前 N 行是本结构的定义"做假设，顺序就成了契约。**
-/// **这里保留基线的顺序，并把这件事写下来。**
+/// **这里保留顺序，并把这件事写下来。**
 ///
 /// **差值取 `mask − definition` 而不是 `definition − mask`**：**等式两边取反等价，
 /// 所以这一处不影响正确性。但若哪天改成不等式，方向就成了语义——
 /// 现在写成减数在前是有意的，不是随手。**
 ///
-/// Following the baseline's `MaskingStructure`.
+/// Following its `MaskingStructure`.
 ///
 /// **The mask column may be <b>shared</b>, and sharing decides who retains it.**
 ///
@@ -50,7 +50,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 ///
 /// **The definition row is `mask − definition = 0` and it sits <b>before</b> the conditional value's rows.** **The order
 /// is not itself semantics (an equality is an equality anywhere), but if anyone slices by index or assumes "the first N
-/// rows are this structure's definition", the order becomes a contract.** **The baseline's order is kept, and this is
+/// rows are this structure's definition", the order becomes a contract.** **order is kept, and this is
 /// recorded.**
 ///
 /// **The difference is `mask − definition` rather than the reverse**: **negating an equality is equivalent, so it does

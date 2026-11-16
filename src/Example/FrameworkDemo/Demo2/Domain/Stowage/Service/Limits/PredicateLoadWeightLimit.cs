@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 谓词装载重量上界 / Upper bound on the predicate load weight.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/PredicateLoadWeightLimit.kt`：给每个"需要谓词重量"的舱位加一行 `y_j ≤ plw.max`。
+/// 对齐：给每个"需要谓词重量"的舱位加一行 `y_j ≤ plw.max`。
 ///
 /// 这行约束存在的原因是 `y` 的正上下界已经由变量范围给到 `mlw`，但**谓词重量还有一个更紧的规格上界**。少了这一行，
 /// `y` 会一路顶到 `mlw`，松弛量随之失真，而求解器不会有任何抱怨。
 ///
-/// Mirrors the baseline: add `y_j ≤ plw.max` for every position that needs the predicate weight. The row exists because `y`'s declared range already goes up to `mlw`, but the
+/// add `y_j ≤ plw.max` for every position that needs the predicate weight. The row exists because `y`'s declared range already goes up to `mlw`, but the
 /// predicate weight has a **tighter specification bound**. Without the row `y` drifts to `mlw`, the slack becomes meaningless, and the solver never complains.
 /// </remarks>
 public sealed class PredicateLoadWeightLimit

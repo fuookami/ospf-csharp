@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// The "find the counterpart by name" method cannot be trusted, and I have misjudged with it three times.
 /// </summary>
 /// <remarks>
-/// **起初要回答一个看起来很简单的问题：基线里有多少类型本仓没有？**
+/// **起初要回答一个看起来很简单的问题：有多少类型本仓没有？**
 ///
 /// **我写了一个脚本，按文件名 + 类型声明名对照，得到的数字一路在变：**
 ///
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **三次都是同一个动作：** **用"名字相等"代理"是不是同一个东西"。**
 /// **而 Kotlin 与 C# 的命名习惯不同（`Function` 后缀、`View`／`Item`／`Group` 后缀），
-/// 基线里还有大量 `typealias` 与纯函数文件——<b>名字本来就不该相等**。</b>
+/// 还有大量 `typealias` 与纯函数文件——<b>名字本来就不该相等**。</b>
 ///
 /// ### 所以这里不交付"缺多少"，交付"这个数字不可交付"
 ///
@@ -49,11 +49,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// `src/Core/Symbol/Function/`), `UnivariateLinearPiecewise` (called missing; this repo names it
 /// `UnivariateLinearPiecewiseFunction`), and `ModelView` / `ConstraintPriority` (both called missing, both under
 /// `src/Core/Model/Basic/`).** **All three commit the same act: substituting "the names are equal" for "these are the same
-/// thing" — and Kotlin and C# name things differently (`Function`, `View`, `Item`, `Group` suffixes), while the baseline also
+/// thing" — and Kotlin and C# name things differently (`Function`, `View`, `Item`, `Group` suffixes), while the code also
 /// carries many `typealias` and pure-function files, so <b>the names were never supposed to match</b>.**
 ///
 /// **So not deliver "how much is missing"; it delivers "that number is not deliverable".** **What the criterion
-/// asserts is that the names I misjudged do have counterparts here — it guards not against "the baseline lacks something" but
+/// asserts is that the names I misjudged do have counterparts here — it guards not against "the code lacks something" but
 /// against "someone, myself included, runs the same script again and gets another number".**
 /// </remarks>
 public class NameBasedCounterpartScanTests

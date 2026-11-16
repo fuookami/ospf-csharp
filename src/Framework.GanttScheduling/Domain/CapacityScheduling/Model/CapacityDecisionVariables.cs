@@ -25,11 +25,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// `Invoke` 都是 `=> Ok`，`BunchCapacitySchedulingResourceUsage.Register` 也被改成了显式失败，根因都一样：
 /// 没有决策变量，就没有任何"每动作每时隙加工多少"的量可以写进约束和目标。
 ///
-/// 基线的对应物是 `compilation.operationTime[actionIndex, slotIndex]`——一个动作 × 时隙的矩阵。
+/// 对应物是 `compilation.operationTime[actionIndex, slotIndex]`——一个动作 × 时隙的矩阵。
 /// C# 侧用 <see cref="UIntVariable2"/>：它就是这个形状，且范围与整数性由它自己管，不需要在这里再写一遍。
 ///
 /// **This layer is what capacity scheduling has been missing.** The three `Invoke` bodies are `=> Ok` and `BunchCapacitySchedulingResourceUsage.Register` was changed to fail
-/// explicitly, all for the same root cause: without decision variables there is no "how much is processed per action per slot" quantity to put into a row or an objective. The baseline's
+/// explicitly, all for the same root cause: without decision variables there is no "how much is processed per action per slot" quantity to put into a row or an objective. The code's
 /// counterpart is `compilation.operationTime[actionIndex, slotIndex]` — an action-by-slot matrix. On the C# side <see cref="UIntVariable2"/> is exactly that shape, and it owns its range
 /// and integrality, so nothing needs rewriting here.
 /// </remarks>

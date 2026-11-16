@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 累进费率：每段用各自的边际费率，费用<b>连续</b> / An incremental tariff: a marginal rate per segment, and the cost is continuous.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Tariff.kt` 的 `IncrementalTariff`。
+/// 对齐的 `IncrementalTariff`。
 ///
 /// <c>cost(b₀) = baseCost</c>，然后 <c>cost(bᵢ₊₁) = cost(bᵢ) + rateᵢ · (bᵢ₊₁ − bᵢ)</c>。
 /// **在断点处是连续的**——**这就是"累进"的含义：越过一个断点，只有断点之后的那部分享受新费率。**
@@ -32,13 +32,13 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **这里的费用在断点处连续，而全量折扣在那里会<b>跳降</b>。**
 /// **两者用同一组断点与费率时在第一个区间内完全相同，所以只测小值的判据分不开它们。**
 ///
-/// Following the baseline's `IncrementalTariff`.
+/// Following its `IncrementalTariff`.
 ///
 /// `cost(b₀) = baseCost`, then `cost(bᵢ₊₁) = cost(bᵢ) + rateᵢ · (bᵢ₊₁ − bᵢ)`.
 /// **It is continuous at every breakpoint** — **that is what "incremental" means: past a breakpoint only the portion
 /// above it enjoys the new rate.**
 ///
-/// **That is exactly the difference from `AllUnitsDiscountFunction`**:
+/// **That is exactly the difference from `AllUnitsDiscountFunction`**.
 /// **the cost here is continuous at breakpoints, while an all-units discount <b>jumps down</b> there.**
 /// **Given the same breakpoints and rates the two agree on the first segment, so a criterion that only tests small
 /// values cannot separate them.**
@@ -120,7 +120,7 @@ public static class IncrementalTariff
 /// 全量折扣：<b>整批数量</b>适用同一档位的单价 / An all-units discount: one unit price for the whole quantity.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Tariff.kt` 的 `AllUnitsDiscountFunction`。
+/// 对齐的 `AllUnitsDiscountFunction`。
 ///
 /// <c>cost = quantity · rate(tier)</c>——**单价按整批数量选，所以费用对数量是线性的，但斜率在断点处改变。**
 ///
@@ -132,7 +132,7 @@ public static class IncrementalTariff
 /// **`boundaryGap` 让档位区间在断点处收半开**：**没有它，断点同时属于两个档位，
 /// 而 one-hot 约束不禁止两个 selector 同时为 1，于是 `result = Σ masked` 会把两个档位加起来。**
 ///
-/// Following the baseline's `AllUnitsDiscountFunction`.
+/// Following its `AllUnitsDiscountFunction`.
 ///
 /// `cost = quantity · rate(tier)` — **the unit price is picked from the whole quantity, so the cost is linear in the
 /// quantity with a slope change at each breakpoint.**
@@ -203,10 +203,10 @@ public sealed class AllUnitsDiscountFunction<V> : IMathFunctionSymbol<V>, IHasRe
         DisplayName = displayName;
 
         // **默认边界间隙为 0**：**那时断点同时属于两个档位，而 `TryEvaluate` 取"第一个匹配"的档位，
-        // 与基线的 `firstOrNull` 一致。** **正的间隙把区间收成半开，让 one-hot 真正唯一。**
+        // 与`firstOrNull` 一致。** **正的间隙把区间收成半开，让 one-hot 真正唯一。**
         //
         // **The boundary gap defaults to zero**: **a breakpoint then belongs to two tiers, and `TryEvaluate` takes the
-        // first match, matching the baseline's `firstOrNull`.** **A positive gap makes the intervals half-open so the
+        // first match, matching its `firstOrNull`.** **A positive gap makes the intervals half-open so the
         // one-hot is genuinely unique.**
         BoundaryGap = boundaryGap ?? converter.Zero;
 

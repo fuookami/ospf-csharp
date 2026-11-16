@@ -1,9 +1,8 @@
 // 层生成器与组合上下文 / Layer generators and the composite context.
-// 与固定 Kotlin 基线 `bpp2d/domain/layer_generation/LayerGenerationContext.kt`（597 行）对应。
-// Mirrors the pinned baseline's `LayerGenerationContext.kt`.
+// 与固定 Kotlin 对应。
 //
 // earlier 闭合了 `block_loading` 域，这里随即补上三个块装载生成器（`BlLocalLayerGenerator`／
-// `BlGlobalLayerGenerator`／`SpaceSplitLayerGenerator`），`DefaultGenerators` 至此与基线一致（八个）。
+// `BlGlobalLayerGenerator`／`SpaceSplitLayerGenerator`），`DefaultGenerators` 至此（八个）。
 // earlier closed the `block_loading` domain, so the three block-loading generators
 // (`BlLocalLayerGenerator` / `BlGlobalLayerGenerator` / `SpaceSplitLayerGenerator`); `DefaultGenerators` now matches the
 // baseline (eight).
@@ -521,9 +520,9 @@ public sealed record LayerGenerationContext<V>(
     /// 默认生成器集合 / Default generator set.
     /// </summary>
     /// <remarks>
-    /// 顺序与基线一致（八个）。**顺序即优先级，只在 `maxCandidates` 截断时可见**：先生成的候选先占额度，因此块装载族
+    /// 顺序（八个）。**顺序即优先级，只在 `maxCandidates` 截断时可见**：先生成的候选先占额度，因此块装载族
     /// 放在 BLA 之前、历史层放在最后——历史层只是回放，不该挤掉新生成的候选。
-    /// The order matches the baseline (eight). **The order is priority, visible only when `maxCandidates` truncates**:
+    /// The order matches the code (eight). **The order is priority, visible only when `maxCandidates` truncates**:
     /// earlier generators claim the budget first, so the block-loading family precedes BLA and the historical generator
     /// goes last — it merely replays and should not crowd out freshly generated candidates.
     /// </remarks>

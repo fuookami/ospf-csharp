@@ -132,11 +132,11 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// </summary>
     /// <remarks>
     /// `frontOf[from, to] = 1` 当且仅当 `est[from]` **不晚于** `est[to]`。"不晚于"而不是"早于"是关键：相等时两边都是 1，
-    /// 于是 `not_between` 会把"三个任务同时开始"这种退化排法判成互相夹在中间——与基线一致。把 `&lt;=` 写成 `&lt;` 会让相等时两边都是 0，
+    /// 于是 `not_between` 会把"三个任务同时开始"这种退化排法判成互相夹在中间——。把 `&lt;=` 写成 `&lt;` 会让相等时两边都是 0，
     /// 换型指示整片消失，而解依旧可行。
     ///
     /// `frontOf[from, to] = 1` exactly when `est[from]` is **not later than** `est[to]`. "Not later" rather than "earlier" is the point: with ties both sides are 1, so
-    /// `not_between` treats a degenerate "all three start together" schedule as mutually sandwiched — as in the baseline. Writing `&lt;=` as `&lt;` makes both sides 0 on a tie,
+    /// `not_between` treats a degenerate "all three start together" schedule as mutually sandwiched — as in the code. Writing `&lt;=` as `&lt;` makes both sides 0 on a tie,
     /// the indicators vanish wholesale, and the solution stays feasible.
     /// </remarks>
     public IReadOnlyDictionary<(T From, T To), object>? FrontOfTable { get; private set; }
@@ -149,7 +149,7 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// 且 `task1` 计划上紧跟在 `task2` 之前。有任务时间的那一支要用 `frontOf` / `betweenIn` 两层 `IfFunction` / `AndFunction`
     /// 组合，属于独立一批的量——**所以它显式失败**，而不是悄悄退化成无时间分支（那会假设计划顺序就是真实顺序）。
     ///
- /// implements only the **no-task-time** branch (the baseline's own `taskTime == null` path): the indicator is "both assignment columns are 1 and `task1`
+ /// implements only the **no-task-time** branch (its own `taskTime == null` path): the indicator is "both assignment columns are 1 and `task1`
     /// immediately precedes `task2` in the plan". The task-time branch needs `frontOf` / `betweenIn` built from two layers of `IfFunction` / `AndFunction` and is a batch of its
     /// own — **so it fails explicitly** instead of quietly degrading to the no-time branch (which would assume the planned order is the real order).
     /// </remarks>
@@ -232,13 +232,13 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// <remarks>
     /// 三种情况：
     /// <list type="number">
-    /// <item>`from == to` → **常量零**（落在下一条里：开始时间严格早于自己不可能成立）。基线在 `switch` 里对对角线返回 `empty`，
+    /// <item>`from == to` → **常量零**（落在下一条里：开始时间严格早于自己不可能成立）。`switch` 里对对角线返回 `empty`，
     ///   而在 `SwitchCostTriples` 里**不跳过**对角线——两件事并不矛盾：对角线**参与求和**，只是它的值是零。</item>
     /// <item>`from` 在计划上不是紧跟 `to` → 常量零。"紧跟"= `from` 的开始严格早于 `to`，且没有第三个任务的开始时间落在两者之间。</item>
     /// <item>否则 → `AND(分配[执行器, from], 分配[执行器, to])`。</item>
     /// </list>
     ///
-    /// Three cases: `from == to` → **constant zero** (the baseline returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it — no contradiction:
+    /// Three cases: `from == to` → **constant zero** (the code returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it — no contradiction:
     /// the diagonal takes part in the sum, its value is just zero); `from` does not immediately precede `to` in the plan → constant zero ("immediately" means `from` starts
     /// strictly earlier than `to` and no third task starts strictly in between); otherwise → `AND(assignment[executor, from], assignment[executor, to])`.
     /// </remarks>
@@ -386,17 +386,17 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
 
     /// <summary>造 `frontOf` 表 / Build the `frontOf` table.</summary>
     /// <remarks>
-    /// `frontOf[from, to] = 1` 当且仅当 `est[from]` 不晚于 `est[to]`。基线把它写成 `IfFunction` 包住一条不等式，
+    /// `frontOf[from, to] = 1` 当且仅当 `est[from]` 不晚于 `est[to]`。它写成 `IfFunction` 包住一条不等式，
     /// 于是"谁在前"变成一个**决策变量**而不是一个静态判断——这正是允许提前/延迟之后必须做的事。
     ///
-    /// `frontOf[from, to] = 1` exactly when `est[from]` is not later than `est[to]`. The baseline wraps an inequality in an `IfFunction`, turning "who comes first" into a
+    /// `frontOf[from, to] = 1` exactly when `est[from]` is not later than `est[to]`. The code wraps an inequality in an `IfFunction`, turning "who comes first" into a
     /// **decision variable** rather than a static test — exactly what advance/delay makes necessary.
     ///
-    /// **这里 ceiling**：基线把 `estimateStartTime[task1].range.range!!` 当左侧值域传给约束输入，而 C# 里
+    /// **这里 ceiling**：`estimateStartTime[task1].range.range!!` 当左侧值域传给约束输入，而 C# 里
     /// `LinearExpressionSymbol.Range` 的写入**读不回来**（既有 ceiling），所以这里只能传全域。后果是 `IfFunction`
     /// 少一层收紧，不影响正确性，只影响松弛强度。
     ///
-    /// **Ceiling**: the baseline passes `estimateStartTime[task1].range.range!!` as the left-hand range, but in C# the writes to `LinearExpressionSymbol.Range` **cannot be read
+    /// **Ceiling**: the code passes `estimateStartTime[task1].range.range!!` as the left-hand range, but in C# the writes to `LinearExpressionSymbol.Range` **cannot be read
     /// back** (an existing ceiling), so the full range is passed. The `IfFunction` loses one layer of tightening — no effect on correctness, only on relaxation strength.
     /// </remarks>
     private Try BuildFrontOf(IAbstractLinearMetaModel<Flt64> linear) {
@@ -457,10 +457,10 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// <remarks>
     /// `betweenIn[middle, from, to] = frontOf[from, middle] AND frontOf[middle, to]`：`middle` 正好夹在两者之间。
     ///
-    /// **基线的一处越界**：`betweenIn` 是 3 维，但它的构造 lambda 读的是 `v[1] / v[2] / v[3]`（`v` 只有 0..2）。
+    /// **一处越界**：`betweenIn` 是 3 维，但它的构造 lambda 读的是 `v[1] / v[2] / v[3]`（`v` 只有 0..2）。
     /// 语义（以及它自己的命名 `between_in_{task3}_{task1}_{task2}`）指向 `v[0]`，即"中间那个任务"，这里按**语义**实现并记录。
     ///
-    /// **A baseline out-of-range**: `betweenIn` is 3-dimensional but its lambda reads `v[1] / v[2] / v[3]` (with `v` holding only 0..2). Both the intent and the baseline's own
+    /// **A baseline out-of-range**: `betweenIn` is 3-dimensional but its lambda reads `v[1] / v[2] / v[3]` (with `v` holding only 0..2). Both the intent and its own
     /// naming `between_in_{task3}_{task1}_{task2}` point at `v[0]`, the middle task, so this follows the **intent** and records the deviation.
     /// </remarks>
     private Try BuildBetweenIn(IAbstractLinearMetaModel<Flt64> linear) {

@@ -1,6 +1,5 @@
 // 设施分区约束 / Facility-partition constraints.
-// 与固定 Kotlin 基线 `structure/service/limits/FacilityPartitionConstraints.kt`（2460 字节）对应。
-// Mirrors the pinned baseline's `FacilityPartitionConstraints.kt`.
+// 与固定 Kotlin （2460 字节）对应。
 
 using System;
 using Fuookami.Ospf.Core.Model.Mechanism;

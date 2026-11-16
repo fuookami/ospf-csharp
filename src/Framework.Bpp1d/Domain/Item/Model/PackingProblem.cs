@@ -1,6 +1,6 @@
 // 一维装箱领域模型 / One-dimensional packing domain model.
-// 与固定 Kotlin 基线 `bpp1d/domain/item/model/PackingProblem.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp1d/domain/item/model/PackingProblem.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -88,9 +88,9 @@ public sealed record PackingPattern<V>(string BinTypeId, IReadOnlyDictionary<str
     /// </summary>
     /// <remarks>
     /// **键里带长度前缀**（`id.Length + ":" + id`）：只用 `;` 与 `=` 分隔，`"a=1;b"` 与 `"a=1"` + `"b"`
-    /// 这类带分隔符的标识会撞键。基线用同样的长度前缀编码。
+    /// 这类带分隔符的标识会撞键。同样的长度前缀编码。
     ///
-    /// **The key carries length prefixes** (`id.Length + ":" + id`): with only `;` and `=` separators, identifiers containing them (`"a=1;b"`) would collide. The baseline
+    /// **The key carries length prefixes** (`id.Length + ":" + id`): with only `;` and `=` separators, identifiers containing them (`"a=1;b"`) would collide. The code
     /// uses the same length-prefix encoding.
     /// </remarks>
     public string Key {
@@ -209,13 +209,13 @@ public sealed record PackingProblem<V>(
     /// <param name="pattern">待验证列 / Pattern to validate.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// **两处容易写错，基线是对的**：
+    /// **两处容易写错，对的**：
     ///
     /// 1. **间距只加在物品之间，不加尾部**：第一个物品加 `amount - 1` 份间距，其余加 `amount` 份。
     ///    若第一个也加 `amount`，每列都会凭空多出一段尾部间距，容量判定会**偏保守**。
     /// 2. **件数用二进制倍增，不逐件累加**：需求可以很大（`ulong`），逐件循环会卡住。
     ///
-    /// **Two easy mistakes the baseline gets right**: (1) **spacing goes between pieces only, never trailing** — the first item adds `amount - 1` gaps and the rest add
+    /// **Two easy mistakes the code gets right**: (1) **spacing goes between pieces only, never trailing** — the first item adds `amount - 1` gaps and the rest add
     /// `amount`; adding `amount` for the first would invent a trailing gap per pattern and make the capacity check **conservatively wrong**. (2) **counts use binary
     /// scaling, not per-piece accumulation** — demand can be large (`ulong`) and a per-piece loop would stall.
     /// </remarks>

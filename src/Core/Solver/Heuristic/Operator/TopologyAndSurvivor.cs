@@ -1,7 +1,7 @@
 // 种群拓扑、幸存者选择与多样性度量 / Population topology, survivor selection and diversity metrics.
-// 与固定 Kotlin 基线 `operator/topology/Topology.kt`、`operator/survivor/SurvivorSelection.kt`、
-// `operator/diversity/DiversityMetric.kt` 对应。
-// Mirrors the pinned baseline's `Topology.kt`, `SurvivorSelection.kt` and `DiversityMetric.kt`.
+// 与固定 Kotlin 、
+// 对应。
+// , and.
 
 using System;
 using System.Collections.Generic;
@@ -346,11 +346,11 @@ public sealed class MeanPairwiseDistance : IDiversityMetric {
         }
         // **这是"平均欧氏距离"，不是"距离的均方根"**。基线写 `accumulated / pairs`，即先逐对取欧氏距离再求平均；
         // 先累加平方再开方得到的是 RMS，两者在距离分布不均匀时差异显著——而两种值都是"合理的正数"，
-        // **只看数值大小完全看不出用了哪一个**。此前这里误写成 RMS 且未记录偏离，已按基线改正。
-        // **This is the mean Euclidean distance, not the root of the mean squared distance.** The baseline writes `accumulated / pairs`,
+        // **只看数值大小完全看不出用了哪一个**。此前这里误写成 RMS 且未记录偏离，已改正。
+        // **This is the mean Euclidean distance, not the root of the mean squared distance.** The code writes `accumulated / pairs`,
         // i.e. take each pair's Euclidean distance then average; summing squares first yields an RMS, and the two differ noticeably when
         // distances are unevenly distributed — while both are plausible positive numbers, **so the value alone reveals nothing**.
-        // This was wrongly written as an RMS without a recorded divergence; it now matches the baseline.
+        // This was wrongly written as an RMS without a recorded divergence; it now matches the code.
         return pairs == 0 ? Flt64.Zero : new Flt64(total / pairs);
     }
 }
@@ -367,10 +367,10 @@ public sealed class MeanPairwiseDistance : IDiversityMetric {
 /// **估计失败时返回 0**。空输入、样本不足或退化分布都会让估计失败，而把失败当成"高多样性"会让停止判据在该停的时候不停。
 /// **A failed estimate returns 0.** Empty input, too few samples or a degenerate distribution all make the estimate fail, and treating
 /// failure as "high diversity" would keep the stopping criterion from stopping when it should.
-/// **这是基线里 `FractalDimensionDiversity` 的补齐**：`operator/diversity/DiversityMetric.kt` 与
-/// `TopologyAndSurvivor` 的度量族是同名不同址的两处定义，本移植把它们合并到同一组接口上，避免出现两个 `IDiversityMetric`。
-/// **This completes the baseline's `FractalDimensionDiversity`**: the baseline defines its metric family both in
-/// `operator/diversity/DiversityMetric.kt` and alongside `TopologyAndSurvivor`, and this port merges them onto one interface so there is
+/// **这是`FractalDimensionDiversity` 的补齐**： 与
+/// `TopologyAndSurvivor` 的度量族是同名不同址的两处定义，本实现把它们合并到同一组接口上，避免出现两个 `IDiversityMetric`。
+/// **This completes its `FractalDimensionDiversity`**: the code defines its metric family both in
+/// and alongside `TopologyAndSurvivor`, and this implementation merges them onto one interface so there is
 /// only a single `IDiversityMetric`.
 /// </remarks>
 public sealed class FractalDimensionDiversity : IDiversityMetric {

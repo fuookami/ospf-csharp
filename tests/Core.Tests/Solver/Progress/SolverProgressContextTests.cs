@@ -15,13 +15,13 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// The progress context must really monotonise, really localize, and really check cancellation.
 /// </summary>
 /// <remarks>
-/// 基线 `progress/SolverProgress.kt`（224 行）+ `ProgressAdapters.kt`（127 行）是一整套上报系统。
+/// +（127 行）是一整套上报系统。
 /// C# 侧**完全没有**：`grep ProgressReporter` 只命中 Benders 的一个局部委托字段，与这套无关。
 ///
 /// 三条判据分别钉住 `Report` 里的三个环节。**它们之所以必须分开**：`Report` 的顺序是
 /// "取消 → 本地化 → 单调 → 上报"，任何一环写错，只要其余环正确，**只测"上报成功"的判据依然会绿**。
 ///
-/// The baseline's `progress/SolverProgress.kt` (224 lines) plus `ProgressAdapters.kt` (127 lines) is a whole reporting system. **The C# side had none**:
+/// The code's (224 lines) plus (127 lines) is a whole reporting system. **The C# side had none**:
 /// `grep ProgressReporter` only matched a local delegate field in Benders, unrelated to this.
 ///
 /// The three criteria pin the three stages inside `Report`. **They must be separate** because `Report` runs "cancel → localize → monotonise → report", and if any one
@@ -53,7 +53,7 @@ public class SolverProgressContextTests {
     /// 基线 `MonotonicProgressState.accept` 取 `max(上次值, 本次值)`。若实现直接透传快照，
     /// 进度条会**倒退**——这在长时间求解里是明显可见的错误，但"上报成功"的判据不会发现。
     ///
-    /// The baseline's `MonotonicProgressState.accept` takes `max(last, current)`. If the implementation passed the snapshot through unchanged, the progress bar would
+    /// The code's `MonotonicProgressState.accept` takes `max(last, current)`. If the implementation passed the snapshot through unchanged, the progress bar would
     /// **go backwards** — an obvious error in long solves that a "reporting succeeded" criterion would never catch.
     /// </remarks>
     [Fact]
@@ -71,10 +71,10 @@ public class SolverProgressContextTests {
 
     /// <summary>**阶段进度按阶段分别单调** / In-stage progress is monotonic per stage.</summary>
     /// <remarks>
-    /// 基线用 `stageProgress` 按 `stage.id` **分开记账**。若实现只保留一个全局阶段进度，
+    /// `stageProgress` 按 `stage.id` **分开记账**。若实现只保留一个全局阶段进度，
     /// 换阶段后新阶段的进度会被上一阶段的高值压住。
     ///
-    /// The baseline keeps **separate accounts** in `stageProgress` keyed by `stage.id`. If the implementation kept one global in-stage value, a new stage's progress
+    /// The code keeps **separate accounts** in `stageProgress` keyed by `stage.id`. If the implementation kept one global in-stage value, a new stage's progress
     /// would be pinned by the previous stage's high-water mark.
     /// </remarks>
     [Fact]
@@ -106,10 +106,10 @@ public class SolverProgressContextTests {
 
     /// <summary>**无解析器时不得伪造已解析标签** / Without a resolver, resolved labels must not be faked.</summary>
     /// <remarks>
-    /// 基线在无解析器时**直接 `Normalized`**，不动两个已解析标签。若实现无条件填上默认标签，
+    /// 无解析器时**直接 `Normalized`**，不动两个已解析标签。若实现无条件填上默认标签，
     /// 调用方就无法区分"本地化过"与"没本地化"。
     ///
-    /// The baseline calls **`Normalized` directly** when there is no resolver and leaves the two resolved labels alone. If the implementation unconditionally filled
+    /// The code calls **`Normalized` directly** when there is no resolver and leaves the two resolved labels alone. If the implementation unconditionally filled
     /// in the defaults, callers could not tell "localized" from "not localized".
     /// </remarks>
     [Fact]
@@ -128,7 +128,7 @@ public class SolverProgressContextTests {
     /// 基线 `report` 的第一行就是 `throwIfCancelled`。**顺序很重要**：若先上报再检查取消，
     /// 已取消之后仍会有快照流出去，下游会看到本不该发生的进度。
     ///
-    /// The baseline's `report` starts with `throwIfCancelled`. **Order matters**: if it reported before checking, snapshots would still flow out after cancellation and
+    /// The code's `report` starts with `throwIfCancelled`. **Order matters**: if it reported before checking, snapshots would still flow out after cancellation and
     /// downstream would see progress that should not have happened.
     /// </remarks>
     [Fact]
@@ -154,11 +154,11 @@ public class SolverProgressContextTests {
         subStage.RenderDefault().Should().Be("第 3 轮 / 共 16 轮");
     }
 
-    /// <summary>**内置阶段目录必须与基线逐项一致** / The built-in stage catalog must match the baseline item by item.</summary>
+    /// <summary>**内置阶段目录必须与基线逐项一致** / The built-in stage catalog must match the code item by item.</summary>
     /// <remarks>
     /// 基线 `SolverStages` 有 9 项。少一项或 id 拼错，下游的 `messageKey` 就会指向不存在的键。
     ///
-    /// The baseline `SolverStages` has 9 entries. A missing entry or a misspelled id would make downstream `messageKey`s point at keys that do not exist.
+    /// The code `SolverStages` has 9 entries. A missing entry or a misspelled id would make downstream `messageKey`s point at keys that do not exist.
     /// </remarks>
     [Fact]
     public void SolverStages_ShouldMatchTheBaselineCatalog() {

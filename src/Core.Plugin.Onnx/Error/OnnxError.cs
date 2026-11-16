@@ -10,12 +10,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Error;
 /// **ONNX 插件的结构化错误** / The ONNX plugin's structured errors.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxError.kt`（13 个变体）。**与"随便抛个异常"的差别在于上下文：**
+/// 同步 Kotlin `dee897d2` 的（13 个变体）。**与"随便抛个异常"的差别在于上下文：**
 /// **节点名、张量名、形状三者能拼回一条可定位的消息**——**一个只写"推理失败"的错误，在真实模型上等于没有信息。**
 ///
 /// 每个变体携带自己的 `ErrorCode`，让调用方既能按类别分派、也能取回结构化对象。
 ///
-/// Syncs `OnnxError.kt` (13 variants). **The difference from "just throw" is context: node name, tensor name and shape are enough to reconstruct a locatable
+/// Syncs (13 variants). **The difference from "just throw" is context: node name, tensor name and shape are enough to reconstruct a locatable
 /// message** — **an error that only says "inference failed" carries no information on a real model.** Each variant carries its own `ErrorCode` so a caller can
 /// dispatch by class and still recover the structured object.
 /// </remarks>

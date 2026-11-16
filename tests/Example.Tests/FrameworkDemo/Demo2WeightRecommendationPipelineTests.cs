@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **没有**软安全、重心优化、装卸效率。本仓以前只注册前三个加载荷最大化，`Init` 里还留着
 /// `// TODO: RecommendedWeightEqualizationContext`，于是"建议打板"其实只是"最大化载荷"。
 ///
-/// The baseline's `WeightRecommendationPipelineContext` registers stowage, mac, airworthiness, **express effectiveness**, **recommended-weight equalization** and
+/// The code's `WeightRecommendationPipelineContext` registers stowage, mac, airworthiness, **express effectiveness**, **recommended-weight equalization** and
 /// payload maximization — **no** soft security, mac optimization or loading effectiveness. The port used to register the first three plus payload maximization and left
 /// `// TODO: RecommendedWeightEqualizationContext` in `Init`, so "weight recommendation" was really just "maximise payload".
 /// </remarks>

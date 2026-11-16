@@ -31,10 +31,10 @@ public class Demo2WeightRecommendationPipelineContextTests {
     /// <remarks>
     /// 两点成对：
     ///
-    /// 1. 七个属性**都不为 `null`**——基线是把它们就地 `= XxxContext` 初始化的。
+    /// 1. 七个属性**都不为 `null`**——把它们就地 `= XxxContext` 初始化的。
     /// 2. 此刻**都还没初始化聚合**——构造不该有副作用。
     ///
-    /// Two paired points: all seven properties are **non-null**, matching the baseline's in-place `= XxxContext` initialisation; and **none has an aggregation yet**, since construction
+    /// Two paired points: all seven properties are **non-null**, matching its in-place `= XxxContext` initialisation; and **none has an aggregation yet**, since construction
     /// must have no side effects.
     /// </remarks>
     [Fact]

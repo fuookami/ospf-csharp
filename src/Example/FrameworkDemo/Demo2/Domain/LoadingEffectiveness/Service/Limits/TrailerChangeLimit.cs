@@ -19,18 +19,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 拖车换装目标 / The trailer-change objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/TrailerChangeLimit.kt` 对齐：把（相邻拖车对 × 相邻舱位对）的换装指示
+/// 与对齐：把（相邻拖车对 × 相邻舱位对）的换装指示
 /// 加权求和，作为**最小化**目标，名为 `"trailer change"`（带空格）。
 ///
-/// 四点必须照抄：
+/// 四点必须沿用：
 ///
 /// 1. **是 `Minimum`**——换装是代价，不是奖励。
 /// 2. **目标名带空格**：`"trailer change"`。
-/// 3. **空集合时直接返回成功、不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
+/// 3. **空集合时直接返回成功、不加目标**（`if (monomials.isEmpty) return ok`）。
 /// 4. **系数是交叉的**：`coefficient(position2, trailer1)`、`coefficient(position1, trailer2)`。
 ///
-/// Aligned with the baseline: the (trailer pair × adjacent position pair) indicators weighted and summed into a **minimisation** named `"trailer change"` (with a space). Four things must be
-/// copied: **it is `Minimum`**, since changing trailers is a cost rather than a reward; **the name has a space**; **an empty set returns success without an objective** (the baseline's early
+/// The (trailer pair × adjacent position pair) indicators weighted and summed into a **minimisation** named `"trailer change"` (with a space). Four things must be
+/// copied: **it is `Minimum`**, since changing trailers is a cost rather than a reward; **the name has a space**; **an empty set returns success without an objective** (its early
 /// return); and **the coefficient is crossed** — `coefficient(position2, trailer1)` and `coefficient(position1, trailer2)`.
 /// </remarks>
 internal sealed class TrailerChangeLimit

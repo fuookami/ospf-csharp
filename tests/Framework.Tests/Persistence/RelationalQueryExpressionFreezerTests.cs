@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Tests.Persistence;
 /// **`RelationalQueryExpressionFreezer` (329 lines) appears nowhere in the test tree.**
 /// It deep-copies the custom payloads inside a query plan so that "immutable after construction" holds.
 ///
-/// **When it fails the symptom is not an error but "the plan changes after construction"**:
+/// **When it fails the symptom is not an error but "the plan changes after construction"**.
 /// the caller mutates the `List` it passed in, **and the already-built plan changes with it** —
 /// **while the plan is what gets cached, compared for equality, and executed on another thread.**
 /// </remarks>

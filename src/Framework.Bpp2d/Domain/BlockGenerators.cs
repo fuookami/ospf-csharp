@@ -1,7 +1,7 @@
 // 简单块与复杂块生成 / Simple and complex block generation.
-// 与固定 Kotlin 基线 `bpp2d/domain/block_loading/service/SimpleBlockGenerator.kt`（118 行）与
-// `ComplexBlockGenerator.kt`（106 行）对应。
-// Mirrors the pinned baseline's `SimpleBlockGenerator.kt` and `ComplexBlockGenerator.kt`.
+// 与固定 Kotlin 与
+//（106 行）对应。
+// And.
 //
 // `BlockLoadingContext` 与 `SpaceSplitAlgorithms`（293 行）留待后续：它们是装配层与空间切分搜索，与这两个
 // 生成器没有反向依赖。

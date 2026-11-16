@@ -204,7 +204,7 @@ public class Demo2SequentialLoadingTests {
     /// 两点成对：
     ///
     /// 1. 只有一件有顺序的货物 → 没有有序对 → **不加目标**，返回成功。
-    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty) return ok` 不能省。
+    /// 2. 目标位数量不变——`if (monomials.isEmpty) return ok` 不能省。
     ///
     /// Two paired points: one item with a sequence gives no ordered pair, so **no objective** is added and success is returned; and the objective count is unchanged, since the
     /// baseline's early return must not be dropped.

@@ -11,10 +11,10 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 一个原始约束或变量值域成员的活动性结果 / Activity result for one original constraint or variable-domain member.
 /// </summary>
 /// <remarks>
-/// 与基线 `ConstraintActivityReport.kt`（126 行）对应。**变量边界和稀疏值域的 `ConstraintId` 为 `null`**；
+/// 与对应。**变量边界和稀疏值域的 `ConstraintId` 为 `null`**；
 /// 所有记录都该用 `Source` 当稳定身份——**用一个可能为 `null` 的 id 当键，正是"两条记录撞成一条"的来源。**
 ///
-/// Mirrors the baseline's `ConstraintActivityReport.kt` (126 lines). **`ConstraintId` is `null` for variable bounds and sparse domains**; every record should use `Source`
+/// **`ConstraintId` is `null` for variable bounds and sparse domains**; every record should use `Source`
 /// as its stable identity — **keying on something that may be `null` is how two records collapse into one.**
 /// </remarks>
 public sealed class ConstraintActivity

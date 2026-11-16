@@ -89,14 +89,14 @@ public sealed class BlockGeneratorsTest {
         SimpleBlockGenerator.Invoke(RectItem("a", 5, 5), Space(0, 0, 1, 1)).Value.Should().BeEmpty();
 
     /// <summary>
-    /// **`WithRemainder` 在基线上是空转的**：右侧余量恒为 `W - cols × pitch`，而 `cols = ⌊W / pitch⌋`，因此余量必然
+    /// **`WithRemainder` 在是空转的**：右侧余量恒为 `W - cols × pitch`，而 `cols = ⌊W / pitch⌋`，因此余量必然
     /// 小于一个节距，递归进去只会得到 `cols = 0`。这里保留该配置项以对齐基线签名，并用测试把这一事实固定下来，
-    /// 免得后来者以为"打开了余量却没用"是本移植的 bug。
+    /// 免得后来者以为"打开了余量却没用"是本实现的 bug。
     ///
-    /// **`WithRemainder` is a no-op in the baseline**: the right remainder is always `W - cols × pitch` with
+    /// **`WithRemainder` is a no-op in the code**: the right remainder is always `W - cols × pitch` with
     /// `cols = ⌊W / pitch⌋`, so it is necessarily narrower than one pitch and the recursion only ever sees `cols = 0`.
     /// The option is kept for signature parity, and this test pins the fact so nobody later reads "enabled but nothing
-    /// happens" as a defect of this port.
+    /// happens" as a defect of this implementation.
     /// </summary>
     [Fact]
     public void Simple_RemainderRecursionIsEffectivelyNoOp() {

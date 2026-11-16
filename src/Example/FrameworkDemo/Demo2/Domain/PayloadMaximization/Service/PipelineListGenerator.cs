@@ -16,16 +16,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization.S
 /// 业载最大化管线列表生成器 / The payload-maximization pipeline list generator.
 /// </summary>
 /// <remarks>
-/// 与基线 `payload_maximization/service/PipelineListGenerator.kt` 对齐：**恒返回一条**管线，**不看装载模式**。
+/// 与对齐：**恒返回一条**管线，**不看装载模式**。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **没有 `withPayloadMaximization` 判断**。软安全与重心优化都有"模式关了就不加"的守卫，业载最大化**没有**——
 ///    它只在建议打板模式下被上层调用，所以生成器自己不做判断。照着别的子域加一个守卫会让预配载模式少一条目标。
 /// 2. **恒一条**，没有条件分支。写成"有业载才加"会漏掉"业载为 0 也要最大化"的情形。
 /// 3. **系数来自 `parameter.weightRecommendationPayload`**，由生成器注入，不是硬编码。
 ///
-/// Aligned with the baseline: **always one pipeline**, **ignoring the stowage mode**. Three things must be copied: **there is no `withPayloadMaximization` check** — soft security and
+/// **always one pipeline**, **ignoring the stowage mode**. Three things must be copied: **there is no `withPayloadMaximization` check** — soft security and
 /// MAC optimisation both guard on the mode, payload maximization does **not**, because the caller only invokes it in weight-recommendation mode, so the generator itself does not
 /// test; adding a guard for symmetry would drop an objective in predistribution. **Always one**, no conditional branch — "add only when payload is positive" would miss
 /// "maximise even a zero payload". And **the coefficient comes from `parameter.weightRecommendationPayload`**, injected rather than hard-coded.

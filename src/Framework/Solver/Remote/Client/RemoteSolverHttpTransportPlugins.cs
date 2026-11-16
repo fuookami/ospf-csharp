@@ -49,8 +49,8 @@ public interface IRemoteSolverHttpTransportPlugin {
 /// 基于 <see cref="HttpClient"/> 的默认传输插件 / Default transport plugin backed by <see cref="HttpClient"/>.
 /// </summary>
 /// <remarks>
-/// 与基线一致：默认插件名为 <c>jdk</c>；连接超时与请求超时都按毫秒整型配置。
-/// Matches the baseline: the default plugin is named <c>jdk</c>, and both connect and request timeouts are configured in whole milliseconds.
+/// ：默认插件名为 <c>jdk</c>；连接超时与请求超时都按毫秒整型配置。
+/// The default plugin is named <c>jdk</c>, and both connect and request timeouts are configured in whole milliseconds.
 /// </remarks>
 public sealed class HttpClientRemoteSolverHttpTransportPlugin : IRemoteSolverHttpTransportPlugin {
     /// <inheritdoc/>

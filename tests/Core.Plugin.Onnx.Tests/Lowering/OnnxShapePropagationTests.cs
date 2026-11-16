@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **形状沿节点推出来，推不出来就说推不出来** / Shapes are inferred along the nodes, and when there is no ground it says so.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `materializeShapes`：**基线在降阶前先补齐形状，因为"有几个元素"决定了后面每一步能不能按元素走。**
+/// 同步 Kotlin `dee897d2` 的 `materializeShapes`：**降阶前先补齐形状，因为"有几个元素"决定了后面每一步能不能按元素走。**
 ///
 /// **这一层的边界很清楚：** **只推仿射链认识的算子**（`Add`／`Sub`／`Mul`／`Sum`／`Neg`／`Identity`／`Cast`），
 /// **其余一律"推不出来"——** **而不是拿 1 蒙过去。**
 ///
-/// Syncs `materializeShapes`: **the baseline fills shapes in before lowering, because "how many elements" decides whether later steps can stay per element.**
+/// Syncs `materializeShapes`: **the code fills shapes in before lowering, because "how many elements" decides whether later steps can stay per element.**
 ///
 /// **The boundary is explicit: only the operators the affine chain knows are inferred, and everything else is "cannot be inferred" rather than a guessed 1.**
 /// </remarks>

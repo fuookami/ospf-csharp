@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Framework.Model;
 /// 带类型的建模积木 / Typed modelling building blocks.
 /// </summary>
 /// <remarks>
-/// 与基线 `TypedModelBuilder.kt` 对齐。**这一族存在的理由是"把建模动作变成值"**：
+/// 与对齐。**这一族存在的理由是"把建模动作变成值"**：
 /// `Expr` / `Weight` 产出值，`Constraint` / `Objective` 产出值，最后由子类的 `Build` 一次性注册进模型。
 /// 好处是同一套建模代码可以对不同后端产出不同的东西（LP 注册、校验、打印、导出）。
 ///
-/// Aligned with the baseline's `TypedModelBuilder.kt`. **This family exists to turn modelling actions into values**: `Expr` and `Weight` produce values, `Constraint` and `Objective` produce values,
+/// Aligned with its. **This family exists to turn modelling actions into values**: `Expr` and `Weight` produce values, `Constraint` and `Objective` produce values,
 /// and a subclass's `Build` registers them into the model in one go, letting the same modelling code produce different things for different backends (LP registration, validation, printing,
 /// export).
 /// </remarks>
@@ -52,7 +52,7 @@ public sealed record TypedTerm(LinearPolynomial<Flt64> Coefficient);
 /// <typeparam name="T">子类的构建上下文 / The subclass's build context.</typeparam>
 /// <typeparam name="R">构建结果 / The build result.</typeparam>
 /// <remarks>
-/// 三处照抄：
+/// 三处沿用：
 ///
 /// 1. **约束归一成"左边减右边 + 右端常数"**：两个表达式相减时右端固定为零，表达式对常数时右端就是常数——
 ///    这样下游只处理一种形状，不用再分情况。

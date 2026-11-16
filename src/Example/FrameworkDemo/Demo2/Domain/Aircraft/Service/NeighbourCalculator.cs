@@ -12,21 +12,21 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// 物理邻接计算器 / The physical-neighbour calculator.
 /// </summary>
 /// <remarks>
-/// 与基线 `aircraft/service/NeighbourCalculator.kt` 的 `PhysicalNeighbourCalculator` 对齐：同一甲板内**两两组合**，按两条规则判定：
+/// 与的 `PhysicalNeighbourCalculator` 对齐：同一甲板内**两两组合**，按两条规则判定：
 ///
 /// | 情形 | 判定 |
 /// | --- | --- |
 /// | 同一纵线且**不同侧** | 直接相邻 |
 /// | 同侧（含横向跨越） | 两个舱位的前后臂区间内**没有第三个舱位**才相邻 |
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **`onSameSide` 的"或"顺序**：横向跨越（`Transverse`）优先，任一舱位横向就视为"同侧"。写成"都在左或都在右"会漏掉横向跨越的舱位。
 /// 2. **`onSameLine` 要求"都在左"**。少了它会把右侧的两舱位也判成同线。
 /// 3. **同侧分支看的是"区间内没有别的舱位"**，不是"两舱位不相交"。用后者会让隔着第三个舱位的两个舱位也算相邻。
 /// 4. **`i` 小于 `j` 的组合**，不是全排列——全排列会让每对出现两次。
 ///
-/// Aligned with the baseline's `PhysicalNeighbourCalculator`: pairwise **combinations** within one deck, decided by the two rules tabulated above. Four things must be copied: **the
+/// Aligned with its `PhysicalNeighbourCalculator`: pairwise **combinations** within one deck, decided by the two rules tabulated above. Four things are carried over: **the
 /// `onSameSide` disjunction order** — a transverse coordinate wins, so either position being transverse counts as "same side"; **`onSameLine` requires "both on the left"**, without
 /// which two right-side positions read as colinear; **the same-side branch asks whether a third position sits inside the front/back interval**, not whether the two boxes overlap,
 /// since the latter makes positions separated by a third read as adjacent; and **`i`-below-`j` combinations**, not permutations.
@@ -125,22 +125,22 @@ internal static class PhysicalNeighbourCalculator
 /// | 两者**本来不是**物理邻接 | `position2` 不在 `position1` 的共邻表里 |
 /// | 存在两个不同的共邻 | 两个共邻的邻接表交集非空（`p` 与 `q` 取组合） |
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **物理邻接先整批复制进来**。只算"补对"会让间接邻接少了基础那一层，而 `BiologicalAdjacentLimit` 依赖它。
 /// 2. **`nearEnough` 的三支**：第二舱位在前 → 看前向间隙；第一舱位在前 → 看后向间隙；重叠 → **直接为真**。
 /// 3. **`tidy` 是双向的**：`a→b` 与 `b→a` 都记。单向会让"共邻"只在一个方向成立。
 /// 4. **`position2` 只在 `position1` 之后取**，避免同一对出现两次。
 ///
-/// Aligned with the baseline. The result is **all physical adjacencies** retyped as `IndirectPhysics` **plus new pairs** inferred through shared neighbours, with four conditions all
-/// required, tabulated above. Four things must be copied: **the physical adjacencies are copied in wholesale** — computing only the inferred pairs would drop the base layer that
+/// The result is **all physical adjacencies** retyped as `IndirectPhysics` **plus new pairs** inferred through shared neighbours, with four conditions all
+/// required, tabulated above. Four things are carried over: **the physical adjacencies are copied in wholesale** — computing only the inferred pairs would drop the base layer that
 /// `BiologicalAdjacentLimit` relies on; **`nearEnough`'s three branches** (second ahead → forward gap; first ahead → backward gap; overlap → **true**); **`tidy` is bidirectional**,
 /// and one direction alone makes "shared neighbour" hold only one way; and **`position2` is taken only after `position1`**, so no pair appears twice.
 /// </remarks>
 internal static class IndirectPhysicsNeighbourCalculator
 {
-    // 基线的 `nearEnoughLongitudinalRatio = 0.5`。
-    // The baseline's `nearEnoughLongitudinalRatio = 0.5`.
+    // `nearEnoughLongitudinalRatio = 0.5`。
+    // The code's `nearEnoughLongitudinalRatio = 0.5`.
     private const double NearEnoughLongitudinalRatio = 0.5;
 
     /// <summary>

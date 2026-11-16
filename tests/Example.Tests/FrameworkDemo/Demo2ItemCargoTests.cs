@@ -12,18 +12,18 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **`ItemCargo` 被拆进 `Item`，但多标签语义不能丢** / `ItemCargo` was flattened into `Item`, but the multi-tag semantics must survive.
 /// </summary>
 /// <remarks>
-/// 基线把"货类集合 + 优先级"打成一个 `data class ItemCargo`，带三个 `contains` 重载。本仓把它拆成 `Item.Cargos`（集合）与 `Item.Priority`，
+/// "货类集合 + 优先级"打成一个 `data class ItemCargo`，带三个 `contains` 重载。本仓把它拆成 `Item.Cargos`（集合）与 `Item.Priority`，
 /// 只保留 `Item.Contains(CargoCode)`——**内容没丢，只是不再打成一个包**，所以它不进缺口表（见缺口清单第四之二节）。
 ///
-/// 但"没丢"必须有用例兜住：基线的 `enabled` 反复问"这件货是不是 AOG **或** MAT"，而**一件货可以同时是两者**（`AOGMATAppointed` 那条规则就为此存在）。
+/// 但"没丢"必须有用例兜住：`enabled` 反复问"这件货是不是 AOG **或** MAT"，而**一件货可以同时是两者**（`AOGMATAppointed` 那条规则就为此存在）。
 /// 拆包时最容易犯的错是把集合退化成单个货类，那时 `AOGMAT` 货只会命中一个判定，**模型不会报错，只会少一条规则**。
 ///
 /// 两点成对：一个带 `AOG`+`MAT` 双标签的货**两个都命中** / 一个只带 `CARGOMAT` 的货**两个都不命中**。
 ///
-/// The baseline bundled "cargo-class set + priority" into a `data class ItemCargo` with three `contains` overloads. This port splits it into `Item.Cargos` (a set) and
+/// The code bundled "cargo-class set + priority" into a `data class ItemCargo` with three `contains` overloads. This implementation splits it into `Item.Cargos` (a set) and
 /// `Item.Priority`, keeping only `Item.Contains(CargoCode)` — **nothing lost, only no longer bundled**, which is why it stays out of the inventory.
 ///
-/// But "nothing lost" needs a test behind it: the baseline's `enabled` repeatedly asks "is this item AOG **or** MAT", and **one item can be both** (the
+/// But "nothing lost" needs a test behind it: its `enabled` repeatedly asks "is this item AOG **or** MAT", and **one item can be both** (the
 /// `AOGMATAppointed` rule exists for exactly that). The easy mistake while unpacking is collapsing the set into a single type — then an `AOGMAT` item satisfies only
 /// one check, **and the model does not fail, it just silently loses a rule**. Two paired points: an item tagged both `AOG` and `MAT` **matches both**; an item tagged
 /// only `CARGOMAT` **matches neither**.

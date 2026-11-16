@@ -1,6 +1,5 @@
 // 无损 JSON 编码器组合 / Lossless JSON codec combinators.
-// 与固定 Kotlin 基线 `core/solver/heuristic/SearchCodecs.kt`（5855 字节）对应。
-// Mirrors the pinned baseline's `core/solver/heuristic/SearchCodecs.kt`.
+// 与固定 Kotlin （5855 字节）对应。
 
 using System;
 using System.Collections.Generic;

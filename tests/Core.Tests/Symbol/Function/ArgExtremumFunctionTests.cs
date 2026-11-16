@@ -59,7 +59,7 @@ public class ArgExtremumFunctionTests
     /// **因为候选值是 1、5、3 时，最大值 5 恰好也是个合法的下标（且刚好是正确答案）。**
     /// **所以候选值必须选成“值域与下标值域不相交”的样子。**
     ///
-    /// **This is the one point where argmax and max diverge, and it is what goes wrong here**:
+    /// **This is the one point where argmax and max diverge, and it is what goes wrong here**.
     /// **returning the maximum value instead of the index passes every "plausible" test** —
     /// **with candidates 1, 5, 3 the maximum 5 happens to be a legal index and even the right answer.**
     /// **So the candidates have to be chosen so that the value range and the index range do not overlap.**

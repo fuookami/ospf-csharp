@@ -1,6 +1,6 @@
 // 按原序求和 / Sum in original occurrence order.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../OrderedActivitySum.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `OrderedActivitySum.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Number;
 

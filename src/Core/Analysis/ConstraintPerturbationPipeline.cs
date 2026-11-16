@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **这是 `ConstraintPerturbationAnalyzer.analyze` 的编排层。** 所有判定都已单独搬过
 /// （派生、求解请求、分类、聚合、删除、二分、扫描、前置门），**这一段只把它们的顺序钉死。**
 ///
-/// **This is the orchestration layer of `ConstraintPerturbationAnalyzer.analyze`.** Every verdict was ported on its own — derivation, solve request, classification, aggregation,
+/// **This is the orchestration layer of `ConstraintPerturbationAnalyzer.analyze`.** Every verdict was implemented on its own — derivation, solve request, classification, aggregation,
 /// removal, bisection, sweep, pre-flight gate — **and this only fixes their order.**
 ///
 /// **两条顺序规则，都容易写反：**

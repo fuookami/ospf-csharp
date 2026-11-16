@@ -22,12 +22,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 第 3、4 行才是"掩码关掉"的关键 / Rows 3 and 4 are what make "the mask is off" mean anything.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMaskingRange.kt` 把原本的空壳换成真实编码。
+/// 对齐把原本的空壳换成真实编码。
 ///
 /// **五条约束里，1、2 在 `z = 0` 时给 `y = p`，而 `y` 本该是 0——**
 /// **所以 3、4（`y ≤ M·z`、`y ≥ −M·z`）才是这里的关键。**
 ///
-/// Replaces a stub with the real encoding, following the baseline.
+/// Replaces a stub with the real encoding, following the code.
 ///
 /// **Of the five rows, 1 and 2 give `y = p` at `z = 0` while `y` should be zero —**
 /// **so rows 3 and 4 (`y ≤ M·z`, `y ≥ −M·z`) are what turns on.**

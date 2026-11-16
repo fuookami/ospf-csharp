@@ -1,6 +1,5 @@
 // VRPTW 应用服务 / The VRPTW application service.
-// 与固定 Kotlin 基线 `application/service/VrptwApplicationService.kt`（3118 字节）对应。
-// Mirrors the pinned baseline's `application/service/VrptwApplicationService.kt`.
+// 与固定 Kotlin （3118 字节）对应。
 
 using System;
 using System.Collections.Generic;

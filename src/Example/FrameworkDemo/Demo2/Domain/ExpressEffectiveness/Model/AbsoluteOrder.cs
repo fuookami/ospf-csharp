@@ -12,18 +12,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 绝对优先级系数 / The absolute priority coefficients.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/model/AbsoluteOrder.kt` 对齐：**每个优先级配一个按舱位取值的函数**，用于预配载模式下的最大化目标。
+/// 与对齐：**每个优先级配一个按舱位取值的函数**，用于预配载模式下的最大化目标。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **系数公式是 `(优先级 + 1) × (最大装载顺序 − 该舱位顺序 + 1)`**。两项都是**加一**，不是不加。
 ///    少一个加一会让优先级 0 或装载顺序最大的舱位系数变成 0，整个偏好消失。
 /// 2. **`maxOfOrNull` 为空时回退 0**。没有舱位时最大装载顺序取 0，而不是抛异常。
 /// 3. **未登记的优先级回退 1**（基线 `?: Flt64.one`），不是 0。返回 0 会让那种货物在目标里没有权重。
 ///
-/// Aligned with the baseline: **one function per priority**, mapping a position to its coefficient, used by the predistribution maximisation objective. Three things must be copied:
+/// **one function per priority**, mapping a position to its coefficient, used by the predistribution maximisation objective. Three things must be copied:
 /// **the formula is `(priority + 1) × (maxLoadingOrder − thisOrder + 1)`** — both terms have a plus one, and dropping either zeroes the coefficient for priority 0 or for the
-/// highest-order position, erasing the preference; **an empty `maxOfOrNull` falls back to 0** rather than throwing; and **an unregistered priority falls back to 1** (the baseline's
+/// highest-order position, erasing the preference; **an empty `maxOfOrNull` falls back to 0** rather than throwing; and **an unregistered priority falls back to 1** (its
 /// `?: Flt64.one`), not 0, which would leave that cargo weightless in the objective.
 /// </remarks>
 public sealed class AbsoluteOrder

@@ -1,7 +1,7 @@
 // 渲染 DTO 与装箱渲染适配 / Render DTOs and the packing render adapter.
-// 与固定 Kotlin 基线 `bpp2d/infrastructure/dto/RendererDTO.kt`（112 行）与
-// `bpp2d/domain/packing/service/PackingRendererAdapter.kt`（147 行）对应。
-// Mirrors the pinned baseline's `RendererDTO.kt` and `PackingRendererAdapter.kt`.
+// 与固定 Kotlin 与
+//（147 行）对应。
+// And.
 //
 // 面向外部渲染器的 DTO 一律使用 `double` 而非量纲类型：**跨界即降维**，渲染器不关心单位语义，只关心数值。
 // 因此这里的转换是唯一允许"丢掉单位"的地方，量纲校验必须发生在转换之前。

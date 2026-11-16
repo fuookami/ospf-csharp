@@ -15,8 +15,8 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 原生 PWL 所需的已转换 primitive 数据 / Converted primitive data required by native PWL.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativePiecewise.kt` 的 `NativePiecewiseData`。
-/// **Following the baseline's `NativePiecewiseData`.**
+/// 对齐的 `NativePiecewiseData`。
+/// **Following its `NativePiecewiseData`.**
 /// &lt;/remarks>
 public sealed record NativePiecewiseData(
     VariableItemKey InputKey,
@@ -30,7 +30,7 @@ public sealed record NativePiecewiseData(
 /// Validate a PWL structure and convert it into solver-independent primitive data.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativePiecewise.kt` 的 `prepareNativePiecewise`。
+/// 对齐的 `prepareNativePiecewise`。
 ///
 /// **这一层<b>不</b>碰求解器边界与 fallback 选择变量的使用情况**（基线注释明说"有意不处理"）。
 /// **它只回答一个问题：这个结构能不能被翻译成一组 `x/y` 断点。**
@@ -56,7 +56,7 @@ public sealed record NativePiecewiseData(
 /// **`maximumMagnitude` 用 `abs(value) &lt; maximumMagnitude`，即<b>严格</b>上界**，
 /// 与 `NativeAbs` 一致。
 ///
-/// **This layer does <b>not</b> touch solver bounds or fallback selector usage** (the baseline comment says so
+/// **This layer does <b>not</b> touch solver bounds or fallback selector usage** (the code comment says so
 /// explicitly). **It answers one question: can this structure be translated into a set of `x/y` breakpoints.**
 ///
 /// **Breakpoints must be <b>strictly</b> increasing: `x[i-1] >= x[i]` is rejected.**

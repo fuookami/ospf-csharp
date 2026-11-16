@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 辅助列重建：零点约定与"解里不该有它" / The zero convention and "the solution must not contain it".
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `selectorValues` 与 `absHelperValues`。
+/// 对齐的 `selectorValues` 与 `absHelperValues`。
 ///
 /// Adds </remarks>
 public class NativeHelperReconstructionTests
@@ -211,11 +211,11 @@ public class NativeHelperReconstructionTests
     /// ABS does not reject a solution containing helpers, unlike selectors.
     /// </summary>
     /// <remarks>
-    /// **这是一处<b>已知的不对称</b>，这里照抄基线不改。**
+    /// **这是一处<b>已知的不对称</b>，这里照做不改。**
     /// **ABS 的辅助列同样是消掉的，但基线没写这条检查；
     /// 单方面加上会让两侧行为分岔。**
     ///
-    /// **A <b>known asymmetry</b>, copied from the baseline.** **ABS helpers are eliminated too, but the baseline has no
+    /// **A <b>known asymmetry</b>, copied from the code.** **ABS helpers are eliminated too, but the code has no
     /// such check; adding one unilaterally would fork the two sides' behaviour.**
     /// </remarks>
     [Fact]

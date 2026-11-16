@@ -16,10 +16,10 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 全种类结构的审计指纹 / Audit fingerprint across every structure kind.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint` 补，
+/// 对齐的 `nativeFingerprint` 补，
 /// **覆盖快路径与 PWL / ABS / MAX / 半连续 / 二值逻辑五类结构行**。
 ///
-/// **缺口（明确记录，不静默丢弃）：** **基线的这个函数还接受 `indicators` 与 `maskings` 两个列表，
+/// **缺口（明确记录，不静默丢弃）：** **这个函数还接受 `indicators` 与 `maskings` 两个列表，
 /// 而它们对应的 `NativeIndicatorData` 与 `NativeMaskingData` 在 C# 侧<b>还不存在</b>。**
 ///
 /// **那两个类型各自带着一整族嵌套语义**（**`zeroBand` 的侧列、`conjunction`、`difference`、
@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **Covers the fast path and the PWL / ABS / MAX / semi-continuous / binary-logic structure lines.**
 ///
-/// **Gap, recorded rather than silently dropped:** **the baseline also accepts `indicators` and `maskings`, whose
+/// **Gap, recorded rather than silently dropped:** **the code also accepts `indicators` and `maskings`, whose
 /// `NativeIndicatorData` and `NativeMaskingData` do <b>not</b> exist on the C# side yet.**
 ///
 /// **Those two types each carry a whole family of nested semantics** (**the `zeroBand` side column, `conjunction`,
@@ -396,9 +396,9 @@ public static class NativeFingerprint
             SolveFingerprinting.Sha256(content.ToString(), schema));
     }
 
-    /// &lt;summary>按基线阶梯选 schema 版本 / Pick the schema version following the baseline ladder.&lt;/summary>
+    /// &lt;summary>阶梯选 schema 版本 / Pick the schema version following the code ladder.&lt;/summary>
     /// &lt;remarks>
-    /// **基线的阶梯有十三个分支，这里只有<b>五个</b>可达：**
+    /// **阶梯有十三个分支，这里只有<b>五个</b>可达：**
     /// **`binary-logic-1`、`semi-1`、`max-1`、`abs-1`、`pwl-abs-1`。**
     ///
     /// **另外八个（`masking-1`、`masking-2`、`indicator-2..8`）的前提是指示器或遮盖非空，
@@ -409,7 +409,7 @@ public static class NativeFingerprint
     ///
     /// **所以要测的不是"某一个分支对不对"，而是<b>相邻两个同时非空时谁赢</b>。**
     ///
-    /// **The baseline ladder has thirteen branches; <b>five</b> are reachable here:**
+    /// **The code ladder has thirteen branches; <b>five</b> are reachable here:**
     /// **`binary-logic-1`, `semi-1`, `max-1`, `abs-1`, `pwl-abs-1`.**
     ///
     /// **The other eight (`masking-1/2`, `indicator-2..8`) presuppose indicators or maskings, absent from this signature —
@@ -454,11 +454,11 @@ public static class NativeFingerprint
             return $"{backendName}-functions-max-1";
         }
 
-        // **指示器的阶梯<b>在 MAX 之上</b>：基线的顺序是 masking → binary-logic → semi → max →
+        // **指示器的阶梯<b>在 MAX 之上</b>：顺序是 masking → binary-logic → semi → max →
         // indicator-8..2 → max-1 → abs-1 / pwl-abs-1。**
-        // **而 `max` 那档在基线里位于 indicator 之后，所以两者同时非空时应由 indicator 胜出。**
+        // **而 `max` 那档在位于 indicator 之后，所以两者同时非空时应由 indicator 胜出。**
         //
-        // **The indicator ladder sits <b>above</b> MAX: the baseline order is masking, binary-logic, semi, max,
+        // **The indicator ladder sits <b>above</b> MAX: the code order is masking, binary-logic, semi, max,
         // indicator-8..2, max-1, abs-1/pwl-abs-1.** **`max` comes after the indicator rungs, so when both are non-empty
         // the indicator wins.**
         if (indicatorList.Count > 0) {
@@ -526,13 +526,13 @@ public static class NativeFingerprint
     /// **按<b>列号</b>排序而不是按键排序：** **指纹描述的是"这个模型"，而列号是模型内部的编号。
     /// 按键排序会让同一个模型在不同列的排布下给出不同指纹。**
     ///
-    /// **基线的 `sortedBy { it.first }` 排的是 `Pair&lt;Int, Double>` 的第一项，也就是列号。**
+    /// **`sortedBy { it.first }` 排的是 `Pair&lt;Int, Double>` 的第一项，也就是列号。**
     ///
     /// **Ordered by <b>column</b>, not by key: the fingerprint describes "this model", and the column index is that model's
     /// internal numbering.** **Sorting by key would make the same model fingerprint differently under a different column
     /// arrangement.**
     ///
-    /// **The baseline's `sortedBy { it.first }` sorts on the first element of `Pair&lt;Int, Double&gt;`, the column.**
+    /// **The code's `sortedBy { it.first }` sorts on the first element of `Pair&lt;Int, Double&gt;`, the column.**
     /// &lt;/remarks>
     public static string? TermsText(
         IReadOnlyDictionary<VariableItemKey, double>? terms,
@@ -564,12 +564,12 @@ public static class NativeFingerprint
 
     /// &lt;summary>渲染一个布尔值 / Render a boolean.&lt;/summary>
     /// &lt;remarks>
-    /// **基线的字符串插值给出 Kotlin 的 `true` / `false`，与 .NET 的 `True` / `False` <b>大小写不同</b>。**
-    /// **这里用<b>小写</b>以贴合基线的文本形状——但因为指纹文本本就不保证跨语言一致
+    /// **字符串插值给出 Kotlin 的 `true` / `false`，与 .NET 的 `True` / `False` <b>大小写不同</b>。**
+    /// **这里用<b>小写</b>以贴合文本形状——但因为指纹文本本就不保证跨语言一致
  ///，这一处选择只影响本侧的自洽性。**
     ///
-    /// **The baseline's interpolation yields Kotlin's `true`/`false`, differing in <b>case</b> from .NET's
-    /// `True`/`False`.** **Lowercase is used here to match the baseline's text shape — but since the fingerprint text is
+    /// **The code's interpolation yields Kotlin's `true`/`false`, differing in <b>case</b> from .NET's
+    /// `True`/`False`.** **Lowercase is used here to match its text shape — but since the fingerprint text is
     /// not guaranteed to match across languages (recorded), this choice only affects self-consistency.**
     /// &lt;/remarks>
     public static string BoolText(bool value) => value ? "true" : "false";

@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy;
 /// 冗余上下文 / The redundancy context.
 /// </summary>
 /// <remarks>
-/// 与基线 `redundancy/RedundancyContext.kt` 对齐：**初始化幂等**，`Init` **不收 `stowageMode`**（冗余的聚合与模式无关，
+/// 与对齐：**初始化幂等**，`Init` **不收 `stowageMode`**（冗余的聚合与模式无关，
 /// 模式只在生成管线时用）。
 ///
 /// 这一点与装载效能上下文**不同**：那边 `Init` 必须收模式，因为聚合要按模式二选一地建子模型；这边两个子模型无条件都建。
 ///
-/// Aligned with the baseline: **initialisation is idempotent** and `Init` **does not take the `stowageMode`** (the redundancy aggregation is mode-independent; the mode only matters when
+/// **initialisation is idempotent** and `Init` **does not take the `stowageMode`** (the redundancy aggregation is mode-independent; the mode only matters when
 /// generating pipelines).
 ///
 /// This differs from the loading-effectiveness context, whose `Init` must take the mode because its aggregation builds one of two sub-models by mode, while here both sub-models are
@@ -102,7 +102,7 @@ public sealed class RedundancyContext
         }
 
         // **先注册子模型（冗余 → 纵向平衡），再走生成器（纵向平衡 → 冗余）**：两侧顺序相反是基线自带的。
-        // **Register the sub-models (redundancy, then balance), then run the generator (balance, then redundancy)**: the two opposite orders are the baseline's own.
+        // **Register the sub-models (redundancy, then balance), then run the generator (balance, then redundancy)**: the two opposite orders are its own.
         Try registered = Aggregation.Register(model);
         if (!registered.IsOk)
         {
@@ -145,9 +145,9 @@ public sealed class RedundancyContext
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 基线的子问题**没有额外约束**（冗余的目标全在主问题），返回成功如实。
+    /// 子问题**没有额外约束**（冗余的目标全在主问题），返回成功如实。
     ///
-    /// The baseline adds **no extra constraints** to the sub-problem (every redundancy objective lives in the master problem), so success is accurate.
+    /// The code adds **no extra constraints** to the sub-problem (every redundancy objective lives in the master problem), so success is accurate.
     /// </remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model) =>
         Results.Ok<Success>(Results.SuccessInstance);

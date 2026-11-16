@@ -1,6 +1,5 @@
 // 拓扑算法 / Topology algorithms.
-// 与固定 Kotlin 基线 `NetworkTopology.kt`（302 行）对应。
-// Mirrors the pinned baseline's `NetworkTopology.kt`.
+// 与固定 Kotlin 对应。
 //
 // 本类**不拥有业务或求解状态**：只读图、只算，过滤产生新视图而不改动原图。所有算法都按"标识"而非"索引"工作，因此下游
 // 可以在过滤后的视图里继续用同一套标识寻址。

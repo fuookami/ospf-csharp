@@ -43,7 +43,7 @@ public abstract record PredicateTranslation<T> where T : class {
 /// `AlwaysFalse` → `ApplicationError`（后端做不到，且已按"恒假"降级）。
 /// 三个码分别指向三种不同的处置，合并成一个码会让调用方无从判断该改代码还是该换后端。
 ///
-/// Aligned with the baseline's `UnsupportedPredicateDetail`. **The policy decides the error code, not just the message**: `FailFast` gives `IllegalArgument` (the caller wrote a predicate the backend
+/// Aligned with its `UnsupportedPredicateDetail`. **The policy decides the error code, not just the message**: `FailFast` gives `IllegalArgument` (the caller wrote a predicate the backend
 /// cannot take), `ClientFilter` gives `ApplicationFailed` (this backend cannot, another can) and `AlwaysFalse` gives `ApplicationError` (this backend cannot and has degraded to a constant false).
 /// Three codes point at three different reactions, and merging them would leave the caller unable to tell whether to change the code or the backend.
 /// </remarks>
@@ -104,7 +104,7 @@ public sealed record UnsupportedPredicateDetail(
 /// 调用方显式声明"这个谓词后端做不到时按恒假处理"，其余两种必须原样传播——
 /// 把 `FailFast` 也降级成恒假会让"写错了谓词"变成"查询结果为空"，最难查的一种。
 ///
-/// Aligned with the baseline's `propagateFailure` / `withAlwaysFalseUnsupported`. **`AlwaysFalse` is the only policy that gets swallowed**: the caller has explicitly said "treat this predicate as
+/// Aligned with its `propagateFailure` / `withAlwaysFalseUnsupported`. **`AlwaysFalse` is the only policy that gets swallowed**: the caller has explicitly said "treat this predicate as
 /// constant false when the backend cannot take it", while the other two must propagate untouched — degrading `FailFast` to constant false would turn "the predicate was written wrongly" into "the
 /// query returned nothing", the hardest kind to diagnose.
 /// </remarks>

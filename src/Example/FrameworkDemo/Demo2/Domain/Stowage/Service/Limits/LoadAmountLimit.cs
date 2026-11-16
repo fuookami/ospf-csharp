@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 舱位装载件数上限 / The per-position load count cap.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/LoadAmountLimit.kt`：对每个**可用**舱位加一行 `load_amount_j ≤ mla_j`。
+/// 对齐：对每个**可用**舱位加一行 `load_amount_j ≤ mla_j`。
 ///
 /// 判据要盯住"可用"这个过滤：不可用舱位的装载量恒为零，多这一行不会错，但会让约束表多出一批废行。
 ///
-/// Aligned with the baseline: one row `load_amount_j ≤ mla_j` per **available** position. The criteria watch the "available" filter: an unavailable position's load amount is
+/// One row `load_amount_j ≤ mla_j` per **available** position. The criteria watch the "available" filter: an unavailable position's load amount is
 /// identically zero, so the extra row is harmless but swells the table with dead rows.
 /// </remarks>
 public sealed class LoadAmountLimit

@@ -10,11 +10,11 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi 侧的扰动后端工厂 / The Gurobi-side perturbation backend factory.
 /// </summary>
 /// <remarks>
-/// **这是基线 `GurobiCriticalConstraintAnalysis.kt` 里 `gurobiPerturbationBackend` 的对应物。**
+/// **这是里 `gurobiPerturbationBackend` 的对应物。**
 ///
-/// ### 它&lt;b&gt;不**另写一个"扰动后端"类，这是与基线的一处有意分歧&lt;/b&gt;
+/// ### 它&lt;b&gt;不**另写一个"扰动后端"类，这是与一处有意分歧&lt;/b&gt;
 ///
-/// **基线里有一个 `ConstraintProgrammingPerturbationBackend` 类，
+/// **有一个 `ConstraintProgrammingPerturbationBackend` 类，
 /// 职责是"拿扰动后的快照建模型、开 session、求解、回结果"；而两个插件各写一个 `…PerturbationBackend`
 /// 工厂去包它。**
 ///
@@ -24,10 +24,10 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// **这个工厂因此只做一件事：** **给出一个&lt;b&gt;配置好的** CP 求解器，
 /// 而"怎么扰动"这件事仍然只有流水线一份实现。**
 ///
-/// **The baseline has a `ConstraintProgrammingPerturbationBackend` class that builds the perturbed model, opens a session and
+/// **The code has a `ConstraintProgrammingPerturbationBackend` class that builds the perturbed model, opens a session and
 /// solves, with each plugin adding a `…PerturbationBackend` factory around it.** **This repo's
 /// `ConstraintPerturbationPipeline.AnalyzeAsync` already accepts an `IConstraintProgrammingSolver` and does exactly that — so
-/// porting the class too would leave two paths doing one job.** **This factory therefore does one thing: hand back a
+/// implementation the class too would leave two paths doing one job.** **This factory therefore does one thing: hand back a
 /// &lt;b&gt;configured&lt;/b&gt; CP solver, leaving how to perturb to the pipeline's single implementation.**
 /// </remarks>
 public static class GurobiPerturbationBackend

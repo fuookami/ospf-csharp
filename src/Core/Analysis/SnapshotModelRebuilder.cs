@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 以及目标过滤（`objectiveFilter`）。**它们不静默跳过——遇到就直接报错**，
 /// 因为"少了一条约束、解出来还是个数"正是最难发现的失效。
 ///
-/// **What is not ported is listed here rather than silently skipped**: domain rebinding when evidence is selectively deactivated (`activeSources`), interval variables, and
+/// **What is not implemented is listed here rather than silently skipped**: domain rebinding when evidence is selectively deactivated (`activeSources`), interval variables, and
 /// objective filtering (`objectiveFilter`). **None of them is quietly dropped — each is an error.** A model that quietly lost a constraint still solves, and still gives a
 /// number, which is the hardest kind of failure to notice.
 /// </remarks>
@@ -79,10 +79,10 @@ public static class SnapshotModelRebuilder
         foreach (ConstraintProgrammingVariableSnapshot definition in snapshot.Variables) {
             if (!recovered.TryGetValue(definition.Id, out IVariableItem? variable)) {
                 model.Dispose();
-                // **不能像基线那样 `continue`**：基线跳过的依据是"该变量完全没被引用"，
+                // **不能像样 `continue`**：基线跳过的依据是"该变量完全没被引用"，
                 // 而这里"找不到"是"我们没能从 AST 里收出来"——**两件事，跳过就是把后者当成前者。**
                 //
-                // **This must not `continue` the way the baseline does**: the baseline skips on "the variable is referenced nowhere", while a miss here means "we could not
+                // **This must not `continue` the way the code does**: the code skips on "the variable is referenced nowhere", while a miss here means "we could not
                 // recover it from the AST". **Those are different facts, and skipping conflates them.**
                 return Fail($"无法从快照找回变量 {definition.Id.Value} / Cannot recover variable {definition.Id.Value} from the snapshot");
             }
@@ -207,7 +207,7 @@ public static class SnapshotModelRebuilder
     /// **但会让"这份派生模型是为哪个目标造的"这件事变得含糊。**
     ///
     /// **The rounding direction is not a detail**: &gt;= rounds up and &lt;= rounds down; **the wrong way lowers the bar by one unit**, and the report still produces a
-    /// plausible-looking conclusion. **Only the target objective is registered in the derived model** (as in the baseline): registering the rest would not break the solve,
+    /// plausible-looking conclusion. **Only the target objective is registered in the derived model** (as in the code): registering the rest would not break the solve,
     /// **but it would blur which objective the derived model was built for.**
     /// </remarks>
     public static Result<DerivedModel, ErrorCode, Error<ErrorCode>> RebuildWithTarget(

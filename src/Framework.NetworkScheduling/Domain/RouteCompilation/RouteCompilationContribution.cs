@@ -1,6 +1,5 @@
 // 路线扩展主问题贡献 / Extra master-problem contributions for route compilation.
-// 与固定 Kotlin 基线 `route_compilation/RouteCompilationContribution.kt`（4307 字节）对应。
-// Mirrors the pinned baseline's `RouteCompilationContribution.kt`.
+// 与固定 Kotlin （4307 字节）对应。
 
 using System;
 using System.Collections.Generic;

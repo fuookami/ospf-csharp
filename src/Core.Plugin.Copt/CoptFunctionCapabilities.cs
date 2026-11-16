@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// COPT 的原生能力探测 / Native capability detection for COPT.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CoptFunctionCapabilities.kt`（30 行）补，与 起的 `GurobiFunctionCapabilities` 同源。
+/// 对齐补，与 起的 `GurobiFunctionCapabilities` 同源。
 ///
 /// **这里的实际动机不是"补一个探测函数"，而是把那层"读侧与写侧"的区分写进用户能读到的地方。**
 ///
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// 不是"我们写进去的那条约束有没有被求解器采纳"。**
 /// **两者相差一次真跑，而这里不声称跨过它。**
 ///
-/// **follows the baseline's 30-line `CoptFunctionCapabilities.kt`, the same family as `GurobiFunctionCapabilities`
+/// **follows its 30-line, the same family as `GurobiFunctionCapabilities`
 /// since then.**
 ///
 /// **The real motive is not "add a probe function" but to put the read-side/write-side distinction somewhere the userr
@@ -44,18 +44,18 @@ public static class CoptFunctionCapabilities
     /// </summary>
     /// <remarks>
     /// **只探测一条：`AddSos(Var[], double[], int)` 返回 `Sos`。**
-    /// **基线在这一点上比 Gurobi 那一侧<b>严格</b>：它校验返回类型与参数类型，
+    /// **这一点上比 Gurobi 那一侧<b>严格</b>：它校验返回类型与参数类型，
     /// 而 `GurobiFunctionCapabilities` 只校验名字（那里的 `ponytail:` 天花板）。**
     ///
-    /// **本实现照基线的严格程度做**：**名字 + 三个参数 + 返回类型。**
+    /// **本实现照严格程度做**：**名字 + 三个参数 + 返回类型。**
     /// **理由：这里的判断决定"我们的 PWL 写入会不会在运行时抛 `MissingMethodException`"，
     /// 而一个同名但签名不同的方法会让那个判断出错。**
     ///
-    /// **One capability only: `AddSos(Var[], double[], int)` returning `Sos`.** **The baseline is <b>stricter</b> here than
+    /// **One capability only: `AddSos(Var[], double[], int)` returning `Sos`.** **The code is <b>stricter</b> here than
     /// on the Gurobi side: it checks return and parameter types, while `GurobiFunctionCapabilities` checks names only (the
     /// `ponytail:` ceiling there).**
     ///
-    /// **This implementation matches the baseline's strictness: name + three parameter types + return type.** **Because this
+    /// **This implementation matches its strictness: name + three parameter types + return type.** **Because this
     /// decision governs whether our PWL write throws `MissingMethodException` at run time, and a same-named method with a
     /// different signature would make that decision wrong.**
     /// </remarks>
@@ -77,8 +77,8 @@ public static class CoptFunctionCapabilities
         var supported = new HashSet<FunctionNativeCapability>();
         if (HasSos2Creator(modelType))
         {
-            // **一个方法同时支撑 SOS1 与 SOS2（与基线一致）：`addSos` 的 type 参数决定 1 还是 2。**
-            // **One method backs SOS1 and SOS2 alike (matching the baseline): the type argument picks 1 or 2.**
+            // **一个方法同时支撑 SOS1 与 SOS2：`addSos` 的 type 参数决定 1 还是 2。**
+            // **One method backs SOS1 and SOS2 alike (matching the code): the type argument picks 1 or 2.**
             supported.Add(FunctionNativeCapability.Sos1);
             supported.Add(FunctionNativeCapability.Sos2);
             // **PWL 的约束侧依赖 SOS2，所以这里一并声明。**
@@ -101,7 +101,7 @@ public static class CoptFunctionCapabilities
     /// **`AddSos` 有三个重载（`SosBuilder`、`Var[]`、`VarArray`），只按名字会命中任意一个。**
     ///
     /// **`GetMethod` returns only the exact signature, never a look-alike name** — that is precisely how it differs from
-    /// `HasMethod` and why the baseline chose it.
+    /// `HasMethod` and why the code chose it.
     ///
     /// **The three parameter types come from the SDK's own types rather than a hard-coded `typeof(Array)`: `AddSos` has
     /// three overloads (`SosBuilder`, `Var[]`, `VarArray`), and matching by name alone would hit any of them.**

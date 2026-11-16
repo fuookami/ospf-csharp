@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 把"行来源"对偶/敏感度区间映射回原始约束 / Map row-origin duals and sensitivity ranges back onto original constraints.
 /// </summary>
 /// <remarks>
-/// **这是 `FixedIntegerLpSensitivity.kt` 里 `mapExplicitProvenanceDuals` 与 `mapExplicitProvenanceRanges` 的移植。**
+/// **这是 里 `mapExplicitProvenanceDuals` 与 `mapExplicitProvenanceRanges` 的移植。**
 ///
 /// **两条规则决定了结果对不对，而且都会"安静地"出错：**
 ///
@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 ///
 /// **两条都是"多给一条"的错误**，而多给一条比少给一条更难发现：**读者看到有数值就以为验过了。**
 ///
-/// **These are `mapExplicitProvenanceDuals` and `mapExplicitProvenanceRanges` from `FixedIntegerLpSensitivity.kt`.** **Two rules decide correctness, and both fail quietly**: a source with
+/// **These are `mapExplicitProvenanceDuals` and `mapExplicitProvenanceRanges`.** **Two rules decide correctness, and both fail quietly**: a source with
 /// more than one row **cannot pick one without inventing it** (the whole source must be dropped), and a source outside `originalIds` would **report an intermediate-layer row as an
 /// original constraint's sensitivity.** **Both errors give one value too many**, and one too many is harder to spot than one too few: **a reader who sees a number assumes it was
 /// checked.**
@@ -78,7 +78,7 @@ public static class ProvenanceDualMapping
     /// **`rowOrigins` 用 `ElementAtOrDefault` 而不是索引器**：两个列表长度不一致时，
     /// 索引器会抛异常，而基线取 `getOrNull` —— **短的那一侧只是"这行没有来源"，不是错误。**
     ///
-    /// **`rowOrigins` uses `ElementAtOrDefault` rather than the indexer**: when the two lists differ in length the indexer throws, while the baseline takes `getOrNull` — **the short side
+    /// **`rowOrigins` uses `ElementAtOrDefault` rather than the indexer**: when the two lists differ in length the indexer throws, while the code takes `getOrNull` — **the short side
     /// simply means "this row has no origin", not an error.**
     /// </remarks>
     private static IReadOnlyDictionary<ConstraintId, TValue> Map<T, TValue>(

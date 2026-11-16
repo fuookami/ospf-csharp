@@ -22,17 +22,17 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Client;
 /// 远程约束规划客户端 / Remote constraint-programming client.
 /// </summary>
 /// <remarks>
-/// 对齐固定 Kotlin 基线 <c>RemoteConstraintProgrammingClient</c> 的 <c>solve</c> 入口：把不含 native 句柄的
+/// 对齐<c>RemoteConstraintProgrammingClient</c> 的 <c>solve</c> 入口：把不含 native 句柄的
 /// CP snapshot 编码为原始模型数据（格式 <c>ospf-cp-snapshot-json</c>），连同任务元数据一起提交，并等待
 /// 远端完成。
 ///
-/// 与基线一致的两点：
+/// 的两点：
 /// - 调度时间片由切片接口传递，**不属于** CP 语义配置，因此不进入 <see cref="SolvePayload.Config"/>
 ///   （否则会污染配置指纹）。
 /// - <c>targetType</c> 固定为 <c>cp</c>，并附带变量数与约束数作为规模估计。
 ///
-/// 本类当前只覆盖 <c>solve</c>；基线的 <c>solveOutput</c>／<c>materialize</c>（稳定整数解物化与全量成员
-/// 校验）尚未移植，调用方应使用 <see cref="SolveAsync"/> 拿到原始协议结果。
+/// 本类当前只覆盖 <c>solve</c>；<c>solveOutput</c>／<c>materialize</c>（稳定整数解物化与全量成员
+/// 校验）尚未实现，调用方应使用 <see cref="SolveAsync"/> 拿到原始协议结果。
 ///
 /// Aligns with the fixed Kotlin baseline's <c>RemoteConstraintProgrammingClient.solve</c>: encode a CP
 /// snapshot without native handles as raw model data (format <c>ospf-cp-snapshot-json</c>), submit it with
@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Client;
 /// pollute the configuration fingerprint), and <c>targetType</c> is always <c>cp</c> with variable and
 /// constraint counts attached as size estimates.
 ///
-/// <see cref="SolveAsync"/> covers the baseline's <c>solve</c> and returns the reduced protocol result;
+/// <see cref="SolveAsync"/> covers its <c>solve</c> and returns the reduced protocol result;
 /// <see cref="SolveOutputAsync"/> covers <c>solveOutput</c>/<c>materialize</c> and produces a Core
 /// <see cref="ConstraintProgrammingSolverOutput"/>. Only the latter needs a result-storage port, because
 /// materializing a stable integer solution means reading the artifact the result references.
@@ -87,10 +87,10 @@ public sealed class RemoteConstraintProgrammingClient {
     /// 提交 CP snapshot 并等待远端完成 / Submit a CP snapshot and wait for remote completion.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：snapshot 先经 Core 的 <see cref="ConstraintProgrammingSnapshotCodec"/> 编码；编码失败
+    /// ：snapshot 先经 Core 的 <see cref="ConstraintProgrammingSnapshotCodec"/> 编码；编码失败
     /// 直接返回结构化错误，不做任何网络请求。时间片必须为正、轮数必须为正，由
     /// <see cref="RemoteSolverClient.SolveAsync"/> 统一校验。
-    /// Mirrors the baseline: the snapshot is encoded through Core's
+    /// the snapshot is encoded through Core's
     /// <see cref="ConstraintProgrammingSnapshotCodec"/> first, and an encoding failure returns a
     /// structured error without issuing any network request. A positive quantum and round count are
     /// enforced by <see cref="RemoteSolverClient.SolveAsync"/>.
@@ -162,7 +162,7 @@ public sealed class RemoteConstraintProgrammingClient {
     /// 与 <see cref="SolveAsync"/> 的分工：那条路径只提交并返回精简结果（供只要任务标识的调用方）；本方法才
     /// 是"要把结果交给求解器用户"的入口，因此需要工件存储与配置指纹。
     ///
-    /// This is the baseline's <c>solveOutput</c> orchestration: submit, normalize a legacy result, self-consistency
+    /// This is its <c>solveOutput</c> orchestration: submit, normalize a legacy result, self-consistency
     /// check, execution-binding check, read the artifact, artifact-agreement check, three-state classification,
     /// then build the Core output. Any failing step propagates **unchanged** rather than degrading into
     /// "succeeded without a solution". The division of labour with <see cref="SolveAsync"/> is that the latter

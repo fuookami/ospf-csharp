@@ -277,31 +277,30 @@ public class ConstraintProgrammingCheckpointWireContractTest {
 
     private static string[] FieldNames(string section) =>
         Rows(section).Select(row => row[1]).ToArray();
-    /// <summary>**fixture 必须逐字节来自固定基线** / The fixture must come from the pinned baseline byte for byte.</summary>
+    /// <summary>**fixture 必须逐字节来自固定基线** / The fixture must come  byte for byte.</summary>
     /// <remarks>
-    /// 之前，这一节只证明"C# 能解码、能重编码、能复算摘要"——**却没人核对过 fixture 本身是不是基线的**。
+    /// 之前，这一节只证明"C# 能解码、能重编码、能复算摘要"——**却没人核对过 fixture 本身是不是**。
     /// 一份被本地改过的 fixture 能让这三件事全部通过，同时证明不了任何跨语言事实。
     ///
     /// 现在钉住的是**来源**：`checkpoint-envelope-v3.json` 与固定基线 `12fdb587` 的
-    /// `ospf-kotlin-core/src/test/resources/analysis-fixtures/checkpoint-envelope-v3.json` **逐字节相同**（1555 字节，
-    /// 摘要 `3f2d2f49…`）。**字节数也是判据的一部分**：只比摘要会放过"改了内容但摘要字段没跟着改"的本地副本。
+    /// **一个固定的字节序列**：1555 字节、摘要 `3f2d2f49…`、LF 换行。**字节数也是判据的一部分**：
+    /// 只比摘要会放过"改了内容但摘要字段没跟着改"的本地副本。
     ///
-    /// Before this section only proved "C# can decode, re-encode and recompute the digest" — **nobody checked the fixture itself against the baseline**. A locally edited
-    /// fixture would let all three pass while proving nothing about cross-language behaviour. What is pinned now is the **provenance**: the file is **byte for byte** identical to
-    /// the pinned baseline's copy (1555 bytes, digest `3f2d2f49…`). **The byte count is part of the criterion**: comparing digests alone would let a local copy whose content
-    /// changed but whose digest field did not.
+    /// Before this section only proved "the decoder, re-encoder and digest all agree among themselves" — **nobody checked the fixture against a fixed value**. A locally edited
+    /// fixture would let all three pass while proving nothing. What is pinned now is the **exact content**: 1555 bytes with digest `3f2d2f49…`. **The byte count is part of the
+    /// criterion**: comparing digests alone would let a local copy whose content changed but whose digest field did not.
     /// </remarks>
     [Fact]
-    public void TheEnvelopeFixture_ShouldBeByteIdenticalToThePinnedBaseline() {
+    public void TheEnvelopeFixture_ShouldBeByteIdenticalToTheRecordedContent() {
         string path = Path.Combine(FixtureRoot, "checkpoint-envelope-v3.json");
         File.Exists(path).Should().BeTrue("the cross-language fixture must be present, not regenerated at test time");
 
         byte[] bytes = File.ReadAllBytes(path);
-        bytes.Length.Should().Be(1555, "measured: the pinned baseline's file is exactly 1555 bytes");
-        bytes.Should().NotContain((byte)13, "the baseline file has LF endings; a CRLF copy is not byte identical");
+        bytes.Length.Should().Be(1555, "the recorded fixture is exactly 1555 bytes");
+        bytes.Should().NotContain((byte)13, "the recorded fixture has LF endings; a CRLF copy is not byte identical");
         System.Text.Encoding.UTF8.GetString(bytes)
             .Should().Contain("\"integritySha256\":\"3f2d2f499f1eb6e7e4378d7a04c85c88896973000a2567c0b908fd24daf65637\"",
-                "measured: this digest was produced by the pinned Kotlin baseline, not by this repository");
+                "this digest is the recorded one; recomputing it here would defeat the purpose of a fixed value");
     }
 
 }

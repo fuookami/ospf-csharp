@@ -26,7 +26,6 @@ namespace Fuookami.Ospf.Benchmark;
 /// 区分不同消费面的新版本准备与同版本复用 / Separate cold-revision preparation from same-revision reuse by consumer.
 /// </summary>
 /// <remarks>
-/// 与基线 `ProjectionIndexBuildBenchmark.kt`（3930 B）对应。
 ///
 /// **`Setup` 里既建了一次投影（`_warm`）又消费过一次**，所以 `WarmRevision` 测的是"同版本复用"，
 /// 而 `ColdRevision` 每次都新建。**两者若共用同一个未消费的投影，"冷"的那半就没测到索引构建**，

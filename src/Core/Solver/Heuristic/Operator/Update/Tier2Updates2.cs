@@ -1,6 +1,5 @@
 // 布谷鸟、蝙蝠、飞蛾扑火与蝗虫更新 / Cuckoo-search, bat, moth-flame and grasshopper updates.
-// 与固定 Kotlin 基线 `operator/update/Tier2Updates2.kt`（12879 B）对应。
-// Mirrors the pinned baseline's `Tier2Updates2.kt`.
+// 与固定 Kotlin （12879 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -18,8 +17,8 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// <remarks>
 /// **`levySigma` 依赖 Lanczos Γ 近似，必须与基线逐位一致**。指数取 1.0 时公式退化为 1.0、取 2.0 时退化为 `1e-8` 量级，
 /// 只有默认的 1.5 才给出有意义的 `0.6965745…`。把 `gamma` 换成 `Math.Gamma` 之类"等价"实现会因系数不同而产生
-/// **看起来同样合理的**轨迹，因此这里保留基线的 8 个 Lanczos 系数，并用独立实现（Python）算出的黄金向量校验。
-/// **`levySigma` depends on the Lanczos Γ approximation and must match the baseline bit for bit.** With an exponent of 1.0 the formula
+/// **看起来同样合理的**轨迹，因此这里保留8 个 Lanczos 系数，并用独立实现（Python）算出的黄金向量校验。
+/// **`levySigma` depends on the Lanczos Γ approximation and must match the code bit for bit.** With an exponent of 1.0 the formula
 /// degenerates to 1.0 and with 2.0 it collapses to the `1e-8` scale; only the default 1.5 yields a meaningful `0.6965745…`. Swapping
 /// `gamma` for an "equivalent" implementation such as `Math.Gamma` produces a **plausible-looking but different** trajectory, so the
 /// baseline's eight Lanczos coefficients are kept and checked against golden vectors computed by an independent Python implementation.
@@ -30,7 +29,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// 步长尺度随之变化，而算法仍然收敛——只是收敛速度与基线不同。
 /// **`normal` is "the sum of four uniform draws minus 2"**, not the standard `sqrt(12/n) * (sum - n/2)` approximation. Using the
 /// standard form changes the distribution variance and hence the step scale, while the algorithm still converges — just at a different
-/// rate than the baseline.
+/// rate than the code.
 /// **放弃巢穴的分支按个体判定，但逐维重建**。`abandoned` 在个体级别抽一次，然后每一维各自均匀重建；把它挪到维度级别会让
 /// 同一只布谷鸟只有部分维度被重建，解处在"半新半旧"的不一致状态。
 /// **The abandonment branch is decided per individual but rebuilt per dimension.** `abandoned` is drawn once per individual and then
@@ -149,9 +148,9 @@ public sealed record CuckooSearchUpdate(double LevyExponent, double StepScale, d
 /// 蝙蝠算法更新 / Bat-algorithm update.
 /// </summary>
 /// <remarks>
-/// **频率按个体抽取一次，逐维共用**。这是基线的写法：整只蝙蝠用同一个频率，但每一维各抽一个数。把频率挪进维度循环会让
+/// **频率按个体抽取一次，逐维共用**。这是写法：整只蝙蝠用同一个频率，但每一维各抽一个数。把频率挪进维度循环会让
 /// 各维在完全不同的频段上更新，蝙蝠的运动失去一致性。
-/// **The frequency is drawn once per individual and shared across dimensions.** That is the baseline's shape: one bat uses one
+/// **The frequency is drawn once per individual and shared across dimensions.** That is its shape: one bat uses one
 /// frequency while each dimension draws its own random number. Moving the frequency inside the dimension loop makes each dimension
 /// update in a completely different band and the bat's motion loses coherence.
 /// **步长方向是"远离最优"**：`(position - best) * frequency * unit`。写成 `best - position` 会让蝙蝠朝最优跳跃，
@@ -211,9 +210,9 @@ public sealed record BatAlgorithmUpdate(double MinimumFrequency, double MaximumF
 /// **The flame count decreases from `size` towards 1**, shifting the search from parallel exploration to refinement around the best.
 /// Pinning `flameAmount` to `size` keeps the algorithm exploring forever and convergence stalls; pinning it to 1 makes it refine
 /// around the best from the start and stagnate prematurely.
-/// **螺旋参数按个体抽取一次，逐维共用**，而每一维的距离各自计算。这是基线的形状。
+/// **螺旋参数按个体抽取一次，逐维共用**，而每一维的距离各自计算。这是形状。
 /// **The spiral parameter is drawn once per individual and shared across dimensions**, while each dimension computes its own distance.
-/// That is the baseline's shape.
+/// That is its shape.
 /// </remarks>
 /// <param name="SpiralRate">螺旋增长率 / The spiral growth rate.</param>
 /// <param name="FlameRatio">火焰比例演化源 / The flame-ratio source.</param>

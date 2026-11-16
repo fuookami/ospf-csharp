@@ -21,17 +21,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同来源相邻目标 / The same-source-adjacency objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/SameSourceAdjacentLimit.kt` 对齐：把（来源 × 相邻舱位对）的指示
+/// 与对齐：把（来源 × 相邻舱位对）的指示
 /// 加权求和，作为**最大化**目标，名为 `"same source adjacent"`（带空格）。
 ///
-/// 四点必须照抄：
+/// 四点必须沿用：
 ///
 /// 1. **是 `Maximum`**——相邻同来源是好事，不是惩罚。
 /// 2. **目标名带空格**：`"same source adjacent"`，与管线名 `same_source_adjacent_limit` 不同。
 /// 3. **两重遍历**：外层来源、内层相邻舱位对，**每个组合都进目标**。
 /// 4. **系数按 `(来源, 第一个舱位, 第二个舱位)` 取**，不是按货位下标。
 ///
-/// Aligned with the baseline: the (source × adjacent pair) indicators weighted and summed into a **maximisation** named `"same source adjacent"` (with a space). Four things must be copied:
+/// The (source × adjacent pair) indicators weighted and summed into a **maximisation** named `"same source adjacent"` (with a space). Four things are carried over:
 /// **it is `Maximum`**, since same-source adjacency is desirable rather than penalised; **the name has a space**, unlike the pipeline name; **there are two nested loops** — sources
 /// outside, adjacent pairs inside, with **every combination entering the objective**; and **the coefficient is taken per (source, first position, second position)**, not per index.
 /// </remarks>

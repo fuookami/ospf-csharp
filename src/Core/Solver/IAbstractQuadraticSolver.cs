@@ -36,7 +36,7 @@ public interface IAbstractQuadraticSolver {
         Array.Empty<IInfeasibilityAnalyzer<IQuadraticTetradModelView>>();
 
     /// <summary>求解并保留后端终态 / Solve and retain the backend termination state.</summary>
-    /// <remarks>过渡期间，尚未迁移的后端返回不支持；此入口不保证后台执行。 / During migration, unported backends return unsupported; this entry does not guarantee background execution.</remarks>
+    /// <remarks>过渡期间，尚未迁移的后端返回不支持；此入口不保证后台执行。 / Unimplemented backends return unsupported; this entry does not guarantee background execution.</remarks>
     /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
     /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>
     /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
@@ -50,7 +50,7 @@ public interface IAbstractQuadraticSolver {
             "求解器尚未实现统一报告 / Solver does not yet implement unified reports")));
 
     /// <summary>求解并保留解池与后端终态 / Solve and retain the solution pool and backend state.</summary>
-    /// <remarks>过渡期间，尚未迁移的后端返回不支持；此入口不保证后台执行。 / During migration, unported backends return unsupported; this entry does not guarantee background execution.</remarks>
+    /// <remarks>过渡期间，尚未迁移的后端返回不支持；此入口不保证后台执行。 / Unimplemented backends return unsupported; this entry does not guarantee background execution.</remarks>
     /// <param name="model">二次矩阵模型 / Quadratic matrix model.</param>
     /// <param name="solutionAmount">解池容量 / Solution pool capacity.</param>
     /// <param name="solvingStatusCallBack">求解状态回调 / Solving status callback.</param>

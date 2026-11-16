@@ -17,11 +17,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// 乘客取消变量 / The passenger cancellation variables.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerCancel.kt`：每位航班乘客一个非负整数变量，上界是这一位的人数——**取消量不可能超过人本身**。
+/// ：每位航班乘客一个非负整数变量，上界是这一位的人数——**取消量不可能超过人本身**。
 /// 这条上界不是可有可无的收紧：没有它，取消变量可以取任意大，取消最小化会把"取消多少人"压到零的同时，
 /// 让别的约束通过这个变量拿到任意多的自由度。
 ///
-/// The baseline's `PassengerCancel.kt`: one non-negative integer variable per flight passenger, bounded above by that passenger's head count — **cancelling more people than exist is
+/// The code's: one non-negative integer variable per flight passenger, bounded above by that passenger's head count — **cancelling more people than exist is
 /// impossible**. That bound is not optional tightening: without it the cancellation variables could take any value, and cancellation minimisation would drive "how many people are
 /// cancelled" to zero while other constraints gain arbitrary freedom through them.
 /// </remarks>

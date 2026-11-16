@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
 /// `Position` 必须按 <see cref="Position.Id"/> **值相等**，与基线 `data class` 的可观察行为一致。
-/// `Position` must be **value-equal by <see cref="Position.Id"/>**, matching the baseline `data class`'s observable behaviour.
+/// `Position` must be **value-equal by <see cref="Position.Id"/>**, matching the code `data class`'s observable behaviour.
 /// </summary>
 /// <remarks>
 /// 之前 `Position` 是 `sealed class` 且**没有 `Equals`/`GetHashCode`**，所以
@@ -121,10 +121,10 @@ public class Demo2PositionEqualityTests {
 
     /// <summary>**`Id` 是唯一键：同 `Id` 但其它字段不同仍视为同一位置** / `Id` is the key: same `Id` with other fields differing is still the same position.</summary>
     /// <remarks>
-    /// 这是**有意选择**的简化，不是疏漏：基线 `data class` 比较全部字段，但 `Id` 在基线里标注为"唯一标识"，
+    /// 这是**有意选择**的简化，不是疏漏：基线 `data class` 比较全部字段，但 `Id` 在标注为"唯一标识"，
     /// 同 `Id` 必然同其余字段。若将来允许"同 `Id` 不同字段"的构造，这条断言必须改。
     ///
-    /// This is a **deliberate simplification**, not an oversight: the baseline `data class` compares all fields, but `Id` is documented there as the unique
+    /// This is a **deliberate simplification**, not an oversight: the code `data class` compares all fields, but `Id` is documented there as the unique
     /// identifier, so the same `Id` implies the same everything else. If constructing "same `Id`, different fields" ever becomes legal, this assertion must
     /// change.
     /// </remarks>

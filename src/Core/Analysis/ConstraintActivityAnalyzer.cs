@@ -20,15 +20,15 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 在一个不可变 CP snapshot 与基线赋值上计算活动性 / Computes activity at one immutable CP snapshot and baseline assignment.
 /// </summary>
 /// <remarks>
-/// 与基线 `ConstraintActivityAnalyzer.kt`（566 行）的核心对应。**整数比较暴露精确的标量松弛度量；
+/// 与的核心对应。**整数比较暴露精确的标量松弛度量；
 /// 全局约束与稀疏值域按语义契约求值，绝不伪造 LP 风格松弛。**
 ///
-/// 只搬核心分析**：基线的三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
+/// 只搬核心分析**：三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
 /// 那一层还没搬，所以这里**只搬纯计算入口** `Analyze(snapshot, solution)`。**没搬的重载没有空跑版本。**
 ///
-/// Mirrors the core of the baseline's `ConstraintActivityAnalyzer.kt` (566 lines). **Integer comparisons expose an exact scalar slack metric; global constraints and sparse
-/// domains are evaluated through their semantic contract and never receive a fabricated LP-style slack.** **ported the core analysis only**: the baseline's three
-/// `analyze(session, …)` overloads need `CriticalConstraintAnalysisSession` (cache and lifecycle), which is not ported yet, so only the pure `Analyze(snapshot, solution)`
+/// **Integer comparisons expose an exact scalar slack metric; global constraints and sparse
+/// domains are evaluated through their semantic contract and never receive a fabricated LP-style slack.** **implemented the core analysis only**: its three
+/// `analyze(session, …)` overloads need `CriticalConstraintAnalysisSession` (cache and lifecycle), which is not implemented yet, so only the pure `Analyze(snapshot, solution)`
 /// entry point came over. **The missing overloads were not stubbed.**
 /// </remarks>
 public sealed class ConstraintActivityAnalyzer
@@ -427,7 +427,7 @@ public sealed class ConstraintActivityAnalyzer
         var right = new BigInteger(rhs.ToLong());
 
         // **等式没有单侧 slack**：非零残差必须作为违反处理，所以它的"松弛"是残差的绝对值。
-        // 照抄 `right - left` 会让一个残差为 `-5` 的等式看起来比残差为 `+1` 的更松弛。
+        // 沿用 `right - left` 会让一个残差为 `-5` 的等式看起来比残差为 `+1` 的更松弛。
         // **Equality has no one-sided slack**: a non-zero residual is a violation, so its "slack" is the absolute residual. Copying `right - left` would make an equality off by
         // `-5` look slacker than one off by `+1`.
         return comparison switch {

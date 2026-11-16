@@ -10,18 +10,18 @@ using Xunit;
 namespace Fuookami.Ospf.Utils.Tests.Functional;
 
 /// <summary>
-/// **`Variant` 的档位要和基线对齐** / The `Variant` arities have to match the baseline.
+/// **`Variant` 的档位要和基线对齐** / The `Variant` arities have to match the code.
 /// </summary>
 /// <remarks>
 /// 按公开类型名扫了 22 个模块，**`utils` 的命中率只有 62.9%**，而未出现的那 36 个里有一整段是
-/// `Variant9`—`Variant20`——**基线有 `Variant2` 到 `Variant20`，本仓只到 `Variant8`。**
+/// `Variant9`—`Variant20`——**`Variant2` 到 `Variant20`，本仓只到 `Variant8`。**
 ///
 /// **这不是"够用了"**：`Variant` 表示"N 选一"，**它的价值在于"类型层面保证恰好一个分支"**，
 /// **少一个档位就少一个能安全表达的元数**——**而少掉的那一档，调用方只能退回 `object` 加 `if`，**
 /// **于是"漏一个分支"从编译错误变成运行时"没有反应"。**
 ///
 /// A sweep over 22 modules by public type name, and **`utils` hit only 62.9%**; among the 36 absent names was an
-/// entire run of `Variant9`—`Variant20` — **the baseline has `Variant2` through `Variant20`, this repo stopped at `Variant8`.**
+/// entire run of `Variant9`—`Variant20` — **the code has `Variant2` through `Variant20`, this repo stopped at `Variant8`.**
 ///
 /// **That is not "good enough"**: `Variant` represents "one of N", **and its value is a type-level guarantee that exactly one branch is taken**,
 /// **so one missing arity is one arity that cannot be expressed safely** — **and the caller of that arity falls back to `object` plus `if`,**
@@ -31,12 +31,12 @@ public class VariantCoverageTests
 {
     /// <summary>**`Variant2`—`Variant20` 都在** / `Variant2` through `Variant20` all exist.</summary>
     /// <remarks>
-    /// **上界 20 不是随便定的**：**基线 `Variant.kt` 就写到 20**（实测），
-    /// **而"基线有多少档"这件事必须以基线为准，不能以"我们用得到多少"为准**——
+    /// **上界 20 不是随便定的**：**就写到 20**（实测），
+    /// **而"多少档"这件事必须以基线为准，不能以"我们用得到多少"为准**——
     /// **后者会让"用不到"变成"没有"，而下一个需要 12 元的人会发现它不存在。**
     ///
-    /// **The upper bound 20 is not arbitrary**: **the baseline's `Variant.kt` stops at 20** (measured),
-    /// **and "how many arities the baseline has" has to be answered by the baseline, not by "how many we happen to need"** —
+    /// **The upper bound 20 is not arbitrary**: **its stops at 20** (measured),
+    /// **and "how many arities the code has" has to be answered by the code, not by "how many we happen to need"** —
     /// **the latter turns "unused" into "absent", and the next person needing arity 12 finds it missing.**
     /// </remarks>
     [Fact]

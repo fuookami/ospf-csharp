@@ -100,7 +100,7 @@ public class Demo2LoadingEffectivenessWrapUpTests {
     /// **六条拖车校验各自能拦住自己的坏输入** / Each of the six trailer validations catches its own bad input.
     /// </summary>
     /// <remarks>
-    /// 六点成对，逐条对应基线的六条校验：
+    /// 六点成对，逐条对应六条校验：
     ///
     /// 1. **空白名称** → 失败。
     /// 2. **重名** → 失败。
@@ -174,10 +174,10 @@ public class Demo2LoadingEffectivenessWrapUpTests {
     ///
     /// 1. 三个来源交错的请求 → 分组键按**首次出现顺序**：`PEK`、`CTU`、`CAN`。
     /// 2. **同来源的下标按请求顺序**，不排序。
-    /// 3. **重复来源不会合并成新组**——这正是基线的 `groupBy` 语义。
+    /// 3. **重复来源不会合并成新组**——这正是`groupBy` 语义。
     ///
     /// Three paired points: an interleaved request groups keys by **first appearance** (`PEK`, `CTU`, `CAN`); **indices within a source follow request order** rather than being sorted; and
-    /// **a repeated source does not open a new group**, which is exactly the baseline's `groupBy`.
+    /// **a repeated source does not open a new group**, which is exactly its `groupBy`.
     /// </remarks>
     [Fact]
     public void CargosBySource_ShouldPreserveOrder() {

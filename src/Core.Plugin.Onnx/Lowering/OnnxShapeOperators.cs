@@ -9,11 +9,11 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **六个形状算子的形状推导** / Shape inference for six shape operators.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxShapeOperators.kt`。**这些算子只算形状、不搬元素，所以"错一位就静默"：**
+/// 同步 Kotlin `dee897d2` 的。**这些算子只算形状、不搬元素，所以"错一位就静默"：**
 /// **`Reshape` 的 `-1` 算错只是某个维度变成另一个数，`Concat` 的轴错只是拼错一维，`ReduceSum` 的 `keepDims` 错只是秩差一。**
 /// **它们都不会抛异常，只会在下游让一个约束绑错变量。**
 ///
-/// Syncs `OnnxShapeOperators.kt`. **These operators compute shapes without moving elements, so "one off" is silent: a wrong `-1` in Reshape just makes a dimension
+/// Syncs. **These operators compute shapes without moving elements, so "one off" is silent: a wrong `-1` in Reshape just makes a dimension
 /// another number, a wrong axis in Concat just joins the wrong dimension, a wrong `keepDims` just differs by one rank.** **None of them throws; downstream a
 /// constraint simply binds the wrong variable.**
 /// </remarks>

@@ -108,7 +108,7 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
         ResultVar = new RealVar(name + "_masking");
     }
 
-    /// <summary>基线在推导失败时回退到 `1e6` / The baseline falls back to `1e6` when the inference fails.</summary>
+    /// <summary>推导失败时回退到 `1e6` / The code falls back to `1e6` when the inference fails.</summary>
     private static V FallbackBigM(IIntoValue<V> converter) => converter.IntoValue(new Flt64(1e6));
 
     /// <summary>Big-M 上下界 / The Big-M bounds.</summary>
@@ -119,7 +119,7 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
     /// `mask` 读不到 → **零**（基线如此）；`mask = 0` → 零；否则是输入的值。
     /// 第一条容易被写成"读不到就 `null`"——那会把"掩码未知"变成"结果未知"，而掩码本身是个决策变量。
     ///
-    /// A missing `mask` → **zero** (as in the baseline); `mask = 0` → zero; otherwise the input's value. The first rule is easy to write as "missing means `null`" — which turns
+    /// A missing `mask` → **zero** (as in the code); `mask = 0` → zero; otherwise the input's value. The first rule is easy to write as "missing means `null`" — which turns
     /// "the mask is unknown" into "the result is unknown", while the mask is a decision variable.
     /// </remarks>
     public V? Evaluate(IReadOnlyDictionary<ISymbol, V> values) => TryEvaluate(values).Value;
@@ -140,12 +140,12 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 基线有 `deferredStructure` 一条路径（把掩码交给 `ConditionalValue` 那套中间结构去生成约束）。C# 没有
-    /// `MaskingStructure` / `ConditionalValue`，所以**只实现直接的四行 Big-M**——这也是基线在掩码不是二值类型时
+    /// `deferredStructure` 一条路径（把掩码交给 `ConditionalValue` 那套中间结构去生成约束）。C# 没有
+    /// `MaskingStructure` / `ConditionalValue`，所以**只实现直接的四行 Big-M**——这也是掩码不是二值类型时
     /// 自己走的那一支。
     ///
-    /// The baseline has a `deferredStructure` path handing the mask to the `ConditionalValue` intermediate machinery. C# has no `MaskingStructure` / `ConditionalValue`, so only
-    /// the direct four-row Big-M is implemented — which is also the branch the baseline itself takes when the mask is not binary.
+    /// The code has a `deferredStructure` path handing the mask to the `ConditionalValue` intermediate machinery. C# has no `MaskingStructure` / `ConditionalValue`, so only
+    /// the direct four-row Big-M is implemented — which is also the branch the code itself takes when the mask is not binary.
     /// </remarks>
     public Try RegisterConstraints(IAbstractLinearMechanismModel<V> model) {
         if (model is null) {
@@ -204,11 +204,11 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
 /// 掩码为多项式的掩码函数 / Masking function whose mask is a polynomial
 /// </summary>
 /// <remarks>
-/// 基线的做法：先建一个二值变量 `m` 并用一条等式把它**定义成**掩码多项式，再套标准的掩码约束。
+/// 做法：先建一个二值变量 `m` 并用一条等式把它**定义成**掩码多项式，再套标准的掩码约束。
 /// 直接拿多项式当掩码写进 Big-M 行会在 `mask` 被多个变量共享时失去整数性，
 /// 而失去之后模型**仍然可解**，只是解里 `mask` 可以是 0.5。
 ///
-/// The baseline builds a binary variable `m`, defines it by an equality against the mask polynomial, then applies the standard masking rows. Writing the polynomial straight into the
+/// The code builds a binary variable `m`, defines it by an equality against the mask polynomial, then applies the standard masking rows. Writing the polynomial straight into the
 /// Big-M rows loses integrality when `mask` is shared by several variables — and the model **still solves**, only with `mask = 0.5` in the answer.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
@@ -309,11 +309,11 @@ public sealed class MaskingWithPolyMaskFunction<V> : IMathFunctionSymbol<V>, IHa
 /// 掩码区间函数 / Masking range function
 /// </summary>
 /// <remarks>
-/// **仍是空壳**（`Evaluate` 恒 `null`、`RegisterConstraints` 恒 `Ok`）。基线的 `MaskingRangeFunction` 与
+/// **仍是空壳**（`Evaluate` 恒 `null`、`RegisterConstraints` 恒 `Ok`）。`MaskingRangeFunction` 与
 /// `MaskingFunction` 共用 `MaskingStructure` 那条延迟结构路径，而 C# 没有那套中间结构——把它做实要先把
 /// 等价的多行 Big-M 推导出来，属于独立一批的量。列在这里是为了不让人以为它已经被 覆盖。
 ///
-/// **Still an empty stub** (`Evaluate` always null, `RegisterConstraints` always Ok). The baseline's `MaskingRangeFunction` shares the deferred `MaskingStructure` path with
+/// **Still an empty stub** (`Evaluate` always null, `RegisterConstraints` always Ok). The code's `MaskingRangeFunction` shares the deferred `MaskingStructure` path with
 /// `MaskingFunction`, and C# has no such intermediate machinery — making it real requires deriving the equivalent multi-row Big-M separately. It is listed here so nobody assumes
 /// covered it.
 /// </remarks>

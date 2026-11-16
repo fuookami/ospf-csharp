@@ -20,9 +20,9 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// 尾箱分配约束 / The tail-bin assignment constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `layer_assignment/service/limits/TailBinAssignmentConstraint.kt` 对齐：**尾箱必须排在最后**。
+/// 与对齐：**尾箱必须排在最后**。
 ///
-/// 四点必须照抄：
+/// 四点必须沿用：
 ///
 /// 1. **最后一个箱单独走一支**：`v[last] &lt;= tail[last]`（最后一个箱被用到时它必须是尾箱）。
 /// 2. **其余每个箱走另一支**：`tail[i] &lt;= v[i + 1]`（标了尾箱就必须还有后一个箱被用到）。
@@ -32,9 +32,9 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// 两支的方向**不对称**是基线自带的：最后一箱比的是 `v` 与 `tail`（同一箱），其余比的是 `tail[i]` 与 `v[i+1]`
 /// （跨到下一个箱）。把它们统一成一种写法会让"最后一个箱既是尾箱又没被用到"通过。
 ///
-/// Aligned with the baseline: **the tail bin must come last**. Four things must be copied: **the last bin takes its own branch**, `v[last] &lt;= tail[last]` (a used last bin must be the tail
+/// **the tail bin must come last**. Four things are carried over: **the last bin takes its own branch**, `v[last] &lt;= tail[last]` (a used last bin must be the tail
 /// bin); **every other bin takes the other**, `tail[i] &lt;= v[i + 1]` (marking a tail requires a used successor); **both are `Comparison.LE`**, and reversing them would allow a tail bin
-/// up front; and the name is `{name}_{i}` for every bin including the last — **there is no separate tail row name**. The asymmetry between the branches is the baseline's own: the last
+/// up front; and the name is `{name}_{i}` for every bin including the last — **there is no separate tail row name**. The asymmetry between the branches is its own: the last
 /// bin relates `v` and `tail` of the same bin, the rest relate `tail[i]` to `v[i+1]` across neighbours, and unifying them would let "the last bin is a tail and unused" through.
 /// </remarks>
 public sealed class TailBinAssignmentConstraint

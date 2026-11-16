@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **记的缺口**：`Csp1dMilp.InitialPlansAsync` 是 `Csp1dColumnGeneration.InitialPlanPoolAsync` 的
 /// **平行副本**，但**三个扩展点一个都没接**——于是同一个策略**经由列生成生效、经由 MILP 直连静默失效**。
 ///
-/// 基线不是这样：`Csp1dMilp.kt:139` 的 `initialPlans` 签名里就有
+/// 基线不是这样： 的 `initialPlans` 签名里就有
 /// `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` 三者，且都在用。
 ///
 /// **这里把两侧拉齐。**
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **The gap recorded**: `Csp1dMilp.InitialPlansAsync` is a **parallel copy** of `Csp1dColumnGeneration.InitialPlanPoolAsync` with **none of the three hooks wired** — so
 /// the same strategy works through column generation and **silently fails** through the MILP path.
 ///
-/// The baseline is not like that: `initialPlans` at `Csp1dMilp.kt:139` takes `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` and uses all three.
+/// The code is not like that: `initialPlans` at takes `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` and uses all three.
 ///
 /// ** aligns the two.**
 /// </remarks>

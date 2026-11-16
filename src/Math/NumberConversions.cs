@@ -103,7 +103,7 @@ public static class NumberConversions {
     /// <param name="value">数值 / The value.</param>
     /// <returns>`FltX` 表示 / The `FltX` representation.</returns>
     /// <remarks>
-    /// 基线的 `Product&lt;V : RealNumber&gt;.toRenderDto` 直接调 `toFltX`——**接口上有这个方法**，所以十二个数值类型全通。
+    /// `Product&lt;V : RealNumber&gt;.toRenderDto` 直接调 `toFltX`——**接口上有这个方法**，所以十二个数值类型全通。
     /// C# 的 `IRealNumber&lt;TSelf&gt;` 上也有 `ToFltX`，但调用方只约束到 `where V : struct`，**泛型参数上拿不到接口成员**，
     /// 于是每个调用点各写一段"认得出 `Flt64` / `FltX` / `Int64` / `UInt64`"的 `is` 链，其余类型抛 `NotSupportedException`。
     /// 两处调用点（渲染映射、解渲染）各缺一半，`Flt32` / `Int32` / `UInt32` 在运行期炸。
@@ -112,7 +112,7 @@ public static class NumberConversions {
     /// 把 `where V : struct` 改成 `where V : struct, IRealNumber&lt;V&gt;` 会顺着 `Product&lt;V&gt;` / `Csp1dSolution&lt;V&gt;`
     /// 等几十个声明级联，与本缺陷的收益不成比例。
     ///
-    /// The baseline's `Product&lt;V : RealNumber&gt;.toRenderDto` calls `toFltX` straight off the interface, so all twelve numeric types work. C#'s `IRealNumber&lt;TSelf&gt;` carries
+    /// The code's `Product&lt;V : RealNumber&gt;.toRenderDto` calls `toFltX` straight off the interface, so all twelve numeric types work. C#'s `IRealNumber&lt;TSelf&gt;` carries
     /// `ToFltX` too, but callers constrain only `where V : struct`, **and interface members are unreachable through such a type parameter**, so every call site grew its own `is` chain
     /// recognising `Flt64` / `FltX` / `Int64` / `UInt64` and throwing `NotSupportedException` for the rest. Each of the two call sites was missing a different half, so `Flt32` / `Int32` /
     /// `UInt32` blew up at run time. This method **consolidates the chain in one place** and completes it for all twelve types. It is still a run-time `switch` rather than a constraint:

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **误报率 98.9%。** 当年放弃逐文件比对时只是"觉得不可靠"，**这里把它量出来了**——
 /// 于是"按文件名清单判缺口"这个做法，从此在仓库里有数字挡着。
 ///
-/// differenced the baseline's 320 math file names against this repo and got **91 "missing"**; checking each showed **only one was real**, the rest living inside
+/// differenced its 320 math file names against this repo and got **91 "missing"**; checking each showed **only one was real**, the rest living inside
 /// differently-named files. **A 98.9% false-positive rate** — abandoned per-file comparison because it "felt unreliable", and ** measured it**, so the method now
 /// has a number standing in front of it.
 /// </remarks>

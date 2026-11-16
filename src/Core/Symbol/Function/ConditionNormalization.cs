@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 归一化后的条件范围 / A normalized condition range.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Conditional.kt` 的 `NormalizedCondition` 与 `normalizedCondition`。
+/// 对齐的 `NormalizedCondition` 与 `normalizedCondition`。
 ///
 /// **"归一化"在这里的意思是：把四种关系都折算成"<b>严格真</b>"的形态。**
 /// **`LT`/`LE` 先把多项式取负，于是"负侧"变成"正侧"；**
@@ -25,14 +25,14 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **它告诉调用方"要不要把多项式取负"，而<b>忘了取负</b>会让整个真假判断反向——
 /// 模型仍然可行，只是条件被取反了。**
 ///
-/// Following the baseline's `NormalizedCondition` and `normalizedCondition`.
+/// Following its `NormalizedCondition` and `normalizedCondition`.
 ///
 /// **"Normalising" here means folding the four relations into a <b>strictly true</b> shape.**
 /// **`LT`/`LE` negate the polynomial so the negative side becomes the positive one;**
 /// **`GT`/`LT` put the true branch's lower edge at `δ`, `GE`/`LE` at `0`.**
 /// **After folding, downstream handles one shape only.**
 ///
-/// **Of the six fields `NegatePolynomial` is the easiest to overlook**:
+/// **Of the six fields `NegatePolynomial` is the easiest to overlook**.
 /// **it tells the caller whether to negate the polynomial, and <b>forgetting to</b> flips the whole truth decision —
 /// the model stays feasible, only the condition is inverted.**
 /// </remarks>
@@ -56,7 +56,7 @@ public sealed record NormalizedCondition(
 /// 条件范围归一化与校验 / Normalize and validate condition ranges.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Conditional.kt` 的 `normalizedCondition`、`validateConditionBounds`、
+/// 对齐的 `normalizedCondition`、`validateConditionBounds`、
 /// `conditionBranchCoverage` 三个入口补。
 ///
 /// **三件事依次检查，最后一件最容易漏**：
@@ -80,7 +80,7 @@ public sealed record NormalizedCondition(
 /// indicator rows can be satisfied.**
 ///
 /// **There is also a "both branches empty" check**: **when the range meets neither branch there is no solution.**
-/// **The baseline errors rather than returning "both are false"** — **the latter would read as "the condition is
+/// **The code errors rather than returning "both are false"** — **the latter would read as "the condition is
 /// always false" while the actual problem is "this range is not legal".**
 /// </remarks>
 public static class ConditionNormalization

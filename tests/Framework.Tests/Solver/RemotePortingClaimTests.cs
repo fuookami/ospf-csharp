@@ -12,8 +12,8 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// 文档声明与源码事实一致 / Document claims agree with the source.
 /// </summary>
 /// <remarks>
-/// **曾有一句"其余 3 个真实缺口共约 1100 行尚未移植"**
-/// （`RemoteLinearSolver.kt` 339、`RemoteQuadraticSolver.kt` 339、`OspfRemoteModelSerializer.kt` 480），
+/// **曾有一句"其余 3 个真实缺口共约 1100 行尚未实现"**
+/// （ 339、 339、 480），
 /// **它与同段前文"已完成"直接矛盾，也与源码事实不符——三份都已移植。**
 ///
 /// **一句话过期了很久，而它<b>不可能被任何行为判据发现</b>：** **所有测试都绿着，
@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 ///
 /// **所以这里留下的判据不是"行为对"，而是"描述与文件系统一致"。**
 ///
-/// **一条过期的"尚未移植"比一条过期的"已移植"更危险：**
+/// **一条过期的"尚未实现"比一条过期的"已移植"更危险：**
 /// **前者会让下一轮<b>重做一遍</b>，而重做时可能把已有的正确实现覆盖成一份新的。</**
 ///
-/// **A sentence once claimed "three real gaps, about 1100 lines not ported"**
-/// (`RemoteLinearSolver.kt` 339, `RemoteQuadraticSolver.kt` 339, `OspfRemoteModelSerializer.kt` 480) — directly
+/// **A sentence once claimed "three real gaps, about 1100 lines not implemented"**
+/// ( 339, 339, 480) — directly
 /// contradicting the same paragraph's "already done" and contradicting the source, since all three exist.
 ///
 /// **A stale sentence lived a long time and <b>no behavioural criterion could ever find it</b>: every test was green
@@ -34,14 +34,14 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// **So the criterion here is not "the behaviour is right" but "the description agrees with the
 /// file system".**
 ///
-/// **A stale "not ported" is more dangerous than a stale "ported": the former makes the next round <b>do the work
+/// **A stale "not implemented" is more dangerous than a stale "implemented": the former makes the next round <b>do the work
 /// again</b>, and redoing it may overwrite a correct existing implementation with a fresh one.**
 /// </remarks>
 public class RemotePortingClaimTests
 {
     /// <summary>
     /// **被声明为"已移植"的三个文件必须存在且无空壳标记** /
-    /// The three files declared "ported" must exist and carry no stub markers.
+    /// The three files declared "implemented" must exist and carry no stub markers.
     /// </summary>
     [Theory]
     [InlineData("src/Framework/Solver/Remote/Client/RemoteLinearSolver.cs")]
@@ -66,10 +66,10 @@ public class RemotePortingClaimTests
 
     /// <summary>
     /// **被声明为“已移植”的 IIS 引擎必须存在且无空壳标记** /
-    /// The IIS engines declared ported must exist and carry no stub markers.
+    /// The IIS engines declared implemented must exist and carry no stub markers.
     /// </summary>
     /// <remarks>
-    /// **纠偏对象：状态文档说“旧 elastic IIS 引擎尚未移植，故 `IisAvailable = false`”，
+    /// **纠偏对象：状态文档说“旧 elastic IIS 引擎尚未实现，故 `IisAvailable = false`”，
     /// 而 `LegacyElasticInfeasibilityAnalyzer`、`LinearIisModel`、`LinearLegacyIisCompute`、
     /// `QuadraticLegacyIisCompute` 全都在且已知线（SCIP 与 COPT 置 `IisAvailable: true`）。**
     ///
@@ -77,7 +77,7 @@ public class RemotePortingClaimTests
     ///
     /// **这里纠了<b>三处</b>过期结论，全部是同一种失效：代码做完了，描述停在立项那天。**
     ///
-    /// **The correction target: a note said the legacy elastic IIS engine was not ported, so
+    /// **The correction target: a note said the legacy elastic IIS engine was not implemented, so
     /// `IisAvailable = false`, while all four files exist and are wired (SCIP and COPT set `IisAvailable: true`).**
     ///
     /// **`QuadraticLegacyIisCompute`'s header comment still said "skeleton only, nothing there" while the file has 612
@@ -98,10 +98,10 @@ public class RemotePortingClaimTests
 
         string text = File.ReadAllText(full);
 
-        // **`not ported` 与 `TODO` 只查注释里的形态：这两个词在英文注释里可能是"尚未移植"的说明。**
+        // **`not implemented` 与 `TODO` 只查注释里的形态：这两个词在英文注释里可能是"尚未实现"的说明。**
         // **这里的四个文件都应<b>没有</b>这种说明，因为它们已经是实现。**
         //
-        // **`not ported` and `TODO` are checked in their comment forms: both words may describe "not ported yet" in
+        // **`not implemented` and `TODO` are checked in their comment forms: both words may describe "not implemented yet" in
         // English.** **All four files here must carry no such note, because they are implementations.**
         foreach (string marker in new[] {
             "NotImplementedException", "NotSupportedException", "not ported", "TODO",
@@ -117,14 +117,14 @@ public class RemotePortingClaimTests
     /// <remarks>
     /// **这一条钉的是一句<b>中文</b>注释。**
     ///
-    /// **英文标记（`TODO`／`not ported`）能被上一条抓住，但那句原话是“只建立类型与入口骨架”，
+    /// **英文标记（`TODO`／`not implemented`）能被上一条抓住，但那句原话是“只建立类型与入口骨架”，
     /// 一个英文标记都匹配不到——而它比任何一个 TODO 都更误导，因为它让读者以为整个文件是空的。**
     ///
     /// **中文文档里的过期结论，用英文标记扫不出来。这条判据补的就是那个洞。**
     ///
     /// **This one pins a <b>Chinese</b> comment.**
     ///
-    /// **The English markers above catch `TODO`/`not ported`, but the original wording was "only establishes the types and
+    /// **The English markers above catch `TODO`/`not implemented`, but the original wording was "only establishes the types and
     /// entry skeleton", which matches no English marker — and it misleads more than any TODO, because it makes the reader
     /// believe the file is empty.**
     ///
@@ -142,7 +142,7 @@ public class RemotePortingClaimTests
     }
 
     /// <summary>
-    /// **CPLEX 的 point-based 回调已移植且接线** / CPLEX's point-based callbacks are ported and wired.
+    /// **CPLEX 的 point-based 回调已移植且接线** / CPLEX's point-based callbacks are implemented and wired.
     /// </summary>
     /// <remarks>
     /// **核实由两个断言组成，缺一不可：**
@@ -210,7 +210,7 @@ public class RemotePortingClaimTests
     /// **一个读者扫到第一处就以为所有后端都没有回调，而事实是只有一个没有。**
     ///
     /// **所以判据必须成对：只钉 CPLEX 已移植，会让人以为 COPT 也已移植；
-    /// 只钉 COPT 未移植，会让人以为 CPLEX 也没有。**
+    /// 只钉 COPT 未实现，会让人以为 CPLEX 也没有。**
     ///
     /// **两件事都断言，才能钉住"同一个词在不同后端上结论相反"这个事实。**
     ///
@@ -219,7 +219,7 @@ public class RemotePortingClaimTests
     ///
     /// **A reader who sees the first concludes no backend has callbacks, while only one lacks them.**
     ///
-    /// **So the criteria must be a pair: pinning only "CPLEX is ported" suggests COPT is too, and pinning only "COPT is
+    /// **So the criteria must be a pair: pinning only "CPLEX is implemented" suggests COPT is too, and pinning only "COPT is
     /// not" suggests CPLEX is not either.**
     ///
     /// **Asserting both pins down the fact that one word carries opposite conclusions on different backends.**
@@ -254,7 +254,7 @@ public class RemotePortingClaimTests
     /// `LocalFileObjectStoragePort`（90 行）一直在。**
     ///
     /// **而这一条比前面几批的更微妙：** **它是“扩展而非缺口”这个判断的一部分。**
-    /// **判断本身是对的（基线的固定版本确实只有接口），但支撑它的那句事实描述是错的。**
+    /// **判断本身是对的（固定版本确实只有接口），但支撑它的那句事实描述是错的。**
     ///
     /// **"结论对、依据错"比"结论错"更难发现：** **因为结论对，所有行为判据都绿着；
     /// 而依据错，意味着以后再有人引用这个依据时会得到反的结论。**
@@ -263,7 +263,7 @@ public class RemotePortingClaimTests
     /// `LocalFileObjectStoragePort` (90 lines) has been there all along.**
     ///
     /// **This one is subtler: it is part of the judgement "an extension, not a gap".** **The
-    /// judgement is right (the pinned baseline really has only the interface) but the fact cited to support it was
+    /// judgement is right (the reference really has only the interface) but the fact cited to support it was
     /// wrong.**
     ///
     /// **"Right conclusion, wrong evidence" is harder to find than a wrong conclusion: every behavioural criterion stays
@@ -288,22 +288,22 @@ public class RemotePortingClaimTests
     }
 
     /// <summary>
-    /// **基线的 `SolveFingerprinting` 只有两个入口，所以 C# 的 `Solver`／`Model` 确是扩展** /
-    /// The baseline's `SolveFingerprinting` has two entries, so the C# `Solver`/`Model` really are extensions.
+    /// **`SolveFingerprinting` 只有两个入口，所以 C# 的 `Solver`／`Model` 确是扩展** /
+    /// The code's `SolveFingerprinting` has two entries, so the C# `Solver`/`Model` really are extensions.
     /// </summary>
     /// <remarks>
     /// **这一条<b>核对的是基线</b>，不是 C#——因为那句声明的主语是基线。**
     ///
-    /// **"`solver`／`model` 指纹入口在固定基线里不存在"这句话，只能用基线来验。**
+    /// **"`solver`／`model` 指纹入口在固定不存在"这句话，只能用基线来验。**
     /// **而验证的方式是读固定的 Kotlin 提交（`12fdb587`）的那份文件，不是读工作区——
     /// 工作区可能已经往前走了。**
     ///
     /// **判据因此读 `git cat-file` 的输出：** **CLAUDE/AGENTS 的口径是"不切换 checkout"，
     /// 而 `cat-file` 正是"不切换也能读固定提交"的手段。**
     ///
-    /// **This one verifies <b>the baseline</b>, not C#, because the baseline is the subject of that sentence.**
+    /// **This one verifies <b>the code</b>, not C#, because the code is the subject of that sentence.**
     ///
-    /// **"The `solver`/`model` fingerprint entries do not exist in the pinned baseline" can only be checked against the
+    /// **"The `solver`/`model` fingerprint entries do not exist" can only be checked against the
     /// baseline.** **And the way to check is to read that file at the pinned Kotlin commit (`12fdb587`), not the working
     /// tree, which may have moved on.**
     ///
@@ -324,7 +324,7 @@ public class RemotePortingClaimTests
         baseline.Should().NotContain("fun model(");
     }
 
-    /// <summary>读固定 Kotlin 基线里的一份文件 / Read a file from the pinned Kotlin baseline.</summary>
+    /// <summary>读固定 Kotlin 的一份文件 / Read a file from the reference.</summary>
     /// <remarks>
     /// **用 `git -C <repo> cat-file -p <commit>:<path>`，不切换 checkout。**
     /// **切换 checkout 会改动另一个工作区，而那是本方向明令禁止的。**

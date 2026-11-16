@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi 侧的固定整数 LP 后端工厂 / The Gurobi-side fixed-integer LP backend factory.
 /// </summary>
 /// <remarks>
-/// **这是基线 `GurobiCriticalConstraintAnalysis.kt` 里 `gurobiFixedIntegerLpBackend` 的对应物。**
+/// **这是里 `gurobiFixedIntegerLpBackend` 的对应物。**
 ///
 /// ### 它&lt;b&gt;不**自己实现求解，这是有意的&lt;/b&gt;
 ///
@@ -29,19 +29,19 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// **基线允许"未提供 ranging 钩子时 `sensitivityRange` 保持为空——按计划红线，宁缺勿造"。**
 ///
 /// **本工厂&lt;b&gt;不提供**该钩子：** **Gurobi 的 `SARHSLow`／`SARHSUp` 必须在&lt;b&gt;主求解过程**中、
-/// 且关掉 presolve 才读得对（基线在同一文件里记了实测：
+/// 且关掉 presolve 才读得对（同一文件里记了实测：
 /// 二次求解时 presolve 配置不再生效，`SARHSLow` 会退化成哨兵值）。**
 /// **在没做那件事之前，报告里的区间保持为 `null`——** **而不是拿一个"看起来像区间"的数填上。**
 ///
-/// **This is the counterpart of `gurobiFixedIntegerLpBackend` in the baseline.** **The baseline says the implementation reuses
+/// **This is the counterpart of `gurobiFixedIntegerLpBackend` in the code.** **The code says the implementation reuses
 /// the backend-neutral `LinearSolverFixedIntegerLpBackend`, with Gurobi adding only a native ranging hook, so both backends share
 /// one tested path with no duplicated logic.** **So this is a three-layer chain: lowering adapter → solver-and-dual-mapping →
 /// Gurobi's linear solver.** **The middle layer did not exist at first, which is why neither plugin could connect; this change
 /// connects Gurobi's end.**
 ///
-/// **One explicit absence: the baseline allows the ranging hook to be omitted, leaving `sensitivityRange` empty — "better absent
+/// **One explicit absence: the code allows the ranging hook to be omitted, leaving `sensitivityRange` empty — "better absent
 /// than invented".** **This factory omits it: Gurobi's `SARHSLow`/`SARHSUp` are only correct when read during the
-/// &lt;b&gt;primary&lt;/b&gt; solve with presolve disabled (the baseline records the measurement that a second solve no longer honours the
+/// &lt;b&gt;primary&lt;/b&gt; solve with presolve disabled (the code records the measurement that a second solve no longer honours the
 /// presolve configuration and returns sentinel values).** **Until that is done, ranges stay `null` rather than being filled with
 /// something that merely looks like a range.**
 /// </remarks>

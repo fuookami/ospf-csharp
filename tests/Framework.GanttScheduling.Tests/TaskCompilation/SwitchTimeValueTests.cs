@@ -10,10 +10,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **遮蔽不是钳制：mask 为 0 恒零，mask 为 1 连负时距一起传出** / Masking is not clamping: a zero mask gives zero, a mask of 1 passes even a negative gap.
 /// </summary>
 /// <remarks>
-/// 基线的 `frontOf[t1, t2]` 是 `start[t1] ≤ start[t2]`，推不出 `end[t1] ≤ start[t2]`——
+/// `frontOf[t1, t2]` 是 `start[t1] ≤ start[t2]`，推不出 `end[t1] ≤ start[t2]`——
 /// 两个任务重叠时，时距是负的，而遮蔽会把它原样传出。
 ///
-/// The baseline's `frontOf[t1, t2]` is `start[t1] ≤ start[t2]`, which does not imply `end[t1] ≤ start[t2]` — when two tasks overlap the gap is negative, and masking passes it
+/// The code's `frontOf[t1, t2]` is `start[t1] ≤ start[t2]`, which does not imply `end[t1] ≤ start[t2]` — when two tasks overlap the gap is negative, and masking passes it
 /// through unchanged.
 /// </remarks>
 public class SwitchTimeValueTests {
@@ -26,11 +26,11 @@ public class SwitchTimeValueTests {
     /// **重叠时时距为负，且不钳制** / An overlapping pair yields a negative gap, unclamped.
     /// </summary>
     /// <remarks>
-    /// 这条钉住"照抄基线"这个决定：钳到 0 会让这里返回 0。钳制看起来更"安全"，
+    /// 这条钉住"照做"这个决定：钳到 0 会让这里返回 0。钳制看起来更"安全"，
     /// 但它与基线不同，而这个差异只在重叠排布上显现——正常模型里时间冲突约束已经排除了重叠。
     /// 记下这个 ceiling 比悄悄改掉更有价值。
     ///
-    /// This pins the "copy the baseline" decision: clamping would return 0 here. Clamping looks "safer" but differs from the baseline, and the difference only shows on
+    /// This pins the "copy the code" decision: clamping would return 0 here. Clamping looks "safer" but differs from the code, and the difference only shows on
     /// overlapping arrangements — which the time-conflict constraints already exclude in a full model. Recording the ceiling is worth more than quietly changing it.
     /// </remarks>
     [Fact]
@@ -63,10 +63,10 @@ public class SwitchTimeValueTests {
     /// **一对任务不可能在两个执行器上同时换型** / A task pair cannot switch on two executors at once.
     /// </summary>
     /// <remarks>
-    /// 基线的 `thisSwitch ≤ 1` 上界约束的就是这条。判据把 0、1、2 都过一遍：只有 2 及以算越界。
+    /// `thisSwitch ≤ 1` 上界约束的就是这条。判据把 0、1、2 都过一遍：只有 2 及以算越界。
     /// 若实现写成 `>= 1`，一对正常相邻的任务就会被判成越界。
     ///
-    /// The baseline's `thisSwitch ≤ 1` bound enforces exactly this. The criterion covers 0, 1 and 2: only 2 and above exceed it. An implementation written as `>= 1` would
+    /// The code's `thisSwitch ≤ 1` bound enforces exactly this. The criterion covers 0, 1 and 2: only 2 and above exceed it. An implementation written as `>= 1` would
     /// flag a normal adjacent pair as a violation.
     /// </remarks>
     [Theory]

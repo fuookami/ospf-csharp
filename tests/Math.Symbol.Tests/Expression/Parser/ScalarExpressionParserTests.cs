@@ -189,11 +189,11 @@ public class ScalarExpressionParserTests
     /// <remarks>
     /// **这一条是补上一个判据缺口**：原来那条只钉了 `else` 里的嵌套，
     /// **于是把 `thenBranch = ParseTernary` 改成 `ParseLogicalOr` 之后，判据照样全绿。**
-    /// **基线里两支都递归，所以两支都得钉。**
+    /// **两支都递归，所以两支都得钉。**
     ///
     /// **This fills a criterion gap**: the original one pinned only the nesting in `else`,
     /// **so replacing `thenBranch = ParseTernary` with `ParseLogicalOr` left everything green.**
-    /// **The baseline recurses on both branches, so both have to be pinned.**
+    /// **The code recurses on both branches, so both have to be pinned.**
     /// </remarks>
     [Fact]
     public void TheThenBranch_ShouldAlsoAllowANestedTernary()

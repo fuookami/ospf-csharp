@@ -1,8 +1,8 @@
 // 物理量核心算子 / Quantity core operators.
-// 与固定 Kotlin 基线 `geometry2d/QuantityCore.kt` 对应。C# 侧 `QuantityOps` 已提供 `PlusSafe`／`MinusSafe`／
+// 与固定 Kotlin 对应。C# 侧 `QuantityOps` 已提供 `PlusSafe`／`MinusSafe`／
 // `QuantityProduct`／`OrdSafe`／`MaxSafe`／`MinSafe`／`QuantityZeroOf`，`QuantityOperators` 已提供加减乘除与标量运算，
 // 因此本文件**只补确实缺失的部分**，不再重复定义已有能力。
-// Mirrors the pinned Kotlin baseline's `geometry2d/QuantityCore.kt`. C#'s `QuantityOps` already provides
+// The pinned Kotlin: . C#'s `QuantityOps` already provides
 // `PlusSafe`/`MinusSafe`/`QuantityProduct`/`OrdSafe`/`MaxSafe`/`MinSafe`/`QuantityZeroOf` and `QuantityOperators`
 // already provides arithmetic and scalar operations, so this file **only adds what is genuinely missing**.
 
@@ -373,9 +373,9 @@ public static class QuantityCore {
     /// the repeated subtraction would run for a long time, and capping keeps the cost deterministic.
     ///
     /// ponytail: 逐次相减是 O(available/cell)；要更快应在调用方给出可除的量纲（长度/长度），此处保留循环以维持
-    /// 基线的"无除零、无量纲推导"行为。
+    /// "无除零、无量纲推导"行为。
     /// ponytail: repeated subtraction is O(available/cell); a faster version needs a dimensionless division supplied
-    /// by the caller. The loop stays to keep the baseline's "no division, no dimension inference" behaviour.
+    /// by the caller. The loop stays to keep its "no division, no dimension inference" behaviour.
     /// </remarks>
     /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
     /// <param name="available">可用量 / Available quantity.</param>

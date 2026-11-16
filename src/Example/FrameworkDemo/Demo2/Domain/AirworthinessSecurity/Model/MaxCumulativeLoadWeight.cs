@@ -43,14 +43,14 @@ public sealed record CumulativeCheckPoint(
 /// 某个方向上的累积载荷限制区域 / A zone defining cumulative load limits in one direction.
 /// </summary>
 /// <remarks>
-/// 与基线 `demo2/domain/airworthiness_security/model/MaxCumulativeLoadWeight.kt` 对齐。三处容易做错：
+/// 与对齐。三处容易做错：
 ///
 /// 1. **`AFT` 方向把点表倒序**。倒序之后检查点按"从远到近"排列，累积区间才与前进方向一致；不倒序会让后向累积的每个检查点覆盖错误的舱位集合。
-/// 2. **力臂相同的点先去重再排序**。基线用 `distinctBy { toArm }`，保留**第一次出现**的那个；先排序后去重会保留另一个 `maxSum`。
+/// 2. **力臂相同的点先去重再排序**。`distinctBy { toArm }`，保留**第一次出现**的那个；先排序后去重会保留另一个 `maxSum`。
 /// 3. **重叠比例按舱位的实际长度算**，不是按"是否落在区间内"二值判断。跨度为零的舱位（{code}length &lt;= 0{/code}）直接排除，避免除零。
 ///
-/// Aligned with the baseline. Three easy mistakes: (1) **`AFT` reverses the point table** so checkpoints run far-to-near and each accumulation interval matches the direction;
-/// without it, every aft checkpoint covers the wrong set of positions; (2) **points with the same arm are deduplicated before sorting** — the baseline's `distinctBy { toArm }`
+/// Three easy mistakes: (1) **`AFT` reverses the point table** so checkpoints run far-to-near and each accumulation interval matches the direction;
+/// without it, every aft checkpoint covers the wrong set of positions; (2) **points with the same arm are deduplicated before sorting** — its `distinctBy { toArm }`
 /// keeps the **first** occurrence, while sorting first would keep the other `maxSum`; (3) **the overlap ratio uses the position's real length**, not an in/out test, and positions of
 /// zero span ({code}length &lt;= 0{/code}) are dropped to avoid dividing by zero.
 /// </remarks>
@@ -141,7 +141,7 @@ public sealed class CumulativeLoadLimitZone
                 // 实测把守卫改成 `if (false)` 判据全绿。它真正起作用的是 `length < 0`（`FrontArm > BackArm` 的畸形舱位），
                 // 那种输入目前没有任何调用方产生，所以只留注释，不伪造判据。
                 //
-                // A position of zero or negative span has no "overlap ratio", so the baseline drops it. **One unobservable recorded**: at `length == 0` the guard does not change
+                // A position of zero or negative span has no "overlap ratio", so the code drops it. **One unobservable recorded**: at `length == 0` the guard does not change
                 // the outcome — `overlap` is `min(back, end) − max(front, start)`, necessarily `<= 0` when `front == back`, so the next line's `overlap > 0` already rejects it;
                 // replacing the guard with `if (false)` leaves every criterion green (measured). It only matters for `length < 0` (a malformed position with `FrontArm > BackArm`),
                 // which no caller produces today — hence a comment rather than a fabricated criterion.

@@ -17,9 +17,9 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Tests;
 /// </summary>
 public sealed class BlockLoadingGeneratorsTest {
     /// <summary>
- /// **默认生成器集合现在与基线一致（八个）**：这是 earlier 记下的缺口，这里必须由测试把它钉住，否则下一次
+ /// **默认生成器集合现在（八个）**：这是 earlier 记下的缺口，这里必须由测试把它钉住，否则下一次
     /// 重构可能悄悄少装一个而无人察觉。
- /// **The default generator set now matches the baseline (eight)**: that was the gap recorded in earlier, and this
+ /// **The default generator set now matches the code (eight)**: that was the gap recorded in earlier, and this
     /// test pins it so a later refactor cannot silently drop one unnoticed.
     /// </summary>
     [Fact]

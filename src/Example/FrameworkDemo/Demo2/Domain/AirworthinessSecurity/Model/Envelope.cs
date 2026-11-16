@@ -119,11 +119,11 @@ public sealed class EnvelopeSide
     /// <remarks>
     /// 四条分支：无点 → 0；不高于首点 → 首点；不低于末点 → 末点；否则相邻两点间**线性插值**（两点总重相同时取上点，避免除零）。
     ///
-    /// 基线的单位不兼容分支在 C# 里**不存在**：这里所有量都是"千克"与"力矩单位"下的 `double`，没有可携带错单位的类型。这是有意的简化，
+    /// 单位不兼容分支在 C# 里**不存在**：这里所有量都是"千克"与"力矩单位"下的 `double`，没有可携带错单位的类型。这是有意的简化，
     /// 代价是"单位写错"在类型层面拦不住——它会表现为一个荒谬的指数值，而不是一条错误消息。
     ///
     /// Four branches: no points → 0; at or below the first → the first; at or above the last → the last; otherwise **linear interpolation** between neighbours (equal weights take
-    /// the upper point, avoiding division by zero). The baseline's unit-incompatibility branches **do not exist** in C# here: every quantity is a `double` in kilogram and the torque
+    /// the upper point, avoiding division by zero). The code's unit-incompatibility branches **do not exist** in C# here: every quantity is a `double` in kilogram and the torque
     /// unit, so no type could carry a wrong unit. That is a deliberate simplification and it costs the compiler's ability to catch a wrong unit — a wrong unit now shows up as an
     /// absurd index value rather than an error message.
     /// </remarks>
@@ -160,7 +160,7 @@ public sealed class EnvelopeSide
         ArgumentNullException.ThrowIfNull(totalWeightEstimate);
         if (Points.Count < 2) {
             // 基线要求至少两点；一点时"折线"退化成常数，而分段函数构造会直接失败。应当在这里拦住，而不是让构造器抛。
-            // The baseline needs at least two points; with one the polyline degenerates to a constant and the piecewise constructor rejects it. Stop it here rather than letting the
+            // The code needs at least two points; with one the polyline degenerates to a constant and the piecewise constructor rejects it. Stop it here rather than letting the
             // constructor throw.
             return Results.Failed<ILinearIntermediateSymbol<Flt64>>(new Err<ErrorCode>(
                 ErrorCode.IllegalArgument,
@@ -197,13 +197,13 @@ public sealed class EnvelopeSide
 /// 标准 CG 包络线（左右两侧）/ The standard CG envelope with a left and a right side.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `model/Envelope.kt`：左侧给最小指数、右侧给最大指数，各自按"该阶段总重已知与否"产常数或分段线性符号，名称分别是
+/// 逐条对齐：左侧给最小指数、右侧给最大指数，各自按"该阶段总重已知与否"产常数或分段线性符号，名称分别是
 /// `min_index_{包络名}_{阶段}` 与 `max_index_{包络名}_{阶段}`。
 ///
 /// 左右两侧的产出**必须分别注册**。把两侧合成一条约束（重心 ≥ 左、≤ 右）少写一半很容易，但那样一旦某侧漏注册就无从发现——分别注册加两条判据才能钉住
 /// "两侧各自成立"。
 ///
-/// Mirrors the baseline: the left side yields the minimum index and the right the maximum, each producing a constant or a piecewise-linear symbol depending on whether that phase's
+/// the left side yields the minimum index and the right the maximum, each producing a constant or a piecewise-linear symbol depending on whether that phase's
 /// total weight is known, named `min_index_{envelope}_{phase}` and `max_index_{envelope}_{phase}`. The two sides must be **registered separately**: folding them into one row
 /// (CG ≥ left, ≤ right) is easy to half-write, and a missing side becomes undetectable.
 /// </remarks>
@@ -344,15 +344,15 @@ public sealed class Envelope : IEnvelope
 ///
 /// **一处有意简化（`ponytail:`）**：基线对非分段符号还会先试"多项式本身的有限界"，更紧；C# 侧那个助手是
 /// `Core` 的 internal（`BigMValues.FiniteBounds`），示例域拿不到，所以常数符号直接用 `[值, 值]`、其余一律退回断点范围。
-/// 升级路径：把 `FiniteBounds` 提为公开（或搬到 `Math`），再按基线先试紧界。
+/// 升级路径：把 `FiniteBounds` 提为公开（或搬到 `Math`），再先试紧界。
 ///
 /// **The undetermined branch synthesises the switch**: `min = second + switch·(first − second)`, likewise `max`; the switch is an `IfThenFunction` that needs a 0/1 condition symbol
 /// and two sets of bounds (the condition's range, the difference's range). A too-wide bound only weakens the Big-M relaxation, **a too-narrow one cuts off feasible solutions**, so
 /// whenever a usable finite bound cannot be obtained this falls back to **the point range** (a superset that certainly contains the true values).
 ///
-/// **One deliberate simplification (`ponytail:`)**: for non-piecewise symbols the baseline first tries the polynomial's own finite bounds, which are tighter. That helper is `Core`'s
+/// **One deliberate simplification (`ponytail:`)**: for non-piecewise symbols the code first tries the polynomial's own finite bounds, which are tighter. That helper is `Core`'s
 /// internal `BigMValues.FiniteBounds`, unreachable from an example domain, so constant symbols use `[value, value]` and everything else falls back to the point range. Upgrade path: make
-/// `FiniteBounds` public (or move it to `Math`) and prefer the tight bounds as the baseline does.
+/// `FiniteBounds` public (or move it to `Math`) and prefer the tight bounds as the code does.
 /// </remarks>
 public sealed class ConditionalEnvelope : IEnvelope
 {

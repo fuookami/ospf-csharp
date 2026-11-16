@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 最大装载重量模型 / The maximum load weight model.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/MaxLoadWeight.kt`：每个舱位产一个 `max_load_weight_{舱位}` 符号，取值三支：
+/// 逐条对齐：每个舱位产一个 `max_load_weight_{舱位}` 符号，取值三支：
 ///
 /// 1. 有分段规格**且**已知零油重 → `mlw(zfw)`，即零油重落在哪一段就取那段；
 /// 2. 有分段规格**但**不知零油重 → 退回各段最大值 `mlw`；
@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 零油重未知时取任何一段都等于凭空假设一个装载状态；退回各段最大值则是"按最宽松的规格",至少在零油重真值偏轻时是对的。
 /// 这条与 的"超出最后一段取最后一段"是不同的两件事：那一条里的零油重**是已知的**。
 ///
-/// Mirrors the baseline: one `max_load_weight_{position}` symbol per position, with three branches — (1) piecewise **and** a known zero-fuel weight takes `mlw(zfw)`;
+/// one `max_load_weight_{position}` symbol per position, with three branches — (1) piecewise **and** a known zero-fuel weight takes `mlw(zfw)`;
 /// (2) piecewise but **no** known zero-fuel weight falls back to the maximum across segments; (3) no segments is the constant `mlw`. Branch 2 invites merging into branch 1
 /// ("no zero-fuel weight, so take the first segment") — that is wrong: segments mean "heavier aircraft, less cargo", so with the weight unknown any single segment is an invented
 /// loading state, while the maximum is the loosest specification and is at least correct when the true weight is light. This is a different thing from the earlier "past the last segment

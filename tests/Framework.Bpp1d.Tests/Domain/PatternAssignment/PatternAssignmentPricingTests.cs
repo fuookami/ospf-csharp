@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// | **批量定价不按对偶行顺序累加** | 按字典序 | 浮点加法不结合 ⇒ 同一候选**两个不同的检验数**，加入与否取决于走哪条路 |
 /// | **`inventory:` 键不带箱型** | 前缀匹配 | 所有箱型的库存价都减掉 ⇒ 检验数集体偏低，**该加的列不加** |
 ///
-/// Mirrors the baseline's pricing half; the three failure modes are in the table above.
+/// 's pricing half; the three failure modes are in the table above.
 /// </remarks>
 public class PatternAssignmentPricingTests {
     /// <summary>**`BinCount` 口径的系数恒为 1** / Under `BinCount` the coefficient is always 1.</summary>

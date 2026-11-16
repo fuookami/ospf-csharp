@@ -1,7 +1,7 @@
 // 运行检查点 / Run checkpoints.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`。
-// Mirrors `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)` in the pinned baseline's
-// `HyperHeuristicSolver.kt` (47241 B).
+// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`。
+// Mirrors `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`'s
+// (47241 B).
 
 using System;
 using System.Collections.Generic;
@@ -25,16 +25,16 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic;
 /// **检查点里的 `transitions` 是"已发生但尚未喂给策略的转移"，不是全部历史**。把全部历史写进去，恢复后会把同一批转移再喂一遍，
 /// **策略的计数翻倍而搜索轨迹看起来完全正常**。
 ///
-/// 而本移植里转移在 `Advance` 内**当场**交给 `Merge` 并落进 `Transitions`——**并没有"待喂"队列**。
+/// 而本实现里转移在 `Advance` 内**当场**交给 `Merge` 并落进 `Transitions`——**并没有"待喂"队列**。
 /// 因此检查点保存的是**已观测的转移记录**（供导出/训练用），恢复时**绝不重新 `Observe`**；策略状态由 `PolicyArchive` 恢复。
-/// 这两者的区别正是基线那条注释想防的事。
+/// 这两者的区别正是条注释想防的事。
 ///
 /// **The `transitions` in a checkpoint are "transitions that happened but have not yet been fed to the policy", not the whole history.** Writing
 /// the whole history makes restore feed the same batch again, **doubling the policy's counts while the search trajectory looks normal**.
 ///
-/// In this port a transition goes to `Merge` and into `Transitions` **immediately** inside `Advance` — there is **no "pending" queue**. So the
+/// In this implementation a transition goes to `Merge` and into `Transitions` **immediately** inside `Advance` — there is **no "pending" queue**. So the
 /// checkpoint stores the **already-observed transition log** (for export and training), and restore **never calls `Observe` again**; the policy state
-/// comes back from `PolicyArchive`. That distinction is exactly what the baseline's comment is guarding.
+/// comes back from `PolicyArchive`. That distinction is exactly what its comment is guarding.
 /// </remarks>
 /// <typeparam name="O">目标类型 / The objective type.</typeparam>
 /// <typeparam name="V">值类型 / The value type.</typeparam>

@@ -368,9 +368,9 @@ public class Demo2SimpleLimitsTests {
     /// | 60000 | 4 | 末点 |
     /// | 80000 | **4** | 高于末点 → **夹住**，不是按斜率外推到 0 |
     ///
-    /// 若上端外推，80000 会给 0；若下端不夹，30000 会给 10。**基线是两端都夹**——循环形状看起来像上端外推，实际不会。
+    /// 若上端外推，80000 会给 0；若下端不夹，30000 会给 10。**两端都夹**——循环形状看起来像上端外推，实际不会。
     ///
-    /// Consistent with `MinLowPayload`. Five paired points as tabulated. Extrapolating the top would give 0 at 80000; not clamping the bottom would give 10 at 30000. **The baseline
+    /// Consistent with `MinLowPayload`. Five paired points as tabulated. Extrapolating the top would give 0 at 80000; not clamping the bottom would give 10 at 30000. **The code
     /// clamps both ends** — the loop shape merely looks like an upper extrapolation.
     /// </remarks>
     [Fact]

@@ -52,11 +52,11 @@ public class ExecutorCostMinimization<E, A>
     /// 基线：**只有给了系数提取器**才最小化 `Σ_执行器 penalty(执行器) × executor_compilation[执行器]`，目标名 `executor`；
     /// 没给提取器就什么都不做（`Ok`）。这不是"漏接线"——"用不用执行器要花钱"这件事本身就是可选的，没有成本就没有目标。
     ///
-    /// 提取失败时基线用无穷大；`Flt64` 没有无穷，所以这里失败。
+    /// 提取失败时无穷大；`Flt64` 没有无穷，所以这里失败。
     ///
-    /// The baseline minimises `Σ_executor penalty(executor) × executor_compilation[executor]` (objective name `executor`) **only when an extractor is given**; without one it does
+    /// The code minimises `Σ_executor penalty(executor) × executor_compilation[executor]` (objective name `executor`) **only when an extractor is given**; without one it does
     /// nothing and returns `Ok`. That is not missing wiring — "using an executor costs money" is itself optional, and no cost means no objective. An extraction failure uses
-    /// infinity in the baseline and `Flt64` has none, so it fails here.
+    /// infinity in the code and `Flt64` has none, so it fails here.
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);

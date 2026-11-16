@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// **一维装箱物理结果提取** / One-dimensional packing physical extraction.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `PackingContext.pack`。**本函数有四道校验，缺一道就会静默给出错结果**：
+/// 对应`PackingContext.pack`。**本函数有四道校验，缺一道就会静默给出错结果**：
 ///
 /// | 校验 | 漏掉的后果 | 判据 |
 /// | --- | --- | --- |
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// 而这样的输入在 `ValidatePattern` 之前就会被需求复核挡住。**这是真实的可达性问题，不是遗漏**——
 /// 为了覆盖它得造一个自相矛盾的夹具，那会让判据失去意义。
 ///
-/// Mirrors the baseline's `PackingContext.pack` (see the table for the four checks and which criterion covers each). **The material-overflow criterion is not written**:
+/// **The material-overflow criterion is not written**.
 /// triggering a `ulong` overflow needs a per-item contribution near `ulong.MaxValue`, and such an input is already rejected by the demand check before it can reach the
 /// summary. **That is a real reachability gap, not an omission** — covering it would require a self-contradictory fixture, which would make the criterion meaningless.
 /// </remarks>

@@ -1,6 +1,6 @@
 // 广义流节点与问题 / Generalized-flow node and problem.
-// 与固定 Kotlin 基线 `model/GeneralizedFlowNode.kt`（2212 字节）、`model/GeneralizedFlowProblem.kt`（1177 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowNode.kt` and `GeneralizedFlowProblem.kt`.
+// 与固定 Kotlin （2212 字节）、（1177 字节）对应。
+// And.
 
 using System;
 using System.Collections.Generic;

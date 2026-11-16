@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 互补约束 <c>x ⊥ y</c>：两者至多一个为正 / Complementarity `x ⊥ y`: at most one of them is positive.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Complementarity.kt` 的 `ComplementarityFunction`。
+/// 对齐的 `ComplementarityFunction`。
 ///
 /// **六条约束，一个二值变量 `s`**：
 ///
@@ -44,11 +44,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **写成都用负号会让 `s = 1` 时 `y` 反而被放大。**
 ///
 /// **`Evaluate` 返回的是"违反指示"而不是"满足指示"**：
-/// **两侧同时严格为正时返回 1，否则返回 0。** **这是基线的语义，也是最容易读反的一处。**
+/// **两侧同时严格为正时返回 1，否则返回 0。** **这是语义，也是最容易读反的一处。**
 ///
-/// Following the baseline's `ComplementarityFunction`.
+/// Following its `ComplementarityFunction`.
 ///
-/// **Six rows and one binary `s`**:
+/// **Six rows and one binary `s`**.
 ///
 /// | Rows | Content |
 /// | --- | --- |
@@ -57,7 +57,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// | 5 | `x − xU·s ≤ 0` |
 /// | 6 | `y + yU·s ≤ yU` |
 ///
-/// **Rows 5 and 6 carry a single big-M term each and rely on non-negativity to force the other side to zero**:
+/// **Rows 5 and 6 carry a single big-M term each and rely on non-negativity to force the other side to zero**.
 /// **`s = 0` makes row 5 read `x ≤ 0`, which with `x ≥ 0` gives `x = 0`;**
 /// **`s = 1` makes row 6 read `y ≤ 0`, which with `y ≥ 0` gives `y = 0`.**
 ///
@@ -68,8 +68,8 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **The two big-M terms have opposite signs** (row 5 uses `−xU`, row 6 uses `+yU`) —
 /// **making both negative would enlarge `y` at `s = 1` instead.**
 ///
-/// **`Evaluate` returns a violation indicator, not a satisfaction indicator**:
-/// **it returns 1 when both sides are strictly positive and 0 otherwise.** **That is the baseline's semantics and the
+/// **`Evaluate` returns a violation indicator, not a satisfaction indicator**.
+/// **it returns 1 when both sides are strictly positive and 0 otherwise.** **That is its semantics and the
 /// easiest thing here to read the wrong way round.**
 /// </remarks>
 public sealed class ComplementarityFunction<V> : IMathFunctionSymbol<V>

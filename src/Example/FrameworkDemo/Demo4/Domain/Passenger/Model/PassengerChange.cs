@@ -18,20 +18,20 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// 乘客变更变量 / The passenger change variables.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerChange.kt` 建两层变量：
+/// 建两层变量：
 ///
 /// * **舱位变更**：每位乘客、**除自己舱位以外**的每个舱位一个变量——自己那一档不需要"变更"变量；
 /// * **航班变更**（可选）：每位乘客、同一航路上**其它**航班、每个舱位一个变量。
 ///
 /// 两层都以上界 = 人数收紧。
 ///
-/// **一处必要差异**：基线用 `PassengerClass.entries` 枚举取全部舱位，而 C# 侧只有包字符串的 `PassengerClassId`（没有枚举），
+/// **一处必要差异**：`PassengerClass.entries` 枚举取全部舱位，而 C# 侧只有包字符串的 `PassengerClassId`（没有枚举），
 /// 所以舱位清单由调用方传入。**缺了它就只能自己猜舱位**，而猜出来的舱位表与容量表对不上时，变更变量永远取零。
 ///
-/// The baseline's `PassengerChange.kt` builds two variable layers: **cabin change** — one variable per passenger and every cabin **except the passenger's own** (no "change" is needed to
+/// The code's builds two variable layers: **cabin change** — one variable per passenger and every cabin **except the passenger's own** (no "change" is needed to
 /// stay in the same cabin); and **flight change** (optional) — one per passenger, per other flight on the same route, per cabin. Both layers are bounded above by the head count.
 ///
-/// **One necessary difference**: the baseline reads every cabin from the `PassengerClass.entries` enum, while C# only has the string-wrapping `PassengerClassId` (no enum), so the cabin
+/// **One necessary difference**: the code reads every cabin from the `PassengerClass.entries` enum, while C# only has the string-wrapping `PassengerClassId` (no enum), so the cabin
 /// list comes from the caller. **Without it the cabins can only be guessed**, and a guessed cabin table that disagrees with the capacity table keeps every change variable at zero.
 /// </remarks>
 public sealed class PassengerChange {

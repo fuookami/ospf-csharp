@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Application.Service;
 /// 与基线 `ColumnGenerationApplicationResponse` 对齐：**三块分开**——列生成给了什么、装成了什么、装得好不好。
 /// 合成一个对象会让调用方无法只取其中一块（比如只想看 KPI 的报表）。
 ///
-/// Aligned with the baseline's `ColumnGenerationApplicationResponse`: **three separate parts** — what column generation produced, what packing made of it, and how good the packing is. Merging
+/// Aligned with its `ColumnGenerationApplicationResponse`: **three separate parts** — what column generation produced, what packing made of it, and how good the packing is. Merging
 /// them would leave a caller unable to take just one, such as a report that only wants the KPIs.
 /// </remarks>
 public sealed record ColumnGenerationApplicationResponse(
@@ -64,7 +64,7 @@ public delegate Task<Result<ColumnGenerationResult, ErrorCode, Error<ErrorCode>>
 ///
 /// 第 4 步是本服务独有的价值：**列生成只保证够用，不保证刚好**。
 ///
-/// Aligned with the baseline's `solve`, in five steps: assemble the executor set from the request ; produce **seed columns** with the candidate generator, since the first LP must be feasible
+/// Aligned with its `solve`, in five steps: assemble the executor set from the request ; produce **seed columns** with the candidate generator, since the first LP must be feasible
 /// and an empty-variable RMP is immediately infeasible with no dual solution; run the column-generation algorithm; **trim the tail sheet**, since column generation guarantees coverage and the last
 /// sheet usually overshoots the demand, so packing it untrimmed ships an extra piece and skews the remaining-area KPI; and pack and compute the KPIs. Step four is this service's own contribution:
 /// **column generation guarantees enough, never exactly enough**.
@@ -145,10 +145,10 @@ public sealed class ColumnGenerationApplicationService
     /// 跑默认算法 / Run the default algorithm.
     /// </summary>
     /// <remarks>
-    /// 组装的顺序照抄基线：**种子列先于一切**。算法拿不到种子时首轮 RMP 是空变量模型，
+    /// 组装的顺序照做：**种子列先于一切**。算法拿不到种子时首轮 RMP 是空变量模型，
     /// LP 必然不可行，对偶解也拿不到，整轮白跑。
     ///
-    /// The assembly follows the baseline's order: **seed columns come first**. Without seeds the first RMP is an empty-variable model, the LP is necessarily infeasible, no duals appear and the
+    /// The assembly follows its order: **seed columns come first**. Without seeds the first RMP is an empty-variable model, the LP is necessarily infeasible, no duals appear and the
     /// round is wasted.
     /// </remarks>
     private async Task<Result<ColumnGenerationResult, ErrorCode, Error<ErrorCode>>> RunDefaultAlgorithmAsync(

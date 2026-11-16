@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// </remarks>
 public class SpeedAndAccelerationUnitsTests
 {
-    /// <summary>**基线的 14 个速度单位都在** / All 14 baseline speed units are present.</summary>
+    /// <summary>**14 个速度单位都在** / All 14 baseline speed units are present.</summary>
     [Fact]
     public void TheSpeedUnits_ShouldCoverTheBaseline()
     {
@@ -95,10 +95,10 @@ public class SpeedAndAccelerationUnitsTests
 
     /// <summary>**马赫按 340.3 折算，不是 343** / Mach uses 340.3, not 343.</summary>
     /// <remarks>
-    /// **343 是 20 °C 干空气的声速，340.3 是基线的选择。** 两者差 0.8%——
+    /// **343 是 20 °C 干空气的声速，340.3 是选择。** 两者差 0.8%——
     /// **在 0.8 马赫上就是 2 米每秒。**
     ///
-    /// **343 is the speed of sound in dry air at 20 °C; 340.3 is the baseline's choice.** They differ by 0.8% —
+    /// **343 is the speed of sound in dry air at 20 °C; 340.3 is its choice.** They differ by 0.8% —
     /// **which at Mach 0.8 is 2 metres per second.**
     /// </remarks>
     [Fact]
@@ -126,7 +126,7 @@ public class SpeedAndAccelerationUnitsTests
             "light speed is exactly one light second per second, by definition of the light second");
     }
 
-    /// <summary>**基线的 6 个加速度单位都在，且标准重力是定义值** / All 6 baseline accelerations, with standard gravity defined exactly.</summary>
+    /// <summary>**6 个加速度单位都在，且标准重力是定义值** / All 6 baseline accelerations, with standard gravity defined exactly.</summary>
     [Fact]
     public void TheAccelerationUnits_ShouldCoverTheBaseline()
     {

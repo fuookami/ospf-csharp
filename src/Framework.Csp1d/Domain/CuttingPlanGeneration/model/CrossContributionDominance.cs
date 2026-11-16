@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// Cross-contribution dominance: the new plan dominates the old one iff **its rest width is no worse** and **its contribution to every product is no worse**.
 /// </summary>
 /// <remarks>
-/// 逐条对应基线 `GenerationCollector.kt` 的 `canCrossContributionDominate`：
+/// 逐条对应的 `canCrossContributionDominate`：
 ///
 /// | 基线 | 这里 |
 /// | --- | --- |
@@ -22,8 +22,8 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// **三条规则里最容易写漏的是单位检查**：两个余宽数值可比但单位不同（米 vs 厘米）时，
 /// 按数值比会得出错误结论。基线专门检查它，这里也专门检查它。
 ///
-/// Line by line against the baseline's `canCrossContributionDominate` in `GenerationCollector.kt`. **The easiest rule to omit is the unit check**: when two
-/// rest widths are numerically comparable but in different units (metres vs centimetres), comparing numbers alone gives the wrong answer. The baseline checks
+/// Line by line against its `canCrossContributionDominate`. **The easiest rule to omit is the unit check**: when two
+/// rest widths are numerically comparable but in different units (metres vs centimetres), comparing numbers alone gives the wrong answer. The code checks
 /// it explicitly, and so does this.
 /// </remarks>
 public static class CrossContributionDominance {
@@ -34,10 +34,10 @@ public static class CrossContributionDominance {
     /// <param name="existingPlan">待比较的已有方案 / The existing plan to compare against.</param>
     /// <returns>新方案是否支配已有方案 / Whether the new plan dominates the existing one.</returns>
     /// <remarks>
-    /// **余宽为空时一律返回 false**：基线用空值短路，意思是"不知道余宽就无法判定支配"。
+    /// **余宽为空时一律返回 false**：空值短路，意思是"不知道余宽就无法判定支配"。
     /// 这是**保守**选择——宁可接受一个可能重复的候选，也不错误剪掉一个更优的候选。
     ///
-    /// **A null rest width always yields false**: the baseline short-circuits on null, meaning "without knowing the rest width, dominance cannot be decided".
+    /// **A null rest width always yields false**: the code short-circuits on null, meaning "without knowing the rest width, dominance cannot be decided".
     /// That is the **conservative** choice — better to accept a possibly-redundant candidate than to wrongly prune a better one.
     /// </remarks>
     public static bool Dominates(

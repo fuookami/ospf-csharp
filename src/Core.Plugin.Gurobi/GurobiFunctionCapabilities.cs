@@ -12,14 +12,14 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi 的函数接口能力探测 / Capability detection for Gurobi's function interfaces.
 /// </summary>
 /// <remarks>
-/// 与基线 `GurobiFunctionCapabilities.kt`（3832 B）对应。基线在 **Java 侧用反射检查 `GRBModel` 的精确方法签名**，
+/// **Java 侧用反射检查 `GRBModel` 的精确方法签名**，
 /// 这里在 .NET 侧用同样的思路，但**不引用 Gurobi 托管程序集**——所以这段代码在**没有 SDK 的机器上也能编译**，
 /// 只是探测结果为空。
 ///
 /// **没有 SDK 就不声明任何能力。** 这是本仓反复回到的一条：能力声明宁可少说。返回"支持 9 项"而其实一个都调不通，
 /// 比返回"支持 0 项"危险得多——前者会让上层选择一条**不存在的原生路径**。
 ///
-/// Mirrors the baseline's `GurobiFunctionCapabilities.kt`. The baseline reflects over `GRBModel`'s exact method signatures on the Java side; this does the same on the
+/// The code reflects over `GRBModel`'s exact method signatures on the Java side; this does the same on the
 /// .NET side but **without referencing the Gurobi managed assembly**, so this code compiles **on a machine with no SDK** — the result is simply empty.
 ///
 /// **No SDK, no capability claims.** This is a rule this repository keeps returning to: a capability declaration may understate. Reporting "supports 9" when not one of
@@ -45,10 +45,10 @@ public static class GurobiFunctionCapabilities
     /// <param name="version">SDK 版本；`null` 表示未探测 / SDK version; `null` means not probed.</param>
     /// <returns>能力声明 / The capability declaration.</returns>
     /// <remarks>
-    /// **方法名匹配，不是签名匹配**——这是与基线的一处**较弱证据**：基线校验返回类型与参数类型，这里只校验名字存在。
+    /// **方法名匹配，不是签名匹配**——这是与一处**较弱证据**：基线校验返回类型与参数类型，这里只校验名字存在。
     /// 记成 `ponytail:` 天花板：升级路径是等托管程序集可用时（`GurobiAvailability` 为真）再检查参数类型。
     ///
-    /// **By method name, not by signature** — a **weaker form of evidence** than the baseline, which checks return and parameter types. Recorded as a `ponytail:` ceiling:
+    /// **By method name, not by signature** — a **weaker form of evidence** than the code, which checks return and parameter types. Recorded as a `ponytail:` ceiling:
     /// the upgrade path is to check parameter types once the managed assembly is guaranteed present.
     /// </remarks>
     public static FunctionSolverCapabilities Detect(Type? modelType = null, string? version = null)
@@ -69,8 +69,8 @@ public static class GurobiFunctionCapabilities
         }
         if (HasMethod(modelType, "AddSOS"))
         {
-            // **一个方法同时支撑两种能力**（与基线一致）：`AddSOS` 的 `type` 参数决定 1 还是 2。
-            // **One method backs two capabilities** (matching the baseline): `AddSOS`'s type argument picks 1 or 2.
+            // **一个方法同时支撑两种能力**：`AddSOS` 的 `type` 参数决定 1 还是 2。
+            // **One method backs two capabilities** (matching the code): `AddSOS`'s type argument picks 1 or 2.
             supported.Add(FunctionNativeCapability.Sos1);
             supported.Add(FunctionNativeCapability.Sos2);
         }
@@ -84,8 +84,8 @@ public static class GurobiFunctionCapabilities
         }
         if (HasMethod(modelType, "AddGenConstrMax") && HasMethod(modelType, "AddGenConstrMin"))
         {
-            // **两个都要**（与基线一致）：只有一个说明这对接口不完整，声明"支持"会让上层调用不存在的那一半。
-            // **Both are required** (matching the baseline): with only one the pair is incomplete, and claiming support would let the layer above call the missing half.
+            // **两个都要**：只有一个说明这对接口不完整，声明"支持"会让上层调用不存在的那一半。
+            // **Both are required** (matching the code): with only one the pair is incomplete, and claiming support would let the layer above call the missing half.
             supported.Add(FunctionNativeCapability.GeneralMinMax);
         }
         if (HasMethod(modelType, "AddGenConstrAnd") && HasMethod(modelType, "AddGenConstrOr"))

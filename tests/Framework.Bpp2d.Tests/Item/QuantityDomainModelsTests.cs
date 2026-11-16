@@ -106,7 +106,7 @@ public class QuantityDomainModelsTests {
     ///
     /// 1. 未旋转：形状宽 30、高 20，`Rotated` 为假。
     /// 2. **旋转后：宽 20、高 30**——形状真的换了，而不是只把标记置真。
-    /// 3. 坐标与货物编号照抄。
+    /// 3. 坐标与货物编号沿用。
     ///
     /// Three paired points: unrotated gives width 30 and height 20 with `Rotated` false; **rotated gives width 20 and height 30** — the shape really changes rather than just the flag —
     /// and the coordinates and item id carry over.

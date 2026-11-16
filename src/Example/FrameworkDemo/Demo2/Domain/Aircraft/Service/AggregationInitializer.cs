@@ -14,9 +14,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// 飞机聚合初始化器 / The aircraft aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与基线 `aircraft/service/AggregationInitializer.kt` 对齐。**校验在前、构造在后**，任何一条校验失败都不构造聚合。
+/// 与对齐。**校验在前、构造在后**，任何一条校验失败都不构造聚合。
 ///
-/// 校验顺序照抄基线（八条），因为消息与判定必须一一对应：
+/// 校验顺序照做（八条），因为消息与判定必须一一对应：
 ///
 /// | # | 校验 | 为什么不能省 |
 /// | --- | --- | --- |
@@ -29,14 +29,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// | 7 | 力臂有限 | 力矩计算的输入 |
 /// | 8 | 空间/装载顺序有效 | 见下 |
 ///
-/// **第 8 条是复合条件**，基线把它写成一行"或"：空间表与舱位表大小不等、任一空间 id 为空、任一舱位的 `spaceId` 不在空间表里、
-/// 任一 `partitionId` 为空、任一 `loadingOrder` 越界、装载顺序不唯一——六种情形共用同一条消息。照抄这条"合并"是有意的：
-/// 拆成六条消息会偏离基线，而基线的调用方只区分成功与失败。
+/// **第 8 条是复合条件**，它写成一行"或"：空间表与舱位表大小不等、任一空间 id 为空、任一舱位的 `spaceId` 不在空间表里、
+/// 任一 `partitionId` 为空、任一 `loadingOrder` 越界、装载顺序不唯一——六种情形共用同一条消息。沿用这条"合并"是有意的：
+/// 拆成六条消息会偏离基线，而调用方只区分成功与失败。
 ///
-/// Aligned with the baseline: **validation first, construction second**, and no aggregation is built when any check fails. The eight checks are copied in baseline order, because
-/// their messages and predicates pair up one to one (tabulated above). **Check 8 is a compound condition** the baseline writes as a single disjunction — space table size mismatch,
+/// **validation first, construction second**, and no aggregation is built when any check fails. The eight checks are copied in baseline order, because
+/// their messages and predicates pair up one to one (tabulated above). **Check 8 is a compound condition** the code writes as a single disjunction — space table size mismatch,
 /// a blank space id, a position's `spaceId` missing from the table, a blank `partitionId`, an out-of-range `loadingOrder`, or a duplicate loading order — with six situations
-/// sharing one message. Copying that merge is deliberate: splitting it into six messages would diverge from the baseline, whose callers only distinguish success from failure.
+/// sharing one message. Copying that merge is deliberate: splitting it into six messages would diverge from the code, whose callers only distinguish success from failure.
 /// </remarks>
 internal static class AggregationInitializer
 {
@@ -95,8 +95,8 @@ internal static class AggregationInitializer
             }
         }
 
-        // **第 8 条：空间与装载顺序**。六种情形共用一条消息，照抄基线的合并。
-        // **Check 8: spaces and loading order**. Six situations share one message, copying the baseline's merge.
+        // **第 8 条：空间与装载顺序**。六种情形共用一条消息，沿用合并。
+        // **Check 8: spaces and loading order**. Six situations share one message, copying its merge.
         var spaces = new Dictionary<string, LoadingSpaceInput>(StringComparer.Ordinal);
         foreach (LoadingSpaceInput space in input.Spaces ?? Array.Empty<LoadingSpaceInput>())
         {
@@ -219,8 +219,8 @@ internal static class AggregationInitializer
                     : new HashSet<AircraftPosition> { orderedPositions[index + 1] });
         }
 
-        // **物理邻接按"物理空间"分组**，不是按甲板：基线用 `spacesByPosition` 把同 `spaceId` 的舱位连起来。
-        // **Physical adjacency groups by physical space**, not by deck: the baseline uses `spacesByPosition` to chain positions sharing a `spaceId`.
+        // **物理邻接按"物理空间"分组**，不是按甲板：`spacesByPosition` 把同 `spaceId` 的舱位连起来。
+        // **Physical adjacency groups by physical space**, not by deck: the code uses `spacesByPosition` to chain positions sharing a `spaceId`.
         var spaceByPosition = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (PositionInput position in input.Positions)
         {
@@ -267,7 +267,7 @@ internal static class AggregationInitializer
         }
 
         // **甲板按 `PositionLocation.Location` 分组**，与基线 `groupBy { it.location.location }` 一致。
-        // **Decks group by `PositionLocation.Location`**, matching the baseline's `groupBy`.
+        // **Decks group by `PositionLocation.Location`**, matching its `groupBy`.
         var deckBuckets = new Dictionary<DeckLocation, List<AircraftPosition>>();
         foreach (AircraftPosition position in basePositions)
         {

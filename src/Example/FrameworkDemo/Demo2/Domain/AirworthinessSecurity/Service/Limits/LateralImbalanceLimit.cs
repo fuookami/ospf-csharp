@@ -19,17 +19,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 用对称上下界约束横向力矩 / Constrain lateral torque with symmetric upper and lower bounds.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/LateralImbalanceLimit.kt`：两行，`lateral_torque ≤ max`（名字 `{name}_maximum`）与
+/// 逐条对齐：两行，`lateral_torque ≤ max`（名字 `{name}_maximum`）与
 /// `−lateral_torque ≤ max`（名字 `{name}_minimum`）。**下限写成对负数取上限**，不是 `lateral_torque ≥ −max`；
-/// 两种写法代数等价，但符号排列与报告里的系数不同，照抄基线的形状。
+/// 两种写法代数等价，但符号排列与报告里的系数不同，沿用形状。
 ///
 /// 两处容易做错：
 ///
 /// 1. **`maximum` 在前、`minimum` 在后**（与 `LongitudinalMomentLimit` 一致，与 `PayloadLimit` 相反）。
 /// 2. **`−lateral_torque` 是把整个多项式的系数取反**，常数项也要反。只翻系数、不翻常数会让带常数项的横向力矩偏一个常数。
 ///
-/// Mirrors the baseline: two rows, `lateral_torque ≤ max` (named `{name}_maximum`) and `−lateral_torque ≤ max` (named `{name}_minimum`). **The lower bound is written as an upper
-/// bound on the negation**, not as `lateral_torque ≥ −max`; the two are algebraically equal but the monomial layout and the reported coefficients differ, so the baseline's shape is
+/// two rows, `lateral_torque ≤ max` (named `{name}_maximum`) and `−lateral_torque ≤ max` (named `{name}_minimum`). **The lower bound is written as an upper
+/// bound on the negation**, not as `lateral_torque ≥ −max`; the two are algebraically equal but the monomial layout and the reported coefficients differ, so its shape is
 /// copied. Two easy mistakes: (1) **`maximum` first, `minimum` second** (matching `LongitudinalMomentLimit` and opposite to `PayloadLimit`); (2) **`−lateral_torque` negates the
 /// whole polynomial**, constant term included — flipping only the coefficients leaves a constant offset.
 /// </remarks>

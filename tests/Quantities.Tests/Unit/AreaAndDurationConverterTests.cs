@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 整数时长截断是对的，负数时长截断到 0 是错的 / Truncating integer seconds is right; truncating negatives is not.
 /// </summary>
 /// <remarks>
-/// 补 4 个面积单位与 2 个 Duration 转换器（基线 `Area.kt` / `DurationExtensions.kt`）。
+/// 补 4 个面积单位与 2 个 Duration 转换器（/）。
 ///
 /// **两个类型对"负时长"的处理必须不同**：
 /// **`IntX` 能表示负数，所以截断即可；`UIntX` 不能，所以负数必须拒绝。**
 /// **把 -5 秒变成 0 秒会让"早于基准点"的信息悄悄消失，而调用方看到的是一个合法的 0。**
 ///
-/// **The two types must treat a negative duration differently**:
+/// **The two types must treat a negative duration differently**.
 /// **`IntX` can hold negatives, so truncation suffices; `UIntX` cannot, so negatives must be rejected.**
 /// **Turning -5 s into 0 s silently erases "before the reference point" while handing back a legal zero.**
 /// </remarks>
@@ -33,7 +33,7 @@ public class AreaAndDurationConverterTests
     /// **这是英国土地测量的基础关系（10 平方链 = 1 英亩），而它是一条恒等式**：
     /// **两个值各自算错都会让这条断，而"平方链比英亩小"这种定性检查看不出来。**
     ///
-    /// **This is the relation British land survey rests on (ten square chains to an acre), and it is an identity**:
+    /// **This is the relation British land survey rests on (ten square chains to an acre), and it is an identity**.
     /// **either value going wrong breaks it, while a qualitative "a square chain is smaller than an acre" cannot see it.**
     /// </remarks>
     [Fact]

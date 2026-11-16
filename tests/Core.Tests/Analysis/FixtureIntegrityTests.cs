@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Analysis;
 
 /// <summary>
-/// 搬进来的契约文件必须与基线逐字节相同 / A copied contract has to be byte-identical to the baseline.
+/// 搬进来的契约文件必须与基线逐字节相同 / A copied contract has to be byte-identical to the code.
 /// </summary>
 /// <remarks>
 /// **这两份文件是"跨语言"这个词的全部依据。** 它们一旦被改动——哪怕只是补个空格、
@@ -29,7 +29,7 @@ public class FixtureIntegrityTests
     /// **这两个值只该随基线一起变。** 换基线时重新算一遍并连同提交信息一起改，
     /// **而不是在某个批次的尾随修改里顺手改掉。**
     ///
-    /// **These two values may only change with the baseline.** Recompute them when the baseline moves, **not as a trailing fix inside some batch.**
+    /// **These two values may only change with the code.** Recompute them when the code moves, **not as a trailing fix inside some batch.**
     /// </remarks>
     private static readonly (string Name, string Sha256)[] Pinned =
     [

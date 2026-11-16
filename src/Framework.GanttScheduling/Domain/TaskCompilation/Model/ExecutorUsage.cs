@@ -1,8 +1,8 @@
 // 执行器占用与编译量 / Executor usage and compilation amount.
-// 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的 `xor[e] ≥ xi[task]` 与
+// 与固定 Kotlin 的 `xor[e] ≥ xi[task]` 与
 // `executorCompilation[e] = xor[e] + z[e]`（`withExecutorLeisure` 时）对应。
 // Mirrors `xor[e] ≥ xi[task]` and `executorCompilation[e] = xor[e] + z[e]` (when `withExecutorLeisure`)
-// in the pinned baseline's `task_compilation/model/Compilation.kt`.
+//'s.
 
 using System;
 
@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 执行器占用与编译量 / Executor usage and compilation amount.
 /// </summary>
 /// <remarks>
-/// 基线用两层量描述一个执行器：
+/// 两层量描述一个执行器：
 ///
 /// | 符号 | 含义 | 约束 |
 /// | --- | --- | --- |
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 2. **带空闲时编译量的上界是 2，不是 1**。成本系数乘上去时，同一套系数在有/无空闲两种配置下
 ///    能差出两倍——按"它就是个 0/1 指示量"去估算成本会低估一半。
 ///
-/// The baseline describes an executor with layers:
+/// The code describes an executor with layers:
 ///
 /// | Symbol | Meaning | Constraint |
 /// | --- | --- | --- |

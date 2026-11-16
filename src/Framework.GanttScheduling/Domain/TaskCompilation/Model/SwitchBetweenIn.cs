@@ -1,8 +1,8 @@
 // "居中"指示量 / The "in between" indicator.
-// 与固定 Kotlin 基线 `task_compilation/model/Switch.kt` 的 `betweenIn` 构造对应：
+// 与固定 Kotlin 的 `betweenIn` 构造对应：
 // `if (task1 == task2 || task1 == task3 || task2 == task3) LinearIntermediateSymbol.empty(...)`，
 // 否则取 `frontOf[task1, task3] AND frontOf[task3, task2]`。
-// Mirrors the `betweenIn` construction in the pinned baseline's `task_compilation/model/Switch.kt`:
+// `betweenIn`: 
 // `if (task1 == task2 || task1 == task3 || task2 == task3) LinearIntermediateSymbol.empty(...)`,
 // otherwise `frontOf[task1, task3] AND frontOf[task3, task2]`.
 

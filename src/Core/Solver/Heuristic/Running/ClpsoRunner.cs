@@ -1,6 +1,5 @@
 // 综合学习粒子群运行器 / The comprehensive-learning particle-swarm runner.
-// 与固定 Kotlin 基线 `runner/ClpsoRunner.kt` 对应。
-// Mirrors the pinned baseline's `runner/ClpsoRunner.kt`.
+// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;
@@ -58,7 +57,7 @@ public sealed record ClpsoParticle<ObjValue, V>(
 /// **评估失败时保留个人最优、只把停滞计数加一，但速度仍然写成新算出的值**。这一点与 `ParticleSwarmRunner` 的"整条状态原样保留"
 /// **不同**，是有意跟随基线：CLPSO 的速度是"学习方向"，丢了它等于把这次失败的学习结果也丢掉。
 /// **A failed evaluation keeps the personal best and only increments stagnation, while the velocity is still written with the freshly
-/// computed value.** This differs from `ParticleSwarmRunner`'s "keep the whole state" — deliberately following the baseline: CLPSO's
+/// computed value.** This differs from `ParticleSwarmRunner`'s "keep the whole state" — deliberately following the code: CLPSO's
 /// velocity is the "learning direction", and discarding it discards the failed step's learning too.
 /// **`randomIndex` 在规模为 1 时返回 0 且不消耗随机数**。消耗随机数会让单粒子情形下的随机流位置与多粒子情形不同，
 /// **而两种情形本该只在"抽样"上不同**。

@@ -66,7 +66,7 @@ public class Makespan<T, E, A> : IMakespan
     /// <item>某个任务在表里查不到——跳过它会让完工时间偏小而看不出来。</item>
     /// </list>
     ///
-    /// The baseline is `MaxFunction.fromSymbols(tasks.map { taskTime.estimateEndTime[it] })` (`MinMaxFunction` when `extra`, **same value**, only adding selector variables to
+    /// The code is `MaxFunction.fromSymbols(tasks.map { taskTime.estimateEndTime[it] })` (`MinMaxFunction` when `extra`, **same value**, only adding selector variables to
     /// identify afterwards which task sets the makespan — see <see cref="MakespanValue"/>). Two cases must fail first: the task time offers no end-time table (**no end times, no
     /// makespan**), and a task missing from that table (skipping it shrinks the makespan invisibly).
     /// </remarks>
@@ -100,8 +100,8 @@ public class Makespan<T, E, A> : IMakespan
                 Flt64.Zero));
         }
         if (polynomials.Count == 0) {
-            // 没有任务时基线也建不出 `MaxFunction`（它要求至少一个多项式）。空排程的完工时间就是零。
-            // With no tasks the baseline cannot build a `MaxFunction` either (it requires at least one polynomial). An empty schedule finishes at zero.
+            // 没有任务时建不出 `MaxFunction`（它要求至少一个多项式）。空排程的完工时间就是零。
+            // With no tasks the code cannot build a `MaxFunction` either (it requires at least one polynomial). An empty schedule finishes at zero.
             _makespan = new LinearExpressionSymbol(new MutableLinearPolynomial<Flt64>(null, Flt64.Zero), name: "makespan");
             return linear.Add((IIntermediateSymbol)_makespan);
         }

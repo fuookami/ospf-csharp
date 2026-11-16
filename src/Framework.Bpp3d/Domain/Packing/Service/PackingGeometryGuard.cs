@@ -19,14 +19,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing.Service;
 /// horizontal cylinders have sufficient support, no overlaps between items.
 /// </summary>
 /// <remarks>
-/// 移植基线 `PackingGeometryGuard.kt`（23023 B）的**终态重叠检测**：长方体-长方体、圆柱-长方体、
+/// 移植（23023 B）的**终态重叠检测**：长方体-长方体、圆柱-长方体、
 /// 同轴圆柱-圆柱、异轴圆柱-圆柱四种配对。
 ///
-/// **这里不移植**：宽相位扫掠表（基线的 `candidateGeometryPairs` / `sweepScore`，大箱降复杂度用）、
+/// **这里不移植**：宽相位扫掠表（`candidateGeometryPairs` / `sweepScore`，大箱降复杂度用）、
 /// 越界检测。两者留在 P9 台账。
 ///
-/// Ports the baseline's **final-state overlap detection**: box-box, cylinder-box, same-axis cylinder-cylinder, and different-axis
-/// cylinder-cylinder. **Not ported**: the broad-phase sweep table (the baseline's `candidateGeometryPairs` / `sweepScore`, an O(n log n) shortcut for
+/// Ports its **final-state overlap detection**: box-box, cylinder-box, same-axis cylinder-cylinder, and different-axis
+/// cylinder-cylinder. **Not implemented**: the broad-phase sweep table (its `candidateGeometryPairs` / `sweepScore`, an O(n log n) shortcut for
 /// large bins) and the outside-bin check. Both stay on the P9 ledger.
 /// </remarks>
 internal static class PackingGeometryGuard {
@@ -136,7 +136,7 @@ internal static class PackingGeometryGuard {
         };
     }
 
-    /// <summary>全配对 / Every unordered pair, in the baseline's order.</summary>
+    /// <summary>全配对 / Every unordered pair, in its order.</summary>
     /// <param name="count">物品数 / Item count.</param>
     /// <returns>配对列表 / The pair list.</returns>
     private static IReadOnlyList<(int Lhs, int Rhs)> ExhaustivePairs(int count) {
@@ -156,7 +156,7 @@ internal static class PackingGeometryGuard {
     /// 移植基线 `candidateGeometryPairs`：**含圆柱的配对全部保留**（圆柱判据不是包围盒，扫掠无法剪枝），
     /// 只对长方体之间用一维扫掠剪掉确定不相交的配对。任何一步无法证明安全都返回 `null`，由调用方退回全配对。
     ///
-    /// Ports the baseline's `candidateGeometryPairs`: **every cylinder-related pair is kept** (the cylinder predicate is not a bounding box, so the
+    /// Ports its `candidateGeometryPairs`: **every cylinder-related pair is kept** (the cylinder predicate is not a bounding box, so the
     /// sweep cannot prune it) and only box-box pairs are pruned by a one-dimensional sweep. Any step that cannot be proven safe returns `null` and the
     /// caller falls back to the exhaustive pairing.
     /// </remarks>
@@ -438,7 +438,7 @@ internal static class PackingGeometryGuard {
     ///
     /// **The old implementation compared pairwise**: "if any single support's top is no higher than the cylinder's bottom and overlaps it horizontally,
     /// the cylinder is supported". That conflates every case, because **a cylinder needs its whole axis covered** while one support only covers a
-    /// segment. The baseline therefore unions the support intervals instead — see `HorizontalCylinderSupportCoverage.CuboidSupportCoverage`.
+    /// segment. The code therefore unions the support intervals instead — see `HorizontalCylinderSupportCoverage.CuboidSupportCoverage`.
     /// </remarks>
     /// <param name="bin">已装箱的箱子 / Packed bin to validate</param>
     /// <param name="source">调用来源标识 / Caller source identifier</param>

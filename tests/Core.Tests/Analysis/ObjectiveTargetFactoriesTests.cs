@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// **相对按比例缩放**，**预算单位按绝对量平移**。
 /// **把预算单位当成相对，基线一大就会放大十倍。**
 ///
-/// **They differ in one point, and that point decides usability**: **relative scales**, **business-unit translates**. **Treating a delta as a fraction multiplies it tenfold as soon as the baseline is
+/// **They differ in one point, and that point decides usability**: **relative scales**, **business-unit translates**. **Treating a delta as a fraction multiplies it tenfold as soon as the code is
 /// large.**
 /// </remarks>
 public class ObjectiveTargetFactoriesTests
@@ -92,7 +92,7 @@ public class ObjectiveTargetFactoriesTests
     /// 基线同时提供 `relativeAtLeast` 与 `atLeastRelative`（预算单位同理），
     /// **两套名字必须落到同一个值上**，否则调用方按哪套写会得到不同结果。
     ///
-    /// The baseline offers both `relativeAtLeast` and `atLeastRelative` (and the same for business units). **The two names must land on the same value**, or the caller's choice of name changes the answer.
+    /// The code offers both `relativeAtLeast` and `atLeastRelative` (and the same for business units). **The two names must land on the same value**, or the caller's choice of name changes the answer.
     /// </remarks>
     [Fact]
     public void TheTwoNamingOrders_ShouldAgree() {

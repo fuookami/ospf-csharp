@@ -88,7 +88,7 @@ public class Csp1dMilpSolverProgressTests {
 
     /// <summary>**最终 MILP 的进度必须落在 75—99 带里** / The final MILP's progress must land in the 75—99 band.</summary>
     /// <remarks>
-    /// 基线 `Csp1dColumnGeneration.kt:753` 把 `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
+    /// 基线 把 `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
     ///
     /// **判据用注册回调那条（阶段内 100 → 带内 99）**，理由是实测出来的：
     /// 求解回调的阶段内 99 在带内是 98，**但注册回调先上报、带内已到 99**，
@@ -99,7 +99,7 @@ public class Csp1dMilpSolverProgressTests {
     /// **这是第三次撞上"单调化掩盖了判据想测的东西"**`、 的取消检查点、 的带下界）。
     /// 每次的表现都是"判据绿/红得莫名其妙"，每次都要回到"谁先把这个值改了"。
     ///
-    /// The baseline's `Csp1dColumnGeneration.kt:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
+    /// The code's passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
     ///
     /// **The criterion uses the registration callback (in-stage 100 → banded 99)**, for an empirically found reason: the solving callback's in-stage 99 would band to 98,
     /// **but the registration callback reports first and already reaches 99 in the band**, so `AcceptMonotonic` **lifts the later 98 back to 99** — **the solving one cannot

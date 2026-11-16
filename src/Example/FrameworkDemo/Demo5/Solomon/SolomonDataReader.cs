@@ -52,7 +52,6 @@ public sealed record SolomonData(
 /// Solomon 示例文本读取器 / Solomon demo text reader.
 /// </summary>
 /// <remarks>
-/// 与基线 `framework_demo/demo5/infrastructure/io/SolomonDataReader.kt`（6181 B）对应。
 ///
 /// **数值一律按十进制字面量解析**（`decimal`），不经过 `double`。Solomon 实例里的坐标与时间窗是
 /// 十进制小数，走 `double` 会让 `12.3` 变成 `12.300000000000000710…`，而**下游做的是精确相等比较**。

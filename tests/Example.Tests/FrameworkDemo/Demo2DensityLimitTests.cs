@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **表面密度上限与线性密度** / The surface density cap and linear density.
 /// </summary>
 /// <remarks>
-/// 表面密度和线性密度是同一件事的两个方向：`重量 / 面积` 与 `重量 / 长度`。两处口径**不同**，都是基线的选择：
+/// 表面密度和线性密度是同一件事的两个方向：`重量 / 面积` 与 `重量 / 长度`。两处口径**不同**，都是选择：
 ///
 /// | | 建符号的舱位 | 系数 |
 /// | --- | --- | --- |
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 线性密度还有一半是**限制线**：沿机身按力臂切横截面，每个切面覆盖"压在这一刀上"的舱位。三步容易错——候选力臂去重、区域外的切面丢弃、
 /// 空线丢弃。
 ///
-/// Surface and linear density are the same idea along two axes: weight per area and weight per length. Their conventions **differ**, and both are the baseline's: surface density
+/// Surface and linear density are the same idea along two axes: weight per area and weight per length. Their conventions **differ**, and both are its: surface density
 /// builds symbols **only inside a zone**, linear density for **every** position. Linear density also has a second half — **limit lines** cutting cross-sections along the fuselage,
 /// each covering the positions lying on that cut. Three easy mistakes: de-duplicating the candidate arms, dropping cuts outside the zone, and dropping empty lines.
 /// </remarks>

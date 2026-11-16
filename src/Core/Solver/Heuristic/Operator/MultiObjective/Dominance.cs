@@ -1,7 +1,7 @@
 // 多目标支配、非支配排序与参考点 / Multi-objective dominance, non-dominated sorting and reference points.
-// 与固定 Kotlin 基线 `operator/multi_objective/Dominance.kt`、`operator/multi_objective/NonDominatedSort.kt`、
-// `operator/multi_objective/ReferencePoints.kt` 对应。
-// Mirrors the pinned baseline's `Dominance.kt`, `NonDominatedSort.kt` and `ReferencePoints.kt`.
+// 与固定 Kotlin 、
+// 对应。
+// , and.
 
 using System;
 using System.Collections.Generic;

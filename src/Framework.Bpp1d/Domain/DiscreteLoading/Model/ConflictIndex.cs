@@ -1,6 +1,6 @@
 // 经验证的团覆盖 / Verified clique cover.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/model/ConflictIndex.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp/domain/discrete_loading/model/ConflictIndex.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using PositionConflict = Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading.Model.PositionConflict;
@@ -68,7 +68,7 @@ public sealed class ConflictIndex {
             // **必须双向登记。** 变异"只登记一个方向"在这里的判据下**存活**——
             // 因为下面那句守卫已经保证了正确性，单向登记只是让候选集变小（有的团因此拆得更碎，
             // 但**每个团仍合法、每条边仍被覆盖**）。**这是真实的等价变异，不是判据不足。**
-            // 仍按基线双向登记，因为那才是无向图的正确表示。
+            // 仍双向登记，因为那才是无向图的正确表示。
             //
             // **Both directions must be registered.** The "register only one direction" mutant **survived** the criteria — the guard below already guarantees
             // correctness, and one-way registration merely shrinks the candidate set (some cliques end up split more finely, but **every clique stays legal and every edge

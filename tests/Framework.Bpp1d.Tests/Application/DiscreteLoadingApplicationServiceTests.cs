@@ -31,13 +31,13 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **离散装载应用服务** / The discrete-loading application service.
 /// </summary>
 /// <remarks>
-/// 对应基线 `DiscreteLoadingApplicationService.kt` 的 MILP 路径。
+/// 对应的 MILP 路径。
 ///
 /// **判据全都不需要真实求解器**：`milpSolver` 是一个**函数参数**，所以判据可以直接注入
 /// "求解器报了这个目标"，再检查应用层有没有**按完整模型重算一遍**把它抓住。
 /// 这比用真求解器更有力——真求解器不会配合你造一个"目标错位"的解。
 ///
-/// Mirrors the MILP path of `DiscreteLoadingApplicationService.kt`. **No criterion needs a real solver**: `milpSolver` is a **function parameter**, so a criterion can
+/// Mirrors the MILP path of. **No criterion needs a real solver**: `milpSolver` is a **function parameter**, so a criterion can
 /// inject "the solver reported this objective" and check whether the application layer **recomputes it from the full model** and catches the mismatch — stronger than
 /// a real solver, which will not cooperate by producing a misaligned objective.
 /// </remarks>

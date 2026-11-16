@@ -1,6 +1,6 @@
 // VRP 定价对偶快照与列系数 / VRP pricing duals and column coefficients.
-// 与固定 Kotlin 基线 `PricingDuals.kt`（43 行）、`RouteArcCoefficientProvider.kt`（37 行）对应。
-// Mirrors the pinned baseline's `PricingDuals.kt` and `RouteArcCoefficientProvider.kt`.
+// 与固定 Kotlin 、（37 行）对应。
+// And.
 
 using System;
 using System.Collections.Generic;

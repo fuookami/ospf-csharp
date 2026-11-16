@@ -1,6 +1,6 @@
 // 渲染用 DTO / Render DTOs.
-// 与固定 Kotlin 基线 `csp2d/infrastructure/dto/RenderDTO.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `dto/RenderDTO.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 

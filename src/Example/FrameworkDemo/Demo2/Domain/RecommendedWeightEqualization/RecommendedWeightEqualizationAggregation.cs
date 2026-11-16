@@ -15,16 +15,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡聚合 / The recommended-weight-equalisation aggregation.
 /// </summary>
 /// <remarks>
-/// 与基线 `recommended_weight_equalization/Aggregation.kt` 对齐：**六个上游部件 + 一个自建模型**（`PriorityAppointment`）。
+/// 与对齐：**六个上游部件 + 一个自建模型**（`PriorityAppointment`）。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **`PriorityAppointment` 在这里派生，不是从配载域传进来**。它依赖 `Item.Cargo.Priority` 与 `LoadingOrder.PrecDepth`，
 ///    而后者是飞机域的后置赋值结果——在配载域算会读到还没串好的装载顺序。
 /// 2. **预约映射取 `StowageAggregation.Appointment.Appointment`**（内层字典），不是 `Appointment` 对象本身。
 /// 3. **`Ballast` 可为 `null`**：预配载模式下没有压舱物。
 ///
-/// Aligned with the baseline: **six upstream parts plus one self-built model** (`PriorityAppointment`). Three things must be copied: **`PriorityAppointment` is derived here**,
+/// **six upstream parts plus one self-built model** (`PriorityAppointment`). Three things must be copied: **`PriorityAppointment` is derived here**,
 /// not passed in from the stowage domain — it depends on `Item.Cargo.Priority` and `LoadingOrder.PrecDepth`, the latter assigned after construction in the aircraft domain, so
 /// computing it in the stowage domain would read loading orders that are not linked yet; **the appointment map is `StowageAggregation.Appointment.Appointment`** (the inner
 /// dictionary), not the `Appointment` object; and **`Ballast` may be `null`**, since predistribution carries no ballast.

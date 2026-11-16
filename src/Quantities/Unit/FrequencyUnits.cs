@@ -23,7 +23,7 @@ public static class FrequencyUnits {
     /// **所以这个单位比赫兹小 3600 倍，而不是大 3600 倍——**
     /// **"每小时一次"当然比"每秒一次"慢，方向必须是除。**
     ///
-    /// **The baseline writes `Hertz * Second.to(Hour)`, and `Second.to(Hour)` is "how many hours one second is"
+    /// **The code writes `Hertz * Second.to(Hour)`, and `Second.to(Hour)` is "how many hours one second is"
     /// = 1/3600.** **So this unit is 3600 times smaller than the hertz, not larger** —
     /// **once per hour is obviously slower than once per second, so the direction has to be a division.**
     /// </remarks>

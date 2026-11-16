@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// **`EffectiveDomain.Compute` 此后就被判据覆盖，却一个调用方都没有**——
 /// **类型齐了、判据齐了，而删除复验的输入从来没被它改过。**
 ///
-/// **This is the port of `activeDomains` and `rebindExpression`, neither of which existed here.** **`EffectiveDomain.Compute` had been covered by criteria since then with no caller** — **the type was ready, the criteria
+/// **This is the implementation of `activeDomains` and `rebindExpression`, neither of which existed here.** **`EffectiveDomain.Compute` had been covered by criteria since then with no caller** — **the type was ready, the criteria
 /// were ready, and the deletion checks' input had never gone through it.**
 /// </remarks>
 public class ActiveDomainRebindingTests {

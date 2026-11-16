@@ -19,25 +19,25 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **导出器：三处照抄基线，一处必须偏离** / The exporter: three behaviours copied from the baseline, one deliberate divergence.
+/// **导出器：三处照做，一处必须偏离** / The exporter: three behaviours copied from the code, one deliberate divergence.
 /// </summary>
 /// <remarks>
 /// 四点成对：行格式 `"{id}: {spaceName} (order={order})"` / **排序按"甲板 → 顺序号 → id 的字符串字典序"**（第三级是字典序，`"10"` 排在 `"2"` 前）/
 /// `status` 恒为 `"Optimal"` / **没分配顺序号的舱位明确报错**而不是崩溃或静默跳过。
 ///
-/// 第二点最容易被"顺手改好"：看着像 bug，但它是基线的行为。改了以后同一批输入的输出顺序就与基线不同，
+/// 第二点最容易被"顺手改好"：看着像 bug，但它是行为。改了以后同一批输入的输出顺序就与基线不同，
 /// **而顺序本身就是这个导出器的全部产出**——这类"改进"会让对拍失去意义。所以要改得先确认调用方不依赖它。
 ///
-/// 第四点是唯一必须偏离的地方：基线的 `_loadingOrder` 是 `lateinit`，读得太早抛异常；本仓把它建成可空的，
+/// 第四点是唯一必须偏离的地方：`_loadingOrder` 是 `lateinit`，读得太早抛异常；本仓把它建成可空的，
 /// 于是这里给**错误码 + 点名哪个舱位**。崩溃换不到信息，错误码能。
 ///
 /// Four paired points: the line format; **the sort is "deck → order number → the id's string order"** (the third key is lexicographic, so `"10"` precedes `"2"`);
 /// `status` is always the literal `"Optimal"`; and **a position without an order number fails loudly** instead of crashing or being skipped silently.
 ///
-/// The second point is the easiest to "fix while at it": it looks like a bug, but it is the baseline behaviour, and changing it makes the same input produce a
+/// The second point is the easiest to "fix while at it": it looks like a bug, but it is the code behaviour, and changing it makes the same input produce a
 /// different order — **and the order is this exporter's entire output**, so such an "improvement" makes cross-checking meaningless. Changing it needs a confirmed
-/// promise from callers first. The fourth point is the one place a divergence is required: the baseline's `_loadingOrder` is `lateinit` and throws when read too
-/// early, while this port models it as nullable and therefore returns **an error code naming the position**. A crash buys no information; an error code does.
+/// promise from callers first. The fourth point is the one place a divergence is required: its `_loadingOrder` is `lateinit` and throws when read too
+/// early, while this implementation models it as nullable and therefore returns **an error code naming the position**. A crash buys no information; an error code does.
 /// </remarks>
 public sealed class Demo2LoadingOrderExporterTests {
     private static readonly Regex Line = new(@"^\d+: \S+ \(order=\d+\)$", RegexOptions.CultureInvariant);
@@ -75,9 +75,9 @@ public sealed class Demo2LoadingOrderExporterTests {
         LoadingOrderResponseDTO response =
             ((Ok<LoadingOrderResponseDTO, ErrorCode, Error<ErrorCode>>)exporter.Invoke(request)).Value;
 
-        // **独立重算一遍期望顺序**，不照抄被测实现：第三级键故意写成字符串比较，因为那正是基线的行为。
+        // **独立重算一遍期望顺序**，不沿用被测实现：第三级键故意写成字符串比较，因为那正是行为。
         // **Recompute the expected order independently** rather than copying the implementation: the third key is deliberately a string comparison, because that is
-        // exactly the baseline behaviour.
+        // exactly the code behaviour.
         var expected = aggregation.Decks
             .SelectMany(deck => deck.Positions.Select(position => (Deck: deck.Location, Position: position)))
             .OrderBy(pair => pair.Deck)

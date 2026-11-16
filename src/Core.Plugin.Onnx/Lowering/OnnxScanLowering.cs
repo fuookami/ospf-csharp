@@ -52,7 +52,7 @@ public static class OnnxScanLowering
     /// **这一入口存在的理由，是"长度与切片都来自那个张量本身"：** **长度取首维（与基线 `lowerScan` 一致），第 `i` 片取 `SliceLeading(i)`。** '
     /// **切片之后每轮的输入可以含变量——** **这正是"运行期切片"与"常量数组切片"的差别：** **前者切的是表达式，后者切的是数。**
     ///
-    /// **The reason this entry exists is that both the length and the slices come from that tensor: the length is the leading dimension (as in the baseline's lowerScan) and round i
+    /// **The reason this entry exists is that both the length and the slices come from that tensor: the length is the leading dimension (as in its lowerScan) and round i
     /// takes SliceLeading(i).** **A sliced round input may carry variables — that is exactly the difference between runtime slicing and slicing a constant array: one cuts expressions,
     /// the other cuts numbers.**
     /// </remarks>

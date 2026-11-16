@@ -11,20 +11,20 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 优先级预约 / The priority appointment.
 /// </summary>
 /// <remarks>
-/// 与基线 `recommended_weight_equalization/model/PriorityAppointment.kt` 对齐：把**每个货物优先级**映射到一组"可放置的装载顺序深度"。
+/// 与对齐：把**每个货物优先级**映射到一组"可放置的装载顺序深度"。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **回退到全部可用深度**。某个优先级没有任何已预约位置时，它拿到的是 `availableDepths`（全部可用舱位的深度），
 ///    不是空集。写成空集会让 `PriorityAppointmentLimit` 把该优先级的货物全部钉死在 0 处。
 /// 2. **只统计"可用"舱位**。`Status.Available` 为假的舱位既不计入 `availableDepths`，也不计入已预约深度。
 /// 3. **深度用 `LoadingOrder.PrecDepth`**，而那个值**恒为 0**（见 `LoadingOrder.PrecDepth` 的说明）。于是整个映射
-///    实际上只有 `{0}` 这一个深度，`Invoke(priority, position)` 对所有可用舱位都为真。**这是基线的行为**，照抄。
+///    实际上只有 `{0}` 这一个深度，`Invoke(priority, position)` 对所有可用舱位都为真。**这是行为**。
 ///
-/// Aligned with the baseline: each cargo priority maps to a set of loading-order depths it may occupy. Three things must be copied: **the fallback is all available depths** — a
+/// Each cargo priority maps to a set of loading-order depths it may occupy. Three things must be copied: **the fallback is all available depths** — a
 /// priority with no appointed position gets `availableDepths`, not an empty set, which would pin every item of that priority at depth 0 via `PriorityAppointmentLimit`; **only
 /// available positions count**, neither into `availableDepths` nor into the appointed depths; and **the depth is `LoadingOrder.PrecDepth`, which is always 0** (see that property),
-/// so the whole mapping really holds only depth `{0}` and `Invoke(priority, position)` is true for every available position. That is the baseline's behaviour and is copied.
+/// so the whole mapping really holds only depth `{0}` and `Invoke(priority, position)` is true for every available position. That is its behaviour and is copied.
 /// </remarks>
 public sealed class PriorityAppointment
 {
@@ -51,10 +51,10 @@ public sealed class PriorityAppointment
     /// <param name="appointment">货物到舱位的预约 / The item-to-position appointments.</param>
     /// <returns>优先级预约 / The priority appointment.</returns>
     /// <remarks>
-    /// 基线的 `payload`、`totalWeight`、`ballast` 三个参数**在函数体里一次都没用到**——它们只是签名的一部分。这里不收，
+    /// `payload`、`totalWeight`、`ballast` 三个参数**在函数体里一次都没用到**——它们只是签名的一部分。这里不收，
     /// 因为收了却不读会让调用方以为有影响。
     ///
-    /// The baseline's `payload`, `totalWeight` and `ballast` parameters are **never read in the body** — they are signature decoration. They are omitted here, since accepting and
+    /// The code's `payload`, `totalWeight` and `ballast` parameters are **never read in the body** — they are signature decoration. They are omitted here, since accepting and
     /// ignoring them would suggest they matter.
     /// </remarks>
     public static PriorityAppointment From(
@@ -132,8 +132,8 @@ public sealed class PriorityAppointment
     /// "这个对象在不在那个列表里"（`item in items` 走的是 `equals`，但两个列表来自同一个聚合，成员是同一批对象）。
     /// 按引用判更严格，且不会因为两个 `Id` 相同的不同对象而误判——那是本仓 `Position` 按 `Id` 判等埋下的坑。
     ///
-    /// `ReferenceEquals` rather than `Contains`: the equality semantics of `Item` and `StowagePosition` are their own business, while the baseline asks "is this object in that
-    /// list" (Kotlin's `in` uses `equals`, but both lists come from one aggregation and hold the same instances). Reference identity is stricter and avoids the trap this port's
+    /// `ReferenceEquals` rather than `Contains`: the equality semantics of `Item` and `StowagePosition` are their own business, while the code asks "is this object in that
+    /// list" (Kotlin's `in` uses `equals`, but both lists come from one aggregation and hold the same instances). Reference identity is stricter and avoids the trap this implementation's
     /// `Position` sets by comparing on `Id`, where two distinct objects with one `Id` would pass.
     /// </remarks>
     private static bool Contains<T>(IReadOnlyList<T> source, T candidate)

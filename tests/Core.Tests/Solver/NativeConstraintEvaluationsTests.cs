@@ -14,10 +14,10 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Solver;
 
 /// <summary>
-/// native 求值：两处照抄下来的不对称 / Two asymmetries copied from the baseline.
+/// native 求值：两处沿用下来的不对称 / Two asymmetries copied from the code.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `absEvaluations` 与 `maxEvaluations`。
+/// 对齐的 `absEvaluations` 与 `maxEvaluations`。
 ///
 /// Adds </remarks>
 public class NativeConstraintEvaluationsTests
@@ -93,7 +93,7 @@ public class NativeConstraintEvaluationsTests
     /// **所以一个 `minimum = true` 的结构会被拿去和<b>最大值</b>比：** **输入是 `10` 与 `3`，
     /// 结果正确地取了 `3`（最小值），而求值器期望 `10`，于是违反量是 `7`、判为不满足。**
     ///
-    /// **这里<b>照抄</b>以保持与基线的可比性，并把这一点写成判据。**
+    /// **这里<b>沿用</b>以保持与可比性，并把这一点写成判据。**
     /// **一个被记录下来的缺陷是"已知债"；一个没人测过的缺陷是"潜伏的错"。**
     ///
     /// **The batch's key criterion, and it records a <b>baseline defect</b>.**
@@ -105,7 +105,7 @@ public class NativeConstraintEvaluationsTests
     /// takes `3` (the minimum), the evaluator expects `10`, the violation is `7` and the evaluation is deemed
     /// unsatisfied.**
     ///
- /// ** <b>copies</b> it to stay comparable with the baseline and turns it into a criterion.** **A recorded
+ /// ** <b>copies</b> it to stay comparable with the code and turns it into a criterion.** **A recorded
     /// defect is known debt; an untested one is a latent bug.**
     /// </remarks>
     [Fact]

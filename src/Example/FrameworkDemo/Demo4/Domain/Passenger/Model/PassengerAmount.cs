@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// 航班上的人数表达式 / The passenger-amount expressions per flight and cabin.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerAmount.kt`：每个（航班任务，舱位）一个表达式，四件事合成的：
+/// ：每个（航班任务，舱位）一个表达式，四件事合成的：
 ///
 /// * **原人数**：这位乘客本来就在这一档 → 加上人数；
 /// * **取消**：无论哪一档，都减去取消量（取消是"这个人不飞了"，与舱位无关）；
@@ -31,17 +31,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// 最容易写错的是第三点的两个分支：**自己那一档是"减出去"，别的档是"加进来"**。两处写反会让人数在舱位之间凭空翻倍或归零，
 /// 而容量约束照样能过——**因为容量约束只看总数，不看分档**。
 ///
-/// **一处必要差异**：基线在没开航班变更时会去读未初始化的变量表（运行时抛异常）。C# 侧遇到 `null` 就跳过那几项——
+/// **一处必要差异**：没开航班变更时会去读未初始化的变量表（运行时抛异常）。C# 侧遇到 `null` 就跳过那几项——
 /// 没开就是没开，不是错误。
 ///
-/// The baseline's `PassengerAmount.kt`: one expression per (flight task, cabin), assembled from four things: **the original head count** when the passenger is already in that cabin;
+/// The code's: one expression per (flight task, cabin), assembled from four things: **the original head count** when the passenger is already in that cabin;
 /// **cancellation**, subtracted regardless of cabin (cancelling means "this person does not fly", independent of cabin); **changing out** — the passenger's own cabin subtracts every change,
 /// while **other cabins** add "the amount moved into this cabin"; and **changing in** — when someone else's itinerary moves onto this flight, that flight gains those people in that cabin.
 ///
 /// The easiest mistake is the two branches in the third point: **the own cabin subtracts, other cabins add**. Swapping them makes the head count double or vanish between cabins while
 /// the capacity constraints still pass — **because those constraints only look at the total, not the split**.
 ///
-/// **One necessary difference**: without flight change enabled the baseline reads an uninitialised variable table and throws at runtime. The C# side skips those terms on `null` —
+/// **One necessary difference**: without flight change enabled the code reads an uninitialised variable table and throws at runtime. The C# side skips those terms on `null` —
 /// not enabled means not enabled, not an error.
 /// </remarks>
 public sealed class PassengerAmount {

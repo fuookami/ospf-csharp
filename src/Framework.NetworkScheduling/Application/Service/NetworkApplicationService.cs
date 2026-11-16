@@ -1,6 +1,6 @@
 // 应用服务层 / Application service layer.
-// 与固定 Kotlin 基线 `application/service/SolutionEnricher.kt`（926 字节）、`NetworkApplicationService.kt`（6780 字节）对应。
-// Mirrors the pinned baseline's `SolutionEnricher.kt` and `NetworkApplicationService.kt`.
+// 与固定 Kotlin （926 字节）、（6780 字节）对应。
+// And.
 
 using System;
 using System.Collections.Generic;

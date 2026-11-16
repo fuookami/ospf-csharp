@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// CG 包络约束 / The CG envelope constraint.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/EnvelopeLimit.kt`：对**每个飞行阶段** × **该阶段的每条包络**各加两行——
+/// 逐条对齐：对**每个飞行阶段** × **该阶段的每条包络**各加两行——
 ///
 /// | 行 | 关系 | 名称 |
 /// | --- | --- | --- |
@@ -32,11 +32,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **两行都要有**。只加上界时重心可以无限前移而求解器一声不响——飞机可以飞到机头压得抬不起来，模型照样"最优"。
 /// 2. **同一阶段的多条包络是"且"不是"或"**。两张包络同时适用时必须同时满足；把它们合并成一条（取更严的）要求先判定谁更严，
-///    而"谁更严"随总重变化。基线逐条加，照抄。
+///    而"谁更严"随总重变化。基线逐条加。
 /// 3. **力矩取该阶段的那一个**，不是首阶段的、也不是 `ZeroFuel` 的。按阶段取错会让起飞和着陆共用一个力矩边界。
 /// 4. **`_ub` 与 `_lb` 后缀**。两行同名时求解器报"第 3 条约束不可行"无法区分是上界还是下界。
 ///
-/// Mirrors the baseline: for **each flight phase** × **each envelope of that phase**, two rows — an upper bound (torque ≤ max index, `_ub`) and a lower bound (torque ≥ min index,
+/// for **each flight phase** × **each envelope of that phase**, two rows — an upper bound (torque ≤ max index, `_ub`) and a lower bound (torque ≥ min index,
 /// `_lb`). Four easy mistakes: (1) **both rows are needed** — with only the upper bound the centre of gravity can drift arbitrarily forward with no complaint, the aircraft nose-heavy
 /// and the model still "optimal"; (2) **several envelopes for one phase mean AND, not OR** — each must hold, and folding them into one (taking the tighter) requires deciding which
 /// is tighter, which varies with total weight; (3) **the torque is that phase's**, not the first phase's nor the zero-fuel one, or take-off and landing share one boundary;

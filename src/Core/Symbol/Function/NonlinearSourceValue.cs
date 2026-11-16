@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 真实函数基准值：逼近误差的对照物 / The true function's value: what the approximation is measured against.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NonlinearPiecewise.kt` 基类的 `originalValueFlt64` / `originalValue`。
+/// 对齐基类的 `originalValueFlt64` / `originalValue`。
 ///
 /// **为什么需要它**：**四个分段逼近函数（`exp`/`ln`/`1/x`/`x^p`）都只返回<b>逼近值</b>。**
 /// **没有真实值，就<b>无法测出逼近误差</b>——**
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **"The error is zero at the breakpoints" is a trap**: **linear interpolation coincides exactly with the true
 /// function at every breakpoint**, **so "spot-check a few breakpoints" can never reveal too few segments.**
 ///
-/// **Three things must be checked, and the baseline checks all three**:
+/// **Three things must be checked, and the code checks all three**.
 /// **① non-finite input; ② input outside `[breakpoints.first, breakpoints.last]`; ③ non-finite true value.**
 /// **Skipping ① lets `NaN` flow into the error computation, and `NaN` compares `false` against everything, so an
 /// "error too large" criterion <b>passes silently</b>.**

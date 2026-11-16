@@ -1,6 +1,5 @@
 // 上下文状态同步器 / The cross-context state synchroniser.
-// 与固定 Kotlin 基线 `runner/ContextStateSynchronizer.kt`（7769 B）对应。
-// Mirrors the pinned baseline's `runner/ContextStateSynchronizer.kt` (7769 B).
+// 与固定 Kotlin （7769 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -37,10 +36,10 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **于是两个上下文从此各自演化而不自知**。
 /// **When the velocity cannot be computed the whole merge fails, rather than "skipping one"**. Skipping hands the caller a partially
 /// Sync
-/// **`clpso` 复用 `particles` 的规则，然后把学习对象重置成"该粒子自己的下标"**（基线的 `List(size) { index }` 闭包里取的是外层
-/// `mapIndexed` 的 `index`，不是列表元素下标）。照抄这一点是有意的：它让同步后的粒子拥有一个"确定但无意义"的学习起点，
+/// **`clpso` 复用 `particles` 的规则，然后把学习对象重置成"该粒子自己的下标"**（`List(size) { index }` 闭包里取的是外层
+/// `mapIndexed` 的 `index`，不是列表元素下标）。沿用这一点是有意的：它让同步后的粒子拥有一个"确定但无意义"的学习起点，
 /// 由后续的停滞刷新去纠正。改成随机下标会让同步这一步额外消耗随机数，**而两个上下文的随机流就此错位**。
-/// **`clpso` reuses `particles`' rule and then resets the exemplars to "the particle's own index"** (the baseline's `List(size) { index }`
+/// **`clpso` reuses `particles`' rule and then resets the exemplars to "the particle's own index"** (its `List(size) { index }`
 /// captures the outer `mapIndexed` `index`, not the element index). Copying that is deliberate: it gives the synced particle a
 /// "deterministic but meaningless" learning start that the later stagnation refresh corrects. Using random indices would make the sync
 /// step consume entropy, **desynchronising the two contexts' random streams**.
@@ -204,7 +203,7 @@ public sealed class ContextStateSynchronizer<ObjValue, V>
         for (int index = 0; index < synced.Count; index++) {
             ParticleState<ObjValue, V> particle = synced[index];
             // 学习对象全部取该粒子自己的下标——基线这里捕获的是外层下标，不是列表元素下标。
-            // The exemplars all take the particle's own index — the baseline captures the outer index here, not the element index.
+            // The exemplars all take the particle's own index — the code captures the outer index here, not the element index.
             var exemplars = new List<int>(particle.Individual.Solution.Count);
             for (int axis = 0; axis < particle.Individual.Solution.Count; axis++) {
                 exemplars.Add(index);

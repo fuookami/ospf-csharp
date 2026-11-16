@@ -20,9 +20,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 建议装载松弛 / The advised-load slack.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/model/AdviceLoading.kt` 对齐：每个舱位两个**单侧松弛**符号，衡量"实际装载超出建议值多少"。
+/// 与对齐：每个舱位两个**单侧松弛**符号，衡量"实际装载超出建议值多少"。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
 /// 1. **用 `SlackFunction` 的阈值形式**：基线经 `exampleThresholdSlack` 转成
 ///    `SlackFunction(x = 装载量, y = 阈值, withNegative = false, withPositive = true, threshold = true, constraint = true)`。
@@ -33,18 +33,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///    依赖 `StowagePosition.ToString` 覆写（补上），否则全部重名。
 /// 5. 只包一层 `LinearFunctionSymbolAdapter`，因为抽象模型只接受中间符号。
 ///
-/// **一处刻意的单位简化**：基线把被松弛量与阈值都换算到 `aircraftModel.weightUnit` 再相减；本仓要求调用方
+/// **一处刻意的单位简化**：被松弛量与阈值都换算到 `aircraftModel.weightUnit` 再相减；本仓要求调用方
 /// **用同一单位**给出 `Alw` 与 `EstimateLoadWeight`。两种做法只差一个**正比例因子**，而该因子会被目标系数
 /// `parameter.AdviceLoadWeight` 吸收，所以行为等价；换成"在符号里做换算"会引入一个没有任何消费者的单位路径。
 ///
-/// Aligned with the baseline: two **one-sided** slack symbols per position, measuring how far the actual load exceeds the advised value. Five things must be copied: **the threshold form of
-/// `SlackFunction`** — the baseline goes through `exampleThresholdSlack`, which becomes `SlackFunction(x = load, y = threshold, withNegative = false, withPositive = true, threshold = true,
+/// Two **one-sided** slack symbols per position, measuring how far the actual load exceeds the advised value. Five things must be copied: **the threshold form of
+/// `SlackFunction`** — the code goes through `exampleThresholdSlack`, which becomes `SlackFunction(x = load, y = threshold, withNegative = false, withPositive = true, threshold = true,
 /// constraint = true)`, and **`withNegative = false`** is the key, since a lower side would grow the slack when the load is *below* the advice and invert the penalty; **a position with a null
 /// threshold gets a constant-zero symbol** rather than being skipped, since the matrix must match the position count; **the amount slack relaxes `Load.LoadAmount` and the weight slack
 /// `Load.EstimateLoadWeight`**; **the two families are named `advice_amount_slack_{position}` and `advice_weight_slack_{position}`**, relying on the `StowagePosition.ToString` override
 /// Added
 ///
-/// **One deliberate unit simplification**: the baseline converts both the relaxed quantity and the threshold into `aircraftModel.weightUnit` before subtracting, while this port requires the
+/// **One deliberate unit simplification**: the code converts both the relaxed quantity and the threshold into `aircraftModel.weightUnit` before subtracting, while this implementation requires the
 /// caller to supply `Alw` and `EstimateLoadWeight` **in the same unit**. The two differ only by a **positive scale factor**, which the objective coefficient
 /// `parameter.AdviceLoadWeight` absorbs, so behaviour is equivalent; doing the conversion inside the symbol would introduce a unit path with no consumer.
 /// </remarks>

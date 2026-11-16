@@ -10,14 +10,14 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 公共诊断证据允许的稳定来源 / Stable sources allowed in public diagnostic evidence.
 /// </summary>
 /// <remarks>
-/// 与基线 `DiagnosticSource.kt`（171 行）对应。**这个类型刻意不含求解器行、列、生成变量或后端句柄**：
+/// 与对应。**这个类型刻意不含求解器行、列、生成变量或后端句柄**：
 /// `StableId` 要能当缓存键，也要能跨后端对照——**一旦把行号塞进来，换个后端就对不上了。**
 ///
 /// 补**：这是 `core.analysis` 里**不依赖原生后端**的入口之一。§九第 6 条说该模块缺 18 个文件，
 /// 而多数分析器要 IIS、活动约束、扰动重解这些**只有真后端给得出**的证据；`DiagnosticSource` / `ActivityStatus` /
 /// `ActivityEvidence` 三个不需要，所以先做这三个。
 ///
-/// Mirrors the baseline's `DiagnosticSource.kt` (171 lines). **Solver rows, columns, generated variables and backend handles are deliberately absent**: `StableId` has to
+/// **Solver rows, columns, generated variables and backend handles are deliberately absent**: `StableId` has to
 /// work as a cache key and across backends — **a row number in it would stop matching the moment the backend changed.** ****: this is one of the `core.analysis` entry
 /// points that **does not need a native backend**. §九 item 6 says the module is 18 files short, and most analyzers need IIS, active constraints or perturbation
 /// re-solving — evidence **only a real backend produces**; these three do not, so they come first.
@@ -189,7 +189,7 @@ public abstract record DiagnosticSource
     /// **这是 `ConflictAnalyzer.sourceOf` 的移植。** 求解器只说"这个约束 / 这个边界 / 这个值域让它不可行"，
     /// 冲突分析要的是"哪个诊断来源"。**两套类型各说各话，中间必须有这一次翻译。**
     ///
-    /// **This is the port of `ConflictAnalyzer.sourceOf`.** The solver says "this constraint / this bound / this domain made it infeasible"; conflict analysis wants "which diagnostic source". **Two type families, and this
+    /// **This is the implementation of `ConflictAnalyzer.sourceOf`.** The solver says "this constraint / this bound / this domain made it infeasible"; conflict analysis wants "which diagnostic source". **Two type families, and this
     /// translation is the only thing between them.**
     ///
     /// **边界方向不能丢。** `VariableBoundRef` 带着 `Side`，**丢掉它就等于把"下界太紧"和"上界太紧"报成同一件事**，

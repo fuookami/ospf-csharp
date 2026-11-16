@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 装载契约 / The load contract.
 /// </summary>
 /// <remarks>
-/// 与基线 `layer_assignment/model/Load.kt` 的 `interface Load` 对齐。六个成员里 `Load` / `OverLoad` / `LessLoad`
-/// 在基线是 `LinearExpressionSymbols1` / `LinearIntermediateSymbols1`——Kotlin 的 typealias，C# 无法表达
+/// 与的 `interface Load` 对齐。六个成员里 `Load` / `OverLoad` / `LessLoad`
+/// 在`LinearExpressionSymbols1` / `LinearIntermediateSymbols1`——Kotlin 的 typealias，C# 无法表达
 /// （`src/Core/Symbol/SymbolCombination.cs:95`），因此这里用 `IReadOnlyList&lt;...&gt;`。这是本仓第三次同样的处置，
 /// 不是随手改的形状。
 ///
-/// Aligned with the baseline's `interface Load`. Three of the six members are Kotlin typealiases (`LinearExpressionSymbols1` /
+/// Aligned with its `interface Load`. Three of the six members are Kotlin typealiases (`LinearExpressionSymbols1` /
 /// `LinearIntermediateSymbols1`) that C# cannot express (see `src/Core/Symbol/SymbolCombination.cs:95`), so `IReadOnlyList&lt;...&gt;` is used instead — the third time this repository has handled
 /// the same problem, not an ad-hoc shape.
 /// </remarks>
@@ -55,21 +55,21 @@ public interface ILoad
 /// 与基线 `ImpreciseLoad` 对齐。它是 `DemandConstraint` 等约束真正要的东西：**每个需求一项装载变量**，
 /// 且每项是"候选列 × 该列对该需求的系数"的线性和。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **装载变量只建一次**（`registerLoad` 幂等）：重复建会把 `<c>load_0</c>` 变成两个不同符号，约束找不到。
 /// 2. **`appendColumnTerms` 在没注册时直接返回**，不抛——列生成是先注册、每轮追加，顺序反过来不该炸。
 /// 3. **系数来自 <c>LayerAssignmentMath.LayerDemandCoefficient</c>**，不是"该列件数"：按面积需求时件数完全不对。
 ///
-/// `OverLoad` / `LessLoad` 在基线的 `AbstractLoad` 里按开关懒建。本仓先留空表 + 开关（`OverEnabled` / `LessEnabled`
-/// 默认 `false` / `true`，与基线相同），等松弛约束落地时再填——**空表配上开关不等于能力**，所以这里明确记下它还没实现。
+/// `OverLoad` / `LessLoad` 在`AbstractLoad` 里按开关懒建。本仓先留空表 + 开关（`OverEnabled` / `LessEnabled`
+/// 默认 `false` / `true`），等松弛约束落地时再填——**空表配上开关不等于能力**，所以这里明确记下它还没实现。
 ///
-/// Aligned with the baseline's `ImpreciseLoad`. It is what `DemandConstraint` and friends actually need: **one load variable per demand**, each a linear sum of "candidate column times
+/// Aligned with its `ImpreciseLoad`. It is what `DemandConstraint` and friends actually need: **one load variable per demand**, each a linear sum of "candidate column times
 /// that column's coefficient for the demand". Three things must be copied: **the load variables are built once** (`registerLoad` is idempotent), since rebuilding turns `load_0` into two
 /// different symbols and constraints cannot find them; **`appendColumnTerms` returns early when unregistered** rather than throwing, because column generation registers first and appends
 /// each round and the reverse order must not explode; and **the coefficient comes from `LayerAssignmentMath.LayerDemandCoefficient`** rather than "units in the column", which is simply
-/// wrong for area demands. The baseline builds `OverLoad` / `LessLoad` lazily in `AbstractLoad`; here they are empty lists plus the switches (`OverEnabled` / `LessEnabled` default
-/// `false` / `true`, as in the baseline) until the slack constraints land — **an empty list with a switch is not a capability**, hence this note.
+/// wrong for area demands. The code builds `OverLoad` / `LessLoad` lazily in `AbstractLoad`; here they are empty lists plus the switches (`OverEnabled` / `LessEnabled` default
+/// `false` / `true`, as in the code) until the slack constraints land — **an empty list with a switch is not a capability**, hence this note.
 /// </remarks>
 public sealed class ImpreciseLoad : ILoad
 {
@@ -158,21 +158,21 @@ public sealed class ImpreciseLoad : ILoad
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 对应基线 `AbstractLoad.register`。四点照抄：
+    /// 对应基线 `AbstractLoad.register`。四点沿用：
     ///
     /// 1. **按开关懒建，且只建一次**：重复建会把 `over_load_0` 变成两个不同符号。
     /// 2. **超额 / 欠额的初值是"当前`load`的拷贝"**，不是新变量——它们表达的是"这个需求现在被超/欠了多少"，
-    ///    所以要跟着装载量走。基线在注册那一刻拷贝，**之后 `appendColumnTerms` 只追加到 `load`**，
-    ///    超/欠不会跟着涨；这是基线的既有语义，这里照抄并记档，不擅自"修好"。
+    ///    所以要跟着装载量走。注册那一刻拷贝，**之后 `appendColumnTerms` 只追加到 `load`**，
+    ///    超/欠不会跟着涨；这是既有语义，这里沿用并记档，不擅自"修好"。
     /// 3. **开关关着就完全不建也不加**：建了不加等于留一个悬空符号，查不到也删不掉。
     /// 4. **任一 `Add` 失败立即返回失败**，不继续加剩下的——半个符号层比没有更糟。
     ///
     /// 注意 `model.Add` 走的是 `Add(IIntermediateSymbol)` 重载（`LinearExpressionSymbol` 实现了
     /// `ILinearIntermediateSymbol&lt;Flt64&gt;`），不是变量重载。
     ///
-    /// Mirrors the baseline's `AbstractLoad.register`. Four things copied: **built lazily by switch and only once**, since rebuilding turns `over_load_0` into two different symbols; **the over and under
+    /// Four things copied: **built lazily by switch and only once**, since rebuilding turns `over_load_0` into two different symbols; **the over and under
     /// symbols start as a copy of the current `load`**, not as fresh variables, because they express by how much the demand is currently over- or under-supplied and therefore follow the load
-    /// amounts — the baseline copies at registration time and **later `appendColumnTerms` calls only append to `load`**, so over and under do not grow with it, which is the baseline's existing semantics
+    /// amounts — the code copies at registration time and **later `appendColumnTerms` calls only append to `load`**, so over and under do not grow with it, which is its existing semantics
     /// and is copied and recorded here rather than quietly "fixed"; **a disabled switch builds and adds nothing**, since a built-but-unregistered symbol is unreachable and undeletable; and **any
     /// failing `Add` returns at once** instead of continuing, a half-built symbol layer being worse than none.
     /// </remarks>

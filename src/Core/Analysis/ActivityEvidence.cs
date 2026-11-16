@@ -7,8 +7,8 @@ namespace Fuookami.Ospf.Core.Analysis;
 
 /// <summary>原始模型报告边界的证据类型 / Evidence kind used at the original-model report boundary.</summary>
 /// <remarks>
-/// 与基线 `ActivityEvidence.kt` 的 `ActivityEvidenceKind` 逐成员对应。
-/// Mirrors `ActivityEvidenceKind` in the baseline's `ActivityEvidence.kt`, member for member.
+/// 与的 `ActivityEvidenceKind` 逐成员对应。
+/// Mirrors `ActivityEvidenceKind` in its, member for member.
 /// </remarks>
 public enum ActivityEvidenceKind
 {
@@ -32,11 +32,11 @@ public enum ActivityEvidenceKind
 /// 原始模型一条活动性记录的证据 / Original-model evidence for one activity record.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivityEvidence.kt`（73 行）对应。**数值以 `double` 暴露以便报告互操作，同时保留 `Int64` 的精确字符串**——
+/// 与对应。**数值以 `double` 暴露以便报告互操作，同时保留 `Int64` 的精确字符串**——
 /// 调用方不该把舍入过的浮点值再拿去做 CP 输入。这条不是洁癖：`9007199254740993` 走一趟 `double` 就变成
 /// `9007199254740992`，**而两者作为约束边界是完全不同的两个模型。**
 ///
-/// Mirrors the baseline's `ActivityEvidence.kt` (73 lines). **Values are exposed as `double` for report interoperability while the exact `Int64` spelling is retained** —
+/// **Values are exposed as `double` for report interoperability while the exact `Int64` spelling is retained** —
 /// a consumer should not feed a rounded float back into CP. This is not fastidiousness: `9007199254740993` through a `double` becomes `9007199254740992`, and **as a constraint
 /// boundary those are two different models.**
 /// </remarks>

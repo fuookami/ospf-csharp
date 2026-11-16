@@ -91,18 +91,18 @@ public sealed class SearchRegistryTests {
     /// <summary>**可重建性只认两样东西：默认无状态集，和 `IRecoverableComponent`** / Recoverability honours exactly two things: the default stateless set and `IRecoverableComponent`.</summary>
     /// <remarks>
     /// **这里有一个容易误判的事实，必须记下来**：`Entry.Stateless`（注册时传的 `stateless`）**并不进入可重建集合**。
-    /// 基线的 `statelessComponents` 只有两类来源——初始化时硬编码的一份清单，以及 `registerFeatures/Reward/Acceptance/Exchange/Allocator(stateless = true)`
+    /// `statelessComponents` 只有两类来源——初始化时硬编码的一份清单，以及 `registerFeatures/Reward/Acceptance/Exchange/Allocator(stateless = true)`
     /// 追加的条目。`registerUpdate(stateless = true)` **不追加**。
     ///
-    /// 也就是说：**"注册时声明无状态"与"恢复后可以就地重建"在本移植（与基线）里不是同一件事**。
+    /// 也就是说：**"注册时声明无状态"与"恢复后可以就地重建"在本实现（与基线）里不是同一件事**。
     /// 本测试把这条差异钉住，避免后来者以为两者等价而把某个更新算子当成可重建的。
     ///
     /// **There is an easily misjudged fact here that must be recorded**: `Entry.Stateless` (the `stateless` flag passed at registration) **does not
-    /// feed the recoverable set**. The baseline's `statelessComponents` has exactly two sources — a hard-coded list at construction, plus entries
+    /// feed the recoverable set**. The code's `statelessComponents` has exactly two sources — a hard-coded list at construction, plus entries
     /// appended by `registerFeatures/Reward/Acceptance/Exchange/Allocator(stateless = true)`. `registerUpdate(stateless = true)` **does not append**.
     ///
-    /// In other words, **"declared stateless at registration" and "can be rebuilt in place after a restore" are not the same thing** in this port
-    /// (nor in the baseline). This test pins that difference so a later reader does not assume equivalence and treat an update operator as
+    /// In other words, **"declared stateless at registration" and "can be rebuilt in place after a restore" are not the same thing** here
+    /// (nor in the code). This test pins that difference so a later reader does not assume equivalence and treat an update operator as
     /// recoverable.
     /// </remarks>
     [Fact]
@@ -191,9 +191,9 @@ public sealed class SearchRegistryTests {
 
     /// <summary>**未注册的选择器退化成表格策略，但参数仍然受校验，而且这只覆盖七个已知名字** / An unregistered selector degrades to the tabular policy with parameters validated, and that covers only the seven known names.</summary>
     /// <remarks>
-    /// 这是基线里唯一的"回退"。它与"未知组件退回默认算子"不同：表格策略本身就是"用通用表格近似任意选择器"，
+    /// 这是唯一的"回退"。它与"未知组件退回默认算子"不同：表格策略本身就是"用通用表格近似任意选择器"，
     /// 退化后**仍在同一族行为里**。但**参数校验不能跟着一起退化**——否则 `epsilon: 2.0` 会被安静地接受。
-    /// This is the baseline's only "fallback". It differs from "an unknown component falls back to a default operator": the tabular policy is
+    /// This is its only "fallback". It differs from "an unknown component falls back to a default operator": the tabular policy is
     /// itself "approximate any selector with a generic table", so the degenerate case **stays in the same family**. But **parameter validation must
     /// not degrade with it** — otherwise `epsilon: 2.0` is quietly accepted.
     /// </remarks>
@@ -207,7 +207,7 @@ public sealed class SearchRegistryTests {
         registry.Selection(Spec("epsilon-greedy", ("epsilonn", 0.2)), actions, true).Should()
             .BeOfType<Failed<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
         // **"回退"不是兜底**：表格策略自己只认那七个名字，其它名字一律失败（基线亦然）。
-        // **The "fallback" is not a catch-all**: the tabular policy only recognises those seven names; everything else fails (as in the baseline).
+        // **The "fallback" is not a catch-all**: the tabular policy only recognises those seven names; everything else fails (as in the code).
         registry.Selection(Spec("my-selector"), actions, true).Should()
             .BeOfType<Failed<ISelectionPolicy, ErrorCode, Error<ErrorCode>>>();
         registry.Selection(new ComponentSpec("q-learning", new JsonObject(), 2), actions, true).Should()
@@ -348,7 +348,7 @@ public sealed class SearchRegistryTests {
             .Should().BeOfType<Failed<IMemoryAcceptance<Flt64, Flt64>, ErrorCode, Error<ErrorCode>>>();
     }
 
-    /// <summary>**`not-worse` 是基线的默认接受策略，因此必须能构造出来** / `not-worse` is the baseline's default acceptance policy and must be constructible.</summary>
+    /// <summary>**`not-worse` 是默认接受策略，因此必须能构造出来** / `not-worse` is its default acceptance policy and must be constructible.</summary>
     /// <remarks>
  /// **这是对 earlier/226 一次判断的反转**。当时以"注册表不该替问题做主"为由把 `not-worse` 留空，而那条理由站不住：
     /// `Acceptance` 本来就接收 `SearchProblem`，支配判据与坐标投影就地可得。留空的后果是**基线默认配置根本跑不起来**
@@ -356,7 +356,7 @@ public sealed class SearchRegistryTests {
     ///
  /// **This reverses a decision from earlier/226.** `not-worse` was left out on the grounds that "the registry must not decide for the problem",
     /// and that reason does not hold: `Acceptance` already receives the `SearchProblem`, so the dominance predicate and the coordinate projection are
-    /// right there. Leaving it out meant **the baseline's default configuration could not run at all** (`HyperHeuristicConfig`'s `acceptance` default
+    /// right there. Leaving it out meant **its default configuration could not run at all** (`HyperHeuristicConfig`'s `acceptance` default
     /// is `not-worse`).
     /// </remarks>
     [Fact]

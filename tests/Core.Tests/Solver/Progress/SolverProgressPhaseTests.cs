@@ -14,11 +14,8 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// `Phase(start, end)` must remap the sub-context's **in-stage** progress into the parent's band.
 /// </summary>
 /// <remarks>
-/// 基线 `SolverProgressContext.phase(start, end)`：
-///
-/// ```kotlin
-/// overallProgress = start + snapshot.progressInStage.coerceIn(0, 100) * (end - start) / 100
-/// ```
+/// 重映射的公式是
+/// `overallProgress = start + clamp(progressInStage, 0, 100) × (end − start) / 100`。
 ///
 /// **重映射的输入是 `progressInStage`，不是子上下文的 `overallProgress`。**
 /// 这一条是整批最容易写错的地方：用 `overallProgress` 也能算出"看起来合理"的数字，
@@ -27,7 +24,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// 判据特意构造**两者不相等**的快照（`progressInStage = 50`、`overallProgress = 90`），
 /// 这样两种实现给出**不同的结果**，才能区分。
 ///
-/// The baseline's `phase(start, end)` computes `overallProgress = start + progressInStage * (end - start) / 100` (snippet above).
+/// The code's `phase(start, end)` computes `overallProgress = start + progressInStage * (end - start) / 100` (snippet above).
 ///
 /// **The remap input is `progressInStage`, not the sub-context's `overallProgress`.** This is the easiest thing to get wrong in the whole batch: using
 /// `overallProgress` also produces a **plausible-looking** number, but it is a **double squash** — the sub-solver's in-stage progress (already 0—100) is treated as

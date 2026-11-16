@@ -113,11 +113,11 @@ public sealed class FullSumGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cutt
     /// <param name="widthIndex">宽度索引 / Width index.</param>
     /// <param name="collector">收集器 / Collector.</param>
     /// <remarks>
-    /// **本类不再自己实现搜索**：基线的 `FullSumGenerator` 与 `DFSGenerator` 搜索循环逐行相同，
+    /// **本类不再自己实现搜索**：`FullSumGenerator` 与 `DFSGenerator` 搜索循环逐行相同，
     /// 差别只在"扩展时是否做剪枝约束检查"。逻辑抽到 `GenerationSumSearch`，这里传 `applyPruningConstraints: false`
     /// （全和生成器只在叶节点检查约束）。
     ///
-    /// **This class no longer implements the search**: the baseline's `FullSumGenerator` and `DFSGenerator` search loops are line-for-line identical, differing
+    /// **This class no longer implements the search**: its `FullSumGenerator` and `DFSGenerator` search loops are line-for-line identical, differing
     /// only in whether pruning constraints are checked while expanding. The logic lives in `GenerationSumSearch`; this passes `applyPruningConstraints: false`
     /// (the full-sum generator checks constraints only at leaves).
     /// </remarks>

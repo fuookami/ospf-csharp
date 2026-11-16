@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// | 9 | 固定装载是合法分配 | 固定到不允许的舱位，模型静默少一项 |
 /// | 11 | 固定装载不超容量 | 固定装载本身就超重，求解器只会说"不可行" |
 ///
-/// Mirrors the baseline's eleven checks; the criteria single out the **three subtlest** (table above).
+/// 's eleven checks; the criteria single out the **three subtlest** (table above).
 /// </remarks>
 public class DiscreteLoadingValidatorTests {
     /// <summary>**合法输入必须通过，且容量与重量被归一化** / A legal input passes and normalises capacities and weights.</summary>

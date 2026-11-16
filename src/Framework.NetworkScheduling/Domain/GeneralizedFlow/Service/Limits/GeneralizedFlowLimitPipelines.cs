@@ -1,8 +1,8 @@
 // 广义流约束管线 / Generalized-flow constraint pipelines.
-// 与固定 Kotlin 基线 `service/limits/GeneralizedFlowInputCapacityPipeline.kt`（2304 字节）、
-// `service/limits/GeneralizedFlowNodeBalancePipeline.kt`（2032 字节）、`model/GeneralizedFlowPipelineFactory.kt`（1005 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowInputCapacityPipeline.kt`, `GeneralizedFlowNodeBalancePipeline.kt` and
-// `GeneralizedFlowPipelineFactory.kt`.
+// 与固定 Kotlin （2304 字节）、
+//（2032 字节）、（1005 字节）对应。
+// , and
+//.
 
 using System;
 using System.Collections.Generic;

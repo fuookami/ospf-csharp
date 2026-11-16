@@ -22,8 +22,8 @@ public sealed class PackageClassificationTest {
         PackageClassificationRules.Of(false).Should().Be(PackageClassification.Inner);
 
     /// <summary>
-    /// **null 与空列表同等对待**：基线用 `isNullOrEmpty`，若把 null 当"未知"再单独分支，会多出一条与空列表不一致的路径。
-    /// **null and empty are treated identically**: the baseline uses `isNullOrEmpty`, and a separate null branch would create
+    /// **null 与空列表同等对待**：`isNullOrEmpty`，若把 null 当"未知"再单独分支，会多出一条与空列表不一致的路径。
+    /// **null and empty are treated identically**: the code uses `isNullOrEmpty`, and a separate null branch would create
     /// a path inconsistent with the empty case.
     /// </summary>
     [Fact]
@@ -50,8 +50,8 @@ public sealed class PackageClassificationTest {
     }
 
     /// <summary>
-    /// **枚举顺序与基线一致（Outer 在前）**：若有代码按整数值持久化分类，顺序变化会让历史数据被读成相反语义。
-    /// **The enum order matches the baseline (Outer first)**: if any code persists the classification by integer value, a
+    /// **枚举顺序（Outer 在前）**：若有代码按整数值持久化分类，顺序变化会让历史数据被读成相反语义。
+    /// **The enum order matches the code (Outer first)**: if any code persists the classification by integer value, a
     /// reordering would make historical data read with the opposite meaning.
     /// </summary>
     [Fact]

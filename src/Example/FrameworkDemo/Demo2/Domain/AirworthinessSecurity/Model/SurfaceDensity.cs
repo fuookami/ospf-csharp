@@ -32,18 +32,18 @@ public sealed record SurfaceDensityLimitZone(
 /// 表面密度模型 / The surface density model.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/airworthiness_security/model/SurfaceDensity.kt`：每个落在限区内的舱位产一个
+/// 逐条对齐：每个落在限区内的舱位产一个
 /// `surface_density_{舱位}` 符号，值 = `estimateLoadWeight[j] / 舱位面积`。
 ///
 /// 三处容易做错：
 ///
 /// 1. **面积来源**。用 `PositionShape.Area`（申报面积优先于长×宽），不是现算长×宽。货站可用面积与"长×宽"经常差很多，
 ///    而表面密度是"按面积算重量"——面积错一点，重量就错一片。
-/// 2. **只注册落在限区内的舱位**。基线在 `model.add` 前有 `if (limitsZones.any { ... withIntersectionWith ... })`。少了这个判断，
+/// 2. **只注册落在限区内的舱位**。`model.add` 前有 `if (limitsZones.any { ... withIntersectionWith ... })`。少了这个判断，
 ///    不在任何限区里的舱位也会得到一个"表面密度"符号——那个数字没有任何规格可对照，白白进了模型。
 /// 3. **"有交集"不是"完整落在区间内"**。用 `Between` 代替 `WithIntersectionWith` 会漏掉所有压在区域边界上的舱位，而那恰恰是最该查的一批。
 ///
-/// Mirrors the baseline: every position inside a limit zone gets a `surface_density_{position}` symbol equal to `estimateLoadWeight[j] / position area`. Three easy mistakes:
+/// every position inside a limit zone gets a `surface_density_{position}` symbol equal to `estimateLoadWeight[j] / position area`. Three easy mistakes:
 /// (1) **where the area comes from** — `PositionShape.Area` with the declared area preferred over length × width, since usable deck area often differs a lot and surface density
 /// is weight per area; (2) **only positions inside a zone are registered** — without that check, positions outside every zone get a symbol with no specification to compare
 /// against, cluttering the model for nothing; (3) **"intersects" is not "lies entirely within"** — using `Between` drops every position straddling a zone boundary, which is

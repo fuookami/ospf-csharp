@@ -1,6 +1,6 @@
 // 分区列生成预算与轨迹 / Partition column generation budget and trace.
-// 与固定 Kotlin 基线 `application/PartitionColumnGenerationApplicationService.kt` 的头部对应。
-// Mirrors the header of the pinned Kotlin baseline's `PartitionColumnGenerationApplicationService.kt`.
+// 与固定 Kotlin 的头部对应。
+// The header of the pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Number;
 

@@ -21,10 +21,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 顺序装载反转 / The sequential-loading reversals.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/model/SequentialLoading.kt` 对齐：为**每个（有序货物对, 有序舱位对）**造一个中间符号，
+/// 与对齐：为**每个（有序货物对, 有序舱位对）**造一个中间符号，
 /// 表示"这一对的装载先后被反了"。
 ///
-/// 六处必须照抄：
+/// 六处必须沿用：
 ///
 /// 1. **只收"有装载顺序"的货物**（基线 `filter { it.order?.order != null }`），并按 `顺序升序` 再按 `Id` 排序。
 /// 2. **有序对是全组合**，谓词是**严格小于**（顺序小的在前）。
@@ -35,15 +35,15 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 6. **符号名带三个元素**：`item_order_reverse_{item1}_{item2}_{position1}_{position2}`。
 ///    这依赖 `Item` 与 `StowagePosition` 的 `ToString` 覆写（补上），否则全部重名。
 ///
-/// Aligned with the baseline: one intermediate symbol per (ordered item pair, ordered position pair), meaning "this pair was loaded the wrong way round". Six things must be copied:
-/// **only items carrying a loading sequence are kept** (the baseline's filter), sorted by sequence then `Id`; **ordered pairs are all combinations** under a strict less-than
+/// One intermediate symbol per (ordered item pair, ordered position pair), meaning "this pair was loaded the wrong way round". Six things must be copied:
+/// **only items carrying a loading sequence are kept** (its filter), sorted by sequence then `Id`; **ordered pairs are all combinations** under a strict less-than
 /// predicate; **the ordered position pairs come from the caller** rather than being recomputed here; **the condition is `s[i1,j2] + s[i2,j1] − 2 + ε`** with `ε = NONZERO_TOLERANCE
 /// = 1e-10`, and `strictBoundary` **also takes that ε** — it is the true/false gap, not a threshold, and 0.5 is rejected by `SafeLattice` (measured); **an unplaceable combination
 /// gets a constant-zero symbol** rather than being skipped; and **the name carries three elements**, which relies on the `ToString` overrides added.
 /// </remarks>
 public sealed class SequentialLoading
 {
-    /// <summary>浮点边界余量：与基线的 `NONZERO_TOLERANCE` 一致 / The floating-point margin, matching the baseline's `NONZERO_TOLERANCE`.</summary>
+    /// <summary>浮点边界余量：与`NONZERO_TOLERANCE` 一致 / The floating-point margin, matching its `NONZERO_TOLERANCE`.</summary>
     private const double NonzeroTolerance = 1e-10;
 
     private readonly IReadOnlyList<Item> _items;

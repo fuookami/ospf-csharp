@@ -18,13 +18,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **加列的五步顺序不能换** / The five steps of adding columns are order-sensitive.
 /// </summary>
 /// <remarks>
-/// 基线的 `addColumns` 依次：建 `x_iteration` → `taskCost.flush` 后加本轮代价 →
+/// `addColumns` 依次：建 `x_iteration` → `taskCost.flush` 后加本轮代价 →
 /// 重写 `taskAssignment` → 重写 `taskCompilation` → 加 `xor` 与跨轮冲突约束。
 ///
 /// 顺序错一步的后果都不报错：约束引用了还不存在的列、代价加到了会被清空的表上、
 /// 或者跨轮冲突漏掉了本轮自己的列。
 ///
-/// The baseline's `addColumns` runs: build `x_iteration` → `taskCost.flush` then add this round's cost → rewrite `taskAssignment` → rewrite `taskCompilation` → add the `xor` and
+/// The code's `addColumns` runs: build `x_iteration` → `taskCost.flush` then add this round's cost → rewrite `taskAssignment` → rewrite `taskCompilation` → add the `xor` and
 /// cross-round conflict constraints. Getting the order wrong raises nothing: constraints reference columns that do not exist yet, cost lands on a table about to be cleared, or the
 /// cross-round conflicts miss this round's own columns.
 /// </remarks>
@@ -84,10 +84,10 @@ public class IterativeAddColumnsTests {
     /// **代价提取失败就失败，不当成零** / A failed cost extraction fails; it does not become zero.
     /// </summary>
     /// <remarks>
-    /// 基线用无穷大表示"不可定价"。`Flt64` 没有无穷，
+    /// 无穷大表示"不可定价"。`Flt64` 没有无穷，
     /// 当成零会让"排不起的任务"在目标里**免费**，于是求解器会优先选它。
     ///
-    /// The baseline uses infinity for "cannot be priced". `Flt64` has none (the same limit); treating it as zero makes an unaffordable task **free** in the objective, and the
+    /// The code uses infinity for "cannot be priced". `Flt64` has none (the same limit); treating it as zero makes an unaffordable task **free** in the objective, and the
     /// solver then prefers it.
     /// </remarks>
     [Fact]

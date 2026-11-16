@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 没有下标等式，选择与下标就脱钩了 / Without the index row the selection is decoupled from the index.
 /// </summary>
 /// <remarks>
-/// 补 `ElementFunction`（基线 `Element.kt`）。
+/// 补 `ElementFunction`。
 ///
 /// **编码是三段**：one-hot、每个表项一组屏蔽边、以及两条等式（下标等式与结果等式）。
 ///

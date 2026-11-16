@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 业载上下限 / The payload upper and lower bounds.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/PayloadLimit.kt`：两行，`estimate_payload ≤ maxPayload`（名字 `{name}`）与
+/// 逐条对齐：两行，`estimate_payload ≤ maxPayload`（名字 `{name}`）与
 /// `estimate_payload ≥ minPayload`（名字 `{name}_minimum`）。
 ///
 /// 两点容易做错：
@@ -28,8 +28,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 2. **`minPayload` 是构造参数，不是 `Payload` 的字段**。`Payload` 只有 `PlannedPayload` / `MaxPayload` / `ComputedPayload`，
 ///    下限来自运行期参数（调度给的最低业载）。混用会把"计划业载"当成"最低业载"。
 ///
-/// Mirrors the baseline: two rows, `estimate_payload ≤ maxPayload` (named `{name}`) and `estimate_payload ≥ minPayload` (named `{name}_minimum`). Two easy mistakes:
-/// (1) **only the lower row carries a suffix** — it looks like it should be symmetric, but this is what the baseline does and renaming breaks existing reports;
+/// two rows, `estimate_payload ≤ maxPayload` (named `{name}`) and `estimate_payload ≥ minPayload` (named `{name}_minimum`). Two easy mistakes:
+/// (1) **only the lower row carries a suffix** — it looks like it should be symmetric, but this is what the code does and renaming breaks existing reports;
 /// (2) **`minPayload` is a constructor argument, not a `Payload` field** — `Payload` holds `PlannedPayload` / `MaxPayload` / `ComputedPayload` only, and the minimum comes from
 /// a runtime parameter; conflating them turns "planned payload" into "minimum payload".
 /// </remarks>

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// MAX 函数的结构与 fallback 快照 / Maximum structure and fallback snapshot.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `MaxStructure`。
+/// 对齐的 `MaxStructure`。
 ///
 /// **`max` 需要每个候选一个选择列，而不是一个：**
 /// **`SelectorVariables` 与 `Inputs` 一一对应，`BigMValues` 也是。**
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 只测"扩大被拒"的话，"永远拒绝"的实现也能通过；
 /// 只测"收缩可以"的话，"永远接受"的实现也能通过。**
 ///
-/// Following the baseline's `MaxStructure`.
+/// Following its `MaxStructure`.
 ///
 /// **`max` needs one selector column per candidate, not one overall**: **`SelectorVariables` maps one-to-one onto
 /// `Inputs`, and so does `BigMValues`.** **A single "current maximum" column cannot express <i>which</i> candidate
@@ -242,7 +242,7 @@ public sealed record MaxStructure(
             // 也就是 `result ≤ input` 与 `result ≥ input + M(1 − sel)`——正是 MIN 需要的两组行。**
             //
             // **所以一个符号因子就够了，不需要第二套实现。**
-            // **而 Kotlin 基线里 `generateMinConstraints` 是<b>独立的一段</b>（它自己的消息、
+            // **而 Kotlin `generateMinConstraints` 是<b>独立的一段</b>（它自己的消息、
             // 自己的一遍循环），本仓把它合成了一个实现。合并本身没问题，但合并的时候
             // "方向"这个参数没接上。**
             //
@@ -355,13 +355,13 @@ public sealed record MaxStructure(
     /// 物化 fallback 约束 / Materialize the fallback constraints.
     /// </summary>
     /// <remarks>
-    /// **顺序是"先校验输入范围证明，再生成行"，与基线一致。**
+    /// **顺序是"先校验输入范围证明，再生成行"。**
     ///
     /// **校验在前不是形式：** **`M_i` 的正确性依赖那个证明。
     /// 先生成行再校验的话，一个证明已经失效的快照会先产出一组行，
     /// 而调用方可能已经拿它去建模型了。**
     ///
-    /// **The order is "validate the input-range proof, then generate the rows", as in the baseline.**
+    /// **The order is "validate the input-range proof, then generate the rows", as in the code.**
     ///
     /// **Checking first is not formality**: **the correctness of `M_i` rests on that proof.** **Generating first would let a
     /// snapshot with an invalidated proof produce rows that the caller may already have used to build the model.**

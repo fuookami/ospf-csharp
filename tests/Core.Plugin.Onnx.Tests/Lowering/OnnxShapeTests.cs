@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **形状算术：底座错一处，七个算子在错** / Shape arithmetic: one fault here faults seven operators.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxTensorExpr.kt` 里 `OnnxShape`。**`Transpose`／`Reshape`／`Flatten`／`Concat`／`Split`／`Gather`／
+/// 同步 Kotlin `dee897d2` 的 里 `OnnxShape`。**`Transpose`／`Reshape`／`Flatten`／`Concat`／`Split`／`Gather`／
 /// `ReduceSum` 共用它，而它的错法都属于"不抛异常但算错"**——**步长错只是取到别的元素，广播错只是形状多一维。**
 ///
 /// Syncs `OnnxShape`. **Seven operators share it, and its mistakes are all of the "wrong answer, no exception" kind — a wrong stride fetches another element, a

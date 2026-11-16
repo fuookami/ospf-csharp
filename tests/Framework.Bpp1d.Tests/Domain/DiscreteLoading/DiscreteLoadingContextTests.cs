@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 ///
 /// **第二条最要紧**：`0.5` 不是浮点噪声，是**求解器在说"这不是整数解"**。
 ///
-/// Mirrors the baseline's `register` prefix and `extractSolution`. The four rejection rules are in the table; **the second matters most** — `0.5` is not floating
+/// Prefix and `extractSolution`. The four rejection rules are in the table; **the second matters most** — `0.5` is not floating
 /// noise, it is **the solver saying "this is not an integer solution"**.
 /// </remarks>
 public class DiscreteLoadingContextTests {
@@ -298,7 +298,7 @@ public class DiscreteLoadingContextTests {
     /// 错误的原因变绿**：它是失败了，但失败在"缺值"而不是"非二元"。
     /// 这是"判据通过但没证明要证明的事"的又一例。
     ///
-    /// **Zero everything first, then override in the specific case.** The baseline requires **every** assignment/occupancy/layout variable to carry a value;
+    /// **Zero everything first, then override in the specific case.** The code requires **every** assignment/occupancy/layout variable to carry a value;
     /// without zeroing, an unassigned variable makes extraction fail with `DataNotFound`, so **the "non-binary value rejected" criterion goes green for the wrong
     /// reason**: it did fail, but on "missing value" rather than "non-binary". Another case of "the criterion passes without proving what it claims".
     /// </remarks>

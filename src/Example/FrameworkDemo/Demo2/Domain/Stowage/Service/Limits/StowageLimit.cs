@@ -20,13 +20,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 装载可行性约束 / The stowage feasibility rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/StowageLimit.kt`：对每一对"双方都可用但**位置不接纳**"的货物与舱位，加一行 `stowage_{i,j} = 0`。
+/// 对齐：对每一对"双方都可用但**位置不接纳**"的货物与舱位，加一行 `stowage_{i,j} = 0`。
 ///
 /// 三个条件缺一不可：`item.status.available`、`position.status.available`、`!position.enabled(item).ok`。
 /// 少查前两个会让"这件货根本不装"或"这个舱位根本不用"的组合也加行——行本身是对的（`= 0` 成立），但约束表被无谓地撑大，
 /// 而且掩盖了真正的不合法对。少查第三个则是**漏掉全部约束**，模型会允许把货塞进装不下的舱位。
 ///
-/// Aligned with the baseline: for every pair where **both sides are available but the position refuses the item**, add `stowage_{i,j} = 0`. All three conditions matter. Dropping
+/// For every pair where **both sides are available but the position refuses the item**, add `stowage_{i,j} = 0`. All three conditions matter. Dropping
 /// the first two adds rows for pairs that are irrelevant anyway — the rows are true (`= 0` holds) but the constraint table swells and the genuinely illegal pairs get hidden;
 /// dropping the third **loses every row**, letting the model stuff cargo into positions that cannot take it.
 /// </remarks>

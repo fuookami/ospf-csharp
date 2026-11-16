@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// **更新写错比查询写错更贵**：查询错了重新查一次就好，**更新错了数据已经变了**——
 /// **而没有备份的地方，改错的值不会自己回来。**
 ///
-/// The baseline's `MongoUpdateTranslator` (**120 lines**) turns `UpdateAssignments` into `Updates.combine(...)`:
+/// The code's `MongoUpdateTranslator` (**120 lines**) turns `UpdateAssignments` into `Updates.combine(...)`:
 /// every assignment lands on `$set`, and the field name goes through the caller's resolver.
 ///
 /// **A wrong update costs more than a wrong query**: a wrong query can be run again,
@@ -32,7 +32,7 @@ public static class MongoUpdateTranslator
     /// **空赋值返回 `null` 而不是 `$set: {}`**：基线原文 `if (assignments.isEmpty) return Ok(null)`。
     /// **空 `$set` 在 Mongo 里是合法但无意义的更新**，而 `null` 让调用方整个省掉这次写。
     ///
-    /// **Empty assignments return `null`, not `$set: {}`**: the baseline reads `if (assignments.isEmpty) return Ok(null)`.
+    /// **Empty assignments return `null`, not `$set: {}`**: the code reads `if (assignments.isEmpty) return Ok(null)`.
     /// **An empty `$set` is legal but meaningless in Mongo**, while `null` lets the caller skip the write entirely.
     /// </remarks>
     public static Result<BsonDocument?, ErrorCode, Error<ErrorCode>> Translate(
@@ -97,17 +97,17 @@ public static class MongoUpdateTranslator
 
     /// <summary>**表达式只接受常量** / The expression accepts constants only.</summary>
     /// <remarks>
-    /// 基线的写法是 `item.expression as? ScalarConstant&lt;*&gt; ?: return assignmentFailure(..., "expression is not supported")`——
+    /// 写法是 `item.expression as? ScalarConstant&lt;*&gt; ?: return assignmentFailure(..., "expression is not supported")`——
     /// **只有常量能进来，其他一律失败。**
     ///
     /// **这不是偷懒**：Mongo 的 `$set` 里可以放聚合表达式，**但那会引入一整套作用域规则**，
-    /// 而基线的更新路径根本没打算支持它。**在这里"顺手支持"等于发明一个没人验证过的语义。**
+    /// 而更新路径根本没打算支持它。**在这里"顺手支持"等于发明一个没人验证过的语义。**
     ///
-    /// The baseline reads `item.expression as? ScalarConstant&lt;*&gt; ?: return assignmentFailure(..., "expression is not supported")` —
+    /// The code reads `item.expression as? ScalarConstant&lt;*&gt; ?: return assignmentFailure(..., "expression is not supported")` —
     /// **only constants get through; everything else fails.**
     ///
     /// **That is not laziness**: Mongo's `$set` can carry aggregation expressions, **but that brings a whole scoping model**,
-    /// and the baseline's update path never intended to support it. **Supporting it "while here" invents a semantics nobody validated.**
+    /// and its update path never intended to support it. **Supporting it "while here" invents a semantics nobody validated.**
     /// </remarks>
     private static Result<BsonValue, ErrorCode, Error<ErrorCode>> TranslateExpression(
         UpdateAssignment.SetFromExpression assignment)
@@ -116,7 +116,7 @@ public static class MongoUpdateTranslator
         // **这是两种不同的东西**：字符串既可能是常量，也可能是一段没人解析过的表达式源码。
         // **所以这里不猜**——只有能确定是常量的输入才被接受，而字符串无法区分，于是失败。
         //
-        // **C# `SetFromExpression` carries a `string Expression` where the baseline carries a `ScalarExpression&lt;*&gt;`.
+        // **C# `SetFromExpression` carries a `string Expression` where the code carries a `ScalarExpression&lt;*&gt;`.
         // **Those are different things**: a string may be a constant or an unparsed expression source.
         // **So this does not guess** — only input known to be a constant is accepted, and a string cannot be distinguished, so it fails.
         return new Failed<BsonValue, ErrorCode, Error<ErrorCode>>(

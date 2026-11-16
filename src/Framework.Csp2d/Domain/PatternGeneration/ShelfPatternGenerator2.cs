@@ -1,6 +1,6 @@
 // 货架式图案生成器 / The shelf pattern generator.
-// 与固定 Kotlin 基线 `csp2d/domain/pattern_generation/ShelfPatternGenerator2.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `ShelfPatternGenerator2.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

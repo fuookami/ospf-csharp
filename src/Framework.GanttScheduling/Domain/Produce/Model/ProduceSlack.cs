@@ -25,14 +25,14 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Produce.Model;
 /// 生产松弛工具 / Produce slack utilities.
 /// </summary>
 /// <remarks>
-/// 与基线 `ProduceSlack.kt` 对齐。基线的 `produceSlack` 与任务调度那边的 `thresholdSlack` **不是同一个函数**：
-/// 前者的阈值是一个**常量**（`y = 常数多项式`），后者允许 `y` 是多项式。这里照抄常量版。
+/// 与对齐。`produceSlack` 与任务调度那边的 `thresholdSlack` **不是同一个函数**：
+/// 前者的阈值是一个**常量**（`y = 常数多项式`），后者允许 `y` 是多项式。这里沿用常量版。
 ///
 /// 三个开关的固定组合由调用方给，`constraint` 是这里的关键：**超量 / 不足表要自己加上界约束**，
 /// 所以松弛本身必须是 `constraint: false`——否则会多出一对 `x ± slack ≤/≥ y` 的行，把
 /// "超出上界多少"变成"与上界的绝对差"，超量和不足两个方向就都算错了。
 ///
-/// Aligned with the baseline's `ProduceSlack.kt`. Its `produceSlack` is **not** the same function as the task-scheduling `thresholdSlack`: here the threshold is a **constant**
+/// Aligned with its. Its `produceSlack` is **not** the same function as the task-scheduling `thresholdSlack`: here the threshold is a **constant**
 /// (`y` is a constant polynomial) while the other allows a polynomial `y`. This copies the constant form. The three switches are supplied by the caller, and `constraint` is the crux of:
 /// **the over/less tables add their own upper-bound rows**, so the slack itself must be `constraint: false` — otherwise an extra pair of `x ± slack ≤/≥ y` rows appears and turns "how far past the
 /// bound" into "the absolute distance from it", making both the over and the less direction wrong.
@@ -105,16 +105,16 @@ public static class ProduceSlackHelper {
     /// <param name="table">建出的符号表 / The built symbol table.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// **键是材料对象本身，不是下标**：基线的 `LinearIntermediateSymbols1` 按 `Shape1` 位置索引，而位置只有在索引连续时才等于索引；
-    /// 用对象做键就不必假设连续性。**符号名用 `Index` 而不是 `ToString`**：基线的 `${{product}}` 是 Kotlin data class 的
+    /// **键是材料对象本身，不是下标**：`LinearIntermediateSymbols1` 按 `Shape1` 位置索引，而位置只有在索引连续时才等于索引；
+    /// 用对象做键就不必假设连续性。**符号名用 `Index` 而不是 `ToString`**：`${{product}}` 是 Kotlin data class 的
     /// `toString`，C# 的普通类只给出类型名，两个产品会撞成同一个符号名（`SymbolRepetitive` 拒绝）。
     ///
     /// **The key is the material object, not a position**：`produce_quantity_（产品）` 的上界来自需求、消耗量的来自储备；
-    /// 不设范围，求解器只会把产量顶到无穷远。**范围非法就失败**，不要静默跳过——基线是 `.value!!`，跳过等于把上界丢了。
+    /// 不设范围，求解器只会把产量顶到无穷远。**范围非法就失败**，不要静默跳过——`.value!!`，跳过等于把上界丢了。
     ///
-    /// **The key is the material object, not a position**: the baseline's `LinearIntermediateSymbols1` indexes by `Shape1` position, which equals the material index only when indices are
+    /// **The key is the material object, not a position**: its `LinearIntermediateSymbols1` indexes by `Shape1` position, which equals the material index only when indices are
     /// contiguous; keying by object avoids assuming that. **The range must be set**: `produce_quantity_ (product)` takes its bound from the demand and the consumption one from the reserves; without
-    /// a range the solver simply drives the quantity to infinity. **An invalid range fails rather than being skipped**, since the baseline uses `.value!!` and skipping silently drops the bound.
+    /// a range the solver simply drives the quantity to infinity. **An invalid range fails rather than being skipped**, since the code uses `.value!!` and skipping silently drops the bound.
     /// </remarks>
     public static Try BuildQuantityTable<M>(
         IReadOnlyList<(M Material, Flt64? Lower, Flt64? Upper)> materials,
@@ -158,14 +158,14 @@ public static class ProduceSlackHelper {
     /// <param name="onLess">不足表就绪 / The less table is ready.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 对应基线 `AbstractProduce.register` / `AbstractConsumption.register` 的超量、不足两段。三处必须照抄：
+    /// 对应基线 `AbstractProduce.register` / `AbstractConsumption.register` 的超量、不足两段。三处必须沿用：
     ///
     /// 1. **松弛带 `constraint: false`**：上界行由本方法自己加（`pos ≤ overQuantity`、`neg ≥ -lessQuantity`）。
     ///    让松弛自带约束会多出一对行，把"超出多少"变成"与上界的绝对差"，两个方向都算错。
     /// 2. **没有需求 / 储备的项是空符号，不是零松弛**：空符号求值为零但不参与约束；给它建松弛等于凭空多出两个变量。
     /// 3. **先加表，再加行**：反过来的话行里引用的 `pos` / `neg` 还没进模型。
     ///
-    /// Mirrors the over/less halves of the baseline's `AbstractProduce.register` and `AbstractConsumption.register`. Three things must be copied: **the slack carries `constraint: false`**,
+    /// the over/less halves of the: and `AbstractConsumption.register`. Three things must be copied: **the slack carries `constraint: false`**,
     /// because the bound rows are added here (`pos` at most `overQuantity`, `neg` at least `-lessQuantity`) and letting the slack carry its own would add an extra pair and turn "how far past the bound" into
     /// "the absolute distance from it"; **an item without a demand or reserve gets an empty symbol rather than a zero slack**, since an empty symbol evaluates to zero without entering any
     /// constraint while a slack invents two variables; and **the table goes in before the rows**, otherwise the `pos`/`neg` the rows reference are not in the model yet.
@@ -279,7 +279,7 @@ public static class ProduceSlackHelper {
     /// <param name="id">符号名里的键，缺省用 `ToString` / The key used in symbol names, defaulting to `ToString`.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 对应基线四个"数量"目标与四个"超量 / 不足"目标的公共形状。四处必须照抄：
+    /// 对应基线四个"数量"目标与四个"超量 / 不足"目标的公共形状。四处必须沿用：
     ///
     /// 1. **阈值 0 时直接计费符号本身，非零时才建松弛**：给阈值 0 也建松弛，等于把"产量"换成"超出 0 的部分"，
     ///    在有下界时两者不同（下界 10 时前者是 10、后者是 0）。
@@ -289,11 +289,11 @@ public static class ProduceSlackHelper {
     /// 4. **空列表的处理两边不同**：基线四个"数量"目标照旧 `minimize` 一个空多项式，四个"超量 / 不足"目标
     ///    外层有 `if (materials.isNotEmpty)`，为空时连目标都不加。这个差别由 `skipWhenEmpty` 承载。
     ///
-    /// Mirrors the shared shape of the baseline's four "quantity" objectives and four "over/less" ones. Four things must be copied: **a zero threshold charges the symbol itself and only a non-zero
+    /// shared shape: **a zero threshold charges the symbol itself and only a non-zero
     /// one builds a slack**, since building one at zero turns "the quantity" into "the part above zero" and the two differ whenever there is a lower bound (10 versus 0 at a bound of 10);
     /// **`constraint: true`**, because these four objectives do not add their own rows the way the over/less tables do, so the slack must carry "`x - pos` at most `threshold`" or `pos` is a free variable with
-    /// no ceiling that minimisation pins at zero and maximisation drives to infinity; **the coefficient multiplies outside the slack**, matching the baseline's `coefficient(x) * slack`; and **the empty
-    /// list is handled differently on the two sides**, the baseline's four "quantity" objectives minimising an empty polynomial anyway while the four "over/less" ones sit inside
+    /// no ceiling that minimisation pins at zero and maximisation drives to infinity; **the coefficient multiplies outside the slack**, matching its `coefficient(x) * slack`; and **the empty
+    /// list is handled differently on the two sides**, its four "quantity" objectives minimising an empty polynomial anyway while the four "over/less" ones sit inside
     /// `if (materials.isNotEmpty)` and add no objective at all — a difference carried by `skipWhenEmpty`.
     /// </remarks>
     public static Try BuildObjective<M>(
@@ -382,16 +382,16 @@ public static class ProduceSlackHelper {
     /// <param name="args">影子价格键 / The shadow-price key.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 行名照抄基线 `${name}_ub_${product}` 的顺序：**后缀在前、标识在后**，`produce_quantity_ub_0`。
+    /// 行名照做 `${name}_ub_${product}` 的顺序：**后缀在前、标识在后**，`produce_quantity_ub_0`。
     ///
-    /// 对应基线 `ProduceQuantityConstraint.invoke` / `ConsumptionQuantityConstraint.invoke`。三处必须照抄：
+    /// 对应基线 `ProduceQuantityConstraint.invoke` / `ConsumptionQuantityConstraint.invoke`。三处必须沿用：
     ///
     /// 1. **有超量松弛时上界加在 `polyX` 上，不是 `quantity` 上**：`polyX = x - pos`，正是"扣掉超量之后的数量"。
     ///    加在 `quantity` 上会让超量变量失去意义——超出的部分照样违反上界。
     /// 2. **下界用 `x + neg`**（`withNegative` 的 `SignedLeft`），同理。
     /// 3. **两个分支的方向不能反**：`polyX` 与 `quantity` 求值都非负，反了照样能解，只是约束变成"上界至少"。
     ///
-    /// Mirrors the baseline's `ProduceQuantityConstraint.invoke` and `ConsumptionQuantityConstraint.invoke`. Three things must be copied: **with an over slack the upper bound applies to
+    /// And `ConsumptionQuantityConstraint.invoke`. Three things must be copied: **with an over slack the upper bound applies to
     /// `polyX`, not to `quantity`** — `polyX = x - pos` is exactly "the quantity after the excess is discounted", and applying it to `quantity` makes the over variable pointless since the excess
     /// would still violate the bound; **the lower bound uses `x + neg`** (the `SignedLeft` of `withNegative`), for the same reason; and **the two directions must not be swapped**, since both `polyX`
     /// and `quantity` evaluate non-negative and a swap still solves, merely asserting "at least the upper bound".
@@ -463,18 +463,18 @@ public static class ProduceSlackHelper {
     /// 而 C# 的 `IIntermediateSymbol.Args` 是从 `Parent` 派生的只读属性（`IntermediateSymbol.cs:37`），
     /// 符号建好之后挂不上去。 已经把键挂在**约束行**的 `Args` 上，而行正是对偶值的来源——从行取键是等价且更直接的。
     ///
-    /// 四处必须照抄：
+    /// 四处必须沿用：
     ///
-    /// 1. **只有挂键的行才有价格**：没挂键的行静默跳过，不是错误（基线的 `when` 没有 `else`）。
-    /// 2. **按行累加**：同一个键可能被多条行命中，基线用 `putOrAdd`。
+    /// 1. **只有挂键的行才有价格**：没挂键的行静默跳过，不是错误（`when` 没有 `else`）。
+    /// 2. **按行累加**：同一个键可能被多条行命中，`putOrAdd`。
     /// 3. **对偶表里没有该行时什么都不做**，不能当成零价写进去——零价会被后续过滤掉，看起来像"算过"。
     /// 4. **表未建立时跳过整段**，不是失败：`refresh` 可能在注册之前被调用。
     ///
-    /// Mirrors the baseline's `Produce.refresh` and `Consumption.refresh`, but **the entry point for the key differs**: the baseline reads it from **the symbol's `args`**, while C#'s
+    /// And `Consumption.refresh`, but **the entry point for the key differs**: the code reads it from **the symbol's `args`**, while C#'s
     /// `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and cannot be attached after construction. already attaches the key to the
-    /// **constraint row's** `Args`, and the row is what the dual value is keyed by, so reading it from the row is equivalent and more direct. Four things must be copied: **only a row carrying a key has
-    /// a price** and a row without one is skipped silently rather than being an error (the baseline's `when` has no `else`); **prices accumulate per row**, since one key can be hit by several rows and
-    /// the baseline uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as "already computed"; and **a table that
+    /// **constraint row's** `Args`, and the row is what the dual value is keyed by, so reading it from the row is equivalent and more direct. Four things are carried over: **only a row carrying a key has
+    /// a price** and a row without one is skipped silently rather than being an error (its `when` has no `else`); **prices accumulate per row**, since one key can be hit by several rows and
+    /// the code uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as "already computed"; and **a table that
     /// was never built skips the whole block** instead of failing, since `refresh` may run before registration.
     /// </remarks>
     public static Try RefreshTable(

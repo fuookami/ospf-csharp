@@ -15,13 +15,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **一件货可以同时属于多个货类** / One item can belong to several cargo classes.
 /// </summary>
 /// <remarks>
-/// 基线的 `enabled` 反复问"这件货是不是 AOG **或** MAT"——因为它真的可能是两者。C# 的 `Item` 原来只有一个
+/// `enabled` 反复问"这件货是不是 AOG **或** MAT"——因为它真的可能是两者。C# 的 `Item` 原来只有一个
 /// `CargoType`，只能表达"是 AOG 或 MAT 中的一个"。这不是风格问题：`AOGMATAppointed`、`NormalBulkAppointed`
 /// 两条规则就是为组合货类存在的，单值模型下它们要么永远成立、要么永远不成立，**两种都错**。
 ///
 /// 舱位类型同理：`enabled` 的十几条检查全是"这个码在不在集合里"，所以类型必须挂在**舱位**上，且是集合。
 ///
-/// The baseline's `enabled` repeatedly asks "is this item AOG **or** MAT" — because it can be both. C#'s `Item` used to hold a single `CargoType`, which can only say "it is one of
+/// The code's `enabled` repeatedly asks "is this item AOG **or** MAT" — because it can be both. C#'s `Item` used to hold a single `CargoType`, which can only say "it is one of
 /// AOG or MAT". That is not a style point: the `AOGMATAppointed` and `NormalBulkAppointed` rules exist exactly for combined classes, and under a single-value model they either
 /// always hold or never hold — **both wrong**. Same for position types: a dozen checks in `enabled` are "is this code in the set", so the type belongs to the **position** as a set.
 /// </remarks>
@@ -111,13 +111,13 @@ public class Demo2StowageTypeTests {
     }
 
     /// <summary>
-    /// **舱位类型码与基线逐项对齐** / The position type codes match the baseline member for member.
+    /// **舱位类型码与基线逐项对齐** / The position type codes match the code member for member.
     /// </summary>
     /// <remarks>
     /// 名字就是规则的开关：把 `CopyItemForbidden` 之类差一个字母的名字写进来不会报错，只会让那条规则永远不成立。
     /// 因此这里连**数量**一起钉（基线 7 项）。
     ///
-    /// The names are the rules' switches: a near-miss spelling never fails to compile, it just makes that rule never fire. The **count** is pinned too (7 in the baseline).
+    /// The names are the rules' switches: a near-miss spelling never fails to compile, it just makes that rule never fire. The **count** is pinned too (7 in the code).
     /// </remarks>
     [Fact]
     public void PositionType_ShouldMirrorTheBaselineCodes() {

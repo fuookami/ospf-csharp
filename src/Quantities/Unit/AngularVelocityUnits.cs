@@ -8,13 +8,13 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 角速度单位 / Angular velocity units.
 /// </summary>
 /// <remarks>
-/// **按基线 `AngularVelocity.kt` 新建，2 个单位。**
+/// **按新建，2 个单位。**
 ///
 /// **角速度与频率同量纲**（都是 `1/s`），**所以 `RadianPerSecond` 与 `Hertz` 在量纲上不可区分**——
 /// **这与力矩/能量是同一类 SI 取舍**：**"每秒转多少弧度"与"每秒多少个周期"数值差 `2π`，**
 /// **而量纲完全一样。**
 ///
-/// **Created from the baseline `AngularVelocity.kt`, two units.**
+/// **Created from the code, two units.**
 ///
 /// **Angular velocity and frequency share a dimension** (both `1/s`), **so `RadianPerSecond` and `Hertz` are
 /// dimensionally indistinguishable** — **the same kind of SI trade-off as the earlier torque and energy**:

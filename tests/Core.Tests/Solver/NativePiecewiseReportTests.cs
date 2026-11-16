@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 分段选择：端点容差、内部归属、夹紧后的返回值 / Endpoint tolerance, interior ownership, clamped value.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `selectSegment`。
+/// 对齐的 `selectSegment`。
 ///
 /// Adds </remarks>
 public class NativePiecewiseReportTests
@@ -203,7 +203,7 @@ public class NativePiecewiseReportTests
     ///
     /// **所以查找必然命中，`no valid segment` 是死代码。**
     ///
-    /// **基线保留了它，本仓库照抄。判据不改这一点，而是<b>把不可达本身记下来</b>，
+    /// **基线保留了它，本仓库沿用。判据不改这一点，而是<b>把不可达本身记下来</b>，
     /// 并抽样验证这个结论——一个没有判据的"死代码"下次读代码时会被当成"还有情形没处理"。**
     ///
     /// **This is the direction's seventh "untestable" finding, and this one can be <b>proved</b>, not merely "not
@@ -214,8 +214,8 @@ public class NativePiecewiseReportTests
     /// `[b_{i-1}, b_i] ∋ v` and the search hits there.** **If `i == 0` then `v == b_0`; for segment 0 to miss we need
     /// `b_1 < v`, and for segment 1 to miss `b_2 < v`, and so on, giving `b_n < v` — contradicting `v <= b_n`.**
     ///
-    /// **So the search always hits and `no valid segment` is dead code.** **The baseline keeps it and copies
-    /// the baseline; the criterion does not change that but <b>records the unreachability</b> and samples it, because dead
+    /// **So the search always hits and `no valid segment` is dead code.** **The code keeps it and copies
+    /// the code; the criterion does not change that but <b>records the unreachability</b> and samples it, because dead
     /// code without a criterion gets read next time as "a case still unhandled".**
     /// </remarks>
     [Fact]

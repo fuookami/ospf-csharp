@@ -35,11 +35,11 @@ public class BunchCostMinimization<T, E, A>
     /// <param name="compilation">任务束编译结果 / Bunch compilation result</param>
     /// <param name="name">管道名称 / Pipeline name</param>
     /// <remarks>
-    /// 参数类型是 **`ITaskCost`** 而不是具体的 `BunchCompilation&lt;…&gt;`：基线的 `BunchCompilation&lt;*, V, T, E, A&gt;` 那个星号在 C# 里做不到
+    /// 参数类型是 **`ITaskCost`** 而不是具体的 `BunchCompilation&lt;…&gt;`：`BunchCompilation&lt;*, V, T, E, A&gt;` 那个星号在 C# 里做不到
     /// （泛型不变），于是 `BunchCompilation&lt;FlightTaskBunch, …&gt;` 根本传不进来——Demo4 因此把这条管线**跳过**了。
     /// 目标真正需要的只是"成本符号"，那是 `ITaskCost` 的事。
     ///
-    /// The parameter is **`ITaskCost`**, not the concrete `BunchCompilation&lt;…&gt;`: the baseline's `BunchCompilation&lt;*, V, T, E, A&gt;` star cannot be expressed in C#
+    /// The parameter is **`ITaskCost`**, not the concrete `BunchCompilation&lt;…&gt;`: its `BunchCompilation&lt;*, V, T, E, A&gt;` star cannot be expressed in C#
     /// (generics are invariant), so `BunchCompilation&lt;FlightTaskBunch, …&gt;` could not be passed at all — which is why Demo4 **skipped** this pipeline. The objective only needs
     /// "the cost symbol", and that is `ITaskCost`'s job.
     /// </remarks>

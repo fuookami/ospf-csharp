@@ -1,18 +1,18 @@
 // 装箱器 / Packer.
-// 与固定 Kotlin 基线 `bpp2d/domain/packing/service/Packer.kt` 对应：把排样完成的板材展开为二维放置列表，计算装载
+// 与固定 Kotlin 对应：把排样完成的板材展开为二维放置列表，计算装载
 // 顺序、校验几何并汇总物料，输出 `PackingResult`。
-// Mirrors the pinned baseline: expands the laid-out sheets into 2D placements, computes the loading order, validates
+// Expands the laid-out sheets into 2D placements, computes the loading order, validates
 // the geometry, summarises materials and emits a `PackingResult`.
 //
 // 层模型已在 earlier 移植，因此本类同时提供**接 `Sheet` 的正规入口**（`InvokeSheets`）与接扁平放置列表的入口
 // （`Invoke`）。前者与基线签名一致，后者在只要放置、不关心层的场景下少一次包装。
 // The layer model landed in earlier, so this offers both the **proper `Sheet` entry point** (`InvokeSheets`) and the
-// flat-placement one (`Invoke`). The former matches the baseline signature; the latter skips a wrapper when only
+// flat-placement one (`Invoke`). The former matches the code signature; the latter skips a wrapper when only
 // placements matter.
 //
 // 物料汇总在 earlier 接通：`MaterialKey`／`Material` 与 `IAbstractItem.MaterialAmounts` 均已移植。
 // The material summary came online in earlier: `MaterialKey` / `Material` and `IAbstractItem.MaterialAmounts` are all
-// ported now.
+// implemented now.
 
 using System;
 using System.Collections.Generic;

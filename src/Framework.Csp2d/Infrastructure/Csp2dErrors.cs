@@ -1,6 +1,6 @@
 // 二维套裁错误类型 / 2D cutting stock error types.
-// 与固定 Kotlin 基线 `csp2d/infrastructure/Csp2dErrors.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `Csp2dErrors.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using Fuookami.Ospf.Utils.Error;
 

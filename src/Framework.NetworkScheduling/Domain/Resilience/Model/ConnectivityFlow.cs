@@ -1,6 +1,5 @@
 // 韧性域：辅助连通流 / Resilience domain: the auxiliary connectivity flow.
-// 与固定 Kotlin 基线 `resilience/model/ConnectivityFlow.kt`（4582 字节）对应。
-// Mirrors the pinned baseline's `resilience/model/ConnectivityFlow.kt`.
+// 与固定 Kotlin （4582 字节）对应。
 
 using System;
 using System.Collections.Generic;

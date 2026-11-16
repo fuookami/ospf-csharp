@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 普通散货同目的地约束 / The "same-destination normal bulk" rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/NormalBulkDestinationAssignmentLimit.kt`：普通散货舱里，**两件普通散货最多装一件**——
+/// 对齐：普通散货舱里，**两件普通散货最多装一件**——
 /// 一行 <c>stowage_{i1,j} + stowage_{i2,j} ≤ 1</c> 覆盖每一对。散货舱是"一堆散装混在一起"，两件不同目的地的散货混装会分不开，
 /// 所以同一舱位只允许一件普通散货。
 ///
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 ///
 /// 配对用 `i2 > i1` 的**组合**而不是排列：写成全排列会让每一对出现两次，约束表翻倍而模型不变。
 ///
-/// Aligned with the baseline: in a normal bulk hold, **at most one of two normal bulk items** may be loaded, one row <c>stowage_{i1,j} + stowage_{i2,j} ≤ 1</c> per pair. A bulk
+/// In a normal bulk hold, **at most one of two normal bulk items** may be loaded, one row <c>stowage_{i1,j} + stowage_{i2,j} ≤ 1</c> per pair. A bulk
 /// hold is a loose pile, so two items for different destinations would be inseparable; hence one normal bulk item per position. Four filters, tabulated above, are all required.
 /// Pairs are **combinations** with `i2 > i1`, not permutations: the latter emits every pair twice, doubling the table while the model is unchanged.
 /// </remarks>

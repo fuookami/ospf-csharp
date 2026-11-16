@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness;
 /// 货物时效上下文 / The express-effectiveness context.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/ExpressEffectivenessContext.kt` 对齐：**初始化幂等**，**`Init` 收 `stowageMode`**。
+/// 与对齐：**初始化幂等**，**`Init` 收 `stowageMode`**。
 ///
 /// 与其它子域不同，这里 `Init` 必须知道装载模式——聚合按模式二选一地建子模型，而模式是请求的属性，不是注册时的参数。
 ///
-/// Aligned with the baseline: **initialisation is idempotent** and **`Init` takes the `stowageMode`**. Unlike the other sub-domains, `Init` must know the mode here, because the
+/// **initialisation is idempotent** and **`Init` takes the `stowageMode`**. Unlike the other sub-domains, `Init` must know the mode here, because the
 /// aggregation builds one of two sub-models by mode, and the mode is a property of the request rather than a registration-time argument.
 /// </remarks>
 public sealed class ExpressEffectivenessContext

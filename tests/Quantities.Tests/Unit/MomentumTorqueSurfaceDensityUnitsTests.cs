@@ -36,7 +36,7 @@ public class MomentumTorqueSurfaceDensityUnitsTests
                 "the baseline declares exactly one momentum unit");
     }
 
-    /// <summary>**基线的两个力矩单位都在** / Both baseline torque units are present.</summary>
+    /// <summary>**两个力矩单位都在** / Both baseline torque units are present.</summary>
     [Fact]
     public void TheTorqueUnits_ShouldCoverTheBaseline()
     {
@@ -115,7 +115,7 @@ public class MomentumTorqueSurfaceDensityUnitsTests
             ForceUnits.Newton.Multiply(SIBaseUnits.Meter).Quantity);
     }
 
-    /// <summary>**基线的两个面密度单位都在，且相差 1000 倍** / Both surface-density units, 1000 apart.</summary>
+    /// <summary>**两个面密度单位都在，且相差 1000 倍** / Both surface-density units, 1000 apart.</summary>
     /// <remarks>
     /// **这两个名字只差一个词、差 1000 倍**——**与 `LitersPerMinute` / `LitersPerSecond` 是同一类风险。**
     /// **g/m² 在纺织与造纸里极常用（纸张克重），混用会让整批材料的定量错 1000 倍。**

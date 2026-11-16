@@ -91,7 +91,7 @@ public sealed class FileSearchStoreTests : IDisposable {
     /// `..`，`Path.Combine(root, key)` 加 `GetFullPath` 就**不可能**逃出根目录——单段文件名没有逃逸手段。
     /// 把包含性检查改成 `true` 后，上面 `Key_ShouldRejectPathEscape` 的四项断言**仍然全部通过**。
     ///
-    /// 因此这是**第六次等价变异**。保留它的理由与前面几次不同：**它不是"基线里的防御性代码"，而是"纵深防御的第二道"**——
+    /// 因此这是**第六次等价变异**。保留它的理由与前面几次不同：**它不是"的防御性代码"，而是"纵深防御的第二道"**——
     /// 字符串检查是白名单式的（拒绝分隔符），包含性检查是黑盒式的（验证结果）。白名单写错一个字符，第二道仍能兜住；
     /// 但它当前不承担可观测职责，**不能声称它在防住什么**。
     /// I originally assumed a key that only the post-normalization check could stop would disprove this line, but that proved
@@ -100,7 +100,7 @@ public sealed class FileSearchStoreTests : IDisposable {
     /// passes all four assertions in `Key_ShouldRejectPathEscape` above.
     ///
     /// So this is the **sixth equivalent mutant**. It is kept for a different reason than the earlier ones: **it is not "defensive code
-    /// from the baseline" but "the second layer of defence in depth"** — the string check is whitelist-style (rejecting separators) and
+    /// from the code" but "the second layer of defence in depth"** — the string check is whitelist-style (rejecting separators) and
     /// the containment check is black-box-style (verifying the result). If the whitelist misses a character, the second layer still
     /// catches it; but it currently carries no observable duty, and **we must not claim it stops anything**.
     /// </remarks>

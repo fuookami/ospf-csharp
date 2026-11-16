@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 原生 PWL primitive：严格递增、连续性与 y 点推导 / Strict increase, continuity, y-point derivation.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewise.kt` 的 `NativePiecewiseData` 与 `prepareNativePiecewise`。
+/// 对齐的 `NativePiecewiseData` 与 `prepareNativePiecewise`。
 ///
 /// Adds </remarks>
 public class NativePiecewiseTests
@@ -258,7 +258,7 @@ public class NativePiecewiseTests
     ///
     /// **最初判据断言的是 `no valid segment`，实测拿到的是 `outside its domain`——
     /// 因为 `upper` 取最后一个断点。改判据之前先想清楚是判据错还是实现错：
-    /// 这里是判据错，实现与基线一致。**
+    /// 这里是判据错，实现。**
     ///
     /// **The primitive layer says `breakpoints must be strictly increasing` — accurate, pointing at the
     /// structure.**
@@ -273,7 +273,7 @@ public class NativePiecewiseTests
     ///
     /// **My first version asserted `no valid segment` and actually got `outside its domain`, because `upper` is the last
     /// breakpoint.** **Before changing a criterion, decide whether the criterion or the implementation is wrong: here the
-    /// criterion was, and the implementation matches the baseline.**
+    /// criterion was, and the implementation matches the code.**
     /// </remarks>
     [Fact]
     public void TheTwoLayers_ShouldReportShuffledBreakpointsDifferently() {

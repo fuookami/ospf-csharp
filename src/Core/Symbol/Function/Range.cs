@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一组多项式的极差：<c>max − min</c> / The range of several polynomials: `max - min`.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CompositeFunctions.kt` 的 `RangeFunction`。
+/// 对齐的 `RangeFunction`。
 ///
 /// **极差不是"两两之差的最大值"**，**而是 `max(inputs) − min(inputs)`。**
 /// **两者在只有两个输入时相同，在三个及以上时不同**：
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`Evaluate` 直接按定义算，不走 `max`/`min`**：
 /// **这条路径与编码无关，所以它能独立验证编码对不对。**
 ///
-/// Following the baseline's `RangeFunction`.
+/// Following its `RangeFunction`.
 ///
 /// **The range is not "the largest pairwise difference"** but `max(inputs) - min(inputs)`.
 /// **The two agree for two inputs and differ beyond that.**
@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **No extremum encoding lives here**: **it builds one `MaxFunction` and one `MinFunction` and subtracts them.**
 /// **The encoding is entirely in those two classes.**
 ///
-/// **`Evaluate` computes the definition directly rather than through `max`/`min`**:
+/// **`Evaluate` computes the definition directly rather than through `max`/`min`**.
 /// **that path is independent of the encoding, so it can check the encoding.**
 /// </remarks>
 public sealed class RangeFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynomial<V>

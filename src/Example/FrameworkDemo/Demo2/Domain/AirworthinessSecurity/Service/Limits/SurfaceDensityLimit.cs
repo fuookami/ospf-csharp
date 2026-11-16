@@ -19,18 +19,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 表面密度上限 / The upper bound on surface density.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/SurfaceDensityLimit.kt`：对**每个限区** × **每个落在该限区且可用的舱位**加一行
+/// 逐条对齐：对**每个限区** × **每个落在该限区且可用的舱位**加一行
 /// `surface_density_{舱位} ≤ 限区的最大表面密度`，名为 `{name}_{限区名}_{舱位名}`。
 ///
 /// 三处细节：
 ///
 /// 1. **不可用舱位跳过**。基线判 `position.status.unavailable`。给一个已经不可用的舱位加密度上限毫无意义，而且它的符号根本不该有价值。
 /// 2. **区域逐个来**，不是"取最严的限区"。两个区域重叠时，重叠处的舱位必须**同时**满足两条上限——取最严可以少一行约束，但那要求先算出
-///    哪个更严，而"更严"是随舱位面积变化的。基线不这么做，照抄。
+///    哪个更严，而"更严"是随舱位面积变化的。基线不这么做。
 /// 3. **名字三段拼接**。`surface_density_limit_Z1_P1` 这种名字让人能从约束反查到区域与舱位；只用 `name` 的话所有行同名，
 ///    求解器报"第 3 条约束不可行"时无法定位。
 ///
-/// Mirrors the baseline: for **each zone** × **each available position intersecting that zone**, add `surface_density_{position} ≤ zone maximum`, named
+/// for **each zone** × **each available position intersecting that zone**, add `surface_density_{position} ≤ zone maximum`, named
 /// `{name}_{zone}_{position}`. Three details: (1) **unavailable positions are skipped** — capping the density of a position that cannot take cargo is meaningless and its symbol should
 /// carry no value; (2) **zones are handled one by one**, not by picking the tightest — where two zones overlap the positions must satisfy **both** caps, and "which is tighter" varies
 /// with each position's area; (3) **the name is three segments**, so a solver's "constraint 3 is infeasible" can be traced back to a zone and a position.

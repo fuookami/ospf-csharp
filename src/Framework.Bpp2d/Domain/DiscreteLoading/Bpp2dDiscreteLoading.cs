@@ -31,26 +31,26 @@ public sealed record LoadingRectangle<V>(string Id, string SpaceId, Box2Geometry
 /// 二维离散装载几何适配 / Two-dimensional discrete-loading geometry adapter.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `bpp2d/domain/discrete_loading/DiscreteLoadingContext.kt` 的 `Bpp2dDiscreteLoading.context`。**与一维的差别只有一处**：
+/// 对齐的 `Bpp2dDiscreteLoading.context`。**与一维的差别只有一处**：
 /// 判交从"区间重叠"换成"矩形精确相交"，其余（一一对应校验、合并业务互斥、`validate`）逐字相同。
 ///
 /// **为什么值得单独存在**：Demo2 的 `LoadingContextFactory` 一直只走一维内核，原因是"Bpp2d 没有 `Context` 工厂"
 /// （那句话写在那个文件的类注释里，是本仓记在案的真实缺口）。**补上它，二维装载才不是一句空话。**
 ///
-/// **两处与基线的差异，都是"基线那条做不到或有歧义"**：
+/// **两处与差异，都是"条做不到或有歧义"**：
 ///
-/// 1. **用 `Box2Geometry.Overlapped` 而不是另写一套判交**。基线的 `normalized.getValue(a).overlapped(...)` 走的是
+/// 1. **用 `Box2Geometry.Overlapped` 而不是另写一套判交**。`normalized.getValue(a).overlapped(...)` 走的是
 ///    共享几何的 `Box2Geometry`，本仓的同名类型**直接委托** `QuantityBox2.Overlapped`，所以这里也走它——
 ///    **再写一份相交算法等于给同一个语义留两份实现**。
 /// 2. **`validate` 在 `DiscreteLoadingContext` 构造里已经跑过**（本仓的构造即校验），所以这里不重复调用；
-///    基线的 `context.validate` 是因为它的构造不做校验。**照抄一次多余的校验不会更安全，只会让失败点变两个。**
+///    `context.validate` 是因为它的构造不做校验。**沿用一次多余的校验不会更安全，只会让失败点变两个。**
 ///
-/// Aligned with the baseline's `Bpp2dDiscreteLoading.context`. **The only difference from 1-D is the intersection test** — rectangles instead of intervals;
+/// Aligned with its `Bpp2dDiscreteLoading.context`. **The only difference from 1-D is the intersection test** — rectangles instead of intervals;
 /// everything else (the two-way correspondence check, merging business conflicts, validation) is identical. **Why it earns a file**: Demo2's `LoadingContextFactory`
 /// has only ever used the 1-D kernel because "Bpp2d has no `Context` factory" — a real gap recorded in that file's remarks. **With this in place, 2-D loading stops
-/// being a slogan.** Two deliberate differences, both because the baseline's line cannot be honoured or is ambiguous: the intersection test **reuses**
+/// being a slogan.** Two deliberate differences, both because its line cannot be honoured or is ambiguous: the intersection test **reuses**
 /// `Box2Geometry.Overlapped` (whose C# counterpart delegates to `QuantityBox2.Overlapped`) rather than growing a second algorithm for the same semantics, and
-/// **`validate` is not called again** since this port's `DiscreteLoadingContext` constructor already validates — the baseline calls it because its constructor does
+/// **`validate` is not called again** since this implementation's `DiscreteLoadingContext` constructor already validates — the code calls it because its constructor does
 /// not. **Copying a redundant check does not make things safer; it only creates a second failure point.**
 /// </remarks>
 public static class Bpp2dDiscreteLoading

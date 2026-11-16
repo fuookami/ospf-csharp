@@ -1,10 +1,9 @@
 // 物品域 id 语义标记接口 / Item domain id semantic marker interfaces.
-// 与固定 Kotlin 基线 `item/model/Id.kt`（82 行）对应。
-// Mirrors the pinned baseline's `Id.kt`.
+// 与固定 Kotlin 对应。
 //
-// 基线把裸 `String` id 改为**语义化标记接口**，业务侧实现接口、子类协变 override，以保留类型安全。C# 侧此前 `ActualItem.Id`
+// 裸 `String` id 改为**语义化标记接口**，业务侧实现接口、子类协变 override，以保留类型安全。C# 侧此前 `ActualItem.Id`
 // 仍是裸 `string`，物品编号与箱型编号、物料编号在类型上无法区分——把物品编号传给要箱型编号的方法，编译能过。
-// The baseline replaced raw `String` ids with **semantic marker interfaces** so implementations and covariant overrides
+// The code replaced raw `String` ids with **semantic marker interfaces** so implementations and covariant overrides
 // keep type safety. On the C# side `ActualItem.Id` was still a raw `string`, leaving item, bin-type and material identifiers
 // indistinguishable at the type level — passing an item id where a bin-type id was expected compiled fine.
 
@@ -35,7 +34,7 @@ public interface IBinTypeId : IComparable<IBinTypeId>, IEquatable<IBinTypeId> {
 /// <remarks>
 /// 基线此处只声明接口，实际仍用 infrastructure 侧的 `MaterialNo` 值类——因为 infrastructure 不依赖 item-context，值类无法
 /// 实现该接口。C# 侧保持同样分工：本接口留给未来的实现者，现有代码继续用 <see cref="Infra.MaterialNo"/>。
-/// The baseline only declares the interface here and still uses the infrastructure-side `MaterialNo` value class, because
+/// The code only declares the interface here and still uses the infrastructure-side `MaterialNo` value class, because
 /// infrastructure does not depend on item-context and a value class cannot implement it. The C# port keeps the same split:
 /// this interface is for future implementers while existing code keeps using <see cref="Infra.MaterialNo"/>.
 /// </remarks>
@@ -49,7 +48,7 @@ public interface IMaterialId : IComparable<IMaterialId>, IEquatable<IMaterialId>
 /// </summary>
 /// <remarks>
 /// 与 <see cref="IMaterialId"/> 同理：基线保留 `PackageCode` 值类，本接口供未来实现者使用。
-/// Same rationale as <see cref="IMaterialId"/>: the baseline keeps the `PackageCode` value class and this interface is for
+/// Same rationale as <see cref="IMaterialId"/>: the code keeps the `PackageCode` value class and this interface is for
 /// future implementers.
 /// </remarks>
 public interface IPackageId : IComparable<IPackageId>, IEquatable<IPackageId> {
@@ -109,7 +108,7 @@ public sealed record BinTypeIdImpl(string Value) : IBinTypeId {
 /// 工厂函数存在的理由是**不直接暴露实现类构造器**：调用方只拿到接口，将来换实现不必改动调用点。基线注释明确写了这一点，
 /// 这里保持一致。
 /// The factories exist so **implementation constructors are not exposed directly**: callers only hold the interface, and a
-/// future implementation swap needs no call-site changes. The baseline states this explicitly and the port keeps it.
+/// future implementation swap needs no call-site changes. The code states this explicitly and the implementation keeps it.
 /// </remarks>
 public static class IdFactory {
     /// <summary>

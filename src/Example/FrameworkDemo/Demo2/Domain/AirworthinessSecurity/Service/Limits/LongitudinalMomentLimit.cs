@@ -21,22 +21,22 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 把每个飞行阶段的纵向力矩限制在给定区间 / Constrain the longitudinal moment of every flight phase to a supplied interval.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/LongitudinalMomentLimit.kt`：**每个飞行阶段两行**，
+/// 逐条对齐：**每个飞行阶段两行**，
 /// `longitudinal_torque_{phase} ≥ min`（名字 `{name}_{phase}_minimum`）与 `≤ max`（名字 `{name}_{phase}_maximum`）。
 ///
 /// 三处容易做错：
 ///
 /// 1. **这里是 `_minimum` 在前**。`PayloadLimit` 是先上限后下限、且上限不带后缀；这一个两个都带后缀、顺序也相反。
-///    两个文件的对称性不一样，照抄各自的样子。
+///    两个文件的对称性不一样，沿用各自的样子。
 /// 2. **`min` / `max` 是构造参数**，不是 `Torque` 的字段。基线从 `targetLongitudinalMoment ± maxLongitudinalMomentDeviation`
 ///    算出来再传进来，本类只负责用它建两行。
-/// 3. **缺符号时明确失败**。基线的 `torque.longitudinalTorque[phase]!!` 会抛 `NullPointerException`；
+/// 3. **缺符号时明确失败**。`torque.longitudinalTorque[phase]!!` 会抛 `NullPointerException`；
 /// C# 侧改成返回 `ApplicationFailed` 并说明是哪个阶段。
 ///
-/// Mirrors the baseline: **two rows per flight phase**, `longitudinal_torque_{phase} ≥ min` (named `{name}_{phase}_minimum`) then `≤ max` (`..._maximum`).
+/// **two rows per flight phase**, `longitudinal_torque_{phase} ≥ min` (named `{name}_{phase}_minimum`) then `≤ max` (`..._maximum`).
 /// Three easy mistakes: (1) **`_minimum` comes first here** — `PayloadLimit` adds the upper row first and only the lower row carries a suffix, whereas this one suffixes both and
-/// reverses the order; the two files are not symmetric and each is copied as written; (2) **`min` / `max` are constructor arguments**, not `Torque` fields — the baseline derives
-/// them from `targetLongitudinalMoment ± maxLongitudinalMomentDeviation` and only builds the rows here; (3) **a missing symbol fails explicitly** — the baseline's `!!` throws an
+/// reverses the order; the two files are not symmetric and each is copied as written; (2) **`min` / `max` are constructor arguments**, not `Torque` fields — the code derives
+/// them from `targetLongitudinalMoment ± maxLongitudinalMomentDeviation` and only builds the rows here; (3) **a missing symbol fails explicitly** — its `!!` throws an
 /// NPE, while this returns `ApplicationFailed` naming the phase.
 /// </remarks>
 internal sealed class LongitudinalMomentLimit
@@ -81,8 +81,8 @@ internal sealed class LongitudinalMomentLimit
                     "纵向力矩符号未注册 / the longitudinal torque symbol is not registered: " + phase));
             }
 
-            // 基线的 `phase.name.lowercase`：`ZeroFuel` → `zerofuel`，不是 `zero_fuel`。
-            // The baseline's `phase.name.lowercase`: `ZeroFuel` becomes `zerofuel`, not `zero_fuel`.
+            // `phase.name.lowercase`：`ZeroFuel` → `zerofuel`，不是 `zero_fuel`。
+            // The code's `phase.name.lowercase`: `ZeroFuel` becomes `zerofuel`, not `zero_fuel`.
             string suffix = phase.ToString().ToLowerInvariant();
 
             string minimumName = Name + "_" + suffix + "_minimum";

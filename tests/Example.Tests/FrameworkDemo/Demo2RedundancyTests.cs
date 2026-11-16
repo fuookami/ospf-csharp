@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **冗余域：备用容量、纵向平衡与两条目标** / The redundancy domain: spare capacity, longitudinal balance and two objectives.
 /// </summary>
 /// <remarks>
-/// 基线的冗余域只有 4 个 `.kt` 源文件，做两件事：
+/// 冗余域只有 4 个 源文件，做两件事：
 ///
 /// 1. **备用容量** = 主甲板总容量 − 主甲板装载重量（实际与推荐各一份）+ 松弛；
 /// 2. **纵向平衡** = 主甲板纵向力矩的**实际与推荐之差** + 松弛。
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 推荐与实际共用一个多项式（备用容量在规划阶段就等于实际值），或者两条目标共用一个松弛（纵向平衡不再被优化）。
 /// 都能编译、能求解，报告里数字也都"合理"。
 ///
-/// The baseline domain is four `.kt` sources doing two things: spare capacity (main-deck capacity minus main-deck load weight, once actual and once estimated, plus a slack) and
+/// The code domain is four sources doing two things: spare capacity (main-deck capacity minus main-deck load weight, once actual and once estimated, plus a slack) and
 /// longitudinal balance (the actual-minus-estimated main-deck torque, plus a slack). Both objectives are `minimize(coefficient × slack)` with an identical shape. The classic
 /// mistake is collapsing the two: sharing one polynomial between actual and estimated (spare capacity then equals the actual during planning), or sharing one slack between the two
 /// objectives (the balance stops being optimised). Both compile, both solve, and the report looks reasonable either way.

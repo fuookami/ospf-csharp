@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// sigmoid 的两个参数各有各的失效方式 / The sigmoid's two parameters fail in different ways.
 /// </summary>
 /// <remarks>
-/// 补 `LogisticApproximationFunction`（基线 `NonlinearPiecewise.kt`）与 `ZeroBand`（基线 `ZeroBand.kt`）。
+/// 补 `LogisticApproximationFunction`与 `ZeroBand`。
 ///
 /// **中点搞错，曲线整体平移；陡度搞错，曲线整体变平或反号——两者都不报错。**
 /// **而"值都在 0 与 1 之间"这条对任何 sigmoid 形态的实现都成立，分不开它们。**
@@ -127,7 +127,7 @@ public class LogisticAndZeroBandTests
     /// **两支写法的好处在于中间量不是无穷——而中间量不可从结果观察，
     /// 所以这条判据不声称它验证了那件事。**
     ///
-    /// **The first version asserted "never exactly 0 or 1" and was turned red by measurement**:
+    /// **The first version asserted "never exactly 0 or 1" and was turned red by measurement**.
     /// **`σ(-800)` underflows to `0.0` in double and `σ(700)` rounds to `1.0`** —
     /// **`e^(-800) ≈ 10^-347` is below the smallest subnormal, and `1/(1+10^-305)` rounds to one.**
     ///

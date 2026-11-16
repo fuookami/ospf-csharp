@@ -14,7 +14,6 @@ namespace Fuookami.Ospf.Benchmark;
 /// 真实图入口的冷构建、反向复用及稳态读取 / Production cold graph construction, reverse reuse, and warm reads.
 /// </summary>
 /// <remarks>
-/// 与基线 `NetworkIndexBuildBenchmark.kt`（3094 B）对应。
 ///
 /// **`Setup` 里已经把图预热一次**（`StronglyConnectedComponents`），所以 `WarmReachable` 测的是"索引已建好"的读取，
 /// 而 `ColdReachable` 每次都用新图。**两者如果共用同一张图，两个基准测的就是同一件事**，

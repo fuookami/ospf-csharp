@@ -31,7 +31,7 @@ public sealed record PositionPair(int First, int Second);
 /// 分隔空载装载模型 / The divide-empty-loading model.
 /// </summary>
 /// <remarks>
-/// 与基线 `soft_security/model/DivideEmptyLoading.kt` 对齐：为每对相邻舱位建立**三个**中间符号，度量"两舱之间被空载隔开"的程度，
+/// 与对齐：为每对相邻舱位建立**三个**中间符号，度量"两舱之间被空载隔开"的程度，
 /// 由 `DivideEmptyLoadingLimit` 作为目标函数最小化。
 ///
 /// 相邻对的构造（基线伴生对象）：按 `location.location` 分组，**组内按 `loadingOrder.order` 排序后 `zipWithNext`**——
@@ -48,7 +48,7 @@ public sealed record PositionPair(int First, int Second);
 /// **四条分支的顺序是硬要求**：`position2` 需装载这一支必须排在 `loadAmount2 == 0` 之前，因为后者是"舱位根本不用"的静态情形，
 /// 前者才是"用了但装得少"的动态情形。调换顺序会让需装载的舱位走静态分支，惩罚项恒为 0，整个目标失效。
 ///
-/// 三处必须照抄基线：
+/// 三处必须照做：
 ///
 /// 1. **"是否固定为零"看 `range.fixedValue`**，不是看多项式是否为空。一个多项式可能没有单项式（和为零）但仍是**变量**，
 ///    那与"固定为零"是两回事。
@@ -56,7 +56,7 @@ public sealed record PositionPair(int First, int Second);
 /// 3. **`ε` 是 `NONZERO_TOLERANCE`**，加在 `IfFunction` 的条件里。去掉它，`loadAmount1 - loadAmount2 == 1` 这种"刚好差一件"的情形
 ///    会在浮点边界上抖动。
 ///
-/// Aligned with the baseline: three intermediate symbols per adjacent pair measuring how much an empty load separates the two holds, minimised as objectives by
+/// Three intermediate symbols per adjacent pair measuring how much an empty load separates the two holds, minimised as objectives by
 /// `DivideEmptyLoadingLimit`. Adjacent pairs are built by grouping on `location.location` and **sorting within each group by `loadingOrder.order` before `zipWithNext`** —
 /// consecutive only, never all combinations, since two non-neighbouring holds on one deck have no "between". The three expressions and their four-branch order are tabulated
 /// above; **the order is a hard requirement** — the `position2`-needs-stowage branch must precede `loadAmount2 == 0`, because the latter is the static "this hold is unused" case
@@ -110,7 +110,7 @@ public sealed class DivideEmptyLoading
     /// <remarks>
     /// 与基线伴生对象一致：**按甲板分组、组内按装载顺序排序、取相邻的两个**。组内只有一个舱位时不产生任何对。
     ///
-    /// Matches the baseline companion: **group by deck, sort by loading order within each group, then take consecutive pairs**. A group of one yields nothing.
+    /// Matches the code companion: **group by deck, sort by loading order within each group, then take consecutive pairs**. A group of one yields nothing.
     /// </remarks>
     public static IReadOnlyList<PositionPair> BuildAdjacentPositions(IReadOnlyList<StowagePosition> positions)
     {
@@ -304,9 +304,9 @@ public sealed class DivideEmptyLoading
     /// </summary>
     /// <remarks>
     /// `subtractOne` 为真时条件是 `amount1 - amount2 - 1 + ε`，为假时是 `amount1 + amount2 - constant + ε`。
-    /// 分支顺序与基线一致，**`position2` 需装载那一支必须在"固定为零"之前**。
+    /// 分支顺序，**`position2` 需装载那一支必须在"固定为零"之前**。
     ///
-    /// With `subtractOne` the condition is `amount1 - amount2 - 1 + ε`, otherwise `amount1 + amount2 - constant + ε`. The branch order matches the baseline, and the
+    /// With `subtractOne` the condition is `amount1 - amount2 - 1 + ε`, otherwise `amount1 + amount2 - constant + ε`. The branch order matches the code, and the
     /// `position2`-needs-stowage branch **must** precede the "fixed at zero" one.
     /// </remarks>
     private Result<ILinearIntermediateSymbol<Flt64>, ErrorCode, Error<ErrorCode>> Build(
@@ -380,8 +380,8 @@ public sealed class DivideEmptyLoading
         return Zero(name);
     }
 
-    // `NONZERO_TOLERANCE`：基线的常量，避免"刚好差一件"在浮点边界上抖动。
-    // The baseline constant that keeps a "differs by exactly one piece" case off the floating-point boundary.
+    // `NONZERO_TOLERANCE`：常量，避免"刚好差一件"在浮点边界上抖动。
+    // The code constant that keeps a "differs by exactly one piece" case off the floating-point boundary.
     private const double NonzeroTolerance = 1e-6;
 
     // "固定为零"= **多项式里没有单项式**（和为零）。
@@ -440,7 +440,7 @@ public sealed class DivideEmptyLoading
     /// <remarks>
     /// **当前返回失败，并明确说明原因**——这是这里**唯一未落地**的一处，不是"先返回 Ok 以后再说"。
     ///
-    /// 基线用 `IfFunction(condition = …, converter, name)` 表达"第一舱位的装载量比第二舱位多出至少一件"。本仓的
+    /// `IfFunction(condition = …, converter, name)` 表达"第一舱位的装载量比第二舱位多出至少一件"。本仓的
     /// `IfFunction.From` 带**离散格点证明**（`SafeLattice`）：它要求条件多项式的系数与常数落在同一个整数格上，
     /// 而这里条件的常数是 `-1`（"多出至少一件"），三个系数是 `+1/-1/-1`，格距为 1、常数模格距为 0——按代码读应当通过，
     /// 但实测一律返回"约束输入无效或展开结果不精确 / 离散证明无效"。逐项排查过：
@@ -458,8 +458,8 @@ public sealed class DivideEmptyLoading
     /// **不猜**：与其把条件悄悄降级成"恒零"（那会让整族惩罚失效而判据全绿——正是 那次假绿的形态），不如让注册
     /// **明确失败**，并把这一处记进能力缺口。
     ///
-    /// **This currently returns a failure and says why** — the batch's **one unlanded piece**, not a "return Ok for now". The baseline expresses "the first position holds at least
-    /// one more piece than the second" through `IfFunction(condition = …)`. This port's `IfFunction.From` carries a **discrete-lattice proof** (`SafeLattice`) requiring the
+    /// **This currently returns a failure and says why** — the batch's **one unlanded piece**, not a "return Ok for now". The code expresses "the first position holds at least
+    /// one more piece than the second" through `IfFunction(condition = …)`. This implementation's `IfFunction.From` carries a **discrete-lattice proof** (`SafeLattice`) requiring the
     /// condition's coefficients and constant to share one integer lattice; here the constant is `-1` and the coefficients `+1/-1/-1`, spacing 1 with constant residue 0, which by
     /// reading should pass — yet it consistently returns "invalid constraint input or inexact expansion / invalid discrete proof". Everything tabulated above was checked. The
     /// remaining candidates are `ExactLinearExpansion.Matches` and `SafeLattice`'s direction handling for `Comparison.LE` (the `reverse` branch negates the bounds). **No

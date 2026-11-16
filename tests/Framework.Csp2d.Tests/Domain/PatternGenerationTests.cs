@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain;
 /// **料域上界、检验数与候选整理** / Region bounds, reduced cost and candidate selection.
 /// </summary>
 /// <remarks>
-/// 对应基线 `PatternGeneration.kt`。这里全是纯函数与纯校验，**不需要求解器**。
+/// 对应。这里全是纯函数与纯校验，**不需要求解器**。
 ///
-/// Mirrors the baseline `PatternGeneration.kt`. is pure validation and pure functions: **no solver needed**.
+///. is pure validation and pure functions: **no solver needed**.
 /// </remarks>
 public class PatternGenerationTests {
     /// <summary>**请求校验拦住四类错误** / Request validation stops four kinds of mistake.</summary>

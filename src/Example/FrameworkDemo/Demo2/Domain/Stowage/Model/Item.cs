@@ -21,10 +21,10 @@ public enum ItemStatus
 /// 货位标签 / Item location tag.
 /// </summary>
 /// <remarks>
-/// 逐项对齐基线 `demo2/domain/stowage/model/Item.kt` 的 `ItemLocationTag`（5 项）。位置合法性判断全靠这五个标签：
+/// 逐项对齐的 `ItemLocationTag`（5 项）。位置合法性判断全靠这五个标签：
 /// "主舱货不能进下舱"、"散货只能进散货舱"、"头舱货只能进头舱位"，都是标签在不在集合里。
 ///
-/// Mirrors the baseline `ItemLocationTag` member for member (5 entries). Every location-legality rule is a set membership over these five tags: "main cargo does not go to the
+/// `ItemLocationTag` member for member (5 entries). Every location-legality rule is a set membership over these five tags: "main cargo does not go to the
 /// lower deck", "bulk only into bulk positions", "head cargo only into the head section".
 /// </remarks>
 public enum ItemLocationTag
@@ -49,10 +49,10 @@ public enum ItemLocationTag
 /// 货物位置能力。Item location capability.
 /// </summary>
 /// <remarks>
-/// 两个构造入口：**标签**（基线的口径）与 **甲板集合**（C# 早期调用方的口径）。后者是按标签推导出来的
+/// 两个构造入口：**标签**（口径）与 **甲板集合**（C# 早期调用方的口径）。后者是按标签推导出来的
 /// ——`Main` 标签给主甲板，`Low` 标签给两个下货舱——所以两条路走同一套判断，不会各说各话。
 ///
-/// Two constructors: **tags** (the baseline's vocabulary) and a **deck set** (what earlier C# callers pass). The latter is derived from tags — the `Main` tag means the main deck and
+/// Two constructors: **tags** (its vocabulary) and a **deck set** (what earlier C# callers pass). The latter is derived from tags — the `Main` tag means the main deck and
 /// the `Low` tag means both lower holds — so both paths go through the same rules instead of disagreeing.
 /// </remarks>
 public sealed class ItemLocation
@@ -159,7 +159,7 @@ public sealed class Item
     /// 同名两件货会共用一列。`Id` 与 `Name` 分开是为了让"显示用的名字"和"身份"不再纠缠。
     /// 不给 `id` 时回落到名称，老调用方一行都不用改——但**同名两件货仍然会共用一列**，这是回落口径的已知上限。
     ///
-    /// The baseline's `Item.id` is the identity (its `toString` returns it too); C# only had `Name`, so the stowage matrix keyed by name and two items sharing a name shared a
+    /// `Item.id` is the identity (its `toString` returns it too); C# only had `Name`, so the stowage matrix keyed by name and two items sharing a name shared a
     /// column. Splitting `Id` from `Name` separates "display label" from "identity". Omitting `id` falls back to the name so existing callers need no change — but **two items with
     /// the same name still share a column**, a known ceiling of that fallback.
     /// </remarks>
@@ -169,7 +169,7 @@ public sealed class Item
     /// <remarks>
     /// 基线 `enabled` 有两条规则要用它（`enabledULDs` 与禁忌区间），此前 C# 的 `Item` 没有 `Uld`，两条都无从查起。
     ///
-    /// The baseline's `enabled` needs it for two rules (the `enabledULDs` check and the taboo range); C#'s `Item` had no `Uld`, so neither could be checked.
+    /// The code's `enabled` needs it for two rules (the `enabledULDs` check and the taboo range); C#'s `Item` had no `Uld`, so neither could be checked.
     /// </remarks>
     public ULD? Uld { get; }
     /// <summary>重量 / Weight (kg)</summary>
@@ -178,10 +178,10 @@ public sealed class Item
     public CargoPriority Priority { get; }
     /// <summary>货物类型 / Cargo type</summary>
     /// <remarks>
-    /// 单个货类是**主货类**的快捷方式，判定要用 <see cref="Cargos"/>：基线的 `enabled` 反复问
+    /// 单个货类是**主货类**的快捷方式，判定要用 <see cref="Cargos"/>：`enabled` 反复问
     /// "这件货是不是 AOG **或** MAT"，而一件货可以同时是两者（`AOGMATAppointed` 那条规则就是为此存在的）。
     ///
-    /// The single type is a shortcut for the **primary** class; decide with <see cref="Cargos"/> instead: the baseline's `enabled` repeatedly asks "is this item AOG **or** MAT",
+    /// The single type is a shortcut for the **primary** class; decide with <see cref="Cargos"/> instead: its `enabled` repeatedly asks "is this item AOG **or** MAT",
     /// and one item can be both — that is exactly why the `AOGMATAppointed` rule exists.
     /// </remarks>
     public CargoType CargoType { get; }
@@ -263,11 +263,11 @@ public sealed class Item
     /// 名字 / The name.
     /// </summary>
     /// <remarks>
-    /// **必须覆写**：基线的 Kotlin data class 自动生成基于构造属性的 `toString`，而 C# 的 `class` 默认给类型全名。
+    /// **必须覆写**：Kotlin data class 自动生成基于构造属性的 `toString`，而 C# 的 `class` 默认给类型全名。
     /// 中间符号名是"货物 + 舱位"拼出来的，不覆写会让**每个**货物得到同一个名字，模型注册时直接报
     /// `Repeated "…"`（实测）。这不是命名美观问题，是符号唯一性问题。
     ///
-    /// **Must override**: the baseline's Kotlin data class generates `toString` from its constructor properties, while a C# `class` defaults to the full type name. Intermediate symbol
+    /// **Must override**: its Kotlin data class generates `toString` from its constructor properties, while a C# `class` defaults to the full type name. Intermediate symbol
     /// names concatenate item and position, so not overriding gives **every** item the same name and model registration fails with `Repeated "…"` (measured). This is symbol uniqueness,
     /// not cosmetics.
     /// </remarks>

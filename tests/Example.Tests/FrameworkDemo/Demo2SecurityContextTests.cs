@@ -361,7 +361,7 @@ public class Demo2SecurityContextTests {
     }
 
     /// <summary>
-    /// **三个 Benders 钩子与基线一致** / The three Benders hooks match the baseline.
+    /// **三个 Benders 钩子** / The three Benders hooks match the code.
     /// </summary>
     /// <remarks>
     /// 四点成对，全部用**约束行数**与**符号**观察：
@@ -400,10 +400,10 @@ public class Demo2SecurityContextTests {
     /// **已有聚合时 `Init` 不重建** / `Init` does not rebuild an existing aggregation.
     /// </summary>
     /// <remarks>
-    /// 基线的守卫是 `if (!::aggregation.isInitialized)`。这里用构造时注入的聚合调 `Init`：应当**直接成功**、聚合仍是同一个实例，
+    /// 守卫是 `if (!::aggregation.isInitialized)`。这里用构造时注入的聚合调 `Init`：应当**直接成功**、聚合仍是同一个实例，
     /// 而且**不去碰**传入的三个上下文——若守卫写反（每次都重建），初始化器会明确失败，这条会红。
     ///
-    /// The baseline's guard is `if (!::aggregation.isInitialized)`. Calling `Init` on a context built with an aggregation must **succeed directly**, keep the same instance, and
+    /// guard is `if (!::aggregation.isInitialized)`. Calling `Init` on a context built with an aggregation must **succeed directly**, keep the same instance, and
     /// **not touch** the three contexts — if the guard were reversed (rebuilding every time) the initialiser would fail explicitly and this turns red.
     /// </remarks>
     [Fact]
@@ -426,13 +426,13 @@ public class Demo2SecurityContextTests {
     /// **没有上游聚合时 `Init` 明确失败，绝不返回空聚合** / Without an upstream aggregation `Init` fails explicitly and never returns an empty one.
     /// </summary>
     /// <remarks>
-    /// 这条判据在 时断言的是"初始化器尚未移植，所以失败"。 把初始化器实现了，那条断言随之过时——现在失败来自**上游聚合为空**
-    /// （`StowageContext` 没有聚合，初始化器拒绝空位置表），而不是"未移植"。
+    /// 这条判据在 时断言的是"初始化器尚未实现，所以失败"。 把初始化器实现了，那条断言随之过时——现在失败来自**上游聚合为空**
+    /// （`StowageContext` 没有聚合，初始化器拒绝空位置表），而不是"未实现"。
     ///
     /// 成对：失败后 `Aggregation` 仍是 `null`，不会有半个聚合被交出去。
     ///
-    /// This criterion asserted that "the initialiser is not ported, hence failure". ported the initialiser, making that assertion stale — the failure now comes
-    /// from an **empty upstream aggregation** (the `StowageContext` has no aggregation and the initialiser rejects an empty position list), not from "not ported". Paired: after the
+    /// This criterion asserted that "the initialiser is not implemented, hence failure". implemented the initialiser, making that assertion stale — the failure now comes
+    /// from an **empty upstream aggregation** (the `StowageContext` has no aggregation and the initialiser rejects an empty position list), not from "not implemented". Paired: after the
     /// failure `Aggregation` is still `null`, so no half-built aggregation is handed out.
     /// </remarks>
     [Fact]

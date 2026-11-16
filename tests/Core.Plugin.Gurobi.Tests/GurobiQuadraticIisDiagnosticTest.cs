@@ -142,7 +142,7 @@ public class GurobiQuadraticIisDiagnosticTest {
     ///
     /// **This shape is dictated by the backend, not picked at random.** Two attempts were refused by Gurobi with the same reason, "Q matrix is not positive semi-definite":
     /// the cross term `x*y` is not PSD over non-negative variables, and `x²+y² >= 10` has a convex quadratic form but **a non-convex feasible region (outside the ball)**.
-    /// **"Convex quadratic" is not "convex constraint"** — the direction decides whether the feasible set is convex. That is also why the baseline sets no `NonConvex`: it only
+    /// **"Convex quadratic" is not "convex constraint"** — the direction decides whether the feasible set is convex. That is also why the code sets no `NonConvex`: it only
     /// handles the convex side. So the criteria use only that side too, **rather than changing a backend parameter to make the test convenient.**
     /// </remarks>
     private static QuadraticTetradModel QuadraticModel(double normMax, double sumMin) {

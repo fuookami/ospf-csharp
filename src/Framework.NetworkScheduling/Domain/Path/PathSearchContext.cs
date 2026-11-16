@@ -1,6 +1,5 @@
 // 无求解器依赖的资源标签搜索 / Solver-independent resource-label search.
-// 与固定 Kotlin 基线 `PathSearchContext.kt`（331 行）对应。
-// Mirrors the pinned baseline's `PathSearchContext.kt`.
+// 与固定 Kotlin 对应。
 //
 // 这一层的关键设计是**把"搜索"与"业务资源"彻底分离**：搜索只知道图、标签前驱链和几个回调，完全不知道 VRPTW、对偶或定价。
 // 因此 ESPPRC 定价是它的一个使用者，将来别的定价模型（带时间窗的、带容量维度的）也用同一套搜索。

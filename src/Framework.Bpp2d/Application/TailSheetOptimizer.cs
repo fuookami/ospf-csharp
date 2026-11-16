@@ -1,6 +1,6 @@
 // 尾板优化器 / Tail sheet optimiser.
-// 与固定 Kotlin 基线 `bpp2d/application/service/TailSheetOptimizer.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `TailSheetOptimizer.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

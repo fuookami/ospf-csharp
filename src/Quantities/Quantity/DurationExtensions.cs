@@ -119,11 +119,11 @@ public sealed class UInt64DurationConverter : IDurationConverter<UInt64> {
 /// <remarks>
 /// **`IntX` 是整数，所以 `TimeSpan` 的亚秒部分会被截断。**
 /// **这不是精度损失，是类型本身的语义：一个整数秒的量在转换为 TimeSpan 时不带小数。**
-/// **基线用 `value.toLong` 也是截断，行为一致。**
+/// **`value.toLong` 也是截断，行为一致。**
 ///
 /// **`IntX` is integral, so the sub-second part of a `TimeSpan` is truncated.**
 /// **That is not lost precision but the type semantics: an integer-seconds quantity carries no fraction when
-/// converted.** **The baseline truncates with `value.toLong` too, so the behaviour matches.**
+/// converted.** **The code truncates with `value.toLong` too, so the behaviour matches.**
 /// </remarks>
 public sealed class IntXDurationConverter : IDurationConverter<IntX> {
     public static readonly IntXDurationConverter Instance = new();

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **截断函数：把输入夹在 `[lower, upper]` 之间** / Clamp: squeeze the input into `[lower, upper]`.
 /// </summary>
 /// <remarks>
-/// **按基线 `CompositeFunctions.kt` 的 `ClampFunction` 补。**
+/// **按的 `ClampFunction` 补。**
 ///
 /// **它不是一个新的数学原语**：**基线自己也是用 `MaxFunction` 与 `MinFunction` 拼出来的**
 /// （`max(input, lower)` 再 `min(…, upper)`）——
@@ -28,9 +28,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **手写一套"夹"的约束会与既有的 max/min 编码产生两套 Big-M，
 /// 而两套 Big-M 在同一模型里会互相挤掉对方的可行域。**
 ///
-/// **The `ClampFunction` from the baseline's `CompositeFunctions.kt`.**
+/// **The `ClampFunction` from its.**
 ///
-/// **It is not a new mathematical primitive**: **the baseline itself builds it from `MaxFunction` and `MinFunction`**
+/// **It is not a new mathematical primitive**: **the code itself builds it from `MaxFunction` and `MinFunction`**
 /// (`max(input, lower)` then `min(…, upper)`) —
 /// **so this follows suit rather than writing another encoding.**
 /// **Hand-writing "clamp" constraints would produce a second set of Big-Ms alongside the existing max/min ones,
@@ -137,11 +137,11 @@ public sealed class ClampFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynom
             return new Ok<V?, ErrorCode, Error<ErrorCode>>(null);
         }
 
-        // **夹的顺序不能反**：先下界再上界，与基线一致。
+        // **夹的顺序不能反**：先下界再上界。
         // **反过来（先上界再下界）在 `lower > upper` 时结果不同**——**虽然构造器已经拒绝那种输入，
         // 但顺序本身是这个函数定义的一部分，不该依赖前置检查才对。**
         //
-        // **The order must not be reversed**: lower first, then upper, matching the baseline.
+        // **The order must not be reversed**: lower first, then upper, matching the code.
         // **Reversing it gives a different answer when `lower > upper`** — **the constructor rejects that input,
         // but the order is part of the definition and should not rely on the guard.**
         V clamped = value.CompareTo(Lower) < 0

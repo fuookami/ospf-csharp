@@ -1,7 +1,7 @@
 // 空间区域、块与旋转校验 / Space region, block and rotation guard.
-// 与固定 Kotlin 基线 `bpp2d/domain/block_loading/model/Space2.kt`（147 行）与
-// `bpp2d/domain/block_loading/service/RotationGuard.kt`（37 行）对应。
-// Mirrors the pinned baseline's `Space2.kt` and `RotationGuard.kt`.
+// 与固定 Kotlin 与
+//（37 行）对应。
+// And.
 
 using System;
 using System.Collections.Generic;
@@ -87,9 +87,9 @@ public sealed record Space2<V>
     /// 合并偏移量与余量的运算结果 / Combine the offset and remainder quantities.
     /// </summary>
     /// <remarks>
-    /// 基线的切片是纯算术、遇到单位不符直接抛异常；这里改成返回结果，因为**单位不符是输入错误，不是编程错误**，
+    /// 切片是纯算术、遇到单位不符直接抛异常；这里改成返回结果，因为**单位不符是输入错误，不是编程错误**，
     /// 不应该用异常打断整批排样。
-    /// The baseline's split is plain arithmetic and throws on unit mismatch; this returns a result because **mismatched
+    /// split is plain arithmetic and throws on unit mismatch; this returns a result because **mismatched
     /// units are an input error, not a programming error** and should not abort a whole packing run with an exception.
     /// </remarks>
     /// <param name="offset">切出块的偏移量 / Offset of the cut piece.</param>

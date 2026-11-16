@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.ConstraintProgramming;
 /// Only SCIP has CP today, yet the foundation underneath is generic.
 /// </summary>
 /// <remarks>
-/// 逐项对照里唯一"真的要写实现"的块（基线 `MipBackedConstraintProgrammingSolver.kt`，503 行）。
+/// 逐项对照里唯一"真的要写实现"的块（，503 行）。
 /// **这里不写它，而是把缺口量化、并把依赖关系钉住——因为这块比前五块大一个量级，
 /// 而半成品比不做更糟。**
 ///
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.ConstraintProgramming;
 /// **缺口因此是：** **Gurobi／Cplex／Copt 没有 CP 能力，而它们本来只差"把 lowerer 接到自己的线性求解器上"。**
 ///
 /// The only "a real implementation is needed" block of the survey (baseline
-/// `MipBackedConstraintProgrammingSolver.kt`, 503 lines). ** does not write it; it sizes the gap and pins the
+///, 503 lines). ** does not write it; it sizes the gap and pins the
 /// dependency relation — because this block is an order of magnitude larger than the previous five, and a half-finished one
 /// would be worse than none.**
 ///

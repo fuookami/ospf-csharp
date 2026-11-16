@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 条件多项式与条件行的可用性检查 / Usability checks for condition polynomials and rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 里的 `hasUsableConditionSolverValues` /
+/// 对齐里的 `hasUsableConditionSolverValues` /
 /// `hasUsableConditionFlattenedValues` / `isUsableConditionBound` 三个私有助手补。
 ///
 /// **为什么这三个检查值得单独抽出来**：**它们挡的是同一类问题——

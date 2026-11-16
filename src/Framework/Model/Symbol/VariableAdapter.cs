@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Model.Symbol;
 /// 与基线 `VariableAdapter` 对齐。**这是"别名"的载体**：外层变量与内层变量是同一决策的两个门面，
 /// 求解器只认一个，建模者按另一面写约束。
 ///
-/// Aligned with the baseline's `VariableAdapter`. **It carries an alias**: the outer and inner variables are two faces of the same decision, the solver honouring one while the modeller writes
+/// Aligned with its `VariableAdapter`. **It carries an alias**: the outer and inner variables are two faces of the same decision, the solver honouring one while the modeller writes
 /// constraints against the other.
 /// </remarks>
 public sealed record VariableAdapter<T, TType>
@@ -65,11 +65,11 @@ public sealed record VariableAdapter<T, TType>
 /// 找出某个变量所属的适配器 / Find the adapter a variable belongs to.
 /// </summary>
 /// <remarks>
-/// **按引用相等判定，不按值相等**：基线的 `===` 是引用相等。这一条是全部意义所在——
+/// **按引用相等判定，不按值相等**：`===` 是引用相等。这一条是全部意义所在——
 /// `AbstractVariableItem` 的值相等可能对两只不同变量成立（同类型同上下界），
 /// 用值相等会把"别人的别名"认成自己的。
 ///
-/// **Identity, not value equality**: the baseline's `===` compares references. That is the whole point: two distinct variable items can be value-equal (same type, same bounds), and value equality
+/// **Identity, not value equality**: its `===` compares references. That is the whole point: two distinct variable items can be value-equal (same type, same bounds), and value equality
 /// would mistake someone else's alias for one's own.
 /// </remarks>
 public static class VariableAdapterLookup {

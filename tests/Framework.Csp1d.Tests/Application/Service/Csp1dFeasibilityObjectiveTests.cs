@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// 于是第一阶段最小化的仍是**批次成本**，人工短缺项的系数虽然被设成 1，**却进不了目标**——
 /// **第一阶段解得的是"批次最省"，不是"短缺最小"**。
 ///
-/// **finding**: the baseline's `setObjective` opens with `if (feasibilityPhase) { … return }`, emitting only the yield objective under the name `csp1d_phase_one`.
+/// **finding**: its `setObjective` opens with `if (feasibilityPhase) { … return }`, emitting only the yield objective under the name `csp1d_phase_one`.
 /// C# **had no such branch**: `_feasibilityPhase` was forwarded only to the yield aggregation and `SetObjective` never read it, so phase one still minimised **batch cost** —
 /// the deficits' coefficient of 1 **never reached the objective**, and phase one solved "cheapest batches" instead of "smallest deficit".
 /// </remarks>

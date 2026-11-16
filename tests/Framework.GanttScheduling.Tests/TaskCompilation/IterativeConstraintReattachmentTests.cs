@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// That model **solves** — every column is simply free to choose: `xor` is no longer bounded below (executor usage is free), and two rounds' columns of the same task can be selected
 /// together (the cross-round conflicts are gone). The answer is legal and absurdly cheap.
 ///
-/// The baseline behaves the same way (its `addColumns` constraints go only into the model handed to it), so **does not fix it** — it pins it: after switching models the caller
+/// The code behaves the same way (its `addColumns` constraints go only into the model handed to it), so **does not fix it** — it pins it: after switching models the caller
 /// must run `AddColumns` again (or wait for a replay in a later batch).
 /// </remarks>
 public class IterativeConstraintReattachmentTests {
@@ -73,13 +73,13 @@ public class IterativeConstraintReattachmentTests {
     /// 没有这一条时，新模型会**有全部列、却一条列相关约束都没有**：`xor` 不再被下界约束住（执行器使用免费），
     /// 同一任务的两轮列可以同时被选中（跨轮冲突消失）。答案合法，代价低得离谱。
     ///
-    /// 基线把 `addColumns` 的约束只加进传给它的那个模型，所以它**没有**这个问题需要的搬运；
+    /// `addColumns` 的约束只加进传给它的那个模型，所以它**没有**这个问题需要的搬运；
     /// 本实现按 的 `ReattachTo` 一并重放——否则"换模型"这个已落地能力只搬了一半。
     ///
     /// Without this, the new model would have **every column and not one column-related constraint**: `xor` is no longer bounded below (executor usage is free) and two rounds' columns
     /// of the same task can be selected together (the cross-round conflicts are gone). The answer is legal and absurdly cheap.
     ///
-    /// The baseline's `addColumns` adds its constraints only to the model handed to it, so it has no carrying logic; this implementation replays them as part of the earlier `ReattachTo` —
+    /// The code's `addColumns` adds its constraints only to the model handed to it, so it has no carrying logic; this implementation replays them as part of the earlier `ReattachTo` —
     /// otherwise the already-landed "switch model" capability would carry only half of what it must.
     /// </remarks>
     [Fact]

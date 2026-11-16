@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 分段选择结果 / The result of selecting a segment.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `SegmentSelection`。
+/// 对齐的 `SegmentSelection`。
 /// **注意 `Input` 是<b>夹紧之后</b>的值，不是调用方传进来的那个。**
 ///
-/// **Following the baseline's `SegmentSelection`.** **Note that `Input` is the <b>clamped</b> value, not the one
+/// **Following its `SegmentSelection`.** **Note that `Input` is the <b>clamped</b> value, not the one
 /// the caller passed in.**
 /// &lt;/remarks>
 /// &lt;param name="Index">分段下标 / Segment index.&lt;/param>
@@ -27,7 +27,7 @@ public sealed record SegmentSelection(int Index, double Input);
 /// 分段线性报告：分段选择 / Piecewise reporting: segment selection.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `selectSegment`、`finiteSolverDouble(s)` 与
+/// 对齐的 `selectSegment`、`finiteSolverDouble(s)` 与
 /// `PIECEWISE_TOLERANCE` 补。
 ///
 /// **容差只在定义域的两个<b>端点</b>起作用，内部断点没有容差。**

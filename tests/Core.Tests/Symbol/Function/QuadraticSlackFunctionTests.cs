@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 松弛是无符号的，两侧都要算 / Slack is unsigned, so both sides must be computed.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticInequality.kt`、`QuadraticSlack.kt`、`QuadraticSlackRange.kt` 补三个类。
+/// 对齐、 补三个类。
 ///
 /// **只取一侧会在半个定义域上恒为 0，且不报错。**
 ///

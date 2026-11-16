@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **判定是注入的，循环只有一份；每对只出现一次** / The predicate is injected, the loop exists once, and every pair appears once.
 /// </summary>
 /// <remarks>
-/// 基线的冲突族有两份几乎一样的双循环，差别只在判定那一行。写两遍、改一处忘另一处就是**漏一对**，
+/// 冲突族有两份几乎一样的双循环，差别只在判定那一行。写两遍、改一处忘另一处就是**漏一对**，
 /// 而漏一对是双重占用：两个任务排给同一执行器、时段重叠，容量算两份而实际只有一份。
 ///
 /// 判据必须能分开"每对一次"与"两个方向各一次"——后者不会出错，但会让模型白长一截。
 ///
-/// The baseline's conflict family has two almost identical double loops differing in one line. Writing it twice and forgetting one copy means **a missed pair**, and a missed
+/// The code's conflict family has two almost identical double loops differing in one line. Writing it twice and forgetting one copy means **a missed pair**, and a missed
 /// pair is double booking: two tasks on one executor over overlapping intervals, capacity counted twice where only one exists. The criteria must tell "once per pair" from "once
 /// per direction" — the latter is not wrong, but wastes model size.
 /// </remarks>

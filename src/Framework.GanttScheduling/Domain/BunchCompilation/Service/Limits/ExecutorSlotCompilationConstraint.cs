@@ -1,6 +1,6 @@
 // 执行器-时隙编译约束 / Executor-slot compilation constraint.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-bunch-compilation-context/.../limits/ExecutorSlotCompilationConstraint.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `ExecutorSlotCompilationConstraint.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;
@@ -124,7 +124,7 @@ public class ExecutorSlotCompilationConstraint<E, A>
     /// 收集全部只是多做了工作；而如果实现选择"跳过缺失的继续做"，剩下的组合会被加上约束，
     /// 于是模型处于"部分约束"状态——比完全失败更危险。
     ///
-    /// **加行这一半以前是缺的**：它只校验、不加任何行。基线的 `invoke` 是
+    /// **加行这一半以前是缺的**：它只校验、不加任何行。`invoke` 是
     /// `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))`——
     /// 也就是"每个（执行器, 时隙）恰好编译一次"这条要求本身。少了它，编译量可以取任意值，
     /// 那个执行器在那个时隙上可以一个任务都不接，而排程看起来完全正常。
@@ -134,7 +134,7 @@ public class ExecutorSlotCompilationConstraint<E, A>
     ///
     /// **Returns a failure on the first missing pair** rather than collecting them all. The caller stops at the first failure anyway, so collecting is wasted work; and an
     /// implementation that instead "skips the missing one and continues" leaves the model **partially constrained**, which is worse than failing outright. **The row-adding half was
-    /// missing**: it only validated. The baseline's `invoke` is `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))` — the requirement itself,
+    /// missing**: it only validated. `invoke` is `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))` — the requirement itself,
     /// that **each (executor, slot) is compiled exactly once**. Without it the compiled quantity may take any value and that executor may take no task in that slot while the schedule looks
     /// normal. A **placeholder** expression adds no row and is not a failure: `CompilationTable.Build` fills `new object` today, a placeholder is the normal state, and failing would reject
     /// every assignment — the same ceiling as `TaskCompilationConstraint`.

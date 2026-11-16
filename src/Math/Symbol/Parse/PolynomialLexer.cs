@@ -52,14 +52,14 @@ public readonly record struct PolynomialToken(PolynomialTokenType Type, string T
 /// 多项式词法分析器 / Polynomial expression lexer.
 /// </summary>
 /// <remarks>
-/// 从固定基线 `12fdb587` 的 `symbol/parse/PolynomialLexer.kt`（281 行）移植。
-/// **基线有三个行为容易在移植时丢掉，测试各钉一条：**
+/// 从固定基线 `12fdb587` 的（281 行）移植。
+/// **三个行为容易在移植时丢掉，测试各钉一条：**
 ///
 /// 1. **末尾一定有一个 `End` 单元。** 空输入不是空列表，是「`End` 一个」。
 /// 2. **单独一个小数点成不了数字。** `.` 后面没有数字就是词法错误，不是 `0.`。
 /// 3. **`!` 只有接 `=` 才合法。** 单独的 `!` 是错误，**因为它可能被写成"取反"而那个语义这里没有。**
 ///
-/// Ported from `symbol/parse/PolynomialLexer.kt` (281 lines) at the pinned baseline.
+/// Ported (281 lines) at the reference.
 /// **Three baseline behaviours are easy to lose in a port, and each has a test:**
 /// **1. There is always a trailing `End` token.** Empty input is not an empty list but one `End`.
 /// **2. A lone decimal point cannot start a number.** A `.` with no digit after it is a lexical error, not `0.`.

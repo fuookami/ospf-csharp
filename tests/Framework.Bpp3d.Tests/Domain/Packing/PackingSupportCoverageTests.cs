@@ -99,10 +99,10 @@ public sealed class PackingSupportCoverageTests {
 
     /// <summary>**顶面与圆柱底面之间有间隙的支撑不算支撑** / A support with a gap below the cylinder's bottom face does not count.</summary>
     /// <remarks>
-    /// 基线的判据要求两者**同高**（`abs(support.maxY - cylinder.minY) <= tolerance`）。旧实现只要求"支撑顶面不高于圆柱底面"，
+    /// 判据要求两者**同高**（`abs(support.maxY - cylinder.minY) <= tolerance`）。旧实现只要求"支撑顶面不高于圆柱底面"，
     /// 于是**中间空出 0.5 的悬空支撑也算数**。
     ///
-    /// The baseline requires the two to be **flush**. The old rule only required the support top to be no higher, so **a support floating half a unit
+    /// The code requires the two to be **flush**. The old rule only required the support top to be no higher, so **a support floating half a unit
     /// below still counted**.
     /// </remarks>
     [Fact]

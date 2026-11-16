@@ -1,7 +1,7 @@
 // 稀疏求解器注册构件 / Sparse solver registration artifacts.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/model/LoadingAggregation.kt` 对应，
+// 与固定 Kotlin 对应，
 // 并把基线 `DiscreteLoadingContext.register` 里的"建变量 + 累计表达式"三圈提到这里复用。
-// Mirrors the baseline's `LoadingAggregation.kt` and lifts the "create variables, accumulate expressions" loops of
+// And lifts the "create variables, accumulate expressions" loops of
 // `DiscreteLoadingContext.register` into a reusable builder.
 
 using System.Collections.Generic;

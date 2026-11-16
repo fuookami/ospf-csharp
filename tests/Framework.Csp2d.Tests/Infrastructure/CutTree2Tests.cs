@@ -16,9 +16,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Infrastructure;
 /// **级数与刀缝的一致性** / Stage and kerf consistency.
 /// </summary>
 /// <remarks>
-/// 对应基线 `CutTree2.kt`。断头台的排样**必须由切分树产生**，而这棵树就是交给车间的下刀顺序。
+/// 对应。断头台的排样**必须由切分树产生**，而这棵树就是交给车间的下刀顺序。
 ///
-/// Mirrors the baseline `CutTree2.kt`. A guillotine layout **must be produced by a cut tree**, and that tree is the cut sequence handed to the workshop.
+///. A guillotine layout **must be produced by a cut tree**, and that tree is the cut sequence handed to the workshop.
 /// </remarks>
 public class CutTree2Tests {
     /// <summary>**合法的两级断头台通过校验** / A legal two-stage guillotine passes validation.</summary>

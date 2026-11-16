@@ -122,11 +122,11 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
 
         // 构建 canonical key 索引 / Build canonical key index
         _planKeyIndex = new Dictionary<CuttingPlanCanonicalKey, int>();
-        // **基线按 `id` 与 `canonicalKey` **双键**去重**（`ProduceAggregation.kt:56`：
+        // **基线按 `id` 与 `canonicalKey` **双键**去重**（：
         // `candidate.id !in registeredIds && candidate.canonicalKey !in registeredKeys`）。
         // C# 原本**只有键索引**，于是"同 id 不同内容"的两条方案会被同时接受。
         //
-        // **The baseline dedupes by **two keys**, id and canonicalKey** (`ProduceAggregation.kt:56`). C# originally had **only the key index**, so two plans sharing an id but
+        // **The code dedupes by **two keys**, id and canonicalKey**. C# originally had **only the key index**, so two plans sharing an id but
         // differing in content would both be accepted.
         _planIds = new HashSet<string>();
         for (int i = 0; i < cuttingPlans.Count; i++) {
@@ -177,12 +177,12 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
 
         // **初始方案也必须填充中间符号。**
         //
-        // 基线在 `register` 里先建 `PlanBatchTerms`，再用它填 `demandQuantity` /
+        // `register` 里先建 `PlanBatchTerms`，再用它填 `demandQuantity` /
         // `materialQuantity` / `machineBatchQuantity` / `machineCapacityQuantity`；
         // C# 原本**只建空符号**，于是第一轮 LP 的需求/物料约束**左边恒为零**——
         // 求解器会认为"什么都不做就已满足全部需求"。
         //
-        // **Initial plans must populate the intermediate symbols too.** The baseline builds `PlanBatchTerms` in `register` and fills `demandQuantity` /
+        // **Initial plans must populate the intermediate symbols too.** The code builds `PlanBatchTerms` in `register` and fills `demandQuantity` /
         // `materialQuantity` / `machineBatchQuantity` / `machineCapacityQuantity` from it; C# originally **only created empty symbols**, so the first LP's demand and
         // material constraints had **an identically zero left side** — the solver would believe "doing nothing already satisfies every demand".
         PopulateInitialSymbols(cuttingPlans, demands, materials, machines);
@@ -205,7 +205,7 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
     /// 后面两条不是优化，是**基线写明的过滤条件**：不滤的话，一条以厘米计的贡献会被
     /// 当成毫米计入（系数差 10 倍），而零消耗的单项式会让产能约束失去意义。
     ///
-    /// Mirrors the baseline `PlanBatchTerms.init` clause by clause: one coefficient-1 monomial per plan for **its own material**; one batch monomial for **its own machine**;
+    /// `PlanBatchTerms.init` clause by clause: one coefficient-1 monomial per plan for **its own material**; one batch monomial for **its own machine**;
     /// demand contributions **only for (product id, unit) pairs present in `demands`, and only once per pair within a plan**; machine capacity **only when the unit matches
     /// and the consumption is strictly positive**. The last two are not optimisations but **explicit baseline filters**: without them a centimetre contribution would count as
     /// millimetres (a factor of 10) and zero-consumption monomials would make the capacity constraint meaningless.
@@ -348,8 +348,8 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
         var uniquePlans = new List<CuttingPlan<V>>();
         foreach (CuttingPlan<V> plan in newPlans) {
             var key = CuttingPlanCanonicalKey.From(plan);
-            // **两个条件都要查**：基线是 `id 不在 AND 键不在`。
-            // **Both conditions must be checked**: the baseline is `id not in AND key not in`.
+            // **两个条件都要查**：`id 不在 AND 键不在`。
+            // **Both conditions must be checked**: the code is `id not in AND key not in`.
             if (!_planIds.Contains(plan.Id) && !_planKeyIndex.ContainsKey(key)) {
                 uniquePlans.Add(plan);
             }

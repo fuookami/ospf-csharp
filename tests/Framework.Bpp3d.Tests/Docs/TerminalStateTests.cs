@@ -9,19 +9,19 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **终态核对：基线是固定的、数字是实测的、结论不被删掉** /
-/// Terminal check: the baseline is fixed, the numbers are measured, the conclusion is not deleted.
+/// **终态核对：固定的、数字是实测的、结论不被删掉** /
+/// Terminal check: the code is fixed, the numbers are measured, the conclusion is not deleted.
 /// </summary>
 /// <remarks>
 /// **整条链的三个锚点钉在一起：**
 ///
-/// 1. **扫描脚本的默认提交** 必须是固定基线 `12fdb587` —— **否则"对基线的全量同步"这句话就没有主语**；
+/// 1. **扫描脚本的默认提交** 必须是固定基线 `12fdb587` —— **否则"对全量同步"这句话就没有主语**；
 /// 2. **状态文档里的门禁数字** 必须是真实跑出来的（这一条已由 `GateNumbersTests` 覆盖，这里只钉它确实在场）；
 /// 3. **计划里的终态核对一节** 不许被删 —— **它是"还剩什么"的唯一入口**。
 ///
 /// ### 为什么第 1 条最要紧
 ///
-/// **"全量同步"永远是对某个基线的全量同步。** **如果脚本的默认提交漂了（`HEAD`、`master`、或者某个新 tag），
+/// **"全量同步"永远是对某个全量同步。** **如果脚本的默认提交漂了（`HEAD`、`master`、或者某个新 tag），
 /// 那么每次门禁都在拿一个<b>移动的</b>基线去比，而所有历史结论会悄悄变成"对某个当时的提交成立"。**
 /// **这条判据把默认值钉在常量上：换基线必须改这一行，而改它就会红。**
 ///

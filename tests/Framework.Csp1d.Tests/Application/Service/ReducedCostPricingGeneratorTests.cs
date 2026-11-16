@@ -228,7 +228,7 @@ public class ReducedCostPricingGeneratorTests {
     /// **变异测试发现的缺口**：把单位键写成 `Symbol ?? ToString`（**丢掉 name 回退**）时判据全绿——
     /// 因为当时唯一的自定义单位**既无 name 也无 symbol**，两条路径在它身上**结果相同**。
     ///
-    /// 基线的回退顺序是 `symbol ?: name ?: toString`。**只测"都没有"的那种单位，
+    /// 回退顺序是 `symbol ?: name ?: toString`。**只测"都没有"的那种单位，
     /// 无法区分"按顺序回退"与"跳过 name 直接 toString"**——两者在没有 name 时一致。
     ///
     /// 这条用一个**有 name、无 symbol** 的单位，把对偶价格存在 `"name-only-unit"` 下。
@@ -251,7 +251,7 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// **This paragraph also once claimed a "real hazard" that was wrong and is corrected here.** It said `DerivedPhysicalUnit.ToString` was `Symbol ?? ""` — **wrong
     /// attribution**: `DerivedPhysicalUnit` **does not override `ToString`** and inherits the base's three-step fallback. The `Symbol ?? ""` version belongs to
-    /// **`AnonymousPhysicalUnit`**, and that is **byte-for-byte identical** to the baseline (`override fun toString = symbol ?: ""`).
+    /// **`AnonymousPhysicalUnit`**, and that is **byte-for-byte identical** to the code (`override fun toString = symbol ?: ""`).
     ///
     /// So "a symbol-less, nameless anonymous unit keys to an empty string, letting two distinct units collide" is **baseline behaviour, not a divergence**. It is now
     /// pinned by `UnitKeyConvergenceTests.AnonymousUnit_ShouldKeyAsTheBaselineDoes`.
@@ -299,7 +299,7 @@ public class ReducedCostPricingGeneratorTests {
             "the name is the second fallback, so the lookup must use \"name-only-unit\"");
     }
 
-    /// <summary>**单位键必须与基线 `shadowPriceUnitSymbol` 一致（含第三条回退）** / The unit key must match the baseline's `shadowPriceUnitSymbol`, third fallback included.</summary>
+    /// <summary>**单位键必须与基线 `shadowPriceUnitSymbol` 一致（含第三条回退）** / The unit key must match its `shadowPriceUnitSymbol`, third fallback included.</summary>
     /// <remarks>
     /// 基线：`unit.symbol ?: unit.name ?: unit.toString`。
     ///
@@ -310,7 +310,7 @@ public class ReducedCostPricingGeneratorTests {
     /// 判据用**一个无 symbol、无 name 的自定义单位**，把对偶价格按 `GenerationQuantityMath.UnitKey(unit)`
     /// 的正确取值存入；若实现落空串，就**查不到**这条价格、返回空。
     ///
-    /// The baseline is `unit.symbol ?: unit.name ?: unit.toString`.
+    /// The code is `unit.symbol ?: unit.name ?: unit.toString`.
     ///
     /// **This was once written as `Symbol ?? Name ?? string.Empty`** — the first two fallbacks agree, **the third lands on an empty string**. Consequence: every unit
     /// with neither symbol nor name **shares one key**, so `(product, "")` makes **dual prices of different units match each other**, pricing picks the wrong price and
@@ -355,7 +355,7 @@ public class ReducedCostPricingGeneratorTests {
     /// **这条判据被反转过一次，值得记下。**
     ///
     /// 加了"定价器过滤池里已有方案"，判据断言"已有方案不出列"。
-    /// 之后发现**基线把这个过滤放在 `deduplicatePlans`（列生成侧）**，定价器只做候选内部去重。
+    /// 之后发现**这个过滤放在 `deduplicatePlans`（列生成侧）**，定价器只做候选内部去重。
     /// 两者的可观测差别是终止原因：
     ///
     /// | 过滤位置 | 定价报 | 终止原因 |
@@ -370,7 +370,7 @@ public class ReducedCostPricingGeneratorTests {
     /// **This criterion was once inverted, which is worth recording.**
     ///
     /// added "the pricing generator filters plans already in the pool" together with a criterion asserting "an existing plan yields nothing". Later it turned out
-    /// **the baseline puts that filter in `deduplicatePlans` (the column-generation side)**, with the pricing generator only deduping among candidates. The observable
+    /// **the code puts that filter in `deduplicatePlans` (the column-generation side)**, with the pricing generator only deduping among candidates. The observable
     /// difference is the termination reason (table above).
     ///
     /// So **the pricing generator must report plans already in the pool** — filtering is downstream. The criterion is inverted accordingly.
@@ -457,7 +457,7 @@ public class ReducedCostPricingGeneratorTests {
 
     /// <summary>**上限截断时必须留下收益最高的列，而不是枚举顺序的前几条** / Truncation must keep the highest-benefit columns, not the first ones enumerated.</summary>
     /// <remarks>
-    /// **基线是"先排序、再取上限"**，C# 旧实现是**按枚举顺序取上限**。上限截断时，**排序决定了哪几条被留下**。
+    /// **"先排序、再取上限"**，C# 旧实现是**按枚举顺序取上限**。上限截断时，**排序决定了哪几条被留下**。
     ///
     /// 夹具设计：三个产品 A / B / C，**按枚举顺序 A < B < C 的收益递增**（A=1.5、B=2.5、C=3.5），
     /// 上限 **2**。
@@ -467,7 +467,7 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// 断言"**恰好留下 B 和 C**"而不是"数量是 2"——**只断言数量时旧实现也通过**。
     ///
-    /// **The baseline sorts first, then takes the limit**; the old C# implementation took the limit **in enumeration order**. When the limit truncates, **the sort
+    /// **The code sorts first, then takes the limit**; the old C# implementation took the limit **in enumeration order**. When the limit truncates, **the sort
     /// decides which columns survive**.
     ///
     /// The fixture uses three products A / B / C with **increasing benefit in enumeration order A < B < C** (1.5, 2.5, 3.5) and a limit of **2**.
@@ -765,7 +765,7 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// 把基线 `SimplePricingGenerator` 的语义（"对偶价为正就出列"）写进了
     /// **`ReducedCostPricingGenerator`** 这个类——**类名和语义对不上**。
-    /// 基线里 `ReducedCostPricingGenerator` 是**包装器**：enumerator 枚举候选，
+    /// `ReducedCostPricingGenerator` 是**包装器**：enumerator 枚举候选，
     /// 再按 `benefit > objectiveCost` 过滤（`objectiveCost` 基础值是 **1**）。
     ///
     /// 判据用"**收益 0.5、成本 1**"：对偶价为正（`0.01 > 0`，旧实现会出列），
@@ -773,8 +773,8 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// **This is the substantive "reduced cost" criterion**, and the step the earlier version **lacked**.
     ///
-    /// wrote the baseline `SimplePricingGenerator` semantics ("emit when the dual price is positive") into the class named
-    /// **`ReducedCostPricingGenerator`** — **name and semantics disagreed**. In the baseline `ReducedCostPricingGenerator` is a **wrapper**: the enumerator enumerates
+    /// wrote the code `SimplePricingGenerator` semantics ("emit when the dual price is positive") into the class named
+    /// **`ReducedCostPricingGenerator`** — **name and semantics disagreed**. In the code `ReducedCostPricingGenerator` is a **wrapper**: the enumerator enumerates
     /// candidates, which are then filtered by `benefit > objectiveCost` (whose base is **1**).
     ///
     /// The criterion uses "**benefit 0.5, cost 1**": the dual price is positive (`0.01 > 0`, so the old implementation would emit), but the benefit

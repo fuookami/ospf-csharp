@@ -129,7 +129,7 @@ public sealed record LengthAggregation(
         // 返回处直接传列表本身。C# 这里是**同一个 `Count > 0 ? list : null` 模式**——
         // 只修了 yield，**漏了这里**。**又一次"修一处等于没修"。**
         //
-        // **The same correction as `YieldAggregation` : an empty list is not null.** The baseline's two fields are also `= emptyList` and the return passes the lists
+        // **The same correction as `YieldAggregation` : an empty list is not null.** The code's two fields are also `= emptyList` and the return passes the lists
         // through. C# had **the identical `Count > 0 ? list : null` pattern** here — fixed yield only and **missed this**. **"Fixing one place changes nothing", again.**
         return new LengthAssignmentModelingResult<Flt64>(
             assignedLengths,

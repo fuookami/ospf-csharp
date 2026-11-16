@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 航班上的人数不得超过舱位容量 / Passengers on a flight may not exceed its cabin capacity.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerFlightCapacityConstraint.kt`：对每个航班、每个舱位加 `人数[航班, 舱位] ≤ 容量[航班, 舱位]`。
+/// ：对每个航班、每个舱位加 `人数[航班, 舱位] ≤ 容量[航班, 舱位]`。
 ///
 /// 这是乘客域与机队层之间**唯一的接缝**：左边是乘客域的人数表达式，右边是批次汇编里按机型分档的容量表达式。
 /// 两侧都靠符号名对上，所以判据必须**同时认住左边与右边是哪个符号**——只数行数会让"两边都写成本侧"的实现通过：
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 另一个容易漏的形态：乘客飞机的容量表只覆盖**它真的排了班的**那些航班。查不到容量就当成"容量为零"会把一条本来合法的排班判死，
 /// 当成"容量无穷"又会让超售悄悄通过——所以这里**查不到就报失败**，交给人看。
 ///
-/// The baseline's `PassengerFlightCapacityConstraint.kt` adds `amount[flight, cabin] ≤ capacity[flight, cabin]` per flight and cabin.
+/// The code's adds `amount[flight, cabin] ≤ capacity[flight, cabin]` per flight and cabin.
 ///
 /// This is **the only seam** between the passenger domain and the fleet layer: the left side is the passenger amount expression , the right side the per-cabin capacity expression
 /// built during bunch compilation . Both sides are matched by symbol name, so the criterion must **pin down which symbol sits on each side** — counting rows would let an

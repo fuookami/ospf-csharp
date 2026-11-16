@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 把 NaN 变成一次明确的拒绝 / Turning a NaN into an explicit rejection.
 /// </summary>
 /// <remarks>
-/// 补 `LogFunction` / `PowerFunction` / `ReciprocalFunction`（基线 `NonlinearPiecewise.kt`）。
+/// 补 `LogFunction` / `PowerFunction` / `ReciprocalFunction`。
 ///
 /// **三者的源函数各在什么地方失效**：
 /// | 函数 | 失效条件 |
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **如果不拦，`ln(0)` 给出 `-∞`、`1/0` 给出 `±∞`、`(-1)^0.5` 给出 `NaN`，
 /// 而这些值会一路塞进分段线性函数里——分段函数不拒绝它们，于是整条约束悄悄失效。**
 ///
-/// **Where each source fails**:
+/// **Where each source fails**.
 /// | Function | Fails when |
 /// | --- | --- |
 /// | `ln` | `x ≤ 0` |

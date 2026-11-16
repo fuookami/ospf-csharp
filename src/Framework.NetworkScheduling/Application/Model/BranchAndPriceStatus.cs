@@ -1,8 +1,8 @@
 // Branch-and-Price 应用模型 / Branch-and-Price application models.
-// 与固定 Kotlin 基线 `application/model/BranchAndPriceStatus.kt`（2018 字节）、`BranchAndPriceTrace.kt`（1008 字节）、
-// `BranchAndPriceTraceListener.kt`（521 字节）、`VrptwSolveResult.kt`（1599 字节）对应。
-// Mirrors the pinned baseline's `BranchAndPriceStatus.kt`, `BranchAndPriceTrace.kt`,
-// `BranchAndPriceTraceListener.kt` and `VrptwSolveResult.kt`.
+// 与固定 Kotlin （2018 字节）、（1008 字节）、
+//（521 字节）、（1599 字节）对应。
+// ,,
+// and.
 
 using System;
 using Fuookami.Ospf.Framework.NetworkScheduling.Domain.Vrp.Model;
@@ -75,8 +75,8 @@ public sealed record BranchAndPriceTrace(
 /// Branch-and-Price 轨迹监听器 / Branch-and-Price trace listener.
 /// </summary>
 /// <remarks>
-/// 基线是 `fun interface`；C# 侧用委托表达同一语义，并用静态成员提供默认空实现。
-/// The baseline is a `fun interface`; the C# side expresses the same with a delegate and exposes the default no-op as a static
+/// `fun interface`；C# 侧用委托表达同一语义，并用静态成员提供默认空实现。
+/// The code is a `fun interface`; the C# side expresses the same with a delegate and exposes the default no-op as a static
 /// member.
 /// **监听器失败会中止求解**，这是有意的：轨迹是诊断手段，如果它静默失败，调用方会以为"没有轨迹"就是"没有事件"。
 /// **A listener failure aborts the solve** deliberately: the trace is a diagnostic, and if it failed silently the caller would read

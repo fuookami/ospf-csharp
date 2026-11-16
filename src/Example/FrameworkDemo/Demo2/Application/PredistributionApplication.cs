@@ -32,10 +32,10 @@ public sealed class PredistributionApplication
     private readonly AirworthinessSecurityContext _airworthinessSecurityContext = new();
     private readonly SoftSecurityContext _softSecurityContext = new();
     private readonly MacOptimizationContext _macOptimizationContext = new();
-    // **基线在预配载里还注册这两个域**：漏掉它们不会报错，只会让模型少几条约束——
+    // **预配载里还注册这两个域**：漏掉它们不会报错，只会让模型少几条约束——
     // 实测后果是整条路径不可行（49 行 vs 54 行）。
     //
-    // **The baseline registers these two more domains for predistribution** : omitting them never errors, it just leaves the model with fewer
+    // **The code registers these two more domains for predistribution** : omitting them never errors, it just leaves the model with fewer
     // constraints — the measured consequence was that the whole path became infeasible (49 rows vs 54).
     private readonly ExpressEffectivenessContext _expressEffectivenessContext = new();
     private readonly LoadingEffectivenessContext _loadingEffectivenessContext = new();
@@ -46,7 +46,7 @@ public sealed class PredistributionApplication
     /// **预配载独有的第八个域**：基线 `PredistributionPipelineContext` 在全配载七域之后再注册它。
     /// 这个域在本仓早就写完了却从没接线，于是预配载少了六个符号、两个目标。
     ///
-    /// **The eighth domain, predistribution only**: the baseline registers it after full load's seven. The domain had long been finished here but never wired, so
+    /// **The eighth domain, predistribution only**: the code registers it after full load's seven. The domain had long been finished here but never wired, so
     /// predistribution was missing six symbols and two objectives.
     /// </remarks>
     private readonly RedundancyContext _redundancyContext = new();
@@ -92,7 +92,7 @@ public sealed class PredistributionApplication
         // 4. **There is no Benders wiring on this path, so it is refused explicitly** . This used to resolve the mode and then discard it, always
         // running MILP — a request that asked for Benders got **a MILP answer that looked successful**, with the note `Benders requested; adaptive Benders
         // path enabled in application layer` left in the diagnostics: **saying one thing and doing another.** Only the full-load path has Benders wired
-        // . When a path lacks it, say so instead of silently falling back.
+        // When a path lacks it, say so instead of silently falling back.
         if (solveMode is SolveMode.Benders bendersMode)
         {
             notes.Add($"benders_mode_not_wired={bendersMode.Config.MaxIterations};mode=Predistribution");
@@ -102,9 +102,9 @@ public sealed class PredistributionApplication
         // TODO: Port solveWithMILP and solveWithBendersAlgorithm from Kotlin
 
         // **求解器由调用方带进来**：默认全量测试不能依赖可选后端；没带就明确说"未接线"，
-        // **不是"未移植"**——装配与求解链路在本仓早已可用（先接线了全配载）。
+        // **不是"未实现"**——装配与求解链路在本仓早已可用（先接线了全配载）。
         // **The solver comes from the caller**: the default suite must not depend on an optional backend. When none is supplied it says "not wired",
-        // **not "not ported"** — assembly and solving already exist in this port ( wired the full-load path first).
+        // **not "not implemented"** — assembly and solving already exist here ( wired the full-load path first).
         return milpSolver is null
             ? (ResponseDTO.NoSolution("MilpSolverNotSupplied", notes), null)
             : (DirectMilpRunner.Run(
@@ -117,11 +117,11 @@ public sealed class PredistributionApplication
                         _macContext.Register(StowageMode.Predistribution, model),
                         _airworthinessSecurityContext.Register(StowageMode.Predistribution, model),
                 _softSecurityContext.Register(StowageMode.Predistribution, parameter, model),
-                    // **基线在这里还注册三个域**：`macOptimization`、`expressEffectiveness`、`loadingEffectiveness`。
+                    // **这里还注册三个域**：`macOptimization`、`expressEffectiveness`、`loadingEffectiveness`。
                     // 以前只注册四个，**预配载路径因此不可行**（49 行，SCIP 报 `ORModelInfeasible`），而七个域全注册时可行（54 行，目标 1）。
                     // 缺域不会报错，只会让模型"少几条约束"——这类缺陷最难发现，因为装配看起来是成功的。
                     //
-                    // **The baseline registers three more domains here** : `macOptimization`, `expressEffectiveness`, `loadingEffectiveness`.
+                    // **The code registers three more domains here** : `macOptimization`, `expressEffectiveness`, `loadingEffectiveness`.
                     // Registering only four made the predistribution path **infeasible** (49 rows, SCIP reports `ORModelInfeasible`), while all seven are feasible
                     // (54 rows, objective 1). A missing domain never errors — it just leaves the model with fewer constraints, which is the hardest kind to notice.
                     _macOptimizationContext.Register(StowageMode.Predistribution, parameter, model),

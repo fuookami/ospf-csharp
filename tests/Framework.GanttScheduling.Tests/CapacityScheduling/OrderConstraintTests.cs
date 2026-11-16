@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// **顺序约束真的建行** / The order constraint really builds rows.
 /// </summary>
 /// <remarks>
-/// 第一版 `Invoke` 是 `=&gt; Ok`：三族约束一条都没建。现在按基线建：
+/// 第一版 `Invoke` 是 `=&gt; Ok`：三族约束一条都没建。现在建：
 ///
 /// 1. 每顺序位至多一个动作：`Σ_a b[a, t, o] ≤ 1`；
 /// 2. 下界关联：`x[a, t, o] ≥ b[a, t, o]`；
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// 判据钉的是**三条都真的存在**，而不只是"行数变多了"——2 与 3 各缺一条都会让 `b` 与 `x` 脱钩：
 /// 只留 2，`b` 为 1 而 `x` 可以无限大；只留 3，`x` 为 0 而 `b` 为 1，白占一个顺序位。
 ///
-/// The first `Invoke` was `=&gt; Ok`: none of the three families existed. It now builds the baseline's three (see the list above). The criteria pin that **all three really exist**, not merely
+/// The first `Invoke` was `=&gt; Ok`: none of the three families existed. It now builds its three (see the list above). The criteria pin that **all three really exist**, not merely
 /// that the row count grew — dropping either 2 or 3 decouples `b` from `x`: with only 2, `b` is 1 while `x` may be unbounded; with only 3, `x` is 0 while `b` is 1, wasting a position.
 /// </remarks>
 public class OrderConstraintTests {

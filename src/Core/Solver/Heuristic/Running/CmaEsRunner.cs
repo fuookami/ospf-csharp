@@ -1,6 +1,6 @@
 // CMA-ES 运行器 / The CMA-ES runner.
-// 与固定 Kotlin 基线 `runner/CmaNumerics.kt`、`runner/CmaEsRunner.kt`（12640 B）对应。
-// Mirrors the pinned baseline's `runner/CmaNumerics.kt` and `runner/CmaEsRunner.kt` (12640 B).
+// 与固定 Kotlin 、（12640 B）对应。
+// And (12640 B).
 
 using System;
 using System.Collections.Generic;
@@ -18,14 +18,14 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// CMA-ES 数值实现 / The CMA-ES numerical implementation.
 /// </summary>
 /// <remarks>
-/// **两个分支的差别只在"高斯采样怎么做"**，不在超越函数上。基线的 `PolarFdlibmV1` 还额外把
-/// `ln`/`sqrt`/`exp`/`pow` 换成 Java `StrictMath`（fdlibm）；本移植无法在 .NET 上复现那份逐位结果，
+/// **两个分支的差别只在"高斯采样怎么做"**，不在超越函数上。`PolarFdlibmV1` 还额外把
+/// `ln`/`sqrt`/`exp`/`pow` 换成 Java `StrictMath`（fdlibm）；本实现无法在 .NET 上复现那份逐位结果，
 /// 因此两者都用 `System.Math`，**并且配置层对 `numerics: cma-polar-fdlibm-v1` 直接失败**——收下配置却按原生超越函数跑，
 /// 会让同一份配置对应两份轨迹。这是已记录的可复现性缺口，不假装两个分支在超越函数上等价于基线。
-/// **The two branches differ only in "how the Gaussian is sampled"**, not in the transcendentals. The baseline's `PolarFdlibmV1` additionally
-/// swaps `ln`/`sqrt`/`exp`/`pow` for Java `StrictMath` (fdlibm); this port cannot reproduce those bit-exact results on .NET, so both use
+/// **The two branches differ only in "how the Gaussian is sampled"**, not in the transcendentals. The code's `PolarFdlibmV1` additionally
+/// swaps `ln`/`sqrt`/`exp`/`pow` for Java `StrictMath` (fdlibm); this implementation cannot reproduce those bit-exact results on .NET, so both use
 /// `System.Math`, **and the configuration layer fails outright on `numerics: cma-polar-fdlibm-v1`** — accepting a config while running native
-/// transcendentals would map one config to two trajectories. This is a recorded reproducibility gap, and the branches are not claimed to match the baseline.
+/// transcendentals would map one config to two trajectories. This is a recorded reproducibility gap, and the branches are not claimed to match the code.
 /// **`Native` 的 Box–Muller 把第一个随机数抬到 `1.0e-12` 以上**。不抬会让 `ln(0)` 得到负无穷，
 /// **于是整条采样路径产出 `NaN`，而协方差在若干代之后才彻底失效**。
 /// **`Native`'s Box–Muller lifts its first draw above `1.0e-12`.** Without it `ln(0)` yields negative infinity,

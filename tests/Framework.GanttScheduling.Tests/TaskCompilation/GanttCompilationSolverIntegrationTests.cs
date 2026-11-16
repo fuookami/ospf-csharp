@@ -308,12 +308,12 @@ public class GanttCompilationSolverIntegrationTests {
     /// 这里最大化掩码后的延迟时间：`task_compilation` 被强制为 1，于是掩码等于恒等，值必须仍是 `21 × 3600`。
     ///
     /// **这里的 ceiling 记在这里**：C# 里 `task_compilation == 1` 是强制的（`AddCompilationConstraints`），所以普通编译下
-    /// 这层掩码**恒等 1**，与基线一致。它真正起作用的地方是迭代编译（任务可能不在当前批次里），而那条路径还没接线。
+    /// 这层掩码**恒等 1**。它真正起作用的地方是迭代编译（任务可能不在当前批次里），而那条路径还没接线。
     ///
     /// The masking rows are four Big-M rows plus a definition, and the likeliest failure is **making the model infeasible** — reported as "no solution", looking like an
     /// unschedulable plan. The masked delay is maximised here: `task_compilation` is forced to 1, so the mask is the identity and the value must still be `21 × 3600`.
     /// **The ceiling is recorded here**: in C# `task_compilation == 1` is forced (`AddCompilationConstraints`), so under a plain compilation this mask is **identically 1**, as in
-    /// the baseline. Where it really matters is iterative compilation (a task may be outside the current batch), and that path is not wired yet.
+    /// the code. Where it really matters is iterative compilation (a task may be outside the current batch), and that path is not wired yet.
     /// </remarks>
     [Fact]
     public async System.Threading.Tasks.Task MaskedDelayTime_ShouldStillEqualTheDeviationUnderRealScip() {

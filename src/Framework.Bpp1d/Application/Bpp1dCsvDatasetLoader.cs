@@ -1,6 +1,6 @@
 // 一维 CSV 数据集读取 / One-dimensional CSV dataset loading.
-// 与固定 Kotlin 基线 `bpp1d/application/Bpp1dCsvDatasetLoader.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `Bpp1dCsvDatasetLoader.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp1d.Domain.Item.Model;

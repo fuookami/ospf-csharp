@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一条严格正条件 <c>polynomial &gt; 0</c> / One strictly positive condition.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `StrictPositiveCondition`。
+/// 对齐的 `StrictPositiveCondition`。
 ///
 /// **它只是一个包装**：**`polynomial &gt; 0` 这件事全靠调用方按约定解释**，
 /// **记录本身不做任何检查。** **这正是它的用处——把一个"约定"变成类型。**
 ///
-/// Following the baseline's `StrictPositiveCondition`.
+/// Following its `StrictPositiveCondition`.
 ///
 /// **It is only a wrapper**: **the meaning `polynomial &gt; 0` is a convention the caller must honour**, and the record
 /// itself checks nothing. **That is exactly its point — turning a convention into a type.**
@@ -36,7 +36,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// 把离散条件转成严格正形式 <c>q &gt; 0</c> / Turn a discrete condition into a strictly positive one.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `toStrictPositiveCondition` 两个重载。
+/// 对齐的 `toStrictPositiveCondition` 两个重载。
 ///
 /// **变换规则**：
 ///
@@ -59,9 +59,9 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// `p + 0.5 &gt; 0` 与 `p ≥ 0` 恰好等价；换成步长是 1 的变量就仍然等价；
 /// 但如果变量实际能取到 `−0.25`，等价性就没了，而模型仍然可行。**
 ///
-/// Following the baseline's two `toStrictPositiveCondition` overloads.
+/// Following its two `toStrictPositiveCondition` overloads.
 ///
-/// **The rules**:
+/// **The rules**.
 ///
 /// | Relation | Transform | Strictly positive form |
 /// | --- | --- | --- |
@@ -75,7 +75,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// **The two agree only when <b>`p` takes values on a lattice of spacing `δ`</b>** — **because then no lattice point
 /// lies in `(−δ, 0)`.**
 ///
-/// **So for `δ ≠ 1` the baseline demands a proof that `δ` aligns with the lattice**, and **rejects when it cannot be
+/// **So for `δ ≠ 1` the code demands a proof that `δ` aligns with the lattice**, and **rejects when it cannot be
 /// shown.** **At `δ = 1` no proof is needed: an integer variable's spacing is one by definition.**
 ///
 /// **That rejection matters**: **if the variables could actually reach `−0.25`, the equivalence disappears while the
@@ -194,7 +194,7 @@ public static class StrictPositiveTransformation
     /// then the lattice spacing is their greatest common divisor; ② `δ` must not exceed that spacing.**
     ///
     /// **When ① fails, a weaker check applies**: **the constant must sit on the same side of zero or far enough away**
-    /// (`c ≥ 0` or `c ≤ −δ` for `GE`). **That check is weak, but it is all the baseline guarantees** —
+    /// (`c ≥ 0` or `c ≤ −δ` for `GE`). **That check is weak, but it is all the code guarantees** —
     /// **the equivalence is not proved there, merely not disproved.**
     /// </remarks>
     private static Result<Success, ErrorCode, Error<ErrorCode>> ProveShift(

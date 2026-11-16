@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.BunchCompilation;
 /// </remarks>
 public class ReducedCostCutoffTests {
     /// <summary>
-    /// **非整数输入下按基线路径向下取整** / Non-integral input follows the baseline's floor-first path.
+    /// **非整数输入下路径向下取整** / Non-integral input follows its floor-first path.
     /// </summary>
     /// <remarks>
     /// 输入要选**两条路径都高于 5 下限**的，否则下限钳制会把差异抹平：
@@ -39,7 +39,7 @@ public class ReducedCostCutoffTests {
     /// `10.9` 才是判别点：基线 `floor → 10 → 20/3=6`，浮点 `(long)7.266=7`，差 1 且都在下限之上。
     ///
     /// The input must keep **both paths above the floor of 5**, or the clamp erases the difference:
-    /// `7.9` gives `floor(7.9)=7 → 14/3=4` on the baseline path, clamped to `5`, and `(long)5.266=5` on the floating path — also `5`, indistinguishable.
+    /// `7.9` gives `floor(7.9)=7 → 14/3=4` on the code path, clamped to `5`, and `(long)5.266=5` on the floating path — also `5`, indistinguishable.
     /// `10.9` is the discriminating point: baseline `floor → 10 → 20/3=6` versus floating `(long)7.266=7`, off by one and both above the floor.
     /// </remarks>
     [Fact]

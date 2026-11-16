@@ -1,6 +1,6 @@
 // 远程线性求解器 / Remote linear solver.
-// 与固定 Kotlin 基线 `RemoteLinearSolver` 对应：同一个求解器接口，后端换成远程执行。
-// Corresponds to the pinned Kotlin baseline's `RemoteLinearSolver`: the same solver interface with the
+// 与`RemoteLinearSolver` 对应：同一个求解器接口，后端换成远程执行。
+// `RemoteLinearSolver`: the same solver interface with the
 // backend swapped for remote execution.
 
 using System;

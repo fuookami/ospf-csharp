@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// The feasibility phase (Phase-1) must exist and carry the right semantics.
 /// </summary>
 /// <remarks>
-/// **基线有一整套两阶段机制，C# 原本完全没有**：
+/// **一整套两阶段机制，C# 原本完全没有**：
 ///
 /// 1. 从未解出可行解、且 LP 以「模型不可行」失败 → 重建一个**只最小化人工短缺**的主问题；
 /// 2. 目标值 ≤ `1e-7`（短缺归零）→ **丢弃人工短缺、恢复原始硬约束主问题**。
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 而 `MockColumnGenerationSolver` **只会成功或返回通用失败**，无法区分错误码——
 /// **这是判据的真实边界，记入缺口，不假装覆盖了。**
 ///
-/// **The baseline has a whole two-phase mechanism that C# lacked entirely** (steps above).
+/// **The code has a whole two-phase mechanism that C# lacked entirely** (steps above).
 /// **Without step 1** an infeasible LP terminates at once, **even when "an artificial deficit would make it solvable"**.
 /// **Without step 2** the final solution carries artificial deficits — **apparently feasible, actually infeasible**.
 ///
@@ -72,12 +72,12 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**可行性阶段必须让 LP 模式也构建 yield 聚合** / The feasibility phase must make an LP-mode build create the yield aggregation too.</summary>
     /// <remarks>
-    /// 基线是 `val yieldAgg = if (_mode == MILP || _feasibilityPhase)...`，C# 原本只有 `_mode == MILP`。
+    /// `val yieldAgg = if (_mode == MILP || _feasibilityPhase)...`，C# 原本只有 `_mode == MILP`。
     ///
     /// **可观测的差异**：可行性阶段下 `Yield` 聚合非 null，**所以 yield 约束管线会被加进去**。
     /// 判据靠 `context.Yield` 是否存在。
     ///
-    /// The baseline is `val yieldAgg = if (_mode == MILP || _feasibilityPhase)...` while C# only had `_mode == MILP`.
+    /// The code is `val yieldAgg = if (_mode == MILP || _feasibilityPhase)...` while C# only had `_mode == MILP`.
     ///
     /// **The observable difference**: under the feasibility phase the `Yield` aggregation is non-null, **so the yield constraint pipelines are added**. The criterion
     /// checks whether `context.Yield` exists.

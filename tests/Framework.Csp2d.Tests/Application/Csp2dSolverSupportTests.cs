@@ -23,9 +23,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Application;
 /// **候选生成、主问题装配与解恢复** / Candidate generation, master assembly and solution recovery.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Csp2dSolvers.kt` 的纯函数部分。求解器入口（`Csp2dMilp` / `Csp2dColumnGeneration`）需要真求解器，另批处理。
+/// 对应的纯函数部分。求解器入口（`Csp2dMilp` / `Csp2dColumnGeneration`）需要真求解器，另批处理。
 ///
-/// Mirrors the pure-function part of the baseline `Csp2dSolvers.kt`. The solver entries need a real solver and are handled in another batch.
+/// Mirrors the pure-function part of the code. The solver entries need a real solver and are handled in another batch.
 /// </remarks>
 public class Csp2dSolverSupportTests {
     /// <summary>**每个物料都产出一批候选，编号带物料下标** / Each material yields its own candidates, with the material index in the identifier.</summary>

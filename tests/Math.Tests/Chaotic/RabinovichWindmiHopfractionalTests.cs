@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 ///
 /// **两个失效参数**：Windmi 的 `g`、Hopfractional 迭代器的 `iterations`。
 ///
-/// **Three traps, none of which throws**:
+/// **Three traps, none of which throws**.
 /// ① Rabinovich–Fabrikant's `γ` multiplies only the first equation, **while both carry an `xz` term**;
 /// ② Windmi's `dz` has `e` multiplying **`x²`**, not `x·z` and not `x·y`;
 /// ③ Hopfractional's `(k·x)^q` is NaN for a negative base with a fractional exponent.

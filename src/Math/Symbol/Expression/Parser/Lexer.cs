@@ -282,8 +282,8 @@ public sealed class Lexer {
             "null" => new Token(TokenType.Null, value, startPos),
             "true" => new Token(TokenType.True, value, startPos),
             "false" => new Token(TokenType.False, value, startPos),
-            // **四个条件关键字在基线里就在关键字表里，C# 侧此前漏了；补上之后 `if` 不能再当变量名。**
-            // **The four conditional keywords sit in the baseline keyword table; C# had missed them, and adding them means `if` can no longer be a variable name.**
+            // **四个条件关键字在就在关键字表里，C# 侧此前漏了；补上之后 `if` 不能再当变量名。**
+            // **The four conditional keywords sit in the code keyword table; C# had missed them, and adding them means `if` can no longer be a variable name.**
             "if" => new Token(TokenType.If, value, startPos),
             "then" => new Token(TokenType.Then, value, startPos),
             "else" => new Token(TokenType.Else, value, startPos),

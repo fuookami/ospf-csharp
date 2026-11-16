@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternGeneration;
 /// **有界候选生成** / Bounded pattern generation.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `PatternGenerationContext`。判据钉住四件事：
+/// 对应`PatternGenerationContext`。判据钉住四件事：
 ///
 /// | 点 | 漏掉的后果 |
 /// | --- | --- |
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternGeneration;
 /// | **单件方案也在候选里** | 只有一件能装时池子为空 |
 /// | **`InitialPatterns` 不声称完备** | 启发式被当成证明 |
 ///
-/// Mirrors the baseline's `PatternGenerationContext`; the table lists what each criterion pins.
+/// ; the table lists what each criterion pins.
 /// </remarks>
 public class PatternGenerationContextTests {
     /// <summary>**枚举出全部可行组合，且标记为完整** / Enumerate every feasible combination and mark it complete.</summary>

@@ -1,7 +1,7 @@
 // 任务×执行器成本项 / Task-executor cost terms.
-// 与固定 Kotlin 基线 `task_compilation/Service/.../TaskExecutorCostMinimization.kt` 的
-// `tasks.flatMap { executors.map { ... } }` 求和对应。
-// Mirrors the `tasks.flatMap { executors.map { ... } }` sum in the pinned baseline's `TaskExecutorCostMinimization.kt`.
+// 与固定 Kotlin 的
+// 每个任务在每个执行器上各贡献一项代价，全部求和：`tasks.flatMap { executors.map { ... } }`。
+// One cost term per task per executor, summed: `tasks.flatMap { executors.map { ... } }`.
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 「不漏」比「少算」重要：若为了省项而按可用集合过滤，一旦 的收紧规则改了，这里就会静默漏掉本该计费的组合。
 ///
 /// 与 的执行器目标有一处**故意的不对称**：那两件的提取器是可空的，`null` 表示"没配置这项惩罚"，于是**不加目标**；
-/// 这里提取器不可空、缺省返回 `1`，所以**永远加目标**。照抄基线的这个差别，不替它统一。
+/// 这里提取器不可空、缺省返回 `1`，所以**永远加目标**。沿用这个差别，不替它统一。
 ///
 /// **缺省系数 `1` 是个占位，不是有意义的成本。** 全部系数为 `1` 时，目标和等于 `Σ x[t,e]`，
 /// 也就是**被执行的任数量**：任务都不可取消时这是个常数（目标等于任务数，什么都没优化）；

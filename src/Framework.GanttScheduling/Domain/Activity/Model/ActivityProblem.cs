@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
 /// <summary>
 /// 基线：某个已定选择的对齐参考 / A baseline: the reference a fixed choice is measured against.
 /// </summary>
-/// <param name="Choice">基线选择 / The baseline choice.</param>
+/// <param name="Choice">基线选择 / The code choice.</param>
 /// <param name="Frozen">是否冻结 / Whether it is frozen.</param>
 /// <param name="StartChangeCost">改开始时刻的成本 / The cost of moving the start.</param>
 /// <param name="ModeChangeCost">改模式的成本 / The cost of changing the mode.</param>
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Model;
 /// 与基线 `ActivityBaseline` 对齐。**冻结不等于零成本**：`Frozen` 决定"能不能改"，
 /// 两个成本决定"改了要付多少"——把冻结当成成本无穷大会让求解器无法用软约束表达。
 ///
-/// Aligned with the baseline's `ActivityBaseline`. **Frozen is not the same as costly**: `Frozen` says whether a change is allowed while the two costs say what it would cost, and treating frozen as
+/// Aligned with its `ActivityBaseline`. **Frozen is not the same as costly**: `Frozen` says whether a change is allowed while the two costs say what it would cost, and treating frozen as
 /// infinite cost would leave the solver no way to express it softly.
 /// </remarks>
 public sealed record ActivityBaseline<V>(
@@ -52,7 +52,7 @@ public sealed record ActivityExecution<V>(ActivityPlacement<V> Placement, Activi
 /// <remarks>
 /// 与基线 `ActivityRow` 对齐。**上下界都可空**：只给一侧就是单边约束，兜底成 0 会凭空造出一个约束。
 ///
-/// Aligned with the baseline's `ActivityRow`. **Both bounds are nullable**: supplying one side makes a one-sided row, and defaulting to zero would invent a constraint.
+/// Aligned with its `ActivityRow`. **Both bounds are nullable**: supplying one side makes a one-sided row, and defaulting to zero would invent a constraint.
 /// </remarks>
 public sealed record ActivityRow<V>(
     string Id,
@@ -90,7 +90,7 @@ public sealed record ActivityRow<V>(
 /// 一个最小问题就是"在某个区间里把活动排给执行者"，其余都是增量信息。
 /// **`AdditionalCost` 是委托**，因为附加成本要看到具体的选择才能算；写成静态字典会强迫调用方先枚举所有组合。
 ///
-/// Aligned with the baseline's `ActivitySchedulingProblem`. **Everything except the horizon, activities, executors and cost unit is optional**: a minimal problem is just "place activities onto
+/// Aligned with its `ActivitySchedulingProblem`. **Everything except the horizon, activities, executors and cost unit is optional**: a minimal problem is just "place activities onto
 /// executors within a horizon", and the rest is incremental. **`AdditionalCost` is a delegate** because an additional cost needs to see the concrete choice, whereas a static dictionary would force
 /// the caller to enumerate every combination up front.
 /// </remarks>

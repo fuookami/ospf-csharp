@@ -1,6 +1,5 @@
 // VRP 距离计算 / VRP distance calculation.
-// 与固定 Kotlin 基线 `DistanceCalculator.kt`（89 行）对应。
-// Mirrors the pinned baseline's `DistanceCalculator.kt`.
+// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;
@@ -129,12 +128,12 @@ public class EuclideanDistanceCalculator<V>(PhysicalUnit distanceUnit) : IDistan
 /// zero and collapses two distinct points; the Solomon benchmarks require one-decimal *distances*, not one-decimal
 /// *coordinates*.
 ///
-/// **与基线的一处实现差异**：基线用 `V.roundTo(1)`，而 C# 的 `IFloatingNumber&lt;TSelf&gt;` 接口不暴露取整能力（`RoundTo`
-/// 只存在于 `Flt32`／`Flt64`／`FltX` 的具体类型上）。因此本移植把取整作为构造参数传入。语义不变，只是把"如何取整"交给
+/// **与一处实现差异**：`V.roundTo(1)`，而 C# 的 `IFloatingNumber&lt;TSelf&gt;` 接口不暴露取整能力（`RoundTo`
+/// 只存在于 `Flt32`／`Flt64`／`FltX` 的具体类型上）。因此本实现把取整作为构造参数传入。语义不变，只是把"如何取整"交给
 /// 调用方显式提供，`ForFlt64`／`ForFltX` 两个工厂给出常用实现。
-/// **One implementation divergence from the baseline**: the baseline calls `V.roundTo(1)`, but C#'s
+/// **One implementation divergence from the code**: the code calls `V.roundTo(1)`, but C#'s
 /// `IFloatingNumber&lt;TSelf&gt;` does not expose rounding (`RoundTo` lives only on the concrete `Flt32`／`Flt64`／`FltX` types).
-/// This port therefore takes rounding as a constructor argument. Semantics are unchanged; only "how to round" is made
+/// This implementation therefore takes rounding as a constructor argument. Semantics are unchanged; only "how to round" is made
 /// explicit, with `ForFlt64`／`ForFltX` factories supplying the common cases.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>

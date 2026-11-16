@@ -1,6 +1,5 @@
 // SHADE 运行器 / The SHADE runner.
-// 与固定 Kotlin 基线 `runner/ShadeRunner.kt` 对应（`ShadeNumerics` 除外，见注释）。
-// Mirrors the pinned baseline's `runner/ShadeRunner.kt` (except `ShadeNumerics`, see the remarks).
+// 与固定 Kotlin 对应（`ShadeNumerics` 除外，见注释）。
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +78,7 @@ public sealed record ShadeMemory(
     /// <remarks>
     /// **抽取顺序是"槽下标 → 权重扰动 → 三次交叉率扰动"**，共五次。改动顺序不改变分布，却让同一随机流下的轨迹与基线不同。
     /// **The draw order is "slot index → weight perturbation → three cross-rate perturbations"**, five draws in total. Changing the order
-    /// alters no distribution yet makes the trajectory under the same random stream differ from the baseline.
+    /// alters no distribution yet makes the trajectory under the same random stream differ from the code.
     /// **权重扰动后若 ≤ 0 则回退到槽内原值**，而不是截断到 0：截断会让差分权重停在 0，
     /// **于是变异向量退化成"父代 + 0"，整个种群停止移动**。
     /// **A perturbation that lands ≤ 0 falls back to the slot's value** rather than clamping to 0: clamping parks the differential weight at
@@ -196,16 +195,16 @@ public sealed record ShadeState<ObjValue, V>(
 /// size reduction rather than random culling.
 /// **档案从头部裁剪**（`RemoveAt(0)`），保留最近被淘汰的父代。
 /// **The archive is trimmed from the head** (`RemoveAt(0)`), retaining the most recently replaced parents.
-/// **`ShadeNumerics` 只保留原生一支，fdlibm 协议在配置层明确拒绝**。基线的 `FdlibmV1` 依赖 Java 的 `StrictMath`（fdlibm 的 `tan`），
-/// 本移植无法在 .NET 上复现其逐位结果；写一个"看起来一样"的枚举只会让调用方以为可复现，而**收下配置却按原生数值跑**更糟——
+/// **`ShadeNumerics` 只保留原生一支，fdlibm 协议在配置层明确拒绝**。`FdlibmV1` 依赖 Java 的 `StrictMath`（fdlibm 的 `tan`），
+/// 本实现无法在 .NET 上复现其逐位结果；写一个"看起来一样"的枚举只会让调用方以为可复现，而**收下配置却按原生数值跑**更糟——
 /// 同一份配置会对应两份轨迹。所以 `RegistryParameters` 对 `numerics: shade-fdlibm-v1` 直接失败，`Tangent` 恒用 `System.Math.Tan`。
-/// **Only the native branch of `ShadeNumerics` is kept; the fdlibm protocol is refused at the configuration layer.** The baseline's `FdlibmV1`
+/// **Only the native branch of `ShadeNumerics` is kept; the fdlibm protocol is refused at the configuration layer.** The code's `FdlibmV1`
 /// relies on Java's `StrictMath` (fdlibm's `tan`), whose bit-exact results cannot be reproduced on .NET; a "looks the same" enum would only make
 /// callers believe it is reproducible, and **accepting the config while running native numerics** is worse — one config would map to two
 /// trajectories. So `RegistryParameters` fails on `numerics: shade-fdlibm-v1` outright and `Tangent` always uses `System.Math.Tan`.
-/// **没有了"模型自带约束排序"这条分支**。基线的 `keepBest` 先问模型有没有约束处理器；本移植把约束处理器放在问题旁边而非模型上
+/// **没有了"模型自带约束排序"这条分支**。`keepBest` 先问模型有没有约束处理器；本实现把约束处理器放在问题旁边而非模型上
 /// （既定形状差异），因此 `keepBest` 直接按严格比较排序。
-/// **The "model-carried constraint ranking" branch is gone.** The baseline's `keepBest` first asks the model for a constraint handler; this
+/// **The "model-carried constraint ranking" branch is gone.** The code's `keepBest` first asks the model for a constraint handler; this
 /// port keeps the handler next to the problem rather than on the model (an established shape difference), so `keepBest` sorts by strict
 /// comparison directly.
 /// </remarks>

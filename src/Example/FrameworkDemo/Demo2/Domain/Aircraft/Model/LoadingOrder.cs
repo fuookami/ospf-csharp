@@ -36,17 +36,17 @@ public sealed class LoadingOrder
     /// 前驱深度 / The predecessor depth.
     /// </summary>
     /// <remarks>
-    /// **照抄基线，包括它的怪癖**：基线写的是 `directPrec.minOfOrNull { it.precDepth } ?: UInt8.zero`——
+    /// **照做，包括它的怪癖**：基线写的是 `directPrec.minOfOrNull { it.precDepth } ?: UInt8.zero`——
     /// 取直接前驱的 `precDepth` 的**最小值**，而叶子节点的 `precDepth` 也是 0（空集回退到 0）。于是**整条链上每个节点的
     /// `precDepth` 都是 0**，它并不表示"离起点多远"。
     ///
     /// 这不是笔误：`RecommendedWeightEqualization` 的 `PriorityAppointment` 用 `precDepth` 做"预约深度集合"，
-    /// 而按基线的语义那个集合恒为 `{0}`。改成真正的深度会让预约判定与基线不同——那是一个**行为改动**，不是修复，
-    /// 所以留在这里照抄，并记下这个 ceiling。
+    /// 而按语义那个集合恒为 `{0}`。改成真正的深度会让预约判定与基线不同——那是一个**行为改动**，不是修复，
+    /// 所以留在这里沿用，并记下这个 ceiling。
     ///
-    /// **Copied from the baseline, quirk included**: the baseline writes `directPrec.minOfOrNull { it.precDepth } ?: UInt8.zero` — the **minimum** `precDepth` among the direct
+    /// **Copied from the code, quirk included**: the code writes `directPrec.minOfOrNull { it.precDepth } ?: UInt8.zero` — the **minimum** `precDepth` among the direct
     /// predecessors, while a leaf's own `precDepth` is also 0 (an empty set falls back to 0). So **every node in the chain has `precDepth` 0**; it does not mean "distance from the
-    /// start". This is not a typo: `PriorityAppointment` in recommended-weight equalisation uses `precDepth` to build its "appointed depth sets", and under the baseline's semantics
+    /// start". This is not a typo: `PriorityAppointment` in recommended-weight equalisation uses `precDepth` to build its "appointed depth sets", and under its semantics
     /// that set is always `{0}`. Making it a real depth would change the appointment decision — a **behaviour change**, not a fix — so it is copied as-is with this ceiling recorded.
     /// </remarks>
     public byte PrecDepth =>
@@ -67,10 +67,10 @@ public sealed class LoadingOrder
     /// 全部前驱（传递闭包）/ All predecessors (transitive closure).
     /// </summary>
     /// <remarks>
-    /// 基线是 `directPrec + directPrec.flatMap { it.prec }`——**递归且无环保护**。本仓的 `DirectPrec` 由装载顺序串成一条链，
+    /// `directPrec + directPrec.flatMap { it.prec }`——**递归且无环保护**。本仓的 `DirectPrec` 由装载顺序串成一条链，
     /// 天然无环；但若有人手工构造出环，这里会无限递归。加一个 `visited` 集合并保持结果语义不变，成本极低。
     ///
-    /// The baseline is `directPrec + directPrec.flatMap { it.prec }` — **recursive with no cycle guard**. This port's `DirectPrec` forms a chain and is acyclic by construction,
+    /// `directPrec + directPrec.flatMap { it.prec }` — **recursive with no cycle guard**. This implementation's `DirectPrec` forms a chain and is acyclic by construction,
     /// but a hand-built cycle would recurse forever. A `visited` set keeps the semantics identical at negligible cost.
     /// </remarks>
     public IReadOnlySet<Position> Prec => Closure(DirectPrec, position => position.LoadingOrder?.DirectPrec);

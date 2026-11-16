@@ -135,7 +135,7 @@ public abstract record ObjectiveTarget(
     /// **把预算单位当成相对，基线一大就会放大十倍。**
     ///
     /// **The difference between relative and business-unit is one point, and that point decides usability**: **relative scales** (five percent of 100 is 5), **business-unit translates** (5 regardless of the
-    /// baseline). **Treating a business-unit delta as a fraction multiplies it tenfold as soon as the baseline is large.**
+    /// baseline). **Treating a business-unit delta as a fraction multiplies it tenfold as soon as the baseline value is large.**
     /// </remarks>
     public static AtLeast CreateBusinessUnitAtLeast(ObjectiveId objectiveId, Flt64 baseline, Flt64 delta) {
         RequireFinite(baseline, nameof(baseline), "Business-unit target values must be finite");

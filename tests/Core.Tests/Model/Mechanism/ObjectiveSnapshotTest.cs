@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 /// **目标快照必须展平到变量级** / The objective snapshot must be flattened to variables.
 /// </summary>
 /// <remarks>
-/// 对齐基线的 `MetaModel.objectiveSnapshot`。**这条判据不需要求解器**，所以它能在
+/// 对齐`MetaModel.objectiveSnapshot`。**这条判据不需要求解器**，所以它能在
 /// "整条链跑通"之前就红—— 那次是跑到真后端收尾复核才发现缺这一步，绕了很远。
 ///
 /// 判据造一个**目标里含表达式符号**的模型（`stowage_0_0` 那类），再断言：
@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 /// 2. `ObjectiveSnapshot` 展平后**一个非变量单项式都不剩**；
 /// 3. 展平前后的**常量项相同**（展平是代入，不是重算）。
 ///
-/// Mirrors the baseline's `MetaModel.objectiveSnapshot`. **This criterion needs no solver**, so it reds before "the whole chain runs" — only found the
+/// **This criterion needs no solver**, so it reds before "the whole chain runs" — only found the
 /// missing step after reaching the real backend's final check, which is a long way around. The fixture builds a model whose **objective contains an expression
 /// symbol**, then asserts: (1) `MetaSubObjects` **really does** hold a non-variable monomial — **without that premise the criterion tests nothing** (the 
 /// lesson); (2) after `ObjectiveSnapshot` **no non-variable monomial remains**; (3) the constant term is **the same** before and after, since flattening

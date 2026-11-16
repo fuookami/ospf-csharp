@@ -413,10 +413,10 @@ public class Demo2ZoneCumulativeLimitTests {
     /// **累积：力臂相同的点保留第一次出现的那个** / Cumulative: duplicate arms keep the first occurrence.
     /// </summary>
     /// <remarks>
-    /// 两个 900 点（3000 与 9999）只留一个，且是**先出现**的 3000。基线用 `distinctBy { toArm }`，先排序后去重会留下另一个。
+    /// 两个 900 点（3000 与 9999）只留一个，且是**先出现**的 3000。`distinctBy { toArm }`，先排序后去重会留下另一个。
     /// 成对：检查点因此只有一个，右端常数是 3000。
     ///
-    /// Two points at 900 (3000 and 9999) collapse to one, the **first** — 3000. The baseline's `distinctBy { toArm }` keeps the first; sorting first would keep the other.
+    /// Two points at 900 (3000 and 9999) collapse to one, the **first** — 3000. The code's `distinctBy { toArm }` keeps the first; sorting first would keep the other.
     /// Paired: exactly one checkpoint remains, with right side 3000.
     /// </remarks>
     [Fact]
@@ -445,7 +445,7 @@ public class Demo2ZoneCumulativeLimitTests {
     /// <remarks>
     /// 舱位的 `BackArm == FrontArm` 时长度为 0，基线直接排除（否则重叠比例是除零）。判据钉住它不出现在任何检查点的 `Parts` 里。
     ///
-    /// When `BackArm == FrontArm` the length is zero and the baseline drops the position (otherwise the ratio divides by zero). The criterion pins that it appears in no
+    /// When `BackArm == FrontArm` the length is zero and the code drops the position (otherwise the ratio divides by zero). The criterion pins that it appears in no
     /// checkpoint's `Parts`.
     /// </remarks>
     [Fact]

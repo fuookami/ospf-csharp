@@ -27,16 +27,16 @@ public sealed record MaxClimPoint(double Tow, double MaxClim);
 /// 最大中心线指数裕度 / The maximum centreline index margin.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/airworthiness_security/model/MaxCLIM.kt`。CLIM 是"重心偏离中心线多少"的裕度，随起飞重量变化：
+/// 逐条对齐。CLIM 是"重心偏离中心线多少"的裕度，随起飞重量变化：
 /// 飞机越重，允许的横向不平衡越小。
 ///
 /// 结构与 <see cref="MinLowPayload"/> 同形：两支（已知总重 → 常数；未知 → 关于总重估计的线性式），**两端都夹住**。
 ///
-/// 夹取这一点值得记下来，因为基线的循环形状容易读错。`for (i in 0 until sorted.size - 1)` 之后的 `return sorted.last` 看起来像"上端外推"，
+/// 夹取这一点值得记下来，因为循环形状容易读错。`for (i in 0 until sorted.size - 1)` 之后的 `return sorted.last` 看起来像"上端外推"，
 /// 但 x 超过末点时循环里每个 `if (x leq x2)` 都为假、循环自然结束，于是**恰好**执行到那一行——所以上端是夹住的，不是外推。
 /// **这里容易被读成外推，而判据会当场抓住这个误读。**
 ///
-/// Mirrors the baseline. CLIM is the margin by which the centre of gravity departs from the centreline, shrinking as take-off weight grows. The structure matches
+/// CLIM is the margin by which the centre of gravity departs from the centreline, shrinking as take-off weight grows. The structure matches
 /// <see cref="MinLowPayload"/>: two branches (known total → constant, unknown → linear in the estimate) and **both ends clamp**. The clamping is worth recording because the loop
 /// shape is easy to misread: the `return sorted.last` after `for (i in 0 until sorted.size - 1)` looks like an upper extrapolation, but above the last point every
 /// `if (x leq x2)` is false, the loop falls through, and that line is reached **exactly** — so the top clamps. The first draft read it as extrapolation and wrote both the comment

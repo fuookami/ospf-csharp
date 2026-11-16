@@ -103,7 +103,7 @@ public enum NormalizedModelType {
 /// 模型数据 / Model data.
 /// </summary>
 /// <remarks>
-/// 引用、内联线性、内联二次与原始字节四种模式互斥；<see cref="ModelType"/> 按基线顺序推断。
+/// 引用、内联线性、内联二次与原始字节四种模式互斥；<see cref="ModelType"/> 顺序推断。
 /// Reference, inline linear, inline quadratic and raw-bytes modes are exclusive; <see cref="ModelType"/> infers in baseline order.
 /// </remarks>
 /// <param name="Ref">模型对象引用 / Model object reference.</param>
@@ -176,7 +176,7 @@ public sealed record SolverConfig(
 /// <remarks>
 /// 逐字段对照固定 Kotlin `RemoteTaskSubmitRequest`；`deadline` 以 <c>deadlineEpochMs</c> 整型 epoch
 /// 毫秒编码，其余调度字段与 <see cref="SchedulingRequest"/> 同源。
-/// Mirrors the pinned Kotlin `RemoteTaskSubmitRequest`; `deadline` is encoded as an integer
+/// RemoteTaskSubmitRequest: `deadline` is encoded as an integer
 /// <c>deadlineEpochMs</c> epoch-millisecond value, and the remaining scheduling fields share
 /// <see cref="SchedulingRequest"/> as their source.
 /// </remarks>

@@ -19,8 +19,8 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 这条判据把**文件到类型的映射**写进代码：删掉任何一个类型都会红，也就不会有人再把"Demo5 迁移"当成待办。
 ///
-/// The plan carried "Demo5 migration" for a long time, and **it is already done**: all six files of the baseline's `framework_demo/demo5/` have counterparts here, and
-/// `Demo5SolverFactory` is stricter than the baseline (its `when (solver) { "scip" -> …; else -> Gurobi }` would **silently treat a misspelt name as Gurobi**;
+/// The plan carried "Demo5 migration" for a long time, and **it is already done**: all six files of its `framework_demo/demo5/` have counterparts here, and
+/// `Demo5SolverFactory` is stricter than the code (its `when (solver) { "scip" -> …; else -> Gurobi }` would **silently treat a misspelt name as Gurobi**;
 /// this version fails explicitly). The criterion writes the **file-to-type mapping** into code: deleting any type reds it, so nobody mistakes "Demo5 migration" for
 /// pending work again.
 /// </remarks>
@@ -34,12 +34,12 @@ public sealed class Demo5BaselineParityTests
     ///
     /// | 基线 | C# |
     /// | --- | --- |
-    /// | `Application.kt` | `Application` |
-    /// | `infrastructure/SemanticParameter.kt` | `SemanticParameter` |
-    /// | `infrastructure/Solver.kt` | `Demo5SolverFactory` |
-    /// | `infrastructure/dto/Input.kt` | `Input` |
-    /// | `infrastructure/dto/Output.kt` | `Output` + `RouteOutput` + `StopOutput` + `TraceOutput` |
-    /// | `infrastructure/io/SolomonData*.kt` | `SolomonDataReader` + `SolomonInstanceAdapter` |
+    /// | | `Application` |
+    /// | | `SemanticParameter` |
+    /// | | `Demo5SolverFactory` |
+    /// | | `Input` |
+    /// | | `Output` + `RouteOutput` + `StopOutput` + `TraceOutput` |
+    /// | | `SolomonDataReader` + `SolomonInstanceAdapter` |
     ///
     /// The mapping above is what this criterion pins.
     /// </remarks>
@@ -68,11 +68,11 @@ public sealed class Demo5BaselineParityTests
     /// **未知求解器名必须失败，不能静默退回 Gurobi** / An unknown solver name must fail rather than quietly falling back to Gurobi.
     /// </summary>
     /// <remarks>
-    /// 这是本仓**故意偏离基线**的一处，也是唯一一处偏离：基线把拼错的名字当成 Gurobi，
+    /// 这是本仓**故意偏离基线**的一处，也是唯一一处偏离：拼错的名字当成 Gurobi，
     /// 于是 `"gruobi"` 会拿到一个**能跑但用错后端**的求解器。判据钉住这个偏离，免得以后有人"为了对齐基线"把它改回去。
     ///
-    /// This is the port's **one deliberate divergence**: the baseline treats a misspelt name as Gurobi, so `"gruobi"` yields a solver that **runs with the wrong
-    /// backend**. The criterion pins the divergence so nobody "aligns with the baseline" by reverting it.
+    /// This is the implementation's **one deliberate divergence**: the code treats a misspelt name as Gurobi, so `"gruobi"` yields a solver that **runs with the wrong
+    /// backend**. The criterion pins the divergence so nobody "aligns with the code" by reverting it.
     /// </remarks>
     [Fact]
     public void AnUnknownSolverName_ShouldFail() {

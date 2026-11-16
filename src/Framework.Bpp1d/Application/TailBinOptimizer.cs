@@ -1,6 +1,6 @@
 // 尾箱重排入口 / The tail-bin rearrangement entry.
-// 与固定 Kotlin 基线 `bpp1d/application/TailBinOptimizer.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `TailBinOptimizer.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using System.Threading;
@@ -27,11 +27,11 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Application;
 /// 保留前部箱体，只把**尾部窗口**重求一遍，再用**完整问题**复核候选结果。
 /// 这样分两段做的意义在于：**局部问题上的约束放宽不等于全局可行**，所以候选必须过完整复核。
 ///
-/// 基线的注释点明了另一半：**外部业务约束不能直接作用在局部问题上**——
+/// 注释点明了另一半：**外部业务约束不能直接作用在局部问题上**——
 /// 它必须接收**完整结果**再判断。这里用一个 `accept` 回调承担这件事。
 ///
 /// Keeps the prefix bins, re-solves only the **tail window**, then re-verifies the candidate against the **full problem**: relaxing constraints on a local model does
-/// not make a global solution feasible. The baseline's comment names the other half — **external business constraints cannot be applied to a local problem**; they
+/// not make a global solution feasible. The code's comment names the other half — **external business constraints cannot be applied to a local problem**; they
 /// must receive the **complete result**, which the `accept` callback does here.
 /// </remarks>
 public sealed class TailBinOptimizer<V>
@@ -194,7 +194,7 @@ public sealed class TailBinOptimizer<V>
     /// **`ConsumedLength` 必须换算**：箱长与问题里的长度若单位不同（米与毫米），
     /// 不算换就把"500 mm 的箱"与"0.5 m 的箱"当成同一长度，比较结果毫无意义。
     ///
-    /// **The three metrics each stand alone, never summed or converted into one another**, exactly as in the baseline (table above). **`ConsumedLength` must be
+    /// **The three metrics each stand alone, never summed or converted into one another**, exactly as in the code (table above). **`ConsumedLength` must be
     /// converted**: a bin length in metres and the problem's length in millimetres would otherwise compare "500 mm" with "0.5 m" as the same value.
     /// </remarks>
     /// <remarks>

@@ -1,6 +1,6 @@
 // 分区装载生命周期 / Partition-loading lifecycle.
-// 与固定 Kotlin 基线 `bpp/domain/partition_loading/PartitionLoadingContext.kt` 的装配与加列半边对应。
-// Mirrors the create/add-column half of the pinned Kotlin baseline's `PartitionLoadingContext.kt`.
+// 与固定 Kotlin 的装配与加列半边对应。
+// The create/add-column half of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -69,7 +69,7 @@ public sealed record PartitionLoadingColumn<V>(
 /// <remarks>
 /// **装配、加列、定价与主问题注册都在这里**：`CreateAsync` / `RefreshAsync` / `RegisterAsync` / `AddColumnsAsync`，
 /// 以及定价侧的 `PricingModelAsync` / `PricingRequestAsync` / `RefreshShadowPriceAsync` 与主问题侧的
-/// `MasterAsync` / `ExtractSolutionAsync`。基线的 `price` / `applyPricing` 由 `PricingRequestAsync` 与
+/// `MasterAsync` / `ExtractSolutionAsync`。`price` / `applyPricing` 由 `PricingRequestAsync` 与
 /// `ColumnMasterRegistration` 承接，**不是缺口**。
 ///
 /// **加列时独立复核两件事**：局部变量的取值范围与整数性、以及**只涉及本分区变量**的完整模型行。

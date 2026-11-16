@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// ### 这条判据曾被编了一个不存在的理由
 ///
-/// **原文写的是"**同一段还写着‘明确的局限’：Mongo 这条路没有完全接上**"——**而矩阵里那句“明确的局限”说的是判据没连真实 Mongo 实例，以及 H2／Ktorm／MyBatis／JDBC 四个后端未移植，与 update 无关。**
+/// **原文写的是"**同一段还写着‘明确的局限’：Mongo 这条路没有完全接上**"——**而矩阵里那句“明确的局限”说的是判据没连真实 Mongo 实例，以及 H2／Ktorm／MyBatis／JDBC 四个后端未实现，与 update 无关。**
 ///
 /// **而 `MongoRepository.UpdateAsync` 本来就存在，它做的是整文档 `ReplaceOneAsync`——所以字段级的 `MongoUpdateTranslator` 不被调用是设计差异，不是接口未接。**
 ///
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **Found that this criterion was written around an invented reason.** **The text said "the same paragraph also states the
 /// documented limitation that the Mongo path is not fully wired" — but the limitation in the matrix is about the criterion not
-/// connecting to a real Mongo instance plus four unported backends (H2/Ktorm/MyBatis/JDBC), and has nothing to do with updates.**
+/// connecting to a real Mongo instance plus four unimplemented backends (H2/Ktorm/MyBatis/JDBC), and has nothing to do with updates.**
 /// **`MongoRepository.UpdateAsync` has always existed and performs a whole-document `ReplaceOneAsync`, so the field-level
 /// `MongoUpdateTranslator` going uncalled is a design difference, not an unwired interface.** **The criterion is still worth keeping —
 /// it pins that three translators really are reached from production and the fourth really is not — but the reason is now the real

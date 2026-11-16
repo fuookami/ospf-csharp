@@ -47,11 +47,11 @@ public sealed class DomainPipelineContext
     /// 冗余上下文 / The redundancy context.
     /// </summary>
     /// <remarks>
-    /// **只在预配载模式下参与**：基线的 `PredistributionPipelineContext` 是"全配载七域 + 余度"，
+    /// **只在预配载模式下参与**：`PredistributionPipelineContext` 是"全配载七域 + 余度"，
     /// 全配载与建议打板都没有它。这个域在本仓早就写完了（799 行，带自己的判据），却**从来没有消费者**——
     /// 于是预配载少了一整组约束，而所有判据都是绿的。
     ///
-    /// **Only participates in predistribution mode**: the baseline's `PredistributionPipelineContext` is "full load's seven domains + redundancy"; neither full load
+    /// **Only participates in predistribution mode**: its `PredistributionPipelineContext` is "full load's seven domains + redundancy"; neither full load
     /// nor weight recommendation has it. The domain has long been finished here (799 lines with its own criteria) but **never had a consumer** — so predistribution was missing
     /// a whole family of constraints while every criterion stayed green.
     /// </remarks>
@@ -64,7 +64,7 @@ public sealed class DomainPipelineContext
     /// **建议打板独有**：基线 `WeightRecommendationPipelineContext` 用它替换掉全配载的软安全、重心优化、装卸效率三域。
     /// 本仓的通用上下文一直没有它，于是"建议打板模式"在这个上下文里**仍按七域建模**——形状与真实的建议打板路径不同。
     ///
-    /// **Weight recommendation only**: the baseline's context swaps it in for full load's soft security, mac optimization and loading effectiveness. The generic
+    /// **Weight recommendation only**: its context swaps it in for full load's soft security, mac optimization and loading effectiveness. The generic
     /// context here never had it, so "weight recommendation mode" was **still modelled as seven domains** — a different shape from the real weight-recommendation path.
     /// </remarks>
     public RecommendedWeightEqualizationContext RecommendedWeightEqualizationContext { get; } = new();
@@ -144,8 +144,8 @@ public sealed class DomainPipelineContext
             return r8;
         }
 
-                // 余度只在预配载下初始化，与基线的 `PredistributionPipelineContext.init` 一致。
-        // Redundancy is initialised under predistribution only, matching the baseline.
+                // 余度只在预配载下初始化，与`PredistributionPipelineContext.init` 一致。
+        // Redundancy is initialised under predistribution only, matching the code.
         if (stowageMode == StowageMode.Predistribution)
         {
             Try r9 = RedundancyContext.Init(StowageContext, request);
@@ -155,8 +155,8 @@ public sealed class DomainPipelineContext
             }
         }
 
-        // 建议打板独有的两域：基线用它们替换掉软安全、重心优化、装卸效率。
-        // The two weight-recommendation-only domains : the baseline swaps them in for soft security, mac optimization and loading effectiveness.
+        // 建议打板独有的两域：它们替换掉软安全、重心优化、装卸效率。
+        // The two weight-recommendation-only domains : the code swaps them in for soft security, mac optimization and loading effectiveness.
         if (stowageMode == StowageMode.WeightRecommendation)
         {
             Try r10 = RecommendedWeightEqualizationContext.Init(AircraftContext, StowageContext, request);
@@ -201,7 +201,7 @@ public sealed class DomainPipelineContext
         // **Three pipelines, three different compositions, not one set plus or minus members**: full load and predistribution take seven domains (soft security,
         // mac optimization, loading effectiveness); weight recommendation takes six (express effectiveness, equalization, payload maximization). Only the seven-domain set
         // used to exist here, so "weight recommendation mode" produced **a different shape from the real path** — the `54/71/53/2` in the fingerprint table was exactly that
-        // "seven-domain weight recommendation", which the baseline never builds.
+        // "seven-domain weight recommendation", which the code never builds.
         Try[] registrations = stowageMode == StowageMode.WeightRecommendation
             ? [
                 StowageContext.Register(stowageMode, model),

@@ -13,9 +13,9 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 延迟函数 fallback 的物化器 / A deferred-function fallback materializer.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackMaterializer`。
+/// 对齐的 `DeferredFunctionFallbackMaterializer`。
 ///
-/// **Following the baseline's `DeferredFunctionFallbackMaterializer`.**
+/// **Following its `DeferredFunctionFallbackMaterializer`.**
 /// </remarks>
 public interface IDeferredFunctionFallbackMaterializer
 {
@@ -28,14 +28,14 @@ public interface IDeferredFunctionFallbackMaterializer
 /// 延迟函数 fallback 的物化器集合 / The deferred-function fallback materializers.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的六个物化器。
+/// 对齐的六个物化器。
 ///
 /// **失败有三种，而它们必须被分开：**
 ///
 /// | 情况 | 消息 |
 /// | --- | --- |
 /// | **结构类型不在本物化器的范围内** | **`unsupported ... structure: X`** |
-/// | **结构类型对，但行生成还没移植** | **`... row generation is not ported yet: X`** |
+/// | **结构类型对，但行生成还没实现** | **`... row generation is not implemented yet: X`** |
 /// | **结构类型对、行生成在，但那一层自己失败了** | **把内层的错误原样传出去** |
 ///
 /// **把前两种合成一条消息，调用方就分不出"我用错了物化器"与"这个能力还没有"。
@@ -64,7 +64,7 @@ public interface IDeferredFunctionFallbackMaterializer
 /// | Case | Message |
 /// | --- | --- |
 /// | **the structure type is outside this materializer's range** | **`unsupported ... structure: X`** |
-/// | **the type is right but row generation is not ported yet** | **`... row generation is not ported yet: X`** |
+/// | **the type is right but row generation is not implemented yet** | **`... row generation is not implemented yet: X`** |
 /// | **the type is right and row generation exists but that layer failed** | **forward the inner error unchanged** |
 ///
 /// **Collapsing the first two leaves the caller unable to tell "I used the wrong materializer" from "this capability does
@@ -108,7 +108,7 @@ public static class DeferredFunctionFallbackMaterializers
                 $"unsupported {kind} fallback structure: {structure.GetType().Name}");
 
     /// <summary>
-    /// **这个结构属于本物化器、但行生成还没移植** / Row generation for this structure is not ported yet.
+    /// **这个结构属于本物化器、但行生成还没实现** / Row generation for this structure is not implemented yet.
     /// </summary>
     private static Result<DeferredFunctionFallbackConstraints, ErrorCode, Error<ErrorCode>>
         NotPorted(string kind, DeferredFunctionStructure structure) =>

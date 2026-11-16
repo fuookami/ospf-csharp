@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 预约舱位约束 / The appointment rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/AppointmentLimit.kt`：两段，**一段加行、一段只校验**。
+/// 对齐：两段，**一段加行、一段只校验**。
 ///
 /// 1. 每件有预约的货物：`stowage_{i, j} = 1`，其中 `j` 是预约舱位在当前舱位表里的下标。预约舱位不在表里是**失败**，不是跳过。
 /// 2. 每个舱位：预约到它的货物数量不得超过 `mla`。这一段**不加行**，只报错——数量上限本来就由内核的 `MaxCount` 管，
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 ///
 /// 第 2 段容易被写成加一行 `Σ stowage ≤ mla`，那是**重复约束**：内核已经建了同一个。判据因此断言行数只随第 1 段增长。
 ///
-/// Aligned with the baseline: two halves, **one adds rows and one only validates**. (1) every appointed item gets `stowage_{i, j} = 1` with `j` the appointed position's index in
+/// Two halves, **one adds rows and one only validates**. (1) every appointed item gets `stowage_{i, j} = 1` with `j` the appointed position's index in
 /// the current list; an appointed position outside the list is a **failure**, not a skip. (2) every position's appointed count must not exceed `mla`; this half **adds no row**
 /// and only reports — the count limit already belongs to the kernel's `MaxCount`, and the readable failure just spares the solver from burning time on an infeasible model.
 /// Half two is easy to turn into a `Σ stowage ≤ mla` row, which is a **duplicate** of what the kernel built; the criteria therefore assert the row count grows only with half one.

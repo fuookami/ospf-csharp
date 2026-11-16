@@ -25,7 +25,7 @@ public static class EnergyUnits {
     /// <summary>电子伏 / Electronvolt (1 eV = 1.602176634e-19 J).</summary>
     public static readonly PhysicalUnit Electronvolt = new DerivedUnit(Joule.ScaleMultiply(Scale.Invoke(1.602176634e-19)), "electronvolt", "eV");
 
-    // 以下 10 个按基线 `Energy.kt` 补齐。
+    // 以下 10 个按补齐。
     //
     // **这一组全是"焦耳的固定倍数"，所以风险不在公式，在三处语义：**
     // **① `WattHour` 是 `KilowattHour` 的千分之一**（`KilowattHour / Scale.kilo`），不是反过来；
@@ -33,7 +33,7 @@ public static class EnergyUnits {
     // **因为它是 `KilowattHour × Scale.mega`，也就是 10³ Wh × 10⁶ = 10⁹ Wh，名字对但那个 Scale 看着像错的；**
     // **③ `Erg` 是 1e-7 J，比所有其他单位小得多，数量级最容易写错。**
     //
-    // The ten below were added from the baseline Energy.kt.
+    // The ten below were added from the code Energy.kt.
     //
     // **All are fixed multiples of the joule, so the risk is not the formula but three semantic points:**
     // **① `WattHour` is a thousandth of `KilowattHour`**, not the other way round;

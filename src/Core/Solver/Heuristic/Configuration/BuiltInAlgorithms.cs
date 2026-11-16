@@ -187,7 +187,7 @@ public static class BuiltInAlgorithms {
  // **earlier 在这里写过一条"22 个种群更新没有 `ISolutionUpdate` 形态"的缺口，那是错的。**
             // 它们一直都在（`Operator/Update/` 下 20 个 + `SinglePointCross`），我只是用 `grep "class X"` 去找，
             // 而它们是 `sealed record`——**用错误的声明形态搜索，得出的"缺失"结论必然是假的**。
-            // 这里改为按基线映射表补齐默认工厂，并把那条错误结论从文档里撤回。
+            // 这里改为映射表补齐默认工厂，并把那条错误结论从文档里撤回。
             //
  // **earlier recorded a "the 22 population updates have no `ISolutionUpdate`" gap here, and it was wrong.** They had always been there
             // (twenty under `Operator/Update/` plus `SinglePointCross`); I had searched with `grep "class X"` while they are `sealed record`s —
@@ -328,10 +328,10 @@ public static class BuiltInAlgorithms {
     /// 按标识构造默认的种群更新算子 / Build the default population-update operator by identifier.
     /// </summary>
     /// <remarks>
-    /// **这张表与基线的 `populationUpdates` 一一对应，包括默认参数**。表里漏一项的表现不是"报错"，而是
+    /// **这张表与`populationUpdates` 一一对应，包括默认参数**。表里漏一项的表现不是"报错"，而是
     /// **该算法悄悄退回别的算子**——所以本表由一条"22 个标识全部可装配"的测试守着。
     ///
-    /// **This table corresponds one-to-one with the baseline's `populationUpdates`, default arguments included.** A missing entry does not surface as
+    /// **This table corresponds one-to-one with its `populationUpdates`, default arguments included.** A missing entry does not surface as
     /// an error but as **that algorithm quietly falling back to a different operator** — which is why a test guards "all twenty-two identifiers
     /// assemble".
     /// </remarks>

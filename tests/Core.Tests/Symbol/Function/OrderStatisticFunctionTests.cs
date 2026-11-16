@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 第 k 大与"前 k 大之和"的边界差一 / The k-th largest and the top-k sum differ by one at the boundary.
 /// </summary>
 /// <remarks>
-/// 补 `KthLargestFunction` / `TopKSumFunction`（基线 `OrderStatistic.kt`）。
+/// 补 `KthLargestFunction` / `TopKSumFunction`。
 ///
 /// **两者都靠一个比较网络把输入降序排列**（每对比较 = 一个 `MaxFunction` + 一个 `MinFunction`），
 /// **所以"第 k 大"就是"排序后第 k 个"。**

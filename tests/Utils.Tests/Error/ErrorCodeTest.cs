@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Fuookami.Ospf.Utils.Tests.Error;
 /// <summary>
-/// ErrorCode 测试（移植自 ospf-kotlin ErrorCodeTest.kt）/ ErrorCode tests (ported from ospf-kotlin ErrorCodeTest.kt).
+/// ErrorCode 测试（移植自 ospf-kotlin ErrorCodeTest.kt）/ ErrorCode tests (derived from ospf-kotlin ErrorCodeTest.kt).
 /// </summary>
 public class ErrorCodeTest {
     [Fact]

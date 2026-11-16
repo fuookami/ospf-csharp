@@ -1,4 +1,4 @@
-// 基准夹具的覆盖与两侧对应 / Benchmark fixture coverage against the baseline.
+// 基准夹具的覆盖与两侧对应 / Benchmark fixture coverage against the code.
 
 using System;
 using System.IO;
@@ -18,19 +18,19 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **这种缺口不会让任何东西变红**，它只是让"性能没测过"看起来像"没需求"。所以这里把数量钉住：
 /// 少一个就红，多一个也要跟着改文档。
 ///
-/// counted both sides: the baseline has **15** workloads, this repo had **13** — `GenerationCacheBuildBenchmark` and `PatternColumnBenchmark` were missing, and
+/// counted both sides: the code has **15** workloads, this repo had **13** — `GenerationCacheBuildBenchmark` and `PatternColumnBenchmark` were missing, and
 /// **nothing turns red over a missing benchmark**; it just makes "performance was never measured" look like "performance was never needed". This pins the count.
 /// </remarks>
 public class BenchmarkCoverageTests
 {
-    /// <summary>基线的 15 个工作负载，本仓一个都不能少 / All 15 baseline workloads must exist here.</summary>
+    /// <summary>15 个工作负载，本仓一个都不能少 / All 15 baseline workloads must exist here.</summary>
     /// <remarks>
-    /// 名字是基线的（去扩展名），本仓的类名与之一致——**这本身就是一种对照**：改了名字就该有人问为什么。
+    /// 名字是（去扩展名），本仓的类名与之一致——**这本身就是一种对照**：改了名字就该有人问为什么。
     ///
-    /// The names are the baseline's (extension stripped) and this repo's classes match them — **that is itself a check**: a rename should raise a question.
+    /// The names are its (extension stripped) and this repo's classes match them — **that is itself a check**: a rename should raise a question.
     /// </remarks>
     /// <summary>
-    /// **还没移植的 5 个新工作负载必须被点名声明** / No workload from 19c72455 may remain unported.
+    /// **还没实现的 5 个新工作负载必须被点名声明** / No workload from 19c72455 may remain unimplemented.
     /// </summary>
     /// <remarks>
     /// **`19c72455` 的 6 个新基准已经全部移植；`CrossVersionSemanticDump` 的三段（`PRJ`／`GEN`／`TRUNC`）仍是待办，必须写在能力矩阵里。**
@@ -38,20 +38,20 @@ public class BenchmarkCoverageTests
     ///
     /// **判据只读文档，不要求代码在场**——所以它不会因为"还没搬"而红，只会因为"没写下来"而红。
     ///
-    /// **Of the six new benchmarks in `19c72455` one is ported; the other five must be named in the capability matrix.** **"Never
-    /// counted" and "counted but not ported" are different states: the second gets scheduled when someone reads it, the first is simply
-    /// absent.** **The criterion reads the document only, so it reddens for "not written down", never for "not ported yet".**
+    /// **Of the six new benchmarks in `19c72455` one is implemented; the other five must be named in the capability matrix.** **"Never
+    /// counted" and "counted but not implemented" are different states: the second gets scheduled when someone reads it, the first is simply
+    /// absent.** **The criterion reads the document only, so it reddens for "not written down", never for "not implemented yet".**
     /// </remarks>
     [Fact]
     public void TheUnportedNewWorkloads_ShouldBeNamedInTheMatrix() {
         string root = Root();
         string matrix = File.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
 
-        // **6 个新工作负载已经全部有文件了，所以"未移植清单"必须为空。** **矩阵仍要写明
+        // **6 个新工作负载已经全部有文件了，所以"未实现清单"必须为空。** **矩阵仍要写明
         // `CrossVersionSemanticDump` 的三段是待办（`PRJ`／`GEN`／`TRUNC`）——**"基准文件在"与
         // "转储段全在"是两件事，混起来就是这里差点犯的错。**
         //
-        // **all six new workloads now have files, so the unported list must be empty.** **The matrix still has to name the three deferred
+        // **all six new workloads now have files, so the unimplemented list must be empty.** **The matrix still has to name the three deferred
         // sections of `CrossVersionSemanticDump` — "the benchmark file exists" and "every dump section exists" are different claims, and conflating
         // them is exactly the mistake nearly made.**
         string[] unported = System.Array.Empty<string>();
@@ -92,11 +92,11 @@ public class BenchmarkCoverageTests
             "SharedPrimeReadBenchmark",
             "SymbolCombineBenchmark",
             // **`19c72455` 比固定基线多出 6 个工作负载，逐个移植时加到这里。**
-            // **`19c72455` carries six more workloads than the fixed baseline; each lands here as it is ported.**
+            // **`19c72455` carries six more workloads than the fixed baseline; each lands here as it is implemented.**
             "TokenInvalidateRebuildBenchmark",
             "GenerationScaleBenchmark",
-            // **基线的这一个文件里有两个类：`PrimeMixedExpansionBenchmark` 与 `PrimeReaderLatencyBenchmark`。**
-            // **The baseline file holds two classes: the mixed-expansion one and the reader-latency one.**
+            // **这一个文件里有两个类：`PrimeMixedExpansionBenchmark` 与 `PrimeReaderLatencyBenchmark`。**
+            // **The code file holds two classes: the mixed-expansion one and the reader-latency one.**
             "PrimeMixedExpansionBenchmark",
             "TokenSharedReadBenchmark",
             "NetworkSharedGraphBenchmark",
@@ -124,14 +124,14 @@ public class BenchmarkCoverageTests
     public void TheTwoNewBenchmarks_ShouldCarryTheirParameters() {
         string root = Root();
         string generation = File.ReadAllText(Path.Combine(root, "src", "Benchmark", "GenerationCacheBuildBenchmark.cs"));
-        // 三个场景名与基线一致 / the three scenario names match the baseline
+        // 三个场景名/ the three scenario names match the code
         foreach (string scenario in new[] { "equivalent", "distinct", "custom" }) {
             generation.Should().Contain("\"" + scenario + "\"",
                 "the scenario name has to match the baseline, or a comparison would silently compare different fixtures");
         }
 
         string pattern = File.ReadAllText(Path.Combine(root, "src", "Benchmark", "PatternColumnBenchmark.cs"));
-        // 三种规模与基线一致（256 / 512 / 1024 列）/ the three scales match the baseline (256 / 512 / 1024 columns)
+        // 三种规模（256 / 512 / 1024 列）/ the three scales match the code (256 / 512 / 1024 columns)
         pattern.Should().Contain("512").And.Contain("1024").And.Contain("256");
     }
 

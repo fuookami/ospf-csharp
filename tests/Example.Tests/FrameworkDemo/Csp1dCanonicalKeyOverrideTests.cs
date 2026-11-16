@@ -169,7 +169,7 @@ public sealed class Csp1dCanonicalKeyOverrideTests {
     /// **候选过滤在初始池收到空列表、在定价收到当前列池** / The candidate filter sees an empty list in the initial pool and the current pool in pricing.
     /// </summary>
     /// <remarks>
-    /// **这是 `AcceptCandidate` 与另外两个扩展点的实质差别**：基线在 `initialPlanPool` 里
+    /// **这是 `AcceptCandidate` 与另外两个扩展点的实质差别**：`initialPlanPool` 里
     /// **不设 `existingPlans`**（所以是空列表），在定价里传**当前列池**。
     ///
     /// **最初判据写错了**：断言"初始池的过滤永远看到空列表"，实测 `found 2`——
@@ -185,7 +185,7 @@ public sealed class Csp1dCanonicalKeyOverrideTests {
     /// | 到处都是空列表 | 全 `0` → **无 `> 0`** |
     /// | 到处都填满 | 首个就 `> 0` → **首项不是 `0`** |
     ///
-    /// **This is the substantive difference** between `AcceptCandidate` and the other two: the baseline **does not set `existingPlans`** in `initialPlanPool` (hence an empty
+    /// **This is the substantive difference** between `AcceptCandidate` and the other two: the code **does not set `existingPlans`** in `initialPlanPool` (hence an empty
     /// list) and passes the **current column pool** in pricing.
     ///
     /// **My first version of this criterion was wrong**: it asserted "the initial-pool filter always sees an empty list" and measured `found 2` — because **pricing calls

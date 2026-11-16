@@ -1,7 +1,7 @@
 // 网络流弧、节点与商品 / Flow arc, node and commodity.
-// 与固定 Kotlin 基线 `model/FlowArc.kt`（2985 字节）、`model/FlowNode.kt`（2312 字节）、`model/FlowCommodity.kt`（1688 字节）、
-// `model/SupplyDemand.kt`（2369 字节）对应。
-// Mirrors the pinned baseline's `FlowArc.kt`, `FlowNode.kt`, `FlowCommodity.kt`, `SupplyDemand.kt`.
+// 与固定 Kotlin （2985 字节）、（2312 字节）、（1688 字节）、
+//（2369 字节）对应。
+// ,,,.
 //
 // 这一层是**纯领域数据**，不持有任何模型注册态：流弧不知道自己在哪个模型里、流节点不知道有哪些变量引用它。注册态在上下文层，
 // 因此同一份流网络可以被多个模型复用、被并行求解、被重放。

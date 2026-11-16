@@ -267,7 +267,7 @@ public sealed class QuadraticTetradModel : BasicQuadraticTetradModel, IQuadratic
     /// </summary>
     /// <returns>弹性二次四元模型 / The elastic quadratic tetrad model.</returns>
     /// <remarks>
-    /// **基线里 `buildElasticModel` 是挂在模型上的扩展函数，由 `QuadraticTetradModel.elastic` 调用：**
+    /// **`buildElasticModel` 是挂在模型上的扩展函数，由 `QuadraticTetradModel.elastic` 调用：**
     ///
     /// ```
     /// internal fun QuadraticTetradModel.buildElasticModel: QuadraticTetradModel
@@ -275,22 +275,22 @@ public sealed class QuadraticTetradModel : BasicQuadraticTetradModel, IQuadratic
     /// ```
     ///
     /// C# 侧原先只有静态的 `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)`，
-    /// **模型自己没有 `Elastic`**——于是基线那个公开入口在 C# 里**根本不存在**，
+    /// **模型自己没有 `Elastic`**——于是个公开入口在 C# 里**根本不存在**，
     /// 外部只能直接调 `internal` 的静态构建器（而它连 `penalty` 都要自己传）。
     ///
     /// 这里把入口补上。**惩罚系数固定为 `1.0`**，因为基线 `elastic` 无参、`buildElasticModel` 也不收惩罚，
     /// 惩罚是构建器内部的常量；C# 静态方法收 `elasticPenalty` 是为了测试能验证惩罚确实进了目标，
-    /// 而 `Elastic` 必须与基线一致地**不暴露它**。
+    /// 而 `Elastic` 必须地**不暴露它**。
     ///
-    /// **In the baseline `buildElasticModel` is an extension function on the model, called by `QuadraticTetradModel.elastic`** (snippet above).
+    /// **In the code `buildElasticModel` is an extension function on the model, called by `QuadraticTetradModel.elastic`** (snippet above).
     ///
     /// The C# side originally had only the static `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)` and **the model had no `Elastic`** — so
-    /// the baseline's public entry point **did not exist in C# at all**, and callers had to reach an `internal` static builder (which even made them supply
+    /// its public entry point **did not exist in C# at all**, and callers had to reach an `internal` static builder (which even made them supply
     /// `penalty`).
     ///
- /// adds the entry point. **The penalty is fixed at `1.0`** because the baseline's `elastic` takes no arguments and `buildElasticModel` takes
+ /// adds the entry point. **The penalty is fixed at `1.0`** because its `elastic` takes no arguments and `buildElasticModel` takes
     /// no penalty — the penalty is a builder-internal constant. The C# static method accepts `elasticPenalty` so tests can verify the penalty really reaches the
-    /// objective, while `Elastic` must **not expose it**, matching the baseline.
+    /// objective, while `Elastic` must **not expose it**, matching the code.
     /// </remarks>
     public QuadraticTetradModel Elastic() =>
         QuadraticTetradElasticBuilder.BuildElasticModel(this, Flt64.One);

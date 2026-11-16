@@ -24,8 +24,8 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// | `PackingProgramMaterialValue` | 仅在本文件的派生方法内 | 仅本文件 |
 /// | `PackageSolutionLike{Quantity,MaterialItem,Node}` | **零** | **零** |
 ///
-/// 基线有 `PackageSolutionLikeNode.toPackingProgram` **把这条链串起来**，
-/// C# **没有移植它**——所以类型全在、转换全缺，**整条链悬空**。
+/// `PackageSolutionLikeNode.toPackingProgram` **把这条链串起来**，
+/// C# **没有实现它**——所以类型全在、转换全缺，**整条链悬空**。
 ///
 /// **二、两个 `PackingProgram` 同名不同义。**
 /// `Framework.Bpp2d.Domain.PackingProgram<V>` **是活的**（有构造、有测试），
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// 按简单名 `grep` 会把两者混为一谈，**我第一遍就被骗了**（以为 Bpp3d 那个有 14 处引用）。
 ///
 /// **三、单位在同一文件里前后不一致。**
-/// `PackageSolutionLikeQuantity.Weight` 存**裸 `Flt64`**（基线是 `Quantity<V>`，**带单位**），
+/// `PackageSolutionLikeQuantity.Weight` 存**裸 `Flt64`**（`Quantity<V>`，**带单位**），
 /// 而紧邻的 `PackingProgramMaterialValue.Weight` 存 **`Quantity<FltX>?`**（带单位）。
 /// **同一个文件里两个"重量"字段，一个有单位一个没有。**
 ///
@@ -42,10 +42,10 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// 只能靠人工核查，这里如实说明这个边界。
 ///
 /// ** overturns two long-standing records** and finds a third problem. **1) `PackageShapeSpec` is not alone** — its whole sub-graph is unwired (table above).
-/// The baseline's `PackageSolutionLikeNode.toPackingProgram` is what strings the chain together, and C# **never ported it**, so the types exist, the conversion does not,
+/// `PackageSolutionLikeNode.toPackingProgram` is what strings the chain together, and C# **never implemented it**, so the types exist, the conversion does not,
 /// and **the whole chain dangles**. **2) Two `PackingProgram` types share a name**: `Framework.Bpp2d.Domain.PackingProgram<V>` **is live** (constructed and tested) while
 /// `Framework.Bpp3d.Domain.Item.Model.PackingProgram` **is dead**; grepping by simple name conflates them and **fooled me on the first pass** (I read "14 references" as live).
-/// **3) Units disagree inside one file**: `PackageSolutionLikeQuantity.Weight` stores a **bare `Flt64`** (the baseline's `Quantity<V>` carries a unit) while the adjacent
+/// **3) Units disagree inside one file**: `PackageSolutionLikeQuantity.Weight` stores a **bare `Flt64`** (its `Quantity<V>` carries a unit) while the adjacent
 /// `PackingProgramMaterialValue.Weight` stores **`Quantity<FltX>?`**. The criterion pins 2 and 3 (assertable without a pipeline); point 1 is recorded in prose because
 /// **"has no caller" cannot be reliably asserted by a unit test** — only by manual audit, and that boundary is stated honestly.
 /// </remarks>
@@ -82,7 +82,7 @@ public class Bpp3dPackingProgramTrapsTests {
     ///
     /// 判据同时断言两侧，使得**任何一侧被改动**都会红——修好它是好事，但必须同步文档。
     ///
-    /// Both are `Quantity<V>` (unit-carrying) in the baseline; C# flattened `PackageSolutionLikeQuantity.Weight` to a **bare `Flt64`**, so whether "5" means 5 g or 5 kg is
+    /// Both are `Quantity<V>` (unit-carrying) in the code; C# flattened `PackageSolutionLikeQuantity.Weight` to a **bare `Flt64`**, so whether "5" means 5 g or 5 kg is
     /// **unknowable**. The criterion asserts both sides, so **changing either** goes red — fixing it is good, but the docs must follow.
     /// </remarks>
     [Fact]

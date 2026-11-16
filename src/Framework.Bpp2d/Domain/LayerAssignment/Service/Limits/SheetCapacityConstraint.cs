@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 板材容量约束 / The sheet-capacity constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `Objectives.kt` 的 `SheetCapacityConstraint` 对齐：**每列一条** `load_area_i &lt;= 该列板材面积`。
+/// 与的 `SheetCapacityConstraint` 对齐：**每列一条** `load_area_i &lt;= 该列板材面积`。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **板材面积为零或负的列直接跳过**：那条约束会变成 `load_area_i &lt;= 0`，等于强制该列不用。
 ///    而"没有板材类型的列"恰恰是列生成正在评估的候选，强制不用会让它永远进不了解。
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 3. **上界是常数项，不是符号**：右边是空单项式 + 常数 `sheetArea`。写成符号会引入一个恒等于常数的变量，
 ///    白白增加求解规模。
 ///
-/// Aligned with the baseline's `SheetCapacityConstraint`: **one row per column**, `load_area_i &lt;= that column's sheet area`. Three things must be copied: **a column whose sheet area is zero or
+/// Aligned with its `SheetCapacityConstraint`: **one row per column**, `load_area_i &lt;= that column's sheet area`. Three things must be copied: **a column whose sheet area is zero or
 /// negative is skipped**, since that row would read `load_area_i &lt;= 0` and force the column unused while such a column — one without a sheet type — is exactly what column generation is
 /// evaluating; **one row per column named `{name}_{i}`**, because a single summed constraint leaves the solver unable to say which column overflowed; and **the right-hand side is a constant
 /// term, not a symbol**, since using a symbol would introduce a variable that always equals a constant and inflate the solve.

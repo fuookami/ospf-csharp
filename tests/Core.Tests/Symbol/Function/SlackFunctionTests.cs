@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// <item>**两个方向都开**时只写两行下界 → 求解器可以把 `neg` 与 `pos` 一起抬高，约束全满足，
 /// 事后读出的松弛是**假的**。必须用四行绝对值公式；</item>
 /// <item>求值方向写反 → 仍然返回非负数，只查"非负"发现不了；</item>
-/// <item>两个方向都关 → 基线用 `require` 拒绝，这里抛 `ArgumentException`。</item>
+/// <item>两个方向都关 → `require` 拒绝，这里抛 `ArgumentException`。</item>
 /// </list>
 ///
 /// The old `SlackFunction` was an **empty stub**: `Evaluate` always returned `null`, `RegisterConstraints` always `Ok`, `HelperVariables` empty. It appeared in
@@ -214,12 +214,12 @@ public class SlackFunctionTests {
     /// 阈值模式下的等式会把松弛**钉死**成差值的绝对值，于是"偏差"不再是一个可选量。
     /// 判据看的是"没有等式行、只有单边行"。
     ///
-    /// **基线的分支顺序是绝对值公式优先**：两个方向都开时，即使 `threshold = true` 也走四行公式
+    /// **分支顺序是绝对值公式优先**：两个方向都开时，即使 `threshold = true` 也走四行公式
     /// （`if (withNegative && withPositive && sideVar != null) … else if (!threshold) … else …`）。
-    /// 照抄这个顺序，所以阈值模式只在**单方向**下才有区别——这条判据就用单方向。
+    /// 沿用这个顺序，所以阈值模式只在**单方向**下才有区别——这条判据就用单方向。
     ///
     /// In threshold mode an equality would **pin** the slack to the absolute difference, making "deviation" a non-choice. The criterion looks for "no equality row, only one-sided rows".
-    /// **The baseline checks the absolute-value branch first**: with both directions open, even `threshold = true` takes the four-row formulation. That order is copied, so
+    /// **The code checks the absolute-value branch first**: with both directions open, even `threshold = true` takes the four-row formulation. That order is copied, so
     /// threshold mode only differs for **one direction** — which is what this criterion uses.
     /// </remarks>
     [Fact]
@@ -234,10 +234,10 @@ public class SlackFunctionTests {
 
     /// <summary>**两个方向都开时 `threshold` 不改变形状** / With both directions open, `threshold` changes nothing.</summary>
     /// <remarks>
-    /// 这条钉的是基线的**分支顺序**：写成"先判 `threshold`"会让两个方向 + 阈值时退化成两行单边约束，
+    /// 这条钉的是**分支顺序**：写成"先判 `threshold`"会让两个方向 + 阈值时退化成两行单边约束，
     /// 于是 `neg` 与 `pos` 可以一起抬高——正是不该允许的那种松弛。
     ///
-    /// This pins the baseline's **branch order**: checking `threshold` first would degrade "both directions + threshold" into two one-sided rows, letting `neg` and `pos` rise
+    /// This pins its **branch order**: checking `threshold` first would degrade "both directions + threshold" into two one-sided rows, letting `neg` and `pos` rise
     /// together — exactly the slack that must not be allowed.
     /// </remarks>
     [Fact]

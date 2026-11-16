@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 
 /// <summary>
 /// 条件指示降阶共享构造 / Shared relation-indicator lowering construction.
-/// 对应 Kotlin `Conditional.kt` 的 `relationIndicatorConstraints`：不使用 Big-M 回退，
+/// 对应 Kotl 的 `relationIndicatorConstraints`：不使用 Big-M 回退，
 /// 而是直接由条件多项式的有限范围与真假分支间隔导出两行约束。
 /// Mirrors Kotlin `relationIndicatorConstraints`: no Big-M fallback; two rows are derived
 /// directly from the finite condition range and the true/false branch gap.

@@ -282,7 +282,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **函数符号展开策略** / The function-symbol expansion policy.
     /// </summary>
     /// <remarks>
-    /// 对齐基线 `LinearTriadModel.kt`。**基线的默认值是 `EAGER`，这里同样是 `Eager`。**
+    /// 对齐。**默认值是 `EAGER`，这里同样是 `Eager`。**
     ///
     /// **这个属性是三样缺失状态里唯一<b>不依赖求解路径</b>的一样：**
     /// **它只被读、不被写，而"该不该现在展开"这个判断可以在任何求解器都不在场时完成。**
@@ -293,7 +293,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **默认值不是随手定的：** **`Eager` 是"什么都不延迟"，也就是<b>最保守</b>的那一档——
     /// 一个没配置过的模型不会突然走上延迟物化那条更复杂的路径。**
     ///
-    /// **Follows the baseline's `LinearTriadModel.kt`. Its default is `EAGER`, and so is this one.**
+    /// **Its default is `EAGER`, and so is this one.**
     ///
     /// **Of the three missing pieces this is the only one that <b>does not depend on the solve path</b>: it is only read,
     /// never written, and "should this expand now" can be answered with no solver present.**
@@ -311,7 +311,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **延迟函数结构快照** / Snapshots of the deferred function structures.
     /// </summary>
     /// <remarks>
-    /// 对齐基线 `LinearTriadModel.kt`。**基线是只读 `List`，默认 `emptyList`，走构造函数。**
+    /// 对齐。**只读 `List`，默认 `emptyList`，走构造函数。**
     ///
     /// **这是三样缺失状态里的第二样，而它是两样集合里较简单的一个：** **只增不删、只在构造时给定、之后只被读。**
     /// **`DeferredFunctionConstraintRegions` 依赖它（每条区域记录指回一个结构），所以顺序是先它。**
@@ -324,7 +324,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// 空集合表示"提供了，是空的"。构造参数允许 `null` 是为了让旧调用点不必改，
     /// 而属性永远返回非 `null`——** **读的一方不该被迫区分这两件事。**
     ///
-    /// **Follows the baseline's `LinearTriadModel.kt`: a read-only list, defaulting to empty, supplied through the
+    /// **A read-only list, defaulting to empty, supplied through the
     /// constructor.**
     ///
     /// **This is the second of the three missing pieces and the simpler of the two collections: append-only, set once at
@@ -347,7 +347,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **已经物化过的延迟函数约束区域** / The deferred-function constraint regions already materialised.
     /// </summary>
     /// <remarks>
-    /// 对齐基线 `LinearTriadModel.kt`，这是三样缺失状态里的最后一样。
+    /// 对齐，这是三样缺失状态里的最后一样。
     ///
     /// **它存在是为了回答一个问题：** **"这个结构是不是已经物化过了？"**
     ///
@@ -358,7 +358,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **区域记录用<b>行号</b>（`FirstConstraintIndex` + `ConstraintCount`）而不只是结构引用：
     /// 因为它同时要回答"这些约束在模型的哪一段"。** **只记结构能回答"做过了"，记不下"做在哪"。**
     ///
-    /// **Follows the baseline's `LinearTriadModel.kt`; this is the last of the three missing pieces.**
+    /// **This is the last of the three missing pieces.**
     ///
     /// **It exists to answer one question: "has this structure already been materialised?" — which is exactly the third
     /// third filter condition.** **Without it one structure is materialised <b>twice</b>, once through its region

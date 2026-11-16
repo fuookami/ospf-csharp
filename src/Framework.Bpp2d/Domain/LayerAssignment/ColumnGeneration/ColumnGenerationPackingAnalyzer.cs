@@ -27,14 +27,14 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// <param name="RemnantCount">余料块数 / The remnant count.</param>
 /// <param name="RemnantArea">余料面积 / The remnant area.</param>
 /// <remarks>
-/// 与基线 `ColumnGenerationPackingSnapshot` 对齐。**三处口径必须照抄**：
+/// 与基线 `ColumnGenerationPackingSnapshot` 对齐。**三处口径必须沿用**：
 ///
 /// 1. **`ActualArea` 与 `BoundingArea` 是两个数**，不能用一个顶：圆形件按 πr² 计实际面积，按 2r×2r 计外接面积。
 ///    只留一个会让"圆形件多的方案"看起来和方形方案一样好。
 /// 2. **`LoadingRate` 是各板材装载率的平均值**，不是总面积比——板材大小不同时两者不等。
 /// 3. **`RemainingArea` 钳到零**：实际面积超过板材面积时（重叠摆放）不返回负数。
 ///
-/// Aligned with the baseline's `ColumnGenerationPackingSnapshot`. **Three conventions must be copied**: `ActualArea` and `BoundingArea` are **two separate numbers** rather than one
+/// Aligned with its `ColumnGenerationPackingSnapshot`. **Three conventions must be copied**: `ActualArea` and `BoundingArea` are **two separate numbers** rather than one
 /// standing in for the other, since a circle counts πr² of actual area and 2r×2r of bounding area and keeping only one makes a circle-heavy plan look as good as a rectangular one;
 /// `LoadingRate` is the **average of the per-sheet rates** rather than a ratio of totals, which differ whenever sheets have different sizes; and `RemainingArea` is **clamped at zero** so an
 /// overfilled sheet (overlapping placements) does not report a negative number.
@@ -69,11 +69,11 @@ public sealed record ColumnGenerationPackingSnapshot(
     /// </summary>
     /// <returns>键值信息 / The key-value information.</returns>
     /// <remarks>
-    /// **键名照抄基线**（`sheet_count` 等蛇形名）：这些键会被下游当契约读，改成 C# 风格的 PascalCase 会静默丢字段。
+    /// **键名照做**（`sheet_count` 等蛇形名）：这些键会被下游当契约读，改成 C# 风格的 PascalCase 会静默丢字段。
     /// 数值统一走 <see cref="Format"/>：`FltX.ToString` 不接 `IFormatProvider`，直接用它会让小数点随区域设置变成逗号；
 /// `FltX.Value` 是 `internal`，所以经 `ToFlt64.ToDouble` 取数。
     ///
-    /// **The key names are copied from the baseline** (snake case such as `sheet_count`): downstream code reads them as a contract, and switching to C#-style PascalCase would silently
+    /// **The key names are copied from the code** (snake case such as `sheet_count`): downstream code reads them as a contract, and switching to C#-style PascalCase would silently
     /// drop fields. Values are formatted with the invariant culture, or the decimal separator would become a comma under some locales.
     /// </remarks>
     public IReadOnlyDictionary<string, string> ToInfo()
@@ -103,7 +103,7 @@ public sealed record ColumnGenerationPackingSnapshot(
 /// 与基线 `ColumnGenerationPackingAnalyzer` 对齐：把一次装箱结果压成一个快照，供列生成的心跳与日志读。
 /// 它**不改装箱结果**，只读——所以没有失败路径，也不需要 `Result`。
 ///
-/// Aligned with the baseline's `ColumnGenerationPackingAnalyzer`: it flattens a packing result into one snapshot for the column-generation heartbeat and logs to read. It **does not modify the
+/// Aligned with its `ColumnGenerationPackingAnalyzer`: it flattens a packing result into one snapshot for the column-generation heartbeat and logs to read. It **does not modify the
 /// packing result**, only reads it, so it has no failure path and needs no `Result`.
 /// </remarks>
 public sealed class ColumnGenerationPackingAnalyzer

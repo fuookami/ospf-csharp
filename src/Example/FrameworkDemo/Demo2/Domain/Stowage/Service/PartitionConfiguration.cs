@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 理由是"注册与分区配置没接起来"。注册那一半由 `DiscreteLoadingContext.Register` 提供，**缺的就是这一半**。
 /// 把它做成**纯函数**（不碰求解器、不碰模型）后，那一半能被判据钉住，而剩下的求解器接线仍需真实后端。
 ///
-/// Aligned with the baseline's `partitionConfiguration`, **one for one**: the `LoadingPartition` list comes from grouping `input.positions` by `partitionId`, and the
+/// Aligned with its `partitionConfiguration`, **one for one**: the `LoadingPartition` list comes from grouping `input.positions` by `partitionId`, and the
 /// `PartitionDecision` list from the positions whose status needs a predicate or a recommended weight. **Why this layer earns its own file**: since then
 /// `partitionColumnGeneration` is **explicitly refused** in demo2 (`NotYetPorted`) on the grounds that "the registration and the partition configuration are not wired".
 /// The registration half comes from `DiscreteLoadingContext.Register`; **this is the missing half**. Made a **pure function** (no solver, no model), that half becomes
@@ -45,11 +45,11 @@ internal static class PartitionConfiguration
     /// <remarks>
     /// **两种失败都是"请求本身不自洽"，不是求解失败**：
     ///
-    /// 1. **舱位没有分区归属**。基线的 `owners.getValue(position.spaceName)` 在这里会抛 `NoSuchElementException`——**抛异常不是契约**，
+    /// 1. **舱位没有分区归属**。`owners.getValue(position.spaceName)` 在这里会抛 `NoSuchElementException`——**抛异常不是契约**，
     ///    所以改成结构化失败并点名是哪个舱位。
     /// 2. **一个分区里一个舱位都没有**。分组结果里出现空集合意味着 `partitionId` 全是空串一类的输入，交下去只会得到一个空主问题。
     ///
-    /// **Both failures are "the request contradicts itself", not solve failures**: (1) **a position has no partition owner** — the baseline's
+    /// **Both failures are "the request contradicts itself", not solve failures**: (1) **a position has no partition owner** — its
     /// `owners.getValue(position.spaceName)` would throw `NoSuchElementException`, and **throwing is not a contract**, so this reports a structured failure naming the
     /// position; (2) **a partition owns no position**, which means inputs like all-blank `partitionId`s and would only yield an empty master problem downstream.
     /// </remarks>

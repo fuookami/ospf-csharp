@@ -51,17 +51,17 @@ public sealed class Aggregation
         RecoveryNeededFlightTasks = recoveryNeededFlightTasks;
         TaskTime = new BunchSchedulingTaskTime<FlightTaskBunch, FlightTask, Aircraft, FlightTaskAssignment>(
             timeWindow, recoveryNeededFlightTasks, Compilation);
-        // **流量是连接资源用量**：基线的 `flow` 就是这么装的，只是 C# 侧此前连 `Flow` 都当不了资源。
+        // **流量是连接资源用量**：`flow` 就是这么装的，只是 C# 侧此前连 `Flow` 都当不了资源。
         // 缺省为空列表——**没有流量规则时不该建出任何流量行**，而不是建一堆恒零的符号。
         //
-        // **Flows are connection resource usage**: the baseline wires `flow` exactly this way, except the C# side could not even treat `Flow` as a resource . The default is an empty
+        // **Flows are connection resource usage**: the code wires `flow` exactly this way, except the C# side could not even treat `Flow` as a resource . The default is an empty
         // list — **no flow rules must build no flow rows**, rather than a pile of always-zero symbols.
         Flow = new BunchSchedulingConnectionResourceUsage<Flow, FlowControl, Flt64>(
             timeWindow, flows ?? Array.Empty<Flow>(), "flow");
-        // **剩下三样按基线的装配顺序补齐**：机队平衡、任务链接、航班容量。三者都只在有输入时才建符号，
+        // **剩下三样按装配顺序补齐**：机队平衡、任务链接、航班容量。三者都只在有输入时才建符号，
         // 所以缺省的空列表不会让模型里多出一堆恒零符号。
         //
-        // **The remaining three follow the baseline's assembly order**: fleet balance, task links and flight capacity. Each builds symbols only when it has input, so the default empty
+        // **The remaining three follow its assembly order**: fleet balance, task links and flight capacity. Each builds symbols only when it has input, so the default empty
         // lists add no always-zero symbols.
         FleetBalance = new FleetBalance(recoveryNeededAircrafts, originBunches ?? Array.Empty<FlightTaskBunch>(), Compilation);
         FlightLink = new FlightLink(links ?? Array.Empty<Link>(), Compilation);
@@ -105,7 +105,7 @@ public sealed class Aggregation
         // **顺序照基线**：taskTime → flow → fleetBalance → flightLink → flightCapacity。
         // 任何一步失败就整体失败——半装的聚合在求解时表现为"约束莫名不紧"，比直接失败难查得多。
         //
-        // **The order follows the baseline**: taskTime, flow, fleetBalance, flightLink, flightCapacity. A failure anywhere aborts the whole registration — a half-wired aggregation shows
+        // **The order follows the code**: taskTime, flow, fleetBalance, flightLink, flightCapacity. A failure anywhere aborts the whole registration — a half-wired aggregation shows
         // up at solve time as "the constraint is mysteriously slack", much harder to diagnose than a straight failure.
         Try taskTime = TaskTime.Register(model);
         if (taskTime.IsFailed) {

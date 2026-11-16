@@ -95,20 +95,20 @@ public static class OnnxSymbolicActivation
     /// <param name="segments">分段数 / The segment count.</param>
     /// <returns>构造结果 / The result.</returns>
     /// <remarks>
-    /// **与基线一致的四处：** **①界从输入自己**取（`BigMValues.FiniteBounds`），不是调用方给；'
+    /// **的四处：** **①界从输入自己**取（`BigMValues.FiniteBounds`），不是调用方给；'
     /// **②`|界| > 1e6` 按"缺少有效范围"处理；** **③`lower == upper` 直接塌缩成一个常数，不建函数；'
     /// **④断点均匀、在断点上精确插值**（不是拟合）。**
     ///
     /// **为什么"界从输入自己取"是要紧的：** **调用方给的界与模型里的约束是两份东西，** **两边一不一致模型都能求解——**
     /// **只是分段近似的区间与实际可行域错开了，近似的误差落在没人看的地方。**
     ///
-    /// **Four things follow the baseline: a bound beyond 1e6 is treated as missing; lower == upper collapses to a constant instead of building a function; the breakpoints are
+    /// **Four things follow the code: a bound beyond 1e6 is treated as missing; lower == upper collapses to a constant instead of building a function; the breakpoints are
     /// uniform with exact interpolation at them (not a fit); and the interval is the one the model itself is constrained by.**
     ///
     /// **一处实现手段**上的差异，语义相同：** **基线从输入自己取界（`finiteBounds`），`BigMValues` 在 C# 侧是 `internal`，插件调不到；'
     /// **而本插件里界只有唯一来源 `OnnxBounds`——模型约束正是由它生成，** **所以传进来的区间与基线取到的那个是同一份数，不是第二份。**
     ///
-    /// **One difference in the mechanism, not the meaning: the baseline takes the bounds from the input (finiteBounds), and BigMValues is internal on the C# side so the plugin
+    /// **One difference in the mechanism, not the meaning: the code takes the bounds from the input (finiteBounds), and BigMValues is internal on the C# side so the plugin
     /// cannot call it; but OnnxBounds is the plugin's only source of bounds and the model's constraints are generated from it, so the interval passed in is the same number
     /// rather than a second copy.**
     ///
@@ -137,7 +137,7 @@ public static class OnnxSymbolicActivation
         // 界优先取输入变量**自己注册的范围**（与基线 `finiteBounds` 同一个来源）；
         // 变量没有有限范围时才用传入的 `OnnxBounds`，并把它注册上去——否则分段函数构造时看不到界。
         //
-        // Bounds come from the range the input variables carry themselves (the same source as the baseline's finiteBounds); the supplied OnnxBounds is used and registered
+        // Bounds come from the range the input variables carry themselves (the same source as its finiteBounds); the supplied OnnxBounds is used and registered
         // only when a variable has no finite range, because the piecewise constructor cannot see a bound that was never registered.
         (double registeredLower, double registeredUpper, bool fromVariables) = RegisteredBounds(input);
         if (fromVariables) {

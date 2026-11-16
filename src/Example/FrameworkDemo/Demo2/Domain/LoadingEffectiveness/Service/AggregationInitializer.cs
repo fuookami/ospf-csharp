@@ -15,9 +15,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 装载效能聚合初始化器 / The loading-effectiveness aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/AggregationInitializer.kt` 对齐：**六条校验** + **四项派生**。
+/// 与对齐：**六条校验** + **四项派生**。
 ///
-/// 六条校验，顺序照抄基线：拖车名非空 → 拖车名唯一 → 顺序在 `0..255` → 同车内货物不重复 →
+/// 六条校验，顺序照做：拖车名非空 → 拖车名唯一 → 顺序在 `0..255` → 同车内货物不重复 →
 /// 每件货最多属于一辆车 → 拖车引用的货物必须存在。
 ///
 /// 四项派生：
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// | `bigM` | `舱位数` |
 /// | 拖车类型 | **显式映射**，不靠枚举序号 |
 ///
-/// Aligned with the baseline: **six validations** plus **four derivations**. The validations, in the baseline's order: trailer name non-blank; names unique; order within `0..255`; items
+/// **six validations** plus **four derivations**. The validations, in order: trailer name non-blank; names unique; order within `0..255`; items
 /// unique within a trailer; each item in at most one trailer; every referenced cargo exists. The derivations: `cargosBySource` groups the request **in order**, `earlyEnd` is
 /// `(positionCount − 1).coerceAtLeast(0) / 2`, `bigM` is the position count, and trailer types are mapped **explicitly** rather than by enum ordinal.
 /// </remarks>
@@ -79,10 +79,10 @@ internal static class AggregationInitializer
     /// 请求里按来源分组的货物下标 / The request's item indices grouped by source.
     /// </summary>
     /// <remarks>
-    /// 基线的 `mapIndexed { index, cargo -> cargo.source to index }.groupBy(...)`：**保序**、**容许重复来源**，
+    /// `mapIndexed { index, cargo -> cargo.source to index }.groupBy(...)`：**保序**、**容许重复来源**，
     /// 组内下标按请求顺序。用 `Dictionary` 的插入序来实现，不要换成排序。
     ///
-    /// The baseline's `mapIndexed(...).groupBy(...)`: **order-preserving** and **tolerant of repeated sources**, with indices inside a group following request order. Implemented via
+    /// The code's `mapIndexed(...).groupBy(...)`: **order-preserving** and **tolerant of repeated sources**, with indices inside a group following request order. Implemented via
     /// `Dictionary` insertion order; do not replace with a sort.
     /// </remarks>
     /// <param name="input">请求 DTO / The request DTO.</param>

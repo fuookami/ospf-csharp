@@ -19,8 +19,8 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic;
 /// <remarks>
 /// <para>
 /// **两套并存的面，必须说清谁对应基线：**
-/// **基线的 `ospf-kotlin-core-plugin-heuristic` 里没有任何类——`GA.kt` 只有一个 `fun islandGenetic(...)`，
-/// `HS.kt` 只有一个 `fun harmonySearch(...)`。**
+/// **`ospf-kotlin-core-plugin-heuristic` 里没有任何类—— 只有一个 `fun islandGenetic(...)`，
+/// 只有一个 `fun harmonySearch(...)`。**
 /// </para>
 /// <para>
 /// **所以：本基类与它的 6 个子类不是移植来的，是 C# 侧等价的算法封装面；
@@ -32,9 +32,9 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic;
 /// 因为它是区分"算法"与"桩"的、不需要读实现的判据。**
 /// </para>
 /// <para>
-/// **Two surfaces coexist, and which one mirrors the baseline must be stated: the baseline plugin has no classes —
-/// `GA.kt` holds only `fun islandGenetic(...)`, `HS.kt` only `fun harmonySearch(...)`.**
-/// **So this base class and its six subclasses were not ported; they are C#'s equivalent algorithm surface, while the real
+/// **Two surfaces coexist, and which one mirrors the code must be stated: the code plugin has no classes —
+/// holds only `fun islandGenetic(...)`, only `fun harmonySearch(...)`.**
+/// **So this base class and its six subclasses were not implemented; they are C#'s equivalent algorithm surface, while the real
 /// baseline counterpart is `ComposedSolvers` (35 entry points).**
 /// **Keeping both is deliberate, and every subclass must be constructed by some test — that invariant lives in
 /// `AlgorithmClassesShouldBeTestedTests`, because it distinguishes an algorithm from a stub without reading the

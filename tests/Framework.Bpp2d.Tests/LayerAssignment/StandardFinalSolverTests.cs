@@ -271,10 +271,10 @@ public class StandardFinalSolverTests {
         ColumnGenerationFinalResult nearTwoValue =
             ((Ok<ColumnGenerationFinalResult, ErrorCode, Error<ErrorCode>>)
                 await nearTwo.SolveAsync(new ColumnGenerationState(1, Columns()))).Value;
-        // **实测：`1.9999999` 只产出 1 块板材**——基线是"向下取整 + 至少一份"，不是"四舍五入"，
-        // 容差只决定"选不选这一列"，不参与份数取整。这是基线的真实行为，判据钉住它并记为风险：
+        // **实测：`1.9999999` 只产出 1 块板材**——"向下取整 + 至少一份"，不是"四舍五入"，
+        // 容差只决定"选不选这一列"，不参与份数取整。这是真实行为，判据钉住它并记为风险：
         // MILP 给出的份数若带一点点下偏差，就会少排一块板材。
-        // **Measured: `1.9999999` yields exactly one sheet.** The baseline floors and clamps to at least one rather than rounding, and the tolerance only decides whether a column is selected,
+        // **Measured: `1.9999999` yields exactly one sheet.** The code floors and clamps to at least one rather than rounding, and the tolerance only decides whether a column is selected,
         // never how the count rounds. The criterion pins the real behaviour and the plan records it as a risk: a copy count slightly below an integer loses a sheet.
         nearTwoValue.Sheets.Should().HaveCount(1, "1.9999999 floors to 1 rather than rounding to 2");
 

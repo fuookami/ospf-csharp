@@ -54,11 +54,11 @@ public class ImpreciseLoadTests {
     /// 1. 两条需求 → **两个**装载变量，名字 `load_0` / `load_1`。
     /// 2. **在注册前调用 `AppendColumnTerms` 不抛**（列生成是先注册、每轮追加）。
     /// 3. **重复注册失败**（模型不接受同名符号），且**变量个数没有翻倍**——翻倍会让约束指向错符号。
-    /// 4. 开关默认 `OverEnabled=false`、`LessEnabled=true`，与基线一致。
+    /// 4. 开关默认 `OverEnabled=false`、`LessEnabled=true`。
     ///
     /// Four paired points: two demands yield **two** load variables named `load_0` / `load_1`; **calling `AppendColumnTerms` before registration does not throw** (column generation
     /// registers first and appends each round); **a second registration fails** because the model rejects a duplicate name, and **the count does not double**, which would point constraints
-    /// at the wrong symbols; and the switches default to `OverEnabled=false` and `LessEnabled=true`, as in the baseline.
+    /// at the wrong symbols; and the switches default to `OverEnabled=false` and `LessEnabled=true`, as in the code.
     /// </remarks>
     [Fact]
     public void Load_ShouldBuildOneVariablePerDemand() {

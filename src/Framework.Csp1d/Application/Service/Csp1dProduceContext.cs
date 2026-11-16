@@ -133,10 +133,10 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
     /// 是否处于可行性阶段 / Whether the feasibility phase is active.
     /// </summary>
     /// <remarks>
-    /// 基线把这个标志直接传给 `setObjective` 与 yield 聚合；C# 原本只传给了 yield 聚合，
+    /// 这个标志直接传给 `setObjective` 与 yield 聚合；C# 原本只传给了 yield 聚合，
     /// **目标函数看不到它**——于是第一阶段解得的是"批次最省"而非"短缺最小"。
     ///
-    /// The baseline passes this flag to both `setObjective` and the yield aggregation; C# originally forwarded it only to the yield aggregation, so **the objective never
+    /// The code passes this flag to both `setObjective` and the yield aggregation; C# originally forwarded it only to the yield aggregation, so **the objective never
     /// saw it** — phase one solved "cheapest batches" instead of "smallest deficit" .
     /// </remarks>
     public bool FeasibilityPhase { get; }
@@ -256,11 +256,11 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
             // **必须四舍五入，不是截断。**
             //
-            // 基线是 `doubleValue.roundToLong.coerceAtLeast(0)`；C# 原本是 `(long)doubleValue`，
+            // `doubleValue.roundToLong.coerceAtLeast(0)`；C# 原本是 `(long)doubleValue`，
             // **那是截断**：`2.7` 得 2、`0.6` 得 0。后者更糟——**一条用了 0.6 次的方案会被
             // 当成"没用"而整条丢弃**，物料用量、设备用量、欠产判定全部跟着少算。
             //
-            // **It must round, not truncate.** The baseline is `doubleValue.roundToLong.coerceAtLeast(0)`; C# was `(long)doubleValue`, **which truncates**: `2.7`
+            // **It must round, not truncate.** The code is `doubleValue.roundToLong.coerceAtLeast(0)`; C# was `(long)doubleValue`, **which truncates**: `2.7`
             // becomes 2 and `0.6` becomes 0. The latter is worse — **a plan used 0.6 times is discarded as "unused"**, and the material, machine and deficit figures all
             // under-count with it.
             var amount = new UInt64((ulong)System.Math.Max((long)System.Math.Round(doubleValue.Value, MidpointRounding.AwayFromZero), 0));
@@ -645,7 +645,7 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
         // 人工短缺项的系数虽然被 `BuildFeasibilityYieldConfig` 设成 1，**却进不了目标**——
         // 第一阶段解得的是"批次最省"，不是"短缺最小"。
         //
-        // **The feasibility phase's objective contains only the artificial deficit terms.** The baseline's `setObjective` opens with this branch and **returns early**
+        // **The feasibility phase's objective contains only the artificial deficit terms.** The code's `setObjective` opens with this branch and **returns early**
         // (code above). C# **had no such branch**: `_feasibilityPhase` was only forwarded to the yield aggregation and `SetObjective` never read it, so phase one still
         // minimised **batch cost** — the artificial deficits' coefficient of 1 (set by `BuildFeasibilityYieldConfig`) **never reached the objective**, and phase one solved
         // "cheapest batches" instead of "smallest deficit".
@@ -925,11 +925,11 @@ public sealed class Csp1dProduceContextBuilder<V>
     /// <param name="enabled">是否启用 / Whether to enable.</param>
     /// <returns>构建器自身 / The builder itself.</returns>
     /// <remarks>
-    /// 基线的 `feasibilityPhase` 只做一件事：**让 LP 模式下也构建 yield 聚合**。
-    /// 基线里 `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`——
+    /// `feasibilityPhase` 只做一件事：**让 LP 模式下也构建 yield 聚合**。
+    /// `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`——
     /// C# 原本只有 `_mode == MILP`，所以**可行性阶段根本无法表达**。
     ///
-    /// The baseline's `feasibilityPhase` does exactly one thing: **make an LP-mode build create the yield aggregation too**. The baseline has
+    /// The code's `feasibilityPhase` does exactly one thing: **make an LP-mode build create the yield aggregation too**. The code has
     /// `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`, while C# only had `_mode == MILP`, so **the feasibility phase could not be expressed at all**.
     /// </remarks>
     public Csp1dProduceContextBuilder<V> FeasibilityPhase(bool enabled = true) {

@@ -96,26 +96,26 @@ public class AlgorithmClassesShouldBeTestedTests
     }
 
     /// <summary>
-    /// **基线的启发式插件只有工厂函数，没有类** / The baseline heuristic plugin has factory functions, not classes.
+    /// **启发式插件只有工厂函数，没有类** / The code heuristic plugin has factory functions, not classes.
     /// </summary>
     /// <remarks>
     /// **这一条是这里唯一无法在仓内验证的断言——它说的是基线。**
     /// **所以它在这里的写法是<b>记录**而不是断言：断言它会让门禁依赖 `../ospf-kotlin` 的存在。**
     ///
- /// **记录的内容：** **基线 `GA.kt` 只有一个 `fun islandGenetic(...)`，
-    /// `HS.kt` 只有一个 `fun harmonySearch(...)`——<b>没有类**。**
+ /// **记录的内容：** **只有一个 `fun islandGenetic(...)`，
+    /// 只有一个 `fun harmonySearch(...)`——<b>没有类**。**
     ///
     /// **所以本仓这 6 个类<b>不是移植来的**，是 C# 侧等价的算法封装面；
-    /// 而真正的"基线对应物"在 `ComposedSolvers` 里（35 个入口，一一对应基线的工厂函数）。**
+    /// 而真正的"基线对应物"在 `ComposedSolvers` 里（35 个入口，一一对应工厂函数）。**
     ///
     /// **两者都留着不算错（类被测试、函数被调用），但<b>必须有人写下来</b>——
     /// 否则下一个人会以为其中一套是另一套的旧版。**
     ///
-    /// **This is the one claim cannot verify inside the repo, because it is about the baseline; it is therefore
+    /// **This is the one claim cannot verify inside the repo, because it is about the code; it is therefore
     /// <b>recorded</b> rather than asserted, since asserting it would make the gate depend on `../ospf-kotlin` existing.**
     ///
-    /// **Measured: the baseline's `GA.kt` holds only `fun islandGenetic(...)` and `HS.kt` only
-    /// `fun harmonySearch(...)` — <b>no classes</b>. So these six classes were not ported; they are C#'s equivalent algorithm
+    /// **Measured: its holds only `fun islandGenetic(...)` and only
+    /// `fun harmonySearch(...)` — <b>no classes</b>. So these six classes were not implemented; they are C#'s equivalent algorithm
     /// surface, while the real baseline counterpart is `ComposedSolvers` (35 entry points).** **Keeping both is not wrong (the
     /// classes are tested, the functions are called), but <b>someone must write it down</b>, or the next reader will take one set
     /// for an older version of the other.**

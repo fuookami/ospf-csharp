@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// **每一节要么有判据，要么被 `TheUncoveredSections_ShouldBeNamed` 点名。**
 /// **"没断言"与"断言过"必须看得出区别**——**否则一张越来越短的用例表和一张全绿的表无法区分。**
 ///
-/// `Fixtures/analysis-cases.tsv` is **copied verbatim** from the pinned baseline, **and the Kotlin side asserts the same file.** These functions need no backend, **so the contract requires both sides to agree
+/// `Fixtures/analysis-cases.tsv` is **copied verbatim** , **and the Kotlin side asserts the same file.** These functions need no backend, **so the contract requires both sides to agree
 /// exactly.** **Every section either has a criterion or is named by `TheUncoveredSections_ShouldBeNamed`.** **"Not asserted" has to look different from "asserted"** — **otherwise a shrinking case table is
 /// indistinguishable from a fully green one.**
 /// </remarks>
@@ -451,7 +451,7 @@ public class AnalysisCasesTests
     /// 这条判据把差距写成名单，**并让名单与文件不一致时变红**——
     /// **搬完一节就得改名单，这是唯一能强制"覆盖在长"的机制。**
     ///
-    /// **A shrinking case table and a fully green one look identical in the results.** This criterion writes the gap as a list **and goes red when the list and the file disagree** — **porting a section forces an edit,
+    /// **A shrinking case table and a fully green one look identical in the results.** This criterion writes the gap as a list **and goes red when the list and the file disagree** — **implementation a section forces an edit,
     /// and that is the only mechanism that makes coverage grow.**
     /// </remarks>
     [Fact]

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 ///
 /// **查询错了重新查一次就好，更新错了数据已经变了**——**而没有备份的地方，改错的值不会自己回来。**
 ///
-/// The baseline's `MongoUpdateTranslator` (**120 lines**). Added the scalar translator, sorting and updates.
+/// The code's `MongoUpdateTranslator` (**120 lines**). Added the scalar translator, sorting and updates.
 ///
 /// **A wrong query can be run again; a wrong update has already changed the data** — **and where there is no backup,
 /// a wrong value does not come back.**
@@ -68,7 +68,7 @@ public class MongoUpdateTranslatorTests
     /// **基线原文是 `return Ok(null)`。**
     ///
     /// **An empty `$set: {}` is a legal but meaningless write in Mongo**, while `null` lets the caller skip it entirely.
-    /// **The baseline reads `return Ok(null)`.**
+    /// **The code reads `return Ok(null)`.**
     /// </remarks>
     [Fact]
     public void TheEmptyAssignments_ShouldBeNull()
@@ -121,13 +121,13 @@ public class MongoUpdateTranslatorTests
     /// **字符串既可能是常量，也可能是一段没人解析过的表达式源码**——
     /// **猜它是常量，就是把一段未验证的文本当成数据写进库里。**
     ///
-    /// **基线只接受 `ScalarConstant`**，其余 `assignmentFailure(..., "expression is not supported")`。
+    /// **接受 `ScalarConstant`**，其余 `assignmentFailure(..., "expression is not supported")`。
     ///
-    /// **C# `SetFromExpression` carries a `string Expression` where the baseline carries a `ScalarExpression&lt;*&gt;`.**
+    /// **C# `SetFromExpression` carries a `string Expression` where the code carries a `ScalarExpression&lt;*&gt;`.**
     /// **A string may be a constant or unparsed expression source** —
     /// **guessing it is a constant writes unvalidated text into the database as data.**
     ///
-    /// **The baseline accepts `ScalarConstant` only** and fails the rest with `"expression is not supported"`.
+    /// **The code accepts `ScalarConstant` only** and fails the rest with `"expression is not supported"`.
     /// </remarks>
     [Fact]
     public void TheExpressionAssignment_ShouldRefuseRatherThanGuess()

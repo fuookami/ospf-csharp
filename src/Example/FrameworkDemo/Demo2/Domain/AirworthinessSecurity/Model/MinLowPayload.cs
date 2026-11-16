@@ -27,7 +27,7 @@ public sealed record MinLowPayloadPoint(double MinLowPayloadValue, double Zfw);
 /// 从零燃油重量点插值的最小低甲板载荷约束 / The minimum low-deck payload constraint, interpolated from zero-fuel weight points.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/airworthiness_security/model/MinLowPayload.kt`。它是一条**下界**：下舱装得太少会让重心太靠前，
+/// 逐条对齐。它是一条**下界**：下舱装得太少会让重心太靠前，
 /// 所以"最小低载荷"是安全要求，不是容量要求。
 ///
 /// 两支取值，取决于零油重是否已知：
@@ -40,7 +40,7 @@ public sealed record MinLowPayloadPoint(double MinLowPayloadValue, double Zfw);
 /// 第二支是这个类唯一有意思的地方：零油重本身是决策变量的表达式（业载 + 干操作重量 + 救生筏），所以"最小低载荷"也是一个表达式，
 /// 不是数。写成常数要先把零油重估成某个数，那等于把一条约束降级成一个猜测。
 ///
-/// Mirrors the baseline. This is a **lower bound**: too little in the lower hold puts the centre of gravity too far forward, so "minimum low payload" is a safety requirement, not a
+/// This is a **lower bound**: too little in the lower hold puts the centre of gravity too far forward, so "minimum low payload" is a safety requirement, not a
 /// capacity one. Two branches — a known zero-fuel weight gives a **constant** (substitute that number into the table), an unknown one gives a **linear expression in the zero-fuel
 /// weight estimate** (slope from the first and last points, intercept back-solved). The second branch is the only interesting part: the zero-fuel weight is itself an expression
 /// over decisions (payload + dry operating weight + liferaft), so the minimum low payload is an expression too. Forcing it to a constant would mean guessing a number first,
@@ -80,14 +80,14 @@ public sealed class MinLowPayload
     /// <param name="zeroFuelWeight">零燃油重量 / The zero-fuel weight.</param>
     /// <returns>最小低载荷 / The minimum low payload.</returns>
     /// <remarks>
-    /// 四条分支照抄基线：只有一点 → 那点；不高于首点 → 首点；不低于末点 → 末点；否则在相邻两点间**线性插值**。
+    /// 四条分支照做：只有一点 → 那点；不高于首点 → 首点；不低于末点 → 末点；否则在相邻两点间**线性插值**。
     ///
-    /// 注意这与 的 `MaxLoadWeightLimit` 是**相反的**：那里是阶跃（段内恒定），这里是插值（段内线性）。两者都是基线的做法，差异来自数据本身——
+    /// 注意这与 的 `MaxLoadWeightLimit` 是**相反的**：那里是阶跃（段内恒定），这里是插值（段内线性）。两者都是做法，差异来自数据本身——
     /// 最大装载重量是按图表给出的阶梯规格，最小低载荷是一条连续的边界曲线。**不要因为"看着不一致"就把其中一个改成另一个的样子。**
     ///
-    /// Four branches as in the baseline: one point → that point; not above the first → the first; not below the last → the last; otherwise **linear interpolation** between
+    /// Four branches as in the code: one point → that point; not above the first → the first; not below the last → the last; otherwise **linear interpolation** between
     /// neighbours. Note this is the **opposite** of the earlier `MaxLoadWeightLimit`: that one steps (constant within a segment), this one interpolates (linear within a span). Both are
-    /// the baseline's behaviour and the difference comes from the data — the maximum load weight is a stepped chart specification, the minimum low payload a continuous boundary
+    /// its behaviour and the difference comes from the data — the maximum load weight is a stepped chart specification, the minimum low payload a continuous boundary
     /// curve. **Do not "fix" one to look like the other just because they differ.**
     /// </remarks>
     public double Interpolate(double zeroFuelWeight) {
@@ -129,8 +129,8 @@ public sealed class MinLowPayload
                 new MutableLinearPolynomial<Flt64>(constant: new Flt64(Interpolate(computedZeroFuel))),
                 name: "min_low_payload");
         } else if (_totalWeight.EstimateTotalWeight(FlightPhase.ZeroFuel) is { } zeroFuelEstimate) {
-            // 首尾两点定斜率与截距：基线用 `sorted.first` / `sorted.last`，不是最小二乘拟合。
-            // The first and last points fix the slope and intercept: the baseline uses `sorted.first` / `sorted.last`, not a least-squares fit.
+            // 首尾两点定斜率与截距：`sorted.first` / `sorted.last`，不是最小二乘拟合。
+            // The first and last points fix the slope and intercept: the code uses `sorted.first` / `sorted.last`, not a least-squares fit.
             MinLowPayloadPoint first = Points[0];
             MinLowPayloadPoint last = Points[Points.Count - 1];
             double span = last.Zfw - first.Zfw;

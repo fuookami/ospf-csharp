@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// ② 基线写 `UKHorsepower = Watt * 550`，**而 550 是 ft·lbf/s 的数值，漏了换算**
 ///    （550 × 0.3048 × 4.4482216152605 = 745.69987 W）。
 ///
-/// **一处同名不同值**：基线的 `Horsepower` 是 735 W（公制），本仓的是 745.69987 W（机械），
+/// **一处同名不同值**：`Horsepower` 是 735 W（公制），本仓的是 745.69987 W（机械），
 /// **同一个 `hp` 符号，差 1.4%。**
 ///
-/// **Two baseline problems**:
-/// ① the baseline writes `RightAngle = Radian / 4.0`, **while a right angle is pi/2** — correct is `RoundAngle / 4`;
-/// ② the baseline writes `UKHorsepower = Watt * 550`, **and 550 is the ft-lbf/s figure with the conversion dropped**
+/// **Two baseline problems**.
+/// ① the code writes `RightAngle = Radian / 4.0`, **while a right angle is pi/2** — correct is `RoundAngle / 4`;
+/// ② the code writes `UKHorsepower = Watt * 550`, **and 550 is the ft-lbf/s figure with the conversion dropped**
 ///    (550 x 0.3048 x 4.4482216152605 = 745.69987 W).
 ///
 /// **One same-name-different-value case**: baseline `Horsepower` is 735 W (metric), this repo's is 745.69987 W
@@ -39,7 +39,7 @@ public class AngleForcePowerUnitsTests
     /// **而"`Gradian` 是直角的百分之一"那条仍会绿**——**因为两者一起错，比值不动。**
     ///
     /// **The strongest criterion in**: **it pins `Degree` (from the full turn) against `RightAngle`
-    /// (from quartering the turn).** **With the baseline's `Radian / 4` it goes red at 14.3 degrees against 90.**
+    /// (from quartering the turn).** **With its `Radian / 4` it goes red at 14.3 degrees against 90.**
     /// **And "'Gradian' is a hundredth of a right angle" would still pass** — **both go wrong together and the ratio
     /// does not move.**
     /// </remarks>
@@ -70,10 +70,10 @@ public class AngleForcePowerUnitsTests
 
     /// <summary>**百分度是直角的百分之一（π/200）** / A gradian is a hundredth of a right angle.</summary>
     /// <remarks>
-    /// **这条单独不能发现基线那个错误**——**所以它必须与"90 度 = 直角"一起存在。**
+    /// **这条单独不能发现个错误**——**所以它必须与"90 度 = 直角"一起存在。**
     /// **这也是这里的一个方法论要点：由错误派生出的单位，比值判据永远是绿的。**
     ///
-    /// **This alone cannot catch the baseline error** — **so it has to sit beside "90 degrees = one right angle".**
+    /// **This alone cannot catch the code error** — **so it has to sit beside "90 degrees = one right angle".**
     /// **That is the methodological point here: for a unit derived from a wrong one, ratio criteria stay green.**
     /// </remarks>
     [Fact]
@@ -116,7 +116,7 @@ public class AngleForcePowerUnitsTests
     /// **基线写 550，那是 ft·lbf/s 的数值。** **550 × 0.3048 × 4.4482216152605 = 745.69987 W。**
     /// **这条判据同时钉住"值正确"与"是别名而非新对象"。**
     ///
-    /// **The baseline writes 550, which is the ft-lbf/s figure.** **550 x 0.3048 x 4.4482216152605 = 745.69987 W.**
+    /// **The code writes 550, which is the ft-lbf/s figure.** **550 x 0.3048 x 4.4482216152605 = 745.69987 W.**
     /// **This pins both "the value is right" and "it is an alias, not a new object".**
     /// </remarks>
     [Fact]

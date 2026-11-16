@@ -1,6 +1,6 @@
 // 任务准时奖励 / Task on-time reward.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-task-compilation-context/.../TaskOnTimeMaximization.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `TaskOnTimeMaximization.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Number;
 
@@ -41,11 +41,11 @@ public static class TaskOnTimeReward {
     /// <param name="coefficient">系数 / The coefficient.</param>
     /// <returns>奖励 / The reward.</returns>
     /// <remarks>
-    /// **阈值零表示"不封顶"，不是"不给奖励"**。基线在阈值为零时直接线性最大化，
+    /// **阈值零表示"不封顶"，不是"不给奖励"**。阈值为零时直接线性最大化，
     /// 只有阈值非零才引入封顶松弛。把它读成"奖励为 0"会让这条管线在默认参数下**什么都不做**，
     /// 而对象看上去还在最大化准时——目标是空的，求解器自然给出任意解。
     ///
-    /// **A zero threshold means "uncapped", not "no reward"**. The baseline maximises linearly at a zero threshold and only introduces a capping slack when the threshold is
+    /// **A zero threshold means "uncapped", not "no reward"**. The code maximises linearly at a zero threshold and only introduces a capping slack when the threshold is
     /// non-zero. Reading it as "reward is zero" makes this pipeline **do nothing** at its default arguments while the caller believes on-time is still being maximised — the
     /// objective is empty, so the solver returns an arbitrary solution.
     /// </remarks>

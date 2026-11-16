@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一个区间的上下界 / The lower and upper bound of an interval.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Conditional.kt`。
+/// 对齐。
 ///
 /// **它是 `SelectFunction` / `ElementFunction` / `McCormickEnvelopeFunction` 三者共同的入参类型**，
 /// **所以先补它，并在同一批里接上一个真实消费者（`McCormickEnvelopeFunction`）**——
@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **构造时拒绝 `lower > upper`**：**反过来传不是"一个空区间"，而是调用方把两个字段写反了**，
 /// **而空区间会让包络的四条不等式互相矛盾、求解器只报告"不可行"，错误信息离原因很远。**
 ///
-/// Following the baseline's `Conditional.kt`.
+/// Following its.
 ///
 /// **It is the shared input type of `SelectFunction`, `ElementFunction` and `McCormickEnvelopeFunction`**,
 /// **so it comes first, together with one real consumer in the same batch** —

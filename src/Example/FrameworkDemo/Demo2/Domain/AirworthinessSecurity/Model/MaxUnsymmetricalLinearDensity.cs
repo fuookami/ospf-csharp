@@ -42,14 +42,14 @@ public sealed record UnsymmetricalLinearDensityLimitLine(
 /// 定义不对称线性密度限制的区域 / A zone defining unsymmetrical linear density limits.
 /// </summary>
 /// <remarks>
-/// 与基线 `demo2/domain/airworthiness_security/model/MaxUnsymmetricalLinearDensity.kt` 对齐。三处容易做错：
+/// 与对齐。三处容易做错：
 ///
 /// 1. **每条曲线点生成两行**：{code}+1·左 −1·右 &lt;= lhs{/code} 与 {code}−1·左 +1·右 &lt;= rhs{/code}。这是"左比右多不超过 lhs、右比左多不超过 rhs"的两半，
 ///    只生成一行时只限制单侧不对称。
 /// 2. **限制线的候选力臂 = 区域两端 + 区域舱位的前后力臂**，去重、排序、按**归一化**的区间过滤（区域可能 {code}backArm &lt; frontArm{/code}）。
 /// 3. **一条限制线要求该力臂上恰好一左一右**。多于或少于一个时跳过——两侧数量不等就无法定义"不对称"。
 ///
-/// Aligned with the baseline. Three easy mistakes: (1) **each curve point yields two rows**, `+1·left −1·right ≤ lhs` and `−1·left +1·right ≤ rhs` — the two halves of "left exceeds
+/// Three easy mistakes: (1) **each curve point yields two rows**, `+1·left −1·right ≤ lhs` and `−1·left +1·right ≤ rhs` — the two halves of "left exceeds
 /// right by at most lhs" and vice versa, and one row alone bounds only one direction; (2) **candidate arms are the zone ends plus the zone positions' front and back arms**,
 /// deduplicated, sorted, and filtered by the **normalised** interval (the zone may have {code}backArm &lt; frontArm{/code}); (3) **a limit line needs exactly one left and one right position at
 /// that arm** — more or fewer is skipped, since "asymmetry" is undefined when the sides are unbalanced.

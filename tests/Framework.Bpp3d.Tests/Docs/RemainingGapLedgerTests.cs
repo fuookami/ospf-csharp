@@ -98,7 +98,7 @@ public class RemainingGapLedgerTests {
     /// <remarks>
     /// 行数是这条表唯一可以核对的量。**它一旦和基线不符，整张表就只是印象。**
     ///
-    /// The line counts are the only checkable quantity here. **Once they disagree with the baseline the whole table is just an impression.**
+    /// The line counts are the only checkable quantity here. **Once they disagree with the code the whole table is just an impression.**
     /// </remarks>
     [Fact]
     public void TheLedger_ShouldCarryTheMeasuredLineCounts() {
@@ -113,7 +113,7 @@ public class RemainingGapLedgerTests {
         Row(matrix, "ScipInfeasibilityAnalyzers").Should().Contain("278");
 
         // 补掉 Session 后，剩余 core 是 3421 行**；总数与原因都要在。
-        // **With the session ported the remaining core is 3421 lines**; the total and the reason both have to be there.
+        // **With the session implemented the remaining core is 3421 lines**; the total and the reason both have to be there.
         matrix.Contains("3421 行", StringComparison.Ordinal)
             .Should().BeTrue("the total has to be stated, or nobody can size the remainder");
     }

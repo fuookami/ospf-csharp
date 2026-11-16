@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// **约束编程的冲突分析器** / The constraint-programming conflict analyzer.
 /// </summary>
 /// <remarks>
-/// **按基线 `ConstraintProgrammingConflictAnalyzer` 补。**
+/// **`ConstraintProgrammingConflictAnalyzer` 补。**
 ///
 /// **按经验先查依赖，结果又是"只差适配器"：**
 /// **`IConstraintProgrammingSolver`、`ConstraintProgrammingInfeasibleOutput`、`ConstraintProgrammingConflict`、
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// `InfeasibilityEvidence` 上的字段来选择信不信</b>。把它们报成同一档会让"机器验证过的冲突"
 /// 与"松弛过滤的猜测"在矩阵上无法区分。**
 ///
-/// **adds it from the baseline.**
+/// **adds it from the code.**
 /// **Following the earlier habit of checking dependencies first, this is again "only an
 /// adapter is missing": `IConstraintProgrammingSolver`, `ConstraintProgrammingInfeasibleOutput`,
 /// `ConstraintProgrammingConflict`, `SolveDiagnostics.InfeasibilityEvidence` and both `CollectConflict`/`ShrinkConflict`

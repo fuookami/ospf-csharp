@@ -1,7 +1,7 @@
 // 物料库存审计 / Material inventory audit.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../activity/service/ActivityMaterialAudit.kt`
+// 与固定 Kotlin 
 // 的 `levels` / `violations` 对应；`extract` 依赖 `ActivityValueBoundary`，见文末说明。
-// Mirrors `levels` / `violations` in the pinned Kotlin baseline's `ActivityMaterialAudit.kt`; `extract` needs `ActivityValueBoundary` — see the tail note.
+// .
 
 using System;
 using System.Collections.Generic;

@@ -10,8 +10,8 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// <remarks>
 /// **这里修掉了一个真实错误，而它属于最容易被放过的那一类。**
 ///
-/// 对齐基线 `Information.kt` 核对时发现：**本仓原来的 `Kilobyte` 用的是 1024**，
-/// **而基线的 `Kilobyte` 是 `Scale.kilo × 8 = 8000`**。**1024 是 `Kibibyte` 的值。**
+/// 对齐核对时发现：**本仓原来的 `Kilobyte` 用的是 1024**，
+/// **而`Kilobyte` 是 `Scale.kilo × 8 = 8000`**。**1024 是 `Kibibyte` 的值。**
 /// `Megabyte`/`Gigabyte` 同样错了（用了 1024²、1024³）。
 ///
 /// **这个错误不会报错，只会让"1 GB 的磁盘"按二进制解释——差 7.4%。**
@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Quantities.Unit;
 ///
 /// ** fixes a real defect, and it belongs to the easiest kind to let through.**
 ///
-/// Checking against the baseline's `Information.kt` turned up that **this repo's `Kilobyte` used 1024**,
-/// **while the baseline's is `Scale.kilo × 8 = 8000`**. **1024 is `Kibibyte`'s value.**
+/// Checking against its turned up that **this repo's `Kilobyte` used 1024**,
+/// **while its is `Scale.kilo × 8 = 8000`**. **1024 is `Kibibyte`'s value.**
 /// `Megabyte`/`Gigabyte` were wrong the same way (1024², 1024³).
 ///
 /// **Nothing throws — it only makes "a 1 GB disk" read as binary, off by 7.4%.**

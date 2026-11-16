@@ -1,8 +1,8 @@
 // 换型时间的取值 / The value of a switch time.
-// 与固定 Kotlin 基线 `task_compilation/model/Switch.kt` 里 `switchTime` 的
+// 与固定 Kotlin 里 `switchTime` 的
 // `MaskingFunction(x = 时距, mask = thisSwitch)` 构造对应。
 // Mirrors the `MaskingFunction(x = gap, mask = thisSwitch)` construction of `switchTime`
-// in the pinned baseline's `task_compilation/model/Switch.kt`.
+//'s.
 
 using System;
 
@@ -22,13 +22,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// `thisSwitch` 是该对在**各执行器**上 `switch[e, t1, t2]` 之和，并加上 `≤ 1` 上界。
 ///
 /// **遮蔽（mask）不是钳制（clamp）**：mask 为 0 时结果恒 0，但 mask 为 1 时会把**负时距原样传出**。
-/// 基线的判定 `frontOf[t1, t2]` 是 `start[t1] ≤ start[t2]`，它**不能推出** `end[t1] ≤ start[t2]`——
+/// 判定 `frontOf[t1, t2]` 是 `start[t1] ≤ start[t2]`，它**不能推出** `end[t1] ≤ start[t2]`——
 /// 两个任务在时间上重叠时，时距是负的。
 ///
 /// 于是"换型时间"这项代价在重叠排布上会**变成负贡献**，也就是给求解器一个"让任务重叠就更省"的信号。
 /// 正常模型里同一执行器的时间冲突约束会先排除重叠，所以基线没有在这里钳制。
 ///
-/// 这里**照抄基线**：不钳制。见下方 `ponytail:` 说明。
+/// 这里**照做**：不钳制。见下方 `ponytail:` 说明。
 ///
 /// `switchTime[t1, t2] = thisSwitch × gap`, where
 ///
@@ -39,13 +39,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 ///
 /// `thisSwitch` is the sum of `switch[e, t1, t2]` **over executors**, with a `≤ 1` bound.
 ///
-/// **Masking is not clamping**: a zero mask forces zero, but a mask of 1 passes a **negative gap through unchanged**. The baseline's `frontOf[t1, t2]` is
+/// **Masking is not clamping**: a zero mask forces zero, but a mask of 1 passes a **negative gap through unchanged**. The code's `frontOf[t1, t2]` is
 /// `start[t1] ≤ start[t2]`, which **does not imply** `end[t1] ≤ start[t2]` — when two tasks overlap in time the gap is negative.
 ///
 /// So the switch-time cost turns into a **negative contribution** on overlapping arrangements, giving the solver a signal that overlapping is cheaper. In a full model the
-/// per-executor time-conflict constraints exclude overlaps first, which is why the baseline does not clamp here.
+/// per-executor time-conflict constraints exclude overlaps first, which is why the code does not clamp here.
 ///
-/// This implementation **copies the baseline**: no clamping. See the `ponytail:` note below.
+/// This implementation **copies the code**: no clamping. See the `ponytail:` note below.
 /// </remarks>
 public static class SwitchTimeValue {
     /// <summary>
@@ -55,10 +55,10 @@ public static class SwitchTimeValue {
     /// <param name="startOfRight">右任务开始 / The right task's start.</param>
     /// <returns>时距，重叠时为负 / The gap, negative when they overlap.</returns>
     /// <remarks>
-    /// ponytail: 不钳制负时距，照抄基线；若模型里缺少时间冲突约束（或有别的路径让重叠变得可行），
+    /// ponytail: 不钳制负时距，照做；若模型里缺少时间冲突约束（或有别的路径让重叠变得可行），
     /// 换型时间会变成"重叠补贴"。升级路径：在这里钳到 0，或在调用处要求 `endOfLeft ≤ startOfRight`。
     ///
-    /// ponytail: negative gaps are not clamped, copying the baseline; if the model lacks the time-conflict constraints (or some path makes overlap feasible), switch time
+    /// ponytail: negative gaps are not clamped, copying the code; if the model lacks the time-conflict constraints (or some path makes overlap feasible), switch time
     /// becomes an "overlap subsidy". Upgrade path: clamp to 0 here, or require `endOfLeft ≤ startOfRight` at the call site.
     /// </remarks>
     public static double Gap(double endOfLeft, double startOfRight) => startOfRight - endOfLeft;
@@ -87,7 +87,7 @@ public static class SwitchTimeValue {
     /// 基线给 `thisSwitch` 加了 `≤ 1` 上界：一对任务只可能在**一个**执行器上相邻。
     /// 这个上界不要紧——它约束的是"同一对任务在两个执行器上同时换型"，那在指派互斥下本来就不可行。
     ///
-    /// The baseline bounds `thisSwitch` by `≤ 1`: a task pair can be adjacent on **one** executor only. The bound is a no-op under assignment exclusivity — it rules out "the same
+    /// The code bounds `thisSwitch` by `≤ 1`: a task pair can be adjacent on **one** executor only. The bound is a no-op under assignment exclusivity — it rules out "the same
     /// pair switching on two executors at once", which is already infeasible.
     /// </remarks>
     public static bool ExceedsBound(int occurrences) => occurrences > 1;

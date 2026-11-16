@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 按下标取表项：<c>index = lowerIndex + i ? values[i]</c> / Table lookup by integer index.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Element.kt` 的 `ElementFunction`。
+/// 对齐的 `ElementFunction`。
 ///
 /// **编码是三段**：
 /// ① **一个 one-hot 的 `Σ selector_i = 1`**；
@@ -36,9 +36,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`lowerIndex` 是偏移而不是截断**：**`lowerIndex = 1` 表示下标从 1 起，
 /// 而内部槽位仍然从 0 数——把两者搞混会让差一位。**
 ///
-/// Following the baseline's `ElementFunction`.
+/// Following its `ElementFunction`.
 ///
-/// **The encoding has three parts**:
+/// **The encoding has three parts**.
 /// ① **a one-hot `Σ selector_i = 1`**;
 /// ② **a masking group per entry** (the same pattern as `SelectFunction`: `z_i = selector_i · values[i]`);
 /// ③ **two equalities**: `index − Σ i·selector_i = lowerIndex` and `result − Σ z_i = 0`.

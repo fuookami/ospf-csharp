@@ -50,7 +50,7 @@ public sealed class GurobiLinearSolver : ILinearSolver {
     /// **打开这个开关会把 presolve 关掉**——**因为 `SARHSLow`／`SARHSUp` 在 presolve 打开时是哨兵而不是区间。**
     /// **代价是求解变慢，所以它是个显式开关而不是默认行为。**
     ///
-    /// **Ranges must be captured during the &lt;b&gt;primary&lt;/b&gt; solve, never by re-solving: the baseline measured that a second solve of
+    /// **Ranges must be captured during the &lt;b&gt;primary&lt;/b&gt; solve, never by re-solving: the code measured that a second solve of
     /// the same triad no longer honours the presolve configuration and returns sentinel `SARHSLow` values.** **Turning this on
     /// disables presolve, because `SARHSLow`/`SARHSUp` are sentinels rather than ranges when presolve is on — at the cost of a
     /// slower solve, which is why it is an explicit switch.**
@@ -394,11 +394,11 @@ public sealed class GurobiLinearSolver : ILinearSolver {
             }
             // **关掉 presolve 才读得到真区间。**
             //
-            // **Gurobi 在 presolve 打开时返回的是哨兵值而不是区间**——**基线的实测结论是
+            // **Gurobi 在 presolve 打开时返回的是哨兵值而不是区间**——**实测结论是
             // "`SARHSLow` 会退化成 presolve 打开时的哨兵值（c1 得到 4 而不是 0）"。**
             // **所以只有真的要从这次求解里取范围时，才付"关 presolve、求解变慢"这个代价。**
             //
-            // **Presolve must be off for real ranges: with it on, Gurobi returns sentinels rather than ranges** — **the baseline's
+            // **Presolve must be off for real ranges: with it on, Gurobi returns sentinels rather than ranges** — **its
             // measurement was that `SARHSLow` degrades to the presolve-on sentinel (c1 yields 4 instead of 0).** **So the cost of a
             // slower solve is paid only when ranges are actually wanted from this solve.**
             if (_captureSensitivityRanges) {
@@ -409,7 +409,7 @@ public sealed class GurobiLinearSolver : ILinearSolver {
                 // 而 barrier／并发求解不产生基——**那时读 `SARHSLow` 会抛 `GRBException`，
                 // 于是"没有范围"和"没有基"分不清。**
                 //
-                // **Two parameters, neither optional: `Presolve = 0` is the baseline's finding (presolve-on returns sentinels), and
+                // **Two parameters, neither optional: `Presolve = 0` is its finding (presolve-on returns sentinels), and
                 // `Method = 1` (dual simplex) was added from measurement — ranging comes from an <b>optimal basis</b>, which barrier
                 // and concurrent runs do not produce, so the read throws and "no ranges" becomes indistinguishable from "no basis".**
                 GrbModel.Parameters.Presolve = 0;

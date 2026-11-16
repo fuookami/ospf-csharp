@@ -45,21 +45,21 @@ public sealed record LinearDensityLimitLine(
 /// 线性密度模型 / The linear density model.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/airworthiness_security/model/LinearDensity.kt`。两件事：
+/// 逐条对齐。两件事：
 ///
 /// 1. **符号**：每个舱位一个 `linear_density_{舱位}`，值 = `estimateLoadWeight[j] / 舱位长度`。系数用**长度**而不是面积——
 ///    线性密度问的是"沿机身方向单位长度上压了多少重量"，与宽度无关。
 /// 2. **限制线**：沿机身按力臂切面，每个切面覆盖"压在这一刀上"的舱位集合。舱位往往跨好几个切面，一条线就是一次横截面检查。
 ///
 /// 与 `SurfaceDensity` 对照读最清楚：表面密度**只给落在限区内的舱位**建符号（没规格就没必要算），线性密度**给所有舱位**建符号
-/// （限制线是后面按区域切的，符号本身不依赖区域）。两处口径不同是基线的选择，照抄。
+/// （限制线是后面按区域切的，符号本身不依赖区域）。两处口径不同是选择。
 ///
-/// Mirrors the baseline. Two parts: (1) **symbols** — one `linear_density_{position}` per position equal to `estimateLoadWeight[j] / position length`
+/// Two parts: (1) **symbols** — one `linear_density_{position}` per position equal to `estimateLoadWeight[j] / position length`
 /// (length, not area: linear density is weight per unit length along the fuselage, independent of width); (2) **limit lines** — cross-sections cut along the fuselage at arms,
 /// each covering the set of positions that sit on that cut. A position often spans several cuts, and each line is one cross-section check.
 ///
 /// Reading it against `SurfaceDensity` makes the difference clear: surface density builds symbols **only for positions inside a zone** (no specification, nothing to compute),
-/// linear density builds them for **every** position (the limit lines are cut per zone afterwards; the symbols do not depend on zones). Both are the baseline's choices and are
+/// linear density builds them for **every** position (the limit lines are cut per zone afterwards; the symbols do not depend on zones). Both are its choices and are
 /// copied as-is.
 /// </remarks>
 public sealed class LinearDensity
@@ -103,7 +103,7 @@ public sealed class LinearDensity
     /// <param name="positions">舱位 / The positions.</param>
     /// <returns>限制线 / The limit lines.</returns>
     /// <remarks>
-    /// 四步，照抄基线：
+    /// 四步，照做：
     ///
     /// 1. 区域覆盖的舱位 = 甲板位置在区域内 **且** 坐标与区域的力臂区间有交集；
     /// 2. 候选力臂 = 区域两端 + 每个上述舱位的前后臂，去重（**保留首次出现顺序**）；
@@ -112,7 +112,7 @@ public sealed class LinearDensity
     ///
     /// 第 4 步丢掉空线不是省事：一条没有舱位的横截面没有任何重量可检查，留着只会让约束生成器为它加一行恒等于 0 ≤ 上限的废约束。
     ///
-    /// Four steps as in the baseline: (1) the zone's positions are those whose deck location is in the zone **and** whose coordinate intersects the zone's arm range;
+    /// Four steps as in the code: (1) the zone's positions are those whose deck location is in the zone **and** whose coordinate intersects the zone's arm range;
     /// (2) candidate arms are the zone's two ends plus each such position's front and back arms, de-duplicated (**first occurrence order kept**); (3) only candidates inside the
     /// zone's arm range survive — a cut outside the zone means nothing; (4) each arm takes the positions lying **on** it, and **whole empty lines are dropped**. Dropping empty
     /// lines is not laziness: a cross-section with no position has no weight to check, and keeping it only makes the constraint generator emit a vacuous `0 ≤ limit` row.

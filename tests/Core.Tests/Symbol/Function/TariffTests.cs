@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 累进是连续的，全量折扣会跳降 / Incremental is continuous; all-units jumps down.
 /// </summary>
 /// <remarks>
-/// 补 `IncrementalTariff` 与 `AllUnitsDiscountFunction`（基线 `Tariff.kt`）。
+/// 补 `IncrementalTariff` 与 `AllUnitsDiscountFunction`。
 ///
 /// **两者在第一个区间内完全相同**——**所以只测小值的判据分不开它们。**
 /// **分开它们必须跨越一个断点**：
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **全量折扣在断点处跳降（990 → 500），累进只涨了 5。**
 ///
 /// **They agree exactly on the first segment** — **so a criterion that only tests small values cannot separate them.**
-/// **Separating them requires crossing a breakpoint**:
+/// **Separating them requires crossing a breakpoint**.
 ///
 /// | Quantity | Incremental | All units |
 /// | --- | --- | --- |
@@ -69,11 +69,11 @@ public class TariffTests
         double discountAt99 = Discount(99.0);
         discountAt99.Should().BeApproximately(990.0, 1e-9, "the first tier prices 99 units at ten");
 
-        // **`boundaryGap = 0` 时断点本身属于<b>低</b>档**（与基线的 `firstOrNull` 一致），
+        // **`boundaryGap = 0` 时断点本身属于<b>低</b>档**（与`firstOrNull` 一致），
         // **所以 100 处仍然是 10 的单价 = 1000；跳降发生在 100 <b>之上</b>一点。**
         // **这正是上一条"两者在第一个区间内相同"的边界：区间包含右端点。**
         //
-        // **With `boundaryGap = 0` the breakpoint itself belongs to the <b>lower</b> tier** (matching the baseline's
+        // **With `boundaryGap = 0` the breakpoint itself belongs to the <b>lower</b> tier** (matching its
         // `firstOrNull`), **so at 100 the unit price is still ten, giving 1000; the drop happens just <b>above</b>
         // 100.** **That is exactly the boundary of the previous criterion: the segment includes its right end.**
         Discount(100.0).Should().BeApproximately(1000.0, 1e-9,
@@ -115,7 +115,7 @@ public class TariffTests
     /// **这条不是"顺便测一下"，而是说明上一条为什么必须跨界**：
     /// **区间内的值完全一样，所以任何只在这个区间内的判据对两种实现都绿。**
     ///
-    /// **This is not a bonus check but the reason the criterion above has to cross the boundary**:
+    /// **This is not a bonus check but the reason the criterion above has to cross the boundary**.
     /// **values inside the segment are identical, so any criterion confined there is green under either
     /// implementation.**
     /// </remarks>
@@ -156,10 +156,10 @@ public class TariffTests
     public void TheAllUnitsCost_ShouldDropAtEveryBreakpoint()
     {
         // 断点 0、100、200，费率 10、5、2。
-        // **gap = 0 时断点本身属于<b>低</b>档（与基线的 firstOrNull 一致）**，
+        // **gap = 0 时断点本身属于<b>低</b>档（与firstOrNull 一致）**，
         // 所以跳降发生在断点<b>之上</b>一点，而不是正好在断点上。
         //
-        // **With gap = 0 the breakpoint itself belongs to the <b>lower</b> tier (matching the baseline's firstOrNull)**,
+        // **With gap = 0 the breakpoint itself belongs to the <b>lower</b> tier (matching its firstOrNull)**,
         // so the drop happens just <b>above</b> the breakpoint, not on it.
         (Discount(100.001) - Discount(99.999)).Should().BeLessThan(-400.0,
             "crossing into the second tier reprices all units, a fall of roughly 500");

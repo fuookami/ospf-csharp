@@ -1,7 +1,7 @@
 // 装箱几何守卫 / Packing geometry guard.
-// 与固定 Kotlin 基线 `bpp2d/domain/packing/service/PackingGeometryGuard.kt` 对应：校验放置集合是否全部位于板材内、
+// 与固定 Kotlin 对应：校验放置集合是否全部位于板材内、
 // 两两不重叠（可含刀缝），以及旋转是否合法。所有方法返回结果类型，不抛出、不使用非空断言。
-// Mirrors the pinned baseline: validates that placements lie inside the sheet, are pairwise disjoint (optionally with
+// Validates that placements lie inside the sheet, are pairwise disjoint (optionally with
 // a kerf) and are legally rotated. Every method returns a result type with no throwing and no non-null assertions.
 
 using System;

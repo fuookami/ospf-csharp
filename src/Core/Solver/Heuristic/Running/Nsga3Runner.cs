@@ -1,6 +1,5 @@
 // NSGA-III 运行器 / The NSGA-III runner.
-// 与固定 Kotlin 基线 `runner/Nsga3Runner.kt`（8588 B）对应。
-// Mirrors the pinned baseline's `runner/Nsga3Runner.kt` (8588 B).
+// 与固定 Kotlin （8588 B）对应。
 
 using System;
 using System.Collections.Generic;

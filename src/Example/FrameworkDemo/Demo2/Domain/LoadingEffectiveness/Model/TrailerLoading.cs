@@ -21,14 +21,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 拖车换装与绕行指示 / The trailer-change and trailer-circling indicators.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/model/TrailerLoading.kt` 对齐，两个矩阵：
+/// 与对齐，两个矩阵：
 ///
 /// | 矩阵 | 维度 | 含义 |
 /// | --- | --- | --- |
 /// | `trailer_change` | （有序拖车对 × 相邻舱位对） | 相邻两个舱位装的是**不同拖车**的货 |
 /// | `trailer_circling` | （拖车内有序货物对 × 相邻舱位对） | 同一拖车的两件货被**反着**放 |
 ///
-/// 七处必须照抄：
+/// 七处必须沿用：
 ///
 /// 1. **`orderedTrailers` 只收"至少有一件货在本次装载里"的拖车**（基线 `filter { trailer.items.any { it in items } }`），
 ///    再按 `顺序` 后按 `名字` 排序，最后 `zipWithNext` 取相邻对。
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 6. **`trailer_circling` 有恒零退化分支**（不可放置的组合），`trailer_change` 没有。
 /// 7. `ε = NONZERO_TOLERANCE = 1e-10`，`strictBoundary` **也取这个 ε**（：0.5 会被 `SafeLattice` 拒绝）。
 ///
-/// Aligned with the baseline, two matrices: `trailer_change` over (ordered trailer pair × adjacent position pair) meaning the two adjacent positions carry **different trailers'** cargo, and
+/// Aligned with the code, two matrices: `trailer_change` over (ordered trailer pair × adjacent position pair) meaning the two adjacent positions carry **different trailers'** cargo, and
 /// `trailer_circling` over (ordered item pair within a trailer × adjacent position pair) meaning two items of one trailer were placed **the wrong way round**. Seven things must be
 /// copied: **`orderedTrailers` keeps only trailers with at least one item in this load**, sorted by order then name, then `zipWithNext`; **`orderedItemsInTrailers` is the full combination
 /// within each trailer, neither sorted nor filtered by sequence** (unlike `SequentialLoading`); **`trailer_change`'s condition is crossed** — `load(trailer2, pos1) + load(trailer1, pos2) − 2
@@ -50,7 +50,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// </remarks>
 public sealed class TrailerLoading
 {
-    /// <summary>浮点边界余量：与基线的 `NONZERO_TOLERANCE` 一致 / The floating-point margin, matching the baseline's `NONZERO_TOLERANCE`.</summary>
+    /// <summary>浮点边界余量：与`NONZERO_TOLERANCE` 一致 / The floating-point margin, matching its `NONZERO_TOLERANCE`.</summary>
     private const double NonzeroTolerance = 1e-10;
 
     private readonly IReadOnlyList<Item> _items;

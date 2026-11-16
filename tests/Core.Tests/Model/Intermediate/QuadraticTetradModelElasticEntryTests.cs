@@ -19,16 +19,16 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// The model's own `Elastic` must actually produce an elastic model, not merely exist.
 /// </summary>
 /// <remarks>
-/// **基线里 `buildElasticModel` 是扩展函数，由 `QuadraticTetradModel.elastic` 调用。**
+/// **`buildElasticModel` 是扩展函数，由 `QuadraticTetradModel.elastic` 调用。**
 /// C# 侧原先只有静态的 `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)`，
-/// **模型自己没有 `Elastic`**——基线那个公开入口在 C# 里根本不存在。
+/// **模型自己没有 `Elastic`**——个公开入口在 C# 里根本不存在。
 ///
 /// 补上了入口。**这里的判据要能区分"补了入口"与"补了个空壳"**：
 /// 只断言"返回非空模型"是不够的——返回 `this` 也能通过。所以判据必须落在
 /// **弹性模型特有的痕迹**上：约束数与变量数都因松弛列而增加。
 ///
-/// **In the baseline `buildElasticModel` is an extension function called by `QuadraticTetradModel.elastic`.** The C# side originally had only the static
-/// `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)` and **the model had no `Elastic`** — the baseline's public entry point did not exist in C#.
+/// **In the code `buildElasticModel` is an extension function called by `QuadraticTetradModel.elastic`.** The C# side originally had only the static
+/// `QuadraticTetradElasticBuilder.BuildElasticModel(model, penalty)` and **the model had no `Elastic`** — its public entry point did not exist in C#.
 ///
 /// adds the entry point. **The criterion must distinguish "entry added" from "entry added as a shell"**: asserting only "returns a non-null model" is not
 /// enough — returning `this` would also pass. So the criteria land on **traces unique to an elastic model**: both the constraint and the variable count grow because
@@ -130,13 +130,13 @@ public class QuadraticTetradModelElasticEntryTests {
     /// 而这两者**与惩罚值无关**——把 `Flt64.One` 改成 `new Flt64(7.0)`，约束数和变量数完全不变，
     /// 那条判据照样绿。**判据的覆盖面比它想守的东西窄。**
     ///
-    /// 这条改看目标里松弛列的系数：`Elastic` 必须与基线一致地用 `1.0`。
+    /// 这条改看目标里松弛列的系数：`Elastic` 必须地用 `1.0`。
     ///
     /// **This one was added because the previous mutation survived.** `Elastic_ShouldMatchTheStaticBuilderWithUnitPenalty` compares only **constraint and
     /// variable counts**, and neither depends on the penalty — changing `Flt64.One` to `new Flt64(7.0)` leaves both counts identical and that criterion stays
     /// green. **The criterion's coverage was narrower than the thing it meant to guard.**
     ///
-    /// This one looks at the slack coefficients in the objective: `Elastic` must use `1.0`, matching the baseline.
+    /// This one looks at the slack coefficients in the objective: `Elastic` must use `1.0`, matching the code.
     /// </remarks>
     [Fact]
     public void Elastic_ShouldUseUnitPenaltyForSlackColumns() {
@@ -158,10 +158,10 @@ public class QuadraticTetradModelElasticEntryTests {
 
     /// <summary>**弹性约束必须标记为弹性来源** / Elastic constraints must be marked with the elastic source.</summary>
     /// <remarks>
-    /// `ConstraintSource.Elastic` 在基线里存在。
+    /// `ConstraintSource.Elastic` 在存在。
     /// 若 `Elastic` 只是复制了原约束、**没有改来源标记**，下游就无法区分哪些行是松弛行。
     ///
-    /// `ConstraintSource.Elastic` exists in the baseline ( verified the enum matches item by item). If `Elastic` merely copied the original constraints
+    /// `ConstraintSource.Elastic` exists in the code ( verified the enum matches item by item). If `Elastic` merely copied the original constraints
     /// **without changing the source mark**, downstream cannot tell which rows are slack rows.
     /// </remarks>
     [Fact]

@@ -1,6 +1,5 @@
 // 路线编译上下文 / Route compilation context.
-// 与固定 Kotlin 基线 `route_compilation/RouteCompilationContext.kt`（16530 字节）对应。
-// Mirrors the pinned baseline's `RouteCompilationContext.kt`.
+// 与固定 Kotlin （16530 字节）对应。
 
 using System;
 using System.Collections.Generic;
@@ -37,7 +36,7 @@ namespace Fuookami.Ospf.Framework.NetworkScheduling.Domain.RouteCompilation;
 /// - 扩展通过管线列表参与 `Register` 与影子价格（`Refresh` + `Extractor`）；
 /// - `AddColumns` / `RemoveColumns` 只改路线变量与相关中间符号表达式，不动管线里已注册的约束结构；
 /// - `ExtractRouteValues` / `ExtractSolution` 只从路线列池提解，扩展的约束值由模型自身管理。
-/// **The lifecycle boundary of extra contributions is explicit**:
+/// **The lifecycle boundary of extra contributions is explicit**.
 /// - contributions take part in `Register` and shadow pricing (`Refresh` + `Extractor`) via the pipeline list;
 /// - `AddColumns` / `RemoveColumns` only touch route variables and related intermediate-symbol expressions, never the already
 ///   registered constraint structure in the pipelines;

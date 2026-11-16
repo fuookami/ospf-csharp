@@ -40,8 +40,8 @@ public static class RenderMappers {
     }
 
     // **转换收进 `NumberConversions.ToFltXValue`**：原先这里只认四种类型，`Flt32` / `Int32` / `UInt32` 运行期抛。
-    // 基线的 `RealNumber<V>.toFltX` 十二种全通，所以这里不该有只覆盖三分之一的 `is` 链。
-    // **The conversion now lives in `NumberConversions.ToFltXValue`**: this spot used to recognise four types only and threw for `Flt32` / `Int32` / `UInt32` at run time. The baseline's
+    // `RealNumber<V>.toFltX` 十二种全通，所以这里不该有只覆盖三分之一的 `is` 链。
+    // **The conversion now lives in `NumberConversions.ToFltXValue`**: this spot used to recognise four types only and threw for `Flt32` / `Int32` / `UInt32` at run time. The code's
     // `RealNumber<V>.toFltX` covers all twelve, so a chain covering a third of them did not belong here.
     private static FltX ConvertToFltX<V>(V value) where V : struct
         => Fuookami.Ospf.Math.NumberConversions.ToFltXValue(value);

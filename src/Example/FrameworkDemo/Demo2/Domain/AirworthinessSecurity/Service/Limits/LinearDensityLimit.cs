@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 线性密度上限 / The upper bound on linear density, per cross-section.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/LinearDensityLimit.kt`：对**每条限制线**加一行
+/// 逐条对齐：对**每条限制线**加一行
 /// `Σ 该线上舱位的线性密度 ≤ 该线所属区域的上限`，名为 `{name}_{区域名}_{力臂}`。
 ///
 /// 与表面密度上限的区别不只是"面积换成长度"，还有**求和的范围**：表面密度是逐舱位各一行，线性密度是**一条横截面一行**，
@@ -30,16 +30,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 ///
 /// 1. **整条线全部不可用才跳过**。基线判 `line.positions.none { it.status.available }`，是**整条线**的守卫，不是逐舱位过滤。
 ///    一条线上只要还有一个可用舱位，这条约束就照加，不可用舱位的密度仍被算进和里。这与表面密度上限**逐舱位**跳不可用不同，
-///    是基线的选择，照抄（下方 `ponytail:` 记下了它的后果）。
-/// 2. **下标从限制线直接取**。基线用 `positions.indexOf(position)` 按**值相等**回查下标；两个完全相同的舱位会查错。
+///    是选择，沿用（下方 `ponytail:` 记下了它的后果）。
+/// 2. **下标从限制线直接取**。`positions.indexOf(position)` 按**值相等**回查下标；两个完全相同的舱位会查错。
 /// C# 的 `LinearDensityLimitLine.PositionIndices` 在切面时就把下标带上了，这一整类错误不存在。
 /// 3. **名字带力臂数值**。同名约束在求解器里分不清是哪一条横截面，`linear_density_limit_Z1_100` 能直接读出位置。
 ///
-/// Mirrors the baseline: one row per limit line, `Σ linear density of the line's positions ≤ the zone's limit`, named `{name}_{zone}_{arm}`. The difference from the surface density
+/// one row per limit line, `Σ linear density of the line's positions ≤ the zone's limit`, named `{name}_{zone}_{arm}`. The difference from the surface density
 /// cap is not just area-versus-length but **what is summed**: surface density is one row per position, linear density is **one row per cross-section**, and a line usually covers
 /// several positions — dropping one understates the weight on that section while the constraint still looks satisfied. Three details: (1) **skip only when the whole line is
 /// unavailable** (`none { available }` is a whole-line guard, not a per-position filter), so an unavailable position's density still joins the sum when a neighbour on the same
-/// line is available — different from the surface cap, and copied as-is with its consequence recorded below; (2) **the indices come straight from the line** — the baseline
+/// line is available — different from the surface cap, and copied as-is with its consequence recorded below; (2) **the indices come straight from the line** — the code
 /// back-looks them up by **value equality**, which picks the wrong one for two identical positions, a whole class of error C# avoids by carrying indices from the cut;
 /// (3) **the name carries the arm value**, otherwise every row is indistinguishable in the solver log.
 /// </remarks>
@@ -88,7 +88,7 @@ internal sealed class LinearDensityLimit
             }
 
             // ponytail: 整条线守卫的后果——线与线共享舱位时，某个不可用舱位的线性密度仍会被算进这条线的和里。基线就是这么写的，
-            // ponytail: 这里照抄。若将来"不可用舱位不该贡献重量"成为硬要求，就把这里改成逐舱位过滤，并在判据里加"不可用舱位不贡献"一条。
+            // ponytail: 这里沿用。若将来"不可用舱位不该贡献重量"成为硬要求，就把这里改成逐舱位过滤，并在判据里加"不可用舱位不贡献"一条。
             // ponytail: Consequence of the whole-line guard: when lines share positions, an unavailable position's linear density still enters this line's sum. That is what the
             // ponytail: baseline does and it is copied here. If "an unavailable position must contribute no weight" ever becomes a hard requirement, filter per position here and add
             // ponytail: a criterion for it.

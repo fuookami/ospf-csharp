@@ -8,18 +8,18 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 电流单位 / Electric current units.
 /// </summary>
 /// <remarks>
-/// **补齐基线单位。**基线 `Current.kt` 的四个单位（`Ampere`/`Milliampere`/`Microampere`/`Kiloampere`）
+/// **补齐基线单位。**的四个单位（`Ampere`/`Milliampere`/`Microampere`/`Kiloampere`）
 /// 本仓此前一个都没有独立文件**——`Ampere` 只作为 SI 基准存在，派生单位缺失。
 ///
 /// **这里同时把电学三件套（电流、电压、电阻）补齐**，因为它们是互相定义的：
-/// 基线里 `Volt = Watt / Ampere`、`Ohm = Volt / Ampere`，
+/// `Volt = Watt / Ampere`、`Ohm = Volt / Ampere`，
 /// **所以缺了电流，电压与电阻的推导就无从谈起。**
 ///
-/// Created. **None of the baseline's four current units had a file of its own here** —
+/// Created. **None of its four current units had a file of its own here** —
 /// `Ampere` existed only as an SI base, with no derived units.
 ///
 /// ** also completes the electrical trio (current, voltage, resistance), because they define each other:**
-/// in the baseline `Volt = Watt / Ampere` and `Ohm = Volt / Ampere`,
+/// in the code `Volt = Watt / Ampere` and `Ohm = Volt / Ampere`,
 /// **so without current, the voltage and resistance derivations have nothing to stand on.**
 /// </remarks>
 public static class CurrentUnits {

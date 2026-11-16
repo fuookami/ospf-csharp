@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 前置为假时门控必须松弛 / The gate must relax when the antecedent is false.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `ImpliedCondition.kt` 补非折叠蕴含。
+/// 对齐补非折叠蕴含。
 ///
 /// **蕴含与合取的唯一区别就在"前置为假时"**：**如果那时约束仍然生效，
 /// 它就不是蕴含，而是合取——而两者在"前置为真"的点上完全一样。**

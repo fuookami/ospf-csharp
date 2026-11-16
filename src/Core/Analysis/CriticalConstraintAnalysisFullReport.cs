@@ -8,13 +8,13 @@ using System.Linq;
 namespace Fuookami.Ospf.Core.Analysis;
 
 /// <summary>
-/// 基线的摘要 / A summary of the baseline solve.
+/// 摘要 / A summary of the code solve.
 /// </summary>
 /// <param name="ObjectiveId">目标标识 / Objective identity.</param>
 /// <param name="Sense">优化方向 / Optimisation sense.</param>
 /// <param name="ObjectiveValue">基线目标值，可为 <c>null</c> / The baseline objective value, or <c>null</c>.</param>
 /// <param name="Status">基线状态 / Baseline status.</param>
-/// <param name="ProvenOptimal">基线是否已证明最优 / Whether the baseline was proven optimal.</param>
+/// <param name="ProvenOptimal">否已证明最优 / Whether the code was proven optimal.</param>
 public sealed record AnalysisBaselineSummary(
     string ObjectiveId,
     string Sense,
@@ -28,7 +28,7 @@ public sealed record AnalysisBaselineSummary(
 /// <remarks>
 /// 移植自 `CriticalConstraintAnalysisReport`。**这是基线分析器里最后一个报告类型。**
 ///
-/// Ported from `CriticalConstraintAnalysisReport`. **This is the last report type among the baseline analysers.**
+/// Ported from `CriticalConstraintAnalysisReport`. **This is the last report type among the code analysers.**
 /// </remarks>
 /// <param name="Baseline">基线摘要 / The baseline summary.</param>
 /// <param name="Activity">约束活跃度报告 / The constraint activity report.</param>
@@ -103,7 +103,7 @@ public sealed record CriticalConstraintAnalysisReport(
     /// | 不变量 | 违反后报告会说什么 |
     /// | --- | --- |
     /// | schema 版本非空 | 一份无法追溯格式的报告 |
-    /// | 基线有目标身份与方向 | 一份不知道在优化什么的报告 |
+    /// | 目标身份与方向 | 一份不知道在优化什么的报告 |
     /// | **已证明最优必须带目标值** | **"已证明最优"但报不出最优值** |
     /// | **背景阻塞不得同时声称最小集** | **"最小集是空的"与"阻塞来自背景"同时成立** |
     ///

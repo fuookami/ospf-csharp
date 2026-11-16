@@ -1,6 +1,6 @@
 // 分区列生成的服务循环 / The partition column generation service loop.
-// 与固定 Kotlin 基线 `application/PartitionColumnGenerationApplicationService.kt` 的 LP 阶段对应。
-// Mirrors the LP phase of the pinned Kotlin baseline's `PartitionColumnGenerationApplicationService.kt`.
+// 与固定 Kotlin 的 LP 阶段对应。
+// The LP phase of the pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ public sealed record PartitionColumnGenerationOutcome<V>(
 /// 另一处刻意收窄：**批次定价（`BatchPricingEnabled`）显式拒绝**，与 对 Benders 的处理一致——静默走单分区路径
 /// 会让调用方以为拿到了批次语义。
 ///
-/// **This class stops once the root LP converges.** The final integer master and the full loading result are **not ported**: that step must reuse the
+/// **This class stops once the root LP converges.** The final integer master and the full loading result are **not implemented**: that step must reuse the
 /// "recompute the objective from the full model" check in `DiscreteLoadingApplicationService.finish`, which is **the only thing on this path that catches a
 /// model/solver mismatch**. **Producing no result beats producing an unverified one.** The second deliberate narrowing: **batch pricing
 /// (`BatchPricingEnabled`) is refused explicitly**, matching the earlier handling of Benders — silently taking the single-partition path would let callers believe they hold
@@ -299,10 +299,10 @@ public sealed class PartitionColumnGenerationApplicationService<V>
         var pending = new List<(string PartitionId, IReadOnlyDictionary<string, Flt64> Values)>();
 
         // **批次定价只在默认 MILP 定价器上成立**：`PricePrepared` 要的是"预先建好的模型"，自定义定价器拿不出这个契约。
-        // 传了别的定价器就退回逐分区路径——**基线的行为就是这样**，这里照着做并写在注释里，而不是假装有批量。
+        // 传了别的定价器就退回逐分区路径——**行为就是这样**，这里照着做并写在注释里，而不是假装有批量。
         //
         // **Batch pricing only holds for the default MILP pricer**: `PricePrepared` needs a "model built up front", a contract a custom pricer cannot offer. With any other pricer the
-        // per-partition path is used — **that is what the baseline does**, mirrored here and written down rather than faking a batch.
+        // per-partition path is used — **that is what the code does**, mirrored here and written down rather than faking a batch.
         MilpPartitionPricingOracle<V>? batchOracle = config.BatchPricingEnabled ? _oracle as MilpPartitionPricingOracle<V> : null;
         if (batchOracle is not null) {
             var partitionIds = new List<string>(partitions.Count);

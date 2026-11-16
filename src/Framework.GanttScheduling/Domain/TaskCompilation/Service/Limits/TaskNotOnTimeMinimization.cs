@@ -64,9 +64,9 @@ public class TaskNotOnTimeMinimization<T, E, A>
     /// 基线还有 `threshold` 分支（先建 `thresholdSlack` 再优化它的截断部分）。C# 的构造函数**没有 threshold 参数**，
     /// `ThresholdSlack` 只是纯函数，所以只有阈值 0 这一支。
     ///
-    /// The baseline minimises `coefficient × Σ_t NotOnTime[t]`, objective name `task not on time`. The task set is the one given at construction — **no per-task re-filtering**,
+    /// The code minimises `coefficient × Σ_t NotOnTime[t]`, objective name `task not on time`. The task set is the one given at construction — **no per-task re-filtering**,
     /// because "may move" and "on time" are different things: a task allowed to delay still deserves credit for finishing on time, its `on_time` merely being constant zero when
-    /// the switch is off. The baseline's `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
+    /// the switch is off. The code's `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
     /// function — so only the zero-threshold path exists.
     /// </remarks>
     public Try Invoke(object model) {
@@ -98,11 +98,11 @@ public class TaskNotOnTimeMinimization<T, E, A>
         }
 
         // 阈值非零：先建一条阈值松弛并加到模型，再最小化**它的正部**（"不准时得超过阈值才算"）。
-        // 系数**在松弛之外**乘：基线是 `coefficient * slack.positiveSlackPolynomial`，所以松弛建在未加权的和上，
+        // 系数**在松弛之外**乘：`coefficient * slack.positiveSlackPolynomial`，所以松弛建在未加权的和上，
         // 否则同一个解会得出相同的目标值，但符号系数与基线不同、判据也就钉不住系数这一环。
         // A non-zero threshold builds a threshold slack, adds it to the model, and minimises **its positive part** — "not on time counts only beyond the threshold". The coefficient is multiplied
-        // **outside** the slack, matching the baseline's `coefficient * slack.positiveSlackPolynomial`: the slack is built on the unweighted sum, otherwise the same solution yields the same
-        // objective value while the symbol coefficients differ from the baseline and the criteria could not pin the weighting.
+        // **outside** the slack, matching its `coefficient * slack.positiveSlackPolynomial`: the slack is built on the unweighted sum, otherwise the same solution yields the same
+        // objective value while the symbol coefficients differ from the code and the criteria could not pin the weighting.
         if (_threshold != 0UL) {
             Fuookami.Ospf.Math.Symbol.Polynomial.LinearPolynomial<Flt64> total =
             new(monomials.ToArray(), constant);

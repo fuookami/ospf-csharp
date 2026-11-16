@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// </summary>
 /// <remarks>
 /// **这里的结论是一个测量方法失败，不是一次移植。** 想照 / 的办法，把基线
-/// `AircraftModel.kt`/`Position.kt`/`Item.kt` 的 `val` 与 C# 同**文件**的属性做差集。
+///// 的 `val` 与 C# 同**文件**的属性做差集。
 /// 连修五轮（`Is` 前缀、record 位置参数、末位参数、枚举成员、嵌套类）**仍然大面积误报**——
 /// 因为这个代码库把模型的属性拆进了嵌套类型：`PositionShape.Length`、`ItemOrder.CarBoard`、`ItemLocation.IsNormalMain`。
 ///
@@ -35,8 +35,8 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// to another public type and the callers moved with it", **which is a refactor the compiler neither catches nor should**. They are kept for one reason only: to write
 /// "where does it live" down as documentation, so nobody runs the source diff again. **No pretending to guard what the compiler already guards.**
 ///
-/// **The deliverable here is a failed measuring method, not a port.** tried to mirror / by diffing the baseline's
-/// `AircraftModel.kt`/`Position.kt`/`Item.kt` `val`s against the C# properties in the **same file**. After five rounds of fixes (`Is` prefix, record positional parameters,
+/// **The deliverable here is a failed measuring method, not a port.** tried to mirror / by diffing its
+///// `val`s against the C# properties in the **same file**. After five rounds of fixes (`Is` prefix, record positional parameters,
 /// last parameter, enum members, nested classes) it **still over-reported**, because this codebase splits model properties across nested types. **Per-file diffing does not
 /// fit this codebase.** The script is gone; this criterion pins **which type each property belongs to**, guarding against a property being moved or deleted.
 /// </remarks>
@@ -44,10 +44,10 @@ public class Demo2ModelPropertyLayoutTests
 {
     /// <summary>**舱位几何属性挂在 `PositionShape` 上** / The position geometry lives on `PositionShape`.</summary>
     /// <remarks>
-    /// 基线把它们直接放在 `Position` 上。搬到 `PositionShape` 是一次**有意的重构**（形状与坐标分开），
+    /// 它们直接放在 `Position` 上。搬到 `PositionShape` 是一次**有意的重构**（形状与坐标分开），
     /// **不是缺失**——但"搬走了"和"删掉了"从外面看一样，所以这里钉住。
     ///
-    /// The baseline puts them straight on `Position`. Moving them to `PositionShape` is a **deliberate refactor** (shape apart from coordinates), **not a gap** — but
+    /// The code puts them straight on `Position`. Moving them to `PositionShape` is a **deliberate refactor** (shape apart from coordinates), **not a gap** — but
     /// "moved" and "deleted" look the same from outside, which is what this pins.
     /// </remarks>
     [Fact]
@@ -76,7 +76,7 @@ public class Demo2ModelPropertyLayoutTests
     /// 基线写 `val normalMain = main && !head && !tail` 这种**派生属性**，本仓用 `Is` 前缀。
     /// **派生属性和它的原始标签必须同时存在**：只留标签，判定就得在调用方重复一遍。
     ///
-    /// The baseline writes derived properties like `val normalMain = main && !head && !tail`; this port uses an `Is` prefix. **The derived property and the raw tags
+    /// The code writes derived properties like `val normalMain = main && !head && !tail`; this implementation uses an `Is` prefix. **The derived property and the raw tags
     /// have to coexist** — keeping only the tags would push the predicate into every caller.
     /// </remarks>
     [Fact]
@@ -99,7 +99,7 @@ public class Demo2ModelPropertyLayoutTests
     ///
     /// 这条判据**钉住当前的裸 double**，而不是假装标签在。**写明"这里没有单位"比给一个假单位好。**
     ///
-    /// The baseline's `AircraftModel` carries `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`; this port has **none of them** — `LinearDensityLimit`
+    /// The code's `AircraftModel` carries `volumeUnit`/`fuelVolumeUnit`/`fuelDensityUnit`/`linearDensityUnit`; this implementation has **none of them** — `LinearDensityLimit`
     /// uses a bare `double MaxLinearDensity = 500.0`. **This changes no number today**, since neither side converts units at all and both share one implicit unit. **But
     /// "implicit" is the hazard**: the day someone makes one side unit-carrying, the other raises nothing and simply computes a wrong value. This criterion **pins
     /// the bare double** rather than pretending the labels exist. **Saying "there is no unit here" beats inventing one.**

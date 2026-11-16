@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 离散条件的格点计算：合并同变量系数、判整数性、求步长、证平移安全 / Lattice arithmetic for discrete conditions.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `effectiveDiscreteConditionMonomials`、
+/// 对齐的 `effectiveDiscreteConditionMonomials`、
 /// `isIntegerValuedDiscreteConditionNumber`、`discreteConditionCoefficientGcd`、
 /// `hasSafeDiscreteShiftProof` 四个辅助函数补。
 ///
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 而 `−2 > −2` 是假、`−2 ≥ 0` 也是假。**
 /// **再看 `p` 取 `1`：两边都真。所以这个例子也安全。**
 ///
-/// **结论：我上面构造的反例都不成立。** **基线那个余数检查挡的是什么？**
+/// **结论：我上面构造的反例都不成立。** **个余数检查挡的是什么？**
 /// **是 `p = 3x + 2`、`δ = 2`：取值 `2 + 3ℤ = …, −1, 2, 5, …`。**
 /// **`GE` 平移后要求 `p > −2`，于是 `p = −1` <b>满足</b>`p > −2`；**
 /// **而 `p ≥ 0` 对 `p = −1` 是<b>假</b>。**
@@ -47,7 +47,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **所以两处检查都必需：`spacing ≥ δ` 挡"格点太密"，余数距离挡"格点位置不对齐"。**
 ///
 /// **The immediate reason is a gap already found**: **the earlier `ProveShift` only checked
-/// "spacing ≥ δ", while the baseline also checks "the distance from the constant to the nearest lattice point
+/// "spacing ≥ δ", while the code also checks "the distance from the constant to the nearest lattice point
 /// <b>on the side that would be misclassified</b> is at least δ".** **The former is necessary, not sufficient.**
 ///
 /// **The counterexample that shows why**: **`p = 3x + 2`, `δ = 2`. The values are `2 + 3ℤ = …, −1, 2, 5, …`.**
@@ -151,7 +151,7 @@ internal static class DiscreteConditionLattice
     /// 所以危险的是 `p` 落在 `(−δ, 0)` 里——那是常数<b>下方</b>最近的格点；
     /// `LE` 对称，危险的是<b>上方</b>最近的格点。**
     ///
-    /// **Three checks in order, none optional**:
+    /// **Three checks in order, none optional**.
     ///
     /// **① the polynomial must be "integer coefficients times integer variables" — otherwise there is no lattice;**
     /// **② the spacing must be at least δ — this blocks "the lattice is too dense";**

@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// 把它抽成一个不依赖具体方案类型的投影，判定就能被单独实现、单独测试，
 /// **而不必先给三个空壳生成器加泛型约束**。
 ///
-/// The baseline's `canCrossContributionDominate` reads the plan's rest width and demand contributions directly. On the C# side the generation collector is
+/// The code's `canCrossContributionDominate` reads the plan's rest width and demand contributions directly. On the C# side the generation collector is
 /// **generic** and cannot read those fields.
 ///
 /// **This type is the minimal way around that obstacle**: the decision needs only "rest width + contribution table", not the whole plan. Extracting it as

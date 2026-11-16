@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 线性输入什么都不做 / A linear input does nothing.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticLinear.kt` 把空壳换成真实编码。
+/// 对齐把空壳换成真实编码。
 ///
 /// **线性输入时不创建 `y`、不写约束、辅助变量为空**——
 /// **一条 `y = p` 的等式对本来就是线性的 `p` 只是把 `p` 抄了一遍。**
@@ -96,11 +96,11 @@ public class QuadraticLinearFunctionTests
     /// **负值不被截断** / Negative values are not clipped.
     /// </summary>
     /// <remarks>
-    /// **基线的注释明确记了这件事**：**早先的 `URealVar` 会在求解器边界把负值静默截断成 0**——
+    /// **注释明确记了这件事**：**早先的 `URealVar` 会在求解器边界把负值静默截断成 0**——
     /// **于是同一个多项式在负半轴上的结果全错，而模型照样求解成功。**
     /// **判据直接求一个负值，验证它原样返回。**
     ///
-    /// **The baseline's comment records this**: **an earlier `URealVar` silently clipped negatives to zero at the
+    /// **The code's comment records this**: **an earlier `URealVar` silently clipped negatives to zero at the
     /// solver boundary** — **so the polynomial was wrong on its whole negative half while the model still solved
     /// fine.** **The criterion evaluates a negative value and checks it comes back unchanged.**
     /// </remarks>

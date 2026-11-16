@@ -9,13 +9,13 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 
 /// <summary>
 /// **为什么 `CompositeMathFunction` 这个基类不移植** /
-/// Why the `CompositeMathFunction` base class is deliberately not ported.
+/// Why the `CompositeMathFunction` base class is deliberately not implemented.
 /// </summary>
 /// <remarks>
-/// 逐项对照的对象是基线 `CompositeFunctions.kt`（739 行）。**结果是一个"不移植"的决定，
+/// 逐项对照的对象是。**结果是一个"不移植"的决定，
 /// 而它必须带着可执行的理由，否则下一个人会重新做一遍同样的调查。**
 ///
-/// 基线里那个基类只做三件事：
+/// 那个基类只做三件事：
 ///
 /// 1. **`helperVariables` = 所有子函数辅助变量的拼接**
 /// 2. **`registerConstraints` = `registerFunctionsAtomically(model, innerFunctions)`**（全成或全不成）
@@ -34,15 +34,15 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 而本仓的构建流程是"每次 `InvokeAsync` 建一个新模型，失败就整个丢弃"——半截行没有观察者。**
 ///
 /// **第三条为什么不能照搬：** **`CapturedInputBounds` 这一类字段在本仓
-/// <b>没有任何生产者</b>。** **照着基线把校验加进来，加到的就是一个恒为 null 的字段上的检查——
+/// <b>没有任何生产者</b>。** **照着校验加进来，加到的就是一个恒为 null 的字段上的检查——
 /// 那正是"永不触发的检查"。**
 ///
 /// **所以这里的交付是<b>一个有理由的"不做"</b>，而不是"还没做"。**
 ///
-/// The survey item is the baseline's `CompositeFunctions.kt` (739 lines). **The result is a "do not port" decision that must
+/// The survey item is its (739 lines). **The result is a "do not port" decision that must
 /// carry executable reasons, or the next person redoes the same investigation.**
 ///
-/// The baseline base class does exactly three things, and the three differ here: helper concatenation already exists per
+/// The code base class does exactly three things, and the three differ here: helper concatenation already exists per
 /// leaf; the atomic registration is <b>unobservable</b> because every `InvokeAsync` builds a fresh model and discards it on
 /// failure, so there is no observer for half-written rows; and the captured-bounds validation would attach to a field that
 /// <b>nothing produces</b> — precisely the never-firing check that has to be avoided.
@@ -59,7 +59,7 @@ public class CompositeMathFunctionPortDecisionTests
     /// **这条是缺口判据：** **有人开始移植这个基类（或给叶子加边界参数）时它会变红，
     /// 而那时该做的是先回答"谁来生产那些边界"——那是同一个尚未回答的问题。**
     ///
-    /// **This is the gap criterion: it goes red the moment someone starts porting the base (or adds a bounds argument to a
+    /// **This is the gap criterion: it goes red the moment someone starts implementation the base (or adds a bounds argument to a
     /// leaf), and then the first question to answer is "who produces those bounds" — a question still unanswered.**
     /// </remarks>
     [Fact]
@@ -91,7 +91,7 @@ public class CompositeMathFunctionPortDecisionTests
     /// **原子注册所需的原语其实已经在手** / The primitive atomic registration would need already exists.
     /// </summary>
     /// <remarks>
-    /// **基线用 `ConstraintBufferModel` 缓冲，然后用 `addConstraints` 一次刷入。**
+    /// **`ConstraintBufferModel` 缓冲，然后用 `addConstraints` 一次刷入。**
     /// **本仓没有 buffer，但有 `TruncateConstraintsTo`——"先记行数、失败时截回去"是同一件事的另一种做法，
     /// 而且不需要一个新的模型包装类型。**
     ///
@@ -100,7 +100,7 @@ public class CompositeMathFunctionPortDecisionTests
     ///
     /// **而它同时钉住"现在没有这个需要"：** **本仓只有构建期注册，失败即丢弃整个模型。**
     ///
-    /// **The baseline buffers through `ConstraintBufferModel` and flushes with `addConstraints`. This repo has no buffer but
+    /// **The code buffers through `ConstraintBufferModel` and flushes with `addConstraints`. This repo has no buffer but
     /// does have `TruncateConstraintsTo` — "record the row count, truncate on failure" is the same thing without a new
     /// wrapper type.**
     ///

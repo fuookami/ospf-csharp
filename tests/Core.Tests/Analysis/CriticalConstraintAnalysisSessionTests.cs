@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 记的是"持有活的求解器实例，要真实后端"。**那是 grep 代理读错了**：唯一带 `ConstraintProgrammingSolver`
 /// 的参数**只用来读 `Descriptor`**。所以它**完全不需要后端**——判据里的第一条就是证明这一点。
 ///
-/// **ported `CriticalConstraintAnalysisSession` (341 baseline lines) and corrects the earlier ledger.** recorded "holds a live solver instance, needs a real backend".
+/// **implemented `CriticalConstraintAnalysisSession` (341 baseline lines) and corrects the earlier ledger.** recorded "holds a live solver instance, needs a real backend".
 /// **That was the grep proxy misleading the reading**: the one parameter typed `ConstraintProgrammingSolver` **is used only to read its `Descriptor`**. It therefore **needs no
 /// backend at all**, and the first criterion here is the proof.
 /// </remarks>

@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.GanttNetworkScheduling.Domain.Network;
 /// 移植基线 `gantt-scheduling-domain-network-context` 的 `NetworkBunchGenerationContext`（72 行）。
 /// 主模型与分支状态由 Gantt 调用方持有，这里**只做路径 → 任务束的转换与完成状态的翻译**。
 ///
-/// Ports the baseline's 72-line `NetworkBunchGenerationContext`. The master model and branch state stay with the Gantt caller; this **only converts paths
+/// Ports its 72-line `NetworkBunchGenerationContext`. The master model and branch state stay with the Gantt caller; this **only converts paths
 /// into bunches and translates the completion status**.
 ///
 /// **完成状态的翻译才是这段代码的真正内容**，不是形式上的适配：

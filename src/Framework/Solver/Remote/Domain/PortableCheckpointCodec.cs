@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 /// <see cref="ConstraintProgrammingCheckpointCodec"/> 决定，框架侧不再维护第二份字段列表或摘要算法。
 /// 解码入口刻意分开：<see cref="DecodeOrNull"/> 只接受当前 schema，历史格式迁移必须显式走
 /// <see cref="DecodeCompatibleOrNull"/>。
-/// Matches the pinned baseline: this type only forwards. Field order, schema normalization, string-map
+/// This type only forwards. Field order, schema normalization, string-map
 /// ordering and the digest all come from Core's <see cref="ConstraintProgrammingCheckpointCodec"/>, and
 /// no second field list or digest implementation is kept here. The decode entries stay separate:
 /// <see cref="DecodeOrNull"/> accepts only the current schema, and historical migration requires

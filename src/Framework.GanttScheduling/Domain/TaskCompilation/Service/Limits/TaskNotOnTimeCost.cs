@@ -1,7 +1,7 @@
 // 不准时代价 / The not-on-time cost.
-// 与固定 Kotlin 基线 `task_compilation/Service/.../TaskNotOnTimeMinimization.kt` 对应，
+// 与固定 Kotlin 对应，
 // 是 `TaskOnTimeReward` 的对偶。
-// Mirrors the pinned baseline's `TaskNotOnTimeMinimization.kt`; the dual of the earlier `TaskOnTimeReward`.
+// ; the dual of the earlier `TaskOnTimeReward`.
 
 using Fuookami.Ospf.Math.Algebra.Number;
 

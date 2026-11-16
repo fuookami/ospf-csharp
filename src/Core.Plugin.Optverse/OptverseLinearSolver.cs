@@ -3,8 +3,8 @@
 namespace Fuookami.Ospf.Core.Plugin.Optverse;
 
 /// <summary>
-/// OPTVerse 线性求解器占位符，与固定 Kotlin 基线一致，不声明求解能力。
-/// OPTVerse linear solver placeholder matching the pinned Kotlin baseline, with no declared solving capability.
+/// OPTVerse 线性求解器占位符，与一致，不声明求解能力。
+/// OPTVerse linear solver placeholder matching the reference, with no declared solving capability.
 /// </summary>
 /// <remarks>
 /// Kotlin 固定基线尚未实现该模块，因此这里不实现 ILinearSolver，也不伪造环境错误入口。

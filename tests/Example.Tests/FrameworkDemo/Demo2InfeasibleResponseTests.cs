@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **不可行不是"求解出错"** / Infeasibility is not "the solve went wrong".
 /// </summary>
 /// <remarks>
-/// 基线的 `infrastructure/ApplicationResponseMapper.kt` 有一条分支本仓没有：
+/// 有一条分支本仓没有：
 /// **求解器返回 `ORModelInfeasible` 或 `ORModelInfeasibleOrUnbounded` 时，公开响应是 `NoSolution`**，
 /// 并追加一句"已映射为 NoSolution"。**本仓原来不看错误码，一律报 `DirectSolveFailed`。**
 ///
@@ -24,9 +24,9 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **直接测映射函数**：为了跑它去造一个满足 `ILinearSolver` 六个抽象重载的假求解器，
 /// **假件会比被测逻辑长十倍，而多出来的部分证明不了任何事。**
 ///
-/// The baseline's `infrastructure/ApplicationResponseMapper.kt` carries a branch this port lacked:
+/// The code's carries a branch this implementation lacked:
 /// **when the solver returns `ORModelInfeasible` or `ORModelInfeasibleOrUnbounded`, the public response is `NoSolution`**,
-/// with one sentence saying the mapping happened. **This port never looked at the code and reported `DirectSolveFailed` for everything.**
+/// with one sentence saying the mapping happened. **This implementation never looked at the code and reported `DirectSolveFailed` for everything.**
 ///
 /// **The difference is not wording**: **"the solve went wrong" sends somebody to the backend, "the model is infeasible" sends them to the model —
 /// the wrong one points the search backwards.**
@@ -66,16 +66,16 @@ public class Demo2InfeasibleResponseTests
     /// **这条防的是"把整个失败分支都改成 NoSolution"**：那会让真正的后端故障
     /// **伪装成"模型不可行"**，而那是**更难查**的那一种。
     ///
-    /// **状态名照基线**：`ApplicationResponseMapper.kt` 的非不可行分支返回 `ResponseDTO(request, error)`，
+    /// **状态名照基线**： 的非不可行分支返回 `ResponseDTO(request, error)`，
     /// 而那个构造函数写死 `status = "Error"`、`notes = listOf(error.message)`。
-    /// **`"DirectSolveFailed"` 是本仓自造的**（基线里搜不到），**所以它不是可以钉的基线行为。**
+    /// **`"DirectSolveFailed"` 是本仓自造的**（搜不到），**所以它不是可以钉的基线行为。**
     ///
     /// **This guards against rewriting the whole failure branch as `NoSolution`**: that would disguise a real backend fault
     /// **as "the model is infeasible"**, the **harder** of the two to diagnose.
     ///
-    /// **The status name follows the baseline**: the non-infeasible branch of `ApplicationResponseMapper.kt` returns `ResponseDTO(request, error)`,
+    /// **The status name follows the code**: the non-infeasible branch of returns `ResponseDTO(request, error)`,
     /// and that constructor hard-codes `status = "Error"` and `notes = listOf(error.message)`.
-    /// **`"DirectSolveFailed"` was invented by this port** (it appears nowhere in the baseline), **so it is not baseline behaviour to pin.**
+    /// **`"DirectSolveFailed"` was invented by this implementation** (it appears nowhere in the code), **so it is not baseline behaviour to pin.**
     /// </remarks>
     [Theory]
     [InlineData(ErrorCode.OREngineSolvingException)]

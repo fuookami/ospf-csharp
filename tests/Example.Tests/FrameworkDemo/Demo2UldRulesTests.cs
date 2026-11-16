@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// When turned `Enabled` from an always-true shell into a real decision, two rules stayed **uncheckable**: `item.uld.code !in enabledULDs` and the `taboo[item]` number range,
 /// because C#'s `Item` had no `Uld` and `StowagePosition` had no `Taboo`. adds those prerequisites and the rules follow. `Item` also gains an `Id`, so the stowage
-/// matrix keys by identity instead of name — as the baseline always did; keying by name made **two items with the same name share a column**.
+/// matrix keys by identity instead of name — as the code always did; keying by name made **two items with the same name share a column**.
 /// </remarks>
 public class Demo2UldRulesTests {
     private static Item MakeItem(string name, ULD? uld, string id = "", string destination = "SHA") =>
@@ -132,7 +132,7 @@ public class Demo2UldRulesTests {
     /// 基线对短名称调 `substring(3, 8)` 会抛异常。一条读不懂的集装器号不该让整份配载崩掉，而"不命中"与"名称不合规范"
     /// 在禁忌检查上是同一个结果。这条是**刻意的差异**，写在这里而不是埋着。
     ///
-    /// The baseline throws on `substring(3, 8)` for a short name. An unreadable ULD number should not bring the whole stowage run down, and "no hit" is the same outcome as
+    /// The code throws on `substring(3, 8)` for a short name. An unreadable ULD number should not bring the whole stowage run down, and "no hit" is the same outcome as
     /// "malformed name" for taboo purposes. This is a **deliberate divergence**, recorded rather than hidden.
     /// </remarks>
     [Fact]

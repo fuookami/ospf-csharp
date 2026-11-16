@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次输入的绝对值：桥接后交给线性 `AbsFunction` / A quadratic-input absolute value, bridged.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticAbs.kt`。
+/// 对齐。
 ///
 /// **与六个类同形**：**桥接，然后委托。绝对值编码本身没有任何新增。**
 ///
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 所以桥接之后 `|y|` 与 `|p|` 是同一个数——只要桥接等式真的成立。**
 /// **而桥接等式如果不成立（比如忘了注册），`|y|` 会取到任意值。**
 ///
-/// Following the baseline's `QuadraticAbs.kt`.
+/// Following its.
 ///
 /// **Same shape as the six classes**: **bridge, then delegate. No absolute-value encoding is new.**
 ///
@@ -125,9 +125,9 @@ public sealed class QuadraticAbsFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// 二次输入的正部 <c>max(p, 0)</c> / The positive part of a quadratic input.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticPositivePart.kt`。
+/// 对齐。
 ///
-/// **基线用的恒等式是 `max(p, 0) = −min(−p, 0)`，而 `min` 用 `exact = true` 的 `QuadraticMinFunction` 实现。**
+/// **的恒等式是 `max(p, 0) = −min(−p, 0)`，而 `min` 用 `exact = true` 的 `QuadraticMinFunction` 实现。**
 /// **所以本类没有自己的极值编码**：**它构造一个 `−p` 与 `0` 的 `QuadraticMinFunction`，
 /// 再对它的结果取负。**
 ///
@@ -144,23 +144,23 @@ public sealed class QuadraticAbsFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// **浮点里 `−0` 与 `0` 相等但可观察不同（比如格式化输出 `-0`），
 /// 而归一化让"正部在零点"给出干净的零。**
 ///
-/// Following the baseline's `QuadraticPositivePart.kt`.
+/// Following its.
 ///
-/// **The baseline's identity is `max(p, 0) = −min(−p, 0)`, with the `min` built from an `exact = true`
+/// **identity is `max(p, 0) = −min(−p, 0)`, with the `min` built from an `exact = true`
 /// `QuadraticMinFunction`.** **So this class has no extremum encoding of its own**: **it builds a
 /// `QuadraticMinFunction` over `−p` and `0`, then negates the result.**
 ///
-/// **Three things are easy to get wrong, and none throws**:
+/// **Three things are easy to get wrong, and none throws**.
 /// **① forgetting the outer negation (yielding `min(−p, 0)`, the negative part rather than the positive one);**
 /// **② negating the monomials but not the constant term;**
 /// **③ `exact = false` (making the `min` a relaxation, so the result comes out too small).**
 ///
-/// **`selectorVars` is empty when the input is <b>necessarily non-negative or necessarily non-positive</b>**:
+/// **`selectorVars` is empty when the input is <b>necessarily non-negative or necessarily non-positive</b>**.
 /// **then the `min` needs no selector, because the bounds already fix how `p` compares to zero.**
 /// **The criterion must cover that**: **the same polynomial yields different helper counts under bounds and
 /// without them.**
 ///
-/// **`negateAndNormalizeZero` folds `−0` into `0`**:
+/// **`negateAndNormalizeZero` folds `−0` into `0`**.
 /// **in floating point `−0` equals `0` but is observably different (formatting shows `-0`), and normalising gives a
 /// clean zero for the positive part at the origin.**
 /// </remarks>

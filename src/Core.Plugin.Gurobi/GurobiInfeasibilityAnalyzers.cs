@@ -26,14 +26,14 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// 与 `ScipFarkasInfeasibilityAnalyzer` 同构：诊断在自己的 Gurobi 实例上重放模型，整数列直接拒绝，
 /// 因为 LP 证书不能证明混合整数模型不可行。
 ///
-/// 补的是 `GurobiInfeasibilityAnalyzers.kt`（518 行）里的 Farkas 那一条**。
-/// 基线那个文件有三个类：`GurobiNativeIISAnalyzer`（纯 IIS）、`GurobiFarkasAnalyzer`（这里）、
+/// 补的是（518 行）里的 Farkas 那一条**。
+/// 个文件有三个类：`GurobiNativeIISAnalyzer`（纯 IIS）、`GurobiFarkasAnalyzer`（这里）、
 /// `GurobiQuadraticNativeIISAnalyzer`（二次 IIS）。**两次 IIS 都需要 `ComputeIIS` 的隔离实例，
 /// 这里没搬，也没写空跑版本。**
 ///
 /// Mirrors `ScipFarkasInfeasibilityAnalyzer`: the diagnosis replays the model on its own Gurobi instance and rejects integer columns, because an LP certificate cannot prove a
-/// mixed-integer model infeasible. **The Farkas member of `GurobiInfeasibilityAnalyzers.kt` (518 lines) is ported**. That baseline file has three classes — a native IIS one,
-/// this Farkas one, and a quadratic IIS one. **Both IIS classes need an isolated `ComputeIIS` instance; they were neither ported nor stubbed.**
+/// mixed-integer model infeasible. **The Farkas member is implemented here**. It has three classes — a native IIS one,
+/// this Farkas one, and a quadratic IIS one. **Both IIS classes need an isolated `ComputeIIS` instance; they were neither implemented nor stubbed.**
 /// </remarks>
 internal sealed class GurobiFarkasInfeasibilityAnalyzer : IFarkasInfeasibilityAnalyzer<ILinearTriadModelView> {
     /// <summary>Farkas 成分非零判定容差 / Tolerance for a nonzero Farkas component.</summary>

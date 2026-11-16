@@ -108,7 +108,7 @@ public class Demo2ExpressEffectivenessTests {
     }
 
     /// <summary>
-    /// **浮点余量等于基线的 `NONZERO_TOLERANCE`** / The floating-point margin equals the baseline's `NONZERO_TOLERANCE`.
+    /// **浮点余量等于`NONZERO_TOLERANCE`** / The floating-point margin equals its `NONZERO_TOLERANCE`.
     /// </summary>
     /// <remarks>
     /// 两点成对：
@@ -117,7 +117,7 @@ public class Demo2ExpressEffectivenessTests {
     /// 2. **1e-9 会改变行为**：条件常数与边界同时放大时 `SafeLattice` 仍能通过（因为两者同步走），
     /// 所以只有把这个常量本身钉住才能发现偏差。它是一个**校准旋钮**，不是可以随手改的实现细节。
     ///
-    /// Two paired points: the relative order's condition constant and `strictBoundary` are both **1e-10**, the baseline's `NONZERO_TOLERANCE`; and **1e-9 changes behaviour**, yet
+    /// Two paired points: the relative order's condition constant and `strictBoundary` are both **1e-10**, its `NONZERO_TOLERANCE`; and **1e-9 changes behaviour**, yet
     /// `SafeLattice` still passes because the constant and the boundary scale together, so only pinning the constant itself catches the drift. It is a **calibration knob**, not an
     /// implementation detail.
     /// </remarks>
@@ -204,7 +204,7 @@ public class Demo2ExpressEffectivenessTests {
     /// 4. 符号矩阵是 **3 × 1**，每个位置都有符号。
     ///
     /// Four paired points: three distinct priorities give 3 ordered item pairs (all combinations, not 2 adjacent); two positions give 1 ordered position pair; **registration succeeds when
-    /// both items fit both positions**, since `IfFunction`'s `strictBoundary` at `NONZERO_TOLERANCE = 1e-10` passes `SafeLattice` (the earlier 0.5 was this port's calling error, not a
+    /// both items fit both positions**, since `IfFunction`'s `strictBoundary` at `NONZERO_TOLERANCE = 1e-10` passes `SafeLattice` (the earlier 0.5 was this implementation's calling error, not a
     /// framework limit); and the matrix is **3 × 1** with a symbol in every slot.
     /// </remarks>
     [Fact]
@@ -324,10 +324,10 @@ public class Demo2ExpressEffectivenessTests {
     /// <remarks>
     /// 两点成对：
     ///
-    /// 1. **单个货物没有有序对** → `ItemPriorityReverseLimit` 直接返回成功且**不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
+    /// 1. **单个货物没有有序对** → `ItemPriorityReverseLimit` 直接返回成功且**不加目标**（`if (monomials.isEmpty) return ok`）。
     /// 2. 该路径**不需要 `IfFunction`**，因为循环体一次都不执行——所以它能落地，而可放置组合那条路径不能。
     ///
-    /// Two paired points: **one item has no ordered pair**, so `ItemPriorityReverseLimit` returns success and **adds no objective** (the baseline's early return); and this path **does
+    /// Two paired points: **one item has no ordered pair**, so `ItemPriorityReverseLimit` returns success and **adds no objective** (its early return); and this path **does
     /// not need `IfFunction`**, since the loop body never runs — which is why it lands while the placeable-combination path does not.
     /// </remarks>
     [Fact]

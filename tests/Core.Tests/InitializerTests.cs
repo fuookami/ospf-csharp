@@ -142,8 +142,8 @@ public sealed class InitializerTests {
 
     /// <summary>**反对立初始化在不崩溃的前提下补充镜像解** / Opposition initialization adds mirrored solutions without crashing.</summary>
     /// <remarks>
-    /// 基线的这一实现用 `token.lowerBound!!` 非空断言，模型里有一个无界变量就会抛异常。本移植改为无界变量保持原值。
-    /// The baseline dereferences `token.lowerBound!!`, throwing on any unbounded variable. This port keeps the original value instead.
+    /// 这一实现用 `token.lowerBound!!` 非空断言，模型里有一个无界变量就会抛异常。本实现改为无界变量保持原值。
+    /// The code dereferences `token.lowerBound!!`, throwing on any unbounded variable. This implementation keeps the original value instead.
     /// </remarks>
     [Fact]
     public void Opposition_ShouldNotCrashWithoutBounds() {

@@ -23,9 +23,9 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// The region's exclusive end, and "an explicit M needs no range proof".
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `DeferredFunctionConstraintRegion`、
+/// 对齐的 `DeferredFunctionConstraintRegion`、
 /// `UnivariateLinearPiecewiseStructure`（限 `ValidateFallbackInputBounds`）与
-/// `DeferredFunctionFallback.kt` 的 `capturePwlInputBounds` 补。
+/// 的 `capturePwlInputBounds` 补。
 ///
 /// Adds `UnivariateLinearPiecewiseStructure`, and `capturePwlInputBounds`.
 /// </remarks>

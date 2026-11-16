@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 双线性项 <c>x·y</c> 的 McCormick 包络 / The McCormick envelope of the bilinear term `x·y`.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `McCormickEnvelope.kt`。
+/// 对齐。
 ///
 /// 给定 <c>x ∈ [xL, xU]</c>、<c>y ∈ [yL, yU]</c>，用一个辅助变量 <c>w</c> 夹住 <c>x·y</c>：
 ///
@@ -42,7 +42,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **包络不是等式**：**`w` 只在 `x` 或 `y` 取到端点时才恰好等于 `x·y`；在区间内部它是松弛的。**
 /// **所以它只能用于松弛，不能用来"计算乘积"。**
 ///
-/// Following the baseline's `McCormickEnvelope.kt`.
+/// Following its.
 ///
 /// Given `x ∈ [xL, xU]` and `y ∈ [yL, yU]`, an auxiliary `w` brackets `x·y`:
 ///
@@ -53,7 +53,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// | upper-left | `w ≤ xU·y + yL·x − xU·yL` |
 /// | upper-right | `w ≤ xL·y + yU·x − xL·yU` |
 ///
-/// **The pairing of the four edges is not arbitrary**:
+/// **The pairing of the four edges is not arbitrary**.
 /// **the two `≥` rows use the "same corner on both sides" pairing, `(xL,yL)` and `(xU,yU)`;**
 /// **the two `≤` rows use the cross pairing, `(xU,yL)` and `(xL,yU)`.**
 /// **Swapping them (say `≥` on a cross pairing) yields a polyhedron that does not contain `x·y`, so the relaxation is
@@ -249,10 +249,10 @@ public sealed class McCormickEnvelopeFunction<V> : IMathFunctionSymbol<V>, IHasR
         };
 
         // 行 = w − leftScale·left − rightScale·right。
-        // 这里用 monomials + 显式常数，而不是"整条多项式乘系数"——与基线的构造一致。
+        // 这里用 monomials + 显式常数，而不是"整条多项式乘系数"——与构造一致。
         //
         // Row = w - leftScale*left - rightScale*right, using monomials plus an explicit constant rather than scaling the
-        // whole polynomial, matching the baseline's construction.
+        // whole polynomial, matching its construction.
         foreach (LinearMonomial<V> monomial in Left.Monomials) {
             terms.Add(new LinearMonomial<V>(leftScale.Times(monomial.Coefficient).Negate(), monomial.Symbol));
         }

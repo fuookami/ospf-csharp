@@ -97,7 +97,7 @@ public class CrossContributionUnitKeyConsistencyTests {
         );
     }
 
-    /// <summary>**键不得为空**（基线落到 `量纲(比例)`，不是空串）/ The key must not be empty (the baseline falls back to `dimension(scale)`, not to an empty string).</summary>
+    /// <summary>**键不得为空**（基线落到 `量纲(比例)`，不是空串）/ The key must not be empty (the code falls back to `dimension(scale)`, not to an empty string).</summary>
     /// <remarks>
     /// **这一条我在 写错过，改正。** 当时断言的是"两个不同类型的无名单位必须给出**不同**的键"，
     /// 但查基线后确认：基线 `canonicalUnitKey` 是 `symbol ?: name ?: toString`，
@@ -109,11 +109,11 @@ public class CrossContributionUnitKeyConsistencyTests {
     ///
     /// **I got this one wrong and fixed it.** It then asserted that two differently typed nameless units must produce **different** keys, but the
     /// baseline's `canonicalUnitKey` is `symbol ?: name ?: toString` and `toString` is `dimension(scale)` — **it does not look at the type**. Two
-    /// differently typed nameless units **do share one key** under the baseline. Adding the type name makes C# and the baseline disagree on the same input, which
+    /// differently typed nameless units **do share one key** under the code. Adding the type name makes C# and the code disagree on the same input, which
     /// is a semantic divergence, not a fix.
     ///
     /// What actually needs guarding is that the key **is not empty**. Before it fell back to `""`, and that was the defect: an empty string makes "unknown
-    /// unit" look identical to "another unknown unit", whereas the baseline yields `dimension(scale)` and can still tell dimensions apart.
+    /// unit" look identical to "another unknown unit", whereas the code yields `dimension(scale)` and can still tell dimensions apart.
     /// </remarks>
     [Fact]
     public void NamelessUnits_ShouldYieldADimensionBasedKey() {
@@ -137,8 +137,8 @@ public class CrossContributionUnitKeyConsistencyTests {
     /// 才能验证"键不同 → 不支配"这条保守规则。
     ///
     /// **I got this one wrong too, fixed.** It used two **differently typed but same-conversion** nameless units and asserted `Dominates` returns
-    /// `false`. Under the baseline those two units have the **same** key (both `dimension(scale)`), so the baseline **considers them comparable** — the old assertion
-    /// was the opposite of the baseline.
+    /// `false`. Under the code those two units have the **same** key (both `dimension(scale)`), so the code **considers them comparable** — the old assertion
+    /// was the opposite of the code.
     ///
     /// It now uses two units of **different dimensions** (length vs mass), so the keys genuinely differ and the conservative rule "different key → no dominance" can
     /// actually be exercised.

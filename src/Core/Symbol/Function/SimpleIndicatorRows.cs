@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 简单不等式与非负检测的指示行 / Indicator rows for a simple inequality and for non-negativity.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BigM.kt` 的 `simpleIndicatorConstraints`（LE/GE 分支）与 `nonnegativeIndicatorConstraints`。
+/// 对齐的 `simpleIndicatorConstraints`（LE/GE 分支）与 `nonnegativeIndicatorConstraints`。
 ///
 /// **`simpleIndicatorConstraints` 先做<b>差分</b>：`diff = lhs − rhs`。**
 /// **之后所有行都只针对 `diff`，与原来的两侧无关。**
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **`_violated` 行用的是 `relaxBigM(bigM, strictBoundary)`，不是 `bigM`。**
 /// **这与下界行是同一个理由：`strictBoundary` 是"违反"侧的间隔，
-/// 照抄 `bigM` 会让违反侧多松 `strictBoundary`。**
+/// 沿用 `bigM` 会让违反侧多松 `strictBoundary`。**
 ///
 /// **`nonnegativeIndicatorConstraints` 是"非负检测"，方向与正向指示相反**：
 /// **指示 = 1 时 `poly ≥ 0`（允许等于零），指示 = 0 时 `poly ≤ −tolerance`（严格负）。**
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **Same reason as the earlier lower row: `strictBoundary` is the violation-side gap, and copying `bigM` relaxes the
 /// violation side by an extra `strictBoundary`.**
 ///
-/// **`nonnegativeIndicatorConstraints` is "non-negativity detection", the opposite polarity of a positive indicator**:
+/// **`nonnegativeIndicatorConstraints` is "non-negativity detection", the opposite polarity of a positive indicator**.
 /// **indicator 1 means `poly ≥ 0` (zero allowed), indicator 0 means `poly ≤ −tolerance` (strictly negative).**
 /// </remarks>
 public static class SimpleIndicatorRows
@@ -132,11 +132,11 @@ public static class SimpleIndicatorRows
                 break;
 
             // **`EQ` 走零容差带：`diff == 0` 的"偏离"有两个方向，所以需要方向列。**
-            // **调用方不给 `sideVar` 时临建一个——基线也是这样（`BinVar("${namePrefix}_side")`）。**
+            // **调用方不给 `sideVar` 时临建一个——是这样（`BinVar("${namePrefix}_side")`）。**
             // **临建的列<b>必须被调用方登记</b>，否则它是自由的，方向就成了任意值。**
             //
             // **`EQ` goes through the zero band: "deviates from zero" has two directions, so it needs a direction
-            // column.** **When the caller supplies none, one is created — as the baseline does.** **A created column
+            // column.** **When the caller supplies none, one is created — as the code does.** **A created column
             // <b>must be registered by the caller</b>, or it is free and the direction is arbitrary.**
             case Comparison.EQ:
                 IVariableItem side = sideVar ?? new BinVar($"{namePrefix}_side");

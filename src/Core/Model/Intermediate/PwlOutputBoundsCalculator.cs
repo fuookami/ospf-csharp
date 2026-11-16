@@ -14,8 +14,8 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 分段线性函数的输出范围 / A piecewise-linear function's output range.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `PwlOutputBounds`。
-/// **Following the baseline's `PwlOutputBounds`.**
+/// 对齐的 `PwlOutputBounds`。
+/// **Following its `PwlOutputBounds`.**
 /// </remarks>
 /// <param name="Lower">输出下界 / Output lower bound.</param>
 /// <param name="Upper">输出上界 / Output upper bound.</param>
@@ -25,7 +25,7 @@ public sealed record PwlOutputBounds(Flt64 Lower, Flt64 Upper);
 /// 计算分段线性函数的输出范围 / Compute a piecewise-linear function's output range.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `calculatePwlOutputBounds`。
+/// 对齐的 `calculatePwlOutputBounds`。
 ///
 /// **只在本段的两个端点取值，不取内部 —— 而这只对<b>线性</b>分段成立。**
 ///
@@ -43,7 +43,7 @@ public sealed record PwlOutputBounds(Flt64 Lower, Flt64 Upper);
 /// 然后在"端点求值"那一步以"输出非有限或无界"失败——那条消息指向数值，
 /// 而真正的原因是"没有段可算"。**
 ///
-/// Following the baseline's `calculatePwlOutputBounds`.
+/// Following its `calculatePwlOutputBounds`.
 ///
 /// **Only the two endpoints of each segment are evaluated, never an interior point — and that holds only for
 /// <b>linear</b> pieces.**

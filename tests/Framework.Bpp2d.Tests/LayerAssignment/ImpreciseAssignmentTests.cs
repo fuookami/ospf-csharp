@@ -128,10 +128,10 @@ public class ImpreciseAssignmentTests {
     ///
     /// 1. 注册后模型里有 `area` 符号。
     /// 2. **同一轮里加两批新列，面积项累积**——重算会丢掉前一批。
-    /// 3. `AreaSymbol` 始终是同一个对象（重复 `Register` 会因重名失败，与基线一致）。
+    /// 3. `AreaSymbol` 始终是同一个对象（重复 `Register` 会因重名失败）。
     ///
     /// Three paired points: registering puts an `area` symbol on the model; **adding two separate batches of new columns accumulates area terms**, where recomputing would drop the earlier
-    /// batch; and `AreaSymbol` stays the same object (a second `Register` fails on the duplicate name, matching the baseline).
+    /// batch; and `AreaSymbol` stays the same object (a second `Register` fails on the duplicate name, matching the code).
     /// </remarks>
     [Fact]
     public void Area_ShouldAccumulateAcrossBatches() {
@@ -140,9 +140,9 @@ public class ImpreciseAssignmentTests {
 
         assignment.Register(model).IsOk.Should().BeTrue();
         assignment.AreaSymbol.Should().NotBeNull();
-        // **重复注册会失败**，与基线一致（基线也是无条件 `model.add(area)`）：符号只注册一次，
+        // **重复注册会失败**（是无条件 `model.add(area)`）：符号只注册一次，
         // 再注册同名符号是模型的命名冲突，不是本类可以去重的地方。判据钉的是"符号是同一个对象"。
-        // **A second registration fails**, matching the baseline (which also calls `model.add(area)` unconditionally): the symbol is registered once and a duplicate name is a model-level
+        // **A second registration fails**, matching the code (which also calls `model.add(area)` unconditionally): the symbol is registered once and a duplicate name is a model-level
         // conflict, not something this class should deduplicate. The criterion pins that the symbol is the same object.
         assignment.AreaSymbol.Should().BeSameAs(assignment.AreaSymbol);
 

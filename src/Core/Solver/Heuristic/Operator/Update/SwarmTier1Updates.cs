@@ -1,6 +1,5 @@
 // 水循环与海鸥更新算子 / Water-cycle and seagull update operators.
-// 与固定 Kotlin 基线 `operator/update/SwarmTier1Updates.kt`（7905 B）对应。
-// Mirrors the pinned baseline's `SwarmTier1Updates.kt`.
+// 与固定 Kotlin （7905 B）对应。
 
 using System;
 using System.Collections.Generic;

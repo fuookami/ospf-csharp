@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 装载容量契约 / The load-capacity contract.
 /// </summary>
 /// <remarks>
-/// 与基线 `Capacity.kt` 的 `interface Capacity` 对齐。四个成员里两个是 `LinearIntermediateSymbols1&lt;FltX&gt;`——
+/// 与的 `interface Capacity` 对齐。四个成员里两个是 `LinearIntermediateSymbols1&lt;FltX&gt;`——
 /// Kotlin 的 typealias，C# 无法表达（`src/Core/Symbol/SymbolCombination.cs:95`），因此用 `IReadOnlyList&lt;...&gt;`。
 /// **这是本仓第四次同样的处置**（三次各一次），不是随手改的形状。
 ///
-/// Aligned with the baseline's `interface Capacity`. Two of its four members are `LinearIntermediateSymbols1&lt;FltX&gt;`, a Kotlin typealias C# cannot express, so `IReadOnlyList&lt;...&gt;` is used —
+/// Aligned with its `interface Capacity`. Two of its four members are `LinearIntermediateSymbols1&lt;FltX&gt;`, a Kotlin typealias C# cannot express, so `IReadOnlyList&lt;...&gt;` is used —
 /// **the fourth time this repository has handled the same problem** , not an ad-hoc shape.
 /// </remarks>
 public interface ICapacity
@@ -58,15 +58,15 @@ public interface ICapacity
 /// **`Layer.Area` 与 `Layer.Shape.Area` 是两个数**：前者是件面积之和（实际占用），后者是板材面积。
 /// 用错会让装载率恒为 1（第一次就踩了这个，判据的 `200 vs 10000` 直接指出来）。
 ///
-/// **三处必须照抄**：
+/// **三处必须沿用**：
 ///
 /// 1. **板材面积为零或缺失时装载率系数取零**，不做除法——除零会得到 `NaN`/`Infinity`，而求解器不会拒绝它，
-///    只会给出无意义的最优解。基线的写法是 `if (denominator &lt;= 0) 0 else area / denominator`。
+///    只会给出无意义的最优解。写法是 `if (denominator &lt;= 0) 0 else area / denominator`。
 /// 2. **`Register` 幂等**：已建好的符号组复用，重复注册**不再 `model.Add`**——符号注册对重名是拒绝的
 ///    （与变量注册不同，实测过变量注册容忍重名）。
 /// 3. **两个符号组都注册**，只注册一个会让容量约束在另一半上找不到符号。
 ///
-/// Aligned with the baseline's `PreciseLoadCapacity`: two symbols per column, both linear in that column's copy variable `y_i`. **Three things must be copied**: **a zero or missing sheet area makes
+/// Aligned with its `PreciseLoadCapacity`: two symbols per column, both linear in that column's copy variable `y_i`. **Three things must be copied**: **a zero or missing sheet area makes
 /// the loading-rate coefficient zero** rather than dividing, since a division by zero yields NaN or Infinity that the solver will not reject and will merely turn into a meaningless optimum;
 /// **`Register` is idempotent**, reusing the same symbol objects; and **both symbol groups are registered**, since registering only one leaves the capacity constraint unable to find symbols on
 /// the other half.

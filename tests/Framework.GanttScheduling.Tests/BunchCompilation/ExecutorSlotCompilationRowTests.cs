@@ -28,10 +28,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.BunchCompilation;
 /// </summary>
 /// <remarks>
 /// 与 同一缺陷类，只是换了一条流水线：`Invoke` 以前**只校验、不加任何行**，`Extractor` 恒返回零，`Refresh` 是空 `Ok`。
-/// 基线的 `invoke` 是 `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))`——
+/// `invoke` 是 `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))`——
 /// "每个（执行器, 时隙）恰好编译一次"这条要求本身。少了它，那个执行器在那个时隙上可以一个任务都不接，排程看起来完全正常。
 ///
-/// The same defect class as on a different pipeline: `Invoke` used to **validate only and add no row**, `Extractor` always returned zero, and `Refresh` was an empty `Ok`. The baseline's
+/// The same defect class as on a different pipeline: `Invoke` used to **validate only and add no row**, `Extractor` always returned zero, and `Refresh` was an empty `Ok`. The code's
 /// `invoke` is `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))` — the requirement itself, that **each (executor, slot) is compiled exactly once**.
 /// Without it that executor can take no task in that slot while the schedule looks entirely normal.
 /// </remarks>

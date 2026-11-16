@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 业载模型 / The payload model.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/Payload.kt`：六族符号（主舱/下舱/总业载 × 推荐/实际），
+/// 逐条对齐：六族符号（主舱/下舱/总业载 × 推荐/实际），
 /// 且**两种装载模式下取重口径不同**：
 ///
 /// | 模式 | 推荐业载取自 | 实际业载取自 |
@@ -26,12 +26,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// | `FullLoad` | **实际**装载重量 | 实际装载重量 |
 /// | `Predistribution` / `WeightRecommendation` | **推荐**装载重量 | 实际装载重量 |
 ///
-/// 这张表在基线里用 `when (stowageMode)` 逐支写了四遍；C# 收紧成一个取值函数，但**口径必须逐支对上**。
+/// 这张表在用 `when (stowageMode)` 逐支写了四遍；C# 收紧成一个取值函数，但**口径必须逐支对上**。
 /// 把 `FullLoad` 的推荐业载也写成推荐重量是这个域最典型的错——能编译、能求解，只是"全配载"模式下算出来的是
 /// 一个谁也没要求的规划值。
 ///
-/// Mirrors the baseline: six families (main/lower/total × recommended/actual) with **a different source per loading mode** — `FullLoad` takes the recommended payload from the
-/// **actual** load weights, the other two modes from the **recommended** ones; the actual payload always comes from the actual weights. The baseline writes this table out four
+/// six families (main/lower/total × recommended/actual) with **a different source per loading mode** — `FullLoad` takes the recommended payload from the
+/// **actual** load weights, the other two modes from the **recommended** ones; the actual payload always comes from the actual weights. The code writes this table out four
 /// times, once per family; C# folds it into one accessor but **the mapping must match branch for branch**. Writing `FullLoad`'s recommended payload from recommended weights is
 /// the classic mistake: it compiles, it solves, and "full load" simply reports a planned value nobody asked for.
 /// </remarks>
@@ -100,7 +100,7 @@ public sealed class Payload
     /// `FullLoad` 下"推荐"也用实际重量（基线注释：可选货物只按实际分配计重，固定货物也只计一次），其余模式按调用方给的
     /// `recommended` 取。**先判 `FullLoad`**，因为它是唯一会推翻 `recommended` 的模式。
     ///
-    /// Under `FullLoad` the "recommended" figure also uses the actual weights (the baseline's comment: optional cargo counts once through actual assignments, fixed cargo once);
+    /// Under `FullLoad` the "recommended" figure also uses the actual weights (its comment: optional cargo counts once through actual assignments, fixed cargo once);
     /// every other mode honours the caller's `recommended`. `FullLoad` is checked **first** because it is the only mode that overrides `recommended`.
     /// </remarks>
     public LinearPolynomial<Flt64> Weights(StowageMode mode, bool mainDeckOnly, bool lowerHoldOnly, bool recommended) {
@@ -173,9 +173,9 @@ public sealed class Payload
         }
         ActualPayload = _lastAdded;
 
-        // 预分配模式下推荐业载必须**等于目标业载**：基线用 `eq` 约束，不是目标函数里的软项。
+        // 预分配模式下推荐业载必须**等于目标业载**：`eq` 约束，不是目标函数里的软项。
         // 少了这一行，预分配算出来的业载可以偏离货主要多少——总量对不上，而每一舱位看起来都合法。
-        // Under predistribution the recommended payload must **equal** the target: the baseline uses an `eq` row, not a soft objective term. Without it the predistribution can
+        // Under predistribution the recommended payload must **equal** the target: the code uses an `eq` row, not a soft objective term. Without it the predistribution can
         // drift away from the shipper's figure — the total does not add up while every position looks legal.
         if (mode == StowageMode.Predistribution && EstimatePayload is { } estimatePayload) {
             double target = ComputedPayload ?? PlannedPayload;

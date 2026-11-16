@@ -178,7 +178,7 @@ public sealed class BuiltInAlgorithmsTests {
     /// 实际它们一直都在（`Operator/Update/` 下 20 个 + `SinglePointCross`）。原因是我用 `grep "class X"` 去查，
     /// 而它们是 `sealed record` —— **用错误的声明形态搜索，得出的"缺失"必然是假的**。
     ///
-    /// 现在按基线的 `populationUpdates` 映射表补齐默认工厂，这条测试逐个点名 22 个标识，
+    /// 现在按`populationUpdates` 映射表补齐默认工厂，这条测试逐个点名 22 个标识，
     /// **漏一项就会在这里失败**，而不是等到某个配置第一次用到它时安静地退回别的算子。
     ///
  /// **This test corrects a wrong conclusion from earlier**: that batch's code comment and plan document both stated "the twenty-two population
@@ -186,7 +186,7 @@ public sealed class BuiltInAlgorithmsTests {
     /// was searching with `grep "class X"` while they are `sealed record`s — **searching with the wrong declaration shape necessarily yields a false
     /// "missing"**.
     ///
-    /// The default factories now mirror the baseline's `populationUpdates` map, and this test names all twenty-two identifiers, so **a missing entry
+    /// The default factories now mirror its `populationUpdates` map, and this test names all twenty-two identifiers, so **a missing entry
     /// fails here** instead of quietly degrading to another operator when some configuration first uses it.
     /// </remarks>
     [Fact]

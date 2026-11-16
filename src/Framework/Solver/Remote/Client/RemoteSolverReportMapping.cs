@@ -1,6 +1,6 @@
 // 远程求解报告的组装 / Remote solve-report assembly.
-// 与固定 Kotlin 基线 `RemoteReportMapping.toRemoteSolveReport` 对应。
-// Corresponds to the pinned Kotlin baseline's `RemoteReportMapping.toRemoteSolveReport`.
+// 与`RemoteReportMapping.toRemoteSolveReport` 对应。
+// `RemoteReportMapping.toRemoteSolveReport`.
 
 using System;
 using System.Collections.Generic;
@@ -30,14 +30,14 @@ public static class RemoteSolverReportMapping {
     /// 组装远程求解报告 / Assemble the remote solve report.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：报告以**切片结果**为骨架（状态、终止原因、解存在性、证明、统计、诊断、来源、指纹），
+    /// ：报告以**切片结果**为骨架（状态、终止原因、解存在性、证明、统计、诊断、来源、指纹），
     /// 传入的 <paramref name="output"/> 只贡献解本身与最佳界——它来自物化阶段，可能为空（例如只有
     /// incumbent 没有稳定解时）。
     ///
     /// 关键的一点：**`BestBound` 优先取物化结果、回退到统计字段**。统计字段是后端自报，物化结果才是
     /// 经过校验的那一份，因此有物化值时不能又被一个未校验的自报值覆盖。
     ///
-    /// Mirrors the baseline: the report is built on the **slice result** (status, termination, presence,
+    /// the report is built on the **slice result** (status, termination, presence,
     /// proof, statistics, diagnostics, provenance, fingerprints), and the passed-in
     /// <paramref name="output"/> contributes only the solution itself and the best bound — it comes from the
     /// materialization stage and may be absent. Importantly, **`BestBound` prefers the materialized value and
@@ -109,9 +109,9 @@ public static class RemoteSolverReportMapping {
             RemoteTerminationReason.Cancelled => TerminationReason.Cancelled,
             RemoteTerminationReason.Interrupted => TerminationReason.Interrupted,
             RemoteTerminationReason.NumericalFailure => TerminationReason.NumericalFailure,
-            // 与基线一致：UNKNOWN 与缺失都归为 BackendFailure——"没给出终止原因"本身就是后端的问题，
+            // ：UNKNOWN 与缺失都归为 BackendFailure——"没给出终止原因"本身就是后端的问题，
             // 不能伪装成 Completed。
-            // As in the baseline, both UNKNOWN and a missing reason map to BackendFailure: not reporting a
+            // Both UNKNOWN and a missing reason map to BackendFailure: not reporting a
             // termination reason is itself a backend problem and must not masquerade as Completed.
             _ => TerminationReason.BackendFailure,
         };
@@ -143,7 +143,7 @@ public static class RemoteSolverReportMapping {
     /// 组装线性／二次的 incumbent 报告 / Assemble the linear/quadratic incumbent report.
     /// </summary>
     /// <remarks>
-    /// 与基线一致的四条判定：不可行直接报 `ORModelInfeasible`（带上后端给的消息）；没有稳定解时走
+    /// 的四条判定：不可行直接报 `ORModelInfeasible`（带上后端给的消息）；没有稳定解时走
     /// <see cref="ToEmptySolutionOutput"/>；稳定解本身不可行同样报 `ORModelInfeasible`；解长度必须等于模型
     /// 变量数——长度不符说明拿到的解不是这个模型的问题，不能截断或补零凑数。
     ///
@@ -226,9 +226,9 @@ public static class RemoteSolverReportMapping {
     /// 组装线性／二次的完整求解报告 / Assemble the complete linear/quadratic solve report.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：只有解存在性非 `NONE` 时才物化 incumbent；否则报告里不带解。这样"报告说没有解"与
+    /// ：只有解存在性非 `NONE` 时才物化 incumbent；否则报告里不带解。这样"报告说没有解"与
     /// "报告里恰好没有解字段"不会被混淆。
-    /// As in the baseline, the incumbent is materialized only when the presence is not `NONE`; otherwise the
+    /// The incumbent is materialized only when the presence is not `NONE`; otherwise the
     /// report carries no solution, so "the report says there is no solution" cannot be confused with "the
     /// report happens to have no solution field".
     /// </remarks>
@@ -260,9 +260,9 @@ public static class RemoteSolverReportMapping {
     /// 无稳定解时的空解报告 / Empty-solution report when no artifact is available.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：**只有变量数为 0 才允许空解**。变量数不为 0 却说没有可读工件，说明结果不完整，必须报错
+    /// ：**只有变量数为 0 才允许空解**。变量数不为 0 却说没有可读工件，说明结果不完整，必须报错
     /// 而不是返回一个"空解但成功"的报告。
-    /// As in the baseline, an empty solution is allowed **only when the model has zero variables**. A non-zero
+    /// An empty solution is allowed **only when the model has zero variables**. A non-zero
     /// variable count with no readable artifact means the result is incomplete and must fail instead of
     /// returning an "empty but successful" report.
     /// </remarks>
@@ -327,7 +327,7 @@ public static class RemoteSolverReportMapping {
     /// 与线性／二次版本的关键差别是诊断：CP 的诊断里带不可行证据，解析失败时**上抛而不是吞掉**，否则下游会
     /// 把"解析失败"读成"没有证据"。
     ///
-    /// Corresponds to the baseline's <c>toReport</c> but with an <c>Int64</c> objective type, since a CP
+    /// Corresponds to its <c>toReport</c> but with an <c>Int64</c> objective type, since a CP
     /// objective is an exact integer and must not pass through floating point. The key difference from the
     /// linear/quadratic variants is diagnostics: CP diagnostics carry infeasibility evidence and a parse
     /// failure is **propagated rather than swallowed**, otherwise downstream would read "parse failed" as "no
@@ -360,8 +360,8 @@ public static class RemoteSolverReportMapping {
         Fuookami.Ospf.Core.Solver.Report.SolveSolution<Fuookami.Ospf.Math.Algebra.Number.Int64>?
             reportSolution = null;
         if (solution is not null) {
-            // 与基线一致：值按稳定标识排序，保证同一份解得到同一份报告。
-            // As in the baseline, values are ordered by stable identifier so one solution yields one report.
+            // ：值按稳定标识排序，保证同一份解得到同一份报告。
+            // Values are ordered by stable identifier so one solution yields one report.
             var ordered = solution.Values
                 .OrderBy(entry => entry.Key.Value, StringComparer.Ordinal)
                 .Select(entry => entry.Value)
@@ -404,8 +404,8 @@ public static class RemoteSolverReportMapping {
         SliceResult slice,
         IReadOnlySet<SolverModelType> modelTypes) {
         if (slice.Provenance is not { Count: > 0 } provenance) {
-            // 与基线一致：后端没给来源信息时不编造一个来源。
-            // As in the baseline, no provenance is invented when the backend supplied none.
+            // ：后端没给来源信息时不编造一个来源。
+            // No provenance is invented when the backend supplied none.
             return null;
         }
         var effectiveParameters = new Dictionary<string, string>(StringComparer.Ordinal);

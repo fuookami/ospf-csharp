@@ -1,9 +1,9 @@
 // 目标管线 / Objective pipelines.
-// 与固定 Kotlin 基线 `flow/service/MinCostFlowObjective.kt`（938 字节）、
-// `generalized_flow/service/GeneralizedFlowCostObjective.kt`（998 字节）、
-// `structure/service/NetworkStructureConstructionCostObjective.kt`（1053 字节）对应。
-// Mirrors the pinned baseline's `MinCostFlowObjective.kt`, `GeneralizedFlowCostObjective.kt` and
-// `NetworkStructureConstructionCostObjective.kt`.
+// 与固定 Kotlin （938 字节）、
+//（998 字节）、
+//（1053 字节）对应。
+// , and
+//.
 //
 // 三个目标管线形状相同：把一棵**已经注册进模型**的表达式树交给模型当目标。它们不带业务逻辑，因此不需要具体求解器。
 // All three objectives share one shape: hand an expression tree that is **already registered in the model** to the model as its

@@ -20,17 +20,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// 水平安定面 / A horizontal stabilizer.
 /// </summary>
 /// <remarks>
-/// 与基线 `demo2/domain/mac/model/HorizontalStabilizer.kt` 对齐。本类只承担**配平查找**与**配平符号**：
+/// 与对齐。本类只承担**配平查找**与**配平符号**：
 ///
 /// 1. **配平值按起飞重量取最近点**（`minByOrNull { |tow − 给定重量| }`），不是插值。空点表时取 0。
-/// 2. **`trim` 是零多项式符号**（基线就是 `LinearExpressionSymbol(Flt64.zero, …)`）。配平在基线里同样没有真正接上查表结果，
-///    所以 `At` 是一个**独立可用**的查表函数，而 `TrimSymbol` 恒为零。这是基线的现状，不是本移植的退让——照抄并在此记录。
-/// 3. **警告松弛（`warnSlack`）未移植**，见下方 `ponytail:` 说明。
+/// 2. **`trim` 是零多项式符号**（基线就是 `LinearExpressionSymbol(Flt64.zero, …)`）。配平在同样没有真正接上查表结果，
+///    所以 `At` 是一个**独立可用**的查表函数，而 `TrimSymbol` 恒为零。这是现状，不是本实现的退让——沿用并在此记录。
+/// 3. **警告松弛（`warnSlack`）未实现**，见下方 `ponytail:` 说明。
 ///
-/// Aligned with the baseline. This class carries **trim lookup** and **the trim symbol** only: (1) **the trim is the nearest point by take-off weight**, not an interpolation, and
-/// an empty table yields 0; (2) **`trim` is a zero polynomial** — the baseline itself writes `LinearExpressionSymbol(Flt64.zero, …)`, so the lookup never reaches the symbol
-/// there. `At` is therefore a usable lookup on its own while `TrimSymbol` stays zero. That is the baseline's state, not a concession of this port.
-/// (3) **the warning slack (`warnSlack`) is not ported** — see the `ponytail:` note.
+/// This class carries **trim lookup** and **the trim symbol** only: (1) **the trim is the nearest point by take-off weight**, not an interpolation, and
+/// an empty table yields 0; (2) **`trim` is a zero polynomial** — the code itself writes `LinearExpressionSymbol(Flt64.zero, …)`, so the lookup never reaches the symbol
+/// there. `At` is therefore a usable lookup on its own while `TrimSymbol` stays zero. That is its state, not a concession of this implementation.
+/// (3) **the warning slack (`warnSlack`) is not implemented** — see the `ponytail:` note.
 /// </remarks>
 public sealed class HorizontalStabilizer
 {
@@ -52,7 +52,7 @@ public sealed class HorizontalStabilizer
         /// （`Key { Angle = …, ThrustDrate = … }`）。后果不是"名字难看"：`HorizontalStabilizerLimit` 把 `Key` 拼进目标名
         /// `"horizontal stabilizer {key}"`，默认输出会让**每个目标名都带 95 个字符的类型名**，下游按名字取目标全部落空。
         ///
-        /// **This override is required.** The baseline's `Key.toString` returns `angle.toString`, while the C# side used the record's default output. The consequence is not cosmetic:
+        /// **This override is required.** The code's `Key.toString` returns `angle.toString`, while the C# side used the record's default output. The consequence is not cosmetic:
         /// `HorizontalStabilizerLimit` interpolates the `Key` into the objective name `"horizontal stabilizer {key}"`, so the default output puts a 95-character type dump in every
         /// objective name and downstream lookups by name all miss.
         /// </remarks>
@@ -117,7 +117,7 @@ public sealed class HorizontalStabilizer
     /// <remarks>
     /// 取**最近点**，不是插值。空点表时返回 0（基线 `?.trim ?: Flt64.zero`）。
     ///
-    /// The **nearest** point, not an interpolation. An empty table yields 0, matching the baseline's `?.trim ?: Flt64.zero`.
+    /// The **nearest** point, not an interpolation. An empty table yields 0, matching its `?.trim ?: Flt64.zero`.
     /// </remarks>
     public double At(double takeOffWeight) {
         if (_points.Count == 0) {
@@ -141,11 +141,11 @@ public sealed class HorizontalStabilizer
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线在 `withMacOptimization` 下还会注册一个 `warnSlack`，四个分支：上下界都有 → `SlackRangeFunction`；只有下界 → 负向阈值松弛；
+    /// `withMacOptimization` 下还会注册一个 `warnSlack`，四个分支：上下界都有 → `SlackRangeFunction`；只有下界 → 负向阈值松弛；
     /// 只有上界 → 正向阈值松弛；都没有 → 恒零符号。**起四支全部接上**，因为 `SlackRangeFunction` 与 `SlackFunction` 本仓都已具备。
     ///
-    /// The baseline also registers a `warnSlack` under `withMacOptimization`, in four branches: both bounds → `SlackRangeFunction`; lower only → a negative threshold slack; upper
-    /// only → a positive threshold slack; neither → a constant-zero symbol. **All four are wired up now**, since this port now has both `SlackRangeFunction` and `SlackFunction`.
+    /// The code also registers a `warnSlack` under `withMacOptimization`, in four branches: both bounds → `SlackRangeFunction`; lower only → a negative threshold slack; upper
+    /// only → a positive threshold slack; neither → a constant-zero symbol. **All four are wired up now**, since this implementation now has both `SlackRangeFunction` and `SlackFunction`.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model) {
         ArgumentNullException.ThrowIfNull(model);
@@ -203,11 +203,11 @@ public sealed class HorizontalStabilizer
                             constraint: false,
                             name: name));
                 } else {
-                    // **都没有**：恒零符号（基线也是这样，不是"不注册"）。
-                    // **Neither**: a constant-zero symbol, as the baseline does — not "skip registration".
+                    // **都没有**：恒零符号（是这样，不是"不注册"）。
+                    // **Neither**: a constant-zero symbol, as the code does — not "skip registration".
                     // **恒零分支是普通符号**，不是函数符号——基线这里写的就是 `LinearExpressionSymbol`。
                     // 用 adapter 包一个普通符号在类型上就通不过，也不该硬凑。
-                    // **The constant-zero branch is a plain symbol**, not a function symbol — the baseline writes a `LinearExpressionSymbol` here. Wrapping a plain symbol in the
+                    // **The constant-zero branch is a plain symbol**, not a function symbol — the code writes a `LinearExpressionSymbol` here. Wrapping a plain symbol in the
                     // adapter does not typecheck, and should not be forced.
                     WarnSlack = new LinearExpressionSymbol(
                         new MutableLinearPolynomial<Flt64>(constant: Flt64.Zero),
@@ -226,10 +226,10 @@ public sealed class HorizontalStabilizer
     /// <summary>配平警告松弛 / The trim warning slack</summary>
     /// <remarks>
     /// **类型是 `ISymbol`**：三个分支造的是 `LinearFunctionSymbolAdapter<Flt64>`（函数符号），第四个造的是 `LinearExpressionSymbol`（普通符号），
-    /// 基线的 `warnSlack` 也是这样两种类型混用。统一成 `IIntermediateSymbol` 让 `model.Add(IIntermediateSymbol)` 都能吃下。
+    /// `warnSlack` 也是这样两种类型混用。统一成 `IIntermediateSymbol` 让 `model.Add(IIntermediateSymbol)` 都能吃下。
     ///
     /// **The type is `IIntermediateSymbol`**: three branches build a `LinearFunctionSymbolAdapter<Flt64>` (a function symbol) and the fourth builds a `LinearExpressionSymbol` (a plain one), which
-    /// is how the baseline's `warnSlack` also mixes the two. `IIntermediateSymbol` keeps both acceptable to `model.Add(IIntermediateSymbol)`.
+    /// is how its `warnSlack` also mixes the two. `IIntermediateSymbol` keeps both acceptable to `model.Add(IIntermediateSymbol)`.
     /// </remarks>
     public IIntermediateSymbol? WarnSlack { get; private set; }
 }

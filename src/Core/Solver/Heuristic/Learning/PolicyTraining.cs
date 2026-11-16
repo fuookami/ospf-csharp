@@ -1,15 +1,15 @@
 // 策略训练的数据契约与轨迹持久化 / The policy trainer's data contract and trajectory persistence.
-// 与固定 Kotlin 基线 `learning/PolicyTrainer.kt`（14760 B）里**不依赖求解器**的那一半对应：
+// 与固定 Kotlin （14760 B）里**不依赖求解器**的那一半对应：
 // `TrainingCase` / `TrainingSplit` / `TrainingObservation` / `TrainingReport` / `PolicyEvaluationReport`、
 // `PolicyTrainer.replay` 与 `TrajectoryFiles`。
-// Mirrors the half of the pinned baseline's `learning/PolicyTrainer.kt` (14760 B) that does **not** depend on the solver:
+// The half of the: that does **not** depend on the solver:
 // `TrainingCase` / `TrainingSplit` / `TrainingObservation` / `TrainingReport` / `PolicyEvaluationReport`,
 // `PolicyTrainer.replay` and `TrajectoryFiles`.
 //
-// **未移植的部分**：`train` / `PolicyEvaluator.evaluate` / `compare` —— 三者都要 `HyperHeuristicSolver.open(...)`，
-// 而该文件在基线里有 47241 B，尚未移植。`PolicyTrainer` 里**能独立成立的那一半**先落地并压满测试。
-// **Not ported**: `train` / `PolicyEvaluator.evaluate` / `compare` — all three need `HyperHeuristicSolver.open(...)`, and that file is 47241 B in
-// the baseline and not yet ported. The **half of `PolicyTrainer` that stands on its own** lands first, with tests.
+// **未实现的部分**：`train` / `PolicyEvaluator.evaluate` / `compare` —— 三者都要 `HyperHeuristicSolver.open(...)`，
+// 而该文件在有 47241 B，尚未实现。`PolicyTrainer` 里**能独立成立的那一半**先落地并压满测试。
+// **Not implemented**: `train` / `PolicyEvaluator.evaluate` / `compare` — all three need `HyperHeuristicSolver.open(...)`, and that file is 47241 B in
+// the code and not yet implemented. The **half of `PolicyTrainer` that stands on its own** lands first, with tests.
 
 using System;
 using System.Collections.Generic;

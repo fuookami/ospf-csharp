@@ -113,7 +113,7 @@ public class ConflictAnalysisPreflightTests {
     /// 一个坏快照 + 一组坏选项，基线报的是**选项**。
     /// **顺序反过来会让人去修快照，而选项才是第一个过不去的门。**
     ///
-    /// A broken snapshot with broken options reports the **options** under the baseline. **The other order sends the reader to fix the snapshot while the options are the first gate that fails.**
+    /// A broken snapshot with broken options reports the **options** under the code. **The other order sends the reader to fix the snapshot while the options are the first gate that fails.**
     /// </remarks>
     /// <summary>**选项与快照都合法时放行** / Both gates passing lets it through.</summary>
     /// <remarks>

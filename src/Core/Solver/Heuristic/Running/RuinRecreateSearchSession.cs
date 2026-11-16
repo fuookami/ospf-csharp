@@ -1,6 +1,5 @@
 // 破坏—重建搜索会话 / The ruin-and-recreate search session.
-// 与固定 Kotlin 基线 `runner/RuinRecreateSearchSession.kt`（9190 B）对应。
-// Mirrors the pinned baseline's `runner/RuinRecreateSearchSession.kt` (9190 B).
+// 与固定 Kotlin （9190 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -46,11 +45,11 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **而它产出的每一步都是合法的**。
 /// **Restore re-checks "the initialisation flag matches the solution" and "the solution satisfies encoding/feasibility/validity"**. Skipping it
 /// lets a corrupted checkpoint take effect silently, **and every step it produces is itself legal**.
-/// **编码当前解时同时存"解向量"与"目标值"**。基线用的是 `SearchCodecs.individual(problem)`，本移植没有那个工厂，
+/// **编码当前解时同时存"解向量"与"目标值"**。的是 `SearchCodecs.individual(problem)`，本实现没有那个工厂，
 /// 因此改用问题自带的值编码器与目标编码器逐项编码——**语义等价，但 JSON 形状不同，不宣称与基线逐字节兼容**。
-/// **Encoding the current solution stores both "the solution vector" and "the objective"**. The baseline uses
-/// `SearchCodecs.individual(problem)`, which this port does not have, so it encodes each entry with the problem's own value and objective
-/// codecs instead — **semantically equivalent, but the JSON shape differs and is not claimed to be byte-compatible with the baseline**.
+/// **Encoding the current solution stores both "the solution vector" and "the objective"**. The code uses
+/// `SearchCodecs.individual(problem)`, which this implementation does not have, so it encodes each entry with the problem's own value and objective
+/// codecs instead — **semantically equivalent, but the JSON shape differs and is not claimed to be byte-compatible with the code**.
 /// </remarks>
 /// <typeparam name="ObjValue">目标值类型 / The objective-value type.</typeparam>
 /// <typeparam name="V">值类型 / The value type.</typeparam>

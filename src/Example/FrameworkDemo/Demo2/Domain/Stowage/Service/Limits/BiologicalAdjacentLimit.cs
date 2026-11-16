@@ -21,13 +21,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 生物限制相邻约束 / The biological adjacency rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/BiologicalAdjacentLimit.kt`：对每条**生物限制类型对**（如活体与干冰），
+/// 对齐：对每条**生物限制类型对**（如活体与干冰），
 /// 该类型对的两件货物不得落在相邻舱位。结构与 `ELDAdjacentLimit` 同形——每条邻接**两行**，条件是 `||`，配对 `i2 > i1`。
 ///
 /// 差异只在**配对判定**：ELD 是"两件都是 ELD"，这里是"一件含 `type1` 且另一件含 `type2`，**或反过来**"。
 /// 两个朝向都要试：只写 `item1` 含 `type1` 且 `item2` 含 `type2` 会漏掉货物顺序相反的情形，而限制表里的类型对**没有方向**。
 ///
-/// Aligned with the baseline: for every **biological type pair** (live animals versus dry ice, say), two items of that pair must not sit in adjacent positions. The structure
+/// For every **biological type pair** (live animals versus dry ice, say), two items of that pair must not sit in adjacent positions. The structure
 /// mirrors `ELDAdjacentLimit` — **two rows** per adjacency, an `||` guard, pairs with `i2 > i1`. The only difference is **the pair test**: ELD means "both are ELD", while this is
 /// "one contains `type1` and the other `type2`, **or the reverse**". Both orientations must be tried: writing only "`item1` has `type1` and `item2` has `type2`" misses the reversed cargo
 /// order, and the type pairs in the limit table are **undirected**.

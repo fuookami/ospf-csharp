@@ -269,7 +269,7 @@ public sealed class GenerationInput<V> where V : struct {
     /// **这解释了 之前观察到的 `reason=AllDuplicates iters=1 priced=0` 的另一半原因**：
     /// 那一半是"定价器不读对偶价格"（已修），这一半是"**定价器不知道池里有什么**"。
     ///
-    /// **The counterpart of the baseline's `CuttingPlanGenerationInput.existingPlans`.** Pricing uses it for deduplication — **without it, pricing re-reports plans
+    /// **The counterpart of its `CuttingPlanGenerationInput.existingPlans`.** Pricing uses it for deduplication — **without it, pricing re-reports plans
     /// already in the pool**, so the very first round is "all duplicates".
     ///
     /// **This is the other half of the `reason=AllDuplicates iters=1 priced=0` observation from at first**: one half was "pricing ignored the dual prices" (fixed in
@@ -287,9 +287,9 @@ public sealed class GenerationInput<V> where V : struct {
     /// **语义是「全部通过」**：基线写作 `input.dominanceAcceptOverrides.all { it(plan, existing) }`——
     /// **任何一个返回 false，候选就被拒**。空列表表示不额外过滤。
     ///
-    /// **The counterpart of the baseline's `dominanceAcceptOverrides`**, projected from `ICsp1dGenerationStrategy.AcceptDominance`.
+    /// **The counterpart of its `dominanceAcceptOverrides`**, projected from `ICsp1dGenerationStrategy.AcceptDominance`.
     ///
-    /// **The semantics are "all must pass"**: the baseline writes `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **any false rejects the candidate**.
+    /// **The semantics are "all must pass"**: the code writes `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **any false rejects the candidate**.
     /// An empty list means no extra filtering.
     /// </remarks>
     /// <summary>
@@ -302,9 +302,9 @@ public sealed class GenerationInput<V> where V : struct {
     /// 注意第二个参数是 **`input.existingPlans`**——同一个钩子在**初始池**（空）与**定价**（当前列池）
     /// 两种上下文下行为不同，这正是它能表达"别跟已有方案撞"的原因。
     ///
-    /// **The counterpart of the baseline's `candidateFilters`**, projected from `ICsp1dGenerationStrategy.AcceptCandidate`.
+    /// **The counterpart of its `candidateFilters`**, projected from `ICsp1dGenerationStrategy.AcceptCandidate`.
     ///
-    /// **The semantics are also "all must pass"**: the baseline writes `candidateFilters.all { it(plan, input.existingPlans) }`. Note the second argument is
+    /// **The semantics are also "all must pass"**: the code writes `candidateFilters.all { it(plan, input.existingPlans) }`. Note the second argument is
     /// **`input.existingPlans`** — the same hook behaves differently in the **initial pool** (empty) and **pricing** (current column pool) contexts, which is exactly what
     /// lets it express "do not collide with existing plans".
     /// </remarks>

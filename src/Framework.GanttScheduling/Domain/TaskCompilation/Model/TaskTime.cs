@@ -116,11 +116,11 @@ public abstract class TaskTime {
 /// </summary>
 /// <typeparam name="T">任务类型 / Task type</typeparam>
 /// <remarks>
-/// **没有结束时间就没有完工时间。** 基线把每个任务的结束时间做成符号（`estimateEndTime`），
+/// **没有结束时间就没有完工时间。** 每个任务的结束时间做成符号（`estimateEndTime`），
 /// 最大完工时间再对这些符号取最大值。少了这张表，`Makespan.Register` 只能返回 `Ok` 装作已经注册，
 /// 而模型里根本没有 `makespan` 这个量——之后任何"最小化完工时间"都不是在最小化任何东西。
 ///
-/// **No end times, no makespan.** The baseline turns each task's end time into a symbol (`estimateEndTime`) and takes the maximum over them. Without that table
+/// **No end times, no makespan.** The code turns each task's end time into a symbol (`estimateEndTime`) and takes the maximum over them. Without that table
 /// `Makespan.Register` can only return `Ok` and pretend, while the model holds no `makespan` at all — any later "minimise the makespan" then minimises nothing.
 /// </remarks>
 public interface IEstimateEndTime<T> {
@@ -239,11 +239,11 @@ public interface IOnTime<T> {
 /// 预估结束时间表的构造 / Building the estimated end-time table.
 /// </summary>
 /// <remarks>
-/// 基线用每任务的 `est` 变量（开始时间选择）加时长算出结束时间；本实现**还没有** `est` 变量，
+/// 每任务的 `est` 变量（开始时间选择）加时长算出结束时间；本实现**还没有** `est` 变量，
 /// 所以只能取任务自己声明的时间窗结束点，作为一个**常量**多项式。这条限制必须显式记着：
 /// 现在的完工时间只反映"任务计划什么时候结束"，**不反映排程把任务挪到哪里**。
 ///
-/// The baseline derives each end time from a per-task `est` variable (a start-time choice) plus the duration; this implementation **has no** `est` variable yet, so it can
+/// The code derives each end time from a per-task `est` variable (a start-time choice) plus the duration; this implementation **has no** `est` variable yet, so it can
 /// only take the end of the task's own declared window as a **constant** polynomial. That limit matters: today's makespan reflects "when the plan says the tasks end",
 /// **not where the schedule moves them**.
 /// </remarks>
@@ -374,9 +374,9 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
     /// </summary>
     /// <remarks>
     /// 只在"允许提前或延迟"的任务上有真符号；其余任务得到的是**常量零**（不是 `null`）——
-    /// 基线的 `LinearIntermediateSymbol.empty` 就是这个语义，读它的人会拿到 0 而不是空引用。
+    /// `LinearIntermediateSymbol.empty` 就是这个语义，读它的人会拿到 0 而不是空引用。
     ///
-    /// Only tasks that may advance or be delayed get a real symbol; the rest get a **constant zero** (not `null`) — the baseline's `LinearIntermediateSymbol.empty` means exactly
+    /// Only tasks that may advance or be delayed get a real symbol; the rest get a **constant zero** (not `null`) — its `LinearIntermediateSymbol.empty` means exactly
     /// that, so a reader gets 0 rather than a null reference.
     /// </remarks>
     public IReadOnlyDictionary<T, object>? EstimateSlack { get; private set; }
@@ -481,20 +481,20 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
             return Results.Ok<Success>(Results.SuccessInstance);
         }
         // 开始时间变量：`est`，连续窗口用连续变量。
-        // 基线的三条边界规则照抄，且**后写的覆盖先写的**：
+        // 三条边界规则沿用，且**后写的覆盖先写的**：
         //   ① 上界 = 窗口结束；
         //   ② 不启用提前（全局或本任务）→ 下界 = 本任务时间窗开始；
         //   ③ 不启用延迟（全局或本任务）→ 上界 = 本任务时间窗开始。
         // ②③ 同时成立时 `est` 被钉在时间窗开始——这是正确的：不能挪就只能按计划开始。
         //
-        // Start-time variable: `est`, continuous on a continuous window. The baseline's three bound rules are copied verbatim, **later writes overriding earlier ones**:
+        // Start-time variable: `est`, continuous on a continuous window. The code's three bound rules are copied verbatim, **later writes overriding earlier ones**:
         // (1) upper bound = window end; (2) advance not enabled (globally or for this task) → lower bound = this task's window start; (3) delay not enabled (globally or for
         // this task) → upper bound = this task's window start. With both (2) and (3) `est` is pinned to the window start — correct: cannot move, so it starts as planned.
-        // 基线用的是 **`URealVariable1`（无符号连续）**，不是 `RealVariable1`：开始时间不可能是负的。
+        // 的是 **`URealVariable1`（无符号连续）**，不是 `RealVariable1`：开始时间不可能是负的。
         // 缺省下界因此是 0 而不是 `-1e308`——差别只在"允许提前"那一支：下界不写死成任务时间窗开始后，
         // 有符号变量会一路降到负无穷，倒推出一个负的完工时间。
         //
-        // The baseline uses **`URealVariable1` (unsigned continuous)**, not `RealVariable1`: a start time cannot be negative. Its default lower bound is therefore 0 rather than
+        // The code uses **`URealVariable1` (unsigned continuous)**, not `RealVariable1`: a start time cannot be negative. Its default lower bound is therefore 0 rather than
         // `-1e308` — and that only matters in the "advance allowed" branch: with the lower bound not pinned to the task's window start, a signed variable would sink to negative
         // infinity and yield a negative makespan.
         Try builtEstimate = BuildEstimatePolynomials(
@@ -530,21 +530,21 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
             symbols.Add(startSymbol);
             symbols.Add((IIntermediateSymbol)table[task]);
 
-            // `est_slack`：**开始时间偏离计划开始多少**。基线只在"允许提前或延迟"时建它——不能挪的任务
+            // `est_slack`：**开始时间偏离计划开始多少**。在"允许提前或延迟"时建它——不能挪的任务
             // 偏离恒为零，建一个恒零的符号只会让后面读它的人以为读到了什么。
             // 两个方向都开时走 `SlackFunction` 的四行绝对值公式；只开一个方向时走一行等式/单边行。
             //
-            // `est_slack`: **how far the start deviates from the planned start**. The baseline only builds it when advance or delay is allowed — a task that cannot move has zero
+            // `est_slack`: **how far the start deviates from the planned start**. The code only builds it when advance or delay is allowed — a task that cannot move has zero
             // deviation always, and building a constant-zero symbol would make whoever reads it believe they got something. Both directions open goes through `SlackFunction`'s
             // four-row absolute-value formulation; one direction goes through a single equality / one-sided row.
             // 没有时间窗的任务：`est` / `estEnd` 照建（它们来自钩子，与时间窗无关），但**没有"偏离计划"可言**——
             // 计划开始未知，偏移、超最大偏移、准时、结束时间偏移全会指向一个不存在的东西。给常量零并在符号名上说清楚。
-            // 这道坎原来写成了硬失败：基线的 `TaskTimeImpl.register` 对 `time == null` 是直接跳过，而任务束/迭代那两支的
+            // 这道坎原来写成了硬失败：`TaskTimeImpl.register` 对 `time == null` 是直接跳过，而任务束/迭代那两支的
             // 任务本来就可能没有时间窗。要求"必须有时间窗"是本实现在抽取钩子时**多加的**限制，不是基线行为。
             //
             // A task without a time window still gets `est` / `estEnd` (they come from the hook and do not depend on the window), but there is **no "deviation from plan"** — the
             // planned start is unknown, so deviation, over-max, on-time and end-time deviation would all point at something that does not exist. A constant zero is built and
-            // named as such. This used to be a hard failure: the baseline's `TaskTimeImpl.register` simply skips `time == null`, and the bunch/iterative branches legitimately
+            // named as such. This used to be a hard failure: its `TaskTimeImpl.register` simply skips `time == null`, and the bunch/iterative branches legitimately
             // carry tasks without a window. Demanding a window was a restriction **added** here when the hook was extracted, not baseline behaviour.
             if (task.Time is null) {
                 var zeroSlack = new LinearExpressionSymbol(
@@ -788,7 +788,7 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
     /// est 是一个**共用的位移**或**常量零**（一个束只有一个位移，迭代任务没有独立开始变量）。
     /// 不抽出来的话，那两个类要么复制这八张表，要么永远只有一个静默 `Ok`。
     ///
-    /// **默认实现**：连续窗口上一变量一任务（`est`），三条边界规则照抄基线，且**后写的覆盖先写的**——
+    /// **默认实现**：连续窗口上一变量一任务（`est`），三条边界规则照做，且**后写的覆盖先写的**——
     /// ① 上界 = 窗口结束；② 不启用提前（全局或本任务）→ 下界 = 本任务时间窗开始；③ 不启用延迟（全局或本任务）→ 上界 = 本任务时间窗开始。
     /// ②③ 同时成立时 `est` 被钉在时间窗开始——这是正确的：不能挪就只能按计划开始。
     ///
@@ -798,7 +798,7 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
     /// Extracted as a virtual method because the eight tables that follow (deviation, over-max, on-time, end-time deviation) depend only on "what is each task's `est`", not on where
     /// it comes from. Task scheduling time takes `est` from its **own start-time variables**; bunch and iterative scheduling time have a **shared displacement** or a **constant
     /// zero** instead (a bunch has one displacement, and an iterative task has no independent start variable). Without the hook those two classes either duplicate the eight
-    /// tables or stay a silent `Ok` forever. **Default implementation**: one variable per task on a continuous window, with the baseline's three bound rules copied verbatim and
+    /// tables or stay a silent `Ok` forever. **Default implementation**: one variable per task on a continuous window, with its three bound rules copied verbatim and
     /// **later writes overriding earlier ones** — (1) upper bound = window end; (2) advance not enabled (globally or for this task) → lower bound = this task's window start;
     /// (3) delay not enabled (globally or for this task) → upper bound = this task's window start. With (2) and (3) together `est` is pinned to the window start, which is
     /// correct: cannot move, so starts as planned. **Why the placeholder fails instead of returning zeros**: a constant zero would make every start time 0 while the eight tables
@@ -808,14 +808,14 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
         IAbstractLinearMetaModel<Flt64> linear,
         out Dictionary<T, LinearPolynomial<Flt64>> starts,
         out Dictionary<T, LinearPolynomial<Flt64>> ends) {
-        // 离散窗口的守卫**放在这里**，因为它是"建开始时间变量"这一支的限制：基线在离散窗口上用
+        // 离散窗口的守卫**放在这里**，因为它是"建开始时间变量"这一支的限制：离散窗口上用
         // `UIntVariable1`（`UInt64` 承载），而本仓**还没有**整数开始时间变量——`UIntVar` 的缺省上界是
         // `ulong.MaxValue`，换成 double 是 1.8e19，超过 binary64 能精确表示的整数上界 2^53，求解器在注册阶段就会拒。
         //
         // 放在共用循环里就错了：任务束的 `est` 是一个**连续位移**（`est_redundancy`），与"整数开始时刻"无关，
         // 而 Demo4 的束时间窗恰恰是离散的——共用守卫会把那条本来能注册的路径挡住。
         //
-        // The discrete-window guard belongs **here**, because it is a restriction of "building start-time variables": the baseline uses `UIntVariable1` (backed by `UInt64`) on
+        // The discrete-window guard belongs **here**, because it is a restriction of "building start-time variables": the code uses `UIntVariable1` (backed by `UInt64`) on
         // discrete windows, while this repository has **no** integer start-time variable yet — `UIntVar`'s default upper bound is `ulong.MaxValue` (1.8e19 as a double), beyond
         // binary64's exact-integer limit of 2^53, so the solver rejects it at registration. Putting it in the shared loop was wrong: a bunch's `est` is a **continuous
         // displacement** (`est_redundancy`) unrelated to integer start instants, and Demo4's bunch window is discrete — the shared guard blocked a path that does register.
@@ -865,8 +865,8 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
             }
             var monomial = new Fuookami.Ospf.Math.Symbol.Monomial.LinearMonomial<Flt64>(Flt64.One, est[index]);
             starts[task] = new LinearPolynomial<Flt64>(new[] { monomial }, Flt64.Zero);
-            // 结束时间 = 开始时间 + 工期。基线在**这里**加时长；迭代任务调度时间那支不加（见它的重写）。
-            // End = start + duration. The baseline adds the duration **here**; the iterative task scheduling time does not (see its override).
+            // 结束时间 = 开始时间 + 工期。**这里**加时长；迭代任务调度时间那支不加（见它的重写）。
+            // End = start + duration. The code adds the duration **here**; the iterative task scheduling time does not (see its override).
             ends[task] = new LinearPolynomial<Flt64>(new[] { monomial }, _timeBoundary.ValueOf(duration));
         }
         return Results.Ok<Success>(Results.SuccessInstance);
@@ -1006,11 +1006,11 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
     /// `taskTime.onTime[task]` 在 `OnTime` 表里缺席，目标函数取符号时会炸。
     ///
     /// 死区来自基线：`not_on_last_end_time` 只在**整整晚一个时间窗**时才为 1（`afterWindowDurationValue`），
-    /// `not_on_earliest_end_time` 只在**整整早一个时间窗**时才为 1（`beforeWindowDurationValue`）。照抄，不改成 `1 − on`。
+    /// `not_on_earliest_end_time` 只在**整整早一个时间窗**时才为 1（`beforeWindowDurationValue`）。沿用，不改成 `1 − on`。
     ///
     /// Each direction is a real indicator only when the switch is on, the task may move, and the task carries a target time; otherwise it is **constant zero** (not skipped):
     /// `OnTime` / `NotOnTime` are **sums**, so a missing term equals a zero term numerically, but skipping would leave `taskTime.onTime[task]` absent and the objective would throw
-    /// when reading the symbol. The dead band is the baseline's: `not_on_last_end_time` only fires when late by a **whole window** (`afterWindowDurationValue`) and
+    /// when reading the symbol. The dead band is its: `not_on_last_end_time` only fires when late by a **whole window** (`afterWindowDurationValue`) and
     /// `not_on_earliest_end_time` only when early by a **whole window** (`beforeWindowDurationValue`). Copied as-is rather than replaced with `1 − on`.
     /// </remarks>
     private Try BuildOnTimePair(
@@ -1249,15 +1249,15 @@ public class TaskSchedulingTaskTime<T, E, A> : TaskTime, IEstimateEndTime<T>, IE
 /// **与任务调度时间共用全部八张表**（偏移、超最大偏移、准时、结束时间偏移）：那些表只依赖"每个任务的 `est` 是什么"，
 /// 与 `est` 从哪来无关。本类只重写 `est` 的来源——迭代任务**没有独立的开始时间变量**，`est` 恒为零。
 ///
-/// 基线的这一支同样如此：`estimate_start_time` 与 `estimate_end_time` 都是"冗余量为空时的常量零"，且 `estEnd` **不再加工期**
-/// （与任务调度时间那支不同）。冗余范围在基线里**直接返回失败**（"暂未实现 withRedundancy 路径"），本类照抄。
+/// 这一支同样如此：`estimate_start_time` 与 `estimate_end_time` 都是"冗余量为空时的常量零"，且 `estEnd` **不再加工期**
+/// （与任务调度时间那支不同）。冗余范围在**直接返回失败**（"暂未实现 withRedundancy 路径"），本类沿用。
 ///
 /// 之前这里是 `Try Register(...) => Results.Ok(...)`：模型里什么都没有，而调用方以为时间已注册。
 ///
 /// **Shares all eight tables** with task scheduling time (deviation, over-max, on-time, end-time deviation): those depend only on "what is each task's `est`", not on where it comes
-/// from. This class overrides only the source of `est` — an iterative task has **no independent start-time variable**, so `est` is identically zero. The baseline's branch is the
+/// from. This class overrides only the source of `est` — an iterative task has **no independent start-time variable**, so `est` is identically zero. branch is the
 /// same: both `estimate_start_time` and `estimate_end_time` are "constant zero when there is no redundancy", and `estEnd` does **not** add the duration here (unlike task
-/// scheduling time). A redundancy range **fails outright** in the baseline ("the withRedundancy path is not implemented"), copied verbatim. This used to be
+/// scheduling time). A redundancy range **fails outright** in the code ("the withRedundancy path is not implemented"), copied verbatim. This used to be
 /// `Try Register(...) => Results.Ok(...)`: nothing in the model while the caller believed the time was registered.
 /// </remarks>
 public class IterativeTaskSchedulingTaskTime<IT, T, E, A> : TaskSchedulingTaskTime<T, E, A>
@@ -1277,7 +1277,7 @@ public class IterativeTaskSchedulingTaskTime<IT, T, E, A> : TaskSchedulingTaskTi
     /// <param name="timeWindow">时间窗口 / Time window</param>
     /// <param name="tasks">任务列表 / List of tasks</param>
     /// <param name="compilation">迭代编译结果 / Iterative compilation result</param>
-    /// <param name="redundancyRange">冗余范围；给了就失败（基线也没实现） / Redundancy range; giving one fails (the baseline does not implement it either)</param>
+    /// <param name="redundancyRange">冗余范围；给了就失败（没实现） / Redundancy range; giving one fails (the code does not implement it either)</param>
     public IterativeTaskSchedulingTaskTime(
         TimeWindow<Flt64> timeWindow,
         IReadOnlyList<T> tasks,
@@ -1313,11 +1313,11 @@ public class IterativeTaskSchedulingTaskTime<IT, T, E, A> : TaskSchedulingTaskTi
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 冗余范围在基线里没有实现，所以**给了就直接失败**，而且要在动模型之前失败——先加一半符号再报错会留下一个半成品模型。
-    /// 没给冗余时 `est` 与 `estEnd` 都是**常量零**，且 `estEnd` 不再加工期（基线在这一支就是这样）。
+    /// 冗余范围在没有实现，所以**给了就直接失败**，而且要在动模型之前失败——先加一半符号再报错会留下一个半成品模型。
+    /// 没给冗余时 `est` 与 `estEnd` 都是**常量零**，且 `estEnd` 不再加工期（这一支就是这样）。
     ///
-    /// The redundancy range is unimplemented in the baseline, so giving one **fails outright** — and before touching the model, since adding half the symbols first would leave a
-    /// half-built model. Without redundancy both `est` and `estEnd` are **constant zero**, and `estEnd` does not add the duration (that is the baseline's shape in this branch).
+    /// The redundancy range is unimplemented in the code, so giving one **fails outright** — and before touching the model, since adding half the symbols first would leave a
+    /// half-built model. Without redundancy both `est` and `estEnd` are **constant zero**, and `estEnd` does not add the duration (that is its shape in this branch).
     /// </remarks>
     protected override Try BuildEstimatePolynomials(
         IAbstractLinearMetaModel<Flt64> linear,
@@ -1327,9 +1327,9 @@ public class IterativeTaskSchedulingTaskTime<IT, T, E, A> : TaskSchedulingTaskTi
         starts = new Dictionary<T, LinearPolynomial<Flt64>>();
         ends = new Dictionary<T, LinearPolynomial<Flt64>>();
 
-        // 迭代任务的 `est` 虽是常量零，但它的 `est_slack` 要用**整数**松弛（基线在离散窗口上走 `flooredValueOf` + `UInteger`）。
+        // 迭代任务的 `est` 虽是常量零，但它的 `est_slack` 要用**整数**松弛（离散窗口上走 `flooredValueOf` + `UInteger`）。
         // 共用循环只产出连续松弛，所以离散窗口在这里仍然明确失败，而不是给一个"看得见但不该动"的连续松弛。
-        // An iterative task's `est` is constant zero, but its `est_slack` needs an **integer** slack on a discrete window (the baseline uses `flooredValueOf` + `UInteger`). The
+        // An iterative task's `est` is constant zero, but its `est_slack` needs an **integer** slack on a discrete window (the code uses `flooredValueOf` + `UInteger`). The
         // shared loop only produces continuous slack, so a discrete window still fails loudly here instead of getting a continuous slack that looks usable but must not move.
         if (!TimeBoundary.Continues) {
             return Results.Failed<Success>(new Err<ErrorCode>(

@@ -58,7 +58,7 @@ public sealed class PilePreparationBenchmarkTests {
     /// 它把"场景参数目前不影响被测路径"钉在门禁里，避免基准被当成"分层合并的耗时证据"。
     ///
     /// This assertion **records a gap**, it does not assert a correct design: the in-repo `ItemMerger.MergePiles` compares only base dimensions and total
-    /// height, **reading neither `PackageAttribute.MaxLayer` nor `restWeight`**. The baseline expects "layer cap 1 means no stacking", whereas here both
+    /// height, **reading neither `PackageAttribute.MaxLayer` nor `restWeight`**. The code expects "layer cap 1 means no stacking", whereas here both
     /// scenarios yield the same pile count. **Once layered merging lands this assertion fails — and that is exactly its purpose**: it pins "the scenario
     /// parameter currently does not affect the measured path" into the gate so the benchmark cannot be cited as evidence about layered merging.
     /// </remarks>

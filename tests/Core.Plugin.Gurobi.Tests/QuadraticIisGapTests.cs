@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Gurobi;
 ///
 /// | 事实 | 当时的证据 |
 /// | --- | --- |
-/// | 基线在 `Quadratic.kt:175` **有**生产调用 `model.elastic` | 基线源码 |
+/// | **有**生产调用 `model.elastic` | 基线源码 |
 /// | C# 的 `Elastic` **只有测试调用** | `grep '\.Elastic' src` 零命中 |
 /// | C# **没有** `ComputeLegacyIISAsync` 的二次版本 | `src/Core/Solver/Iis/` 只有 `LinearLegacyIisCompute.cs` |
 /// | 于是 `DiagnosticAnalyzers` 二次版**返回空** | 接口默认方法 `Array.Empty` |

@@ -1,8 +1,8 @@
 // 关系查询编译器契约与来源注册表 / Relational query compiler contract and source registry.
-// 与固定 Kotlin 基线 `RelationalQueryCompiler.kt` 的契约部分对应。SQL 编译器本体（`SqlRelationalQueryCompiler`）
+// 与固定 Kotlin 的契约部分对应。SQL 编译器本体（`SqlRelationalQueryCompiler`）
 // 随后单独成批移植。
-// Mirrors the contract section of the pinned Kotlin baseline's `RelationalQueryCompiler.kt`. The SQL compiler body
-// (`SqlRelationalQueryCompiler`) is ported in its own batch.
+// The contract section of the pinned Kotlin: . The SQL compiler body
+// (`SqlRelationalQueryCompiler`) is implemented in its own batch.
 
 using System;
 using System.Collections.Generic;

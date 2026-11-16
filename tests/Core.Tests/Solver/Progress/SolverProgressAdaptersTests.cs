@@ -24,14 +24,14 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 ///
 /// 两条最要紧的语义：
 /// 1. **保留原回调**：接入进度上报**不得让既有回调失效**。
-/// 2. **`Try.then` 的短路**：基线的 `Try.then` 只在 `Ok` 时执行 `next`，
+/// 2. **`Try.then` 的短路**：`Try.then` 只在 `Ok` 时执行 `next`，
 /// 所以**上报失败时原回调不会被调用**——否则一次上报失败会让下游回调在错误的时机触发。
 ///
-/// ported the core types ("how to report"); ports the adapters ("where to hook in"). **Without adapters progress reporting exists but nothing calls it** —
+/// implemented the core types ("how to report"); ports the adapters ("where to hook in"). **Without adapters progress reporting exists but nothing calls it** —
 /// the same class of problem as the earlier "reachable ≠ in use".
 ///
 /// Two critical semantics: (1) **preserve the original callback** — wiring in progress reporting **must not disable existing callbacks**; (2) **`Try.then`'s
-/// short-circuit** — the baseline's `Try.then` only runs `next` on `Ok`, so **when reporting fails the original callback is not invoked**; otherwise a failed
+/// short-circuit** — its `Try.then` only runs `next` on `Ok`, so **when reporting fails the original callback is not invoked**; otherwise a failed
 /// report would fire downstream callbacks at the wrong moment.
 /// </remarks>
 public class SolverProgressAdaptersTests {
@@ -118,7 +118,7 @@ public class SolverProgressAdaptersTests {
     /// `BranchAndPrice → 70 + p*2/10`、其余 `30 + p*7/10`。
     /// **四档必须逐个验证**——只验一档时，其余三档写错不会被发现。
     ///
-    /// The baseline's four coefficients are `MasterLP → 30 + p*4/10`, `ColumnGeneration → 60 + p*2/10`, `BranchAndPrice → 70 + p*2/10`, and everything else
+    /// The code's four coefficients are `MasterLP → 30 + p*4/10`, `ColumnGeneration → 60 + p*2/10`, `BranchAndPrice → 70 + p*2/10`, and everything else
     /// `30 + p*7/10`. **All four must be verified** — checking only one leaves the other three free to be wrong.
     /// </remarks>
     [Fact]
@@ -143,7 +143,7 @@ public class SolverProgressAdaptersTests {
     /// 基线 `percentage` 在 `totalValue == 0.0` 时返回 100，而不是 0——**总量为零意味着"已经全部完成"**。
     /// 这条在初始化瞬间触发，写成 0 会让进度条从 0 开始跳。
     ///
-    /// The baseline's `percentage` returns 100 when `totalValue == 0.0`, not 0 — **a zero total means "everything is done"**. This fires at the first instant of
+    /// The code's `percentage` returns 100 when `totalValue == 0.0`, not 0 — **a zero total means "everything is done"**. This fires at the first instant of
     /// initialisation; writing 0 makes the progress bar jump from zero.
     /// </remarks>
     [Fact]

@@ -26,12 +26,12 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PartitionLoading;
 /// **分区装载的装配与加列** / Assembly and column addition for partition loading.
 /// </summary>
 /// <remarks>
-/// 对应基线 `PartitionLoadingContext.kt` 的 `create` / `columnId` / `decisionId` / 边界与整数性复核。
+/// 对应的 `create` / `columnId` / `decisionId` / 边界与整数性复核。
 ///
 /// **判据先打纯函数**：分区覆盖的五条规则、身份格式、整数类型识别、范围复核，都不需要求解器也不需要模型。
 /// 装配本身（`CreateAsync`）另有一条，用真实的离散上下文与已注册模型。
 ///
-/// Mirrors the baseline's `create`, `columnId`, `decisionId`, and the bounds/integrality re-checks. **The criteria hit the pure functions first** — the five coverage
+/// , `columnId`, `decisionId`, and the bounds/integrality re-checks. **The criteria hit the pure functions first** — the five coverage
 /// rules, the identity formats, integer-type detection and bounds checking need neither solver nor model; assembly itself gets one case against a real discrete
 /// context and a registered model.
 /// </remarks>

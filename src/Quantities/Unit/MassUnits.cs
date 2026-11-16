@@ -19,13 +19,13 @@ public static class MassUnits {
     /// <summary>盎司 / Ounce (1 oz = 0.028349523125 kg).</summary>
     public static readonly PhysicalUnit Ounce = new DerivedUnit(SIBaseUnits.Kilogram, Scale.Invoke(0.028349523125), "ounce", "oz");
 
-    // 以下 12 个按基线 `Mass.kt` 补齐。
+    // 以下 12 个按补齐。
     //
     // **这一组里有三套"吨"与两套"盎司"，它们各自不同：**
     // **长吨 2240 磅、短吨 2000 磅、公吨 1000 千克**；
     // **常衡盎司 1/16 磅、金衡盎司 1/12 磅**——**金衡盎司更重，而名字只差一个词。**
     //
-    // The twelve below were added from the baseline Mass.kt.
+    // The twelve below were added from the code Mass.kt.
     //
     // **This group carries three tons and two ounces, all different:**
     // **long ton 2240 lb, short ton 2000 lb, metric ton 1000 kg**;

@@ -1,6 +1,5 @@
 // 小生境类更新算子 / Niche-flavoured update operators.
-// 与固定 Kotlin 基线 `operator/update/NicheUpdates.kt`（8963 B）对应。
-// Mirrors the pinned baseline's `NicheUpdates.kt`.
+// 与固定 Kotlin （8963 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -17,10 +16,10 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// 战争策略更新 / War-strategy update.
 /// </summary>
 /// <remarks>
-/// **进攻与防守的步长系数必须不同**。基线的进攻步长是向最优收缩并放大 `strategyScale`（默认 2.0），收敛是安全的；但防守的目标是
+/// **进攻与防守的步长系数必须不同**。进攻步长是向最优收缩并放大 `strategyScale`（默认 2.0），收敛是安全的；但防守的目标是
 /// **随机战友**，对随机目标做同样的 2 倍外推会让整代种群互相反馈、模长逐代放大——**最优值不下降、解却在膨胀**，而这种发散在
 /// 前几代看起来只是"多样性变好"。
-/// **The attack and defence step scales must differ.** The baseline's attack step contracts toward the best and is amplified by
+/// **The attack and defence step scales must differ.** The code's attack step contracts toward the best and is amplified by
 /// `strategyScale` (default 2.0), which converges safely; but the defence target is a **random comrade**, and extrapolating 2x on a
 /// random target makes the whole generation feed back into itself with a growing magnitude — **the objective stops improving while the
 /// solutions inflate**, and that divergence looks like "better diversity" during the first few generations.

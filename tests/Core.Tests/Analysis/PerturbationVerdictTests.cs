@@ -36,7 +36,7 @@ public class PerturbationVerdictTests {
     /// <remarks>
     /// 写成 `false` 会让报告声称"扰动之后整数解的模式没变"——**而那份基线解根本没拿到，结论是从空气里来的。**
     ///
-    /// Returning `false` would let the report claim "the integer pattern did not change after the perturbation" — **while the baseline solution was never obtained.**
+    /// Returning `false` would let the report claim "the integer pattern did not change after the perturbation" — **while the code solution was never obtained.**
     /// </remarks>
     [Fact]
     public void TheMissingSolution_ShouldGiveNull() {

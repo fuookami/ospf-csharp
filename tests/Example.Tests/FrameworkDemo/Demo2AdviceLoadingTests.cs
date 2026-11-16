@@ -235,7 +235,7 @@ public class Demo2AdviceLoadingTests {
     /// 两点成对：
     ///
     /// 1. 三个舱位**都没有** `Ala`/`Alw` → 两条目标都**不加**、返回成功。
-    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty) return ok`。
+    /// 2. 目标位数量不变——`if (monomials.isEmpty) return ok`。
     ///
     /// Two paired points: three positions with **no** `Ala` or `Alw` give **no** objective from either limit, both returning success; and the objective count is unchanged, per the
     /// baseline's early return.

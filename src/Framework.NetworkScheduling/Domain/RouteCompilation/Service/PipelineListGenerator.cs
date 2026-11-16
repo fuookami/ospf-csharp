@@ -1,7 +1,7 @@
 // 管线列表生成器与影子价格键安全转换 / Pipeline-list generator and shadow-price-key safe cast.
-// 与固定 Kotlin 基线 `route_compilation/service/PipelineListGenerator.kt`（2790 字节）、
-// `route_compilation/service/ShadowPriceKeyCastSupport.kt`（337 字节）对应。
-// Mirrors the pinned baseline's `PipelineListGenerator.kt` and `ShadowPriceKeyCastSupport.kt`.
+// 与固定 Kotlin （2790 字节）、
+//（337 字节）对应。
+// And.
 
 using System;
 using System.Collections.Generic;
@@ -119,10 +119,10 @@ public static class PipelineListGenerator {
 /// 影子价格键安全转换工具 / Shadow price key safe cast utility.
 /// </summary>
 /// <remarks>
-/// 基线的 `shadowPriceKeyOf` 是 `inline fun &lt;reified K : ShadowPriceKey&gt;`。C# 的泛型在运行时保留类型实参，因此直接用 `as` 即可，
-/// 不需要 `reified` 的语法糖；返回 `null` 表达"不是这个键"，与基线的 `as?` 一致。
-/// The baseline's `shadowPriceKeyOf` is `inline fun &lt;reified K : ShadowPriceKey&gt;`. C# generics keep their type argument at
-/// runtime, so a plain `as` does the job without `reified` sugar; returning `null` expresses "not this key", matching the baseline's
+/// `shadowPriceKeyOf` 是 `inline fun &lt;reified K : ShadowPriceKey&gt;`。C# 的泛型在运行时保留类型实参，因此直接用 `as` 即可，
+/// 不需要 `reified` 的语法糖；返回 `null` 表达"不是这个键"，与`as?` 一致。
+/// `shadowPriceKeyOf` is `inline fun &lt;reified K : ShadowPriceKey&gt;`. C# generics keep their type argument at
+/// runtime, so a plain `as` does the job without `reified` sugar; returning `null` expresses "not this key", matching its
 /// `as?`.
 /// </remarks>
 public static class ShadowPriceKeyCastSupport {

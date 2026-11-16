@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// **一维装箱指标** / One-dimensional packing indicators.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `PackingResult.kpi(unit)`。判据钉住三件事：
+/// 对应`PackingResult.kpi(unit)`。判据钉住三件事：
 ///
 /// | 点 | 为什么重要 |
 /// | --- | --- |
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// | **换算失败返回 `Failed`** | 静默跳过会让 KPI 偏小，而偏小的 KPI 看起来像"装箱更紧凑" |
 /// | **件数按放置数累加** | 按方案数累加会把一个方案算成一件 |
 ///
-/// Mirrors the baseline's `PackingResult.kpi(unit)`; the three points above are what the criteria pin.
+/// ; the three points above are what the criteria pin.
 /// </remarks>
 public class PackingKpiTests {
     /// <summary>**混合单位必须换算到同一口径** / Mixed units must be converted to one reporting unit.</summary>

@@ -1,8 +1,8 @@
 // 强化学习算子 / Reinforcement-learning operators.
-// 与固定 Kotlin 基线 `operator/rl/` 下的 `Reward.kt`、`QTable.kt`、`StateDiscretizer.kt`、`ActionSelector.kt`、
-// `QlearningAgent.kt`、`QlearningSource.kt`、`QlearningUpdate.kt` 对应（README 与基线测试不移植）。
-// Mirrors the pinned baseline's `Reward.kt`, `QTable.kt`, `StateDiscretizer.kt`, `ActionSelector.kt`, `QlearningAgent.kt`,
-// `QlearningSource.kt` and `QlearningUpdate.kt` (the READMEs and the baseline test file are not ported).
+// 与`operator/rl/` 下的、
+//、 对应（README 与基线测试不移植）。
+// ,,,,,
+// and (the READMEs and the code test file are not implemented).
 
 using System;
 using System.Collections.Generic;
@@ -118,7 +118,7 @@ public sealed class QTable {
     /// <remarks>
     /// **返回的是拷贝而不是活视图**。基线写 `entries[state].toList`；返回活视图会让调用方持有的"价值快照"在后续更新后
     /// 静默变化，而选择器读到的值与它决策时的值不再一致。
-    /// **A copy is returned, not a live view.** The baseline writes `entries[state].toList`; a live view makes the caller's "value
+    /// **A copy is returned, not a live view.** The code writes `entries[state].toList`; a live view makes the caller's "value
     /// snapshot" change silently after later updates, so the selector reads values that no longer match what it decided on.
     /// </remarks>
     public IReadOnlyList<Flt64> ValuesOf(int state) {
@@ -235,10 +235,10 @@ public sealed class QTable {
     /// <returns>表的副本 / A copy of the table.</returns>
     public IReadOnlyList<IReadOnlyList<Flt64>> Snapshot() {
         // **必须逐行拷贝**。`Array.AsReadOnly(row)` 只是对内部数组的活视图，`Clear` 或后续更新会同步改掉"快照"，
-        // 于是恢复出来的仍是清空后的表——而快照调用本身返回成功，看不出任何异常。基线用的是 `it.toList`，即拷贝。
+        // 于是恢复出来的仍是清空后的表——而快照调用本身返回成功，看不出任何异常。的是 `it.toList`，即拷贝。
         // **Each row must be copied.** `Array.AsReadOnly(row)` is only a live view over the internal array, so `Clear` or any later
         // update mutates the "snapshot" too and the restore yields the cleared table — while the snapshot call itself succeeds and
-        // nothing looks wrong. The baseline uses `it.toList`, i.e. a copy.
+        // nothing looks wrong. The code uses `it.toList`, i.e. a copy.
         var copy = new List<IReadOnlyList<Flt64>>(_entries.Length);
         foreach (Flt64[] row in _entries) {
             var cloned = new Flt64[row.Length];
@@ -810,11 +810,11 @@ public sealed class QlearningSource : IParameterSource, IIterationObserver {
 /// 个体视图转换 / Individual view conversion.
 /// </summary>
 /// <remarks>
-/// **`QlearningAgent.Step` 只需要"解向量 + 目标值"，但调用方持有的是带具体目标值类型的个体**。基线用 `Individual&lt;*, V&gt;`
+/// **`QlearningAgent.Step` 只需要"解向量 + 目标值"，但调用方持有的是带具体目标值类型的个体**。`Individual&lt;*, V&gt;`
 /// 的通配符擦除目标值类型；C# 没有通配符，只能用视图投影把 `IIndividual&lt;ObjValue, V&gt;` 转成
 /// `IIndividual&lt;object?, V&gt;`。这里不做任何数据拷贝，只换一个静态类型。
 /// **`QlearningAgent.Step` only needs the solution vector and the objective value, but callers hold individuals with a concrete
-/// objective type.** The baseline erases the objective type with the `Individual&lt;*, V&gt;` wildcard; C# has no wildcards, so a view
+/// objective type.** The code erases the objective type with the `Individual&lt;*, V&gt;` wildcard; C# has no wildcards, so a view
 /// projection converts `IIndividual&lt;ObjValue, V&gt;` into `IIndividual&lt;object?, V&gt;`. No data is copied, only the static type
 /// changes.
 /// </remarks>

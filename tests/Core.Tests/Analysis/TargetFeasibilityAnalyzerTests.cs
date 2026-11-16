@@ -72,7 +72,7 @@ public class TargetFeasibilityAnalyzerTests {
 
     /// <summary>**可行但见证不合格 → `Unknown`，不是可达** / Feasible with a bad witness is `Unknown`.</summary>
     /// <remarks>
-    /// 后端说可行、解却不满足目标边界。**照抄"可行"就是把一个错的结论写进报告。**
+    /// 后端说可行、解却不满足目标边界。**沿用"可行"就是把一个错的结论写进报告。**
     ///
     /// The backend says feasible while the solution misses the bound. **Copying "feasible" through would write a wrong conclusion into the report.**
     /// </remarks>

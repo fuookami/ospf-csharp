@@ -1,7 +1,7 @@
 // 网络建设聚合与上下文 / Network-design aggregation and context.
-// 与固定 Kotlin 基线 `design/model/NetworkDesignAggregation.kt`（13326 字节）、`design/NetworkDesignContext.kt` 的
+// 与固定 Kotlin （13326 字节）、 的
 // `NetworkDesignContext` 类（5875 字节）对应。
-// Mirrors the pinned baseline's `NetworkDesignAggregation.kt` and the `NetworkDesignContext` class from `NetworkDesignContext.kt`.
+// And the `NetworkDesignContext` class.
 
 using System;
 using System.Collections.Generic;

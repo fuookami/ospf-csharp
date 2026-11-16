@@ -1,6 +1,5 @@
 // VRPTW 分支定价算法 / The VRPTW branch-and-price algorithm.
-// 与固定 Kotlin 基线 `application/service/BranchAndPriceAlgorithm.kt`（29596 字节）对应。
-// Mirrors the pinned baseline's `application/service/BranchAndPriceAlgorithm.kt`.
+// 与固定 Kotlin （29596 字节）对应。
 
 using System;
 using System.Collections.Generic;
@@ -80,9 +79,9 @@ public sealed record BranchAndPriceResult<V>(
 /// **Integer assignment/edge with fractional route values is a contract violation**, which must fail rather than branch arbitrarily. It
 /// means the deduplication invariant broke or parallel arcs made edge aggregation ambiguous, so any "optimum" reached by branching on
 /// would be meaningless.
-/// **与基线的偏离**：C# 侧没有 `SolverProgressContext`，进度上报被省略；这不是能力缺口，而是本仓未移植进度上下文。
-/// **Divergence from the baseline**: there is no `SolverProgressContext` on the C# side, so progress reporting is omitted. That is
-/// not a capability gap but an unported progress context in this repository.
+/// **与偏离**：C# 侧没有 `SolverProgressContext`，进度上报被省略；这不是能力缺口，而是本仓未实现进度上下文。
+/// **Divergence from the code**: there is no `SolverProgressContext` on the C# side, so progress reporting is omitted. That is
+/// not a capability gap but an unimplemented progress context in this repository.
 /// </remarks>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 public sealed class BranchAndPriceAlgorithm<V> where V : struct, IFloatingNumber<V> {
@@ -573,8 +572,8 @@ public sealed class BranchAndPriceAlgorithm<V> where V : struct, IFloatingNumber
         foreach (Route<V> route in routes) {
             Result<Flt64, ErrorCode, Error<ErrorCode>> cost =
                 _policy.ValueAdapter.Normalize(route.Cost, _instance.Units.CostUnit);
-            // 单条路线换算失败按零计——这与基线一致，但总成本因此只是一个下估计。
-            // A failed per-route conversion counts as zero, matching the baseline, so the total is only a lower estimate.
+            // 单条路线换算失败按零计——这，但总成本因此只是一个下估计。
+            // A failed per-route conversion counts as zero, matching the code, so the total is only a lower estimate.
             total = total.Plus(cost.IsOk ? ((Ok<Flt64, ErrorCode, Error<ErrorCode>>)cost).Value : Flt64.Zero);
         }
         return total;

@@ -75,10 +75,10 @@ public class SwitchTableTests {
 
     /// <summary>**对角线是常量零，且参与求和** / The diagonal is constant zero and takes part in the sum.</summary>
     /// <remarks>
-    /// 基线在 `switch` 里对对角线返回 `empty`，但 `SwitchCostTriples` **不跳过**它。若判据只看"表里有没有这一项"，
+    /// `switch` 里对对角线返回 `empty`，但 `SwitchCostTriples` **不跳过**它。若判据只看"表里有没有这一项"，
     /// 跳过对角线和填零都通过；所以我断言**项在表里**而且**多项式为空**——两件事一起才算对。
     ///
-    /// The baseline returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it. Checking only "is the entry present" passes both skipping and
+    /// The code returns `empty` for the diagonal in `switch` while `SwitchCostTriples` **does not** skip it. Checking only "is the entry present" passes both skipping and
     /// zero-filling, so the assertion demands **the entry is present** *and* **its polynomial is empty**.
     /// </remarks>
     [Fact]
@@ -149,7 +149,7 @@ public class SwitchTableTests {
     /// </summary>
     /// <remarks>
     /// 无任务时间时只有"计划上紧跟"的那一对有指示，反方向是常量零。有任务时间时**两个方向都必须是真的 `AND`**：
-    /// 允许提前/延迟之后，`T2` 完全可能排到 `T1` 前面。判据同时检查两个方向，只查一个会让"照抄计划顺序"通过。
+    /// 允许提前/延迟之后，`T2` 完全可能排到 `T1` 前面。判据同时检查两个方向，只查一个会让"沿用计划顺序"通过。
     ///
     /// Without a task time only the plan-adjacent pair carries an indicator and the reverse is constant zero. With a task time **both directions must be real `AND`s**: once
     /// advance/delay is allowed, `T2` may well run before `T1`. Both directions are checked; one alone would let "just copy the plan order" pass.
@@ -388,10 +388,10 @@ public class SwitchTableTests {
 
     /// <summary>**系数提取失败必须报错** / A failed coefficient extraction must fail.</summary>
     /// <remarks>
-    /// 基线在系数为 `null` 时用无穷大；`Flt64` 没有无穷，所以只能失败。悄悄当成 1 会让"这个换型不计成本"变成"计 1"，
+    /// 系数为 `null` 时用无穷大；`Flt64` 没有无穷，所以只能失败。悄悄当成 1 会让"这个换型不计成本"变成"计 1"，
     /// 而两个数看起来都正常。
     ///
-    /// The baseline uses infinity when the coefficient is `null`; `Flt64` has none, so it must fail. Treating it as 1 silently turns "this switch is free" into "it costs 1", and
+    /// The code uses infinity when the coefficient is `null`; `Flt64` has none, so it must fail. Treating it as 1 silently turns "this switch is free" into "it costs 1", and
     /// both numbers look normal.
     /// </remarks>
     [Fact]
@@ -424,14 +424,14 @@ public class SwitchTableTests {
     /// 换型时间是 `(est[to] − end[from]) × 指示`，而目标对**所有有序对**求和。于是：
     /// <list type="bullet">
     /// <item>最小化会把某个方向压成**负值**——它把后一个任务排到前一个任务之前，那一对的间隔就是负的。基线不夹这个负值，
-    /// 照抄，不偷偷 `max(0, ·)`。</item>
+    /// 沿用，不偷偷 `max(0, ·)`。</item>
     /// <item>最大化会被推到**大于计划里的 3600 秒**。</item>
     /// </list>
     /// 这两条一起才钉得住"`x` 真的读了 `est`"：若 `x` 是常量间隔，求和只可能落在 `0` 或 `3600`，**永远出不了负值、也超不过 3600**。
     /// 第一版判据断言最小值是 0，实测 −14400——断言写的是我以为会发生的，不是实现做的。
     ///
     /// The switch time is `(est[to] − end[from]) × indicator` and the objective sums over **all ordered pairs**, so minimising drives one direction **negative** (it orders the
-    /// later task before the earlier one, whose gap is negative). The baseline does not clamp that (the earlier ceiling) and this copies it rather than quietly taking `max(0, ·)`.
+    /// later task before the earlier one, whose gap is negative). The code does not clamp that (the earlier ceiling) and this copies it rather than quietly taking `max(0, ·)`.
     /// Maximising is pushed **above** the planned 3600 s. Together these pin "`x` really reads `est`": with a constant gap the sum could only be `0` or `3600`, never negative and
     /// never above 3600. The first version of this criterion asserted the minimum was 0 and measured −14400 — the assertion described what I expected, not what the code does.
     /// </remarks>

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **这一层有四处"看起来对、实际反了或漏了"的地方，四条判据分别钉住：**
 /// 反转比较、null 与缺失、正则转义顺序、空 `or`。
 ///
-/// The baseline's `MongoBooleanTranslator` (**422 lines**), the last and most error-prone of the four Mongo translators.
+/// The code's `MongoBooleanTranslator` (**422 lines**), the last and most error-prone of the four Mongo translators.
 ///
 /// **This layer has four places that look right but are reversed or incomplete, and four criteria pin them:**
 /// reversed comparisons, null versus missing, regex escaping order, and empty `or`.
@@ -38,10 +38,10 @@ public class MongoBooleanTranslatorTests
 
     /// <summary>**`True` 匹配全部，`False`/`Unknown` 匹配不到** / `True` matches all; `False`/`Unknown` match nothing.</summary>
     /// <remarks>
-    /// **`Unknown` 归到"匹配不到"是基线的选择**：三值逻辑里的未知不能当成"通过"，
+    /// **`Unknown` 归到"匹配不到"是选择**：三值逻辑里的未知不能当成"通过"，
     /// **当成通过等于让一个没算出来的条件放行数据。**
     ///
-    /// **Folding `Unknown` into "matches nothing" is the baseline's choice**: unknown must not pass,
+    /// **Folding `Unknown` into "matches nothing" is its choice**: unknown must not pass,
     /// **because passing it lets an undecided condition release data.**
     /// </remarks>
     [Fact]
@@ -172,16 +172,16 @@ public class MongoBooleanTranslatorTests
     ///
     /// **C# 的 `AndExpression` / `OrExpression` 构造函数直接拒绝空操作数**（实测
     /// `ArgumentException: And expression requires at least one operand`），
-    /// **所以我按基线写的那两段分支在这里不可达——已删掉，而不是留一段取不到的代码。**
+    /// **所以我写的那两段分支在这里不可达——已删掉，而不是留一段取不到的代码。**
     ///
     /// **这条判据钉的是那个约束本身**：谁把构造函数的检查去掉，"空逻辑"就会从"不可能"变成"未处理"。
     ///
-    /// The baseline's `translateAnd` and `translateOr` both have an "operands are empty" branch (empty `and` is always true,
+    /// `translateAnd` and `translateOr` both have an "operands are empty" branch (empty `and` is always true,
     /// empty `or` matches nothing), **because Kotlin's `AndExpression` allows an empty list.**
     ///
     /// **The C# `AndExpression` / `OrExpression` constructors reject empty operands outright** (measured:
     /// `ArgumentException: And expression requires at least one operand`),
-    /// **so the two branches written after the baseline are unreachable here — they were deleted rather than left as dead code.**
+    /// **so the two branches written after the code are unreachable here — they were deleted rather than left as dead code.**
     ///
     /// **This pins the constraint itself**: remove the constructor check and "empty logical" goes from impossible to unhandled.
     /// </remarks>

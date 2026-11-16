@@ -21,13 +21,13 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **指数函数的分段线性近似** / A piecewise-linear approximation of the exponential.
 /// </summary>
 /// <remarks>
-/// **按基线 `NonlinearPiecewise.kt` 的 `ExpFunction` 补。**
+/// **按的 `ExpFunction` 补。**
 ///
 /// **`exp` 不是线性的，所以这里给的不是"指数函数"，是"指数函数在给定区间上的分段线性近似"。**
 /// **这个区别决定了两件事**：**① 断点上误差恰好为零；② 段中间有误差，且段数越少误差越大。**
 /// **所以"抽查几个断点"永远看不出段数不够。**
 ///
-/// **The `ExpFunction` from the baseline's `NonlinearPiecewise.kt`.**
+/// **The `ExpFunction` from its.**
 ///
 /// **`exp` is not linear, so what this provides is not "the exponential" but "a piecewise-linear approximation of it
 /// over a given interval".**
@@ -114,14 +114,14 @@ public sealed class ExpFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynomia
     /// <param name="name">函数名称 / Function name.</param>
     /// <param name="displayName">可选显示名称 / Optional display name.</param>
     /// <remarks>
-    /// **默认 16 段与基线一致。** **段数越少，区间中部的近似误差越大**——
+    /// **默认 16 段。** **段数越少，区间中部的近似误差越大**——
     /// **而误差在断点上恰好为零，所以"抽查几个断点"看不出段数不够。**
     ///
     /// **`bigM` 为空时构造会去推导输入多项式的有限界**，**而无界变量推导不出界，构造就失败**——
     /// **这是 `UnivariateLinearPiecewiseFunction` 的既有约束，不是这里加的。**
     /// **要建模无界变量上的 `exp`，必须先给出界（把变量声明在有限区间上，或显式传 `bigM`）。**
     ///
-    /// **The default of 16 segments matches the baseline.** **Fewer segments mean more error in the middle of each
+    /// **The default of 16 segments matches the code.** **Fewer segments mean more error in the middle of each
     /// interval** — **and the error is exactly zero at the breakpoints, so "spot-check a few breakpoints" cannot
     /// reveal too few segments.**
     ///

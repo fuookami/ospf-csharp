@@ -18,23 +18,23 @@ namespace Fuookami.Ospf.Math.Symbol.Expression.Parser;
 /// 标量表达式的算术解析层 / The arithmetic layer of the scalar expression parser.
 /// </summary>
 /// <remarks>
-/// 基线 `expression/parser/ScalarParser.kt`（713 行）里**算术那一段**在这里。
+/// 里**算术那一段**在这里。
 /// **C# 侧此前只有 `Parser` 内部一个私有的 `ParseScalarValue`**，**只服务比较操作数**（字面量与路径），
 /// **没有公开的标量入口，也没有算术。**
 ///
-/// **本层不做三元、`if-then-else`、逻辑与模式匹配**——那些仍在基线里，**而绊线钉着它们不在。**
+/// **本层不做三元、`if-then-else`、逻辑与模式匹配**——那些仍在，**而绊线钉着它们不在。**
 ///
-/// The arithmetic part of the baseline's `ScalarParser.kt` lives here.
+/// The arithmetic part of its lives here.
 /// **C# had only a private `ParseScalarValue` inside `Parser`, serving comparison operands (literals and paths)**,
 /// **with no public scalar entry and no arithmetic.**
-/// **This layer does not do ternaries, `if-then-else`, logic, or pattern matching** — those stay in the baseline,
+/// **This layer does not do ternaries, `if-then-else`, logic, or pattern matching** — those stay in the code,
 /// **and a tripwire pins their absence.**
 ///
-/// 优先级与结合性（与基线一致）：
+/// 优先级与结合性：
 /// `additive`（`+`/`-`，左结合）→ `multiplicative`（`*`/`/`/`%`，左结合）→ `unaryMinus` → `power`（`^`/`**`，**右结合**）→ `unaryPlus` → `primary`。
 /// **`-2^2` 读作 `-(2^2)`**：一元负号比幂松。**`2^3^2` 读作 `2^(3^2)`**：幂右结合。
 ///
-/// Precedence and associativity, matching the baseline: **`-2^2` means `-(2^2)`** and **`2^3^2` means `2^(3^2)`**.
+/// Precedence and associativity, matching the code: **`-2^2` means `-(2^2)`** and **`2^3^2` means `2^(3^2)`**.
 /// </remarks>
 public sealed class ScalarExpressionParser
 {
@@ -295,7 +295,7 @@ public sealed class ScalarExpressionParser
     }
 
     /// <summary>合并两个布尔为 or / Merge two booleans into an or.</summary>
-    /// <remarks>**两边已经是 `OrExpression` 时展开，不再套一层**——**否则 `a or b or c` 会变成右倾嵌套，而扁平的那个才与基线一致。**</remarks>
+    /// <remarks>**两边已经是 `OrExpression` 时展开，不再套一层**——**否则 `a or b or c` 会变成右倾嵌套，而扁平的那个才。**</remarks>
     private static OrExpression MergeOr(BooleanExpression left, BooleanExpression right) =>
         new([.. left is OrExpression l ? l.Operands : [left], .. right is OrExpression r ? r.Operands : [right]]);
 

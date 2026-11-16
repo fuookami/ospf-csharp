@@ -99,7 +99,7 @@ public class FixedIntegerLpGatesTests {
     /// <remarks>
     /// **直接转发到 `ProvenanceDualMapping.MapRanges`**，规则与前面一致完全一致。
     ///
-    /// **Forwards to `ProvenanceDualMapping.MapRanges`**, with the rule ported.
+    /// **Forwards to `ProvenanceDualMapping.MapRanges`**, with the rule implemented.
     /// </remarks>
     [Fact]
     public void TheSingleRowRemap_ShouldDropMultiRowLowerings() {

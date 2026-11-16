@@ -13,11 +13,11 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// 能力探测**没有 SDK 就不声明任何能力** / With no SDK, detect claims nothing.
 /// </summary>
 /// <remarks>
-/// 基线的探测器有两个可注入点（`modelClass` 与 SDK 常量），测试就靠这两个点验证"探测不到就什么都不说"。
+/// 探测器有两个可注入点（`modelClass` 与 SDK 常量），测试就靠这两个点验证"探测不到就什么都不说"。
 /// 把同样的可注入点搬到.NET 侧：`Detect(modelType)` 可以喂一个假类，于是判据**不依赖本机装没装 Gurobi**——
 /// 这一点很要紧，否则判据在 CI 上绿、在开发机上红，红绿都由环境决定。
 ///
-/// The baseline's detector has two injectable points (`modelClass` and an SDK constant), and its tests use them to verify "cannot detect → say nothing". carries the
+/// The code's detector has two injectable points (`modelClass` and an SDK constant), and its tests use them to verify "cannot detect → say nothing". carries the
 /// same injectable point over: `Detect(modelType)` takes a fake class, so the criteria **do not depend on whether this machine has Gurobi** — which matters, because
 /// otherwise the criteria go green in CI and red on a developer machine, with the colour decided by the environment.
 /// </remarks>
@@ -45,10 +45,10 @@ public sealed class GurobiFunctionCapabilitiesTests
     /// **`GeneralMinMax` 要两个方法都在才声明** / `GeneralMinMax` needs both methods before it is claimed.
     /// </summary>
     /// <remarks>
-    /// 基线也是 `addGenConstrMax` 与 `addGenConstrMin` **两个都要**。只有一个时声明"支持"，会让上层去调不存在的那一半——
+    /// 是 `addGenConstrMax` 与 `addGenConstrMin` **两个都要**。只有一个时声明"支持"，会让上层去调不存在的那一半——
     /// 而调用那一刻的错误会出现在**另一端**，看起来像上层写错了。
     ///
-    /// The baseline requires **both** `addGenConstrMax` and `addGenConstrMin`. Claiming support with only one lets the layer above call the missing half, and the error
+    /// The code requires **both** `addGenConstrMax` and `addGenConstrMin`. Claiming support with only one lets the layer above call the missing half, and the error
     /// surfaces **at the other end**, looking like the caller's mistake.
     /// </remarks>
     [Fact]
@@ -61,9 +61,9 @@ public sealed class GurobiFunctionCapabilitiesTests
 
     /// <summary>**一个方法可以支撑两种能力** / One method can back two capabilities.</summary>
     /// <remarks>
-    /// `AddSOS` 的 `type` 参数决定 SOS1 还是 SOS2（基线的 `addSOS` 同理），所以它一出现就同时声明两项。
+    /// `AddSOS` 的 `type` 参数决定 SOS1 还是 SOS2（`addSOS` 同理），所以它一出现就同时声明两项。
     ///
-    /// `AddSOS`'s type argument picks SOS1 or SOS2 (the baseline's `addSOS` is the same), so its presence claims both.
+    /// `AddSOS`'s type argument picks SOS1 or SOS2 (its `addSOS` is the same), so its presence claims both.
     /// </remarks>
     [Fact]
     public void AnSosMethod_ShouldClaimBothTypes() {

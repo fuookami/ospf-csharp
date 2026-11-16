@@ -116,9 +116,9 @@ public sealed record SchedulingDecision(
     /// 补全缺失的调度字段 / Fill in missing scheduling fields.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：只补空字段，绝不覆盖服务端或 artifact 已经给出的值；未知语义下结果强制为
+    /// ：只补空字段，绝不覆盖服务端或 artifact 已经给出的值；未知语义下结果强制为
     /// <c>UNKNOWN</c>，即使本对象原本宣称已完成。
-    /// Mirrors the baseline: only empty fields are filled and values already supplied by the server or
+    /// only empty fields are filled and values already supplied by the server or
     /// the artifact are never overwritten; under unknown semantics the outcome is forced to
     /// <c>UNKNOWN</c> even if this object claimed completion.
     /// </remarks>

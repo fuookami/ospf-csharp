@@ -11,9 +11,9 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **六个形状算子：错一位就静默** / Six shape operators: one off is silent.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxShapeOperators.kt`。**这些算子只算形状、不搬元素，所以不会抛异常——** **只会在下游让一个约束绑错变量。**
+/// 同步 Kotlin `dee897d2` 的。**这些算子只算形状、不搬元素，所以不会抛异常——** **只会在下游让一个约束绑错变量。**
 ///
-/// Syncs `OnnxShapeOperators.kt`. **These operators compute shapes without moving elements, so nothing throws — downstream a constraint simply binds the wrong
+/// Syncs. **These operators compute shapes without moving elements, so nothing throws — downstream a constraint simply binds the wrong
 /// variable.**
 /// </remarks>
 public class OnnxShapeOperatorsTests

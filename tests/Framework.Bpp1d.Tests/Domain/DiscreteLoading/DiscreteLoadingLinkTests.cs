@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **附加重量联动与一维几何适配** / Additional-weight linking and the 1-D geometry adapter.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `linkAdditionalWeight` 与 `Bpp1dDiscreteLoading.context`：
+/// 对应`linkAdditionalWeight` 与 `Bpp1dDiscreteLoading.context`：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// | 舱位与几何一一对应 | 单向检查 | 没有区间的舱位**冲突全漏** |
 /// | 冲突是合并 | 直接替换 | 调用方**业务上已声明的互斥**被悄悄丢掉 |
 ///
-/// Mirrors the baseline's `linkAdditionalWeight` and `Bpp1dDiscreteLoading.context`; the table lists the four failure modes.
+/// And `Bpp1dDiscreteLoading.context`; the table lists the four failure modes.
 /// </remarks>
 public class DiscreteLoadingLinkTests {
     /// <summary>**附加重量必须被约束为非负** / The additional weight must be constrained non-negative.</summary>

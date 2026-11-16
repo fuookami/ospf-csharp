@@ -9,10 +9,10 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **ONNX 移植的未移植项必须逐条写清理由与升级路径** / The unmigrated ONNX items need a reason and an upgrade path each.
+/// **ONNX 移植的未实现项必须逐条写清理由与升级路径** / The unmigrated ONNX items need a reason and an upgrade path each.
 /// </summary>
 /// <remarks>
-/// **未移植项若不逐条写清"为什么没做、怎么补上、影响谁"，下一个人只能从代码里猜——** **而猜错的方向通常是"以为已经支持了"。**
+/// **未实现项若不逐条写清"为什么没做、怎么补上、影响谁"，下一个人只能从代码里猜——** **而猜错的方向通常是"以为已经支持了"。**
 /// **这条判据钉的是清单本身的存在与形状，不是清单内容的对错：** **内容的对错由各批的判据负责。**
 ///
 /// **Without a per-item "why not, how to add it, who is affected", the next reader can only guess from the code — and the usual wrong guess is "it is already

@@ -73,9 +73,9 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
 
     /// <inheritdoc/>
     /// <remarks>
-    /// **实例持有而不是每次新建**：早先是 {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create{/code}，每次访问都返回一个全新的空范围，于是 {code}symbol.Range.SetRange(...){/code} 设完就丢——基线的 `loadAmount[j].range.leq(mla)` 在 C# 里**根本无法表达**，而写上去的那行代码看起来完全正常。
+    /// **实例持有而不是每次新建**：早先是 {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create{/code}，每次访问都返回一个全新的空范围，于是 {code}symbol.Range.SetRange(...){/code} 设完就丢——`loadAmount[j].range.leq(mla)` 在 C# 里**根本无法表达**，而写上去的那行代码看起来完全正常。
     /// **Instance-held rather than freshly created**: this used to be {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create{/code}, returning a brand-new empty range on every access, so
-    /// {code}symbol.Range.SetRange(...){/code} was discarded immediately — the baseline's `loadAmount[j].range.leq(mla)` was **inexpressible** in C#, while the line that tried looked fine.
+    /// {code}symbol.Range.SetRange(...){/code} was discarded immediately — its `loadAmount[j].range.leq(mla)` was **inexpressible** in C#, while the line that tried looked fine.
     /// </remarks>
     public ExpressionRange<Flt64> Range { get; } = ExpressionRange<Flt64>.Create();
 

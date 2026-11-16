@@ -22,17 +22,17 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **回收只摘变量，不动约束与目标项** / Retirement drops the variable only, not constraints or objective terms.
 /// </summary>
 /// <remarks>
-/// 基线的 `remove(item)` 只有一行 `tokens.remove(item)`。所以回收之后：
+/// `remove(item)` 只有一行 `tokens.remove(item)`。所以回收之后：
 /// 以它为系数的约束仍在、以它为系数的目标项仍在——**都不报错**，因为变量已被固定为 0。
 ///
 /// 这就是"行为对、模型脏"：解不变，但任何按符号表遍历模型的下游（导出、审计、二次求解）
 /// 都会看到悬空引用。这里提供的是**观测**，不是修复——清理会让模型偏离固定基线。
 ///
-/// The baseline's `remove(item)` is one line: `tokens.remove(item)`. So after retirement the constraints using it as a coefficient remain, and so do the objective terms —
+/// `remove(item)` is one line: `tokens.remove(item)`. So after retirement the constraints using it as a coefficient remain, and so do the objective terms —
 /// **neither raises anything**, because the variable is already pinned to 0.
 ///
 /// That is "right behaviour, dirty model": the solution is unchanged, but any downstream walking the model by symbol table (export, audit, re-solve) sees a dangling reference.
-/// offers **observation, not repair** — cleaning up would move the model away from the pinned baseline.
+/// offers **observation, not repair** — cleaning up would move the model away .
 /// </remarks>
 public class RetirementResidueTests {
     private static (LinearMetaModel<Flt64> Model, CombinationVariableItem<UInt8, Binary> Kept, CombinationVariableItem<UInt8, Binary> Retired) MakeModelWithOneConstraintEach() {
@@ -107,15 +107,15 @@ public class RetirementResidueTests {
     }
 
     /// <summary>
-    /// **`RemoveObjectiveTerms` 能清掉残留，但基线不调它** / `RemoveObjectiveTerms` clears the residue, but the baseline does not call it.
+    /// **`RemoveObjectiveTerms` 能清掉残留，但基线不调它** / `RemoveObjectiveTerms` clears the residue, but the code does not call it.
     /// </summary>
     /// <remarks>
     /// 这条判据的作用是钉住"工具存在、而基线选择不用"这个事实：
     /// 若哪天有人在 `RemoveColumns` 里顺手加上清理，这里会变绿，而**回收后的模型会开始偏离固定基线**——
     /// 上游的 `RetirementResidueTests` 仍然会指出偏离发生了什么。
     ///
-    /// The point of this criterion is to pin the fact that "the tool exists and the baseline chooses not to use it": if someone later adds the cleanup to `RemoveColumns`, this goes
-    /// green while **the post-retirement model starts diverging from the pinned baseline** — and the criteria above still say what the divergence is.
+    /// The point of this criterion is to pin the fact that "the tool exists and the code chooses not to use it": if someone later adds the cleanup to `RemoveColumns`, this goes
+    /// green while **the post-retirement model starts diverging ** — and the criteria above still say what the divergence is.
     /// </remarks>
     [Fact]
     public void RemoveObjectiveTerms_ShouldClearTheResidue() {

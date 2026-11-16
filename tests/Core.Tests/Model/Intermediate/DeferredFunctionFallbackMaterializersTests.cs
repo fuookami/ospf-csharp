@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 物化层：三种失败必须分开 / The three failures must stay apart.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的六个物化器。
+/// 对齐的六个物化器。
 ///
 /// **"用错物化器"与"能力还没有"是两件事，修法完全不同。**
 ///
@@ -28,13 +28,13 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 public class DeferredFunctionFallbackMaterializersTests
 {
     /// <summary>
-    /// **类型不对与未移植给出不同的消息** / A wrong type and an unported row generator say different things.
+    /// **类型不对与未实现给出不同的消息** / A wrong type and an unimplemented row generator say different things.
     /// </summary>
     /// <remarks>
     /// **这是这里的核心判据。**
     ///
     /// **`Pwl` 物化器收到一个 `SemiStructure`：类型不对。**
-    /// **`Pwl` 物化器收到一个 `UnivariateLinearPiecewiseStructure`：类型对，但行生成还没移植。**
+    /// **`Pwl` 物化器收到一个 `UnivariateLinearPiecewiseStructure`：类型对，但行生成还没实现。**
     ///
     /// **两条消息都必须出现，而且<b>必须不同</b>。**
     /// **合成一条的话，调用方看到"不支持"会先去查自己传错了类型，而真正的原因是
@@ -43,7 +43,7 @@ public class DeferredFunctionFallbackMaterializersTests
     /// **This is the batch's core criterion.**
     ///
     /// **The `Pwl` materializer receiving a `SemiStructure` is a type mismatch; receiving a
-    /// `UnivariateLinearPiecewiseStructure` is the right type with an unported row generator.**
+    /// `UnivariateLinearPiecewiseStructure` is the right type with an unimplemented row generator.**
     ///
     /// **Both messages must exist and <b>must differ</b>.** **Collapsed into one, a caller seeing "unsupported" checks its
     /// own type first while the real cause is an absent capability — the investigation goes the wrong way.**
@@ -64,10 +64,10 @@ public class DeferredFunctionFallbackMaterializersTests
         wrongMessage.Should().Contain("unsupported");
         wrongMessage.Should().Contain("SemiStructure");
 
-        // **此后"未移植"这一格空了：七个结构里已经没有不产生行的。
+        // **此后"未实现"这一格空了：七个结构里已经没有不产生行的。
         // 所以这里改为断言那条措辞<b>不再出现</b>——否则它就成了一个永远为假的类别。**
         //
-        // **The "not ported" cell is empty: none of the seven structures lacks row generation.
+        // **The "not implemented" cell is empty: none of the seven structures lacks row generation.
         // So this asserts that wording <b>no longer appears</b>, rather than keeping a category with no instances.**
         IDeferredFunctionFallbackMaterializer core = DeferredFunctionFallbackMaterializers.Core;
         foreach (DeferredFunctionStructure structure in new DeferredFunctionStructure[] {
@@ -88,7 +88,7 @@ public class DeferredFunctionFallbackMaterializersTests
     }
 
     /// <summary>
-    /// **三个结构明确未移植，四个能物化** / Three structures are explicitly unported; four can materialize.
+    /// **三个结构明确未实现，四个能物化** / Three structures are explicitly unimplemented; four can materialize.
     /// </summary>
     /// <remarks>
     /// **物化层的完整性由<b>行生成</b>决定，而不是由分派表决定。**

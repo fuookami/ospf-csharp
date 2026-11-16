@@ -29,9 +29,9 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **查询会返回一个错误的结果集，而调用方以为查对了**——
 /// **这是最难发现的一类错误：它不抛异常，只是答错了。**
 ///
-/// The baseline's `MongoScalarTranslator` (**209 lines**) turns scalar expressions into aggregation-pipeline values.
+/// The code's `MongoScalarTranslator` (**209 lines**) turns scalar expressions into aggregation-pipeline values.
 /// **Found that none of the four C# Mongo translators existed** (`BsonDocument` appeared 0 times under `src/`),
-/// **while the baseline carries 18 offline criteria across them — none needing a Mongo instance.** adds the first.
+/// **while the code carries 18 offline criteria across them — none needing a Mongo instance.** adds the first.
 ///
 /// **Why "fails" itself needs pinning**: returning `null` or the input for an unsupported operator
 /// **makes the query return a wrong result set while the caller believes it succeeded** —
@@ -131,12 +131,12 @@ public class MongoScalarTranslatorTests
 
     /// <summary>**不支持的运算必须失败，且给出理由** / An unsupported operator fails with a reason.</summary>
     /// <remarks>
-    /// **`ABS` 与 `POWER` 在基线里都不支持**（Mongo 有 `$abs`/`$pow`，基线没接）。
+    /// **`ABS` 与 `POWER` 在都不支持**（Mongo 有 `$abs`/`$pow`，基线没接）。
     /// **这里跟着基线失败，不自作主张补上**——**多接一个就是多一个"本仓比基线多"的地方，而那不是同步。**
     ///
-    /// **`ABS` and `POWER` are both unsupported in the baseline** (Mongo has `$abs`/`$pow`; the baseline never wired them).
-    /// **This fails with the baseline rather than inventing support** — **wiring an extra one is a place where this repo
-    /// does more than the baseline, and that is not synchronisation.**
+    /// **`ABS` and `POWER` are both unsupported in the code** (Mongo has `$abs`/`$pow`; the code never wired them).
+    /// **This fails with the code rather than inventing support** — **wiring an extra one is a place where this repo
+    /// does more than the code, and that is not synchronisation.**
     /// </remarks>
     [Fact]
     public void TheUnsupportedOperators_ShouldFailRatherThanVanish()

@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 第三点最容易漏：少判"主舱"或"模式"任一条，下舱或全配载下也会生成没有意义的重量变量——**那种模型不会报错，只会变钝**。
 ///
-/// This port had four boolean flags and no status code, and the assembler hard-coded `stowageNeeded = true`. The result: **`Loaded` and `Reserved` are both
+/// This implementation had four boolean flags and no status code, and the assembler hard-coded `stowageNeeded = true`. The result: **`Loaded` and `Reserved` are both
 /// unavailable and both need no decision**, so they were identical in the model and "already loaded" could not be told from "reserved".
 ///
 /// Four paired points: the codes of `Loaded` and `Reserved` **differ** while both are unavailable; `Preassigned` needs adjustment and `Unloaded` does not; the

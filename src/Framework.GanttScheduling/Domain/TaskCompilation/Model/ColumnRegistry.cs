@@ -1,7 +1,7 @@
 // 列变量登记 / Registration of column variables.
-// 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的 `_x.add(xi)` 与
+// 与固定 Kotlin 的 `_x.add(xi)` 与
 // `x[otherIteration][task2]` 两级访问对应。
-// Mirrors `_x.add(xi)` and the two-level `x[otherIteration][task2]` access in the pinned baseline's `task_compilation/model/Compilation.kt`.
+// Mirrors `_x.add(xi)` and the two-level `x[otherIteration][task2]` access's.
 
 using System;
 using System.Collections.Generic;
@@ -12,14 +12,14 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 列变量登记 / Registration of column variables.
 /// </summary>
 /// <remarks>
-/// 迭代编译每加一轮列就新增一组变量（基线的 `xi = BinVariable1("x_$iteration", ...)`），
+/// 迭代编译每加一轮列就新增一组变量（`xi = BinVariable1("x_$iteration", ...)`），
 /// 并且**历史轮次不会被丢弃**：跨轮冲突约束要写成 `xi[task1] + x[otherIteration][task2] ≤ 1`，
 /// 也就是回头访问**任意一轮**的变量。
 ///
 /// 于是"按轮次分组"这件事不能省：一个扁平的 `Dictionary&lt;task, var&gt;` 会让**同名任务在不同轮次互相覆盖**，
 /// 跨轮冲突就会约束到同一个变量上（`xi + xi ≤ 1`），于是**本该互斥的两个任务安静地共处**。
 ///
-/// Iterative compilation adds a fresh variable set every round (the baseline's `xi = BinVariable1("x_$iteration", ...)`) and **never discards earlier rounds**: cross-round
+/// Iterative compilation adds a fresh variable set every round (its `xi = BinVariable1("x_$iteration", ...)`) and **never discards earlier rounds**: cross-round
 /// conflicts are written as `xi[task1] + x[otherIteration][task2] ≤ 1`, which reaches back into **any** earlier round.
 ///
 /// So grouping by round cannot be skipped: a flat `Dictionary&lt;task, var&gt;` lets **same-named tasks in different rounds overwrite each other**, and a cross-round conflict would

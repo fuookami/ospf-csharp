@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 逼近误差只能在断点<b>之间</b>测出来 / The approximation error is only visible between breakpoints.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NonlinearPiecewise.kt` 基类的 `originalValue` / `originalValueFlt64`。
+/// 对齐基类的 `originalValue` / `originalValueFlt64`。
 ///
 /// **线性插值在每个断点处与真实函数完全重合，所以"抽查断点"永远测不出段数不足。**
 /// **这条判据就是那个陷阱的可执行版本。**

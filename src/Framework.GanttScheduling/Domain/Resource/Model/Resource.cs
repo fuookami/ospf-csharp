@@ -128,7 +128,7 @@ public abstract class Resource<C, V> : ManualIndexed
     /// <returns>初始数量 / The initial quantity.</returns>
     /// <remarks>
     /// **不能直接 `Convert.ToDouble`**：`Flt64` 不实现 `IConvertible`，`V` 是 `Flt64` 时那一步抛
-    /// `InvalidCastException`。`IAbstractResourceCapacity` 里的 `ToFlt64` 早就处理了这一支，这里照抄。
+    /// `InvalidCastException`。`IAbstractResourceCapacity` 里的 `ToFlt64` 早就处理了这一支，这里沿用。
     ///
     /// **`Convert.ToDouble` cannot be used directly**: `Flt64` does not implement `IConvertible`, so the cast throws `InvalidCastException` whenever `V` is `Flt64`.
     /// `ToFlt64` in `IAbstractResourceCapacity` already handles that case; this mirrors it.

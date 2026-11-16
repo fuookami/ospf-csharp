@@ -103,9 +103,9 @@ public class MaxCopiesAndFinalTests {
         MaxCopies.PerColumn(new[] { oneItem }, both)[0]
             .Should().Be(5UL, "the amount demand decides; the area demand neither overrides nor is counted");
 
-        // **模式字段本身是判据的一部分**：基线的 `Mode` 与 `Demand` 是两个字段，可能不一致。
-        // 造一条"模式说面积、值却是件数"的错配——只看 `Demand` 的实现会把它当件数用，而基线只看 `Mode`，因此应当忽略。
-        // **The mode field is part of the criterion**: the baseline's `Mode` and `Demand` are separate fields and can disagree. A row whose mode says area while its value is an amount is ignored
+        // **模式字段本身是判据的一部分**：`Mode` 与 `Demand` 是两个字段，可能不一致。
+        // 造一条"模式说面积、值却是件数"的错配——只看 `Demand` 的实现会把它当件数用，而看 `Mode`，因此应当忽略。
+        // **The mode field is part of the criterion**: its `Mode` and `Demand` are separate fields and can disagree. A row whose mode says area while its value is an amount is ignored
         // by an implementation that reads the mode, but counted by one that only inspects the value.
         Bpp2dAssignmentDemandEntry mismatched = new(
             Bpp2dAssignmentDemandMode.ItemArea, new ItemId("A"),

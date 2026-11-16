@@ -82,10 +82,10 @@ public class SwitchOccurrenceTests {
     /// </summary>
     /// <remarks>
     /// 这一支用 `<` 严格不等，而**可移分支的 `frontOf` 用 `≤`**。同一个"同时开始"的排布在两支里结论相反，
-    /// 这是基线的原样。判据两条都钉住，否则把两支的严格性搞混也测不出来。
+    /// 这是原样。判据两条都钉住，否则把两支的严格性搞混也测不出来。
     ///
     /// This branch uses strict `&lt;`, while **the movable branch's `frontOf` uses `≤`**. The same "starts together" arrangement gives opposite answers in the two branches, and
-    /// that is the baseline verbatim. Both are pinned, otherwise swapping the two strictnesses would go unnoticed.
+    /// that is the code verbatim. Both are pinned, otherwise swapping the two strictnesses would go unnoticed.
     /// </remarks>
     [Fact]
     public void Fixed_ShouldNotSwitchOnEqualStarts() {

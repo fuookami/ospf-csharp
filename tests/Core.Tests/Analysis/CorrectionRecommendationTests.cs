@@ -17,12 +17,12 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// </summary>
 /// <remarks>
 /// 补了 `CorrectionRecommendation` 的前 325 行**：策略、候选、成本、修正集合、改进方案与四个构造器。
-/// 尾部约 110 行要 `ConflictExplanation`，**它住在带后端求解的 `ConflictAnalyzer.kt` 里，所以没搬，也没写空跑版本。**
+/// 尾部约 110 行要 `ConflictExplanation`，**它住在带后端求解的 里，所以没搬，也没写空跑版本。**
 ///
 /// 判据钉的是**两件"说了就不能反悔"的事**：最小性只在没被截断时成立；总成本必须与成员一致。
 ///
-/// **ported the first 325 lines of `CorrectionRecommendation`**. The last ~110 need `ConflictExplanation`, which lives inside the backend-solving `ConflictAnalyzer.kt`, so they
-/// were neither ported nor stubbed. The criteria pin **two things a claim cannot take back**: minimality holds only without truncation, and the total has to agree with the members.
+/// **implemented the first 325 lines of `CorrectionRecommendation`**. The last ~110 need `ConflictExplanation`, which lives inside the backend-solving, so they
+/// were neither implemented nor stubbed. The criteria pin **two things a claim cannot take back**: minimality holds only without truncation, and the total has to agree with the members.
 /// </remarks>
 public class CorrectionRecommendationTests {
     private static CorrectionCandidate Candidate(string id, double weight = 1.0, double relaxation = 1.0) =>

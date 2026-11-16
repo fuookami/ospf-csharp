@@ -183,7 +183,7 @@ public class BunchSchedulingExecutionResourceUsage<R, C, V>
     /// 不足松弛：`x − 下界` 的负部（`withNegative: true`, `withPositive: false`）。两者都**不建约束**——
     /// 约束由 `ResourceCapacityConstraint` 加，松弛只负责度量。
     ///
-    /// Mirrors the baseline's `BunchSchedulingExecutionResourceUsage.register`: first build a `quantity` symbol per time slot (constant = the resource's initial quantity, range
+    /// First build a `quantity` symbol per time slot (constant = the resource's initial quantity, range
     /// `[lower - less, upper + over]`), then build the over and less slacks per slot. **The range must be set**: an unset range is the full domain, so a slack could take any value and the
     /// over-quantity constraint would lose its meaning — the model stays solvable, only "how much over" always computes to zero. The over slack is the positive part of `x - upper`
     /// (`withNegative: false`, `withPositive: true`); the less slack is the negative part of `x - lower` (`withNegative: true`, `withPositive: false`). Neither **builds a constraint** — the

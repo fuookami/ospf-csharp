@@ -27,12 +27,12 @@ public sealed record FrameworkSolveOptions {
     /// 进度上报上下文；为 null 时不启用统一进度上报 / Progress reporting context; when null, unified progress reporting is off.
     /// </summary>
     /// <remarks>
-    /// **基线 `ColumnGenerationSolver.kt` 通过 `options.progressContext` 取到它，再用适配器包装回调。**
+    /// **通过 `options.progressContext` 取到它，再用适配器包装回调。**
     /// 移植了适配器，但 C# 的选项里**没有这个字段**，所以适配器**没有可接的位置**。
     ///
     /// 这条是"有地方接 ≠ 已经接上"的最后一环：适配器是工具，**得有人拿它去包装**。
     ///
-    /// **The baseline's `ColumnGenerationSolver.kt` obtains it from `options.progressContext` and uses the adapters to wrap callbacks.** ported the adapters,
+    /// **The code's obtains it from `options.progressContext` and uses the adapters to wrap callbacks.** implemented the adapters,
     /// but the C# options **had no such field**, so the adapters **had nowhere to hook in**.
     ///
     /// This is the last link of "somewhere to hook ≠ hooked up": adapters are tools, and **someone has to use them to wrap**.

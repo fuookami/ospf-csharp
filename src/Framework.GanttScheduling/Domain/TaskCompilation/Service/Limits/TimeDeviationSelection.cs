@@ -1,11 +1,11 @@
 // 时间偏移量的任务筛选 / Task selection for time-deviation objectives.
-// 与固定 Kotlin 基线 `task_compilation/service/limits/` 里的两处筛选对应：
-// `TaskAdvanceTimeMinimiaztion.kt`（**文件名拼错，类名正确**）的
+// 与`task_compilation/service/limits/` 里的两处筛选对应：
+//（**文件名拼错，类名正确**）的
 // `tasks.filter { it.advanceEnabled && it.scheduledTime != null }`，
-// 以及 `TaskDelayTimeMinimization.kt` 的 `tasks.filter { it.delayEnabled && it.scheduledTime != null }`。
-// Mirrors the two filters in the pinned baseline's `task_compilation/service/limits/`:
-// `tasks.filter { it.advanceEnabled && it.scheduledTime != null }` in `TaskAdvanceTimeMinimiaztion.kt`
-// (the **file name is misspelled, the class name is not**) and the `delayEnabled` counterpart in `TaskDelayTimeMinimization.kt`.
+// 以及 的 `tasks.filter { it.delayEnabled && it.scheduledTime != null }`。
+// The two filters in the: 
+// `tasks.filter { it.advanceEnabled && it.scheduledTime != null }`
+// (the **file name is misspelled, the class name is not**) and the `delayEnabled` counterpart.
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 第三条最容易被漏掉：它看起来像冗余校验，其实是这个量的**定义前提**。
 /// 一个任务可以声明"允许提前"却还没有排定时间（例如排在某个未定的班次里），此时它的偏移量**不是一个数**。
 ///
-/// 基线把这种情况**排除**而不是当成零——当成零会让"偏移了但没有基准"安静地通过，
+/// 这种情况**排除**而不是当成零——当成零会让"偏移了但没有基准"安静地通过，
 /// 而真正的结论应该是"这个任务的偏移量还不可知"。
 ///
 /// 两个开关**互不影响**：一个任务可以同时允许提前与延迟，也可以只允许其中一个。
@@ -50,7 +50,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// The third is the easiest to skip: it looks like a redundant validation but is really the **precondition for the definition**. A task may declare "advancing allowed" before a
 /// scheduled time exists (say it sits in an undecided shift), and then its deviation is not a number.
 ///
-/// The baseline **excludes** that case rather than treating it as zero: zero would let "deviated, but there is no reference" through quietly, when the honest conclusion is "this
+/// The code **excludes** that case rather than treating it as zero: zero would let "deviated, but there is no reference" through quietly, when the honest conclusion is "this
 /// task's deviation is not knowable yet".
 ///
 /// The two switches are **independent**: a task may allow both directions, or only one. Using `advanceEnabled` for the delay objective yields a **plausible-looking** task set

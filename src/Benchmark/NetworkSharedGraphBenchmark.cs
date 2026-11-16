@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **共享同一张不可变图上的并发首读与稳态读取** / Concurrent first consumption and steady reads over one shared immutable graph.
 /// </summary>
 /// <remarks>
-/// **与基线 `NetworkSharedGraphBenchmark.kt`（146 行，`19c72455` 新增）对应，与 `NetworkIndexBuildBenchmark` 互补：**
+/// **与 `NetworkIndexBuildBenchmark` 互补：**
 /// **后者是每线程独立建图，而这里所有 reader 共享同一张图**。** **冷批次作为一个完整操作计时**，
 /// 含建图、线程调度、栅栏对齐与全部 reader 完成；**`DispatchOnly` 是同一调度协议下的空调度对照。**
 ///
@@ -127,7 +127,7 @@ public class NetworkSharedGraphBenchmark
         // **到达顺序号用原子递增分配，和基线一致：** **若改成"线程下标"，屏障对齐后的顺序就不再真实，
         // 而"谁先到"正是并发首读要观察的东西。**
         //
-        // **Arrival ordinals come from an atomic counter, as in the baseline: using the thread index instead would fabricate an order after the
+        // **Arrival ordinals come from an atomic counter, as in the code: using the thread index instead would fabricate an order after the
         // barrier, and "who arrived first" is exactly what a concurrent first read is meant to observe.**
         int arrivals = 0;
         for (int slot = 0; slot < Readers; ++slot) {

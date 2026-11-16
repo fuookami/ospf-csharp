@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 桥接变量必须被约束，否则它自由 / The bridge variable must be constrained or it is free.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticIf.kt`、`QuadraticIfThen.kt`、`QuadraticIfIn.kt` 补三个类。
+/// 对齐、 补三个类。
 ///
 /// **三者都只做一件事**：**把二次多项式桥接成一个实变量，再交给已有的线性 `If*` 函数。**
 /// **分支编码本身没有任何新增。**

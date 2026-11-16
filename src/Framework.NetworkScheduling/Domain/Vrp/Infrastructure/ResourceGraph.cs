@@ -1,6 +1,6 @@
 // 车辆资源维度的有向弧 / Directed arc in a vehicle-resource dimension.
-// 与固定 Kotlin 基线 `ResourceArc.kt`（23 行）、`ResourceGraph.kt`（58 行）对应。
-// Mirrors the pinned baseline's `ResourceArc.kt` and `ResourceGraph.kt`.
+// 与固定 Kotlin 、（58 行）对应。
+// And.
 
 using System;
 using System.Collections.Generic;
@@ -38,9 +38,9 @@ public static class ResourceArcs {
 /// 车辆资源维度的有向弧 / Directed arc in a vehicle-resource dimension.
 /// </summary>
 /// <remarks>
-/// 用 `record` 而非类：基线是 `data class`，两侧的 `Set` 成员判断（`arc in forbiddenArcs`）与冲突比较（`arc != required`）
+/// 用 `record` 而非类：`data class`，两侧的 `Set` 成员判断（`arc in forbiddenArcs`）与冲突比较（`arc != required`）
 /// 都依赖**结构相等**。四个字段全是浅值对象，结构相等在这里既正确又便宜。
-/// A `record` rather than a class: the baseline is a `data class`, and both the `Set` membership test
+/// A `record` rather than a class: the code is a `data class`, and both the `Set` membership test
 /// (`arc in forbiddenArcs`) and the conflict comparison (`arc != required`) rely on **structural equality**. All four fields
 /// are shallow value objects, so structural equality is both correct and cheap here.
 /// </remarks>

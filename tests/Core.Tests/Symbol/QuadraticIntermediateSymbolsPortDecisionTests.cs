@@ -14,10 +14,10 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 
 /// <summary>
 /// **`QuadraticIntermediateSymbols` 这个工厂对象不移植，理由与同族另一项不同** /
-/// The `QuadraticIntermediateSymbols` factory object is not ported, for a different reason than the sibling decision.
+/// The `QuadraticIntermediateSymbols` factory object is not implemented, for a different reason than the sibling decision.
 /// </summary>
 /// <remarks>
-/// 逐项对照的对象是基线 `SymbolCombination.kt`（843 行）。
+/// 逐项对照的对象是。
 ///
 /// **先数叶子：** **`IAbstractSymbolCombination`、`SymbolCombination`、
 /// `QuantitySymbolCombination` 本仓<b>全都有</b>**（`src/Core/Symbol/SymbolCombination.cs`）。
@@ -25,8 +25,8 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 /// **缺的只有 `QuadraticIntermediateSymbols`——一个 `data object`，十个 `operator fun invoke` 重载，
 /// 每个都是"按形状造一个装满空二次表达式符号的组合"。**
 ///
-/// **而它在基线里<b>零生产调用方</b>：** **`git grep` 只命中它自己的文件与一个测试
-/// （`SymbolCombinationGenericFactoryTest.kt`）。**
+/// **而它在<b>零生产调用方</b>：** **`git grep` 只命中它自己的文件与一个测试
+///。**
 ///
 /// **这与理由不同，值得分清：**
 ///
@@ -52,13 +52,13 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 /// **"没人用"与"做了也没意义"是两句话。** **前者会变（有一天有人要），后者不会。**
 /// **所以这里的判据必须能区分它们：** **它不证明"做不到"，而证明"现在做得到、只是没做"。**
 ///
-/// The survey item is the baseline's `SymbolCombination.kt` (843 lines).
+/// The survey item is its (843 lines).
 ///
 /// **Counting the leaves first: `IAbstractSymbolCombination`, `SymbolCombination` and
 /// `QuantitySymbolCombination` all exist here.** Only the `QuadraticIntermediateSymbols` factory object is missing — ten
 /// `invoke` overloads, each building a shape's worth of empty quadratic expression symbols.
 ///
-/// **And it has <b>zero production callers</b> in the baseline: `git grep` hits only its own file and one test.**
+/// **And it has <b>zero production callers</b> in the code: `git grep` hits only its own file and one test.**
 ///
 /// **That reason differs from the sibling decision and the two must be kept apart: there the base class was "already had, unobservable, or
 /// an empty check", while this is "buildable, merely unused".** **"Nobody uses it" changes; "it would be pointless" does

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// 力矩模型 / The torque model.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/mac/model/Torque.kt`。四族符号：
+/// 逐条对齐。四族符号：
 ///
 /// | 族 | 构成 | 按阶段 |
 /// | --- | --- | --- |
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Model;
 /// 3. **CLIM 只在宽体机上注册**。窄体机注册一个 CLIM 符号会让约束生成器以为有 CLIM 限制可加。
 /// 4. **救生筏的力矩要用 `Formula.Arm` 从指数反推力臂**，不是直接把指数当力臂用。指数是"力矩除以系数"，量纲与力臂不同。
 ///
-/// Mirrors the baseline. Four families, tabulated above. Four easy mistakes: (1) **fuel belongs only to take-off and landing** — the zero-fuel phase has none, which is the
+/// Four families, tabulated above. Four easy mistakes: (1) **fuel belongs only to take-off and landing** — the zero-fuel phase has none, which is the
 /// definition, the same convention as `TotalWeight`; (2) **dry operating weight enters torque as gravity × arm** and enters the index as an index — different quantities, not one
 /// number renamed; (3) **CLIM is registered on wide-body aircraft only** — a CLIM symbol on a narrow-body tells the constraint generator there is a CLIM limit to add;
 /// (4) **the liferaft's torque needs `Formula.Arm`** to recover an arm from its index, since an index is "torque over a coefficient" and has different dimensions.
@@ -103,7 +103,7 @@ public sealed class Torque
     /// 基线写的是 `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`：**先取重力，再乘力臂**。顺序不能反——先乘力臂会把"重量×力臂"
     /// 当成重量去求重力（差一个 g），而两者数值相差近十倍，看不出是量纲错，只会得到一个偏大十倍的力矩。
     ///
-    /// The baseline writes `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`: **gravity first, then the arm**. The order matters — multiplying the arm first feeds
+    /// The code writes `aircraftModel.gravity(fuselage.dow) * fuselage.balancedArm`: **gravity first, then the arm**. The order matters — multiplying the arm first feeds
     /// "weight × arm" to the gravity conversion (off by g), and the two differ by nearly an order of magnitude, so it reads as a plausible torque rather than a unit error.
     /// </remarks>
     public double DryOperatingTorque() => TorqueOf(_fuselage.Dow, _fuselage.BalancedArm);

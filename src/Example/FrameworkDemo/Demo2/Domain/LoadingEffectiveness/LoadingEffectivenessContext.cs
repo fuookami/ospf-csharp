@@ -18,18 +18,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness;
 /// 装载效能上下文 / The loading-effectiveness context.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/LoadingEffectivenessContext.kt` 对齐：**初始化幂等**，**`Init` 收 `stowageMode`**，
+/// 与对齐：**初始化幂等**，**`Init` 收 `stowageMode`**，
 /// 注册时先派生四个子模型再生成十二条管线。
 ///
-/// **一处刻意的参数删减**：基线的 `init` 还收 `aircraftContext`，但本仓的 `AggregationInitializer` 用不到飞机的任何量
+/// **一处刻意的参数删减**：`init` 还收 `aircraftContext`，但本仓的 `AggregationInitializer` 用不到飞机的任何量
 /// （重量单位那条路径在 已改成"调用方用同一单位"），所以这里**不接一个没有消费者的参数**——接了就只是把
 /// "这个参数必须有"变成一句空话。
 ///
-/// Aligned with the baseline: **initialisation is idempotent**, **`Init` takes the `stowageMode`**, and registration derives the four sub-models before generating the twelve
+/// **initialisation is idempotent**, **`Init` takes the `stowageMode`**, and registration derives the four sub-models before generating the twelve
 /// pipelines.
 ///
-/// **One deliberate parameter omission**: the baseline's `init` also takes an `aircraftContext`, but this port's `AggregationInitializer` reads nothing from the aircraft (the weight-unit
-/// path became "the caller uses one unit"), so this port **does not accept a parameter with no consumer** — accepting it would only turn "this parameter must exist" into an empty
+/// **One deliberate parameter omission**: its `init` also takes an `aircraftContext`, but this implementation's `AggregationInitializer` reads nothing from the aircraft (the weight-unit
+/// path became "the caller uses one unit"), so this implementation **does not accept a parameter with no consumer** — accepting it would only turn "this parameter must exist" into an empty
 /// promise.
 /// </remarks>
 public sealed class LoadingEffectivenessContext
@@ -127,10 +127,10 @@ public sealed class LoadingEffectivenessContext
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 基线的子问题在这里**没有额外约束**（`loading_effectiveness` 的目标全在主问题），所以返回成功是**如实**的，
+    /// 子问题在这里**没有额外约束**（`loading_effectiveness` 的目标全在主问题），所以返回成功是**如实**的，
     /// 不是占位壳。
     ///
-    /// The baseline adds **no extra constraints** to the sub-problem here (every `loading_effectiveness` objective lives in the master problem), so returning success is **accurate**
+    /// The code adds **no extra constraints** to the sub-problem here (every `loading_effectiveness` objective lives in the master problem), so returning success is **accurate**
     /// rather than a placeholder shell.
     /// </remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model) =>

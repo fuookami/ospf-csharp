@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 归一化：真假分支之间必须有正间隔 / The branches must be separated by a positive gap.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Conditional.kt` 的 `normalizedCondition` / `validateConditionBounds`。
+/// 对齐的 `normalizedCondition` / `validateConditionBounds`。
 ///
 /// **"归一化"是把四种关系折算成"严格真"的形态。**
 ///
@@ -92,7 +92,7 @@ public class ConditionNormalizationTests
     /// **At `δ = 0`, `TrueLower = FalseUpper = 0`, so "is this point true or false" has no answer — while the model
     /// stays feasible, because both sides of the indicator rows can be satisfied.**
     ///
-    /// **The baseline errors. The criterion must verify <b>that</b> error rather than merely "it failed"** —
+    /// **The code errors. The criterion must verify <b>that</b> error rather than merely "it failed"** —
     /// **because the positive-gap rule is what fires here, not some earlier check.**
     /// </remarks>
     [Fact]
@@ -224,7 +224,7 @@ public class ConditionNormalizationTests
     ///
     /// **取范围 `[0.2, 0.8]`、`δ = 1`：真分支要 `q ≥ 1`（不满足），假分支要 `q ≤ 0`（不满足）。**
     ///
-    /// **The baseline errors rather than returning "both false"** — **the latter would read as "the condition is always
+    /// **The code errors rather than returning "both false"** — **the latter would read as "the condition is always
     /// false" while the range is simply illegal.**
     ///
     /// **The case takes care to build**: **under `GT` the true branch is `q ≥ 1` and the false branch `q ≤ 0`, while

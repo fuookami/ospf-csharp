@@ -21,9 +21,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Infrastructure;
 /// 建议重量管线上下文 / The weight-recommendation pipeline context.
 /// </summary>
 /// <remarks>
-/// 与基线 `infrastructure/WeightRecommendationPipelineContext.kt` 对齐：**七个上下文、固定的初始化顺序、固定的注册顺序**。
+/// 与对齐：**七个上下文、固定的初始化顺序、固定的注册顺序**。
 ///
-/// 两条顺序都必须照抄，且**两者不一样**：
+/// 两条顺序都必须沿用，且**两者不一样**：
 ///
 /// | 阶段 | 顺序 |
 /// | --- | --- |
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Infrastructure;
 /// 全套流程**只在 `StowageMode.WeightRecommendation` 下跑**，这个常量在每一处调用上都要传，包括 `Init` 里那些
 /// 收模式的子域。
 ///
-/// Aligned with the baseline: **seven contexts, a fixed initialisation order and a fixed registration order**, and the two differ. `Init` runs aircraft, stowage, MAC, airworthiness,
+/// **seven contexts, a fixed initialisation order and a fixed registration order**, and the two differ. `Init` runs aircraft, stowage, MAC, airworthiness,
 /// express effectiveness, recommended-weight equalisation and payload maximisation; `Register` runs stowage, MAC, airworthiness, express effectiveness, recommended-weight equalisation
 /// and payload maximisation. **`Register` omits the aircraft** — that aggregation only supplies model parameters and writes nothing to the model, so adding it would register rows that do
 /// not belong to this pipeline. The whole flow runs **only under `StowageMode.WeightRecommendation`**, which must be passed at every call site, including the sub-domains whose `Init`
@@ -48,10 +48,10 @@ public sealed class WeightRecommendationPipelineContext
     /// 全套流程使用的装载模式 / The stowage mode the whole flow runs under.
     /// </summary>
     /// <remarks>
-    /// 单点定义，避免六个子域各自写一遍常量。基线的每一处调用都写字面量 `StowageMode.WeightRecommendation`，
+    /// 单点定义，避免六个子域各自写一遍常量。每一处调用都写字面量 `StowageMode.WeightRecommendation`，
     /// 本仓用一个常量收敛——语义相同，改成别的模式时只有一处要动。
     ///
-    /// Defined once so six sub-domains do not each repeat the constant. The baseline writes the literal `StowageMode.WeightRecommendation` at every call site; this port converges it to one
+    /// Defined once so six sub-domains do not each repeat the constant. The code writes the literal `StowageMode.WeightRecommendation` at every call site; this implementation converges it to one
     /// constant with identical semantics, so switching modes touches one place.
     /// </remarks>
     public const StowageMode Mode = StowageMode.WeightRecommendation;
@@ -87,7 +87,7 @@ public sealed class WeightRecommendationPipelineContext
         ArgumentNullException.ThrowIfNull(request);
 
         // **必须逐步短路**：把它们塞进数组字面量会**先全部求值**再逐个检查，第一个失败时后面六步已经跑过，
-        // 上下文被改了一半。基线的每一次 `when` 都是当场返回。
+        // 上下文被改了一半。每一次 `when` 都是当场返回。
         // **Must short-circuit step by step**: packing them into an array literal **evaluates all of them first** and only then checks, so a first-step failure would still leave the
         // remaining six contexts half-initialised. Every baseline `when` returns on the spot.
         Try step = AircraftContext.Init(request);

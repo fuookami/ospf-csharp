@@ -44,10 +44,10 @@ public class ActivitySchedulingContextTests {
     /// **首字符为数字被拒** / A leading digit is rejected.
     /// </summary>
     /// <remarks>
-    /// 这个判据价值最高：`[A-Za-z0-9_]*` 这样的宽松正则会放过 `9_model`，而基线的正则要求**首字符是字母**。
+    /// 这个判据价值最高：`[A-Za-z0-9_]*` 这样的宽松正则会放过 `9_model`，而正则要求**首字符是字母**。
     /// 两者只在首字符上不同，所以判据必须是"首字符数字"这一种输入。
     ///
-    /// This is the most valuable criterion: a lenient pattern like `[A-Za-z0-9_]*` would accept `9_model`, while the baseline's pattern requires **a leading letter**. The two
+    /// This is the most valuable criterion: a lenient pattern like `[A-Za-z0-9_]*` would accept `9_model`, while its pattern requires **a leading letter**. The two
     /// differ only at the first character, so the fixture must use a digit there.
     /// </remarks>
     [Theory]

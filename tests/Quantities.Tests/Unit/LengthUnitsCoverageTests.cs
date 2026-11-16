@@ -15,26 +15,26 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// <remarks>
 /// 按公开类型名扫 22 个模块，`quantities` 命中率 **45.6%**（167 个未出现）。
 /// 逐条核实下来，其中最大的一块是**长度单位**：
-/// **基线 `Length.kt` 有 33 个，本仓 `LengthUnits` 只有 10 个**，而 `docs/` 里一次都没提过。
+/// **有 33 个，本仓 `LengthUnits` 只有 10 个**，而 `docs/` 里一次都没提过。
 ///
 /// **单位换算错了不会报错，只会让"5 海里"变成别的长度**——
 /// **所以判据要钉的不是"字段存在"，而是"换算因子是对的"。**
 ///
 /// A sweep over 22 modules by public type name and `quantities` hit **45.6%** (167 absent).
 /// the earlier item-by-item check found the largest block to be **length units**:
-/// **the baseline `Length.kt` has 33 and this repo's `LengthUnits` had 10**, with `docs/` silent about it.
+/// **the code has 33 and this repo's `LengthUnits` had 10**, with `docs/` silent about it.
 ///
 /// **A wrong conversion does not throw; it makes "5 nautical miles" a different length** —
 /// **so the criteria pin the factors, not merely that the fields exist.**
 /// </remarks>
 public class LengthUnitsCoverageTests
 {
-    /// <summary>**基线的 33 个长度单位都在** / All 33 baseline length units are present.</summary>
+    /// <summary>**33 个长度单位都在** / All 33 baseline length units are present.</summary>
     /// <remarks>
-    /// **清单照基线 `Length.kt` 抄，不是照"我们记得的"抄**：
+    /// **清单沿用，不是照"我们记得的"抄**：
     /// **四个地区海里（FR/UK/RU/US）与三个秒差距档（kilo/mega/giga）最容易在凭记忆列举时被漏掉。**
     ///
-    /// **The list is copied from the baseline `Length.kt`, not from memory**:
+    /// **The list is copied from the code, not from memory**.
     /// **the four regional nautical miles (FR/UK/RU/US) and the three parsec scales are the easiest to miss.**
     /// </remarks>
     [Fact]
@@ -106,7 +106,7 @@ public class LengthUnitsCoverageTests
     /// **基线写的是 `LightDay * 365.25`**，**不是 365 天，也不是 365.2425**。
     /// **三者差 0.0069%**——**在光年的量级上就是 6.5 亿公里。**
     ///
-    /// **The baseline writes `LightDay * 365.25`**, **not 365 days and not 365.2425**.
+    /// **The code writes `LightDay * 365.25`**, **not 365 days and not 365.2425**.
     /// **The three differ by 0.0069%** — **which at a light year is about 650 million kilometres.**
     /// </remarks>
     [Fact]
@@ -142,7 +142,7 @@ public class LengthUnitsCoverageTests
     /// <remarks>
     /// **走 `ConversionRule` 而不是反射私有字段**：**私有字段名会变，而 `ConversionRule` 是这个类型对外承诺的东西。**
     ///
-    /// **Goes through `ConversionRule` rather than reflecting a private field**:
+    /// **Goes through `ConversionRule` rather than reflecting a private field**.
     /// **private names change, while `ConversionRule` is what the type promises to the outside.**
     /// </remarks>
     private static double FactorOf(PhysicalUnit unit)

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service;
 /// 乘客域的管线清单 / The passenger-domain pipeline list.
 /// </summary>
 /// <remarks>
-/// 基线 `passenger/service/PipelineListGenerator.kt`：**三条约束在前、三条目标在后**，顺序固定。
+/// ：**三条约束在前、三条目标在后**，顺序固定。
 ///
 /// 顺序在这里有语义：先约束后目标，求解器拿到的才是"在可行域里最小化"；顺序反了不会报错，
 /// 只会让列生成的定价失去可用的对偶信息——**而那是"求解成功但改不动"的形态**。
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service;
 /// 与批次汇编那一份生成器一样，系数不从某个全局 `Parameter` 里摸，而是逐个传进来：
 /// **一个供 6 条管线共用的全局系数表，改一处影响全部，排查时说不清是谁的代价**。
 ///
-/// The baseline's `passenger/service/PipelineListGenerator.kt` puts **three constraints first and three objectives after**, in a fixed order.
+/// The code's puts **three constraints first and three objectives after**, in a fixed order.
 ///
 /// The order carries meaning here: constraints before objectives is what makes the solver "minimise inside the feasible region"; reversing it raises nothing and merely leaves column
 /// generation's pricing without usable dual information — **the "it solved but nothing moves" shape**.

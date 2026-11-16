@@ -10,10 +10,10 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Graph;
 /// **常量张量：形状、载荷与读取** / Constant tensors: shape, payload and reads.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxTensorConstant.kt`。判据钉的是**几处不抛异常却会读错模型**的地方：
+/// 同步 Kotlin `dee897d2` 的。判据钉的是**几处不抛异常却会读错模型**的地方：
 /// 标量的元素个数、载荷与形状不一致、整数转浮点的精度边界。
 ///
-/// Syncs `OnnxTensorConstant.kt`. The criteria pin the places where a model is read wrongly without throwing: a scalar's element count, a payload that
+/// Syncs. The criteria pin the places where a model is read wrongly without throwing: a scalar's element count, a payload that
 /// disagrees with its shape, and the precision boundary of integer-to-float conversion.
 /// </remarks>
 public class OnnxTensorConstantTests

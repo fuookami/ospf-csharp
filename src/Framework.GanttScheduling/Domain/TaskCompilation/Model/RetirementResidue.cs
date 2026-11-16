@@ -1,8 +1,7 @@
 // 回收后的残留引用 / Residual references after a variable is retired.
-// 与固定 Kotlin 基线 `core/model/mechanism/MetaModel.kt` 的 `tokens.remove(item)` 对应：
-// 基线的 `remove` **只摘变量**，不动约束与目标项。
-// Mirrors `tokens.remove(item)` in the pinned baseline's `core/model/mechanism/MetaModel.kt`:
-// the baseline's `remove` **drops the variable only**, leaving constraints and objective terms alone.
+// 与固定 Kotlin 的 `tokens.remove(item)` 对应：
+// `remove` **只摘变量**，不动约束与目标项。
+// its `remove` **drops the variable only**, leaving constraints and objective terms alone.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 回收后仍被引用的情况 / What still refers to a retired variable.
 /// </summary>
 /// <remarks>
-/// 基线的 `remove(item)` 只有一行 `tokens.remove(item)`。于是回收一个列变量之后：
+/// `remove(item)` 只有一行 `tokens.remove(item)`。于是回收一个列变量之后：
 ///
 /// | 残留 | 后果 |
 /// | --- | --- |
@@ -30,11 +29,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 也就是说**行为是对的，而模型内容是脏的**——脏到任何"按符号表遍历模型"的下游
 /// （导出、审计、二次求解）都会看到悬空引用。
 ///
-/// 照抄基线就**不能**顺手清理：基线的 `removeColumns` 不调 `RemoveObjectiveTerms`，
+/// 照做就**不能**顺手清理：`removeColumns` 不调 `RemoveObjectiveTerms`，
 /// 加了会让解的行为（乃至求解器看到的模型）偏离固定基线。所以这里提供的是**观测**，
 /// 不是修复——让这份偏离被看见、被断言，而不是变成一条静默的 ceiling。
 ///
-/// The baseline's `remove(item)` is one line: `tokens.remove(item)`. So after a column variable is retired:
+/// `remove(item)` is one line: `tokens.remove(item)`. So after a column variable is retired:
 ///
 /// | Residue | Consequence |
 /// | --- | --- |
@@ -44,8 +43,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// Neither raises anything: the variable is already pinned to 0, so the constraints stay satisfiable and the objective terms are identically 0. In other words **the behaviour is
 /// right while the model content is dirty** — dirty enough that any downstream walking the model by symbol table (export, audit, re-solve) sees a dangling reference.
 ///
-/// Copying the baseline means this **cannot** be cleaned up on the side: the baseline's `removeColumns` does not call `RemoveObjectiveTerms`, and adding it would move the
-/// solution behaviour (and the model the solver sees) away from the pinned baseline. So what is offered here is **observation, not repair** — so the divergence is seen and
+/// Copying the code means this **cannot** be cleaned up on the side: its `removeColumns` does not call `RemoveObjectiveTerms`, and adding it would move the
+/// solution behaviour (and the model the solver sees) away . So what is offered here is **observation, not repair** — so the divergence is seen and
 /// asserted instead of turning into a silent ceiling.
 /// </remarks>
 public static class RetirementResidue {

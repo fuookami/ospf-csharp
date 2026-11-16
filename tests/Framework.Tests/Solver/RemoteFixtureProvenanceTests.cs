@@ -24,11 +24,11 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 ///
 /// The README says these four fixtures are byte-for-byte copies of the pinned Kotlin `12fdb587` fixtures, and **nothing guarded that claim**: a stray space edited into
 /// one of them silently voids the cross-language evidence while the dozens of decoding criteria **stay green**, because they test "this file decodes", **not "this file
-/// came from the baseline"**. These four SHA-256 values are now pinned. **Replacing a fixture means editing this file too**, and at that point somebody asks where the new
+/// came from the code"**. These four SHA-256 values are now pinned. **Replacing a fixture means editing this file too**, and at that point somebody asks where the new
 /// file came from — which is the point: **a provenance change has to be an explicit act, not an incidental edit.**
 /// </remarks>
 public class RemoteFixtureProvenanceTests {
-    /// <summary>四份 fixture 的基线哈希 / The baseline hashes of the four fixtures.</summary>
+    /// <summary>四份 fixture 的基线哈希 / The code hashes of the four fixtures.</summary>
     /// <remarks>
     /// 实测来源：`git -C D:/workspace/ospf/ospf-kotlin cat-file -p 12fdb587:ospf-kotlin-framework/src/test/resources/fixtures/<name>`
     /// 与本地文件逐字节比对（`python logs/b951-fixtures.py`）。**四个都 SAME。**
@@ -59,10 +59,10 @@ public class RemoteFixtureProvenanceTests {
 
     /// <summary>**README 必须标注每一份的来源** / The README has to record each file's provenance.</summary>
     /// <remarks>
-    /// README 自己写着"来源必须标注，因为'由固定 Kotlin 基线产出'和'由 C# 产出'是两种不同强度的证据"。
+    /// README 自己写着"来源必须标注，因为'由产出'和'由 C# 产出'是两种不同强度的证据"。
     /// **那句规则要能被检查**，否则新加一份 fixture 时没人会想起来标注。
     ///
-    /// The README states that provenance must be recorded, because "produced by the pinned Kotlin baseline" and "produced by C#" are two different strengths of evidence.
+    /// The README states that provenance must be recorded, because "produced by the reference" and "produced by C#" are two different strengths of evidence.
     /// **That rule has to be checkable**, or nobody remembers to annotate a newly added fixture.
     /// </remarks>
     [Fact]

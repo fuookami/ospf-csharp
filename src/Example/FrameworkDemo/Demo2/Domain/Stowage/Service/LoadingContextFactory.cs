@@ -27,19 +27,19 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 严格 DTO 到框架的适配边界 / The strict DTO-to-framework adaptation boundary.
 /// </summary>
 /// <remarks>
-/// 与基线 `stowage/service/LoadingContextFactory.kt` 对齐，但有**两处真实的差距**，都记在这里而不是悄悄缩水：
+/// 与对齐，但有**两处真实的差距**，都记在这里而不是悄悄缩水：
 ///
 /// 1. ~~**只有一维内核**~~ —— **已闭**。`Framework.Bpp2d` 有了 `Bpp2dDiscreteLoading.Context`，
 ///    于是按机型分流：窄体走一维、宽体走二维（与基线同一个分派）。**缺几何的请求仍退回一维**，那是数据问题不是能力问题。
-/// 2. **DTO 没有分舱、几何、固定装载、冲突、布局组**。基线的 `PositionInput` 带 `spaceId`/`geometry`/`partitionId`/`loadedItems`/
+/// 2. **DTO 没有分舱、几何、固定装载、冲突、布局组**。`PositionInput` 带 `spaceId`/`geometry`/`partitionId`/`loadedItems`/
 ///    `ala`/`alw`/`predicateLoadWeightMin`/`maxLoadCount`，本仓的只有名字、最大重量与两个力臂。因此分区配置与这些约束**无从构造**。
 ///
 /// 两条都在 `docs/kotlin-sync-status.md` 的差距表里，不是这里临时决定。
 ///
-/// Aligned with the baseline, with **two real gaps** recorded rather than quietly shrunk: (1) **one-dimensional kernel only** — the baseline picks
-/// `Bpp1dDiscreteLoading`  or `Bpp2dDiscreteLoading` (the rest), while this port's `Framework.Bpp2d` has no `Context` factory yet, so **every type goes 1-D** and
+/// Aligned with the code, with **two real gaps** recorded rather than quietly shrunk: (1) **one-dimensional kernel only** — the code picks
+/// `Bpp1dDiscreteLoading`  or `Bpp2dDiscreteLoading` (the rest), while this implementation's `Framework.Bpp2d` has no `Context` factory yet, so **every type goes 1-D** and
 /// two-dimensional loading is unavailable; that is a capability gap, not a design choice. (2) **the DTO has no partitions, geometry, fixed loads, conflicts or layout groups** —
-/// the baseline's `PositionInput` carries `spaceId`/`geometry`/`partitionId`/`loadedItems`/`ala`/`alw`/`predicateLoadWeightMin`/`maxLoadCount`, while this one has only a name,
+/// its `PositionInput` carries `spaceId`/`geometry`/`partitionId`/`loadedItems`/`ala`/`alw`/`predicateLoadWeightMin`/`maxLoadCount`, while this one has only a name,
 /// a maximum weight and two arms, so the partition configuration and those constraints cannot be built at all. Both are in the gap table of `docs/kotlin-sync-status.md`.
 /// </remarks>
 internal static class LoadingContextFactory
@@ -59,13 +59,13 @@ internal static class LoadingContextFactory
         var positionNames = new HashSet<string>(aggregation.Positions.Select(position => position.Name));
         var itemsById = aggregation.Items.ToDictionary(item => item.Id, item => item);
 
-        // **固定装载：一件货不能同时固定在两个舱位**（照基线的两条前置校验）。
+        // **固定装载：一件货不能同时固定在两个舱位**（照两条前置校验）。
         //
-        // 基线在构造问题之前先做两件事：`allowedPositions` 引用未知舱位就拒，以及**同一件货出现在两个舱位的 `loadedItems` 里就拒**。
+        // 构造问题之前先做两件事：`allowedPositions` 引用未知舱位就拒，以及**同一件货出现在两个舱位的 `loadedItems` 里就拒**。
         // 这两条在本仓从来就没有：`FixedPositionId` 一直硬编码 `null`，于是**已经装在某个舱位里的货物被当成自由货物**，
         // 求解器可以把它挪走——**而"挪走已装载货物"恰恰是调整模式要最小化的东西**。
         //
-        // **Fixed loading: one item cannot be fixed to two positions** （following the baseline's two pre-checks）. The baseline rejects an
+        // **Fixed loading: one item cannot be fixed to two positions** （following its two pre-checks）. The code rejects an
         // `allowedPositions` entry naming an unknown position, and **rejects an item appearing in two positions' `loadedItems`**. Neither existed here:
         // `FixedPositionId` was hard-coded `null`, so **an item already inside a position counted as free** and the solver could move it — **while moving
         // loaded cargo is exactly what the adjustment mode exists to minimise**.
@@ -84,13 +84,13 @@ internal static class LoadingContextFactory
             }
         }
 
-        // **重量单位来自请求**。基线有两处来源：货物重量与问题声明用 `aircraftModel.weightUnit`（固定 `Kilogram`），
-        // 舱位承重用 `input.weightUnit`。**那两处在基线里可能不一致**，本仓统一用请求那一个：
+        // **重量单位来自请求**。两处来源：货物重量与问题声明用 `aircraftModel.weightUnit`（固定 `Kilogram`），
+        // 舱位承重用 `input.weightUnit`。**那两处在可能不一致**，本仓统一用请求那一个：
         // 默认 `Kilogram` 时与基线逐字相同，非默认时**至少内部一致**。
         //
-        // **The weight unit comes from the request** . The baseline has two sources: item weight and the problem declaration use
-        // `aircraftModel.weightUnit` (fixed `Kilogram`), the position cap uses `input.weightUnit`. **Those two can disagree in the baseline**; this port uses the
-        // request's one throughout: identical to the baseline at the default `Kilogram`, and **at least internally consistent** otherwise.
+        // **The weight unit comes from the request** . The code has two sources: item weight and the problem declaration use
+        // `aircraftModel.weightUnit` (fixed `Kilogram`), the position cap uses `input.weightUnit`. **Those two can disagree in the code**; this implementation uses the
+        // request's one throughout: identical to the code at the default `Kilogram`, and **at least internally consistent** otherwise.
         PhysicalUnit weightUnit = input.WeightUnit == WeightUnitInput.Kilogram ? SIBaseUnits.Kilogram : MassUnits.Gram;
         var loadingItems = new List<LoadingItem<Flt64>>(aggregation.Items.Count);
         foreach (Item item in aggregation.Items) {
@@ -111,7 +111,7 @@ internal static class LoadingContextFactory
                 Enabled: position.Status.Available || position.LoadedItems.Count > 0));
         }
 
-        // **允许的指派 = 基线那三支的并集**：`stowageNeeded || adjustmentNeeded || item ∈ position.loadedItems`。
+        // **允许的指派 = 三支的并集**：`stowageNeeded || adjustmentNeeded || item ∈ position.loadedItems`。
         //
         // **之前这里只问 `StowageNeeded`，而它并不包含后两支**——`Stowage.StowageNeeded(item, position)` 的第一句就是
         // `ItemStatuses.StowageNeeded(item.Status)`，那是 `Preassigned`/`Optional` 才为真的判定。于是：
@@ -122,22 +122,22 @@ internal static class LoadingContextFactory
         // 而且**不会报错**：稀疏决策只给合法组合建变量，没有变量就等于"这件货不存在"。注释当时写的是
         // "`StowageNeeded` 已经把三个条件合并了"——**那句话是错的**，这就是照着注释相信代码的代价。
         //
-        // **Allowed assignments are the union of the baseline's three branches**: `stowageNeeded || adjustmentNeeded || item ∈ position.loadedItems`.
+        // **Allowed assignments are the union of its three branches**: `stowageNeeded || adjustmentNeeded || item ∈ position.loadedItems`.
         // **Before only `StowageNeeded` was consulted, and it does not contain the other two** — its first line is `ItemStatuses.StowageNeeded(item.Status)`,
         // which holds only for `Preassigned`/`Optional`. So an `AdjustmentNeeded` item **got no allowed assignment at all** and could never be placed, and an item
         // already inside a position's `LoadedItems` got none either. **Nothing raised an error**: the sparse decisions only create variables for legal pairs, so no
         // variable reads as "this item does not exist". The old comment claimed `StowageNeeded` folded all three conditions — **that sentence was wrong**, which is the
         // price of believing a comment over the code.
         //
-        // **再加一条基线的前置校验与一条过滤**：
+        // **再加一条前置校验与一条过滤**：
         //
         // 1. `allowedPositions` 里出现**未知舱位名就拒**——否则那条限制永远不生效，而且不留痕迹；
         // 2. `allowedPositions == null` 表示不限，否则必须包含该舱位。
         //
-        // **基线的甲板那条没有照抄**，理由写在下面过滤处：同一字段已经推导成 `Item.location`，再过滤一次是空转。
+        // **甲板那条没有沿用**，理由写在下面过滤处：同一字段已经推导成 `Item.location`，再过滤一次是空转。
         //
         // **One more baseline pre-check and one filter**: an `allowedPositions` entry naming an **unknown position is refused** (otherwise the restriction
-        // never takes effect and leaves no trace), and `null` means unrestricted while a non-null set must contain the position. **The baseline's deck comparison
+        // never takes effect and leaves no trace), and `null` means unrestricted while a non-null set must contain the position. **The code's deck comparison
         // is not copied**, for the reason recorded at the filter below: the same field already becomes `Item.location`, so a second filter is a no-op.
         var spaceByPosition = new Dictionary<string, string>(aggregation.Positions.Count, StringComparer.Ordinal);
         foreach (PositionInput requested in input.Positions ?? []) {
@@ -182,13 +182,13 @@ internal static class LoadingContextFactory
                 // （`Main → MainDeck`、其余 → `LowNotBulk`），而 `StowagePosition.Enabled(item)` 会按它判可用性——
                 // **同一字段推导两次，第二次永远是空转**。
                 //
-                // 我按基线写了那道过滤，然后用变异测试验证：把它关掉，判据**照样绿**（下舱货仍然一个指派都拿不到，
+                // 我写了那道过滤，然后用变异测试验证：把它关掉，判据**照样绿**（下舱货仍然一个指派都拿不到，
                 // 因为 `Item.location` 已经挡住了）。所以删掉它——**留一段测不出、又不改变行为的代码，只会让人以为这里有两道防线。**
                 //
-                // **The deck is no longer filtered separately, because there is nothing left to filter** (measured). The baseline compares
-                // `cargo.deckLocation` against the position's deck; this port already turns the same `DeckLocation` into `Item.location` (`Main → MainDeck`,
+                // **The deck is no longer filtered separately, because there is nothing left to filter** (measured). The code compares
+                // `cargo.deckLocation` against the position's deck; this implementation already turns the same `DeckLocation` into `Item.location` (`Main → MainDeck`,
                 // else `LowNotBulk`), and `StowagePosition.Enabled(item)` judges availability from it — **deriving the same field twice makes the second check a
-                // no-op**. I wrote the baseline's filter anyway and mutation-tested it: disabling it left the criterion **green** (the lower-deck cargo still got
+                // no-op**. I wrote its filter anyway and mutation-tested it: disabling it left the criterion **green** (the lower-deck cargo still got
                 // no assignment, because `Item.location` already blocks it). So it is gone — **code that cannot be measured and changes no behaviour only makes
                 // people believe there are two lines of defence.**
                 if (StowageModel.StowageNeeded(item, position)
@@ -205,10 +205,10 @@ internal static class LoadingContextFactory
             Positions: loadingPositions,
             AllowedAssignments: allowed,
             // **调用方声明的业务互斥真的进去**。之前恒为空集：声明了也白声明，**不报错，只是那条业务规则不存在**。
-            // 基线是"只增不减、不覆盖几何冲突"，而几何冲突在 `Bpp1d/2dDiscreteLoading.Context` 里合并，所以这里只放业务那一半。
+            // "只增不减、不覆盖几何冲突"，而几何冲突在 `Bpp1d/2dDiscreteLoading.Context` 里合并，所以这里只放业务那一半。
             //
             // **The caller's declared business exclusions really go in** . The set used to be empty: declaring one did nothing, **with no error — the rule
-            // simply did not exist**. The baseline adds without ever replacing, and geometry is merged inside `Bpp1d/2dDiscreteLoading.Context`, so only the business
+            // simply did not exist**. The code adds without ever replacing, and geometry is merged inside `Bpp1d/2dDiscreteLoading.Context`, so only the business
             // half belongs here.
             Conflicts: RequestConflicts(input),
             // **布局组真的进去**。之前恒为空表，于是"区域或整机恰选一种布局"变成了"随便几种"。
@@ -217,7 +217,7 @@ internal static class LoadingContextFactory
             // **重量单位来自请求**。本仓三处都用克，所以默认是 `Gram`；把它带进来之后，
             // 任何"声明克、按千克算"的错配都会被 那条判据抓到。
             //
-            // **The weight unit comes from the request** . This port uses grams throughout, hence the default; carrying it in means any "declared grams,
+            // **The weight unit comes from the request** . This implementation uses grams throughout, hence the default; carrying it in means any "declared grams,
             // computed as kilograms" mismatch is caught by the criterion.
             WeightUnit: weightUnit);
 
@@ -253,12 +253,12 @@ internal static class LoadingContextFactory
         //
         // **之前这里写的是 `SpaceId: position.Name`，那是个真缺陷**：`LoadingGeometry.Conflicts` **按 `SpaceId` 分桶**，
         // 每个舱位自成一体就永远配不到一起，于是**一维几何扫描一个冲突都不产生**—— 的几何扫掠在 Demo2 里等于没接。
-        // 而"没有冲突"不会报错，只会给出**一个违反几何的装载解**。基线用的是 `spaceId = p.spaceId`（请求字段），本仓也有这个字段（默认 `MAIN`）。
+        // 而"没有冲突"不会报错，只会给出**一个违反几何的装载解**。的是 `spaceId = p.spaceId`（请求字段），本仓也有这个字段（默认 `MAIN`）。
         //
         // **The physical space each position belongs to, taken from the request** . **Before this line said `SpaceId: position.Name`, which is a real
         // defect**: `LoadingGeometry.Conflicts` **buckets by `SpaceId`**, so a position that is its own space can never be paired and **the 1-D geometric sweep
         // produces no conflict at all** — the earlier sweep was effectively unwired in Demo2. And "no conflicts" raises no error; it just yields **a solution that
-        // violates the geometry**. The baseline uses `spaceId = p.spaceId` (a request field), and this port has that field too (defaulting to `MAIN`).
+        // violates the geometry**. The code uses `spaceId = p.spaceId` (a request field), and this implementation has that field too (defaulting to `MAIN`).
         // **几何数值的单位来自请求**。 的二维路径把它们**当成米**硬编码，而请求的 `LengthUnit` 默认是**英寸**——
         // 于是一个 1.0 的舱位被当成 1 米（39.37 倍），**判交结果照样"看起来合理"**。这与 记的那处是同一个缺陷类别。
         //
@@ -271,8 +271,8 @@ internal static class LoadingContextFactory
         };
 
 
-        // 一维几何：`[前臂, 后臂]`。基线用 `geometry.front/back`；本仓的舱位直接带 `Coordinate.FrontArm/BackArm`。
-        // 1-D geometry is `[front arm, back arm]`. The baseline reads `geometry.front/back`; a position here carries `Coordinate.FrontArm/BackArm` directly.
+        // 一维几何：`[前臂, 后臂]`。`geometry.front/back`；本仓的舱位直接带 `Coordinate.FrontArm/BackArm`。
+        // 1-D geometry is `[front arm, back arm]`. The code reads `geometry.front/back`; a position here carries `Coordinate.FrontArm/BackArm` directly.
         var geometry = new List<LoadingInterval<Flt64>>(aggregation.Positions.Count);
         foreach (StowagePosition position in aggregation.Positions) {
             geometry.Add(new LoadingInterval<Flt64>(
@@ -290,7 +290,7 @@ internal static class LoadingContextFactory
         // **宽体的二维矩形直接取自请求的 `Geometry`**（`Front`/`Back`/`Left`/`Right`）。**缺几何就退回一维并写进备注**，
         // 而不是猜一个矩形：猜出来的矩形会让"冲突"与"不冲突"都变成假的。
         //
-        // **Kernel by aircraft type**: narrow bodies  go 1-D, wide bodies  go 2-D — the same dispatch as the baseline. Before this
+        // **Kernel by aircraft type**: narrow bodies  go 1-D, wide bodies  go 2-D — the same dispatch as the code. Before this
         // **always** went 1-D, for a reason recorded in the class remarks ("Bpp2d has no Context factory") that no longer holds. **A wide body's rectangles come straight
         // from the request's `Geometry`**; **missing geometry falls back to 1-D and says so in the notes** rather than inventing a rectangle, since an invented one makes
         // both "conflicting" and "not conflicting" fake.
@@ -321,7 +321,7 @@ internal static class LoadingContextFactory
                     // 这不只是"好看"——`LoadingGeometry.Conflicts` 用 `x` 区间做扫描剪枝，**剪枝轴与判交轴必须是同一个物理方向**，
                     // 否则被剪掉的候选里会混进真正相交的舱位。
                     //
-                    // **Axis order follows the baseline**: `x = front` (longitudinal), `y = left` (lateral), width along the length, height across. That is not
+                    // **Axis order follows the code**: `x = front` (longitudinal), `y = left` (lateral), width along the length, height across. That is not
                     // cosmetic: `LoadingGeometry.Conflicts` prunes with the `x` interval, **and the pruning axis must be the same physical direction as the
                     // intersection test**, or genuinely overlapping positions get evicted from the candidate set.
                     Bounds: Box2Geometry<Flt64>.Of(

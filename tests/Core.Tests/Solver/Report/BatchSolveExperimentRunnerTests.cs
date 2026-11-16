@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// 批量实验运行器 / The batch experiment runner.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `OfflineExperiment.kt` 补上这块整块缺失的编排层。
+/// 对齐补上这块整块缺失的编排层。
 ///
 /// **这一块的价值全在两条确定性保证上，而两条都不能靠"读起来对"来确认：**
 /// **输入顺序打乱 → 结果仍按 `Id` 排序；并发 > 1 → 报告顺序与并发无关。**

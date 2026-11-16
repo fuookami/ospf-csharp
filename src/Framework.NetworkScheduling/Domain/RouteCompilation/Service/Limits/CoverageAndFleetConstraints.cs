@@ -1,7 +1,7 @@
 // 客户覆盖与车队数量约束管线 / Customer-coverage and fleet-size constraint pipelines.
-// 与固定 Kotlin 基线 `route_compilation/service/limits/CustomerCoverageConstraint.kt`（3196 字节）、
-// `route_compilation/service/limits/FleetSizeConstraint.kt`（3511 字节）对应。
-// Mirrors the pinned baseline's `CustomerCoverageConstraint.kt` and `FleetSizeConstraint.kt`.
+// 与固定 Kotlin （3196 字节）、
+//（3511 字节）对应。
+// And.
 
 using System;
 using System.Collections.Generic;

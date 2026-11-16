@@ -19,19 +19,19 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同目的地相邻目标 / The same-destination-adjacency objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/SameDestinationAdjacent.kt` 对齐：把（目的地 × 相邻舱位对）的指示
+/// 与对齐：把（目的地 × 相邻舱位对）的指示
 /// 加权求和，作为**最大化**目标，名为 `"same destination adjacent"`（带空格）。
 ///
-/// 四点必须照抄：
+/// 四点必须沿用：
 ///
 /// 1. **是 `Maximum`**。
-/// 2. **目标名带空格**：`"same destination adjacent"`。基线的管线类名是 `SameDestinationAdjacent`（**没有** `Limit`
+/// 2. **目标名带空格**：`"same destination adjacent"`。管线类名是 `SameDestinationAdjacent`（**没有** `Limit`
 ///    后缀），但目标名与同来源那条**结构完全对称**，写成 `same_destination_adjacent` 会与管线名混淆。
 /// 3. **两重遍历**：外层目的地、内层相邻舱位对，**每个组合都进目标**。
 /// 4. **系数按 `(目的地, 第一个舱位, 第二个舱位)` 取**。
 ///
-/// Aligned with the baseline: the (destination × adjacent pair) indicators weighted and summed into a **maximisation** named `"same destination adjacent"` (with a space). Four things must be
-/// copied: **it is `Maximum`**; **the name has a space** — the baseline's class is `SameDestinationAdjacent` (**without** a `Limit` suffix), but the objective name is structurally symmetric
+/// The (destination × adjacent pair) indicators weighted and summed into a **maximisation** named `"same destination adjacent"` (with a space). Four things must be
+/// copied: **it is `Maximum`**; **the name has a space** — its class is `SameDestinationAdjacent` (**without** a `Limit` suffix), but the objective name is structurally symmetric
 /// with the same-source one, and `same_destination_adjacent` would be confused with the pipeline name; **there are two nested loops** with **every combination entering the objective**;
 /// and **the coefficient is taken per (destination, first position, second position)**.
 /// </remarks>

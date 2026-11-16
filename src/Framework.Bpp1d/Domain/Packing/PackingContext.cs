@@ -1,6 +1,6 @@
 // 一维装箱物理结果提取 / One-dimensional packing physical result extraction.
-// 与固定 Kotlin 基线 `bpp1d/domain/packing/PackingContext.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp1d/domain/packing/PackingContext.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp1d.Domain.Item.Model;

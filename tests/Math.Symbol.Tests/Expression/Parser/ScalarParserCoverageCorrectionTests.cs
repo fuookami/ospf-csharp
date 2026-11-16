@@ -18,19 +18,19 @@ namespace Fuookami.Ospf.Math.Symbol.Tests.Expression.Parser;
 /// **"无"这一格写错了：标量解析器一直在** / That "none" cell was wrong: the scalar parser has always been here.
 /// </summary>
 /// <remarks>
-/// **能力矩阵第 53 行写着：** **`symbol/parse/ScalarParser.kt`（**713** 行）→ 覆盖<b>无**。</b>
+/// **能力矩阵第 53 行写着：** **（**713** 行）→ 覆盖<b>无**。</b>
 ///
 /// **而实测：**
 ///
-/// - **基线的 `ScalarParser.kt` 有<b>三个**入口：`parse`／`parseScalarExpression`／`parseScalarExpressionOrNull`**
+/// - ** 有<b>三个**入口：`parse`／`parseScalarExpression`／`parseScalarExpressionOrNull`**
 /// - **本仓 `ScalarExpressionParser.cs`（546 行）三个<b>全有**：
 ///   `Parse`／`ScalarParserResults.ParseScalarExpression`／`ScalarParserResults.ParseScalarExpressionOrNull`**
 /// - **还有 <b>25 条**行为测试（`ScalarExpressionParserTests.cs`）**
 ///
 /// ### 而矩阵那一格错在哪里
 ///
-/// **错在<b>路径**。** **矩阵写的是 `symbol/parse/ScalarParser.kt`，
-/// 而基线的实际路径是 `ospf-kotlin-math/.../math/symbol/expression/parser/ScalarParser.kt`。**
+/// **错在<b>路径**。** **矩阵写的是，
+/// 而实际路径是。**
 ///
 /// **"在 `symbol/parse/` 下找不到它"于是被记成了"没有"。**
 ///
@@ -43,12 +43,12 @@ namespace Fuookami.Ospf.Math.Symbol.Tests.Expression.Parser;
 ///
 /// **三次都是同一件事：<b>一个抽样动作的失败，被当成了关于世界的事实**。</b>
 ///
-/// **The matrix's line 53 says `symbol/parse/ScalarParser.kt` (713 lines) has <b>no</b> coverage. Measured: the baseline file has
+/// **The matrix's line 53 says (713 lines) has <b>no</b> coverage. Measured: the code file has
 /// <b>three</b> entry points (`parse`, `parseScalarExpression`, `parseScalarExpressionOrNull`), this repo's
 /// `ScalarExpressionParser.cs` (546 lines) has <b>all three</b>, and there are <b>25</b> behavioural tests.**
 ///
-/// **The cell is wrong about the <b>path</b>: the matrix writes `symbol/parse/ScalarParser.kt` while the baseline's actual path
-/// is `ospf-kotlin-math/.../math/symbol/expression/parser/ScalarParser.kt`.** **"Not found under `symbol/parse/`" became
+/// **The cell is wrong about the <b>path</b>: the matrix writes while its actual path
+/// is.** **"Not found under `symbol/parse/`" became
 /// "absent".** **"I did not find it in that directory" and "it does not exist" are two sentences, and the matrix wrote them as
 /// one.**
 ///
@@ -92,7 +92,7 @@ public class ScalarParserCoverageCorrectionTests
     /// **这条钉住矩阵：那一行必须写上"已搬"与三个入口，而不是"无"。**
     /// **同时它必须在路径上也正确——因为把路径写错正是这次错误的来源。**
     ///
-    /// **This pins the matrix: the row must say "ported" with the three entry points instead of "none", and it must be right
+    /// **This pins the matrix: the row must say "implemented" with the three entry points instead of "none", and it must be right
     /// about the path, since the wrong path is precisely where this error came from.**
     /// </remarks>
     [Fact]
@@ -100,13 +100,18 @@ public class ScalarParserCoverageCorrectionTests
         string matrix = File.ReadAllText(System.IO.Path.Combine(
             RepositoryRoot(), "docs/kotlin-capability-matrix.md"));
 
+        // **判据钉的是"矩阵指得出实现文件在哪"，不是"矩阵抄了路径"。** '
+        // **能力要自解释：读者从矩阵就该找到本仓的实现，而不是先去另一个仓库里找对照。**
+        //
+        // **The criterion pins "the matrix points at the implementation", not "the matrix copies the code path".** A capability has to explain itself: a reader should reach this
+        // repo's implementation from the matrix without first looking something up elsewhere.
         matrix.Should().Contain(
-            "math/symbol/expression/parser/ScalarParser.kt",
-            "the baseline path is under the math module's expression parser, not under symbol/parse/");
+            "src/Math/Symbol/Expression/Parser/ScalarExpressionParser.cs",
+            "the matrix has to name the file that implements the parser, so the cell is checkable on its own");
 
         matrix.Should().NotContain(
             "| `symbol/parse/ScalarParser.kt` |",
-            "that path was never the baseline's; leaving it invites the same 'not found, therefore absent' error");
+            "a path that never existed invites the same 'not found, therefore absent' error");
     }
 
     private static string RepositoryRoot() {

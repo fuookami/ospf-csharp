@@ -1,6 +1,5 @@
 // 岛屿运行器 / The island runner.
-// 与固定 Kotlin 基线 `runner/IslandRunner.kt`（4493 B）对应。
-// Mirrors the pinned baseline's `runner/IslandRunner.kt` (4493 B).
+// 与固定 Kotlin （4493 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -18,10 +17,10 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// </summary>
 /// <remarks>
 /// **每座岛独立推进一代，岛屿之间没有共享可变状态**。这一点是"能不能并行"的全部依据：一旦某个岛在推进时读到另一座岛的种群，
-/// 并行的顺序就会改变结果，**而串行实现看起来完全正常**（本移植是串行的，见下）。
+/// 并行的顺序就会改变结果，**而串行实现看起来完全正常**（本实现是串行的，见下）。
 /// **Each island advances one generation independently and islands share no mutable state.** That is the entire basis for "can this run in
 /// parallel": as soon as one island reads another's population while advancing, the parallelism's scheduling changes the result,
-/// **while the serial implementation looks perfectly normal** (this port is serial, see below).
+/// **while the serial implementation looks perfectly normal** (this implementation is serial, see below).
 /// **迁移只在 `iteration.Current` 是 `migrationPeriod` 的整数倍时发生，且 `migrationPeriod == 0` 表示"永不迁移"**。
 /// 用 `(iteration.Current + 1)` 或跳过零值判断会让迁移多发生或少发生一次，**而每座岛的规模与最优值都仍然正常**。
 /// **Migration happens only when `iteration.Current` is a multiple of `migrationPeriod`, and `migrationPeriod == 0` means "never migrate"**.
@@ -32,9 +31,9 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **The state may hold more islands than are configured** (e.g. the caller restored an older checkpoint). The extra islands are
 /// **carried over unchanged** rather than dropped. Dropping them makes the second generation after a restore lose islands out of nowhere,
 /// **while the total individual count merely "got smaller"**.
-/// **本移植是串行的**。基线用并发 dispatcher 并行推进各岛；这里按索引顺序串行推进，理由是"同样的随机流必须给出同样的结果"。
+/// **本实现是串行的**。并发 dispatcher 并行推进各岛；这里按索引顺序串行推进，理由是"同样的随机流必须给出同样的结果"。
 /// 升级路径：按岛索引分片调度，判据是"并行与串行的结果逐位相同"。`ponytail:` 并发不是这里的目标，正确性优先。
-/// **This port is serial.** The baseline advances the islands in parallel via a dispatcher; here they advance serially in index order, for the
+/// **This implementation is serial.** The code advances the islands in parallel via a dispatcher; here they advance serially in index order, for the
 /// reason that "the same random stream must give the same result". Upgrade path: index-sharded scheduling, gated on "parallel matches
 /// serial bit for bit". `ponytail:` concurrency is out of scope; correctness first.
 /// </remarks>

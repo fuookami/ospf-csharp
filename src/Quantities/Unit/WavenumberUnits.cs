@@ -9,13 +9,13 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 波数单位 / Wavenumber units.
 /// </summary>
 /// <remarks>
-/// **按基线 `Wavenumber.kt` 新建。** 基线只有一个 `ReciprocalMeter`，**是米的倒数**。
+/// **按新建。** 有一个 `ReciprocalMeter`，**是米的倒数**。
 ///
 /// **`Dimensions.cs` 里原本没有 `Wavenumber` 这个量纲**（实测 13 个缺失量纲里只有它连量纲都没有），
 /// **所以这个文件同时是"单位 + 量纲"的第一处**——
 /// **它用一个 `1/m` 的单位来代表量纲，而不是先在 `Dimensions` 里注册再引用。**
 ///
-/// **Created from the baseline `Wavenumber.kt`.** The baseline has one unit, `ReciprocalMeter`, the reciprocal of the metre.
+/// **Created from the code.** The code has one unit, `ReciprocalMeter`, the reciprocal of the metre.
 ///
 /// **`Dimensions.cs` did not have a `Wavenumber` quantity** (of the 13 missing dimensions measured, this was the only
 /// one missing even the dimension), **so this file is the first place where the unit and the dimension arrive together** —

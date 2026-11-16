@@ -19,14 +19,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization;
 /// 业载最大化上下文 / The payload-maximization context.
 /// </summary>
 /// <remarks>
-/// 与基线 `payload_maximization/PayloadMaximizationContext.kt` 对齐：**初始化只做一次**（`aggregation` 已初始化就跳过），
+/// 与对齐：**初始化只做一次**（`aggregation` 已初始化就跳过），
 /// **注册先建管线再逐条执行**。
 ///
-/// 一处必须照抄：**初始化是幂等的**。基线的 `if (!::aggregation.isInitialized)` 意味着第二次 `init` 不会重建聚合——
+/// 一处必须沿用：**初始化是幂等的**。`if (!::aggregation.isInitialized)` 意味着第二次 `init` 不会重建聚合——
 /// 重建会把上一次的符号引用丢掉，而模型里还挂着那些符号。
 ///
-/// Aligned with the baseline: **initialisation happens once** (skipped when the aggregation already exists) and **registration builds the pipelines then runs each**. One thing must be
-/// copied: **initialisation is idempotent** — the baseline's `if (!::aggregation.isInitialized)` means a second `init` does not rebuild the aggregation, which would drop the previous
+/// **initialisation happens once** (skipped when the aggregation already exists) and **registration builds the pipelines then runs each**. One thing must be
+/// copied: **initialisation is idempotent** — its `if (!::aggregation.isInitialized)` means a second `init` does not rebuild the aggregation, which would drop the previous
 /// symbol references while the model still holds them.
 /// </remarks>
 public sealed class PayloadMaximizationContext

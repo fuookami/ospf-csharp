@@ -31,12 +31,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **它和普通线性成本的区别只在“启用”这一步**：cost = fixedCost · active + unitCost · activity，
 /// 而 active 是 0/1 变量。**少了 active 那一项，模型会说“不启用也免费”，而目标函数看起来完全正常。**
 ///
-/// The FixedChargeFunction from the baseline.
+/// The FixedChargeFunction from the code.
 ///
 /// This is “pay to start a machine, then pay per item” — siting, unit commitment, and the setup fee of
 /// quantity discounts all take this shape.
 ///
-/// **The only difference from an ordinary linear cost is the activation term**:
+/// **The only difference from an ordinary linear cost is the activation term**.
 /// cost = fixedCost · active + unitCost · activity with a binary active.
 /// **Drop the activation term and the model says “not activating is free”, with an objective that looks perfectly
 /// ordinary.**

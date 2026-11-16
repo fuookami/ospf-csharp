@@ -1,7 +1,7 @@
 // 装箱上下文与装载顺序 / Packing context and loading order.
-// 与固定 Kotlin 基线 `bpp2d/domain/packing/PackingContext.kt` 与
-// `bpp2d/domain/item/service/LoadingOrderCalculator.kt` 对应。
-// Mirrors the pinned baseline's `PackingContext.kt` and `LoadingOrderCalculator.kt`.
+// 与固定 Kotlin 与
+// 对应。
+// And.
 
 using System;
 using System.Collections.Generic;

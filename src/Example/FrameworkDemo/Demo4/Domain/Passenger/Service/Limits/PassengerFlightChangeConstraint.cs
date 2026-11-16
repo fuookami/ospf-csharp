@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 改签只能在时间上接得住的航班上进行 / A re-booking may only target a flight the connection can still catch.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerFlightChangeConstraint.kt`：对行程上每一段，用 `IfFunction` 造一个 0/1 指示变量，
+/// ：对行程上每一段，用 `IfFunction` 造一个 0/1 指示变量，
 /// 表示"这个接口太紧、赶不上"，再把改签变量压到 `人数 × 指示变量` 以下。
 ///
 /// 两个方向的判断各一条：
@@ -42,10 +42,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// **指示变量写反不会报错**：改签会被整片放开（或者整片封死），求解照样成功——**只有"紧接口时改签必须为零"与
 /// "松接口时改签可以不为零"两条判据能分辨**。
 ///
-/// **一处必要差异**：基线里 `IfFunction` 的 `strictBoundary` 取默认的 `NONZERO_TOLERANCE = 1e-10`，
+/// **一处必要差异**：`IfFunction` 的 `strictBoundary` 取默认的 `NONZERO_TOLERANCE = 1e-10`，
 /// C# 的 `Create` 没有缺省值，所以显式传 `1e-10`；传 0.5 之类的"看起来像阈值"的值会让 `SafeLattice` 直接拒绝构造。
 ///
-/// The baseline's `PassengerFlightChangeConstraint.kt` builds a 0/1 indicator per itinerary leg with `IfFunction` — "this connection is too tight to catch" — and bounds the re-booking
+/// The code's builds a 0/1 indicator per itinerary leg with `IfFunction` — "this connection is too tight to catch" — and bounds the re-booking
 /// variables by `head count × indicator`.
 ///
 /// Two directions, one row each: **catching the next leg** — `earliest start = this leg's arrival − the next leg's departure + airport transfer time`, positive means "cannot catch it";
@@ -54,7 +54,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// **Reversing the indicator raises nothing**: re-booking is either fully opened or fully blocked, and the solve still succeeds — **only the two criteria "a tight connection forces zero
 /// re-booking" and "a loose connection allows non-zero re-booking" can tell**. 
 ///
-/// **One necessary difference**: the baseline's `IfFunction` defaults `strictBoundary` to `NONZERO_TOLERANCE = 1e-10`; C#'s `Create` has no default, so 1e-10 is passed explicitly — a
+/// **One necessary difference**: its `IfFunction` defaults `strictBoundary` to `NONZERO_TOLERANCE = 1e-10`; C#'s `Create` has no default, so 1e-10 is passed explicitly — a
 /// "threshold-looking" value such as 0.5 makes `SafeLattice` refuse to construct.
 /// </remarks>
 public sealed class PassengerFlightChangeConstraint

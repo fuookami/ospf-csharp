@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 吉瓦时用的是 mega 而不是 giga，因为基准是千瓦时 / GWh uses mega because its base is the kilowatt-hour.
 /// </summary>
 /// <remarks>
-/// 补 10 个能量单位（基线 `Energy.kt`）。全是焦耳的固定倍数，
+/// 补 10 个能量单位。全是焦耳的固定倍数，
 /// **所以风险不在公式，在三处语义**：
 /// **① `WattHour` 是 `KilowattHour` 的千分之一，方向容易反；**
 /// **② `GigawattHour` 用 `Scale.mega`（基准是 10³ Wh），名字是 giga 而 Scale 看着像错的；**
@@ -113,10 +113,10 @@ public class ExtendedEnergyUnitsTests
     /// <summary>**英热单位是 1055.06 焦耳（IT 制）** / BTU is 1055.06 joules on the IT definition.</summary>
     /// <remarks>
     /// **热化学制是 1054.35，两者都叫 BTU，差 0.07%。**
-    /// **判据钉的是 IT 制——因为基线的注释写的是它。**
+    /// **判据钉的是 IT 制——因为注释写的是它。**
     ///
     /// **The thermochemical definition is 1054.35, both are called BTU, 0.07% apart.**
-    /// **The criterion pins the IT definition, which is what the baseline's comment states.**
+    /// **The criterion pins the IT definition, which is what its comment states.**
     /// </remarks>
     [Fact]
     public void TheBritishThermalUnit_ShouldUseTheItDefinition()
@@ -152,7 +152,7 @@ public class ExtendedEnergyUnitsTests
         (JoulesOf(EnergyUnits.Gigajoule) / JoulesOf(EnergyUnits.Joule)).Should().Be(1e9);
     }
 
-    /// <summary>**单位清单与基线一致** / The unit list matches the baseline.</summary>
+    /// <summary>**单位清单** / The unit list matches the code.</summary>
     [Fact]
     public void TheUnitList_ShouldMatchTheBaseline()
     {

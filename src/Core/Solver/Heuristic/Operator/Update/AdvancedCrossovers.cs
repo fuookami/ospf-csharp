@@ -1,6 +1,5 @@
 // 进阶交叉算子 / Advanced crossover operators.
-// 与固定 Kotlin 基线 `operator/update/AdvancedCrossovers.kt`（9530 B）对应。
-// Mirrors the pinned baseline's `AdvancedCrossovers.kt`.
+// 与固定 Kotlin （9530 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -237,13 +236,13 @@ public sealed class OrderCross : ICross {
 /// **真正让循环终止的是 `assigned` 数组，不是 `guard`**。`index = firstIndices[cycleSource[index]]` 沿着值→位置映射跳转，
 /// 一旦映射成环，跳转本身会永远继续下去；但每个位置在被访问时立即置 `assigned[index] = true`，于是下一次回到该位置时
 /// `!assigned[index]` 为假、循环退出。循环次数因此天然被解的长度限制住。
-/// **`guard &lt;= size` 是基线的第二道保险，在本实现里是冗余的**：变异测试把上界放宽到 `size * 4` 后测试**仍然通过**，
-/// 因为 `assigned` 已经先一步终止了循环。保留它只为与基线一致；把它说成"防止死循环的关键"会是不准确的。
+/// **`guard &lt;= size` 是第二道保险，在本实现里是冗余的**：变异测试把上界放宽到 `size * 4` 后测试**仍然通过**，
+/// 因为 `assigned` 已经先一步终止了循环。保留它只为；把它说成"防止死循环的关键"会是不准确的。
 /// **What actually terminates the loop is the `assigned` array, not `guard`.** `index = firstIndices[cycleSource[index]]` hops along
 /// the value-to-position map and would continue forever once that map forms a cycle; but each position sets `assigned[index] = true`
 /// when visited, so the next time the walk returns there `!assigned[index]` is false and the loop exits. The iteration count is thus
 /// naturally bounded by the solution length.
-/// **`guard &lt;= size` is the baseline's second line of defence and is redundant here**: loosening the bound to `size * 4` still passes
+/// **`guard &lt;= size` is its second line of defence and is redundant here**: loosening the bound to `size * 4` still passes
 /// the tests because `assigned` terminates the loop first. It is kept only for baseline fidelity; calling it "the thing that prevents
 /// the infinite loop" would be inaccurate.
 /// **`firstIndices` 记录的是每个值在另一来源中的首次出现位置**（`putIfAbsent`）。用最后一次出现会让环的走向完全不同，

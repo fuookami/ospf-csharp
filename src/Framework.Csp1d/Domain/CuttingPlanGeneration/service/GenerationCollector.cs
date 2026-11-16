@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// 把覆盖函数列表折叠成单个 dominance 判据 / Fold override lists into one dominance predicate.
 /// </summary>
 /// <remarks>
-/// **语义必须与基线一致**：`input.dominanceAcceptOverrides.all { it(plan, existing) }`——
+/// **语义必须**：`input.dominanceAcceptOverrides.all { it(plan, existing) }`——
 /// **全部通过才接受**，不是"任一通过"。列表为空时返回 null（不额外过滤）。
 ///
 /// **这段逻辑只写一次**，四个生成器共用——否则四处复制的 `All(...)` 迟早会有一处写成 `Any(...)`。
 ///
-/// **The semantics must match the baseline**: `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **all must pass, not any**. An empty list returns null (no
+/// **The semantics must match the code**: `input.dominanceAcceptOverrides.all { it(plan, existing) }` — **all must pass, not any**. An empty list returns null (no
 /// extra filtering).
 ///
 /// **This logic is written once** and shared by the four generators — otherwise one of four copies of `All(...)` would eventually be written as `Any(...)`.
@@ -118,7 +118,7 @@ internal sealed class GenerationCollector<TPlan> {
     /// <param name="dominanceAcceptOverride">自定义 dominance 接受函数 / Custom dominance acceptance function.</param>
     /// <param name="candidateFilter">候选过滤函数；为 null 时不过滤 / Candidate filter; null means no filtering.</param>
     /// <param name="existingPlansForFilter">
-    /// 传给候选过滤的"已有方案"列表，对应基线 `input.existingPlans` / The "existing plans" list passed to the candidate filter, matching the baseline's
+    /// 传给候选过滤的"已有方案"列表，对应基线 `input.existingPlans` / The "existing plans" list passed to the candidate filter, matching its
     /// `input.existingPlans`.
     /// </param>
     /// <param name="crossContributionProjector">跨贡献投影器；为 null 时跨贡献剪枝不发生 / Cross-contribution projector; when null, cross-contribution pruning does not happen.</param>
@@ -178,13 +178,13 @@ internal sealed class GenerationCollector<TPlan> {
     /// <summary>记录跨贡献 dominance 剪枝的候选数 / Record candidates pruned by cross-contribution dominance.</summary>
     /// <param name="count">本次新增候选数 / Candidates to add.</param>
     /// <remarks>
-    /// 基线在 `GenerationCollector.kt` 的跨贡献分支里递增这个计数。C# 侧此前**只有字段与统计参数**，
+    /// 的跨贡献分支里递增这个计数。C# 侧此前**只有字段与统计参数**，
     /// `_dominanceStrategy` 被存下来但**从不读取**，跨贡献分支根本不存在。
     ///
     /// **这里只补计数通道，不补跨贡献判定本身**——判定需要 `relaxedDominanceKey` 与
     /// `canCrossContributionDominate`，那是一个独立的能力缺口（见计划小节"仍然存在的缺口"）。
     ///
-    /// The baseline increments this counter in `GenerationCollector.kt`'s cross-contribution branch. On the C# side there was previously **only the field and
+    /// The code increments this counter's cross-contribution branch. On the C# side there was previously **only the field and
     /// the statistics parameter**; `_dominanceStrategy` was stored but **never read**, and the cross-contribution branch did not exist at all.
     ///
  /// ** adds only the counting channel, not the cross-contribution decision itself** — that decision needs `relaxedDominanceKey` and
@@ -237,11 +237,11 @@ internal sealed class GenerationCollector<TPlan> {
             return false;
         }
 
-        // **候选过滤必须在去重之前。** 基线把 `candidateFilters` 放在 `plans.add(plan)` 之前，
+        // **候选过滤必须在去重之前。** `candidateFilters` 放在 `plans.add(plan)` 之前，
         // 而 `plans.add` 之后才轮到收集器的去重。顺序反了会让"被过滤掉的候选"占掉规范键名额，
         // 把**本来该被接受的同键候选**挤掉。
         //
-        // **The candidate filter must run before deduplication.** The baseline applies `candidateFilters` before `plans.add(plan)`, and only after that does the
+        // **The candidate filter must run before deduplication.** The code applies `candidateFilters` before `plans.add(plan)`, and only after that does the
         // collector dedupe. Reversing the order lets a **filtered-out** candidate occupy the canonical-key slot and squeeze out a same-key candidate that should have
         // been accepted.
         if (_candidateFilter is not null && !_candidateFilter(plan, _existingPlansForFilter)) {

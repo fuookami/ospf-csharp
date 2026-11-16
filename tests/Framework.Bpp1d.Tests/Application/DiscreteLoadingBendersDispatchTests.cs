@@ -36,14 +36,14 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// </summary>
 /// <remarks>
 /// 这里之前，`DiscreteLoadingApplicationService` 的 Benders 分支（`RunBendersAsync`、回退、`RequiresFreshModel` 守卫）
-/// **零判据**——代码在、没人验。 已经确认这条路径**就是**基线的生产路径（demo2 自己那份只有测试在调），
+/// **零判据**——代码在、没人验。 已经确认这条路径**就是**生产路径（demo2 自己那份只有测试在调），
 /// 所以它是这个仓里最该有判据、却最没有判据的一段。
 ///
 /// 四条判据对应四个分派结果：没后端、回退成功、禁止回退、回退时复用同一模型。
 /// **三条不需要真求解器**：`milpSolver` 是函数参数，Benders 后端是接口，两者都能注入。
 ///
 /// Before the service's Benders branch (`RunBendersAsync`, fallback, the `RequiresFreshModel` guard) had **no criteria at all** — code present, nobody
-/// verifying it. established that this path **is** the baseline's production one (demo2's own copy is called only from tests), so it is the least covered and
+/// verifying it. established that this path **is** its production one (demo2's own copy is called only from tests), so it is the least covered and
 /// most important stretch in this repo. The four criteria cover the four dispatch outcomes: no backend, fallback succeeded, fallback forbidden, and a fallback that
 /// reuses one model. **Three need no real solver**: `milpSolver` is a function parameter and the Benders backend is an interface, so both can be injected.
 /// </remarks>

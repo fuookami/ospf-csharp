@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 把变量钉在一个值上：<c>variable = value</c> / Pin a variable to a value.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `fixedVariableEquality`。
+/// 对齐的 `fixedVariableEquality`。
 ///
 /// **它只有一行，但有两个容易漏的地方**：
 ///
@@ -28,12 +28,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **反了在 `EQ` 下数值上等价，但名称与系数的符号会变**——
 /// **而 `EQ` 恰好是对称的，所以这是一个"改了也测不出来"的错误。**
 ///
-/// **本函数<b>不做</b>可用性检查**：**基线也没有做。**
+/// **本函数<b>不做</b>可用性检查**：**没有做。**
 /// **它只是构造一行；检查在调用方。** **这一点要说清，否则读代码的人会以为这里已经把关了。**
 ///
-/// Following the baseline's `fixedVariableEquality`.
+/// Following its `fixedVariableEquality`.
 ///
-/// **It is one row, but two things are easy to miss**:
+/// **It is one row, but two things are easy to miss**.
 ///
 /// **① The coefficient must be `one` and the constant `zero`, <b>not the other way round</b>.**
 /// **`one` and `zero` come from the caller rather than being built from `Flt64`** — **so it works for any `V`
@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **Flipped, it is numerically identical under `EQ`, but the name and the coefficient signs change** —
 /// **and `EQ` is symmetric, so this is an error that "changes nothing measurable".**
 ///
-/// **This function <b>performs no</b> usability check**: **neither does the baseline.**
+/// **This function <b>performs no</b> usability check**: **neither does the code.**
 /// **It only builds a row; the checking is the caller's.** **That has to be said, or a reader would assume the gate is
 /// here.**
 /// </remarks>

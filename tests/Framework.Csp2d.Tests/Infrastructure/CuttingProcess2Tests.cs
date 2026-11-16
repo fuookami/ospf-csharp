@@ -10,9 +10,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Infrastructure;
 /// **工艺与工序级数** / The process and its stage limits.
 /// </summary>
 /// <remarks>
-/// 对应基线 `CuttingProcess2.kt`。四条都是纯判断，**不需要几何、不需要求解器**。
+/// 对应。四条都是纯判断，**不需要几何、不需要求解器**。
 ///
-/// Mirrors the baseline `CuttingProcess2.kt`. All four are pure predicates: **no geometry, no solver**.
+///. All four are pure predicates: **no geometry, no solver**.
 /// </remarks>
 public class CuttingProcess2Tests {
     /// <summary>**任意排样不受级数约束** / Arbitrary nesting has no stage limit.</summary>

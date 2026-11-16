@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 跨结构键检查：登记范围与引用范围不同 / The claim range and the reference range differ.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText`。
+/// 对齐的 `validateCombinedStructureKeys` 与 `keyText`。
 ///
 /// Adds </remarks>
 public class NativeCombinedKeyValidatorTests
@@ -196,7 +196,7 @@ public class NativeCombinedKeyValidatorTests
     /// **消息只给键、不给占用者** / The message names the key but not the claimants.
     /// </summary>
     /// <remarks>
-    /// **这是一个真实的诊断缺口，这里照抄基线不改。**
+    /// **这是一个真实的诊断缺口，这里照做不改。**
     ///
     /// **看到 `key is duplicated` 之后，调用方还得自己去找是哪两个结构。**
     /// **而 `owners` 字典里<b>本来就有</b>两个占用者的标签——第一个已经存在，
@@ -205,7 +205,7 @@ public class NativeCombinedKeyValidatorTests
     /// **判据把这一条断言下来：消息里<b>有</b>键、<b>没有</b> `pwl[` / `abs[` / `max[` 这些标签。**
     /// **这样"消息缺什么"成为一个被记录的事实，而不是一个观感。**
     ///
-    /// **A real diagnostic gap, copied from the baseline.** **After `key is duplicated` the caller still has to find the
+    /// **A real diagnostic gap, copied from the code.** **After `key is duplicated` the caller still has to find the
     /// two structures, even though the `owners` dictionary <b>already holds</b> both labels — the first is stored and the
     /// second is right there.**
     ///

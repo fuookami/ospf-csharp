@@ -1,8 +1,8 @@
 // 换型发生条件 / When a switch occurs.
-// 与固定 Kotlin 基线 `task_compilation/model/Switch.kt` 里 `switch` 的两支构造对应：
+// 与固定 Kotlin 里 `switch` 的两支构造对应：
 // 有 `taskTime` 时取 `x[e,t1] AND x[e,t2] AND frontOf[t1,t2] AND NOT betweenIn[t3,t1,t2]`（对每个 t3）；
 // 无 `taskTime` 时取 `t1.start < t2.start` 且无第三个任务的起点严格落在两者之间。
-// Mirrors the two branches building `switch` in the pinned baseline's `task_compilation/model/Switch.kt`:
+// Two branches build `switch`: 
 // with `taskTime`, `x[e,t1] AND x[e,t2] AND frontOf[t1,t2] AND NOT betweenIn[t3,t1,t2]` for every t3;
 // without it, `t1.start < t2.start` and no third task's start strictly between the two.
 
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 执行器上排了 `A → B → C`，若只看"指派了 + 先后"，`A→C` 也会被当成一次换型，
 /// 于是换型时间被计入四次（AB、AC、BA 之类的组合），而排程本身完全正常。
 ///
-/// **两支的严格性不同，这是基线的原样**：
+/// **两支的严格性不同，这是原样**：
 ///
 /// | 分支 | 先后判定 | 夹在中间的判定 |
 /// | --- | --- | --- |
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// Dropping that chain does not merely under-count — it **counts the same switch many times**. With `A → B → C` on one executor, "assigned and ordered" alone would also
 /// treat `A→C` as a switch, charging switch time four times over, while the schedule itself looks perfectly normal.
 ///
-/// **The two branches differ in strictness, and that is the baseline verbatim:**
+/// **The two branches differ in strictness, and that is the code verbatim:**
 ///
 /// | Branch | Ordering test | Betweenness test |
 /// | --- | --- | --- |

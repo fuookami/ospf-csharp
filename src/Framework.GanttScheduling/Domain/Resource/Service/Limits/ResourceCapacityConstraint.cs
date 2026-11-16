@@ -47,7 +47,7 @@ public class ResourceCapacityConstraint<E, A, S, R, C, V>
     /// 每个时间槽两行：**上界** 是 `polyX` 不超过容量上界，**下界** 是 `polyX` 不低于容量下界，行名 `{name}_ub_{槽}` / `{name}_lb_{槽}`，
     /// 都挂 `ResourceCapacityShadowPriceKey(slot)`。
     ///
-    /// 三件照抄基线：
+    /// 三件照做：
     ///
     /// 1. **`polyX` 不是数量本身**：有超量松弛时上界加在 `x - pos` 上，有不足松弛时下界加在 `x + neg` 上（"扣掉超出 / 补上不足之后的数量"）。
     ///    加在数量上，松弛就失去意义——超出的部分照样违反上界。
@@ -55,7 +55,7 @@ public class ResourceCapacityConstraint<E, A, S, R, C, V>
     /// 3. **数量表必须先注册**：没注册就失败，不能当"零数量"处理——零数量会让容量永远不紧，模型照样可解。
     ///
     /// Two rows per time slot: an **upper bound** of `polyX` against the capacity's upper bound and a **lower bound** of `polyX` against its lower bound, named `{name}_ub_{slot}` / `{name}_lb_{slot}`, both carrying a
-    /// `ResourceCapacityShadowPriceKey(slot)`. Three things are copied from the baseline: **`polyX` is not the quantity itself** — with an over slack the upper bound applies to `x - pos` and
+    /// `ResourceCapacityShadowPriceKey(slot)`. Three things are copied from the code: **`polyX` is not the quantity itself** — with an over slack the upper bound applies to `x - pos` and
     /// with a less slack the lower bound to `x + neg` (the quantity after removing the excess or covering the shortfall), since applying it to the quantity would make the slack pointless and
     /// the excess would still violate the bound; **when no slack is available the row falls back to the quantity**, for a slot whose over switch is off or whose slack is an empty symbol; and
     /// **the quantity table must be registered first** — failing instead of treating an unregistered table as "quantity zero", which would leave capacity never tight while the model stays solvable.

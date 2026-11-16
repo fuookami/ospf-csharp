@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 推荐重量均衡约束 / The recommended-weight-equalisation constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `recommended_weight_equalization/service/limits/RecommendedWeightEqualizationLimit.kt` 对齐：对**每一对需要推荐重量的舱位**加**两条**互相制约的约束。
+/// 与对齐：对**每一对需要推荐重量的舱位**加**两条**互相制约的约束。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
 /// 1. **两条约束，方向相反**：`z[j1] 不超过 z[j2] + mlw1 × actualLoaded[j2]` 与 `z[j2] 不超过 z[j1] + mlw2 × actualLoaded[j1]`。
 ///    只加一条会让偏差单向无界。
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 4. **两个舱位都必须 `RecommendedWeightNeeded`**。只判一个会让另一个舱位被迫承担均衡。
 /// 5. **约束名带两个舱位**，且第二条把顺序反过来（`_${position2}_${position1}`），否则两条同名。
 ///
-/// Aligned with the baseline: **two constraints in opposite directions** for every pair of positions needing recommended weight, `z[j1] 不超过 z[j2] + mlw1 × actualLoaded[j2]` and
+/// **two constraints in opposite directions** for every pair of positions needing recommended weight, `z[j1] 不超过 z[j2] + mlw1 × actualLoaded[j2]` and
 /// `z[j2] 不超过 z[j1] + mlw2 × actualLoaded[j1]` — one alone leaves the deviation unbounded in one direction; **the slack coefficient is the *other* position's `mlw`**, not its own, and
 /// swapping them mixes up the two capacities; **`j2` strictly above `j1`** so each pair is added once; **both positions must have `RecommendedWeightNeeded`**, since testing only one forces the
 /// other to carry the balance; and **the names carry both positions**, with the second reversing the order so the two do not collide.

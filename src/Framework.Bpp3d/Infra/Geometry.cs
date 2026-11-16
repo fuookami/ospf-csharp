@@ -72,11 +72,11 @@ public sealed record CuboidPackingShape3<V>(QuantityCuboid3<V> Cuboid) : IPackin
 /// **缺了它会怎样**：`ContinuousRadiusSolverHelpers.PrototypesFromItems` 无法判断"哪些圆柱参与连续半径优化"，
 /// 只能对**所有**竖直圆柱产出原型——那比基线激进，会把列生成推进基线不会进入的分支（已记录该偏差）。
 ///
-/// **The latter three parameters did not exist at first**; they are the C# counterparts of the baseline
+/// **The latter three parameters did not exist at first**; they are the C# counterparts of the code
 /// `PackageShapeSpec.VerticalCylinder`'s `radiusWeightFunctionKey / radiusMin / radiusMax`.
 ///
 /// **What their absence caused**: `ContinuousRadiusSolverHelpers.PrototypesFromItems` could not tell "which cylinders participate in continuous-radius
-/// optimisation", so it produced prototypes for **every** vertical cylinder — more aggressive than the baseline and pushing column generation down a branch the
+/// optimisation", so it produced prototypes for **every** vertical cylinder — more aggressive than the code and pushing column generation down a branch the
 /// baseline would not enter (a deviation recorded).
 /// </remarks>
 public sealed record CylinderPackingShape3(

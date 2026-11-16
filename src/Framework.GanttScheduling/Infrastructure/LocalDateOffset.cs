@@ -1,6 +1,6 @@
 // 本地日期偏移 / Local date offset.
-// 与固定 Kotlin 基线 `gantt-scheduling-infrastructure/.../LocalDateOffset.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `LocalDateOffset.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System;
 

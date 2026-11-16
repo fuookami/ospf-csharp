@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// 现在从数量直接算：`占用 = Σ 单位加工时长 × 数量`，再换回时长。
 ///
 /// Since，`ExecutorCapacityResult.TotalDuration` summed every allocation's `Duration` (the slot length), so two actions in one slot reported "two slots of occupancy" —
-/// **a number that looks like capacity but is really the action count times the slot length**. The baseline evaluates `capacity[e, s]` and converts back through
+/// **a number that looks like capacity but is really the action count times the slot length**. The code evaluates `capacity[e, s]` and converts back through
 /// `timeWindow.durationOf(...)`. It is now computed from the amounts: `occupancy = sum of unit processing time x amount`, converted back to a duration.
 /// </remarks>
 public class CapacityOccupancyTests {

@@ -10,11 +10,11 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// **归一化后的 ONNX 常量张量** / A normalised ONNX constant tensor.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxTensorConstant.kt`。**两种规范化取值并存的理由与基线一致：**
+/// 同步 Kotlin `dee897d2` 的。**两种规范化取值并存的理由：**
 /// ONNX 的张量既可能以 `float_data` 存放、也可能以 `int64_data` 存放，**而 dtype 决定该读哪一个。**
 /// **把两者摊平成同一个数组就得在解码时先猜类型**——那是错的：类型是模型自己声明的，不是从内容猜出来的。
 ///
-/// Syncs `OnnxTensorConstant.kt`. **The reason the baseline keeps two normalised arrays:** an ONNX tensor may store its payload either as
+/// Syncs. **The reason the code keeps two normalised arrays:** an ONNX tensor may store its payload either as
 /// `float_data` or as `int64_data`, **and the dtype decides which one to read.** **Flattening both into one array forces the decoder to guess the type,
 /// which is wrong: the model declares it rather than it being inferred from the bytes.**
 /// </remarks>
@@ -57,10 +57,10 @@ public sealed class OnnxTensorConstant
     /// <summary>元素个数 / The element count.</summary>
     /// <remarks>
     /// **标量（空 shape）的元素个数是 1，不是 0：** **空 shape 表示"零维"，而零维张量恰好有一个元素。**
-    /// 把 `fold` 的初值当作结果会让标量张量看起来是空的。基线的 `shape.fold(1) { acc, dim -> acc * dim }` 正是这个意思。
+    /// 把 `fold` 的初值当作结果会让标量张量看起来是空的。`shape.fold(1) { acc, dim -> acc * dim }` 正是这个意思。
     ///
     /// **A scalar (empty shape) has one element, not zero: an empty shape means zero-dimensional, and a zero-dimensional tensor holds exactly one element.**
-    /// Treating the fold's seed as the answer would make scalar tensors look empty. The baseline's `shape.fold(1) { acc, dim -> acc * dim }` says the same.
+    /// Treating the fold's seed as the answer would make scalar tensors look empty. The code's `shape.fold(1) { acc, dim -> acc * dim }` says the same.
     /// </remarks>
     public int ElementCount => Shape.Aggregate(1, (accumulated, dimension) => accumulated * dimension);
 

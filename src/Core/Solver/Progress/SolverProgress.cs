@@ -72,10 +72,10 @@ public sealed record SolverSubStage(
     /// <param name="template">模板文本 / Template text.</param>
     /// <returns>渲染结果 / The rendered text.</returns>
     /// <remarks>
-    /// **必须逐键顺序替换，且用 `{key}` 形式**，与基线一致。基线是
+    /// **必须逐键顺序替换，且用 `{key}` 形式**。
     /// `args.entries.fold(template) { text, (key, value) -> text.replace("{$key}", value) }`。
     ///
-    /// **Keys must be substituted in order using the `{key}` form**, matching the baseline.
+    /// **Keys must be substituted in order using the `{key}` form**, matching the code.
     /// </remarks>
     public string Render(string template) {
         string text = template;
@@ -114,11 +114,11 @@ public sealed record SolverProgressSnapshot(
     /// <summary>将百分比收敛到合法范围 / Clamp percentages to the valid range.</summary>
     /// <returns>收敛后的快照 / The clamped snapshot.</returns>
     /// <remarks>
-    /// `ResolvedStageLabel` / `ResolvedSubStageLabel` 为 null 时**按基线的默认值补上**：
+    /// `ResolvedStageLabel` / `ResolvedSubStageLabel` 为 null 时**按默认值补上**：
     /// 基线这两个属性的默认值是 `stage.fallbackLabel` 与 `subStage?.renderDefault`，
     /// 而 C# 的可选参数不能引用其它参数，所以在属性访问处补。
     ///
-    /// When null, **the baseline defaults are supplied**: the baseline defaults these to `stage.fallbackLabel` and `subStage?.renderDefault`, but C# optional
+    /// When null, **the code defaults are supplied**: the code defaults these to `stage.fallbackLabel` and `subStage?.renderDefault`, but C# optional
     /// parameters cannot reference other parameters, so it is done at the property accessor instead.
     /// </remarks>
     public SolverProgressSnapshot Normalized() => this with {
@@ -159,11 +159,11 @@ public interface IProgressReporter {
 /// 进度上报上下文 / Progress reporting context.
 /// </summary>
 /// <remarks>
-/// **基线的 `SolverProgressContext` 与 `MonotonicProgressState` 是两个类型**（后者是 private class），
+/// **`SolverProgressContext` 与 `MonotonicProgressState` 是两个类型**（后者是 private class），
 /// C# 侧合并成一个类：单调状态是纯实现细节，拆开只会多一个文件而没有调用方能用到它。
 /// 行为逐条对齐——见 `Report` 的注释。
 ///
-/// **The baseline's `SolverProgressContext` and `MonotonicProgressState` are two types** (the latter a private class). The C# side merges them: the monotonic state
+/// **`SolverProgressContext` and `MonotonicProgressState` are two types** (the latter a private class). The C# side merges them: the monotonic state
 /// is a pure implementation detail, and splitting it out would add a file nobody can call. Behaviour is aligned item by item — see the notes on `Report`.
 /// </remarks>
 public sealed class SolverProgressContext {
@@ -209,7 +209,7 @@ public sealed class SolverProgressContext {
     /// 它也是 `CancellationToken.ThrowIfCancellationRequested` 抛出的同一类型——
     /// **这样两套取消机制对调用方是同一种异常**。
     ///
-    /// The baseline throws `CancellationException`; the C# counterpart is `OperationCanceledException`, the same type
+    /// The code throws `CancellationException`; the C# counterpart is `OperationCanceledException`, the same type
     /// `CancellationToken.ThrowIfCancellationRequested` throws — **so both cancellation mechanisms surface as one exception type to callers**.
     /// </remarks>
     public void ThrowIfCancelled() {
@@ -224,14 +224,14 @@ public sealed class SolverProgressContext {
     /// <param name="snapshot">进度快照 / The progress snapshot.</param>
     /// <returns>成功或错误 / Success or an error.</returns>
     /// <remarks>
-    /// **顺序必须与基线一致**：先 `throwIfCancelled`，再解析标签，最后过单调状态后上报。
+    /// **顺序必须**：先 `throwIfCancelled`，再解析标签，最后过单调状态后上报。
     ///
     /// 三处细节逐条对齐：
     /// 1. **取消检查在最前**——已取消时**一次都不上报**，也不做本地化。
     /// 2. 无解析器时**直接 `Normalized`**，不清空已解析标签。
     /// 3. 有解析器时**覆盖**两个已解析标签，然后 `Normalized`。
     ///
-    /// **The order must match the baseline**: `ThrowIfCancelled` first, then label resolution, then through the monotonic state before reporting.
+    /// **The order must match the code**: `ThrowIfCancelled` first, then label resolution, then through the monotonic state before reporting.
     ///
     /// Three details aligned item by item: (1) **the cancellation check comes first** — when cancelled, **nothing is reported** and no localization happens;
     /// (2) without a resolver, call `Normalized` directly and do not clear the already-resolved labels; (3) with a resolver, **overwrite** both resolved labels and
@@ -270,10 +270,10 @@ public sealed class SolverProgressContext {
     /// <returns>单调化后的快照 / The monotonised snapshot.</returns>
     /// <remarks>
     /// **进度只增不减**：阶段内取 `max(上次该阶段值, 本次值)`，总体取 `max(上次总体, 本次)`，
-    /// 都收敛到 `0..100`。基线用 `@Synchronized`，C# 用 `lock`。
+    /// 都收敛到 `0..100`。`@Synchronized`，C# 用 `lock`。
     ///
     /// **Progress never decreases**: in-stage takes `max(last for that stage, current)`, overall takes `max(last overall, current)`, both clamped to `0..100`.
-    /// The baseline uses `@Synchronized`; C# uses `lock`.
+    /// The code uses `@Synchronized`; C# uses `lock`.
     /// </remarks>
     private SolverProgressSnapshot AcceptMonotonic(SolverProgressSnapshot snapshot) {
         lock (_gate) {

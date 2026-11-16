@@ -1,7 +1,7 @@
 // 关系查询计划规范化表示 / Relational query plan canonical representation.
-// 与固定 Kotlin 基线 `canonical`／`canonicalQueryKey` 对应。所有片段用"长度前缀"编码，避免拼接歧义
+// 与`canonical`／`canonicalQueryKey` 对应。所有片段用"长度前缀"编码，避免拼接歧义
 // （`a`+`bc` 与 `ab`+`c` 若不长度前缀会撞成同一个字符串）。
-// Mirrors the pinned Kotlin baseline's `canonical`/`canonicalQueryKey`. Every fragment is length-prefixed to
+// The pinned Kotlin: /`canonicalQueryKey`. Every fragment is length-prefixed to
 // remove concatenation ambiguity (`a`+`bc` and `ab`+`c` would otherwise collide).
 
 using System;
@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// 关系查询计划规范化渲染器 / Relational query plan canonical renderer.
 /// </summary>
 /// <remarks>
-/// **一处与基线一致但容易被误改的语义**：`And`／`Or` 的操作数在渲染时**按字符串排序**，`In` 的候选集同理。
+/// **一处但容易被误改的语义**：`And`／`Or` 的操作数在渲染时**按字符串排序**，`In` 的候选集同理。
 /// 排序是规范化等价的前提——不排序的话，同一逻辑条件换个书写顺序就会得到不同的哈希。不要为了"保留用户书写
 /// 顺序"去掉它。
 ///
-/// **C# 专用范围**：本实现与基线的字符串**不保证逐字节相同**（C# 侧表达式节点的类型集合与 Kotlin 并不一致，
+/// **C# 专用范围**：本实现与字符串**不保证逐字节相同**（C# 侧表达式节点的类型集合与 Kotlin 并不一致，
 /// 例如没有 `ScalarConditional`／`ScalarBoolean`）。因此 `canonical`／`hash` 只用于 C# 内部与 C# 之间
 /// 的稳定性比较，**不得**用来声称与 Kotlin 的哈希一致。
 ///
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// same condition in a different writing order hashes differently. Do not remove it to "preserve the user's
 /// order".
 ///
-/// **C#-only scope**: the string is **not guaranteed byte-identical** to the baseline (the C# expression node set
+/// **C#-only scope**: the string is **not guaranteed byte-identical** to the code (the C# expression node set
 /// differs, e.g. no `ScalarConditional`/`ScalarBoolean`). `canonical`/`hash` are therefore stable within C#
 /// only and **must not** be used to claim hash equality with Kotlin.
 /// </remarks>

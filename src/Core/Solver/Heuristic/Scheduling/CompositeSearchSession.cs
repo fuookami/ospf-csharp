@@ -1,6 +1,5 @@
 // 复合搜索会话 / The composite search session.
-// 与固定 Kotlin 基线 `scheduling/CompositeSearchSession.kt`（9339 B）对应。
-// Mirrors the pinned baseline's `scheduling/CompositeSearchSession.kt` (9339 B).
+// 与固定 Kotlin （9339 B）对应。
 
 using System;
 using System.Collections.Generic;

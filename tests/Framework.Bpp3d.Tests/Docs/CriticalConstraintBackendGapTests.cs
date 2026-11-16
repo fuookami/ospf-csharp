@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// | 侧 | 内容 |
 /// | --- | --- |
 /// | **已就绪** | `CriticalConstraintAnalysisOptions`／`…Report`／`…ReportBuilder`／`…FullReport`／`CriticalAnalysisReports`／`ConstraintPerturbationPipeline`／`…Report`／`…Support`（8 个文件） |
-/// | **缺失** | `GurobiCriticalConstraintAnalysis.kt`（3 个公开函数）与 `ScipCriticalConstraintAnalysis.kt`（3 个公开函数），<b>一个都没有** |
+/// | **缺失** |（3 个公开函数）与（3 个公开函数），<b>一个都没有** |
 ///
 /// **这 6 个函数是：** **固定整数 LP 灵敏度采集、扰动后端、以及把两者编排成 pipeline 的那个入口。**
 /// **它们<b>全部要调真实求解器的对偶值／边界重解**——所以缺它们不等于"少抄了几个函数"，**
@@ -41,8 +41,8 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// capabilities with zero writers and zero readers; this one has the <b>framework complete and both backends absent</b> —
 /// interface first, implementation missing.**
 ///
-/// **Measured: eight framework files are in place; `GurobiCriticalConstraintAnalysis.kt` (3 public functions) and
-/// `ScipCriticalConstraintAnalysis.kt` (3 public functions) are <b>entirely absent</b>.** **Those six collect fixed-integer LP
+/// **Measured: eight framework files are in place; (3 public functions) and
+/// (3 public functions) are <b>entirely absent</b>.** **Those six collect fixed-integer LP
 /// sensitivity, provide the perturbation backend, and compose the two into a pipeline — all of them call a real solver's duals
 /// or re-solve with bounds, so missing them is not "a few functions left un-copied" but "no backend can connect to this
 /// framework yet".**

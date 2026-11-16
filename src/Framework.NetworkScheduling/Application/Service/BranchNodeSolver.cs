@@ -1,6 +1,5 @@
 // 单分支节点求解器 / The single branch-node solver.
-// 与固定 Kotlin 基线 `application/service/BranchNodeSolver.kt`（22550 字节）对应。
-// Mirrors the pinned baseline's `application/service/BranchNodeSolver.kt`.
+// 与固定 Kotlin （22550 字节）对应。
 
 using System;
 using System.Collections.Generic;
@@ -84,11 +83,11 @@ public sealed record NodeSolveResult<V>(
 /// **列数截断不等于收敛**。`ExactPricingComplete` 为假时，即使本轮没拿到新列也不能判定收敛。
 /// **Truncating columns is not convergence.** When `ExactPricingComplete` is false, an empty batch still does not prove
 /// convergence.
-/// **与基线的有意偏离**：C# 的 `IColumnGenerationSolver.SolveLPAsync` 只返回可行解，无法表达"不可行证书"或非最优状态，
-/// 因此基线中的 `LPResultWithStatus.Infeasible` 与 `status != Optimal` 分支在这里统一落到失败路径。调用方拿到的失败结果
+/// **与有意偏离**：C# 的 `IColumnGenerationSolver.SolveLPAsync` 只返回可行解，无法表达"不可行证书"或非最优状态，
+/// 因此的 `LPResultWithStatus.Infeasible` 与 `status != Optimal` 分支在这里统一落到失败路径。调用方拿到的失败结果
 /// 携带原始求解错误，不会被伪装成"节点不可行"。
-/// **Deliberate divergence from the baseline**: C#'s `IColumnGenerationSolver.SolveLPAsync` returns only a feasible output and
-/// cannot express an infeasibility certificate or a non-optimal status, so the baseline's `LPResultWithStatus.Infeasible` and
+/// **Deliberate divergence from the code**: C#'s `IColumnGenerationSolver.SolveLPAsync` returns only a feasible output and
+/// cannot express an infeasibility certificate or a non-optimal status, so its `LPResultWithStatus.Infeasible` and
 /// `status != Optimal` branches collapse onto the failure path here. The caller receives the original solver error, never a
 /// disguised "node infeasible".
 /// </remarks>

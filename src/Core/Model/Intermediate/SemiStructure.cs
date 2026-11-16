@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 延迟函数 fallback 生成的求解器无关约束 / Solver-neutral constraints from a deferred-function fallback.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackConstraints`。
+/// 对齐的 `DeferredFunctionFallbackConstraints`。
 ///
 /// **一个包装而不是直接返回列表**：**它标记"这些行的来源是 fallback 路径，不是结构的原生展开"。
 /// 调用方据此决定要不要做等价列与保留列的登记——两者的处理不同。**
@@ -35,7 +35,7 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// 半连续变量的结构 / Semi-continuous variable structure.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `SemiStructure`。
+/// 对齐的 `SemiStructure`。
 ///
 /// **半连续的意思是"要么是 0，要么落在 `[L, U]` 里"。**
 /// **两条行，而<b>它们只在成对时才强制 0</b>：**
@@ -51,12 +51,12 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// **这就是半连续的编码方式：不是"加一条 `result = 0` 的分支"，
 /// 而是让两条行在指示 = 0 时<b>都收紧到 0</b>、在指示 = 1 时<b>都放宽到一个区间</b>。**
 ///
-/// **没有校验 `L > 0`，而这不是遗漏**：**基线在 `materializeFallbackConstraints` 里也不校验。**
+/// **没有校验 `L > 0`，而这不是遗漏**：**`materializeFallbackConstraints` 里也不校验。**
 /// **但 `L ≤ 0` 会让"半连续"退化成"普通有界变量"——
 /// 因为那时指示 = 1 的区间本身包含 0，"要么 0 要么 ≥ L"就没有区分力。**
 /// **本实现不做基线没有的校验，但把这个后果写在这里。**
 ///
-/// Following the baseline's `SemiStructure`.
+/// Following its `SemiStructure`.
 ///
 /// **Semi-continuous means "either zero or inside `[L, U]`".**
 /// **Two rows, and <b>they force zero only as a pair</b>:**
@@ -67,10 +67,10 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// **That is the encoding: not "add a `result = 0` branch" but make both rows <b>tighten to zero</b> at indicator 0 and
 /// <b>relax to an interval</b> at indicator 1.**
 ///
-/// **`L > 0` is not validated, and that is not an omission**: **neither does the baseline's
+/// **`L > 0` is not validated, and that is not an omission**: **neither does its
 /// `materializeFallbackConstraints`.** **But `L ≤ 0` degrades "semi-continuous" into "an ordinary bounded variable",
 /// because the indicator-1 interval then contains zero and "either zero or ≥ L" loses its meaning.** **This
-/// implementation adds no check the baseline lacks, and records the consequence here.**
+/// implementation adds no check the code lacks, and records the consequence here.**
 /// </remarks>
 public sealed record SemiStructure(
     Flt64 LowerBound,
@@ -91,14 +91,14 @@ public sealed record SemiStructure(
     /// </summary>
     /// <remarks>
     /// **基线返回 `Ret&lt;DeferredFunctionFallbackConstraints&gt;` 并经过 `convertPwlConstraintsToFlt64`，**
-    /// **那个转换器存在的理由是 `SemiStructure` 在基线里对 `V` 泛型，而约束列表要落到 `Flt64`。**
+    /// **那个转换器存在的理由是 `SemiStructure` 在对 `V` 泛型，而约束列表要落到 `Flt64`。**
     ///
     /// **本实现是 `Flt64` 专用的（与 `IndicatorStructure`、`AbsStructure`、`MaxStructure` 一致），
     /// 所以行<b>本来就是</b> `Flt64`——转换是恒等，这里不做一次假转换。**
     /// **这个差别写在方法注释里，而不是悄悄省掉一个调用。**
     ///
-    /// **The baseline returns `Ret&lt;DeferredFunctionFallbackConstraints&gt;` through `convertPwlConstraintsToFlt64`, and
-    /// that converter exists because the baseline's `SemiStructure` is generic over `V` while the constraint list must
+    /// **The code returns `Ret&lt;DeferredFunctionFallbackConstraints&gt;` through `convertPwlConstraintsToFlt64`, and
+    /// that converter exists because its `SemiStructure` is generic over `V` while the constraint list must
     /// land on `Flt64`.**
     ///
     /// **This implementation is `Flt64`-only (consistent with `IndicatorStructure`, `AbsStructure` and `MaxStructure`), so

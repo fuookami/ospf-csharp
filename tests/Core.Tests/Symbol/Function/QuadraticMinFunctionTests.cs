@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 空壳比缺失更危险 / A stub is more dangerous than an absence.
 /// </summary>
 /// <remarks>
-/// 把 `QuadraticMinFunction` 从空壳换成真实编码（基线 `QuadraticMin.kt`）。
+/// 把 `QuadraticMinFunction` 从空壳换成真实编码。
 ///
 /// **在此之前它是空壳**：**`Evaluate` 恒返回 `null`、`RegisterConstraints` 什么都不做。**
 /// **它能编译、有名字、能进注册表，所以"类型存在"的扫描把它算作已覆盖——而它对任何模型都没有作用。**

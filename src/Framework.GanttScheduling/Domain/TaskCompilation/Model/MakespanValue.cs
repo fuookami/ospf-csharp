@@ -1,7 +1,7 @@
 // 最大完工时间的取值 / The value of the makespan.
-// 与固定 Kotlin 基线 `task_compilation/model/Makespan.kt` 的 `register` 对应：
+// 与固定 Kotlin 的 `register` 对应：
 // `extra` 分支用 `MinMaxFunction`，否则用 `MaxFunction`，两者都作用在 `estimateEndTime[task]` 上。
-// Mirrors `register` in the pinned baseline's `task_compilation/model/Makespan.kt`: the `extra` branch uses
+// The `extra` branch uses
 // `MinMaxFunction`, otherwise `MaxFunction`, both over `estimateEndTime[task]`.
 
 using System;
@@ -13,8 +13,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 最大完工时间的取值 / The value of the makespan.
 /// </summary>
 /// <remarks>
-/// 基线有两个分支：`extra = true` 用 `MinMaxFunction`，否则用 `MaxFunction`。
-/// 名字看着像"最大减最小"或"最小化最大值"，但读 `MinMax.kt` 的文档就清楚了：
+/// 两个分支：`extra = true` 用 `MinMaxFunction`，否则用 `MaxFunction`。
+/// 名字看着像"最大减最小"或"最小化最大值"，但读 的文档就清楚了：
 ///
 /// > 最小-最大值函数：`result = max(polynomials[0], polynomials[1], ...)`
 /// > 命名为"MinMax"是因为在优化上下文中它计算最大值的最小值。
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 把 `extra` 理解成"最大减最小"（跨度）是个安静的错：数值仍然是"一个完工时间"，
 /// 但目标从"尽早全部做完"变成了"把排程压紧"，**滞后与否完全不再被计入**。
 ///
-/// The baseline has two branches: `extra = true` uses `MinMaxFunction`, otherwise `MaxFunction`. The names suggest "max minus min" or "minimise the maximum", but `MinMax.kt`'s
+/// The code has two branches: `extra = true` uses `MinMaxFunction`, otherwise `MaxFunction`. The names suggest "max minus min" or "minimise the maximum", but's
 /// own documentation settles it:
 ///
 /// > Min-max function: `result = max(polynomials[0], polynomials[1], ...)`
@@ -44,10 +44,10 @@ public static class MakespanValue {
     /// <param name="endTimes">各任务估计结束 / Each task's estimated end.</param>
     /// <returns>最大值；空列表为零 / The maximum; zero for an empty list.</returns>
     /// <remarks>
-    /// **空列表取零**：基线的 `MaxFunction` 作用在空集合上没有意义，而"没有任务"的排程完工时间确实是零。
+    /// **空列表取零**：`MaxFunction` 作用在空集合上没有意义，而"没有任务"的排程完工时间确实是零。
     /// 返回 `-∞` 或抛异常都会让调用方在空输入上直接崩掉，而空输入是列生成初期的常态。
     ///
-    /// **An empty list yields zero**: the baseline's `MaxFunction` over an empty set is meaningless, and "no tasks" really does finish at zero. Returning `-∞` or throwing would
+    /// **An empty list yields zero**: its `MaxFunction` over an empty set is meaningless, and "no tasks" really does finish at zero. Returning `-∞` or throwing would
     /// crash the caller on empty input, which is the normal state early in column generation.
     /// </remarks>
     public static double Of(IReadOnlyList<double> endTimes) {

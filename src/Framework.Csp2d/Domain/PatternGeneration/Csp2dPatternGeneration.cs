@@ -1,6 +1,6 @@
 // 图案生成请求、结果与纯函数助手 / Pattern generation requests, results and pure-function helpers.
-// 与固定 Kotlin 基线 `csp2d/domain/pattern_generation/PatternGeneration.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `PatternGeneration.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

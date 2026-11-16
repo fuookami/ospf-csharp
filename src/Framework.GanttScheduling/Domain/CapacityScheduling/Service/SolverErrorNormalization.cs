@@ -1,7 +1,7 @@
 // 求解器错误规范化 / Solver error normalization.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-capacity-scheduling-context/.../SlotBasedCapacityPreSolver.kt`
+// 与固定 Kotlin 
 // 里的 `errorCodeErrorOf` / `errorCodeErrorsOf` 对应。
-// Mirrors `errorCodeErrorOf` / `errorCodeErrorsOf` in the pinned Kotlin baseline's `SlotBasedCapacityPreSolver.kt`.
+// .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Utils.Error;

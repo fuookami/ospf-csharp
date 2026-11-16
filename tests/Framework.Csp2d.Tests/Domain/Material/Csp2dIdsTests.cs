@@ -10,9 +10,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Material;
 /// **编号契约** / The identifier contracts.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Ids2.kt`。纯值对象，**判据不需要求解器也不需要模型**。
+/// 对应。纯值对象，**判据不需要求解器也不需要模型**。
 ///
-/// Mirrors the baseline `Ids2.kt`. Pure value objects: **no criterion needs a solver or a model**.
+///. Pure value objects: **no criterion needs a solver or a model**.
 /// </remarks>
 public class Csp2dIdsTests {
     /// <summary>**四个生产对象编号共享同一实现，语义只在接口上区分** / The four production-object identifiers share one implementation; the distinction lives in the interfaces.</summary>
@@ -20,7 +20,7 @@ public class Csp2dIdsTests {
     /// 同一个字符串可以同时是产品、物料、设备、副产物编号。**这不是偷懒，是基线口径**：它们在领域里是同一类"生产对象"，
     /// 拆成四个类只会让每次调用多写一次转换。
     ///
-    /// One string can be a product, a material, a machine and a by-product identifier at once. **This is the baseline's convention, not laziness**: they are one class of
+    /// One string can be a product, a material, a machine and a by-product identifier at once. **This is its convention, not laziness**: they are one class of
     /// "production object" in the domain, and four classes would only force a conversion at every call site.
     /// </remarks>
     [Fact]

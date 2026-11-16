@@ -23,10 +23,10 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// The Gurobi native IIS diagnosis: `computeIIS` on the real backend.
 /// </summary>
 /// <remarks>
-/// 补了 `GurobiInfeasibilityAnalyzers.kt` 里两个 IIS 类中的线性那个**。
+/// 补了 里两个 IIS 类中的线性那个**。
 /// 二次那个（`GurobiQuadraticNativeIISAnalyzer`）仍缺——它要处理二次约束，不是同一条路径。
 ///
-/// **The linear one of the two IIS classes in `GurobiInfeasibilityAnalyzers.kt`. is ported** The quadratic one is still missing: it handles quadratic constraints, which is not
+/// **The linear one of the two IIS classes. is implemented** The quadratic one is still missing: it handles quadratic constraints, which is not
 /// the same path.
 /// </remarks>
 public class GurobiNativeIisDiagnosticTest {
@@ -35,14 +35,14 @@ public class GurobiNativeIisDiagnosticTest {
     /// <remarks>
     /// `NativeIis` 从 `false` 改成 `true`，**不是因为改它能让分析器跑起来**——`LinearIisCompute` 传给编排器的
     /// 是 `solver.Descriptor?.Capabilities`，而 Gurobi 没覆写 `Descriptor`（默认 `null`），**这个标志当前不参与过滤**。
-    /// 改它是因为**声明和实现对不上了**：基线有这个能力，C# 现在也有了。
+    /// 改它是因为**声明和实现对不上了**：这个能力，C# 现在也有了。
     ///
     /// 这条判据不查那个布尔值，**它查的是"这个能力真的能用"**：在一份真不可行的模型上走完整条路，
     /// 看回来的证据是不是 `NativeIis`。**标志对了但分析器是空壳，这句话就假了。**
     ///
     /// `NativeIis` moved from `false` to `true`, and **not because that is what lets the analyzer run** — `LinearIisCompute` hands the orchestrator
     /// `solver.Descriptor?.Capabilities` and Gurobi does not override `Descriptor` (default `null`), so **the flag does not currently take part in filtering.** It changed because
-    /// **declaration and implementation stopped agreeing**: the baseline has this capability and C# now does too. This criterion does not inspect that boolean — **it checks that
+    /// **declaration and implementation stopped agreeing**: the code has this capability and C# now does too. This criterion does not inspect that boolean — **it checks that
     /// the capability actually works**, by running the whole path on a genuinely infeasible model and seeing whether the evidence comes back as `NativeIis`.
     /// **A correct flag over a hollow analyzer would make that sentence false.**
     /// </remarks>

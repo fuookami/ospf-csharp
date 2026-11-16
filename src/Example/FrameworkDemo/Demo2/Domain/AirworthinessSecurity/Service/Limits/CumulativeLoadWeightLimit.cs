@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 累积载荷重量上限 / The upper bound on cumulative load weight.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/CumulativeLoadWeightLimit.kt`：每个检查点一行
+/// 逐条对齐：每个检查点一行
 /// `Σ (重叠比例 × 该舱位估计装载重量) ≤ 检查点最大累积和`，名字 `{name}_{区域名}_{力臂}`。
 ///
 /// 三处容易做错：
@@ -29,12 +29,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 1. **检查点没有可用舱位就跳过**，不是失败。与区域载荷上限同形。
 /// 2. **力臂用不变文化格式**。`toArm.value` 拼进名字，用当前文化会让小数点随机器变化（`900.5` vs `900,5`），
 ///    同一份数据在两台机器上产生不同的约束名，报告无法对照。
-/// 3. **没有救生筏常数项**。累积载荷只看货，不像区域载荷那样含救生筏——这是基线的分工，不是遗漏。
+/// 3. **没有救生筏常数项**。累积载荷只看货，不像区域载荷那样含救生筏——这是分工，不是遗漏。
 ///
-/// Mirrors the baseline: one row per checkpoint, `Σ (overlap ratio × estimated load weight) ≤ checkpoint maximum`, named `{name}_{zone}_{arm}`. Three easy mistakes:
-/// (1) **a checkpoint with no available position is skipped**, not failed — same shape as the zone bound; (2) **the arm uses the invariant culture** — the baseline splices
+/// one row per checkpoint, `Σ (overlap ratio × estimated load weight) ≤ checkpoint maximum`, named `{name}_{zone}_{arm}`. Three easy mistakes:
+/// (1) **a checkpoint with no available position is skipped**, not failed — same shape as the zone bound; (2) **the arm uses the invariant culture** — the code splices
 /// `toArm.value` into the name, and the current culture would make the decimal separator machine-dependent (`900.5` vs `900,5`), so the same data yields different constraint names
-/// on two machines and reports cannot be compared; (3) **there is no liferaft constant** — cumulative load counts cargo only, unlike the zone bound; that is the baseline's
+/// on two machines and reports cannot be compared; (3) **there is no liferaft constant** — cumulative load counts cargo only, unlike the zone bound; that is its
 /// division of labour, not an omission.
 /// </remarks>
 internal sealed class CumulativeLoadWeightLimit

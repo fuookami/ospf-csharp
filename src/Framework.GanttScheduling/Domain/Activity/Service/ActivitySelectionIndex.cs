@@ -1,8 +1,8 @@
 // 活动候选索引与选择校验 / Activity choice index and selection validation.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../ActivitySchedulingAggregation.kt` 的
+// 与固定 Kotlin 的
 // `variable` / `cancellationVariable` 查询与 `extractSolution` 里的"恰好选一"校验对应。
 // Mirrors the `variable` / `cancellationVariable` lookups and the "exactly one" check inside `extractSolution`
-// in the pinned Kotlin baseline's `ActivitySchedulingAggregation.kt`.
+//'s.
 
 using System;
 using System.Collections.Generic;

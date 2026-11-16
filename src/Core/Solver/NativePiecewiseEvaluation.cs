@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// PWL 求值与 ABS 列校验 / PWL evaluation and ABS column validation.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseEvaluations` 与 `validateNativeAbsColumns`。
+/// 对齐的 `piecewiseEvaluations` 与 `validateNativeAbsColumns`。
 ///
 /// **插值用的是<b>夹紧之后</b>的输入。**
 ///
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// | `maxEvaluations` | **字面量 `1e-6`** |
 /// | `piecewiseEvaluations` | **`finiteSolverDouble(PIECEWISE_TOLERANCE, …)`** |
 ///
-/// **所以三个求值器里两个同源、一个不同源。** **照抄，并记录这处分歧。**
+/// **所以三个求值器里两个同源、一个不同源。** **沿用，并记录这处分歧。**
 ///
 /// **分母可以是零：** **`fraction = (input − lower) / (upper − lower)` 在 `upper == lower` 时除零。**
 /// **`prepareNativePiecewise` 会拒绝非严格递增的断点，但 `NormalizedPiecewise` 可以被直接构造——

@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Core.Solver;
 /// MAX 的一个仿射输入 / An affine input to MAX.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativeMax.kt` 的 `NativeMaxInputData`。
+/// 对齐的 `NativeMaxInputData`。
 /// **`Terms` 是按变量键合并后的非零系数。**
 ///
-/// **Following the baseline's `NativeMaxInputData`.** **`Terms` holds nonzero coefficients combined by variable
+/// **Following its `NativeMaxInputData`.** **`Terms` holds nonzero coefficients combined by variable
 /// key.**
 /// &lt;/remarks>
 /// &lt;param name="Terms">按变量键合并的系数 / Coefficients combined by variable key.&lt;/param>
@@ -36,7 +36,7 @@ public sealed record NativeMaxInputData(
 /// &lt;summary>
 /// 已校验的 MAX 原语数据 / Validated MAX primitive data.
 /// &lt;/summary>
-/// &lt;remarks>按基线 `NativeMax.kt` 的 `NativeMaxData` 补。 / Adds the baseline's `NativeMaxData`.&lt;/remarks>
+/// &lt;remarks>按的 `NativeMaxData` 补。 / Adds its `NativeMaxData`.&lt;/remarks>
 public sealed record NativeMaxData(
     IReadOnlyList<NativeMaxInputData> Inputs,
     VariableItemKey ResultKey,
@@ -49,7 +49,7 @@ public sealed record NativeMaxData(
 /// 校验 MAX 数据及原 Big-M 对输入域的覆盖 / Validate MAX data and the original Big-Ms' coverage of the input domain.
 /// &lt;/summary>
 /// &lt;remarks>
-/// 对齐基线 `NativeMax.kt` 的 `prepareNativeMax`。
+/// 对齐的 `prepareNativeMax`。
 ///
 /// **这一层最要紧的一条是 Big-M 的<b>覆盖</b>检查：**
 ///

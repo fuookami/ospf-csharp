@@ -75,7 +75,7 @@ public sealed class Demo2DomainFingerprintTests {
 
     /// <summary>建议打板 / Weight recommendation.</summary>
     /// <remarks>
-    /// **这是六域，不是七域**。基线的 `WeightRecommendationPipelineContext` 用时效、推荐重量均衡、载荷最大化**替换掉**
+    /// **这是六域，不是七域**。`WeightRecommendationPipelineContext` 用时效、推荐重量均衡、载荷最大化**替换掉**
     /// 软安全、重心优化、装卸效率——所以这张表的行名与前两张**不同**，不是"同一批域少了几行"。
     ///
     /// 之前这里记的是"与全配载完全相同"，那是**模式还没接通时测出来的假数据**； ~ 之间它记的是"七域的建议打板"
@@ -84,10 +84,10 @@ public sealed class Demo2DomainFingerprintTests {
     ///
     /// 另一个形状细节：**均衡域只加符号与目标、不加行**（`50/64/34/0` → `55/64/34/1`）。
     ///
-    /// **This is six domains, not seven**. The baseline swaps in express effectiveness, recommended-weight equalization and payload maximization **for** soft
+    /// **This is six domains, not seven**. The code swaps in express effectiveness, recommended-weight equalization and payload maximization **for** soft
     /// security, mac optimization and loading effectiveness, so the row names here differ from the two tables above — it is not "the same domains with fewer rows".
     /// Before this table said "identical to full load", which was **fake data measured while the mode was not yet connected**; between and it recorded a
-    /// "seven-domain weight recommendation" (`54/71/53/2`), **a shape the baseline never builds** because the generic context's `Register` only had the seven-domain set.
+    /// "seven-domain weight recommendation" (`54/71/53/2`), **a shape the code never builds** because the generic context's `Register` only had the seven-domain set.
     /// With the composition split by mode this is the first real measurement: `55/64/34/2`, matching `WeightRecommendationApplication`'s
     /// `direct_model=rows55,symbols64,objective2`. One further shape note: **equalization adds symbols and objectives but no rows** (`50/64/34/0` → `55/64/34/1`).
     /// </remarks>
@@ -120,7 +120,7 @@ public sealed class Demo2DomainFingerprintTests {
         // 以前这里一张固定的七域表应付三种模式，于是建议打板那一行量的其实是"七域的建议打板"，基线从来不建它。
         //
         // **Three pipelines, three compositions**: seven domains for full load and predistribution, six for weight recommendation. The step list follows the mode;
-        // one fixed seven-domain list used to serve all three, so the weight-recommendation row measured a "seven-domain weight recommendation" the baseline never builds.
+        // one fixed seven-domain list used to serve all three, so the weight-recommendation row measured a "seven-domain weight recommendation" the code never builds.
         List<(string Name, Func<Try> Run)> steps = mode == StowageMode.WeightRecommendation
             ? [
                 ("stowage", () => pipeline.StowageContext.Register(mode, model)),
@@ -255,9 +255,9 @@ public sealed class Demo2DomainFingerprintTests {
         // 去读基线：`predicateLoadWeightMin == null` 那道守卫**在 `AggregationInitializer` 里**，也就是**装配阶段**。
         // 所以旧判据钉的是本仓的一处实现偏差（守卫放晚了），不是基线行为。
         //
-        // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Read the baseline: the
+        // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Read the code: the
         // `predicateLoadWeightMin == null` guard sits **in `AggregationInitializer`**, i.e. **during assembly**. The old criterion therefore pinned a local deviation
-        // (the guard sat one step late), not the baseline's behaviour.
+        // (the guard sat one step late), not its behaviour.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest();
         var pipeline = new DomainPipelineContext();
         Result<Success, ErrorCode, Error<ErrorCode>> assembled = pipeline.Init(request, StowageMode.Predistribution);

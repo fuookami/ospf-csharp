@@ -107,7 +107,7 @@ public sealed record NormalizedObjective(
 /// 归一化数学模型 / A normalized mathematical model.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `solver/report/NormalizedModel.kt` 的六个记录与 `validateNormalizedIdentityMetadata`。
+/// 对齐的六个记录与 `validateNormalizedIdentityMetadata`。
 ///
 /// **这一族记录的存在理由是"稳定指纹"**：**同一个模型重建两次，
 /// 变量、约束、目标的<b>顺序可能不同</b>，而指纹必须相同。**
@@ -117,14 +117,14 @@ public sealed record NormalizedObjective(
 /// **`IdentityValidation` 是构造时算出来的，不是事后调用的**：
 /// **这样"不一致的模型"根本没有机会被创建出来。**
 ///
-/// Following the baseline's six records and `validateNormalizedIdentityMetadata`.
+/// Following its six records and `validateNormalizedIdentityMetadata`.
 ///
 /// **The reason this family exists is the <b>stable fingerprint</b>**: **the same model rebuilt twice may order its
 /// variables, constraints and objective differently, while the fingerprint must not change.**
 /// **Every number is therefore kept as a <b>string</b> rather than a `double`** — **once a `double` takes part in a
 /// round trip, "the same number" can become two fingerprints over formatting alone.**
 ///
-/// **`IdentityValidation` is computed at construction rather than called afterwards**:
+/// **`IdentityValidation` is computed at construction rather than called afterwards**.
 /// **so an inconsistent model never gets to exist.**
 /// </remarks>
 public sealed class NormalizedMathematicalModel
@@ -203,7 +203,7 @@ public sealed class NormalizedMathematicalModel
 /// **空白串按"没说"处理**——**`""` 与 `null` 都表示"没有指定"，
 /// 把空白串当成一个命名空间会让 `""` 与 `"A"` 被判为不一致，而那是一种无意义的失败。**
 ///
-/// Following the baseline's `validateNormalizedIdentityMetadata`.
+/// Following its `validateNormalizedIdentityMetadata`.
 ///
 /// **It blocks "two namespaces inside one model".**
 ///

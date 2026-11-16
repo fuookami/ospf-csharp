@@ -30,9 +30,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **所以结果多项式的常数项必须是 0**：**下标 0 对应"全是零"，而它不能靠常数项表达。**
 ///
-/// The ArgMinFunction from the baseline's OrderStatistic.kt.
+/// The ArgMinFunction from its OrderStatistic.kt.
 ///
-/// **`argmin` differs from `max` in exactly one way, and that is enough to get wrong**:
+/// **`argmin` differs from `max` in exactly one way, and that is enough to get wrong**.
 /// **`max` gives the value, `argmin` gives "which one".** And "which one" is expressed **as a weighted sum of the
 /// selector variables** — **the coefficient of index i is i** (selector zero does not participate, since its
 /// coefficient is zero).

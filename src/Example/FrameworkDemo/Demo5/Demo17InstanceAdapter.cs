@@ -20,7 +20,6 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo5;
 /// 把仓库现有 Demo17 数据转换为可复现的 VRPTW 夹具 / Convert repository Demo17 data into reproducible VRPTW fixtures.
 /// </summary>
 /// <remarks>
-/// 与基线 `framework_demo/demo5/infrastructure/adapter/Demo17InstanceAdapter.kt`（7168 B）对应。
 ///
 /// **客户数量必须落在 `1..可用客户数` 内**。越界时返回失败而不是截断，因为截断会让"要 100 个客户"悄悄变成
 /// "5 个客户"，**而实例名仍然写着 `demo17-100`**。
@@ -28,10 +27,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo5;
 /// **The customer count must fall inside `1..available`.** An out-of-range count fails instead of truncating, because truncation turns "give me 100
 /// customers" into "5 customers" silently, **while the instance name still says `demo17-100`**.
 ///
-/// **与基线的数据规模偏离**：基线 `Demo17` 有 100 个需求节点与 2 个不同的车辆规格；仓库内的 C# `Demo17` 是简化版
+/// **与数据规模偏离**：基线 `Demo17` 有 100 个需求节点与 2 个不同的车辆规格；仓库内的 C# `Demo17` 是简化版
 /// （5 个需求节点、3 辆同规格车）。适配逻辑一致，规模不同——这里不为凑数字去编造 100 个节点。
 ///
-/// **Scale divergence from the baseline**: the baseline `Demo17` has 100 demand nodes and two distinct vehicle specifications; the in-repo C# `Demo17`
+/// **Scale divergence from the code**: the code `Demo17` has 100 demand nodes and two distinct vehicle specifications; the in-repo C# `Demo17`
 /// is the simplified version (5 demand nodes, 3 identically specified vehicles). The adaptation logic matches, the scale does not — not
 /// invent 100 nodes just to match a count.
 /// </remarks>
@@ -103,9 +102,9 @@ public static class Demo17InstanceAdapter {
                     $"客户 {number} 时间窗创建失败",
                     $"time-window creation failed for customer {number}");
             }
-            // **服务时长取 0**：仓库内的简化 Demo17 没有服务时长字段，而基线的 `serviceTime` 在原始数据里也普遍为 0。
+            // **服务时长取 0**：仓库内的简化 Demo17 没有服务时长字段，而`serviceTime` 在原始数据里也普遍为 0。
             // 编一个非零值会让时间窗推演与原始数据不一致，**而这种不一致只在跨实例比对时才会暴露**。
-            // **Service time is zero**: the in-repo simplified Demo17 has no service-time field, and the baseline's `serviceTime` is zero throughout the
+            // **Service time is zero**: the in-repo simplified Demo17 has no service-time field, and its `serviceTime` is zero throughout the
             // raw data too. Inventing a non-zero value would desynchronise the time-window propagation from the raw data, **and that desynchronisation
             // only shows up when comparing across instances**.
             Result<Customer<Flt64>, ErrorCode, Error<ErrorCode>> customer = Customer<Flt64>.Invoke(

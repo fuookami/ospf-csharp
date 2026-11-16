@@ -1,6 +1,6 @@
 // VRP 行驶时间与弧成本计算 / VRP travel-time and arc-cost calculation.
-// 与固定 Kotlin 基线 `TravelTimeCalculator.kt`（72 行）、`ArcCostCalculator.kt`（70 行）对应。
-// Mirrors the pinned baseline's `TravelTimeCalculator.kt` and `ArcCostCalculator.kt`.
+// 与固定 Kotlin 、（70 行）对应。
+// And.
 
 using System;
 using Fuookami.Ospf.Framework.GanttScheduling.Infrastructure;

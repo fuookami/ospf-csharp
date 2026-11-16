@@ -19,19 +19,19 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 建议装载重量目标 / The advised-load-weight objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/AdviceLoadWeightLimit.kt` 对齐：把**有建议重量**的舱位的重量松弛
+/// 与对齐：把**有建议重量**的舱位的重量松弛
 /// 加权求和，作为**最小化**目标，名为 `"advice load weight"`（带空格）。
 ///
-/// 四点必须照抄：
+/// 四点必须沿用：
 ///
 /// 1. **是 `Minimum`**。
 /// 2. **目标名带空格**：`"advice load weight"`。
-/// 3. **只收 `Alw` 非 `null` 的舱位**，且**一条都没有时不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
+/// 3. **只收 `Alw` 非 `null` 的舱位**，且**一条都没有时不加目标**（`if (monomials.isEmpty) return ok`）。
 ///    注意这里"空"指**没有任何舱位带建议值**，不是"没有舱位"。
 /// 4. **系数按舱位取**，不是按舱位下标。
 ///
-/// Aligned with the baseline: the amount slacks of positions **carrying an advised amount** are weighted and summed into a **minimisation** named `"advice load weight"` (with a space).
-/// Four things must be copied: **it is `Minimum`**; **the name has a space**; **only positions with a non-null `Alw` are collected**, and **an empty collection adds no objective** (the
+/// The amount slacks of positions **carrying an advised amount** are weighted and summed into a **minimisation** named `"advice load weight"` (with a space).
+/// Four things are carried over: **it is `Minimum`**; **the name has a space**; **only positions with a non-null `Alw` are collected**, and **an empty collection adds no objective** (the
 /// baseline's early return) — "empty" meaning no position carries an advice, not that there are no positions; and **the coefficient is taken per position**, not per index.
 /// </remarks>
 internal sealed class AdviceLoadWeightLimit

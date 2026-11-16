@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// **产能排序的三维变量层** / The capacity-order three-dimensional variable layer.
 /// </summary>
 /// <remarks>
-/// 基线的 `CapacityOrderCompilation.register` 建两个三维量：`x[动作, 时隙, 顺序位]`（数量，非负整数，逐格上界是
+/// `CapacityOrderCompilation.register` 建两个三维量：`x[动作, 时隙, 顺序位]`（数量，非负整数，逐格上界是
 /// `action.upperBound(slot, timeWindow)`）与 `b[动作, 时隙, 顺序位]`（二元选中）。`OrderConstraint` 的三族约束全建在它们上面，
 /// C# 侧两者都是 `null`，所以那个 `Invoke` 只能写 `=> Ok`。
 ///
@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// 而 Core 里 `URealVariable2` / `UIntVar3` / `BinVariable3` 本来就有——**重复造轮子是这套代码库里最常见的浪费**，
 /// 三个新类型全部删掉，改用现成的。
 ///
-/// The baseline's `CapacityOrderCompilation.register` builds two three-dimensional quantities: `x[action, slot, order position]` (amount, non-negative integer, per-cell upper bound
+/// The code's `CapacityOrderCompilation.register` builds two three-dimensional quantities: `x[action, slot, order position]` (amount, non-negative integer, per-cell upper bound
 /// `action.upperBound(slot, timeWindow)`) and `b[action, slot, order position]` (binary selection). All three `OrderConstraint` families build on them, and both are `null` on the C#
 /// side, so that `Invoke` can only be `=> Ok`. **Also recording a self-inflicted detour**: the first version of introduced `FltVariable2` / `UIntVariable3` /
 /// `BinVariable3`, while Core already had `URealVariable2` / `UIntVar3` / `BinVariable3` — **re-inventing what already sits a few files over is the most common waste in this

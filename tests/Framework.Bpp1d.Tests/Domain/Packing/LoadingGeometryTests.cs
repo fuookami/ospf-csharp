@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// **舱位几何与冲突扫描** / Position geometry and conflict sweep.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `loadingConflicts`（`bpp/infrastructure/LoadingGeometry.kt`）。
+/// 对应`loadingConflicts`。
 /// 扫描线实现，**三个边界最容易写错**：
 ///
 /// | 点 | 错法 | 后果 |
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// | 先配对后剔除 | 顺序颠倒 | 已结束的区间仍参与配对 |
 /// | 跨空间混扫 | 不按 `SpaceId` 分组 | 不同甲板被判成冲突 |
 ///
-/// Mirrors the baseline's `loadingConflicts`; the table lists the three boundaries most likely to be wrong.
+/// ; the table lists the three boundaries most likely to be wrong.
 /// </remarks>
 public class LoadingGeometryTests {
     /// <summary>**首尾相接不算重叠** / Touching intervals do not overlap.</summary>

@@ -82,7 +82,7 @@ public class Demo2ColumnGenerationWiringTests
     /// 提醒我改判据而不是让它默默绿着。
     ///
     /// **pinned where it stopped** — the chain failed at the final check with "missing objective variable". added `MetaModel.ObjectiveSnapshot`
-    /// (the baseline always had it, this port never did) and this criterion **flipped immediately**: it must now be `Optimal`. **That is exactly what
+    /// (the code always had it, this implementation never did) and this criterion **flipped immediately**: it must now be `Optimal`. **That is exactly what
     /// "turn a gap into a criterion" buys** — the pin from went red the moment the gap closed, forcing the criterion to be rewritten instead of quietly
     /// staying green.
     /// </remarks>

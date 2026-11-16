@@ -1,9 +1,9 @@
 // 算子池与绑定 / Operator pools and bindings.
-// 与固定 Kotlin 基线 `selection/OperatorBindings.kt`（19823 B）的 `RecoverableComponent`、`OperatorPool`、`SlotSnapshot`、
-// `OperatorBindings` 四部分对应；同文件的 `ControlledSearchSession` 依赖尚未移植的 `SearchMemory`/`RewardPolicy`/
+// 与固定 Kotlin （19823 B）的 `RecoverableComponent`、`OperatorPool`、`SlotSnapshot`、
+// `OperatorBindings` 四部分对应；同文件的 `ControlledSearchSession` 依赖尚未实现的 `SearchMemory`/`RewardPolicy`/
 // `ProgressFeatures`（属于 `memory/` 与 `learning/` 族），留待那些族完成后单独成批。
-// Mirrors `RecoverableComponent`, `OperatorPool`, `SlotSnapshot` and `OperatorBindings` from the pinned baseline's
-// `OperatorBindings.kt` (19823 B); the same file's `ControlledSearchSession` depends on the not-yet-ported `SearchMemory`,
+// Mirrors `RecoverableComponent`, `OperatorPool`, `SlotSnapshot` and `OperatorBindings` 's
+// (19823 B); the same file's `ControlledSearchSession` depends on the not-yet-implemented `SearchMemory`,
 // `RewardPolicy` and `ProgressFeatures` (from the `memory/` and `learning/` families) and will be handled in its own batch.
 
 using System;

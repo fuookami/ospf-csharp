@@ -172,14 +172,14 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
     /// 只把束从束列表里删掉是不够的：列变量和它的成本系数还在，求解器可以继续选它——"移除"变成只影响报告、不影响求解。
-    /// 基线的两步（钉 0、`remove`）照抄，**再加一步清目标项**：实测过，摘掉变量后不清理目标项，展开会以
+    /// 两步（钉 0、`remove`）沿用，**再加一步清目标项**：实测过，摘掉变量后不清理目标项，展开会以
     /// "变量 x_… 未注册"失败（`IllegalArgument`）——目标项里还留着指向那个变量的单项式。
     ///
     /// 束的列没加过（还没走到那一轮）时是**空操作**而不是失败：移除束在编译层是合法动作，没有列就没有变量要摘。
     /// 已经退役过的列再来一次也是空操作：重复摘一个已摘的变量没有好处，重复登记会让计数类判据失真。
     ///
     /// Dropping the bunch from the bunch list is not enough: its column variable and cost coefficient remain and the solver keeps selecting it — "removal" then only affects
-    /// reporting. The baseline's two steps (pin to 0, `remove`) are copied, **plus an objective cleanup**: measured — with the variable dropped but the objective untouched, expansion
+    /// reporting. The code's two steps (pin to 0, `remove`) are copied, **plus an objective cleanup**: measured — with the variable dropped but the objective untouched, expansion
     /// fails with "variable x_… is not registered" (`IllegalArgument`), because the objective still mentions that variable. A bunch whose columns were never added (that round has not
     /// been reached) is a **no-op**, not a failure: removing a bunch is legal at the compilation layer and there is no variable to drop. A column already retired is also a no-op:
     /// dropping twice helps nothing, and double-recording skews count-based criteria.
@@ -243,10 +243,10 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 任务束编译**没有 `x` 变量**：分配列是每轮按需建的（`x_{iteration}`，见基线的 `addColumns`）。所以这张表在建列之前是空的，
+    /// 任务束编译**没有 `x` 变量**：分配列是每轮按需建的（`x_{iteration}`，见`addColumns`）。所以这张表在建列之前是空的，
     /// 空表而不是 `null`——读它的人拿到"没有分配列"而不是空引用。
     ///
-    /// A bunch compilation has **no `x` variable**: the assignment columns are created per round (`x_{iteration}`, see the baseline's `addColumns`). The table is therefore empty
+    /// A bunch compilation has **no `x` variable**: the assignment columns are created per round (`x_{iteration}`, see its `addColumns`). The table is therefore empty
     /// before any column is added — empty rather than `null`, so a reader gets "no assignment columns" instead of a null reference.
     /// </remarks>
     public IReadOnlyDictionary<(IAbstractTask<E, A> Task, E Executor), object> Assignment =>
@@ -280,7 +280,7 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
     /// <item>没有空闲时 `executor_compilation` 是**常量零**而不是 `null`——它是"这个执行器被用了多少"的载体。</item>
     /// </list>
     ///
-    /// The baseline builds six things: `y` (a per-task cancellation column, locked tasks pinned to 1), `bunch_cost` (the objective carrier), `task_assignment_*` (**placeholder**
+    /// The code builds six things: `y` (a per-task cancellation column, locked tasks pinned to 1), `bunch_cost` (the objective carrier), `task_assignment_*` (**placeholder**
     /// intermediate symbols filled by each round's `addColumns`), `task_compilation_t = y[t]`, `z` (a per-executor leisure column, only with `withExecutorLeisure`), and
     /// `executor_compilation_e = z[e]` (constant zero without leisure). **This used to return `Ok` outright**: nothing was in the model while the bunch task time's deviation masks
     /// need the `task_compilation` table, so that whole path could only fail. Three details worth naming: (1) `task_compilation_t` here is **just `y[t]`**, with no `Σ_e x[t,e]`
@@ -472,16 +472,16 @@ public class BunchCompilation<B, T, E, A> : ICompilation, ITaskCompilation<E, A>
         _x.Add(columns);
         _roundColumns[iteration] = columns;
 
-        // 2. `bunch_cost` 累加 `cost × x`。没有求解器成本时**明确失败**：基线用 `Flt64.infinity` 当默认值，
+        // 2. `bunch_cost` 累加 `cost × x`。没有求解器成本时**明确失败**：`Flt64.infinity` 当默认值，
         //    本仓的 `Flt64` 是十进制承载、没有无穷，硬塞一个有限大数会让"选不起的列"变成"便宜得离谱"。
-        // `bunch_cost` accumulates `cost × x`. A missing solver cost **fails loudly**: the baseline defaults to `Flt64.infinity`, while this repository's `Flt64` is decimal-backed
+        // `bunch_cost` accumulates `cost × x`. A missing solver cost **fails loudly**: the code defaults to `Flt64.infinity`, while this repository's `Flt64` is decimal-backed
         // with no infinity, and substituting a large finite number would turn "unaffordable column" into "implausibly cheap one".
         for (int index = 0; index < unduplicated.Count; ++index) {
             B bunch = unduplicated[index];
             // ponytail: 没有求解器成本时系数取 0，基线取 `Flt64.infinity`（永不选择）。十进制 `Flt64` 表达不了无穷，
             // 取 0 意味着"免费"——这一处与基线**语义不等价**。要等价得引入一个足够大的有限惩罚，或者给 `Flt64` 加无穷。
-            // ponytail: a missing solver cost gets coefficient 0 where the baseline uses `Flt64.infinity` (never chosen). Decimal `Flt64` cannot express infinity, and 0 means
-            // "free" — this point is **not semantically equivalent** to the baseline. Equivalence needs a sufficiently large finite penalty, or an infinity for `Flt64`.
+            // ponytail: a missing solver cost gets coefficient 0 where the code uses `Flt64.infinity` (never chosen). Decimal `Flt64` cannot express infinity, and 0 means
+            // "free" — this point is **not semantically equivalent** to the code. Equivalence needs a sufficiently large finite penalty, or an infinity for `Flt64`.
             Flt64 cost = bunch.Cost.SolverCostOrNull(Flt64.Zero) ?? Flt64.Zero;
             _taskCost!.AsMutable().AddMonomial(
                 new Fuookami.Ospf.Math.Symbol.Monomial.LinearMonomial<Flt64>(cost, columns[index]));

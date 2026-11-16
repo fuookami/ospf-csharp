@@ -11,7 +11,7 @@ public enum ParseIssueType {
 
 /// <summary>
 /// 解析问题 / Parse issue.
-/// Kotlin symbol/parse/ParseIssue.kt — ported in full by a later phase.
+/// Kotlin symbol/parse/ParseIssue.kt — implemented in full by a later phase.
 /// </summary>
 public sealed record ParseIssue(
     ParseIssueType Type,

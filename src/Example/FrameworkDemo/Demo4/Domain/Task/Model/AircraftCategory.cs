@@ -87,9 +87,9 @@ public abstract class AircraftCapacity {
         /// 货量 / The cargo capacity value.
         /// </summary>
         /// <remarks>
-        /// 同上：构造参数不是成员，**货机装了多重的东西在外面读不到**。基线里这是 `capacity` 属性。
+        /// 同上：构造参数不是成员，**货机装了多重的东西在外面读不到**。这是 `capacity` 属性。
         ///
-        /// Same as above: the constructor parameter is not a member, so **how much a freighter holds was unreadable from outside**. The baseline exposes it as `capacity`.
+        /// Same as above: the constructor parameter is not a member, so **how much a freighter holds was unreadable from outside**. The code exposes it as `capacity`.
         /// </remarks>
         public Flt64 ContainedCapacity { get; } = value;
 

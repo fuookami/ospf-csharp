@@ -1,6 +1,6 @@
 // 广义流聚合与上下文 / Generalized-flow aggregation and context.
-// 与固定 Kotlin 基线 `model/GeneralizedFlowAggregation.kt`（25651 字节）、`GeneralizedFlowContext.kt`（3510 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowAggregation.kt` and `GeneralizedFlowContext.kt`.
+// 与固定 Kotlin （25651 字节）、（3510 字节）对应。
+// And.
 
 using System;
 using System.Collections.Generic;
@@ -83,7 +83,7 @@ public sealed class GeneralizedFlowAggregation<V> where V : struct, IRealNumber<
     /// <remarks>
     /// **跨量纲弧必须显式声明转换系数**。缺少它时基线直接失败，而不是默认按 1 处理：把"立方米"当成"吨"会给出一个单位上完全错误的
     /// 平衡，而模型照样解得出可行解。
-    /// **A cross-dimensional arc must declare its conversion factor.** Without it the baseline fails instead of defaulting to one:
+    /// **A cross-dimensional arc must declare its conversion factor.** Without it the code fails instead of defaulting to one:
     /// treating cubic metres as tonnes yields a dimensionally wrong balance that still solves to a feasible-looking answer.
     /// </remarks>
     /// <param name="model">元模型 / Meta model.</param>

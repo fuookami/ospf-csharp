@@ -112,7 +112,7 @@ public sealed class Demo2BendersFallbackHonestyTests
     /// 基线要求回退**重建一个新模型与新上下文**；本仓的域上下文是**一次性**的。
     /// 所以"调用方没给 MILP 求解器"和"给了求解器也建不出新模型"是**两个不同的原因**，混成一句会让后来的人以为补个求解器就好了。
     ///
-    /// The baseline requires the fallback to **rebuild a fresh model and context**; this port's domain contexts are **single-use** (measured). So "no MILP solver
+    /// The code requires the fallback to **rebuild a fresh model and context**; this implementation's domain contexts are **single-use** (measured). So "no MILP solver
     /// was supplied" and "a solver was supplied but no fresh model can be built" are **two different reasons**; merging them makes the next reader think supplying a
     /// solver is enough.
     /// </remarks>

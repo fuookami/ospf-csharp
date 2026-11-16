@@ -64,7 +64,7 @@ public sealed record ConflictGroupSummary(string? Group, int Count);
 ///
 /// `AvailableEvidence` is the complete original activation universe; `Members` is the current conflict/MUS candidate and **never includes the target**. **ports the
 /// report side only**: baseline line 630 has `solver.solve(...)` and line 755 has `session.solve(assumptions = ...)`, and both `ConflictAnalyzer` and `MinimalConflictAnalyzer`
-/// come after them. **That needs a real CP backend, so it was neither ported nor stubbed.**
+/// come after them. **That needs a real CP backend, so it was neither implemented nor stubbed.**
 /// </remarks>
 /// <param name="Target">固定的目标条件 / Fixed objective target.</param>
 /// <param name="TargetFeasibility">所有证据激活时的初始目标可行性结果 / Initial target-feasibility result with all evidence active.</param>

@@ -20,17 +20,17 @@ public static class BandwidthUnits {
     /// <summary>字节每秒 / Bytes per second.</summary>
     public static readonly PhysicalUnit BytesPerSecond = new DerivedUnit(BitsPerSecond.ScaleMultiply(Scale.Invoke(8)), "bytes per second", "B/s");
 
-    // 以下 5 个按基线 `Bandwidth.kt` 补齐（现存 5 个 → 10 个）。
+    // 以下 5 个按补齐（现存 5 个 → 10 个）。
     //
     // **带宽单位延续了 `Information` 的十进制/二进制之分**：
     // **`KilobytesPerSecond` 是 1000 B/s，`KibibytesPerSecond` 才是 1024 B/s。**
-    // **基线只定义到十进制那一套，所以这里也只有十进制。**
+    // **定义到十进制那一套，所以这里也只有十进制。**
     //
-    // The five below were added from the baseline Bandwidth.kt (five existing, ten total).
+    // The five below were added from the code Bandwidth.kt (five existing, ten total).
     //
-    // **Bandwidth keeps the decimal/binary split from `Information`**:
+    // **Bandwidth keeps the decimal/binary split from `Information`**.
     // **`KilobytesPerSecond` is 1000 B/s and `KibibytesPerSecond` would be 1024.**
-    // **The baseline defines only the decimal family, and so does this.**
+    // **The code defines only the decimal family, and so does this.**
 
     /// <summary>太比特每秒（10¹² bit/s）/ Terabit per second.</summary>
     public static readonly PhysicalUnit TerabitsPerSecond = new DerivedUnit(

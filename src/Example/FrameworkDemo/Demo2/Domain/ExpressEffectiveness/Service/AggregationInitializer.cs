@@ -14,18 +14,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 货物时效聚合初始化器 / The express-effectiveness aggregation initializer.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/service/AggregationInitializer.kt` 对齐：**一条校验**（上游非空）+ **一条派生规则**（必须发货下标）。
+/// 与对齐：**一条校验**（上游非空）+ **一条派生规则**（必须发货下标）。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **`mustShipIndices` 的判据是 `cargo.priority >= 8`**，用**请求里的下标**（`mapIndexedNotNull`），不是货物名也不是 `Item`。
-///    阈值 8 是基线的硬编码，照抄。
+///    阈值 8 是硬编码。
 /// 2. **聚合接收 `stowageMode`**，因为它决定建 `AbsoluteOrder` 还是 `RelativeOrder`。
-/// 3. **`aircraftAggregation` 在基线里收了但没用**——本仓不收，收了不读会让调用方以为有影响。
+/// 3. **`aircraftAggregation` 在收了但没用**——本仓不收，收了不读会让调用方以为有影响。
 ///
-/// Aligned with the baseline: **one check** (upstream present) plus **one derivation rule** (the must-ship indices). Three things must be copied: **the must-ship criterion is
-/// `cargo.priority >= 8`** using the **request's index** (the baseline's `mapIndexedNotNull`), not a name and not an `Item`, with 8 hard-coded as in the baseline; **the aggregation
-/// takes the `stowageMode`**, since that decides between `AbsoluteOrder` and `RelativeOrder`; and **`aircraftAggregation` is accepted but unread in the baseline** — it is omitted
+/// **one check** (upstream present) plus **one derivation rule** (the must-ship indices). Three things must be copied: **the must-ship criterion is
+/// `cargo.priority >= 8`** using the **request's index** (its `mapIndexedNotNull`), not a name and not an `Item`, with 8 hard-coded as in the code; **the aggregation
+/// takes the `stowageMode`**, since that decides between `AbsoluteOrder` and `RelativeOrder`; and **`aircraftAggregation` is accepted but unread in the code** — it is omitted
 /// here, since accepting and ignoring it would suggest it matters.
 /// </remarks>
 internal static class AggregationInitializer
@@ -69,7 +69,7 @@ internal static class AggregationInitializer
     /// **优先级不小于 8 的货物下标**（基线 `mapIndexedNotNull { index, cargo -> index.takeIf { cargo.priority >= 8 } }`）。
     /// 单独成方法是**为了让它可被测**：上一版的判据自己重算了一遍期望值而没调用被测代码，结果"阈值改成 7"的变异存活。
     ///
-    /// **The indices of items whose priority is at least 8** (the baseline's `mapIndexedNotNull`). It is a separate method **so that it can be tested**: the previous version's criterion
+    /// **The indices of items whose priority is at least 8** (its `mapIndexedNotNull`). It is a separate method **so that it can be tested**: the previous version's criterion
     /// recomputed the expectation itself without calling the code under test, and a mutant changing the threshold to 7 survived.
     /// </remarks>
     /// <param name="input">请求 DTO / The request DTO.</param>
@@ -80,8 +80,8 @@ internal static class AggregationInitializer
         var indices = new List<int>();
         for (int index = 0; index < input.Cargos.Count; ++index)
         {
-            // **优先级 >= 8 的必须发货**，阈值照抄基线。
-            // **A priority of 8 or more must ship**, the threshold copied from the baseline.
+            // **优先级 >= 8 的必须发货**，阈值照做。
+            // **A priority of 8 or more must ship**, the threshold copied from the code.
             if (input.Cargos[index].Priority >= MustShipPriorityThreshold)
             {
                 indices.Add(index);

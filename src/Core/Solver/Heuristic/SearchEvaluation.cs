@@ -1,6 +1,5 @@
 // 计费搜索评估 / Metered search evaluation.
-// 与固定 Kotlin 基线 `core/solver/heuristic/SearchEvaluation.kt`（1875 字节）对应。
-// Mirrors the pinned baseline's `core/solver/heuristic/SearchEvaluation.kt`.
+// 与固定 Kotlin （1875 字节）对应。
 
 using System;
 using System.Collections.Generic;

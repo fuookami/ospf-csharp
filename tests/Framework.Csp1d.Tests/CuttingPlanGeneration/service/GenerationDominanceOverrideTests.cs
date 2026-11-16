@@ -138,7 +138,7 @@ public class GenerationDominanceOverrideTests {
     /// 基线语义是 `all { it(plan, existing) }`；全 true 时应当**一条都不少**。
     /// 若实现把"有覆盖"当成"全拒"，这条会红。
     ///
-    /// The baseline semantics is `all { it(plan, existing) }`; with all true **nothing may be lost**. If the implementation treated "has overrides" as "reject
+    /// The code semantics is `all { it(plan, existing) }`; with all true **nothing may be lost**. If the implementation treated "has overrides" as "reject
     /// everything", this would fail.
     /// </remarks>
     [Fact]
@@ -198,13 +198,13 @@ public class GenerationDominanceOverrideTests {
 
     /// <summary>**覆盖必须看到已接受的方案** / The override must see the accepted plans.</summary>
     /// <remarks>
-    /// 基线把 `existing` 传进覆盖函数，调用方靠它做支配判断。若实现传的是**空列表**，
+    /// `existing` 传进覆盖函数，调用方靠它做支配判断。若实现传的是**空列表**，
     /// 依赖 `existing` 的策略会静默失效——**而"被调用过"这件事仍然成立**。
     ///
     /// 所以这里断言"**至少有一次调用看到非空 `existing`**"：只有多切片搜索接受了第一条方案之后，
     /// 后续候选才会看到它。
     ///
-    /// The baseline passes `existing` into the override; callers rely on it for dominance. If the implementation passed an **empty list**, strategies depending on
+    /// The code passes `existing` into the override; callers rely on it for dominance. If the implementation passed an **empty list**, strategies depending on
     /// `existing` would silently break — **while "it was called" would still hold**.
     ///
     /// So this asserts "**at least one call saw a non-empty `existing`**": only after the search accepts a first plan do later candidates see it.

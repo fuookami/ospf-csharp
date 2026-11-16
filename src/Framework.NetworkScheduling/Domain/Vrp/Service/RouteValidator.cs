@@ -1,6 +1,5 @@
 // 路线资源递推与成本独立校验 / Independent route resource-recursion and cost validation.
-// 与固定 Kotlin 基线 `RouteValidator.kt`（249 行）对应。
-// Mirrors the pinned baseline's `RouteValidator.kt`.
+// 与固定 Kotlin 对应。
 //
 // 这个校验器**不信任路线里的任何数值**：到达时刻、服务开始、离开时刻、累计负载、总距离、总成本，全部按策略与实例重新递推
 // 一遍再比对。它是整条求解流水线的最后一道防线——定价算错了、合并算错了、启发式写错了，都会在这里暴露成一个可读的失败消息，

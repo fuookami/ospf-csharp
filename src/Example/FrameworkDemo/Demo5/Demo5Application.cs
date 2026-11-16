@@ -24,13 +24,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo5;
 /// demo5 语义参数 / demo5 semantic parameters.
 /// </summary>
 /// <remarks>
-/// 与基线 `framework_demo/demo5/infrastructure/SemanticParameter.kt`（1455 B）对应。
 ///
-/// **`Solver` 不是字符串名**。基线用 `System.getProperty("ospf.demo5.solver", "gurobi")` 按名字挑后端，
+/// **`Solver` 不是字符串名**。`System.getProperty("ospf.demo5.solver", "gurobi")` 按名字挑后端，
 /// 那条路在 C# 侧不存在（没有 `LinearSolverBuilder`），**把求解器做成字符串只会得到一个"名字不认识"的运行时失败**，
 /// 而错误现场离真正的配置错误很远。这里改成显式注入 `IColumnGenerationSolver`。
 ///
-/// **`Solver` is not a name string.** The baseline picks a backend by name via `System.getProperty("ospf.demo5.solver", "gurobi")`, and that path does not
+/// **`Solver` is not a name string.** The code picks a backend by name via `System.getProperty("ospf.demo5.solver", "gurobi")`, and that path does not
 /// exist on the C# side (there is no `LinearSolverBuilder`) — **turning the solver into a string only buys an "unknown name" runtime failure** whose
 /// site is far from the real configuration mistake. This version injects an `IColumnGenerationSolver` explicitly.
 /// </remarks>

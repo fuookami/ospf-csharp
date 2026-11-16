@@ -97,15 +97,15 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 按置换重排元素 / Permute the elements. 对齐基线 `transpose`。
+    /// 按置换重排元素 / Permute the elements.
     /// </summary>
     /// <param name="permutation">目标轴顺序 / The target axis order.</param>
     /// <returns>重排后的表示 / The permuted representation.</returns>
     /// <remarks>
-    /// **坐标映射按行主序，与基线的 `flatten(sourceCoordinates, sourceStrides)` 同一个算法：** '
+    /// **坐标映射按行主序，与`flatten(sourceCoordinates, sourceStrides)` 同一个算法：** '
     /// **目标位置 `(t₀..tₙ)` 读的是源张量的 `(t_{p₀}..)` 处的元素——** **也就是"谁是第几个维度"换了，而元素本身没动。**
     ///
-    /// **The coordinate mapping is row-major and follows the same algorithm as the baseline's flatten(sourceCoordinates, sourceStrides): the target position (t₀..tₙ) reads the
+    /// **The coordinate mapping is row-major and follows the same algorithm as its flatten(sourceCoordinates, sourceStrides): the target position (t₀..tₙ) reads the
     /// source element at (t_{p₀}..) — what changed is which dimension is which, not the elements themselves.**
     /// </remarks>
     public Result Transpose(IReadOnlyList<int> permutation) {
@@ -145,7 +145,7 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 沿首维取第 `index` 片 / Take the `index`-th slice along the leading axis. 对齐基线 `sliceLeading`。
+    /// 沿首维取第 `index` 片 / Take the `index`-th slice along the leading axis.
     /// </summary>
     /// <param name="index">第几片 / Which slice.</param>
     /// <returns>切片后的表示 / The sliced representation.</returns>
@@ -178,19 +178,19 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 按轴拼接多个逐元素张量 / Concatenate several element lists along an axis. 对齐基线 `concat`。
+    /// 按轴拼接多个逐元素张量 / Concatenate several element lists along an axis.
     /// </summary>
     /// <param name="parts">待拼接的张量，至少一个 / the tensors to concatenate, at least one.</param>
     /// <param name="axis">拼接轴，负数按秩归一 / the axis, with negatives normalised by the rank.</param>
     /// <returns>拼接结果 / The concatenation.</returns>
     /// <remarks>
-    /// **算法与基线的 `concat` 同一个循环结构：** **外层按"拼接轴之前的坐标"分组，** **每组里依次把每个输入的对应一段接上来。**
+    /// **算法与`concat` 同一个循环结构：** **外层按"拼接轴之前的坐标"分组，** **每组里依次把每个输入的对应一段接上来。**
     /// **这一段的大小是 `该输入在拼接轴上的长度 × 轴后元素数`，** **起点是 `外层下标 × 段长`。**
     ///
     /// **除拼接轴之外的每一维都必须相同：** **不同就意味着"每组的段长不一样"，** **而按下标去取会取到别的输入的尾巴——** '
     /// **错位之后数值上看不出异常，只是那一段整体挪了位。**
     ///
-    /// **The loop structure matches the baseline's concat: an outer loop over the coordinates before the axis, and within each group each input's run is appended in turn.** **A run is
+    /// **The loop structure matches its concat: an outer loop over the coordinates before the axis, and within each group each input's run is appended in turn.** **A run is
     /// length-on-axis times elements-after-axis long, starting at outer index times run length.**
     ///
     /// **Every dimension other than the axis has to agree: otherwise the runs differ in size and indexing by offset reads another input's tail — the shift is invisible numerically,
@@ -251,26 +251,26 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 矩阵乘 / Matrix multiplication. 对齐基线 `lowerMatMul` 的线性部分。
+    /// 矩阵乘，只做线性部分 / Matrix multiplication, the linear case.
     /// </summary>
     /// <param name="right">右操作数 / The right operand.</param>
     /// <returns>结果 / The product.</returns>
     /// <remarks>
-    /// **秩 1 按 `(1,K)`／`(K,1)` 参与计算，末了把那一维压掉**（与基线同一个处理）；**秩 0 拒绝。**
+    /// **秩 1 按 `(1,K)`／`(K,1)` 参与计算，末了把那一维压掉**；**秩 0 拒绝。**
     ///
     /// **这里只处理"至少一侧是常量"的线性情形。** **两侧都含变量时每个元素是二次的，而这一层只装一次多项式——**
-    /// **基线能算是因为它有 `OnnxDegreeMode`，C# 侧的二次路径是独立的（`OnnxQuadraticProduct`）。** '
+    /// **二次项不走这里：二次路径是独立的 `OnnxQuadraticProduct`。** '
     /// **所以这里明确拒绝并点名原因，** **而不是把二次的乘积静默塞进一次多项式。**
     ///
-    /// **批量维（秩 > 2）也明确拒绝：** **基线按 numpy 规则广播它，而这一层还没做——** **把批量维当普通维度算会让索引整体错位。**
+    /// **批量维（秩 > 2）也明确拒绝：** **按 numpy 规则广播尚未实现——** **把批量维当普通维度算会让索引整体错位。**
     ///
-    /// **Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed at the end, as in the baseline; rank 0 is refused.**
+    /// **Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed at the end, as in the code; rank 0 is refused.**
     ///
  /// ** covers the linear case where at least one side is constant.** **With variables on both sides each element becomes quadratic while this layer holds linear polynomials —
-    /// the baseline can do it because it has OnnxDegreeMode, and the quadratic path on the C# side is separate (OnnxQuadraticProduct).** **So it is refused with the reason named, rather than
+    /// the code can do it because it has OnnxDegreeMode, and the quadratic path on the C# side is separate (OnnxQuadraticProduct).** **So it is refused with the reason named, rather than
     /// quietly stuffing a quadratic product into a linear polynomial.**
     ///
-    /// **Batch dimensions (rank > 2) are refused too: the baseline broadcasts them under numpy rules and this layer does not — treating a batch dimension as an ordinary one misaligns every
+    /// **Batch dimensions (rank > 2) are refused too: the code broadcasts them under numpy rules and this layer does not — treating a batch dimension as an ordinary one misaligns every
     /// index.**
     /// </remarks>
     public Result MatMul(OnnxElementList right) {
@@ -329,7 +329,7 @@ public sealed class OnnxElementList
             return new Result(
                 null,
                 "MatMul 两侧都含变量时结果是二次的，而这一层只装一次多项式 / a product of two symbolic operands is quadratic while this layer holds linear polynomials"
-                + "（基线用 OnnxDegreeMode 处理，C# 侧二次路径是 OnnxQuadraticProduct / the baseline does it through OnnxDegreeMode；the quadratic path here is OnnxQuadraticProduct）");
+                + "（二次项走独立的 OnnxQuadraticProduct / the quadratic path is a separate OnnxQuadraticProduct）");
         }
 
         // 混合情形下必须"把一个元素乘上另一侧的常数"，**而不是只取两边的常数项——** '
@@ -373,7 +373,7 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 通用矩阵乘 / General matrix multiplication. 对齐基线 `lowerGemm`。
+    /// 通用矩阵乘 / General matrix multiplication.
     /// </summary>
     /// <param name="right">右操作数 / The right operand.</param>
     /// <param name="bias">偏置 `C`，可空 / The bias C, nullable.</param>
@@ -383,18 +383,18 @@ public sealed class OnnxElementList
     /// <param name="beta">偏置的缩放 / The scale on the bias.</param>
     /// <returns>结果 / The result.</returns>
     /// <remarks>
-    /// **顺序与基线一致：** **先按 `transA`／`transB` 转置，再乘，再乘 `alpha`，再把 `beta·C` 逐元素加上。** '
+    /// **顺序：** **先按 `transA`／`transB` 转置，再乘，再乘 `alpha`，再把 `beta·C` 逐元素加上。** '
     /// **顺序换了会得到不同的数，而每一步单独看都对。**
     ///
-    /// **只支持二维输入：** **基线的 `Gemm` 也只支持二维（它当场拒绝更高秩），** **而"秩 1 也当向量处理"是 `MatMul` 的规则，不是 `Gemm` 的。**
+    /// **只支持二维输入：** **`Gemm` 也只支持二维（它当场拒绝更高秩），** **而"秩 1 也当向量处理"是 `MatMul` 的规则，不是 `Gemm` 的。**
     ///
     /// **偏置 `C` 可以是 `[M,N]` 或 `[N]`：** **后者按行广播——** **这是 ONNX 允许的两种形态；** **其余形状拒绝，** '
     /// **因为"形状差不多"的偏置会让某一列静默加上别的列的值。**
     ///
-    /// **The order matches the baseline: transpose by transA/transB, multiply, scale by alpha, then add beta·C elementwise.** **Any other order yields different numbers while every step looks right on its
+    /// **The order matches the code: transpose by transA/transB, multiply, scale by alpha, then add beta·C elementwise.** **Any other order yields different numbers while every step looks right on its
     /// own.**
     ///
-    /// **Two-dimensional inputs only: the baseline's Gemm refuses higher rank outright, and "rank 1 behaves as a vector" is MatMul's rule, not Gemm's.**
+    /// **Two-dimensional inputs only: its Gemm refuses higher rank outright, and "rank 1 behaves as a vector" is MatMul's rule, not Gemm's.**
     ///
     /// **The bias may be [M,N] or [N]; the latter broadcasts over rows — the two forms ONNX allows.** **Other shapes are refused, because a roughly-shaped bias silently adds one column's values to
     /// another.**
@@ -428,7 +428,7 @@ public sealed class OnnxElementList
         return Add(scaled, scaledBias);
     }
 
-    /// <summary>二维转置，与基线 `transpose2d` 同一个循环顺序 / A 2-D transpose with the baseline's loop order.</summary>
+    /// <summary>二维转置，按行优先顺序遍历 / A 2-D transpose walked in row-major order.</summary>
     public static OnnxElementList Transpose2D(OnnxElementList tensor) {
         int rows = tensor._shape[0];
         int columns = tensor._shape[1];
@@ -477,20 +477,20 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 沿轴求和 / Sum along axes. 对齐基线 `lowerReduceSum`。
+    /// 沿轴求和 / Sum along axes.
     /// </summary>
     /// <param name="axes">要归约的轴；为空表示全部 / the axes to reduce, empty meaning all.</param>
     /// <param name="keepDims">是否保留被归约的维度（长度为 1）/ whether the reduced dimensions stay, of length one.</param>
     /// <returns>结果 / The result.</returns>
     /// <remarks>
-    /// **累加按"源坐标映射到目标坐标"分组，** **与基线同一个做法：** **每个位置算出它落到目标的哪个下标，落到同一个下标的加在一起。**
+    /// **累加按"源坐标映射到目标坐标"分组：** **每个位置算出它落到目标的哪个下标，落到同一个下标的加在一起。**
     ///
     /// **`keepdims` 不是装饰：** **`true` 时形状是 `[1,1]`，`false` 时是空形状（标量）——** '
     /// **两者元素个数都是 1，而下游按形状判断的东西完全不同。**
     ///
     /// **轴为空表示"全部归约"；** **负数轴按秩归一，越界拒绝。**
     ///
-    /// **The accumulation groups by "source coordinate maps to which target coordinate", the same way the baseline does: each position works out the target index it falls into and positions
+    /// **The accumulation groups by "source coordinate maps to which target coordinate", the same way the code does: each position works out the target index it falls into and positions
     /// sharing one index are added together.**
     ///
     /// **keepdims is not decoration: with true the shape is [1,1] and with false it is empty (a scalar) — both hold one element, and what a downstream reads off the shape differs
@@ -672,7 +672,7 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 按索引沿轴采集 / Gather by index along an axis. 对齐基线 `lowerGather`。
+    /// 按索引沿轴采集 / Gather by index along an axis.
     /// </summary>
     /// <param name="indices">索引（负数按轴长归一）/ the indices, with negatives normalised by the axis length.</param>
     /// <param name="axis">采集轴，负数按秩归一 / the axis, negatives normalised by the rank.</param>
@@ -755,19 +755,19 @@ public sealed class OnnxElementList
     }
 
     /// <summary>
-    /// 按轴分片 / Split along an axis. 对齐基线 `split`。
+    /// 按轴分片 / Split along an axis.
     /// </summary>
     /// <param name="axis">分片轴，负数按秩归一 / the axis, negatives normalised by the rank.</param>
     /// <param name="sizes">每段长度；为空表示均分 / the size of each piece; empty means split evenly.</param>
     /// <param name="outputCount">输出个数 / the number of outputs.</param>
     /// <returns>分片结果 / The result.</returns>
     /// <remarks>
-    /// **切口与基线同一个游标：** **每处理完外层一个坐标，游标就前进"该段长度 × 轴后元素数"，** **于是下一段从上一个的末尾接着取。**
+    /// **切口用一个游标推进：** **每处理完外层一个坐标，游标就前进"该段长度 × 轴后元素数"，** **于是下一段从上一个的末尾接着取。**
     ///
     /// **均分要求轴长能被整除，否则拒绝。** **"除不尽就向下取整"会让最后一段短一截，而形状上谁也看不出来——** '
     /// **只有那段少了一个元素。**
     ///
-    /// **The cut follows the baseline's single cursor: after each outer coordinate the cursor advances by that piece's size times elements-after-axis, so the next piece starts where the
+    /// **The cut follows its single cursor: after each outer coordinate the cursor advances by that piece's size times elements-after-axis, so the next piece starts where the
     /// previous ended.**
     ///
     /// **An even split requires the axis length to divide, and refuses otherwise.** "Round down when it does not divide" leaves the last piece short, which no shape reveals — only that

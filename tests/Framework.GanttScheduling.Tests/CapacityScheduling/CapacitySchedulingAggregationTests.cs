@@ -18,10 +18,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// **产能调度聚合类补齐总产能** / The capacity scheduling aggregation gains its total capacity.
 /// </summary>
 /// <remarks>
-/// `CapacitySchedulingAggregation` 早就在（按文件名扫也扫得出来），但它**只有计数和索引，缺基线的两个总产能成员**：
+/// `CapacitySchedulingAggregation` 早就在（按文件名扫也扫得出来），但它**只有计数和索引，缺两个总产能成员**：
 /// `totalCapacityValue` 与 `totalCapacityQuantity`。这是"同名不等于能力完整"的又一例——清点表按 stem 扫，扫不出缺半边。
 ///
-/// `CapacitySchedulingAggregation` already existed (and name-based scanning finds it), but it **had only the counters and indices, missing the baseline's two capacity members**:
+/// `CapacitySchedulingAggregation` already existed (and name-based scanning finds it), but it **had only the counters and indices, missing its two capacity members**:
 /// `totalCapacityValue` and `totalCapacityQuantity`. Another case of "same name is not the same capability" — scanning by stem cannot see a half-filled class.
 /// </remarks>
 public class CapacitySchedulingAggregationCapacityTests {

@@ -1,6 +1,6 @@
 // 从 PWL 求解结果中提取的半径 / The radius extracted from a PWL solve.
-// 与固定 Kotlin 基线 `bpp3d/infrastructure/ContinuousRadiusModelComponent.kt` 中的 `PWLExtractedRadius` 对应。
-// Mirrors `PWLExtractedRadius` in the pinned Kotlin baseline's `ContinuousRadiusModelComponent.kt`.
+// 与固定 Kotlin 中的 `PWLExtractedRadius` 对应。
+// .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Number;

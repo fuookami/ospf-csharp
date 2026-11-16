@@ -152,7 +152,7 @@ public class StartTimeSlackTests {
     /// 基线写的是 `advanceEnabled && task.advanceEnabled`——**两个都要开**。写成 `||` 会让"任务允许提前"单独生效，
     /// 于是全局开关形同虚设；而结果只是多了几个变量，看不出错。
     ///
-    /// The baseline writes `advanceEnabled && task.advanceEnabled` — **both must be on**. Writing `||` lets a task-level flag alone take effect, making the global switch
+    /// The code writes `advanceEnabled && task.advanceEnabled` — **both must be on**. Writing `||` lets a task-level flag alone take effect, making the global switch
     /// pointless; the only visible trace is a few extra variables.
     /// </remarks>
     [Fact]

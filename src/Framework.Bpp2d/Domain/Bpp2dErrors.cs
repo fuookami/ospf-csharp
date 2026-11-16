@@ -1,7 +1,7 @@
 // 二维装箱错误类型与几何契约消息 / 2D packing error types and geometry contract messages.
-// 与固定 Kotlin 基线 `bpp2d/infrastructure/Bpp2dErrors.kt` 与 `bpp2d/domain/packing/service/PackingGeometryContract.kt`
+// 与固定 Kotlin 与
 // 对应：用语义化错误子类型替代裸 `ErrorCode + message`，几何违规整理成可检索的中英双语消息。
-// Mirrors the pinned baseline: semantic error subtypes replace bare `ErrorCode + message`, and geometry violations
+// Semantic error subtypes replace bare `ErrorCode + message`, and geometry violations
 // are rendered as searchable bilingual messages.
 
 using System;

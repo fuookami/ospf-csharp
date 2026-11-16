@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **离散装载的限制类** / The discrete-loading limit classes.
 /// </summary>
 /// <remarks>
-/// 对应基线 `LoadingLimits.kt` 的两个限制类。**判据不跑求解器，直接读回约束的不等号方向与右端系数**——
+/// 对应的两个限制类。**判据不跑求解器，直接读回约束的不等号方向与右端系数**——
 /// 因为最容易写错的恰恰是这两处：
 ///
 /// | 点 | 错法 | 后果 |

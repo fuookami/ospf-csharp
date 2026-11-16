@@ -1,6 +1,5 @@
 // Branch-aware 定价图构建 / Branch-aware pricing graph construction.
-// 与固定 Kotlin 基线 `RouteGraphBuilder.kt`（283 行）对应。
-// Mirrors the pinned baseline's `RouteGraphBuilder.kt`.
+// 与固定 Kotlin 对应。
 //
 // 定价图把 VRPTW 实例 + 对偶 + 分支遮罩压成一张**只含节点索引与数值**的图：节点坐标、服务时长、需求、弧的 reduced cost 全部
 // 预计算成 `V`，定价标签扩展时只做加减比较，不再碰业务对象。构建一次、扩展百万次的场景下，这个取舍是必须的。
@@ -278,7 +277,7 @@ public sealed class RouteGraphBuilder<V>(
     /// </summary>
     /// <remarks>
     /// 拆成独立方法只是为了避免双层循环里嵌套六层缩进；逻辑与基线逐句对应。
-    /// Split out only to avoid six levels of nesting inside the double loop; the logic mirrors the baseline line by line.
+    /// Split out only to avoid six levels of nesting inside the double loop; the logic mirrors the code line by line.
     /// </remarks>
     /// <param name="fromNode">起点定价节点 / Origin pricing node.</param>
     /// <param name="toNode">终点定价节点 / Destination pricing node.</param>

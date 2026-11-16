@@ -22,13 +22,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 乘客取消的最小化目标 / The passenger cancellation objective.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerCancelMinimization.kt`：`Σ 系数 × cancel[乘客]` 放进最小化。系数按乘客给，缺省 1——
+/// ：`Σ 系数 × cancel[乘客]` 放进最小化。系数按乘客给，缺省 1——
 /// **系数是"取消这一位有多贵"**：普通旅客取消比要客便宜，缺省值让所有人为一体。
 ///
 /// **目标与上界必须成对**：取消变量本身有"不超过人数"的上界，没有这条目标它会被一直压到上界（**因为取消能给别人腾地方**）；
 /// 反过来只有目标没有上界，取消能压到零、上界就没有意义。这里只加目标，上界在 已经钉过。
 ///
-/// The baseline's `PassengerCancelMinimization.kt` puts `Σ coefficient × cancel[passenger]` into the minimisation. The coefficient is per passenger and defaults to 1 — **it says how
+/// The code's puts `Σ coefficient × cancel[passenger]` into the minimisation. The coefficient is per passenger and defaults to 1 — **it says how
 /// expensive it is to cancel this one**: an ordinary traveller is cheaper to drop than a VIP, and the default treats everyone the same.
 ///
 /// **The objective and the bound must come as a pair**: the cancellation variables already carry a "no more than the head count" bound, and without this objective they are pushed to

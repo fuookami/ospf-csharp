@@ -11,9 +11,9 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Infra;
 /// </summary>
 /// <remarks>
 /// 这里修掉了一个真实的方向错误：`PackagePattern.Belong` 原本写成 `Code.StartsWith(other.Code)`，
-/// 而基线是 `ano.code.startsWith(code)`——**包含关系整个颠倒**，且因为当时没有任何调用点而无人发现。
+/// 而`ano.code.startsWith(code)`——**包含关系整个颠倒**，且因为当时没有任何调用点而无人发现。
 ///
-/// fixes a real direction bug: `PackagePattern.Belong` read `Code.StartsWith(other.Code)` while the baseline reads `ano.code.startsWith(code)` — the
+/// fixes a real direction bug: `PackagePattern.Belong` read `Code.StartsWith(other.Code)` while the code reads `ano.code.startsWith(code)` — the
 /// containment was **inverted**, and nothing caught it because there were no call sites.
 /// </remarks>
 public class SemanticParameterTests {

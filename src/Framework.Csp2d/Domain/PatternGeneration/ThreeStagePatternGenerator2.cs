@@ -1,6 +1,5 @@
 // 三级断头台图案生成器 / The three-stage guillotine pattern generator.
-// 与固定 Kotlin 基线 `csp2d/domain/pattern_generation/PatternGenerationContext2.kt` 内的 `ThreeStagePatternGenerator2` 对应。
-// Mirrors `ThreeStagePatternGenerator2` inside the pinned Kotlin baseline's `PatternGenerationContext2.kt`.
+// 与固定 Kotlin 内的 `ThreeStagePatternGenerator2` 对应。
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;

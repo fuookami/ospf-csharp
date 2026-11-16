@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 指示结构：三行链接的完备性，以及校验顺序 / Link completeness, and the order of checks.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `IndicatorStructure.kt` 补，连同循环依赖的 `ConjoinedIndicator`、`DifferenceIndicator`。
+/// 对齐补，连同循环依赖的 `ConjoinedIndicator`、`DifferenceIndicator`。
 ///
 /// **合取需要<b>三</b>行而不是两行。**
 ///

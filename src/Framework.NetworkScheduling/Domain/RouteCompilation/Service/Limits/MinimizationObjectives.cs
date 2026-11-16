@@ -1,7 +1,7 @@
 // Phase-I 与 Phase-II 最小化目标管线 / Phase-I and Phase-II minimisation objectives.
-// 与固定 Kotlin 基线 `route_compilation/service/limits/PhaseOneMinimization.kt`（1696 字节）、
-// `route_compilation/service/limits/RouteCostMinimization.kt`（1685 字节）对应。
-// Mirrors the pinned baseline's `PhaseOneMinimization.kt` and `RouteCostMinimization.kt`.
+// 与固定 Kotlin （1696 字节）、
+//（1685 字节）对应。
+// And.
 
 using System;
 using Fuookami.Ospf.Core.Model.Basic;

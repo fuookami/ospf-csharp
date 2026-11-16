@@ -1,6 +1,6 @@
 // 既有模型到新模型的桥接 / Bridge from the legacy models to the current ones.
-// 与固定 Kotlin 基线 `bpp2d/application/service/LegacyBridge.kt` 的 `toSheetType` / `toBox2Geometry` 对应。
-// Mirrors `toSheetType` / `toBox2Geometry` in the pinned Kotlin baseline's `LegacyBridge.kt`.
+// 与固定 Kotlin 的 `toSheetType` / `toBox2Geometry` 对应。
+// .
 //
 // `toActualItem` / `toLayerPlacement` / `toLayer` / `toLegacyScene` 需要 `ActualItem` 的完整形状体系，
 // 见文末说明。The remaining conversions need the full `ActualItem` shape system — see the tail note.

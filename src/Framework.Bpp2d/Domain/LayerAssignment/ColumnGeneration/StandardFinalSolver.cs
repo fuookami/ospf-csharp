@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 5. **把解写回模型令牌**，再按令牌读每列的份数——不写回就读到全零，板材会一块也不产出。
 /// 6. 按份数产出板材：一份一块。
 ///
-/// Aligned with the baseline's `finalSolver`. The flow is fixed at six steps: **return immediately when there are no columns** (`skipped=no_columns`), not even building a model, since solving an
+/// Aligned with its `finalSolver`. The flow is fixed at six steps: **return immediately when there are no columns** (`skipped=no_columns`), not even building a model, since solving an
 /// empty one is pure waste; register the final stage's four artifacts (assignment, load, demand constraints, capacity); **register the three objectives in order** — area (primary), sheet count
 /// (secondary), per-type cost (tertiary); solve the MILP; **write the solution back into the model tokens** and only then read each column's copies, since skipping the write-back reads zeros and
 /// yields no sheets at all; and emit one sheet per copy.
@@ -227,14 +227,14 @@ public sealed class StandardFinalSolver : IColumnGenerationFinalSolver
     /// <param name="fallbackType">兜底板材类型 / The fallback sheet type.</param>
     /// <returns>板材清单 / The sheets.</returns>
     /// <remarks>
-    /// 四点照抄基线 `buildSheets`：
+    /// 四点照做 `buildSheets`：
     ///
     /// 1. 板材类型**取该列自带的那块**，没有才用兜底（主板材优先）。
     /// 2. 份数**向下取整并至少一份**：`0.4` 也算一份——已经过了容差筛选，能到这里就说明它算被选中。
     /// 3. 每块板材的 `SheetLayer` 形状用**该列自己的形状**，不是板材类型的形状（列可能只占板材一角）。
     /// 4. 一份一块，不合并。
     ///
-    /// Four things copied from the baseline's `buildSheets`: the sheet type **comes from the column itself**, with the fallback used only when absent (main sheet first); the copy count **floors to
+    /// Four things copied from its `buildSheets`: the sheet type **comes from the column itself**, with the fallback used only when absent (main sheet first); the copy count **floors to
     /// at least one**, so `0.4` still yields a sheet, since surviving the tolerance filter means it counted as selected; each sheet's `SheetLayer` shape uses **the column's own shape** rather than
     /// the sheet type's, because a column may occupy only a corner; and one copy yields exactly one sheet, with no merging.
     /// </remarks>

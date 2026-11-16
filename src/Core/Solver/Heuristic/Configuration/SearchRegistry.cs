@@ -1,7 +1,7 @@
 // 搜索注册表 / The search registry.
-// 与固定 Kotlin 基线 `configuration/SearchRegistry.kt`（43259 B）的类骨架、组件字典、注册与查询方法、
+// 与固定 Kotlin （43259 B）的类骨架、组件字典、注册与查询方法、
 // 以及内建组件注册对应；算法的装配与策略查询留到后续批次。
-// Mirrors the pinned baseline's `configuration/SearchRegistry.kt` (43259 B): the class skeleton, the component dictionaries, the register and
+// The class skeleton, the component dictionaries, the register and
 // lookup methods, and the built-in component registrations. Algorithm assembly and the policy lookups follow in later batches.
 
 using System;
@@ -606,10 +606,10 @@ public sealed class SearchRegistry<O, V>
     /// 构造一个选择策略 / Build a selection policy.
     /// </summary>
     /// <remarks>
-    /// **未注册的类型不会失败，而是退化成表格策略**——这是基线里唯一的"回退"，也是唯一一处值得解释的例外：
+    /// **未注册的类型不会失败，而是退化成表格策略**——这是唯一的"回退"，也是唯一一处值得解释的例外：
     /// 表格策略本身就是"用通用表格近似任意选择器"，退化后仍然是**同一族行为**，且参数仍然全部受校验。
     /// 这与"未知组件退回默认算子"不同：后者是**换了一个语义完全不同的东西**。
-    /// **An unregistered type does not fail but degrades into the tabular policy** — the only "fallback" in the baseline, and the only one worth
+    /// **An unregistered type does not fail but degrades into the tabular policy** — the only "fallback" in the code, and the only one worth
     /// explaining: the tabular policy is itself "approximate any selector with a generic table", so the degenerate case stays **in the same family**
     /// and its parameters are still fully validated. That differs from "an unknown component falls back to a default operator", which **swaps in
     /// something with entirely different semantics**.
@@ -702,12 +702,12 @@ public sealed class SearchRegistry<O, V>
                     coordinates,
                     horizon));
             }
-            // **`not-worse` 是基线的默认接受策略**（`HyperHeuristicConfig` 的 `acceptance` 默认值），
+            // **`not-worse` 是默认接受策略**（`HyperHeuristicConfig` 的 `acceptance` 默认值），
             // 因此它必须在注册表里能构造出来，否则**默认配置根本跑不起来**。
             //
  // earlier/226 曾以"注册表不该替问题做主"为由把它留空。**那个理由站不住**：`Acceptance` 本来就接收
             // `SearchProblem`，支配判据与坐标投影都是就地可得的；留空反而让默认配置不可用。
-            // **`not-worse` is the baseline's default acceptance policy** (`HyperHeuristicConfig`'s `acceptance` default), so it must be
+            // **`not-worse` is its default acceptance policy** (`HyperHeuristicConfig`'s `acceptance` default), so it must be
             // constructible from the registry — otherwise **the default configuration cannot run at all**.
             //
  // earlier/226 left it out on the grounds that "the registry must not decide for the problem". **That reason does not hold**:

@@ -16,14 +16,14 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 接收 fallback 约束并支持事务回滚的目标 / A target that accepts fallback rows and supports rollback.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackTarget`。
+/// 对齐的 `DeferredFunctionFallbackTarget`。
 ///
 /// **`Append` 与 `Rollback` 返回的都是"可能失败"，而这不是形式主义：**
 /// **目标可能是一个已经写完的模型层（追加会被拒绝）、
 /// 也可能是一个固定容量的缓冲区（追加会溢出）。**
 /// **驱动必须能处理这些失败，所以它们不能是 `void`。**
 ///
-/// **Aligned with the baseline's `DeferredFunctionFallbackTarget`.**
+/// **Aligned with its `DeferredFunctionFallbackTarget`.**
 ///
 /// **Both `Append` and `Rollback` report possible failure, and that is not formalism**: **the target may be a finished model
 /// layer that refuses appends, or a fixed-capacity buffer that overflows.** **The driver must handle those, so neither can
@@ -72,7 +72,7 @@ public interface IDeferredFunctionFallbackTarget
 /// 事务化物化一组延迟函数 fallback / Materialize a group of deferred-function fallbacks transactionally.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `materializeDeferredFunctionFallbacks` 与 `rollbackErrors`。
+/// 对齐的 `materializeDeferredFunctionFallbacks` 与 `rollbackErrors`。
 ///
 /// **整个循环是一个事务：任一结构失败就回滚到<b>开始时的行数</b>，而不是回滚一步。**
 ///
@@ -120,7 +120,7 @@ public interface IDeferredFunctionFallbackTarget
 /// The adapter that connects `LinearMechanismModel` to the materialisation driver.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `MechanismFunctionFallbackTarget.kt`。
+/// 对齐。
 ///
 /// **这里缺的不是能力，而是<b>接线</b>。** **驱动、事务、回滚、五个 materializer 都已经写好了，
 /// 而它们此前只在测试里被调用过——产品代码零调用。**
@@ -131,7 +131,7 @@ public interface IDeferredFunctionFallbackTarget
 /// **它与"读得有、写不出"是同一族、方向相反：** **那里缺的是一个实现，
 /// 这里是实现齐全而<b>没有入口</b>。** **后者的判据必须是"谁调用了它"，而不是"它对不对"。**
 ///
-/// **Aligned with the baseline's `MechanismFunctionFallbackTarget.kt`.**
+/// **Aligned with its.**
 ///
 /// **What is missing here is not a capability but <b>the wiring</b>.** **The driver, the
 /// transaction, the rollback and five materializers — and they were called only from tests, never from product
@@ -209,7 +209,7 @@ public sealed class LinearMechanismFallbackTarget : IDeferredFunctionFallbackTar
 /// <remarks>
 /// 对齐基线 `materializeMechanismFunctionFallbacks` 的<b>第一个守卫</b>。
 ///
-/// **基线那个函数有四段，这里只做第一段，理由写明：**
+/// **个函数有四段，这里只做第一段，理由写明：**
 ///
 /// | 段 | 依赖 | 这里 |
 /// | --- | --- | --- |
@@ -224,7 +224,7 @@ public sealed class LinearMechanismFallbackTarget : IDeferredFunctionFallbackTar
 /// **"把能单独成立的一段先做出来"不是拆碎了交付，而是<b>让后面那两段的缺口保持清晰</b>：
 /// 现在缺的是两个集合，而不是"整个函数"。**
 ///
-/// **Follows the <b>first guard</b> of the baseline's `materializeMechanismFunctionFallbacks`.**
+/// **Follows the <b>first guard</b> of its `materializeMechanismFunctionFallbacks`.**
 ///
 /// **That function has four parts and only the first is here, for a stated reason: it is the only part that needs
 /// exactly one read-only property. So it can stand and be measured on its own, without first giving the model those two
@@ -265,7 +265,7 @@ public static class DeferredFunctionMaterializationGate
     /// **挑出真正需要物化的结构** / Pick the structures that genuinely need materialising.
     /// </summary>
     /// <remarks>
-    /// 按基线 `materializeMechanismFunctionFallbacks` 的<b>第二段</b>，前两个条件在此处判定；
+    /// `materializeMechanismFunctionFallbacks` 的<b>第二段</b>，前两个条件在此处判定；
     /// 第三个条件同样在此处判定，<b>不存在临时开关</b>。
     ///
     /// **三个条件现在都在：**
@@ -354,12 +354,12 @@ public static class DeferredFunctionMaterializationGate
 /// 别的结构 `ok`。** **这不是遗漏——只有这两个结构的 fallback 会用到创建时捕获的输入范围，
 /// 而范围失效时 `bigM` 就不再成立。** **别的结构没有这个依赖，校验它们是在检查一件不存在的事。**
 ///
-/// **第四段先复制再物化，而不是原地改：** **基线的注释写着"保留源模型"。**
+/// **第四段先复制再物化，而不是原地改：** **注释写着"保留源模型"。**
 /// **而"保留"在这里有两层意思：** **失败时源模型不被污染（由事务保证），
 /// 以及成功时源模型也不被改（这一点只能靠复制）。**
 /// **两者都要，所以复制是必需的，不是优化。**
 ///
-/// **The baseline's four parts all live in one function: return the model
+/// **The code's four parts all live in one function: return the model
 /// unchanged when `Eager`; filter the pending structures (three conditions); validate
 /// each structure's input bounds; copy the model, carry over the region records and call the driver)
 /// **
@@ -369,7 +369,7 @@ public static class DeferredFunctionMaterializationGate
 /// creation, and when the range goes stale their `bigM` no longer holds.** **Other kinds do not have that dependency, and
 /// validating them would be checking something that does not exist.**
 ///
-/// **The fourth part copies before materialising rather than mutating in place: the baseline's comment says "preserving
+/// **The fourth part copies before materialising rather than mutating in place: its comment says "preserving
 /// the source".** **That means two things here — a failure must not pollute the source (the transaction covers it) and
 /// a success must not change it either (only copying covers that).** **Both are needed, so the copy is required, not an
 /// optimisation.**
@@ -378,7 +378,7 @@ public static class DeferredFunctionMaterializationGate
 /// **求解入口处的延迟物化判定** / The deferred-materialisation decision at the solve entry.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CoptLinearSolver.kt` 的入口判断：**两个策略，任一为 `Eager` 就走常规求解。**
+/// 对齐的入口判断：**两个策略，任一为 `Eager` 就走常规求解。**
 ///
 /// **为什么要把这个判断单独拿出来做成函数，而不是写进求解器：**
 /// **它是"两个开关里更保守的那个说了算"这条语义的唯一实现点。**
@@ -387,7 +387,7 @@ public static class DeferredFunctionMaterializationGate
 /// **而写反的后果是<b>不可见</b>的：** **配置说"立刻展开"、模型说"可以延迟"，如果实现写成"任一是非 Eager 就延迟"，
 /// 那么"全局关掉延迟"这个动作在个别模型上就失效了，而求解仍然成功，只是走了另一条路径。**
 ///
-/// **Follows the baseline's `CoptLinearSolver.kt` entry check: two policies, and if <b>either</b> is `Eager` the
+/// **Follows its entry check: two policies, and if <b>either</b> is `Eager` the
 /// ordinary solve runs.**
 ///
 /// **Why this is a separate function rather than inline in the solver: it is the single point implementing "the more
@@ -453,7 +453,7 @@ public static class DeferredFunctionMaterialization
         if (pending.Count == 0) {
             // **没有待处理结构时返回<b>原模型</b>，不是副本：基线同样如此，
             // 而理由是这样调用方可以用引用相等判断"有没有发生物化"。**
-            // **With nothing pending the <b>source</b> comes back, not a copy: the baseline does the same, and the reason is
+            // **With nothing pending the <b>source</b> comes back, not a copy: the code does the same, and the reason is
             // that a caller can then use reference equality to tell whether materialisation happened.**
             return Results.Ok(model);
         }

@@ -23,11 +23,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// 三个 `Invoke` 是 `=> Ok`、`BunchCapacitySchedulingResourceUsage.Register` 被改成显式失败，根因同一个：
 /// **没有决策变量**，就没有"每动作每时隙加工多少"这个量可以写进行或目标。
 ///
-/// 补的就是这一层（`CapacityDecisionVariables`，形状照基线的 `operationTime[actionIndex, slotIndex]`），
+/// 补的就是这一层（`CapacityDecisionVariables`，形状照`operationTime[actionIndex, slotIndex]`），
 /// 同时删掉 `LocateColumnDecision`——它没有调用方，返回的是 `new object` 占位，靠"以后可能有人用"占着一个假实现的位置。
 ///
 /// Three `Invoke` bodies are `=> Ok` and `BunchCapacitySchedulingResourceUsage.Register` fails explicitly, one root cause: **no decision variables**, so there is no "how much is
-/// processed per action per slot" quantity to put into a row or objective. adds exactly that layer (`CapacityDecisionVariables`, shaped after the baseline's
+/// processed per action per slot" quantity to put into a row or objective. adds exactly that layer (`CapacityDecisionVariables`, shaped after its
 /// `operationTime[actionIndex, slotIndex]`) and deletes `LocateColumnDecision` — no callers, a `new object` placeholder body, occupying a fake implementation's seat for a "maybe later".
 /// </remarks>
 public class CapacityDecisionVariablesTests {

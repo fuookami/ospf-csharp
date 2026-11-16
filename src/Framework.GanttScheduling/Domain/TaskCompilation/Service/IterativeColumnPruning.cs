@@ -1,7 +1,7 @@
 // 迭代列剪枝 / Iterative column pruning.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-task-compilation-context/.../IterativeAggregation.kt` 里
-// `removeColumns` 的两个纯判定部分对应。
-// Mirrors the two pure decisions inside `removeColumns` in the pinned baseline's `IterativeAggregation.kt`.
+// 与固定 Kotlin 里
+// 剪枝只做两个纯判定，不触碰模型。
+// Pruning makes two pure decisions and never touches the model.
 
 using System;
 using Fuookami.Ospf.Framework.GanttScheduling.Domain.BunchCompilation;
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 ///
 /// Each round drops columns whose reduced cost is no longer worth keeping. The test is a conjunction of three, and **the boundary direction of the first is easiest to invert**:
 ///
-/// the baseline writes `!(reducedCost(task) ls maximumReducedCost)`, i.e. drop when `reducedCost >= maximumReducedCost`. A "natural" implementation writes
+/// the code writes `!(reducedCost(task) ls maximumReducedCost)`, i.e. drop when `reducedCost >= maximumReducedCost`. A "natural" implementation writes
 /// `reducedCost > maximumReducedCost` — the two differ only at **exactly equal**. A column exactly at the boundary is the one that just barely qualifies: with the wrong
 /// comparison it stays in the pool, gets rescanned every round, and **never becomes a column worth having**.
 /// </remarks>
@@ -62,11 +62,11 @@ public static class IterativeColumnPruning {
     /// <returns>下一轮的最大约简成本 / the next round's maximum reduced cost.</returns>
     /// <remarks>
     /// 只在**列数仍超上限时**衰减，否则原样返回。衰减本身复用 `BunchCompilation` 里已落地的
-    /// `NextReducedCostCutoff`——基线的同一段逻辑在 `IterativeAggregation` 里有一份私有拷贝，
+    /// `NextReducedCostCutoff`——同一段逻辑在 `IterativeAggregation` 里有一份私有拷贝，
     /// C# 共用一份实现即可。
     ///
     /// Decay only when the **column count still exceeds the ceiling**, otherwise return it unchanged. The decay itself reuses the already-landed `NextReducedCostCutoff` from
-    /// `BunchCompilation` — the baseline keeps a private copy of the same code in `IterativeAggregation`, and C# shares one implementation.
+    /// `BunchCompilation` — the code keeps a private copy of the same code in `IterativeAggregation`, and C# shares one implementation.
     /// </remarks>
     public static Flt64 NextMaximumReducedCost(
         int remainingAmount,

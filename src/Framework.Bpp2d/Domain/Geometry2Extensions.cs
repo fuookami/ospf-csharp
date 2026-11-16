@@ -1,15 +1,15 @@
 // 二维几何类型扩展 / Extensions for the 2D quantity geometry types.
-// 与固定 Kotlin 基线 `geometry2d/Geometry2Extensions.kt` 对应。基线注释说明了取舍：quantities 层已提供矩形、圆、
+// 与固定 Kotlin 对应。基线注释说明了取舍：quantities 层已提供矩形、圆、
 // 包围盒及其重叠判定，本文件**只补装箱需要的派生量，不重定义既有类型**。
-// Mirrors the pinned Kotlin baseline's `geometry2d/Geometry2Extensions.kt`. The baseline states the trade-off:
+// The pinned Kotlin: . The code states the trade-off:
 // the quantity layer already ships rectangles, circles, boxes and their overlap tests, so this file **only adds
 // packing-oriented derived values without redefining them**.
 //
-// 因此这里**刻意不移植**基线中的 `boundingWidth`／`boundingHeight`／`minX`／`minY`／`maxX`／`maxY`／
+// 因此这里**刻意不移植**的 `boundingWidth`／`boundingHeight`／`minX`／`minY`／`maxX`／`maxY`／
 // `areaOf`（矩形）：C# 的 `QuantityBox2.Width`／`Height`／`X`／`Y`／`MaxX`／`MaxY` 与
 // `QuantityRectangle2.Area` 已经是同名能力，再加一层只是别名。只有**确实缺失**的两项被补上。
-// Therefore the baseline's `boundingWidth`/`boundingHeight`/`minX`/`minY`/`maxX`/`maxY`/
-// `areaOf` (rectangle) are **deliberately not ported**: C# already has `QuantityBox2.Width`/`Height`/`X`/`Y`/
+// Therefore its `boundingWidth`/`boundingHeight`/`minX`/`minY`/`maxX`/`maxY`/
+// `areaOf` (rectangle) are **deliberately not implemented**: C# already has `QuantityBox2.Width`/`Height`/`X`/`Y`/
 // `MaxX`/`MaxY` and `QuantityRectangle2.Area` under those names, so another layer would be aliases only. Just
 // the two genuinely missing pieces are added.
 

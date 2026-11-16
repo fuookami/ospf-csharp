@@ -11,11 +11,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 流水线与冲突分析的选项 / The pipeline and conflict-analysis options.
 /// </summary>
 /// <remarks>
-/// 补的是 `CriticalConstraintAnalysisPipeline.kt`（359 行）的选项层，没补编排器。**
+/// 补的是（359 行）的选项层，没补编排器。**
 /// 编排器要依次调扰动、目标可行性、冲突三个分析器，**而这三个的分析器本体都还没搬**。
 ///
-/// **The option layer of `CriticalConstraintAnalysisPipeline.kt` and not the orchestrator is ported**: it calls the perturbation, target-feasibility and conflict analyzers,
-/// **none of whose bodies is ported**.
+/// **The option layer of and not the orchestrator is implemented**: it calls the perturbation, target-feasibility and conflict analyzers,
+/// **none of whose bodies is implemented**.
 /// </remarks>
 public class CriticalAnalysisOptionsTests {
     /// <summary>**零不是错误，负数才是** / Zero is not an error; negative is.</summary>
@@ -50,7 +50,7 @@ public class CriticalAnalysisOptionsTests {
     /// 策略类型自己默认 `deltas = [1.0]`——要跑一串 RHS 扰动。**两者代价差一个数量级**，
     /// 而流水线是自动跑的，**取重的那个会让"跑一次分析"变成一件很贵的事。**
     ///
-    /// The baseline pipeline defaults to removals only; the policy type's own default runs a series of RHS perturbations. **The two differ by an order of magnitude in cost**,
+    /// The code pipeline defaults to removals only; the policy type's own default runs a series of RHS perturbations. **The two differ by an order of magnitude in cost**,
     /// and the pipeline runs automatically, so **the heavier default makes "one analysis run" expensive.**
     /// </remarks>
     [Fact]

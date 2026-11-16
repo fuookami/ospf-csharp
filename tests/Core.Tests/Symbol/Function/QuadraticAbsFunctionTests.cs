@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 正部是 `max(p, 0)`，不是负部 / The positive part is `max(p, 0)`, not the negative one.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticAbs.kt`、`QuadraticPositivePart.kt` 补两个类。
+/// 对齐、 补两个类。
 ///
 /// **正部的编码是 `max(p, 0) = −min(−p, 0)`**：**外层那个取负就是"正部"与"负部"的全部差别。**
 ///
@@ -143,7 +143,7 @@ public class QuadraticAbsFunctionTests
     /// **基线 `polynomial` 是 `−1 · resultVar`**：**因为 `resultVar = min(−p, 0)`，
     /// 而正部是它的相反数。** **漏掉这个负号会让结果多项式与 `ResultVar` 同号，即负部。**
     ///
-    /// **The baseline's `polynomial` is `−1 · resultVar`**: **since `resultVar = min(−p, 0)` and the positive part is
+    /// **`polynomial` is `−1 · resultVar`**: **since `resultVar = min(−p, 0)` and the positive part is
     /// its negation.** **Dropping the sign makes the result polynomial agree with `ResultVar`, i.e. the negative
     /// part.**
     /// </remarks>

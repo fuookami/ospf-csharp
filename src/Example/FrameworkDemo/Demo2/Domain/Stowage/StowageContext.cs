@@ -35,9 +35,9 @@ public sealed class StowageContext
     /// <param name="stowageMode">装载模式 / The stowage mode.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 与基线一致：**已初始化过就不再重建**。失败只可能来自校验或内核构造，不会静默成功。
+    /// ：**已初始化过就不再重建**。失败只可能来自校验或内核构造，不会静默成功。
     ///
-    /// As in the baseline, **an existing aggregation is not rebuilt**. A failure can only come from validation or kernel construction, never a silent success.
+    /// **an existing aggregation is not rebuilt**. A failure can only come from validation or kernel construction, never a silent success.
     /// </remarks>
     public Try Init(AircraftContext aircraftContext, RequestDTO input, StowageMode stowageMode = StowageMode.FullLoad)
     {
@@ -76,9 +76,9 @@ public sealed class StowageContext
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
-    /// 与基线一致：**先聚合、再生成管线、再逐条执行**。三步都按顺序短路——聚合失败就不生成，生成失败就不执行。
+    /// ：**先聚合、再生成管线、再逐条执行**。三步都按顺序短路——聚合失败就不生成，生成失败就不执行。
     ///
-    /// As in the baseline: **aggregate first, then generate the pipelines, then run each**. All three short-circuit in order — a failed aggregation skips generation, and a
+    /// **aggregate first, then generate the pipelines, then run each**. All three short-circuit in order — a failed aggregation skips generation, and a
     /// failed generation skips execution.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model)
@@ -124,7 +124,7 @@ public sealed class StowageContext
     /// **基线这一层是纯转发**：`StowageContext.registerForBendersMP` 只调 `aggregation.registerForBendersMP`，没有任何自己的逻辑。
     /// 本仓此前没有它，于是 `StowageContext` 在 Benders 覆盖表上算"缺一套"。
     ///
-    /// **This layer is a pure forwarder in the baseline** : the context only delegates to the aggregation. It was missing here, which is why
+    /// **This layer is a pure forwarder in the code** : the context only delegates to the aggregation. It was missing here, which is why
     /// `StowageContext` counted as "one set short" in the Benders coverage table.
     /// </remarks>
     public Try RegisterForBendersMP(StowageMode stowageMode, LinearMetaModel<Flt64> model)
@@ -187,10 +187,10 @@ public sealed class StowageContext
     /// <param name="solution">主问题解 / The master-problem solution</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// **基线这里是个怪处，照抄并记下来**：`flushForBendersSP` 的转发目标是 `aggregation.registerForBendersSP`，**不是某个 flush**。
-    /// 换句话说"刷新"在配载域等同于"再注册一次子问题"。看起来像笔误，但**没有证据支持改写它**，所以照抄。
+    /// **基线这里是个怪处，沿用并记下来**：`flushForBendersSP` 的转发目标是 `aggregation.registerForBendersSP`，**不是某个 flush**。
+    /// 换句话说"刷新"在配载域等同于"再注册一次子问题"。看起来像笔误，但**没有证据支持改写它**，所以沿用。
     ///
-    /// **This is the baseline quirk, copied and named**: the flush forwards to `aggregation.registerForBendersSP`, **not to any flush** — "flush" here means
+    /// **This is the code quirk, copied and named**: the flush forwards to `aggregation.registerForBendersSP`, **not to any flush** — "flush" here means
     /// "register the sub-problem again". It looks like a typo, but **there is no evidence to rewrite it** , so it is copied.
     /// </remarks>
     public Try FlushForBendersSP(StowageMode stowageMode, LinearMetaModel<Flt64> model, IReadOnlyList<double> solution)

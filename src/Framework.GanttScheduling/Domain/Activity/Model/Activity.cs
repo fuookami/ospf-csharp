@@ -1,9 +1,9 @@
 // 活动排程模型 / Activity scheduling model.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../activity/model/Activity.kt` 的枚举与值类型对应。
-// Mirrors the enums and value types in the pinned Kotlin baseline's `Activity.kt`.
+// 与固定 Kotlin 的枚举与值类型对应。
+// The enums and value types in the pinned Kotlin: .
 //
-// `ActivityCompilation`（472 行）尚未移植，见文末说明。
-// `ActivityCompilation` (472 lines) is not yet ported — see the tail note.
+// `ActivityCompilation`（472 行）尚未实现，见文末说明。
+// `ActivityCompilation` (472 lines) is not yet implemented — see the tail note.
 
 using System;
 using System.Collections.Generic;
@@ -71,11 +71,11 @@ public enum ActivityExecutionStatus {
 /// all rely on this identity.
 /// </remarks>
 /// <remarks>
-/// 任务与资源身份在这里用 `string`：C# 的 `Executor.Id` 是 `string`，而基线的 `ExecutorId` 是接口。
+/// 任务与资源身份在这里用 `string`：C# 的 `Executor.Id` 是 `string`，而`ExecutorId` 是接口。
 /// 把接口继承体系搬过来会牵动整个 `Task` 领域，而这里只需要一个可用于分组与比较的键。
 /// `ponytail:` 天花板——等到活动与任务领域真正需要共享身份时，再引入 `ExecutorId` 接口。
 ///
-/// **The task and resource identities are `string` here**: C#'s `Executor.Id` is a `string` while the baseline's `ExecutorId` is an interface. Porting that interface
+/// **The task and resource identities are `string` here**: C#'s `Executor.Id` is a `string` while its `ExecutorId` is an interface. Porting that interface
 /// hierarchy would drag in the whole `Task` domain, and only needs a key to group and compare by.
 /// **`ponytail:` ceiling** — introduce an `ExecutorId` interface when the activity and task domains genuinely need to share identity.
 /// </remarks>

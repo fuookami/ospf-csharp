@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage;
 /// 配载域聚合 / The stowage domain aggregation.
 /// </summary>
 /// <remarks>
-/// 与基线 `stowage/Aggregation.kt` 对齐：构造时建好 5 个派生模型（配重按机型可空），`Register` 按基线顺序注册。
+/// 与对齐：构造时建好 5 个派生模型（配重按机型可空），`Register` 顺序注册。
 ///
 /// **三条注册路径的顺序互不相同，这是最容易做错的地方**：
 ///
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage;
 /// MP 不注册总重与最大装载重量、SP 不注册装载与载荷——看起来像漏了，但基线就是如此。把三者写成同一个方法会出两种故障：
 /// MP 多算两族符号；SP 重复注册装载变量（`Stowage.Register` 对同一对象只允许一次，会直接失败）。
 ///
-/// Aligned with the baseline: five derived models are built in the constructor (the ballast one nullable by aircraft type) and `Register` follows the baseline's order.
+/// Five derived models are built in the constructor (the ballast one nullable by aircraft type) and `Register` follows its order.
 /// **The three registration paths differ, which is where this is easiest to get wrong**, tabulated above. Collapsing them into one method causes two failures: the master
 /// computes two extra symbol families, and the sub-problem re-registers the stowage variables (`Stowage.Register` allows one registration per object and fails).
 /// </remarks>
@@ -224,12 +224,12 @@ public sealed class StowageAggregation
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线是**一个模型 + 阶段表**（`DiscreteLoadingApplicationService.kt:90`），所以业载只能注册一次。
+    /// **一个模型 + 阶段表**，所以业载只能注册一次。
     /// `RegisterForBendersSP` 会在同一个模型上再注册一次业载，而 `Register` 对同一对象只允许一次——**那是两条路径，不是一条**。
     /// 这里把"业载已注册"当**前提**写进签名（没有 payload 参数，不猜、不跳过），只补总重与最大装载重量。
     /// **调用方必须先跑 `RegisterForBendersMP`**，否则模型里没有业载，重量符号引用不到东西。
     ///
-    /// The baseline is **one model plus a stage table** (`DiscreteLoadingApplicationService.kt:90`), so the payload can be registered only once. `RegisterForBendersSP`
+    /// The code is **one model plus a stage table**, so the payload can be registered only once. `RegisterForBendersSP`
     /// registers it again on the same model, and `Register` allows one registration per object — **those are two paths, not one**. This puts "the payload is already
     /// registered" into the signature as a **premise** (no payload argument, no guessing, no skipping) and adds only the weight families. **The caller must run
     /// `RegisterForBendersMP` first**, otherwise the model has no payload and the weight symbols reference nothing.

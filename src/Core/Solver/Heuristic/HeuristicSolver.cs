@@ -1,6 +1,6 @@
 // 启发式求解器入口 / The heuristic-solver entry points.
-// 与固定 Kotlin 基线 `HeuristicSolver.kt`（2904 B）对应；`HeuristicResult.kt` 的更早批次已移植。
-// Mirrors the pinned baseline's `HeuristicSolver.kt` (2904 B); `HeuristicResult.kt` is ported alongside it.
+// 与固定 Kotlin （2904 B）对应； 的更早批次已移植。
+// ; is implemented alongside it.
 
 using System;
 using System.Collections.Generic;
@@ -66,9 +66,9 @@ public interface IHeuristicSolver<ObjValue, V>
 /// 把一个运行器包装成求解器 / Wrap a runner into a solver.
 /// </summary>
 /// <remarks>
-/// **`HeuristicResult.BestSolution` 在本移植里是"解向量"而不是基线的 `Solution` 包装**。这是更早批次（PSO 求解器）定下的形状，
+/// **`HeuristicResult.BestSolution` 在本实现里是"解向量"而不是`Solution` 包装**。这是更早批次（PSO 求解器）定下的形状，
 /// 已有消费者依赖它，因此这里**沿用而不改动**。差异写在类型注释里，不假装与基线逐字段一致。
-/// **`HeuristicResult.BestSolution` is "the solution vector" here rather than the baseline's `Solution` wrapper.** That shape was fixed by
+/// **`HeuristicResult.BestSolution` is "the solution vector" here rather than its `Solution` wrapper.** That shape was fixed by
 /// an earlier change (the PSO solver) and existing consumers depend on it, so it **stays unchanged**. The difference is recorded
 /// here rather than being passed off as field-for-field compatible.
 /// </remarks>

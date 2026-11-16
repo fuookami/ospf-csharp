@@ -1,6 +1,6 @@
 // 一维离散装载几何适配 / One-dimensional discrete-loading geometry adapter.
-// 与固定 Kotlin 基线 `bpp1d/domain/discrete_loading/DiscreteLoadingContext.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp1d/domain/discrete_loading/DiscreteLoadingContext.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading;
@@ -98,12 +98,12 @@ public static class Bpp1dDiscreteLoading {
         // **方向在这里无关紧要，这里变异"反向翻译"存活**：业务侧 `PositionConflict` 是**无序对**的
         // 语义（`First`/`Second` 只是两个成员名），而 `ConflictIndex` 建图时**自己会双向登记**、
         // `validate` 只禁止 `First == Second`。所以 `(A,B)` 与 `(B,A)` 在后续所有环节**完全等价**。
-        // **真实的等价变异，不是判据不足。** 这里按几何侧的扫描顺序写，与基线一致。
+        // **真实的等价变异，不是判据不足。** 这里按几何侧的扫描顺序写。
         //
         // **Direction is irrelevant here, and the "translate backwards" mutant survived the criteria**: the business `PositionConflict` is semantically an **unordered
         // pair** (`First`/`Second` are merely member names), `ConflictIndex` registers **both directions** when building its graph, and `validate` only forbids
         // `First == Second`. `(A,B)` and `(B,A)` are therefore **fully equivalent downstream** — **a genuine equivalent mutant, not a weak criterion.** The geometry
-        // sweep's own order is kept, matching the baseline.
+        // sweep's own order is kept, matching the code.
         foreach (Fuookami.Ospf.Framework.Bpp.Infrastructure.PositionConflict conflict in geometryConflicts) {
             merged.Add(new PositionConflict(conflict.Earlier, conflict.Later));
         }

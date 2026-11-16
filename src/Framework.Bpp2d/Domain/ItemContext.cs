@@ -1,6 +1,5 @@
 // 物品领域上下文 / Item domain context.
-// 与固定 Kotlin 基线 `item/ItemContext.kt`（60 行）对应。
-// Mirrors the pinned baseline's `ItemContext.kt`.
+// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

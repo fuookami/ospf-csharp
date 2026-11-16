@@ -1,6 +1,6 @@
 // 网络流约束管线 / Flow constraint pipelines.
-// 与固定 Kotlin 基线 `service/limits/CapacityBoundConstraint.kt`（1216 字节）、`service/limits/FlowConservationConstraint.kt`（1071 字节）对应。
-// Mirrors the pinned baseline's `CapacityBoundConstraint.kt` and `FlowConservationConstraint.kt`.
+// 与固定 Kotlin （1216 字节）、（1071 字节）对应。
+// And.
 //
 // 两条约束都是「把一棵已注册的表达式树变成一行约束」，本身不含业务判断：容量上下界与流量守恒的正确性由调用方保证，这里只负责
 // 忠实注册。因此它们都能直接对着 `IAbstractLinearMetaModel<Flt64>` 实现，不需要具体求解器。

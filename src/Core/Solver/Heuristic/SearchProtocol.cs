@@ -1,6 +1,5 @@
 // 启发式搜索协议 / The heuristic search protocol.
-// 与固定 Kotlin 基线 `core/solver/heuristic/SearchProtocol.kt`（9819 字节）对应。
-// Mirrors the pinned baseline's `core/solver/heuristic/SearchProtocol.kt`.
+// 与固定 Kotlin （9819 字节）对应。
 
 using System;
 using System.Collections.Generic;

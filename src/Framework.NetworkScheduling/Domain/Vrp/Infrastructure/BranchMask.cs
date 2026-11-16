@@ -1,6 +1,5 @@
 // 车辆类型分配与弧分支遮罩 / Vehicle-type assignment and arc branch mask.
-// 与固定 Kotlin 基线 `BranchMask.kt`（234 行）对应。
-// Mirrors the pinned baseline's `BranchMask.kt`.
+// 与固定 Kotlin 对应。
 //
 // 分支定价里的"遮罩"编码了三类分支决策：某车辆类型禁访某些客户、某客户必须由某车辆类型服务、某条弧被禁或被要求。
 // 遮罩本身不可变，所有校验都在构造时一次做完，因此下游每次查询只是纯函数判断，不需要重复校验。

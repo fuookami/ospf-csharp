@@ -1,6 +1,6 @@
 // 预算分配与调度日志 / Budget allocation and schedule logging.
-// 与固定 Kotlin 基线 `scheduling/BudgetAllocator.kt`（995 B）与 `scheduling/ScheduleLog.kt`（7761 B）对应。
-// Mirrors the pinned baseline's `BudgetAllocator.kt` (995 B) and `ScheduleLog.kt` (7761 B).
+// 与固定 Kotlin （995 B）与（7761 B）对应。
+// And (7761 B).
 
 using System;
 using System.Collections.Generic;

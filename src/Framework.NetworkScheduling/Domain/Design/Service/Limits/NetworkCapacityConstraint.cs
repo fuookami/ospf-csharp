@@ -1,6 +1,5 @@
 // 结构决策启用的容量约束 / Capacity bounds gated by structural decisions.
-// 与固定 Kotlin 基线 `design/service/limits/NetworkCapacityConstraint.kt`（1560 字节）对应。
-// Mirrors the pinned baseline's `NetworkCapacityConstraint.kt`.
+// 与固定 Kotlin （1560 字节）对应。
 
 using System;
 using Fuookami.Ospf.Core.Model.Mechanism;

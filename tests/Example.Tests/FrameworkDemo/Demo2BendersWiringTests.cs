@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// These two paths used to **resolve the mode and then do nothing with it**: the mode was discarded and MILP always ran. A request that asked for Benders got **a
 /// MILP answer that looked successful**, with the note `Benders requested; adaptive Benders path enabled in application layer` still in the diagnostics —
-/// **saying one thing and doing another.** That is the worst defect shape this port has recorded: not an error, but **an answer that is not what was asked for
+/// **saying one thing and doing another.** That is the worst defect shape this implementation has recorded: not an error, but **an answer that is not what was asked for
 /// and looks successful.**
 /// </remarks>
 public sealed class Demo2BendersWiringTests
@@ -71,13 +71,13 @@ public sealed class Demo2BendersWiringTests
     }
 
     /// <summary>
-    /// **请求 Benders 但阈值没到 → 走 MILP 是基线的正确行为，不是缺陷** / Asking for Benders below the threshold falls back to MILP by design.
+    /// **请求 Benders 但阈值没到 → 走 MILP 是正确行为，不是缺陷** / Asking for Benders below the threshold falls back to MILP by design.
     /// </summary>
     /// <remarks>
     /// 这条与上面两条划清界限：**低于阈值回落是基线明写的**（`Benders requested but skipped: binary_variables=… &lt; threshold=…`），
     /// 而"本路径没接线"是**移植缺口**。两种都要说清楚，但**不能混成一句**——否则读者分不清"我调阈值就能用"还是"这条路径根本不行"。
     ///
-    /// This draws the line: **falling back below the threshold is the baseline's own behaviour** (with the `Benders requested but skipped` note), while "this
+    /// This draws the line: **falling back below the threshold is its own behaviour** (with the `Benders requested but skipped` note), while "this
     /// path has no wiring" is **a port gap.** Both must be stated, but **never as the same message** — otherwise the reader cannot tell "raising the threshold
     /// helps" from "this path simply cannot do it."
     /// </remarks>
@@ -150,13 +150,8 @@ public sealed class Demo2BendersWiringTests
     /// **结构性分歧：框架要一个模型，demo2 建了两个** / A structural divergence: the framework takes one model, demo2 builds two.
     /// </summary>
     /// <remarks>
-    /// 基线 `DiscreteLoadingApplicationService.kt:90` 是：
-    ///
-    /// ```kotlin
-    /// val models = LinearBendersPartition.build(registration.model, registration.bendersStages)
-    /// ```
-    ///
-    /// 也就是**一个注册模型 + 一张显式阶段表**：哪些变量属于主问题、哪些属于连续追索，由调用方标出来，
+    /// 框架要的是 `LinearBendersPartition.BuildAsync(model, stages)`——
+    /// **一个注册模型 + 一张显式阶段表**：哪些变量属于主问题、哪些属于连续追索，由调用方标出来，
     /// 框架负责拆分。本仓的 `LinearBendersPartition.BuildAsync(model, stages)` 形状一致。
     ///
     /// 而 demo2 走的是**两个模型**：主问题与子问题分别注册、分别组装。这两件事没法直接对接——
@@ -164,14 +159,14 @@ public sealed class Demo2BendersWiringTests
     /// 而两个注册路径的符号是重叠的（`Payload` 两边都注册）。
     ///
     /// 这条判据钉住**分歧本身**，这样下次有人以为这只是接线时，判据会把这两句话摆在他面前。
-    /// 它不钉"哪个对"——对的是基线那边，本仓这边是待改的。
+    /// 它不钉"哪个对"——对的是边，本仓这边是待改的。
     ///
-    /// The baseline at `DiscreteLoadingApplicationService.kt:90` is `LinearBendersPartition.build(registration.model, registration.bendersStages)`: **one registered model
+    /// The code at is `LinearBendersPartition.build(registration.model, registration.bendersStages)`: **one registered model
     /// plus an explicit stage table**. The port's `LinearBendersPartition.BuildAsync(model, stages)` has the same shape. demo2 instead runs on **two models**, each
     /// registered and assembled separately, and the two cannot be joined directly — `BuildAsync` has no "give me two models" overload. So replacing demo2's path is
     /// not wiring, it is **merging the two models into one**, and the two registration paths overlap in their symbols (`Payload` is registered by both). This criterion
     /// pins **the divergence itself**, so the next reader who assumes it is a wiring job gets both sentences in front of them. It does not decide which is right — the
-    /// baseline is right and this port is the one to change.
+    /// baseline is right and this implementation is the one to change.
     /// </remarks>
     [Fact]
     public void TheStructuralDivergence_ShouldStayVisible() {
@@ -192,7 +187,7 @@ public sealed class Demo2BendersWiringTests
                 // `demo2_full_load_master` / `_sub` 仍在（对照判据还用得上），但**不再被分派调用**。这里按**名字**数，而不是数前缀——
                 // 前缀计数在 当天就红了一次，红的原因是"多了一条正确的路径"。
                 //
-                // **Two construction paths live in one file, and since then dispatch takes the single-model one**: `demo2_full_load_single` is the baseline shape and what
+                // **Two construction paths live in one file, and since then dispatch takes the single-model one**: `demo2_full_load_single` is the code shape and what
                 // dispatch uses; `demo2_full_load_master` / `_sub` remain (the comparison criteria still need them) but **are no longer called by dispatch**. Counted **by
                 // name**, not by prefix — the prefix count went red the day landed, and it went red because **a correct path had been added**.
                 //

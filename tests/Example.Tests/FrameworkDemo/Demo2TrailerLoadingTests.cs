@@ -189,9 +189,9 @@ public class Demo2TrailerLoadingTests {
     /// 两点成对：
     ///
     /// 1. 只有一辆拖车 → 没有相邻对 → 换装目标**不加**、返回成功。
-    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty) return ok`。
+    /// 2. 目标位数量不变——`if (monomials.isEmpty) return ok`。
     ///
-    /// Two paired points: a single trailer gives no adjacent pair, so **no** change objective is added and success is returned; and the objective count is unchanged, per the baseline's
+    /// Two paired points: a single trailer gives no adjacent pair, so **no** change objective is added and success is returned; and the objective count is unchanged, per its
     /// early return.
     /// </remarks>
     [Fact]

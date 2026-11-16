@@ -20,26 +20,26 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 适航安全域聚合 / The airworthiness security domain aggregation.
 /// </summary>
 /// <remarks>
-/// 与基线 `demo2/domain/airworthiness_security/Aggregation.kt` 对齐。它在构造时就建好四个派生模型，`Register` 再把它们逐个注册进模型：
+/// 与对齐。它在构造时就建好四个派生模型，`Register` 再把它们逐个注册进模型：
 ///
 /// | 派生模型 | 何时建 | 备注 |
 /// | --- | --- | --- |
 /// | <see cref="LinearDensity"/> | 总是 | |
 /// | <see cref="SurfaceDensity"/> | 总是 | |
 /// | <see cref="MaxCLIM"/> | **宽体机且 CLIM 点表非空** | 否则为 `null`，`CLIMLimit` 也就不会加 |
-/// | <see cref="MinLowPayload"/> | 总是 | 点表为空时构造器抛异常（基线的 `first` 也会） |
+/// | <see cref="MinLowPayload"/> | 总是 | 点表为空时构造器抛异常（`first` 也会） |
 /// | <see cref="Envelopes"/> | 总是 | 按飞行阶段分组 |
 ///
 /// 三处容易做错：
 ///
 /// 1. **`MaxCLIM` 的两个前提**。只看"点表非空"会在窄体机上建一个永远用不到的 CLIM；只看"宽体"会在空点表时抛异常。
-/// 2. **注册顺序**。基线是线性密度 → 表面密度 → `MaxCLIM` → `MinLowPayload` → 包络。顺序决定了模型里符号的排列，按序号引用约束的报告依赖它。
-/// 3. **`RegisterForBendersSP` 就是 `Register`**，`RegisterForBendersMP` 是**空操作**（基线 `return ok`）。两者看起来该做别的事，但基线就是如此——照抄，并在测试里钉住。
+/// 2. **注册顺序**。线性密度 → 表面密度 → `MaxCLIM` → `MinLowPayload` → 包络。顺序决定了模型里符号的排列，按序号引用约束的报告依赖它。
+/// 3. **`RegisterForBendersSP` 就是 `Register`**，`RegisterForBendersMP` 是**空操作**（基线 `return ok`）。两者看起来该做别的事，但基线就是如此——沿用，并在测试里钉住。
 ///
-/// Aligned with the baseline. Four derived models are built in the constructor and registered by `Register`, tabulated above. Three easy mistakes: (1) **`MaxCLIM` needs both
+/// Four derived models are built in the constructor and registered by `Register`, tabulated above. Three easy mistakes: (1) **`MaxCLIM` needs both
 /// conditions** — testing only the point list builds a CLIM on a narrow body, testing only the wide-body flag throws on an empty list; (2) **the registration order** is linear
 /// density → surface density → `MaxCLIM` → `MinLowPayload` → envelopes, and reports that reference constraints by index depend on it; (3) **`RegisterForBendersSP` is just
-/// `Register`** while `RegisterForBendersMP` is a **no-op** (the baseline is `return ok`). Both look like they should do more; they do not, and the tests pin that.
+/// `Register`** while `RegisterForBendersMP` is a **no-op** (the code is `return ok`). Both look like they should do more; they do not, and the tests pin that.
 /// </remarks>
 public sealed class AirworthinessSecurityAggregation
 {
@@ -122,9 +122,9 @@ public sealed class AirworthinessSecurityAggregation
         Load = load;
         TotalWeight = totalWeight;
         // 密度模型要的是**飞机侧**的 `Position`（几何与坐标），而各条限制要的是**装载侧**的 `StowagePosition`
-        // （带可用状态、最大重量、谓词）。C# 把基线的单个 `Position` 拆成了两个类型，这里按需要各给一份。
+        // （带可用状态、最大重量、谓词）。C# 把单个 `Position` 拆成了两个类型，这里按需要各给一份。
         // The density models take the **aircraft-side** `Position` (geometry and coordinates) while the limits take the **stowage-side** `StowagePosition` (status, maximum
-        // weight, predicates). C# split the baseline's single `Position` into two types, so each consumer gets the one it needs.
+        // weight, predicates). C# split its single `Position` into two types, so each consumer gets the one it needs.
         IReadOnlyList<Position> aircraftPositions = positions.Select(position => position.AircraftPosition).ToList();
         LinearDensity = new LinearDensity(linearDensityLimitZones, linearDensityLimitLines, aircraftPositions, load);
         SurfaceDensity = new SurfaceDensity(surfaceDensityLimitZones, aircraftPositions, load);
@@ -206,11 +206,11 @@ public sealed class AirworthinessSecurityAggregation
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 顺序照抄基线：线性密度 → 表面密度 → `MaxCLIM`（若有）→ `MinLowPayload` → 包络。
+    /// 顺序照做：线性密度 → 表面密度 → `MaxCLIM`（若有）→ `MinLowPayload` → 包络。
     ///
-    /// `stowageMode` 在这条路径上**没有被用到**——基线的 `register` 也收它，只往 `registerForBendersSP` 传。保留参数是为了与基线签名一致。
+    /// `stowageMode` 在这条路径上**没有被用到**——`register` 也收它，只往 `registerForBendersSP` 传。保留参数是为了与基线签名一致。
     ///
-    /// The order follows the baseline. `stowageMode` is **unused** on this path — the baseline accepts it too and only forwards it in `registerForBendersSP`. The parameter stays
+    /// The order follows the code. `stowageMode` is **unused** on this path — the code accepts it too and only forwards it in `registerForBendersSP`. The parameter stays
     /// for signature parity.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model) {
@@ -252,9 +252,9 @@ public sealed class AirworthinessSecurityAggregation
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线就是 `return ok`。这个签名看起来该加 Benders 割，但适航安全域的约束全是原问题的，主问题不需要额外的行。照抄。
+    /// 基线就是 `return ok`。这个签名看起来该加 Benders 割，但适航安全域的约束全是原问题的，主问题不需要额外的行。沿用。
     ///
-    /// The baseline is `return ok`. The signature suggests it should add Benders cuts, but every airworthiness security constraint belongs to the original problem and the master
+    /// The code is `return ok`. The signature suggests it should add Benders cuts, but every airworthiness security constraint belongs to the original problem and the master
     /// needs no extra rows. Copied as-is.
     /// </remarks>
     public Try RegisterForBendersMP(LinearMetaModel<Flt64> model) {
@@ -272,7 +272,7 @@ public sealed class AirworthinessSecurityAggregation
     /// <remarks>
     /// 基线就是 `return register(stowageMode, model)`，**忽略 `solution`**。看起来该按解固定某些变量，但适航约束是原问题的硬约束，子问题只是重加一遍。
     ///
-    /// The baseline is `return register(stowageMode, model)` and **ignores `solution`**. It looks like it should fix variables to the master's answer, but airworthiness constraints
+    /// `return register(stowageMode, model)` **ignores `solution`**. It looks like it should fix variables to the master's answer, but airworthiness constraints
     /// are hard constraints of the original problem and the sub-problem merely re-adds them.
     /// </remarks>
     public Try RegisterForBendersSP(StowageMode stowageMode, LinearMetaModel<Flt64> model, IReadOnlyList<double> solution) {

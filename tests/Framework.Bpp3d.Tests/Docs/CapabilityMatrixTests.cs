@@ -253,7 +253,7 @@ public sealed class CapabilityMatrixTests {
         // C# 侧是**不实现 `ILinearSolver` 的占位类型**，所以它们连"无 SDK 时显式失败"都不该假装有。
         //
         // `Lingo` and `OptVerse` belong in this list too.** They were missing while the document already had rows for them — so marking them ✅ would
-        // **turn nothing red**. They also differ from the other eight: **the baseline itself does not implement them**, and the C# side is a **placeholder that does not
+        // **turn nothing red**. They also differ from the other eight: **the code itself does not implement them**, and the C# side is a **placeholder that does not
         // implement `ILinearSolver`**, so they must not even pretend to have "an explicit failure without an SDK".
         string[] plugins = {
             "| Gurobi |", "| Gurobi 11 |", "| SCIP |", "| CPLEX |",
@@ -272,7 +272,7 @@ public sealed class CapabilityMatrixTests {
         // **两个占位后端必须自己说出来**：它们的行要写"基线本身未实现 … 不声明求解能力"，
         // 而不是混在"◐ 接口在、能力子集"里——**"没实现"和"实现了但没验证"是两件事**，混在一起等于把前者说成后者。
         //
-        // **The two placeholder backends must say so themselves**: their rows must read "the baseline itself does not implement this … declares no solving capability",
+        // **The two placeholder backends must say so themselves**: their rows must read "the code itself does not implement this … declares no solving capability",
         // not blend into "◐ interface present, capability subset" — **"not implemented" and "implemented but unverified" are different**, and blending them upgrades the former
         // into the latter.
         foreach (string placeholder in new[] { "| Lingo |", "| OptVerse |" }) {

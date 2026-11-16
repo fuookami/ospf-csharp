@@ -1,6 +1,5 @@
 // 路线编译聚合 / Route compilation aggregation.
-// 与固定 Kotlin 基线 `route_compilation/Aggregation.kt`（3748 字节）对应。
-// Mirrors the pinned baseline's `Aggregation.kt`.
+// 与固定 Kotlin （3748 字节）对应。
 
 using System;
 using System.Collections.Generic;

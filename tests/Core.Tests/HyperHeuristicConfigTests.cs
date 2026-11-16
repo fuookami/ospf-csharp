@@ -248,11 +248,11 @@ public sealed class HyperHeuristicConfigTests {
 
     /// <summary>**子算法不递归校验** / Child algorithms are not validated recursively.</summary>
     /// <remarks>
-    /// 基线的 `validate` 只检查顶层；递归校验会让一份"顶层合法、子层有问题"的配置在父层报错，
-    /// **而错误信息指向的是父层标识**。这是与基线一致的**已知行为**。
-    /// The baseline's `validate` checks only the top level; recursive validation would report a "top-level legal, child broken"
+    /// `validate` 只检查顶层；递归校验会让一份"顶层合法、子层有问题"的配置在父层报错，
+    /// **而错误信息指向的是父层标识**。这是的**已知行为**。
+    /// The code's `validate` checks only the top level; recursive validation would report a "top-level legal, child broken"
     /// configuration against the parent, **with the error message pointing at the parent identity**. This is **known behaviour** matching
-    /// the baseline.
+    /// the code.
     /// </remarks>
     [Fact]
     public void Validate_ShouldNotValidateChildren() {

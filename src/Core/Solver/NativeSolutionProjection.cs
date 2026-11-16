@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 按列号把解向量摊回变量键 / Spread a solution vector back onto variable keys.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `valuesByKey` 与 `finiteSolverDouble`。
+/// 对齐的 `valuesByKey` 与 `finiteSolverDouble`。
 /// **`nativeColumns` 依赖 `LinearTriadModel` 的 `origin` 与 token 概念，
 /// 而 C# 侧的 `ModelViewVariable` 没有 `Origin`，所以那一格留到后续批次。**
 ///
@@ -64,11 +64,11 @@ public static class NativeSolutionProjection
             return Failure("native solution length does not match columns");
         }
 
-        // **基线用 `LinkedHashMap` 保留插入顺序，C# 侧用普通字典。**
+        // **`LinkedHashMap` 保留插入顺序，C# 侧用普通字典。**
         // **下游全部按键查值，没有一处依赖顺序，所以这个差异没有行为后果——但它是一处<b>有意的</b>差异，
         // 而不是"忘了"。**
         //
-        // **The baseline uses a `LinkedHashMap` to keep insertion order; this uses a plain dictionary.**
+        // **The code uses a `LinkedHashMap` to keep insertion order; this uses a plain dictionary.**
         // **Every downstream use looks values up by key and none depends on order, so the difference has no behavioural
         // consequence — but it is a <b>deliberate</b> one, not an oversight.**
         var result = new Dictionary<VariableItemKey, Flt64>(columns.Count);

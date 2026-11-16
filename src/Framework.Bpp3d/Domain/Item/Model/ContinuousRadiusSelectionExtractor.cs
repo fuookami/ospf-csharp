@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 把连续半径求解结果装配成"半径选择结果" / Assemble continuous-radius solver results into radius-selection results.
 /// </summary>
 /// <remarks>
-/// 与基线 `ContinuousRadiusSelectionExtractor.kt` 对齐。四处照抄：
+/// 与对齐。四处沿用：
 ///
 /// 1. **空输入给空列表**，不是抛错——没有可装配的东西不是失败。
 /// 2. **求解结果里没有的变量名一律跳过**，而不是造一个零半径结果——零半径会被 `Validate` 拒，造出来只会炸在别处。
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 ///    半径不能）。这条区别是整段代码最容易抄错的地方。
 /// 4. **原型必须有 `RadiusWeightFunctionKey`**，它是结果的键；没有就抛——键是回指依据，不允许为空。
 ///
-/// Aligned with the baseline's `ContinuousRadiusSelectionExtractor.kt`. Four things copied: **empty input yields an empty list** rather than throwing, since nothing to assemble is not a failure;
+/// Aligned with its. Four things copied: **empty input yields an empty list** rather than throwing, since nothing to assemble is not a failure;
 /// **names absent from the solver results are skipped** rather than given a zero-radius result, which `Validate` would reject anyway and which would only blow up somewhere else; **the two kinds
 /// of absence differ**, a missing `solverRadius` **skipping the entry** while missing error fields **default to zero**, because an error may be absent but a radius may not — the easiest line here
 /// to copy wrongly; and **a prototype must carry a `RadiusWeightFunctionKey`**, its result key, throwing when absent, since a key is how a result is traced back.

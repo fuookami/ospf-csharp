@@ -9,12 +9,12 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **激活算子的取值语义与属性校验** / The activation operators' value semantics and attribute validation.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxActivation.kt` 里"算子算什么"那一半。**为什么先把取值语义单独做出来：**
-/// **降阶（把算子接进多项式与函数符号）还没移植，而"这个算子算什么、哪些属性组合是错的"是可以独立验证的。** '
+/// 同步 Kotlin `dee897d2` 的 里"算子算什么"那一半。**为什么先把取值语义单独做出来：**
+/// **降阶（把算子接进多项式与函数符号）还没实现，而"这个算子算什么、哪些属性组合是错的"是可以独立验证的。** '
 /// **把错判留到降阶层，表现出来只是"模型不可解"，而真实原因是某个 `alpha` 为负。**
 ///
-/// Syncs the "what does this operator compute" half of `OnnxActivation.kt`. **Why the value semantics come first: lowering (wiring an operator into polynomials
-/// and function symbols) is not ported yet, while "what this operator computes and which attribute combinations are wrong" can be verified on its own.**
+/// Syncs the "what does this operator compute" half of. **Why the value semantics come first: lowering (wiring an operator into polynomials
+/// and function symbols) is not implemented yet, while "what this operator computes and which attribute combinations are wrong" can be verified on its own.**
 /// **Leaving a bad judgement to the lowering layer shows up only as "the model does not solve", while the real cause is a negative `alpha`.**
 /// </remarks>
 public static class OnnxActivationSemantics

@@ -1,6 +1,6 @@
 // 待裁产品、需求与需求集合 / Products, demands and demand sets.
-// 与固定 Kotlin 基线 `csp2d/domain/material/model/Product2.kt` 对应（单件面积见文件末尾说明）。
-// Mirrors the pinned Kotlin baseline's `Product2.kt` (single-piece area is scoped out; see the tail note).
+// 与固定 Kotlin 对应（单件面积见文件末尾说明）。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Infrastructure;

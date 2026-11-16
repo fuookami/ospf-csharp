@@ -64,7 +64,7 @@ public class MongoRepositoryFindTests
     /// **只断言"失败时不动集合"是不够的**：**一个永远失败、永远不查询的实现也能通过那一条。**
     /// **所以还要一条"成功时确实查了"的判据。**
     ///
-    /// **Asserting only "does not touch the collection on failure" is not enough**:
+    /// **Asserting only "does not touch the collection on failure" is not enough**.
     /// **an implementation that always fails and never queries would pass it.**
     /// **So there is also a criterion for "it really queries on success".**
     /// </remarks>

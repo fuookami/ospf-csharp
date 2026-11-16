@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// **The only difference from `FullSumGenerator`**: this generator checks pruning constraints **while expanding** (`ICuttingPlanConstraint.IsPruning == true`),
 /// whereas the full-sum generator checks only at leaves.
 ///
-/// That difference comes from the baseline: `DFSGenerator.dfsSearch` calls `satisfiesPruningConstraints` before pushing each new slice, and
+/// That difference comes from the code: `DFSGenerator.dfsSearch` calls `satisfiesPruningConstraints` before pushing each new slice, and
 /// `FullSumGenerator.fullSumSearch` does not.
 ///
 /// **The search logic itself is identical**, so it is not reimplemented here; instead `applyPruningConstraints` is passed as `true`.

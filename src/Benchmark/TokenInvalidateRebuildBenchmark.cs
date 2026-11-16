@@ -17,14 +17,14 @@ namespace Fuookami.Ospf.Benchmark;
 /// **索引失效后的下一次读** / The first read after the index was invalidated.
 /// </summary>
 /// <remarks>
-/// **与基线 `TokenInvalidateRebuildBenchmark.kt`（104 行，`19c72455` 新增）对应。**
+/// ****
 ///
 /// **它测的东西，既有基准都不测：** **每次操作先增删同一个 token 让缓存失效，再对一个稳定 token 做首读，
 /// 迫使索引重建；同一批还有两个对照组（只读、只增删），把"重建成本"从"读成本"和"改成本"里分出来。**
 ///
 /// **修改只发生在调用线程上**，符合列表自身的单写锁契约，不涉及未支持的并发写。
 ///
-/// **Corresponds to the baseline's `TokenInvalidateRebuildBenchmark.kt` (104 lines, added in `19c72455`).** **Each operation adds
+/// **Corresponds to its (104 lines, added in `19c72455`).** **Each operation adds
 /// then removes one token to invalidate the cache, then performs a first read of a stable token to force a rebuild; two controls
 /// (reads only, mutations only) separate rebuild cost from read cost and mutation cost.** **Mutation stays on the calling thread,
 /// matching the list's single-writer lock contract.**

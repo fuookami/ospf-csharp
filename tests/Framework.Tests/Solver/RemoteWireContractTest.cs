@@ -29,8 +29,8 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// 远程 wire 结果契约测试 / Remote wire result-contract tests.
 /// </summary>
 /// <remarks>
-/// 直接读取固定 Kotlin 基线 `12fdb587` 的 fixtures 副本，验证精确整数、未知枚举容错和毫秒时长。
-/// Reads the pinned Kotlin baseline `12fdb587` fixture copies and verifies exact integers, unknown-enum tolerance and millisecond durations.
+/// 直接读取`12fdb587` 的 fixtures 副本，验证精确整数、未知枚举容错和毫秒时长。
+/// Reads the reference `12fdb587` fixture copies and verifies exact integers, unknown-enum tolerance and millisecond durations.
 /// </remarks>
 public class RemoteWireContractTest {
     [Fact]
@@ -1513,10 +1513,10 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// <c>SolveFingerprinting.Solver</c> 在固定 Kotlin 基线里**没有对应实现**（基线只有 `sha256` 与
+    /// <c>SolveFingerprinting.Solver</c> 在固定 Kotlin **没有对应实现**（有 `sha256` 与
     /// `configuration`），因此这是 C# 侧扩展而非同步缺口。本测试锁定其审计值，避免重构时静默改变
     /// 已落库的求解器身份。
-    /// <c>SolveFingerprinting.Solver</c> has **no counterpart** in the pinned Kotlin baseline (which only
+    /// <c>SolveFingerprinting.Solver</c> has **no counterpart** (which only
     /// has `sha256` and `configuration`), so it is a C#-side extension rather than a sync gap. This test
     /// pins its audit value so a refactor cannot silently change persisted solver identities.
     /// </summary>
@@ -1582,7 +1582,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 固定 Kotlin 基线只有 5 个路径：<c>POST /api/v1/tasks</c>、<c>GET /api/v1/capabilities</c>、
+    /// 固定 Kotlin 有 5 个路径：<c>POST /api/v1/tasks</c>、<c>GET /api/v1/capabilities</c>、
     /// <c>GET /api/v1/tasks/{taskId}</c>、<c>POST.../stop</c>、<c>POST.../resume</c>。
     /// 本测试钉死这 5 个，防止再次自造端点。
     /// The pinned Kotlin baseline has exactly five paths: <c>POST /api/v1/tasks</c>,
@@ -1688,11 +1688,11 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 不可行证据的 wire 名是**枚举成员原名**（PascalCase），不是 SCREAMING_SNAKE——基线用
+    /// 不可行证据的 wire 名是**枚举成员原名**（PascalCase），不是 SCREAMING_SNAKE——
     /// <c>valueOf(name)</c> 直接比较、不做大小写转换。本测试钉住这一点，并覆盖
     /// <c>NativeIis</c>／<c>NativeIIS</c> 这一个拼写差异。
     /// Infeasibility-evidence wire names are the **raw enum member names** (PascalCase), not
-    /// SCREAMING_SNAKE — the baseline compares with <c>valueOf(name)</c> and never changes case. This test
+    /// SCREAMING_SNAKE — the code compares with <c>valueOf(name)</c> and never changes case. This test
     /// pins that, including the single <c>NativeIis</c>/<c>NativeIIS</c> spelling divergence.
     /// </summary>
     [Fact]
@@ -1984,9 +1984,9 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 基线的 <c>storage.put(path, bytes, metadata)</c> 会把 <c>taskId</c>／<c>sliceId</c>／<c>tenantId</c>
+    /// <c>storage.put(path, bytes, metadata)</c> 会把 <c>taskId</c>／<c>sliceId</c>／<c>tenantId</c>
     /// 写成对象元数据。本测试确认 C# 侧不再只传 content type。
-    /// The baseline's <c>storage.put(path, bytes, metadata)</c> writes taskId/sliceId/tenantId as object
+    /// The code's <c>storage.put(path, bytes, metadata)</c> writes taskId/sliceId/tenantId as object
     /// metadata. This test confirms the C# side no longer passes only a content type.
     /// </summary>
     [Fact]
@@ -2019,11 +2019,11 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 基线的 <c>requestId</c> 是**幂等请求 ID**：同一 (tenant, task, slice) 必须每次提交都得到同一个值，
-    /// 否则重试会被服务端当成新任务。基线里没有"异步重放"或"恰好一次归并"这一层能力，幂等性就落在
+    /// <c>requestId</c> 是**幂等请求 ID**：同一 (tenant, task, slice) 必须每次提交都得到同一个值，
+    /// 否则重试会被服务端当成新任务。没有"异步重放"或"恰好一次归并"这一层能力，幂等性就落在
     /// 这个 ID 上。
-    /// The baseline's <c>requestId</c> is an **idempotent request ID**: the same (tenant, task, slice) must
-    /// yield the same value on every submit, otherwise a retry reads as a new task. The baseline has no
+    /// <c>requestId</c> is an **idempotent request ID**: the same (tenant, task, slice) must
+    /// yield the same value on every submit, otherwise a retry reads as a new task. The code has no
     /// "async replay" or "exactly-once merge" layer — idempotence rests on this ID.
     /// </summary>
     [Fact]
@@ -2064,8 +2064,8 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 基线的取消是幂等的：只有首次请求会真正中断后端，后续请求直接成功返回。
-    /// The baseline cancels idempotently: only the first request actually interrupts the backend and later
+    /// 取消是幂等的：只有首次请求会真正中断后端，后续请求直接成功返回。
+    /// The code cancels idempotently: only the first request actually interrupts the backend and later
     /// requests simply succeed.
     /// </summary>
     [Fact]
@@ -2092,7 +2092,7 @@ public class RemoteWireContractTest {
     /// <summary>
     /// 基线明确规定：**已取消时注册的监听器立即执行**。这条不能反过来——否则一个在取消请求之后才
     /// 注册的后端永远不会被中断，求解资源就漏了。
-    /// The baseline states explicitly that a listener **registered after cancellation runs immediately**.
+    /// The code states explicitly that a listener **registered after cancellation runs immediately**.
     /// This must not be inverted — otherwise a backend registered after the cancel request would never be
     /// interrupted and its resources would leak.
     /// </summary>
@@ -2133,9 +2133,9 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 基线的 <c>CheckpointMetadata</c> 用 <c>ref</c> 与 <c>createdAtEpochMs</c>；C# 此前写成
+    /// <c>CheckpointMetadata</c> 用 <c>ref</c> 与 <c>createdAtEpochMs</c>；C# 此前写成
     /// <c>objectRef</c> 与 <c>createdAt</c>，两端读不到对方字段。
-    /// The baseline's <c>CheckpointMetadata</c> uses <c>ref</c> and <c>createdAtEpochMs</c>; C# previously
+    /// The code's <c>CheckpointMetadata</c> uses <c>ref</c> and <c>createdAtEpochMs</c>; C# previously
     /// used <c>objectRef</c> and <c>createdAt</c>, so neither side could read the other's fields.
     /// </summary>
     [Fact]
@@ -2173,9 +2173,9 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 基线的 <c>RemoteConstraintProgrammingClient.solve</c> 把 CP snapshot 编码为
+    /// <c>RemoteConstraintProgrammingClient.solve</c> 把 CP snapshot 编码为
     /// <c>ospf-cp-snapshot-json</c> 原始模型数据，并带上 <c>targetType=cp</c> 与规模估计。
-    /// The baseline's <c>RemoteConstraintProgrammingClient.solve</c> encodes the CP snapshot as
+    /// The code's <c>RemoteConstraintProgrammingClient.solve</c> encodes the CP snapshot as
     /// <c>ospf-cp-snapshot-json</c> raw model data with <c>targetType=cp</c> and size estimates.
     /// </summary>
     [Fact]
@@ -2397,7 +2397,7 @@ public class RemoteWireContractTest {
     /// <summary>
     /// wire 模型的身份字段必须与基线同名同默认值：<c>identityScope</c> 默认 <c>MODEL_LOCAL</c>，
     /// null 字段不写出，<c>identityProvenance</c> 是对象列表。
-    /// The wire models' identity fields must match the baseline name for name and default for default:
+    /// The wire models' identity fields must match the code name for name and default for default:
     /// <c>identityScope</c> defaults to <c>MODEL_LOCAL</c>, null fields are omitted and
     /// <c>identityProvenance</c> is a list of objects.
     /// </summary>
@@ -2485,9 +2485,9 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 端到端：真实线性模型经 <c>Serialize</c> 后应得到基线的变量／约束／目标结构，空约束名回退
+    /// 端到端：真实线性模型经 <c>Serialize</c> 后应得到变量／约束／目标结构，空约束名回退
     /// <c>cons&lt;index&gt;</c>，且未设置身份时作用域为 <c>MODEL_LOCAL</c>。
-    /// End to end: a real linear model serializes into the baseline's variable/constraint/objective
+    /// End to end: a real linear model serializes into its variable/constraint/objective
     /// structure, an empty constraint name falls back to <c>cons&lt;index&gt;</c>, and an unset identity
     /// yields the <c>MODEL_LOCAL</c> scope.
     /// </summary>
@@ -3827,7 +3827,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 声称最优但**没有证明**时必须降级为 <c>Feasible</c>，不能照抄后端的乐观说法。
+    /// 声称最优但**没有证明**时必须降级为 <c>Feasible</c>，不能沿用后端的乐观说法。
     /// An unproven optimality claim must be downgraded to <c>Feasible</c> rather than copied from the
     /// backend's optimism.
     /// </summary>

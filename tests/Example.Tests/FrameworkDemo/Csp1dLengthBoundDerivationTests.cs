@@ -151,7 +151,7 @@ public class Csp1dLengthBoundDerivationTests {
         // **只看约束名不够。** 实测：把 `maxOverProduceLength` 分支改成恒假，它会退到
         // "需求最大值"兜底，**约束照样被加上**，只查名字的判据全绿。
         //
-        // 所以还要看**右端常数**：下界约束的右端是 0（基线用 `zero`），上界约束的右端是 500
+        // 所以还要看**右端常数**：下界约束的右端是 0（`zero`），上界约束的右端是 500
         // （`maxOverProduceLength`），不是 60（需求兜底）。
         //
         // **Checking the names alone is not enough.** Measured: making the `maxOverProduceLength` branch always false falls back to "max demand" and **the constraint is still
@@ -283,7 +283,7 @@ public class Csp1dLengthBoundDerivationTests {
             "nothing triggers an over-length variable: no penalty, no bound, no maxOverProduceLength");
     }
 
-    /// <summary>**没有需求时不建长度变量**——与基线一致，不是缺口 / No demand means no length variables — consistent with the baseline, not a gap.</summary>
+    /// <summary>**没有需求时不建长度变量**——，不是缺口 / No demand means no length variables — consistent with the code, not a gap.</summary>
     /// <remarks>
     /// **这里一开始把这个当成缺口，是错的。**
     ///
@@ -292,11 +292,11 @@ public class Csp1dLengthBoundDerivationTests {
     /// 哪怕边界推导阶段能从切割方案的贡献里找到那个产品。
     ///
     /// 所以 `ResolveDefaultLengthBounds` 里"从贡献找产品"那段**只影响推导出的配置值**，
-    /// 而配置值在**没有需求时根本用不上**。C# 与基线一致。
+    /// 而配置值在**没有需求时根本用不上**。C# 。
     ///
     /// **判据记录这个一致性**：它防止下一个人"顺手"把变量改成按产品建。
     ///
- /// ** first recorded this as a gap — that was wrong.** The baseline's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
+ /// ** first recorded this as a gap — that was wrong.** The code's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
     /// No demand means no variables and no constraints, even though the derivation step can find the product from a plan's contribution. So the "find the product from a
     /// contribution" branch in `ResolveDefaultLengthBounds` **only affects the derived config values**, which are **unused when there is no demand**. C# matches the
     /// baseline, and this criterion records that consistency — it stops the next person from "helpfully" switching the variables to be per-product.

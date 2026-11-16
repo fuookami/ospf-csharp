@@ -35,7 +35,7 @@ public interface IIntermediateSymbol : ISymbol {
     /// The auxiliary variable realizing this symbol, or null when it is inlined.
     /// </summary>
     /// <remarks>
-    /// 同步 Kotlin 2e72a17c：基线用 `val intermediateVariable: AbstractVariableItem（无泛型参数）? get = null`
+    /// 同步 Kotlin 2e72a17c：`val intermediateVariable: AbstractVariableItem（无泛型参数）? get = null`
     /// 给默认实现。C# 用默认接口成员等价地做到，**不必改几十个实现类**。
     /// 非 null 时，约束与目标应引用该变量，而不是把符号定义原地展开。
     ///

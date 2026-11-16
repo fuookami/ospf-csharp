@@ -88,10 +88,10 @@ public class ContinuousRadiusPrototypesFromItemsTest {
 
     /// <summary>**横置圆柱不得产出原型** / A horizontal cylinder must not yield a prototype.</summary>
     /// <remarks>
-    /// 基线只取 `PackageShapeSpec.VerticalCylinder`。**若实现只判"是不是圆柱"而不判轴向，
+    /// 取 `PackageShapeSpec.VerticalCylinder`。**若实现只判"是不是圆柱"而不判轴向，
     /// 横置圆柱会混进来**——而原型数量仍然"看起来合理"。
     ///
-    /// The baseline takes only `PackageShapeSpec.VerticalCylinder`. **An implementation that only asks "is it a cylinder" without checking the axis lets
+    /// The code takes only `PackageShapeSpec.VerticalCylinder`. **An implementation that only asks "is it a cylinder" without checking the axis lets
     /// horizontal ones through** while the prototype count still looks plausible.
     /// </remarks>
     [Fact]
@@ -133,10 +133,10 @@ public class ContinuousRadiusPrototypesFromItemsTest {
 
     /// <summary>**同一货物重复出现必须按变量名去重** / A repeated item must de-duplicate by variable name.</summary>
     /// <remarks>
-    /// 基线用 `putIfAbsent`：**先到先得**。若实现改用 `[key] = value`，
+    /// `putIfAbsent`：**先到先得**。若实现改用 `[key] = value`，
     /// 内容相同的重复项会被后一个覆盖——**数量一样，但语义从"保留首个"变成"保留末个"**。
     ///
-    /// The baseline uses `putIfAbsent`: **first wins**. An implementation using `[key] = value` lets a later duplicate overwrite an earlier one — **same count,
+    /// The code uses `putIfAbsent`: **first wins**. An implementation using `[key] = value` lets a later duplicate overwrite an earlier one — **same count,
     /// but "keep the first" silently becomes "keep the last"**.
     /// </remarks>
     [Fact]
@@ -151,13 +151,13 @@ public class ContinuousRadiusPrototypesFromItemsTest {
 
     /// <summary>**没有半径权重函数键的圆柱不产出原型** / A cylinder without a radius weight-function key yields no prototype.</summary>
     /// <remarks>
-    /// 这是 恢复的**基线门控**：基线的 `continuousRadiusSelectionResult` 在该键为 null 时返回 null，
+    /// 这是 恢复的**基线门控**：`continuousRadiusSelectionResult` 在该键为 null 时返回 null，
     /// 于是无键圆柱**不进入**连续半径路径。
     ///
     /// 因为 C# 形状模型还没有这个键，只能对所有竖直圆柱产出原型，并在文档里记下偏差。
     /// **现在门控回来了，这条测试锁住它。**
     ///
-    /// This is the **baseline gate** restored: the baseline's `continuousRadiusSelectionResult` returns null when the key is null, so a keyless
+    /// This is the **baseline gate** restored: its `continuousRadiusSelectionResult` returns null when the key is null, so a keyless
     /// cylinder **stays out** of the continuous-radius path.
     ///
     /// could only produce prototypes for every vertical cylinder because the C# shape model lacked the key, and it recorded that deviation. **The gate is

@@ -24,18 +24,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 航班变更的最小化目标 / The flight-change objective.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerFlightChangeMinimization.kt`：对每位乘客、**同航路的每个其它航班**、每个舱位，累加
+/// ：对每位乘客、**同航路的每个其它航班**、每个舱位，累加
 /// `系数 × passengerFlightChange[乘客, 目标航班, 舱位]`。系数按"从哪班、到哪班、哪一档"三点给——
 /// **同一个舱位在不同航段上的代价可以不同**。
 ///
 /// 这一层比舱位变更那层多一维，也多了两个"空表即空目标"的入口：**没开航班变更**、**没有可替换的航班**。
 /// 两种情况下 `monomials` 为空，基线就不加目标——**空目标不是"目标为零"，是不存在**。
 ///
-/// The baseline's `PassengerFlightChangeMinimization.kt` accumulates `coefficient × passengerFlightChange[passenger, target flight, cabin]` over every passenger, **every other flight on the
+/// The code's accumulates `coefficient × passengerFlightChange[passenger, target flight, cabin]` over every passenger, **every other flight on the
 /// same route**, and every cabin. The coefficient is keyed by "from which flight, to which flight, which cabin" — **the same cabin can cost differently on different legs**.
 ///
 /// This layer has one dimension more than the cabin-change one, and two more "empty table means empty objective" entries: **flight change is off**, and **there is no alternative
-/// flight**. In both cases `monomials` is empty and the baseline adds no objective — **an empty objective is not "a zero objective", it does not exist**.
+/// flight**. In both cases `monomials` is empty and the code adds no objective — **an empty objective is not "a zero objective", it does not exist**.
 /// </remarks>
 public sealed class PassengerFlightChangeMinimization
     : ICGPipeline<IGanttSchedulingShadowPriceArguments<Aircraft, FlightTaskAssignment>, object, GanttSchedulingShadowPriceMap<Aircraft, FlightTaskAssignment>> {
@@ -81,8 +81,8 @@ public sealed class PassengerFlightChangeMinimization
         }
 
         if (!_change.WithFlightChange || _change.PassengerFlightChange is not { } table) {
-            // **没开航班变更就不是错误**：基线在这种情况下 `monomials` 为空，直接不加目标。
-            // **Flight change being off is not an error**: the baseline finds `monomials` empty here and simply adds no objective.
+            // **没开航班变更就不是错误**：这种情况下 `monomials` 为空，直接不加目标。
+            // **Flight change being off is not an error**: the code finds `monomials` empty here and simply adds no objective.
             return Results.Ok<Success>(Results.SuccessInstance);
         }
 

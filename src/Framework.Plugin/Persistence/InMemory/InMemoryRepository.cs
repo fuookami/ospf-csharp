@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.InMemory;
 
 
 /// <remarks>
-/// **这个类是内存实现，不是 EF Core。** 它持有一个 `List&lt;T&gt;`，不接触 `DbContext`；名字沿用基线的
+/// **这个类是内存实现，不是 EF Core。** 它持有一个 `List&lt;T&gt;`，不接触 `DbContext`；名字沿用
 /// `KtormRepository` / `JdbcClientRepository` 那一格，但行为必须诚实地反映"内存"。
 ///
 /// 第一版有两个静默空洞：
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.InMemory;
 /// 两个都改成有信号：给了键匹配器就真的按 id 找，没给就 `NotSupportedException` 并说明要什么；
 /// 更新找不到实体也直接抛，而不是假装成功。
 ///
-/// **This class is an in-memory implementation, not EF Core.** It holds a `List&lt;T&gt;` and never touches a `DbContext`; the name follows the baseline's
+/// **This class is an in-memory implementation, not EF Core.** It holds a `List&lt;T&gt;` and never touches a `DbContext`; the name follows its
 /// `KtormRepository` / `JdbcClientRepository` slot, but the behaviour must honestly say "in memory". The first version had two silent holes: `GetByIdAsync` returned `default`
 /// for **any** id — the caller reads "not found" while nothing was ever looked up — and `UpdateAsync` was `Task.CompletedTask`, swallowing the write with no signal. Both now
 /// signal: with a key matcher it really looks the id up, without one it throws `NotSupportedException` naming what is needed, and an update that finds no entity throws instead of

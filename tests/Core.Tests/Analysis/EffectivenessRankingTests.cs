@@ -15,10 +15,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 有效性排序报告 / The effectiveness ranking report.
 /// </summary>
 /// <remarks>
-/// 补了 `CriticalConstraintAnalysisReport.kt` 的报告侧**： 当时只补了漏斗那一块，
+/// 补了 的报告侧**： 当时只补了漏斗那一块，
 /// 这里补有效性条目与排序。`buildEffectivenessRanking`、`summarizeGroups` 与报告构造器仍缺。
 ///
-/// **The report side of `CriticalConstraintAnalysisReport.kt` is ported**: only ported the funnel block, so the effectiveness entry and ranking.
+/// **The report side of is implemented**: only implemented the funnel block, so the effectiveness entry and ranking.
 /// `buildEffectivenessRanking`, `summarizeGroups` and the report builder remain missing.
 /// </remarks>
 public class EffectivenessRankingTests {

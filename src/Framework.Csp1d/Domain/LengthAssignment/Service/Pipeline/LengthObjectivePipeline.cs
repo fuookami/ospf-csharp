@@ -127,7 +127,7 @@ public class LengthObjectivePipeline<V> : IPipeline<LinearMetaModel<Flt64>>
     // 的取整与空列表都是这个形状）。**判据只覆盖了被调用的那一份。**
     //
     // **The local `ToFlt64` is gone; `DomainValueConversion.ToFlt64` is used instead.** The local one **silently returned `Flt64.Zero`** for an unknown `V`, so **penalty terms
-    // vanished instead of failing**. The shared one falls back to `System.Convert.ToDouble` and **converts any numeric type**, matching the baseline's "`V` has a
+    // vanished instead of failing**. The shared one falls back to `System.Convert.ToDouble` and **converts any numeric type**, matching its "`V` has a
     // `toFlt64` constraint, so every `V` converts". **This is another "same logic written twice, only one copy correct"** (the earlier projection, /the earlier rounding and
     // empty lists all had this shape). **The criteria only ever covered the copy that was called.**
 }

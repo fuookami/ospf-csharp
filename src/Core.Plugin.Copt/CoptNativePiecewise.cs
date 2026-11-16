@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// COPT 原生分段线性写入 / Native piecewise-linear writing for COPT.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CoptNativePiecewise.kt` 的 `validateCoptNativePiecewiseData` 与 `addCoptNativePiecewise`。
+/// 对齐的 `validateCoptNativePiecewiseData` 与 `addCoptNativePiecewise`。
 ///
 /// **这里补的是<b>写侧</b>：把 `x/y` 断点翻译成 COPT 模型里的 λ 变量组、三条行与一条 SOS2。**
 /// **读侧（报告里的求值与指纹）早已有之。**
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 ///
 /// **这也是为什么它不报错：** **读侧全绿，因为它读的是自己的数据；写侧缺失不产生任何信号。**
 ///
-/// **follows the baseline's `validateCoptNativePiecewiseData` and `addCoptNativePiecewise`.**
+/// **follows its `validateCoptNativePiecewiseData` and `addCoptNativePiecewise`.**
 ///
 /// ** adds the <b>write</b> side: turning `x/y` breakpoints into COPT λ variables, three rows and one
 /// SOS2 per structure.** **The read side (report evaluation and fingerprints) has existed since then.**
@@ -51,7 +51,7 @@ internal static class CoptNativePiecewise
     /// **"在写入之前"这四个字是重点：** **中途失败会留下一半的模型改动，
     /// 而 COPT 的 `addVar` 没有回滚。** **所以校验必须是<b>前置</b>的一整遍，而不是边写边查。**
     ///
-    /// **基线在这里做三件事，本实现照抄：**
+    /// **这里做三件事，本实现沿用：**
     ///
     /// 1. **无穷哨兵必须有限且为正**（否则 λ 的上下界会失效）
     /// 2. **输入键与结果键不得相同，且结果键不得重复**（否则两条 PWL 会抢同一个结果变量）
@@ -60,7 +60,7 @@ internal static class CoptNativePiecewise
     /// **"Before writing" is the point: a mid-way failure leaves the model half-modified, and COPT's `addVar` cannot roll
     /// back.** **So the check must be one <b>up-front</b> pass, not interleaved with the writing.**
     ///
-    /// **The baseline does three things here, copied as-is:** **the infinity sentinel must be finite and positive; input
+    /// **The code does three things here, copied as-is:** **the infinity sentinel must be finite and positive; input
     /// and result keys must differ and result keys must not repeat; and there must be at least two breakpoints with the
     /// same length as the values.**
     /// </remarks>

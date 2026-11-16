@@ -16,9 +16,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 货物时效管线生成器 / The express-effectiveness pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/service/PipelineListGenerator.kt` 对齐：**三条条件管线**，且**没有总的模式开关**。
+/// 与对齐：**三条条件管线**，且**没有总的模式开关**。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **`AbsoluteOrder` 非空才加 `ItemPriorityLimit`**（即仅预配载）。
 /// 2. **`RelativeOrder` 非空才加 `ItemPriorityReverseLimit`**（即仅全载）。
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 ///    写成那种谓词会让建议打板少一条约束。
 /// 4. **顺序**：优先级、反转、必须发货。
 ///
-/// Aligned with the baseline: **three conditional pipelines and no overall mode switch**. Four things must be copied: **`ItemPriorityLimit` only when `AbsoluteOrder` is non-null**
+/// **three conditional pipelines and no overall mode switch**. Four things are carried over: **`ItemPriorityLimit` only when `AbsoluteOrder` is non-null**
 /// (predistribution only); **`ItemPriorityReverseLimit` only when `RelativeOrder` is non-null** (full load only); **`MustShipLimit` requires "not predistribution and a non-empty index
 /// list"**, testing only `!= Predistribution` rather than a `WithMacOptimization`-style predicate, which would drop a constraint under weight recommendation; and **the order** is
 /// priority, reversal, must-ship.

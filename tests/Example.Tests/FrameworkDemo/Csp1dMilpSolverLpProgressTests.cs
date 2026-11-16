@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 它若悄悄退化成空壳（比如返回空的影子价格表），**上游只会看到"定价不产列、迅速收敛"**，
 /// 而那恰好与"真的收敛了"外观相同。
 ///
-/// **covered only `SolveAsync`; `SolveLPAsync` had zero coverage.** This adds it and found it **accepted no progress context** — while the baseline
+/// **covered only `SolveAsync`; `SolveLPAsync` had zero coverage.** This adds it and found it **accepted no progress context** — while the code
 /// `solveLP(input, extensions, progressContext)` **does**.
 ///
 /// **The danger of zero coverage is concrete here**: `SolveLPAsync` is the path the master problem takes every round, and if it quietly degraded into a shell (say

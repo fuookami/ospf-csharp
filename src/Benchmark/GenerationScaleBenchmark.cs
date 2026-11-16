@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// The scale characteristics of the generators: three generators by three scenarios by four parallelisms by two budgets.
 /// </summary>
 /// <remarks>
-/// **与基线 `GenerationScaleBenchmark.kt`（112 行，`19c72455` 新增）对应。**
+/// ****
 ///
 /// **它比既有的 `GenerationCacheBuildBenchmark` 多测两件事：**
 ///
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **两个基准方法也分工：** `GenerateWithReport` 把手头完整的报告全算出来，`GenerateSummary` 只取"方案数 : 终止原因"，
 /// 后者证明结果确实被消费——BenchmarkDotNet 会避免死代码消除，但"结果有没有被读"仍要由基准自己表达清楚。
 ///
-/// **Corresponds to the baseline's `GenerationScaleBenchmark.kt` (112 lines, added in `19c72455`).** **It measures two things
+/// **Corresponds to its (112 lines, added in `19c72455`).** **It measures two things
 /// `GenerationCacheBuildBenchmark` does not: ① a different generator (`dfs`/`nsum`/`fullsum`) — one generator alone hides the slow one;
 /// ② a different budget (`100000` versus `200`) — a budget of 200 stops on the cap rather than on exhaustion, so the cost difference comes
 /// from the stop condition, not the search size.** **The two methods split the work as well: `GenerateWithReport` materialises the full
@@ -132,10 +132,10 @@ public class GenerationScaleBenchmark
 
     /// <summary>恒真的自定义策略 / An always-satisfied custom policy.</summary>
     /// <remarks>
-    /// **基线在 `custom` 场景里塞一条恒真约束，C# 侧照搬。** **它不是装饰：** **生成器对每条约束都要走一次判定，
+    /// **`custom` 场景里塞一条恒真约束，C# 侧照搬。** **它不是装饰：** **生成器对每条约束都要走一次判定，
     /// 多一条就多一次虚调用——这正是要计时的部分。**
     ///
-    /// **The baseline adds an always-true constraint in the `custom` scenario and this mirrors it.** **It is not decoration: the generator
+    /// **The code adds an always-true constraint in the `custom` scenario and this mirrors it.** **It is not decoration: the generator
     /// rules on every constraint for every candidate, so one more is one more virtual call — exactly what is being timed.**
     /// </remarks>
     private sealed class AlwaysSatisfiedConstraint : ICuttingPlanConstraint<Flt64> {

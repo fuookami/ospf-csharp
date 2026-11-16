@@ -1,7 +1,7 @@
 // 纯参数化 SQL 编译器 / Pure parameterized SQL compiler.
-// 与固定 Kotlin 基线 `SqlRelationalQueryCompiler` 对应。不连接数据库、不依赖任何 ORM：只把关系查询计划编译成
+// 与`SqlRelationalQueryCompiler` 对应。不连接数据库、不依赖任何 ORM：只把关系查询计划编译成
 // 参数化 SQL。所有标量字面量都进参数列表，SQL 字符串里不含业务值。
-// Mirrors the pinned Kotlin baseline's `SqlRelationalQueryCompiler`. It opens no connection and depends on no ORM:
+// The pinned Kotlin: . It opens no connection and depends on no ORM:
 // it compiles a relational query plan into parameterized SQL. Every scalar literal becomes a parameter, so the SQL
 // text carries no business values.
 
@@ -22,12 +22,12 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// 纯参数化 SQL 编译器 / Pure parameterized SQL compiler.
 /// </summary>
 /// <remarks>
-/// **一处与基线的实现差异**：基线用 Kotlin 的泛型模式匹配直接解构 <c>Comparison&lt;*&gt;</c> 等节点；C# 的泛型
+/// **一处与实现差异**：Kotlin 的泛型模式匹配直接解构 <c>Comparison&lt;*&gt;</c> 等节点；C# 的泛型
 /// 实参在运行时才确定，单一模式覆盖不了全部实例化，因此统一按属性反射取值。取值方式与
 /// <see cref="RelationalQueryJoinValidator"/>／<see cref="RelationalQueryExpressionFreezer"/> 一致，三者共用同一
 /// 套约定。
 ///
-/// **A difference from the baseline**: Kotlin destructures <c>Comparison&lt;*&gt;</c> and friends through generic
+/// **A difference from the code**: Kotlin destructures <c>Comparison&lt;*&gt;</c> and friends through generic
 /// pattern matching; a C# generic argument is only known at run time so one pattern cannot cover every
 /// instantiation, and properties are read reflectively instead. The convention is shared with
 /// <see cref="RelationalQueryJoinValidator"/> and <see cref="RelationalQueryExpressionFreezer"/>.

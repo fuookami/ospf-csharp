@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **所以这一条只钉**这张表里能精确点名的三行**：它们都写了完整路径、都指向唯一一个测试文件。**
 /// **其余各处仍无人核对——这一点写在这里，而不是让它看起来已经被覆盖。**
 ///
-/// **A "ported, N criteria" cell can state a number the test file does not hold: the matrix says 24 while
+/// **A "implemented, N criteria" cell can state a number the test file does not hold: the matrix says 24 while
 /// `PolynomialParserTests.cs` holds 22.**
 ///
 /// **Why only these three rows: the matrix carries dozens of "N criteria" claims, written inconsistently — some give a full
@@ -134,7 +134,7 @@ public class MathParsingPortCountTests
         // **29 to 30.** **The extra one is the "5 criteria" sentence added to the `TokenSharedReadBenchmark` note — like the other 29 it
         // is a count claim nobody pins one by one.** **The criterion firing is correct: it does not mean "the matrix may hold only 29 such
         // sentences", it means every new one has to be noticed.**
-        // **一度变成 31，又回到 30。** **那一处"3 条判据"写在未移植清单的 `Scan` 行里，'
+        // **一度变成 31，又回到 30。** **那一处"3 条判据"写在未实现清单的 `Scan` 行里，'
         // **而那一行随后被改写成"运行期切片"，句子随之消失。** **留这段话，是因为"数字动过又回来"和"从没动过"是两件事。**
         //
         // **it briefly became 31 and went back to 30.** **The "3 criteria" sentence lived in the Scan row of the unmigrated list, and that row was rewritten into
@@ -148,7 +148,7 @@ public class MathParsingPortCountTests
             // **26：** **矩阵里删掉了大批"某某批补了什么"的叙述，** **连带带走了那些顺带写着"N 条判据"的句子。** **判据本身不放宽——它照旧要求"每一处计数宣称都得有人知道"，只是基线随文档一起降到 26。**
             //
             // **26: the matrix dropped the batch-by-batch narration, which took those sentences claiming "N criteria" with it. The criterion is not relaxed — it still requires every count
-            // claim to be known — the baseline just moved with the document.**
+            // claim to be known — the code just moved with the document.**
             27,
             "27 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "
             + "this note stops describing reality");

@@ -25,7 +25,7 @@ public sealed record Bpp2dShadowPriceArguments(
 /// 没有载荷位，`ToKey` 会把模式与物品编号折叠掉（实测：加两条只剩一条）。本类于是自己持有
 /// `Dictionary&lt;Bpp2dDemandShadowPriceKey, Flt64&gt;`，键是**自带相等性的值对象**。
 ///
-/// 三处照抄基线的语义：
+/// 三处沿用语义：
 ///
 /// 1. **同一个键累加**，不是覆盖——同一条需求在多轮迭代里被反复定价；
 /// 2. **没登记的键取回 null**，不是零（零会被读成"已知影子价格为 0"）；

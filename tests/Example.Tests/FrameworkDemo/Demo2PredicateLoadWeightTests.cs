@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **谓词装载重量：三元组、松弛与上界** / The predicate load weight: triple, slack and upper bound.
 /// </summary>
 /// <remarks>
-/// C# 之前把基线的 `PositionPredicateLoadWeight`（`plw`/`min`/`max` 三元组）压成一个 `double?`，于是基线里两处用量都丢了。
+/// C# 之前把`PositionPredicateLoadWeight`（`plw`/`min`/`max` 三元组）压成一个 `double?`，于是两处用量都丢了。
 /// 这里补回三元组，并把两处接上：
 ///
 /// | 用处 | 取哪一端 | 落在哪 |
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 取错一端的后果不同但都安静：取错上界只让 `y` 顶得更高（求解器不抱怨）；取错下界让松弛量整体偏移一个常数。
 ///
-/// C# had flattened the baseline's triple into a single `double?`, losing both uses. restores the triple and wires both: `y_j ≤ plw.max` in
+/// C# had flattened its triple into a single `double?`, losing both uses. restores the triple and wires both: `y_j ≤ plw.max` in
 /// `PredicateLoadWeightLimit` and the slack's right-hand side using `min`. Taking the wrong end fails quietly in both cases: a wrong upper bound simply lets `y` climb higher (the
 /// solver never complains) and a wrong lower bound shifts the slack by a constant.
 /// </remarks>

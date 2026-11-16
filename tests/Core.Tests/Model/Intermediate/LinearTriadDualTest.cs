@@ -514,7 +514,7 @@ public class LinearTriadDualTest {
     /// Every Farkas-generated column has an identity, and they are all distinct.
     /// </summary>
     /// <remarks>
-    /// 对齐基线 `LinearTriadModel.kt` 的 `withDerivedIdentity` 调用点补上三种角色：
+    /// 对齐的 `withDerivedIdentity` 调用点补上三种角色：
     /// `farkas-constraint`（行乘子）、`farkas-slack`（等式行正负松弛）、`farkas-bound`（界乘子）。
     ///
     /// **底层 `DerivedModelElementIdentity.Create` 早就在，`MatrixIdentitySupport` 一直在用；
@@ -552,7 +552,7 @@ public class LinearTriadDualTest {
     /// </summary>
     /// <remarks>
     /// **只判"有身份"会放过"只接了一种角色"的实现。**
-    /// **基线有三种角色，分别来自三处不同的调用点，所以"三种都在"更接近这个批次真正做的事。**
+    /// **三种角色，分别来自三处不同的调用点，所以"三种都在"更接近这个批次真正做的事。**
     ///
     /// **"Has an identity" would let through an implementation that wired only one role.** **The three roles come from
     /// three call sites, so "all three appear" is closer to what did.**
@@ -604,16 +604,16 @@ public class LinearTriadDualTest {
     /// **对偶列断言：无来源、<b>无派生身份</b>** / Dual-column assertions: no origin, <b>no derived identity</b>.
     /// </summary>
     /// <remarks>
- /// **`Dual` 路径不带派生身份（基线也不带），而 `FarkasDual` 路径带。**
+ /// **`Dual` 路径不带派生身份（不带），而 `FarkasDual` 路径带。**
     /// **所以这条断言只能用在对偶列上——Farkas 列有了派生身份之后，复用它的那两处就红了。**
     ///
-    /// **这正是"判据前提被有意改变"的典型情形：** **红的原因是实现按基线前进，
+    /// **这正是"判据前提被有意改变"的典型情形：** **红的原因是实现前进，
     /// 而不是实现退化。所以是拆分判据，不是回退实现。**
     ///
-    /// **The `Dual` path carries no derived identity (nor does the baseline), while `FarkasDual` does.** **So this assertion only applies to dual columns — the two places that reused it for Farkas columns went red once those gained identities.**
+    /// **The `Dual` path carries no derived identity (nor does the code), while `FarkasDual` does.** **So this assertion only applies to dual columns — the two places that reused it for Farkas columns went red once those gained identities.**
     ///
     /// **This is the textbook "the criterion's premise was deliberately changed" case: the red is because the
-    /// implementation moved toward the baseline, not away.** **So split the criterion; do not revert the
+    /// implementation moved toward the code, not away.** **So split the criterion; do not revert the
     /// implementation.**
     /// </remarks>
     /// <summary>
@@ -625,9 +625,9 @@ public class LinearTriadDualTest {
     /// **初版写的是"表必须覆盖每一行"，跑起来红了：期望 3，实得 0。**
     ///
     /// **而红的原因不是实现错了，是<b>判据的前提错了</b>：** **测试用的原模型没有给变量和约束设身份
-    /// （`Identities` 为空 ⇒ `Ids` 为空），而基线的 `tidyDualSolution` 在 `origins` 为空时同样返回空 map。**
+    /// （`Identities` 为空 ⇒ `Ids` 为空），而`tidyDualSolution` 在 `origins` 为空时同样返回空 map。**
     ///
-    /// **所以"空表"与基线一致，是正确答案。** **一个要求"表非空"的判据会逼实现去<b>伪造</b>身份，
+    /// **所以"空表"，是正确答案。** **一个要求"表非空"的判据会逼实现去<b>伪造</b>身份，
     /// 而伪造出来的身份比没有身份更危险——它会出现在下游的账里，却指向不存在的约束。**
     ///
     /// **真正的判据要分两支：没有身份 ⇒ 空表；有身份 ⇒ 完整覆盖。** **第二支在下面两条里用<b>带身份</b>的模型测。**
@@ -637,10 +637,10 @@ public class LinearTriadDualTest {
     /// **The first version said "the table must cover every row"; it went red, expecting 3 and getting 0.**
     ///
     /// **The red was not a wrong implementation but a <b>wrong premise</b>: the test primal assigns no identities to its
-    /// variables or constraints (`Identities` empty ⇒ `Ids` empty), and the baseline's `tidyDualSolution` likewise returns
+    /// variables or constraints (`Identities` empty ⇒ `Ids` empty), and its `tidyDualSolution` likewise returns
     /// an empty map when `origins` is empty.**
     ///
-    /// **So "empty table" agrees with the baseline and is correct.** **A criterion demanding a non-empty table would force
+    /// **So "empty table" agrees with the code and is correct.** **A criterion demanding a non-empty table would force
     /// the implementation to <b>fabricate</b> identities — and a fabricated identity is more dangerous than none: it
     /// appears in a downstream ledger while pointing at a constraint that does not exist.**
     ///
@@ -713,7 +713,7 @@ public class LinearTriadDualTest {
     ///
     /// **所以对偶模型必须把原模型的行身份<b>带过来</b>，否则那两半永远对不上。**
     ///
-    /// **基线在这一处不需要"带"：它的 `dualOrigin` 是约束对象引用，天生就指回原约束。
+    /// **这一处不需要"带"：它的 `dualOrigin` 是约束对象引用，天生就指回原约束。
     /// C# 因为用行号表达同一件事，必须补一次快照——这是表示差异带来的<b>额外一步</b>，不是额外能力。**
     ///
     /// **This pins the step most easily missed in:** **a dual model is <b>newly built</b>; its own
@@ -722,7 +722,7 @@ public class LinearTriadDualTest {
     ///
     /// **So the dual model must <b>carry over</b> the primal's row identities, or the two halves never line up.**
     ///
-    /// **The baseline needs no carry: its `dualOrigin` is a constraint object reference that points home by nature. C#
+    /// **The code needs no carry: its `dualOrigin` is a constraint object reference that points home by nature. C#
     /// expresses the same thing with a row index, so it must add one snapshot — an <b>extra step</b> caused by the
     /// representation difference, not an extra capability.**
     /// </remarks>

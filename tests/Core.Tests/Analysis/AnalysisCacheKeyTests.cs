@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 分析缓存的键 / The analysis cache key.
 /// </summary>
 /// <remarks>
-/// 基线的键是三段：**分析器实例 + 目标 + 选项**。
+/// 键是三段：**分析器实例 + 目标 + 选项**。
 /// **第三段最容易漏，而它漏了以后不会报错——只会让两个后端共用一个结论。**
 ///
-/// The baseline key is three segments: **analyzer instance, target, options**. **The first is the easiest to omit, and omitting it raises nothing — it just lets two backends share one conclusion.**
+/// The code key is three segments: **analyzer instance, target, options**. **The first is the easiest to omit, and omitting it raises nothing — it just lets two backends share one conclusion.**
 /// </remarks>
 public class AnalysisCacheKeyTests {
     /// <summary>一个只用来表示"某个分析器"的占位对象 / A stand-in that only means "some analyzer".</summary>

@@ -12,11 +12,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **对角线恒零；同一时刻开始算"不晚于"** / The diagonal is identically zero, and equal starts count as "no later than".
 /// </summary>
 /// <remarks>
-/// 基线的 `frontOf` 是 `IfFunction` 判定 `estimateStartTime[t1] ≤ estimateStartTime[t2]`，
+/// `frontOf` 是 `IfFunction` 判定 `estimateStartTime[t1] ≤ estimateStartTime[t2]`，
 /// 但 `task1 == task2` 时直接给空符号（恒零）。这个例外不能省：`t ≤ t` 恒真，走正常构造会得到 `1`，
 /// 于是**每个任务都声称排在自己前面**——多出来的关系不产生任何错误或警告，数值全都算得出来。
 ///
-/// The baseline's `frontOf` is an `IfFunction` testing `estimateStartTime[t1] ≤ estimateStartTime[t2]`, but `task1 == task2` yields an empty symbol (identically zero).
+/// `frontOf` is an `IfFunction` testing `estimateStartTime[t1] ≤ estimateStartTime[t2]`, but `task1 == task2` yields an empty symbol (identically zero).
 /// That exception cannot be dropped: `t ≤ t` is always true, so the normal construction gives `1` — **every task claiming to precede itself**, raising no error or warning
 /// while every number still computes.
 /// </remarks>
@@ -53,10 +53,10 @@ public class SwitchPrecedenceTests {
     /// **同一时刻开始算成立** / Equal starts count as true.
     /// </summary>
     /// <remarks>
-    /// 基线是 `leq` 不是 `lt`。写成 `<` 会让**所有同时开始的先后关系全部消失**——
+    /// `leq` 不是 `lt`。写成 `<` 会让**所有同时开始的先后关系全部消失**——
     /// 而"两个任务可以同时开始"在排班里非常常见。
     ///
-    /// The baseline tests `leq`, not `lt`. Writing `&lt;` makes **every** same-instant relation vanish — and "two tasks may start together" is very common in scheduling.
+    /// The code tests `leq`, not `lt`. Writing `&lt;` makes **every** same-instant relation vanish — and "two tasks may start together" is very common in scheduling.
     /// </remarks>
     [Fact]
     public void IsFrontOf_ShouldHoldOnEqualStarts() {

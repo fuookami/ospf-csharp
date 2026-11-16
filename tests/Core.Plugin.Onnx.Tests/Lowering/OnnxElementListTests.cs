@@ -88,7 +88,7 @@ public class OnnxElementListTests
     /// <remarks>
     /// **这就是 `Scan` 运行期切片要的那一刀，与基线 `sliceLeading` 同一个形状：** **首维是轮数，第 `i` 片是连续的一段元素。**
     ///
-    /// **This is the cut Scan runtime slicing needs, shaped like the baseline's sliceLeading: the leading dimension is the round count and slice i is a contiguous run.**
+    /// **This is the cut Scan runtime slicing needs, shaped like its sliceLeading: the leading dimension is the round count and slice i is a contiguous run.**
     /// </remarks>
     [Fact]
     public void SliceLeading_ShouldTakeAContiguousRun() {
@@ -350,7 +350,7 @@ public class OnnxElementListTests
     /// **基线能算是因为它有 `OnnxDegreeMode`；** **C# 侧的二次路径是 `OnnxQuadraticProduct`。** '
     /// **静默把二次的乘积塞进一次多项式，会让结果少掉交叉项而模型照常求解。**
     ///
-    /// **The baseline manages through OnnxDegreeMode; the C# quadratic path is OnnxQuadraticProduct.** **Quietly stuffing a quadratic product into a linear polynomial drops the cross terms
+    /// **The code manages through OnnxDegreeMode; the C# quadratic path is OnnxQuadraticProduct.** **Quietly stuffing a quadratic product into a linear polynomial drops the cross terms
     /// while the model still solves.**
     /// </remarks>
     [Fact]

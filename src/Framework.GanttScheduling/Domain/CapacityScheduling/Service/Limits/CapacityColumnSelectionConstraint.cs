@@ -1,6 +1,6 @@
 // 产能列选择约束 / Capacity column selection constraint.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-capacity-scheduling-context/.../limits/CapacityColumnSelectionConstraint.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `CapacityColumnSelectionConstraint.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ public sealed record CapacityColumnSelectionShadowPriceKey<E>(E Executor, TimeRa
 /// 不可用的执行器、零长度时隙、以及被外部排班排除的组合都不该被要求"恰好选一列"。
 /// 若把它当成全积，一个本该空着的组合会**强制**求解器塞进一列，于是产能被凭空占用。
 ///
-/// **`Groups` is the active subset that needs "exactly one", not the full Cartesian product.** The baseline defaults to the full product but accepts a smaller explicit set:
+/// **`Groups` is the active subset that needs "exactly one", not the full Cartesian product.** The code defaults to the full product but accepts a smaller explicit set:
 /// unavailable executors, zero-length slots and combinations excluded by an external roster must not be required to pick a column. Treating it as the full product **forces**
 /// the solver to fill a combination that should stay empty, consuming capacity out of thin air.
 ///

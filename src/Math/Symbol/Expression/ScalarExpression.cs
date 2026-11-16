@@ -217,13 +217,13 @@ public sealed record ScalarConditional<T>(
 /// <summary>把布尔表达式包成标量表达式 / Wrap a boolean expression as a scalar expression.</summary>
 /// <param name="Expr">被包的布尔表达式 / The wrapped boolean expression.</param>
 /// <remarks>
-/// **基线里这是 `ScalarBoolean`，而它在整个解析器里只有一个用途**：让比较/逻辑的结果能沿着标量那条链继续往上走，
+/// **这是 `ScalarBoolean`，而它在整个解析器里只有一个用途**：让比较/逻辑的结果能沿着标量那条链继续往上走，
 /// **到三元与 `if-then-else` 那里再被拆回布尔**（基线 `unwrapBoolean` / `extractBooleanCondition`）。
 ///
 /// **这一层不能省**：没有它，"比较的结果"就没法当成"三元条件"传上去，
 /// **而标量链上每一层都只认 `ScalarExpression`。**
 ///
-/// **In the baseline this is `ScalarBoolean`, and it has exactly one purpose**: letting a comparison or logical result travel up the scalar chain,
+/// **In the code this is `ScalarBoolean`, and it has exactly one purpose**: letting a comparison or logical result travel up the scalar chain,
 /// **then be unwrapped back to a boolean at the ternary and `if-then-else` layers.**
 /// **The layer cannot be skipped**: without it a comparison result cannot be passed as a ternary condition,
 /// **and every layer of the scalar chain accepts only `ScalarExpression`.**

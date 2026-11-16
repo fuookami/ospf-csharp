@@ -918,14 +918,14 @@ public sealed class LinearMetaModel<V> : AbstractMetaModel<V>, IAbstractLinearMe
     /// </summary>
     /// <returns>展平后的子项；无法展平时为 null / The flattened sub-objects, or null when one cannot be flattened.</returns>
     /// <remarks>
-    /// 对齐基线的 `MetaModel.objectiveSnapshot`。**这一步不是可选的**：`MetaSubObjects` 的单项式里可以有**表达式符号**
+    /// 对齐`MetaModel.objectiveSnapshot`。**这一步不是可选的**：`MetaSubObjects` 的单项式里可以有**表达式符号**
     /// （`LinearExpressionSymbol` 等 `ILinearIntermediateSymbol`），它们不是变量、也不在解表里。
     /// 直接用 `MetaSubObjects` 求值，只要某个域的目标引用表达式符号，就会得到"目标引用缺少变量值"——
     /// **而解表其实是全的**，那句措辞会把人送去查错的地方。
     ///
     /// 复现：分区列生成走真 SCIP 后端跑到收尾复核，就停在这一步。
     ///
-    /// Mirrors the baseline's `MetaModel.objectiveSnapshot`. **This step is not optional**: a monomial inside `MetaSubObjects` may carry an **expression symbol**
+    /// **This step is not optional**: a monomial inside `MetaSubObjects` may carry an **expression symbol**
     /// (a `LinearExpressionSymbol` or another `ILinearIntermediateSymbol`), which is not a variable and is not in the solution table. Evaluating `MetaSubObjects`
     /// directly then reports "missing objective variable" for any domain objective that references one — **while the solution table is in fact complete**, so the
     /// wording sends you to the wrong place. Reproduced from into : partition column generation on the real SCIP backend reached the final check and stopped here.

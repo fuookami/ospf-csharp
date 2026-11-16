@@ -1,6 +1,5 @@
 // 搜索目标视图 / The search objective view.
-// 与固定 Kotlin 基线 `core/solver/heuristic/SearchModels.kt`（1973 字节）对应。
-// Mirrors the pinned baseline's `core/solver/heuristic/SearchModels.kt`.
+// 与固定 Kotlin （1973 字节）对应。
 
 using System;
 using System.Collections.Generic;

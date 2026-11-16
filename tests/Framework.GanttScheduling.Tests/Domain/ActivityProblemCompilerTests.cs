@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 /// It validates **before** compiling the problem into a model: a non-empty horizon, no duplicate identity within
 /// tasks, resources or executions, and no task colliding with an execution.
 ///
-/// **When these checks fail the symptom is not an error but "a wrong model compiles fine"**:
+/// **When these checks fail the symptom is not an error but "a wrong model compiles fine"**.
 /// a duplicate task id silently merges two activities, **and the objective, the constraints and the solution all come out —
 /// of a different problem.**
 /// </remarks>

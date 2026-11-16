@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 /// CPLEX 原生 PWL 的校验与写入 / CPLEX's native PWL validation and writing.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CplexNativePiecewise.kt` 补写侧，与 COPT 同形。
+/// 对齐补写侧，与 COPT 同形。
 ///
 /// **这里判据的重点不在"写了 SOS2"（那一层已经钉过、这里结构相同），**
 /// **而在<b>两条 CPLEX 特有的校验</b>：非有限值、断点严格递增。**

@@ -129,7 +129,7 @@ public class Demo2ClosingLimitsTests {
     /// <remarks>
     /// 名字必须是字面量 `ballast_weight_limit`，**不带** `name` 前缀（基线写死）。方向是 `ballast_weight ≥ min_ballast_weight`。
     ///
-    /// The name must be the literal `ballast_weight_limit` with **no** `name` prefix (the baseline hard-codes it), and the direction is
+    /// The name must be the literal `ballast_weight_limit` with **no** `name` prefix (the code hard-codes it), and the direction is
     /// `ballast_weight ≥ min_ballast_weight`.
     /// </remarks>
     [Fact]
@@ -351,20 +351,20 @@ public class Demo2ClosingLimitsTests {
     /// **不对称密度：整线两侧都不可用才跳过** / Unsymmetrical density: the line is skipped only when both sides are unavailable.
     /// </summary>
     /// <remarks>
-    /// 基线是 `line.positions.none { it.status.available }`——**两侧都不可用**才跳过。只有一侧不可用时仍加两行。
+    /// `line.positions.none { it.status.available }`——**两侧都不可用**才跳过。只有一侧不可用时仍加两行。
     ///
     /// **记录一处不可观测**：候选力臂集合（区域两端 + 舱位前后力臂）里，区域两端只有在**恰好**有舱位落在其上时才会产生限制线；
     /// 本例两舱位的 `FrontArm`/`BackArm` 都是 500/900，把区域放大到 400—1000 之后，400 与 1000 上没有任何舱位满足 `On(arm)`，
     /// 所以 `Lines` 仍是 {500, 900}。把"区域两端进候选"那一行删掉，`Lines` 与所有约束**完全不变**（实测变异存活）。
     /// 这条性质只在"区域端点恰好落在某舱位的区间内且该点有左右配对"时才可观测，而那种输入与"舱位边界进候选"无法区分。
-    /// 因此照抄基线的写法，并在此记录它没有被判据覆盖。
+    /// 因此沿用写法，并在此记录它没有被判据覆盖。
     ///
-    /// The baseline is `line.positions.none { it.status.available }` — skipped only when **both** sides are unavailable; with one side unavailable the two rows stay.
+    /// The code is `line.positions.none { it.status.available }` — skipped only when **both** sides are unavailable; with one side unavailable the two rows stay.
     /// **One unobservable recorded**: among the candidate arms (zone ends plus position boundaries) a zone end only produces a line when a position happens to satisfy `On(arm)`
     /// there. Here both positions have `FrontArm`/`BackArm` of 500/900, so after widening the zone to 400—1000 neither 400 nor 1000 has any position on it and `Lines` stays
     /// {500, 900}. Deleting the "zone ends are candidates" line changes `Lines` and every constraint **not at all** (the mutation survives, measured). That property is only
     /// observable when a zone end falls inside some position's span *and* has a left/right pair there, and such an input cannot be told apart from a position boundary.
-    /// The baseline's form is copied and its lack of coverage recorded here.
+    /// form is copied and its lack of coverage recorded here.
     /// </remarks>
     [Fact]
     public void UnsymmetricalDensity_ShouldSkipOnlyWhenBothSidesAreUnavailable() {

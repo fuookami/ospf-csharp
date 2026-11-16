@@ -21,21 +21,21 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 用比较网络把若干多项式降序排列 / Sort polynomials descending with a comparison network.
 /// </summary>
 /// <remarks>
-/// 基线 `OrderStatistic.kt` 的做法：**冒泡排序，每一对比较都换成一个 <c>MaxFunction</c> 与一个
+/// 的做法：**冒泡排序，每一对比较都换成一个 <c>MaxFunction</c> 与一个
 /// <c>MinFunction</c>**，于是"第 k 大"就变成"排序后第 k 个"。
 ///
 /// **代价是 O(n²) 对函数**——**n 个输入要 n(n−1) 个函数**。
-/// **这是基线的选择，本仓照做**，因为顺序统计量本来就没有更省的精确线性编码。
+/// **这是选择，本仓照做**，因为顺序统计量本来就没有更省的精确线性编码。
 /// **`ponytail:` 有意保留 O(n²)：输入通常是个位数；若某天 n 上百，需要的是排序网络（Batcher）而不是加大 bigM。**
 ///
 /// **`MaxFunction` 与 `MinFunction` 必须成对用同一对多项式**——
 /// **只用 Max 得到的是"每对里的较大者"，重复使用会让同一个多项式出现在多个位置，
 /// 而"第 k 大"于是变成一个没有意义的量。**
 ///
-/// Following the baseline's approach: **bubble sort where each comparison becomes one `MaxFunction` and one
+/// Following its approach: **bubble sort where each comparison becomes one `MaxFunction` and one
 /// `MinFunction`**, so "the k-th largest" is "the k-th after sorting".
 ///
-/// **The cost is O(n²) function pairs** — **n inputs need n(n−1) functions.** **That is the baseline's choice and this
+/// **The cost is O(n²) function pairs** — **n inputs need n(n−1) functions.** **That is its choice and this
 /// repo follows it**, because order statistics have no cheaper exact linear encoding.
 /// **`ponytail:` O(n²) is deliberate: the input count is usually single digits; if it ever reaches the hundreds, the
 /// answer is a Batcher sorting network, not a bigger bigM.**
@@ -116,12 +116,12 @@ internal sealed class DescendingOrder<V> where V : struct, IRealNumber<V>, INumb
 /// 第 k 大（从 0 开始）/ The k-th largest, zero-based.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `OrderStatistic.kt` 的 `KthLargestFunction`。
+/// 对齐的 `KthLargestFunction`。
 ///
 /// **`k` 从 0 开始**：**`k = 0` 是最大值，`k = n − 1` 是最小值。**
 /// **从 1 开始的约定会让 `k = 0` 与 `k = n` 都越界，而越界检查的边界会差一位。**
 ///
-/// The k-th largest from the baseline.
+/// The k-th largest from the code.
 ///
 /// **`k` is zero-based**: **`k = 0` is the maximum and `k = n − 1` the minimum.**
 /// **A one-based convention would put both `k = 0` and `k = n` out of range, and the bounds check would be off by
@@ -258,7 +258,7 @@ public sealed class KthLargestFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// 前 k 大之和 / The sum of the k largest.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `OrderStatistic.kt` 的 `TopKSumFunction`。
+/// 对齐的 `TopKSumFunction`。
 ///
 /// **`k = 0` 时结果是常数 0、`k = n` 时是全部之和——两者都跳过排序**，
 /// **于是省掉 n(n−1) 个函数。这是基线就有的优化，不是本仓加的。**
@@ -269,7 +269,7 @@ public sealed class KthLargestFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// The sum of the k largest.
 ///
 /// **With `k = 0` the result is the constant zero and with `k = n` it is the whole sum — both skip the sort**,
-/// **saving n(n−1) functions. That optimisation comes from the baseline, not from this repo.**
+/// **saving n(n−1) functions. That optimisation comes from the code, not from this repo.**
 ///
 /// **The legal range of `k` is `[0, n]` (inclusive of n), unlike `KthLargestFunction`'s `[0, n−1]`** —
 /// **the boundaries differ by one because "the sum of all n" exists while "the n-th largest" does not.**

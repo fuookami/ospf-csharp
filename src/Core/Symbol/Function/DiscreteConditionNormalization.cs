@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Normalize a discrete condition into one linearization record.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `normalizeDiscreteCondition` 补，并补齐
+/// 对齐的 `normalizeDiscreteCondition` 补，并补齐
 /// `transformForRelationIndicator`。
 ///
 /// **这里只做装配**：**归一化范围、折叠判断、格点证明三块都已就位。**
@@ -32,11 +32,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **反过来的话，折叠给出的"这个分支不可能"会被范围重算覆盖掉，
 /// 于是一个本可以省掉的指示变量又被生成——不报错，只是白算。**
 ///
-/// Following the baseline's `normalizeDiscreteCondition`, plus `transformForRelationIndicator`.
+/// Following its `normalizeDiscreteCondition`, plus `transformForRelationIndicator`.
 ///
 /// ** is assembly only**: **range normalization , gap folding and lattice proofs
 /// are all in place.**
-/// **Two things in the assembly are still easy to get wrong, and neither throws**:
+/// **Two things in the assembly are still easy to get wrong, and neither throws**.
 ///
 /// **① The range transform must use the <b>same</b> `strictBoundary` as the polynomial transform.**
 /// **If the polynomial shifts by `δ` while the range does not, the two are off by `δ` — the branch-existence test
@@ -72,11 +72,11 @@ public static class DiscreteConditionNormalization
         }
 
         // **先算折叠**：**它基于<b>原始</b>关系，而不是变换后的关系。**
-        // **基线的注释把这一点写明：变换后的多项式可能在 `delta > strictBoundary` 时
+        // **注释把这一点写明：变换后的多项式可能在 `delta > strictBoundary` 时
         // 把安全假分支移到正半轴，而固定指示变量时不需要再生成变换后的关系约束。**
         //
         // **The fold comes first**: **it is based on the <b>original</b> relation, not the transformed one.**
-        // **The baseline's comment says so: with `delta > strictBoundary` the transformed polynomial can move a safe
+        // **The code's comment says so: with `delta > strictBoundary` the transformed polynomial can move a safe
         // false branch into the positive half-line, and a fixed indicator needs no transformed relation constraints.**
         TruthValue? singleBranchFold = DiscreteConditionGap.AvoidsGap(relation, bounds, strictBoundary);
 
@@ -84,7 +84,7 @@ public static class DiscreteConditionNormalization
         // **`GT`/`LT` 要证严格边界不落在格点间隙里；`GE`/`LE` 要证平移安全。**
         // **`EQ`/`NE` 不需要——它们本来就不支持。**
         //
-        // **When `delta > strictBoundary` and the fold failed, a stronger proof is required**:
+        // **When `delta > strictBoundary` and the fold failed, a stronger proof is required**.
         // **`GT`/`LT` must show the strict boundary clears the lattice gap; `GE`/`LE` must show the shift is safe.**
         // **`EQ`/`NE` need neither — they are unsupported anyway.**
         bool needsProof = delta.CompareTo(strictBoundary) > 0 && singleBranchFold is null;
@@ -127,7 +127,7 @@ public static class DiscreteConditionNormalization
         // **范围变换必须与多项式变换用同一个 `strictBoundary`**：
         // **错开 `δ` 会让分支存在性判断在一个偏移过的区间上做，结论可能反。**
         //
-        // **The range transform must use the same `strictBoundary` as the polynomial**:
+        // **The range transform must use the same `strictBoundary` as the polynomial**.
         // **an offset of `δ` runs the branch-existence test on a shifted interval and can flip its conclusion.**
         ConditionBounds<Flt64> transformedBounds = relation switch {
             Comparison.GT => bounds,
@@ -164,7 +164,7 @@ public static class DiscreteConditionNormalization
             // **没有钉死时，范围还得过一遍"归一化后必须合法"的检查**：
             // **否则一个两个分支都不相交的范围会被当成"两个分支都可能"。**
             //
-            // **Without a fixed value the range still has to pass the "normalized range must be legal" check**:
+            // **Without a fixed value the range still has to pass the "normalized range must be legal" check**.
             // **otherwise a range meeting neither branch would be read as "both possible".**
             Result<NormalizedCondition, ErrorCode, Error<ErrorCode>> validated =
                 ConditionNormalization.Normalize(Comparison.GT, transformedBounds, strictBoundary);

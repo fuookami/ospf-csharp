@@ -23,10 +23,10 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// The Gurobi Farkas diagnosis: continuous-LP certificates on the real backend.
 /// </summary>
 /// <remarks>
-/// 补了 `GurobiInfeasibilityAnalyzers.kt` 里 Farkas 那一条**。这个文件里的每一条判据都真跑 Gurobi，
+/// 补了 里 Farkas 那一条**。这个文件里的每一条判据都真跑 Gurobi，
 /// **没有一条用假后端**——Farkas 证书存在与否只有真后端答得出来。
 ///
-/// **The Farkas member of `GurobiInfeasibilityAnalyzers.kt`. is ported** Every criterion here really runs Gurobi; **none uses a fake backend**, because whether a Farkas
+/// **The Farkas member of. is implemented** Every criterion here really runs Gurobi; **none uses a fake backend**, because whether a Farkas
 /// certificate exists is something only a real backend can answer.
 /// </remarks>
 public class GurobiFarkasDiagnosticTest {
@@ -34,7 +34,7 @@ public class GurobiFarkasDiagnosticTest {
     /// <remarks>
     /// 原生 IIS 还没搬，**`NativeIis` 就必须继续是 `false`**。提前写成 `true` 会让上层以为有一条它其实没有的提取路径。
     ///
-    /// Native IIS is not ported yet, so **`NativeIis` must stay `false`**. Flipping it early would tell callers about an extraction path that does not exist.
+    /// Native IIS is not implemented yet, so **`NativeIis` must stay `false`**. Flipping it early would tell callers about an extraction path that does not exist.
     /// </remarks>
     [Fact]
     public void TheAnalyzer_ShouldDeclareOnlyContinuousFarkas() {

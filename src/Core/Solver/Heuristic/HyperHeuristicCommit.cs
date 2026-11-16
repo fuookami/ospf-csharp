@@ -1,7 +1,7 @@
 // 决策的归并与观测 / Merging and observing one decision.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.commitOutcome(outcome)`：
+// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.commitOutcome(outcome)`：
 // 归并候选、算奖励、构造 `SelectionTransition`、交给选择策略观测。
-// Mirrors `HyperHeuristicRun.commitOutcome(outcome)` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B): merge the candidates, compute the
+// Merge the candidates, compute the
 // reward, build the `SelectionTransition` and hand it to the selection policy.
 
 using System;
@@ -74,7 +74,7 @@ public sealed record HyperHeuristicMerge<O, V>(
 /// - 报告成功但零步、且全局**完全没有**评估/决策/时间预算 → 这是"切片额度不足以提交一个完整步"的**配置错误**，
 ///   同样禁用。**这一条只在"没有任何别的终止手段"时才成立**：有预算时零步是正常的切片边界。
 ///
-/// **Failure and "no output" are two different things and must be handled separately**:
+/// **Failure and "no output" are two different things and must be handled separately**.
 ///
 /// - The report itself failed → **disable the algorithm** and record a failed transition. Without disabling, the next round picks it again,
 ///   **so every round fails the same way** while diagnostics only accumulate.

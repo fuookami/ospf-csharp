@@ -15,24 +15,24 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Model;
 /// 一位乘客的行程 / One passenger's itinerary.
 /// </summary>
 /// <remarks>
-/// 基线 `passenger/model/Passenger.kt`：一位乘客 = 人数 + 一串"航班任务 × 舱位"。行程不是随便一串航段——
+/// ：一位乘客 = 人数 + 一串"航班任务 × 舱位"。行程不是随便一串航段——
 /// **相邻两段必须首尾相接**（前一段的到达机场等于后一段的出发机场），否则这条行程根本飞不到目的地。
 ///
-/// **一处有意的强化**：基线用 Kotlin 的 `assert` 做这三条检查，而 `assert` 在 release 构建里**整个消失**——
+/// **一处有意的强化**：Kotlin 的 `assert` 做这三条检查，而 `assert` 在 release 构建里**整个消失**——
 /// 也就是说生产环境上一条不连通的行程会被安静地接受。C# 侧改成抛 `ArgumentException`：这里是信任边界（外部数据进来的地方），
 /// 悄悄放过一条错行程比直接报错危险得多。
 ///
-/// **只用 `PassengerClassId`**：基线的 `PassengerClass` 是包字符串的内联值类，C# 侧已有的 `PassengerClassId` 就是同一个东西，
+/// **只用 `PassengerClassId`**：`PassengerClass` 是包字符串的内联值类，C# 侧已有的 `PassengerClassId` 就是同一个东西，
 /// 不必再造一个类型。
 ///
-/// The baseline's `passenger/model/Passenger.kt`: a passenger is a head count plus a list of "flight task x cabin". The itinerary is not an arbitrary list of legs — **adjacent legs must
+/// The code's: a passenger is a head count plus a list of "flight task x cabin". The itinerary is not an arbitrary list of legs — **adjacent legs must
 /// connect** (the previous leg's arrival airport equals the next leg's departure airport), otherwise the itinerary cannot reach its destination.
 ///
-/// **One deliberate strengthening**: the baseline checks these three rules with Kotlin's `assert`, which **vanishes entirely in release builds** — so in production a disconnected
+/// **One deliberate strengthening**: the code checks these three rules with Kotlin's `assert`, which **vanishes entirely in release builds** — so in production a disconnected
 /// itinerary is quietly accepted. The C# side throws `ArgumentException`: this is a trust boundary (where external data enters), and silently accepting a broken itinerary is far more
 /// dangerous than failing loudly.
 ///
-/// **Only `PassengerClassId` is used**: the baseline's `PassengerClass` is an inline value class wrapping a string, and C#'s existing `PassengerClassId` is the same thing — there is no
+/// **Only `PassengerClassId` is used**: its `PassengerClass` is an inline value class wrapping a string, and C#'s existing `PassengerClassId` is the same thing — there is no
 /// need for another type.
 /// </remarks>
 public sealed class Passenger {
@@ -127,7 +127,7 @@ public sealed class Passenger {
 /// <remarks>
 /// 与基线一样继承 `ManualIndexed`——C# 侧本来就有这个基类（`Utils.Concept.Indexed`），**不必自己再写一遍三件套**。
 ///
-/// It extends `ManualIndexed` exactly as the baseline does — C# already has that base class (`Utils.Concept.Indexed`), so **there is no reason to re-implement the index trio**.
+/// It extends `ManualIndexed` exactly as the code does — C# already has that base class (`Utils.Concept.Indexed`), so **there is no reason to re-implement the index trio**.
 /// </remarks>
 public sealed class FlightPassenger : ManualIndexed {
     /// <summary>构造函数 / Constructor.</summary>

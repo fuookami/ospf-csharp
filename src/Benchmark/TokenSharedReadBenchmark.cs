@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// Concurrent first reads, steady reads and real index-build work over one shared token list.
 /// </summary>
 /// <remarks>
-/// **与基线 `TokenSharedReadBenchmark.kt`（184 行，`19c72455` 新增）对应。**
+/// ****
 ///
 /// **它补的是 `PreparationHotPathBenchmark` 的空档：** **那个基准的 `ColdTokenIndices` 是单线程整体成本哨兵**，
 /// 而这里所有 reader 共享同一个列表和同一组 token**，一次冷批次作为一个完整操作计时**——
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **建表工作量由变量标识符的读取次数给出：** **一次完整建表约等于每个 token 一次读，查询本身另计；
 /// 超过这个数的读取就是重复建表。** **这正是 `ColdBuildWork` 返回 `reads=…;indexSum=…` 的原因。**
 ///
-/// **Corresponds to the baseline's 184-line `TokenSharedReadBenchmark.kt`.** **It fills a gap left by `PreparationHotPathBenchmark`: that one's
+/// **Corresponds to its 184-line.** **It fills a gap left by `PreparationHotPathBenchmark`: that one's
 /// `ColdTokenIndices` is a single-threaded whole-cost sentinel, while here every reader shares one list and one token set and a cold batch is
 /// timed as one operation including dispatch, barrier alignment and completion of all readers.** **`DispatchOnly` is the empty-dispatch control
 /// under the same protocol, so scheduling cost and build cost separate.** **Build work is counted as variable-identifier reads: one full build
@@ -192,10 +192,10 @@ public class TokenSharedReadBenchmark
 
     /// <summary>标识符读取可计数的变量项 / A variable item whose identifier reads are counted.</summary>
     /// <remarks>
-    /// **基线的 `CountingVariable` 在这里照搬：** **标识符由夹具自己固定分配，不依赖内部生成器，
+    /// **`CountingVariable` 在这里照搬：** **标识符由夹具自己固定分配，不依赖内部生成器，
     /// 于是"读取次数"就是"建表时问过多少次标识符"的直接读数。**
     ///
-    /// **The baseline's `CountingVariable` is mirrored here: the identifier is fixed by the fixture rather than generated, so the read count is a
+    /// **`CountingVariable` is mirrored here: the identifier is fixed by the fixture rather than generated, so the read count is a
     /// direct reading of how often a build asked for an identifier.**
     /// </remarks>
     private sealed class CountingVariable : AbstractVariableItem<Flt64, Continuous>

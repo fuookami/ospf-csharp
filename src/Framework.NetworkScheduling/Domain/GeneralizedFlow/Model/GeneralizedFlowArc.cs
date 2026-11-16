@@ -1,6 +1,5 @@
 // 单输入、单输出的广义流服务弧 / Single-input, single-output generalized-flow service arc.
-// 与固定 Kotlin 基线 `model/GeneralizedFlowArc.kt`（3326 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowArc.kt`.
+// 与固定 Kotlin （3326 字节）对应。
 //
 // 容量与资费都按**起点投入量**计；`inputToOutputFactor` 只负责单位／工艺计量换算，`productionYield` 独立表示业务损耗或增益。
 // 把这两件事分开是必须的：混成一个"总换算率"后，就再也无法区分"1 吨原料出 0.8 吨成品（工艺损耗）"与"1 短吨折 0.907 公吨

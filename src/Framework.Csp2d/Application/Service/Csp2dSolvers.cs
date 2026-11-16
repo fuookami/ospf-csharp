@@ -1,6 +1,6 @@
 // 二维套裁的求解入口：MILP 路径与列生成路径 / The 2D cutting stock entries: the MILP path and the column generation path.
-// 与固定 Kotlin 基线 `csp2d/application/service/Csp2dSolvers.kt` 的求解器部分对应。
-// Mirrors the solver part of the pinned Kotlin baseline's `Csp2dSolvers.kt`.
+// 与固定 Kotlin 的求解器部分对应。
+// The solver part of the pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

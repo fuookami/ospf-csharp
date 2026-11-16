@@ -1,7 +1,7 @@
 // 路线编译影子价格键与映射 / Route-compilation shadow-price keys and map.
-// 与固定 Kotlin 基线 `shadow/FleetSizeShadowPriceKey.kt`（13 行）、`shadow/CustomerCoverageShadowPriceKey.kt`、`shadow/VrpShadowPriceMap.kt`
+// 与固定 Kotlin 、
 // （102 行）对应。
-// Mirrors the pinned baseline's `FleetSizeShadowPriceKey.kt`, `CustomerCoverageShadowPriceKey.kt`, `VrpShadowPriceMap.kt`.
+// ,,.
 //
 // 这一层只做「对偶的命名与快照」，不碰主问题结构：上层用稳定键把每行对偶存进来，定价侧按业务含义（客户覆盖 / 车队规模）读出来，
 // 再压成不可变的 `PricingDuals`。generation 与 compilation 因此保持单向解耦——定价不需要知道主问题长什么样。

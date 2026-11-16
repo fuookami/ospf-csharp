@@ -1,6 +1,6 @@
 // 分配唯一性、容量及整体占用联动；重叠舱位及布局选择 / Assignment, capacity, occupancy links, overlap and layout selection.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/service/limits/LoadingLimits.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp/domain/discrete_loading/service/limits/LoadingLimits.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;

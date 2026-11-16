@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </list>
 ///
 /// Three silent failures: (1) **the row bounding `over_max_*` instead of the deviation** — those are "violation" vs "amount", and bounding the former is a different statement;
-/// (2) **inverting the task filter** — with the global switch on the baseline keeps the tasks that may **not** move (deviation identically zero, row always true), and only with
+/// (2) **inverting the task filter** — with the global switch on the code keeps the tasks that may **not** move (deviation identically zero, row always true), and only with
 /// the switch off does it constrain every task with a limit; (3) **silently skipping when the deviation is unavailable** — fewer rows, still feasible, looks fine.
 /// </remarks>
 public class OverMaxConstraintTests {
@@ -113,12 +113,12 @@ public class OverMaxConstraintTests {
 
     /// <summary>**全局开关开着 → 行全部变空；关着 → 才真的约束** / With the switch on every row goes vacuous, only with it off does a row bite.</summary>
     /// <remarks>
-    /// 这是基线里看起来最反的一处：开关打开反而**收紧**到"不允许移动"的任务，而对它们偏移量恒为零，`0 ≤ 上限` 恒真，于是一行都不生成。
+    /// 这是看起来最反的一处：开关打开反而**收紧**到"不允许移动"的任务，而对它们偏移量恒为零，`0 ≤ 上限` 恒真，于是一行都不生成。
     /// 关掉开关才约束所有有上限的任务。判据把两种情况**成对**跑：只测一种会让"两种行为相同"也通过。
     ///
     /// 顺手"修"成"只保留允许移动的任务"会让开关打开时多出一行、关掉时少一行，而解依旧可行。
     ///
-    /// This is the most inverted-looking part of the baseline: turning the switch **on** narrows to the immovable tasks, whose deviation is identically zero, so `0 ≤ limit` is
+    /// This is the most inverted-looking part of the code: turning the switch **on** narrows to the immovable tasks, whose deviation is identically zero, so `0 ≤ limit` is
     /// always true and **no row is emitted at all**. Only with the switch off does every task with a limit get constrained. The criterion runs both cases **as a pair**: testing
     /// one alone would also pass if the two behaviours were identical. "Fixing" it silently would produce one extra row with the switch on and one fewer with it off, while the
     /// solution stays feasible.

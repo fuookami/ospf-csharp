@@ -1,6 +1,5 @@
 // 文化与模因求解器 / The memetic solver.
-// 与固定 Kotlin 基线 `solver/MemeticSolvers.kt`（6970 B）对应。
-// Mirrors the pinned baseline's `solver/MemeticSolvers.kt` (6970 B).
+// 与固定 Kotlin （6970 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -32,9 +31,9 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 /// **The polished result is kept only when it is strictly better.** On a tie the global result stands, **otherwise a meaningless swap
 /// changes the provenance of an identical solution** and whether the polish did anything at all can no longer be told from the result.
 ///
-/// **打磨拿到的是一份全新的迭代状态**（与基线一致）。沿用全局的迭代状态会让打磨的停止判据从全局已经用掉的预算开始数，
+/// **打磨拿到的是一份全新的迭代状态**。沿用全局的迭代状态会让打磨的停止判据从全局已经用掉的预算开始数，
 /// **于是打磨要么一步都不走，要么走得比配置的多**。
-/// **The polish receives a fresh iteration state** (as in the baseline). Reusing the global one makes the polish's stopping criterion
+/// **The polish receives a fresh iteration state** (as in the code). Reusing the global one makes the polish's stopping criterion
 /// count from the budget the global search already consumed, **so the polish either never takes a step or takes more than configured**.
 /// </remarks>
 /// <typeparam name="ObjValue">目标值类型 / The objective-value type.</typeparam>
@@ -88,8 +87,8 @@ public sealed class MemeticSolver<ObjValue, V> : IHeuristicSolver<ObjValue, V>
         }
         var values = new List<double>(global.BestSolution.Count);
         foreach (V value in global.BestSolution) {
-            // 与基线一致：先转成 Flt64 再取 double（V 上没有直接的 ToDouble）。
-            // As in the baseline: go through Flt64 before taking the double (V has no direct ToDouble).
+            // ：先转成 Flt64 再取 double（V 上没有直接的 ToDouble）。
+            // Go through Flt64 before taking the double (V has no direct ToDouble).
             values.Add(value.ToFlt64().ToDouble());
         }
         Result<HeuristicResult<ObjValue, V>, ErrorCode, Error<ErrorCode>> polishResult =

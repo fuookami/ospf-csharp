@@ -1,7 +1,7 @@
 // 解更新框架与两个最小更新算子 / The solution-update framework and two smallest update operators.
-// 与固定 Kotlin 基线 `operator/update/SolutionUpdate.kt`、`operator/update/Cross.kt`、
-// `operator/update/GreyWolfUpdate.kt`、`operator/update/HarmonySearchUpdate.kt` 对应。
-// Mirrors the pinned baseline's `SolutionUpdate.kt`, `Cross.kt`, `GreyWolfUpdate.kt` and `HarmonySearchUpdate.kt`.
+// 与固定 Kotlin 、
+//、 对应。
+// ,, and.
 
 using System;
 using System.Collections.Generic;

@@ -19,11 +19,11 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Domain;
 /// <param name="Deterministic">是否确定性 / Whether deterministic.</param>
 /// <param name="EnvironmentSummary">环境摘要 / Environment summary.</param>
 /// <remarks>
-/// 基线的 <c>RemoteTaskView.provenance</c> 是 <c>Map&lt;String, String&gt;</c>，而
+/// <c>RemoteTaskView.provenance</c> 是 <c>Map&lt;String, String&gt;</c>，而
 /// <c>RemoteTaskAction.provenance</c> 是**本类型**——两者同名但形状不同。因此本类型刻意**不**挂在
 /// <see cref="RemoteTaskActionView"/> 上：视图按 Map 形状解析（它对应 <c>GET /api/v1/tasks/{taskId}</c>），
 /// 本类型留给动作响应，避免同一个 JSON 名被两个不同形状抢用。
-/// The baseline's <c>RemoteTaskView.provenance</c> is a <c>Map&lt;String, String&gt;</c> while
+/// <c>RemoteTaskView.provenance</c> is a <c>Map&lt;String, String&gt;</c> while
 /// <c>RemoteTaskAction.provenance</c> is **this type** — same name, different shape. This type is
 /// therefore deliberately not a member of <see cref="RemoteTaskActionView"/>: the view decodes the map
 /// shape (it corresponds to <c>GET /api/v1/tasks/{taskId}</c>) and this type is reserved for action
@@ -45,10 +45,10 @@ public sealed record RemoteTaskActionProvenance(
 /// 任务操作的取消事实 / Cancellation record reported by a task action.
 /// </summary>
 /// <remarks>
-/// 与基线一致：未知的 <paramref name="Origin"/> 落到 <c>CancellationSource.Other</c>，且此时**必须**
+/// ：未知的 <paramref name="Origin"/> 落到 <c>CancellationSource.Other</c>，且此时**必须**
 /// 保留原始文本作为 <c>WireOrigin</c>——否则 <c>external</c> 与 <c>backend</c> 会在写回时都变成
 /// <c>Other</c> 的规范代码而失真。
-/// Mirrors the baseline: an unknown <paramref name="Origin"/> lands in <c>CancellationSource.Other</c>,
+/// an unknown <paramref name="Origin"/> lands in <c>CancellationSource.Other</c>,
 /// and the raw text **must** then be preserved as <c>WireOrigin</c> — otherwise <c>external</c> and
 /// <c>backend</c> would both be written back as <c>Other</c>'s canonical code and lose fidelity.
 /// </remarks>
@@ -186,9 +186,9 @@ public sealed record RemoteTaskActionView(
     /// 是否携带未知结果语义 / Whether any outcome semantic is unknown.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：状态、切片结果、终止原因、解存在性、证明状态或调度结果中任一为 <c>UNKNOWN</c>，
+    /// ：状态、切片结果、终止原因、解存在性、证明状态或调度结果中任一为 <c>UNKNOWN</c>，
     /// 就视为语义未知；此时**不得**再推断可行性或最优性，只允许把结果标记为未知。
-    /// Mirrors the baseline: if the status, slice outcome, termination reason, solution presence, proof
+    /// if the status, slice outcome, termination reason, solution presence, proof
     /// status or scheduling outcome is <c>UNKNOWN</c>, the semantics are unknown and feasibility or
     /// optimality must **not** be inferred — the result may only be reported as unknown.
     /// </remarks>
@@ -216,7 +216,7 @@ public sealed record RemoteTaskActionView(
     /// 推断切片结果 / Infer the slice outcome.
     /// </summary>
     /// <remarks>
-    /// 未知语义恒为 <see cref="SliceOutcome.Unknown"/>；否则按基线顺序取显式结果，再按状态与可行性回退。
+    /// 未知语义恒为 <see cref="SliceOutcome.Unknown"/>；否则顺序取显式结果，再按状态与可行性回退。
     /// Under unknown semantics this is always <see cref="SliceOutcome.Unknown"/>; otherwise the explicit
     /// outcome wins, then the status and feasibility decide in baseline order.
     /// </remarks>
@@ -242,7 +242,7 @@ public sealed record RemoteTaskActionView(
     /// 推断终止原因 / Infer the termination reason.
     /// </summary>
     /// <remarks>
-    /// 与基线一致的回退链：未知语义 → <c>UNKNOWN</c>；否则显式原因优先；<c>STOPPED</c> →
+    /// 的回退链：未知语义 → <c>UNKNOWN</c>；否则显式原因优先；<c>STOPPED</c> →
     /// <c>CANCELLED</c>；<c>FAILED</c> → 取非 <c>COMPLETED</c> 的显式原因，缺省 <c>BACKEND_FAILURE</c>；
     /// 其余情况缺失时，若结果为 <c>COMPLETED</c> 则 <c>COMPLETED</c>，否则 <c>TIME_LIMIT</c>。
     /// Baseline fallback chain: unknown semantics yield <c>UNKNOWN</c>; otherwise the explicit reason
@@ -323,9 +323,9 @@ public sealed record RemoteTaskActionView(
     /// 合并为规范切片结果 / Merge into the canonical slice result.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：结果 artifact（<paramref name="result"/>）优先，其次本任务视图，最后按状态推断。
+    /// ：结果 artifact（<paramref name="result"/>）优先，其次本任务视图，最后按状态推断。
     /// <c>Completed</c> 只在状态已知且为 <c>COMPLETED</c>／<c>FAILED</c>／<c>STOPPED</c> 时为真。
-    /// Mirrors the baseline: the result artifact (<paramref name="result"/>) wins, then this task view,
+    /// the result artifact (<paramref name="result"/>) wins, then this task view,
     /// then status inference. <c>Completed</c> is true only when the status is known and is
     /// <c>COMPLETED</c>, <c>FAILED</c> or <c>STOPPED</c>.
     /// </remarks>
@@ -353,8 +353,8 @@ public sealed record RemoteTaskActionView(
         SliceOutcome effectiveOutcome = unknownSemantics
             ? SliceOutcome.Unknown
             : InferredOutcome;
-        // 调度决策按基线补全缺失字段；未知语义下结果强制 UNKNOWN。
-        // The scheduling decision fills its missing fields per the baseline; the outcome is forced to
+        // 调度决策补全缺失字段；未知语义下结果强制 UNKNOWN。
+        // The scheduling decision fills its missing fields per the code; the outcome is forced to
         // UNKNOWN under unknown semantics.
         SchedulingDecision? effectiveScheduling = Scheduling?.Complete(
             taskId: new TaskId(handle.TaskId.Value),
@@ -439,9 +439,9 @@ public sealed record RemoteTaskActionView(
     /// 身份指纹合并视图 / Merged identity fingerprints view.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：先取显式 <c>fingerprints</c>，再用三个平铺指纹覆盖同名键，最后让调度决策里的
+    /// ：先取显式 <c>fingerprints</c>，再用三个平铺指纹覆盖同名键，最后让调度决策里的
     /// <c>model</c> 指纹胜出——顺序决定优先级，不允许两处静默给出不同值。
-    /// Mirrors the baseline: start from the explicit <c>fingerprints</c>, then overwrite by the three flat
+    /// start from the explicit <c>fingerprints</c>, then overwrite by the three flat
     /// fingerprint fields, and finally let the scheduling decision's <c>model</c> fingerprint win. The
     /// order defines precedence, so two sources never silently disagree.
     /// </remarks>
@@ -491,9 +491,9 @@ public sealed record RemoteTaskActionView(
     /// 是否已观测到任何结果信息 / Whether any result information has been observed.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：终态、状态未知、任一结果字段存在、或存在未知语义，都算"已观测"；否则调用方应得到
+    /// ：终态、状态未知、任一结果字段存在、或存在未知语义，都算"已观测"；否则调用方应得到
     /// null 而不是一个空结果。
-    /// Mirrors the baseline: a terminal status, an unknown status, any populated result field or unknown
+    /// a terminal status, an unknown status, any populated result field or unknown
     /// semantics all count as observed; otherwise the caller gets null rather than an empty result.
     /// </remarks>
     public bool HasObservation =>
@@ -511,9 +511,9 @@ public sealed record RemoteTaskActionView(
     /// 与所选检查点的身份差异字段 / Identity fields that disagree with the selected checkpoint.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：`taskId` 必须相等；`tenantId`、`runId`、`attemptId` 与三个指纹必须存在且相等；
+    /// ：`taskId` 必须相等；`tenantId`、`runId`、`attemptId` 与三个指纹必须存在且相等；
     /// 缺失也算不一致，不允许"缺失即通过"。
-    /// Mirrors the baseline: `taskId` must match; `tenantId`, `runId`, `attemptId` and all three
+    /// `taskId` must match; `tenantId`, `runId`, `attemptId` and all three
     /// fingerprints must be present and equal. A missing value counts as a mismatch — absence never passes.
     /// </remarks>
     /// <param name="taskId">期望任务标识 / Expected task identifier.</param>

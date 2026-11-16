@@ -1,7 +1,7 @@
 // 二维装载放置 / 2D packing placement.
-// 与固定 Kotlin 基线 `geometry2d/Placement2.kt` 对应：一个装载形状落在板材坐标系中的位置。所有几何判定都返回结果
+// 与固定 Kotlin 对应：一个装载形状落在板材坐标系中的位置。所有几何判定都返回结果
 // 类型，不使用空断言。
-// Mirrors the pinned Kotlin baseline's `geometry2d/Placement2.kt`: a packing shape positioned on a sheet. Every
+// The pinned Kotlin: a packing shape positioned on a sheet. Every
 // geometry check returns a result type rather than asserting.
 
 using System;

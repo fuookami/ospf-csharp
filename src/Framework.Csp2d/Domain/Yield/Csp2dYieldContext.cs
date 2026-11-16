@@ -1,6 +1,6 @@
 // 良率配置与超产上界约束 / Yield configuration and the over-production bound constraint.
-// 与固定 Kotlin 基线 `csp2d/domain/yield/YieldContext.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `YieldContext.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;

@@ -58,10 +58,10 @@ public abstract class HeuristicPolicy : IAbstractHeuristicPolicy {
 /// **`Time` 是实时读数**，不是只在 `Next` 时更新；否则在长时间不推进迭代的空档里，超时判据读到的是过期值。
 /// **`Time` is a live reading**, not updated only inside `Next`; otherwise a timeout check reading it during a long gap between
 /// iterations would see a stale value.
-/// **与基线的有意偏离**：基线用 `UInt64` 计数并支持构造时恢复计数与耗时；这里保留 `int` 计数，因为全部调用点都与 `int` 预算比较，
+/// **与有意偏离**：`UInt64` 计数并支持构造时恢复计数与耗时；这里保留 `int` 计数，因为全部调用点都与 `int` 预算比较，
 /// 换成 `UInt64` 会牵动整条调用链且没有行为收益。恢复语义只保留耗时，计数通过 `Reset` 归零。
-/// **Deliberate divergence from the baseline**: the baseline counts with `UInt64` and restores both counters and elapsed time through
-/// its constructor. This port keeps `int` counters because every call site compares against `int` budgets; switching to `UInt64`
+/// **Deliberate divergence from the code**: the code counts with `UInt64` and restores both counters and elapsed time through
+/// its constructor. This implementation keeps `int` counters because every call site compares against `int` budgets; switching to `UInt64`
 /// would ripple through the whole chain with no behavioural gain. Only elapsed time is restorable, and `Reset` zeroes the counters.
 /// </remarks>
 public class Iteration {

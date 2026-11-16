@@ -73,7 +73,7 @@ internal static class LpWriterSupport {
         return Results.OkInstance;
     }
 
-    /// <summary>按 Kotlin 基线的符号与单位系数规则追加一项 / Append a term using the pinned Kotlin sign and unit-coefficient rules.</summary>
+    /// <summary>按 Kotlin 符号与单位系数规则追加一项 / Append a term using the pinned Kotlin sign and unit-coefficient rules.</summary>
     /// <param name="builder">目标缓冲区 / Destination buffer.</param>
     /// <param name="hasTerm">是否已经写入一项 / Whether a term was already written.</param>
     /// <param name="coefficient">系数 / Coefficient.</param>

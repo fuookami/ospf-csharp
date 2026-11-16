@@ -15,14 +15,14 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Service;
 /// "求和类"生成器共用的深度优先搜索 / Depth-first search shared by the sum-style generators.
 /// </summary>
 /// <remarks>
-/// 基线的 `FullSumGenerator` 与 `DFSGenerator` 的搜索循环**逐行相同**，唯一差别是
+/// `FullSumGenerator` 与 `DFSGenerator` 的搜索循环**逐行相同**，唯一差别是
 /// `DFSGenerator` 在扩展分支时多做一次**剪枝约束检查**（`satisfiesPruningConstraints`），
 /// 而 `FullSumGenerator` 只在叶节点检查。
 ///
 /// **把这段逻辑写两遍是没有理由的**：两份 150 行的循环里，任何一处修正都会漏掉另一份——
 /// 本项目已经因为"同一个量值算术各写一份"漏过一次符号检查。
 ///
-/// The baseline's `FullSumGenerator` and `DFSGenerator` have **line-for-line identical** search loops. The only difference: `DFSGenerator` performs an extra
+/// `FullSumGenerator` and `DFSGenerator` have **line-for-line identical** search loops. The only difference: `DFSGenerator` performs an extra
 /// **pruning constraint check** when expanding a branch, while `FullSumGenerator` checks only at the leaf.
 ///
 /// **There is no reason to write this twice**: with two 150-line copies, any fix applied to one will miss the other — and this project has already missed a

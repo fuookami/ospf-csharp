@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Application;
 /// **问题校验、主目标选择与件数上界** / Problem validation, primary objective selection and the piece bound.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Csp2dProblem.kt`。`sheetConfig`（板长分配配置）随 `SheetAssignmentContext` 一起推迟，见批次记录。
+/// 对应。`sheetConfig`（板长分配配置）随 `SheetAssignmentContext` 一起推迟，见批次记录。
 ///
-/// Mirrors the baseline `Csp2dProblem.kt`. `sheetConfig` (the sheet assignment configuration) is deferred together with `SheetAssignmentContext`; see the batch record.
+///. `sheetConfig` (the sheet assignment configuration) is deferred together with `SheetAssignmentContext`; see the batch record.
 /// </remarks>
 public class Csp2dProblemTests {
     /// <summary>**问题校验拦住五类错误** / Validation stops five kinds of mistake.</summary>

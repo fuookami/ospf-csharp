@@ -27,15 +27,15 @@ public sealed record SolvePolicy(
 /// 货物输入数据。Cargo input data for stowage planning.
 /// </summary>
 /// <remarks>
-/// **`RequiresSeparation` 在本仓和基线里都没有读者**（逐个查过引用）：基线只有一条测试断言它存得进去，
-/// 生产代码里没有任何一行读它。**这不是缺口，也不是漏接**——它是请求契约的一部分，抄过来是为了请求形状与基线一致。
+/// **`RequiresSeparation` 在本仓没有读者**（逐个查过引用）：有一条测试断言它存得进去，
+/// 生产代码里没有任何一行读它。**这不是缺口，也不是漏接**——它是请求契约的一部分，抄过来是为了请求形状。
 /// 谁将来要用它（例如"需要分离装载的货物不得同舱"），那是**新功能**，得连着规则本身一起做；
-/// **不要为了让它"看起来被用上"而临时接一条约束**——那会凭空造出一条基线没有的规则，而且没有任何判据能说明它对不对。
+/// **不要为了让它"看起来被用上"而临时接一条约束**——那会凭空造出一条本来不存在的规则，而且没有任何判据能说明它对不对。
 ///
-/// **`RequiresSeparation` has no reader in this port or in the baseline** ( checked every reference): the baseline has one test asserting it round-trips, and
+/// **`RequiresSeparation` has no reader here** (every reference was checked): it has one test asserting it round-trips, and
 /// no production line reads it. **This is neither a gap nor a missed connection** — it is part of the request contract, copied so the request shape matches the
-/// baseline. Whoever needs it later (e.g. "cargos requiring separation may not share a position") is adding a **new feature** and has to build the rule with it;
-/// **do not attach a constraint just to make it look used** — that invents a rule the baseline does not have, with nothing to say whether it is right.
+/// rule. Whoever needs it later (e.g. "cargos requiring separation may not share a position") is adding a **new feature** and has to build the rule with it;
+/// **do not attach a constraint just to make it look used** — that invents a rule the code does not have, with nothing to say whether it is right.
 /// </remarks>
 /// <param name="Name">货物名称 / Cargo name</param>
 /// <param name="Weight">货物重量 / Cargo weight (kg)</param>
@@ -55,16 +55,16 @@ public sealed record CargoInput(
     string Destination,
     bool RequiresSeparation = false,
     bool Required = false,
-    // 补齐基线 `CargoInput` 的三个字段**：`order`、`allowedPositions`、`deckLocation`。
+    // 三个字段**：`order`、`allowedPositions`、`deckLocation`。
     //
-    // 前两个决定**允许指派**：基线先拒掉"`allowedPositions` 里出现未知舱位名"，再按
+    // 前两个决定**允许指派**：先拒掉"`allowedPositions` 里出现未知舱位名"，再按
     // `allowedPositions?.contains(spaceName) != false` 与 `deckLocation == 该舱位所在甲板` 过滤。
     // 没有它们，装载内核**默认每件货都能去任何舱位**——一个不报错、只是把解空间放大的行为。
     //
-    // `deckLocation` 还决定 `Item.location`：基线是 `Main → normalMain`、其余 → `lowNotBulk`，
+    // `deckLocation` 还决定 `Item.location`：`Main → normalMain`、其余 → `lowNotBulk`，
     // 而在 之前这里**恒为主舱**，于是下舱货被当成主舱货。
     //
-    // adds the baseline `CargoInput`'s three missing fields.** The first two decide **allowed assignments**: the baseline first rejects an
+    // adds the code `CargoInput`'s three missing fields.** The first two decide **allowed assignments**: the code first rejects an
     // `allowedPositions` entry naming an unknown position, then filters by `allowedPositions?.contains(spaceName) != false` and `deckLocation == the position's
     // deck`. Without them the kernel **lets every cargo go anywhere** — no error, just a wider solution space. `deckLocation` also decides `Item.location`
     // (`Main → normalMain`, everything else → `lowNotBulk`), and before **every item was main deck**, so lower-deck cargo counted as main-deck cargo.
@@ -76,10 +76,10 @@ public sealed record CargoInput(
 /// 拖车类型输入 / The trailer-type input.
 /// </summary>
 /// <remarks>
-/// 与基线 `TrailerTypeInput` 一一对应；转换在 `AggregationInitializer` 里完成，而不是靠枚举序号对上
+/// 与请求里的车型枚举一一对应；转换在 `AggregationInitializer` 里完成，而不是靠枚举序号对上
 /// （两边的顺序可能不同，靠序号对上是等着被悄悄改坏的写法）。
 ///
-/// One-to-one with the baseline's `TrailerTypeInput`. The conversion happens in `AggregationInitializer` rather than relying on enum ordinals, which would silently break if either side
+/// One-to-one with its `TrailerTypeInput`. The conversion happens in `AggregationInitializer` rather than relying on enum ordinals, which would silently break if either side
 /// were reordered.
 /// </remarks>
 public enum TrailerTypeInput
@@ -129,11 +129,11 @@ public sealed record PositionInput(
     double MaxWeight,
     double LongitudinalArm,
     double LateralArm,
-    // **起补齐基线所需字段**：`spaceId`/`partitionId`/`loadingOrder`/`geometry` 是 `Aircraft.AggregationInitializer` 的
+    // **所需字段**：`spaceId`/`partitionId`/`loadingOrder`/`geometry` 是 `Aircraft.AggregationInitializer` 的
     // 必要输入（舱位归属哪个物理空间、装载顺序索引、矩形边界）。缺它们时那个初始化器只能恒失败。
     // 全部给了默认值，既有两处 `new PositionInput("P1", 10.0, -1.0, -0.5)` 调用不受影响。
     //
-    // **Fields the baseline needs, added**: `spaceId`, `partitionId`, `loadingOrder` and `geometry` are required inputs for the aircraft aggregation initializer
+    // **Fields the code needs, added**: `spaceId`, `partitionId`, `loadingOrder` and `geometry` are required inputs for the aircraft aggregation initializer
     // (which physical space a position belongs to, its loading-order index, its rectangle bounds). Without them that initializer could only fail. All defaulted, so the two existing
     // `new PositionInput("P1", 10.0, -1.0, -0.5)` call sites are unaffected.
     // 补齐舱位状态码**：舱位是 `Loaded`/`Reserved` 时不可用、`Preassigned` 时要调整——这些都从码推出来，
@@ -157,30 +157,30 @@ public sealed record PositionInput(
     //
     // adds the predicate load weight specification**: in predistribution mode `Load` creates a predicate weight variable for every position flagged
     // `PredicateWeightNeeded`, and both its upper bound and the slack right-hand side come from this spec. Without it, predistribution **fails during assembly**
-    // . The `null` default keeps existing call sites working; only predistribution requests need it.
+    // The `null` default keeps existing call sites working; only predistribution requests need it.
     PositionPredicateLoadWeightInput? PredicateLoadWeight = null,
-    // 补上已装载货物名**：基线 `PositionInput.loadedItems`，装载内核用它填 `LoadingItem.FixedPositionId`。
+    // 补上已装载货物名**：装载内核用它填 `LoadingItem.FixedPositionId`。
     //
     // 没有这个字段时 `FixedPositionId` 只能硬编码 `null`，于是**已经装在某个舱位里的货物被当成自由货物**，
     // 求解器可以把它挪走——**而"挪走已装载货物"恰恰是调整模式要最小化的东西**。默认空表与既有调用一致。
     //
-    // adds the already-loaded cargo names**: the baseline's `PositionInput.loadedItems`, which the loading kernel turns into
+    // adds the already-loaded cargo names**: its `PositionInput.loadedItems`, which the loading kernel turns into
     // `LoadingItem.FixedPositionId`. Without it `FixedPositionId` could only be hard-coded `null`, so **an item already inside a position counted as free** and the
     // solver could move it — **while moving loaded cargo is exactly what adjustment mode minimises**. The empty default keeps existing call sites working.
     IReadOnlyList<string>? LoadedItems = null,
-    // 补上基线 `PositionInput` 的三个字段**：`maxLoadCount`、`ala`、`alw`。
+    // 补上舱位的三个字段**：`maxLoadCount`、`ala`、`alw`。
     //
-    // `maxLoadCount` 是舱位的**最大装载件数**，基线拿它做两件事：校验 `<= 0` 要拒，以及
+    // `maxLoadCount` 是舱位的**最大装载件数**，用它做两件事：校验 `<= 0` 要拒，以及
     // "已装载件数超过它"要拒。 之前本仓把它**硬编码成 `1UL`**（注释写"保守值"）：
     // 一个能装 20 件的舱位被当成只能装 1 件——**不报错，只是把可行解砍掉一大半。**
     //
-    // `ala`/`alw` 是**建议装载件数/重量（软目标）**，基线的 `AdviceLoadAmountLimit`/`AdviceLoadWeightLimit`
+    // `ala`/`alw` 是**建议装载件数/重量（软目标）**，`AdviceLoadAmountLimit`/`AdviceLoadWeightLimit`
     // 只收非 `null` 的舱位。模型侧早就实现了，**缺的一直是这两个字段的来路**，于是那两条目标永远为空。
     //
-    // adds the baseline `PositionInput`'s three missing fields.** `maxLoadCount` is the position's **maximum item count**: the baseline rejects `<= 0`
-    // and rejects "loaded items exceed it". Before this port **hard-coded `1UL`** (the comment said "conservative"), so a position that holds 20 items was
+    // adds the code `PositionInput`'s three missing fields.** `maxLoadCount` is the position's **maximum item count**: the code rejects `<= 0`
+    // and rejects "loaded items exceed it". Before this implementation **hard-coded `1UL`** (the comment said "conservative"), so a position that holds 20 items was
     // treated as holding 1 — **no error, just a solution space cut down by most of its width.** `ala`/`alw` are the **advisory count/weight (soft targets)**, and
-    // the baseline's `AdviceLoadAmountLimit`/`AdviceLoadWeightLimit` only collect positions with a non-null value. The model side has been implemented for a long
+    // its `AdviceLoadAmountLimit`/`AdviceLoadWeightLimit` only collect positions with a non-null value. The model side has been implemented for a long
     // time; **what was missing was where these two come from**, so both objectives were always empty.
     ulong MaxLoadCount = 1UL,
     double? Ala = null,
@@ -205,8 +205,8 @@ public sealed record LayoutGroupInput(string Id, IReadOnlySet<string> Positions,
 /// 额外业务互斥 / An additional business exclusion.
 /// </summary>
 /// <remarks>
-/// **不覆盖几何冲突，只追加**（基线原话）。顺序无关：`(A,B)` 与 `(B,A)` 是同一条。
-/// **Adds to the geometric conflicts, never replaces them** (the baseline says so), and order does not matter: `(A,B)` and `(B,A)` are the same edge.
+/// **不覆盖几何冲突，只追加**。顺序无关：`(A,B)` 与 `(B,A)` 是同一条。
+/// **Adds to the geometric conflicts, never replaces them** (the code says so), and order does not matter: `(A,B)` and `(B,A)` are the same edge.
 /// </remarks>
 /// <param name="First">首舱位名 / First position name</param>
 /// <param name="Second">次舱位名 / Second position name</param>
@@ -225,11 +225,11 @@ public enum WeightUnitInput
 /// 舱位谓词装载重量规格输入 / Position predicate load weight specification input.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `PositionPredicateLoadWeight` 的**三元组**，与模型侧的 `PositionPredicateLoadWeight` 同形。
+/// **三元组**，与模型侧的 `PositionPredicateLoadWeight` 同形。
 /// **三端都要**：`Plw` 给谓词重量变量的上界，`Min` 给谓词重量松弛的右端，`Max` 参与区间判断——
 /// 压成一个数就看不出哪一端是哪一端。
 ///
-/// Mirrors the baseline `PositionPredicateLoadWeight` **triple**, the same shape as the model-side record. **All three ends are needed**: `Plw` bounds the
+/// `PositionPredicateLoadWeight` **triple**, the same shape as the model-side record. **All three ends are needed**: `Plw` bounds the
 /// predicate weight variable, `Min` is the slack right-hand side, and `Max` takes part in the interval check — collapsed into one number, there is no way to tell
 /// which end is which.
 /// </remarks>
@@ -339,9 +339,9 @@ public sealed record RequestDTO(
     IReadOnlyList<CargoInput> Cargos,
     IReadOnlyList<PositionInput> Positions,
     AircraftTypeInput AircraftType = AircraftTypeInput.B737,
-    // ****：基线把 `spaces` 与长度单位作为请求的一部分，`AggregationInitializer` 靠它们决定每个舱位落在哪块甲板、
+    // ****：`spaces` 与长度单位作为请求的一部分，`AggregationInitializer` 靠它们决定每个舱位落在哪块甲板、
     // 以及把力臂从请求单位换算到机型单位。默认值让既有请求继续可用。
-    // ****: the baseline carries `spaces` and the length unit in the request; the aggregation initializer uses them to place each position on a deck and to convert arms from
+    // ****: the code carries `spaces` and the length unit in the request; the aggregation initializer uses them to place each position on a deck and to convert arms from
     // the request unit into the model's. Defaults keep existing requests working.
     IReadOnlyList<LoadingSpaceInput>? Spaces = null,
     LengthUnitInput LengthUnit = LengthUnitInput.Inch,
@@ -362,23 +362,23 @@ public sealed record RequestDTO(
     double TargetLongitudinalMoment = 0.0,
     double MaxLongitudinalMomentDeviation = 20.0,
     double MaxLateralImbalance = 12.0,
-    // 补上基线 `RequestDTO` 的三个字段**：`weightUnit`、`layoutGroups`、`positionConflicts`。
+    // 补上请求的三个字段**：`weightUnit`、`layoutGroups`、`positionConflicts`。
     //
-    // `positionConflicts` 是调用方声明的**业务互斥**，基线把它们并进装载问题的互斥集（**只增不减，不覆盖几何冲突**）。
+    // `positionConflicts` 是调用方声明的**业务互斥**，它们并进装载问题的互斥集（**只增不减，不覆盖几何冲突**）。
     // 本仓一直是 `Conflicts: new HashSet<PositionConflict>`——**声明了也白声明，不报错，只是那条业务规则不存在**。
     //
     // `layoutGroups` 是"区域或整机恰选一种布局"的约束组，本仓一直是空表。**空表让"该恰选一种"变成"随便几种"。**
     //
-    // `weightUnit` 决定请求里重量数字的单位。**基线默认 `Kilogram` 且真的读它**（舱位承重那一行用 `input.weightUnit`），
+    // `weightUnit` 决定请求里重量数字的单位。**默认 `Kilogram`，而且真的读它**（舱位承重那一行用 `input.weightUnit`），
     // 所以这里也默认 `Kilogram`，并让货物重量、舱位承重、问题声明三处**都用它**。
     //
-    // `weightUnit` decides the unit of the request's weight numbers. **The baseline defaults to `Kilogram` and really reads it** (the position-capacity line
+    // `weightUnit` decides the unit of the request's weight numbers. **The code defaults to `Kilogram` and really reads it** (the position-capacity line
     // uses `input.weightUnit`), so this defaults to `Kilogram` too and lets the item weight, the position cap and the problem declaration **all follow it**.
     //
-    // adds the baseline `RequestDTO`'s three missing fields.** `positionConflicts` are the caller's **business exclusions**, which the baseline merges into
-    // the loading problem (**adds only, never overriding geometry**). This port always passed `new HashSet<PositionConflict>` — **declaring one did nothing, with no
+    // adds the code `RequestDTO`'s three missing fields.** `positionConflicts` are the caller's **business exclusions**, which the code merges into
+    // the loading problem (**adds only, never overriding geometry**). This implementation always passed `new HashSet<PositionConflict>` — **declaring one did nothing, with no
     // error; the rule simply did not exist.** `layoutGroups` carry "exactly one layout per region or aircraft"; the empty list turned "exactly one" into "any number".
-    // `weightUnit` says what unit the request's weight numbers are in, and the baseline really reads it, so it is used for the item weight, the position cap and the
+    // `weightUnit` says what unit the request's weight numbers are in, and the code really reads it, so it is used for the item weight, the position cap and the
     // problem declaration alike.
     WeightUnitInput WeightUnit = WeightUnitInput.Kilogram,
     IReadOnlyList<LayoutGroupInput>? LayoutGroups = null,
@@ -395,15 +395,15 @@ public sealed record RequestDTO(
     /// 从本请求派生的业务目标参数 / The business objective parameters derived from this request.
     /// </summary>
     /// <remarks>
-    /// **对齐基线的 `RequestDTO.parameter`**：基线把 `weightRecommendationObjective` 的两个优先级直接送进 `Parameter`，
+    /// **对齐`RequestDTO.parameter`**：`weightRecommendationObjective` 的两个优先级直接送进 `Parameter`，
     /// 而本仓在此之前到处都是 `new Parameter` —— **请求里的这两个优先级被静默丢弃**，权重推荐的目标系数永远是默认值。
     ///
-    /// 这里只映射**基线映射过的那两个**。别的参数留在默认值上，是因为基线也没从请求里取它们；
+    /// 这里只映射**实际用到的两个**。别的参数留在默认值上，是因为没从请求里取它们；
     /// **不为了让这个属性看起来完整而顺手补几条没有依据的映射。**
     ///
-    /// **Mirrors the baseline `RequestDTO.parameter`**: the baseline feeds the two priorities from `weightRecommendationObjective` straight into `Parameter`,
-    /// while this port used `new Parameter` everywhere — **both priorities in the request were silently dropped** and the weight-recommendation objective
-    /// coefficients were always the defaults. Only the two the baseline maps are mapped here. The rest stay at their defaults because the baseline does not read
+ /// **the code feeds the two priorities from `weightRecommendationObjective` straight into `Parameter`,
+    /// while this implementation used `new Parameter` everywhere — **both priorities in the request were silently dropped** and the weight-recommendation objective
+    /// coefficients were always the defaults. Only the two the code maps are mapped here. The rest stay at their defaults because the code does not read
     /// them from the request either; **no extra mapping is invented to make this property look complete.**
     /// </remarks>
     public Parameter ResolvedParameter {

@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Math.Tests;
 /// 多项式语法核心 / The polynomial grammar core.
 /// </summary>
 /// <remarks>
-/// **移植自固定基线 `PolynomialParser.kt`（622 行）的语法层。**
+/// **移植自固定的语法层。**
 /// 五条判据对着五个"能编译但语义丢了"的点：优先级、`*` 左结合、`x^0`、负指数、多余输入。
 ///
-/// **Ported from the grammar layer of `PolynomialParser.kt`.** Five criteria for five places where the code can compile with the meaning gone: precedence, left-associative `*`, `x^0`, negative exponents, trailing input.
+/// **Ported from the grammar layer of.** Five criteria for five places where the code can compile with the meaning gone: precedence, left-associative `*`, `x^0`, negative exponents, trailing input.
 /// </remarks>
 public class PolynomialParserTests
 {
@@ -337,7 +337,7 @@ public class LinearInequalityLoweringTests
     /// **即使真的移了项，两边仍然不一样。** 改成**与单独解析 `2*x`、`3*y + 1` 的结果结构相等**——
     /// **移了项这颗钉子必红。**
     ///
-    /// **The first version asserted `Lhs.ToString != Rhs.ToString`, which proves nothing**:
+    /// **The first version asserted `Lhs.ToString != Rhs.ToString`, which proves nothing**.
     /// **even after rearranging the two sides would still differ.** This compares against parsing `2*x` and `3*y + 1` on their own instead —
     /// **and a rearranged result cannot pass.**
     /// </remarks>

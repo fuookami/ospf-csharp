@@ -20,18 +20,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同来源早装限制 / The same-source early-loading constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/SourceEarlyLimit.kt` 对齐：**同一来源的多件货物至少有一件装进前段舱位**。
+/// 与对齐：**同一来源的多件货物至少有一件装进前段舱位**。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
-/// 1. **只有货物数大于 1 的来源才加约束**（基线的 `cargos.size` 不大于 1 时跳过）。
+/// 1. **只有货物数大于 1 的来源才加约束**（`cargos.size` 不大于 1 时跳过）。
 /// 2. **前段舱位按 `linearLoadingOrder` 排序后取前 `earlyEnd + 1` 个**，且**显式按装载顺序**，不依赖输入列表顺序。
 /// 3. **`take` 的上界是 `(earlyEnd + 1).coerceIn(0, positions.size)`**——不夹取会越界。
 /// 4. **关系是 `GE`，右端 1**（至少一件），不是等式。
 /// 5. **约束名带来源**：`source_early_limit_{source}`。
 ///
-/// Aligned with the baseline: **at least one of a source's items must go into an early position**. Five things must be copied: **only sources with more than one item are constrained**
-/// (the baseline skips when `cargos.size` is at most 1); **the early positions are the first `earlyEnd + 1` in `linearLoadingOrder` order**, explicitly by loading order rather than
+/// **at least one of a source's items must go into an early position**. Five things must be copied: **only sources with more than one item are constrained**
+/// (the code skips when `cargos.size` is at most 1); **the early positions are the first `earlyEnd + 1` in `linearLoadingOrder` order**, explicitly by loading order rather than
 /// input-list order;
 /// **the take bound is `(earlyEnd + 1).coerceIn(0, positions.size)`**, without which it would overrun; **the relation is `GE` with right-hand side 1** (at least one), not an equality;
 /// and **the name carries the source**.

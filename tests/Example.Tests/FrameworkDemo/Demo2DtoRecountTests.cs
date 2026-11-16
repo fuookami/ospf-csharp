@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 public class Demo2DtoRecountTests
 {
     /// <summary>
-    /// 基线 12 个有引用的记录，本仓必须有同名类型 / The 12 referenced baseline records must each have a same-named type in this port.
+    /// 基线 12 个有引用的记录，本仓必须有同名类型 / The 12 referenced baseline records must each have a same-named type here.
     /// </summary>
     [Fact]
     public void EveryReferencedBaselineDto_ShouldHaveATypeInThePort() {
@@ -47,13 +47,13 @@ public class Demo2DtoRecountTests
     /// </summary>
     /// <remarks>
     /// **"文件没人要"和"文件里的每一个声明都没人要"是两件事**，一开始就是把它们混为一谈。
-    /// 实测：`LengthUnitInput`(2)、`DeckLocationInput`(5)、`LoadingSpaceInput`(3) 在基线里都被引用且本仓都有；
+    /// 实测：`LengthUnitInput`(2)、`DeckLocationInput`(5)、`LoadingSpaceInput`(3) 在都被引用且本仓都有；
     /// `WeightUnitInput`(2) 被引用但本仓**没有**——这是真缺口；`LoadingGeometryInput` 记录**零引用**，不抄是对的。
     ///
     /// **`WeightUnitInput` 这条判据会在缺口补上时变红**——那正是它该做的事：届时把它移进"必须有"的那一组。
     ///
     /// **"The file is unwanted" and "every declaration in it is unwanted" are different claims**, and initially conflated them. Measured: `LengthUnitInput` (2),
-    /// `DeckLocationInput` (5) and `LoadingSpaceInput` (3) are all referenced in the baseline and all present here; `WeightUnitInput` (2) is referenced but **absent**
+    /// `DeckLocationInput` (5) and `LoadingSpaceInput` (3) are all referenced in the code and all present here; `WeightUnitInput` (2) is referenced but **absent**
     /// here — a real gap; the `LoadingGeometryInput` record has **zero** references, and not copying it is correct. **This criterion turns red once the gap closes** —
     /// which is its job: that is when it moves into the "must exist" group.
     /// </remarks>
@@ -69,11 +69,11 @@ public class Demo2DtoRecountTests
             names.Should().Contain(present, present + " is referenced in the baseline and is ported here");
         }
         // `WeightUnitInput` 从"必须没有"移到"必须有"。** 判据自己写着"缺口补上时它会红，届时把它移进必须存在那一组"——
-        // 缺口在 补上了：`LoadingContextFactory` 用 `input.WeightUnit` 建舱位承重与问题声明（基线 `LoadingContextFactory.kt:62` 就是这么做的）。
+        // 缺口在 补上了：`LoadingContextFactory` 用 `input.WeightUnit` 建舱位承重与问题声明（基线 就是这么做的）。
         //
         // **moves `WeightUnitInput` from "must be absent" to "must be present".** The criterion itself said "it turns red once the gap closes, and that is
         // when it moves into the must-exist group" — the gap closed: `LoadingContextFactory` uses `input.WeightUnit` for the position capacity and the
-        // problem declaration, exactly as the baseline does at `LoadingContextFactory.kt:62`.
+        // problem declaration, exactly as the code does at.
         names.Should().Contain("WeightUnitInput",
             "it is referenced twice in the baseline and now has a consumer here, so its absence would be the gap");
         names.Should().NotContain("LoadingGeometryInput",

@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// MAX 结构的范围证明：收缩可以，扩大不行 / Shrinking is fine, growing is not.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `MaxStructure`。
+/// 对齐的 `MaxStructure`。
 ///
 /// **这个方向不对称，所以判据必须两个方向都测。**
 ///
@@ -419,10 +419,10 @@ public class MaxStructureTests
     /// **MAX 现在能真正物化了** / MAX can now actually materialize.
     /// </summary>
     /// <remarks>
-    /// **它是"未移植"的三格之一，后来划掉一格，这里划掉这一格。**
+    /// **它是"未实现"的三格之一，后来划掉一格，这里划掉这一格。**
     /// **举证：物化成功且行数是 `2n + 1`。**
     ///
-    /// **It was one of the three "not ported" cells; one was removed,e and another.**
+    /// **It was one of the three "not implemented" cells; one was removed,e and another.**
     /// **The evidence: it materializes with `2n + 1` rows.**
     /// </remarks>
     [Fact]

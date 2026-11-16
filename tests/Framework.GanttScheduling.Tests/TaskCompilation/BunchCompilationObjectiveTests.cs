@@ -83,9 +83,9 @@ public class BunchCompilationObjectiveTests {
 
     /// <summary>**空闲最小化：给了系数才有目标** / Leisure minimisation: an objective only with a coefficient.</summary>
     /// <remarks>
-    /// 基线是 `coefficient?.let { … }`，所以必须**成对**：给了系数 → 每个执行器一项；没给 → 模型里没有子目标。
+    /// `coefficient?.let { … }`，所以必须**成对**：给了系数 → 每个执行器一项；没给 → 模型里没有子目标。
     ///
-    /// The baseline is `coefficient?.let { … }`, so this must be **paired**: with a coefficient → one term per executor; without one → no sub-objective at all.
+    /// The code is `coefficient?.let { … }`, so this must be **paired**: with a coefficient → one term per executor; without one → no sub-objective at all.
     /// </remarks>
     [Fact]
     public void ExecutorLeisureMinimization_ShouldWorkOnABunchCompilationOnlyWithACoefficient() {

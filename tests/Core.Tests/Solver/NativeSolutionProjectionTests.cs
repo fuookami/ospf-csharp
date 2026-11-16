@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 解向量投影：检查是一道闸门，不是一次转换 / The check is a gate, not a transform.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `valuesByKey`。
+/// 对齐的 `valuesByKey`。
 ///
 /// Adds </remarks>
 public class NativeSolutionProjectionTests
@@ -164,8 +164,8 @@ public class NativeSolutionProjectionTests
         ((Failed<IReadOnlyDictionary<VariableItemKey, Flt64>, ErrorCode, Error<ErrorCode>>)result)
             .Error.Message.Should().Contain("missing column 7");
 
-        // **负列号同样被拒：** **C# 的索引器会把它当成越界，而基线的 `getOrNull` 也会返回 null。**
-        // **A negative column is rejected too: the C# indexer treats it as out of range, as does the baseline's
+        // **负列号同样被拒：** **C# 的索引器会把它当成越界，而`getOrNull` 也会返回 null。**
+        // **A negative column is rejected too: the C# indexer treats it as out of range, as does its
         // `getOrNull`.**
         var negative = new Dictionary<VariableItemKey, int> { [A.Key] = 0, [B.Key] = -1 };
         NativeSolutionProjection.ValuesByKey(

@@ -12,8 +12,8 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 基线 `resolveQualityGuardConfig` 干两件事：**把 `null` 的字段用默认值补上**，然后**把五个风险权重归一化到和为 1**，
 /// 其余九个标量各自 `coerce` 进合法区间。本仓这块逐行一致，**同样一条判据都没有**。
 ///
-/// The baseline's resolver does two things: **fill `null` fields from the defaults**, then **normalise the five risk weights to sum to one**, with the other nine
-/// scalars coerced into their valid ranges. This port matches line for line (checked) and again **had no criterion at all**.
+/// The code's resolver does two things: **fill `null` fields from the defaults**, then **normalise the five risk weights to sum to one**, with the other nine
+/// scalars coerced into their valid ranges. This implementation matches line for line (checked) and again **had no criterion at all**.
 ///
 /// **归一化为什么重要**：质量评分是"风险 × 权重"的和。权重没归一化，一个把 `gap` 权重填成 `3.5` 的调用方会**把评分整体放大 10 倍**，
 /// 进而让"评分低于阈值"这条判定永远成立——**症状是守卫从不触发，看起来像"质量一直很好"。**
@@ -49,10 +49,10 @@ public sealed class Demo2BendersQualityGuardTests
     /// </summary>
     /// <remarks>
     /// 这是最容易被写错的一格：只填一个权重时，**没填的必须取默认值**再参与归一化——不是当成 0，也不是跳过归一化。
-    /// 基线用的是 `override.scoreXWeight ?: default.scoreXWeight`，本仓照抄；这条判据钉的就是"没填的取默认"。
+    /// 的是 `override.scoreXWeight ?: default.scoreXWeight`，本仓沿用；这条判据钉的就是"没填的取默认"。
     ///
     /// This is the easiest cell to get wrong: with a single weight supplied, **the missing ones must take their defaults** before normalisation — not zero, and
-    /// not skipped. The baseline writes `override.scoreXWeight ?: default.scoreXWeight`; this criterion pins exactly that.
+    /// not skipped. The code writes `override.scoreXWeight ?: default.scoreXWeight`; this criterion pins exactly that.
     /// </remarks>
     [Fact]
     public void APartialOverride_ShouldStillSumToOne() {
@@ -76,10 +76,10 @@ public sealed class Demo2BendersQualityGuardTests
     /// </summary>
     /// <remarks>
     /// 五个权重都填 0（或全为负）时，归一化会得到 `NaN`，而 `NaN` 参与比较的结果永远是 false——
-    /// **守卫从此不再触发，评分也不再是可比较的数**。基线用 `<= 1e-12` 兜底回（0.35, 0.2, 0.2, 0.15, 0.1）。
+    /// **守卫从此不再触发，评分也不再是可比较的数**。`<= 1e-12` 兜底回（0.35, 0.2, 0.2, 0.15, 0.1）。
     ///
     /// With all five weights zero (or all negative) the normalisation yields `NaN`, and any comparison with `NaN` is false — **the guard stops firing and the
-    /// score stops being a comparable number**. The baseline catches it with `<= 1e-12` and falls back to (0.35, 0.2, 0.2, 0.15, 0.1).
+    /// score stops being a comparable number**. The code catches it with `<= 1e-12` and falls back to (0.35, 0.2, 0.2, 0.15, 0.1).
     /// </remarks>
     [Fact]
     public void AZeroWeightSum_ShouldFallBackToTheDefaultShares() {
@@ -104,7 +104,7 @@ public sealed class Demo2BendersQualityGuardTests
     ///
     /// 一次给全部九个越界值，断言每一个都被夹回边界。**判据钉的是边界，不是"大致被夹过"。**
     ///
-    /// The baseline coerces each one. **These are not cosmetic**: `iterationPressurePercent = 0` fires iteration pressure on the first iteration, and
+    /// The code coerces each one. **These are not cosmetic**: `iterationPressurePercent = 0` fires iteration pressure on the first iteration, and
     /// `trajectoryMinSnapshots = 0` lets trajectory analysis run on a single snapshot — **both look like "the guard fired too early"**, and the caller will
     /// assume their thresholds are wrong. All nine are given out-of-range values at once and each is asserted back on its boundary.
     /// </remarks>

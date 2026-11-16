@@ -237,11 +237,11 @@ public class OnnxControlFlowImportTests
                 inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new OnnxBounds(-1.0, 1.0) }));
 
         // 列表语义下，一个六元素输入没有逐元素符号就不该被当成一个数——**形状写着 6、绑定里只有一个符号，
-        // 那是一个自相矛盾的绑定。** 导入器还没按调用方给的符号列表建输入（基线的 inputBindings），所以这里断言拒绝及其理由；
+        // 那是一个自相矛盾的绑定。** 导入器还没按调用方给的符号列表建输入（inputBindings），所以这里断言拒绝及其理由；
         // **接上 importBindings 之后，这一条要改回"导入成功且元素逐个对上"。**
         //
         // under list semantics a six-element input with no per-element symbols must not be treated as one number — a shape of 6 with one symbol in the binding is
-        // self-contradictory. The importer does not build inputs from caller-supplied symbols (the baseline's inputBindings) yet, so this asserts the refusal and its reason; **when
+        // self-contradictory. The importer does not build inputs from caller-supplied symbols (its inputBindings) yet, so this asserts the refusal and its reason; **when
         // the next step wires inputBindings, this criterion goes back to "imports, and the elements line up one by one".**
         imported.IsOk.Should().BeFalse("a six-element input needs six symbols before a reshape means anything");
         imported.Stage.Should().Be("evaluate");
@@ -320,7 +320,7 @@ public class OnnxControlFlowImportTests
     /// **这是基线 `inputBindings: Map<String, List<Symbol>>` 在 C# 侧的落地：** **`x` 与 `y` 各给三个符号，**
     /// **`Add` 就逐位置相加，输出按元素取——不再有"整个张量是一个数"的那一步。**
     ///
-    /// **This is the baseline's inputBindings taking shape on the C# side: three symbols for x and three for y, so Add pairs per position and the output is read by element — the
+    /// **This is its inputBindings taking shape on the C# side: three symbols for x and three for y, so Add pairs per position and the output is read by element — the
     /// "the whole tensor is one number" step is gone.**
     /// </remarks>
     [Fact]

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 先减后取绝对值，不是先取绝对值再减 / Subtract first, then take absolute values.
 /// </summary>
 /// <remarks>
-/// 补 `L1DistanceFunction` / `LInfinityDistanceFunction`（基线 `CompositeFunctions.kt`）。
+/// 补 `L1DistanceFunction` / `LInfinityDistanceFunction`。
 ///
 /// **两个函数只差最后一步（求和 vs 取最大），所以"逐项相减再取绝对值"共享一份。**
 ///
@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **They differ only in the last step (sum versus maximum), so "subtract pairwise, then absolute" is shared.**
 ///
-/// **The one real trap is that direction**:
+/// **The one real trap is that direction**.
 /// **`|a − b|` and `|a| − |b|` have opposite signs when `a` and `b` differ in sign** —
 /// **and "the distance is non-negative" cannot separate them**, since both are non-negative on some inputs.
 /// </remarks>

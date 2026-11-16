@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///
 /// 三个字段**必须保持可空**：把它们改成非空布尔会让"尚未发生"与"发生在第 0 秒"混为一谈。
 ///
-/// Aligned with the baseline's three nullable instants. The three instants are **independently nullable** rather than collapsed into one stage enum — the baseline keeps three
+/// Aligned with its three nullable instants. The three instants are **independently nullable** rather than collapsed into one stage enum — the code keeps three
 /// separate nullable fields and **their order carries business meaning**: hardstand → car board → reweighed. The two relevant limits then test them as **prefixes**:
 /// `ItemAheadLoadLimit` fires when any item satisfies "already on the hardstand", "already on the hardstand or boarded", or "any of the three"; and `ItemReweighNeededLimit` puts
 /// into the objective only items **without a reweigh instant**. All three fields **must stay nullable**: making them non-nullable booleans would conflate "has not happened" with

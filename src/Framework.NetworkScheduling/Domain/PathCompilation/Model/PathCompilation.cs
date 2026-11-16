@@ -1,6 +1,5 @@
 // 路径编译模型 / Path compilation model.
-// 与固定 Kotlin 基线 `path_compilation/model/PathCompilation.kt`（2629 字节）对应。
-// Mirrors the pinned baseline's `path_compilation/model/PathCompilation.kt`.
+// 与固定 Kotlin （2629 字节）对应。
 
 using System;
 using System.Collections.Generic;
@@ -86,9 +85,9 @@ public sealed class PathCompilation {
         ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(coefficients);
         ArgumentNullException.ThrowIfNull(name);
-        // C# 侧没有单元素二元变量类型，用长度 1 的 `UIntVariable1` 表达同一语义（基线是 `BinVar`）。
+        // C# 侧没有单元素二元变量类型，用长度 1 的 `UIntVariable1` 表达同一语义（`BinVar`）。
         // The C# side has no single-element binary variable type; a length-1 `UIntVariable1` expresses the same semantics
-        // (the baseline uses `BinVar`).
+        // (the code uses `BinVar`).
         var variable = new UIntVariable1(name, Shape1.Invoke(1));
         _variables[id] = variable;
         foreach ((string rowId, LinearExpressionSymbol symbol) in _rows) {

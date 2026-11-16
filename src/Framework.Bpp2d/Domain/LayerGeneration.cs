@@ -1,12 +1,12 @@
 // 层生成请求与圆形网格生成 / Layer generation request and circle grid generation.
-// 与固定 Kotlin 基线 `bpp2d/domain/layer_generation/LayerGenerationRequest.kt`（142 行）与
-// `layer_generation/service/CircleGridGenerator.kt`（259 行）对应。
-// Mirrors the pinned baseline's `LayerGenerationRequest.kt` and `service/CircleGridGenerator.kt`.
+// 与固定 Kotlin 与
+//（259 行）对应。
+// And.
 //
-// 这是 `layer_generation` 域的此前：物料与层模型在 earlier／83 落地后，请求与圆形网格生成器已无未移植依赖。
-// `LayerGenerationContext.kt`（597 行）仍需后续批次。
+// 这是 `layer_generation` 域的此前：物料与层模型在 earlier／83 落地后，请求与圆形网格生成器已无未实现依赖。
+//（597 行）仍需后续批次。
 // This is the first batch of the `layer_generation` domain: with the material and layer models landed in earlier/83,
-// the request and the circle grid generator have no unported dependencies left. `LayerGenerationContext.kt` (597 lines)
+// the request and the circle grid generator have no unimplemented dependencies left. (597 lines)
 // still needs later batches.
 
 using System;
@@ -42,9 +42,9 @@ public sealed record LayerGenerationDemandEntry(
 /// 层生成请求 / Layer generation request.
 /// </summary>
 /// <remarks>
-/// 基线用 `Duration` 表示时间限制，C# 对应 <see cref="TimeSpan"/>；`scoreByShadowPrice` 是可空委托，对应可空的
+/// `Duration` 表示时间限制，C# 对应 <see cref="TimeSpan"/>；`scoreByShadowPrice` 是可空委托，对应可空的
 /// <see cref="Func{T1, T2, TResult}"/>。二者都不是降级——它们表达的是同一件事。
-/// The baseline uses `Duration` for the time limit, mapped to <see cref="TimeSpan"/> here; `scoreByShadowPrice` is a
+/// The code uses `Duration` for the time limit, mapped to <see cref="TimeSpan"/> here; `scoreByShadowPrice` is a
 /// nullable delegate, mapped to a nullable <see cref="Func{T1, T2, TResult}"/>. Neither is a downgrade — they express
 /// the same thing.
 /// </remarks>
@@ -187,15 +187,15 @@ public sealed record CircleGridLayout<V>(
 ///
 /// **必须用标量比 `26/30` 去缩放直径量，而不是「26d / 30d」**：后者得到一个无量纲的 0.8667，只在 `d = 1` 时碰巧
 /// 正确。基线注释记录了这个真实缺陷——修正前在 10×8 板材、直径 2 的圆形件上，相邻圆心距仅 1.32（小于直径 2），
-/// 会实际产出重叠的圆。本移植保持标量比写法，并用测试固定该场景。
+/// 会实际产出重叠的圆。本实现保持标量比写法，并用测试固定该场景。
 ///
 /// The hexagonal row pitch uses `26/30·d`, slightly larger than `√3/2`. A larger pitch is conservative: rows sit
 /// farther apart than theory requires, so overlap cannot occur while density still beats the square grid, and it avoids
 /// a square root on a generic numeric type.
 /// **The diameter must be scaled by the scalar ratio `26/30`, not written as "26d / 30d"**: the latter yields the
-/// dimensionless 0.8667 and is only accidentally correct when `d = 1`. The baseline records this real defect — before
+/// dimensionless 0.8667 and is only accidentally correct when `d = 1`. The code records this real defect — before
 /// the fix, a 10×8 sheet with diameter-2 circles had adjacent centres only 1.32 apart (below the diameter 2) and
-/// produced actually overlapping circles. This port keeps the scalar-ratio form and pins that scenario with a test.
+/// produced actually overlapping circles. This implementation keeps the scalar-ratio form and pins that scenario with a test.
 /// </remarks>
 public static class CircleGridGenerator {
     /// <summary>六角网格最大行数，避免病态输入造成的长时间循环 / Maximum rows, guarding pathological inputs.</summary>

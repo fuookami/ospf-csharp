@@ -48,7 +48,6 @@ public sealed class SolomonFltXValueConverter : ISolomonValueConverter<FltX> {
 /// 把 demo5 的 Solomon 输入装配为 framework VRPTW 实例 / Assemble demo5 Solomon input into a framework VRPTW instance.
 /// </summary>
 /// <remarks>
-/// 与基线 `framework_demo/demo5/infrastructure/adapter/SolomonInstanceAdapter.kt`（7809 B）对应。
 ///
 /// **所有原始数值在进入领域之前都要过一次非有限检查**。`FltX` 底层是 `decimal`、天然没有 `NaN`/`Infinity`，
 /// 但这层检查不能省：转换器是**可替换的实现**，换成 `double` 支撑的类型后，非有限值会一路流进时间窗与需求量，

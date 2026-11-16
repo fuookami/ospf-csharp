@@ -71,7 +71,7 @@ public sealed class Demo2BendersQualityReasonTests
     /// 间隙只到"弱"（未超守卫），时间超守卫，迭代也到压力线。基线先报时间：**时间是不会自己变好的那个**，
     /// 迭代还能再来一轮，时间不能。
     ///
-    /// The gap is only "weak" (inside the guard), the time is over the guard and the iteration pressure is on. The baseline reports time first: **time is the one
+    /// The gap is only "weak" (inside the guard), the time is over the guard and the iteration pressure is on. The code reports time first: **time is the one
     /// that does not improve by itself**.
     /// </remarks>
     [Fact]
@@ -93,7 +93,7 @@ public sealed class Demo2BendersQualityReasonTests
     /// 迭代已到 `iterationPressurePercent`（95 ≥ 90），快照也确实停滞。基线报迭代压力：
     /// **"已经跑满预算"比"每步进步很小"更能解释结果**，前者是原因，后者是症状。
     ///
-    /// Iterations have reached the pressure line (95 ≥ 90) and the snapshots really are stagnant. The baseline reports iteration pressure: **"the budget is
+    /// Iterations have reached the pressure line (95 ≥ 90) and the snapshots really are stagnant. The code reports iteration pressure: **"the budget is
     /// exhausted" explains the outcome better than "each step improved little"** — the former is the cause, the latter the symptom.
     /// </remarks>
     [Fact]
@@ -117,7 +117,7 @@ public sealed class Demo2BendersQualityReasonTests
     /// 迭代没到压力线（20 / 100），快照停滞，且割密度也低（1/20 = 0.05 < 0.25）。基线报轨迹：
     /// **轨迹说的是"主问题目标已经不动了"，割密度说的是"割产出少"** —— 而目标不动更接近结论。
     ///
-    /// Iterations did not reach the pressure line (20 / 100), the snapshots are stagnant and the cut density is low too (1/20 = 0.05 < 0.25). The baseline reports
+    /// Iterations did not reach the pressure line (20 / 100), the snapshots are stagnant and the cut density is low too (1/20 = 0.05 < 0.25). The code reports
     /// the trajectory: **"the master objective has stopped moving" is closer to the conclusion than "cuts are scarce."**
     /// </remarks>
     [Fact]
@@ -168,7 +168,7 @@ public sealed class Demo2BendersQualityReasonTests
     /// **而症状是"Benders 一启用就被判质量差"**——读者会去调阈值，而不是去查这道闸。
     ///
     /// This is **the most important gate in the whole chain**: the gap at `0.001` is below the weak threshold of `2e-3` while every other signal is bad
-    /// (overtime, iteration pressure, almost no cuts, completely stagnant snapshots). The baseline returns `null` — quality is acceptable. This gate is the only
+    /// (overtime, iteration pressure, almost no cuts, completely stagnant snapshots). The code returns `null` — quality is acceptable. This gate is the only
     /// way the guard switches itself off; miss it and any long run is judged poor **because it took time**, with the symptom being "Benders is always judged bad
     /// the moment it starts" — the reader will go tune thresholds instead of looking at the gate.
     /// </remarks>

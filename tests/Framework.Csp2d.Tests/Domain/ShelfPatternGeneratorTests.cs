@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain;
 /// **货架排样的工艺约束与行距守卫** / The process constraint and the row-pitch guard of shelf nesting.
 /// </summary>
 /// <remarks>
-/// 对应基线 `ShelfPatternGenerator2.kt`。混高与等高的差别不是开关，而是**合法排样的族**。
+/// 对应。混高与等高的差别不是开关，而是**合法排样的族**。
 ///
-/// Mirrors the baseline `ShelfPatternGenerator2.kt`. Mixed versus uniform rows is not a switch but a **family of legal layouts**.
+///. Mixed versus uniform rows is not a switch but a **family of legal layouts**.
 /// </remarks>
 public class ShelfPatternGeneratorTests {
     /// <summary>**行内混高不能当两级断头台** / Mixed rows cannot be a two-stage guillotine.</summary>

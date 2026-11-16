@@ -1,7 +1,6 @@
 // 离散装载注册与取解入口 / Discrete-loading registration and solution-extraction entry.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的
+// 与固定 Kotlin 的
 // `register` 与 `extractSolution` 对应（`validate`/`verify` 已在 ）。
-// Mirrors `register` and `extractSolution` of the pinned Kotlin baseline's `DiscreteLoadingContext.kt`.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -54,7 +53,7 @@ public sealed class DiscreteLoadingContext<V>
     /// <summary>领域输入 / The domain input.</summary>
     /// <remarks>
     /// **组合层（分区装载）需要它做分区归属、占位冲突、布局兼容与重量单位换算**，
-    /// 而基线的 `DiscreteLoadingContext` 本来就公开 `problem` 与 `adapter`。这里补上同样的两个只读属性，
+    /// 而`DiscreteLoadingContext` 本来就公开 `problem` 与 `adapter`。这里补上同样的两个只读属性，
     /// **不在组合层塞一份重复的输入副本**。
     ///
     /// **The composition layer (partition loading) needs it for partition ownership, occupancy conflicts, layout compatibility and weight-unit conversion**, and the
@@ -179,7 +178,7 @@ public sealed class DiscreteLoadingContext<V>
     /// <param name="additionalWeights">附加重量的已提取值，单位同问题 / Extracted additional weights in the problem unit.</param>
     /// <returns>已验证解或失败 / Verified solution or failure.</returns>
     /// <remarks>
-    /// **与基线的一处有意差异**：基线接收 `values: List&lt;Flt64&gt;` 并靠 `tokens.indexOf(variable)` 取下标，
+    /// **与一处有意差异**：基线接收 `values: List&lt;Flt64&gt;` 并靠 `tokens.indexOf(variable)` 取下标，
     /// 这里直接读 `model.Tokens.Find(variable)?.DoubleResult`——**同一份数据，少一个参数**，
     /// 且与 `Csp1dProduceContext` 已有的取解方式一致（同一套管线里求解器把结果写回 token）。
     ///
@@ -195,7 +194,7 @@ public sealed class DiscreteLoadingContext<V>
     /// **第二条是这里最要紧的**：`0.5` 不是浮点噪声，是**求解器在说"这个解不是整数解"**。
     /// 四舍五入会把一个 LP 松弛解当成整数解报出去。
     ///
-    /// **One deliberate deviation from the baseline**: it accepts a `values: List&lt;Flt64&gt;` and indexes by `tokens.indexOf(variable)`, whereas this reads
+    /// **One deliberate deviation from the code**: it accepts a `values: List&lt;Flt64&gt;` and indexes by `tokens.indexOf(variable)`, whereas this reads
     /// `model.Tokens.Find(variable)?.DoubleResult` — **the same data with one fewer parameter**, matching how `Csp1dProduceContext` already extracts solutions
     /// (the solver writes results back into tokens in this pipeline). The four rejection rules are in the table; **the second is the important one** — `0.5` is not
     /// floating noise, it is **the solver saying "this is not an integer solution"**, and rounding it up reports an LP relaxation as an integer plan.
@@ -299,10 +298,10 @@ public sealed class DiscreteLoadingContext<V>
     /// <param name="variable">变量 / The variable.</param>
     /// <returns>值；缺失或非二元时为 `null` / The value, or `null` when missing or non-binary.</returns>
     /// <remarks>
-    /// **容差取 `1e-6`，与基线一致**：求解器返回的 `1.0000001` 必须被当成 1，否则所有正常解都会被拒。
+    /// **容差取 `1e-6`**：求解器返回的 `1.0000001` 必须被当成 1，否则所有正常解都会被拒。
     /// 但 `0.5` 必须被拒——那是**求解器在说"这不是整数解"**。
     ///
-    /// **The tolerance is `1e-6`, matching the baseline**: a solver's `1.0000001` must count as 1 or every normal solution would be rejected, while `0.5` must be
+    /// **The tolerance is `1e-6`, matching the code**: a solver's `1.0000001` must count as 1 or every normal solution would be rejected, while `0.5` must be
     /// refused — that is **the solver saying "this is not an integer solution"**.
     /// </remarks>
     private static double? ReadBinary(LinearMetaModel<Flt64> model, IVariableItem variable) {

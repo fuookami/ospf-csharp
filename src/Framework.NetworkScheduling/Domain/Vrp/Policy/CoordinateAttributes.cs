@@ -1,6 +1,5 @@
 // VRP 坐标约定 / VRP coordinate convention.
-// 与固定 Kotlin 基线 `CoordinateAttributes.kt`（25 行）对应。
-// Mirrors the pinned baseline's `CoordinateAttributes.kt`.
+// 与固定 Kotlin 对应。
 //
 // 通用网络节点**不定义坐标语义**：节点的 `Attributes` 只是一张通用的物理量字典。VRP 在此之上约定 `x`／`y`／`z` 三个属性
 // 表示坐标轴，把"坐标"这件事收在领域层而不是污染基础设施层。

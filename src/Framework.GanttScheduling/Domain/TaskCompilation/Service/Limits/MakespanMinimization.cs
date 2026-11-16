@@ -83,13 +83,13 @@ public class MakespanMinimization<E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 与基线 `MakespanMinimization.kt` 对齐，两条分支都在：
+    /// 与对齐，两条分支都在：
     ///
     /// 1. **阈值等于窗口起点**（数值为 `0`）→ 直接最小化 `coefficient × 完工时间`，名为 `makespan`。
     /// 2. **阈值在窗口内** → 先建一条阈值松弛（`withNegative = false, withPositive = true, threshold = true`，
     ///    名 `makespan_threshold`）并加到模型，再最小化 `coefficient × 松弛的正部`，名字仍是 `makespan`。
     ///
-    /// 三处必须照抄：
+    /// 三处必须沿用：
     ///
     /// - **`withNegative = false`**：带下侧会让松弛在完工时间**小于**阈值时也变大，惩罚方向整个反过来。
     /// - **阈值判定用 `timeBoundary.ValueOf(threshold)` 与 `0` 比较**，不是"阈值等于窗口起点"这种对象比较——
@@ -99,11 +99,11 @@ public class MakespanMinimization<E, A>
     /// 松弛**必须先加到模型**再做目标：建一个未被约束的松弛去最小化，等于又造一个安静的空操作（恒为零）。
     /// 函数约束的注册在机制模型成形时发生（`RegisterFunctionConstraints`），所以这里只负责把符号放进去。
     ///
-    /// Aligned with the baseline's `MakespanMinimization.kt`, with both branches present: **a threshold at the window start** (value `0`) minimises `coefficient × makespan` directly under the name
+    /// Aligned with its, with both branches present: **a threshold at the window start** (value `0`) minimises `coefficient × makespan` directly under the name
     /// `makespan`; **a threshold inside the window** first builds a threshold slack (`withNegative = false, withPositive = true, threshold = true`, named `makespan_threshold`), adds it to the model,
     /// and then minimises `coefficient × ` the slack's positive part, still under the name `makespan`. Three things must be copied: **`withNegative = false`**, since a lower side would make the
     /// slack grow when the makespan is *below* the threshold and invert the penalty; **the threshold comparison uses `timeBoundary.ValueOf(threshold)` against `0`** rather than an object comparison
-    /// with the window start, because the baseline compares the converted solver value; and **both branches name the objective `makespan`**, since different names would make a caller looking it up by
+    /// with the window start, because the code compares the converted solver value; and **both branches name the objective `makespan`**, since different names would make a caller looking it up by
     /// name miss one branch. The slack **must be added to the model before** it is minimised: minimising an unconstrained slack is another quiet no-op fixed at zero. The function's own constraints are
     /// registered when the mechanism model is built (`RegisterFunctionConstraints`), so this only has to put the symbol in place.
     /// </remarks>
@@ -123,8 +123,8 @@ public class MakespanMinimization<E, A>
 
         Flt64 thresholdValue = _timeBoundary.ValueOf(_threshold ?? _timeBoundary.Source.Start);
         if (thresholdValue.ToDouble() == 0.0) {
-            // `coefficient` 照抄基线：目标不是"完工时间"本身，而是 `coefficient × 完工时间`。
-            // The coefficient is copied from the baseline: the objective is `coefficient × makespan`, not the makespan alone.
+            // `coefficient` 照做：目标不是"完工时间"本身，而是 `coefficient × 完工时间`。
+            // The coefficient is copied from the code: the objective is `coefficient × makespan`, not the makespan alone.
             return Minimize(linear, symbol.Polynomial);
         }
 

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Model
 /// 纵向平衡松弛 / The longitudinal-balance slacks.
 /// </summary>
 /// <remarks>
-/// 与基线 `mac_optimization/model/LongitudinalBalance.kt` 对齐：**按装载模式注册不同的松弛集合**。
+/// 与对齐：**按装载模式注册不同的松弛集合**。
 ///
 /// | 装载模式 | 注册哪些松弛 |
 /// | --- | --- |
@@ -25,18 +25,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Model
 /// | 预配载 | 仅 `OPT` |
 /// | 建议打板 | **一个都不注册** |
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **`OPT` 与 `C` 在全载下被排除**。它们不在 `MACRange` 的两侧，给它们松弛等于允许模型把最优点推走。
 /// 2. **建议打板下是空集合**，不是"默认集合"。写成"没配置就全注册"会让建议打板多出两个没有系数的目标项。
-/// 3. **符号名带类型后缀**：`longitudinal_balance_slack_A` / `_B` / `_opt`。基线用 `type.name`，`OPT` 在预配载下变成小写 `opt`——
-///    这是基线的不一致（`Type.OPT.name` 是 `"OPT"`，而它写死了 `"_opt"`），照抄。
+/// 3. **符号名带类型后缀**：`longitudinal_balance_slack_A` / `_B` / `_opt`。`type.name`，`OPT` 在预配载下变成小写 `opt`——
+///    这是不一致（`Type.OPT.name` 是 `"OPT"`，而它写死了 `"_opt"`）。
 ///
-/// Aligned with the baseline: **which slacks register depends on the stowage mode**, tabulated above. Three things must be copied: **`OPT` and `C` are excluded under full load** —
+/// **which slacks register depends on the stowage mode**, tabulated above. Three things must be copied: **`OPT` and `C` are excluded under full load** —
 /// they are not on either side of the `MACRange`, and giving them slack lets the model push the optimum away; **weight recommendation registers an empty set**, not "the default set",
 /// since falling back to "register everything when unconfigured" would add two coefficient-less objectives there; and **the symbol names carry a type suffix**
-/// (`longitudinal_balance_slack_A` / `_B` / `_opt`) — the baseline uses `type.name` but hard-codes `"_opt"` for `OPT`, so the suffix is lower-case only in the predistribution case.
-/// That inconsistency is the baseline's and is copied.
+/// (`longitudinal_balance_slack_A` / `_B` / `_opt`) — the code uses `type.name` but hard-codes `"_opt"` for `OPT`, so the suffix is lower-case only in the predistribution case.
+/// That inconsistency is its and is copied.
 /// </remarks>
 public sealed class LongitudinalBalance
 {

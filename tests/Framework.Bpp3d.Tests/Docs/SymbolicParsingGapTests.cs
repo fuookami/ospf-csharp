@@ -13,14 +13,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 符号文本解析这个缺口还在不在 / Whether the symbolic text-parsing gap is still open.
 /// </summary>
 /// <remarks>
-/// **基线有整套文本解析：`ScalarParser`（713 行）、`PolynomialLexer`（281 行）、`PolynomialParser`（622 行）。**
+/// **整套文本解析：`ScalarParser`（713 行）、`PolynomialLexer`（281 行）、`PolynomialParser`（622 行）。**
 /// **C# 这边只有数值解析（`INumberParser&lt;T&gt;` / `Int64NumberParser`），**
 /// **表达式与多项式的文本入口**没有实现。
 ///
 /// **这条绊线的方向是反的：缺口还是缺口时它绿，补上了它红。**
 /// **红不是问题，红了才是提醒"文档里那句缺口该改了"。**
 ///
-/// **The baseline has a whole text-parsing stack: `ScalarParser` (713 lines), `PolynomialLexer` (281), `PolynomialParser` (622).**
+/// **The code has a whole text-parsing stack: `ScalarParser` (713 lines), `PolynomialLexer` (281), `PolynomialParser` (622).**
 /// **C# has only the numeric parser (`INumberParser&lt;T&gt;` / `Int64NumberParser`)**; the expression and polynomial text entry points have no implementation.
 /// **This tripwire points the other way: green while the gap is a gap, red once it is filled.** **Red is not a failure, red is the reminder that the documented gap needs editing.**
 /// </remarks>
@@ -80,7 +80,7 @@ public class SymbolicParsingGapTests
     ///
  /// 1. 一开始钉"整条表达式解析栈不在"——**那是我读错了文件名差集，栈一直在。**
     /// 2. 然后钉"三元与 `if-then-else` 不在"——**它们搬完之后这条就该红，靠手工收窄才让它继续绿。**
-    /// 3. 最后钉"标量解析器里没有 `PatternMatch`"——**而模式匹配根本不在 `ScalarParser.kt` 里，它在布尔侧 `Parser.kt`，
+    /// 3. 最后钉"标量解析器里没有 `PatternMatch`"——**而模式匹配根本不在 里，它在布尔侧，
     /// C# 的 `Parser.cs` 早就实现了。我钉的是一个不存在的缺口。**
     ///
     /// **现在钉的是能长期成立的那件事：优先级链的九层都在、顺序对、且比较确实不链式。**
@@ -89,7 +89,7 @@ public class SymbolicParsingGapTests
     /// **This criterion has changed its target three times, each time because I mislocated the gap.**
  /// **1. It first pinned "the whole expression stack is absent" — my misreading of a filename diff ; the stack was there.**
     /// **2. Then it pinned "ternaries and `if-then-else` are absent" — which should have gone red once they landed, and stayed green only because I narrowed it by hand.**
-    /// **3. Finally it pinned "no `PatternMatch` in the scalar parser" — but pattern matching is not in `ScalarParser.kt` at all; it lives in the boolean `Parser.kt`,
+    /// **3. Finally it pinned "no `PatternMatch` in the scalar parser" — but pattern matching is not at all; it lives in the boolean,
     /// which C# has had all along. I was pinning a gap that did not exist.**
     /// **What it pins now can hold for good: all nine precedence layers are present, in order, and comparison does not chain.**
     /// **This one needs no narrowing when a piece lands, because it pins structure, not progress.**

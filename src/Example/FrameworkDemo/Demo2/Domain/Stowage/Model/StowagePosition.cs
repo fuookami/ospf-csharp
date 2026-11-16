@@ -102,7 +102,7 @@ public sealed class PositionStatus
     }
 
     /// <summary>
-    /// 按状态码推导舱位状态（对齐基线 `PositionStatus.invoke`）/ Derive the status from the code (mirrors the baseline `PositionStatus.invoke`).
+    /// 按状态码推导舱位状态（对齐基线 `PositionStatus.invoke`）/ Derive the status from the code (mirrors the code `PositionStatus.invoke`).
     /// </summary>
     /// <param name="location">舱位所属区域 / The position location</param>
     /// <param name="code">状态码 / The status code</param>
@@ -113,7 +113,7 @@ public sealed class PositionStatus
     /// `adjustmentNeeded = code == Preassigned`；**谓词/推荐重量只在"可用 / 要装载决策 / 主舱"且模式匹配时才为真**——
     /// 三个条件缺一不可，少判一个就会给下舱或已装载的舱位生成没有意义的重量变量。
     ///
-    /// Member for member with the baseline: `available = code != Loaded / code != Reserved`; `stowageNeeded = code == Unloaded || code == Preassigned`;
+    /// Member for member with the code: `available = code != Loaded / code != Reserved`; `stowageNeeded = code == Unloaded || code == Preassigned`;
     /// `adjustmentNeeded = code == Preassigned`; and **the predicate/recommended weight flags are true only when "available / decision needed / main deck"**
     /// and the mode matches — all three conditions are required, and dropping one fabricates meaningless weight variables for lower-deck or loaded positions.
     /// </remarks>
@@ -139,19 +139,19 @@ public sealed class PositionStatus
 /// 逐条对齐基线 `PositionMaximumLoadWeight`。它有两种形态：**单一常数**（最常见）与**按零油重分段的阶跃**——
 /// 后者是因为同一个舱位在轻载和重载时的允许装载量不同，重载时要给别的舱位留余量。
 ///
-/// 与基线的三处差异，都记在这里而不是埋着：
+/// 与三处差异，都记在这里而不是埋着：
 ///
-/// 1. **阶跃而不是插值**。基线里那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**被注释掉了**，实际生效的是
-///    `invoke(zfw)` 里的分段查找（`zfw` 落在哪段就用哪段的 `mlw`）。C# 照抄**生效的那一条**，不照抄注释掉的那条。
+/// 1. **阶跃而不是插值**。那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**被注释掉了**，实际生效的是
+///    `invoke(zfw)` 里的分段查找（`zfw` 落在哪段就用哪段的 `mlw`）。C# 沿用**生效的那一条**，不沿用注释掉的那条。
 /// 2. **构造时校验段序**。基线 `assert(piecewise.isNotEmpty)` 在 Kotlin 里默认关闭；C# 的 `ArgumentOutOfRangeException`
 ///    在 Release 下也生效。分段为空是调用方错误，静默接受会得到一个"永远返回 0"的规格。
-/// 3. **`mlw` 取各段最大值**，与基线 `maxWithThreeWayComparatorOrNull` 一致；段按 `minZfw` 升序排，与基线一致。
+/// 3. **`mlw` 取各段最大值**，与基线 `maxWithThreeWayComparatorOrNull` 一致；段按 `minZfw` 升序排。
 ///
-/// Mirrors the baseline. Two forms: a **single constant** (the common case) and a **step function by zero-fuel weight** — the same position allows less when the aircraft is
-/// heavier, leaving room for other positions. Three recorded divergences: (1) it is a **step, not an interpolation** — the baseline's smooth
+/// Two forms: a **single constant** (the common case) and a **step function by zero-fuel weight** — the same position allows less when the aircraft is
+/// heavier, leaving room for other positions. Three recorded divergences: (1) it is a **step, not an interpolation** — its smooth
 /// `UnivariateLinearPiecewiseFunction` path is **commented out**, and what actually runs is the segment lookup in `invoke(zfw)`; C# copies what runs. (2) Segment order is
-/// validated in the constructor — the baseline's `assert` is off by default in Kotlin while C#'s `ArgumentOutOfRangeException` fires in Release too. (3) `mlw` is the maximum
-/// across segments, and segments are sorted by `minZfw`, both as in the baseline.
+/// validated in the constructor — its `assert` is off by default in Kotlin while C#'s `ArgumentOutOfRangeException` fires in Release too. (3) `mlw` is the maximum
+/// across segments, and segments are sorted by `minZfw`, both as in the code.
 /// </remarks>
 public sealed class MaxLoadWeightLimit
 {
@@ -210,11 +210,11 @@ public sealed class MaxLoadWeightLimit
     /// <param name="zeroFuelWeight">零油重 / The zero-fuel weight.</param>
     /// <returns>该零油重下的最大装载重量 / The maximum load weight there.</returns>
     /// <remarks>
-    /// 照抄基线 `invoke(zfw)` 的三条分支：无分段用常数；低于第一段的下界用第一段；落在某段内用该段；都不落则用最后一段。
+    /// 照做 `invoke(zfw)` 的三条分支：无分段用常数；低于第一段的下界用第一段；落在某段内用该段；都不落则用最后一段。
     /// **"都不落则用最后一段"不是兜底而是规格**：零油重超过最后一段的上界说明这架飞机已经超重，那时允许的装载量应当是最小的那个，
     /// 而不是"没有限制"。
     ///
-    /// Copies the baseline's three branches: no segments means the constant; below the first segment's lower bound means the first segment; inside a segment means that segment;
+    /// Copies its three branches: no segments means the constant; below the first segment's lower bound means the first segment; inside a segment means that segment;
     /// nothing matching means the last segment. **"Nothing matching means the last segment" is specification, not a fallback**: a zero-fuel weight past the last segment means the
     /// aircraft is already heavy, and the allowed load should be the smallest one — not "no limit".
     /// </remarks>
@@ -246,11 +246,11 @@ public sealed class MaxLoadWeightLimit
 /// <param name="Min">允许的最小值 / The allowed minimum.</param>
 /// <param name="Max">允许的最大值 / The allowed maximum.</param>
 /// <remarks>
-/// 逐条对齐基线 `PositionPredicateLoadWeight` 的**三元组**。C# 之前把它压成一个 `double?`，于是基线里两处用量都丢了：
+/// 逐条对齐基线 `PositionPredicateLoadWeight` 的**三元组**。C# 之前把它压成一个 `double?`，于是两处用量都丢了：
 /// 一处要 `max`（`y` 的上界，见 `PredicateLoadWeightLimit`），一处要 `min`（谓词重量松弛的右端）。
 /// 压成单个值时那个数字到底代表哪一端，读代码看不出来——补成三元组就是为了让"是哪一端"成为类型的一部分。
 ///
-/// Mirrors the baseline's **triple**. C# had flattened it into a single `double?`, losing both uses in the baseline: one needs `max` (the upper bound on `y`, in
+/// 's **triple**. C# had flattened it into a single `double?`, losing both uses in the code: one needs `max` (the upper bound on `y`, in
 /// `PredicateLoadWeightLimit`) and one needs `min` (the right-hand side of the predicate weight slack). A single number does not say which end it is — the triple makes "which end"
 /// part of the type.
 /// </remarks>
@@ -306,9 +306,9 @@ public sealed class StowagePosition
     /// </summary>
     /// <remarks>
     /// **可空**：为 `null` 表示该舱位没有建议数量，`AdviceLoading` 会给恒零松弛、`AdviceLoadAmountLimit` 会跳过它。
-    /// 与基线的 `Position.ala` 一致。
+    /// 与`Position.ala` 一致。
     ///
-    /// **Nullable**: null means the position carries no advised amount, so `AdviceLoading` yields a constant-zero slack and `AdviceLoadAmountLimit` skips it, as in the baseline's
+    /// **Nullable**: null means the position carries no advised amount, so `AdviceLoading` yields a constant-zero slack and `AdviceLoadAmountLimit` skips it, as in its
     /// `Position.ala`.
     /// </remarks>
     public double? Ala { get; init; }
@@ -360,13 +360,13 @@ public sealed class StowagePosition
     /// <param name="item">货物 / The cargo item.</param>
     /// <returns>能力与原因 / Capability and reason.</returns>
     /// <remarks>
-    /// 逐条对齐基线 `stowage/model/Position.kt` 的 `enabled`：**货位互斥**（主/下、散/非散、头/尾）、
+    /// 逐条对齐的 `enabled`：**货位互斥**（主/下、散/非散、头/尾）、
     /// **货类互斥**（虚拟装载物不进下舱；舱位类型码禁止刚硬/易碎/空集装器/放空；航材指定舱位只装航材；
     /// 普散货指定舱位不装航材；已装航材的散舱不装普通散货）、**散货同目的地**。
     ///
     /// 两条集装器规则也已补上：`item.Uld.Code` 不在 `enabledULDs` 里就拒，命中 `Taboo[item]` 的编号区间也拒。
     ///
-    /// Copied rule by rule from the baseline `stowage/model/Position.kt`'s `enabled`: **location exclusions** (main/lower, bulk/non-bulk, head/tail), **cargo-class exclusions**
+    /// Copied rule by rule from its `enabled`: **location exclusions** (main/lower, bulk/non-bulk, head/tail), **cargo-class exclusions**
     /// (virtual cargo does not enter the lower deck; position type codes forbid stiff/crush/empty/virtual; AOG-MAT appointed positions take only AOG/MAT; normal-bulk appointed
     /// positions take no AOG/MAT; a bulk hold already holding AOG/MAT takes no ordinary bulk), and **same-destination bulk**.
     /// The two ULD rules are covered too : a `Uld.Code` outside `enabledULDs` is refused, and so is a hit on a `Taboo[item]` number range.

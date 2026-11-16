@@ -14,12 +14,12 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 扰动报告与策略 / The perturbation report and policies.
 /// </summary>
 /// <remarks>
-/// 补了 `ConstraintPerturbationAnalyzer.kt` 前 348 行的纯数据类型**（策略、请求、结果、观测、报告）。
+/// 补了 前 348 行的纯数据类型**（策略、请求、结果、观测、报告）。
 /// 第 349 行起是分析器本体，含 `activeBackend!!.solve(request)` 与 `backend!!.solve(request)`，
 /// **要真实重新优化后端，这里不搬，也不写空跑版本。**
 ///
-/// **ported the first 348 lines of `ConstraintPerturbationAnalyzer.kt`** — the policies, request, result, observation and report. From line 349 on is the analyzer itself, with
-/// `activeBackend!!.solve(request)` and `backend!!.solve(request)`; **that needs a real reoptimization backend, so it was neither ported nor stubbed.**
+/// **implemented the first 348 lines of** — the policies, request, result, observation and report. From line 349 on is the analyzer itself, with
+/// `activeBackend!!.solve(request)` and `backend!!.solve(request)`; **that needs a real reoptimization backend, so it was neither implemented nor stubbed.**
 /// </remarks>
 public class ConstraintPerturbationReportTests {
     private static ConstraintPerturbationObservation Observation(

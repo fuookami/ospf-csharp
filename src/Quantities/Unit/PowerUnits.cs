@@ -21,29 +21,29 @@ public static class PowerUnits {
     /// <summary>马力 / Horsepower (1 hp = 745.69987158 W).</summary>
     public static readonly PhysicalUnit Horsepower = new DerivedUnit(Watt.ScaleMultiply(Scale.Invoke(745.69987158)), "horsepower", "hp");
 
-    // 以下 4 个按基线 `Power.kt` 补齐，**而这一组里有一个同名不同值的陷阱。**
+    // 以下 4 个按补齐，**而这一组里有一个同名不同值的陷阱。**
     //
-    // **基线的 `Horsepower` 是 735 W（公制马力 PS），而本仓的 `Horsepower` 是 745.69987 W（机械马力）。**
+    // **`Horsepower` 是 735 W（公制马力 PS），而本仓的 `Horsepower` 是 745.69987 W（机械马力）。**
     // **同一个名字，两个差 1.4% 的值——而 `hp` 这个符号在两种语境下都在用。**
     //
     // **处理方式：本仓的 `Horsepower` 保持机械马力不变**（那是 `hp` 的国际通行含义），
-    // **把基线的 735 以 `MetricHorsepower` 的名字加进来**——
+    // **把735 以 `MetricHorsepower` 的名字加进来**——
     // **改掉既有的 `Horsepower` 会让所有既有调用的结果静默偏移 1.4%。**
     //
-    // **基线的 `UKHorsepower` 写的是 `Watt * 550`，而 550 是 ft·lbf/s 的数值。**
+    // **`UKHorsepower` 写的是 `Watt * 550`，而 550 是 ft·lbf/s 的数值。**
     // **它忘了乘换算因子：550 × 0.3048 × 4.4482216152605 = 745.69987 W**，
     // **正好等于机械马力。所以 `UKHorsepower` 就是本仓既有的 `Horsepower`。**
     //
     // The four below were added from Power.kt, **and this group carries a same-name-different-value trap.**
     //
-    // **The baseline `Horsepower` is 735 W (metric PS) while this repo Horsepower is 745.69987 W (mechanical).**
+    // **The code `Horsepower` is 735 W (metric PS) while this repo Horsepower is 745.69987 W (mechanical).**
     // **One name, two values 1.4% apart, and the symbol `hp` is used in both senses.**
     //
     // **Handling: this repo Horsepower stays mechanical** (the international meaning of `hp`),
-    // **and the baseline 735 is admitted under the name `MetricHorsepower`** —
+    // **and the code 735 is admitted under the name `MetricHorsepower`** —
     // **changing the existing `Horsepower` would silently shift every existing call by 1.4%.**
     //
-    // **The baseline `UKHorsepower` writes `Watt * 550`, and 550 is the ft-lbf/s figure.**
+    // **The code `UKHorsepower` writes `Watt * 550`, and 550 is the ft-lbf/s figure.**
     // **The conversion factor was left out: 550 x 0.3048 x 4.4482216152605 = 745.69987 W**,
     // **which is exactly mechanical horsepower. So `UKHorsepower` is this repo existing `Horsepower`.**
 
@@ -67,7 +67,7 @@ public static class PowerUnits {
     /// **基线给的是整 735，这里用 735.49875**——**两者差 0.07%，而整 735 是常见的工程近似。**
     /// **用精确值是为了让它与机械马力（745.69987）的比值可判据化。**
     ///
-    /// **The baseline gives a round 735; this uses 735.49875** — **0.07% apart, with the round value a common
+    /// **The code gives a round 735; this uses 735.49875** — **0.07% apart, with the round value a common
     /// engineering approximation.** **The exact value makes the ratio against mechanical horsepower checkable.**
     /// </remarks>
     public static readonly PhysicalUnit MetricHorsepower = new DerivedUnit(
@@ -75,10 +75,10 @@ public static class PowerUnits {
 
     /// <summary>**英制马力（= 机械马力 745.69987 W，基线写成 550）** / UK horsepower.</summary>
     /// <remarks>
-    /// **基线的 550 是 ft·lbf/s 的数值，漏了换算；550 ft·lbf/s = 745.69987 W。**
+    /// **550 是 ft·lbf/s 的数值，漏了换算；550 ft·lbf/s = 745.69987 W。**
     /// **所以它与机械马力是同一个值，这里做成本仓 `Horsepower` 的别名。**
     ///
-    /// **The baseline 550 is the ft-lbf/s figure with the conversion dropped; 550 ft-lbf/s = 745.69987 W.**
+    /// **The code 550 is the ft-lbf/s figure with the conversion dropped; 550 ft-lbf/s = 745.69987 W.**
     /// **So it equals mechanical horsepower, and is an alias of this repo `Horsepower` here.**
     /// </remarks>
     public static readonly PhysicalUnit UKHorsepower = Horsepower;

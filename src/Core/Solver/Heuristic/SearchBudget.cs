@@ -1,6 +1,5 @@
 // 启发式搜索预算与随机流 / Heuristic search budget and random stream.
-// 与固定 Kotlin 基线 `core/solver/heuristic/SearchBudget.kt`（4888 字节）对应。
-// Mirrors the pinned baseline's `core/solver/heuristic/SearchBudget.kt`.
+// 与固定 Kotlin （4888 字节）对应。
 
 using System;
 using System.Collections.Generic;

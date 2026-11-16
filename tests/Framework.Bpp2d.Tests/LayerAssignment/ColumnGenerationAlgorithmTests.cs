@@ -99,11 +99,11 @@ public class ColumnGenerationAlgorithmTests {
     ///
     /// 1. **第一轮给一列、之后给空** → `IterationCount` 是 1，且**未因上限结束**。
     /// 2. **`LpSolvedTimes` 是 2**：第二轮也求解了一次 LP，才拿到"没有候选"这个结论。
-    /// 3. **恒定给同一候选不算"没有新列"**：那会跑满上限——基线只在候选**为空**时停，去重后列数不变也照跑。
+    /// 3. **恒定给同一候选不算"没有新列"**：那会跑满上限——在候选**为空**时停，去重后列数不变也照跑。
     /// 4. 目标值被逐轮记下来，不是只留最后一个。
     ///
     /// Four paired points: **one column on the first round then nothing** gives `IterationCount` 1 without the limit flag; **`LpSolvedTimes` is 2**, since the second round still solved an LP
-    /// before concluding there were no candidates; **repeating the same candidate is not "no new columns"**, which runs to the limit, because the baseline stops only on an **empty** candidate
+    /// before concluding there were no candidates; **repeating the same candidate is not "no new columns"**, which runs to the limit, because the code stops only on an **empty** candidate
     /// set and keeps going when deduplication merely leaves the count unchanged; and objectives are recorded per round rather than keeping only the last one.
     /// </remarks>
     [Fact]

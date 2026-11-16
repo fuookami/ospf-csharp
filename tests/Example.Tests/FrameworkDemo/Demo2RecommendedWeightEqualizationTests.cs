@@ -133,9 +133,9 @@ public class Demo2RecommendedWeightEqualizationTests {
     ///
     /// 这不是"修好它"的地方：改成真实深度会让 `PriorityAppointmentLimit` 产生基线没有的约束。
     ///
-    /// Three paired points: **every node on a linked loading-order chain has `PrecDepth` 0**, since the baseline takes the minimum `precDepth` among direct predecessors and a leaf is
+    /// Three paired points: **every node on a linked loading-order chain has `PrecDepth` 0**, since the code takes the minimum `precDepth` among direct predecessors and a leaf is
     /// also 0; therefore `PriorityAppointment.Invoke` is true for any priority and any available position; and `availableDepths` is `{0}`, so even the no-appointment fallback is
-    /// `{0}`. This is not the place to "fix it": real depths would make `PriorityAppointmentLimit` emit constraints the baseline does not.
+    /// `{0}`. This is not the place to "fix it": real depths would make `PriorityAppointmentLimit` emit constraints the code does not.
     /// </remarks>
     [Fact]
     public void PrecDepth_ShouldBeZeroThroughoutTheChain() {

@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 ///
 /// 判据钉的是**分类边界**：哪些记录算约束、哪些算变量、组汇总统计谁。**这三条错了，报告仍然"能跑"，只是数字全对不上。**
 ///
-/// **ported `ConstraintActivityReport` (126 baseline lines)**, which depends only on the earlier three types and needs no native backend. The criteria pin the **classification
+/// **implemented `ConstraintActivityReport` (126 baseline lines)**, which depends only on the earlier three types and needs no native backend. The criteria pin the **classification
 /// boundaries** — which records are constraints, which are variables, and what the group summaries count. **Get these wrong and the report still runs, with every number off.**
 /// </remarks>
 public class ConstraintActivityReportTests {
@@ -88,9 +88,9 @@ public class ConstraintActivityReportTests {
 
     /// <summary>**组汇总只统计约束实例** / Group summaries count constraint instances only.</summary>
     /// <remarks>
-    /// 基线把变量边界留在 `activities` 里、但不进组计数。混进去会让"这个组里有 2 条"变成"2 条约束 + 1 个变量边界"——**而后者的 2 没人能解释。**
+    /// 变量边界留在 `activities` 里、但不进组计数。混进去会让"这个组里有 2 条"变成"2 条约束 + 1 个变量边界"——**而后者的 2 没人能解释。**
     ///
-    /// The baseline keeps variable bounds in `activities` but out of the group counts. Mixing them turns "two in this group" into "two constraints and one variable bound" —
+    /// The code keeps variable bounds in `activities` but out of the group counts. Mixing them turns "two in this group" into "two constraints and one variable bound" —
     /// **and nobody can explain the two.**
     /// </remarks>
     [Fact]

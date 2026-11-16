@@ -51,7 +51,7 @@ internal static class ThresholdSlack {
     /// **返回适配器而不是 `SlackFunction`**：进模型的是适配器，`Threshold` / `WithNegative` / `WithPositive` 三个开关
     /// 要穿过 `adapter.Function` 才读得到；调用方也只拿得到适配器。
     ///
-    /// Mirrors the baseline's `thresholdSlack(...)`: `withNegative = false`, `withPositive = true`, `threshold = true`, `constraint = true`. **`withNegative = false` is the most important of the
+    /// `withNegative = false`, `withPositive = true`, `threshold = true`, `constraint = true`. **`withNegative = false` is the most important of the
     /// three**: a lower side would make the slack grow when the value is *below* the threshold, turning "the part above the threshold" into "the distance from it" and making objectives wrong in
     /// both directions, so the criteria must pin all three switches separately. **The slack must be added to the model before it is optimised**: an unconstrained slack is another no-op fixed at
     /// zero. **The adapter is returned rather than the `SlackFunction`**, because the adapter is what enters the model and its three switches are reachable through `adapter.Function`.
@@ -86,7 +86,7 @@ internal static class ThresholdSlack {
     /// <remarks>
     /// `withNegative = false` 让 `ResultPolynomial` 里只剩 `pos` 那一项，所以它本身就是正部。基线叫 `positiveSlackPolynomial`。
     ///
-    /// `withNegative = false` leaves only the `pos` term in `ResultPolynomial`, so that polynomial *is* the positive part; the baseline calls it `positiveSlackPolynomial`.
+    /// `withNegative = false` leaves only the `pos` term in `ResultPolynomial`, so that polynomial *is* the positive part; the code calls it `positiveSlackPolynomial`.
     /// </remarks>
     public static LinearPolynomial<Flt64> PositivePart(LinearFunctionSymbolAdapter<Flt64> slack) {
         ArgumentNullException.ThrowIfNull(slack);
@@ -103,7 +103,7 @@ internal static class ThresholdSlack {
     /// 基线 `polyX` = `x + neg - pos`；`withNegative = false` 时负部不存在，于是这里是 **`x - pos`**，即"至多到阈值为止"的那个值。
     /// 与正部**不是同一个东西**：正部在阈值以下是 0，截断部在阈值以下是 `x` 本身。奖励类目标要的是截断部。
     ///
-    /// The baseline's `polyX` is `x + neg - pos`; with `withNegative = false` there is no negative part, so this is **`x - pos`** — the value capped at the threshold. It is **not** the same as the
+    /// `polyX` is `x + neg - pos`; with `withNegative = false` there is no negative part, so this is **`x - pos`** — the value capped at the threshold. It is **not** the same as the
     /// positive part: the positive part is zero below the threshold, while the capped part is `x` itself there. Reward objectives want the capped one.
     /// </remarks>
     public static LinearPolynomial<Flt64> CappedPart(

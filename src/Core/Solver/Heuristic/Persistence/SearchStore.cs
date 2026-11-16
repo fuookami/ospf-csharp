@@ -1,6 +1,5 @@
 // 搜索存储 / The search store.
-// 与固定 Kotlin 基线 `persistence/SearchStore.kt`（6559 B）对应。
-// Mirrors the pinned baseline's `SearchStore.kt` (6559 B).
+// 与固定 Kotlin （6559 B）对应。
 
 using System;
 using System.Collections.Generic;

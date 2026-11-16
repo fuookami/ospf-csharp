@@ -1,8 +1,8 @@
 // 跨轮冲突约束的生成条件 / When a cross-round conflict constraint is emitted.
-// 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的
+// 与固定 Kotlin 的
 // `if (task1 != task2 && conflict(task1, task2)) { xi[task1] + x[other][task2] ≤ 1 }` 对应。
 // Mirrors `if (task1 != task2 && conflict(task1, task2)) { xi[task1] + x[other][task2] ≤ 1 }`
-// in the pinned baseline's `task_compilation/model/Compilation.kt`.
+//'s.
 
 using System;
 
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// are **the same variable**, the row degenerates to `2x ≤ 1`, and **every column is forced to 0** — the schedule is infeasible, or feasible with nothing done.
 ///
 /// One detail worth recording: `task1 != task2` compares **task equality**, not "is it the same variable". So the same task appearing in **different rounds** is skipped too, and no
-/// exclusion is added between those two columns. This is the baseline verbatim; see the `ponytail:` note below.
+/// exclusion is added between those two columns. This is the code verbatim; see the `ponytail:` note below.
 /// </remarks>
 public static class CrossRoundConflict {
     /// <summary>

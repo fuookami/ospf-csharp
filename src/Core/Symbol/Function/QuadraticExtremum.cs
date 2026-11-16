@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次极值三兄弟共用的桥接与委托 / The bridging and delegation shared by the three quadratic extremum adapters.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMax.kt`、`QuadraticMaxMin.kt`、`QuadraticMinMax.kt` 补三个类。
+/// 对齐、 补三个类。
 ///
 /// **三者与 `QuadraticIf` 系列是同一个形状**：**把每个二次多项式桥接成一个实变量，
 /// 再交给已有的线性 `Max`/`MaxMin`/`MinMax`。**
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// hand them to the existing linear `Max`/`MaxMin`/`MinMax`.**
 /// **No extremum encoding is new.**
 ///
-/// **On empty input the baseline substitutes a zero polynomial** — **not a rejection, but "the unit of a max/min over
+/// **On empty input the code substitutes a zero polynomial** — **not a rejection, but "the unit of a max/min over
 /// nothing is meaningless, so give a zero".**
 /// **It looks like a patch, but it keeps `MaxFunction` from having to handle an empty list**,
 /// **at the cost of making "empty input" indistinguishable from "one constant zero".**
@@ -47,11 +47,11 @@ internal static class QuadraticExtremumBridging
     /// 把二次输入桥接成线性输入 / Bridge quadratic inputs into linear ones.
     /// </summary>
     /// <remarks>
-    /// **空表补一个零多项式，与基线一致。**
+    /// **空表补一个零多项式。**
     /// **`bridges` 与 `rows` 在空表时长度都为 1**——
     /// **因为补进去的那个零多项式也要有个桥接变量，否则委托出去的线性函数读的是一个不存在的符号。**
     ///
-    /// **An empty list gets one zero polynomial, matching the baseline.**
+    /// **An empty list gets one zero polynomial, matching the code.**
     /// **`bridges` and `rows` both have length one then** — **because the substituted zero needs a bridge too, or the
     /// delegated linear function would read a symbol that does not exist.**
     /// </remarks>
@@ -169,9 +169,9 @@ internal static class QuadraticExtremumBridging
 /// 二次输入的 <c>max</c>：桥接后交给线性 `MaxFunction` / A quadratic-input `max`, bridged.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMax.kt`。
+/// 对齐。
 ///
-/// Following the baseline's `QuadraticMax.kt`. **No extremum encoding here.**
+/// Following its. **No extremum encoding here.**
 /// </remarks>
 public sealed class QuadraticMaxFunction : IMathFunctionSymbol<Flt64>, IHasResultPolynomial<Flt64> {
     private readonly QuadraticPolynomial<Flt64>[] _polynomials;
@@ -263,9 +263,9 @@ public sealed class QuadraticMaxFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// 二次输入的 <c>max min</c>：桥接后交给线性 `MaxMinFunction` / A quadratic-input `max min`, bridged.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMaxMin.kt`。
+/// 对齐。
 ///
-/// Following the baseline's `QuadraticMaxMin.kt`.
+/// Following its.
 /// </remarks>
 public sealed class QuadraticMaxMinFunction : IMathFunctionSymbol<Flt64>, IHasResultPolynomial<Flt64> {
     private readonly QuadraticPolynomial<Flt64>[] _polynomials;
@@ -357,12 +357,12 @@ public sealed class QuadraticMaxMinFunction : IMathFunctionSymbol<Flt64>, IHasRe
 /// 二次输入的 <c>min max</c>：桥接后交给线性 `MinMaxFunction` / A quadratic-input `min max`, bridged.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMinMax.kt`。
+/// 对齐。
 ///
 /// **`max min` 与 `min max` 不是同一个量**：**前者是先取最小再取最大，后者相反。**
 /// **两者的判据必须给出<b>不同</b>的期望值，否则"写反了"测不出来。**
 ///
-/// Following the baseline's `QuadraticMinMax.kt`.
+/// Following its.
 ///
 /// **`max min` and `min max` are different quantities**: **the first minimises then maximises, the second the other
 /// way round.** **Their criteria must expect <b>different</b> values, or a swap goes unnoticed.**

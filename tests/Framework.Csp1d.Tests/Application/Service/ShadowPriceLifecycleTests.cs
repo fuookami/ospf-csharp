@@ -320,7 +320,7 @@ public class ShadowPriceLifecycleTests {
     /// | 抛但不带类型名 | **判据红**（信息缺失） |
     /// | 抛且带类型名 | **绿** |
     ///
- /// **the earlier gap**: "`Int64` / `Flt32` blow up at runtime; recorded but not fixed". read the baseline: `extractFromDualSolution` writes
+ /// **the earlier gap**: "`Int64` / `Flt32` blow up at runtime; recorded but not fixed". read the code: `extractFromDualSolution` writes
     /// `(convertSolverValue(...) as Ok).value`, so `Failed` yields null and `.value` throws — **the throw is baseline parity, not a C# deviation**. This criterion pins
     /// **the quality of the message**: it must at least **name the type**, or users get an `InvalidOperationException` without knowing whether `Int64` or `Flt32` is at
     /// fault (table above).

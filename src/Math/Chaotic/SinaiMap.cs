@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// Sinai 映射（二维，环面上的加法 + 余弦扰动）/ The Sinai map on the torus.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `SinaiMap.kt`。
+/// 对齐。
 ///
 /// <c>x' = (x + y + r·cos(2πx)) mod 1</c>，<c>y' = (y + r·cos(2πx)) mod 1</c>。
 ///
@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// ① **`mod 1` 是取小数部分，不是取绝对值**——**负数坐标（环面上的左侧）取绝对值会折返到右边，破坏环面拓扑**；
 /// ② **两个方程都用同一个 `cos(2πx)`**，**而不是第二个用 `cos(2πy)`。**
 ///
-/// The Sinai map from the baseline.
+/// The Sinai map from the code.
 ///
 /// <c>x' = (x + y + r·cos(2πx)) mod 1</c>, <c>y' = (y + r·cos(2πx)) mod 1</c>.
 ///
-/// **Two things go wrong here**:
+/// **Two things go wrong here**.
 /// ① **`mod 1` is the fractional part, not the absolute value** — **taking an absolute value on a negative
 /// coordinate folds the torus's left side onto its right and breaks the topology**;
 /// ② **both equations use the same `cos(2πx)`**, **not `cos(2πy)` in the second.**
@@ -35,8 +35,8 @@ public sealed record SinaiMap<V>(V R, V TwoPi) : IExtractor<Point<Dim2, V>, Poin
         double y = ((Flt64)(object)p[1]).Value;
         double r = ((Flt64)(object)R).Value;
 
-        // 余弦只算一次，两个方程共用——基线的写法就是这样，而"第二个用 y"是个很容易犯的对称性错误。
-        // The cosine is computed once and shared — that is the baseline's form, and "use y in the second" is an easy
+        // 余弦只算一次，两个方程共用——写法就是这样，而"第二个用 y"是个很容易犯的对称性错误。
+        // The cosine is computed once and shared — that is its form, and "use y in the second" is an easy
         // symmetry mistake to make.
         double cosVal = global::System.Math.Cos(2.0 * global::System.Math.PI * x);
 

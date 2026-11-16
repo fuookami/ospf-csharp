@@ -32,9 +32,9 @@ public sealed record SerializedVariable(
 
 /// <summary>序列化约束 / Serialized constraint.</summary>
 /// <remarks>
-/// 身份字段与固定 Kotlin 基线逐字一致：<c>identityScope</c> 默认 <c>MODEL_LOCAL</c>（字符串枚举代码），
+/// 身份字段与逐字一致：<c>identityScope</c> 默认 <c>MODEL_LOCAL</c>（字符串枚举代码），
 /// <c>identityProvenance</c> 默认空列表。缺少这些字段时远端会丢失元素身份溯源。
-/// Identity fields match the pinned Kotlin baseline verbatim: <c>identityScope</c> defaults to
+/// Identity fields match the reference verbatim: <c>identityScope</c> defaults to
 /// <c>MODEL_LOCAL</c> (a string enum code) and <c>identityProvenance</c> defaults to an empty list.
 /// Without them the remote side loses element-identity provenance.
 /// </remarks>
@@ -102,11 +102,11 @@ public sealed record SerializedLinearModel(
 
 /// <summary>序列化二次约束单元 / Serialized quadratic constraint cell.</summary>
 /// <remarks>
-/// 与固定 Kotlin 基线一致：一个二次单元需要**两个**列索引（<c>colIndex1</c>／<c>colIndex2</c>）。此前
-/// C# 只有一个 <c>ColIndex</c>，根本无法表达二次项，与基线的 wire 形状不符。
-/// Matches the pinned Kotlin baseline: a quadratic cell needs **two** column indices
+/// 与一致：一个二次单元需要**两个**列索引（<c>colIndex1</c>／<c>colIndex2</c>）。此前
+/// C# 只有一个 <c>ColIndex</c>，根本无法表达二次项，与wire 形状不符。
+/// Matches the reference: a quadratic cell needs **two** column indices
 /// (<c>colIndex1</c>/<c>colIndex2</c>). C# previously had a single <c>ColIndex</c>, which cannot express a
-/// quadratic term at all and did not match the baseline wire shape.
+/// quadratic term at all and did not match the code wire shape.
 /// </remarks>
 /// <param name="RowIndex">行索引 / Row index.</param>
 /// <param name="ColIndex1">第一个列索引 / First column index.</param>
@@ -147,8 +147,8 @@ public sealed record SerializedQuadraticConstraint(
 
 /// <summary>序列化二次目标单元 / Serialized quadratic objective cell.</summary>
 /// <remarks>
-/// 与基线一致：目标单元只需两个列索引，**没有**行索引——目标是单行结构。
-/// Matches the baseline: an objective cell carries two column indices and **no** row index, because the
+/// ：目标单元只需两个列索引，**没有**行索引——目标是单行结构。
+/// An objective cell carries two column indices and **no** row index, because the
 /// objective is a single row.
 /// </remarks>
 /// <param name="ColIndex1">第一个列索引 / First column index.</param>
@@ -186,9 +186,9 @@ public sealed record SerializedQuadraticObjective(
 
 /// <summary>序列化二次模型 / Serialized quadratic model.</summary>
 /// <remarks>
-/// 与固定 Kotlin 基线一致：线性约束与二次约束是**两个独立列表**，不是合并后的一个列表——两者的单元
+/// 与一致：线性约束与二次约束是**两个独立列表**，不是合并后的一个列表——两者的单元
 /// 结构不同，合并会让线性约束丢失其本来的形状。
-/// Matches the pinned Kotlin baseline: linear and quadratic constraints are **two separate lists**, not one
+/// Matches the reference: linear and quadratic constraints are **two separate lists**, not one
 /// merged list — their cell shapes differ, and merging loses the linear constraints' original shape.
 /// </remarks>
 /// <param name="Name">模型名称 / Model name.</param>

@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 使用位置：被引用优先于"目标与约束都有" / Referenced outranks "both".
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `FunctionUsageSummary`、`FunctionUsageLocation`、
+/// 对齐的 `FunctionUsageSummary`、`FunctionUsageLocation`、
 /// `FunctionInputShape`、`PiecewiseContinuity` 补。
 ///
 /// **四个布尔是事实，三个派生属性是决定——分开它们让"何时保留结果变量"只有一处规则。**
@@ -86,7 +86,7 @@ public class FunctionUsageSummaryTests
     /// 一个只有在两者<b>同时</b>为真时才看得出的差别。**
     /// **只测单独情形的话，两种顺序都能通过。**
     ///
-    /// **The baseline reports `Nested` when both hold.**
+    /// **The code reports `Nested` when both hold.**
     /// **This gets its own criterion because "check `Nested` first or `External` first" is a difference visible only when
     /// <b>both</b> are true.** **Testing the single cases alone passes under either order.**
     /// </remarks>

@@ -1,8 +1,8 @@
 // 网络建设问题数据层 / The data layer of a network design problem.
-// 与固定 Kotlin 基线 `design/NetworkDesignContext.kt`（5875 字节）的数据部分、`design/model/NetworkConstruction.kt` 的
+// 与固定 Kotlin （5875 字节）的数据部分、 的
 // `NetworkConstructionSolution` 对应。
-// Mirrors the data portion of the pinned baseline's `design/NetworkDesignContext.kt` and `NetworkConstructionSolution` from
-// `design/model/NetworkConstruction.kt`.
+// The data portion of the: and `NetworkConstructionSolution` from
+//.
 //
 // 这一层是**纯领域数据**，不含变量与注册态：建设决策的生命周期由 `NetworkDesignAggregation` 持有，同一份建设问题因此可以被场景复用。
 // This layer is **pure domain data** with no variables or registration state: the design decision's lifecycle is owned by

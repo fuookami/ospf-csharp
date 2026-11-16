@@ -73,12 +73,12 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**没有分区归属的舱位必须结构化失败并点名** / A position without a partition must fail structurally, naming it.</summary>
     /// <remarks>
-    /// 基线的 `owners.getValue(position.spaceName)` 在这里会抛 `NoSuchElementException`。**抛异常不是契约**，而且它连"是哪个舱位"都不说。
+    /// `owners.getValue(position.spaceName)` 在这里会抛 `NoSuchElementException`。**抛异常不是契约**，而且它连"是哪个舱位"都不说。
     ///
     /// **这条只能直接调被测函数**：`Aircraft.AggregationInitializer` 已经把空分区号并进"物理空间或装载顺序无效"这条合并消息
     /// 。所以这里用**已装配好的聚合**配**故意改坏的请求**——被测函数自己那一层的守卫仍要单独成立。
     ///
-    /// The baseline's `owners.getValue(position.spaceName)` would throw `NoSuchElementException` here. **Throwing is not a contract**, and it does not even say which
+    /// `owners.getValue(position.spaceName)` throws `NoSuchElementException` when the key is missing. **Throwing is not a contract**, and it does not even say which
     /// position is at fault. **This one has to call the subject directly**: the aircraft initialiser already folds a blank partition id into its merged "invalid physical
     /// space or loading order" message (a trade-off, not changed for this criterion), so an **already assembled aggregation** is paired with a **deliberately broken
     /// request** — the subject's own guard must still hold on its own.
@@ -278,9 +278,9 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**窄体仍然走一维** / Narrow bodies still take the 1-D kernel.</summary>
     /// <remarks>
-    /// 少了这条，"所有机型都走二维"也能让上一条绿——而宽体走二维、窄体走一维是**基线自己的分派**。
+    /// 少了这条，"所有机型都走二维"也能让上一条绿——而宽体走二维、窄体走一维是**本实现的分派**。
     ///
-    /// Without this, "every type goes 2-D" would also keep the criterion above green — while wide-in-2-D and narrow-in-1-D is **the baseline's own dispatch**.
+    /// Without this, "every type goes 2-D" would also keep the criterion above green — while wide-in-2-D and narrow-in-1-D is **this implementation's dispatch**.
     /// </remarks>
     [Fact]
     public void ANarrowBody_ShouldKeepTheOneDimensionalKernel() {
@@ -320,7 +320,7 @@ public class Demo2PartitionConfigurationTests
             "both positions sit in the MAIN space with the same longitudinal span, so the 1-D sweep must pair them");
     }
 
-    /// <summary>**允许的指派是基线三支的并集** / Allowed assignments are the union of the baseline's three branches.</summary>
+    /// <summary>**允许的指派是三支的并集** / Allowed assignments are the union of the three branches.</summary>
     /// <remarks>
     /// 之前 `LoadingContextFactory` 只问 `StowageNeeded`，而它只对 `Preassigned`/`Optional` 为真。
     /// 于是 `AdjustmentNeeded` 的货物与"已在舱位里"的货物**一个允许指派都拿不到**——稀疏决策不给它们建变量，
@@ -351,14 +351,14 @@ public class Demo2PartitionConfigurationTests
     // 然后把单位改回硬编码的米——**判据照样绿**。原因很直接：请求只有一个 `LengthUnit`，
     // **所有矩形被同一个倍数缩放，而相交关系在统一缩放下不变**。
     //
-    // 所以"单位来自请求"这个修复**无法用相交结论钉住**。它仍然是正确的（基线用 `input.lengthUnit`，
+    // 所以"单位来自请求"这个修复**无法用相交结论钉住**。它仍然是正确的（`input.lengthUnit`，
     // 且硬编码的米会让一个舱位大 39.37 倍），只是**没有一条判据能在这个层次上看见它**。
     // 我宁可留一条明说的空缺，也不留一条"改坏了也不红"的判据——那是 记过的同一个坑。
     //
     // **I deleted the unit criterion because it measures nothing.** I first wrote "the inch request and the metre request must agree on overlap", then reverted
     // the unit to hard-coded metres — **and it stayed green**. The reason is plain: a request carries a single `LengthUnit`, so **every rectangle scales by the same
     // factor, and overlap is invariant under uniform scaling**. "The unit comes from the request" therefore **cannot be pinned by an overlap verdict**. The fix is
-    // still right (the baseline uses `input.lengthUnit`, and hard-coded metres inflate a position 39.37x); it simply **has no criterion that can see it at this
+    // still right (`input.lengthUnit` is honoured, and hard-coded metres inflate a position 39.37x); it simply **has no criterion that can see it at this
     // level**. I would rather record an honest hole than keep a criterion that **stays green when the code is wrong** — the same trap recorded.
 
     /// <summary>**已装载的货物必须固定在自己的舱位** / An already-loaded item must stay fixed to its position.</summary>
@@ -393,10 +393,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**一件货不能固定在两个舱位** / One item cannot be fixed to two positions.</summary>
     /// <remarks>
-    /// 基线的第二条前置校验。**少了它，`toMap` 会静默只留最后一个**，于是"固定在哪个舱位"取决于列表顺序——
+    /// 第二条前置校验。**少了它，`toMap` 会静默只留最后一个**，于是"固定在哪个舱位"取决于列表顺序——
     /// 一个不报错、只给出错误解的行为。
     ///
-    /// The baseline's second pre-check. **Without it a map keeps only the last entry**, so "which position it is fixed to" depends on list order — a behaviour that
+    /// The second pre-check. **Without it a map keeps only the last entry**, so "which position it is fixed to" depends on list order — a behaviour that
     /// raises nothing and simply yields a wrong solution.
     /// </remarks>
     [Fact]
@@ -432,10 +432,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**`allowedPositions` 只能是真实舱位** / `allowedPositions` may only name real positions.</summary>
     /// <remarks>
-    /// 基线的第一条前置校验。**少了它，一个拼错的舱位名会让那条限制永远不生效，而且不留痕迹**——
+    /// 第一条前置校验。**少了它，一个拼错的舱位名会让那条限制永远不生效，而且不留痕迹**——
     /// 求解器只是在更大的解空间里挑一个解，看起来完全正常。
     ///
-    /// The baseline's first pre-check. **Without it a misspelt position name makes the restriction silently inert** — the solver just picks from a larger
+    /// The first pre-check. **Without it a misspelt position name makes the restriction silently inert** — the solver just picks from a larger
     /// solution space and everything looks normal.
     /// </remarks>
     [Fact]
@@ -507,8 +507,8 @@ public class Demo2PartitionConfigurationTests
         };
 
         StowageAggregation aggregation = Aggregation(request);
-        // **基线是 `Main → normalMain`、其余 → `lowNotBulk`**； 之前这里恒为主舱。
-        // **The baseline maps `Main → normalMain` and everything else → `lowNotBulk`**; before this was always main deck.
+        // **`Main → normalMain`、其余 → `lowNotBulk`**； 之前这里恒为主舱。
+        // **`Main` maps to `normalMain`, everything else to `lowNotBulk`**; before this was always main deck.
         Item lower = aggregation.Items.Single(item => item.Id == sample.Cargos[0].Name);
         Item main = aggregation.Items.Single(item => item.Id == sample.Cargos[1].Name);
         lower.Location.Tags.Should().Contain(ItemLocationTag.Low,
@@ -553,10 +553,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**建议装载件数/重量真的进了模型** / The advisory count/weight really reach the model.</summary>
     /// <remarks>
-    /// 基线的两条建议装载目标**只收非 `null` 的舱位**。 之前 DTO 没有这两个字段，于是那两条目标**永远是空表**——
+    /// 两条建议装载目标**只收非 `null` 的舱位**。 之前 DTO 没有这两个字段，于是那两条目标**永远是空表**——
     /// 不报错，只是"建议装载"这个能力在模型里根本不存在。
     ///
-    /// The baseline's two advisory objectives **only collect positions with a non-null value**. Before the DTO had neither field, so both objectives were
+    /// The two advisory objectives **only collect positions with a non-null value**. Before the DTO had neither field, so both objectives were
     /// **always empty** — no error, just "advisory loading" not existing in the model at all.
     /// </remarks>
     [Fact]
@@ -585,10 +585,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**件数上限为零要拒** / A zero item cap must be refused.</summary>
     /// <remarks>
-    /// 基线的第一条 `maxLoadCount` 校验。**少了它，一个"装 0 件"的舱位会变成永远不可用的舱位**——而它看起来只是个普通舱位，
+    /// 第一条 `maxLoadCount` 校验。**少了它，一个"装 0 件"的舱位会变成永远不可用的舱位**——而它看起来只是个普通舱位，
     /// 求解器用不上它也不报错。
     ///
-    /// The baseline's first `maxLoadCount` check. **Without it a "holds 0 items" position becomes permanently unusable** while looking like an ordinary one — the
+    /// The first `maxLoadCount` check. **Without it a "holds 0 items" position becomes permanently unusable** while looking like an ordinary one — the
     /// solver just never uses it and says nothing.
     /// </remarks>
     [Fact]
@@ -612,9 +612,9 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**已装载件数超过上限要拒** / Loaded items exceeding the cap must be refused.</summary>
     /// <remarks>
-    /// 基线的第二条校验。**少了它，内核会收到一个初始就不可行的起点**：已装 2 件、上限 1 件。
+    /// 第二条校验。**少了它，内核会收到一个初始就不可行的起点**：已装 2 件、上限 1 件。
     ///
-    /// The baseline's second check. **Without it the kernel receives a starting point that is infeasible before it begins**: 2 items loaded, cap 1.
+    /// The second check. **Without it the kernel receives a starting point that is infeasible before it begins**: 2 items loaded, cap 1.
     /// </remarks>
     [Fact]
     public void MoreLoadedItemsThanTheCap_ShouldBeRefused() {
@@ -692,10 +692,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**谓词下限必须在舱位载重范围内** / The predicate lower bound must sit within the position capacity.</summary>
     /// <remarks>
-    /// 基线明写：非有限、为负、或**大于舱位上限**就拒。三个数进去，谓词重量的松弛右端就是一个非法区间，
+    /// 规则明写：非有限、为负、或**大于舱位上限**就拒。三个数进去，谓词重量的松弛右端就是一个非法区间，
     /// 而求解器只会报"不可行"，**不会告诉你是哪一端写错了**。
     ///
-    /// The baseline states it outright: reject a non-finite, negative, or **above-cap** value. Those make the slack right-hand side an illegal interval and the
+    /// The rule is outright: reject a non-finite, negative, or **above-cap** value. Those make the slack right-hand side an illegal interval and the
     /// solver only says "infeasible", **never which end is wrong**.
     /// </remarks>
     [Fact]
@@ -721,10 +721,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**预配载缺下限要拒** / Predistribution without a bound must be refused.</summary>
     /// <remarks>
-    /// 基线：`stowageMode == Predistribution && any { it == null }` 就失败。**缺规格时那两条软目标会悄悄消失**，
+    /// `stowageMode == Predistribution && any { it == null }` 就失败。**缺规格时那两条软目标会悄悄消失**，
     /// 模式照跑，只是不再是预配载——**不报错，只是做的是另一件事**。
     ///
-    /// The baseline fails on `stowageMode == Predistribution && any { it == null }`. **Without the spec the two soft objectives quietly vanish** and the mode still
+    /// `stowageMode == Predistribution && any { it == null }` fails. **Without the spec the two soft objectives quietly vanish** and the mode still
     /// runs — just no longer as predistribution. **No error, it simply does something else.**
     /// </remarks>
     [Fact]
@@ -758,9 +758,9 @@ public class Demo2PartitionConfigurationTests
     /// <summary>**请求声明的业务互斥真的进装载问题** / The request's declared business exclusions really reach the loading problem.</summary>
     /// <remarks>
     /// 之前这里恒为空集：**声明了也白声明，不报错，只是那条业务规则不存在**。
-    /// 基线是"只增不减、不覆盖几何冲突"，所以这条判据同时要求**几何那一半还在**（不是被替换掉）。
+    /// "只增不减、不覆盖几何冲突"，所以这条判据同时要求**几何那一半还在**（不是被替换掉）。
     ///
-    /// Before the set was always empty: **declaring one did nothing, with no error — the rule simply did not exist**. The baseline adds without ever replacing,
+    /// Before the set was always empty: **declaring one did nothing, with no error — the rule simply did not exist**. The set adds without ever replacing,
     /// so this criterion also requires **the geometric half to survive** rather than be replaced.
     /// </remarks>
     [Fact]

@@ -49,13 +49,13 @@ public static class EndConstraintRows {
     /// <param name="argsOf">行上携带的对偶回程键，`null` 表示该行不参与价格回程 / The dual return-address key carried on each row; `null` means the row takes no part in price return.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// **哪些任务被约束**（照抄基线，包括它看起来反了的地方）：给了目标结束时间，并且——只有在对应方向全局开关**开着**时——
+    /// **哪些任务被约束**（照做，包括它看起来反了的地方）：给了目标结束时间，并且——只有在对应方向全局开关**开着**时——
     /// **不**允许移动的那些。开关打开时被约束的正是"本来就不许动"的任务；关掉开关才约束所有给了目标的任务。
     ///
     /// 与 的超最大约束不同，这里**不跳过**任何行：`estEnd` 对每个任务都存在（不动任务的 `estEnd` 只是被窗口夹住），
     /// 所以"不许动"的任务照样能收到一条有内容的行。
     ///
-    /// **Which tasks are constrained** (copied from the baseline, including the part that looks inverted): those carrying a target end, and — only when the corresponding global
+    /// **Which tasks are constrained** (copied from the code, including the part that looks inverted): those carrying a target end, and — only when the corresponding global
     /// switch is **on** — the ones that may **not** move. With the switch on the constrained tasks are exactly the immovable ones; only with it off does every task with a target
     /// get a row. Unlike the over-max rows of，**no row is skipped** here: `estEnd` exists for every task (for an immovable one it is merely pinned by the window), so an
     /// immovable task still receives a row with content.

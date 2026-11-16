@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 分段线性函数的 Big-M 解析 / Resolve a piecewise function's Big-M.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `resolvePwlBigM`。
+/// 对齐的 `resolvePwlBigM`。
 ///
 /// **同一个非正候选值，在两条路径上得到相反的结果：**
 ///
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **两次校验（规范化前后各一次）也不是重复**：**规范化本身可能产出不可用的值，
 /// 而那时错误消息不同——"候选不可用"与"规范化后不可用"是两件事。**
 ///
-/// Following the baseline's `resolvePwlBigM`.
+/// Following its `resolvePwlBigM`.
 ///
 /// **The same non-positive candidate yields opposite outcomes on the two paths:**
 ///

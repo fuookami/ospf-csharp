@@ -18,13 +18,13 @@ namespace Fuookami.Ospf.Benchmark;
 /// Measure geometry validation and DTO preparation through the production renderer entry point, without running a solver.
 /// </summary>
 /// <remarks>
-/// 移植基线 `PackingGeometryPreparationBenchmark.kt`（121 行）。
+/// 移植。
 ///
 /// **它测的是"守卫 + DTO 构造"这条路径**，不是装箱算法：`sparse` 场景里所有货物互不重叠，守卫走完全量检查；
 /// `denseFirstConflict` 场景里前两件货物放在原点，守卫在**第一个冲突对**就短路返回。
 /// 两个场景的耗时差异因此是**真实的路径差异**，不是夹具差异。
 ///
-/// Ports `PackingGeometryPreparationBenchmark.kt` (121 lines).
+/// Ports (121 lines).
 ///
 /// **It measures the "guard + DTO construction" path**, not the packing algorithm: in `sparse` no items overlap so the guard checks everything, while in
 /// `denseFirstConflict` the first two items share the origin and the guard short-circuits at **the first conflicting pair**. The timing difference between

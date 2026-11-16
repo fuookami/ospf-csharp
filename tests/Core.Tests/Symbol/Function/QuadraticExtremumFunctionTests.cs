@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// `max min` 与 `min max` 不是同一个量 / `max min` and `min max` are different quantities.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMax.kt`、`QuadraticMaxMin.kt`、`QuadraticMinMax.kt` 补三个类。
+/// 对齐、 补三个类。
 ///
 /// **三者与 `QuadraticIf` 系列同形**：**桥接每个二次多项式，再交给已有的线性极值函数。**
 /// **极值编码本身没有任何新增。**
@@ -126,12 +126,12 @@ public class QuadraticExtremumFunctionTests
     /// **空输入补一个零，而不是拒绝** / An empty input gets a zero rather than a rejection.
     /// </summary>
     /// <remarks>
-    /// **基线的 `inputs.ifEmpty { listOf(LinearPolynomial(emptyList, zero)) }`。**
+    /// **`inputs.ifEmpty { listOf(LinearPolynomial(emptyList, zero)) }`。**
     /// **代价是"空输入"与"输入一个常数 0"无法区分**——
-    /// **而如果这里改成抛异常，基线的行为就变了，所以照抄。**
+    /// **而如果这里改成抛异常，行为就变了，所以沿用。**
     ///
-    /// **The baseline substitutes a zero.** **The cost is that "empty input" cannot be told from "one constant
-    /// zero"** — **and throwing here would change the baseline's behaviour, so it is copied as is.**
+    /// **The code substitutes a zero.** **The cost is that "empty input" cannot be told from "one constant
+    /// zero"** — **and throwing here would change its behaviour, so it is copied as is.**
     /// </remarks>
     [Fact]
     public void TheMax_ShouldSubstituteAZeroForAnEmptyInput()
@@ -152,7 +152,7 @@ public class QuadraticExtremumFunctionTests
     /// **`Inner` 的类型就是"委托给谁"的可观察证据**：
     /// **三者都是 `IMathFunctionSymbol`，所以只有具体类型能区分它们。**
     ///
-    /// **The `Inner` type is the observable evidence of "delegated to what"**:
+    /// **The `Inner` type is the observable evidence of "delegated to what"**.
     /// **all three are `IMathFunctionSymbol`, so only the concrete type tells them apart.**
     /// </remarks>
     [Fact]

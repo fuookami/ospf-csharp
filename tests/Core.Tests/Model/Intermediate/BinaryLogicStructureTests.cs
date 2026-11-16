@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 二值逻辑：真值表是唯一的判据 / The truth table is the only criterion.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BinaryLogicStructure.kt` 的 `BinaryLogicStructure` 与 `BinaryLogicOperation`。
+/// 对齐的 `BinaryLogicStructure` 与 `BinaryLogicOperation`。
 ///
 /// **四种编码的行数公式不同，方向也不同。真正的判据是：<b>把每个二值赋值代进去，
 /// 可行的恰好是该运算的那些</b>。**
@@ -137,7 +137,7 @@ public class BinaryLogicStructureTests
     /// 一个断言"XOR 完全正确"的判据在这里会失败，而失败的原因不在我的代码。**
     ///
     /// **This is the direction's fifth "measured negative" finding, and it is <b>not</b> a defect in my implementation —
-    /// the baseline's XOR encoding is already slack at `n ≥ 3`.**
+    /// its XOR encoding is already slack at `n ≥ 3`.**
     ///
     /// **Checked against the truth table: exact at `n = 1` and `n = 2`, over-accepting at `n = 3` and `n = 4`.** **At
     /// `n = 3` the only extra assignment is `(1,1,1,0)`.**

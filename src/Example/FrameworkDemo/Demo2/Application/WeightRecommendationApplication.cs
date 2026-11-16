@@ -80,7 +80,7 @@ public sealed class WeightRecommendationApplication
         // 4. **There is no Benders wiring on this path, so it is refused explicitly** . This used to resolve the mode and then discard it, always
         // running MILP — a request that asked for Benders got **a MILP answer that looked successful**, with the note `Benders requested; adaptive Benders
         // path enabled in application layer` left in the diagnostics: **saying one thing and doing another.** Only the full-load path has Benders wired
-        // . When a path lacks it, say so instead of silently falling back.
+        // When a path lacks it, say so instead of silently falling back.
         if (solveMode is SolveMode.Benders bendersMode)
         {
             notes.Add($"benders_mode_not_wired={bendersMode.Config.MaxIterations};mode=WeightRecommendation");
@@ -90,9 +90,9 @@ public sealed class WeightRecommendationApplication
         // TODO: Port solveWithMILP and solveWithBendersAlgorithm from Kotlin
 
         // **求解器由调用方带进来**：默认全量测试不能依赖可选后端；没带就明确说"未接线"，
-        // **不是"未移植"**——装配与求解链路在本仓早已可用（先接线了全配载）。
+        // **不是"未实现"**——装配与求解链路在本仓早已可用（先接线了全配载）。
         // **The solver comes from the caller**: the default suite must not depend on an optional backend. When none is supplied it says "not wired",
-        // **not "not ported"** — assembly and solving already exist in this port ( wired the full-load path first).
+        // **not "not implemented"** — assembly and solving already exist here ( wired the full-load path first).
         return milpSolver is null
             ? (ResponseDTO.NoSolution("MilpSolverNotSupplied", notes), null)
             : (DirectMilpRunner.Run(

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 /// <remarks>
 /// 判据的重点：**份数上界至少为 1**（`maxCopies` 为 0 时不能让该层被强制不用）、**`Register` 幂等**（第二次失败而不是翻倍）。
 ///
-/// The criteria focus on **the copy bound being at least 1** (a zero `maxCopies` must not force the layer unused) and **`Register` being idempotent** in the baseline's sense: a second call
+/// The criteria focus on **the copy bound being at least 1** (a zero `maxCopies` must not force the layer unused) and **`Register` being idempotent** in its sense: a second call
 /// fails rather than doubling.
 /// </remarks>
 public class PreciseAssignmentTests {
@@ -46,12 +46,12 @@ public class PreciseAssignmentTests {
     /// 四点成对：
     ///
     /// 1. 注册后**每层都有变量**，越界下标返回 null。
-    /// 2. **`maxCopies` 为 0 时上界仍为 1**——这是基线的 `if (upper < 1) 1 else upper`；上界 0 会让该层被强制不用，
+    /// 2. **`maxCopies` 为 0 时上界仍为 1**——这是`if (upper < 1) 1 else upper`；上界 0 会让该层被强制不用，
     /// 而列生成正要用它判断"用不用"。
     /// 3. 上界按 `maxCopies` 取值（给 3 就是 3）。
     /// 4. **`maxCopies` 短于层数时缺失项按 1**，不抛越界。
     ///
-    /// Four paired points: after registration **every layer has a variable** and an out-of-range index returns null; **a `maxCopies` of 0 still yields a bound of 1**, per the baseline's
+    /// Four paired points: after registration **every layer has a variable** and an out-of-range index returns null; **a `maxCopies` of 0 still yields a bound of 1**, per its
     /// `if (upper < 1) 1 else upper`, since a bound of 0 would force the layer unused while column generation needs exactly that decision; a supplied bound is honoured (3 stays 3); and **a
     /// `maxCopies` shorter than the layer list treats missing entries as 1** rather than throwing.
     /// </remarks>

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 压舱物 / Ballast for weight balance.
 /// </summary>
 /// <remarks>
-/// 与基线 `demo2/domain/stowage/model/Ballast.kt` 对齐。两个符号：
+/// 与对齐。两个符号：
 ///
 /// | 符号 | 构成 | 何时注册 |
 /// | --- | --- | --- |
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 3. **没有最低值时显式注册零**，不是留空。留空会让下游无法区分"没有要求"与"要求为零"，而两者的约束行为不同。
 /// 4. **`ballast_weight` 的单项式是估计装载重量符号本身**，不是新变量。压舱物就是货物，重量已经由装载决策决定了。
 ///
-/// Aligned with the baseline. Two symbols as tabulated. Four easy mistakes: (1) **ballast positions are the available ones**, filtered at construction — using all positions
+/// Two symbols as tabulated. Four easy mistakes: (1) **ballast positions are the available ones**, filtered at construction — using all positions
 /// counts unavailable ones into the ballast weight; (2) **`min_ballast_weight` registers only under soft security** — under hard security it would tell the constraint generator
 /// there is a minimum ballast requirement to add; (3) **an explicit zero when no minimum is supplied**, not nothing, or downstream cannot tell "no requirement" from "a requirement
 /// of zero", and the two behave differently; (4) **`ballast_weight`'s monomials are the estimated load weight symbols themselves**, not fresh variables — ballast is cargo, and its

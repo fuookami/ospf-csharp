@@ -20,18 +20,18 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// The cargo attribute model filled in here: all twelve types exist and no algorithm changed.
 /// </summary>
 /// <remarks>
-/// 复审发现基线 `PackageAttribute.kt` 的十二个类型在 C# 侧一个都没有，而三份文档也从未提到它们。
+/// 复审发现的十二个类型在 C# 侧一个都没有，而三份文档也从未提到它们。
 /// 这里补齐后要钉住两件事：
 ///
 /// ① 十二个类型真的都在（反射列名，而不是"我以为我写了"）；② 生产代码里没有任何人构造它们——
-/// 基线里它们只被 `PackageAttribute.kt` 自身读取，所以 C# 侧也必须是"只有模型"的状态。
+/// 它们只被 自身读取，所以 C# 侧也必须是"只有模型"的状态。
 /// 第二条同时保证"补模型"没有偷偷变成"改行为"。
 ///
 /// 策略本身的行为另有判据： 用一个最小 `ICargoView` 替身把四道门限各撞一次。
 ///
-/// The review found none of the baseline's twelve types on the C# side and no mention of them in any document. After two things
-/// need pinning: the twelve types really exist (by reflection, not by memory), and nothing in production code constructs them — in the baseline they
-/// are read only inside `PackageAttribute.kt`, so the C# side must be "model only" too. The second check also guarantees "adding a model" did not
+/// The review found none of its twelve types on the C# side and no mention of them in any document. After two things
+/// need pinning: the twelve types really exist (by reflection, not by memory), and nothing in production code constructs them — in the code they
+/// are read only inside, so the C# side must be "model only" too. The second check also guarantees "adding a model" did not
 /// quietly become "changing behaviour". The policies' behaviour has its own criteria: a minimal `ICargoView` double walks each gate once.
 /// </remarks>
 public class CargoAttributeModelTests
@@ -162,11 +162,11 @@ public class CargoAttributeModelTests
 
     /// <summary>未知高度即判否 / An unknown height decides false.</summary>
     /// <remarks>
-    /// C# 的物品模型把 `MaxHeight` 存成层数，而基线是长度。 这里刻意让它"未知"，并让策略判否：
+    /// C# 的物品模型把 `MaxHeight` 存成层数，而长度。 这里刻意让它"未知"，并让策略判否：
     /// 把层数当长度会让高度门限静默失效——那才是"看起来迁移完了"的假象。
     ///
-    /// The C# item model keeps `MaxHeight` as a layer count while the baseline keeps a length. Unknown is deliberately modelled here and the
-    /// policy refuses: treating a layer count as a length would let the height gate silently pass — which is precisely the illusion of "ported".
+    /// The C# item model keeps `MaxHeight` as a layer count while the code keeps a length. Unknown is deliberately modelled here and the
+    /// policy refuses: treating a layer count as a length would let the height gate silently pass — which is precisely the illusion of "implemented".
     /// </remarks>
     [Fact]
     public void AnUnknownHeight_ShouldDecideFalse() {

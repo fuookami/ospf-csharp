@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// PWL 指纹：描述的是集合，不是列表 / It describes a set, not a list.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseFingerprint` 与 `numberListText`。
+/// 对齐的 `piecewiseFingerprint` 与 `numberListText`。
 ///
 /// Adds </remarks>
 public class NativePiecewiseFingerprintTests
@@ -69,7 +69,7 @@ public class NativePiecewiseFingerprintTests
     /// An empty list adds no newline, so it is the hash of the previous fingerprint alone.
     /// </summary>
     /// <remarks>
-    /// **基线的 `append(fingerprint.value)` 之后是 `if (structureLines.isNotEmpty) { append('\n');... }`。**
+    /// **`append(fingerprint.value)` 之后是 `if (structureLines.isNotEmpty) { append('\n');... }`。**
     ///
     /// **所以"没有 PWL 结构"时的内容就是上一阶段的指纹本身，而不是"上一阶段指纹 + 一个换行"。**
     ///
@@ -78,7 +78,7 @@ public class NativePiecewiseFingerprintTests
     ///
     /// **如果实现无条件加一个换行，两者不同，判据变红。**
     ///
-    /// **The baseline does `append(fingerprint.value)` then `if (structureLines.isNotEmpty)`.** **So "no PWL structures"
+    /// **The code does `append(fingerprint.value)` then `if (structureLines.isNotEmpty)`.** **So "no PWL structures"
     /// hashes the previous fingerprint itself, not "that plus a newline".**
     ///
     /// **The criterion writes that identity out: an empty list must equal `Sha256(previous.Value, "{backend}-pwl-1")`.**

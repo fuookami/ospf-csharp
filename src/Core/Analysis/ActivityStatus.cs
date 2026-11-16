@@ -6,12 +6,12 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 原始模型成员的活动性状态 / Activity state of an original model member.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivityStatus.kt`（29 行）**逐成员对应，顺序也一致**——它是枚举，顺序会进序列化与比较。
+/// 与**逐成员对应，顺序也一致**——它是枚举，顺序会进序列化与比较。
 ///
 /// **违规与非活动明确分开**：非活动成员满足约束且离边界远，违规成员超出了声明的关系或值域。
 /// 把两者合成一个"不活跃"，会让"这条约束没起作用"和"这条约束被违反了"看起来一样。
 ///
-/// Mirrors the baseline's `ActivityStatus.kt` (29 lines) **member for member, order included** — it is an enum, and the order reaches serialization and comparison.
+/// **member for member, order included** — it is an enum, and the order reaches serialization and comparison.
 /// **A violation is kept distinct from an inactive member**: an inactive one is satisfied and far from its boundary, a violated one is outside the declared relation or domain.
 /// Merging them into "not active" makes "this constraint did nothing" look like "this constraint was broken".
 /// </remarks>

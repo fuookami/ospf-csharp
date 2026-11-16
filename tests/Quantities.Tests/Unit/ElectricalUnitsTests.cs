@@ -14,16 +14,16 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 电流、电压、电阻互相定义，缺一个另外两个就站不住 / The electrical trio defines each other.
 /// </summary>
 /// <remarks>
-/// **新建 `CurrentUnits`**（基线 `Current.kt` 的四个单位本仓一个都没有独立文件），
+/// **新建 `CurrentUnits`**（的四个单位本仓一个都没有独立文件），
 /// 并补 `Voltage.Megavolt` 与 `Resistance` 的基线命名别名 `Kiloohm`/`Megaohm`。
 ///
-/// **为什么三个一起补**：基线里 `Volt = Watt / Ampere`、`Ohm = Volt / Ampere`——
+/// **为什么三个一起补**：`Volt = Watt / Ampere`、`Ohm = Volt / Ampere`——
 /// **缺了电流，电压与电阻的推导无从谈起。**
 ///
-/// Creates `CurrentUnits` (none of the baseline's four current units had a file here)
-/// and adds `Voltage.Megavolt` plus the baseline spellings `Kiloohm`/`Megaohm`.
+/// Creates `CurrentUnits` (none of its four current units had a file here)
+/// and adds `Voltage.Megavolt` plus the code spellings `Kiloohm`/`Megaohm`.
 ///
-/// **Why all three at once**: the baseline defines `Volt = Watt / Ampere` and `Ohm = Volt / Ampere` —
+/// **Why all three at once**: the code defines `Volt = Watt / Ampere` and `Ohm = Volt / Ampere` —
 /// **without current, the voltage and resistance derivations have nothing to stand on.**
 /// </remarks>
 public class ElectricalUnitsTests
@@ -54,7 +54,7 @@ public class ElectricalUnitsTests
             "an alias must point at the base, not at a copy of it");
     }
 
-    /// <summary>**基线命名的电阻别名指向同一个值** / The baseline resistance spellings agree.</summary>
+    /// <summary>**基线命名的电阻别名指向同一个值** / The code resistance spellings agree.</summary>
     /// <remarks>
     /// **`Kiloohm` 与 `Kilohm`、`Megaohm` 与 `Megohm` 必须完全相等。**
     /// **写成两个独立的 `DerivedUnit` 会"数值相等而对象不同"——**、
@@ -113,7 +113,7 @@ public class ElectricalUnitsTests
         ladder.Should().BeInAscendingOrder("micro < milli < 1 < kilo < mega");
     }
 
-    /// <summary>**单位清单与基线一致** / The unit lists match the baseline.</summary>
+    /// <summary>**单位清单** / The unit lists match the code.</summary>
     [Theory]
     [InlineData(typeof(CurrentUnits), "Ampere,Milliampere,Microampere,Kiloampere")]
     [InlineData(typeof(VoltageUnits), "Volt,Microvolt,Millivolt,Kilovolt,Megavolt")]

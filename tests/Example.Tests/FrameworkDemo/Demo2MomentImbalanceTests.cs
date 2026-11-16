@@ -224,7 +224,7 @@ public class Demo2MomentImbalanceTests {
     /// 成对：同一个限制在注册过力矩的模型上成功，在没注册过的模型上失败并说明是**哪个阶段**。基线这里是 `!!`，
     /// 会抛空指针；C# 侧改成返回失败，错误消息带阶段名。
     ///
-    /// Paired: the same limit succeeds on a model with the torque registered and fails on one without, naming the **phase**. The baseline uses `!!` and throws; this returns a
+    /// Paired: the same limit succeeds on a model with the torque registered and fails on one without, naming the **phase**. The code uses `!!` and throws; this returns a
     /// failure whose message carries the phase.
     /// </remarks>
     [Fact]

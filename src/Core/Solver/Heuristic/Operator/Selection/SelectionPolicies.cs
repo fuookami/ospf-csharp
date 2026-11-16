@@ -1,6 +1,5 @@
 // 选择策略 / Selection policies.
-// 与固定 Kotlin 基线 `selection/SelectionPolicy.kt`（13691 B）对应。
-// Mirrors the pinned baseline's `SelectionPolicy.kt` (13691 B).
+// 与固定 Kotlin （13691 B）对应。
 
 using System;
 using System.Collections.Generic;

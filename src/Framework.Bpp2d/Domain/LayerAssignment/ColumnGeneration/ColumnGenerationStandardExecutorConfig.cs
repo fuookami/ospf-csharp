@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 标准执行器配置 / The standard-executor configuration.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationStandardExecutorConfig` 对齐：15 个字段，**默认值全部照抄**。三类字段各有用意：
+/// 与基线 `ColumnGenerationStandardExecutorConfig` 对齐：15 个字段，**默认值全部沿用**。三类字段各有用意：
 ///
 /// | 类别 | 字段 | 用意 |
 /// | --- | --- | --- |
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// **`SheetAmountWeight` 默认 `1e-6`，不是 1**：基线注释写明"余料为主目标；板数权重保持极小，仅用于在'余料相同'的解之间打破平局，
 /// 避免多选零余料的整板"。把它当成普通权重调大，会得到"多选整板"的解——余料一样、板数却更多。
 ///
-/// Aligned with the baseline's `ColumnGenerationStandardExecutorConfig`: 15 fields with **all defaults copied**. **`SheetAmountWeight` defaults to `1e-6` rather than 1**: the baseline comment
+/// Aligned with its `ColumnGenerationStandardExecutorConfig`: 15 fields with **all defaults copied**. **`SheetAmountWeight` defaults to `1e-6` rather than 1**: the code comment
 /// says waste is the primary objective and the sheet-count weight stays tiny, only breaking ties between equal-waste solutions so the model does not add perfectly filled sheets. Raising it
 /// like an ordinary weight yields solutions with the same waste but more sheets.
 /// </remarks>

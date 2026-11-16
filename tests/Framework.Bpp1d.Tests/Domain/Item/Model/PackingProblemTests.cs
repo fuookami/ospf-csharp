@@ -20,18 +20,18 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Item.Model;
 /// **一维装箱领域模型** / The one-dimensional packing domain model.
 /// </summary>
 /// <remarks>
-/// 新建 `Framework.Bpp1d`**：基线有 10 个文件、约 1391 行，C# 侧**一行都没有**。
+/// 新建 `Framework.Bpp1d`**：10 个文件、约 1391 行，C# 侧**一行都没有**。
 /// 这里只做**领域模型层**（`PackingProblem.cs`），应用层与服务层留待后续批次。
 ///
-/// 判据集中钉住**两个容易写错的地方**（基线是对的）：
+/// 判据集中钉住**两个容易写错的地方**（对的）：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |
 /// | 间距只加在件与件之间 | 第一个物品也加 `amount` 份 | 每列凭空多出尾部间距，容量判定偏保守 |
 /// | 件数用二进制倍增 | 逐件累加 | 大件数会卡住 |
 ///
-/// **creates `Framework.Bpp1d`**: the baseline has 10 files (~1391 lines) and the C# side had **nothing**. covers only the **domain model layer**;
-/// application and service layers come later. The criteria pin the **two easy mistakes** above (the baseline is right).
+/// **creates `Framework.Bpp1d`**: the code has 10 files (~1391 lines) and the C# side had **nothing**. covers only the **domain model layer**;
+/// application and service layers come later. The criteria pin the **two easy mistakes** above (the code is right).
 /// </remarks>
 public class PackingProblemTests {
     /// <summary>**间距只加在件与件之间，不加尾部** / Spacing goes between pieces only, never trailing.</summary>

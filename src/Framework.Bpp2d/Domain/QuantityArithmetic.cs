@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// <summary>
 /// 物理量算术辅助类（内部共享）
 /// Quantity arithmetic helpers (internal shared).
-/// Mirrors the 6 Kotlin private file-level functions from RectangularPackingDemand.kt.
+/// The 6 file-level functions: kt.
 /// </summary>
 internal static class QuantityArithmetic {
     /// <summary>

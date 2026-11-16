@@ -20,16 +20,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 必须发货约束 / The must-ship constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/service/limits/MustShipLimit.kt` 对齐：**每个必须发货的货物**，其在**全部舱位**上的配载变量之和等于 1。
+/// 与对齐：**每个必须发货的货物**，其在**全部舱位**上的配载变量之和等于 1。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **等式约束，右端是 1**（不是 `≥ 1`，也不是 `≤ 1`）。用不等式会允许重复装载或漏装。
 /// 2. **求和覆盖全部舱位**，不是只覆盖"可放置"的舱位。不可放置的舱位变量本身为 0，加进去不影响等式。
 /// 3. **`mustShipIndices` 是货物下标**（`Int`），不是货物对象。
 /// 4. **约束名带货物名**：`must_ship_limit_{item}`。
 ///
-/// Aligned with the baseline: for **each must-ship item**, the sum of its stowage variables over **all positions** equals 1. Four things must be copied: **it is an equality with
+/// For **each must-ship item**, the sum of its stowage variables over **all positions** equals 1. Four things are carried over: **it is an equality with
 /// right-hand side 1**, not `≥` or `≤`, which would allow double loading or a miss; **the sum covers every position**, not only the placeable ones, since an unplaceable position's
 /// variable is already zero and adding it does not change the equality; **`mustShipIndices` are item indices**, not item objects; and **the name carries the item**.
 /// </remarks>

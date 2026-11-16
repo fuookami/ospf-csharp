@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// <remarks>
 /// 移植自 `ConflictAnalyzer` 的 `sourceOf` 与 `groupSummaries`。**两个种子策略（原生 IIS、假设式）没搬。**
 ///
-/// Ported from `sourceOf` and `groupSummaries` of `ConflictAnalyzer`. **The two seed strategies (native IIS, assumption-based) are not ported.**
+/// Ported from `sourceOf` and `groupSummaries` of `ConflictAnalyzer`. **The two seed strategies (native IIS, assumption-based) are not implemented.**
 /// </remarks>
 public static class ConflictEvidenceSupport
 {

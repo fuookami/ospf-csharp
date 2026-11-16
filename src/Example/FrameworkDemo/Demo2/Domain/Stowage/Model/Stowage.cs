@@ -22,11 +22,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 货物状态的派生语义 / Derived semantics of an item status.
 /// </summary>
 /// <remarks>
-/// 基线的 `ItemStatus` 是**带默认值的枚举成员**（`Loaded { override val loaded = true }` …），C# 的枚举没有成员属性，
-/// 于是这里的映射就是那份默认值的移植。**照抄而不要"合理推断"**：`Preassigned` 和 `Optional` 都是"需要装载"，
+/// `ItemStatus` 是**带默认值的枚举成员**（`Loaded { override val loaded = true }` …），C# 的枚举没有成员属性，
+/// 于是这里的映射就是那份默认值的移植。**沿用而不要"合理推断"**：`Preassigned` 和 `Optional` 都是"需要装载"，
 /// 但 `Preassigned` 不是"需要调整"；`AdjustmentNeeded` 同时是"已装载"和"可用"。
 ///
-/// The baseline's `ItemStatus` is an enum **with per-member overrides** (`Loaded { override val loaded = true }` …); a C# enum has no member properties, so this mapping is that
+/// `ItemStatus` is an enum **with per-member overrides** (`Loaded { override val loaded = true }` …); a C# enum has no member properties, so this mapping is that
 /// set of defaults. **Copy it, do not "reason it out"**: `Preassigned` and `Optional` both need stowage but `Preassigned` is not "needs adjustment"; `AdjustmentNeeded` is both
 /// loaded and available.
 /// </remarks>
@@ -59,14 +59,14 @@ public static class ItemStatuses
 /// 装载模型的业务桥接：决策由共享内核拥有，符号在这里翻译 / Business bridge for stowage: the kernel owns the decisions, the symbols are translated here.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/Stowage.kt`：**合法性判定**（`StowageNeeded` / `AdjustmentNeeded`）与
+/// 逐条对齐：**合法性判定**（`StowageNeeded` / `AdjustmentNeeded`）与
 /// **符号桥接**（`stowage_{i}_{j}` 每个合法组合一项、`loaded_{i}` 每件货一行）。
 ///
-/// 与基线的一处已知差异：基线用 `items[i].id` 做键，C# 的 `Item` 目前只有 `Name`，所以键是**名称**。
+/// 与一处已知差异：`items[i].id` 做键，C# 的 `Item` 目前只有 `Name`，所以键是**名称**。
 /// 名称重复会让两件货共用一列——这是 `Item` 还缺 `Id` 的后果，已记入缺口。
 ///
-/// Mirrors the baseline `Stowage.kt` closely: **legality** (`StowageNeeded` / `AdjustmentNeeded`) and **symbol bridging** (`stowage_{i}_{j}` per legal pair, `loaded_{i}` per item).
-/// One known divergence: the baseline keys by `items[i].id` while C#'s `Item` only has `Name`, so the key is the **name**. Duplicate names would make two items share a column —
+/// closely: **legality** (`StowageNeeded` / `AdjustmentNeeded`) and **symbol bridging** (`stowage_{i}_{j}` per legal pair, `loaded_{i}` per item).
+/// One known divergence: the code keys by `items[i].id` while C#'s `Item` only has `Name`, so the key is the **name**. Duplicate names would make two items share a column —
 /// a consequence of `Item` still lacking an `Id`, recorded as a gap.
 /// </remarks>
 public sealed class Stowage
@@ -130,10 +130,10 @@ public sealed class Stowage
     /// <param name="positionIndex">舱位下标 / Position index.</param>
     /// <returns>决策变量；不合法组合没有变量 / The variable; illegal pairs have none.</returns>
     /// <remarks>
-    /// **不合法组合返回 `null` 而不是零变量**：基线的稀疏决策只给合法组合建变量，返回零会让"没有这条决策"
+    /// **不合法组合返回 `null` 而不是零变量**：稀疏决策只给合法组合建变量，返回零会让"没有这条决策"
     /// 和"这条决策被固定为不选"看起来一样，而后者是一个可以写错的约束。
     ///
-    /// **Illegal pairs return `null` rather than a zero variable**: the baseline's sparse decisions only create variables for legal pairs, and returning zero would make "no such
+    /// **Illegal pairs return `null` rather than a zero variable**: its sparse decisions only create variables for legal pairs, and returning zero would make "no such
     /// decision" look identical to "the decision is fixed to not-chosen" — the latter being a constraint one can get wrong.
     /// </remarks>
     public BinVar? AssignmentVariable(int itemIndex, int positionIndex) {

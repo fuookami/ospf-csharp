@@ -1,6 +1,6 @@
 // 板长分配：配置、约束、目标与结果 / Sheet assignment: configuration, constraints, objectives and the result.
-// 与固定 Kotlin 基线 `csp2d/domain/sheet_assignment/SheetAssignmentContext.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `SheetAssignmentContext.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Csp2d.Domain.SheetAssignment;
 /// 保留它是因为**软化的口径是产品需求**（"超一点可以，但要罚"），而软化需要额外的松弛变量，
 /// 那是另一件事，不该在这一层偷偷加。
 ///
-/// **`OverLengthWeight` exists only as configuration, exactly like the baseline**: none of the three constraints or objectives reads it. It is kept because **a softened
+/// **`OverLengthWeight` exists only as configuration, exactly like the code**: none of the three constraints or objectives reads it. It is kept because **a softened
 /// measure is a product requirement** ("a little over is fine but must be penalised"), and softening needs extra slack variables — a separate change that must not be
 /// slipped in at this layer.
 /// </remarks>

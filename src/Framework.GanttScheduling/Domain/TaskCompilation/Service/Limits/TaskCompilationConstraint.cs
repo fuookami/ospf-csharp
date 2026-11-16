@@ -111,12 +111,12 @@ public class TaskCompilationConstraint<E, A>
     /// <inheritdoc/>
     /// <remarks>
     /// **这一条以前只做校验、不加任何行**：它检查表里有没有每个任务的编译表达式，然后返回 `Ok`。
-    /// 基线的 `invoke` 是 `model.addConstraint(taskCompilation[task] eq 1, args = TaskCompilationShadowPriceKey(task))`——
+    /// `invoke` 是 `model.addConstraint(taskCompilation[task] eq 1, args = TaskCompilationShadowPriceKey(task))`——
     /// 也就是**每个任务必须恰好被编译一次**这条要求本身。少了它，任务编译量可以取任意值，排程照样"成功"。
     ///
     /// 三件事一起做：**缺表达式就失败**（原来那半段）、**加 `= 1` 的行**、**行上挂键**。
     ///
-    /// **This used to validate only and add no row**: it checked that every task had a compiled expression and returned `Ok`. The baseline's `invoke` is
+    /// **This used to validate only and add no row**: it checked that every task had a compiled expression and returned `Ok`. `invoke` is
     /// `model.addConstraint(taskCompilation[task] eq 1, args = TaskCompilationShadowPriceKey(task))` — the requirement itself, that **each task is compiled exactly once**. Without it the
     /// compiled quantity may take any value and the schedule still "succeeds". Three things now happen together: **fail on a missing expression** (the half that existed), **add the `= 1` row**, and
     /// **attach the key to the row**.

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 结构节点拥有的连续约束区域 / A contiguous constraint region owned by a structure node.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `DeferredFunctionConstraintRegion`。
+/// 对齐的 `DeferredFunctionConstraintRegion`。
 ///
 /// **`LastConstraintIndex` 是<b>排他</b>索引，而这一点决定了所有用它做的算术。**
 ///
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **判据钉住"`Last − First == Count`"，而不是钉住某个具体数值——
 /// 后者在改变 `First` 时会一起变，于是不变量看起来仍然成立。**
 ///
-/// Following the baseline's `DeferredFunctionConstraintRegion`.
+/// Following its `DeferredFunctionConstraintRegion`.
 ///
 /// **`LastConstraintIndex` is an <b>exclusive</b> index, and that decides every arithmetic on it.**
 ///
@@ -67,7 +67,7 @@ public sealed record DeferredFunctionConstraintRegion(
 /// 为延迟自动 Big-M 快照捕获有限输入范围 / Capture a finite input range for a deferred automatic Big-M snapshot.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `capturePwlInputBounds`。
+/// 对齐的 `capturePwlInputBounds`。
 ///
 /// **三层校验，顺序不能换：**
 ///
@@ -130,7 +130,7 @@ public static class PiecewiseInputBounds
 /// 分段线性函数的结构与 fallback 证明快照 / Piecewise structure and fallback proof snapshot.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `UnivariateLinearPiecewiseStructure` 补其
+/// 对齐的 `UnivariateLinearPiecewiseStructure` 补其
 /// `ValidateFallbackInputBounds` 部分；**行生成与选择列约束留给后续批次。**
 ///
 /// **这个校验的<b>第一件事</b>是看 `ExplicitM`：**

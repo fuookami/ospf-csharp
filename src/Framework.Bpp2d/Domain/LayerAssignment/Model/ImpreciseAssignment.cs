@@ -17,9 +17,9 @@ using Fuookami.Ospf.Utils.Error;
 using Fuookami.Ospf.Utils.Functional;
 using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional.Success, Fuookami.Ospf.Utils.Error.ErrorCode, Fuookami.Ospf.Utils.Error.Error<Fuookami.Ospf.Utils.Error.ErrorCode>>;
 
-// 基线的 `typealias Bpp2dColumnVariable = AbstractVariableItem<UInt64, UInteger>` 无法在 C# 表达
+// `typealias Bpp2dColumnVariable = AbstractVariableItem<UInt64, UInteger>` 无法在 C# 表达
 // （`src/Core/Symbol/SymbolCombination.cs:95` 同样记录），所以用 `using` 别名；别名不能带 XML 文档。
-// The baseline's typealias cannot be expressed in C#, so a using alias is used; aliases cannot carry XML docs.
+// The code's typealias cannot be expressed in C#, so a using alias is used; aliases cannot carry XML docs.
 using Bpp2dColumnVariable = Fuookami.Ospf.Core.Variable.CombinationVariableItem<Fuookami.Ospf.Math.Algebra.Number.UInt64, Fuookami.Ospf.Core.Variable.UInteger>;
 
 namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
@@ -28,10 +28,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 非精确层分配 / The imprecise layer assignment.
 /// </summary>
 /// <remarks>
-/// 与基线 `bpp2d-domain-layer-assignment-context/.../model/Assignment.kt` 的 `ImpreciseAssignment` 对齐。它是
+/// 与的 `ImpreciseAssignment` 对齐。它是
 /// `Load`、`Capacity`、`Objectives` 与十余条 `Limits` 的共同前置：没有它，后几块连变量都拿不到。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **列变量按迭代分批**（`x_0`、`x_1`…），`VariableOf` 先找已有分组、找不到才用**最后一组的第一项**。
 ///    直接取"新建一组"会让老列失去变量，目标函数与约束对不上列。
@@ -40,8 +40,8 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 ///    为一个空集合注册 `x_1` 会白占一个变量组。
 /// 4. **`Area` 是"列面积 × 该列变量"的线性和**，每轮 `AddColumns` 都往里追加项，不是重算。
 ///
-/// Aligned with the baseline's `ImpreciseAssignment`. It is the common prerequisite for `Load`, `Capacity`, `Objectives` and a dozen `Limits`: without it those blocks cannot even get a
-/// variable. Four things must be copied: **column variables are grouped per iteration** (`x_0`, `x_1`, …) and `VariableOf` looks through the existing groups first, falling back to **the
+/// Aligned with its `ImpreciseAssignment`. It is the common prerequisite for `Load`, `Capacity`, `Objectives` and a dozen `Limits`: without it those blocks cannot even get a
+/// variable. Four things are carried over: **column variables are grouped per iteration** (`x_0`, `x_1`, …) and `VariableOf` looks through the existing groups first, falling back to **the
 /// first item of the last group**, since always creating a new group would leave older columns without a variable and desynchronise the objective from the constraints; **the column
 /// upper bound is a conservative estimate**, `ceil(largest demand to cover / units in the column)`, and omitting it would let one candidate column be reused indefinitely;
 /// **`AddColumns` deduplicates first**, returning early on an empty result and **registering no variable**, because registering `x_1` for an empty set wastes a variable group; and
@@ -100,11 +100,11 @@ public sealed class ImpreciseAssignment
     /// <returns>列变量 / The column variable.</returns>
     /// <exception cref="InvalidOperationException">还没有任何变量组 / No variable group exists yet.</exception>
     /// <remarks>
-    /// **与基线的一处差异**：基线用 `layer.index`（`ManualIndexed`），而本仓的 `Layer` **没有手动下标**，
+    /// **与一处差异**：`layer.index`（`ManualIndexed`），而本仓的 `Layer` **没有手动下标**，
     /// 只有 `Iteration`（优化轮次，不是列序号）。用 `Iteration` 代替会把"第几轮"当成"第几列"，
     /// 列一多就索引错位。所以这里让调用方传列下标——**传错的锅在调用方，不在类型里藏一个假下标**。
     ///
-    /// **One difference from the baseline**: the baseline uses `layer.index` (from `ManualIndexed`), while this repository's `Layer` **has no manual index**, only `Iteration` (the optimisation
+    /// **One difference from the code**: the code uses `layer.index` (from `ManualIndexed`), while this repository's `Layer` **has no manual index**, only `Iteration` (the optimisation
     /// round, not the column number). Substituting `Iteration` would treat "which round" as "which column" and misalign as soon as a round carries more than one column, so the caller passes
     /// the index — **a wrong index is then the caller's problem rather than a fake index hidden in the type**.
     /// </remarks>

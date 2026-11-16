@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 ///
 /// The rows are `estEnd ≤ lastEnd` / `estEnd ≥ earliestEnd` — a **mirrored pair**; swapping them keeps the model feasible and merely slides the plan. Three silent failures:
 /// (1) **inverted direction** — both sides usually feasible, the solve succeeds and the answer is skewed; (2) **wrong symbol** — the row binds `estEnd`; binding `est` constrains the
-/// start instead and breaks as soon as the duration changes; (3) **inverted task filter** — with the switch on the baseline keeps the tasks that may **not** move.
+/// start instead and breaks as soon as the duration changes; (3) **inverted task filter** — with the switch on the code keeps the tasks that may **not** move.
 /// </remarks>
 public class EndConstraintTests {
     private static readonly DateTimeOffset Origin = new(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);

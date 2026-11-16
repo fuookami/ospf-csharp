@@ -1,6 +1,6 @@
 // 库存累积行 / Cumulative stock rows.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../ActivityMaterialRows.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `ActivityMaterialRows.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

@@ -136,10 +136,10 @@ public class Csp1dWasteValueTests {
 
     /// <summary>**物料没有长度时余料为 null，不是零** / Without a material length the rest material is null, not zero.</summary>
     /// <remarks>
-    /// 基线是 `?: return null`。若实现改成"返回零"，**"没有数据"和"真的没有余料"就混在一起**——
+    /// `?: return null`。若实现改成"返回零"，**"没有数据"和"真的没有余料"就混在一起**——
     /// 下游无法区分，KPI 会显示成"零浪费"。
     ///
-    /// The baseline is `?: return null`. If it returned zero instead, **"no data" and "genuinely no waste" would be conflated**, and the KPI would read as
+    /// The code is `?: return null`. If it returned zero instead, **"no data" and "genuinely no waste" would be conflated**, and the KPI would read as
     /// "zero waste".
     /// </remarks>
     [Fact]

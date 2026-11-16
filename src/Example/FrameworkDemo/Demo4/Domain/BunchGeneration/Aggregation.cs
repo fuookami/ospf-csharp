@@ -40,9 +40,9 @@ public sealed class Aggregation(
     /// 每架飞机的路线图诊断 / The route-graph diagnostics per aircraft.
     /// </summary>
     /// <remarks>
-    /// **缺省是空表，不是 `null`**：读它的人应当拿到"这轮没有诊断"，而不是空引用。基线也是 `emptyMap`。
+    /// **缺省是空表，不是 `null`**：读它的人应当拿到"这轮没有诊断"，而不是空引用。是 `emptyMap`。
     ///
-    /// **The default is an empty map, not `null`**: a reader should get "no diagnostics this round", not a null reference. The baseline uses `emptyMap` too.
+    /// **The default is an empty map, not `null`**: a reader should get "no diagnostics this round", not a null reference. The code uses `emptyMap` too.
     /// </remarks>
     public IReadOnlyDictionary<Aircraft, RouteGraphDiagnostics> RouteGraphDiagnostics { get; } =
         routeGraphDiagnostics ?? new Dictionary<Aircraft, RouteGraphDiagnostics>();

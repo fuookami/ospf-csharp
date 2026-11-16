@@ -1,6 +1,5 @@
 // 生物启发类更新算子 / Biologically-inspired update operators.
-// 与固定 Kotlin 基线 `operator/update/BioUpdates.kt`（11044 B）对应。
-// Mirrors the pinned baseline's `BioUpdates.kt`.
+// 与固定 Kotlin （11044 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -56,8 +55,8 @@ public sealed record WhaleOptimizationUpdate(IParameterSource Decay, double Spir
             int dimension = current.Count;
             var moved = new List<V>(dimension);
 
-            // 抽样顺序必须与基线一致：p → A → C →（探索时）参照下标 → spiralLength。
-            // The draw order must match the baseline: p, then A, then C, then (on exploration) the reference index, then spiralLength.
+            // 抽样顺序必须：p → A → C →（探索时）参照下标 → spiralLength。
+            // The draw order must match the code: p, then A, then C, then (on exploration) the reference index, then spiralLength.
             double p = NumericSupport.Unit(entropy);
             bool spiral = p >= 0.5;
             double coefficientA = (2.0 * a * NumericSupport.Unit(entropy)) - a;
@@ -100,9 +99,9 @@ public sealed record WhaleOptimizationUpdate(IParameterSource Decay, double Spir
 /// **All three energy regimes must remain**: `|E| &gt;= 1` distant exploration, `|E| &gt;= 0.5` soft siege, otherwise hard siege. Merging
 /// the middle regime removes the transition, and the algorithm jumps between large and small energy — the convergence curve plateaus
 /// then suddenly hugs the optimum.
-/// **每维的额外抽样不能提前**。基线在每维内部各抽一次（远距探索段抽一次、软围攻段再抽一次），提前到循环外会让同一维的多次更新
+/// **每维的额外抽样不能提前**。每维内部各抽一次（远距探索段抽一次、软围攻段再抽一次），提前到循环外会让同一维的多次更新
 /// 共用一个随机数，探索性大幅下降而结果看起来仍然合理。
-/// **The extra per-dimension draws cannot be hoisted.** The baseline draws once inside each dimension (one in the distant-exploration
+/// **The extra per-dimension draws cannot be hoisted.** The code draws once inside each dimension (one in the distant-exploration
 /// branch, one in the soft-siege branch); hoisting them outside the loop makes every dimension reuse one random number, sharply reducing
 /// exploration while the results still look reasonable.
 /// </remarks>
@@ -169,12 +168,12 @@ public sealed record HarrisHawkUpdate(IParameterSource Decay) : ISolutionUpdate 
 /// 而"加速"这一看似合理的名字会让人以为它天然安全。
 /// **The probability must be clamped into `[1e-6, 1]`.** It appears in a denominator, and the linearly decaying probability heads toward
 /// 0.001 or lower late in a run; hitting 0 divides by zero, and the plausible-sounding name "accelerator" makes it look inherently safe.
-/// **三个随机数按个体抽取一次，不在每维重抽**。这是基线的写法：整个个体的所有维度共用同一组分支判据，否则同一维的更新会在
+/// **三个随机数按个体抽取一次，不在每维重抽**。这是写法：整个个体的所有维度共用同一组分支判据，否则同一维的更新会在
 /// "加速"与"减速"之间逐维跳变。
-/// **The three random numbers are drawn once per individual, not per dimension.** That is the baseline's shape: all dimensions of one
+/// **The three random numbers are drawn once per individual, not per dimension.** That is its shape: all dimensions of one
 /// individual share the same branch decisions; otherwise the update flips between acceleration and deceleration dimension by dimension.
-/// **`scale = width * sensitivity + origin`** 是基线的原样写法（把区间宽度按灵敏度折算再平移到下界）。
-/// **`scale = width * sensitivity + origin`** is the baseline's exact shape (the interval width scaled by the sensitivity, shifted to the
+/// **`scale = width * sensitivity + origin`** 是原样写法（把区间宽度按灵敏度折算再平移到下界）。
+/// **`scale = width * sensitivity + origin`** is its exact shape (the interval width scaled by the sensitivity, shifted to the
 /// lower bound).
 /// </remarks>
 /// <param name="Accelerator">加速系数演化源 / The accelerator source.</param>

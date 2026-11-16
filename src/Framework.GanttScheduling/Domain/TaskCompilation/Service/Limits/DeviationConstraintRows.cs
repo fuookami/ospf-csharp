@@ -99,7 +99,7 @@ public static class DeviationConstraintRows {
             // 基线这里是 `args = Task{Delay,Advance}TimeShadowPriceKey(task)`；少了它，提取器读一张永远空的表，
             // 列生成按零价格挑列**且不报错**。
             //
-            // **The row must carry a shadow-price key**: duals come back per row, so recognising its own row requires the `args` on the row. The baseline passes
+            // **The row must carry a shadow-price key**: duals come back per row, so recognising its own row requires the `args` on the row. The code passes
             // `args = Task{Delay,Advance}TimeShadowPriceKey(task)`; without it the extractor reads a forever-empty table and column generation selects at zero prices **without raising**.
             Fuookami.Ospf.Framework.Model.ShadowPriceKey key = direction == DeviationDirection.Delay
                 ? new TaskDelayTimeShadowPriceKey<E, A>(task)

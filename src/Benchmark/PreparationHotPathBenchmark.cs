@@ -30,7 +30,6 @@ namespace Fuookami.Ospf.Benchmark;
 /// 使用真实入口测量批量准备，规模按 N / 2N / 4N 增长 / Measure the production preparation APIs at N / 2N / 4N sizes.
 /// </summary>
 /// <remarks>
-/// 与基线 `PreparationHotPathBenchmark.kt`（8312 B）对应。
 ///
 /// **基线最后一个基准 `handleConstraintProgrammingSolution`（`bulkSolutionWithSharedOwner`）
 /// 依赖 `ManualTokenList.tokensInSolver.reversed` 构造"逆序共享 owner"**；C# 侧 `TokensInSolver` 是
@@ -38,7 +37,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **不写一个不会真正逆序的替代夹具**——那会让"重复存在性扫描"这一被测行为消失，而基准仍然跑得出数字。
 /// 缺口留在 P9 台账。
 ///
-/// **The baseline's `bulkSolutionWithSharedOwner` relies on `ManualTokenList.tokensInSolver.reversed` to build a "reverse-shared owner"**; on the C# side
+/// **The code's `bulkSolutionWithSharedOwner` relies on `ManualTokenList.tokensInSolver.reversed` to build a "reverse-shared owner"**; on the C# side
 /// `TokensInSolver` is **a read-only property computed in `SolverIndex` ascending order**, with no way to register in reverse. keeps the
 /// single-item and batch registration benchmarks and **does not write a stand-in that never actually reverses** — that would make the "repeated
 /// existence scan" behaviour disappear while the benchmark still produces numbers. The gap stays on the P9 ledger.

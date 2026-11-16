@@ -110,7 +110,7 @@ public class ProvenanceDualMappingTests {
     /// 基线取 `getOrNull`：**短的那一侧只是"这行没有来源"，不是错误。**
     /// 用索引器会抛异常，**而抛异常会让整份敏感度报告消失。**
     ///
-    /// The baseline takes `getOrNull`: **the short side simply means "this row has no origin", not an error.** The indexer throws, **and a throw loses the whole sensitivity report.**
+    /// The code takes `getOrNull`: **the short side simply means "this row has no origin", not an error.** The indexer throws, **and a throw loses the whole sensitivity report.**
     /// </remarks>
     [Fact]
     public void TheMismatchedLengths_ShouldNotThrow() {

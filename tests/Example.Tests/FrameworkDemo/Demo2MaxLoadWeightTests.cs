@@ -12,16 +12,16 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **分段线性最大装载重量** / Piecewise-linear maximum load weight.
 /// </summary>
 /// <remarks>
-/// 基线的 `PositionMaximumLoadWeight` 支持"按零油重分段"：同一舱位在飞机轻时允许装得多、重时允许装得少，为别的舱位留余量。
+/// `PositionMaximumLoadWeight` 支持"按零油重分段"：同一舱位在飞机轻时允许装得多、重时允许装得少，为别的舱位留余量。
 /// 它有三处容易被"顺手写得更合理"的地方：
 ///
-/// 1. **阶跃，不是插值**。基线里那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**是注释掉的**，生效的是分段查找。
+/// 1. **阶跃，不是插值**。那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**是注释掉的**，生效的是分段查找。
 /// 把它"补全"成插值是很自然的冲动，但那会把跨语言行为改掉。
 /// 2. **零油重超过最后一段时取最后一段**，不是"无限制"。取无限制会让已经超重的飞机允许再装任意重量。
 /// 3. **`mlw` 是各段最大值**，不是第一段或最后一段——`y` 的变量上界用的就是它。
 ///
-/// The baseline supports "segments by zero-fuel weight": a position takes more when the aircraft is light and less when it is heavy, leaving room for other positions. Three places
-/// invite a "helpful" rewrite: (1) it is a **step, not an interpolation** — the baseline's smooth path is **commented out** and the segment lookup is what runs; (2) a zero-fuel
+/// The code supports "segments by zero-fuel weight": a position takes more when the aircraft is light and less when it is heavy, leaving room for other positions. Three places
+/// invite a "helpful" rewrite: (1) it is a **step, not an interpolation** — its smooth path is **commented out** and the segment lookup is what runs; (2) a zero-fuel
 /// weight past the last segment takes the last segment, not "no limit", which would let an already-heavy aircraft load anything; (3) `mlw` is the **maximum across segments**,
 /// not the first or last, and that is what bounds `y`.
 /// </remarks>
@@ -94,10 +94,10 @@ public class Demo2MaxLoadWeightTests {
     /// </summary>
     /// <remarks>
     /// 段内取值必须**恒等于该段的 `mlw`**，不随零油重变化。插值的话 60 与 90 会给出两个不同的数；阶跃下两者都是 800。
-    /// 基线里那条插值路径是注释掉的——把它"补全"是很自然的冲动，这条判据就是拦这个的。
+    /// 那条插值路径是注释掉的——把它"补全"是很自然的冲动，这条判据就是拦这个的。
     ///
     /// Inside a segment the value must be **exactly that segment's `mlw`**, independent of the zero-fuel weight: an interpolation would give two different numbers at 60 and 90 while
-    /// a step gives 800 for both. The baseline's interpolation path is commented out — "completing" it is the natural impulse this criterion blocks.
+    /// a step gives 800 for both. The code's interpolation path is commented out — "completing" it is the natural impulse this criterion blocks.
     /// </remarks>
     [Fact]
     public void At_ShouldBeAStepNotAnInterpolation() {
@@ -185,10 +185,10 @@ public class Demo2MaxLoadWeightTests {
     /// **空分段是错误** / An empty segment list is an error.
     /// </summary>
     /// <remarks>
-    /// 基线的 `assert(piecewise.isNotEmpty)` 在 Kotlin 里默认关闭；C# 的异常在 Release 下也生效。静默接受空分段会得到一个
+    /// `assert(piecewise.isNotEmpty)` 在 Kotlin 里默认关闭；C# 的异常在 Release 下也生效。静默接受空分段会得到一个
     /// "永远返回 0"的规格——它不会崩，只会让每个舱位都不可用。
     ///
-    /// The baseline's `assert` is off by default in Kotlin while C#'s exception fires in Release too. Silently accepting an empty list yields a specification that returns zero
+    /// `assert` is off by default in Kotlin while C#'s exception fires in Release too. Silently accepting an empty list yields a specification that returns zero
     /// forever — nothing crashes, every position just becomes unusable.
     /// </remarks>
     [Fact]

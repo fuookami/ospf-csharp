@@ -1,6 +1,6 @@
 // 裁切图案、方案与几何小判据 / Cutting patterns, plans and small geometry checks.
-// 与固定 Kotlin 基线 `csp2d/domain/material/model/Pattern2.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `Pattern2.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp2d.Domain;
@@ -25,11 +25,11 @@ namespace Fuookami.Ospf.Framework.Csp2d.Domain.Material.Model;
 /// <param name="CutTree">断头台切分树；任意排样为空 / The guillotine cut tree; null for arbitrary nesting.</param>
 /// <param name="Process">裁切工艺 / The cutting process.</param>
 /// <remarks>
-/// **三处面积与利用率返回 `Result` 而不是静默取零**：基线的 `quantitySum(...) ?: quantityZeroOf(...)`
+/// **三处面积与利用率返回 `Result` 而不是静默取零**：`quantitySum(...) ?: quantityZeroOf(...)`
 /// 在**单位不一致**时会把占用面积悄悄变成 0，于是"利用率 0%"看起来像一个合法结果，而真实情况是**这笔账根本算不成**。
 /// 本实现把这一格显式报出来。
 ///
-/// **Three area and utilization members return a `Result` instead of silently zeroing**: the baseline's
+/// **Three area and utilization members return a `Result` instead of silently zeroing**: its
 /// `quantitySum(...) ?: quantityZeroOf(...)` quietly turns the occupied area into 0 when the **units disagree**, so
 /// "0% utilization" looks like a legal result while the real situation is that **the arithmetic cannot be done at all**.
 /// This implementation reports that case explicitly.

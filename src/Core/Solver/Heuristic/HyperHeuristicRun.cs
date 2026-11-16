@@ -1,7 +1,7 @@
 // 超启发式运行 / The hyper-heuristic run.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun` 的单线程主体：
+// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun` 的单线程主体：
 // 选动作 → 分配额度 → 执行 → 归并 → 记账 → 决策，加上 `run` 循环与 `result`。
-// Mirrors the single-threaded body of `HyperHeuristicRun` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B): pick an action, allocate an
+// Single-threaded body: pick an action, allocate an
 // allowance, execute, merge, account, decide — plus the `run` loop and `result`.
 
 using System;
@@ -19,14 +19,14 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic;
 /// 一次超启发式运行 / One hyper-heuristic run.
 /// </summary>
 /// <remarks>
-/// **本移植只做单线程顺序执行**，基线支持 `ExecutionMode.Asynchronous` 下的多线程并发派发。
+/// **本实现只做单线程顺序执行**，基线支持 `ExecutionMode.Asynchronous` 下的多线程并发派发。
 /// 差异的后果是明确的：并发下"同一决策序号可能有两个工作单元同时记账"，而顺序执行**每一步的账都是确定的**。
 /// 因此这里的门槛证据与基线并发路径不可互比——**不声称性能等价，也不声称并发行为一致**。
 /// `ponytail:` 并发派发留到需要时再加，届时按工作单元分片的调度是升级路径。
 ///
-/// **This port runs single-threaded and sequential**, while the baseline supports multi-threaded concurrent dispatch under
+/// **This implementation runs single-threaded and sequential**, while the code supports multi-threaded concurrent dispatch under
 /// `ExecutionMode.Asynchronous`. The consequence is explicit: under concurrency one decision index may be accounted by two workers at once, while
-/// sequential execution **accounts every step deterministically**. The gate evidence here is therefore not comparable to the baseline's concurrent
+/// sequential execution **accounts every step deterministically**. The gate evidence here is therefore not comparable to its concurrent
 /// path — **no claim of equal performance, none of identical concurrency semantics**.
 /// `ponytail:` concurrent dispatch is deferred until needed; index-sharded scheduling per worker is the upgrade path.
 /// </remarks>

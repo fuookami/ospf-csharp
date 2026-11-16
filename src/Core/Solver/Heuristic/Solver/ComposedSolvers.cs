@@ -1,7 +1,7 @@
 // 组合求解器工厂 / The composed-solver factories.
-// 与固定 Kotlin 基线 `solver/ComposedSolvers.kt`（75223 B）的本文件全部工厂对应；该文件共约 35 个工厂，分批推进。
-// Mirrors the first three groups of factories in the pinned baseline's `solver/ComposedSolvers.kt` (75223 B), which holds roughly 35 factories
-// and is being ported in batches.
+// 与固定 Kotlin （75223 B）的本文件全部工厂对应；该文件共约 35 个工厂，分批推进。
+// The first three groups of factories in the: , which holds roughly 35 factories
+// and is being implemented in batches.
 
 using System;
 using System.Collections.Generic;
@@ -16,12 +16,12 @@ using Fuookami.Ospf.Math.Algebra.Number;
 namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 
 /// <remarks>
-/// **本类是基线启发式插件的直接对应物：** **基线 `GA.kt`／`HS.kt` 等文件里各只有一个工厂函数，
+/// **本类是基线启发式插件的直接对应物：** **／ 等文件里各只有一个工厂函数，
 /// 没有类——所以"基线对应物"是这里的 35 个入口，而不是 `Core.Plugin.Heuristic` 里的 `HeuristicAlgorithm` 子类**
 /// （后者是 C# 侧的等价算法封装面，同样保留、且每个都被测试构造）。
 ///
-/// **This class is the baseline's direct counterpart : each baseline file such as `GA.kt` / `HS.kt` holds a single
-/// factory function and no classes, so the baseline counterpart is these 35 entry points rather than the `HeuristicAlgorithm`
+/// **This class is its direct counterpart : each baseline file such as / holds a single
+/// factory function and no classes, so the code counterpart is these 35 entry points rather than the `HeuristicAlgorithm`
 /// subclasses in `Core.Plugin.Heuristic`** (those are C#'s equivalent algorithm surface, also kept, and each is constructed by a
 /// test).
 /// </remarks>
@@ -30,15 +30,15 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Solver;
 /// </summary>
 /// <remarks>
 /// **每个工厂都做三件事：装配运行器、给它一个人能认出来的名字、把它包成求解器。** 没有第四件事——
-/// 工厂里出现"顺手做点别的"（调参、预热、额外校验）就会让"基线里这个算法到底是怎么装的"变得无法对照。
+/// 工厂里出现"顺手做点别的"（调参、预热、额外校验）就会让"这个算法到底是怎么装的"变得无法对照。
 /// **Every factory does three things: assemble a runner, give it a recognisable name, and wrap it into a solver.** There is no fourth thing —
-/// a factory that "does a little extra" (tuning, warm-up, extra validation) makes it impossible to compare against how the baseline actually
+/// a factory that "does a little extra" (tuning, warm-up, extra validation) makes it impossible to compare against how the code actually
 /// wires that algorithm.
-/// **变异率与拓扑是有语义的默认值，不是装饰**：蜂群类算法在基线里一律 `NoMutation` + 变异率 `0` + `GlobalTopology`。
-/// 给它们配上非零变异率会让"标准的 GWO / SCA / MVO"**悄悄多了一个基线里不存在的随机扰动**，
+/// **变异率与拓扑是有语义的默认值，不是装饰**：蜂群类算法在一律 `NoMutation` + 变异率 `0` + `GlobalTopology`。
+/// 给它们配上非零变异率会让"标准的 GWO / SCA / MVO"**悄悄多了一个不存在的随机扰动**，
 /// 而收敛曲线只会"更抖一点"。
 /// **The mutation rate and the topology are semantic defaults, not decoration**: the swarm algorithms are uniformly `NoMutation` with a zero
-/// mutation rate and `GlobalTopology` in the baseline. Giving them a non-zero rate **quietly adds a random perturbation the baseline does not
+/// mutation rate and `GlobalTopology` in the code. Giving them a non-zero rate **quietly adds a random perturbation the code does not
 /// have**, and the convergence curve merely looks "a bit noisier".
 /// </remarks>
 public static class ComposedSolvers {
@@ -231,9 +231,9 @@ public static class ComposedSolvers {
     /// 装配一个"蜂群式"运行器：只更新、不变异、全局拓扑 / Assemble a swarm-style runner: update only, no mutation, global topology.
     /// </summary>
     /// <remarks>
-    /// 基线里 GWO / SCA / MVO 三个工厂的装配完全同构，只有名字与默认更新算子不同。把这段重复写成一处，
+    /// GWO / SCA / MVO 三个工厂的装配完全同构，只有名字与默认更新算子不同。把这段重复写成一处，
     /// **是为了让"三者装配一致"这件事由代码结构本身保证**，而不是靠三份逐字复制的参数表。
-    /// The GWO / SCA / MVO factories are assembled identically in the baseline, differing only in the name and the default update operator.
+    /// The GWO / SCA / MVO factories are assembled identically in the code, differing only in the name and the default update operator.
     /// Factoring the repetition out **lets the code structure itself guarantee "all three are assembled alike"**, instead of relying on three
     /// hand-copied parameter lists.
     /// </remarks>
@@ -918,8 +918,8 @@ public static class ComposedSolvers {
             size,
             memorySize,
             pBestRate,
-            // 与基线一致：规模随时间线性缩到 5%。
-            // As in the baseline: the size shrinks linearly down to 5%.
+            // ：规模随时间线性缩到 5%。
+            // The size shrinks linearly down to 5%.
             sizeRatio ?? new LinearSource(Flt64.One, new Flt64(0.05), 100UL),
             minimumSize));
 

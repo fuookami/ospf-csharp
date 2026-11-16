@@ -78,11 +78,11 @@ internal static class DistanceTerms {
 /// L1 距离（各分量绝对差之和）/ The L1 distance, the sum of absolute component differences.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CompositeFunctions.kt` 的 `L1DistanceFunction`。
+/// 对齐的 `L1DistanceFunction`。
 ///
 /// <c>Σ |left_i − right_i|</c>。
 ///
-/// The L1 distance from the baseline.
+/// The L1 distance from the code.
 ///
 /// <c>Σ |left_i − right_i|</c>.
 /// </remarks>
@@ -222,7 +222,7 @@ public sealed class L1DistanceFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// L∞ 距离（各分量绝对差的最大值）/ The L∞ distance, the largest absolute component difference.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CompositeFunctions.kt` 的 `LInfinityDistanceFunction`。
+/// 对齐的 `LInfinityDistanceFunction`。
 ///
 /// <c>max_i |left_i − right_i|</c>。
 ///
@@ -230,7 +230,7 @@ public sealed class L1DistanceFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// **`MaxFunction` 用大 M 把 <c>z ≥ |left_i − right_i|</c> 逐条挂上，于是 <c>z</c> 只有在下界方向上被约束。**
 /// **目标里最小化它才恰好等于最大绝对差；最大化它就会跑偏。**
 ///
-/// The L∞ distance from the baseline.
+/// The L∞ distance from the code.
 ///
 /// <c>max_i |left_i − right_i|</c>.
 ///

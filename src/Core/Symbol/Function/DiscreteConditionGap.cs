@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 归一化后的离散条件线性化数据 / Normalized linearization data for a discrete condition.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `DiscreteConditionLinearization`。
+/// 对齐的 `DiscreteConditionLinearization`。
 ///
 /// **五个字段各管一件事，其中两个是"分支是否可能"**：
 ///
@@ -27,9 +27,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 而"从 `FixedValue` 推回去"要多一次空判断。**
 /// **冗余在这里换来的是调用点的直接性——这不是可以随便删的东西。**
 ///
-/// Following the baseline's `DiscreteConditionLinearization`.
+/// Following its `DiscreteConditionLinearization`.
 ///
-/// **Five fields, two of which say whether a branch survives**:
+/// **Five fields, two of which say whether a branch survives**.
 ///
 /// - **`Polynomial`**: the normalized condition polynomial (the relation folded in)
 /// - **`Bounds`**: the condition value's finite range
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// - **`TrueBranchPossible` / `FalseBranchPossible`**: whether each branch is still alive
 ///
 /// **`FixedValue` and the two `Possible` flags are <b>redundant</b>**: **when `FixedValue` is set exactly one
-/// `Possible` is true.** **The baseline keeps both anyway**, because **callers usually care about just one of them,
+/// `Possible` is true.** **The code keeps both anyway**, because **callers usually care about just one of them,
 /// and deriving it from `FixedValue` costs an extra null check.** **The redundancy buys directness at the call site —
 /// not something to delete casually.**
 /// </remarks>
@@ -57,7 +57,7 @@ public sealed record DiscreteConditionLinearization(
 /// 条件值的界能否直接定出真假 / Whether the bounds already settle the truth value.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `boundsAvoidDiscreteConditionGap`。
+/// 对齐的 `boundsAvoidDiscreteConditionGap`。
 ///
 /// **它回答的是"还要不要生成指示约束"**：**界已经把答案定死时，指示变量没有意义——
 /// 直接给真值，省掉一个二元变量与两条行。**
@@ -81,12 +81,12 @@ public sealed record DiscreteConditionLinearization(
 /// **返回 `null` 表示"界定不下来"**，**而 `null` 与"两个分支都可能"是同一个意思——
 /// 不是"不知道"，是"需要指示变量"。**
 ///
-/// Following the baseline's `boundsAvoidDiscreteConditionGap`.
+/// Following its `boundsAvoidDiscreteConditionGap`.
 ///
 /// **It answers "do we still need indicator constraints"**: **when the bounds already settle the answer, an indicator
 /// variable is pointless — hand back the truth value and save one binary variable and two rows.**
 ///
-/// **The four relations are <b>asymmetric</b>, and that is the only difficulty here**:
+/// **The four relations are <b>asymmetric</b>, and that is the only difficulty here**.
 ///
 /// | Relation | Decided true | Decided false |
 /// | --- | --- | --- |

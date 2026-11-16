@@ -18,10 +18,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization;
 /// 重心优化聚合 / The MAC-optimisation aggregation.
 /// </summary>
 /// <remarks>
-/// 与基线 `mac_optimization/Aggregation.kt` 对齐：**自建三个模型**（`MACRange`、`LongitudinalBalance`、`LateralBalance`），
+/// 与对齐：**自建三个模型**（`MACRange`、`LongitudinalBalance`、`LateralBalance`），
 /// 上游只取飞机型号、公式、总重、扭矩与安定面。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **`MACRange` 在这里算出来，不是从 `Mac` 域传进来**。它依赖 `TotalWeight` 的起飞重量，而那是配载域的产物——
 ///    在 `Mac` 域里算会用到还没注册的符号。
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization;
 ///    给窄体机也建一个会让目标里多一个恒零项。
 /// 3. **`Register` 先纵后横，任一失败即短路**。横向失败被吞掉会让宽体机少一个目标而看不出来。
 ///
-/// Aligned with the baseline: **three models are built here** (`MACRange`, `LongitudinalBalance`, `LateralBalance`), taking only the aircraft model, formula, total weight, torque and
+/// **three models are built here** (`MACRange`, `LongitudinalBalance`, `LateralBalance`), taking only the aircraft model, formula, total weight, torque and
 /// stabilizers from upstream. Three things must be copied: **`MACRange` is computed here**, not passed in from the `Mac` domain — it depends on the take-off total weight, a stowage
 /// domain product, and computing it in the `Mac` domain would use symbols that are not registered yet; **lateral balance exists only for wide-body aircraft** (`null` otherwise, so the
 /// generator skips `LateralBalanceLimit`; building one for a narrow-body would add a constant-zero objective term); and **`Register` does longitudinal then lateral and
@@ -124,10 +124,10 @@ public sealed class MacOptimizationAggregation
     /// <param name="solution">主问题解 / The master-problem solution.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// 基线在这里**什么都不做**，且 `flushForBendersSP` 是 `private` 且从未被调用。照抄成空操作，而不是"顺手实现"——
+    /// 这里**什么都不做**，且 `flushForBendersSP` 是 `private` 且从未被调用。沿用成空操作，而不是"顺手实现"——
     /// 子问题不消费这些松弛符号。
     ///
-    /// The baseline does **nothing** here, and its `flushForBendersSP` is `private` and never called. Copied as a no-op rather than "implemented in passing": the sub-problem does not
+    /// The code does **nothing** here, and its `flushForBendersSP` is `private` and never called. Copied as a no-op rather than "implemented in passing": the sub-problem does not
     /// consume these slack symbols.
     /// </remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model, IReadOnlyList<Flt64> solution) =>

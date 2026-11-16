@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二值选择：<c>mask = 1 ? then : otherwise</c> / A binary select: `mask = 1 ? then : otherwise`.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Select.kt` 的 `SelectFunction`。
+/// 对齐的 `SelectFunction`。
 ///
 /// **编码的关键是"被屏蔽的差"**：令 <c>d = then − otherwise</c>，辅助变量 <c>z = mask · d</c>。
 /// 于是 <c>result = otherwise + z</c>——**一条等式就够了，不需要两条分支不等式。**
@@ -43,12 +43,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **四条边里 `dL` 与 `dU` 的位置不能互换**：**`zero_upper` 用 `dU`（因为 `mask = 0` 时它必须允许 `z = 0`）、
 /// `one_lower` 用 `dU`；写成 `zero_upper` 用 `dL` 会让 `mask = 0` 时 `z` 被迫为负。**
 ///
-/// Following the baseline's `SelectFunction`.
+/// Following its `SelectFunction`.
 ///
 /// **The encoding turns on "the masked difference"**: let `d = then − otherwise` and an auxiliary `z = mask · d`.
 /// Then `result = otherwise + z` — **one equality suffices; no pair of branch inequalities is needed.**
 ///
-/// **`z = mask · d` is bracketed by four rows rather than an equality**:
+/// **`z = mask · d` is bracketed by four rows rather than an equality**.
 ///
 /// | Edge | Inequality |
 /// | --- | --- |

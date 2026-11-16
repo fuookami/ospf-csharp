@@ -11,11 +11,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **`extra` 不改变取值，只加选择变量；最大值就是最大值** / `extra` does not change the value and only adds selectors; the maximum is the maximum.
 /// </summary>
 /// <remarks>
-/// 读 `MinMax.kt` 的文档：`MinMaxFunction` 的结果也是 `max(...)`，名字里的 "MinMax" 指"在优化里最小化这个最大值"。
+/// 读 的文档：`MinMaxFunction` 的结果也是 `max(...)`，名字里的 "MinMax" 指"在优化里最小化这个最大值"。
 /// 把它理解成"最大减最小"会让目标从"尽早全部做完"变成"把排程压紧"，**滞后与否完全不再被计入**——
 /// 而数值仍然叫"完工时间"，没人会怀疑。
 ///
-/// Reading `MinMax.kt`: `MinMaxFunction` also evaluates to `max(...)`; the name refers to "minimising that maximum in the optimisation". Reading it as "max minus min" changes the
+/// Reading: `MinMaxFunction` also evaluates to `max(...)`; the name refers to "minimising that maximum in the optimisation". Reading it as "max minus min" changes the
 /// objective from "finish everything early" to "squeeze the schedule together", and **lateness stops counting** — while the number is still called "the makespan" and nobody
 /// suspects a thing.
 /// </remarks>

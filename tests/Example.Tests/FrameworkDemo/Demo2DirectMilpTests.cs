@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// Three paired points, in the default suite and without any backend: the `solver_path` diagnostic is `milp_direct`; the status without a solver is
 /// **`MilpSolverNotSupplied`**; and `NotYetPorted` **no longer appears** in the notes. The second point matters most: it separates "no backend supplied" from
-/// "not ported". Before this path always returned `NotYetPorted` — **while both the model assembly and the solve chain already existed in this port**,
+/// "not implemented". Before this path always returned `NotYetPorted` — **while both the model assembly and the solve chain already existed here**,
 /// so that status turned a wiring task into a bogus migration gap.
 /// </remarks>
 public sealed class Demo2DirectMilpTests {
@@ -50,11 +50,11 @@ public sealed class Demo2DirectMilpTests {
     [InlineData("predistribution")]
     [InlineData("weight-recommendation")]
     public void OtherPaths_ShouldSayTheSolverIsMissingInsteadOfNotPorted(string path) {
-        // **预配载要用带谓词规格的请求**： 补上基线的"预配载必须有下限"校验之后，
+        // **预配载要用带谓词规格的请求**： 补上"预配载必须有下限"校验之后，
         // 用全配载形状的请求跑预配载会在装配阶段就被拒——**那正是基线行为**，不是回归。
         //
-        // **Predistribution needs the request that carries the predicate spec**: once added the baseline's "predistribution requires a bound" check,
-        // running a full-load-shaped request through it is refused during assembly — **which is the baseline's behaviour**, not a regression.
+        // **Predistribution needs the request that carries the predicate spec**: once added its "predistribution requires a bound" check,
+        // running a full-load-shaped request through it is refused during assembly — **which is its behaviour**, not a regression.
         RequestDTO request = path == "predistribution"
             ? AircraftLoadingDemo.CreatePredistributionSampleRequest()
             : AircraftLoadingDemo.CreateSampleRequest();
@@ -95,8 +95,8 @@ public sealed class Demo2DirectMilpTests {
         // 把拒绝点提前到装配阶段**：去读基线，那道守卫就在 `AggregationInitializer` 里。
         // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物，不是基线行为。
         //
-        // **moves the refusal to assembly**: the baseline keeps that guard in `AggregationInitializer`. The old `DomainRegisterFailed` pinned a local
-        // deviation (the guard sat a step late), not the baseline's behaviour.
+        // **moves the refusal to assembly**: the code keeps that guard in `AggregationInitializer`. The old `DomainRegisterFailed` pinned a local
+        // deviation (the guard sat a step late), not its behaviour.
         response.Status.Should().Be("InitFailed",
             "the missing specification is refused where the baseline refuses it: during assembly");
         response.Notes.Should().NotContain(note => note.Contains("NotYetPorted"));

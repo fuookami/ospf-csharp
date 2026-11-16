@@ -281,14 +281,14 @@ public class ConstraintProgrammingBenchmark {
     /// 枚举到第一个不满足的赋值就整次求解失败**（`recordEvaluationFailure` → `stopped = true`）。
     /// 因此这一份保留自由 `end` 变量只喂降阶基准，求解基准走 `BuildSolvableSchedulingModel`。
     ///
-    /// 基线只有一份夹具，于是基线那条 `schedulingSolve` 基准**测的是一次失败路径**，从未真正枚举过排程。
+    /// 有一份夹具，于是条 `schedulingSolve` 基准**测的是一次失败路径**，从未真正枚举过排程。
     ///
     /// **Lowering and solving disagree about `end`, so the fixture must exist twice.** The lowerer requires "interval start/end must be scalar variables"
     /// (`Unsupported: interval start/end must be scalar variables`), while the Fake solver requires candidate assignments to satisfy `end = start + size` —
     /// **once `end` is a free variable, the first assignment that violates it fails the whole solve** (`recordEvaluationFailure` → `stopped = true`). This
     /// copy keeps the free `end` variable and only feeds the lowering benchmarks; the solve benchmarks use `BuildSolvableSchedulingModel`.
     ///
-    /// The baseline has a single fixture, so its `schedulingSolve` benchmark **measures a failure path** and never really enumerates a schedule.
+    /// The code has a single fixture, so its `schedulingSolve` benchmark **measures a failure path** and never really enumerates a schedule.
     /// </remarks>
     private static ConstraintProgrammingModel BuildSchedulingModel(int count) {
         var model = new ConstraintProgrammingModel(

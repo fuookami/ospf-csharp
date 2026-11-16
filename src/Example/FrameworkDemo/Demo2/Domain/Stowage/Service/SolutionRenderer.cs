@@ -18,28 +18,28 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 把配载方案渲染成输出 DTO / Render a stowage solution as the output DTO.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/Solution.kt` 的 `Solution.render`：
+/// 逐条对齐的 `Solution.render`：
 /// **三个来源的舱位取并集**（分配表、谓词重量表、推荐重量表），按**甲板序号 → 装载顺序号 → 舱位 id 的字符串字典序**排好，
 /// 每个舱位给出 id、名称、货物 id 列表与两个重量。
 ///
-/// **三处照抄而不是"顺手改好"**：
-/// 1. 第三级排序键是 `id.ToString`，即**字符串字典序**——`"10"` 排在 `"2"` 前面。看着像 bug，但它是基线的行为；
-/// 的 `LoadingOrderOutputExporter` 出于同样的理由照抄，两处因此一致。
-/// 2. 货物 id 列表**排序后输出**，而不是按分配顺序——基线的 `.sorted` 就是这个意思。
+/// **三处沿用而不是"顺手改好"**：
+/// 1. 第三级排序键是 `id.ToString`，即**字符串字典序**——`"10"` 排在 `"2"` 前面。看着像 bug，但它是行为；
+/// 的 `LoadingOrderOutputExporter` 出于同样的理由沿用，两处因此一致。
+/// 2. 货物 id 列表**排序后输出**，而不是按分配顺序——`.sorted` 就是这个意思。
 /// 3. 重量用 `unit.symbol ?? unit.name`，**单位缺失时留空**而不是编一个默认单位。
 ///
-/// **一处必须偏离**：基线的 `Position.id` 是强类型，C# 的 `StowagePosition` 借用 `AircraftPosition.Id`，而 `Item` **仍然只有 `Name` 没有 `Id`**，
+/// **一处必须偏离**：`Position.id` 是强类型，C# 的 `StowagePosition` 借用 `AircraftPosition.Id`，而 `Item` **仍然只有 `Name` 没有 `Id`**，
 /// 所以货物标识用的是名称。这是 `Item` 缺 `Id` 的后果，已记入缺口；两件同名的货会在渲染里显示成同一个标识。
 ///
-/// Mirrors the baseline `Solution.render`: **take the union of three sources** (assignments, predicate weights, recommended weights), sort by
+/// `Solution.render`: **take the union of three sources** (assignments, predicate weights, recommended weights), sort by
 /// **deck ordinal → loading-order number → the position id's string order**, and emit id, name, item ids and both weights per position.
 ///
 /// **Three things copied rather than "fixed while at it"**: (1) the third key is `id.ToString`, i.e. **lexicographic** — `"10"` sorts before `"2"`. It looks like
-/// a bug, but it is the baseline behaviour; the earlier `LoadingOrderOutputExporter` copies it for the same reason, so the two stay consistent. (2) the item ids are
-/// **sorted before output**, which is what the baseline's `.sorted` means. (3) the weight uses `unit.symbol ?? unit.name`, **left blank when the unit is
+/// a bug, but it is the code behaviour; the earlier `LoadingOrderOutputExporter` copies it for the same reason, so the two stay consistent. (2) the item ids are
+/// **sorted before output**, which is what its `.sorted` means. (3) the weight uses `unit.symbol ?? unit.name`, **left blank when the unit is
 /// missing** rather than inventing a default.
 ///
-/// **One deliberate divergence**: the baseline's `Position.id` is strongly typed while this port borrows `AircraftPosition.Id`, and `Item` **still has only
+/// **One deliberate divergence**: its `Position.id` is strongly typed while this implementation borrows `AircraftPosition.Id`, and `Item` **still has only
 /// `Name` and no `Id`**, so the item identifier is the name. That is a consequence of the missing `Item.Id`, recorded as a gap; two items with the same name
 /// would render as the same identifier.
 /// </remarks>

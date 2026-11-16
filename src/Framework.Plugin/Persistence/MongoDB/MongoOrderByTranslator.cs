@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// **排序错了不会报错，只会让结果顺序不对**——**而分页正建立在顺序之上**：
 /// 顺序不稳，第 2 页会重复或漏掉第 1 页的记录。**这是最容易"看起来正常"的一类错误。**
 ///
-/// The baseline's `MongoOrderByTranslator` (**83 lines**) turns a `SortBy` into `Sorts.orderBy(...)`:
+/// The code's `MongoOrderByTranslator` (**83 lines**) turns a `SortBy` into `Sorts.orderBy(...)`:
 /// ascending writes `1`, descending writes `-1`, and the field name goes through the caller's resolver.
 ///
 /// **A wrong sort does not throw; it only puts results in the wrong order** — **and paging is built on order**:
@@ -31,7 +31,7 @@ public static class MongoOrderByTranslator
     /// **空排序返回 `null` 而不是空文档**：基线原文是 `if (sortBy == null || sortBy.isEmpty) return Ok(null)`。
     /// **空 `$sort: {}` 在 Mongo 里是合法但无意义的阶段**，而返回 `null` 让调用方整个省掉这个阶段。
     ///
-    /// **An empty sort returns `null`, not an empty document**: the baseline reads
+    /// **An empty sort returns `null`, not an empty document**: the code reads
     /// `if (sortBy == null || sortBy.isEmpty) return Ok(null)`.
     /// **An empty `$sort: {}` is legal but meaningless in Mongo**, while `null` lets the caller drop the stage entirely.
     /// </remarks>
@@ -61,13 +61,13 @@ public static class MongoOrderByTranslator
                     + $"Sort field translation failed: field {item.Field}: field was not resolved");
             }
 
-            // **`Nulls` 在基线里没有**：C# 的 `SortItem` 多一个 `NullsOrder? Nulls`，
-            // **而基线的 `MongoOrderByTranslator` 不看它**。
+            // **`Nulls` 在没有**：C# 的 `SortItem` 多一个 `NullsOrder? Nulls`，
+            // **而`MongoOrderByTranslator` 不看它**。
             // **这里也不看，但要说出来**——静默忽略一个调用方明确设置的选项，
             // **比不支持更糟：调用方以为它生效了。**
             //
-            // **`Nulls` does not exist in the baseline**: the C# `SortItem` carries an extra `NullsOrder? Nulls`,
-            // **and the baseline's `MongoOrderByTranslator` never looks at it.**
+            // **`Nulls` does not exist in the code**: the C# `SortItem` carries an extra `NullsOrder? Nulls`,
+            // **and its `MongoOrderByTranslator` never looks at it.**
             // **Neither does this, but it says so** — silently ignoring an option the caller explicitly set
             // **is worse than not supporting it: the caller believes it took effect.**
             if (item.Nulls is not null)

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Relation-indicator rows, derived from the condition's own bounds — **no big-M needed**.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Conditional.kt` 的 `relationIndicatorConstraints`。
+/// 对齐的 `relationIndicatorConstraints`。
 ///
 /// **这是本方向第一个<b>不用 big-M</b> 的指示编码，而这不是巧合**：
 /// **当条件本身有一个已知范围 `[qLower, qUpper]` 时，松弛量可以<b>精确算出</b>——
@@ -46,18 +46,18 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// （**否则两行里同一变量出现两次，`ind` 既在被判定的式子里又在判定它——自指**）；
 /// **③ 取负后仍要可用**（**`LT`/`LE` 会先取负，而取负会让一个大数变成负的大数**）。
 ///
-/// Following the baseline's `relationIndicatorConstraints`.
+/// Following its `relationIndicatorConstraints`.
 ///
-/// **The first <b>big-M-free</b> indicator encoding in this direction, and not by accident**:
+/// **The first <b>big-M-free</b> indicator encoding in this direction, and not by accident**.
 /// **when the condition already has a known range `[qLower, qUpper]`, the relaxation can be <b>computed exactly</b> —
 /// it is the distance from the true branch's edge to the range's edge.**
 ///
-/// **Two adjustments**:
+/// **Two adjustments**.
 ///
 /// - **`lowerAdjustment = trueLower − qLower`** (**how far the true branch's lower edge sits from the range's**)
 /// - **`upperAdjustment = qUpper − falseUpper`** (**how far the range's upper edge sits from the false branch's**)
 ///
-/// **Two rows**:
+/// **Two rows**.
 ///
 /// | Row | Content | indicator = 0 | indicator = 1 |
 /// | --- | --- | --- | --- |
@@ -67,7 +67,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **Note the two rows <b>swap which one binds</b> between indicator 1 and 0**: **`_lower` binds at indicator 1 and
 /// `_upper` at indicator 0.** **That is exactly "the condition holds at one and fails at zero".**
 ///
-/// **None of the three checks is cosmetic**:
+/// **None of the three checks is cosmetic**.
 ///
 /// **① the indicator must be binary; ② the polynomial <b>must not contain the indicator itself</b>**
 /// (**otherwise the same variable appears twice and `ind` both governs and is governed — self-reference**);

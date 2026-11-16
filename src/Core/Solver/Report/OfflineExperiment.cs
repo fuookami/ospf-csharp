@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Core.Solver.Report;
 /// 批量实验场景 / Batch experiment case.
 /// </summary>
 /// <remarks>
-/// **按基线 `OfflineExperiment.kt` 的 `SolveExperimentCase` 补。**
+/// **按的 `SolveExperimentCase` 补。**
 ///
-/// **这一块是本仓此前<b>整块缺失</b>的：基线有 `SolveExperiment*`／`BatchSolveExperiment*`，
+/// **这一块是本仓此前<b>整块缺失</b>的：`SolveExperiment*`／`BatchSolveExperiment*`，
 /// 本仓一个文件都没有。** **而它依赖的 `SolveReport`／`SolveIssue`／`SolveIssueCategory`／
 /// `AuditFingerprint`／`SolverProvenance` 全都在——所以缺的是这一层编排，不是底座。**
 ///
-/// **adds it from the baseline's `SolveExperimentCase`.**The whole block was absent here: the baseline has
+/// **adds it from its `SolveExperimentCase`.**The whole block was absent here: the code has
 /// `SolveExperiment*`/`BatchSolveExperiment*` and this repo had no file for either.** **Every dependency
 /// (`SolveReport`, `SolveIssue`, `SolveIssueCategory`, `AuditFingerprint`, `SolverProvenance`) already exists — what was
 /// missing is this orchestration layer, not the foundation.**
@@ -127,7 +127,7 @@ public sealed record GeneratedMilpSampleMetadata<V>(
 /// **本仓没有任何地方消费它，所以这条约束现在是靠"没有消费者"成立的。
 /// 而在有消费者那一天，必须先回答"它能不能影响配置"这个问题。**
 ///
-/// **"Carrying no production solve controls" is a constraint the baseline states on the type, not an accident.** **It
+/// **"Carrying no production solve controls" is a constraint the code states on the type, not an accident.** **It
 /// means the type may only be <b>observed</b>, never used to <b>drive</b> another solve — and the moment it is read into a
 /// configuration that boundary is gone.**
 ///

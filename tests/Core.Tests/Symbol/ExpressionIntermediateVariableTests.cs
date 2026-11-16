@@ -20,9 +20,9 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 /// **这里做的是"能力可用"：** 槽位、开关、惰性辅助变量、令牌注册与展平当叶子；**模型层自动注册等式约束在 C# 侧还没有分派点，
 /// 明确记为未接线**（Kotlin 在 `MechanismModel` 里按符号类型分派，C# 没有这条路径）。
 ///
-/// Syncs Kotlin `2e72a17c`. The baseline defaults `intermediateVariable` to null and gives the expression symbols a `useIntermediateVariable` switch that lazily
+/// Syncs Kotlin `2e72a17c`. The code defaults `intermediateVariable` to null and gives the expression symbols a `useIntermediateVariable` switch that lazily
 /// creates an auxiliary. ** delivers the capability: the slot, the switch, the lazy auxiliary, token registration and leaf treatment when flattening;
-/// automatic equality registration at the model layer has no dispatch point on the C# side and is recorded as not wired** (the baseline dispatches per symbol
+/// automatic equality registration at the model layer has no dispatch point on the C# side and is recorded as not wired** (the code dispatches per symbol
 /// type inside `MechanismModel`, which C# does not have).
 /// </remarks>
 public class ExpressionIntermediateVariableTests

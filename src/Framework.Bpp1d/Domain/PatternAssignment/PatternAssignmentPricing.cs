@@ -1,6 +1,6 @@
 // 方案定价：目标系数、影子价格与检验数 / Pattern pricing: objective coefficients, shadow prices and reduced costs.
-// 与固定 Kotlin 基线 `bpp1d/domain/pattern_assignment/PatternAssignmentContext.kt` 的定价半边对应。
-// Mirrors the pricing half of the pinned Kotlin baseline's `PatternAssignmentContext.kt`.
+// 与固定 Kotlin 的定价半边对应。
+// The pricing half of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Basic;
@@ -45,8 +45,8 @@ public enum PackingModelStage {
 /// </summary>
 /// <typeparam name="V">领域数值 / Domain number.</typeparam>
 /// <remarks>
-/// **只有定价钩子。** 基线的扩展还带 `register`/`refresh` 两个建模钩子，它们随建模半边一起落地。
-/// **Pricing hook only.** The baseline extension also carries `register`/`refresh` modelling hooks, which land with the modelling half .
+/// **只有定价钩子。** 扩展还带 `register`/`refresh` 两个建模钩子，它们随建模半边一起落地。
+/// **Pricing hook only.** The code extension also carries `register`/`refresh` modelling hooks, which land with the modelling half .
 /// </remarks>
 public interface IPatternModelingExtension<V>
     where V : struct, IFloatingNumber<V> {
@@ -337,7 +337,7 @@ public sealed class PatternAssignmentContext<V>
             // **C# 侧不会在注册时展开符号**（实测：一列 `I1=4`、成本 1，SCIP 报目标 **2**，
             // 也就是符号那一份与逐列那一份都在）。**所以这里只保留符号这一份。**
             //
-            // **The objective has exactly one source: the aggregate symbol.** Adding a per-column term as well counts it twice. The baseline registers the symbol and
+            // **The objective has exactly one source: the aggregate symbol.** Adding a per-column term as well counts it twice. The code registers the symbol and
             // then adds a per-column term, but there the symbol is **flattened into the then-empty pool at registration**, so only the per-column term actually
             // contributes. **C# does not flatten at registration** (measured: one column `I1=4` with cost 1 makes SCIP report an objective of **2**, i.e. both copies
             // are present), **so only the symbol is kept here.**
@@ -355,7 +355,7 @@ public sealed class PatternAssignmentContext<V>
     /// <param name="model">元模型 / Meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
-    /// **与基线的一处有意偏离：每次全量重建，不做"只追加新列"的增量。** 基线的增量靠
+    /// **与一处有意偏离：每次全量重建，不做"只追加新列"的增量。** 增量靠
     /// `asMutable.mutationVersion` 这个**可变版本号**来判断哪些符号没变过；
     /// C# 侧没有这个计数器，**也没有任何外部可观察的等价信号**。
     ///
@@ -363,7 +363,7 @@ public sealed class PatternAssignmentContext<V>
     /// **结果完全相同**、代码少一个只存在于优化里的状态。**这是拿常数因子换正确性，值得。**
     /// `ponytail:` 每次刷新 O(列 × 项)；若列池规模成为瓶颈，再引入真正的脏标记。
     ///
-    /// **One deliberate deviation: a full rebuild every time, no "append only the new columns" increment.** The baseline's increment relies on the **mutable
+    /// **One deliberate deviation: a full rebuild every time, no "append only the new columns" increment.** The code's increment relies on the **mutable
     /// `asMutable.mutationVersion` counter** to decide which symbols changed, and C# has neither that counter **nor any externally observable equivalent**. The
     /// increment saves a few recomputations and risks **silently keeping stale coefficients** when the judgement is wrong. A full rebuild produces **exactly the same
     /// result** with one less piece of state that only exists for optimisation. **That trades a constant factor for correctness, which is worth it.**
@@ -423,7 +423,7 @@ public sealed class PatternAssignmentContext<V>
     /// 三种口径：`BinCount` 恒为 **1**（数箱数）；`ConsumedLength` 是**箱长换算到米**；
     /// `Cost` 是箱单价。
     ///
-    /// **与基线的一处偏离**：基线写 `bin.length.convertTo(Meter)!!`——**断言一定换算成功，失败就抛**。
+    /// **与一处偏离**：基线写 `bin.length.convertTo(Meter)!!`——**断言一定换算成功，失败就抛**。
     /// 这里返回 `Result`：箱长的量纲不兼容是**可查的错误**，不该变成空指针异常。
     ///
     /// Three metrics: `BinCount` is always **1** (counting bins), `ConsumedLength` is the **bin length in metres**, `Cost` is the unit bin cost. **One deviation from the
@@ -693,12 +693,12 @@ public sealed class PatternAssignmentContext<V>
     /// | 3 | `RemoveObjectiveTerms` 清掉逐列目标项 | — |
     /// | 4 | 从模型里移除变量 | 先移变量再清目标项，目标项里会留下一个已不存在的变量 |
     ///
-    /// **未知键静默跳过，不报错**——基线是 `mapNotNull { variables.remove(it) }`。
+    /// **未知键静默跳过，不报错**——`mapNotNull { variables.remove(it) }`。
     /// 定价循环每轮都可能重发候选，把"本来就不在池里"当成错误会让每轮都失败。
     ///
     /// **The order cannot change** (table above): removing the objective terms before refreshing would let the refresh write the deleted columns back, and removing the
     /// variables before clearing their terms would leave an objective term pointing at a variable that no longer exists. **Unknown keys are skipped silently, not
-    /// reported** — the baseline uses `mapNotNull { variables.remove(it) }`, and a pricing loop may resend candidates every round, so treating "not in the pool" as an
+    /// reported** — the code uses `mapNotNull { variables.remove(it) }`, and a pricing loop may resend candidates every round, so treating "not in the pool" as an
     /// error would fail every round.
     /// </remarks>
     public Result<Success, ErrorCode, Error<ErrorCode>> RemoveColumns(
@@ -732,7 +732,7 @@ public sealed class PatternAssignmentContext<V>
         // 移植时用的那条 API 在这里变成多余的一步。**删掉，不留"以防万一"的调用。**
         //
         // **`RemoveObjectiveTerms` is not needed.** made the objective a **single source** (the aggregate symbol) and `Refresh` already rebuilds its contents from the
-        // remaining pool, so per-column objective terms no longer exist and there is nothing to clear. The call ported becomes a redundant step here.
+        // remaining pool, so per-column objective terms no longer exist and there is nothing to clear. The call implemented becomes a redundant step here.
         foreach (UIntVar variable in variables) {
             model.Remove(variable);
         }
@@ -745,8 +745,8 @@ public sealed class PatternAssignmentContext<V>
     /// <param name="model">元模型 / Meta model.</param>
     /// <returns>列份数或失败 / Usages or failure.</returns>
     /// <remarks>
-    /// **与基线的一处偏离：返回有序对列表，而不是以方案为键的字典。**
-    /// 基线的 `Map&lt;PackingPattern, UInt64&gt;` 依赖 data class 按**内容**比较（含 `amounts` 这个 Map）；
+    /// **与一处偏离：返回有序对列表，而不是以方案为键的字典。**
+    /// `Map&lt;PackingPattern, UInt64&gt;` 依赖 data class 按**内容**比较（含 `amounts` 这个 Map）；
     /// C# 的 `record` 对字段里的字典做**引用比较**，以方案为键的字典会**错键**——
     /// 两个数量完全相同的方案会被当成两个不同的键。**有序对列表绕开这个陷阱，也更清楚。**
     ///
@@ -761,7 +761,7 @@ public sealed class PatternAssignmentContext<V>
     ///
     /// **容差 `1e-6` 两侧都钉住**：`1.9999999` 必须算 2（否则正常解全被拒），`2.0001` 必须被拒。
     ///
-    /// **One deviation from the baseline: an ordered list of pairs instead of a dictionary keyed by pattern.** The baseline's `Map&lt;PackingPattern, UInt64&gt;` relies on
+    /// **One deviation from the code: an ordered list of pairs instead of a dictionary keyed by pattern.** The code's `Map&lt;PackingPattern, UInt64&gt;` relies on
     /// Kotlin data-class **content** equality over the `amounts` map, while a C# `record` compares a nested dictionary **by reference**, so a pattern-keyed dictionary
     /// would **mis-key**: two patterns with identical amounts would count as two distinct keys. The ordered list sidesteps that trap and reads more clearly. The four
     /// rejection rules are in the table; **the `1e-6` tolerance is pinned from both sides** — `1.9999999` must count as 2 or every normal solution is rejected, while

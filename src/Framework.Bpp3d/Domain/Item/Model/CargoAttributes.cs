@@ -17,17 +17,17 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 货物属性模型：堆叠、悬挂、变形、重量 / The cargo attribute model: stacking, hanging, deformation, weight.
 /// </summary>
 /// <remarks>
-/// 补齐基线 `PackageAttribute.kt` 里的 12 个类型。 复审发现它们在 C# 侧一个都没有，
+/// 补齐里的 12 个类型。 复审发现它们在 C# 侧一个都没有，
 /// 而三份文档也从未提到 `PackageAttribute`——所以这不是"待办"，是"从未被记录"。
 ///
-/// 一句话说明这次补齐的边界： 这些类型在基线里只被 `PackageAttribute.kt` 自身读取，没有任何生产判定依赖它们
-/// （实测：`MaterialPacker.kt` 只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
+/// 一句话说明这次补齐的边界： 这些类型在只被 自身读取，没有任何生产判定依赖它们
+/// （实测： 只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
 /// 判据 `CargoAttributeModelTests` 钉住这一点：十二个类型都在，而 `src/` 里没有生产代码构造它们。
 ///
-/// Fills in the twelve types from the baseline's `PackageAttribute.kt`. The review found none of them on the C# side, and none of
+/// Fills in the twelve types from its. The review found none of them on the C# side, and none of
 /// the three documents ever mentioned `PackageAttribute` — so this is not "pending", it was never recorded. One sentence on the boundary: in the
-/// baseline these types are read only inside `PackageAttribute.kt` itself and no production decision depends on them (measured that
-/// `MaterialPacker.kt` merely stamps default values while constructing an attribute). So porting them changes no algorithm, and a criterion pins
+/// baseline these types are read only inside itself and no production decision depends on them (measured that
+/// merely stamps default values while constructing an attribute). So implementation them changes no algorithm, and a criterion pins
 /// exactly that: all twelve types exist while no production code in `src/` constructs them.
 /// </remarks>
 public interface ICargoAttributeMarker {
@@ -42,7 +42,7 @@ public interface AbstractCargoAttribute : ICargoAttributeMarker {
 /// 基线直接用 `ItemView`。 这里收窄成"策略真正读到的那些成员"，有两个好处： `ActualItem` 只要实现这几个属性，
 /// 而判据可以造一个最小替身来验证策略逻辑，不必构造整个物品模型。
 ///
-/// The baseline uses `ItemView` directly. Narrowing to the members the policies actually read has two benefits: `ActualItem` only has to
+/// The code uses `ItemView` directly. Narrowing to the members the policies actually read has two benefits: `ActualItem` only has to
 /// expose these, and a criterion can build a minimal double to exercise the policy logic without constructing the whole item model.
 /// </remarks>
 public interface ICargoView {
@@ -64,11 +64,11 @@ public interface ICargoView {
     /// 允许的最大高度（长度）；未知时为 null / The allowed maximum height as a length, or null when unknown.
     /// </summary>
     /// <remarks>
-    /// 基线把 `maxHeight` 存成 `Quantity&lt;FltX&gt;`（长度），而 C# 现有物品模型里 `MaxHeight` 是 `UInt64` 的层数。
+    /// `maxHeight` 存成 `Quantity&lt;FltX&gt;`（长度），而 C# 现有物品模型里 `MaxHeight` 是 `UInt64` 的层数。
     /// 这是真实的语义差异，不能靠换算糊过去：把层数当长度用会让高度门限静默失效。
     /// 所以这里如实做成"未知即 null"，策略遇到未知高度一律判否。
     ///
-    /// the baseline stores `maxHeight` as a length (`Quantity&lt;FltX&gt;`), while the current C# item model keeps `MaxHeight` as a `UInt64` layer
+    /// the code stores `maxHeight` as a length (`Quantity&lt;FltX&gt;`), while the current C# item model keeps `MaxHeight` as a `UInt64` layer
     /// count. That is a real semantic difference and cannot be papered over by conversion: treating a layer count as a length would let the height
     /// gate silently pass. So it is modelled honestly as "unknown means null", and the policies refuse whenever the height is unknown.
     /// </remarks>
@@ -226,7 +226,7 @@ public interface AbstractHangingPolicy {
     /// <summary>
     /// 判断 `item` 能否挂在 `bottomSupport` 上。 基线比的是"投影面积减去支撑面积"与一个允许的悬挂面积。
     ///
-    /// Decide whether `item` may hang over `bottomSupport`: the baseline compares the footprint area minus the supported area against an allowed
+    /// Decide whether `item` may hang over `bottomSupport`: the code compares the footprint area minus the supported area against an allowed
     /// hanging area.
     /// </summary>
     /// <param name="item">待放置的货物 / The item being placed.</param>
@@ -329,10 +329,10 @@ public sealed record WeightAttribute(UInt64 MaxLayer) : AbstractWeightAttribute 
 
 /// <summary>策略里用到的数量比较 / The quantity comparisons the policies need.</summary>
 /// <remarks>
-/// C# 的 `Quantity` 算术返回 `Result`（单位不匹配会失败），而基线的 `gr`／`leq` 直接给出布尔。 这里把两者对齐成
+/// C# 的 `Quantity` 算术返回 `Result`（单位不匹配会失败），而`gr`／`leq` 直接给出布尔。 这里把两者对齐成
 /// "单位不匹配即判否"： 一个算不出来的比较不能当作"允许堆叠"。 这是这里唯一的行为选择，写在这里而不是散在四个策略里。
 ///
-/// C# `Quantity` arithmetic returns `Result` (a unit mismatch fails) while the baseline's `gr`/`leq` yield a boolean. The bridge here is "a unit
+/// C# `Quantity` arithmetic returns `Result` (a unit mismatch fails) while its `gr`/`leq` yield a boolean. The bridge here is "a unit
 /// mismatch decides false": a comparison that cannot be computed must never count as "stacking allowed". This is the batch's only behavioural
 /// choice, and it lives here instead of being scattered across four policies.
 /// </remarks>
@@ -359,7 +359,7 @@ internal static class CargoComparisons {
     internal static Quantity<FltX> Difference(Quantity<FltX> left, Quantity<FltX> right) =>
         Of(Value(left) - Value(right), left.Unit);
 
-    /// <summary>"一个该单位"的数量——基线里 `x * weight.unit` 的写法 / One unit of the given quantity's unit.</summary>
+    /// <summary>"一个该单位"的数量——`x * weight.unit` 的写法 / One unit of the given quantity's unit.</summary>
     /// <param name="quantity">取单位的数量 / The quantity whose unit is taken.</param>
     /// <returns>值为 1、单位相同的数量 / A quantity of value one in the same unit.</returns>
     internal static Quantity<FltX> UnitOf(Quantity<FltX> quantity) => new(new FltX(1m), quantity.Unit);

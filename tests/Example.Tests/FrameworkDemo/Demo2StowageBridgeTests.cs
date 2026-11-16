@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **装载矩阵要把业务合法性和内核决策对上** / The stowage matrix must line up business legality with kernel decisions.
 /// </summary>
 /// <remarks>
-/// 基线 `Stowage.kt` 只做两件事：判合法性（`StowageNeeded`/`AdjustmentNeeded`）、把内核的稀疏决策翻译成 `stowage_{i}_{j}` 与 `loaded_{i}`。
+/// 只做两件事：判合法性（`StowageNeeded`/`AdjustmentNeeded`）、把内核的稀疏决策翻译成 `stowage_{i}_{j}` 与 `loaded_{i}`。
 /// 这两件事都有一种安静的错法：
 ///
 /// - 合法性判错 → 不该有的组合有了决策变量，模型能解、解出来装了不该装的东西；
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 所以判据成对：合法组合有变量、不合法组合**没有**；`stowage` 的系数指着那个变量；`loaded` 的项数等于该货的合法舱位数。
 ///
-/// The baseline `Stowage.kt` does two things: decide legality (`StowageNeeded`/`AdjustmentNeeded`) and translate the kernel's sparse decisions into `stowage_{i}_{j}` and
+/// The code does two things: decide legality (`StowageNeeded`/`AdjustmentNeeded`) and translate the kernel's sparse decisions into `stowage_{i}_{j}` and
 /// `loaded_{i}`. Both have a quiet failure mode: wrong legality produces decision variables for forbidden pairs (the model solves, and loads what it should not), and a wrong
 /// translation order (translate before registering the kernel) makes every `stowage` an **empty polynomial** — identically zero, still solvable, loading nothing.
 /// </remarks>
@@ -116,8 +116,8 @@ public class Demo2StowageBridgeTests {
         };
         // P1 在低舱、P2 在主舱。基线 `enabled` 只查"主舱位拒下舱货"，**不查**"下舱位拒主舱货"——
         // 所以 (I1, P1) 是合法的、(I2, P2) 不合法。这条单向性是基线原样，见下一条判据。
-        // P1 is lower, P2 is main. The baseline `enabled` only checks "a main position refuses lower cargo" and **not** "a lower position refuses main cargo" —
-        // so (I1, P1) is legal and (I2, P2) is not. That one-directionality is the baseline as written; see the next criterion.
+        // P1 is lower, P2 is main. The code `enabled` only checks "a main position refuses lower cargo" and **not** "a lower position refuses main cargo" —
+        // so (I1, P1) is legal and (I2, P2) is not. That one-directionality is the code as written; see the next criterion.
         var positions = new List<StowagePosition> {
             MakePosition("P1", 1UL, PositionLocation.LowForwardNotBulkLocation),
             MakePosition("P2", 2UL, PositionLocation.NormalMainLocation),
@@ -154,7 +154,7 @@ public class Demo2StowageBridgeTests {
 
 
     /// <summary>
-    /// **"下舱位拒主舱货"这条基线没查** / The baseline does not check "a lower position refuses main cargo".
+    /// **"下舱位拒主舱货"这条基线没查** / The code does not check "a lower position refuses main cargo".
     /// </summary>
     /// <remarks>
     /// 基线 `enabled` 只写了一个方向：`this.location.main && item.location.low`（主舱位拒下舱货）。
@@ -164,10 +164,10 @@ public class Demo2StowageBridgeTests {
     /// 结果：主舱货能装进下舱位。这是**基线原样**，不是这里引入的偏差；写在这里是为了让它留档——
     /// 否则下一个人会以为是移植漏了，然后"顺手修好"，把跨语言行为改掉。
     ///
-    /// The baseline `enabled` writes only one direction: `this.location.main && item.location.low` (a main position refuses lower cargo). The reverse
+    /// The code `enabled` writes only one direction: `this.location.main && item.location.low` (a main position refuses lower cargo). The reverse
     /// `this.location.low && item.location.main` exists only in `ItemLocation.enabledIn(PositionLocation)`, and that method has **no caller** anywhere in Demo2 (searched file by
-    /// file in). Consequence: main-deck cargo can go into a lower position. That is **the baseline as written**, not a divergence introduced here — recorded so the
-    /// next reader does not take it for a porting slip and "fix" the cross-language behaviour.
+    /// file in). Consequence: main-deck cargo can go into a lower position. That is **the code as written**, not a divergence introduced here — recorded so the
+    /// next reader does not take it for a implementation slip and "fix" the cross-language behaviour.
     /// </remarks>
     [Fact]
     public void StowageNeeded_ShouldRecordTheOneDirectionalBaselineRule() {
@@ -260,10 +260,10 @@ public class Demo2StowageBridgeTests {
     /// **没有内核就明确失败** / Without a kernel, fail loudly.
     /// </summary>
     /// <remarks>
-    /// 基线是 `if (!::loadingContext.isInitialized) return Failed(...)`。返回 `Ok` 会让调用方以为矩阵建好了，
+    /// `if (!::loadingContext.isInitialized) return Failed(...)`。返回 `Ok` 会让调用方以为矩阵建好了，
     /// 而实际上一列都没有——这正是本仓反复修的那类壳行为。
     ///
-    /// The baseline is `if (!::loadingContext.isInitialized) return Failed(...)`. Returning `Ok` would let the caller believe the matrix exists when there is not one column —
+    /// The code is `if (!::loadingContext.isInitialized) return Failed(...)`. Returning `Ok` would let the caller believe the matrix exists when there is not one column —
     /// exactly the shell behaviour this repo keeps removing.
     /// </remarks>
     [Fact]

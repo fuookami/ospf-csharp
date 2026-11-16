@@ -237,7 +237,7 @@ public class OnnxScanLoweringTests
     /// <remarks>
     /// **这一条证明的是契约本身已经支持"运行期值"：** **每一轮的切片只是一个绑定，而绑定里装的可以是含变量的表达式。** '
     /// **所以 `Scan` 缺的不是"能不能带变量"，而是"导入期怎么把一个多元素张量切成每轮一片"——** '
-    /// **那需要逐元素表示（基线的 `sliceLeading`），是清单里同一项。**
+    /// **那需要逐元素表示（`sliceLeading`），是清单里同一项。**
     ///
     /// **This proves the contract already accepts runtime values: a round's slice is just a binding, and a binding may carry an expression with variables.** **So what Scan lacks is
     /// not "can it hold a variable" but "how does the import time cut a multi-element tensor into one slice per round" — that needs the per-element representation (the

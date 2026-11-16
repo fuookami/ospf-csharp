@@ -23,7 +23,7 @@ public class OnnxConstantFoldingTests
     /// <summary>**`value` 张量被折成同名常量** / A `value` tensor folds into a constant under the output name.</summary>
     /// <remarks>
     /// **输出名必须改写成节点的输出名，而不是沿用它自己的：** **`Constant` 的 `value` 里那个 `name` 通常为空或与输出不同，**
-    /// **照抄会让这张常量在张量表里挂着一个没人引用的名字——** **于是"常量存在但输入仍不可得"。**
+    /// **沿用会让这张常量在张量表里挂着一个没人引用的名字——** **于是"常量存在但输入仍不可得"。**
     ///
     /// **The output name has to be rewritten to the node's output rather than kept: the `name` inside a Constant's `value` is usually empty or different, and
     /// copying it leaves the constant registered under a name nobody references — so "the constant exists and the input is still unavailable".**

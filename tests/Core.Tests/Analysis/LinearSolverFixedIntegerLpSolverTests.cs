@@ -73,7 +73,7 @@ public class LinearSolverFixedIntegerLpSolverTests
     ///
     /// **三种输入断言三件事：唯一归属→保留；对应两行→丢弃；无原始来源→丢弃。**
     ///
-    /// **The baseline says a value is given only when an original constraint corresponds to a unique lowered row, and that helper
+    /// **The code says a value is given only when an original constraint corresponds to a unique lowered row, and that helper
     /// rows and rows without a unique original do not enter the map.** **The first implementation let later writes overwrite
     /// earlier ones, so a two-row constraint received the second row's dual — a plausible number with the wrong owner — and this
     /// criterion caught it.** **Three inputs assert three things: unique → kept; two rows → dropped; no original → dropped.**

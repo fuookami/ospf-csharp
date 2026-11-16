@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain;
 /// **刀序级数由生成器决定，分派由工艺决定** / The generator decides the stage count; the process decides the dispatch.
 /// </summary>
 /// <remarks>
-/// 对应基线 `PatternGenerationContext2.kt`（三级生成器与上下文两部分）。
+/// 对应（三级生成器与上下文两部分）。
 ///
-/// Mirrors the three-stage generator and context parts of the baseline `PatternGenerationContext2.kt`.
+/// Mirrors the three-stage generator and context parts of the code.
 /// </remarks>
 public class PatternGenerationContextTests {
     /// <summary>**三级生成器产出三级刀序，且不受请求里的工艺影响** / The three-stage generator emits a three-stage order regardless of the requested process.</summary>

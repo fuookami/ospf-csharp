@@ -1,6 +1,5 @@
 // 广义流费用目标 / Generalized-flow cost objective.
-// 与固定 Kotlin 基线 `generalized_flow/service/GeneralizedFlowCostObjective.kt`（998 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowCostObjective.kt`.
+// 与固定 Kotlin （998 字节）对应。
 
 using System;
 using Fuookami.Ospf.Core.Model.Basic;

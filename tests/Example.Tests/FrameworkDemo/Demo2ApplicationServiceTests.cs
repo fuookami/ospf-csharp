@@ -37,8 +37,8 @@ public sealed class Demo2ApplicationServiceTests {
         // **预配载要用带谓词规格的请求**： 补上基线"预配载必须有下限"的校验后，
         // 全配载形状的请求会在装配阶段被拒——**那是基线行为，不是没接上路径**。
         //
-        // **Predistribution needs the request carrying the predicate spec**: once added the baseline's "predistribution requires a bound" check, a
-        // full-load-shaped request is refused during assembly — **the baseline's behaviour, not an unwired path**.
+        // **Predistribution needs the request carrying the predicate spec**: once added its "predistribution requires a bound" check, a
+        // full-load-shaped request is refused during assembly — **its behaviour, not an unwired path**.
         RequestDTO request = mode == StowageMode.Predistribution
             ? AircraftLoadingDemo.CreatePredistributionSampleRequest()
             : AircraftLoadingDemo.CreateSampleRequest();
@@ -64,9 +64,9 @@ public sealed class Demo2ApplicationServiceTests {
 
     [Fact]
     public void Facade_ShouldNotReimplementAssembly() {
-        // **门面只分派**：装配逻辑一旦被抄回门面，两条实现就会分叉—— 接线全配载时另外两条还在报"未移植"，就是分叉的第一天。
+        // **门面只分派**：装配逻辑一旦被抄回门面，两条实现就会分叉—— 接线全配载时另外两条还在报"未实现"，就是分叉的第一天。
         // **The facade only dispatches**: once assembly is copied back into it the two implementations diverge — wiring full load while the other two still
-        // reported "not ported" was the first day of exactly that divergence.
+        // reported "not implemented" was the first day of exactly that divergence.
         string source = System.IO.File.ReadAllText(Path("src/Example/FrameworkDemo/Demo2/Application/Demo2ApplicationService.cs"));
 
         source.Should().NotContain("Register(");
@@ -108,10 +108,10 @@ public sealed class Demo2ApplicationServiceTests {
             "notes: " + string.Join(" | ", (recommendation.Notes ?? Array.Empty<string>()).ToArray()));
         recommendation.Status.Should().Be("Optimal");
 
-        // 把拒绝点提前到装配阶段**：基线那道守卫在 `AggregationInitializer` 里，不在注册阶段。
+        // 把拒绝点提前到装配阶段**：道守卫在 `AggregationInitializer` 里，不在注册阶段。
         // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物。
         //
-        // **moves the refusal to assembly**: the baseline keeps that guard in `AggregationInitializer`, not at registration. The old
+        // **moves the refusal to assembly**: the code keeps that guard in `AggregationInitializer`, not at registration. The old
         // `DomainRegisterFailed` pinned a local deviation.
         predistribution.Status.Should().Be("InitFailed",
             "the full-load sample has no predicate load weight specification, and the baseline refuses that during assembly");
@@ -126,13 +126,13 @@ public sealed class Demo2ApplicationServiceTests {
     /// <summary>**三个自造状态不许再被产出** / The three invented statuses must not come back.</summary>
     /// <remarks>
     /// **`DirectSolveFailed`、`DomainRegisterFailed`、`ModelBuildFailed` 在基线 `12fdb587` 里一次都不出现**——
-    /// 它们是本仓发明的，而基线只产出 `Infeasible` / `NotConverged` / `Error` 三个。
+    /// 它们是本仓发明的，而产出 `Infeasible` / `NotConverged` / `Error` 三个。
     ///
     /// **这条判据钉的是"没有产出点"**，不是"映射表里没有名字"：
     /// **一个没人产出的字符串留在 `CodeOf` 里，会让它看起来像一条真实分支**——
     /// **而它真正的作用只是让旧判据继续通过。**
     ///
-    /// **They appear nowhere in baseline `12fdb587`** — this port invented them, and the baseline emits only
+    /// **They appear nowhere in baseline `12fdb587`** — this implementation invented them, and the code emits only
     /// `Infeasible` / `NotConverged` / `Error`.
     ///
     /// **What this pins is "no producer"**, not "no name in the mapping table":
@@ -154,8 +154,8 @@ public sealed class Demo2ApplicationServiceTests {
                 invented + " is not a baseline status, so nothing may emit it");
         }
 
-        // **正向的一半**：基线的三个状态里，两个必须真的出现。
-        // **The positive half**: two of the baseline statuses have to actually appear.
+        // **正向的一半**：三个状态里，两个必须真的出现。
+        // **The positive half**: two of the code statuses have to actually appear.
         source.Should().Contain("\"NoSolution\"", "an infeasible model still reports NoSolution");
         source.Should().Contain("\"NotConverged\"", "a non-converged solver is still named as such");
     }

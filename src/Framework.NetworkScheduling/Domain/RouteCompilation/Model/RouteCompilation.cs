@@ -1,6 +1,5 @@
 // 路线编译模型 / Route compilation model.
-// 与固定 Kotlin 基线 `route_compilation/model/RouteCompilation.kt`（16566 字节）对应。
-// Mirrors the pinned baseline's `RouteCompilation.kt`.
+// 与固定 Kotlin （16566 字节）对应。
 
 using System;
 using System.Collections.Generic;
@@ -284,7 +283,7 @@ public sealed class RouteCompilation<V> where V : struct, IRealNumber<V> {
     /// </summary>
     /// <remarks>
     /// 基线说明"第一版默认不自动删列；仅在显式启用列上限时调用"，本实现照此提供但不主动使用。
-    /// The baseline notes "the first version defaults to no automatic column removal; only called when a column limit is explicitly
+    /// The code notes "the first version defaults to no automatic column removal; only called when a column limit is explicitly
     /// enabled"; this implementation follows suit and never calls it on its own.
     /// </remarks>
     /// <param name="routesToRemove">待移除路线 / Routes to remove.</param>
@@ -407,9 +406,9 @@ public sealed class RouteCompilation<V> where V : struct, IRealNumber<V> {
     /// <param name="integralityTolerance">整数容差；缺省取实例容差 / Integrality tolerance; defaults to the instance tolerance.</param>
     /// <returns>路线及其变量值 / Routes together with their variable values.</returns>
     /// <remarks>
-    /// **该参数在本方法体内不被使用，与基线一致**：基线 `extractRouteValues` 也只是把它声明出来、供 `extractSolution` 转发。这里保留
+    /// **该参数在本方法体内不被使用**：基线 `extractRouteValues` 也只是把它声明出来、供 `extractSolution` 转发。这里保留
     /// 同样的签名，是为了让调用方在两个提取方法之间切换时不必改参数列表。
-    /// **This parameter is unused inside this method, matching the baseline**: the baseline's `extractRouteValues` also only declares it
+    /// **This parameter is unused inside this method, matching the code**: its `extractRouteValues` also only declares it
     /// so `extractSolution` can forward it. Keeping the same signature lets callers switch between the two extraction methods without
     /// rewriting their argument lists.
     /// </remarks>

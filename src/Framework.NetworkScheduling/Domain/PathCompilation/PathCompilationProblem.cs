@@ -1,6 +1,6 @@
 // 通用路径主问题类型 / Generic path master-problem types.
-// 与固定 Kotlin 基线 `path_compilation/PathCompilationContext.kt`（5133 字节）中的问题类型部分对应。
-// Mirrors the problem types of the pinned baseline's `path_compilation/PathCompilationContext.kt`.
+// 与固定 Kotlin （5133 字节）中的问题类型部分对应。
+// The problem types of the: .
 
 using System;
 using System.Collections.Generic;

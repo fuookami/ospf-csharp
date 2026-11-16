@@ -10,10 +10,10 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 冲突解释投影成修正集合的判定 / Verdicts that project a conflict explanation into correction sets.
 /// </summary>
 /// <remarks>
-/// **这是 `CorrectionRecommendation.kt` 里三个纯函数的移植。** 三个都不碰求解器：
+/// **这是 里三个纯函数的移植。** 三个都不碰求解器：
 /// 一个判定"这份解释够不够格谈 MCS"，另两个把够格的解释投影成单例修正集合。
 ///
-/// **These are three pure functions from `CorrectionRecommendation.kt`.** None touches a solver: one decides whether the explanation qualifies as an MCS, the other two project a
+/// **These are three pure functions.** None touches a solver: one decides whether the explanation qualifies as an MCS, the other two project a
 /// qualifying explanation into singleton correction sets.
 /// </remarks>
 public static class CorrectionProjection
@@ -172,7 +172,7 @@ public static class CorrectionProjection
     /// （局部敏感性与目标分析共用一份报告），**于是"这份报告里有冲突"不等于"这个目标有冲突"**——
     /// **删掉它就会把一个目标的修复建议挂到另一个目标名下。**
     ///
-    /// **This is the port of the pure aggregation inside `analyzeCriticalityTargets`.** Three gates are all needed: **the target status must be `Unreachable`**, **the report's target must be the conflict's target**, and **the
+    /// **This is the implementation of the pure aggregation inside `analyzeCriticalityTargets`.** Three gates are all needed: **the target status must be `Unreachable`**, **the report's target must be the conflict's target**, and **the
     /// conflict must be verified minimal.** **The second gate looks redundant and is not**: a report's `Conflict` may belong to another target (local sensitivity and target analysis share a report), **so "this
     /// report has a conflict" is not "this target has a conflict" — dropping it files one target's repair advice under another target's name.**
     /// </remarks>

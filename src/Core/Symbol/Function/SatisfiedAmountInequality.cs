@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// constraint; the result is <c>sum(u)</c> without <c>amount</c>, otherwise the binary <c>y</c> linked to
 /// the satisfied-count range by two rows. Flags are fixed trivially when the normalized lhs range
 /// excludes zero.</para>
-/// <para>注意：基线的注册使用零带蕴含，而求值按比较符号计数；二者不是双向等价。
+/// <para>注意：注册使用零带蕴含，而求值按比较符号计数；二者不是双向等价。
 /// Note: baseline registration uses a zero-band implication, while evaluation counts by comparison;
 /// these are not equivalent. The count-range output also only implies membership when y=1.</para>
 /// </summary>
@@ -192,7 +192,7 @@ public class SatisfiedAmountInequalityFunction :
         return IndicatorSupport.AddConstraints(model, constraints);
     }
 
-    /// <summary>按固定 Kotlin 基线生成零带蕴含行，不按 sign 改写 / Emit baseline zero-band implication rows without rewriting by sign.</summary>
+    /// <summary>按生成零带蕴含行，不按 sign 改写 / Emit baseline zero-band implication rows without rewriting by sign.</summary>
     private Result<
         IReadOnlyList<LinearInequality<Flt64>>,
         ErrorCode,

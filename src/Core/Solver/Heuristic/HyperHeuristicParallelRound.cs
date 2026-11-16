@@ -1,7 +1,7 @@
 // 并行派发 / Parallel dispatch.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `advanceLocked` 的"一轮派发多个工作单元"：
+// 对应固定 Kotlin （47241 B）里 `advanceLocked` 的"一轮派发多个工作单元"：
 // 选择互不相同的工作单元、逐个分配额度（预留额从剩余额度里扣）、并行执行、再顺序归并。
-// Mirrors the "dispatch several workers in one round" part of `advanceLocked` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B):
+// "dispatch several workers in one round" part: 
 // pick distinct workers, allocate each an allowance (reserving it out of the remaining budget), run them in parallel and merge sequentially.
 
 using System;

@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// **判据直接照契约的原文写**：字段顺序表与取消来源词表。**契约是外部文件，这里不复制它的全部内容，
 /// 只钉住"C# 与它一致"这件事实**——契约变了而 C# 没变，这条判据会红。
 ///
-/// Acceptance row 4.7 said "`checkpoint-wire-contract.tsv` is a **Kotlin↔Rust** contract with **no C# party**, so it is not ported".
+/// Acceptance row 4.7 said "`checkpoint-wire-contract.tsv` is a **Kotlin↔Rust** contract with **no C# party**, so it is not implemented".
 /// **That judgement was wrong.**
 ///
 /// **C# implements the same checkpoint envelope**: `ConstraintProgrammingCheckpoint` carries `integritySha256` and a per-field
@@ -118,16 +118,16 @@ public class CheckpointWireContractTests
     /// </summary>
     /// <remarks>
     /// **契约的 `[provenance-field]` 一节只列到 6**（`solverId` … `threadCount`），
-    /// **而基线 `ConstraintProgrammingCheckpointV2.kt` 有 10 个**：多了 `randomSeed`、`deterministic`、`environmentSummary`。
+    /// **而有 10 个**：多了 `randomSeed`、`deterministic`、`environmentSummary`。
     ///
     /// **所以"契约只到 6"不是 C# 的问题，是契约自己没跟上基线。**
     /// **这条判据只钉前 7 个（契约里的 0—6）**——**多出来的三个是契约的缺口，不是我该"改回去"的东西。**
     /// **把它写下来，是为了让下一个人知道"7 与 10 不一致"是已知的、有出处的。**
     ///
     /// **The contract's `[provenance-field]` section stops at 6** (`solverId` … `threadCount`),
-    /// **while the baseline `ConstraintProgrammingCheckpointV2.kt` has 10**: it adds `randomSeed`, `deterministic` and `environmentSummary`.
+    /// **while the code has 10**: it adds `randomSeed`, `deterministic` and `environmentSummary`.
     ///
-    /// **So "the contract stops at 6" is not a C# problem; the contract did not keep up with the baseline.**
+    /// **So "the contract stops at 6" is not a C# problem; the contract did not keep up with the code.**
     /// **This pins the first 7 (0—6 in the contract)** — **the extra three are the contract's gap, not something to "revert".**
     /// **Writing it down is so the next reader knows "7 versus 10" is known and sourced.**
     /// </remarks>
@@ -163,14 +163,14 @@ public class CheckpointWireContractTests
 
     /// <summary>**兜底代码必须原样往返** / A catch-all code has to survive verbatim.</summary>
     /// <remarks>
-    /// **契约把 `backend` 和未知代码交给"原样保留"**，基线的判据原文是
+    /// **契约把 `backend` 和未知代码交给"原样保留"**，判据原文是
     /// `listOf("user", "backend", "vendorSpecificStop")` 必须**逐位无损往返**。
     ///
     /// **C# 承载它的是 `PortableCancellationRecord.Origin`，类型是普通 `string` 而不是枚举**——
     /// **这正好满足要求，而"正好"是必须被钉住的东西**：把 `Origin` 改成枚举，
     /// **`backend` 与 `vendorSpecificStop` 会在反序列化时炸掉，而三方摘要都对不上。**
     ///
-    /// **The contract leaves `backend` and unknown codes to "preserved verbatim"**, and the baseline criterion reads
+    /// **The contract leaves `backend` and unknown codes to "preserved verbatim"**, and the code criterion reads
     /// `listOf("user", "backend", "vendorSpecificStop")` with a **lossless round trip** requirement.
     ///
     /// **In C# the carrier is `PortableCancellationRecord.Origin`, typed as a plain `string` rather than an enum** —

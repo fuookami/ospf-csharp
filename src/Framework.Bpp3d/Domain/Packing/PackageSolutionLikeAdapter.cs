@@ -1,6 +1,6 @@
 // 类包装解决方案到装箱程序的适配 / Adapter from a package-solution-like tree to a packing program.
-// 与固定 Kotlin 基线 `bpp3d/domain/packing/model/PackageSolutionLikeAdapter.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `PackageSolutionLikeAdapter.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;

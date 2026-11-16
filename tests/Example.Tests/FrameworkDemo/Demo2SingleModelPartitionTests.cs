@@ -85,10 +85,10 @@ public sealed class Demo2SingleModelPartitionTests
             models.Master.Tokens.Tokens.Count.Should().Be(12);
             // **实测**：来源 11 行 → 主 14 行、子 19 行。
             // 主多出来的 3 行是 theta 与目标相关的行；**子有 19 行**，说明行确实被切开来了——
-            // 基线同样会为非决策变量补 `bound_lb_/bound_ub_` 边界行（`LinearBendersAlgorithm.kt`），本仓也这么做。
+            // 基线同样会为非决策变量补 `bound_lb_/bound_ub_` 边界行，本仓也这么做。
             //
             // **Measured **: 11 source rows become 14 master and 19 sub. The master gains rows for theta and the objective; **the sub has nineteen rows**, so the
-            // rows really are split — the baseline likewise adds `bound_lb_/bound_ub_` rows for non-decision variables, and this port does the same.
+            // rows really are split — the code likewise adds `bound_lb_/bound_ub_` rows for non-decision variables, and this implementation does the same.
             models.Master.Constraints.Count.Should().Be(14);
             models.Sub.Constraints.Count.Should().Be(19,
                 "the recorded state: rows are split; change this number only with a measurement that shows a different split");
@@ -103,7 +103,7 @@ public sealed class Demo2SingleModelPartitionTests
     /// </summary>
     /// <remarks>
     /// 上一条证明了"能拆"，这一条证明"拆得动"：把最大装载重量的符号标成连续追索，子问题的符号数必须**少于**全部。
-    /// 若阶段声明被忽略，两条数字会一模一样——那才是"看起来在分解、其实在照抄"。
+    /// 若阶段声明被忽略，两条数字会一模一样——那才是"看起来在分解、其实在沿用"。
     ///
     /// The previous criterion proves it splits; this one proves it **narrows**: marking the max-load-weight symbols as continuous recourse must leave the sub with
     /// fewer than all variables. If the stage declaration were ignored the two counts would match — that is what "looks like decomposition while copying everything" is.
@@ -159,14 +159,14 @@ public sealed class Demo2SingleModelPartitionTests
     /// **阶段表只能点名变量，而追索那半没有变量** / The stage table can only name variables, and the recourse registers none.
     /// </summary>
     /// <remarks>
-    /// 基线的 `bendersStages` 是 `Map<IVariableItem, LinearBendersStage>`——**键只能是变量**。
+    /// `bendersStages` 是 `Map<IVariableItem, LinearBendersStage>`——**键只能是变量**。
     /// 而实测追索那半加的是 `+0 tokens、+8 symbols`：**它只加表达式符号，一个变量也不加**。
     /// 于是这条路径**无法用阶段表表达"这一半属于追索"**——不是"还没填表"，是**表里没有可填的键**。
     ///
     /// 这不是缺一个功能，是划分器只按变量切分。要让追索真的收窄，得让划分器能按**约束行**归属——那是框架层的新能力，
     /// 需要证据与新判据，不能在这里假装填一张空表。
     ///
-    /// The baseline's `bendersStages` maps `IVariableItem` to a stage — **only variables can be keys**. The measured recourse half adds `+0 tokens` and `+8 symbols`:
+    /// The code's `bendersStages` maps `IVariableItem` to a stage — **only variables can be keys**. The measured recourse half adds `+0 tokens` and `+8 symbols`:
     /// **symbols only, no variables**. So this path **cannot express "this half is the recourse" through the stage table** — not "the table is not filled yet", but **there is no
     /// key to fill**. This is not a missing feature but a partitioner that splits by variable only. Narrowing the recourse for real needs row-level ownership in the
     /// framework, with evidence and criteria of its own; faking an empty table here is not that.

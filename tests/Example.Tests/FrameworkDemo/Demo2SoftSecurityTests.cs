@@ -377,7 +377,7 @@ public class Demo2SoftSecurityTests {
         // 1. A false withSoftSecurity gives zero.
         var b757 = new Rig(MainDeckItems(5), positions, AircraftType.B757);
         // `withSoftSecurity` **只在建议打板模式下为假**；预配载仍然启用（基线就是这样）。
-        // `withSoftSecurity` is false **only in weight-recommendation mode**; predistribution still enables it, as in the baseline.
+        // `withSoftSecurity` is false **only in weight-recommendation mode**; predistribution still enables it, as in the code.
         // 预配载：软安全启用，但空载厌恶**只对全配载**生效 → 门舱 + 分隔空载 = 2 条。
         // Predistribution: soft security is on, but empty-hating applies **only to full load**, so door plus divide-empty = 2.
         Generate(b757, StowageMode.Predistribution).Should().HaveCount(2, "predistribution still enables soft security");

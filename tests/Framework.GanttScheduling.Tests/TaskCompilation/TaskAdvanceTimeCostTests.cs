@@ -15,13 +15,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **零阈值与非零阈值必须给出同一取值；提不出系数不是"系数为一"** / A zero threshold and a non-zero one must agree, and a missing coefficient is not "one".
 /// </summary>
 /// <remarks>
-/// 基线在零阈值时直接线性计入、非零阈值时引入松弛变量。零阈值只是省掉一个变量，不是换一套语义：
+/// 零阈值时直接线性计入、非零阈值时引入松弛变量。零阈值只是省掉一个变量，不是换一套语义：
 /// 两者若差一点点，"设了阈值"和"没设阈值"就会给出不同的解，而这在配置层面完全看不出。
 ///
-/// 而"提不出系数"在基线上是 `infinity`——即该任务的提前时间**不可定价**。静默取 `1` 会把"禁止提前"变成
+/// 而"提不出系数"在是 `infinity`——即该任务的提前时间**不可定价**。静默取 `1` 会把"禁止提前"变成
 /// "每单位罚 1"，于是本该被拒绝的排程被轻松接受。
 ///
-/// The baseline charges linearly at a zero threshold and introduces a slack variable otherwise. A zero threshold merely saves one variable, it does not swap semantics: if the two
+/// The code charges linearly at a zero threshold and introduces a slack variable otherwise. A zero threshold merely saves one variable, it does not swap semantics: if the two
 /// diverge slightly, "configured a threshold" and "no threshold" produce different solutions, invisible at the configuration level. And "no coefficient" is `infinity` upstream —
 /// the advance **cannot be priced**. Defaulting to `1` turns "advance prohibited" into "penalty 1 per unit", letting a schedule that should be rejected be accepted cheaply.
 /// </remarks>

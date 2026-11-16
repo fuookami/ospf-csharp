@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// **查询写错不抛异常，它只是答错**——而这一层里有四处"看起来对、实际反了或漏了"的地方：
 /// **反转比较**、**null 与"字段缺失"**、**正则转义顺序**、**不支持的谓词按策略处理**。
 ///
-/// The baseline's `MongoBooleanTranslator` (**422 lines**) is the largest of the four Mongo translators and the easiest to get wrong.
+/// The code's `MongoBooleanTranslator` (**422 lines**) is the largest of the four Mongo translators and the easiest to get wrong.
 /// The scalar, sort and update translators are in place; this is the last one.
 ///
 /// **A wrong query does not throw; it answers wrongly** — and this layer has four places that look right but are reversed or incomplete:
@@ -64,11 +64,11 @@ public static class MongoBooleanTranslator
         {
             case BooleanConstant constant:
                 // **`True` 是空过滤器（匹配全部），`False` 与 `Unknown` 都匹配不到任何东西。**
-                // **`Unknown` 归到"匹配不到"是基线的选择**：三值逻辑里的未知不能当成"通过"，
+                // **`Unknown` 归到"匹配不到"是选择**：三值逻辑里的未知不能当成"通过"，
                 // **当成通过等于让一个没算出来的条件放行数据。**
                 //
                 // **`True` is the empty filter (match everything); `False` and `Unknown` match nothing.**
-                // **Folding `Unknown` into "matches nothing" is the baseline's choice**: unknown must not pass,
+                // **Folding `Unknown` into "matches nothing" is its choice**: unknown must not pass,
                 // **because passing it lets an undecided condition release data.**
                 return Results.Ok<BsonDocument?>(
                     constant.Value is Trivalent.True ? new BsonDocument() : AlwaysFalse());
@@ -145,7 +145,7 @@ public static class MongoBooleanTranslator
         // **其余情况（引用与引用、常量与常量、含运算的）走 `$expr`**：
         // **`$expr` 才能比较两个字段**，而普通过滤器只能比较字段与常量。
         //
-        // **Everything else (ref/ref, const/const, arithmetic) goes through `$expr`**:
+        // **Everything else (ref/ref, const/const, arithmetic) goes through `$expr`**.
         // **only `$expr` can compare two fields**, while ordinary filters compare a field with a constant.
         Result<BsonValue, ErrorCode, Error<ErrorCode>> left =
             MongoScalarTranslator.Translate(comparison.Left, name => resolveFieldName(name) ?? name);
@@ -186,7 +186,7 @@ public static class MongoBooleanTranslator
         // **因为 Mongo 里 `{f: null}` 会同时匹配"字段是 null"与"字段不存在"**，
         // **而写这个条件的人通常只想表达前者。**
         //
-        // **A `null` constant cannot be treated as an ordinary value**: **the baseline rejects it outright**
+        // **A `null` constant cannot be treated as an ordinary value**: **the code rejects it outright**
         // (`Null comparison constant is not supported`), **because `{f: null}` in Mongo matches both
         // "the field is null" and "the field is missing"**, **while whoever wrote the condition usually meant only the former.**
         if (constant.Value is null)
@@ -278,7 +278,7 @@ public static class MongoBooleanTranslator
             // **`Exact`/`Prefix`/`Suffix`/`Contains` 都要先转义再拼锚点**：
             // **用户给的 `a.b` 里的点必须匹配字面点**，否则 `a.b` 会匹配 `axb`。
             //
-            // **`Exact`/`Prefix`/`Suffix`/`Contains` escape before anchoring**:
+            // **`Exact`/`Prefix`/`Suffix`/`Contains` escape before anchoring**.
             // **a dot in the user's `a.b` has to match a literal dot**, or `a.b` also matches `axb`.
             PatternMatchMode.Exact => "^" + EscapeRegex(pattern) + "$",
             PatternMatchMode.Prefix => "^" + EscapeRegex(pattern),
@@ -346,12 +346,12 @@ public static class MongoBooleanTranslator
         UnsupportedPredicatePolicy policy,
         int depth)
     {
-        // **基线在这里有一段"操作数为空"的分支（空 `and` 恒真、空 `or` 匹配不到），
+        // **这里有一段"操作数为空"的分支（空 `and` 恒真、空 `or` 匹配不到），
         // 而 C# 的 `AndExpression`/`OrExpression` 构造函数直接拒绝空操作数**——
         // **所以那一段在这里不可达，已删掉，而不是留一段取不到的代码。**
         // `MongoBooleanTranslatorTests.TheEmptyLogical_ShouldBeImpossibleToConstruct` 钉住这个约束。
         //
-        // **The baseline has an "operands are empty" branch here (empty `and` is always true, empty `or` matches nothing),
+        // **The code has an "operands are empty" branch here (empty `and` is always true, empty `or` matches nothing),
         // and the C# `AndExpression`/`OrExpression` constructors reject empty operands outright** —
         // **so that branch is unreachable here and was deleted rather than left as dead code.**
         // `MongoBooleanTranslatorTests.TheEmptyLogical_ShouldBeImpossibleToConstruct` pins the constraint.
@@ -397,10 +397,10 @@ public static class MongoBooleanTranslator
 
     /// <summary>**"匹配不到任何东西"的过滤器** / A filter that matches nothing.</summary>
     /// <remarks>
-    /// **基线用 `{_id: {$exists: false}}`**：每个文档都有 `_id`，所以这条过滤不了任何东西。
+    /// **`{_id: {$exists: false}}`**：每个文档都有 `_id`，所以这条过滤不了任何东西。
     /// **换成 `{_id: null}` 就错了**——它还会匹配 `_id` 缺失的文档（正常集合里没有，但语义不同）。
     ///
-    /// **The baseline uses `{_id: {$exists: false}}`**: every document has an `_id`, so nothing passes.
+    /// **The code uses `{_id: {$exists: false}}`**: every document has an `_id`, so nothing passes.
     /// **`{_id: null}` would be wrong** — it also matches documents without an `_id` (absent in a normal collection, but a different meaning).
     /// </remarks>
     private static BsonDocument AlwaysFalse() =>
@@ -487,7 +487,7 @@ public static class MongoBooleanTranslator
         // **三种策略都以失败返回，区别在错误的"种类"**：
         // **调用方靠种类判断"这条谓词能不能降级成永远为假"，而不是靠解析错误信息。**
         //
-        // **All three policies return a failure; they differ in the error's kind**:
+        // **All three policies return a failure; they differ in the error's kind**.
         // **the caller recognises whether a predicate may be degraded to always-false by that kind, not by parsing a message.**
         UnsupportedPredicateDetail detail = policy switch
         {

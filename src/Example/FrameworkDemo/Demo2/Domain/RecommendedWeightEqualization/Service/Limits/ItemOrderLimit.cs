@@ -23,9 +23,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 货物顺序约束 / The item-order constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `recommended_weight_equalization/service/limits/ItemOrderLimit.kt` 对齐：**优先级高与优先级低的一对货物，不能分别落在"后与前"的一对舱位上**。
+/// 与对齐：**优先级高与优先级低的一对货物，不能分别落在"后与前"的一对舱位上**。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **两个排序键不同**：货物按 `优先级降序` 再按 `Id 升序`；舱位按 `装载顺序升序` 再按 `Id 字符串升序`。
 ///    第二级的 `Id` 是**打破平局**用的——只按主键排会让同优先级的货物顺序取决于列表原序。
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 3. **下标用"首次出现"**：同一对象在列表里出现两次时取第一次。用 `IndexOf` 也行，但基线写的是显式的首次出现表。
 /// 4. **约束是 `s[i1,j2] + s[i2,j1] 不超过 1`**：两个"反向放置"之和至多 1，即最多允许其中一个。
 ///
-/// Aligned with the baseline: **a higher-priority and a lower-priority item must not land in a "later and earlier" pair of positions**. Four things must be copied: **the two sort keys
+/// **a higher-priority and a lower-priority item must not land in a "later and earlier" pair of positions**. Four things are carried over: **the two sort keys
 /// differ** — items by `priority descending` then `Id ascending`, positions by `loading order ascending` then `Id` as a **string** ascending, where the second level breaks ties and
 /// without it the order of equal-priority items depends on the input list; **ordered pairs are all combinations**, not adjacent pairs, since halving the constraints would let a
 /// high-priority item sit late; **indices come from first occurrence**, so a repeated object takes its first index; and **the constraint is `s[i1,j2] + s[i2,j1] 不超过 1`**, allowing at

@@ -19,17 +19,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness;
 /// 装载效能聚合 / The loading-effectiveness aggregation.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/Aggregation.kt` 的**基础部分**对齐：相邻舱位对、有序舱位对、来源与目的地集合、
+/// 与的**基础部分**对齐：相邻舱位对、有序舱位对、来源与目的地集合、
 /// 以及 `PriorityOrderLimit` / `SourceEarlyLimit` 所需的两项派生量。
 ///
-/// **这里只落地不依赖 `IfFunction` 的部分**。基线的五个子模型里有四个（`SequentialLoading`、
+/// **这里只落地不依赖 `IfFunction` 的部分**。五个子模型里有四个（`SequentialLoading`、
 /// `TransferAdjacentLoading`、`TrailerLoading`、`AdviceLoading` 的松弛项）都建立在
 /// `IfFunction(… − 2 + ε)` 之上，而本仓的 `IfFunction.Create` 对"带单项式且带非零常数"的条件一律拒绝——
 /// 与 、 同根。那四个模型连同依赖它们的十条限制留给后续批次，**不以恒零符号顶替**。
 ///
-/// Aligned with the baseline's **foundation**: adjacent position pairs, ordered position pairs, the source and destination sets, and the two derived quantities that `PriorityOrderLimit`
-/// and `SourceEarlyLimit` need. ** lands only the `IfFunction`-free part.** Four of the baseline's five sub-models (`SequentialLoading`, `TransferAdjacentLoading`,
-/// `TrailerLoading`, and `AdviceLoading`'s slack terms) all rest on `IfFunction(… − 2 + ε)`, which this port's `IfFunction.Create` rejects for any condition carrying both a monomial
+/// Aligned with its **foundation**: adjacent position pairs, ordered position pairs, the source and destination sets, and the two derived quantities that `PriorityOrderLimit`
+/// and `SourceEarlyLimit` need. ** lands only the `IfFunction`-free part.** Four of its five sub-models (`SequentialLoading`, `TransferAdjacentLoading`,
+/// `TrailerLoading`, and `AdviceLoading`'s slack terms) all rest on `IfFunction(… − 2 + ε)`, which this implementation's `IfFunction.Create` rejects for any condition carrying both a monomial
 /// and a non-zero constant — the same root. Those four models and the ten limits that depend on them are left to later batches, **not substituted with constant-zero
 /// symbols**.
 /// </remarks>
@@ -143,7 +143,7 @@ public sealed class LoadingEffectivenessAggregation
     /// <remarks>
     /// 基线**无条件**构造它，与装载模式无关；其余三个子模型都是按模式二选一。
     ///
-    /// The baseline builds this **unconditionally**, independent of stowage mode; the other three sub-models are chosen by mode.
+    /// The code builds this **unconditionally**, independent of stowage mode; the other three sub-models are chosen by mode.
     /// </remarks>
     public TransferAdjacentLoading? TransferAdjacentLoading { get; private set; }
 
@@ -163,7 +163,7 @@ public sealed class LoadingEffectivenessAggregation
     /// 与基线 `Aggregation` 的 `when (stowageMode)` 一致：**`TransferAdjacentLoading` 无条件**，
     /// `AdviceLoading` 与 `SequentialLoading` 只在预配载，`TrailerLoading` 只在全载。建议打板三种模型全空。
     ///
-    /// Matches the baseline's `when (stowageMode)`: **`TransferAdjacentLoading` unconditionally**, `AdviceLoading` and `SequentialLoading` only under predistribution, `TrailerLoading` only
+    /// Matches its `when (stowageMode)`: **`TransferAdjacentLoading` unconditionally**, `AdviceLoading` and `SequentialLoading` only under predistribution, `TrailerLoading` only
     /// under full load, with weight recommendation leaving all three null.
     /// </remarks>
     /// <param name="load">装载模型 / The load model.</param>
@@ -195,8 +195,8 @@ public sealed class LoadingEffectivenessAggregation
         ArgumentNullException.ThrowIfNull(parameter);
         ArgumentNullException.ThrowIfNull(model);
 
-        // **先派生四个子模型**：基线的 `Aggregation.register` 自己建 `load` 再建子模型，两步都在生成管线之前。
-        // **Derive the four sub-models first**: the baseline's `Aggregation.register` builds `load` and then the sub-models, both before generating the pipelines.
+        // **先派生四个子模型**：`Aggregation.register` 自己建 `load` 再建子模型，两步都在生成管线之前。
+        // **Derive the four sub-models first**: its `Aggregation.register` builds `load` and then the sub-models, both before generating the pipelines.
         if (Load is { } load)
         {
             if (TransferAdjacentLoading is null)
@@ -246,7 +246,7 @@ public sealed class LoadingEffectivenessAggregation
         }
 
         // **走生成器**，与基线同一条路径：条件与顺序集中在一处，`Register` 不再重复判断。
-        // **Goes through the generator**, the same path as the baseline: conditions and order live in one place and `Register` does not re-decide them.
+        // **Goes through the generator**, the same path as the code: conditions and order live in one place and `Register` does not re-decide them.
         Result<IReadOnlyList<Func<LinearMetaModel<Flt64>, Try>>, ErrorCode, Error<ErrorCode>> generated =
             new Service.PipelineListGenerator(this).Invoke(stowageMode, parameter);
         if (generated is Failed<IReadOnlyList<Func<LinearMetaModel<Flt64>, Try>>, ErrorCode, Error<ErrorCode>> failed)
@@ -347,8 +347,8 @@ public sealed class LoadingEffectivenessAggregation
             {
                 continue;
             }
-            // **到达站不计入目的地**（基线的 `if (it.destination != flight.arrival)`）。
-            // **The arrival is not a destination**, as in the baseline.
+            // **到达站不计入目的地**（`if (it.destination != flight.arrival)`）。
+            // **The arrival is not a destination**, as in the code.
             if (flight is not null && string.Equals(destination, flight.Destination.Code, StringComparison.Ordinal))
             {
                 continue;
@@ -366,7 +366,7 @@ public sealed class LoadingEffectivenessAggregation
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
     /// 基线注释写得很直白："装卸效率的约束进主问题"，实现就是 `register(...)`。
-    /// **The baseline says it plainly**: "loading effectiveness constraints go into the master problem" — the implementation is `register(...)`.
+    /// **The code says it plainly**: "loading effectiveness constraints go into the master problem" — the implementation is `register(...)`.
     /// </remarks>
     public Try RegisterForBendersMP(StowageMode stowageMode, LinearMetaModel<Flt64> model) =>
         Register(stowageMode, new Parameter(), model);
@@ -375,7 +375,7 @@ public sealed class LoadingEffectivenessAggregation
     /// <param name="model">线性元模型 / Linear meta model</param>
     /// <param name="solution">主问题解 / The master-problem solution</param>
     /// <returns>执行结果 / Execution result</returns>
-    /// <remarks>基线原文："装卸效率不参与子问题"。 / The baseline: "loading effectiveness does not contribute to the sub problem".</remarks>
+    /// <remarks>基线原文："装卸效率不参与子问题"。 / The code: "loading effectiveness does not contribute to the sub problem".</remarks>
     public Try RegisterForBendersSP(LinearMetaModel<Flt64> model, IReadOnlyList<double> solution) =>
         Results.Ok<Success>(Results.SuccessInstance);
 

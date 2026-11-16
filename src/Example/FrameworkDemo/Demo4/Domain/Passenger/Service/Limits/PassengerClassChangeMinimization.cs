@@ -23,12 +23,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// 舱位变更的最小化目标 / The cabin-change objective.
 /// </summary>
 /// <remarks>
-/// 基线 `PassengerClassChangeMinimization.kt`：对每位乘客、**除自己舱位以外**的每个舱位，累加 `系数 × passengerClassChange[乘客, 舱位]`。
+/// ：对每位乘客、**除自己舱位以外**的每个舱位，累加 `系数 × passengerClassChange[乘客, 舱位]`。
 ///
 /// 求和口径是这一层唯一容易错的地方：**不是"每位乘客一项"，而是"每位乘客 × 除自己以外的舱位"**。
 /// 少算会让"改舱"变成免费的（目标里没有它的价格），多算（把自己那一档也算进去）会因为那个变量根本不存在而取不到值。
 ///
-/// The baseline's `PassengerClassChangeMinimization.kt` accumulates `coefficient × passengerClassChange[passenger, cabin]` for every passenger and **every cabin except the passenger's
+/// The code's accumulates `coefficient × passengerClassChange[passenger, cabin]` for every passenger and **every cabin except the passenger's
 /// own**.
 ///
 /// That summation is the only easy mistake here: **it is not "one term per passenger" but "one per passenger per other cabin"**. Under-counting makes a cabin change free (its price is

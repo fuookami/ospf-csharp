@@ -94,7 +94,7 @@ public sealed class CapacityOrderCompilation<A> : ICapacity<A>
     /// **读不到已求解的值就失败**，不猜：变量没注册、或符号不在模型里、或取值还没写回，都会显式报错。
     /// 把"读不到"当成 0 会安静地报一份空计划。
     ///
-    /// **天花板**：`Duration` 现在直接取时隙长度，没有按 `action` 的单位加工时间折算——基线的 `operationTime` 那一层
+    /// **天花板**：`Duration` 现在直接取时隙长度，没有按 `action` 的单位加工时间折算——`operationTime` 那一层
     /// 还没接。等产能调度有了解路径再补，现在先保证**数量和顺序位是对的**。
     ///
     /// **The first version returned `Ok` with an empty allocation table**: the caller read "solved, nothing scheduled" — **an empty solution and a real one cannot be told apart**,
@@ -104,7 +104,7 @@ public sealed class CapacityOrderCompilation<A> : ICapacity<A>
     /// **A missing solved value fails instead of guessing**: unregistered variables, a symbol that is not in the model, or a value that was not written back all report explicitly.
     /// Treating "cannot read" as 0 would quietly report an empty plan.
     ///
-    /// **Ceiling**: `Duration` currently takes the slot length rather than folding in the action's unit processing time — the baseline's `operationTime` layer is not wired. Add it once
+    /// **Ceiling**: `Duration` currently takes the slot length rather than folding in the action's unit processing time — its `operationTime` layer is not wired. Add it once
     /// capacity scheduling has a solve path; until then **the amounts and order positions are what is guaranteed**.
     /// </remarks>
     public Result<CapacitySchedulingSolution<A>, ErrorCode, Error<ErrorCode>> ExtractSolution(object model) {

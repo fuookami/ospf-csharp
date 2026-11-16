@@ -1,13 +1,13 @@
 // 网络调度基础设施：弧、容量、流量、供需与容量上下界 / Network-scheduling infrastructure: arcs, capacity, flow, balance
 // and capacity bounds.
-// 与固定 Kotlin 基线 `network-scheduling-infrastructure` 的 `NetworkArc.kt`（51 行）、`Capacity.kt`（24 行）、
-// `Flow.kt`（24 行）、`NodeBalance.kt`（23 行）、`CapacityBounds.kt`（49 行）对应。
-// Mirrors the pinned baseline's `NetworkArc.kt`, `Capacity.kt`, `Flow.kt`, `NodeBalance.kt` and `CapacityBounds.kt`.
+// 与`network-scheduling-infrastructure` 的（51 行）、（24 行）、
+//（24 行）、（23 行）、（49 行）对应。
+// ,,, and.
 //
-// 这一层的特点：**每个类型都是"带校验的构造器"**，校验失败一律返回 `IllegalArgument`，而不是抛出。这是基线的统一约定，
+// 这一层的特点：**每个类型都是"带校验的构造器"**，校验失败一律返回 `IllegalArgument`，而不是抛出。这是统一约定，
 // 也是下游能把多个构造失败汇总成一份报告的前提。
 // The pattern here: **every type is a "validating constructor"** whose failures all return `IllegalArgument` rather than
-// throwing. That is the baseline's convention and the reason downstream can aggregate several construction failures into
+// throwing. That is its convention and the reason downstream can aggregate several construction failures into
 // one report.
 
 using System;
@@ -144,7 +144,7 @@ public sealed class CapacityBounds<V>(Quantity<V> lower, Quantity<V> upper) wher
     /// Four checks in this order: same dimension → non-negative → upper convertible → lower not above upper.
     /// **The dimension check must come first**: with mismatched dimensions every later numeric comparison is meaningless,
     /// and comparing values first yields a "plausible-looking" wrong conclusion. **The upper bound is stored in its original
-    /// unit**: the baseline converts only for the comparison, so storing the converted value would hand callers an `Upper`
+    /// unit**: the code converts only for the comparison, so storing the converted value would hand callers an `Upper`
     /// in a different unit than they passed and mislead downstream reading it in their expected unit.
     /// </remarks>
     /// <param name="lower">下界（非负）/ Lower bound (non-negative).</param>

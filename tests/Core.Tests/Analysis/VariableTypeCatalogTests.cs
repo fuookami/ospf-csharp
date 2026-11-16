@@ -215,10 +215,10 @@ public class VariableTypeFactoryTests {
 /// 快照里找回的是原变量对象，不是新造一个 / A snapshot yields the original variable objects, not new ones.
 /// </summary>
 /// <remarks>
-/// **更正了 的判断**：基线的 `buildModel` 不从 `TypeName` 重建变量，
+/// **更正了 的判断**：`buildModel` 不从 `TypeName` 重建变量，
 /// 而是遍历表达式 AST 把 `IVariableItem` 引用**原样收出来**。
 ///
-/// **corrected the claim**: the baseline does not rebuild variables from `TypeName`; it walks the expression AST and reuses the `IVariableItem` references.**
+/// **corrected the claim**: the code does not rebuild variables from `TypeName`; it walks the expression AST and reuses the `IVariableItem` references.**
 /// </remarks>
 public class SnapshotVariableIdentityTests {
     /// <summary>**快照里的变量就是原来那个对象** / The variable in the snapshot is the original object.</summary>

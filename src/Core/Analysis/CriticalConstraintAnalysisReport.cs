@@ -247,10 +247,10 @@ public sealed record CandidateFunnelRanking(
 /// 候选分层与漏斗构建 / Candidate classification and funnel construction.
 /// </summary>
 /// <remarks>
-/// **基线的 `classifyCandidate` / `buildCandidateFunnel` 是顶层函数，C# 没有顶层函数**，所以它们收在这里。
+/// **`classifyCandidate` / `buildCandidateFunnel` 是顶层函数，C# 没有顶层函数**，所以它们收在这里。
 /// 收进一个带名字的类不是装饰：**它让"这是一组报告侧纯函数"这件事有个地方可写。**
 ///
-/// **The baseline's `classifyCandidate` and `buildCandidateFunnel` are top-level functions and C# has none**, so they live here. Putting them in a named class is not
+/// **`classifyCandidate` and `buildCandidateFunnel` are top-level functions and C# has none**, so they live here. Putting them in a named class is not
 /// decoration: **it gives the fact that these are report-side pure functions somewhere to be stated.**
 /// </remarks>
 public static class CriticalCandidateFunnel {

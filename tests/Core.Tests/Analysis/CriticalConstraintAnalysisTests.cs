@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// </summary>
 /// <remarks>
 /// 补 `CriticalConstraintAnalysisReport` 的漏斗块**（基线 872 行里的前 340 行左右）。
-/// 基线的其余两块要 `ConstraintPerturbationReport` 与 `ConflictExplanation`，这两个都住在**带后端求解**的文件里，
+/// 其余两块要 `ConstraintPerturbationReport` 与 `ConflictExplanation`，这两个都住在**带后端求解**的文件里，
 /// 所以这里只搬漏斗，**没搬的部分不写空跑版本**。
 ///
 /// 判据钉的是**"没有证据就不许分层"**：这一层最容易犯的错是把 `Unknown` 读成"不重要"。
 ///
-/// **ported the funnel block of `CriticalConstraintAnalysisReport`** — roughly the first 340 of its 872 baseline lines. The other two blocks need `ConstraintPerturbationReport`
-/// and `ConflictExplanation`, both of which live inside files that **do solve on a backend**, so ported the funnel only and **stubbed nothing**. The criteria pin
+/// **implemented the funnel block of `CriticalConstraintAnalysisReport`** — roughly the first 340 of its 872 baseline lines. The other two blocks need `ConstraintPerturbationReport`
+/// and `ConflictExplanation`, both of which live inside files that **do solve on a backend**, so implemented the funnel only and **stubbed nothing**. The criteria pin
 /// **"no evidence, no tier"**: the mistake this layer is most likely to make is reading `Unknown` as "unimportant".
 /// </remarks>
 public class CriticalConstraintAnalysisTests {

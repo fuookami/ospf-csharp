@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 四条屏蔽边里 `dL` 与 `dU` 的位置不能互换 / `dL` and `dU` cannot swap places in the four masking rows.
 /// </summary>
 /// <remarks>
-/// 补 `SelectFunction`（基线 `Select.kt`）。
+/// 补 `SelectFunction`。
 ///
 /// **编码的关键是"被屏蔽的差"**：令 <c>d = then − otherwise</c>、辅助变量 <c>z = mask · d</c>，
 /// 于是 <c>result = otherwise + z</c>——**一条等式就够，不需要两条分支不等式。**

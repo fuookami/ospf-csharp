@@ -1,6 +1,5 @@
 // 超启发式配置 / Hyper-heuristic configuration.
-// 与固定 Kotlin 基线 `hyper_heuristic/HyperHeuristicConfig.kt`（8838 B）对应。
-// Mirrors the pinned baseline's `HyperHeuristicConfig.kt` (8838 B).
+// 与固定 Kotlin （8838 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -190,11 +189,11 @@ public sealed record PersistenceConfig(
 /// **而失败点距离配置错误已经很远**。
 /// **Automatic checkpoints require both "persistence enabled" and "a destination path".** Checking only the interval defers the failure
 /// to run time, **far from the configuration mistake**.
-/// **子算法不递归校验**。基线的 `validate` 只检查顶层；递归校验会让一份"顶层合法、子层有问题"的配置在父层报错，
-/// **而错误信息指向的是父层标识**。这是与基线一致的**已知行为**，不是遗漏。
-/// **Child algorithms are not validated recursively.** The baseline's `validate` checks only the top level; recursive validation would
+/// **子算法不递归校验**。`validate` 只检查顶层；递归校验会让一份"顶层合法、子层有问题"的配置在父层报错，
+/// **而错误信息指向的是父层标识**。这是的**已知行为**，不是遗漏。
+/// **Child algorithms are not validated recursively.** The code's `validate` checks only the top level; recursive validation would
 /// report a "top-level legal, child broken" configuration against the parent, **with the error message pointing at the parent identity**.
-/// This is **known behaviour** matching the baseline, not an omission.
+/// This is **known behaviour** matching the code, not an omission.
 /// </remarks>
 public sealed record HyperHeuristicConfig(
     [property: JsonPropertyName("problem")] ComponentSpec Problem,
@@ -400,9 +399,9 @@ public sealed class HyperHeuristicBuilder {
     /// </summary>
     /// <returns>配置 / The configuration.</returns>
     public Result<HyperHeuristicConfig, ErrorCode, Error<ErrorCode>> Build() {
-        // **必须给出 problem**：基线在 `build` 里直接拒绝缺失的 problem，而不是塞一个默认值。
+        // **必须给出 problem**：`build` 里直接拒绝缺失的 problem，而不是塞一个默认值。
         // 塞默认值会让一份"忘了声明问题"的配置被当成"用模型问题"的配置，**而运行时会拿一个空模型去求解**。
-        // **A problem is required**: the baseline rejects a missing problem outright in `build` rather than substituting a default.
+        // **A problem is required**: the code rejects a missing problem outright in `build` rather than substituting a default.
         // Substituting one turns "forgot to declare the problem" into "uses the model problem", **and the run then solves against an
         // empty model**.
         if (_problem is null) {

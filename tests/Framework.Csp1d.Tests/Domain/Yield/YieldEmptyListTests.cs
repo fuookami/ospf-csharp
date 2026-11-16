@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 /// **这正是 在余料代理那里刚批评过的同一类混淆**（"没有数据"与"零浪费"必须分开），
 /// **方向相反，错误相同**。
 ///
-/// **the earlier deviation**: the baseline's two fields are `List<...> = emptyList` — **never null**. C# used `Count > 0 ? list : null`. Callers receiving null can only guess
+/// **the earlier deviation**: its two fields are `List<...> = emptyList` — **never null**. C# used `Count > 0 ? list : null`. Callers receiving null can only guess
 /// between "none" and "not computed" — **the same conflation criticised one batch earlier** in the rest-material proxy. **Opposite direction, same mistake.**
 /// </remarks>
 public class YieldEmptyListTests {

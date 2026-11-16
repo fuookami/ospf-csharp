@@ -105,12 +105,12 @@ public static class CrossContributionProjector {
     /// 同时撤回那一步并收敛实现：本处与 `GenerationWidthIndex.CanonicalUnitKey` 都委托到
     /// `GenerationQuantityMath.UnitKey`，与基线"只有一个 private fun"一致。
     ///
-    /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`, byte-for-byte with the baseline.** Before this fell back to
-    /// the empty string, and changed it to `full type name|ToString` — **that step was wrong**: the baseline's `canonicalUnitKey` is
-    /// `symbol ?: name ?: toString` and **never looks at the type**. Adding the type name makes C# and the baseline disagree on the same input.
+    /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`, byte-for-byte with the code.** Before this fell back to
+    /// the empty string, and changed it to `full type name|ToString` — **that step was wrong**: its `canonicalUnitKey` is
+    /// `symbol ?: name ?: toString` and **never looks at the type**. Adding the type name makes C# and the code disagree on the same input.
     ///
     /// both reverts that step and collapses the implementation: this and `GenerationWidthIndex.CanonicalUnitKey` delegate to `GenerationQuantityMath.UnitKey`,
-    /// matching the baseline's "one private fun".
+    /// matching its "one private fun".
     ///
     /// **The unit key routes through the single implementation `GenerationQuantityMath.UnitKey`.** Before this fell back to the empty string and changed
     /// it to `full type name|ToString` — but **three copies each writing it out** was the real problem. collapses it into one: both this and

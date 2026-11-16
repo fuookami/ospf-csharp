@@ -22,16 +22,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service.
 /// 空载厌恶目标 / The empty-hating objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `soft_security/service/limits/EmptyHatedLimit.kt` 对齐：对**带 `EmptyHated` 类型码**的舱位加一项
+/// 与对齐：对**带 `EmptyHated` 类型码**的舱位加一项
 /// `c·(1 - full_j)`——即"该舱位空着"的代价，由 `minimize` 作为**目标**（不是约束）。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **它是目标，不是约束**。写成 `addConstraint` 会把它变成"空载必须 ≤ 某值"，语义完全相反。
 /// 2. **只有带该类型码的舱位参与**，其余 `mapNotNull` 掉。
 /// 3. **系数由外部注入**（`parameter.emptyHated`），不是常数 1。
 ///
-/// Aligned with the baseline: for each position carrying the `EmptyHated` type code, add `c·(1 - full_j)` — the cost of leaving it empty — via `minimize` as an **objective**,
+/// For each position carrying the `EmptyHated` type code, add `c·(1 - full_j)` — the cost of leaving it empty — via `minimize` as an **objective**,
 /// not a constraint. Three things must be copied: **it is an objective** (writing `addConstraint` turns it into "emptiness must be at most some value", the exact opposite);
 /// **only positions with that type code participate**, the rest being filtered out; and **the coefficient is injected** (`parameter.emptyHated`), not a constant one.
 /// </remarks>
@@ -111,10 +111,10 @@ public sealed class EmptyHatedLimit
 /// 主甲板舱门空载偏好目标 / The main-deck-door empty preference objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `soft_security/service/limits/MainDeckDoorEmptyLimit.kt` 对齐：对**紧邻舱门**的主甲板舱位，按货物类别加不同权重，
+/// 与对齐：对**紧邻舱门**的主甲板舱位，按货物类别加不同权重，
 /// 由 `minimize` 作为目标。
 ///
-/// 权重表（基线硬编码，照抄）：
+/// 权重表（基线硬编码，沿用）：
 ///
 /// | 货物 | 集装器类别 | 权重 |
 /// | --- | --- | --- |
@@ -129,7 +129,7 @@ public sealed class EmptyHatedLimit
 /// 2. **只有 `DoorUbietyType.Beside` 的舱位参与**，其它 `mapNotNull` 掉。
 /// 3. **权重再乘 `parameter.besideDoorMainPosition`**，不是裸权重。
 ///
-/// Aligned with the baseline: for main-deck positions **right beside a door**, weight each cargo class differently and `minimize`. The weight table is tabulated above and the
+/// For main-deck positions **right beside a door**, weight each cargo class differently and `minimize`. The weight table is tabulated above and the
 /// baseline hard-codes it. Three points: **the order decides the result** — empty/pallet first, non-empty/pallet next, container last, and hoisting the container case makes an
 /// "empty pallet" weigh 5; **only `DoorUbietyType.Beside` positions participate**; and **the weight is multiplied by `parameter.besideDoorMainPosition`**, not used raw.
 /// </remarks>
@@ -236,7 +236,7 @@ public sealed class MainDeckDoorEmptyLimit
 /// 分隔空载目标 / The divide-empty-loading objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `soft_security/service/limits/DivideEmptyLoadingLimit.kt` 对齐：三族符号各 `minimize` **一次**，共三个目标项。
+/// 与对齐：三族符号各 `minimize` **一次**，共三个目标项。
 /// 三族分别是"舱位间空载"、"空载舱位后接货物"、"空载舱位后接空载"。
 ///
 /// 三点：
@@ -245,8 +245,8 @@ public sealed class MainDeckDoorEmptyLimit
 /// 2. **每个相邻对都参与**，包括系数为 0 的——基线没有跳过零系数，跳过会让"系数为 0"与"相邻对不存在"在模型里不可区分。
 /// 3. **符号缺失是失败**，不是跳过：缺符号意味着 `Register` 没跑或跑了一半。
 ///
-/// Aligned with the baseline: one `minimize` per symbol family, three objective terms in total — "empty between cargo", "empty cargo then cargo" and "empty then empty". Three
-/// points: **three `minimize` calls, not three constraints** (merging them changes the relative weights, which the baseline allows to differ per family); **every adjacent pair
+/// One `minimize` per symbol family, three objective terms in total — "empty between cargo", "empty cargo then cargo" and "empty then empty". Three
+/// points: **three `minimize` calls, not three constraints** (merging them changes the relative weights, which the code allows to differ per family); **every adjacent pair
 /// participates**, zero coefficients included, since skipping would make "coefficient is zero" indistinguishable from "the pair does not exist"; and **a missing symbol is a
 /// failure**, not a skip, because it means `Register` did not run or ran halfway.
 /// </remarks>

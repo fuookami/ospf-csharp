@@ -21,13 +21,13 @@ public static class VolumeUnits {
     /// <summary>加仑（美制）/ US gallon (1 gal = 3.785411784 L).</summary>
     public static readonly PhysicalUnit USGallon = new DerivedUnit(Liter.ScaleMultiply(Scale.Invoke(3.785411784)), "US gallon", "gal");
 
-    // 以下 16 个按基线 `Volume.kt` 补齐。
+    // 以下 16 个按补齐。
     //
     // **英制与美制的液量单位同名而不同量**：
     // **UK 液量盎司 28.4130625 mL，US 液量盎司 29.5735295625 mL**；
     // **UK 加仑 4.54609 L，US 加仑 3.78541178 L**——**两者差 20%，而名字只差两个字母。**
     //
-    // The sixteen below were added from the baseline Volume.kt.
+    // The sixteen below were added from the code Volume.kt.
     //
     // **Imperial and US liquid measures share names and differ in size:**
     // **UK fluid ounce 28.4130625 mL, US fluid ounce 29.5735295625 mL**;

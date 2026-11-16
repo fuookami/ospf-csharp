@@ -165,9 +165,9 @@ public class Csp1dPricingPolicyWiringTests {
         var policy = new CountingPolicy();
         Material<Flt64> material = problem.Materials[0];
         // **必须用会产出新列的定价器**：默认定价器与初始池共用枚举器，
-        // 第一轮的列全是池里已有的，去重后为空，**策略根本不会被调用**（与基线一致）。
+        // 第一轮的列全是池里已有的，去重后为空，**策略根本不会被调用**。
         // **A pricing generator that yields new columns is required**: the default one shares the pool's enumerator, so its first round is all duplicates and after
-        // dedup is empty, **and the policy is never invoked** (matching the baseline).
+        // dedup is empty, **and the policy is never invoked** (matching the code).
         var generation = new Csp1dColumnGeneration<Flt64>(
             new MockColumnGenerationSolver(),
             pricingGenerator: new OneShotPricingGenerator(material, policy));
@@ -189,7 +189,7 @@ public class Csp1dPricingPolicyWiringTests {
     /// <remarks>
     /// **记的缺口**：`ObjectiveConfig` 在生产路径上**恒为 null**，成本永远只有基础值 1。
     /// 基线 `pricingObjectiveConfig(resolvedConfig)` 从 `lengthConfig.batchMinPenalty` 与
-    /// `wasteConfig` 的三个惩罚项取值（见 `Csp1dColumnGeneration.kt:1000`）。
+    /// `wasteConfig` 的三个惩罚项取值（见）。
     ///
     /// 判据用**捕获定价输入**的方式：一个只记录 `input` 的定价替身，然后断言
     /// `ObjectiveConfig` 里那四个字段**等于配置里设的值**。
@@ -197,8 +197,8 @@ public class Csp1dPricingPolicyWiringTests {
     /// **断言具体数值，不是"非 null"**：把它接成 `new Csp1dPricingObjectiveConfig<V>` 也能过"非 null"，
     /// 但那样**四个惩罚全是 null**，等于没接。
     ///
-    /// **The gap recorded**: `ObjectiveConfig` was **always null on the production path**, so the cost was always the base 1. The baseline
-    /// `pricingObjectiveConfig(resolvedConfig)` reads `lengthConfig.batchMinPenalty` and the three waste penalties (`Csp1dColumnGeneration.kt:1000`).
+    /// **The gap recorded**: `ObjectiveConfig` was **always null on the production path**, so the cost was always the base 1. The code
+    /// `pricingObjectiveConfig(resolvedConfig)` reads `lengthConfig.batchMinPenalty` and the three waste penalties.
     ///
     /// The criterion **captures the pricing input**: a pricing double that only records `input`, then asserts the four `ObjectiveConfig` fields **equal the configured
     /// values**.
@@ -240,8 +240,8 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// 判定"定价枚举器复读初始方案是首要缺口"，之后又想"修"它。查清后的结论是：
     ///
-    /// 1. **基线的默认定价器与初始池共用同一个枚举器**（`SimpleInitialCuttingPlanGenerator`），C# 也一样；
-    /// 2. 基线在**同样场景**下也断言 `AllDuplicates`（`Csp1dApplicationAcceptanceTest.kt:726`）——
+    /// 1. **默认定价器与初始池共用同一个枚举器**（`SimpleInitialCuttingPlanGenerator`），C# 也一样；
+    /// 2. **同样场景**下也断言 `AllDuplicates`——
     /// 但那用的是**自定义 fake 定价器**，能产出重复列；
     /// 3. 这里用**真实默认定价器 + 全零对偶 mock**，减成本判据 `收益 > 成本` 不成立，
     /// 所以 `Generate` 返回空，走 `PricingConverged` 分支。
@@ -255,8 +255,8 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// declared "the pricing enumerator replaying the initial plans is the top gap", and later batches tried to "fix" it. After checking properly:
     ///
-    /// 1. **The baseline's default pricing generator shares the initial pool's enumerator** (`SimpleInitialCuttingPlanGenerator`), and so does C#;
-    /// 2. The baseline **also asserts `AllDuplicates`** in that situation (`Csp1dApplicationAcceptanceTest.kt:726`) — but with a **custom fake pricing generator** that
+    /// 1. **The code's default pricing generator shares the initial pool's enumerator** (`SimpleInitialCuttingPlanGenerator`), and so does C#;
+    /// 2. The code **also asserts `AllDuplicates`** in that situation — but with a **custom fake pricing generator** that
     /// can yield duplicate columns;
     /// 3. Here C# uses the **real default pricing generator with an all-zero-dual mock**, so the reduced-cost test `benefit > cost` fails, `Generate` returns empty, and the
     ///    `PricingConverged` branch runs.
@@ -290,7 +290,7 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// 所以第一轮定价就报出 1 条同键列，`DeduplicatePlans` 把它滤掉，`addedPlans` 为空 → `AllDuplicates`。
     ///
-    /// **这正是基线 `Csp1dApplicationAcceptanceTest.kt:726` 的场景**——那里是"定价返回初始方案的副本"。
+    /// **这正是基线 的场景**——那里是"定价返回初始方案的副本"。
     ///
     /// 断言 `FinalPlanCount == InitialPlanCount`：**重复列绝不能真的加进去**，
     /// 否则"报了重复却还是加进去了"也会绿。
@@ -303,7 +303,7 @@ public class Csp1dPricingPolicyWiringTests {
     ///
     /// So the first pricing round already reports one same-key column, `DeduplicatePlans` filters it, `addedPlans` is empty, and the run ends as `AllDuplicates`.
     ///
-    /// **That is precisely the baseline's scenario** at `Csp1dApplicationAcceptanceTest.kt:726` — "pricing returns a copy of the initial plan".
+    /// **That is precisely its scenario** at — "pricing returns a copy of the initial plan".
     ///
     /// It asserts `FinalPlanCount == InitialPlanCount`: **a duplicate column must never actually be added**, or "reported a duplicate but added it anyway" would also pass.
     /// </remarks>

@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 自适应调参表与二进制变量数 / The adaptive tuning table and the binary-variable count.
 /// </summary>
 /// <remarks>
-/// `BendersStrategy.tuneAdaptiveConfig` 在基线里是一张**按问题规模分档的表**：迭代上限加 0/8/16/32/64，
+/// `BendersStrategy.tuneAdaptiveConfig` 在是一张**按问题规模分档的表**：迭代上限加 0/8/16/32/64，
 /// 容差取底线与档位下限的较大者，两个停滞窗口各按档取值。本仓这块**已经是基线原样**，
 /// 这批判据把它钉住——**它此前一条判据都没有**，改错一个数字不会有任何东西变红。
 ///
-/// The baseline's `tuneAdaptiveConfig` is **a size-banded table**: iterations get +0/8/16/32/64, tolerance becomes the larger of the configured value and the
-/// band's floor, and the two stall windows take a band value. This port's version **is already the baseline's, line for line** (checked) and had **no
+/// `tuneAdaptiveConfig` is **a size-banded table**: iterations get +0/8/16/32/64, tolerance becomes the larger of the configured value and the
+/// band's floor, and the two stall windows take a band value. This implementation's version **is already its, line for line** (checked) and had **no
 /// criterion at all** — a single changed digit would not have turned anything red.
 /// </remarks>
 public sealed class Demo2BendersSizingTests
@@ -27,7 +27,7 @@ public sealed class Demo2BendersSizingTests
     /// **六个档位边界各对一次** / One case per band boundary.
     /// </summary>
     /// <remarks>
-    /// 值全部由基线的表算出来（`maxIterations` 默认 64、`tolerance` 默认 1e-6）：
+    /// 值全部由表算出来（`maxIterations` 默认 64、`tolerance` 默认 1e-6）：
     ///
     /// | 变量数 | 迭代 | 容差 | 主停滞 | 目标停滞 |
     /// | --- | --- | --- | --- | --- |
@@ -39,7 +39,7 @@ public sealed class Demo2BendersSizingTests
     ///
     /// **59 那一行不能省**：档位是"≥60"才跳，写成"≥59"或"<60"的两种写法在这一行上表现不同。
     ///
-    /// Every value comes from the baseline's table (defaults 64 iterations, 1e-6 tolerance). **The 59 row is not optional**: the band jumps at "≥60", and "≥59"
+    /// Every value comes from its table (defaults 64 iterations, 1e-6 tolerance). **The 59 row is not optional**: the band jumps at "≥60", and "≥59"
     /// versus "<60" behave differently exactly there.
     /// </remarks>
     [Theory]
@@ -68,11 +68,11 @@ public sealed class Demo2BendersSizingTests
     /// **`maxIterations == 0` 是"不要调"而不是"调到 0"** / An explicit zero means "do not tune", not "tune to zero".
     /// </summary>
     /// <remarks>
-    /// 基线在这里提前返回：三个字段原样带走，两个停滞窗口留空（`null`）。如果漏了这个分支，`0 + 64 = 64` 会让
+    /// 这里提前返回：三个字段原样带走，两个停滞窗口留空（`null`）。如果漏了这个分支，`0 + 64 = 64` 会让
     /// "用户明确关掉调参"变成"用户要 64 次迭代"——**一个默认值悄悄覆盖了用户的显式选择**，
     /// 而且求解照样跑成功，只是跑得比用户要求的久。
     ///
-    /// The baseline returns early here, passing the three fields through untouched and leaving both stall windows `null`. Missing this branch turns
+    /// The code returns early here, passing the three fields through untouched and leaving both stall windows `null`. Missing this branch turns
     /// `0 + 64 = 64`, so "the user switched tuning off" becomes "the user wants 64 iterations" — **a default silently overriding an explicit choice**, and the solve
     /// still succeeds, just for longer than asked.
     /// </remarks>
@@ -89,18 +89,18 @@ public sealed class Demo2BendersSizingTests
     }
 
     /// <summary>
-    /// **二进制变量数按基线求和，不按乘积** / The binary-variable count follows the baseline's sum, not a product.
+    /// **二进制变量数求和，不按乘积** / The binary-variable count follows its sum, not a product.
     /// </summary>
     /// <remarks>
     /// 把这条判据翻面了。** 它原本钉的是"`CargoInput` 仍然没有 `AllowedPositions`"这个**前提**，
-    /// 并写明"字段一落地它就红，届时必须把 `BendersStrategy.ResolveSolveMode` 那一行改成基线那种求和"。
+    /// 并写明"字段一落地它就红，届时必须把 `BendersStrategy.ResolveSolveMode` 那一行改成种求和"。
     /// **字段在 落地，判据应声变红，那一行也照它说的改了。**
     ///
     /// 现在它钉的是**求和本身**：限制过的请求必须得到比乘积**更小**的数。少了这一条，
     /// "改成求和"可以退化成"换个写法的乘积"，而两者在无限制请求上完全一样——**判据会照样绿**。
     ///
     /// **flipped this criterion.** It used to pin the **premise** that `CargoInput` had no `AllowedPositions`, and said in so many words that when the field
-    /// landed it would red and the line in `ResolveSolveMode` would have to become the baseline's sum. **The field landed, the criterion reddened, and the
+    /// landed it would red and the line in `ResolveSolveMode` would have to become its sum. **The field landed, the criterion reddened, and the
     /// line was changed as instructed.** It now pins **the sum itself**: a constrained request must produce **fewer** than the product. Without that, "switch to a
     /// sum" can degrade into "a product written differently", and the two are identical on unconstrained requests — **the criterion would stay green**.
     /// </remarks>
@@ -149,7 +149,7 @@ public sealed class Demo2BendersSizingTests
     /// 基线比较的是 `tunedAdaptive.minBinaryVariables`（调参不走阈值，所以数值上等于配置值），而不是某个常数。
     /// 判据钉两端：低于阈值 → 落回 MILP 并写明理由；达到阈值 → 走 Benders。
     ///
-    /// The baseline compares against `tunedAdaptive.minBinaryVariables` (tuning does not rewrite the threshold, so it equals the configured value), not a constant.
+    /// The code compares against `tunedAdaptive.minBinaryVariables` (tuning does not rewrite the threshold, so it equals the configured value), not a constant.
     /// The criterion pins both sides: below the threshold falls back to MILP with the reason written down, at the threshold it takes Benders.
     /// </remarks>
     [Theory]

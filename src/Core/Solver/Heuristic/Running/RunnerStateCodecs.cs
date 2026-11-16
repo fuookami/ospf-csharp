@@ -1,7 +1,7 @@
 // 运行器状态编解码器 / Runner state codecs.
-// 与固定 Kotlin 基线 `runner/RunnerStateCodecs.kt`（9937 B）对应——**只包含不依赖 runner 专有状态的三个工厂**：
+// 与固定 Kotlin （9937 B）对应——**只包含不依赖 runner 专有状态的三个工厂**：
 // `population`、`islands`、`trajectory`。
-// Mirrors the pinned baseline's `runner/RunnerStateCodecs.kt` (9937 B) — **only the three factories that do not depend on runner-specific
+// — **only the three factories that do not depend on runner-specific
 // state**: `population`, `islands`, `trajectory`.
 
 using System;
@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// 运行器状态编解码器 / Runner state codecs.
 /// </summary>
 /// <remarks>
-/// **只交付了种群、岛、轨迹三个工厂**。基线的 `particles`/`clpso`/`shade`/`cmaEs` 四个工厂编解码的是
-/// `ParticleState`、`ClpsoParticle`、`ShadeState`、`CmaEsState` 这些 **runner 专有状态类型**；本移植还没有这些类型，
+/// **只交付了种群、岛、轨迹三个工厂**。`particles`/`clpso`/`shade`/`cmaEs` 四个工厂编解码的是
+/// `ParticleState`、`ClpsoParticle`、`ShadeState`、`CmaEsState` 这些 **runner 专有状态类型**；本实现还没有这些类型，
 /// 因此这四个工厂连同它们共用的 `NativeState` 信封一起，留到各自的 runner 之后。
-/// **Only the population, island and trajectory factories are delivered.** The baseline's `particles`/`clpso`/`shade`/`cmaEs` factories
-/// encode and decode **runner-specific state types** (`ParticleState`, `ClpsoParticle`, `ShadeState`, `CmaEsState`); this port does not
+/// **Only the population, island and trajectory factories are delivered.** The code's `particles`/`clpso`/`shade`/`cmaEs` factories
+/// encode and decode **runner-specific state types** (`ParticleState`, `ClpsoParticle`, `ShadeState`, `CmaEsState`); this implementation does not
 /// have them yet, so those four factories — together with the shared `NativeState` envelope they use — arrive after their runners.
 ///
 /// **`trajectory` 用"可空个体"而不是"空列表"表示未初始化**。用空列表会让"轨迹上没有个体"与"尚未开始"变成同一个编码，
@@ -84,10 +84,10 @@ public static class RunnerStateCodecs {
     /// </summary>
     /// <remarks>
     /// 七种运行状态形状差异太大（粒子有速度、SHADE 有记忆、CMA-ES 有协方差），逐一建记录会让文件膨胀成七份几乎相同的代码。
-    /// 基线用"一个五字段信封 + 各自的校验"来收拢，本移植照做。
+    /// "一个五字段信封 + 各自的校验"来收拢，本实现照做。
     /// The seven runner states differ too much to share one record (particles carry velocities, SHADE a memory, CMA-ES a covariance), and
-    /// writing seven near-identical records would bloat the file. The baseline collapses them into "one five-field envelope plus per-kind
-    /// validation", and this port follows.
+    /// writing seven near-identical records would bloat the file. The code collapses them into "one five-field envelope plus per-kind
+    /// validation", and this implementation follows.
     /// **`Individuals` 与 `Solutions` 里放的是"已经编码好的 JSON"**，而不是原始类型。这样信封本身与目标类型无关，
     /// **七种状态才能共用同一个读写实现**。
     /// **`Individuals` and `Solutions` hold "already-encoded JSON"** rather than raw values. That keeps the envelope independent of the

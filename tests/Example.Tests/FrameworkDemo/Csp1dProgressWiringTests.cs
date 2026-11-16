@@ -36,10 +36,10 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// **两套取消机制必须一起生效**：`cancellationToken` 与 `progressContext.IsCancelled` **语义相同、来源不同**，
 /// 调用方可能只给了其中之一。只查一套会让另一套静默失效。
 ///
-/// The baseline's `Csp1dColumnGeneration.solve` and `solveWithTrace` both take a `progressContext` parameter and call `progressContext?.throwIfCancelled` at four
+/// `Csp1dColumnGeneration.solve` and `solveWithTrace` both take a `progressContext` parameter and call `progressContext?.throwIfCancelled` at four
 /// points.
 ///
-/// wired `CancellationToken` into the C# side and / / ported the whole reporting system and adapters, **but the CSP1D chain got none of it** — so
+/// wired `CancellationToken` into the C# side and / / implemented the whole reporting system and adapters, **but the CSP1D chain got none of it** — so
 /// progress reporting **does not work at all** inside CSP1D.
 ///
 /// **Both cancellation mechanisms must take effect together**: `cancellationToken` and `progressContext.IsCancelled` are **semantically identical but sourced
@@ -110,10 +110,10 @@ public class Csp1dProgressWiringTests {
         reporter.Snapshots.Should().BeEmpty();
     }
 
-    /// <summary>**进度序列必须与基线数值一致** / The snapshot sequence must match the baseline's numbers.</summary>
+    /// <summary>**进度序列必须与基线数值一致** / The snapshot sequence must match its numbers.</summary>
     /// <remarks>
-    /// **/ 的数值是我自拟的（开场 60、收尾 100），不是基线的。** 这批核对了基线
-    /// `Csp1dColumnGeneration.kt` 的 4 处 `reportProgress`，拿到真实数值：
+    /// **/ 的数值是我自拟的（开场 60、收尾 100），不是。** 这批核对了基线
+    /// 的 4 处 `reportProgress`，拿到真实数值：
     ///
     /// | 位置 | 阶段 | 子阶段 | 阶段内 | 总体 |
     /// | --- | --- | --- | --- | --- |
@@ -122,13 +122,13 @@ public class Csp1dProgressWiringTests {
     /// | :470 定价中段 | `ColumnGeneration` | `pricing_iteration` | 40 | 迭代区间内 |
     /// | :683 定价结束 | `ColumnGeneration` | `pricing_iteration` | 100 | 迭代区间末 |
     ///
-    /// **收尾上界是 99，不是 100**——基线的最终 MILP 拿的是 `phase(75, 99)`，所以进度**永远到不了 100**。
+    /// **收尾上界是 99，不是 100**——最终 MILP 拿的是 `phase(75, 99)`，所以进度**永远到不了 100**。
     /// 这条如实断言 99。
     ///
- /// **/the earlier numbers were my own invention (opening 60, closing 100), not the baseline's.** checked the baseline's four `reportProgress` calls and took
+ /// **/the earlier numbers were my own invention (opening 60, closing 100), not its.** checked its four `reportProgress` calls and took
     /// the real values (table above).
     ///
-    /// **The ceiling is 99, not 100** — the baseline's final MILP gets `phase(75, 99)`, so progress **never reaches 100**. This asserts 99 honestly.
+    /// **The ceiling is 99, not 100** — its final MILP gets `phase(75, 99)`, so progress **never reaches 100**. This asserts 99 honestly.
     /// </remarks>
     [Fact]
     public async Task SolveAsync_ShouldFollowTheBaselineProgressSequence() {
@@ -161,7 +161,7 @@ public class Csp1dProgressWiringTests {
     /// `RangedProgress` 的变异（"永远返回区间起点"）**存活**——因为第一轮 `iteration = 0` 时，
     /// 正确值与变异值**都是 20**，无法区分。这一点在缺口里记下。
     ///
-    /// The baseline's :470 reports `(pricing_iteration, in-stage 40)` after each LP solve, with overall progress inside the iteration band (20—75). Without it, the
+    /// The code's :470 reports `(pricing_iteration, in-stage 40)` after each LP solve, with overall progress inside the iteration band (20—75). Without it, the
     /// 20—75 band has **no feedback at all** during a long solve.
     ///
     /// **The criterion's limits**: it verifies "the snapshot exists with in-stage 40" and **not the band arithmetic**. The `RangedProgress` mutation ("always return
@@ -198,7 +198,7 @@ public class Csp1dProgressWiringTests {
     /// 断言"不存在 30/40"而不是"等于某个带内值"——**带内值依赖迭代上限**（`iterationLimitBound`），
     /// 钉死具体数字会让判据随 fixture 变化而碎。
     ///
-    /// The baseline's `:383` passes `progressContext?.phase(iterationStart, iterationEnd)` to `solveLpMaster`.
+    /// The code's `:383` passes `progressContext?.phase(iterationStart, iterationEnd)` to `solveLpMaster`.
     ///
     /// **The criterion discriminates via "the standalone numbers are replaced"**: made `SolveLPAsync(metaModel, options)` report `(MasterLp, 0, **30**)` and
     /// `(MasterLp, 100, **40**)` — computed **standalone, without a parent**. Once `phase` wraps it, those become band-relative values, and **neither 30 nor 40 should
@@ -238,7 +238,7 @@ public class Csp1dProgressWiringTests {
     /// 判据失败的真正原因是**当时 `MockColumnGenerationSolver` 覆盖了带 options 的重载、
     /// 把适配器包装摘掉了**。**"读代码推出的结论"与"实测的结论"在这里正好相反。**
     ///
-    /// The baseline's `:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
+    /// The code's `:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
     ///
     /// **claimed this was "unobservable" because "`Register` fails and the solver is never reached" — that conclusion was wrong.** I inferred it from reading code
     /// without actually running there. In fact the full CSP1D flow **does reach the final MILP**: the snapshots include `REGISTRATION/-/100/99` and `MILP/incumbent/99/99`.
@@ -284,7 +284,7 @@ public class Csp1dProgressWiringTests {
     /// **The criterion's limits must be stated**: it **cannot distinguish "there are explicit checkpoints" from "there are none"**. Mutation testing confirmed that
     /// deleting **all 3** `progressContext?.ThrowIfCancelled` calls still leaves this green.
     ///
-    /// The reason is that `SolverProgressContext.Report` **also calls `ThrowIfCancelled` internally** (aligned with the baseline), and CSP1D always reports
+    /// The reason is that `SolverProgressContext.Report` **also calls `ThrowIfCancelled` internally** (aligned with the code), and CSP1D always reports
     /// one stage snapshot after the entry. So cancellation **is caught by `Report`**, and the explicit checkpoints are a **redundant second layer**.
     ///
     /// **Redundancy is not a bug**: explicit checkpoints throw earlier when cancellation happens between two reports. But **they have no independent falsifiability**,

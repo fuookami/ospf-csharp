@@ -1,6 +1,5 @@
 // 不可变有向多重图 / Immutable directed multigraph.
-// 与固定 Kotlin 基线 `NetworkGraph.kt`（318 行）对应。
-// Mirrors the pinned baseline's `NetworkGraph.kt`.
+// 与固定 Kotlin 对应。
 //
 // 这一层的设计要点是**拓扑标识在创建时快照化**：节点与弧的标识、起点、终点在构造时全部提取并冻结，之后图再被过滤、反转，
 // 也只是对这些快照做索引选择，而不是重新读业务对象。因此**过滤与反转不会改变任何标识**，下游可以放心按标识寻址。

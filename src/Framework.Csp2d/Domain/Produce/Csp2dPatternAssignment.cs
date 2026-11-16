@@ -1,6 +1,5 @@
 // 主问题的图案使用量变量集合 / The pattern usage variable set of the master problem.
-// 与固定 Kotlin 基线 `csp2d/domain/produce/MasterProblem.kt` 的 `Csp2dPatternAssignment` 与 `safeCsp2dPolynomial` 对应。
-// Mirrors `Csp2dPatternAssignment` and `safeCsp2dPolynomial` from the pinned Kotlin baseline's `MasterProblem.kt`.
+// 与固定 Kotlin 的 `Csp2dPatternAssignment` 与 `safeCsp2dPolynomial` 对应。
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -126,8 +125,8 @@ public sealed class Csp2dPatternAssignment {
 
     /// <summary>每个方案的使用次数变量 / The usage variable of each plan.</summary>
     /// <returns>变量组合 / The variable combination.</returns>
-    /// <remarks>注册前读取会抛异常：**没有上界的无符号变量不可能被求解器接受**，而延迟构造是基线的口径。
-    /// Reading before registration throws: **an unsigned variable without an upper bound cannot be accepted by the solver**, and lazy construction is the baseline's
+    /// <remarks>注册前读取会抛异常：**没有上界的无符号变量不可能被求解器接受**，而延迟构造是口径。
+    /// Reading before registration throws: **an unsigned variable without an upper bound cannot be accepted by the solver**, and lazy construction is its
     /// convention.</remarks>
     public UIntVariable1 Usage =>
         _usage ?? throw new System.InvalidOperationException("usage 尚未注册 / usage is not registered yet");

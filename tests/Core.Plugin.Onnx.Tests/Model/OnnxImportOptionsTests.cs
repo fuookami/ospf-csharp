@@ -106,7 +106,7 @@ public class OnnxImportOptionsTests
         new OnnxImportOptions(OnnxImportMode.Cubic).MaxDegree.Should().Be(3);
     }
 
-    /// <summary>**默认值就是基线的那一套** / The defaults are the baseline's.</summary>
+    /// <summary>**默认值就是那一套** / The defaults are its.</summary>
     [Fact]
     public void TheDefaults_ShouldMatchTheBaseline() {
         var options = new OnnxImportOptions();

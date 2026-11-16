@@ -39,10 +39,10 @@ public class ResourceLessQuantityMinimization<E, A, S, R, C, V>
     /// <param name="coefficient">按槽的权重 / Per-slot weight.</param>
     /// <param name="name">管道名称 / Pipeline name.</param>
     /// <remarks>
-    /// **门槛与权重都按槽**：基线的签名是 `threshold: (S) -> Flt64 = zero` 与 `coefficient: (S) -> Flt64 = one`。
+    /// **门槛与权重都按槽**：签名是 `threshold: (S) -> Flt64 = zero` 与 `coefficient: (S) -> Flt64 = one`。
     /// 给个标量会让"某些槽更贵"这件事无处表达。
     ///
-    /// **Both threshold and weight are per slot**: the baseline signature is per-slot for each; a scalar would leave "some slots cost more" inexpressible.
+    /// **Both threshold and weight are per slot**: the code signature is per-slot for each; a scalar would leave "some slots cost more" inexpressible.
     /// </remarks>
     public ResourceLessQuantityMinimization(
         IResourceUsage<S, R, C, V> quantity,
@@ -63,14 +63,14 @@ public class ResourceLessQuantityMinimization<E, A, S, R, C, V>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 把每个槽的less量按权重累加成一个目标。三件照抄基线：
+    /// 把每个槽的less量按权重累加成一个目标。三件照做：
     ///
     /// 1. **阈值 0 时目标项是松弛符号本身**（每个槽一个单项式）；阈值大于 0 时另建一条带阈值的松弛并加进模型，
     ///    目标项变成它的正部。**不能拿适配器的多项式当目标项**：那是 `pos - neg`，会把不该计费的方向也按负价算进去。
     /// 2. **权重乘在单项式系数上**，乘在松弛内部会让同一个松弛在别处被复用时不带这个权重（的同一课）。
     /// 3. **表未注册就失败**，不能当零计费——零目标会让模型照样可解，缺陷只在产出上留痕。
     ///
-    /// Accumulates every slot's less quantity, weighted, into one objective. Three things are copied from the baseline: **at a zero threshold the term is the slack itself**, not its
+    /// Accumulates every slot's less quantity, weighted, into one objective. Three things are copied from the code: **at a zero threshold the term is the slack itself**, not its
     /// polynomial — expanding the adapter yields the sum of both directions, which looks added while charging what should not be charged; a positive threshold builds a separate thresholded
     /// slack and adds it to the model. **The weight multiplies the monomial coefficients** rather than sitting inside the slack, which would drop it wherever else that slack is reused (the
     /// the same lesson). And **an unregistered table fails** rather than charging zero, since a zero objective leaves the model solvable and the defect visible only in output.

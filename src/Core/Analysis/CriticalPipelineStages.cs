@@ -173,7 +173,7 @@ public static class CriticalPipelineStages
     /// **有效性优先是有意的**：漏斗只按对偶阈值分档，**而有效性排序是实测出来的**——
     /// **有实测就不该再退回启发式分档。**
     ///
-    /// **This is the port of `rankConstraintCandidates`.** One rule orders everything: **the effectiveness ranking wins when present**, otherwise the funnel shortlist, **and neither means empty.**
+    /// **This is the implementation of `rankConstraintCandidates`.** One rule orders everything: **the effectiveness ranking wins when present**, otherwise the funnel shortlist, **and neither means empty.**
     /// **Effectiveness first is deliberate**: the funnel only buckets by dual threshold, **while the effectiveness ranking is measured** — **once something is measured, falling back to a heuristic bucket is a regression.**
     /// </remarks>
     public static IReadOnlyList<ConstraintId> RankConstraintCandidates(

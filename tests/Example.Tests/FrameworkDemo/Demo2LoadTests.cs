@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **装载模型此前：变量、装载量、满载** / The first slice of the load model: variables, stowage amount, full.
 /// </summary>
 /// <remarks>
-/// 基线 `Load.kt` 585 行，这里只落四样：`y`、`z`、`load_amount_{舱位}`、`full_{舱位}`。挑这四样是因为它们**互相依赖的最底层**
+/// 585 行，这里只落四样：`y`、`z`、`load_amount_{舱位}`、`full_{舱位}`。挑这四样是因为它们**互相依赖的最底层**
 /// ——后面 585 行里的扭矩、CLI、重量符号全都建在 `load_amount` 之上。
 ///
 /// 判据盯三处最容易安静出错的地方：
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 2. `load_amount` 的每一项必须指着**该舱位在 `stowage` 里的那批符号**，系数 1——重算一遍项数一样、变量不同；
 /// 3. `full` 的三条分支（不可用 → 恒 1、单位 → 就是装载量、多位 → `SameAsFunction`）必须各走各的。
 ///
-/// The baseline `Load.kt` is 585 lines; lands four things (`y`, `z`, `load_amount_{position}`, `full_{position}`) because they are the bottom of the dependency stack —
+/// The code is 585 lines; lands four things (`y`, `z`, `load_amount_{position}`, `full_{position}`) because they are the bottom of the dependency stack —
 /// the torque/CLI/weight symbols all sit on top of `load_amount`. The criteria target the three places that fail quietly: variables only for positions that need them; every
 /// `load_amount` term pointing at the **stowage** symbols of that position with coefficient 1 (recomputing gives the same count but different variables); and the three `full`
 /// branches (unavailable → constant 1, single slot → the amount itself, multi-slot → `SameAsFunction`) each taking its own path.
@@ -152,11 +152,11 @@ public class Demo2LoadTests {
     /// **`y`/`z` 与多装载方案无关** / `y`/`z` do not depend on the multi-loading schema.
     /// </summary>
     /// <remarks>
-    /// 基线里 `y`/`z` 不在任何 `if` 里，`if (withMultiLoadingSchema)` 只包 `estimateLoadWeight`。 曾把它们包进守卫，
+    /// `y`/`z` 不在任何 `if` 里，`if (withMultiLoadingSchema)` 只包 `estimateLoadWeight`。 曾把它们包进守卫，
     /// 结果单方案下"谓词重量松弛"拿不到 `y`。**这条判据是那一版错误理解的留档改写**：现在钉住"单方案下 `Y`/`Z` 仍然存在，
     /// 且范围按状态钉零"，与多方案成对。
     ///
-    /// In the baseline `y`/`z` sit inside no `if` at all; `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly placed them under the guard and the predicate
+    /// In the code `y`/`z` sit inside no `if` at all; `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly placed them under the guard and the predicate
     /// weight slack then had no `y` under the single schema. **This criterion is the rewritten record of that misunderstanding**: it now pins "under the single schema `Y`/`Z` still
     /// exist, pinned to zero by status", paired with the multi-schema case.
     /// </remarks>
@@ -209,7 +209,7 @@ public class Demo2LoadTests {
     /// 基线给装载量加了 `range.leq(mla)`。少了这一行，一个 3 槽位舱位里装 5 件在模型层面完全合法——五个二元 `stowage`
     /// 变量各自为 1，加起来就是 5，"件数上限"只在报告里被当成常识，不在模型里。
     ///
-    /// The baseline bounds the amount by `range.leq(mla)`. Without it a 3-slot position holding 5 pieces is perfectly legal: five binary `stowage` variables each set to one sum to
+    /// The code bounds the amount by `range.leq(mla)`. Without it a 3-slot position holding 5 pieces is perfectly legal: five binary `stowage` variables each set to one sum to
     /// five, and the piece limit lives only as a convention in the report, not in the model.
     /// </remarks>
     [Fact]

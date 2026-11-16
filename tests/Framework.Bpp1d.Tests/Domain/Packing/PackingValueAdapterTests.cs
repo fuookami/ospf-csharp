@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// **求解器数值边界** / The solver numeric boundary.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `PackingValueAdapter`（在 `bpp/infrastructure/`，是 `bpp1d` 的前置依赖）。
+/// 对应`PackingValueAdapter`（在 `bpp/infrastructure/`，是 `bpp1d` 的前置依赖）。
 /// 判据钉住三件事：
 ///
 /// | 点 | 漏掉的后果 |
@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.Packing;
 /// | **非有限值被拒** | `NaN`/`Inf` 进入求解器，结果是未定义行为 |
 /// | **单位换算真的发生** | 1000 毫米当成 1000 米，模型量级错三个数量级 |
 ///
-/// Mirrors the baseline's `PackingValueAdapter` (in `bpp/infrastructure/`, a prerequisite of `bpp1d`); the table lists what the criteria pin.
+/// ; the table lists what the criteria pin.
 /// </remarks>
 public class PackingValueAdapterTests {
     /// <summary>**单位换算真的发生** / The unit conversion really happens.</summary>

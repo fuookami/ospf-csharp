@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 不对称线性密度限制 / The unsymmetrical linear density bound.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/UnsymmetricalLinearDensityLimit.kt`：每条限制线 × 每个限制行加一行
+/// 逐条对齐：每条限制线 × 每个限制行加一行
 /// `系数_左 × 左线密度 + 系数_右 × 右线密度 ≤ 最大和`，名字 `{name}_{区域名}_{力臂}_{行序号}`。
 ///
 /// 四处容易做错：
@@ -28,13 +28,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 1. **系数可空**。`LeftCoefficient` 为 `null` 时左项整个不进多项式——不是乘 0，而是**不出现**。下游按符号取系数时 `null` 与 0 的行为不一样。
 /// 2. **一条线要两行**（左减右 ≤ lhs、右减左 ≤ rhs）。只加一行时只限制单侧。
 /// 3. **名字带行序号**。同一线上两行同名时"第 3 条约束不可行"不知道是哪一侧。
-/// 4. **整线两侧都不可用才跳过**。只有一侧不可用时仍加——基线是 `none { it.status.available }`。
+/// 4. **整线两侧都不可用才跳过**。只有一侧不可用时仍加——`none { it.status.available }`。
 ///
-/// Mirrors the baseline: one row per limit line per limit row, `coef_left × left density + coef_right × right density ≤ max sum`, named
+/// one row per limit line per limit row, `coef_left × left density + coef_right × right density ≤ max sum`, named
 /// `{name}_{zone}_{arm}_{index}`. Four easy mistakes: (1) **the coefficients are nullable** — a `null` left coefficient keeps the left term **out** of the polynomial rather than
 /// multiplying by zero, and downstream reading a coefficient by symbol treats `null` and 0 differently; (2) **two rows per line** (`left − right ≤ lhs`, `right − left ≤ rhs`), and
 /// one alone bounds a single side; (3) **the name carries the row index**, or "constraint 3 is infeasible" does not say which side; (4) **the line is skipped only when both sides
-/// are unavailable** — the baseline is `none { it.status.available }`, so one unavailable side still gets its row.
+/// are unavailable** — the code is `none { it.status.available }`, so one unavailable side still gets its row.
 /// </remarks>
 internal sealed class UnsymmetricalLinearDensityLimit
 {

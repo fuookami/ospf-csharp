@@ -11,10 +11,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 每列的最大份数 / The maximum copies per column.
 /// </summary>
 /// <remarks>
-/// 与基线 `Assignment.kt` 的 `maxCopiesPerColumn` 对齐：按**件数需求**与**该列对每种物品的覆盖量**估算
+/// 与的 `maxCopiesPerColumn` 对齐：按**件数需求**与**该列对每种物品的覆盖量**估算
 /// "这一列最多用几份"。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **只看件数需求**（`ItemAmount`）。面积需求下"一份够不够"取决于板材面积，不是件数，硬套件数会给出错的份数上界；
 ///    基线对面积需求直接取 `1`，本实现同样如此。
@@ -25,9 +25,9 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 4. **未出现在任何需求量中的列限制为一份**（且上界至少为 1）。没有覆盖价值的列如果允许无限份，
 ///    求解器会拿它凑数。
 ///
-/// Aligned with the baseline's `maxCopiesPerColumn`: it estimates how many copies a column may use from the **item-amount demands** and that column's **coverage of each item**. Four things must be
+/// Aligned with its `maxCopiesPerColumn`: it estimates how many copies a column may use from the **item-amount demands** and that column's **coverage of each item**. Four things must be
 /// copied: **only item-amount demands count**, since under an area demand whether one copy suffices depends on sheet area rather than item count and forcing a count would give a wrong bound —
-/// the baseline uses 1 for area demands and so does this implementation; **the minimum across items is taken** rather than the maximum, because a column must satisfy every item it covers and
+/// the code uses 1 for area demands and so does this implementation; **the minimum across items is taken** rather than the maximum, because a column must satisfy every item it covers and
 /// **the tightest one decides**, while the maximum would leave some item permanently short; **the division rounds up**, since integer division would make `demand = 5, covered = 2` give 2 and
 /// leave one item uncovered; and **a column absent from every demand is limited to one copy** (with a floor of 1), because a column with no coverage value and no bound would be used as filler.
 /// </remarks>

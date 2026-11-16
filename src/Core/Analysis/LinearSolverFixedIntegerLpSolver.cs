@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// Solve a fixed-integer LP with an existing linear solver and return duals keyed by original constraint ID.
 /// </summary>
 /// <remarks>
-/// **这是 `FixedIntegerLpSensitivity.kt` 里 `LinearSolverFixedIntegerLpBackend` 的核心那一步，
+/// **这是 里 `LinearSolverFixedIntegerLpBackend` 的核心那一步，
 /// 而此前 C# 侧&lt;b&gt;一个生产实现都没有**：&lt;/b&gt;
 ///
 /// - `IFixedIntegerLpBackend`、`LoweredFixedIntegerLpBackend`、`ILoweredFixedIntegerLpSolver` **都在**
@@ -37,13 +37,13 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// - **对偶是 incumbent 作用域下的局部边际价值，不是 MILP 全局影子价格**
 /// - **只有&lt;b&gt;已证最优**才升格为 `Reachable`；incumbent 与无解都保持 `Unknown`**
 ///
-/// **This is the core step of the baseline's `LinearSolverFixedIntegerLpBackend`, and it had &lt;b&gt;no production implementation
+/// **This is the core step of its `LinearSolverFixedIntegerLpBackend`, and it had &lt;b&gt;no production implementation
 /// at all&lt;/b&gt; here: the interface, the lowering adapter and the delegate all exist, the linear solver and the lowerer all
 /// exist, and what was missing is exactly the piece that ties them together — the piece both plugin backends depend on.**
 /// **So the earlier "framework complete, backends empty" can be stated one layer more precisely: besides the six plugin functions,
 /// this middle layer was missing too.**
 ///
-/// **Semantics copied from the baseline rather than loosened: duals are exposed only by original stable constraint ID; rows that
+/// **Semantics copied from the code rather than loosened: duals are exposed only by original stable constraint ID; rows that
 /// do not map to an original are omitted; the dual is a local marginal value under the incumbent, not a global MILP shadow
 /// price; and only a &lt;b&gt;proven optimum&lt;/b&gt; rises to `Reachable`, while an incumbent or no solution stays `Unknown`.**
 /// </remarks>
@@ -117,7 +117,7 @@ public sealed class LinearSolverFixedIntegerLpSolver : ILoweredFixedIntegerLpSol
             //
             // **判据：`SolutionPresence.Optimal` 才查 `ToAnalysisStatus`，其余一律 `Unknown`。**
             //
-            // **Only a proven optimum becomes `Reachable`: the baseline says the status rises only when an optimum is really
+            // **Only a proven optimum becomes `Reachable`: the code says the status rises only when an optimum is really
             // formed, while a restricted-solve incumbent stays `Unknown`.** **So `ToAnalysisStatus` cannot decide alone — it
             // ignores solution presence and optimality, and `ProblemStatus.Feasible` is also returned when only an incumbent
             // exists.** **The rule here: only `SolutionPresence.Optimal` consults `ToAnalysisStatus`; everything else is
@@ -148,18 +148,18 @@ public sealed class LinearSolverFixedIntegerLpSolver : ILoweredFixedIntegerLpSol
     /// 只有写进 `lowered.ConstraintProvenance` 的那些才是原始约束。**
     ///
     /// **所以这里做的是"取交集"，不是"翻译"：对不上的一律不出现，而不是猜一个。**
-    /// **这是基线的红线之一——"降阶辅助行及无法唯一归属原始来源的行不会进入返回的对偶映射"。**
+    /// **这是红线之一——"降阶辅助行及无法唯一归属原始来源的行不会进入返回的对偶映射"。**
     ///
     /// **The evaluations use the &lt;b&gt;lowered&lt;/b&gt; constraint IDs; only those recorded in `lowered.ConstraintProvenance` are
     /// original constraints.** **So this is an intersection, not a translation: anything that does not match is omitted rather
-    /// than guessed — one of the baseline's red lines.**
+    /// than guessed — one of its red lines.**
     /// </remarks>
     /// <summary>**解的存在性与最优性证明共同决定状态** / Presence and proof together decide the status.</summary>
     /// <remarks>
-    /// **抽成独立方法是为了可测：这条规则是基线的红线，而它只有一个判断，
+    /// **抽成独立方法是为了可测：这条规则是红线，而它只有一个判断，
     /// 埋在 `SolveAsync` 里面就只能靠一个完整的假求解器去测它。**
     ///
-    /// **Extracted so it can be tested directly: this rule is the baseline's red line and only one judgement, and buried inside
+    /// **Extracted so it can be tested directly: this rule is its red line and only one judgement, and buried inside
     /// `SolveAsync` it could only be reached through a full fake solver.**
     /// </remarks>
     /// <remarks>
@@ -219,14 +219,14 @@ public sealed class LinearSolverFixedIntegerLpSolver : ILoweredFixedIntegerLpSol
 
         // **只保留"恰好对应唯一一行"的那些。**
         //
-        // **基线的原话是"仅当某个原始约束恰好对应**唯一**降阶行时才给出值**——
+        // **原话是"仅当某个原始约束恰好对应**唯一**降阶行时才给出值**——
         // 而第一版实现是"后写覆盖先写"，于是<b>对应两行的约束会拿到第二行的对偶**，
         // 那个数字看起来完全合法，而它归属错误。**
         //
         // **这是我自己的判据抓到的：** **夹具里第三个求值与第一个同 ID，
         // 于是结果只剩一条——而我要的是"要么一条、要么明确丢掉"。**
         //
-        // **Keep only those mapping to exactly one row: the baseline says a value is given only when an original constraint
+        // **Keep only those mapping to exactly one row: the code says a value is given only when an original constraint
         // corresponds to a <b>unique</b> lowered row.** **The first implementation let later writes overwrite earlier ones, so a
         // constraint spanning two rows silently received the second row's dual — a perfectly plausible number with the wrong
         // owner.** **My own criterion caught it: the fixture's third evaluation shares the first one's ID, and the result held

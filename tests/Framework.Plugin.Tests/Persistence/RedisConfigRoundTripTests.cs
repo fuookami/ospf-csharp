@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// **而它管的是真事**：配置往返错了，客户端就会连到**另一个数据库**或**另一个实例**，
 /// 而"连上了、能读写"会让这件事看起来完全正常。
 ///
-/// **Acceptance row 5.3 is ◐, and all ten criteria in `RedisInterfaceTests` are "does the member exist"**:
+/// **Acceptance row 5.3 is ◐, and all ten criteria in `RedisInterfaceTests` are "does the member exist"**.
 /// `Should_Have_ToJson_And_FromJson` asserts only that the two methods **exist**, **saying nothing about whether they are right**.
 ///
 /// **No Redis server is needed here**: `ToJson` / `FromJson` are pure serialization.

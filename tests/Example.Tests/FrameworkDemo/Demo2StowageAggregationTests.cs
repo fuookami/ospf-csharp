@@ -259,7 +259,7 @@ public class Demo2StowageAggregationTests {
     /// The single-model Benders path: the payload is registered once, recourse adds only the weights.
     /// </summary>
     /// <remarks>
-    /// 基线是"一个模型 + 阶段表"（`DiscreteLoadingApplicationService.kt:90`）。同一个模型上，
+    /// "一个模型 + 阶段表"。同一个模型上，
     /// `RegisterForBendersMP` 已经把业载注册进去，而 `RegisterForBendersSP` 会**再注册一次**业载——
     /// 那条路只对"两个模型"成立，也是本仓 demo2 现在走的路。
     ///
@@ -274,7 +274,7 @@ public class Demo2StowageAggregationTests {
     /// 第三条是关键：**它不是"我们觉得会失败"，是这里实测失败**。没有它，`RegisterForBendersSPWithoutPayload`
     /// 看起来只是"多余的便利方法"。
     ///
-    /// The baseline is "one model plus a stage table". On one model `RegisterForBendersMP` already registers the payload, and `RegisterForBendersSP` registers it
+    /// The code is "one model plus a stage table". On one model `RegisterForBendersMP` already registers the payload, and `RegisterForBendersSP` registers it
     /// **again** — a path that only holds for "two models", which is what demo2 does today. This criterion pins three things at once (table): the master half
     /// registers, the payload-free recourse then registers and adds symbols, and the original recourse registration **fails** on that model. The third line matters: it
     /// is not "we think it fails", it fails here, measured. Without it, the payload-free method looks like a redundant convenience.

@@ -55,17 +55,17 @@ public class ExecutorLeisureMinimization<E, A>
     /// <remarks>
     /// 基线：`withExecutorLeisure` 且**给了系数**时最小化 `Σ coefficient(e) * z[e]`。
     ///
-    /// 注意基线的两层保护，这里都照抄：
+    /// 注意两层保护，这里都沿用：
     /// <list type="number">
     /// <item>空闲未启用 → 直接 `Ok`（`z` 根本不存在，无事可做不是假施加）；</item>
     /// <item>**没给系数 → 也直接 `Ok`**（`coefficient?.let { … }`）。这一条容易看漏：它意味着"空闲最小化默认不生效"，
     /// 而不是"默认按 1 计成本"。</item>
     /// </list>
-    /// 与基线不同的只有一处：系数提取失败时基线用无穷大，`Flt64` 没有无穷，所以这里失败。
+    /// 与基线不同的只有一处：系数提取失败时无穷大，`Flt64` 没有无穷，所以这里失败。
     ///
-    /// The baseline minimises `Σ coefficient(e) * z[e]` when `withExecutorLeisure` **and a coefficient is given**. Both of its guards are copied here: leisure disabled → `Ok`
+    /// The code minimises `Σ coefficient(e) * z[e]` when `withExecutorLeisure` **and a coefficient is given**. Both of its guards are copied here: leisure disabled → `Ok`
     /// (`z` does not exist; doing nothing is not a fake application) and **no coefficient → also `Ok`** (`coefficient?.let { … }`). The second is easy to miss: it means "leisure
-    /// minimisation is off by default", not "default to a cost of 1". The only departure is an extraction failure: the baseline uses infinity, `Flt64` has none, so it fails.
+    /// minimisation is off by default", not "default to a cost of 1". The only departure is an extraction failure: the code uses infinity, `Flt64` has none, so it fails.
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);
@@ -74,7 +74,7 @@ public class ExecutorLeisureMinimization<E, A>
             return Results.Ok<Success>(Results.SuccessInstance);
         }
         // 没给系数 → 基线什么都不做。这不是"没接线"，是"调用方没要求"。
-        // No coefficient → the baseline does nothing. That is not "unwired", it is "the caller did not ask".
+        // No coefficient → the code does nothing. That is not "unwired", it is "the caller did not ask".
         if (_coefficient is null) {
             return Results.Ok<Success>(Results.SuccessInstance);
         }

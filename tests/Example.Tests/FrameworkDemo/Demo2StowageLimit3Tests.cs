@@ -223,8 +223,8 @@ public class Demo2StowageLimit3Tests {
         names.Should().NotContain(name => name.Contains("G1", System.StringComparison.Ordinal), "G1 is not an ELD item");
 
         // **"或"与"且"的区别需要一个只有一件能放一侧的用例**：把 P2 改成不可用，于是 `(E1,P1)` 成立而 `(E2,P2)` 不成立。
-        // 基线用"或"，这一对仍加行；写成"且"则整对消失。
-        // **"or" versus "and" needs a case where only one item fits one side**: make P2 unavailable so `(E1,P1)` holds while `(E2,P2)` does not. The baseline uses "or" and the
+        // "或"，这一对仍加行；写成"且"则整对消失。
+        // **"or" versus "and" needs a case where only one item fits one side**: make P2 unavailable so `(E1,P1)` holds while `(E2,P2)` does not. The code uses "or" and the
         // pair still gets a row; "and" would drop it entirely.
         var halfPositions = new List<StowagePosition> {
             MakePosition("P1", 1UL),

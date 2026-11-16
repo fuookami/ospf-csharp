@@ -271,8 +271,8 @@ public class Demo2StowageLimit2Tests {
         // 非航材货物，于是普通散货的 `StowageNeeded` 恒为假，前一行 `!StowageNeeded` 已经把它挡住。也就是说本仓里
         // "航材指定舱位不放普通散货"由 `Enabled` 负责，这条过滤是**防御性的重复**。基线同样如此（`enabled` 有同一组规则）。
         // **One unobservable recorded**: deleting the `AOGMATAppointed` filter is invisible here — `Enabled` refuses non-AOG cargo outright at such a position, so normal
-        // bulk's `StowageNeeded` is identically false and the preceding `!StowageNeeded` already rejects it. In this port "an AOG/MAT-appointed position takes no normal bulk"
-        // is `Enabled`'s job and this filter is a **defensive duplicate** — the baseline is the same, its `enabled` carrying the same rules.
+        // bulk's `StowageNeeded` is identically false and the preceding `!StowageNeeded` already rejects it. In this implementation "an AOG/MAT-appointed position takes no normal bulk"
+        // is `Enabled`'s job and this filter is a **defensive duplicate** — the code is the same, its `enabled` carrying the same rules.
         names.Should().NotContain(name => name.Contains("_P3", System.StringComparison.Ordinal),
             "a position already holding cargo is excluded");
 
@@ -288,7 +288,7 @@ public class Demo2StowageLimit2Tests {
     /// **航材与散货：第三支可达，前两支被 `Enabled` 抢先** / AOG versus bulk: branch three is reachable, branches one and two are pre-empted by `Enabled`.
     /// </summary>
     /// <remarks>
-    /// 这是这里最重要的发现，**不是本移植的退让，是基线的性质**：
+    /// 这是这里最重要的发现，**不是本实现的退让，是性质**：
     ///
     /// `AOGMATBulkConflictLimit` 的前两支都要求 `Stowage.stowageNeeded(item, position)` 成立，而 `stowageNeeded` 又要求
     /// `position.enabled(item).ok`。但 `Position.enabled` **已经**包含三条规则：
@@ -300,15 +300,15 @@ public class Demo2StowageLimit2Tests {
     /// | 已装航材的散舱不能装载普通散货 | 第 1 支（已装航材的舱位） |
     /// | 已装普通散货的散舱不能装载航材 | 第 2 支（已装普通散货的舱位） |
     ///
-    /// 于是前两支的 `stowageNeeded` 恒为假，**永远加不出行**——基线里也一样，因为它的 `enabled` 有同一组规则。
-    /// 照抄，并把这件事写在这里：若将来有人"清理死代码"删掉前两支，行为不变；若有人删掉 `Enabled` 里的某条规则，
+    /// 于是前两支的 `stowageNeeded` 恒为假，**永远加不出行**——也一样，因为它的 `enabled` 有同一组规则。
+    /// 沿用，并把这件事写在这里：若将来有人"清理死代码"删掉前两支，行为不变；若有人删掉 `Enabled` 里的某条规则，
     /// 对应的支会立刻活过来，而两条路径的语义并不相同（一条是变量固定为 0，一条是组合根本不存在）。
     ///
     /// 判据因此只断言：**第三支的配对行存在且是 `≤ 1`**，以及前两支对应的舱位**没有行**（记录它们的不可达）。
     ///
-    /// This is the batch's most important finding, and **it is the baseline's property, not a concession of this port**. Both of the first two branches require
+    /// This is the batch's most important finding, and **it is its property, not a concession of this implementation**. Both of the first two branches require
     /// `Stowage.stowageNeeded(item, position)`, which requires `position.enabled(item).ok`, and `Position.enabled` **already** carries the four rules tabulated above — so
-    /// `stowageNeeded` is identically false there and those branches **never emit a row**, in the baseline too since its `enabled` has the same rules. Copied as-is and
+    /// `stowageNeeded` is identically false there and those branches **never emit a row**, in the code too since its `enabled` has the same rules. Copied as-is and
     /// recorded: deleting the dead branches would change nothing, while deleting a rule from `Enabled` would bring the matching branch to life with different semantics (a
     /// variable pinned to zero versus a combination that does not exist at all). The criteria therefore assert only that **branch three's pair row exists and is `≤ 1`**, and that
     /// the positions matching branches one and two get **no** row, recording their unreachability.
@@ -318,12 +318,12 @@ public class Demo2StowageLimit2Tests {
         var aog = CargoType.FromName("AOG");
         // **航材必须排在普通散货之前**。第 3 支写的是 `for i1... for i2 in (i1+1) until size`，且**只有 `item1` 被要求是航材**
         // （那个 `!IsAogMat(item1)` 的守卫本身不可观测：`item1` 若不含 AOG/MAT，`item2` 那侧的对称条件会把整对跳过，
-        // 加不加这一条得到的行集相同——基线里也一样，是防御性重复）：
+        // 加不加这一条得到的行集相同——也一样，是防御性重复）：
         // 于是这一对只在下标 `i(AOG) < i(bulk)` 时才会被枚举到。反过来排（普通散货在前、航材在后）那一对**永远不会加行**——
-        // 这是基线的真实性质，不是本移植的 bug。判据按可达的顺序构造，并在此记录这个不对称。
+        // 这是真实性质，不是本实现的 bug。判据按可达的顺序构造，并在此记录这个不对称。
         // **The AOG item must come before the normal bulk one.** Branch three is `for i1... for i2 in (i1+1) until size` with **only `item1` required to be AOG**, so a pair is
-        // enumerated only when `index(AOG) < index(bulk)`. With the opposite order (bulk first, AOG after) that pair **never gets a row** — the baseline's real behaviour, not a
-        // bug of this port. The criteria build the reachable order and record the asymmetry here.
+        // enumerated only when `index(AOG) < index(bulk)`. With the opposite order (bulk first, AOG after) that pair **never gets a row** — its real behaviour, not a
+        // bug of this implementation. The criteria build the reachable order and record the asymmetry here.
         var items = new List<Item> {
             MakeItem("A1", location: BulkLocation, cargos: new HashSet<CargoType> { aog }),
             MakeItem("B1", location: BulkLocation),

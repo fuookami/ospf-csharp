@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 装配：范围与多项式必须用同一个 δ / The range and the polynomial must share one delta.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `normalizeDiscreteCondition` 补，并补齐 `transformForRelationIndicator`。
+/// 对齐的 `normalizeDiscreteCondition` 补，并补齐 `transformForRelationIndicator`。
 ///
 /// **这里只做装配**——归一化范围、折叠判断、格点证明三块都已就位。
 ///
@@ -89,7 +89,7 @@ public class DiscreteConditionNormalizationTests
     /// 折叠结果与"按变换后范围重算"的结果<b>没有一处不一致</b>。**
     ///
     /// **所以那个 `??` 的左右两侧在当前形态下恒等价，优先级<b>测不出来</b>。**
-    /// **它保留的理由是可读性与基线的结构对应，不是行为差异。**
+    /// **它保留的理由是可读性与结构对应，不是行为差异。**
     ///
     /// **判据因此只断言"折叠给出的真值决定两个分支"，不再声称测到了优先级。**
     ///
@@ -100,7 +100,7 @@ public class DiscreteConditionNormalizationTests
     /// recomputation from the transformed range <b>never disagreed</b>.**
     ///
     /// **Both sides of that `??` are therefore equivalent in the current shape, and the precedence is
-    /// <b>untestable</b>.** **It stays for readability and structural parity with the baseline, not for a behavioural
+    /// <b>untestable</b>.** **It stays for readability and structural parity with the code, not for a behavioural
     /// difference.**
     ///
     /// **The criterion now asserts only "a folded truth value settles both branches" and no longer claims to test the

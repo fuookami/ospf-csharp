@@ -19,8 +19,8 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 判据钉的是**四个状态不许互相冒充**：`Reachable` / `Unreachable` 是结论，
 /// `Unknown` / `Unsupported` 是"没结论"的两种原因。
 ///
-/// **The report and not the analyzer is ported**: baseline line 673 has a real `solver.solve(model, options)` and a builder that rebuilds a mutable model before it.
-/// **That needs a real CP backend, so it was neither ported nor stubbed.** The criteria pin that **the four statuses may not impersonate one another**.
+/// **The report and not the analyzer is implemented**: baseline line 673 has a real `solver.solve(model, options)` and a builder that rebuilds a mutable model before it.
+/// **That needs a real CP backend, so it was neither implemented nor stubbed.** The criteria pin that **the four statuses may not impersonate one another**.
 /// </remarks>
 public class TargetFeasibilityReportTests {
     private static ObjectiveTarget Target() =>

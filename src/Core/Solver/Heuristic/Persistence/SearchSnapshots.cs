@@ -1,6 +1,5 @@
 // 搜索快照载体 / Search snapshot carriers.
-// 与固定 Kotlin 基线 `persistence/SearchSnapshots.kt`（4615 B）对应。
-// Mirrors the pinned baseline's `SearchSnapshots.kt` (4615 B).
+// 与固定 Kotlin （4615 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -23,9 +22,9 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Persistence;
 /// **而每个快照本身仍然合法**。
 /// **`operators` is a two-level map "pool id → action name → snapshot".** Flattening it loses the pool level, so same-named actions from
 /// two pools overwrite each other **while each snapshot remains individually valid**.
-/// **`root` 是"没有池上下文的那份策略"**（基线里由算法自身持有）。把它与 `operators` 混在一起会让根策略在恢复时被当成
+/// **`root` 是"没有池上下文的那份策略"**（由算法自身持有）。把它与 `operators` 混在一起会让根策略在恢复时被当成
 /// 某个池的策略，**而恢复过程一路成功**。
-/// **`root` is "the policy without a pool context"** (held by the algorithm itself in the baseline). Mixing it into `operators` makes the
+/// **`root` is "the policy without a pool context"** (held by the algorithm itself in the code). Mixing it into `operators` makes the
 /// root policy look like some pool's policy on restore, **while the restore path succeeds throughout**.
 /// </remarks>
 /// <param name="Definition">算法定义标识 / The algorithm definition identity.</param>

@@ -10,10 +10,10 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Graph;
 /// **一张图的可用性判定** / Whether a graph is usable at all.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `OnnxGraphParser.kt` 里 `parseGraphBody` 那一半。**ONNX 要求节点已按拓扑序排列，所以这里做的是"验"而不是"排"：**
+/// 同步 Kotlin `dee897d2` 的 里 `parseGraphBody` 那一半。**ONNX 要求节点已按拓扑序排列，所以这里做的是"验"而不是"排"：**
 /// **排一遍会把一张次序错乱的图悄悄"修好"，于是模型跑出来的东西与导出时想表达的并不一致。**
 ///
-/// Syncs the `parseGraphBody` half of `OnnxGraphParser.kt`. **ONNX requires the nodes to be topologically ordered, so this validates rather than sorts:**
+/// Syncs the `parseGraphBody` half of. **ONNX requires the nodes to be topologically ordered, so this validates rather than sorts:**
 /// **sorting would quietly "fix" a mis-ordered graph, and what the model computes would not be what the exporter meant.**
 /// </remarks>
 public static class OnnxGraphValidator

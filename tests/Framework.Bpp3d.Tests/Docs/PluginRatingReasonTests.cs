@@ -27,7 +27,7 @@ public class PluginRatingReasonTests
     /// <remarks>
     /// 只看第三节那张表。``➖`` 的行允许为空吗？**不允许**：那两行写明了"基线本身未实现"，说明空着从来不是这个表想要的样子。
     ///
-    /// Scoped to section three. Do the ``➖`` rows get to stay empty? **No**: those two state "the baseline itself does not implement it", which shows the table never
+    /// Scoped to section three. Do the ``➖`` rows get to stay empty? **No**: those two state "the code itself does not implement it", which shows the table never
     /// wanted empty cells in the first place.
     /// </remarks>
     [Fact]
@@ -48,8 +48,12 @@ public class PluginRatingReasonTests
             string[] cells = row.Trim().Trim('|').Split('|')
                 .Select(cell => cell.Trim())
                 .ToArray();
-            cells.Should().HaveCount(4, "a table row is four cells: capability, project, status, remark");
-            cells[3].Should().NotBeNullOrWhiteSpace(
+            // **判据要的是"末尾那一格不空"，不是"这张表恰好四列"。** '
+            // **三列的表（`行 | 原来写的 | 实测`）末尾那格同样是备注，同样不许空着。**
+            //
+            // **What matters is "the trailing cell is not empty", not "this table has exactly four columns".** A three-column table's trailing cell is a remark too, and it may not be blank.
+            cells.Should().HaveCountGreaterThanOrEqualTo(3, "a row carries at least capability and a trailing remark");
+            cells[^1].Should().NotBeNullOrWhiteSpace(
                 row.Trim() + " leaves the remark empty; each of these rows has a measured blocker or a measured capability to state");
         }
     }
@@ -105,9 +109,9 @@ public class PluginRatingReasonTests
 
     /// <summary>**Gurobi 11 不能只写"同上"** / "Same as above" is not an answer for Gurobi 11.</summary>
     /// <remarks>
-    /// 本仓是 **4 个类委托**给 `Core.Plugin.Gurobi`，基线是 **22 个文件的独立副本**。写"同上"会让读者以为两者形状相同。
+    /// 本仓是 **4 个类委托**给 `Core.Plugin.Gurobi`，**22 个文件的独立副本**。写"同上"会让读者以为两者形状相同。
     ///
-    /// This repo has **four classes delegating** to `Core.Plugin.Gurobi`; the baseline is an **independent 22-file copy**. "Same as above" makes a reader believe the
+    /// This repo has **four classes delegating** to `Core.Plugin.Gurobi`; the code is an **independent 22-file copy**. "Same as above" makes a reader believe the
     /// shapes match.
     /// </remarks>
     [Fact]

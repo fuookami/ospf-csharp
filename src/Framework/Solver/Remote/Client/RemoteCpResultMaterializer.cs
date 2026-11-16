@@ -1,6 +1,6 @@
 // 远程 CP 结果物化 / Remote CP result materialization.
-// 与固定 Kotlin 基线 `solveOutput` 的判定逻辑对应；Core 输出记录由调用方构造，原因见 `Classify`。
-// Corresponds to the pinned Kotlin baseline's `solveOutput` decision logic; the Core output record is
+// 与`solveOutput` 的判定逻辑对应；Core 输出记录由调用方构造，原因见 `Classify`。
+// `solveOutput` decision logic; the Core output record is
 // built by the caller, for the reason given on `Classify`.
 
 using System;
@@ -65,12 +65,12 @@ public static class RemoteCpResultMaterializer {
     ///    返回的解不是同一个问题）、每个值必须落在其值域内、interval 集合必须一致且满足其定义。
     ///
     /// **不在这里构造 Core 输出记录**：`ConstraintProgrammingFeasibleOutput` 需要一个
-    /// `SolveReport&lt;Int64&gt;`，而 C# 的 `SolverProvenance` 与基线的形状不同
+    /// `SolveReport&lt;Int64&gt;`，而 C# 的 `SolverProvenance` 与形状不同
     /// （`Descriptor`+`Configuration` 对比 `nativeVersion`/`effectiveParameters`/`threadCount`/…），
-    /// 如何把基线的 provenance 字段落进 C# 结构是一个 **Core 设计决定**，不该由远程适配层顺手发明。
+    /// 如何把provenance 字段落进 C# 结构是一个 **Core 设计决定**，不该由远程适配层顺手发明。
     /// 因此本方法只做判定与校验，输出记录留给调用方；这样不会产出"字段缺失但看起来成功"的对象。
     ///
-    /// The decision order matches the baseline: infeasible with `INFEASIBLE` and `COMPLETED` is a proven
+    /// The decision order matches the code: infeasible with `INFEASIBLE` and `COMPLETED` is a proven
     /// infeasibility; any other infeasible result is **unknown**, because "did not finish" must not be
     /// reported as "no solution exists"; a feasible result without a stable solution is an error whenever
     /// the snapshot actually has variables or intervals, since the solution should have been materialized
@@ -80,9 +80,9 @@ public static class RemoteCpResultMaterializer {
     /// satisfying its definition.
     ///
     /// **The Core output record is not built here**: `ConstraintProgrammingFeasibleOutput` needs a
-    /// `SolveReport&lt;Int64&gt;`, and C#'s `SolverProvenance` has a different shape from the baseline's
+    /// `SolveReport&lt;Int64&gt;`, and C#'s `SolverProvenance` has a different shape from its
     /// (`Descriptor`+`Configuration` versus `nativeVersion`/`effectiveParameters`/`threadCount`/…). Deciding
-    /// how the baseline's provenance fields map onto the C# structure is a **Core design decision** that the
+    /// how its provenance fields map onto the C# structure is a **Core design decision** that the
     /// remote adapter must not invent on the side, so this method only classifies and validates. That keeps
     /// it from producing a successfully-typed object with silently missing fields.
     /// </remarks>
@@ -230,14 +230,14 @@ public static class RemoteCpResultMaterializer {
     /// 用 snapshot 重新校验解与目标 / Re-validate the solution and objective against the snapshot.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：**不信任后端算出来的东西**——用本次请求的 snapshot 把每条约束重新求值一遍，并独立计算
+    /// ：**不信任后端算出来的东西**——用本次请求的 snapshot 把每条约束重新求值一遍，并独立计算
     /// 目标值再与后端报告的目标比较。这一步能抓住"后端返回了自相一致、但根本不满足这个模型的解"，而防串台
     /// 指纹抓不到这种情况（那只保证量的是同一份输入，不保证后端算对了）。
     ///
     /// 两条容易漏的规则：snapshot 没有目标却返回了目标值要拒绝（否则凭空冒出一个目标）；有目标却没有报告
     /// 目标值也要拒绝（不能拿别处的值凑数）。
     ///
-    /// As in the baseline this **does not trust what the backend computed**: every constraint is re-evaluated
+    /// As in the code this **does not trust what the backend computed**: every constraint is re-evaluated
     /// against this request's snapshot and the objective is recomputed independently and compared with the
     /// reported value. This catches "the backend returned a self-consistent solution that does not satisfy
     /// this model", which the cross-talk fingerprints cannot — those only prove the same input was measured,
@@ -307,12 +307,12 @@ public static class RemoteCpResultMaterializer {
     /// 把物化分类转成 Core 输出记录 / Turn a materialization classification into a Core output record.
     /// </summary>
     /// <remarks>
-    /// 与基线一致的状态判定：**只有"已证明最优"（解存在性为 `OPTIMAL` 且证明状态为 `Verified`）才是
-    /// `SolverStatus.Optimal`**，其余一律 `Feasible`。声称最优但没证明时降级，而不是照抄后端的乐观说法。
+    /// 的状态判定：**只有"已证明最优"（解存在性为 `OPTIMAL` 且证明状态为 `Verified`）才是
+    /// `SolverStatus.Optimal`**，其余一律 `Feasible`。声称最优但没证明时降级，而不是沿用后端的乐观说法。
     ///
     /// 诊断解析失败会让本方法整体失败，而不是产出一份缺诊断的报告——CP 的诊断里带不可行证据。
     ///
-    /// The status rule matches the baseline: only a **proven** optimum (`OPTIMAL` presence with a `Verified`
+    /// The status rule matches the code: only a **proven** optimum (`OPTIMAL` presence with a `Verified`
     /// proof) is `SolverStatus.Optimal`; everything else is `Feasible`. An unproven optimality claim is
     /// downgraded rather than copied from the backend's optimism. A diagnostics parse failure fails the whole
     /// call instead of producing a report without diagnostics, because CP diagnostics carry infeasibility

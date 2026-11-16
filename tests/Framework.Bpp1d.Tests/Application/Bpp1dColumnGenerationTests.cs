@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **一维列生成入口** / The BPP1D column-generation entry.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Bpp1dSolver.kt` 的 `Bpp1dColumnGeneration`。
+/// 对应的 `Bpp1dColumnGeneration`。
 /// **这里的判据全部需要真实求解器**：LP 定价循环的对偶解只能由求解器给出，
 /// 桩求解器能编造一个对偶，但那样测的是"桩对不对"，不是"定价循环对不对"。
 ///

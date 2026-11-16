@@ -21,9 +21,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain;
 /// **板长分配的算法与两条守卫** / The sheet assignment arithmetic and its two guards.
 /// </summary>
 /// <remarks>
-/// 对应基线 `SheetAssignmentContext.kt`。`AssignmentOf` 是**纯函数**，判据不需要求解器。
+/// 对应。`AssignmentOf` 是**纯函数**，判据不需要求解器。
 ///
-/// Mirrors the baseline `SheetAssignmentContext.kt`. `AssignmentOf` is a **pure function**, so the criteria need no solver.
+///. `AssignmentOf` is a **pure function**, so the criteria need no solver.
 /// </remarks>
 public class SheetAssignmentTests {
     /// <summary>**方案数与使用次数必须一一对应** / The plan and usage counts must line up.</summary>

@@ -93,10 +93,10 @@ public sealed class ActualItem : IItemMergeUnit, ICargoView {
     /// 允许的最大高度（长度）：目前未知 / The allowed maximum height as a length: currently unknown.
     /// </summary>
     /// <remarks>
-    /// C# 的物品模型把 `MaxHeight` 存成层数（`UInt64`），而基线是长度（`Quantity&lt;FltX&gt;`）。
+    /// C# 的物品模型把 `MaxHeight` 存成层数（`UInt64`），而长度（`Quantity&lt;FltX&gt;`）。
     /// 这里如实返回 null，让堆叠策略的高度门限判否——而不是把层数当长度，让门限静默失效。
     ///
-    /// the C# item model keeps `MaxHeight` as a layer count while the baseline keeps a length. Returning null here is the honest answer and
+    /// the C# item model keeps `MaxHeight` as a layer count while the code keeps a length. Returning null here is the honest answer and
     /// makes the policies' height gate refuse, rather than treating a layer count as a length and letting the gate silently pass.
     /// </remarks>
     public Quantity<FltX>? MaxHeightLength => null;

@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// Readers and one writer sharing the same cache: mixed batch, writer only, readers only.
 /// </summary>
 /// <remarks>
-/// **与基线 `PrimeMixedExpansionBenchmark.kt`（`19c72455` 新增）前半段对应。**
+/// **只做前半段。**
 ///
 /// **它测的是既有两个素性基准都不测的形状：** **`SharedPrimeReadBenchmark` 让多 reader 共享一张已经建好的表，
 /// 而这个基准让 reader 在查、writer 在建**——**缓存在查询途中扩容，读者可能落在旧代上。**
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Benchmark;
 /// **`CyclicBarrier` 的对应物是 .NET 的 `Barrier`**：**每个 reader 在屏障上对齐后才开始读，
 /// 这样"并发"是真的同时开始，而不是线程池调度先后。**
 ///
-/// **Corresponds to the first half of the baseline file.** **The existing primality benchmarks do not cover this shape: `SharedPrimeReadBenchmark`
+/// **Corresponds to the first half of the code file.** **The existing primality benchmarks do not cover this shape: `SharedPrimeReadBenchmark`
 /// lets several readers share a table that is already built, while here the readers query while a writer expands the cache, so a reader can
 /// land on an older generation.** **The three methods split the cost: `MixedBatch` runs both, `WriterOnly` is the expansion sequence alone, and
 /// `ReaderOnly` is the readers' build cost without a writer — so the difference reveals whether the overlap is really just a sum.**
@@ -162,18 +162,18 @@ public class PrimeMixedExpansionBenchmark
 /// Reader tail latency: the writer keeps expanding through the whole window while readers stay inside the covered range.
 /// </summary>
 /// <remarks>
-/// **与基线 `PrimeMixedExpansionBenchmark.kt` 后半段的 `PrimeReaderLatencyBenchmark` 对应。**
+/// **与后半段的 `PrimeReaderLatencyBenchmark` 对应。**
 ///
 /// **writer 是唯一的扩容者，而且在每个测量迭代里循环扩容、到界后重建一整代再继续——
 /// **这样扩容压力贯穿整个计时窗，不会因为序列跑完而退化成"稳态读"。** **重建成本只落在 writer 线程上；
 /// reader 只按 volatile 引用读当前代，不加锁、不新增原子写。**
 ///
-/// **一个诚实的能力差：** **基线用 JMH `Mode.SampleTime` 取 p95/p99，而本仓的基准运行器只跑
+/// **一个诚实的能力差：** **JMH `Mode.SampleTime` 取 p95/p99，而本仓的基准运行器只跑
 /// BenchmarkDotNet 的默认模式，不产出采样分位数**。** **所以这里能测的是"读过一次要多久"，不是"尾延迟"。**
 /// **会话限：** **要真的量尾延迟，得给运行器加 `SampleTime` 等价物（BDN 没有同名模式，需要按迭代取样自建），
 /// 那是一件独立的工作。** **在那之前，这个基准的名字里不写"尾延迟"以外的承诺。**
 ///
-/// **Corresponds to the `PrimeReaderLatencyBenchmark` half of the baseline file.** **The writer is the only expander and it loops the
+/// **Corresponds to the `PrimeReaderLatencyBenchmark` half of the code file.** **The writer is the only expander and it loops the
 /// sequence inside every measurement iteration, rebuilding a whole generation at the ceiling, so expansion pressure spans the window instead
 /// of degrading into steady reads; rebuild cost lands on the writer thread, and readers only load a volatile reference.** **One honest gap: the
 /// baseline uses JMH `Mode.SampleTime` for p95/p99, while this repo's runner only drives BenchmarkDotNet's defaults and produces no sample

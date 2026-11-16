@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 精确层分配 / The precise layer assignment.
 /// </summary>
 /// <remarks>
-/// 与基线 `bpp2d/.../model/Assignment.kt` 的 `PreciseAssignment` 对齐——**这是列生成最终阶段的地基**：
+/// 与的 `PreciseAssignment` 对齐——**这是列生成最终阶段的地基**：
 /// 每个候选层一个整数变量 `y_i`（用几份），上下界由需求估出的最大份数给出。
 ///
 /// | 基线成员 | 本仓 | 说明 |
@@ -31,18 +31,18 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// **`v` 与 `tail` 缺位如实记档**：它们是 `SheetCapacityConstraint` 与 `TailBinAssignmentConstraint` 的输入，
 /// 那两条约束在 bpp2d 也还没落地，所以此处不伪造一个"看起来对"的二值化符号。**缺什么写什么**。
 ///
-/// 两处必须照抄的细节：
+/// 两处必须沿用的细节：
 ///
 /// 1. **上界至少为 1**：`maxCopies[i]` 可能是 0（需求算出来"这一层用不上"），但份数变量上界为 0 会让该层被强制不用，
 ///    而列生成恰恰要靠它判断"这一层到底用不用"。基线写的是 `if (upper &lt; 1) 1 else upper`。
-/// 2. **`Register` 幂等**：基线的写法是"已初始化就跳过创建，但仍调 `model.add`"，所以第二次注册**复用同一个变量对象**。
+/// 2. **`Register` 幂等**：写法是"已初始化就跳过创建，但仍调 `model.add`"，所以第二次注册**复用同一个变量对象**。
 ///    实测 `model.Add(variable)` 对重复注册是**容忍的**（与 `ImpreciseAssignment` 的符号注册不同，那里会因重名失败）——
-///    这一点是 实测出来的，不是我照抄的推断。
+///    这一点是 实测出来的，不是我沿用的推断。
 ///
-/// Aligned with the baseline's `PreciseAssignment` — **the foundation of the column-generation final phase**: one integer variable `y_i` per candidate layer (how many copies), bounded by the
+/// Aligned with its `PreciseAssignment` — **the foundation of the column-generation final phase**: one integer variable `y_i` per candidate layer (how many copies), bounded by the
 /// maximum copy count estimated from demand. **`v` and `tail` are missing and recorded as such**: they are inputs to `SheetCapacityConstraint` and `TailBinAssignmentConstraint`, which are also
-/// not ported to bpp2d yet, so no plausible-looking binarisation symbol is fabricated here. Two details must be copied: **the upper bound is at least 1**, since `maxCopies[i]` can be 0 and a
-/// bound of 0 would force the layer unused while column generation needs the variable to decide exactly that; and **`Register` is idempotent** in the baseline's specific sense — it skips
+/// not implemented to bpp2d yet, so no plausible-looking binarisation symbol is fabricated here. Two details must be copied: **the upper bound is at least 1**, since `maxCopies[i]` can be 0 and a
+/// bound of 0 would force the layer unused while column generation needs the variable to decide exactly that; and **`Register` is idempotent** in its specific sense — it skips
 /// creation when already initialised but still calls `model.add`, so a second registration **reuses the same variable object**. Measured: `model.Add(variable)` **tolerates** a
 /// duplicate registration, unlike the symbol registration in `ImpreciseAssignment`, which fails on a duplicate name.
 /// </remarks>

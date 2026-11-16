@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 ///
 /// **the earlier gap**: "the `converter` production code passes has no criteria". This method is used **when there is no model**: it reads `constraint.Origin.Args` directly
 /// instead of going through CGPipeline refresh. Both paths must agree, or **reduced cost depends on which path ran**. also deleted a **write-only**
-/// `Csp1dDefaultShadowPriceMap` (present in both the baseline and C# — written once per iteration, never read or returned). **Deleting it changes no behaviour**, it is
+/// `Csp1dDefaultShadowPriceMap` (present in both the code and C# — written once per iteration, never read or returned). **Deleting it changes no behaviour**, it is
 /// pure cleanup.
 /// </remarks>
 public class ExtractShadowPriceMapTests {

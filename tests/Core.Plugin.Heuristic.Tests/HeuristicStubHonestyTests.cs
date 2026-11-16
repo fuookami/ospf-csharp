@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// </summary>
 /// <remarks>
 /// **发现 8 个类只返回 `ApplicationError` + `"not implemented"`，从不被构造，而<b>真实实现在组合路径上**
-/// （`ComposedSolvers.HarmonySearch` = `Swarm(...)` + `HarmonySearchUpdate`，与基线 `HS.kt` 一致）。**
+/// （`ComposedSolvers.HarmonySearch` = `Swarm(...)` + `HarmonySearchUpdate`，与一致）。**
 ///
 /// **那一批把矩阵从 ◐ 改回 ✅，并把状态钉住。而那个状态其实是<b>该删**。</b>
 ///
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// **这里缺口<b>由删除闭合**，所以判据现在断言"它们不在，而覆盖它们的东西在"。</b>
 ///
 /// **Found eight classes returning `ApplicationError` + `"not implemented"`, never constructed, while the real
-/// implementation lives on the composed path — exactly as the baseline's `HS.kt` composes operators.** **That batch restored the
+/// implementation lives on the composed path — exactly as its composes operators.** **That batch restored the
 /// matrix to ✅ and pinned the state; but the state was <b>"delete them".</b>**
 ///
 /// **Their only observable effect was making a reader believe the area is unfinished.** **the earlier own note said "the harm of dead

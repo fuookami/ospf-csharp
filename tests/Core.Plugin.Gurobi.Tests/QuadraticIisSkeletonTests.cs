@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 /// **overturned the "no solver" premise**: SCIP 9.2 is available and drove the full flow through it, so this file now pins the **post-implementation
 /// contract** rather than an "unimplemented" placeholder.
 ///
-/// **located the largest single missing block**: the baseline's `computeLegacyIIS` is **846 lines / 12 functions** with **nothing** on the C# side. built the
+/// **located the largest single missing block**: its `computeLegacyIIS` is **846 lines / 12 functions** with **nothing** on the C# side. built the
 /// **types and entry skeleton**, and this criterion pins its behavioural contract. **Why a skeleton rather than a direct port** (table above): the elastic builder and a
 /// structural reference exist, but **a real quadratic solver does not**, so a full port **cannot be verified here**. The skeleton's value is turning "unimplemented" from a
 /// **doc note** into a **compilable, assertable structure that later batches can fill in**.
@@ -104,12 +104,12 @@ public class QuadraticIisSkeletonTests {
             "pointing callers at the linear implementation was only correct while the quadratic one was a skeleton");
     }
 
-    /// <summary>**证据来源枚举与基线同名同义** / The evidence-source enum matches the baseline by name and meaning.</summary>
+    /// <summary>**证据来源枚举与基线同名同义** / The evidence-source enum matches the code by name and meaning.</summary>
     /// <remarks>
     /// 基线先跑弹性过滤，失败才跑删除过滤。枚举值的**顺序**因此有意义：
     /// `ElasticFilter` 在前。若将来实现时把顺序搞反，诊断信息会误导。
     ///
-    /// The baseline runs the elastic filter first and the deletion filter only on failure, so the enum **order** matters: `ElasticFilter` comes first. Getting it backwards
+    /// The code runs the elastic filter first and the deletion filter only on failure, so the enum **order** matters: `ElasticFilter` comes first. Getting it backwards
     /// would mislead diagnosis later.
     /// </remarks>
     [Fact]

@@ -1,6 +1,6 @@
 // 一维列生成入口：LP 定价循环 / The BPP1D column-generation entry with the LP pricing loop.
-// 与固定 Kotlin 基线 `bpp1d/application/Bpp1dSolver.kt` 的 `Bpp1dColumnGeneration` 对应。
-// Mirrors `Bpp1dColumnGeneration` in the pinned Kotlin baseline's `Bpp1dSolver.kt`.
+// 与固定 Kotlin 的 `Bpp1dColumnGeneration` 对应。
+// .
 
 using System.Collections.Generic;
 using System.Threading;
@@ -32,12 +32,12 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Application;
 /// 与 `Bpp1dMilp` 的差别只有一处：**在最终整数模型之前先跑一轮 LP 定价循环**，
 /// 每次把检验数为负的候选加进受限主问题（RMP），直到没有负检验数或预算用尽。
 ///
-/// **最终模型始终建在"已生成池 + 种子"上，不是建在 RMP 上。** 基线的注释写得很直白：
+/// **最终模型始终建在"已生成池 + 种子"上，不是建在 RMP 上。** 注释写得很直白：
 /// 受限池的整数最优**不是全局最优**，拿它当结果就是把一个近似说成最优。
 ///
 /// The only difference from `Bpp1dMilp` is the **LP pricing loop before the final integer model**: each round adds candidates with a negative reduced cost to the
 /// restricted master problem (RMP) until there are none left or the budget runs out. **The final model always sits on "generated pool plus seeds", never on the RMP.**
-/// The baseline is explicit about this: an integer optimum over the restricted pool is **not a global optimum**, and reporting it would pass an approximation off as
+/// The code is explicit about this: an integer optimum over the restricted pool is **not a global optimum**, and reporting it would pass an approximation off as
 /// optimal.
 /// </remarks>
 public sealed class Bpp1dColumnGeneration<V>
@@ -103,7 +103,7 @@ public sealed class Bpp1dColumnGeneration<V>
         // **种子取两轮**：`bestFit` 关一次、开一次。基线就是 `listOf(false, true)`——
         // 只留其中一轮会让某些算例的 RMP 起始基不可行。
         //
-        // **Seeds come from two rounds**, with `bestFit` off and then on, exactly as the baseline's `listOf(false, true)`; keeping only one can leave the RMP's starting
+        // **Seeds come from two rounds**, with `bestFit` off and then on, exactly as its `listOf(false, true)`; keeping only one can leave the RMP's starting
         // basis infeasible.
         var seeds = new List<PackingPattern<V>>();
         foreach (bool bestFit in new[] { false, true }) {
@@ -129,9 +129,9 @@ public sealed class Bpp1dColumnGeneration<V>
                 await _solver.SolveLPAsync("bpp1d_rmp", model).ConfigureAwait(false);
             if (lp is Failed<IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>> failedLp) {
                 // **LP 不可行不是失败，是"换个收口方式"。** 种子被库存耦合卡住时 RMP 可能无解，
-                // 基线在这里 `break`：用已生成的池去建最终模型，**不宣称定价已收敛**。
+                // 这里 `break`：用已生成的池去建最终模型，**不宣称定价已收敛**。
                 //
-                // **An infeasible LP is not a failure but a different way of closing out.** Stock coupling can make the RMP infeasible; the baseline breaks here and
+                // **An infeasible LP is not a failure but a different way of closing out.** Stock coupling can make the RMP infeasible; the code breaks here and
                 // builds the final model from the generated pool, **without claiming pricing convergence**.
                 if (failedLp.Error.Code == ErrorCode.ORModelInfeasible) {
                     break;

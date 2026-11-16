@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **沿节点推形状**：没有声明形状的张量也能知道它有几个元素 / Inferring shapes along the nodes, so an undeclared tensor still tells how many elements it holds.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `materializeShapes`：**基线在降阶之前先把形状补齐，** **因为"这个张量有几个元素"决定了后面每一步能不能按元素走。**
+/// 同步 Kotlin `dee897d2` 的 `materializeShapes`：**降阶之前先把形状补齐，** **因为"这个张量有几个元素"决定了后面每一步能不能按元素走。**
 ///
 /// **为什么需要它：** **仿射链只看节点、不看形状。** **输出没有声明形状时，它把一个三元素张量当成一个数，而导入照样成功——**
 /// **调用方拿到的是"看起来没问题"的结果。** **这一层把元素个数推出来，那条路就堵上了。**
@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **推不出来就说推不出来：** **`Unknown` 不是一个可以当 1 用的值**，**它只是"这里没有依据"。** **能不能继续由调用方决定，** '
 /// **而不是由这里猜一个 1 蒙过去。**
 ///
-/// Syncs `materializeShapes`: **the baseline fills shapes in before lowering, because "how many elements does this tensor hold" decides whether every later step can stay per element.**
+/// Syncs `materializeShapes`: **the code fills shapes in before lowering, because "how many elements does this tensor hold" decides whether every later step can stay per element.**
 ///
 /// **Why it is needed: the affine chain looks at nodes and not shapes, so an undeclared output shape lets a three-element tensor pass as one number while the import succeeds — the
 /// caller receives something that looks fine.** **This layer infers the element count and closes that path.**

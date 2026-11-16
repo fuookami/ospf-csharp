@@ -1,6 +1,6 @@
 // 远程二次求解器 / Remote quadratic solver.
-// 与固定 Kotlin 基线 `RemoteQuadraticSolver` 对应：同一个求解器接口，后端换成远程执行。
-// Corresponds to the pinned Kotlin baseline's `RemoteQuadraticSolver`: the same solver interface with the
+// 与`RemoteQuadraticSolver` 对应：同一个求解器接口，后端换成远程执行。
+// `RemoteQuadraticSolver`: the same solver interface with the
 // backend swapped for remote execution.
 
 using System;

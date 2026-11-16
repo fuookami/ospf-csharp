@@ -14,17 +14,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 装载禁忌限制 / Stowage taboo restrictions.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/Position.kt` 的 `PositionStowageTaboo`：一组"某 ULD 代码 + 某编号区间 + 商品说明"
+/// 逐条对齐的 `PositionStowageTaboo`：一组"某 ULD 代码 + 某编号区间 + 商品说明"
 /// 的禁忌，命中即禁止在该舱位装载该集装器。
 ///
-/// 编号是**从集装器名称里切出来的第 4—8 个字符**（基线的 `item.uld.name.substring(3, 8)`）。这不是随手写的：
+/// 编号是**从集装器名称里切出来的第 4—8 个字符**（`item.uld.name.substring(3, 8)`）。这不是随手写的：
 /// ULD 编号的标准写法是"三字母代码 + 4 位数字 + 1 位字母"，比如 `AKE12345MU`——所以位置 3..8 正好是那 4 位数字
 /// （外加一位字母被 `toULong` 丢弃前要先截断）。切片失败（名称太短或不是数字）时基线会抛异常，C# 这里返回 `null`（不命中），
 /// 因为**一条读不懂的编号不应该让整份配载崩掉**，而"不命中"与"名字不合规范"在禁忌检查上是同一个结果。
 ///
-/// Mirrors the baseline's `PositionStowageTaboo`: a list of "ULD code + number range + commodity description" restrictions; a hit forbids that ULD at that position. The number is
-/// **characters 4..8 of the ULD name** (the baseline's `item.uld.name.substring(3, 8)`). That is deliberate: a ULD name is "three-letter code + 4 digits + 1 letter", e.g.
-/// `AKE12345MU`, so positions 3..8 are exactly those four digits. Where the baseline would throw on a short or non-numeric name, this returns `null` (no hit): an unreadable number
+/// A list of "ULD code + number range + commodity description" restrictions; a hit forbids that ULD at that position. The number is
+/// **characters 4..8 of the ULD name** (its `item.uld.name.substring(3, 8)`). That is deliberate: a ULD name is "three-letter code + 4 digits + 1 letter", e.g.
+/// `AKE12345MU`, so positions 3..8 are exactly those four digits. Where the code would throw on a short or non-numeric name, this returns `null` (no hit): an unreadable number
 /// should not bring the whole stowage run down, and "no hit" is the same outcome as "the name is malformed" for taboo purposes.
 /// </remarks>
 public sealed class PositionStowageTaboo

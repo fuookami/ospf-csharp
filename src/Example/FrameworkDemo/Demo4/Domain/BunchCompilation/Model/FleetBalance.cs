@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// 机队平衡层 / The fleet balance layer.
 /// </summary>
 /// <remarks>
-/// 基线 `FleetBalance.kt`：按**检查点**（"型别 × 机场"）给机队计数，每台飞机一个 `z` 变量进表达式，再挂一个
+/// ：按**检查点**（"型别 × 机场"）给机队计数，每台飞机一个 `z` 变量进表达式，再挂一个
 /// "不超过该检查点的机数"的负侧松弛。检查点不是随便取的——**在飞的飞机算它要落的机场，不在飞的算它当前所在机场**，
 /// 否则"今晚有多少架这种机型能落在浦东"根本算不出来。
 ///
@@ -32,14 +32,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// `fleet_l` 变成"这一轮的束各占一项"。C# 的 `Flush` 是空实现，这里显式 `Clear` 再累加——**否则每多一轮就多一批项，
 /// 跑十轮之后同一个束在表达式里出现十次**。
 ///
-/// The baseline `FleetBalance.kt` counts the fleet by **checkpoint** ("minor type x airport"), puts one `z` variable per aircraft into an expression, and attaches a negative-side slack
+/// The code counts the fleet by **checkpoint** ("minor type x airport"), puts one `z` variable per aircraft into an expression, and attaches a negative-side slack
 /// bounding it by the checkpoint's aircraft count. The checkpoint is not arbitrary — **an airborne aircraft counts at the airport it will land at, an idle one at where it is now** —
 /// otherwise "how many of this type can land at ZSPD tonight" is unanswerable.
 ///
 /// Two things the criteria must watch: checkpoints are **deduplicated** by (airport, minor type); and every aircraft under a checkpoint holds **its own term** (not one term per
 /// aircraft group, and not a shared variable).
 ///
-/// **`AddColumns` replaces rather than appends**: the baseline flushes before accumulating each round, so the `z` terms from registration are cleared and `fleet_l` becomes "one term
+/// **`AddColumns` replaces rather than appends**: the code flushes before accumulating each round, so the `z` terms from registration are cleared and `fleet_l` becomes "one term
 /// per bunch of this round". C#'s `Flush` is a no-op, so this clears explicitly before accumulating — **otherwise every extra round adds another batch of terms, and after ten rounds
 /// the same bunch appears ten times in the expression**.
 /// </remarks>
@@ -188,8 +188,8 @@ public sealed class FleetBalance {
             if (monomials.Count == 0) {
                 continue;
             }
-            // **先清再加**，等价于基线的 `flush`：不清的话每轮都会把上一轮的项留在里面。
-            // **Clear, then add** — the equivalent of the baseline's `flush`: without the clear every round keeps the previous round's terms.
+            // **先清再加**，等价于`flush`：不清的话每轮都会把上一轮的项留在里面。
+            // **Clear, then add** — the equivalent of its `flush`: without the clear every round keeps the previous round's terms.
             MutableLinearPolynomial<Flt64> mutable = _fleet[index].AsMutable();
             mutable.Clear();
             mutable.Add(new LinearPolynomial<Flt64>(monomials.ToArray(), Flt64.Zero));

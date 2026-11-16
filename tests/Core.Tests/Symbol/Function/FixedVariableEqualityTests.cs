@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 固定变量等式：一行，但方向与元都容易反 / One row, but direction and identities are easy to flip.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `fixedVariableEquality`。
+/// 对齐的 `fixedVariableEquality`。
 ///
 /// **`EQ` 是对称的**，**所以"左右写反"在数值上完全测不出来**——
 /// **只有系数与常数项的位置能分开。**
@@ -106,12 +106,12 @@ public class FixedVariableEqualityTests
     /// **不检查值的可用性** / The value's usability is not checked.
     /// </summary>
     /// <remarks>
-    /// **基线也不检查。** **这里把这条写成一个判据，是为了让"没有检查"成为<b>已记录的行为</b>，
+    /// **不检查。** **这里把这条写成一个判据，是为了让"没有检查"成为<b>已记录的行为</b>，
     /// 而不是"可能被漏掉的地方"。**
     ///
     /// **`NaN` 会被原样放进右端**——**这是有意为之，检查在调用方。**
     ///
-    /// **The baseline does not either.** **Recording it as a criterion makes "no check" a <b>documented behaviour</b>
+    /// **The code does not either.** **Recording it as a criterion makes "no check" a <b>documented behaviour</b>
     /// rather than a possible omission.**
     ///
     /// **`NaN` goes into the right-hand side verbatim** — **deliberately; the checking is the caller's.**

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Zero-detection indicator rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BigM.kt` 的 `zeroIndicatorConstraints`、`safeZeroIndicatorConstraints`。
+/// 对齐的 `zeroIndicatorConstraints`、`safeZeroIndicatorConstraints`。
 ///
 /// **四条行，而<b>第二条变量（`sideVar`）只在"偏离"那一侧出现</b>**：
 ///
@@ -40,9 +40,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`strictBoundary` 必须<b>严格大于</b> `tolerance`**：**否则"带内"与"带外"在边界上重叠，
 /// 一个点可以同时声称"在带内"与"偏离了"。** **这种重叠不会让模型不可行，只会让它有第二个解。**
 ///
-/// Following the baseline's `zeroIndicatorConstraints` and `safeZeroIndicatorConstraints`.
+/// Following its `zeroIndicatorConstraints` and `safeZeroIndicatorConstraints`.
 ///
-/// **Four rows, and the <b>second binary (`sideVar`) appears only on the deviation side</b>**:
+/// **Four rows, and the <b>second binary (`sideVar`) appears only on the deviation side</b>**.
 ///
 /// | Row | Content | When it binds |
 /// | --- | --- | --- |

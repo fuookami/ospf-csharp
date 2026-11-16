@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **适航安全聚合** / The airworthiness security aggregation.
 /// </summary>
 /// <remarks>
-/// 这里落的是**组装层**：把 4 个派生模型建起来并按基线顺序注册。三处风险：
+/// 这里落的是**组装层**：把 4 个派生模型建起来并顺序注册。三处风险：
 ///
 /// | 处 | 做错了会怎样 |
 /// | --- | --- |
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// | 注册顺序 | 按序号引用约束的报告会指错行 |
 /// | Benders MP 是空操作 | 加上不该有的行，或以为它做了事 |
 ///
-/// lands the **assembly layer**: build four derived models and register them in the baseline's order, with the three risks tabulated above.
+/// lands the **assembly layer**: build four derived models and register them in its order, with the three risks tabulated above.
 /// </remarks>
 public class Demo2SecurityAggregationTests {
     private static Quantity<Flt64> Grams(double value) => new(new Flt64(value), MassUnits.Gram);
@@ -333,7 +333,7 @@ public class Demo2SecurityAggregationTests {
         // **One unobservable recorded**: replacing `if (!density.IsOk) return density;` with `_ = density;` lets the surface density and low payload **fail in turn** (they need
         // the same load and total weight symbols), so `IsOk` stays `false` and neither clears its symbol on failure — all three symbols are `null` either way and no assertion can
         // separate "returned early" from "kept going and failed each step". All three `_ = x;` mutations survive (measured). Making it observable would need a later step that does
-        // **not** depend on the input the earlier one failed on, which conflicts with this class's structure where every derived model shares the same load symbols. The baseline's
+        // **not** depend on the input the earlier one failed on, which conflicts with this class's structure where every derived model shares the same load symbols. The code's
         // form is kept and its lack of coverage recorded here.
     }
 
@@ -383,10 +383,10 @@ public class Demo2SecurityAggregationTests {
     /// **装载模式不影响聚合注册的行** / The stowage mode does not change what the aggregation registers.
     /// </summary>
     /// <remarks>
-    /// 基线的 `Aggregation.register` 收 `stowageMode` 却不用它（只往 `registerForBendersSP` 传）。三种模式注册出的约束数相同。
+    /// `Aggregation.register` 收 `stowageMode` 却不用它（只往 `registerForBendersSP` 传）。三种模式注册出的约束数相同。
     /// 若把模式误用进某处（例如按模式跳过密度约束），这条会红。
     ///
-    /// The baseline accepts `stowageMode` and does not use it on this path. All three modes register the same number of constraints; misusing the mode somewhere turns this red.
+    /// The code accepts `stowageMode` and does not use it on this path. All three modes register the same number of constraints; misusing the mode somewhere turns this red.
     /// </remarks>
     [Fact]
     public void Aggregation_ShouldIgnoreTheStowageModeWhenRegistering() {

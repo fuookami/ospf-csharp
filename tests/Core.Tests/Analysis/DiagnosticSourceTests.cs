@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 补的是 `core.analysis` 里不依赖原生后端的那三个类型**。判据钉的都是"换个后端还能不能对上"，
 /// 因为那正是这些类型存在的理由。
 ///
-/// **ported the three `core.analysis` types that need no native backend.** The criteria pin "does it still line up after the backend changes", because that is the reason
+/// **implemented the three `core.analysis` types that need no native backend.** The criteria pin "does it still line up after the backend changes", because that is the reason
 /// these types exist.
 /// </remarks>
 public class DiagnosticSourceTests {
@@ -118,7 +118,7 @@ public class DiagnosticSourceTests {
             "if the two agreed here, the field would be redundant and the test would prove nothing");
     }
 
-    /// <summary>**`ActivityStatus` 六个成员，顺序与基线一致** / Six members, in the baseline's order.</summary>
+    /// <summary>**`ActivityStatus` 六个成员，顺序** / Six members, in its order.</summary>
     /// <remarks>
     /// 顺序会进序列化与比较，所以**成员集合对不代表顺序对**。
     ///

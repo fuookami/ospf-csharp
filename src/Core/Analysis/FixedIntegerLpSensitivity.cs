@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 与基线 `LocalSensitivityScope` 对应，**只有一个成员，而这个成员本身是重点**：
 /// 这里的对偶值**绝不是 MILP 全局影子价格**，它只在"整数变量固定为一个 incumbent 结构"下成立。
 ///
-/// Mirrors the baseline's `LocalSensitivityScope`. **It has one member, and that member is the point**: these duals are **never global MILP shadow prices**, they hold only under
+/// **It has one member, and that member is the point**: these duals are **never global MILP shadow prices**, they hold only under
 /// "integer variables fixed to one incumbent pattern".
 /// </remarks>
 public enum LocalSensitivityScope
@@ -71,15 +71,15 @@ public sealed record SensitivityRange(Flt64? Lower = null, Flt64? Upper = null)
 /// 单个原始 CP 约束的局部敏感性 / Local sensitivity of one original CP constraint.
 /// </summary>
 /// <remarks>
-/// `DualValue` 的注释在基线里就是一句警告：**它是固定整数结构下的 LP 对偶，不是全局影子价格。**
+/// `DualValue` 的注释在就是一句警告：**它是固定整数结构下的 LP 对偶，不是全局影子价格。**
 /// 这个区别不写清楚，报告会被当成"MILP 灵敏度"来用——**而那正是它不成立的地方。**
 ///
-/// The baseline's own comment on `DualValue` is a warning: **it is the LP dual under a fixed integer pattern, not a global shadow price.** Without that distinction a report
+/// The comment on `DualValue` is a warning: **it is the LP dual under a fixed integer pattern, not a global shadow price.** Without that distinction a report
 /// gets used as "MILP sensitivity" — **exactly where it does not hold.**
 /// </remarks>
 /// <param name="ConstraintId">原始稳定约束 ID / Original stable constraint ID.</param>
 /// <param name="DualValue">固定整数结构下的 LP 对偶值 / LP dual under the fixed-integer pattern.</param>
-/// <param name="Activity">同一基线约束的活动性证据 / Activity evidence for the baseline constraint.</param>
+/// <param name="Activity">同一基线约束的活动性证据 / Activity evidence for the code constraint.</param>
 /// <param name="LocalEffective">局部对偶值是否超过阈值 / Whether the local dual exceeds the threshold.</param>
 /// <param name="SensitivityRange">可选的有效 RHS 敏感性范围 / Optional valid RHS sensitivity range.</param>
 /// <param name="Scope">敏感性值作用域 / Scope of the sensitivity value.</param>
@@ -183,7 +183,7 @@ public sealed record FixedIntegerLpRequest(
 /// 固定整数 LP 后端 / A fixed-integer LP backend.
 /// </summary>
 /// <remarks>
-/// **这是 `FixedIntegerLpSensitivity.kt` 里 `fun interface FixedIntegerLpBackend` 的移植。**
+/// **这是 里 `fun interface FixedIntegerLpBackend` 的移植。**
 ///
 /// **一个方法，一个职责：收到请求、回一个结果或一个错误。** 转储、松弛、对偶提取全部属于实现方，
 /// **接口本身不知道"敏感性"是什么**——所以换一个求解器不需要改这里的任何一个字。
@@ -263,7 +263,7 @@ public sealed record FixedIntegerLpSensitivityReport(
 /// **不关它，每次敏感性分析都在进程里留一份完整模型**——而敏感性分析按约束逐个跑，
 /// **一个千约束的模型会留下千份。**
 ///
-/// **This is the port of `LoweredFixedIntegerLpBackend`, and it had no counterpart here at all** — `IFixedIntegerLpBackend` and the lowerer both exist, **and the layer joining them did not.**
+/// **This is the implementation of `LoweredFixedIntegerLpBackend`, and it had no counterpart here at all** — `IFixedIntegerLpBackend` and the lowerer both exist, **and the layer joining them did not.**
 /// **The `Dispose` in `finally` is not tidiness; it is the precondition of this path being usable at all.** Lowering materialises a linear model; **not closing it leaves one full model per sensitivity run, and sensitivity
 /// runs once per constraint — a thousand-constraint model leaves a thousand behind.**
 /// </remarks>

@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 界折叠：`GE` 与 `GT` 只在等于零处不同 / `GE` and `GT` differ only at zero.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的 `boundsAvoidDiscreteConditionGap` 与
+/// 对齐的 `boundsAvoidDiscreteConditionGap` 与
 /// `DiscreteConditionLinearization` 补。
 ///
 /// **折叠回答的是"还要不要生成指示约束"**：**界已定死时指示变量没有意义。**

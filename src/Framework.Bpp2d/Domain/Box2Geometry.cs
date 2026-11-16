@@ -1,6 +1,6 @@
 // 二维包围盒几何 / 2D bounding box geometry.
-// 与固定 Kotlin 基线 `geometry2d/Box2Geometry.kt` 对应：在 `QuantityBox2` 之上提供装箱所需的包含与相交能力。
-// Mirrors the pinned Kotlin baseline's `geometry2d/Box2Geometry.kt`: containment and intersection on top of
+// 与固定 Kotlin 对应：在 `QuantityBox2` 之上提供装箱所需的包含与相交能力。
+// The pinned Kotlin: containment and intersection on top of
 // `QuantityBox2`.
 
 using System;
@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain;
 /// **重叠语义统一为「内部重叠」：相切不算重叠**。矩形贴边、圆与圆相切、圆与矩形边界相切都视为不重叠。
 /// 这与网格化排样的前提一致——相切是排样中最常见的相邻关系，若把相切判为重叠，任何规则网格都无法成立。
 /// 该语义已由 <see cref="QuantityBox2{V}.Overlapped"/> 完整实现，本类型**直接委托**而不是重写一套相交算法；
-/// 基线的 Kotlin 文件头也声明了这一委托意图，只是其代码另写了一份。
+/// Kotlin 文件头也声明了这一委托意图，只是其代码另写了一份。
 ///
 /// **Overlap is uniformly "interior overlap": tangency is not an overlap.** Edge contact between rectangles and
 /// tangent circles are all disjoint, matching grid packing: tangency is the most common adjacency and treating it
@@ -65,10 +65,10 @@ public sealed record Box2Geometry<V>(Quantity<V> X, Quantity<V> Y, IQuantityProj
     /// 中心 x 坐标 / Center x coordinate.
     /// </summary>
     /// <remarks>
-    /// **与基线的一处刻意差异**：基线的 `centerX`／`centerY` 对矩形返回**左下角坐标**而不是中心，与注释所述不符。
+    /// **与一处刻意差异**：`centerX`／`centerY` 对矩形返回**左下角坐标**而不是中心，与注释所述不符。
     /// 这里按注释语义计算真实中心。照搬一个明显与自身文档矛盾的实现不算"同步能力"。
     ///
-    /// **A deliberate difference**: the baseline's `centerX`/`centerY` return the **lower-left corner** for
+    /// **A deliberate difference**: its `centerX`/`centerY` return the **lower-left corner** for
     /// rectangles, contradicting its own documentation. The real centre is computed here; faithfully copying an
     /// implementation that contradicts its own doc comment is not "capability sync".
     /// </remarks>

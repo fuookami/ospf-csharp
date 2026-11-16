@@ -35,29 +35,29 @@ namespace Fuookami.Ospf.Benchmark;
 /// 跨版本共有的输出语义转储（不计时） / A cross-version dump of shared output semantics (untimed).
 /// </summary>
 /// <remarks>
-/// 与基线 `CrossVersionSemanticDump.kt`（335 行，`19c72455` 新增）对应。 它的用途不是计时，而是让两端各跑一次、
+/// 它的用途不是计时，而是让两端各跑一次、
 /// 逐行对比：网络可达与强连通分量、反向视图一致性、token 索引、素性缓存——每行都是"生产入口算出来的确定值"。
 ///
 /// 这里只转储三段：`NET`（网络）、`TOK`（token）、`PRM`（素性）。 其余三段是待办，
 /// 不是"没有"——`Pending` 常量逐个写明为什么还没搬，并由判据 `CrossVersionSemanticDumpTests` 钉住
 /// "待办清单必须与已实现段不重叠、且每段都写了理由"。
 ///
-/// 一个必须写明的可比性限制： 基线的 `orderDigest`／`sortedDigest` 用的是 Kotlin 的 `String.hashCode`，
+/// 一个必须写明的可比性限制： `orderDigest`／`sortedDigest` 用的是 Kotlin 的 `String.hashCode`，
 /// 那不是跨语言可比的值。 所以本转储不输出 `hashCode` 摘要；可逐行对比的字段是计数、排序后原样拼接的取值、
 /// 以及布尔量。 含 `hashCode` 的行在跨语言 diff 里只能各自记录、不能互比——这一点写在这里，而不是留给下一个人发现。
 ///
 /// Corresponds to the 335-line baseline. Its purpose is not timing but a line-by-line diff of two runs: network reachability and
 /// strongly connected components, reverse-view consistency, token indices, the primality cache — every line a deterministic value from a production
 /// entry point. dumps three sections: `NET`, `TOK`, `PRM`. The other three are *pending*, not absent: the `Pending` constant states
-/// why each is not ported yet, and a criterion pins that the pending list never overlaps what is implemented and always carries a reason.
-/// One comparability limit must be stated: the baseline's digests use Kotlin's `String.hashCode`, which is not comparable across languages, so
+/// why each is not implemented yet, and a criterion pins that the pending list never overlaps what is implemented and always carries a reason.
+/// One comparability limit must be stated: its digests use Kotlin's `String.hashCode`, which is not comparable across languages, so
 /// this dump emits no `hashCode` digest; the diffable fields are counts, sorted raw values and booleans. Lines built on `hashCode` can only be
 /// recorded per side, never compared across — written here instead of left for the next reader to discover.
 /// </remarks>
 public static class CrossVersionSemanticDump
 {
     /// <summary>
-    /// 还没搬的三段，以及为什么 / The three sections not ported yet, and why.
+    /// 还没实现的三段，以及为什么 / The three sections not implemented yet, and why.
     /// </summary>
     /// <remarks>
     /// 判据要求这份清单与已实现段不重叠。 清单里每一条都必须带理由： "还没做"单独一句会一直挂着，
@@ -69,7 +69,7 @@ public static class CrossVersionSemanticDump
     // **三段补齐之后这份清单是空的。** **它保留下来，是因为"清单为空"本身是一个可断言的结论：**
     // **判据要求它与 `Implemented` 不重叠，一旦再有人把某段退回去，必须同时把理由写进这里，而不是悄悄少几行。**
     //
-    // **with the last three sections ported this list is empty.** **It stays because "the list is empty" is itself an assertable conclusion: a
+    // **with the last three sections implemented this list is empty.** **It stays because "the list is empty" is itself an assertable conclusion: a
     // criterion requires it never to overlap `Implemented`, so anyone deferring a section again has to write the reason here rather than quietly
     // emitting fewer lines.**
     public static readonly IReadOnlyList<(string Section, string Reason)> Pending
@@ -278,7 +278,7 @@ public static class CrossVersionSemanticDump
     /// <summary>布尔量渲染成小写：基线输出 `true`／`false`，而 `bool.ToString` 给的是 `True`／`False`——
     /// 逐行 diff 会把每一行都算成差异。
     ///
-    /// Booleans render lowercase: the baseline prints `true`/`false` while `bool.ToString` gives `True`/`False`, which would make every
+    /// Booleans render lowercase: the code prints `true`/`false` while `bool.ToString` gives `True`/`False`, which would make every
     /// line look different in a line-by-line diff.</summary>
     ///
     /// <param name="value">布尔值 / The boolean.</param>
@@ -388,11 +388,11 @@ public static class CrossVersionSemanticDump
             LinearModelSnapshot<Flt64> snapshot = Await(projection.SnapshotAsync(), "投影快照 / the projection snapshot");
             Line(text, $"PRJ|{size}|snapshot|rows={snapshot.Rows.Count}|vars={snapshot.Variables.Count}");
             // **不打印行 `Id`：** **C# 侧它是 `model-local-row:<进程级计数器>:<序号>`，同进程第二次运行必然不同**
-            // **（判据第一次跑就抓到这一点）。** **改用 `SourceName`（`r0`），它既是稳定身份，也比基线那个 id 更可跨语言比对。**
+            // **（判据第一次跑就抓到这一点）。** **改用 `SourceName`（`r0`），它既是稳定身份，也比个 id 更可跨语言比对。**
             //
             // **The row `Id` is not printed: on the C# side it is `model-local-row:<process counter>:<index>`, which necessarily differs on a second run
             // in the same process (the criterion caught this on its first run).** **`SourceName` (`r0`) is used instead: a stable identity, and more
-            // comparable across languages than the baseline's id.**
+            // comparable across languages than its id.**
             LinearModelRow<Flt64> firstRow = snapshot.Rows
                 .OrderBy(row => row.SourceName, StringComparer.Ordinal)
                 .First();
@@ -462,13 +462,13 @@ public static class CrossVersionSemanticDump
     /// 拿不到的是服务层那层包装，不是键本身。 第三次同一种错法。
     ///
     /// 两处有意偏离基线，都写在这里：
-    /// ① 基线的 `hashCode` 是 Java/Kotlin 的字符串哈希，跨语言不可比，这里改用规范键文本的排序后原样拼接（与 `NET`／`TOK`／`PRM` 同一个选择）；
-    /// ② 基线的 `orderDigest` 对顺序敏感，这里给的是"按到达顺序拼接后的摘要"，同样只用于同语言两次运行比对。
+    /// ① `hashCode` 是 Java/Kotlin 的字符串哈希，跨语言不可比，这里改用规范键文本的排序后原样拼接（与 `NET`／`TOK`／`PRM` 同一个选择）；
+    /// ② `orderDigest` 对顺序敏感，这里给的是"按到达顺序拼接后的摘要"，同样只用于同语言两次运行比对。
     ///
     /// The pending reason used to be "`canonicalKey` is a service-layer thing the benchmark cannot reach". Measured: `CuttingPlanCanonicalKey.From(plan)`
     /// lives in `Domain/CuttingPlanGeneration/model/` and `CuttingPlan&lt;V&gt;` implements `ICuttingPlanForCanonicalKey` directly — what was unreachable was
-    /// the service-layer wrapper, not the key. The third time for this same defect. Two deliberate divergences from the baseline are stated here:
-    /// the baseline's `hashCode` is a JVM string hash that cannot be compared across languages, so this uses the sorted raw join of canonical-key text
+    /// the service-layer wrapper, not the key. The third time for this same defect. Two deliberate divergences from the code are stated here:
+    /// its `hashCode` is a JVM string hash that cannot be compared across languages, so this uses the sorted raw join of canonical-key text
     /// (the same choice as `NET`/`TOK`/`PRM`), and the order-sensitive digest is likewise a same-language comparison only.
     /// </remarks>
     /// <param name="text">输出 / The output.</param>
@@ -493,7 +493,7 @@ public static class CrossVersionSemanticDump
         }
     }
 
-    /// <summary>固定生成夹具：8 个商品、12 种物料（与基线逐项相同）/ The fixed generation fixture: eight products, twelve materials, identical to the baseline.</summary>
+    /// <summary>固定生成夹具：8 个商品、12 种物料（与基线逐项相同）/ The fixed generation fixture: eight products, twelve materials, identical to the code.</summary>
     /// <param name="scenario">场景 / The scenario.</param>
     /// <returns>生成输入 / The generation input.</returns>
     private static GenerationInput<Flt64> GenerationInputOf(string scenario) {
@@ -549,7 +549,7 @@ public static class CrossVersionSemanticDump
         };
     }
 
-    /// <summary>恒真的自定义策略（`custom` 场景用它，与基线一致）/ The always-true custom policy used by the `custom` scenario.</summary>
+    /// <summary>恒真的自定义策略（`custom` 场景用它）/ The always-true custom policy used by the `custom` scenario.</summary>
     private sealed class AlwaysSatisfiedConstraint : ICuttingPlanConstraint<Flt64> {
         /// <summary>恒真 / Always true.</summary>
         /// <param name="context">约束上下文 / The constraint context.</param>
@@ -620,7 +620,7 @@ public static class CrossVersionSemanticDump
         }
     }
 
-    /// <summary>数值渲染成与基线一致的文本（整数值不带小数点）/ Render a number the way the baseline does (integers without a decimal point).</summary>
+    /// <summary>数值渲染成的文本（整数值不带小数点）/ Render a number the way the code does (integers without a decimal point).</summary>
     /// <param name="value">数值 / The number.</param>
     /// <returns>文本 / The text.</returns>
     private static string Num(object? value) => value switch {

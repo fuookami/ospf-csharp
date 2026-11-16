@@ -19,14 +19,14 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 /// 1mm 宽、10000mm 可用时正确答案是 **10000**，旧实现返回 **4096**，**不报任何错**。
 ///
 /// 基线 `computeMaxRepeatCount` **没有上限**，所以 4096 是一个真实的偏离。
-/// 但**直接删掉上限会继承基线的死循环**（宽度为零时逐次相加永不推进），所以改成显式零宽守卫。
+/// 但**直接删掉上限会继承死循环**（宽度为零时逐次相加永不推进），所以改成显式零宽守卫。
 ///
 /// 判据分两组：**不截断**（合法大数要算对）与**不死循环**（零宽要立即返回）。
 ///
 /// The old implementation defaulted to `limit = 4096`, treating a hand-written "defensive cap" as real semantics: with a 1mm width and 10000mm available the correct
 /// answer is **10000**, but it returned **4096** **without reporting anything**.
 ///
-/// The baseline's `computeMaxRepeatCount` has **no cap**, so 4096 was a real divergence. But **deleting the cap outright would inherit the baseline's infinite loop**
+/// The code's `computeMaxRepeatCount` has **no cap**, so 4096 was a real divergence. But **deleting the cap outright would inherit its infinite loop**
 /// (with a zero width, repeated addition never advances), hence the explicit zero-width guard.
 ///
 /// The criteria come in two groups: **no truncation** (large legitimate values must be exact) and **no infinite loop** (zero width must return immediately).
@@ -56,13 +56,13 @@ public class MaxRepeatCountBoundaryTests {
 
     /// <summary>**零宽必须立即返回 0** / A zero width must return 0 immediately.</summary>
     /// <remarks>
-    /// 零宽时逐次相加永不推进——**基线的循环在这里会挂死**。C# 用显式守卫避开，
+    /// 零宽时逐次相加永不推进——**循环在这里会挂死**。C# 用显式守卫避开，
     /// 这是**有意优于基线**的一处：死循环不是需要保持的语义。
     ///
     /// 判据若挂住，说明守卫失效（xUnit 会超时失败，等价于检出）。
     ///
-    /// With a zero width, repeated addition never advances — **the baseline's loop hangs here**. C# avoids it with an explicit guard, which is **deliberately better than
-    /// the baseline**: an infinite loop is not semantics worth preserving.
+    /// With a zero width, repeated addition never advances — **its loop hangs here**. C# avoids it with an explicit guard, which is **deliberately better than
+    /// the code**: an infinite loop is not semantics worth preserving.
     ///
     /// If the criterion hangs, the guard is broken (xUnit fails on timeout, which counts as detected).
     /// </remarks>

@@ -239,10 +239,10 @@ public class Demo2LoadWeightTests {
     /// **不可用舱位的 `actual_loaded` 是常数 1** / An unavailable position's `actual_loaded` is constant one.
     /// </summary>
     /// <remarks>
-    /// 与 `estimate_loaded` 成对：基线的 `estimate_loaded` 取内核占用变量（不可用舱位在那里恒 1），`actual_loaded` 单独再写一次常数 1。
+    /// 与 `estimate_loaded` 成对：`estimate_loaded` 取内核占用变量（不可用舱位在那里恒 1），`actual_loaded` 单独再写一次常数 1。
     /// 两者都得是 1，不能一个 1 一个 0。
     ///
-    /// Paired with `estimate_loaded`: the baseline takes the kernel occupancy there (constant one for an unavailable position) and writes constant one again for `actual_loaded`.
+    /// Paired with `estimate_loaded`: the code takes the kernel occupancy there (constant one for an unavailable position) and writes constant one again for `actual_loaded`.
     /// Both must be one, never one-and-zero.
     /// </remarks>
     [Fact]

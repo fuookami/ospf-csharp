@@ -30,8 +30,8 @@ namespace Fuookami.Ospf.Example.ConstraintProgrammingDemo;
 /// 直接使用 Core CP 的示例（确定性 fake 求解器） / Direct core CP demo using a deterministic fake solver.
 /// </summary>
 /// <remarks>
-/// **对应基线 `constraint_programming_demo/ConstraintProgrammingDemos.kt` 的 `DirectConstraintProgrammingDemo`**。
-/// **Mirrors `DirectConstraintProgrammingDemo` from the baseline's `constraint_programming_demo/ConstraintProgrammingDemos.kt`.**
+/// **对应的 `DirectConstraintProgrammingDemo`**。
+/// **Mirrors `DirectConstraintProgrammingDemo` from its.**
 /// </remarks>
 public static class DirectConstraintProgrammingDemo {
     /// <summary>构造并求解一个小型全异模型 / Build and solve a small all-different model.</summary>
@@ -297,7 +297,7 @@ public static class LogicBasedBendersDemo {
         Task<Result<SolveReport<Flt64>, ErrorCode, Error<ErrorCode>>> MasterSolver(
             LinearMetaModel<Flt64> model) {
             // **第一轮给 0 触发冲突割，第二轮给 1 收敛**：这正是基线示例的脚本化主问题。
-            // **Round one returns 0 to trigger a conflict cut, round two returns 1 to converge**: this is the baseline's scripted master.
+            // **Round one returns 0 to trigger a conflict cut, round two returns 1 to converge**: this is its scripted master.
             Flt64 value = masterCalls++ == 0 ? Flt64.Zero : Flt64.One;
             return Task.FromResult(Results.Ok(new SolveReport<Flt64> {
                 ProblemStatus = ProblemStatus.Feasible,

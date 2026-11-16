@@ -35,7 +35,7 @@ public enum BinaryLogicOperation
 /// 纯二值逻辑函数的延迟快照 / A deferred snapshot of a pure binary logic function.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BinaryLogicStructure.kt` 的 `BinaryLogicStructure` 与 `BinaryLogicOperation`。
+/// 对齐的 `BinaryLogicStructure` 与 `BinaryLogicOperation`。
 ///
 /// **四种运算的编码方向各不相同，而每一种的"哪一侧是松的"都要单独看：**
 ///
@@ -61,7 +61,7 @@ public enum BinaryLogicOperation
 /// **二值性检查在生成之前，而且对结果列也查**：**结果列不是二值的话，这些行描述的
 /// 是一个连续值，而 AND/OR/XOR 对连续值没有意义。**
 ///
-/// Following the baseline's `BinaryLogicStructure` and `BinaryLogicOperation`.
+/// Following its `BinaryLogicStructure` and `BinaryLogicOperation`.
 ///
 /// **The four encodings point in different directions, and each one's "which side is slack" has to be read
 /// separately:**
@@ -153,7 +153,7 @@ public sealed record BinaryLogicStructure(
                     // 却在"两个 1、result = 0"时给出 `2 − 0 ≥ −1`（真，错误接受）。**
                     //
                     // **`Σinput − result ≤ n − 1`, i.e. `result ≥ Σinput − n + 1`.**
-                    // **The baseline wrote `Σinput − n·result ≥ 1 − n`, whose coefficient and right-hand side are both
+                    // **The code wrote `Σinput − n·result ≥ 1 − n`, whose coefficient and right-hand side are both
                     // wrong: it rejects "all zeros, result one" but accepts "two ones, result zero".**
                     rows.Add(new LinearInequality<Flt64>(
                         Lhs: Polynomial(SumOfInputs(one).Append(
@@ -179,7 +179,7 @@ public sealed record BinaryLogicStructure(
                     // **基线写的是 `Σinput − result ≤ 0`，方向反了——那一行说的是 `result ≥ Σinput`。**
                     //
                     // **`result − Σinput ≤ 0`, i.e. `result ≤ Σinput`.**
-                    // **The baseline wrote `Σinput − result ≤ 0`, the direction reversed — that says
+                    // **The code wrote `Σinput − result ≤ 0`, the direction reversed — that says
                     // `result ≥ Σinput`.**
                     rows.Add(new LinearInequality<Flt64>(
                         Lhs: Polynomial(new[] {

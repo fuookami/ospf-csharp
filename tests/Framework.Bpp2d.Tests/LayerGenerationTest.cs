@@ -127,7 +127,7 @@ public sealed class LayerGenerationTest {
     /// **六角行距必须是 0.8667·d 而不是 0.8667**：基线记录过把「26d / 30d」写成无量纲比值的真实缺陷，在 10×8 板材、
     /// 直径 2 的圆形件上相邻圆心距会只有 1.32（小于直径 2），实际产出重叠的圆。这里直接断言相邻行间距。
     ///
-    /// **The hexagonal row pitch must be 0.8667·d, not 0.8667**: the baseline records a real defect where "26d / 30d"
+    /// **The hexagonal row pitch must be 0.8667·d, not 0.8667**: the code records a real defect where "26d / 30d"
     /// was written as a dimensionless ratio, leaving adjacent centres only 1.32 apart (below the diameter 2) on a 10×8
     /// sheet with diameter-2 circles, producing actually overlapping circles. This asserts the row spacing directly.
     /// </summary>

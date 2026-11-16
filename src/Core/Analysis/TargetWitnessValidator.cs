@@ -37,8 +37,8 @@ public static class TargetWitnessValidator
     /// **校验的必须是提交给后端的那份快照**，而不是基线快照：冲突删除复验求解的是选择性重建的模型，
     /// 它的值域与激活约束都可能不同。**拿基线去校验,会把一个本来正确的解判成错的。**
     ///
-    /// **It has to validate the snapshot that went to the backend**, not the baseline: a conflict deletion check solves a selectively rebuilt model whose domains and active
-    /// constraints may differ, and **validating against the baseline would reject a solution that is actually right.**
+    /// **It has to validate the snapshot that went to the backend**, not the code: a conflict deletion check solves a selectively rebuilt model whose domains and active
+    /// constraints may differ, and **validating against the code would reject a solution that is actually right.**
     /// </remarks>
     public static string? Validate(
         ConstraintProgrammingModelSnapshot snapshot,

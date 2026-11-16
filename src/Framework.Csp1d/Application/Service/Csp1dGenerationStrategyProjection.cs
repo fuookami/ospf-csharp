@@ -32,7 +32,7 @@ internal static class Csp1dGenerationStrategyProjection {
     /// </summary>
     /// <remarks>
     /// 语义由生成侧折叠：基线 `candidateFilters.all { it(plan, input.existingPlans) }`。
-    /// The semantics are folded on the generation side: the baseline's `candidateFilters.all { it(plan, input.existingPlans) }`.
+    /// The semantics are folded on the generation side: its `candidateFilters.all { it(plan, input.existingPlans) }`.
     /// </remarks>
     /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
     /// <param name="strategies">生成策略列表 / Generation strategy list.</param>
@@ -52,7 +52,7 @@ internal static class Csp1dGenerationStrategyProjection {
     /// </summary>
     /// <remarks>
     /// 语义由生成侧折叠：基线 `dominanceAcceptOverrides.all { it(plan, existing) }`。
-    /// The semantics are folded on the generation side: the baseline's `dominanceAcceptOverrides.all { it(plan, existing) }`.
+    /// The semantics are folded on the generation side: its `dominanceAcceptOverrides.all { it(plan, existing) }`.
     /// </remarks>
     /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
     /// <param name="strategies">生成策略列表 / Generation strategy list.</param>
@@ -92,7 +92,7 @@ internal static class Csp1dGenerationStrategyProjection {
     /// <remarks>
     /// **第一个返回非 null 的覆盖胜出**，与基线 `canonicalKeyOverrides.firstNotNullOfOrNull { it(plan) }` 一致。
     ///
-    /// **The first override returning non-null wins**, matching the baseline's `canonicalKeyOverrides.firstNotNullOfOrNull { it(plan) }`.
+    /// **The first override returning non-null wins**, matching its `canonicalKeyOverrides.firstNotNullOfOrNull { it(plan) }`.
     /// </remarks>
     /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
     /// <param name="plan">切割方案 / Cutting plan.</param>

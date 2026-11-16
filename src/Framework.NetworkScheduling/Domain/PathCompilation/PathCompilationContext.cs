@@ -1,6 +1,6 @@
 // 路径编译上下文 / Path compilation context.
-// 与固定 Kotlin 基线 `path_compilation/PathCompilationContext.kt`（5133 字节）中的上下文类对应。
-// Mirrors the context class of the pinned baseline's `path_compilation/PathCompilationContext.kt`.
+// 与固定 Kotlin （5133 字节）中的上下文类对应。
+// The context class of the: .
 
 using System;
 using System.Collections.Generic;

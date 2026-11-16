@@ -1,7 +1,7 @@
 // 换型代价的三元组枚举 / Triple enumeration for switch cost.
-// 与固定 Kotlin 基线 `task_compilation/Service/.../SwitchCostMinimization.kt` 的
-// `for executor / for task1 / for task2` 三重循环对应。
-// Mirrors the `for executor / for task1 / for task2` triple loop in the pinned baseline's `SwitchCostMinimization.kt`.
+// 与固定 Kotlin 的
+// 三重循环：每个执行器、每对任务各一条开关代价项。
+// A triple loop: one switch-cost term per executor and per ordered task pair.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 换型代价的三元组枚举 / Triple enumeration for switch cost.
 /// </summary>
 /// <remarks>
-/// 基线是 `executors × tasks × tasks`，**包含 `task1 == task2` 的对角线**：
+/// `executors × tasks × tasks`，**包含 `task1 == task2` 的对角线**：
 /// 它没有写 `if (task1 == task2) continue`。
 ///
 /// 一个"自然"的实现会顺手跳过对角线，因为"从某个任务换到它自己"听起来没有意义。但这改变了模型：
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 ///
 /// **对角线是否为零应由换型数据决定，不该由循环替它决定。**
 ///
-/// The baseline is `executors × tasks × tasks`, **including the `task1 == task2` diagonal**: it never writes `if (task1 == task2) continue`.
+/// The code is `executors × tasks × tasks`, **including the `task1 == task2` diagonal**: it never writes `if (task1 == task2) continue`.
 ///
 /// A "natural" implementation would skip the diagonal, since "switching from a task to itself" sounds meaningless. But that changes the model: if `switch[e, t, t]` is
 /// non-zero in the compilation (say it includes setup time), skipping it **under-penalises part of the switch time**, while the schedule looks entirely normal.
@@ -61,9 +61,9 @@ public static class SwitchCostTriples {
     /// <param name="tasks">任务列表 / The tasks.</param>
     /// <returns>任务对序列，含对角线 / The pairs, including the diagonal.</returns>
     /// <remarks>
-    /// 换型时间不带执行器——基线的 `switch.switchTime[task1, task2]` 只有两个下标。
+    /// 换型时间不带执行器——`switch.switchTime[task1, task2]` 只有两个下标。
     ///
-    /// Switch time carries no executor — the baseline's `switch.switchTime[task1, task2]` has only two indices.
+    /// Switch time carries no executor — its `switch.switchTime[task1, task2]` has only two indices.
     /// </remarks>
     public static IReadOnlyList<(T Left, T Right)> AllPairs<T>(IReadOnlyList<T> tasks) {
         System.ArgumentNullException.ThrowIfNull(tasks);

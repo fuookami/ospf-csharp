@@ -11,10 +11,10 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// **调度模型与能力摘要的字段名必须与固定基线逐个相同** / Scheduling-model and capability wire names must match the pinned baseline field by field.
+/// **调度模型与能力摘要的字段名必须与固定基线逐个相同** / Scheduling-model and capability wire names must match the reference field by field.
 /// </summary>
 /// <remarks>
-/// 固定 Kotlin 基线 `12fdb587` **没有为这两组类型提供 wire fixture**（`src/test/resources/fixtures/` 里只有 remote-cp/linear 的四个文件），
+/// `12fdb587` **没有为这两组类型提供 wire fixture**（`src/test/resources/fixtures/` 里只有 remote-cp/linear 的四个文件），
 /// 所以"逐字节往返"这条路走不通。但**字段名是能核的**：Kotlin 的 `@SerialName` 与属性名就是 wire 上的事实，可以直接从固定提交里读出来。
 ///
 /// 这一条因此只声明**名称一致性**，不声明"能互相解码"——后者要等基线提供 fixture。
@@ -25,8 +25,8 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// criterion therefore claims **name parity only**, not "each side can decode the other" — that needs a baseline fixture. **Separating the checkable from the uncheckable is
 /// a lesson this project learned the hard way** (the earlier project-name misjudgement, the earlier reference equality read as "not a partition").
 ///
-/// 来源 / Source: `ospf-kotlin-framework/src/main/fuookami/ospf/kotlin/framework/solver/remote/domain/SchedulingModels.kt`
-/// and `.../domain/ExecutionModels.kt`, both at `12fdb587`.
+/// 来源 / Source:
+/// and, both at `12fdb587`.
 /// </remarks>
 public class RemoteSchedulingWireNameTests {
     private static IReadOnlyList<string> Names(string json)
@@ -64,9 +64,9 @@ public class RemoteSchedulingWireNameTests {
 
     /// <summary>**`SchedulingRequest` 的十五个名字** / The fifteen `SchedulingRequest` names.</summary>
     /// <remarks>
-    /// 基线里 `deadline` 带着 `@SerialName("deadlineEpochMs")`，**属性名和 wire 名不同**——正是这种地方最容易写错。
+    /// `deadline` 带着 `@SerialName("deadlineEpochMs")`，**属性名和 wire 名不同**——正是这种地方最容易写错。
     ///
-    /// In the baseline `deadline` carries `@SerialName("deadlineEpochMs")`: **the property name and the wire name differ**, which is exactly where this goes wrong.
+    /// In the code `deadline` carries `@SerialName("deadlineEpochMs")`: **the property name and the wire name differ**, which is exactly where this goes wrong.
     /// </remarks>
     [Fact]
     public void SchedulingRequest_ShouldUseTheBaselineNames() {
@@ -121,8 +121,8 @@ public class RemoteSchedulingWireNameTests {
     /// </remarks>
     [Fact]
     public void NameParity_ShouldNotBeClaimedAsInteroperability() {
-        // 基线的 fixtures 目录里没有调度模型与能力摘要的样本——因此这两组的往返**未实测**。
-        // The baseline's fixtures directory contains no scheduling-model or capability sample, so round trips for these two groups are **not measured**.
+        // fixtures 目录里没有调度模型与能力摘要的样本——因此这两组的往返**未实测**。
+        // The code's fixtures directory contains no scheduling-model or capability sample, so round trips for these two groups are **not measured**.
         string[] baselineFixtures = [
             "remote-cp-result-v1.json",
             "remote-cp-result-v2.json",

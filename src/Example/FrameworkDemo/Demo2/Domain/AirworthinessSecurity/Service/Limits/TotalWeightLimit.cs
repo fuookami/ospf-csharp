@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 各阶段总重上限 / The total weight upper bound per flight phase.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/TotalWeightLimit.kt`：对**每个**飞行阶段，若该阶段有最大总重就加一行
+/// 逐条对齐：对**每个**飞行阶段，若该阶段有最大总重就加一行
 /// `estimate_total_weight_{阶段} ≤ maxTotalWeight`，名字 `{name}_{阶段}`。
 ///
 /// 三处容易做错：
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 2. **遍历全部三个阶段**，不是只做起飞。只做起飞会让零油重与着陆超重而求解器不知道。
 /// 3. **名字带阶段后缀**。三段同名时"第 2 条约束不可行"不知道是哪个阶段。
 ///
-/// Mirrors the baseline: for **each** flight phase, add `estimate_total_weight_{phase} ≤ maxTotalWeight` when the phase has a maximum, named `{name}_{phase}`. Three easy mistakes:
+/// for **each** flight phase, add `estimate_total_weight_{phase} ≤ maxTotalWeight` when the phase has a maximum, named `{name}_{phase}`. Three easy mistakes:
 /// (1) **a missing estimate is a failure, a missing maximum is a skip** — deliberately different: a missing estimate means `TotalWeight.Register` never ran (or failed) and is
 /// an integration error, while "no maximum for this phase" is a legitimate configuration; (2) **all three phases are iterated**, not just take-off, or zero-fuel and landing
 /// go overweight unnoticed; (3) **the name carries the phase**, or "constraint 2 is infeasible" does not say which phase.

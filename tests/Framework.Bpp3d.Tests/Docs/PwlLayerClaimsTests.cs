@@ -9,10 +9,10 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **"未移植"这三个字要能落到具体一层** / "Not ported" has to name a layer.
+/// **"未实现"这三个字要能落到具体一层** / "Not implemented" has to name a layer.
 /// </summary>
 /// <remarks>
-/// 矩阵里三行插件都写着"PWL 未移植"，第九节第 3 条写着"`PackingRendererAdapter` 里 0 处 `PWL`"。
+/// 矩阵里三行插件都写着"PWL 未实现"，第九节第 3 条写着"`PackingRendererAdapter` 里 0 处 `PWL`"。
 /// **那些都是症状，不是缺口的大小。** 量出来的是三层，状态各不相同：
 ///
 /// | 层 | C# |
@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// | 函数展开层（基线 576 行） | **完全没有** |
 /// | 插件原生写入 | **没有**；Gurobi 只有探测 |
 ///
-/// **把三层混成"未移植"，会让人以为补上最容易的那层就够了——而那层已经在了。**
+/// **把三层混成"未实现"，会让人以为补上最容易的那层就够了——而那层已经在了。**
 ///
-/// Three plugin rows said "PWL not ported" and item 3 said "no `PWL` in `PackingRendererAdapter`". **Those are symptoms, not the size of the gap.** measured three
-/// layers with different states: the piecewise symbols are **present** and Demo2 really uses them; the **function expansion layer (576 lines in the baseline) is entirely
-/// absent**; the plugins have **no native writes**, Gurobi only detection. **Conflating them into "not ported" suggests that filling in the easiest layer would do — and
+/// Three plugin rows said "PWL not implemented" and item 3 said "no `PWL` in `PackingRendererAdapter`". **Those are symptoms, not the size of the gap.** measured three
+/// layers with different states: the piecewise symbols are **present** and Demo2 really uses them; the **function expansion layer (576 lines in the code) is entirely
+/// absent**; the plugins have **no native writes**, Gurobi only detection. **Conflating them into "not implemented" suggests that filling in the easiest layer would do — and
 /// that layer is already here.**
 /// </remarks>
 public class PwlLayerClaimsTests
@@ -50,10 +50,10 @@ public class PwlLayerClaimsTests
 
     /// <summary>**展开层完全缺失** / The expansion layer is entirely absent.</summary>
     /// <remarks>
-    /// 基线 `FunctionExpansion.kt` 有 **576 行**：`AbsStructure`/`MaxStructure`/`SemiStructure`/`DeferredFunctionConstraintRegion` 与策略枚举。
+    /// 有 **576 行**：`AbsStructure`/`MaxStructure`/`SemiStructure`/`DeferredFunctionConstraintRegion` 与策略枚举。
     /// C# 的 `Core/Solver/Function/` 只有 `FunctionSolverCapabilities.cs` 一个文件——**这是缺口的真实大小。**
     ///
-    /// The baseline's `FunctionExpansion.kt` is **576 lines**; the C# `Core/Solver/Function/` holds only a capability declaration — **that is the real size of the gap.**
+    /// The code's is **576 lines**; the C# `Core/Solver/Function/` holds only a capability declaration — **that is the real size of the gap.**
     /// </remarks>
     [Fact]
     public void TheFunctionExpansionLayer_ShouldStillBeAbsent() {
@@ -63,7 +63,7 @@ public class PwlLayerClaimsTests
 
         files.Should().Contain("FunctionSolverCapabilities.cs", "the capability declaration is what exists");
         // **写成"只有这一个"而不是"没有展开层"**：这条判据要能看见它被补上的那一天。
-        // **State it as "only this one", not "no expansion layer"**: the criterion should be able to see the day it gets ported.
+        // **State it as "only this one", not "no expansion layer"**: the criterion should be able to see the day it gets implemented.
         files.Should().HaveCount(1,
             "the expansion layer is 576 baseline lines and none of it is here; a second file means somebody started porting it, and the matrix row has to change with them");
     }
@@ -82,7 +82,7 @@ public class PwlLayerClaimsTests
         // **Copt 现在<b>有</b>原生分段文件了。**
         //
         // **这条判据此前断言"Copt / Cplex 都没有 Piecewise 文件"。**
-        // **判断哪一侧是基线的依据：** **基线 `CoptNativePiecewise.kt` 有 209 行，
+        // **判断哪一侧是依据：** **有 209 行，
  // 而 C# 的读侧早已存在——所以缺的是写侧；写侧补上之后"没有文件"就不再成立。**
         //
         // **改法：Copt 必须<b>有</b>写入器（否则缺口回来了），Cplex 仍然<b>没有</b>（那一侧还没做）。**
@@ -90,7 +90,7 @@ public class PwlLayerClaimsTests
         //
         // **Copt now <b>has</b> a native piecewise file.**
         //
-        // **How the baseline side was decided: the baseline `CoptNativePiecewise.kt` is 209 lines and C#'s read side
+        // **How the code side was decided: the code is 209 lines and C#'s read side
  // already existed — so the write side was the gap.**
         //
         // **后来 Cplex 的写侧也补上了，于是这一条现在断言<b>两者都有</b>。**
@@ -118,8 +118,8 @@ public class PwlLayerClaimsTests
             .Should().BeTrue("the missing layer has to be named as a layer");
         matrix.Contains("576 行", StringComparison.Ordinal)
             .Should().BeTrue("the gap needs its size, or nobody can judge it");
-        // **"探测未移植"不能再出现**：那是被推翻的那句话。
-        // **"Detection not ported" must not reappear**: that is the retracted sentence.
+        // **"探测未实现"不能再出现**：那是被推翻的那句话。
+        // **"Detection not implemented" must not reappear**: that is the retracted sentence.
         matrix.Contains("原生 PWL/SOS2 能力探测未移植", StringComparison.Ordinal)
             .Should().BeFalse("that claim was false; leaving it in lets the next batch repeat it");
     }

@@ -15,14 +15,14 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// 于是"能打包"这件事看起来已经完成，而包里的信息是假的。这类"已经能跑，但内容是编的"状态，
 /// 比"跑不起来"更难发现。
 ///
-/// 本仓的版本号**不自己定**：跟着固定 Kotlin 基线走（基线根 `pom.xml` 在 12fdb587 上是 `1.1.2`）。
+/// 本仓的版本号**不自己定**：跟着走（基线根 `pom.xml` 在 12fdb587 上是 `1.1.2`）。
 /// 所以这条判据做两件事：**元数据齐全**，以及**版本号与能力文档里记的一致**——
-/// 基线上移时两边必须一起动，**不许只改一边**。
+/// 移时两边必须一起动，**不许只改一边**。
 ///
 /// `dotnet pack` already worked — **that was the problem**: it produced `1.0.0` by default, with no authors and no readme, so "it can pack" looked finished while
 /// the package carried false information. That state — runs fine, content invented — is harder to notice than a plain failure. This repo's version is **not its own**:
-/// it follows the pinned Kotlin baseline (`1.1.2` in the baseline root `pom.xml` at 12fdb587). The criteria therefore check two things: the metadata is complete, and
-/// **the version matches what the capability document records** — bumping the baseline means moving both, **never just one**.
+/// it follows the reference (`1.1.2` in the code root `pom.xml` at 12fdb587). The criteria therefore check two things: the metadata is complete, and
+/// **the version matches what the capability document records** — bumping the code means moving both, **never just one**.
 /// </remarks>
 public sealed class PackagingMetadataTests
 {
@@ -52,7 +52,7 @@ public sealed class PackagingMetadataTests
     /// <remarks>
     /// 版本号跟基线走，不跟本仓的心情走。文档里记着"对齐到哪个基线版本"，这里要求两边**同一个数**。
     ///
-    /// The version follows the baseline, not this repo's mood. The document records which baseline version it tracks, and this criterion requires the **same number**
+    /// The version follows the code, not this repo's mood. The document records which baseline version it tracks, and this criterion requires the **same number**
     /// in both places.
     /// </remarks>
     [Fact]

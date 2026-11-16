@@ -38,7 +38,7 @@ public sealed record LengthAssignmentModelingConfig<V>(
 /// <param name="OverLengths">超长产品值 / Over-length values for products exceeding bounds.</param>
 /// <remarks>
 /// **两个字段永不为 null**，与基线 `= emptyList` 一致：**"没有分配"由空列表表达**。
-/// **Neither field is ever null**, matching the baseline's `= emptyList`: **"nothing assigned" is expressed by an empty list** .
+/// **Neither field is ever null**, matching its `= emptyList`: **"nothing assigned" is expressed by an empty list** .
 /// </remarks>
 public sealed record LengthAssignmentModelingResult<V>(
     IReadOnlyList<ModeledAssignedLength<V>> AssignedLengths,

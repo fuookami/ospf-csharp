@@ -45,8 +45,8 @@ public sealed record RemoteSolverHttpResponse(
 /// 远程求解器 HTTP 恢复模式 / Remote solver HTTP resume mode.
 /// </summary>
 /// <remarks>
-/// 与基线一致：规范端点只支持服务端最新检查点；指定检查点恢复明确不支持。
-/// Matches the baseline: the canonical endpoint only supports the server's latest checkpoint; checkpoint-specific resume is explicitly unsupported.
+/// ：规范端点只支持服务端最新检查点；指定检查点恢复明确不支持。
+/// The canonical endpoint only supports the server's latest checkpoint; checkpoint-specific resume is explicitly unsupported.
 /// </remarks>
 public enum RemoteSolverHttpResumeMode {
     /// <summary>恢复服务端任务的最新检查点 / Resume the server task from its latest checkpoint</summary>
@@ -140,7 +140,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// </summary>
     /// <remarks>
     /// 与固定基线一致：<c>GET /api/v1/capabilities</c>，响应为 <c>{code, message, data}</c> 信封。
-    /// Matches the pinned baseline: <c>GET /api/v1/capabilities</c> with a <c>{code, message, data}</c> envelope.
+    /// <c>GET /api/v1/capabilities</c> with a <c>{code, message, data}</c> envelope.
     /// </remarks>
     /// <returns>能力摘要或结构化错误 / Capability summary or a structured error.</returns>
     public async Task<Result<RemoteSolverCapabilities, ErrorCode, Error<ErrorCode>>> ProbeCapabilitiesAsync() {
@@ -230,8 +230,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
                     + $"models={string.Join(',', capabilities.SupportedModelTypes ?? Array.Empty<string>())}"));
             }
         }
-        // 与基线一致：先把载荷写入对象存储，再用返回的引用提交；没有存储端口时不得静默合成路径。
-        // Matches the baseline: upload the payload first and submit the returned reference; without a
+        // ：先把载荷写入对象存储，再用返回的引用提交；没有存储端口时不得静默合成路径。
+        // Upload the payload first and submit the returned reference; without a
         // storage port the path must not be fabricated silently.
         Result<ObjectRef, ErrorCode, Error<ErrorCode>> uploaded =
             await PutPayloadAsync(payload, taskId, sliceId, tenantId);
@@ -389,9 +389,9 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 把原始诊断字段解析成强类型诊断 / Parse raw diagnostics fields into typed diagnostics.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：诊断字段解析失败时**不产出半个结果**——把解析原因写进结果消息并保留原始字段，
+    /// ：诊断字段解析失败时**不产出半个结果**——把解析原因写进结果消息并保留原始字段，
     /// 而不是静默丢弃或抛异常。原始 <c>Diagnostics</c> 字典始终保留，下游仍可看到未经解释的内容。
-    /// Mirrors the baseline: a diagnostics parse failure never yields a half-built result — the reason is
+    /// a diagnostics parse failure never yields a half-built result — the reason is
     /// recorded in the message while the raw fields are kept, rather than being silently dropped or
     /// thrown. The raw <c>Diagnostics</c> map always survives so downstream code still sees the
     /// unexplained content.
@@ -427,9 +427,9 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 读取远程任务视图 / Read a remote task view.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：任务观测一律通过 <c>GET /api/v1/tasks/{taskId}</c>，不另设 await／checkpoint／result
+    /// ：任务观测一律通过 <c>GET /api/v1/tasks/{taskId}</c>，不另设 await／checkpoint／result
     /// 端点。返回 null 表示服务端已无该任务。
-    /// Mirrors the baseline: task observations always go through
+    /// task observations always go through
     /// <c>GET /api/v1/tasks/{taskId}</c>; there is no separate await/checkpoint/result endpoint. A null
     /// result means the server no longer has the task.
     /// </remarks>
@@ -466,8 +466,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     public async Task<Result<SliceResult, ErrorCode, Error<ErrorCode>>> AwaitSliceEndAsync(
         ExecutionHandle handle, TimeSpan quantum,
         CancellationToken cancellationToken = default) {
-        // 与基线一致：时间片只用于校验必须为正；轮询靠固定间隔，请求本身不带 quantum。
-        // Matches the baseline: the quantum only has to be positive; polling uses a fixed interval and
+        // ：时间片只用于校验必须为正；轮询靠固定间隔，请求本身不带 quantum。
+        // The quantum only has to be positive; polling uses a fixed interval and
         // the request itself carries no quantum.
         if (quantum <= TimeSpan.Zero) {
             return Results.Failed<SliceResult>(new Err<ErrorCode>(
@@ -486,8 +486,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
             }
             RemoteTaskActionView? view = viewResult.Value;
             if (view is null) {
-                // 与基线一致：任务已不存在属于失败，不是"仍在运行"。
-                // Matches the baseline: a missing task is a failure, not "still running".
+                // ：任务已不存在属于失败，不是"仍在运行"。
+                // A missing task is a failure, not "still running".
                 return Results.Failed<SliceResult>(new Err<ErrorCode>(
                     ErrorCode.ApplicationFailed,
                     $"远程任务不存在 / Remote task is not found: {handle.TaskId.Value}"));
@@ -502,8 +502,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
             }
             var elapsed = TimeSpan.FromMilliseconds(System.Environment.TickCount64 - startedAt);
             if (status is Domain.TaskStatus.Completed or Domain.TaskStatus.Failed or Domain.TaskStatus.Stopped) {
-                // 与基线一致：终态时合并结果 artifact（若已产出），artifact 优先于任务视图。
-                // Matches the baseline: a terminal state merges the result artifact when produced, and the
+                // ：终态时合并结果 artifact（若已产出），artifact 优先于任务视图。
+                // A terminal state merges the result artifact when produced, and the
                 // artifact wins over the task view.
                 Result<SerializedSolution?, ErrorCode, Error<ErrorCode>> artifact =
                     await FetchResultArtifactAsync(handle, view, cancellationToken);
@@ -532,10 +532,10 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 切片轮询间隔毫秒 / Slice polling interval in milliseconds.
     /// </summary>
     /// <remarks>
-    /// 与固定 Kotlin 基线的 <c>pollInterval</c> 默认值 200 ms 保持一致。此前 C# 用 50 ms，对同一台服务端
-    /// 会造成四倍请求量，而基线的默认值是可以被调用方覆盖的。
-    /// Matches the pinned Kotlin baseline's <c>pollInterval</c> default of 200 ms. C# previously used
-    /// 50 ms, quadrupling the request volume against the same server, while the baseline default is
+    /// 与固定 Kotlin <c>pollInterval</c> 默认值 200 ms 保持一致。此前 C# 用 50 ms，对同一台服务端
+    /// 会造成四倍请求量，而默认值是可以被调用方覆盖的。
+    /// The `<c>pollInterval</c>` default is 200 ms. C# previously used
+    /// 50 ms, quadrupling the request volume against the same server, while the code default is
     /// caller-overridable.
     /// </remarks>
     private const int PollIntervalMs = 200;
@@ -572,9 +572,9 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 导出检查点引用 / Export the checkpoint reference.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：没有独立的导出端点——读取任务视图并返回其 <c>latestCheckpointRef</c>。任务不存在
+    /// ：没有独立的导出端点——读取任务视图并返回其 <c>latestCheckpointRef</c>。任务不存在
     /// 或尚未产出检查点时返回 null，与失败区分。
-    /// Mirrors the baseline: there is no dedicated export endpoint — read the task view and return its
+    /// there is no dedicated export endpoint — read the task view and return its
     /// <c>latestCheckpointRef</c>. A missing task or an unproduced checkpoint returns null, which stays
     /// distinct from a failure.
     /// </remarks>
@@ -600,10 +600,10 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 取回最终求解结果 / Fetch the final solve result.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：先读任务视图；视图无任何观测时返回 null。有 <c>latestResultRef</c> 且配置了对象存储
+    /// ：先读任务视图；视图无任何观测时返回 null。有 <c>latestResultRef</c> 且配置了对象存储
     /// 时取回 artifact 并合并（artifact 优先），否则仅凭视图构造结果。合并逻辑复用
     /// <see cref="RemoteTaskActionView.ToSliceResult"/>，不在此处重写回退链。
-    /// Mirrors the baseline: read the task view first and return null when it carries no observation at
+    /// read the task view first and return null when it carries no observation at
     /// all. With a <c>latestResultRef</c> and a configured object store the artifact is fetched and merged
     /// (artifact wins); otherwise the result is built from the view alone. The merge reuses
     /// <see cref="RemoteTaskActionView.ToSliceResult"/> instead of duplicating the fallback chain here.
@@ -651,9 +651,9 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 取回已验证的结果 artifact / Fetch the verified result artifact.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：空响应体或未产出都返回 null（表示"尚未产出"），不当作失败；解码失败或协议校验失败
+    /// ：空响应体或未产出都返回 null（表示"尚未产出"），不当作失败；解码失败或协议校验失败
     /// 则返回结构化错误，不产出半个结果。
-    /// Mirrors the baseline: an empty body or an unproduced artifact returns null ("not produced yet")
+    /// an empty body or an unproduced artifact returns null ("not produced yet")
     /// rather than a failure, while a decode or protocol-validation failure returns a structured error
     /// instead of a half-built result.
     /// </remarks>
@@ -715,9 +715,9 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 停止远程任务并确认终态 / Stop a remote task and confirm a terminal state.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：受理后轮询任务视图直到终态，最多 <c>StopConfirmationAttempts</c> 次；
+    /// ：受理后轮询任务视图直到终态，最多 <c>StopConfirmationAttempts</c> 次；
     /// 只有 <c>STOPPED</c> 或 <c>COMPLETED</c> 才返回 true。幂等：已处于终态时直接成功。
-    /// Matches the baseline: after acceptance, poll the task view up to <c>StopConfirmationAttempts</c> times until
+    /// After acceptance, poll the task view up to <c>StopConfirmationAttempts</c> times until
     /// terminal; only <c>STOPPED</c> or <c>COMPLETED</c> returns true. Idempotent: an already-terminal task succeeds.
     /// </remarks>
     /// <param name="handle">执行句柄 / Execution handle.</param>
@@ -731,7 +731,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
         if (response.StatusCode is not (>= 200 and < 300)) {
             return new Failed<bool, ErrorCode, Error<ErrorCode>>(new Err<ErrorCode>(ErrorCode.ApplicationFailed, $"Stop failed: {response.Body}"));
         }
-        // 受理但未确认终态时，按基线语义返回 false 而不是谎报成功。
+        // 受理但未确认终态时，语义返回 false 而不是谎报成功。
         // Accepted without a confirmed terminal state returns false rather than claiming success.
         string? status = ReadEnvelopeString(response.Body, "status");
         if (IsTerminal(status)) {
@@ -760,8 +760,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 上传求解载荷 / Upload a solve payload.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：没有对象存储端口时明确失败，不合成路径假装已上传。载荷按 `*Ms` 整型时长序列化。
-    /// Matches the baseline: without an object-storage port this fails explicitly instead of fabricating
+    /// ：没有对象存储端口时明确失败，不合成路径假装已上传。载荷按 `*Ms` 整型时长序列化。
+    /// Without an object-storage port this fails explicitly instead of fabricating
     /// a path and pretending the payload was uploaded. The payload serializes with integer `*Ms` durations.
     /// </remarks>
     /// <param name="payload">求解载荷 / Solve payload.</param>
@@ -783,8 +783,8 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
         byte[] bytes = System.Text.Encoding.UTF8.GetBytes(
             JsonSerializer.Serialize(payload, RemoteWireJson.Options));
         ObjectPath path = _payloadPathProvider(taskId, sliceId, tenantId);
-        // 与基线一致：把 taskId／sliceId／tenantId 作为对象元数据一并写入。
-        // Matches the baseline: write taskId/sliceId/tenantId as object metadata alongside the payload.
+        // ：把 taskId／sliceId／tenantId 作为对象元数据一并写入。
+        // Write taskId/sliceId/tenantId as object metadata alongside the payload.
         var metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
             ["taskId"] = taskId.Value,
             ["sliceId"] = sliceId.Value,
@@ -808,7 +808,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 且不含 <c>.</c>/<c>..</c>；envelope 必须是 schema <c>3.0</c>、<c>sourceFormat = "v2"</c>、身份字段
     /// 齐全、<c>runId</c> 等于任务标识、<c>attemptId</c> 是路径检查点标识的前缀；随后把载荷声明的
     /// model/configuration/solver 指纹与 envelope 逐项比对，任一不符即拒绝。
-    /// Mirrors the pinned baseline: the path must be
+ /// the path must be
     /// <c>&lt;tenant&gt;/checkpoint/&lt;task&gt;/&lt;checkpointId&gt;</c> with no <c>.</c>/<c>..</c>
     /// segment; the envelope must be schema <c>3.0</c> with <c>sourceFormat = "v2"</c>, complete identity
     /// fields, <c>runId</c> equal to the task id, and an <c>attemptId</c> that prefixes the path checkpoint
@@ -984,7 +984,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// <remarks>
     /// 基线由调用方注入 `requestIdProvider`；未注入时按 task/slice/tenant 派生一个确定性标识，
     /// 使同一提交可重试且不会因随机值产生重复任务。
-    /// The baseline injects `requestIdProvider`; without one, a deterministic identifier is derived from
+    /// The code injects `requestIdProvider`; without one, a deterministic identifier is derived from
     /// task/slice/tenant so a retried submission stays idempotent instead of spawning a duplicate task.
     /// </remarks>
     private static RequestId DefaultRequestId(TaskId taskId, SliceId sliceId, TenantId tenantId) =>
@@ -1012,7 +1012,7 @@ public sealed class RemoteSolverHttpClient : ISolverExecutionPort {
     /// 读取信封 <c>data</c> 内的字符串字段 / Read a string field inside the envelope's <c>data</c>.
     /// </summary>
     /// <remarks>
-    /// 基线的任务视图与停止响应都把字段放在 <c>{code, message, data}</c> 信封内。
+    /// 任务视图与停止响应都把字段放在 <c>{code, message, data}</c> 信封内。
     /// Baseline task views and stop responses carry their fields inside a <c>{code, message, data}</c> envelope.
     /// </remarks>
     /// <param name="body">响应体 / Response body.</param>

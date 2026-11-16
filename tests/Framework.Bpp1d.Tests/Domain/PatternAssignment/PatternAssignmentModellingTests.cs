@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// | **列上界是整数除法 `需求 / 件数`** | 浮点除法 | 允许 2.5 份，取解时被整数性检查拒 |
 /// | **重复键跳过而不报错** | 再建一次变量 | 同一方案被重复计费 |
 ///
-/// Mirrors the baseline's `register`/`addColumns`/`refresh`; the table lists the four failure modes.
+/// /`addColumns`/`refresh`; the table lists the four failure modes.
 /// </remarks>
 public class PatternAssignmentModellingTests {
     /// <summary>**需求行用 `==` 且右端是货物数量** / The demand row uses `==` with the item amount.</summary>
@@ -126,11 +126,11 @@ public class PatternAssignmentModellingTests {
 
     /// <summary>**重复键跳过而不报错，也不重复建变量** / A duplicate key is skipped without error and without a second variable.</summary>
     /// <remarks>
-    /// 基线是 `if (pattern.key in pool) continue`——**跳过，不是失败**：
+    /// `if (pattern.key in pool) continue`——**跳过，不是失败**：
     /// 列生成每轮都会重发整池候选，把"已在池里"当成错误会让每轮都失败。
     /// 但**必须真的不建第二个变量**，否则同一方案在目标里被重复计费。
     ///
-    /// The baseline does `if (pattern.key in pool) continue` — **skip, not fail**: column generation resends the whole pool each round, so treating "already in the pool"
+    /// The code does `if (pattern.key in pool) continue` — **skip, not fail**: column generation resends the whole pool each round, so treating "already in the pool"
     /// as an error would fail every round. But it **must not create a second variable**, or the same pattern is charged twice in the objective.
     /// </remarks>
     [Fact]

@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// 产能占用与加工时长的表达式层 / The expression layer for occupancy and processing time.
 /// </summary>
 /// <remarks>
-/// 基线里 `capacity[e, s]` **不是自由变量**，而是由数量推导出来的表达式：
+/// `capacity[e, s]` **不是自由变量**，而是由数量推导出来的表达式：
 ///
 /// * `operationTime[a, s] = 单位加工时长 · Σ_顺序位 x[a, s, o]`；
 /// * `capacity[e, s] = Σ_{执行器为 e 的动作} operationTime[a, s]`。
@@ -29,15 +29,15 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// 所以"占用 ≤ 可用时长"对数量没有任何约束力—— 正是因此撤掉了那条判据。这里改成表达式，
 /// 容量约束就真的压到数量上。
 ///
-/// 单位加工时长按基线的规则取：**离散动作且有 `BatchDuration` 时用它，否则取时间窗刻度（= 1）**。
+/// 单位加工时长按规则取：**离散动作且有 `BatchDuration` 时用它，否则取时间窗刻度（= 1）**。
 /// （的注释说 C# 接口没有 `BatchDuration`——那是错的，它从 B4xx 起就在，只是没人用。）
 ///
-/// In the baseline `capacity[e, s]` is **not a free variable** but an expression derived from the amounts: `operationTime[a, s] = unit processing time · sum of x[a, s, o]` and
+/// In the code `capacity[e, s]` is **not a free variable** but an expression derived from the amounts: `operationTime[a, s] = unit processing time · sum of x[a, s, o]` and
 /// `capacity[e, s] = sum of operationTime[a, s]` over the actions of executor `e`. That difference matters: the earlier `CapacityUsageVariables` builds **free variables** with no row tying
 /// them to the amounts, so "occupancy within available duration" constrains nothing — which is exactly why removed that criterion. Expressed this way the capacity constraint really
 /// presses on the amounts.
 ///
-/// The unit processing time follows the baseline's rule: **a discrete action with `BatchDuration` uses it, otherwise the window scale (1)**. (the earlier comment claimed the C# interface
+/// The unit processing time follows its rule: **a discrete action with `BatchDuration` uses it, otherwise the window scale (1)**. (the earlier comment claimed the C# interface
 /// had no `BatchDuration` — wrong, it has existed since B4xx, just unused.)
 /// </remarks>
 /// <typeparam name="A">生产动作类型 / Production action type</typeparam>
@@ -108,7 +108,7 @@ public sealed class CapacityLoadExpressions<A>
                 // 少了这一层，`x` 的单位就是"件"而不是"时长"，一个时隙只能装 1 件——那不是基线语义。
                 //
                 // **The unit processing time**: a discrete action with a batch duration uses it, otherwise the window scale (1). Without this layer `x` is measured in pieces rather
-                // than durations, so one slot holds exactly one piece — not the baseline's semantics.
+                // than durations, so one slot holds exactly one piece — not its semantics.
                 Flt64 unit = _actions[action].Discrete && _actions[action].BatchDuration is { } batch
                     ? _timeWindow.ValueOf(batch)
                     : _timeWindow.ValueOf(_timeWindow.Interval);

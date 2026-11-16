@@ -18,13 +18,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// 箱容量约束 / Bin capacity constraint.
 /// </summary>
 /// <remarks>
-/// 移植基线 `bpp3d/domain/layer_assignment/service/limits/BinCapacityConstraint.kt` 的**右端项**部分。
+/// 移植的**右端项**部分。
 ///
 /// **修复前**：这个类没有构造函数参数，`RightHandSide` 恒返回**空字典**——一个永远"没有右端项"的约束。
 /// 而它同时挂着 `EnableFinalBinCapacityConstraint = true` 这个开关（默认开启），于是"容量约束已启用"与
 /// "容量约束什么都不做"同时成立，**两者在类型上无法区分**。测试更是把"返回空"写成了预期结果。
 ///
-/// Ports the **right-hand-side** half of the baseline's `BinCapacityConstraint.kt`.
+/// Ports the **right-hand-side** half of its.
 /// **Before the fix**: the class had no constructor parameters and `RightHandSide` always returned an **empty dictionary** — a constraint that
 /// always has no right-hand side. It also carried the `EnableFinalBinCapacityConstraint = true` switch (on by default), so "the capacity constraint is
 /// enabled" and "the capacity constraint does nothing" both held, **and no type could tell them apart**. The test even asserted the empty result as
@@ -51,10 +51,10 @@ public sealed class BinCapacityConstraint<V> : IBpp3dConstraint<V>
     /// 刷新对偶信息 / Refresh dual info from the shadow-price map.
     /// </summary>
     /// <remarks>
-    /// 基线在 `invoke(model)` 里逐箱加一条 `Σ 装载重量 ≤ capacity` 的线性约束，**不做对偶刷新**；
+    /// `invoke(model)` 里逐箱加一条 `Σ 装载重量 ≤ capacity` 的线性约束，**不做对偶刷新**；
     /// 这里同样不做，因此恒成功——但右端项**不再是空的**。
     ///
-    /// The baseline adds one `Σ loading weight ≤ capacity` row per bin inside `invoke(model)` and performs **no dual refresh**; this does the same, so it
+    /// The code adds one `Σ loading weight ≤ capacity` row per bin inside `invoke(model)` and performs **no dual refresh**; this does the same, so it
     /// always succeeds — but the right-hand side is **no longer empty**.
     /// </remarks>
     /// <param name="shadowPriceMap">影子价格表 / Shadow-price map.</param>

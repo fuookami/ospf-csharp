@@ -91,14 +91,14 @@ public class TaskAdvanceTimeMinimization<T, E, A>
     /// 三处与基线不同，都是"无法表达"而不是"换个说法"：
     /// <list type="number">
     /// <item>提前未启用时返回 `Ok`——**保留**：那条目标本就不存在，无事可做不是"假装做了"；</item>
-    /// <item>系数提取失败时基线用无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败；</item>
-    /// <item>基线有 `threshold` 分支（阈值非零时先建 `thresholdSlack` 再最小化其正部）。C# 这边的构造函数**没有
+    /// <item>系数提取失败时无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败；</item>
+    /// <item>`threshold` 分支（阈值非零时先建 `thresholdSlack` 再最小化其正部）。C# 这边的构造函数**没有
     ///   threshold 参数**，`ThresholdSlack` 也只是个纯函数——所以只有阈值 0 这一支，阈值那条路径没有可表达的入口。</item>
     /// </list>
     ///
-    /// The baseline minimises `Σ coefficient(task) * advanceTime[task]` when `taskTime.advanceEnabled`, over the task set from `TimeDeviationSelection.Select` (global switch + task
+    /// The code minimises `Σ coefficient(task) * advanceTime[task]` when `taskTime.advanceEnabled`, over the task set from `TimeDeviationSelection.Select` (global switch + task
     /// switch + **has a scheduled time**). Three departures, all "cannot express": advance disabled returns `Ok` (**kept** — the objective does not exist); an extraction failure uses
-    /// infinity in the baseline and `Flt64` has none (the same limit), so it fails; and the baseline's `threshold` branch (build a `thresholdSlack`, minimise its positive part)
+    /// infinity in the code and `Flt64` has none (the same limit), so it fails; and its `threshold` branch (build a `thresholdSlack`, minimise its positive part)
     /// has **no threshold parameter** in the C# constructor — `ThresholdSlack` is a pure function only, so only the zero-threshold path is expressible.
     /// </remarks>
     public Try Invoke(object model) {

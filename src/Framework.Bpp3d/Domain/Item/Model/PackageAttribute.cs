@@ -68,7 +68,7 @@ public sealed record PackageAttribute(
     /// 原来的位置参数就叫 `MaxLayer`，那会让"包材层数"与"有效层数"共用一个名字，于是这条合成规则没有地方落脚——
     /// 位置参数因此改名 `PackageMaxLayer`，有效层数沿用 `MaxLayer`。没配重量属性时两者相等，既有调用方行为不变。
     ///
-    /// the baseline writes `val maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`. The positional parameter used to be called
+    /// the code writes `val maxLayer = min(packageMaxLayer, weightAttribute.maxLayer)`. The positional parameter used to be called
     /// `MaxLayer`, which left the package count and the effective count sharing one name so the composition had nowhere to live — hence the rename.
     /// With no weight attribute configured the two are equal, so existing callers behave exactly as before.
     /// </remarks>
@@ -80,10 +80,10 @@ public sealed record PackageAttribute(
     /// 可以堆在上方的包装类型 / The package types allowed to sit on top.
     /// </summary>
     /// <remarks>
-    /// 基线 `PackageAttribute.kt` 的 `overPackageTypes`，缺省是全部类型。
+    /// 的 `overPackageTypes`，缺省是全部类型。
     /// 堆叠策略靠它做第一道判断，所以补齐属性模型时必须一起补上。
     ///
-    /// the baseline's `overPackageTypes`, defaulting to every type. The stacking policies use it as their first gate, so completing the
+    /// its `overPackageTypes`, defaulting to every type. The stacking policies use it as their first gate, so completing the
     /// attribute model means adding it here too.
     /// </remarks>
     public IReadOnlySet<PackageType> OverPackageTypes { get; init; }

@@ -1,8 +1,7 @@
 // 活动排程的线性行 / Linear rows of an activity schedule.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../ActivityCompilation.kt` 里的
-// `CompiledActivityRow`，以及 `ActivitySchedulingRows.kt` 里的存在性行构造对应。
-// Mirrors `CompiledActivityRow` in the pinned baseline's `ActivityCompilation.kt` and the presence-row construction
-// in `ActivitySchedulingRows.kt`.
+// 与固定 Kotlin 里的
+// `CompiledActivityRow`，以及 里的存在性行构造对应。
+//.
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +56,7 @@ public static class ActivityPresenceRow {
     ///
     /// **两侧都有固定事实时，常数会互相抵消**：这正是"已完成的前驱与已完成的后续之间无需再约束"的表达。
     ///
-    /// The argument order matches the baseline's `requirePresence(from, to, suffix)`: `from` gets `+1`, `to` gets `−1`, and the upper bound is
+    /// The argument order matches its `requirePresence(from, to, suffix)`: `from` gets `+1`, `to` gets `−1`, and the upper bound is
     /// `−(fixed facts in from − fixed facts in to)`.
     ///
     /// **When both sides carry fixed facts the constants cancel**, which is exactly how "no constraint is needed between an executed predecessor and an executed successor" is

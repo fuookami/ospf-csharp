@@ -10,10 +10,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// Biological cargo compatibility rules: which cargo types may not be adjacent, may not share a bulk position, or are barred from bulk stowage.
 /// </summary>
 /// <remarks>
-/// 移植基线 `BiologicalLimit.kt`。三张表都是**声明**而非推导结果：判定逻辑在约束构造方，
+/// 移植。三张表都是**声明**而非推导结果：判定逻辑在约束构造方，
 /// 这里只负责承载规则。
 ///
-/// Ports the baseline's `BiologicalLimit.kt`. All three lists are **declarations, not derivations**: the judging logic lives in the constraint builder,
+/// Ports its. All three lists are **declarations, not derivations**: the judging logic lives in the constraint builder,
 /// and this type only carries the rules.
 /// </remarks>
 public sealed class BiologicalLimit

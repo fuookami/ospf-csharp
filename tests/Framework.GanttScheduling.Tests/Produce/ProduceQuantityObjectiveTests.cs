@@ -199,7 +199,7 @@ public class ProduceQuantityObjectiveTests {
     /// 3. 两者的差别**不是笔误**：基线就是这样写的，判据把这个不对称钉住。
     ///
     /// Three paired points: `ProduceQuantityMinimization` with an empty list **still adds** an objective (named `produce quantity`, with no terms); `ProduceOverQuantityMinimization` with an empty
-    /// list adds **no objective at all**, matching the baseline's `if (materials.isNotEmpty)`; and the difference is **not a typo** — that is how the baseline is written, and the criterion pins the
+    /// list adds **no objective at all**, matching its `if (materials.isNotEmpty)`; and the difference is **not a typo** — that is how the code is written, and the criterion pins the
     /// asymmetry.
     /// </remarks>
     [Fact]

@@ -1,6 +1,6 @@
 // 任务-执行器分配变量的值域收紧 / Value-range tightening of the task-executor assignment variables.
-// 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的 `register` 里那段 `x[task, executor].range.eq(...)` 对应。
-// Mirrors the `x[task, executor].range.eq(...)` block inside `register` in the pinned Kotlin baseline's `task_compilation/model/Compilation.kt`.
+// 与固定 Kotlin 的 `register` 里那段 `x[task, executor].range.eq(...)` 对应。
+// One range constraint per (task, executor) pair: `x[task, executor].range.eq(...)`.
 
 using System;
 
@@ -39,20 +39,20 @@ public readonly record struct AssignmentRange(double Low, double High) {
 ///    - 就是那个执行器 → 若任务不允许取消则固定为 `1`（必须），否则保持 `0..1`（可取消，交给优化决定）；
 ///    - 其它执行器 → 固定为 `0`。
 ///
-/// **第 2 条会覆盖第 1 条**：基线的写法是先按可用集合写 `0`，再按"执行器已定"写 `1`，**后写的生效**。
+/// **第 2 条会覆盖第 1 条**：写法是先按可用集合写 `0`，再按"执行器已定"写 `1`，**后写的生效**。
 /// 一个已定执行器即使不在任务的可用集合里，最终也会被钉成 `1`。若实现把两条当成交集处理，
 /// 那个任务会**既被禁止又被要求**——模型直接不可解，而错误信息只会说"不可行"。
 ///
 /// Model size is dominated by `task count × executor count`, and **most combinations are impossible to begin with**: a task accepts only certain executors, or the executor has
 /// been fixed by an external roster. Tightening those combinations to a single value tells the solver "no search here".
 ///
-/// The rules come from the baseline's `register`, three of them, but **order matters**:
+/// The rules come from its `register`, three of them, but **order matters**:
 ///
 /// 1. The executor is not among the task's enabled executors → fix to `0` (forbidden).
 /// 2. The task's executor is fixed and may not change: the one that matches → fix to `1` (required) when the task cannot be cancelled, otherwise leave `0..1` (cancellable,
 ///    decided by the optimisation); every other executor → fix to `0`.
 ///
-/// **Rule 2 overrides rule 1**: the baseline writes `0` from the enabled set first, then writes `1` for "executor is fixed", so **the later write wins**. A fixed executor absent
+/// **Rule 2 overrides rule 1**: the code writes `0` from the enabled set first, then writes `1` for "executor is fixed", so **the later write wins**. A fixed executor absent
 /// from the task's enabled set still ends up pinned to `1`. An implementation treating the two as an intersection would leave that task **both forbidden and required** — the model
 /// becomes infeasible, and the only message is "infeasible".
 /// </remarks>

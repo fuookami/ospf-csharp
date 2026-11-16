@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **重复注册不建第二套变量与约束** / Registering twice builds no second variable set and no second constraint set.
 /// </summary>
 /// <remarks>
-/// 基线的 `register` 每一步都有 `if (!::x.isInitialized)` 守卫。少了守卫，第二次注册会：
+/// `register` 每一步都有 `if (!::x.isInitialized)` 守卫。少了守卫，第二次注册会：
 ///
 /// | 重复的东西 | 后果 |
 /// | --- | --- |
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 两套同名变量在解里读起来完全一样，只在**哪个变量被选中**时才发现问题——
 /// 而那时错误的变量已经被当成正确答案返回了。
 ///
-/// Every step of the baseline's `register` is guarded by `if (!::xxx.isInitialized)`. Without the guards, a second registration would produce:
+/// Every step of its `register` is guarded by `if (!::xxx.isInitialized)`. Without the guards, a second registration would produce:
 ///
 /// | What gets duplicated | Consequence |
 /// | --- | --- |
@@ -107,11 +107,11 @@ public class CompilationIdempotencyTests {
     /// **注册到第二个模型会复用同一批变量** / Registering into a second model reuses the same variables.
     /// </summary>
     /// <remarks>
-    /// 基线的守卫是"变量只建一次"，不是"只能注册一个模型"：把同一个编译注册到主问题与松弛模型上是正常用法。
+    /// 守卫是"变量只建一次"，不是"只能注册一个模型"：把同一个编译注册到主问题与松弛模型上是正常用法。
     /// 把守卫写成"注册过就不再注册"会让第二个模型**一个变量都没有**——松弛模型于是无约束，
     /// 它的解看起来永远可行。
     ///
-    /// The baseline's guard is "build the variables once", not "register into one model only": registering the same compilation into a main problem and a relaxed model is normal use.
+    /// guard is "build the variables once", not "register into one model only": registering the same compilation into a main problem and a relaxed model is normal use.
     /// Writing the guard as "already registered, do nothing" leaves the second model with **no variables at all** — the relaxed model is unconstrained, and its solutions always look
     /// feasible.
     /// </remarks>

@@ -24,10 +24,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// <param name="ExecutorConfig">执行器配置 / The executor configuration.</param>
 /// <remarks>
 /// 与基线 `ColumnGenerationApplicationRequest` 对齐，是应用层的入口数据。
-/// 四处照抄：**件数上限用 `ulong`**（件数不会是负数）；**目录与物品分开**（物品清单只有 id 与件数，
+/// 四处沿用：**件数上限用 `ulong`**（件数不会是负数）；**目录与物品分开**（物品清单只有 id 与件数，
 /// 形状在目录里）；**两个上限来自调用方**（不是执行器配置）；**锯缝可以为 null**（零缝宽与"没配置"是两回事）。
 ///
-/// Aligned with the baseline's `ColumnGenerationApplicationRequest`, the application layer's entry data. Four things are copied: **amounts are `ulong`**, since unit counts are never negative;
+/// Aligned with its `ColumnGenerationApplicationRequest`, the application layer's entry data. Four things are copied: **amounts are `ulong`**, since unit counts are never negative;
 /// **the catalogue is separate from the item list**, the list carrying only ids and amounts while the shapes live in the catalogue; **both limits come from the caller** rather than the executor
 /// config; and **the kerf may be null**, since zero kerf differs from an unconfigured one.
 /// </remarks>
@@ -93,7 +93,7 @@ public sealed record ColumnGenerationApplicationRequest(
 /// 与基线 `ColumnGenerationStandardExecutors` 的构造对齐：把请求里的物品、目录、需求项、板材、锯缝与配置
 /// 装成"求解器 + 四个执行器"这一组。**这是装配，不是计算**。
 ///
-/// Aligned with the baseline's `ColumnGenerationStandardExecutors` construction: it packs the request's items, catalogue, demand entries, sheets, kerf and config into "one solver plus four
+/// Aligned with its `ColumnGenerationStandardExecutors` construction: it packs the request's items, catalogue, demand entries, sheets, kerf and config into "one solver plus four
 /// executors". **This assembles; it does not compute.**
 /// </remarks>
 public sealed class ColumnGenerationStandardExecution

@@ -87,12 +87,12 @@ public class TaskDelayLastEndTimeConstraint<E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 每任务一行：`estEnd &lt;= 最晚结束时间`，名字 `task_delay_last_end_time_{任务}`。任务筛选（含基线里看起来反了的那一半）见
+    /// 每任务一行：`estEnd &lt;= 最晚结束时间`，名字 `task_delay_last_end_time_{任务}`。任务筛选（含看起来反了的那一半）见
     /// `EndConstraintRows.Add` 的注释。
     ///
     /// 影子价格**已接线**：行上带 `args`（本类键类型），`Refresh` 从对偶解里认回这些行，`Extractor` 按任务取价。
     ///
-    /// One row per task: `estEnd &lt;= the last allowed end`, named `task_delay_last_end_time_{task}`. Task selection (including the part of the baseline that looks inverted) is documented on `EndConstraintRows.Add`.
+    /// One row per task: `estEnd &lt;= the last allowed end`, named `task_delay_last_end_time_{task}`. Task selection (including the part of the code that looks inverted) is documented on `EndConstraintRows.Add`.
     /// The shadow price **is wired**: rows carry `args` (this class's key type), `Refresh` recognises those rows in the dual solution, and `Extractor` reads the price by task.
     /// </remarks>
     public Try Invoke(object model) {

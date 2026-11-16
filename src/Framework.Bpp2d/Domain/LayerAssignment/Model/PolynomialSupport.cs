@@ -1,6 +1,6 @@
 // 多项式构造辅助 / Polynomial construction helpers.
-// 与固定 Kotlin 基线 `bpp2d/domain/layer_assignment/model/PolynomialSupport.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `PolynomialSupport.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Number;

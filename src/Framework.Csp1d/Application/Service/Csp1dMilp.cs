@@ -84,13 +84,13 @@ public sealed class Csp1dMilp<V> where V : struct {
             ? Csp1dDomainPolicyHelpers.WidthFeasibilityCheckFromPolicies(domainPolicies, domainValueSample.Value)
             : null;
 
-        // **三个生成策略扩展点在这里也必须生效。** 基线 `Csp1dMilp.initialPlans` 接收并使用了
+        // **三个生成策略扩展点在这里也必须生效。** 初始方案生成接收并使用了
         // `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` 三者
-        // （见基线 `Csp1dMilp.kt:139-176`），而 C# 这条 MILP 直连路径**一个都没接**——
+        // 三个回调，而这条 MILP 直连路径**一个都没接**——
         // 于是同一个策略经由列生成生效、经由 MILP 直连**失效**。
         //
-        // **All three generation-strategy extension points must take effect here too.** The baseline's `Csp1dMilp.initialPlans` accepts and uses
-        // `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` (see baseline `Csp1dMilp.kt:139-176`), while C#'s MILP-direct path wired **none of them** —
+        // **All three generation-strategy extension points must take effect here too.** The initial-plan generator accepts and uses
+        // `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides`, while the MILP-direct path wired **none of them** —
         // so the same strategy works through column generation and **silently fails** through the MILP path.
         // **与列生成路径共用同一份投影**（`Csp1dGenerationStrategyProjection`）。
         // — 两条路径各写一份，结果一条接了一条没接——**复制粘贴的代价**。
@@ -197,7 +197,7 @@ public sealed class Csp1dMilp<V> where V : struct {
 
         CuttingPlanGenerationReport<CuttingPlan<V>> report = _initialGenerator.GenerateWithReport(generationInput);
 
-        // Deduplicate by canonical key, honouring strategy overrides (baseline `distinctBy { resolveCanonicalKey(it) }`).
+        // Deduplicate by canonical key, honouring strategy overrides.
         var generatedPlans = report.Plans
             .DistinctByCanonicalKey(plan => Csp1dGenerationStrategyProjection.Resolve(plan, canonicalKeyOverrides))
             .Take((int)configuration.MaxInitialPlans.ToLong())
@@ -367,9 +367,9 @@ public sealed class SimpleInitialGenerator<TV>
                     material: material,
                     slices: new[] { new CuttingPlanSlice<TV>(demand.Product, width) },
                     demandContributions: new[] { new CuttingPlanDemandContribution<TV>(demand.Product, demand.Quantity) });
-                // **候选过滤**：基线 `SimpleInitialCuttingPlanGenerator` 也消费 `candidateFilters`，
+                // **候选过滤**：初始方案生成也消费 `candidateFilters`，
                 // 语义是 `candidateFilters.all { it(plan, input.existingPlans) }`。
-                // **Candidate filter**: the baseline's `SimpleInitialCuttingPlanGenerator` also consumes `candidateFilters`, with `all { it(plan, input.existingPlans) }`.
+                // **Candidate filter**: the initial-plan generator also consumes `candidateFilters`, with `all { it(plan, input.existingPlans) }`.
                 if (!PassesCandidateFilters(plan, input)) {
                     continue;
                 }
@@ -383,9 +383,9 @@ public sealed class SimpleInitialGenerator<TV>
 
     /// <summary>候选过滤是否全部通过 / Whether every candidate filter passes.</summary>
     /// <remarks>
-    /// 语义与基线 `candidateFilters.all { ... }` 一致：**任一返回 false 就拒**。
+    /// 语义是 `candidateFilters.all { ... }`：**任一返回 false 就拒**。
     ///
-    /// Same semantics as the baseline's `candidateFilters.all { ... }`: **any false rejects**.
+    /// The semantics are `candidateFilters.all { ... }`: **any false rejects**.
     /// </remarks>
     /// <param name="plan">候选方案 / Candidate plan.</param>
     /// <param name="input">生成输入 / Generation input.</param>
@@ -431,7 +431,7 @@ public sealed class ReducedCostPricingGenerator<V>
     /// 也就是说"减成本定价"**根本没有读对偶价格**，每一轮产出的都是初始方案，于是
     /// **第一轮必然全部重复、以 `AllDuplicates` 收敛**。名字与行为不一致，且流程看起来"能跑"。
     ///
-    /// 现在按基线 `SimplePricingGenerator` 的语义实现：
+    /// 现在`SimplePricingGenerator` 的语义实现：
     /// 1. 取第一条物料；没有则返回空。
     /// 2. 逐条需求：达到 `MaxGeneratedPlans` 就停。
     /// 3. 查 `ProductDemandShadowPriceKey(产品 id, 单位符号)` 的对偶价格；**缺失或非正就跳过**。
@@ -445,14 +445,14 @@ public sealed class ReducedCostPricingGenerator<V>
     /// round produced the initial plans, and **the first round was necessarily all duplicates and terminated with `AllDuplicates`**. The name and the behaviour
     /// disagreed while the flow still "ran".
     ///
-    /// It now follows the baseline `SimplePricingGenerator` (steps above).
+    /// It now follows the code `SimplePricingGenerator` (steps above).
     ///
     /// **Step 3 is the entire point of pricing**: a non-positive dual price means the demand is **not worth adding a column for** under the current LP solution.
     /// Skipping that check is the same as "report the initial plans again every round".
     /// </remarks>
     public IReadOnlyList<CuttingPlan<V>> Generate(Csp1dPricingInput<V> input) {
-        // 基线 `ReducedCostPricingGenerator` 是**包装器**：先让 enumerator 枚举候选，再按对偶收益筛选。
-        // 基线 `ReducedCostPricingGenerator` is a **wrapper**: the enumerator produces candidates, which are then filtered by dual benefit.
+        // 定价器是**包装器**：先让 enumerator 枚举候选，再按对偶收益筛选。
+        // The pricer is a **wrapper**: the enumerator produces candidates, which are then filtered by dual benefit.
         CuttingPlanGenerationReport<CuttingPlan<V>> report = _initialGenerator.GenerateWithReport(input.GenerationInput);
         if (report.Plans.Count == 0) {
             return report.Plans;
@@ -465,20 +465,19 @@ public sealed class ReducedCostPricingGenerator<V>
         // 上限 2、候选 `[A, A, B]` 时，先截断只剩 `[A, A]`，去重后**只剩 1 条**。
         // 由 `Csp1dPricingOrderTests` 钉住。
         //
-        // **只做"候选内部去重"，不过滤池里已有的方案**：基线把"池里已有的"过滤放在
+        // **只做"候选内部去重"，不过滤池里已有的方案**："池里已有的"过滤放在
         // `deduplicatePlans`（**列生成侧**）。放在定价器里的话，由于 C# 的枚举器与初始池
         // 共用同一个生成器，第一轮就会被滤空 ⇒ 报 0 条 ⇒ `PricingConverged`；
-        // 交给列生成侧 ⇒ 报 N 条、去重后 0 条 ⇒ `AllDuplicates`（基线行为，
-        // `Csp1dApplicationAcceptanceTest.kt:726`）。**这是 的结论。**
+        // 交给列生成侧 ⇒ 报 N 条、去重后 0 条 ⇒ `AllDuplicates`。**这条分界是有意的。**
         //
         // **Order: dedupe within the candidates → benefit/cost filter → sort → truncate.**
         //
         // **Deduplication must precede truncation**: truncating first wastes slots on duplicates — with a limit of 2 and candidates `[A, A, B]`, truncation leaves `[A, A]`
         // and deduping then yields **only 1**. Pinned by `Csp1dPricingOrderTests` .
         //
-        // **Only dedupe within the candidates; do not filter plans already in the pool**: the baseline puts that filter in `deduplicatePlans` (**the column-generation
+        // **Only dedupe within the candidates; do not filter plans already in the pool**: the code puts that filter in `deduplicatePlans` (**the column-generation
         // side**). Doing it here would empty the first round (C#'s enumerator shares the initial pool's generator) ⇒ 0 reported ⇒ `PricingConverged`; leaving it downstream
-        // ⇒ N reported, 0 after dedup ⇒ `AllDuplicates` (the baseline behaviour, `Csp1dApplicationAcceptanceTest.kt:726`). **That is the earlier conclusion.**
+        // ⇒ N reported, 0 after dedup ⇒ `AllDuplicates` (the code behaviour,). **That is the earlier conclusion.**
         //
         // **This paragraph used to claim "dedupe, then filter the pool, then truncate"** while the code only deduped — a comment describing behaviour the code no longer
         // had. Corrected.
@@ -510,11 +509,11 @@ public sealed class ReducedCostPricingGenerator<V>
             candidates.Add(new PricedCandidate<V>(plan, benefit, objectiveCost));
         }
 
-        // **基线是"先排序、再取上限"**，不是"按枚举顺序取上限"。
+        // **"先排序、再取上限"**，不是"按枚举顺序取上限"。
         // 上限截断时，**排序决定了哪几条被留下**——不排序就会留下枚举顺序里的前几条，
         // 而那几条可能恰恰是最差的。
         //
-        // **The baseline sorts first, then takes the limit** — it does not take the limit in enumeration order. When the limit truncates, **the sort decides which
+        // **The code sorts first, then takes the limit** — it does not take the limit in enumeration order. When the limit truncates, **the sort decides which
         // columns survive**; without it you keep the first few in enumeration order, which may be exactly the worst ones.
         candidates.Sort(CompareByScore);
         var pricedPlans = new List<CuttingPlan<V>>();
@@ -547,17 +546,8 @@ public sealed class ReducedCostPricingGenerator<V>
     /// <typeparam name="TP">数值类型 / Numeric value type.</typeparam>
     /// <returns>比较结果，负数表示 left 优先 / Comparison result; negative means left ranks first.</returns>
     /// <remarks>
-    /// 基线：
-    ///
-    /// ```kotlin
-    /// val leftScoreSide = left.benefit + right.objectiveCost
-    /// val rightScoreSide = right.benefit + left.objectiveCost
-    /// when (leftScoreSide partialOrd rightScoreSide) {
-    ///     is Order.Greater -> -1
-    ///     is Order.Less -> 1
-    ///     else -> 0
-    /// }
-    /// ```
+    /// 比较的是**交叉求和**：左侧 = `left.benefit + right.objectiveCost`，右侧 = `right.benefit + left.objectiveCost`，
+    /// 前者大则 left 在前，后者大则 right 在前，相等返回 0。
     ///
     /// **交叉求和与"按净收益 `benefit − cost` 降序"是数学等价的**：
     /// `left.b + right.c > right.b + left.c` ⟺ `left.b − left.c > right.b − right.c`。
@@ -596,13 +586,13 @@ public sealed class ReducedCostPricingGenerator<V>
     /// <param name="shadowPrices">影子价格映射 / Shadow-price map.</param>
     /// <returns>对偶收益 / Dual benefit.</returns>
     /// <remarks>
-    /// 基线公式：`benefit = Σ(贡献量 × 需求对偶价) + 物料对偶价 + 设备对偶价 + 产能消耗 × 设备产能对偶价`。
+    /// 公式：`benefit = Σ(贡献量 × 需求对偶价) + 物料对偶价 + 设备对偶价 + 产能消耗 × 设备产能对偶价`。
     ///
-    /// **时这里只做了需求那一项**，理由是那三个键"只有生产方、没有消费方"。这里把消费方补上了——
-    /// **现在四项齐全**，公式与基线逐项对齐。
+    /// **早先只做了需求那一项**，理由是那三个键"只有生产方、没有消费方"。消费方补上之后——
+    /// **四项齐全**。
     ///
- /// **In only the demand term was implemented**, on the grounds that those three keys had "only producers, no consumers". adds the consumers —
-    /// **all four terms are now present**, matching the baseline term by term.
+ /// **Only the demand term was implemented at first**, on the grounds that those three keys had "only producers, no consumers". With the consumers added —
+    /// **all four terms are now present**, matching the code term by term.
     /// </remarks>
     internal static double ComputeDualBenefitForTest(CuttingPlan<V> plan, ShadowPriceMap<V> shadowPrices) {
         V benefit = ComputeDualBenefit(plan, shadowPrices);
@@ -658,7 +648,7 @@ public sealed class ReducedCostPricingGenerator<V>
     /// <typeparam name="TC">数值类型 / Numeric value type.</typeparam>
     /// <returns>目标成本 / Objective cost.</returns>
     /// <remarks>
-    /// 基线公式（基础成本是 `1`，即"方案用一次"）：
+    /// 公式（基础成本是 `1`，即"方案用一次"）：
     ///
     /// ```
     /// cost = 1
@@ -668,10 +658,10 @@ public sealed class ReducedCostPricingGenerator<V>
     ///      + materialCostPenalty[plan.material.id]              （若该物料配置了）
     /// ```
     ///
-    /// **每一项都有前置条件**，基线是逐个 `if` 判断的。这里**照抄这些前置条件**——
+    /// **每一项都有前置条件**，逐个 `if` 判断的。这里**沿用这些前置条件**——
     /// 漏掉 `isPositive` 那类守卫会让"零宽余料也加惩罚"，从而把成本抬高、把该出列的列挡掉。
     ///
-    /// The baseline formula is above (base cost `1`, i.e. "one use of the plan"). **Every term has preconditions**, checked one `if` at a time in the baseline; those
+    /// The code formula is above (base cost `1`, i.e. "one use of the plan"). **Every term has preconditions**, checked one `if` at a time in the code; those
     /// are copied here — **dropping an `isPositive` guard makes a zero-width remainder add a penalty**, raising the cost and blocking columns that should emit.
     /// </remarks>
     private static TC ComputeObjectiveCost<TC>(
@@ -719,18 +709,9 @@ public sealed class ReducedCostPricingGenerator<V>
     /// <typeparam name="TN">数值类型 / Numeric value type.</typeparam>
     /// <returns>是否改善 / Whether it improves.</returns>
     /// <remarks>
-    /// **先问自定义判据，全部不表态才回退默认**——基线的顺序正是如此：
-    ///
-    /// ```kotlin
-    /// for (judge in judges) {
-    ///     val result = judge(candidate.plan, candidate.benefit, candidate.objectiveCost)
-    ///     if (result != null) return result
-    /// }
-    /// return when (candidate.benefit partialOrd candidate.objectiveCost) {
-    ///     is Order.Greater -> true
-    ///     else -> false
-    /// }
-    /// ```
+    /// **先问自定义判据，全部不表态才回退默认**——顺序正是如此：
+    /// 逐条调用 `judge(plan, benefit, objectiveCost)`，遇到第一个非 `null` 的返回值就用它；
+    /// 全都返回 `null` 时，回退成 `benefit > objectiveCost`。
     ///
     /// **三值语义是这里的全部要害**：`null` 表示"这条判据不表态"，**继续问下一条**。
     /// 若把 `null` 当成 `false`，一条"只管某类方案"的判据会把**其余所有方案**判成不改善，
@@ -738,7 +719,7 @@ public sealed class ReducedCostPricingGenerator<V>
     ///
     /// **默认判据严格大于**：等于时不出列（`Order.Greater` 才 `true`，`Order.Equal` 落 `else`）。
     ///
-    /// **Custom judges are asked first; only when all abstain does the default apply** — exactly the baseline order (snippet above).
+    /// **Custom judges are asked first; only when all abstain does the default apply** — exactly the code order (snippet above).
     ///
     /// **The three-valued semantics is the whole crux**: `null` means "this judge abstains" and **the next one is asked**. Treating `null` as `false` would make a judge
     /// that only handles one kind of plan **reject every other plan**, so **column generation dries up immediately** — and the symptom is "converged quickly",
@@ -773,12 +754,12 @@ public sealed class ReducedCostPricingGenerator<V>
     /// <returns>是否严格为正 / Whether strictly positive.</returns>
     /// <remarks>
     /// **`N` 只约束 `struct`**，所以没有通用的比较方式。这里对 `Flt64` 精确比较（`Flt64` 是实际使用的类型），
-    /// 其它类型**按"存在即接受"处理**——这是与基线的**已知偏离**：基线用 `RealNumber` 的 `isPositive`，对所有数值类型都成立。
+    /// 其它类型**按"存在即接受"处理**——这是与**已知偏离**：`RealNumber` 的 `isPositive`，对所有数值类型都成立。
     ///
     /// `ponytail: 非 Flt64 时跳过正负过滤；若将来出现别的数值类型，改为给 V 加 IComparable 约束。`
     ///
     /// **`N` is only constrained to `struct`**, so there is no generic comparison. `Flt64` is compared exactly (it is the type actually used); other types are
-    /// **treated as accepted when present** — a **known divergence** from the baseline, which uses `RealNumber.isPositive` and works for all numeric types.
+    /// **treated as accepted when present** — a **known divergence** from the code, which uses `RealNumber.isPositive` and works for all numeric types.
     /// </remarks>
     private static bool IsPositiveShadowPrice<N>(N price) where N : struct {
         if (typeof(N) == typeof(Flt64)) {

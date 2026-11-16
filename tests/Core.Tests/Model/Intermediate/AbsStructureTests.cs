@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// A bare variable is "one monomial, coefficient one, constant zero".
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `AbsStructure` 与 `AbsHelperBoundsSnapshot`。
+/// 对齐的 `AbsStructure` 与 `AbsHelperBoundsSnapshot`。
 ///
 /// **三条中少任何一条都必须返回 `null`，不能"尽力而为"。**
 ///
@@ -452,9 +452,9 @@ public class AbsStructureTests
     /// **ABS 现在能真正物化了** / ABS can now actually materialize.
     /// </summary>
     /// <remarks>
-    /// **它是"未移植"的三格之一；这里补上，所以 4/3 的分法变成 5/2。**
+    /// **它是"未实现"的三格之一；这里补上，所以 4/3 的分法变成 5/2。**
     ///
-    /// **It was one of the three "not ported" cells; filling it, so the 4/3 split becomes 5/2.**
+    /// **It was one of the three "not implemented" cells; filling it, so the 4/3 split becomes 5/2.**
     /// </remarks>
     [Fact]
     public void TheAbs_ShouldNowMaterialize()

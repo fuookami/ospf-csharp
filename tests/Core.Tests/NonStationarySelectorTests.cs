@@ -154,7 +154,7 @@ public sealed class NonStationarySelectorTests {
     /// **这条测试记录的是一个等价变异**。双精度下 `p + 1.0*(target - p)` 与 `target` 算术上完全相同，删掉实现里的全更新率捷径后
     /// 测试**仍然通过**。基线注释里"避免消去误差跌破概率下界"的理由在双精度下并不成立——把它写成"防止了数值下溢"会是假的。
     /// **This test records an equivalent mutant.** In double precision `p + 1.0*(target - p)` is arithmetically identical to `target`, so
-    /// removing the full-rate shortcut **still passes**. The baseline's comment about cancellation dipping below the floor does not hold
+    /// removing the full-rate shortcut **still passes**. The code's comment about cancellation dipping below the floor does not hold
     /// in double precision — claiming it prevents underflow would be false.
     /// </remarks>
     [Fact]

@@ -43,12 +43,12 @@ public class CoptNativePiecewiseContractTests
     /// **无穷哨兵必须有限且为正** / The infinity sentinel must be finite and positive.
     /// </summary>
     /// <remarks>
-    /// **基线把它列为第一条校验，而它是唯一<b>与具体 PWL 无关</b>的一条：** **它检查的是求解器常量本身。**
+    /// **它列为第一条校验，而它是唯一<b>与具体 PWL 无关</b>的一条：** **它检查的是求解器常量本身。**
     ///
     /// **为什么它值得一条独立判据：** **λ 的上下界由它推导，哨兵无效会让每条 PWL 的边界一起失效——
     /// 而一条 PWL 的边界失效不会抛异常，只会让 λ 变成无界。**
     ///
-    /// **The baseline lists this first, and it is the only check <b>independent of any particular PWL</b>: it inspects the
+    /// **The code lists this first, and it is the only check <b>independent of any particular PWL</b>: it inspects the
     /// solver constant itself.**
     ///
     /// **Why it deserves its own criterion: the λ bounds derive from it, so an invalid sentinel invalidates every PWL's

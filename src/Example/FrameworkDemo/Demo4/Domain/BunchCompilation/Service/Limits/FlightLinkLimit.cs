@@ -47,13 +47,13 @@ public sealed class FlightLinkShadowPriceKey(Link link) : ShadowPriceKey(typeof(
 /// 任务链接的约束与目标 / The task links' constraints and objective.
 /// </summary>
 /// <remarks>
-/// 基线 `FlightLinkLimit.kt`：每条链接加一条 `slack ≥ 1`，再把 `Σ 系数 × slack` 放进最小化目标。
+/// ：每条链接加一条 `slack ≥ 1`，再把 `Σ 系数 × slack` 放进最小化目标。
 /// 与机队那一条**结构相同、阈值不同**：机队的右端项是机数，链接的右端项恒为 1——一条链接只要接上一次就算成立。
 ///
 /// 阈值 1 与链接松弛的源多项式单位必须一致：源是 `link_k + 0.5·y[前驱] + 0.5·y[后继]`，`link_k` 数的是"这一轮几个束把它们接在一起"，
 /// 所以"至少一次"就是 1。**写成机数或成本会让这条约束变成另一件事。**
 ///
-/// The baseline's `FlightLinkLimit.kt` adds `slack ≥ 1` per link and puts `Σ coefficient × slack` into the minimisation objective. **The same shape as the fleet limit  with a
+/// The code's adds `slack ≥ 1` per link and puts `Σ coefficient × slack` into the minimisation objective. **The same shape as the fleet limit  with a
 /// different threshold**: the fleet's right-hand side is an aircraft count, the link's is constantly 1 — a link holds as soon as it is stitched once.
 ///
 /// The threshold 1 has to agree with the units of the link slack's source: the source is `link_k + 0.5·y[prev] + 0.5·y[succ]`, and `link_k` counts "how many bunches of this round
@@ -151,11 +151,11 @@ public sealed class FlightLinkLimit
     /// <inheritdoc/>
     /// <remarks>
     /// **返回零而不是抛异常**：影子价格为零只是让列生成少一个加速项，结果仍然正确；抛异常会让整条流水线停下来。
-    /// 基线的提取器按"前驱/后继的**原始**任务"反查链接，而 C# 的影子价格参数里没有前驱任务——`ponytail:` 天花板，
+    /// 提取器按"前驱/后继的**原始**任务"反查链接，而 C# 的影子价格参数里没有前驱任务——`ponytail:` 天花板，
     /// 等参数接口需要携带时再补。
     ///
     /// **Returns zero rather than throwing**: a zero shadow price only costs column generation one acceleration term while the answer stays correct; throwing would halt the whole
-    /// pipeline. The baseline's extractor looks the link up by the **origin** tasks of the predecessor and successor, while C#'s shadow-price arguments carry no predecessor —
+    /// pipeline. The code's extractor looks the link up by the **origin** tasks of the predecessor and successor, while C#'s shadow-price arguments carry no predecessor —
     /// **`ponytail:` ceiling**, to be filled in when the argument interface needs it.
     /// </remarks>
     public ShadowPriceExtractor<IGanttSchedulingShadowPriceArguments<Aircraft, FlightTaskAssignment>, GanttSchedulingShadowPriceMap<Aircraft, FlightTaskAssignment>>? Extractor()

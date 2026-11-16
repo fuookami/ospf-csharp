@@ -95,7 +95,7 @@ internal static class LinearFlattenExtensions {
                 // 以中间变量实现的符号当叶子——产出辅助变量的单项，而不是展开定义式。
                 // 与 Kotlin 2e72a17c 的 expandLinearMonomial 里那条 "realization != null 即视为叶子" 对应。
                 // a symbol realized through an intermediate variable is a leaf — emit a monomial over the auxiliary instead of expanding the
-                // definition, mirroring the baseline's "realization != null means leaf" branch.
+                // definition, mirroring its "realization != null means leaf" branch.
                 if (symbol.IntermediateVariable is IVariableItem realization) {
                     terms.Add(new LinearMonomial<V>(coefficient, realization));
                     continue;

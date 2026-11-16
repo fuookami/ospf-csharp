@@ -1,6 +1,5 @@
 // 教案-学习、樽海鞘、引力搜索与萤火虫更新 / Teaching-learning, salp-swarm, gravitational-search and firefly updates.
-// 与固定 Kotlin 基线 `operator/update/Tier2Updates.kt`（15155 B）对应。
-// Mirrors the pinned baseline's `Tier2Updates.kt`.
+// 与固定 Kotlin （15155 B）对应。
 
 using System;
 using System.Collections.Generic;

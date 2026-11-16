@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.Item.Model;
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// 与基线 `bpp2d-domain-item-context/.../model/QuantityDomainModels.kt` 的 `QuantityItemShape` 对齐：**两种形状**，
+/// 与的 `QuantityItemShape` 对齐：**两种形状**，
 /// 矩形与圆。这个类型存在的理由是"外部数据只给量纲，不给解算器形状"——转换是**单独一步**，不塞进构造函数。
 ///
 /// 两个转换方法分工：<see cref="ToShape"/> 保留 `V`，<see cref="ToFltXShape"/> 换成解算器用的 `FltX`。
 /// 合成一个泛型方法会让调用方还要指定目标类型，而实际只有一个去处。
 ///
-/// Aligned with the baseline's `QuantityItemShape`: **two shapes**, rectangle and circle. The type exists because external data supplies quantities rather than solver shapes, and
+/// Aligned with its `QuantityItemShape`: **two shapes**, rectangle and circle. The type exists because external data supplies quantities rather than solver shapes, and
 /// conversion is **a separate step** rather than something stuffed into a constructor. The two conversion methods divide the work: <see cref="ToShape"/> keeps `V`,
 /// <see cref="ToFltXShape"/> switches to the solver's `FltX`. Merging them into one generic method would force callers to name a target type that only ever has one value.
 /// </remarks>
@@ -90,7 +90,7 @@ public abstract record QuantityItemShape<V> where V : struct, IFloatingNumber<V>
 /// 与基线 `QuantityItem` 对齐。**`ToModel` 会丢掉不在物料目录里的物料**（基线 `mapNotNull { materialCatalog[no]?.let { … } }`），
 /// 而不是报错——外部数据里多出来的物料编号是常态，报错会让整批请求失败。
 ///
-/// Aligned with the baseline's `QuantityItem`. **`ToModel` drops materials absent from the catalogue** (the baseline's `mapNotNull { materialCatalog[no]?.let { … } }`) rather than
+/// Aligned with its `QuantityItem`. **`ToModel` drops materials absent from the catalogue** (its `mapNotNull { materialCatalog[no]?.let { … } }`) rather than
 /// failing, because extra material numbers in external data are normal and erroring would fail the whole batch.
 /// </remarks>
 /// <param name="Id">货物编号 / The item id.</param>
@@ -152,7 +152,7 @@ public sealed record QuantityItem<V>(
 /// 与基线 `QuantityLayerPlacement` 对齐。**旋转要落到形状上**：基线 `if (rotated) fltXShape.rotated else fltXShape`，
 /// 所以 `Rotated` 不只是记录用的标记，它会换掉形状本身。只把标记传下去而形状不动，解算器看到的还是未旋转的那一件。
 ///
-/// Aligned with the baseline's `QuantityLayerPlacement`. **Rotation lands on the shape**: the baseline does `if (rotated) fltXShape.rotated else fltXShape`, so `Rotated` rewrites the
+/// Aligned with its `QuantityLayerPlacement`. **Rotation lands on the shape**: the code does `if (rotated) fltXShape.rotated else fltXShape`, so `Rotated` rewrites the
 /// shape rather than merely recording a flag. Passing the flag through without rotating would leave the solver looking at the unrotated piece.
 /// </remarks>
 /// <param name="Shape">量纲形状 / The quantity shape.</param>

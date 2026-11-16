@@ -31,10 +31,10 @@ public sealed record AnalysisGroupSummary(
 /// 报告侧的三个纯函数 / The three pure functions on the report side.
 /// </summary>
 /// <remarks>
-/// 补完 `CriticalConstraintAnalysisReport.kt` 的报告侧**：`buildEffectivenessRanking`、`AnalysisGroupSummary`、`summarizeGroups`。
+/// 补完 的报告侧**：`buildEffectivenessRanking`、`AnalysisGroupSummary`、`summarizeGroups`。
 /// 这三者都不碰后端。**报告构造器 `CriticalConstraintAnalysisReportBuilder` 仍缺**——它要把各阶段结果拼成一份完整报告。
 ///
-/// **completes the report side of `CriticalConstraintAnalysisReport.kt`**: the effectiveness builder, the group summary and the group summarizer. None of the three touches a
+/// **completes the report side of**: the effectiveness builder, the group summary and the group summarizer. None of the three touches a
 /// backend. **The report builder itself is still missing** — it assembles the stage results into one complete report.
 /// </remarks>
 public static class CriticalAnalysisReports

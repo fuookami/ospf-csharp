@@ -1,6 +1,6 @@
 // 搜索特征与奖励策略 / Search features and reward policies.
-// 与固定 Kotlin 基线 `learning/Features.kt`（5029 B）与 `learning/AdaptiveRewards.kt`（4868 B）对应。
-// Mirrors the pinned baseline's `Features.kt` (5029 B) and `AdaptiveRewards.kt` (4868 B).
+// 与固定 Kotlin （5029 B）与（4868 B）对应。
+// And (4868 B).
 
 using System;
 using System.Collections.Generic;

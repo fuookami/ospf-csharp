@@ -18,21 +18,21 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 /// 纵向平衡目标 / The longitudinal-balance objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `mac_optimization/service/limits/LongitudinalBalanceLimit.kt` 对齐：把**所有已注册的松弛按各自系数加权求和**，
+/// 与对齐：把**所有已注册的松弛按各自系数加权求和**，
 /// 作为**一个**最小化目标，名为 `longitudinal balance`（带空格，与 `Name` 属性 `longitudinal_balance_limit` **不同**）。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **一个目标，不是每个松弛一个**。逐条 `AddObject` 会变成多目标优化，而求解器只认第一个。
-/// 2. **目标名带空格**：`"longitudinal balance"`。基线的 `name` 属性是下划线式但 `minimize` 传的是空格式，两者都被使用。
+/// 2. **目标名带空格**：`"longitudinal balance"`。`name` 属性是下划线式但 `minimize` 传的是空格式，两者都被使用。
 /// 3. **系数按类型逐项取**：`C` 点用 `macRangeC`，用 ` LongitudinalBalance`，其余用 `longitudinalBalance`。
 /// 4. **空松弛集合仍然注册一个零目标**。基线不判空——`sum(emptyList)` 是零多项式，`minimize` 照样加一项。
 ///
-/// Aligned with the baseline: **all registered slacks weighted by their coefficients are summed** into **one** minimisation objective named `longitudinal balance` (with a space, which
-/// differs from the `Name` property `longitudinal_balance_limit`). Four things must be copied: **one objective, not one per slack** — adding one each turns it into multi-objective
-/// optimisation while the solver only honours the first; **the objective name has a space**, since the baseline's `name` property is underscore-style but the `minimize` call passes
+/// **all registered slacks weighted by their coefficients are summed** into **one** minimisation objective named `longitudinal balance` (with a space, which
+/// differs from the `Name` property `longitudinal_balance_limit`). Four things are carried over: **one objective, not one per slack** — adding one each turns it into multi-objective
+/// optimisation while the solver only honours the first; **the objective name has a space**, since its `name` property is underscore-style but the `minimize` call passes
 /// the spaced form and both are used; **the coefficient is taken per type** — `C` uses `macRangeC`, uses ` LongitudinalBalance`, everything else `longitudinalBalance`; and
-/// **an empty slack set still registers a zero objective**, because the baseline does not test for emptiness — `sum(emptyList)` is the zero polynomial and `minimize` adds it anyway.
+/// **an empty slack set still registers a zero objective**, because the code does not test for emptiness — `sum(emptyList)` is the zero polynomial and `minimize` adds it anyway.
 /// </remarks>
 internal sealed class LongitudinalBalanceLimit
 {

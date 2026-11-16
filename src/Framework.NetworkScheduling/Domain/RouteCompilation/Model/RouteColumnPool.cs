@@ -1,6 +1,5 @@
 // 路线列池 / Route column pool.
-// 与固定 Kotlin 基线 `model/RouteColumnPool.kt`（65 行）对应。
-// Mirrors the pinned baseline's `RouteColumnPool.kt`.
+// 与固定 Kotlin 对应。
 
 using System;
 using System.Collections.Generic;

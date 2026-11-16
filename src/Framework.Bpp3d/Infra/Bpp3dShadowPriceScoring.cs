@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Infra;
 /// 移植基线 `bpp3d-domain-layer-generation-context` 的 `shadowPriceAwareLayerScore`：
 /// 对每个活跃需求条目求 `影子价格 × 该层对该条目的贡献` 之和。
 ///
-/// Ports the baseline's `shadowPriceAwareLayerScore`: for every active demand entry, sum `shadow price × the layer's contribution to that entry`.
+/// Ports its `shadowPriceAwareLayerScore`: for every active demand entry, sum `shadow price × the layer's contribution to that entry`.
 ///
 /// **修复前** `Bpp3dLayerGenerationRequest.ScoreByShadowPrice` 只是一个 `object?`——谁都能塞，但**没有任何代码读取**，
 /// 于是 `EnableShadowPriceAwareRequestScore` 这个开关开与不开都不改变任何行为。`Bpp2d` 侧早已是强类型函数，只有 Bpp3d 留了这个洞。
@@ -55,8 +55,8 @@ public static class Bpp3dShadowPriceScoring {
             return 0.0;
         }
 
-        // 活跃条目：请求显式给了就按它，否则退回影子价格表的键（与基线一致）。
-        // Active entries: the request's explicit list when present, otherwise the shadow-price keys (matching the baseline).
+        // 活跃条目：请求显式给了就按它，否则退回影子价格表的键。
+        // Active entries: the request's explicit list when present, otherwise the shadow-price keys (matching the code).
         var activeEntries = new List<DemandModeKey>();
         if (request.DemandEntries is { Count: > 0 } entries) {
             foreach (LayerGenerationDemandEntry entry in entries) {

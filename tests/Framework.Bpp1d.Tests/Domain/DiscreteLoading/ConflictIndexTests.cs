@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 ///
 /// 前者是"约束太强"，后者是"约束太弱"。**只测一边，另一边就能错着上线。**
 ///
-/// Mirrors the baseline's `ConflictIndex.build`. The two properties pull in opposite directions and both are pinned: one **over-constrains** (a connected component
+/// The two properties pull in opposite directions and both are pinned: one **over-constrains** (a connected component
 /// used as a clique silently discards feasible solutions), the other **under-constrains** (a partial cover lets a physical conflict through). **Testing only one side
 /// leaves the other free to ship broken.**
 /// </remarks>

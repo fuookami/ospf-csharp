@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 
 /// <summary>
 /// 单位键必须**只有一份实现**，且与基线 `symbol ?: name ?: toString` 逐字一致。
-/// The unit key must have **exactly one implementation**, byte-for-byte with the baseline's `symbol ?: name ?: toString`.
+/// The unit key must have **exactly one implementation**, byte-for-byte with its `symbol ?: name ?: toString`.
 /// </summary>
 /// <remarks>
 /// 这里在 `Framework.Csp1d` 里查出**五份**单位键实现：
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.service;
 ///
 /// 现在全部委托给 `GenerationQuantityMath.UnitKey`。
 ///
-/// found **five** unit-key implementations in `Framework.Csp1d` (table above). With five copies, **any one diverging from the baseline makes "the same
+/// found **five** unit-key implementations in `Framework.Csp1d` (table above). With five copies, **any one diverging from the code makes "the same
 /// unit" resolve differently on different code paths, and no test would notice**. Copies 4 and 5 had even stalled at the earlier empty-string version.
 ///
 /// All of them now delegate to `GenerationQuantityMath.UnitKey`.
@@ -62,8 +62,8 @@ public class UnitKeyConvergenceTests {
     /// 这正是第 4、5 份实现的缺陷：它们返回空串。基线返回 `量纲(比例)`。
     /// 空串会让两个**不同量纲**的未知单位看起来相同，而基线能按量纲区分。
     ///
-    /// This is exactly the defect in copies 4 and 5: they returned an empty string. The baseline returns `dimension(scale)`. An empty string makes two unknown units
-    /// of **different dimensions** look identical, while the baseline can tell them apart.
+    /// This is exactly the defect in copies 4 and 5: they returned an empty string. The code returns `dimension(scale)`. An empty string makes two unknown units
+    /// of **different dimensions** look identical, while the code can tell them apart.
     /// </remarks>
     [Fact]
     public void NamelessUnit_ShouldFallBackToItsStringRepresentation() {
@@ -75,23 +75,19 @@ public class UnitKeyConvergenceTests {
         GenerationQuantityMath.UnitKey(length).Should().NotBe(GenerationQuantityMath.UnitKey(mass));
     }
 
-    /// <summary>**匿名单位的单位键与基线一致（第三回退落空串）** / The anonymous unit's key matches the baseline (third fallback lands on an empty string).</summary>
+    /// <summary>**匿名单位的单位键（第三回退落空串）** / The anonymous unit's key matches the code (third fallback lands on an empty string).</summary>
     /// <remarks>
-    /// 基线的三处一起看才准：
+    /// 三处一起看才准：
     ///
-    /// ```kotlin
-    /// // PhysicalUnit
-    /// override fun toString = symbol ?: name ?: "${dimensionSymbol}(${scale})"
-    /// // AnonymousPhysicalUnit
-    /// override fun toString = symbol ?: ""
-    /// // canonicalUnitKey
-    /// = symbol ?: name ?: toString
-    /// ```
+    /// 三条取值规则，按优先级回落：
+    /// 具体单位 `toString` 取 `symbol ?? name ?? "(${dimensionSymbol})(${scale})"`；
+    /// 匿名单位取 `symbol ?? ""`；
+    /// 规范键取 `symbol ?? name ?? toString`。
     ///
     /// **`AnonymousPhysicalUnit` 的 `toString` 是 `symbol ?: ""`**——它**既不回退到 name，也不渲染量纲**。
     /// 于是"既无 symbol 又无 name 的匿名单位"的单位键就是**空串**，两个不同的匿名单位**共用一个键**。
     ///
-    /// **这是基线的行为，不是 C# 的偏离。** 这里一开始把 `Symbol ?? ""` 记在 `DerivedPhysicalUnit` 名下
+    /// **这是行为，不是 C# 的偏离。** 这里一开始把 `Symbol ?? ""` 记在 `DerivedPhysicalUnit` 名下
     /// 并标为"C# 的真实隐患"——**两处都错了**：`DerivedPhysicalUnit` 并不覆盖 `ToString`（它继承基类），
     /// 而 `AnonymousPhysicalUnit` 的写法与基线**逐字相同**。
     ///
@@ -103,12 +99,12 @@ public class UnitKeyConvergenceTests {
     /// **`AnonymousPhysicalUnit`'s `toString` is `symbol ?: ""`** — it **neither falls back to the name nor renders the dimension**. So a symbol-less, nameless anonymous
     /// unit's key is **an empty string**, and two distinct anonymous units **share one key**.
     ///
- /// **That is the baseline's behaviour, not a C# divergence.** initially attributed `Symbol ?? ""` to `DerivedPhysicalUnit` and labelled it "a real C#
+ /// **That is its behaviour, not a C# divergence.** initially attributed `Symbol ?? ""` to `DerivedPhysicalUnit` and labelled it "a real C#
     /// hazard" — **wrong on both counts**: `DerivedPhysicalUnit` does not override `ToString` (it inherits the base), and `AnonymousPhysicalUnit`'s version is
-    /// **byte-for-byte identical** to the baseline.
+    /// **byte-for-byte identical** to the code.
     ///
     /// The criteria pin both facts, **preventing someone from "fixing" `AnonymousPhysicalUnit.ToString` into the base's three-step fallback** — that would diverge
-    /// from the baseline, and **no existing criterion would notice**.
+    /// from the code, and **no existing criterion would notice**.
     /// </remarks>
     [Fact]
     public void AnonymousUnit_ShouldKeyAsTheBaselineDoes() {
@@ -138,7 +134,7 @@ public class UnitKeyConvergenceTests {
     /// 改成 `Symbol ?? Name ?? ""` 时，**`UnitKey` 的判据全绿**——因为 `UnitKey` 本来就在 `ToString` **之前**
     /// 先试 `Name`，多一层回退**不改变它的结果**。
     ///
-    /// 但 `ToString` **本身有直接调用方**（渲染、日志、id 拼装）。基线在这里是 `symbol ?: ""`——
+    /// 但 `ToString` **本身有直接调用方**（渲染、日志、id 拼装）。这里是 `symbol ?: ""`——
     /// **有 name 也不回退**，所以 `ToString` 返回**空串**。若 C# 回退到 name，两边的诊断输出就会不同。
     ///
     /// **"`UnitKey` 等价"不等于"实现等价"**：判据必须落在**被改动的那个方法**上，
@@ -147,7 +143,7 @@ public class UnitKeyConvergenceTests {
     /// **This exists for a mutant that cannot be killed through `UnitKey`.** Changing `AnonymousPhysicalUnit.ToString` to `Symbol ?? Name ?? ""` leaves **every
     /// `UnitKey` criterion green** — `UnitKey` already tries `Name` **before** `ToString`, so an extra fallback layer **does not change its result**.
     ///
-    /// But `ToString` **has direct callers** (rendering, logs, id assembly), and the baseline is `symbol ?: ""` — **no name fallback**, so `ToString` returns **an
+    /// But `ToString` **has direct callers** (rendering, logs, id assembly), and the code is `symbol ?: ""` — **no name fallback**, so `ToString` returns **an
     /// empty string** even when a name exists. A C# name fallback would make diagnostic output differ.
     ///
     /// **"Equivalent for `UnitKey`" is not "equivalent".** A criterion must land on **the method that was changed**, not on one of its consumers.

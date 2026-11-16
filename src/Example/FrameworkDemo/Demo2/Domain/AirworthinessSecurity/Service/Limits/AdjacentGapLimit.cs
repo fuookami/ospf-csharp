@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 相邻载荷间隙限制 / The bound on the load gap between adjacent positions.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/AdjacentGapLimit.kt`：对每对相邻舱位 (p, p+1) 加**两行**——
+/// 逐条对齐：对每对相邻舱位 (p, p+1) 加**两行**——
 ///
 /// | 行 | 关系 | 名称 |
 /// | --- | --- | --- |
@@ -32,9 +32,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 3. **相邻指舱位表的顺序**，不是按力臂排序。基线直接用 `positions[p]` / `positions[p+1]`——顺序由调用方给定，本类不改写它。
 /// 4. **`positions.Count - 1` 次，不是 `Count` 次**。取到 `Count` 会越界。
 ///
-/// Mirrors the baseline: two rows per adjacent pair, `load[p] − load[p+1] ≤ gap` (`_pos_`) and `load[p+1] − load[p] ≤ gap` (`_neg_`). Four easy mistakes: (1) **the two rows go
+/// two rows per adjacent pair, `load[p] − load[p+1] ≤ gap` (`_pos_`) and `load[p+1] − load[p] ≤ gap` (`_neg_`). Four easy mistakes: (1) **the two rows go
 /// opposite ways** — together they are `|load[p] − load[p+1]| ≤ gap`, and one alone bounds only one direction, so weight can pile up on one side past the gap; (2) **the `pos` / `neg`
-/// suffixes**, or "constraint 2 is infeasible" does not say which side; (3) **adjacent means the position list's order**, not an arm sort — the baseline indexes `positions[p]` and
+/// suffixes**, or "constraint 2 is infeasible" does not say which side; (3) **adjacent means the position list's order**, not an arm sort — the code indexes `positions[p]` and
 /// `positions[p+1]` directly and leaves the order to the caller; (4) **`Count - 1` pairs**, not `Count`, or it overruns.
 /// </remarks>
 internal sealed class AdjacentGapLimit

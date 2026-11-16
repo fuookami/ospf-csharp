@@ -19,14 +19,14 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// ABS 辅助变量在后续模型限制之前捕获的范围 / An ABS helper's range captured before later model restrictions.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `AbsHelperBoundsSnapshot`。
+/// 对齐的 `AbsHelperBoundsSnapshot`。
 ///
 /// **两个字段都可空，而"可空"是这里的全部信息量**：
 /// **`null` 表示"当时没有已知界"，不是"界是零"。**
 /// **把它写成非空的 `Flt64` 会让"没有界"变成"界为零"，
 /// 而后者会让 fallback 证明认为辅助变量只可能在 0 上——那是错的，且不会报错。**
 ///
-/// **Both fields are nullable, and the nullability is the whole information content**:
+/// **Both fields are nullable, and the nullability is the whole information content**.
 /// **`null` means "no known bound at the time", not "the bound is zero".**
 /// **Making them non-nullable turns "no bound" into "bound zero", and the fallback proof then believes a helper can only
 /// be zero — wrong, and silent.**
@@ -39,7 +39,7 @@ public sealed record AbsHelperBoundsSnapshot(Flt64? Lower, Flt64? Upper);
 /// ABS 函数的结构与 fallback 证明快照 / Absolute-value structure and fallback proof snapshot.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `AbsStructure`。
+/// 对齐的 `AbsStructure`。
 ///
 /// **`|x|` 需要三个辅助列，而不是一个**：
 ///
@@ -62,7 +62,7 @@ public sealed record AbsHelperBoundsSnapshot(Flt64? Lower, Flt64? Upper);
 /// 如果系数是 2，那个 helper 属于 `2x` 而不是 `x`，
 /// 而两个不同的结构会被索引到同一个键上——后写入的那个悄悄覆盖前一个。**
 ///
-/// Following the baseline's `AbsStructure`.
+/// Following its `AbsStructure`.
 ///
 /// **`|x|` needs three helper columns, not one:**
 ///

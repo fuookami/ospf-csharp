@@ -21,15 +21,15 @@ public static class SpeedUnits {
     public static readonly PhysicalUnit Knot = new DerivedUnit(
         LengthUnits.NauticalMile.Divide(TimeUnits.Hour), "knot", "kn");
 
-    // **以下 10 个速度单位按基线 `Velocity.kt` 补齐。**
+    // **以下 10 个速度单位按补齐。**
     //
-    // **基线有 14 个速度单位，本仓原来只有 4 个**，而 `docs/` 里一次都没提过。
+    // **14 个速度单位，本仓原来只有 4 个**，而 `docs/` 里一次都没提过。
     // **这四个地区节与四个地区海里是配套的**：海里不同，节也不同——
     // **只补海里不补节，等于让"用 FR 海里算出的距离"无法换成"FR 节表示的速度"。**
     //
-    // **The 10 speed units below were added from the baseline `Velocity.kt`.**
+    // **The 10 speed units below were added from the code.**
     //
-    // **The baseline has 14 speed units and this repo had 4**, with `docs/` silent about it.
+    // **The code has 14 speed units and this repo had 4**, with `docs/` silent about it.
     // **The four regional knots pair with the four regional nautical miles**: different miles mean different knots —
     // **adding the miles without the knots leaves a distance measured in FR miles unable to become a speed in FR knots.**
 
@@ -48,10 +48,10 @@ public static class SpeedUnits {
 
     /// <summary>**马赫，按 340.3 m/s 折算** / Mach, at 340.3 m/s.</summary>
     /// <remarks>
-    /// **基线用的是 340.3，不是 343**（343 是 20 °C 干空气的声速）。
+    /// **的是 340.3，不是 343**（343 是 20 °C 干空气的声速）。
     /// **两者差 0.8%**——**在 0.8 马赫上就是 2 米每秒。**
     ///
-    /// **The baseline uses 340.3, not 343** (343 is the speed of sound in dry air at 20 °C).
+    /// **The code uses 340.3, not 343** (343 is the speed of sound in dry air at 20 °C).
     /// **They differ by 0.8%** — **which at Mach 0.8 is 2 metres per second.**
     /// </remarks>
     public static readonly PhysicalUnit Mach = new DerivedUnit(

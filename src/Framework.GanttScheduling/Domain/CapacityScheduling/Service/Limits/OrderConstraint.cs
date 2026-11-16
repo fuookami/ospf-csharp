@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Serv
 /// <remarks>
 /// **第一版是 `Invoke =&gt; Ok`**：三族约束一条都没建，却对任何模型报成功。
 ///
-/// 现在按基线的三族真的建行（`x` 是数量、`b` 是选中，来自 `CapacityOrderVariables`）：
+/// 现在按三族真的建行（`x` 是数量、`b` 是选中，来自 `CapacityOrderVariables`）：
 ///
 /// 1. **每顺序位至多一个动作**：对每个 (时隙, 顺序位) 加 `Σ_动作 b[a, t, o] ≤ 1`；
 /// 2. **下界关联**：`x[a, t, o] ≥ b[a, t, o]`——选中就必须至少加工 1 件；
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Serv
 /// 第 2 与第 3 条缺一不可：只留第 2 条，`b` 可以是 1 而 `x` 很大（"选中了但无限加工"）；只留第 3 条，`x` 可以是 0
 /// 而 `b` 是 1（"选中了却什么都没做"，白占一个顺序位）。
 ///
-/// **The first version was `Invoke => Ok`**: none of the three families was built, yet every model was reported as fine. It now really builds the baseline's three families (`x` is the
+/// **The first version was `Invoke => Ok`**: none of the three families was built, yet every model was reported as fine. It now really builds its three families (`x` is the
 /// amount, `b` the selection, both from `CapacityOrderVariables`): (1) **at most one action per position** — `sum over actions of b[a, t, o] &lt;= 1` for every (slot, position);
 /// (2) **the lower linking bound** `x[a, t, o] &gt;= b[a, t, o]` — being selected means processing at least 1; (3) **the upper linking bound** `x[a, t, o] &lt;= M . b[a, t, o]` with
 /// `M` taken from `action.upperBound(slot, window)` — not being selected means processing 0. Both (2) and (3) are needed: with only (2), `b` can be 1 while `x` is huge ("selected and

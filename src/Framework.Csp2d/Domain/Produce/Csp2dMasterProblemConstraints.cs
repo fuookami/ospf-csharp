@@ -1,6 +1,6 @@
 // 主问题的三个约束、目标与就绪状态 / The master problem's three constraints, objective and readiness record.
-// 与固定 Kotlin 基线 `csp2d/domain/produce/MasterProblem.kt` 的后半段对应。
-// Mirrors the tail of the pinned Kotlin baseline's `MasterProblem.kt`.
+// 与固定 Kotlin 的后半段对应。
+// The tail of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Basic;

@@ -179,10 +179,10 @@ public class BunchSchedulingStorageResourceUsage<E, R, C, V>
     /// <param name="name">名称 / Name.</param>
     /// <param name="cost">按槽的消耗，缺省为零 / Per-slot consumption, zero by default.</param>
     /// <remarks>
-    /// **消耗按槽**：基线的 `cost` 是子类提供的符号表，C# 侧还没有那个子类，先用"按槽给一个裸值"表达同一件事——
+    /// **消耗按槽**：`cost` 是子类提供的符号表，C# 侧还没有那个子类，先用"按槽给一个裸值"表达同一件事——
     /// 消耗是已知输入，不是决策变量。等任务编译层真的用上，再换成符号表。
     ///
-    /// **Consumption is per slot**: the baseline's `cost` is a symbol table supplied by a subclass that does not exist on the C# side yet, so a raw per-slot value expresses the same thing for
+    /// **Consumption is per slot**: its `cost` is a symbol table supplied by a subclass that does not exist on the C# side yet, so a raw per-slot value expresses the same thing for
     /// now — consumption is a known input, not a decision variable. Switch it to a symbol table once the task-compilation layer really uses storage.
     /// </remarks>
     public BunchSchedulingStorageResourceUsage(
@@ -247,7 +247,7 @@ public class BunchSchedulingStorageResourceUsage<E, R, C, V>
     /// 与执行资源不同，存储的数量不是一个"已知的起点"而是三段的代数和——供应来自资源的固定供应
     /// （`FixedSupplyIn`），消耗由调用方按时间给出。
     ///
-    /// Mirrors the baseline's combined quantity for storage: **initial + supply - consumption**. Unlike an execution resource, storage's quantity is not a known starting point but the
+    /// 's combined quantity for storage: **initial + supply - consumption**. Unlike an execution resource, storage's quantity is not a known starting point but the
     /// algebra of three pieces — supply comes from the resource's fixed supply (`FixedSupplyIn`) and consumption is given per time by the caller.
     ///
     /// <para>
@@ -255,7 +255,7 @@ public class BunchSchedulingStorageResourceUsage<E, R, C, V>
     /// 由任务编译层的子类填充；C# 侧既没有那个子类，也没有它的消费者，先只按资源的固定供应算。
     /// 升级路径：等任务编译层真的用上存储资源时，把那张表加进来并在此处求和。
     ///
-    /// **Ceiling: the executor dimension of supply is not wired.** The baseline also has an `executorSupply` table (three dimensions: policy x resource x time) filled by subclasses in the
+    /// **Ceiling: the executor dimension of supply is not wired.** The code also has an `executorSupply` table (three dimensions: policy x resource x time) filled by subclasses in the
     /// task-compilation layer; the C# side has neither that subclass nor a consumer for it, so only the resource's fixed supply is counted. Upgrade path: once the task-compilation layer
     /// really uses storage resources, add that table and sum it here.
     /// </para>
@@ -285,7 +285,7 @@ public class BunchSchedulingStorageResourceUsage<E, R, C, V>
             var quantities = new Dictionary<StorageResourceTimeSlot<R, C, V>, ILinearIntermediateSymbol<Flt64>>();
             foreach (StorageResourceTimeSlot<R, C, V> slot in TimeSlots) {
                 // 基线算的是"从头到本槽结束"这一段内的供应，不是本槽自己的长度。
-                // The baseline counts supply over the span from the window's start to this slot's end, not over the slot's own length.
+                // The code counts supply over the span from the window's start to this slot's end, not over the slot's own length.
                 V suppliedValue = slot.Resource.FixedSupplyIn(new TimeRange(_windowStart, slot.Time.End));
                 Flt64 supplied = suppliedValue is Flt64 direct ? direct : new Flt64(Convert.ToDouble(suppliedValue));
                 Flt64 consumed = _cost is null ? Flt64.Zero : _cost(slot);

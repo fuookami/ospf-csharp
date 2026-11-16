@@ -1,6 +1,6 @@
 // VRP 策略扩展点：弧可行性与路线成本 / VRP policy extensions: arc feasibility and route cost.
-// 与固定 Kotlin 基线 `ArcFeasibilityPolicy.kt`（50 行）、`RouteCostPolicy.kt`（54 行）对应。
-// Mirrors the pinned baseline's `ArcFeasibilityPolicy.kt` and `RouteCostPolicy.kt`.
+// 与固定 Kotlin 、（54 行）对应。
+// And.
 
 using System;
 using System.Collections.Generic;

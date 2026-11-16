@@ -1,8 +1,8 @@
 // 刀缝与间距 / Kerf and spacing.
-// 与固定 Kotlin 基线 `geometry2d/Kerf.kt` 对应。排样中的 kerf（刀缝/锯缝）要求相邻件之间保留最小间隙。
+// 与固定 Kotlin 对应。排样中的 kerf（刀缝/锯缝）要求相邻件之间保留最小间隙。
 // 实现方式是**放大参与重叠判定的形状**：把一件的覆盖形状按 kerf 膨胀后与另一件的真实形状比较，若仍相交则说明
 // 真实间隙小于 kerf。这样无需在每个放置上记录额外偏移，坐标仍是真实坐标。
-// Mirrors the pinned Kotlin baseline's `geometry2d/Kerf.kt`. Kerf (saw blade width) requires a minimum gap between
+// The pinned Kotlin: . Kerf (saw blade width) requires a minimum gap between
 // neighbouring pieces, implemented by **inflating the shape used in the overlap test**: inflating one piece's
 // footprint by the kerf and comparing it with the other piece's real shape reports intersection exactly when the
 // real gap is smaller than the kerf. Placement coordinates therefore stay physical.

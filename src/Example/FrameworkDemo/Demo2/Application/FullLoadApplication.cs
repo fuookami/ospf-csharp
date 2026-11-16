@@ -49,7 +49,7 @@ public sealed class FullLoadApplication
     /// 本仓的应用路径只有前五个，于是全配载的应用路径是 47 行、管线路径是 52 行——**同一份请求、两种形状**。
     /// 这与 （预配载漏三域）、 （建议打板漏两域）是同一类缺陷：**漏域不报错，只是少约束**。
     ///
-    /// **Full load is seven domains too**: the baseline's `FullLoadPipelineContext` registers express effectiveness and loading effectiveness, while this port's
+    /// **Full load is seven domains too**: its `FullLoadPipelineContext` registers express effectiveness and loading effectiveness, while this implementation's
     /// application path had only the first five — 47 rows on the application path against 52 on the pipeline path, **one request, two shapes**. Same defect class as 
     /// (predistribution missing three) and (weight recommendation missing two): **a missing domain never errors, it just leaves fewer constraints**.
     /// </remarks>
@@ -152,9 +152,9 @@ public sealed class FullLoadApplication
                     notes, DiagnosticsHelper.LevelDiagnostic, DiagnosticsHelper.GroupSolver,
                     DiagnosticsHelper.CodeSolverPath, "milp_direct");
                 // **求解器由调用方带进来**：直连路径需要后端，而默认全量测试不能依赖可选后端。
-                // 没带就明确说"未接线"，**不是"未移植"**——模型装配与求解链路都已经在本仓可用。
+                // 没带就明确说"未接线"，**不是"未实现"**——模型装配与求解链路都已经在本仓可用。
                 // **The solver comes from the caller**: the direct path needs a backend, and the default suite must not depend on an optional one. When none is
-                // supplied it says "not wired", **not "not ported"** — both the model assembly and the solve chain already exist in this port.
+                // supplied it says "not wired", **not "not implemented"** — both the model assembly and the solve chain already exist here.
                 (response, render) = milpSolver is null
                     ? (ResponseDTO.NoSolution("MilpSolverNotSupplied", notes), null)
                     : SolveDirectMilp(milpSolver, notes, request.ResolvedParameter);
@@ -275,12 +275,12 @@ public sealed class FullLoadApplication
             if (request.ResolvedSolvePolicy.BendersFallbackToMilp)
             {
                 // **两种"没走回退"要说成两句不同的话**：基线要求回退**重建一个新模型与新上下文**
-                // （`DiscreteLoadingApplicationService.kt`："回退必须创建新模型与上下文"）。而本仓的域上下文是**一次性**的
+                // （："回退必须创建新模型与上下文"）。而本仓的域上下文是**一次性**的
                 // （`上下文已经注册`），所以就算调用方给了 MILP 求解器，这条路径也**建不出一个可用的新模型**——
                 // 那是比"没给求解器"更根本的原因，混成一句会让后来的人以为"补个求解器就好了"。
                 //
-                // **Two different reasons, two different sentences**: the baseline requires the fallback to **rebuild a fresh model and context**
-                // (`DiscreteLoadingApplicationService.kt`: "the fallback must create a new model and context"). This port's domain contexts are **single-use** (measured in
+                // **Two different reasons, two different sentences**: the code requires the fallback to **rebuild a fresh model and context**
+                // (: "the fallback must create a new model and context"). This implementation's domain contexts are **single-use** (measured in
                 // with `Context already registered`), so even with a MILP solver supplied this path **cannot build a usable fresh model** — a more fundamental reason
                 // than "no solver was given", and merging the two would make the next reader think "just supply a solver".
                 if (milpSolver is null)
@@ -304,7 +304,7 @@ public sealed class FullLoadApplication
         // **状态要报出来**：基线记 `benders_status=…`，本仓此前只在停滞时往备注里塞一句话。
         // 现在无论收敛与否都有这一句，**"没收敛"刚不再是件需要从空解向量里猜的事**。
         //
-        // **The status is reported**: the baseline records `benders_status=…`; this port previously only added a sentence when the loop stalled. Now it is
+        // **The status is reported**: the code records `benders_status=…`; this implementation previously only added a sentence when the loop stalled. Now it is
         // there whether it converged or not, **so "it did not converge" is no longer something to guess from an empty solution vector.**
         notes.Add($"benders_status={result.Status}");
 
@@ -392,15 +392,15 @@ public sealed class FullLoadApplication
         // **The master solution is not turned into assignments**: `result.Solution` is in master **model token order** (theta plus binaries), while
         // The old decoder read it as "cargo x position". recorded this hazard once (it read out empty assignments then); here it is no longer a hazard
         // but a certainty: a length mismatch always misplaces, and a match is a coincidence. This path therefore hands back **the objective and the status**,
-        // leaves assignments empty and says why. Once demo2 moves to the framework `DiscreteLoadingApplicationService` ( established that as the baseline
+        // leaves assignments empty and says why. Once demo2 moves to the framework `DiscreteLoadingApplicationService` ( established that as the code
         // path), assignments come from the framework's `MergeBendersValues`, merged by variable identity — **that is when someone decodes them**.
         notes.Add($"benders_assignments=not_decoded:master_solution_length={result.Solution.Length}");
         return ResponseDTO.Optimal(result.Obj, assignments: null, notes: notes);
     }
 
     /// <summary>
-    /// **单模型 + 阶段表**：按基线形状建一个模型，交给 `LinearBendersPartition.BuildAsync` 拆分。
-    /// **One model plus a stage table**: build a single model in the baseline's shape and let `LinearBendersPartition.BuildAsync` split it.
+    /// **单模型 + 阶段表**：形状建一个模型，交给 `LinearBendersPartition.BuildAsync` 拆分。
+    /// **One model plus a stage table**: build a single model in its shape and let `LinearBendersPartition.BuildAsync` split it.
     /// </summary>
     /// <param name="stowageMode">装载模式 / The stowage mode.</param>
     /// <param name="notes">备注 / Notes.</param>
@@ -466,7 +466,7 @@ public sealed class FullLoadApplication
     // measurement into a solve.
     /// <summary>
     /// **单模型 Benders 求解**（基线形状）：建一个模型 → 划分 → 交给 `LinearBendersAlgorithm`。
-    /// **Single-model Benders** (the baseline shape): build one model, partition it, hand it to `LinearBendersAlgorithm`.
+    /// **Single-model Benders** (the code shape): build one model, partition it, hand it to `LinearBendersAlgorithm`.
     /// </summary>
     /// <param name="stowageMode">装载模式 / The stowage mode.</param>
     /// <param name="solver">Benders 后端 / The Benders backend.</param>
@@ -602,12 +602,12 @@ public sealed class FullLoadApplication
         var masterModel = new LinearMetaModel<Flt64>("demo2_full_load_master", ObjectCategory.Minimum);
         var subModel = new LinearMetaModel<Flt64>("demo2_full_load_sub", ObjectCategory.Minimum);
 
-        // **主问题： 接上了**。基线把「配载 + MAC + 软安全 + MAC 优化」放进主问题，这四处现在真的往里注册——
+        // **主问题： 接上了**。「配载 + MAC + 软安全 + MAC 优化」放进主问题，这四处现在真的往里注册——
         // 在这之前这里是一段注释，唯一的实际动作是加一个 theta 变量，于是主问题**零约束**，`SolveWithBenders` 只能用"没注册"拒绝。
         //
         // 四个上下文的签名本来就不一致（软安全与适航安全不收模式），照各自的签名调，**不去统一它们**——统一需要证据。
         //
-        // **The master problem is wired.** The baseline puts stowage, MAC, soft security and MAC optimisation into the master. Before this the body was
+        // **The master problem is wired.** The code puts stowage, MAC, soft security and MAC optimisation into the master. Before this the body was
         // a comment and the only real action was adding a theta variable, so the master had **zero constraints** and `SolveWithBenders` could only refuse with
         // "not registered". The four contexts' signatures already differ (soft security and airworthiness take no mode); each is called with its own signature,
         // **and they are not unified** — unifying needs evidence.
@@ -629,7 +629,7 @@ public sealed class FullLoadApplication
                 // **不在返回 Result 的方法里抛异常**（本仓的错误处理规矩）：把失败写成备注，让下面的
                 // `MasterModel.Constraints.Count == 0` 守卫接手——**失败的注册不会悄悄变成"注册成功但没内容"**。
                 //
-                // **No throwing in a method that returns a Result** (this port's error-handling rule): record the failure as a note and let the
+                // **No throwing in a method that returns a Result** (this implementation's error-handling rule): record the failure as a note and let the
                 // `MasterModel.Constraints.Count == 0` guard take over — **a failed registration never quietly becomes "registered but empty".**
                 notes.Add($"benders_master_registration_failed: the {name} half refused to register into the master model: {registration}");
             }
@@ -640,7 +640,7 @@ public sealed class FullLoadApplication
         // - `StowageAggregation.RegisterForBendersSP(stowageMode, model)` **根本没有解这个参数**（的签名就只有两项）；
         // - `AirworthinessSecurityContext.RegisterForBendersSP(mode, model, solution)` 收到解之后转给 `Register(mode, model)`，**照样不读它**。
         //
-        // 也就是说：基线的 `registerForBendersSP(mode, model, solution)` 里的 `solution` **在本仓当前实现下是死的**。
+        // 也就是说：`registerForBendersSP(mode, model, solution)` 里的 `solution` **在本仓当前实现下是死的**。
         // 既然如此，把注册按"每轮迭代"搬过来只会得到一个**每轮做同样事情的循环**。所以注册一次，位置在解出来之前。
         //
         // **这个"解是死的"结论用判据钉住了**（`Demo2BendersSubModelTests`）：两个不同的解注册出来的模型形状必须完全相同。
@@ -648,7 +648,7 @@ public sealed class FullLoadApplication
         //
         // **The sub-problem is wired as well**, and it is registered **while building the models, not inside the iteration loop**, because of a measurement:
         // `StowageAggregation.RegisterForBendersSP(stowageMode, model)` **has no solution parameter at all**, and `AirworthinessSecurityContext.RegisterForBendersSP(
-        // mode, model, solution)` forwards to `Register(mode, model)` and **does not read it either**. So the baseline's `solution` argument is **dead in this port's
+        // mode, model, solution)` forwards to `Register(mode, model)` and **does not read it either**. So its `solution` argument is **dead here's
         // current implementation**: registering per iteration would be a loop that repeats the same work. Hence one registration, before any solution exists. **The
         // "the solution is dead" conclusion is pinned by a criterion** (`Demo2BendersSubModelTests`): two different solutions must yield identical model shapes. If a
         // domain ever starts reading it, that criterion reds, **and only then should this move into the loop.**
@@ -669,7 +669,7 @@ public sealed class FullLoadApplication
         masterModel.Add(thetaVar);
 
         // Build fixedVariables from stowage x variables (binary loading decisions)
-        // When stowage aggregation is fully ported, iterate over stowage items/positions
+        // When stowage aggregation is fully implemented, iterate over stowage items/positions
         var fixedVariables = new Dictionary<IVariableItem, Flt64>();
 
         return new BendersModels(masterModel, subModel, thetaVar, fixedVariables);
@@ -812,7 +812,7 @@ public sealed class FullLoadApplication
                 // 而 `fail` 只把 `ORModelInfeasible` 映射成 `"Infeasible"`、`OREngineSolvingException` 映射成 `"NotConverged"`，
                 // **其余一律 `"Error"`**——**`DomainRegisterFailed` 是本仓自造的。**
                 //
-                // **The baseline takes `fail(Err(ApplicationFailed, ...))` here**, and `fail` maps only
+                // **The code takes `fail(Err(ApplicationFailed, ...))` here**, and `fail` maps only
                 // `ORModelInfeasible` to `"Infeasible"` and `OREngineSolvingException` to `"NotConverged"`; **everything else is `"Error"` —
                 // `DomainRegisterFailed` was invented here.**
                 return (new ResponseDTO(Succeed: false, Status: "Error", Notes: [.. notes, failed.Error.Message],

@@ -22,10 +22,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 /// <remarks>
 /// 的注释说 C# 的 `IProductionAction` 没有 `BatchDuration`——**那是错的**：它从 B4xx 起就在，只是没人用。
 /// 结果是 `operationTime` 的系数恒为 1，`x` 的单位变成"件"而不是"时长"，一个时隙只能装 1 件。
-/// 这里把基线的规则接上：**离散动作有 `BatchDuration` 就用它，否则取时间窗刻度**。
+/// 这里把规则接上：**离散动作有 `BatchDuration` 就用它，否则取时间窗刻度**。
 ///
 /// the earlier comment claimed C#'s `IProductionAction` has no `BatchDuration` — **wrong**: it has existed since B4xx, just unused. The consequence was an `operationTime` coefficient
-/// pinned at 1, making `x` measured in pieces rather than durations, so a slot held exactly one piece. wires the baseline's rule: **a discrete action with
+/// pinned at 1, making `x` measured in pieces rather than durations, so a slot held exactly one piece. wires its rule: **a discrete action with
 /// `BatchDuration` uses it, otherwise the window scale**.
 /// </remarks>
 public class CapacityBatchDurationTests {
@@ -91,7 +91,7 @@ public class CapacityBatchDurationTests {
     /// 两点成对：`Discrete = false` 且给了 4 小时批次 → 系数仍是 1（基线写明"仅离散型有效"）/
     /// `Discrete = true` 且同样的批次 → 0.5。**同一个批次时长，两种动作给出不同系数**，才算真的按规则分流。
     ///
-    /// Two paired points: `Discrete = false` with a 4-hour batch still yields 1 (the baseline says "only for discrete actions"); `Discrete = true` with the same batch yields 0.5.
+    /// Two paired points: `Discrete = false` with a 4-hour batch still yields 1 (the code says "only for discrete actions"); `Discrete = true` with the same batch yields 0.5.
     /// **The same batch duration producing two different coefficients** is what proves the rule is really branched.
     /// </remarks>
     [Fact]

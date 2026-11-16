@@ -24,12 +24,12 @@ namespace Fuookami.Ospf.Benchmark;
 /// 数学、数组与有界并发的真实入口对照夹具 / Production-entry fixtures for math, arrays, and bounded concurrency.
 /// </summary>
 /// <remarks>
-/// 与基线 `MathPreparationBenchmark.kt`（7783 B）的**可移植子集**对应：`contraction`、`normalizeShared` /
+/// 覆盖其中可移植的子集：`contraction`、`normalizeShared` /
 /// `normalizeFlat`、`matchingTraversal`、`boundedWorkerMap`。
 ///
 /// **四处明确不移植**（C# 侧没有对应入口，且不写"看起来等价"的替代）：
 ///
-/// 1. `strictGradient` / `exactGradient`：基线用 `CanonicalPolynomial.compileGradientCanonical`，C# 只有
+/// 1. `strictGradient` / `exactGradient`：`CanonicalPolynomial.compileGradientCanonical`，C# 只有
 ///    `LinearPolynomial.CompileGradientLinear` / 二次版——**没有 canonical 幂次多项式的梯度编译**。
 /// 2. `sumAxes`：C# `MultiArray` **没有任何按轴归约**（`SumAxes` / 同类入口全仓不存在）。
 /// 3. `cumsumAxis`：同上，**没有前缀归约**。

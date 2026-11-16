@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// 判据按九条规则分组，每条都有一个**必败**用例与一个**必过**用例——
 /// 只写必过会让"永远返回 Ok"的实现通过，只写必败会让"永远返回 Failed"的实现通过。
 ///
-/// Mirrors the baseline's nine checks. Each rule gets **one failing and one passing** case: only-passing would let "always Ok" survive, only-failing would let
+/// 's nine checks. Each rule gets **one failing and one passing** case: only-passing would let "always Ok" survive, only-failing would let
 /// "always Failed" survive.
 /// </remarks>
 public class DiscreteLoadingVerifyTests {

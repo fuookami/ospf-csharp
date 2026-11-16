@@ -29,7 +29,7 @@ public sealed record ActivitySchedulingResult(
 /// 活动排程应用服务 / The activity scheduling application service.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivitySchedulingApplicationService.solve` 对齐。四处照抄：
+/// 与基线 `ActivitySchedulingApplicationService.solve` 对齐。四处沿用：
 ///
 /// 1. **无解不是失败**：`SolutionPresence` 为 `None` 时返回**成功**，`Schedule` 为 null——
 ///    把"这个问题没有可行排程"报成错误，会让调用方无法区分"模型坏了"和"确实排不下"。
@@ -37,7 +37,7 @@ public sealed record ActivitySchedulingResult(
 /// 3. **数值个数必须与模型变量数一致**且全为有限值，否则 `SetSolution` 之后取解会读到别人的值。
 /// 4. **`extra` 在 `register` 之后调用**：调用方的附加约束要能看到已注册的选择变量。
 ///
-/// Aligned with the baseline's `ActivitySchedulingApplicationService.solve`. Four things copied: **no solution is not a failure**, so `SolutionPresence.None` returns **success** with a null
+/// Aligned with its `ActivitySchedulingApplicationService.solve`. Four things copied: **no solution is not a failure**, so `SolutionPresence.None` returns **success** with a null
 /// `Schedule`, because reporting "this problem has no feasible schedule" as an error would leave the caller unable to tell a broken model from a genuinely infeasible one; **a report claiming an
 /// incumbent must carry values**, otherwise the solver implementation is at fault and `ApplicationFailed` is returned; **the value count must match the model's variable count** and every value must
 /// be finite, or extraction after `SetSolution` would read somebody else's numbers; and **`extra` runs after `register`**, so a caller's additional constraints can see the registered choice variables.

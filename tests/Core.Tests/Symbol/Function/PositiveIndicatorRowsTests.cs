@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 正向指示：两侧的 Big-M 不是同一个数 / The two sides use different Big-M values.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BigM.kt` 的 `positiveIndicatorConstraints` 与 `relaxBigM`。
+/// 对齐的 `positiveIndicatorConstraints` 与 `relaxBigM`。
 ///
 /// **下界行用 `bigM + |tol|`，上界行用 `bigM`；这个差别只在指示 = 0 时显现。**
 ///
@@ -75,7 +75,7 @@ public class PositiveIndicatorRowsTests
     /// <remarks>
     /// **这是这里的核心判据，也是唯一能被写错且看不出来的地方。**
     ///
-    /// **下界行要的是 `poly ≥ tolerance − M·(1 − ind)`。** **照抄 `M` 会在指示 = 0 时得到
+    /// **下界行要的是 `poly ≥ tolerance − M·(1 − ind)`。** **沿用 `M` 会在指示 = 0 时得到
     /// `poly ≥ tolerance − M`，比 `−M` <b>多松了一个 tolerance</b>。**
     ///
     /// **两种写法都允许所有合法解，所以模型不会错——只是松弛变松，而且看不出原因。**
@@ -120,9 +120,9 @@ public class PositiveIndicatorRowsTests
     /// **Using `bigM + tol` instead of `bigM + |tol|` shrinks the relaxation for a negative tolerance, so the lower row
     /// gets <b>tighter</b> at indicator 0 and can cut off legal solutions.**
     ///
-    /// **本实现直接拒绝负 tolerance**（基线也要求 `≥ 0`），所以这条判据断言拒绝，而不是断言松弛仍为正。
+    /// **本实现直接拒绝负 tolerance**（要求 `≥ 0`），所以这条判据断言拒绝，而不是断言松弛仍为正。
     ///
-    /// **This implementation rejects a negative tolerance outright (the baseline also requires `≥ 0`), so the criterion
+    /// **This implementation rejects a negative tolerance outright (the code also requires `≥ 0`), so the criterion
     /// asserts the rejection rather than a positive relaxation.**
     /// </remarks>
     [Fact]

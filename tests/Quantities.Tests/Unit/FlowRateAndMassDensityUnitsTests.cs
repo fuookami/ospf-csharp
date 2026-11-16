@@ -22,13 +22,13 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// Added
 ///
-/// **Neither risk here is "computing wrong"; both are "picking the wrong unit"**:
+/// **Neither risk here is "computing wrong"; both are "picking the wrong unit"**.
 /// **`LitersPerMinute` and `LitersPerSecond` differ by one word and by a factor of 60**;
 /// **`GramsPerCubicCentimeter` and `KilogramsPerCubicMeter` describe the same water with values 1000 apart.**
 /// </remarks>
 public class FlowRateAndMassDensityUnitsTests
 {
-    /// <summary>**基线的三个流量单位都在** / All three baseline flow units are present.</summary>
+    /// <summary>**三个流量单位都在** / All three baseline flow units are present.</summary>
     [Fact]
     public void TheFlowRateUnits_ShouldCoverTheBaseline()
     {
@@ -66,7 +66,7 @@ public class FlowRateAndMassDensityUnitsTests
             "a litre per minute is one sixtieth of a litre per second");
     }
 
-    /// <summary>**基线的四个质量密度单位都在** / All four baseline mass-density units are present.</summary>
+    /// <summary>**四个质量密度单位都在** / All four baseline mass-density units are present.</summary>
     [Fact]
     public void TheMassDensityUnits_ShouldCoverTheBaseline()
     {
@@ -94,7 +94,7 @@ public class FlowRateAndMassDensityUnitsTests
     /// **这两个单位描述同一杯水，数值差 1000 倍**：
     /// **水的密度是 1000 kg/m³，也是 1 g/cm³**——**而 1 这个数看起来完全正常，只是单位错了。**
     ///
-    /// **These two describe the same glass of water with values 1000 apart**:
+    /// **These two describe the same glass of water with values 1000 apart**.
     /// **water is 1000 kg/m³ and also 1 g/cm³** — **and 1 looks like an ordinary number, only the unit is wrong.**
     /// </remarks>
     [Fact]

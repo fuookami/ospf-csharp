@@ -70,13 +70,13 @@ public sealed class CapacitySchedulingAggregation<A>
     /// </summary>
     /// <returns>总产能值 / The total capacity value.</returns>
     /// <remarks>
-    /// `Σ 单位产能 × 上界`，按基线逐格累加。**不做任何折算**：单位产能与上界各是各的口径，折算属于求解层。
+    /// `Σ 单位产能 × 上界`，逐格累加。**不做任何折算**：单位产能与上界各是各的口径，折算属于求解层。
     ///
-    /// 基线里这是个私有函数、只被 `totalCapacityQuantity` 调用；C# 侧直接公开——它本身就是一个有意义的口径，
+    /// 这是个私有函数、只被 `totalCapacityQuantity` 调用；C# 侧直接公开——它本身就是一个有意义的口径，
     /// 而"只有物理量、没有裸值"会让每次要比较都得先造一个单位。
     ///
-    /// `Sum of unit capacity x upper bound`, accumulated cell by cell as in the baseline. **No conversion**: unit capacity and the upper bound keep their own scales; converting belongs
-    /// to the solving layer. In the baseline this is private and only serves `totalCapacityQuantity`; here it is public — the bare value is a meaningful figure on its own, and exposing
+    /// `Sum of unit capacity x upper bound`, accumulated cell by cell as in the code. **No conversion**: unit capacity and the upper bound keep their own scales; converting belongs
+    /// to the solving layer. In the code this is private and only serves `totalCapacityQuantity`; here it is public — the bare value is a meaningful figure on its own, and exposing
     /// only the quantity forces callers to invent a unit just to compare.
     /// </remarks>
     public Flt64 TotalCapacityValue() {

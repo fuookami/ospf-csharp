@@ -1,6 +1,6 @@
 // 物料、设备与副产物 / Materials, machines and by-products.
-// 与固定 Kotlin 基线 `csp2d/domain/material/model/Material2.kt` 对应（几何与校验部分见文件末尾说明）。
-// Mirrors the pinned Kotlin baseline's `Material2.kt` (geometry and validation are scoped out; see the tail note).
+// 与固定 Kotlin 对应（几何与校验部分见文件末尾说明）。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Infrastructure;
@@ -37,7 +37,7 @@ public enum Material2Kind {
 /// **`height` 为空就是卷材**，没有额外的模式字段——基线就是靠这一个可空值区分条带排样与定尺排样。
 /// 多一个枚举字段就有两个真值来源，而它们**迟早会不一致**。
 ///
-/// **A null `height` *is* the coil mode**; there is no separate mode field — the baseline distinguishes strip packing from fixed-size packing by that one nullable value alone.
+/// **A null `height` *is* the coil mode**; there is no separate mode field — the code distinguishes strip packing from fixed-size packing by that one nullable value alone.
 /// A second enum field would give two sources of truth, and they **eventually disagree**.
 /// </remarks>
 public sealed record Material2<V>(
@@ -81,10 +81,10 @@ public sealed record Material2<V>(
     /// </summary>
     /// <returns>校验结果 / The validation result.</returns>
     /// <remarks>
-    /// **卷长给定是允许的**：它把问题退化成"按固定长度切段的定尺问题"。基线只留了注释没有拦——
+    /// **卷长给定是允许的**：它把问题退化成"按固定长度切段的定尺问题"。留了注释没有拦——
     /// **能跑的组合就不该被当成错误**，语义差异写进文档即可。
     ///
-    /// **A given coil length is allowed**: it degrades the problem into fixed-length segments. The baseline keeps only a comment rather than a rejection: **a
+    /// **A given coil length is allowed**: it degrades the problem into fixed-length segments. The code keeps only a comment rather than a rejection: **a
     /// combination that runs should not be reported as an error**, and the semantic difference belongs in the docs.
     /// </remarks>
     public Result<Success, ErrorCode, Error<ErrorCode>> Validate() {
@@ -128,10 +128,10 @@ public sealed record Material2<V>(
 /// <param name="MaxWidth">可加工最大幅宽 / The maximum processable width.</param>
 /// <param name="Capacity">产能 / The capacity.</param>
 /// <remarks>
-/// **`defaultProcess` 这里未移植**：它依赖 `CuttingProcess2`，而那是 `infrastructure` 里的类型，尚未落地。
+/// **`defaultProcess` 这里未实现**：它依赖 `CuttingProcess2`，而那是 `infrastructure` 里的类型，尚未落地。
 /// **先不带这个字段，好过先用一个占位枚举假装它已经被建模。**
 ///
-/// **`defaultProcess` is not ported here**: it depends on `CuttingProcess2`, a type from `infrastructure` that has not landed yet. **Leaving the field out
+/// **`defaultProcess` is not implemented here**: it depends on `CuttingProcess2`, a type from `infrastructure` that has not landed yet. **Leaving the field out
 /// beats a placeholder enum pretending it is modelled.**
 /// </remarks>
 public sealed record Machine2<V>(
@@ -178,10 +178,10 @@ public sealed record Costar2<V>(
     /// </summary>
     /// <returns>方向列表 / The orientation list.</returns>
     /// <remarks>
-    /// `false` 表示不旋转、`true` 表示旋转 90°，与基线一致。**不允许旋转时只返回一项**——
+    /// `false` 表示不旋转、`true` 表示旋转 90°。**不允许旋转时只返回一项**——
     /// 返回两项会让排样把"旋转后的同一块件"当成另一个选择，**白白翻倍搜索空间**。
     ///
-    /// `false` means unrotated and `true` means rotated 90 degrees, matching the baseline. **A non-rotatable piece yields exactly one entry**: two entries would let
+    /// `false` means unrotated and `true` means rotated 90 degrees, matching the code. **A non-rotatable piece yields exactly one entry**: two entries would let
     /// nesting treat "the same piece, rotated" as a separate choice and **double the search space for nothing**.
     /// </remarks>
     public IReadOnlyList<bool> Orientations() =>

@@ -62,11 +62,11 @@ public class TaskExecutorCostMinimization<T, E, A>
     /// **两个集合都要遍历**：只遍历"任务自己启用的执行器"会把不可用组合当成零成本——而它们本来就在编译表里被钉成 0，
     /// 遍历全表等于多加一些零项（无害），漏项则会让某些组合**完全不计成本**，解依旧可行。
     ///
-    /// 系数提取失败时基线用无穷大；`Flt64` 没有无穷，所以这里失败——静默取 0 会让那个任务对目标不产生任何压力。
+    /// 系数提取失败时无穷大；`Flt64` 没有无穷，所以这里失败——静默取 0 会让那个任务对目标不产生任何压力。
     ///
-    /// The baseline minimises `Σ_{task, executor} cost(task, executor) × task_assignment[task, executor]`, objective name `task executor`. **Both collections are traversed**:
+    /// The code minimises `Σ_{task, executor} cost(task, executor) × task_assignment[task, executor]`, objective name `task executor`. **Both collections are traversed**:
     /// iterating only the executors a task enables would treat unavailable pairs as free — they are already pinned to 0 in the compilation table, so covering the whole table adds
-    /// harmless zeros, while missing entries would leave some pairs **entirely uncharged** with the solution still feasible. An extraction failure uses infinity in the baseline and
+    /// harmless zeros, while missing entries would leave some pairs **entirely uncharged** with the solution still feasible. An extraction failure uses infinity in the code and
     /// `Flt64` has none, so it fails here — silently zeroing would put no pressure on that task at all.
     /// </remarks>
     public Try Invoke(object model) {

@@ -1,6 +1,6 @@
 // 一次派发的执行 / Executing one dispatch.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.execute(dispatch)`。
-// Mirrors `HyperHeuristicRun.execute(dispatch)` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B).
+// 对应固定 Kotlin （47241 B）里 `HyperHeuristicRun.execute(dispatch)`。
+// .
 
 using System;
 using System.Collections.Generic;

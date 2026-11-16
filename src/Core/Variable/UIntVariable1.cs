@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace Fuookami.Ospf.Core.Variable;
-// 与固定 Kotlin 基线 `core/variable/VariableCombinationItem.kt` 中的 `UIntVariable1` 位置一致：它是 Core 的通用变量组合，
+// 与固定 Kotlin 中的 `UIntVariable1` 位置一致：它是 Core 的通用变量组合，
 // 不是某个业务域专属类型。放在 `Framework.Csp1d` 会让任何需要它的域（如 route_compilation）被迫反向依赖一个应用模块。
-// Matches the pinned baseline, where `UIntVariable1` lives in `core/variable/VariableCombinationItem.kt`: it is a generic Core
+// Matches the reference, where `UIntVariable1` lives: it is a generic Core
 // variable combination, not a type owned by one business domain. Keeping it in `Framework.Csp1d` would force any other domain that
 // needs it (e.g. route_compilation) to depend on an application module in the wrong direction.
 

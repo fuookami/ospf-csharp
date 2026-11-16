@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 移植自 `ConstraintPerturbationAnalyzer` 的几个 private helper：`requestedDeltas`、`objectiveImprovement`、
 /// `classifyOutcome`、`aggregateStatus`。**求解循环与阈值二分没搬。**
 ///
-/// Ported from the private helpers of `ConstraintPerturbationAnalyzer`. **The solve loop and the threshold bisection are not ported.**
+/// Ported from the private helpers of `ConstraintPerturbationAnalyzer`. **The solve loop and the threshold bisection are not implemented.**
 ///
 /// **这四个函数决定了"一次扰动算不算证据"，而它们是纯的——所以能一次钉死。**
 /// **These four decide whether a perturbation counts as evidence, and they are pure — so they can be pinned down in one go.**
@@ -369,7 +369,7 @@ public static class ConstraintPerturbationSupport
     /// 于是"没变"这个结论是从空气里来的。**
     ///
     /// **This is the "not measured must not be written as unchanged" family again, for the fifth time**: when either solution is missing it returns `null`, not `false`. Returning `false`
-    /// would let the report claim "the integer pattern did not change after the perturbation" — **while the baseline solution was never obtained, so the claim comes from nothing.**
+    /// would let the report claim "the integer pattern did not change after the perturbation" — **while the code solution was never obtained, so the claim comes from nothing.**
     /// </remarks>
     public static bool? IntegerPatternChanged(
         ConstraintProgrammingSolution? baseline,

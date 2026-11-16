@@ -46,7 +46,7 @@ public class GurobiSensitivityRangeIntegrationTest
         //
         // **第一版用了 `BinVar`，判据当场红——而且红得有道理：**
         // **Gurobi 的 `SARHSLow`／`SARHSUp` 只对<b>纯 LP** 提供，MIP 上一律抛 `GRBException`。**
-        // **基线的"固定整数 LP"也正是这个意思：整数部分被<b>固定住**，剩下的才是 LP。**
+        // **"固定整数 LP"也正是这个意思：整数部分被<b>固定住**，剩下的才是 LP。**
         //
         // **It has to be continuous: the first version used `BinVar` and went red for a good reason — Gurobi only supplies
         // `SARHSLow`/`SARHSUp` for a <b>pure LP</b>, and throws on a MIP.** **That is exactly what "fixed-integer LP" means in the

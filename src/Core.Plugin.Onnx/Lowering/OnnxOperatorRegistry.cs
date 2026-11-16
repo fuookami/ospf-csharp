@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// **为什么要在降阶之前单独做一次：** **降阶到一半才发现某个算子不支持，模型已经建了一半——** **而那半个模型是可以求解的，**
 /// **于是"部分导入"会以"成功"的面目出现。前置检查让这件事在**建模型之前**就失败。
 ///
-/// Syncs the support sets the baseline declares across its operator modules, gathering them into one "can this graph be expressed" judgement. **Why a separate pass
+/// Syncs the support sets the code declares across its operator modules, gathering them into one "can this graph be expressed" judgement. **Why a separate pass
 /// before lowering: discovering an unsupported operator half-way through leaves half a model behind, and half a model is solvable — so a partial import would
 /// present itself as success.** The preflight makes it fail before any model is built.
 /// </remarks>

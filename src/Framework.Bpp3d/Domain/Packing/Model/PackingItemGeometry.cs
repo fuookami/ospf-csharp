@@ -11,11 +11,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing.Model;
 /// 已装箱物品的几何快照 / Geometry snapshot of a packed item.
 /// </summary>
 /// <remarks>
-/// 基线 `PackingGeometryGuard.kt`（23023 B）在每次校验时从 `QuantityPlacement3` 现算轴对齐包围盒。
+/// （23023 B）在每次校验时从 `QuantityPlacement3` 现算轴对齐包围盒。
 /// C# 侧的 `PackingItem` **原本一点放置信息都不带**，于是守卫的重叠判断只能恒返回 `false`——
 /// 一个永远说"没有重叠"的守卫。本类型把包围盒**在装箱时就冻结下来**，守卫和渲染器共用同一份。
 ///
-/// The baseline computes the axis-aligned bounding box from `QuantityPlacement3` on every check. The C# `PackingItem` **used to carry no placement at all**,
+/// The code computes the axis-aligned bounding box from `QuantityPlacement3` on every check. The C# `PackingItem` **used to carry no placement at all**,
 /// so the guard's overlap check could only ever return `false` — a guard that always says "no overlap". This type freezes the bounding box **at packing
 /// time**, and both the guard and the renderer read the same one.
 /// </remarks>

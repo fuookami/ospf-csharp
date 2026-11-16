@@ -23,13 +23,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 两条目标各有一个**容易看漏的"什么都不做"**，而且理由完全不同：
 /// <list type="bullet">
 /// <item>取消成本：编译未启用取消 → 这条目标根本不存在；</item>
-/// <item>空闲成本：**没给系数** → 基线的 `coefficient?.let { … }` 直接跳过。**空闲最小化默认关闭**，
+/// <item>空闲成本：**没给系数** → `coefficient?.let { … }` 直接跳过。**空闲最小化默认关闭**，
 /// 不是"默认按 1 计价"。</item>
 /// </list>
 /// 把第二个误当成"没接线"去改，就会让每个默认调用方凭空多出一笔空闲成本。
 ///
 /// Each objective has an **easy-to-miss "do nothing"**, for different reasons: cancellation cost — cancellation is disabled in the compilation, so the objective does not exist;
-/// leisure cost — **no coefficient was given**, and the baseline's `coefficient?.let { … }` skips it. **Leisure minimisation is off by default**, not "costs 1 by default". Mistaking
+/// leisure cost — **no coefficient was given**, and its `coefficient?.let { … }` skips it. **Leisure minimisation is off by default**, not "costs 1 by default". Mistaking
 /// the second for "unwired" would give every default caller a leisure cost out of nowhere.
 /// </remarks>
 public class CancelAndLeisureMinimizationTests {
@@ -152,12 +152,12 @@ public class CancelAndLeisureMinimizationTests {
             .Should().Equal(new[] { "z_0", "z_1" });
     }
 
-    /// <summary>**没给系数 → 什么都不加（基线默认关闭）** / No coefficient adds nothing — off by default in the baseline.</summary>
+    /// <summary>**没给系数 → 什么都不加（基线默认关闭）** / No coefficient adds nothing — off by default in the code.</summary>
     /// <remarks>
     /// 这条判据钉的是**默认行为**：空闲最小化不生效。第一版如果照直觉写成"没给系数就按 1 计价"，
-    /// 这里会红。基线是 `coefficient?.let { … }`，跳过。
+    /// 这里会红。`coefficient?.let { … }`，跳过。
     ///
-    /// This pins the **default**: leisure minimisation is off. A first version that follows intuition ("no coefficient → cost 1") turns this red. The baseline is
+    /// This pins the **default**: leisure minimisation is off. A first version that follows intuition ("no coefficient → cost 1") turns this red. The code is
     /// `coefficient?.let { … }`: skip.
     /// </remarks>
     [Fact]

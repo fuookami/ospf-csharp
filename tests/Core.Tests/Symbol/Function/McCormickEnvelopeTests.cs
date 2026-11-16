@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 四条边的配对方式不是随便配的 / The pairing of the four edges is not arbitrary.
 /// </summary>
 /// <remarks>
-/// 补 `ConditionBounds`（基线 `Conditional.kt`）与 `McCormickEnvelopeFunction`（基线 `McCormickEnvelope.kt`）。
+/// 补 `ConditionBounds`与 `McCormickEnvelopeFunction`。
 ///
 /// **两条 `≥` 必须用"一个角的两侧同号"（`(xL,yL)` 与 `(xU,yU)`），
 /// 两条 `≤` 必须用"交叉配对"（`(xU,yL)` 与 `(xL,yU)`）。**
@@ -67,7 +67,7 @@ public class McCormickEnvelopeTests
     /// **逐条核对右端项（`rhs = −角乘积`），因为那正是配对方式的指纹**：
     /// **`≥` 行的右端是 `−xL·yL` 与 `−xU·yU`（同角）；`≤` 行的右端是 `−xU·yL` 与 `−xL·yU`（交叉）。**
     ///
-    /// **This checks each row's right-hand side (`rhs = −corner product`), which is the fingerprint of the pairing**:
+    /// **This checks each row's right-hand side (`rhs = −corner product`), which is the fingerprint of the pairing**.
     /// **the `≥` rows carry `−xL·yL` and `−xU·yU` (same corner); the `≤` rows carry `−xU·yL` and `−xL·yU` (crossed).**
     /// </remarks>
     [Fact]
@@ -131,7 +131,7 @@ public class McCormickEnvelopeTests
     ///
     /// **配对配错时，某些角会违反某些边**——**而"角上取等号"这个性质在正确实现下对全部四个角都成立。**
     ///
-    /// **This is the envelope's defining property and the one worth testing most**:
+    /// **This is the envelope's defining property and the one worth testing most**.
     /// **substituting `x = xL, y = yL` (and the other three corners) with `w = x·y` must satisfy all four rows.**
     ///
     /// **With a wrong pairing some corner violates some row** — **while "tight at every corner" holds for all four

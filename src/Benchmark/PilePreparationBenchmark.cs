@@ -14,12 +14,12 @@ namespace Fuookami.Ospf.Benchmark;
 /// 对内置货物的真实堆叠入口计时，不复制算法 / Time the production pile entry point without replicating its algorithm.
 /// </summary>
 /// <remarks>
-/// 与基线 `PilePreparationBenchmark.kt`（2801 B）对应，但**仓库内的 C# `ItemMerger.MergePiles` 是简化移植**：
+/// 但**仓库内的 C# `ItemMerger.MergePiles` 是简化移植**：
 /// 它只比较底面尺寸与总高，**不读 `PackageAttribute.MaxLayer`、也不读 `restWeight`**。因此 `Scenario` 参数在 C# 侧
 /// 只改变夹具（层数上限 1 或 4），**对被测路径没有影响**——这一点由 `PilePreparationBenchmarkTests` 显式断言，
 /// 而不是假装场景区分有效。真实分层合并仍列 P9 缺口。
 ///
-/// Mirrors `PilePreparationBenchmark.kt` (2801 B), but **the in-repo C# `ItemMerger.MergePiles` is a simplified port**: it compares only base
+/// Mirrors (2801 B), but **the in-repo C# `ItemMerger.MergePiles` is a simplified port**: it compares only base
 /// dimensions and total height, **reading neither `PackageAttribute.MaxLayer` nor `restWeight`**. So the `Scenario` parameter only changes the fixture
 /// in C# (layer cap 1 vs 4) and **has no effect on the measured path** — which `PilePreparationBenchmarkTests` asserts explicitly rather than
 /// pretending the scenario distinction is effective. Real layered merging stays a P9 gap.

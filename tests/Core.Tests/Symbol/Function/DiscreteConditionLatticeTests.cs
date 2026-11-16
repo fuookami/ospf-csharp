@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// `spacing ≥ δ` 不够，余数检查才挡得住歪斜格点 / Spacing alone is not enough.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DiscreteCondition.kt` 的四个格点辅助函数。
+/// 对齐的四个格点辅助函数。
 ///
 /// **补它的原因是一个已发现的缺口**：**只检查了"步长 ≥ δ"。**
 ///

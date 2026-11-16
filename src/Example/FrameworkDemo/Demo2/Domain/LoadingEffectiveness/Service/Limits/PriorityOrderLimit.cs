@@ -19,21 +19,21 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 优先级顺序限制 / The priority-order constraint.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/limits/PriorityOrderLimit.kt` 对齐：**高优先级货物必须占到更靠前的舱位**，
+/// 与对齐：**高优先级货物必须占到更靠前的舱位**，
 /// 用 Big-M 包成一条线性不等式。
 ///
-/// 五处必须照抄：
+/// 五处必须沿用：
 ///
 /// 1. **排序键是 `linearLoadingOrder`**，不是 `loadingOrder.order`（后者可能为空）。基线写 `it.base.linearLoadingOrder`。
 /// 2. **排名是 `sortedBy(...).withIndex.associate { value to index }`**——`associate` 在**相等键上保留最后一次**。
-///    写成 `TryAdd`（首次）会让并列舱位的排名不同。基线的注释明确点出了这一点。
+///    写成 `TryAdd`（首次）会让并列舱位的排名不同。注释明确点出了这一点。
 /// 3. **不等式是 `Σ (rank + M)·x[i,p] + Σ (−rank + M)·x[j,p] ≤ 2M`**。两个 `M` 都**加**，不是减。
 /// 4. **只对严格更高优先级的（i, j）加**，同优先级跳过。
 /// 5. **约束名带优先级值**：`priority_order_limit_{i}_{j}_{priority}`。
 ///
-/// Aligned with the baseline: **a higher-priority item must occupy an earlier position**, wrapped in one Big-M linear inequality. Five things must be copied: **the sort key is
+/// **a higher-priority item must occupy an earlier position**, wrapped in one Big-M linear inequality. Five things must be copied: **the sort key is
 /// `linearLoadingOrder`**, not `loadingOrder.order`, which may be null; **the rank comes from `sortedBy(...).withIndex.associate { value to index }`**, where `associate` **keeps the
-/// last entry for equal keys** — using `TryAdd` (first wins) would rank tied positions differently, a point the baseline's own comment calls out; **the inequality is
+/// last entry for equal keys** — using `TryAdd` (first wins) would rank tied positions differently, a point its own comment calls out; **the inequality is
 /// `Σ (rank + M)·x[i,p] + Σ (−rank + M)·x[j,p] ≤ 2M`**, with both `M`s **added**; **only strictly higher-priority (i, j) pairs are added**, equal priorities being skipped; and
 /// **the name carries the priority value**.
 /// </remarks>
@@ -78,7 +78,7 @@ internal sealed class PriorityOrderLimit
     /// <remarks>
     /// **`associate` 在相等键上保留最后一次**（基线语义）。这里用"后写覆盖"实现同一条规则。
     ///
-    /// **`associate` keeps the last entry for equal keys** (the baseline's semantics); this overwrites to match.
+    /// **`associate` keeps the last entry for equal keys** (its semantics); this overwrites to match.
     /// </remarks>
     public IReadOnlyDictionary<StowagePosition, int> Ranks()
     {

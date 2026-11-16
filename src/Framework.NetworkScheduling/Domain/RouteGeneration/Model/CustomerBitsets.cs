@@ -1,6 +1,6 @@
 // ESPPRC 客户位集 / ESPPRC customer bitsets.
-// 与固定 Kotlin 基线 `VisitedCustomers.kt`（64 行）、`ForbiddenCustomers.kt`（77 行）对应。
-// Mirrors the pinned baseline's `VisitedCustomers.kt` and `ForbiddenCustomers.kt`.
+// 与固定 Kotlin 、（77 行）对应。
+// And.
 //
 // 两个位集都**不可变**：每次添加客户返回新副本。标签会大量共享与比较，若位集可变，一个标签的扩展就会悄悄改掉另一个标签的
 // 状态，支配判定随之失去意义——而且这种错误不会报错，只会让定价返回错误的 reduced cost。
@@ -51,11 +51,11 @@ public sealed class VisitedCustomers {
     /// 添加客户，返回新的副本 / Add a customer, returning a new copy.
     /// </summary>
     /// <remarks>
-    /// **与基线的一处刻意差异**：基线的扩容循环是一段无效代码（只赋值 `newBits[0]` 后立即 `break`），因此对索引 ≥ `size`
-    /// 的输入会越界抛异常。本移植按那段代码的**本意**实现真正的扩容，越界输入被安全接纳而不是抛异常。合法索引（`&lt; size`）
+    /// **与一处刻意差异**：扩容循环是一段无效代码（只赋值 `newBits[0]` 后立即 `break`），因此对索引 ≥ `size`
+    /// 的输入会越界抛异常。本实现按那段代码的**本意**实现真正的扩容，越界输入被安全接纳而不是抛异常。合法索引（`&lt; size`）
     /// 下两者行为完全一致。
-    /// **One deliberate divergence**: the baseline's grow loop is dead code (it assigns `newBits[0]` then breaks), so an index
-    /// `&gt;= size` throws there. This port implements what that loop intended — real growth — so out-of-range inputs are
+    /// **One deliberate divergence**: its grow loop is dead code (it assigns `newBits[0]` then breaks), so an index
+    /// `&gt;= size` throws there. This implementation implements what that loop intended — real growth — so out-of-range inputs are
     /// accepted rather than throwing. For legal indices (`&lt; size`) behaviour is identical.
     /// </remarks>
     /// <param name="customerIndex">客户索引 / Customer index.</param>

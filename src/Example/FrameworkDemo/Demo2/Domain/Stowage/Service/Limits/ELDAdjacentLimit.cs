@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 锂电池相邻约束 / The lithium-battery adjacency rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/ELDAdjacentLimit.kt`：**两件 ELD 货物不得落在相邻的两个舱位**（无论哪个方向）。
+/// 对齐：**两件 ELD 货物不得落在相邻的两个舱位**（无论哪个方向）。
 /// 每条邻接加**两行**——`(i1→j1, i2→j2) ≤ 1` 与 `(i1→j2, i2→j1) ≤ 1`——覆盖两种朝向。
 ///
 /// 三处容易做错：
@@ -31,9 +31,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 ///    而那正是交叉朝向最常见的情形。
 /// 3. **配对用 `i2 > i1`**：写成全排列会让每一对出现两次，约束表翻倍。
 ///
-/// Aligned with the baseline: **two ELD items must not sit in adjacent positions** in either direction, so every adjacency adds **two rows** — `(i1→j1, i2→j2) ≤ 1` and
+/// **two ELD items must not sit in adjacent positions** in either direction, so every adjacency adds **two rows** — `(i1→j1, i2→j2) ≤ 1` and
 /// `(i1→j2, i2→j1) ≤ 1`. Three easy mistakes: **both rows are required** (one row blocks only the aligned orientation while the crossed one still allows adjacency); the guard is
-/// **"or", not "and"** as the baseline writes it (with "and" a pair where only one item fits that side is skipped, which is exactly the common crossed case); and pairs use
+/// **"or", not "and"** as the code writes it (with "and" a pair where only one item fits that side is skipped, which is exactly the common crossed case); and pairs use
 /// `i2 > i1`, since permutations would emit every pair twice and double the table.
 /// </remarks>
 public sealed class ELDAdjacentLimit

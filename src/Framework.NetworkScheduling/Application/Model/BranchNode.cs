@@ -1,6 +1,6 @@
 // 分支决策与分支节点 / Branch decisions and branch nodes.
-// 与固定 Kotlin 基线 `application/model/BranchDecision.kt`（5206 字节）、`BranchNode.kt`（5822 字节）对应。
-// Mirrors the pinned baseline's `BranchDecision.kt` and `BranchNode.kt`.
+// 与固定 Kotlin （5206 字节）、（5822 字节）对应。
+// And.
 
 using System;
 using System.Collections.Generic;

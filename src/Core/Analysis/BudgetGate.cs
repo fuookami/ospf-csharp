@@ -9,17 +9,17 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 预算门控 / The budget gate.
 /// </summary>
 /// <remarks>
-/// **这是 `ConflictAnalyzer.kt` 的 `budgetExceeded` 的移植。**
+/// **这是 的 `budgetExceeded` 的移植。**
 ///
-/// 基线只有一行：`budget != null &amp;&amp; System.nanoTime - startedAt &gt;= budget.inWholeNanoseconds`。
+/// 有一行：`budget != null &amp;&amp; System.nanoTime - startedAt &gt;= budget.inWholeNanoseconds`。
 /// **它短到看起来不值得单独成文件，而它有一个容易写反的语义：没有预算就是永不超支。**
 ///
-/// The baseline is one line, **short enough to look unworthy of its own file, and it has a semantics that is easy to invert: no budget means never exceeded.**
+/// It is one line, **short enough to look unworthy of its own file, and it has a semantics that is easy to invert: no budget means never exceeded.**
 ///
 /// | 情况 | 结果 | 为什么 |
 /// | --- | --- | --- |
 /// | 没有预算（`null`） | **`false`** | 不设上限就是没有上限，**不是"立刻超支"** |
-/// | 恰好等于预算 | **`true`** | 基线用的是 `>=`，不是 `>` |
+/// | 恰好等于预算 | **`true`** | 的是 `>=`，不是 `>` |
 /// | 超过预算 | `true` | — |
 /// | 还没到预算 | `false` | — |
 ///
@@ -36,8 +36,8 @@ public static class BudgetGate {
     /// <param name="elapsed">已用时间 / The elapsed time.</param>
     /// <param name="budget">预算；<c>null</c> 表示不设上限 / The budget, or <c>null</c> for no limit.</param>
     /// <returns>达到或超过预算时为 <c>true</c> / <c>true</c> when the budget is reached or exceeded.</returns>
-    // **没有预算 = 永不超支。** 基线是 `budget != null && …`，不是 `budget == null || …`。
-    // **No budget means never exceeded.** The baseline is `budget != null && …`, not `budget == null || …`.
+    // **没有预算 = 永不超支。** `budget != null && …`，不是 `budget == null || …`。
+    // **No budget means never exceeded.** The code is `budget != null && …`, not `budget == null || …`.
     public static bool Exceeded(TimeSpan elapsed, TimeSpan? budget) =>
         budget is { } limit && elapsed >= limit;
 

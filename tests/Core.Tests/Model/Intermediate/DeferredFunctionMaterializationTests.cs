@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 于是 `DeferredFunctionConstraintRegions` 在真实路径上永远是空的，
 /// 而第三个过滤条件因此<b>永远不会生效</b>。**
 ///
-/// Completes the last two of the baseline's four parts.
+/// Completes the last two of its four parts.
 ///
 /// **The important find here is not the completion but something only visible while checking parts three and four: the
 /// driver put region records in its <b>return value</b>, whose only consumer was tests — so

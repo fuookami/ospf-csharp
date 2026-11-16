@@ -1,6 +1,6 @@
 // 配置格式 / Configuration formats.
-// 与固定 Kotlin 基线 `configuration/ConfigurationFormats.kt`（7389 B）的 **JSON 路径**对应。
-// Mirrors the **JSON path** of the pinned baseline's `ConfigurationFormats.kt` (7389 B).
+// 与固定 Kotlin （7389 B）的 **JSON 路径**对应。
+// **JSON path**.
 
 using System;
 using System.Collections.Generic;
@@ -32,10 +32,10 @@ public enum ConfigurationFormat {
 /// 配置格式编解码 / Configuration-format codecs.
 /// </summary>
 /// <remarks>
-/// **只实现了 JSON 路径**。基线的 YAML/TOML 路径依赖 Jackson 的 `YAMLFactory`/`TomlFactory` 与 `ktoml`；本仓库没有这两个库，
+/// **只实现了 JSON 路径**。YAML/TOML 路径依赖 Jackson 的 `YAMLFactory`/`TomlFactory` 与 `ktoml`；本仓库没有这两个库，
 /// 也没有为它们引入依赖。
 ///
-/// **本移植只实现了 JSON 路径**。基线的 YAML/TOML 路径依赖 Jackson 的 `YAMLFactory`/`TomlFactory` 与 `ktoml`；本仓库没有这两个库，
+/// **本实现只实现了 JSON 路径**。YAML/TOML 路径依赖 Jackson 的 `YAMLFactory`/`TomlFactory` 与 `ktoml`；本仓库没有这两个库，
 /// 也没有为它们引入依赖。
 ///
 /// `Decode`/`Encode` 对 `Yaml`/`Toml` **显式返回"不支持的格式"**，而不是静默按 JSON 处理——静默回退会让一份 YAML 文件

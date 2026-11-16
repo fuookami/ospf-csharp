@@ -156,7 +156,7 @@ public sealed class Csp1dMilpSolver {
 
         // 求解 MILP / Solve MILP
         // 走带 options 的重载，把进度上下文送进框架层——基线 `Csp1dMilpSolver.solve(..., progressContext)` 正是这样做的。
-        // Use the options overload so the progress context reaches the framework layer — exactly what the baseline's `Csp1dMilpSolver.solve(..., progressContext)` does.
+        // Use the options overload so the progress context reaches the framework layer — exactly what its `Csp1dMilpSolver.solve(..., progressContext)` does.
         Result<FeasibleSolverOutput<Flt64>, ErrorCode, Error<ErrorCode>> solveResult = await _solver.SolveMILPAsync(
             model,
             new Framework.Solver.FrameworkSolveOptions {
@@ -237,7 +237,7 @@ public sealed class Csp1dMilpSolver {
 
         // 求解 LP / Solve LP
         // 走带 options 的重载，把进度上下文送进框架层——基线 `Csp1dMilpSolver.solveLP(input, extensions, progressContext)` 正是这样做的。
-        // Use the options overload so the progress context reaches the framework layer — exactly what the baseline's `solveLP(input, extensions, progressContext)` does.
+        // Use the options overload so the progress context reaches the framework layer — exactly what its `solveLP(input, extensions, progressContext)` does.
         Result<IColumnGenerationSolver.LpResult, ErrorCode, Error<ErrorCode>> lpSolveResult = await _solver.SolveLPAsync(
             model,
             new Framework.Solver.FrameworkSolveOptions {
@@ -250,11 +250,11 @@ public sealed class Csp1dMilpSolver {
         IColumnGenerationSolver.LpResult lpOutput = lpSolveResult.Value;
 
         // 提取影子价格 / Extract shadow prices
-        // **必须把 context 的 CGPipeline 传进去**：基线是 `Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`。
+        // **必须把 context 的 CGPipeline 传进去**：`Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`。
         // 不传的话 `ExtractFromDualSolution` 里 `if (_cgPipelines.Count > 0)` **永不成立**，影子价格**永远是空表**——
         // 而定价正是靠对偶价格决定要不要出列的，于是列生成**第一轮就收敛**。
         //
-        // **The context's CGPipelines must be passed**: the baseline is `Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`.
+        // **The context's CGPipelines must be passed**: the code is `Csp1dShadowPriceLifecycle<V>(domainValueSample, context.cgPipelines)`.
         // Without them, `if (_cgPipelines.Count > 0)` inside `ExtractFromDualSolution` **never holds** and shadow prices are **always an empty map** —
         // and pricing decides by dual price whether to emit a column, so column generation **converges on the first round**.
         var shadowPriceLifecycle = new Csp1dShadowPriceLifecycle<V>(domainValueSample, context.CgPipelines);
@@ -310,7 +310,7 @@ public sealed class Csp1dMilpSolver {
     /// **来源顺序与基线逐条对应**：需求值 → 超长惩罚 → 总长惩罚 → 批次最小惩罚。
     /// 基线写的是 `?:` 链，所以**第一个非 null 的零元**胜出。
     ///
-    /// **The source order mirrors the baseline clause by clause**: demand value, over-length penalty, total-length penalty, batch-min penalty. The baseline uses a `?:`
+    /// **The source order mirrors the code clause by clause**: demand value, over-length penalty, total-length penalty, batch-min penalty. The code uses a `?:`
     /// chain, so **the first non-null identity wins**.
     /// </remarks>
     private static V? ResolveAdditiveZero<V>(
@@ -319,14 +319,14 @@ public sealed class Csp1dMilpSolver {
     ) where V : struct {
         // **返回的是"量的加法零元"，不是那个量本身。**
         //
-        // 基线是 `demand?.quantity?.value?.constants?.zero`——**`constants.zero`**，
+        // `demand?.quantity?.value?.constants?.zero`——**`constants.zero`**，
         // 即该数值类型的加法单位元。C# 第一版返回了 `Quantity.Value`（需求量 60），
         // **于是下界变成了 60**，正是本次要修的那个错误。
         //
         // 判据当场抓到：期望 0，实测 60。**这是"改对了方向但改错了细节"的典型**——
         // 若不写值判据，只查"约束存在"，这个错误会一路过去。
         //
-        // **It returns the quantity's additive identity, not the quantity itself.** The baseline is `demand?.quantity?.value?.constants?.zero` — **`constants.zero`**, the
+        // **It returns the quantity's additive identity, not the quantity itself.** `demand?.quantity?.value?.constants?.zero` — **`constants.zero`**, the
         // additive identity of that numeric type. C#'s first version returned `Quantity.Value` (the 60mm demand), **which made the lower bound 60** — exactly the bug being
         // fixed. The criterion caught it immediately (expected 0, measured 60): **the classic "right direction, wrong detail"**, which a name-only criterion would have missed.
         if (demands.Count > 0) {
@@ -426,13 +426,13 @@ public sealed class Csp1dMilpSolver {
             // **没有需求的产品也要处理。** 基线不跳过它们：产品可以从**切割方案的贡献**里找到，
             // 找不到时下界退到 `zero`。C# 原本 `continue`，于是这类产品的边界**永远推不出来**。
             //
-            // **Products without a demand must be handled too.** The baseline does not skip them: the product is found from a **cutting plan's contribution**, and the
+            // **Products without a demand must be handled too.** The code does not skip them: the product is found from a **cutting plan's contribution**, and the
             // lower bound falls back to `zero`. C# originally did `continue`, so such products **never got bounds at all**.
             demandsByProduct.TryGetValue(productId, out List<ProductDemand<V>>? productDemands);
             productDemands ??= new List<ProductDemand<V>>();
 
-            // 产品来源顺序与基线一致：需求优先，其次方案的贡献。
-            // Product source order matches the baseline: demand first, then a plan's contribution.
+            // 产品来源顺序：需求优先，其次方案的贡献。
+            // Product source order matches the code: demand first, then a plan's contribution.
             Product<V>? product = productDemands.Count > 0 ? productDemands[0].Product : null;
             if (product is null) {
                 foreach (CuttingPlan<V> plan in input.CuttingPlans) {
@@ -451,7 +451,7 @@ public sealed class Csp1dMilpSolver {
             // C# 原本推导成**需求最小值**——**那是一个上界式的假设**：把下界抬到 60mm
             // 会让"分配长度为 0"这个合法解**被排除**。
             //
-            // **The lower bound comes from `zero`, not from a demand quantity.** The baseline assigns `zero`. C# derived **the minimum demand** — **an upper-bound-style
+            // **The lower bound comes from `zero`, not from a demand quantity.** The code assigns `zero`. C# derived **the minimum demand** — **an upper-bound-style
             // assumption**: raising the lower bound to 60mm **excludes the legitimate solution "assigned length = 0"**.
             if (!newLower.ContainsKey(productId)) {
                 V? zero = ResolveAdditiveZero(productDemands, lengthConfig);
@@ -470,10 +470,10 @@ public sealed class Csp1dMilpSolver {
                     newUpper[productId] = maxOverLen.Value;
                 }
                 else if (productDemands.Count > 0) {
-                    // **没有需求时不设上界。** 基线是 `product?.maxOverProduceLength`，两者都没有就留空；
+                    // **没有需求时不设上界。** `product?.maxOverProduceLength`，两者都没有就留空；
                     // C# 原本无条件用需求量，`productDemands` 为空时**会越界**。
                     //
-                    // **Leave the upper bound unset when there is no demand.** The baseline uses `product?.maxOverProduceLength` and leaves it unset when neither exists;
+                    // **Leave the upper bound unset when there is no demand.** The code uses `product?.maxOverProduceLength` and leaves it unset when neither exists;
                     // C# used the demand unconditionally and would **index out of range** on an empty list.
                     V maxDemand = productDemands[0].Quantity.Value;
                     foreach (ProductDemand<V>? d in productDemands.Skip(1)) {

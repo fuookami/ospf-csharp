@@ -63,10 +63,10 @@ public static class OnnxImporter
         /// <param name="index">元素下标 / The element index.</param>
         /// <returns>该元素的表达式 / That element's expression.</returns>
         /// <remarks>
-        /// 对齐基线的 `linearOutput(outputName, elementIndex)`：**多元素输出没有唯一的标量表达式，** '
+        /// 对齐`linearOutput(outputName, elementIndex)`：**多元素输出没有唯一的标量表达式，** '
         /// **所以"第几个元素"必须由调用方给出，而不是由这里挑一个。** **单元素输入上它等价于 `Polynomial`。**
         ///
-        /// Syncs the baseline's `linearOutput(outputName, elementIndex)`: **a multi-element output has no single scalar expression, so "which element" has to come from the caller
+        /// Syncs its `linearOutput(outputName, elementIndex)`: **a multi-element output has no single scalar expression, so "which element" has to come from the caller
         /// rather than being picked here.** **On a single-element output it is the same as Polynomial.**
         /// </remarks>
         public LinearPolynomial<Flt64> Output(int index) {
@@ -95,7 +95,7 @@ public static class OnnxImporter
     /// **导入器不去猜命名。** **这一入口开启之后，多元素输出按 `OutputElements`／`Output(index)` 取，**
     /// **而旧入口在没有符号列表的情况下仍然明确拒绝多元素输出——** **它没有表达这件事的地方。**
     ///
-    /// Syncs the baseline's `load(bytes, inputBindings: Map&lt;String, List&lt;Symbol&gt;&gt;, options)`: **splitting a tensor into per-element symbols is the caller's job, and the importer
+    /// Syncs its `load(bytes, inputBindings: Map&lt;String, List&lt;Symbol&gt;&gt;, options)`: **splitting a tensor into per-element symbols is the caller's job, and the importer
     /// does not guess names.** **With this entry a multi-element output is read through OutputElements / Output(index), while the old entry keeps refusing a multi-element output —
     /// it has nowhere to express it.**
     /// </remarks>
@@ -402,7 +402,7 @@ public static class OnnxImporter
         // 调用方给的符号列表直接变成元素列表：**这就是基线 inputBindings 的落地形态，**
         // **之后逐元素运算、形状算子、`Scan` 全程按元素走，不再回到"一个数"。**
         //
-        // The caller's symbol lists become element lists directly: **this is the baseline inputBindings taking shape here, and from this point elementwise operators, shape operators
+        // The caller's symbol lists become element lists directly: **this is the code inputBindings taking shape here, and from this point elementwise operators, shape operators
         // and Scan all stay per element instead of collapsing back to one number.**
         if (bindings is not null) {
             foreach (KeyValuePair<string, IReadOnlyList<RealVar>> entry in bindings) {

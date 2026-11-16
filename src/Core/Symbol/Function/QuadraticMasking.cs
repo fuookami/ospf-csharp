@@ -23,13 +23,13 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次掩码函数：<c>mask · p(x)</c> / A quadratic masking function.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMasking.kt` 的 `QuadraticMaskingFunction`。
+/// 对齐的 `QuadraticMaskingFunction`。
 ///
 /// **与仓库里其他二次函数一样只支持 `Flt64`**：**桥接本身就是 `Flt64` 的**
 /// （`QuadraticBridging.Bridge` 收 `QuadraticPolynomial&lt;Flt64&gt;`），
 /// **把外层写成泛型只会换来一次 `V → Flt64` 的字符串转换，
 /// 而那种转换在 `V` 是定点数或高精度数时会静默丢精度。**
-/// **基线的泛型是它自己转换器体系的一部分，这里没有对应的东西——所以不假装有。**
+/// **泛型是它自己转换器体系的一部分，这里没有对应的东西——所以不假装有。**
 ///
 /// **结构是"先桥接、再掩码"**：**二次输入 `p` 先被桥接变量 `y` 取代（`y − p = 0`），
 /// 然后 `y` 作为线性输入交给 `MaskingFunction`。**
@@ -44,12 +44,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **桥接等式必须真的写进模型**：**不写的桥接变量是自由的，掩码读的是一个任意值，而模型完全可行。**
 ///
-/// Following the baseline's `QuadraticMaskingFunction`.
+/// Following its `QuadraticMaskingFunction`.
 ///
 /// **`Flt64`-only, like every other quadratic function here**: **the bridge itself is `Flt64`**
 /// (`QuadraticBridging.Bridge` takes `QuadraticPolynomial&lt;Flt64&gt;`), and **making the outer layer generic would only
 /// buy a `V → Flt64` string conversion — one that silently loses precision when `V` is fixed-point or
-/// high-precision.** **The baseline's genericity comes from its own converter system, which has no counterpart here —
+/// high-precision.** **The code's genericity comes from its own converter system, which has no counterpart here —
 /// so this does not pretend to have one.**
 ///
 /// **The structure is "bridge first, then mask"**: **the quadratic input `p` is replaced by a bridge variable `y`

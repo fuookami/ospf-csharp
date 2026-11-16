@@ -119,11 +119,11 @@ public sealed class NSumGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cutting
     /// 对应基线 `NSumGenerator.nSumSearch` 的**迭代式深度优先搜索**：栈里保存"已选切片 + 已用宽度 + 起始下标"，
     /// 每次弹栈时检查剩余宽度是否还容得下任何一个候选，否则就是叶子节点，尝试产出方案。
     ///
-    /// **与基线的差异**（都让能力变弱而不让结果变错）：
+    /// **与差异**（都让能力变弱而不让结果变错）：
     ///
     /// | 基线 | 这里 | 原因 |
     /// | --- | --- | --- |
-    /// | 宽度上界剪枝 + 刀数下界可达性剪枝 | 只有"剩余宽度还容得下" | 可达性剪枝需要 `remainingGenerationCutCapacity`，未移植 |
+    /// | 宽度上界剪枝 + 刀数下界可达性剪枝 | 只有"剩余宽度还容得下" | 可达性剪枝需要 `remainingGenerationCutCapacity`，未实现 |
     /// | 切片模板缓存与记录器 | 无 | 缓存类存在但没有工厂 |
     /// | 数量缓存 | 直接算 | 同上 |
     /// | 并行按物料分任务 | 串行 | 需要完整的报告合并语义 |
@@ -131,10 +131,10 @@ public sealed class NSumGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cutting
     /// **关键正确性点**：`startIndex` 保证**候选下标单调不减**，因此同一组合不会被不同顺序重复枚举。
     /// 这一点若写错，会产生大量重复方案——而**去重会静默吸收它们，使"方案数看起来正常"**。
     ///
-    /// Mirrors the baseline's `nSumSearch` as an **iterative depth-first search**: the stack holds "chosen slices + used width + start index"; popping a frame
+    /// As an **iterative depth-first search**: the stack holds "chosen slices + used width + start index"; popping a frame
     /// checks whether the remaining width still fits any candidate, otherwise it is a leaf and a plan is emitted.
     ///
-    /// The differences from the baseline are recorded above; **all of them weaken the capability without making results wrong**.
+    /// The differences from the code are recorded above; **all of them weaken the capability without making results wrong**.
     ///
     /// **The key correctness point**: `startIndex` keeps **candidate indices monotonic**, so one combination is never enumerated in a different order. Getting
     /// this wrong produces a flood of duplicate plans — **and de-duplication silently absorbs them, making "the plan count look normal"**.

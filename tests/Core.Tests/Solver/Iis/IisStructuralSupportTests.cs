@@ -66,9 +66,9 @@ public class IisStructuralSupportTests {
     /// <summary>**关联变量按索引升序、且只保留被标记的一侧边界** / Related variables are index-ascending and keep only the marked bound side.</summary>
     /// <remarks>
     /// 这是 IIS 的核心语义：**只保留导致不可行的边界**，其余置 `null`。
-    /// 判据同时钉住**排序**（基线用 `sortedBy`）与**边界取舍**。
+    /// 判据同时钉住**排序**（`sortedBy`）与**边界取舍**。
     ///
-    /// This is the core IIS semantics: **keep only the bounds that cause infeasibility** and null the rest. The criterion pins both the **ordering** (the baseline sorts)
+    /// This is the core IIS semantics: **keep only the bounds that cause infeasibility** and null the rest. The criterion pins both the **ordering** (the code sorts)
     /// and the **bound selection**.
     /// </remarks>
     [Fact]

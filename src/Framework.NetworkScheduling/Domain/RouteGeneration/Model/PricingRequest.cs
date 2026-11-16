@@ -1,6 +1,6 @@
 // ESPPRC 标签、定价请求与定价结果 / ESPPRC label, pricing request and pricing result.
-// 与固定 Kotlin 基线 `EspprcLabel.kt`（58 行）、`PricingRequest.kt`（46 行）、`PricingResult.kt`（28 行）对应。
-// Mirrors the pinned baseline's `EspprcLabel.kt`, `PricingRequest.kt` and `PricingResult.kt`.
+// 与固定 Kotlin 、（46 行）、（28 行）对应。
+// , and.
 
 using System;
 using System.Collections.Generic;

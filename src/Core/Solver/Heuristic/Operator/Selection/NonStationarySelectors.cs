@@ -1,6 +1,5 @@
 // 非平稳选择器 / Non-stationary selectors.
-// 与固定 Kotlin 基线 `selection/NonStationarySelectors.kt`（12156 B）对应。
-// Mirrors the pinned baseline's `NonStationarySelectors.kt` (12156 B).
+// 与固定 Kotlin （12156 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +78,7 @@ public sealed record CreditState(
 /// **同一决策号重复 `select` 必须报错**。允许覆盖会让前一次派发的前驱被静默丢弃，而后续 `observe` 仍能成功、只是记错了配对。
 /// **Selecting twice for the same decision must fail.** Allowing overwrite silently drops the earlier dispatch's predecessor, and the
 /// Following
-/// **`adaptive-pursuit` 在全更新率（`rate == 1`）时直接取目标值**。基线的理由写的是"避免消去误差跌破概率下界"，但在双精度下
+/// **`adaptive-pursuit` 在全更新率（`rate == 1`）时直接取目标值**。理由写的是"避免消去误差跌破概率下界"，但在双精度下
 /// `p + 1.0*(target - p)` 与 `target` 算术上完全相同——变异测试删掉这条捷径后测试**仍然通过**，是**等价变异**。
 /// 保留它是为了与基线逐字一致；把它说成"防止了数值下溢"会是假的。
 /// **`adaptive-pursuit` assigns the target directly at full rate (`rate == 1`).** Going through `p + rate*(target - p)` can dip below
@@ -228,7 +227,7 @@ public class NonStationarySelector : ISelectionPolicy {
         }
         // **按 `actions` 的原序过滤掩码**，而不是按 `available` 的顺序。基线写 `actions.filter { it in available }`；
         // 用 `available` 的顺序会让 `maxBy` 在并列时选出不同动作，而两种顺序下的分数完全相同。
-        // **The mask is filtered in `actions` order**, not `available` order. The baseline writes `actions.filter { it in available }`;
+        // **The mask is filtered in `actions` order**, not `available` order. The code writes `actions.filter { it in available }`;
         // using `available` order makes `maxBy` pick a different action on ties while both orders have identical scores.
         var filtered = new List<string>(_actions.Count);
         foreach (string action in _actions) {

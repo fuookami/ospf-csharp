@@ -27,7 +27,7 @@ public sealed class CriticalConstraintAnalysisReportBuilder
     private readonly List<string> _unavailableReasons = [];
     private bool _hasUnsupportedStage;
 
-    /// <summary>记下基线摘要 / Record the baseline summary.</summary>
+    /// <summary>记下基线摘要 / Record the code summary.</summary>
     /// <param name="value">基线摘要 / The baseline summary.</param>
     /// <returns>自身，便于串联 / This builder, for chaining.</returns>
     public CriticalConstraintAnalysisReportBuilder Baseline(AnalysisBaselineSummary value) {
@@ -111,7 +111,7 @@ public sealed class CriticalConstraintAnalysisReportBuilder
     /// **三种失败都返回错误，不返回"尽力而为"的报告：**
     ///
     /// | 缺什么 | 为什么不能凑合 |','    /// | --- | --- |',
-    /// | 基线摘要 | 一份不知道基线是什么的分析报告 |',
+    /// | 基线摘要 | 一份不知道什么的分析报告 |',
     /// | 活动性报告 | 候选漏斗无从算起 |',
     /// | **有扰动但基线目标值缺失** | **有效性排序拿不到比较基准** |','',
     /// **第三条最容易写漏**：扰动报告为空时不需要基线值，**非空时才需要**——

@@ -13,16 +13,16 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 列的检验数 / The reduced cost of a column.
 /// </summary>
 /// <remarks>
-/// 与基线 `ReducedCost.kt` 的 `layerReducedCost` 对齐：`检验数 = 该列实际面积 × 面积系数 − Σ(需求影子价格 × 该列对该需求的系数)`。
+/// 与的 `layerReducedCost` 对齐：`检验数 = 该列实际面积 × 面积系数 − Σ(需求影子价格 × 该列对该需求的系数)`。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **影子价格为零的需求直接跳过**：乘零不改变结果，但会让"没有定价的需求"和"定价为零的需求"在求和里混在一起，
 ///    排查时看不出差别。
 /// 2. **系数用 `LayerDemandCoefficient`**，不是件数：面积需求下件数完全不对（已记档同一处）。
 /// 3. **没有影子价格的需求跳过**（`continue`），不按零参与——缺失与零是两回事，与 的教训相同。
 ///
-/// Aligned with the baseline's `layerReducedCost`: `reduced cost = the column's actual area × the area coefficient − Σ(demand shadow price × that column's coefficient for the demand)`. Three
+/// Aligned with its `layerReducedCost`: `reduced cost = the column's actual area × the area coefficient − Σ(demand shadow price × that column's coefficient for the demand)`. Three
 /// things must be copied: **demands with a zero shadow price are skipped**, since multiplying by zero changes no total but blurs "unpriced demand" against "demand priced at zero" when
 /// debugging; **the coefficient comes from `LayerDemandCoefficient`** rather than the unit count, which is simply wrong for area demands (recorded); and **demands without a shadow price
 /// are skipped** rather than entering as zero, since missing and zero differ — the same lesson.
@@ -82,7 +82,7 @@ public static class ReducedCost
     /// 与基线 `shadowPriceKeysOf` 对齐。**只保留需求项里出现过的键**：求解器可能返回额外的键（比如松弛变量的），
     /// 全部收下会让检验数里混进不相关的价格。**找不到就跳过**，不按零补。
     ///
-    /// Aligned with the baseline's `shadowPriceKeysOf`. **Only keys present in the demand entries survive**: the solver may return extras such as slack-variable prices, and taking them all would
+    /// Aligned with its `shadowPriceKeysOf`. **Only keys present in the demand entries survive**: the solver may return extras such as slack-variable prices, and taking them all would
     /// mix unrelated prices into the reduced cost. **A missing key is skipped**, not filled with zero.
     /// </remarks>
     public static IReadOnlyDictionary<Bpp2dDemandShadowPriceKey, FltX> ShadowPriceKeysOf(
@@ -118,14 +118,14 @@ public static class ReducedCost
 /// 与基线 `reducedCostFilter` 对齐：给每个候选列算检验数，**只留检验数小于负容差的**（真正能改进目标的），
 /// 并按检验数升序排（最负的在前，先被用上）。
 ///
-/// 两处必须照抄：
+/// 两处必须沿用：
 ///
 /// 1. **阈值是 `-容差`**，不是零：浮点检验数不会精确为零，用零会让"恰好为零"的候选被当成改进列，
 ///    每轮都收一批无用的列，直到迭代上限。
 /// 2. **排序在筛选之后**：先筛后排与先排后筛结果相同，但先筛能少排一批——**这里是"顺序不影响正确性、但影响开销"的那类**，
 ///    所以只在注释里记下，不当作正确性要求。
 ///
-/// Aligned with the baseline's `reducedCostFilter`: every candidate gets a reduced cost, **only those below the negative tolerance survive** (the ones that genuinely improve), and they are sorted
+/// Aligned with its `reducedCostFilter`: every candidate gets a reduced cost, **only those below the negative tolerance survive** (the ones that genuinely improve), and they are sorted
 /// ascending by reduced cost so the most negative is used first. Two things must be copied: **the threshold is `-tolerance` rather than zero**, since a floating-point reduced cost is never
 /// exactly zero and a zero threshold would treat "exactly zero" as improving and collect a batch of useless columns each round until the limit; and **sorting happens after filtering**, which
 /// gives the same result either way but filters fewer — **an order that does not affect correctness but does affect cost**, recorded here rather than treated as a correctness rule.

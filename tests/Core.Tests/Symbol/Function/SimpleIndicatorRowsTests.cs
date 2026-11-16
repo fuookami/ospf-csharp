@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 简单指示行：先做差分，违反侧用松弛后的 M / Difference first, relaxed M on the violated side.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `BigM.kt` 的 `simpleIndicatorConstraints`（LE/GE）与 `nonnegativeIndicatorConstraints`。
+/// 对齐的 `simpleIndicatorConstraints`（LE/GE）与 `nonnegativeIndicatorConstraints`。
 ///
 /// **`diff = lhs − rhs`，之后所有行只针对 `diff`。**
 ///
@@ -121,7 +121,7 @@ public class SimpleIndicatorRowsTests
     /// </summary>
     /// <remarks>
     /// **与下界行同一个理由：`strictBoundary` 是违反侧的间隔，
-    /// 照抄 `bigM` 会让违反侧多松 `strictBoundary`。**
+    /// 沿用 `bigM` 会让违反侧多松 `strictBoundary`。**
     ///
     /// **取 `bigM = 100`、`strictBoundary = 2`：放松量应为 `102`。**
     /// **判据断言 `x = 5 + 2 = 7` 处 `_violated` 恰好是紧的**
@@ -264,13 +264,13 @@ public class SimpleIndicatorRowsTests
     /// **`EQ` 不传方向列时临建一个，而不是失败** / `EQ` creates a direction column when none is given.
     /// </summary>
     /// <remarks>
-    /// **基线在 `sideVar` 为 `null` 时 `BinVar("${namePrefix}_side")`。**
+    /// **`sideVar` 为 `null` 时 `BinVar("${namePrefix}_side")`。**
     ///
     /// **这条判据只断言"能建出来且有四条行"——
     /// 它<b>不</b>断言那个临建的列被登记了，因为登记是调用方的责任，而这里没有调用方。**
     /// **把这条限制写出来，比让读的人以为"临建就完事了"要好。**
     ///
-    /// **The baseline creates `BinVar("${namePrefix}_side")` when `sideVar` is null.**
+    /// **The code creates `BinVar("${namePrefix}_side")` when `sideVar` is null.**
     ///
     /// **The criterion only asserts "it builds, with four rows" — it does <b>not</b> assert the created column was
     /// registered, because registering is the caller's job and there is no caller here.**

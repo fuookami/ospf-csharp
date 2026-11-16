@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// KB 是 1000，KiB 是 1024——而本仓原来把 KiB 的值安在了 KB 上 / KB is 1000, KiB is 1024.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Information.kt` 补全 18 个信息单位，**同时修掉一个真实错误**：
+/// 对齐补全 18 个信息单位，**同时修掉一个真实错误**：
 /// **本仓原来的 `Kilobyte` 用的是 1024（`Kibibyte` 的值），符号却写着 `KB`。**
 /// `Megabyte`/`Gigabyte` 同样错（1024²、1024³）。
 ///
 /// **这类错误最难发现，因为"KB 是 1000 还是 1024"在业界本来就被混用**，
 /// **而符号与数值对不上这件事，从外部调用完全看不出来。**
 ///
-/// Completes the 18 information units from the baseline's `Information.kt`
+/// Completes the 18 information units from its
 /// **and fixes a real defect**: **this repo's `Kilobyte` used 1024 (the value of `Kibibyte`) while its symbol said `KB`.**
 /// `Megabyte`/`Gigabyte` were wrong the same way.
 ///
@@ -183,7 +183,7 @@ public class InformationUnitsTests
         }
     }
 
-    /// <summary>**单位清单与基线一致** / The unit list matches the baseline.</summary>
+    /// <summary>**单位清单** / The unit list matches the code.</summary>
     [Fact]
     public void TheUnitList_ShouldMatchTheBaseline()
     {

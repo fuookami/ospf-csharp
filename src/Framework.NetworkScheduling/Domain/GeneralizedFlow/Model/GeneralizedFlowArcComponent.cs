@@ -1,10 +1,9 @@
 // 广义流弧变量组件 / Generalized-flow arc variable component.
-// 与固定 Kotlin 基线 `model/GeneralizedFlowArcComponent.kt`（2697 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowArcComponent.kt`.
+// 与固定 Kotlin （2697 字节）对应。
 //
-// 基线的 `GeneralizedFlowPipelineFactory` 是 `fun interface`，在 C# 里直接由
+// `GeneralizedFlowPipelineFactory` 是 `fun interface`，在 C# 里直接由
 // `Func<GeneralizedFlowExpressions, IPipeline<LinearMetaModel<Flt64>>>` 表达，不再单独声明一个只有单一方法的接口。
-// The baseline's `GeneralizedFlowPipelineFactory` is a `fun interface`; in C# it is expressed directly as
+// `GeneralizedFlowPipelineFactory` is a `fun interface`; in C# it is expressed directly as
 // `Func<GeneralizedFlowExpressions, IPipeline<LinearMetaModel<Flt64>>>` without declaring another single-method interface.
 
 using System;

@@ -21,17 +21,17 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次多项式的桥接变量：<c>y = p</c> / A bridge variable for a quadratic polynomial: `y = p`.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticLinear.kt` 把空壳换成真实编码。
+/// 对齐把空壳换成真实编码。
 ///
 /// **线性输入时什么都不做**：**`y` 不创建、约束不写、辅助变量为空**——
 /// **一条 `y = p` 的等式对本来就是线性的 `p` 只是把 `p` 抄了一遍，白添一个变量与一条等式。**
 /// **判据必须验证这一点**：**只验证"线性时注册成功"是不够的，因为"多写了一条等式"也注册成功。**
 ///
 /// **非线性输入时用无界实变量 `RealVar`，不能用 `URealVar`。**
-/// **基线的注释明确记了这件事**：**`URealVar` 会在求解器边界把负值静默截断成 0——
+/// **注释明确记了这件事**：**`URealVar` 会在求解器边界把负值静默截断成 0——
 /// 于是同一个多项式在负半轴上的结果全错，而模型照样求解成功。**
 ///
-/// Replaces a stub with the real encoding, following the baseline's `QuadraticLinear.kt`.
+/// Replaces a stub with the real encoding, following its.
 ///
 /// **A linear input does nothing**: **no `y`, no row, no helper** —
 /// **a `y = p` equality over an already-linear `p` only copies it, adding a variable and a row for nothing.**
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// succeeds.**
 ///
 /// **A non-linear input uses an unbounded `RealVar`, never a `URealVar`.**
-/// **The baseline's comment records why**: **a `URealVar` silently clips negatives to zero at the solver boundary —
+/// **The code's comment records why**: **a `URealVar` silently clips negatives to zero at the solver boundary —
 /// so the polynomial is wrong on its whole negative half while the model still solves fine.**
 /// </remarks>
 public sealed class QuadraticLinearFunction : IMathFunctionSymbol<Flt64> {

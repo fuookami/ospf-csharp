@@ -1,7 +1,7 @@
 // 搜索档案与拥挤距离 / Search archives and crowding distance.
-// 与固定 Kotlin 基线 `operator/archive/Archive.kt`、`operator/archive/ParetoSearchArchive.kt`、
-// `operator/multi_objective/ParetoArchive.kt`、`operator/multi_objective/NonDominatedSort.kt` 的 `CrowdingDistance` 对应。
-// Mirrors the pinned baseline's `Archive.kt`, `ParetoSearchArchive.kt`, `ParetoArchive.kt` and `CrowdingDistance`.
+// 与固定 Kotlin 、
+//、 的 `CrowdingDistance` 对应。
+// ,, and `CrowdingDistance`.
 
 using System;
 using System.Collections.Generic;

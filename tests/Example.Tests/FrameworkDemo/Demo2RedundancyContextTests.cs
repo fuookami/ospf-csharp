@@ -108,10 +108,10 @@ public class Demo2RedundancyContextTests {
     ///
     /// 1. **预配载** → 两条目标，名字是 `"experimental longitudinal balance"` 与 `"redundancy"`。
     /// 2. **全载** → **零条**目标，且返回成功（不是失败）。
-    /// 3. **建议打板** → **零条**目标。这一点容易写成"少加几条"，基线是**一条都不加**。
+    /// 3. **建议打板** → **零条**目标。这一点容易写成"少加几条"，**一条都不加**。
     ///
     /// Three paired points: **predistribution** gives two objectives named `"experimental longitudinal balance"` and `"redundancy"`; **full load** gives **zero** objectives and still
-    /// succeeds; and **weight recommendation** gives **zero** — easy to write as "fewer pipelines", but the baseline adds **none**.
+    /// succeeds; and **weight recommendation** gives **zero** — easy to write as "fewer pipelines", but the code adds **none**.
     /// </remarks>
     [Fact]
     public void PipelineListGenerator_ShouldOnlyFireDuringPredistribution() {

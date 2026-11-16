@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 条件结果：指示列为 1 时取输入，否则为 0 / Value equals the input on indicator one, otherwise zero.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `model/intermediate/ConditionalValue.kt`。
+/// 对齐。
 ///
 /// **四条约束是"两个分支各两条"，而两个分支的方向相反**：
 ///
@@ -45,9 +45,9 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// `result` 变成一个介于 0 与 `input` 之间的原像——模型可行，结果是捏造出来的。**
 /// **③ `lower ≤ upper`** —— **倒序范围会让 `_zero_*` 把 `result` 夹进一个空区间。**
 ///
-/// Following the baseline's `ConditionalValue`.
+/// Following its `ConditionalValue`.
 ///
-/// **The four rows are "two per branch", and the branches pull in opposite directions**:
+/// **The four rows are "two per branch", and the branches pull in opposite directions**.
 ///
 /// | Row | indicator = 0 | indicator = 1 |
 /// | --- | --- | --- |
@@ -62,7 +62,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **So `bounds` is not "the input's range" but a <b>witness</b>**: **it keeps `_zero_*` from binding at indicator 1.
 /// A wrong (too narrow) `bounds` either makes the model infeasible or cuts off legal solutions.**
 ///
-/// **None of the three checks is cosmetic**:
+/// **None of the three checks is cosmetic**.
 ///
 /// **① `resultVariable != indicator`** — **with one variable serving both roles, the branches demand it be zero and
 /// equal to `input` at once, and the four rows conflict outright.**
@@ -72,11 +72,11 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 ///
 /// **只支持 `Flt64`，与仓库里其他条件结构一致**：**数值可用性检查（`ConditionPolynomials.IsUsable`）
 /// 本身就是 `Flt64` 的，而 `V` 版本只能靠 `ToString` 再过一遍——那会静默丢精度。**
-/// **基线的泛型来自它自己的转换器体系，这里没有对应的东西，所以不假装有。**
+/// **泛型来自它自己的转换器体系，这里没有对应的东西，所以不假装有。**
 ///
 /// **`Flt64`-only, like the other condition structures here**: **the numeric usability check
 /// (`ConditionPolynomials.IsUsable`) is itself `Flt64`, and a `V` version could only round-trip through `ToString` —
-/// which loses precision silently.** **The baseline's genericity comes from its own converter system, which has no
+/// which loses precision silently.** **The code's genericity comes from its own converter system, which has no
 /// counterpart here, so this does not pretend to have one.**
 /// </remarks>
 /// <param name="Input">真分支输入 / The true-branch input.</param>

@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **解提取必须四舍五入，不是截断** / Extracted solution amounts must round, not truncate.
 /// </summary>
 /// <remarks>
-/// 发现的偏离**：基线是 `doubleValue.roundToLong.coerceAtLeast(0)`，
+/// 发现的偏离**：`doubleValue.roundToLong.coerceAtLeast(0)`，
 /// C# 原本是 `(long)doubleValue`——**截断**。
 ///
 /// 两个后果，第二个更严重：
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// `0.6` 那一行说明问题：**一条用了 0.6 次的方案会被当成"没用"而整条丢弃**，
 /// 物料用量、设备用量、欠产判定全部跟着少算。
 ///
-/// **the earlier deviation**: the baseline is `doubleValue.roundToLong.coerceAtLeast(0)` while C# was `(long)doubleValue` — **truncation**. The table above shows the two
+/// **the earlier deviation**: the code is `doubleValue.roundToLong.coerceAtLeast(0)` while C# was `(long)doubleValue` — **truncation**. The table above shows the two
 /// consequences; the `0.6` row is the serious one — **a plan used 0.6 times is discarded as "unused"**, and the material, machine and deficit figures all under-count with it.
 /// </remarks>
 public class Csp1dSolutionRoundingTests {

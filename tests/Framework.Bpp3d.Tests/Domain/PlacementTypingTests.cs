@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// <remarks>
 /// **此前这里有一个语义分歧：** **旧的 `TopItemPlacements` 返回"全局最高一层的所有放置"，
 /// 而基线返回"没有任何底面重叠且更高的放置压在其上的放置"。** **一高一低并列时两者答案不同：** **基线两件都算顶层，旧实现只返回高的那件。**
-/// **旧实现全仓零调用方，所以按基线替换。** **第一条判据就是那个让两者分道的场景。**
+/// **旧实现全仓零调用方，所以替换。** **第一条判据就是那个让两者分道的场景。**
 ///
-/// **There used to be a semantic divergence: the old `TopItemPlacements` returned "every placement on the globally highest layer" while the baseline
-/// returns "every placement that no overlapping higher placement sits above".** **With a tall and a short item side by side the two disagree: the baseline
-/// counts both, the old one returned only the tall one.** **The old implementation had zero callers, so it is replaced by the baseline's. The first criterion
+/// **There used to be a semantic divergence: the old `TopItemPlacements` returned "every placement on the globally highest layer" while the code
+/// returns "every placement that no overlapping higher placement sits above".** **With a tall and a short item side by side the two disagree: the code
+/// counts both, the old one returned only the tall one.** **The old implementation had zero callers, so it is replaced by its. The first criterion
 /// is exactly the shape that separates them.**
 /// </remarks>
 public class PlacementTypingTests
@@ -52,7 +52,7 @@ IReadOnlyList<QuantityPlacement3<ActualItem, FltX>> tops = PlacementTyping.TopIt
         tops.Should().NotContain(baseItem, "the base is covered by the tall box standing on it");
 
         // 基线比的是放置的下沿（`.y`）：矮箱在 x=5 处与底座不重叠，所以它下面确实没有东西，也算底面放置。
-        // The baseline compares bottom edges (`.y`): the short box at x=5 does not overlap the base, so nothing is under it and it is a bottom
+        // The code compares bottom edges (`.y`): the short box at x=5 does not overlap the base, so nothing is under it and it is a bottom
         // placement too.
 IReadOnlyList<QuantityPlacement3<ActualItem, FltX>> bottoms = PlacementTyping.BottomItemPlacements(placements);
         bottoms.Should().Contain(baseItem, "nothing is under the base");
@@ -103,8 +103,8 @@ var views = placements.Select(PlacementTyping.AsStackPlacement).ToList();
     /// 基线递归用的是 `filterBottomOverlapped`：**只比底面投影。** 一个浮在两米多高、投影重叠的放置**仍然算"在同一个竖向通道里"**，
     /// 因为基线要的是"这一列里还有谁"，而不是"谁承着谁"。第一版按"贴着"实现，三层堆叠因此只数出两层。
     ///
-    /// The baseline recursion uses `filterBottomOverlapped`, which compares bottom footprints only. A placement floating two metres up but sharing the
-    /// footprint still counts as "in the same vertical column", because the baseline asks who else is in this column, not who carries whom. The first version
+    /// The code recursion uses `filterBottomOverlapped`, which compares bottom footprints only. A placement floating two metres up but sharing the
+    /// footprint still counts as "in the same vertical column", because the code asks who else is in this column, not who carries whom. The first version
     /// implemented "touching" and therefore counted a three-high stack as two.
     /// </remarks>
     [Fact]

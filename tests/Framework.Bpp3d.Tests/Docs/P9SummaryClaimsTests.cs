@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// | --- | --- |
 /// | `PatternColumnBenchmark` 无法移植：本仓**根本没有 `Framework.Bpp1d`** | **项目在** |
 /// | `GenerationCacheBuildBenchmark` 无法移植：`DFSGenerator` 是 `internal` | **是 `public`** |
-/// | `Item.Weight` 不参与任何约束：`BinType.Capacity` 未用于重量限制 | **`BinType.MaxWeight` 参与**，而 `Capacity` **基线里也没有** |
+/// | `Item.Weight` 不参与任何约束：`BinType.Capacity` 未用于重量限制 | **`BinType.MaxWeight` 参与**，而 `Capacity` **也没有** |
 ///
 /// **三条全错，而三条都是"做不了"这种方向。** 说"做完了"而其实没做，会让人少做一步；
 /// 说"做不了"而其实能做，**那一步永远不会有人去做**。
@@ -53,10 +53,10 @@ public class P9SummaryClaimsTests
 
     /// <summary>**重量真的参与方案校验** / Weight really takes part in pattern validation.</summary>
     /// <remarks>
-    /// 基线在 `PackingProblem.validatePattern` 里把物品重量换算到箱体单位、按件数缩放、求和，再与 `maxWeight` 比较。
+    /// `PackingProblem.validatePattern` 里把物品重量换算到箱体单位、按件数缩放、求和，再与 `maxWeight` 比较。
     /// C# 的 `PackingProblem.ValidatePattern` 逐行对应。**这条判据钉的是"重量被读了"，不是"重量字段在"。**
     ///
-    /// The baseline converts each item's weight into the bin's unit, scales by the count, sums, and compares against `maxWeight`; the C# `ValidatePattern` matches it
+    /// The code converts each item's weight into the bin's unit, scales by the count, sums, and compares against `maxWeight`; the C# `ValidatePattern` matches it
     /// line for line. **This pins "the weight is read", not "the weight field exists".**
     /// </remarks>
     [Fact]
@@ -68,8 +68,8 @@ public class P9SummaryClaimsTests
         text.Should().Contain("bin.MaxWeight", "the weight limit has to be read for the pattern to be checked against it");
         text.Should().Contain("方案超过箱体容量",
             "and exceeding it has to be refused, not silently accepted");
-        // **`BinType.Capacity` 在基线里也不存在**：那条笔记点了一个不存在的字段。
-        // **`BinType.Capacity` does not exist in the baseline either**: that note named a field that was never there.
+        // **`BinType.Capacity` 在也不存在**：那条笔记点了一个不存在的字段。
+        // **`BinType.Capacity` does not exist in the code either**: that note named a field that was never there.
         text.Should().NotContain("Capacity",
             "the baseline's BinType is (id, length, maxWeight, cost, inventory); a Capacity field would be an invention");
     }

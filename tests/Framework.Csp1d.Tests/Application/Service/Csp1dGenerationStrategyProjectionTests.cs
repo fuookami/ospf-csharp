@@ -132,7 +132,7 @@ public class Csp1dGenerationStrategyProjectionTests {
     /// 这条钉住 `Resolve` 的语义，也就是基线 `firstNotNullOfOrNull`。
     /// 若实现改成"最后一个胜出"或"任一非 null 就拼串"，判据会红。
     ///
-    /// This pins `Resolve`'s semantics, i.e. the baseline's `firstNotNullOfOrNull`. If the implementation switched to "last wins" or concatenated, this would fail.
+    /// This pins `Resolve`'s semantics, i.e. its `firstNotNullOfOrNull`. If the implementation switched to "last wins" or concatenated, this would fail.
     /// </remarks>
     [Fact]
     public void Resolve_ShouldTakeTheFirstNonNullOverride() {

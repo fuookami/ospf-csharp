@@ -1,6 +1,6 @@
 // 时间冲突约束的任务筛选与冲突对枚举 / Task filtering and conflicting-pair enumeration for the time conflict constraint.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-task-compilation-context/.../TaskTimeConflictConstraint.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `TaskTimeConflictConstraint.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

@@ -20,20 +20,20 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service.
 /// 建议压舱重量目标 / The advised-ballast-weight objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `soft_security/service/limits/AdviceBallastWeightLimit.kt` 对齐：**当且仅当**存在建议压舱重量时，建立一个
+/// 与对齐：**当且仅当**存在建议压舱重量时，建立一个
 /// **只有负偏差**的阈值松弛（`withNegative = true`、`withPositive = false`），并把它作为**最小化目标**——即"实际压舱不超过建议值"。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **没有建议值时什么都不做**（不是加一个恒零项）。加零项会让模型里多一个无意义的符号。
-/// 2. **只有负偏差**：`withPositive = false`。两个方向都要，惩罚会变成"越接近越好"，而基线的语义是**单边**的。
+/// 2. **只有负偏差**：`withPositive = false`。两个方向都要，惩罚会变成"越接近越好"，而语义是**单边**的。
 /// 3. **阈值单位是飞机的重量单位**（`aircraftModel.weightUnit`），而 `ballast.ballastWeight` 自带单位，需要转换。
 /// 4. **它既是约束也是目标**：`SlackFunction` 的 `constraint: true` 会注册松弛约束，随后的 `AddObject(Minimum, …)` 才是目标。
 ///
-/// Aligned with the baseline: **only when** an advised ballast weight exists, build a **negative-only** threshold slack (`withNegative = true`, `withPositive = false`) and add it
-/// as a **minimisation objective** — that is, "actual ballast does not exceed the advised value". Four things must be copied: **with no advised value, do nothing** (not "add a
+/// **only when** an advised ballast weight exists, build a **negative-only** threshold slack (`withNegative = true`, `withPositive = false`) and add it
+/// as a **minimisation objective** — that is, "actual ballast does not exceed the advised value". Four things are carried over: **with no advised value, do nothing** (not "add a
 /// constant-zero term", which would leave a meaningless symbol in the model); **negative deviation only**, since allowing both makes the penalty "the closer the better" while
-/// the baseline's meaning is one-sided; **the threshold is in the aircraft weight unit** while `ballast.ballastWeight` carries its own, so a conversion is needed; and **it is
+/// its meaning is one-sided; **the threshold is in the aircraft weight unit** while `ballast.ballastWeight` carries its own, so a conversion is needed; and **it is
 /// both a constraint and an objective** — `SlackFunction`'s `constraint: true` registers the slack constraint, and the subsequent `AddObject(Minimum, …)` is the objective.
 /// </remarks>
 public sealed class AdviceBallastWeightLimit

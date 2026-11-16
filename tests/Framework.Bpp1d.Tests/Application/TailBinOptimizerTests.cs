@@ -20,12 +20,12 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **尾箱重排** / Tail-bin rearrangement.
 /// </summary>
 /// <remarks>
-/// 对应基线 `TailBinOptimizer.kt`。判据分两层：
+/// 对应。判据分两层：
 ///
 /// - **打分口径**不需要求解器，直接打在 `Score` 上——**单位换算是本类里最容易错的一段**；
 /// - **重排主流程**需要真实求解器（它要重求局部模型）。
 ///
-/// Mirrors `TailBinOptimizer.kt`. The criteria come in two layers: the **scoring metrics** need no solver and hit `Score` directly (**unit conversion is the most
+/// Mirrors. The criteria come in two layers: the **scoring metrics** need no solver and hit `Score` directly (**unit conversion is the most
 /// error-prone part**), while the **rearrangement flow** needs a real solver because it re-solves a local model.
 /// </remarks>
 public class TailBinOptimizerTests {
@@ -106,11 +106,11 @@ public class TailBinOptimizerTests {
 
     /// <summary>**同分时候选仍会走到 `accept`** / On a tie the candidate still reaches `accept`.</summary>
     /// <remarks>
-    /// 基线是 `if (score(candidate) > score(current)) return Ok(current)`——**严格大于**才保留原结果。
+    /// `if (score(candidate) > score(current)) return Ok(current)`——**严格大于**才保留原结果。
     /// 改成 `>=` 时，同分（正常情形）就不再调用 `accept`：**外部业务策略被静默跳过**。
     /// 判据用一个"总是拒绝"的 `accept`：严格大于下它必然被调用 ⇒ 结果失败。
     ///
-    /// The baseline keeps the original only on **strictly greater**. With `&gt;=`, a tie — the normal case — never reaches `accept`, so the **external business policy is
+    /// The code keeps the original only on **strictly greater**. With `&gt;=`, a tie — the normal case — never reaches `accept`, so the **external business policy is
     /// silently skipped**. The criterion passes an always-rejecting `accept`: under strict-greater it is called and the result must fail.
     /// </remarks>
     [Fact]

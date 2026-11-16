@@ -64,9 +64,9 @@ public class TaskOnTimeMaximization<T, E, A>
     /// 基线还有 `threshold` 分支（先建 `thresholdSlack` 再优化它的截断部分）。C# 的构造函数**没有 threshold 参数**，
     /// `ThresholdSlack` 只是纯函数，所以只有阈值 0 这一支。
     ///
-    /// The baseline maximises `coefficient × Σ_t OnTime[t]`, objective name `task on time`. The task set is the one given at construction — **no per-task re-filtering**,
+    /// The code maximises `coefficient × Σ_t OnTime[t]`, objective name `task on time`. The task set is the one given at construction — **no per-task re-filtering**,
     /// because "may move" and "on time" are different things: a task allowed to delay still deserves credit for finishing on time, its `on_time` merely being constant zero when
-    /// the switch is off. The baseline's `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
+    /// the switch is off. The code's `threshold` branch (build a `thresholdSlack`, optimise its capped part) has **no threshold parameter** here — `ThresholdSlack` is a pure
     /// function — so only the zero-threshold path exists.
     /// </remarks>
     public Try Invoke(object model) {

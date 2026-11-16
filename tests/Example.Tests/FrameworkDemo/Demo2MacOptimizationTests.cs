@@ -262,7 +262,7 @@ public class Demo2MacOptimizationTests {
         // 系数是否真的被用上，在 `LongitudinalBalance` 之外的路径（`MacRangeC` 等参数解析）里没有别的可观察面，
         // 因此这里只钉"三分支都能装配出一个目标"，并把不可观测记下来。
         //
-        // **This criterion can only show the three branches are reachable, not the coefficient values**: all three slack symbols are zero polynomials (the baseline writes
+        // **This criterion can only show the three branches are reachable, not the coefficient values**: all three slack symbols are zero polynomials (the code writes
         // `LinearExpressionSymbol(Flt64, name = …)`), so multiplying by any coefficient still gives the zero polynomial and the objective carries **no monomials**. Asserting a
         // coefficient would depend on a monomial that does not exist — measured to throw `ArgumentOutOfRangeException`. Whether the coefficient is really used has no other observable
         // surface outside `LongitudinalBalance` (the `MacRangeC` parameter is parsed elsewhere), so this pins only "each branch assembles one objective" and records the gap.

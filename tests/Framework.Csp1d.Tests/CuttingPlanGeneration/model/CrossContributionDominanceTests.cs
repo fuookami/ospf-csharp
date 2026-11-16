@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.model;
 
 /// <summary>
 /// <see cref="CrossContributionDominance.Dominates"/> 必须逐条对应基线 `canCrossContributionDominate`。
-/// <see cref="CrossContributionDominance.Dominates"/> must match the baseline `canCrossContributionDominate` rule for rule.
+/// <see cref="CrossContributionDominance.Dominates"/> must match the code `canCrossContributionDominate` rule for rule.
 /// </summary>
 /// <remarks>
 /// 基线判定：新方案支配旧方案当且仅当**余宽不劣**且**对每个产品的贡献不劣**，且**单位一致**。
@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.model;
 ///
 /// **每条规则单独一条测试**：合并断言时，某条规则写漏了也不会被看见。
 ///
-/// The baseline decides dominance iff **the rest width is no worse**, **every product contribution is no worse**, and **units agree**. recorded that
+/// The code decides dominance iff **the rest width is no worse**, **every product contribution is no worse**, and **units agree**. recorded that
 /// "cross-contribution pruning still never happens" — the decision itself.
 ///
 /// **One test per rule**: with merged assertions, an omitted rule goes unnoticed.
@@ -77,10 +77,10 @@ public class CrossContributionDominanceTests {
 
     /// <summary>**新产品表缺某个产品 → 不支配** / The new table lacks a product → does not dominate.</summary>
     /// <remarks>
-    /// 基线用 `newContributions[productId] ?: return false`。**缺产品与"贡献为 0"是两件事**：
+    /// `newContributions[productId] ?: return false`。**缺产品与"贡献为 0"是两件事**：
     /// 若用 `GetValueOrDefault` 默认 0，缺产品会被当成"贡献 0"，只要旧方案贡献也 ≥ 0 就误判支配。
     ///
-    /// The baseline uses `newContributions[productId] ?: return false`. **A missing product and "contribution 0" are different things**: defaulting to 0
+    /// The code uses `newContributions[productId] ?: return false`. **A missing product and "contribution 0" are different things**: defaulting to 0
     /// would treat a missing product as "contribution 0", wrongly granting dominance whenever the existing contribution is also ≥ 0.
     /// </remarks>
     [Fact]
@@ -97,7 +97,7 @@ public class CrossContributionDominanceTests {
     /// 基线专门检查单位，本判据专门钉住它。
     ///
     /// This is **the easiest rule to omit**: comparing 3 centimetres against 5 metres numerically says "3 is smaller, dominates", yet the units are not
-    /// comparable. The baseline checks units explicitly and this criterion pins it.
+    /// comparable. The code checks units explicitly and this criterion pins it.
     /// </remarks>
     [Fact]
     public void DifferentUnits_ShouldNotDominate() {

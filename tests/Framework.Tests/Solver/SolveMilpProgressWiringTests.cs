@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// **判据不能只看"求解成功"**——那与进度无关。判据要看**上报器有没有收到快照**，
 /// 以及**原回调有没有被调用**：前者证明适配器被用了，后者证明它没把原回调吃掉。
 ///
-/// ported the adapters, but the C# `FrameworkSolveOptions` **had no `ProgressContext` field**, so the adapters **had nowhere to hook in**. adds the field and
+/// implemented the adapters, but the C# `FrameworkSolveOptions` **had no `ProgressContext` field**, so the adapters **had nowhere to hook in**. adds the field and
 /// wraps inside `SolveMILPAsync`.
 ///
 /// **The criterion cannot just check "the solve succeeded"** — that has nothing to do with progress. It must check **whether the reporter received snapshots** and
@@ -301,14 +301,14 @@ public class SolveMilpProgressWiringTests {
 
     /// <summary>**解池分支也必须用包装后的回调** / The pool branch must also use the wrapped callbacks.</summary>
     /// <remarks>
-    /// 基线在 `solveMILP` 的**两个重载**里各接一次线（第 156、158 行与第 166、168 行）。
+    /// `solveMILP` 的**两个重载**里各接一次线（第 156、158 行与第 166、168 行）。
     /// C# 的实现把 `registration` / `solving` 算在分支**之前**，所以两个分支共用包装后的回调——
     /// **这个结构本身正确，但它依赖"分支之前"这个位置**。若有人把包装移进非池分支，
     /// 池分支就会退回未包装的回调，而**非池分支的判据全部照旧通过**。
     ///
     /// 这条判据专门走**池分支**（`SolutionAmount` 非 null）。
     ///
-    /// The baseline wires **both** `solveMILP` overloads (lines 156/158 and 166/168). The C# implementation computes `registration` / `solving` **before** the branch,
+    /// The code wires **both** `solveMILP` overloads (lines 156/158 and 166/168). The C# implementation computes `registration` / `solving` **before** the branch,
     /// so both branches share the wrapped callbacks — **that structure is correct, but it depends on being "before the branch"**. If someone moved the wrapping into
     /// the non-pool branch only, the pool branch would fall back to unwrapped callbacks while **every non-pool criterion still passed**.
     ///
@@ -337,7 +337,7 @@ public class SolveMilpProgressWiringTests {
     /// **判据要求恰好两条**，不是"至少一条"：若实现只上报了开始或只上报了结束，
     /// "至少一条"会通过，而**进度条会停在 0 或停在 100**。
     ///
-    /// The baseline's `solveLP(metaModel, options)` reports `(MasterLP, 0, 30)` before the solve and once more on success. The C# side **had no such overload**, so
+    /// The code's `solveLP(metaModel, options)` reports `(MasterLP, 0, 30)` before the solve and once more on success. The C# side **had no such overload**, so
     /// the master-problem stage **produced no snapshot at all**.
     ///
     /// **The criterion demands exactly two**, not "at least one": if the implementation reported only the start or only the end, "at least one" would pass while

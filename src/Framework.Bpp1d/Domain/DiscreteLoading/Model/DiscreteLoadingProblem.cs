@@ -1,6 +1,6 @@
 // 无维度绑定的稀疏装载问题 / Dimension-independent sparse loading problem.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/model/DiscreteLoadingProblem.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `bpp/domain/discrete_loading/model/DiscreteLoadingProblem.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Math.Algebra.Concept;
@@ -88,7 +88,7 @@ public sealed record LayoutSelectionGroup(
 /// 只给"合法的组合"，未列出的组合就是**不允许**。自动补全会让"这条航线不能装这件货"
 /// 变成"能装"，而模型不会报错——**一个会静默放大可行域的默认值**。
 ///
-/// **`AllowedAssignments` is never completed into a Cartesian product.** The baseline is explicit: only the listed combinations are legal, and anything unlisted is
+/// **`AllowedAssignments` is never completed into a Cartesian product.** The code is explicit: only the listed combinations are legal, and anything unlisted is
 /// **forbidden**. Auto-completion would turn "this cargo may not ride this route" into "it may", with no model error — **a default that silently widens the feasible set**.
 /// </remarks>
 public sealed record DiscreteLoadingProblem<V>(

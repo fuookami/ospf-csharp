@@ -463,13 +463,13 @@ public class Demo2RegistrationDeltaTests {
 
         // **至少两个目标项真的在权衡决策变量**：全部为空会让求解器返回常数解。
 
-        // **至于 `longitudinal balance`：它在本移植与基线里都是常数占位**（`MakeSlack` 建的是常数零符号），
+        // **至于 `longitudinal balance`：它在本实现与都是常数占位**（`MakeSlack` 建的是常数零符号），
 
         // 所以这里不要求每一项都有单式——**但也不假装它有**，这条缺口记在计划文档里。
 
         // **At least two parts really weigh decision variables**: all-empty would make the solver return a constant. **As for `longitudinal balance`, it is a constant placeholder
 
-        // in both this port and the baseline** (`MakeSlack` builds a constant-zero symbol), so this does not demand monomials from every part — **nor does it pretend they exist**;
+        // in both this implementation and the code** (`MakeSlack` builds a constant-zero symbol), so this does not demand monomials from every part — **nor does it pretend they exist**;
 
         // the gap is recorded in the plan document.
 
@@ -481,20 +481,20 @@ public class Demo2RegistrationDeltaTests {
 
 
     /// <summary>
-    /// **基线里那份重复的货物调整行不该出现** / The baseline's duplicate item-adjustment rows must not appear.
+    /// **那份重复的货物调整行不该出现** / The code's duplicate item-adjustment rows must not appear.
     /// </summary>
     /// <remarks>
-    /// 基线有 `ItemAssignmentLimit.kt` 与 `ItemAdjustmentLimit.kt` 两份文件，**加的是同一行**（`loaded[i] eq true`），
-    /// 而 `stowage/service/PipelineListGenerator.kt` **只调用前者**——`git grep -l ItemAdjustmentLimit 12fdb587` 只返回它自己的定义，
-    /// 所以后者在基线里是**死代码**。
+    /// 与 两份文件，**加的是同一行**（`loaded[i] eq true`），
+    /// 而 **只调用前者**——`git grep -l ItemAdjustmentLimit 12fdb587` 只返回它自己的定义，
+    /// 所以后者在是**死代码**。
     ///
     /// 本仓把它并进 `ItemAssignmentLimit`（`ItemStatus.AdjustmentNeeded` 走 `Comparison.EQ`）是对的。这条判据钉住"只有一份"：
     /// 模型里**不许出现名字以 `item_adjustment_limit` 开头的行**。将来"顺手补上"那份重复实现会立刻被拦下——
     /// 重复行不会让模型不可行，**只会让 IIS 与诊断里出现两条一模一样的行**，那种噪声比出错更难查。
     ///
-    /// The baseline ships both `ItemAssignmentLimit.kt` and `ItemAdjustmentLimit.kt`, **adding the same row** (`loaded[i] eq true`), while
-    /// `stowage/service/PipelineListGenerator.kt` **only calls the former** — `git grep -l ItemAdjustmentLimit 12fdb587` returns nothing but its own definition,
-    /// so the latter is **dead code in the baseline**. This port folds it into `ItemAssignmentLimit` (`ItemStatus.AdjustmentNeeded` with `Comparison.EQ`), which is
+    /// The code ships both and, **adding the same row** (`loaded[i] eq true`), while
+    /// **only calls the former** — `git grep -l ItemAdjustmentLimit 12fdb587` returns nothing but its own definition,
+    /// so the latter is **dead code in the code**. This implementation folds it into `ItemAssignmentLimit` (`ItemStatus.AdjustmentNeeded` with `Comparison.EQ`), which is
     /// correct. This criterion pins "only one copy": **no row name may start with `item_adjustment_limit`**. Adding the duplicate back would be caught immediately —
     /// a duplicate row does not make the model infeasible, **it only makes two identical rows show up in IIS and diagnostics**, and that noise is harder to chase than
     /// an outright error.

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// CPLEX 原生分段线性写入 / Native piecewise-linear writing for CPLEX.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `CplexNativePiecewise.kt`（135 行）补写侧，与 COPT 同形。
+/// 对齐补写侧，与 COPT 同形。
 ///
 /// **写出来的东西完全一样**（λ 组、`Σλ=1`、`x`／`y` 两条 linking、`SOS2`），
 /// **而校验比 COPT 多两条。这不是疏忽，是<b>后端之间真实的差别</b>：**
@@ -53,13 +53,13 @@ internal static class CplexNativePiecewise
     /// **前置校验：在写入任何东西之前跑完一整遍** / Validate up front, before anything is written.
     /// </summary>
     /// <remarks>
-    /// **五条，全部来自基线，且顺序也照抄**（先数结构、再查数值、再查递增、再查映射、最后查重复）。
+    /// **五条，全部来自基线，且顺序也沿用**（先数结构、再查数值、再查递增、再查映射、最后查重复）。
     ///
     /// **"断点严格递增"这一条尤其值得单独看：** **它不是"数据好看"的要求，而是 SOS2 的<b>前提</b>。**
     /// **SOS2 说"至多两个相邻 λ 非零"，而"相邻"是由断点数组的<b>下标</b>定义的；
     /// 一组乱序断点会让"相邻"指向错误的两个点，于是插值在错误的区间上进行——模型可解，折线是错的。**
     ///
-    /// **Five checks, all from the baseline and in the same order: structure, finiteness, monotonicity, mapping,
+    /// **Five checks, all from the code and in the same order: structure, finiteness, monotonicity, mapping,
     /// duplicates.**
     ///
     /// **"Strictly increasing" deserves its own note: it is not a tidiness requirement but a <b>precondition of

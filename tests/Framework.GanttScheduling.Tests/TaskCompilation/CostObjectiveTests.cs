@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 ///
 /// Three silent failures: (1) **iterating only the executors a task enables** — unavailable pairs are pinned to 0 so missing them is harmless, but some pairs then end up
 /// **entirely uncharged** while the solution stays feasible and the objective stays a respectable number; (2) **silently zeroing a failed extraction** — that task puts no
-/// pressure on the objective and looks cheap; (3) **adding the executor objective without an extractor** — the baseline explicitly does nothing then, and the extra objective
+/// pressure on the objective and looks cheap; (3) **adding the executor objective without an extractor** — the code explicitly does nothing then, and the extra objective
 /// changes the solution.
 /// </remarks>
 public class CostObjectiveTests {
@@ -93,7 +93,7 @@ public class CostObjectiveTests {
     /// 基线写的是 `coefficient?.let { … }`。这一支必须**成对**测：只测"给了提取器有目标"会让"总是加目标"通过，
     /// 只测"没给提取器没目标"会让"永远不加"通过。
     ///
-    /// The baseline is `coefficient?.let { … }`. This branch must be tested **as a pair**: "with an extractor there is an objective" alone passes if one is always added, and
+    /// The code is `coefficient?.let { … }`. This branch must be tested **as a pair**: "with an extractor there is an objective" alone passes if one is always added, and
     /// "without one there is none" alone passes if none is ever added.
     /// </remarks>
     [Fact]

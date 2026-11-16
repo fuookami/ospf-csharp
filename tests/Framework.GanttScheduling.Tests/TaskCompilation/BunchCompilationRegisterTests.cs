@@ -26,14 +26,14 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 三种静默失效：
 /// <list type="number">
 /// <item>**`task_compilation` 里塞了 `Σ_e x[t,e]`**：任务束的分配列是**每轮**建的，注册时还不存在；</item>
-/// <item>**锁定的取消任务用加约束实现**：基线是**钉在范围上**，加约束会在每轮建模时多一条行；</item>
+/// <item>**锁定的取消任务用加约束实现**：**钉在范围上**，加约束会在每轮建模时多一条行；</item>
 /// <item>**没有空闲时 `executor_compilation` 写成 `null`**：它是"这个执行器被用了多少"的载体，应当是常量零。</item>
 /// </list>
 ///
 /// Previously `Register` returned `Ok` outright with nothing in the model. The bunch task time's deviation masks read the `task_compilation` table, so that whole path could only
 /// fail — builds it (together with `y`, `bunch_cost`, the assignment placeholders, `z` and `executor_compilation`). Three silent failures: (1) **putting `Σ_e x[t,e]`
 /// into `task_compilation`** — a bunch's assignment columns are created **per round** and do not exist at registration; (2) **pinning locked cancellation tasks with a constraint** —
-/// the baseline pins the **range**, and a constraint would add one more row per round; (3) **making `executor_compilation` `null` without leisure** — it is the carrier of "how
+/// the code pins the **range**, and a constraint would add one more row per round; (3) **making `executor_compilation` `null` without leisure** — it is the carrier of "how
 /// much this executor is used" and must be a constant zero.
 /// </remarks>
 public class BunchCompilationRegisterTests {

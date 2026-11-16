@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 ///
 /// 判据钉的都是**某个值不合法时会不会被放过去**，因为这一层的作用就是"让不合法的值进不去"。
 ///
-/// **The protocol, not the solving is ported**: the backend hook needs a real LP solver, so only **the half that touches no backend** came over. The criteria pin **whether an
+/// **The protocol, not the solving is implemented**: the backend hook needs a real LP solver, so only **the half that touches no backend** came over. The criteria pin **whether an
 /// invalid value gets through**, because keeping invalid values out is this layer's whole job.
 /// </remarks>
 public class FixedIntegerLpSensitivityTests {

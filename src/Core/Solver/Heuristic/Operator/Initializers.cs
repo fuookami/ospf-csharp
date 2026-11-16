@@ -1,7 +1,7 @@
 // 参数演化源与初始化算子 / Parameter evolution sources and initializers.
-// 与固定 Kotlin 基线 `operator/evolution/ParameterSource.kt`、`operator/initializer/Initializer.kt`、
-// `operator/initializer/FixedInitializer.kt` 对应。
-// Mirrors the pinned baseline's `ParameterSource.kt`, `Initializer.kt` and `FixedInitializer.kt`.
+// 与固定 Kotlin 、
+// 对应。
+// , and.
 
 using System;
 using System.Collections.Generic;
@@ -176,9 +176,9 @@ public sealed record RandomUniformInitializer(Func<Flt64> Entropy) : IInitialize
         ArgumentNullException.ThrowIfNull(converter);
 
         IReadOnlyList<Fuookami.Ospf.Core.Token.Token<V>> tokens = model.Tokens.TokensInSolver;
-        // **空令牌表必须回退，不能走采样**。基线的 `all { ... }` 在零变量上空真成立，于是"全都有界"，接着生成一批长度为零的解——
+        // **空令牌表必须回退，不能走采样**。`all { ... }` 在零变量上空真成立，于是"全都有界"，接着生成一批长度为零的解——
         // 种群看起来有 `amount` 个成员，实际每个都不含任何基因，目标评估只会得到默认值。这是最容易"看起来一切正常"的一类缺陷。
-        // **An empty token table must fall back, never sample.** The baseline's `all { ... }` is vacuously true over zero variables, so
+        // **An empty token table must fall back, never sample.** The code's `all { ... }` is vacuously true over zero variables, so
         // "everything is bounded" holds and a batch of zero-length solutions is produced: the population looks like it has `amount`
         // members while none of them carries a single gene, and objective evaluation only ever returns the default. This is the
         // easiest kind of defect to "look completely normal".
@@ -214,9 +214,9 @@ public sealed record RandomUniformInitializer(Func<Flt64> Entropy) : IInitialize
 /// mirrored solutions.
 /// </summary>
 /// <remarks>
-/// **基线的这一实现会对无界变量直接崩溃**：它用 `token.lowerBound!!` 非空断言取值。本移植改为——无界变量保持原值、不参与镜像，
+/// **这一实现会对无界变量直接崩溃**：它用 `token.lowerBound!!` 非空断言取值。本实现改为——无界变量保持原值、不参与镜像，
 /// 而不是抛异常；否则"模型里有一个无界变量"就会让整个初始化失败，而调用方拿到的只是一个空引用异常。
-/// **The baseline's implementation crashes outright on unbounded variables**: it dereferences `token.lowerBound!!`. This port keeps
+/// **The code's implementation crashes outright on unbounded variables**: it dereferences `token.lowerBound!!`. This implementation keeps
 /// the original value for unbounded variables and skips mirroring them instead of throwing; otherwise "one unbounded variable in the
 /// model" fails the whole initialization, and the caller only sees a null-reference exception.
 /// **镜像解会成倍放大种群**。`originals + mirrored` 的长度是请求数量的两倍——调用方若已按 `amount` 分配了缓冲区，必须自行截断。
@@ -282,8 +282,8 @@ public sealed record FixedInitializer(IReadOnlyList<double> Values) : IInitializ
             values.Add(NumericSupport.AsValue(value, converter));
         }
 
-        // 与基线一致：请求 0 份时仍返回 1 份。空列表在种子生成路径上会直接导致"没有种群"，比多给一份更难排查。
-        // Matches the baseline: asking for 0 still yields 1. An empty list on the seeding path means "no population at all", which
+        // ：请求 0 份时仍返回 1 份。空列表在种子生成路径上会直接导致"没有种群"，比多给一份更难排查。
+        // Asking for 0 still yields 1. An empty list on the seeding path means "no population at all", which
         // is harder to diagnose than one extra entry.
         ulong count = global::System.Math.Max(amount, 1);
         var result = new List<Solution<V>>((int)global::System.Math.Min(count, int.MaxValue));

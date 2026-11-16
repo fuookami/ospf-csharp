@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Math.Tests;
 /// 多项式词法分析器 / The polynomial lexer.
 /// </summary>
 /// <remarks>
-/// **移植自固定基线 `12fdb587` 的 `PolynomialLexer.kt`（281 行）。**
+/// **移植自固定基线 `12fdb587` 的（281 行）。**
 /// 三条行为各一条判据，**因为它们是"能编译但语义丢了"的那几种**：
 /// 末尾 `End`、孤立小数点、孤立 `!`。
 ///
-/// **Ported from `PolynomialLexer.kt` at the pinned baseline.** Three behaviours get a criterion each, **because these are the ones that compile fine with the meaning gone**: the trailing `End`, a lone decimal point,
+/// **Ported at the reference.** Three behaviours get a criterion each, **because these are the ones that compile fine with the meaning gone**: the trailing `End`, a lone decimal point,
 /// a lone `!`.
 /// </remarks>
 public class PolynomialLexerTests
@@ -87,10 +87,10 @@ public class PolynomialLexerTests
     /// <summary>**孤立的小数点不是数字** / A lone decimal point is not a number.</summary>
     /// <remarks>
     /// **它很容易被写成"容忍一下就过去了"**，而一旦容忍，`.5` 与 `5.` 的语义就要靠下游去猜。
-    /// **基线把它判成词法错误，这里跟着判。**
+    /// **它判成词法错误，这里跟着判。**
     ///
     /// **It is tempting to let it slide**, and once it slides, the meaning of `.5` and `5.` has to be guessed downstream.
-    /// **The baseline calls it a lexical error, and so does this.**
+    /// **The code calls it a lexical error, and so does this.**
     /// </remarks>
     [Fact]
     public void TheLoneDecimalPoint_ShouldFail()

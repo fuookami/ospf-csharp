@@ -22,8 +22,8 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 条件数值与门控：包络证明的保守性 / The conservatism of an envelope proof.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativeIndicator.kt` 的 `prepareConditionalValue` 与
-/// `NativeMasking.kt` 的 `prepareNativeMasking` 补。
+/// 对齐的 `prepareConditionalValue` 与
+/// 的 `prepareNativeMasking` 补。
 ///
 /// Adds </remarks>
 public class NativeMaskingTests

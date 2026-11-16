@@ -1,6 +1,5 @@
 // 一维普通 MILP 入口 / The ordinary BPP1D MILP entry.
-// 与固定 Kotlin 基线 `bpp1d/application/Bpp1dSolver.kt` 的 `Bpp1dSolveConfig` / `Bpp1dSolution` / `Bpp1dMilp` 对应。
-// Mirrors `Bpp1dSolveConfig`, `Bpp1dSolution` and `Bpp1dMilp` from the pinned Kotlin baseline's `Bpp1dSolver.kt`.
+// 与固定 Kotlin 的 `Bpp1dSolveConfig` / `Bpp1dSolution` / `Bpp1dMilp` 对应。
 
 using System.Collections.Generic;
 using System.Threading;
@@ -230,7 +229,7 @@ public sealed class Bpp1dMilp<V>
 
         var enhancements = new Dictionary<string, string>();
         foreach (IPatternModelingExtension<T> extension in config.ExtensionsOrDefault) {
-            // **扩展指标提取不在这里范围内**：基线的 `extractSolution(context, values)` 是扩展接口的第三个钩子，
+            // **扩展指标提取不在这里范围内**：`extractSolution(context, values)` 是扩展接口的第三个钩子，
             // 这里的扩展接口只有定价钩子。**这里明确不做**，缺口记在计划文档里。
             _ = extension;
         }

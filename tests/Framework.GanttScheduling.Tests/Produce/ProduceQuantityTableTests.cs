@@ -40,11 +40,11 @@ public class ProduceQuantityTableTests {
     /// 2. 模型里确实出现了 `produce_quantity_（产品）` 符号——只建表不 `Add` 的话求解器看不到它。
     /// 3. 有需求的产品**范围被设上**：`SolverValueRangeLower/Upper` 是 `[下界 − 不足, 上界 + 超量]`，
     /// 所以下界 10、上界 100、不足 5、超量 10 ⇒ `[5, 110]`。
-    /// 4. 没有需求的产品**范围是空的**（基线只在 `demand != null` 时设），不能凭空给个 `[0, 0]`。
+    /// 4. 没有需求的产品**范围是空的**（在 `demand != null` 时设），不能凭空给个 `[0, 0]`。
     ///
     /// Four paired points: after registration `Quantity` is **not** a bare `new object` but a table the product can be looked up in, and before registration it **throws** rather than handing
     /// back an empty object; the model really contains `produce_quantity_ (product)` symbols, since building the table without `Add` leaves the solver unable to see it; a product with a demand has
-    /// its range set to `[lower - less, upper + over]` (10, 100, 5, 10 ⇒ `[5, 110]`); and a product without a demand has **no** range, matching the baseline's `demand != null` guard rather than an
+    /// its range set to `[lower - less, upper + over]` (10, 100, 5, 10 ⇒ `[5, 110]`); and a product without a demand has **no** range, matching its `demand != null` guard rather than an
     /// invented `[0, 0]`.
     /// </remarks>
     [Fact]

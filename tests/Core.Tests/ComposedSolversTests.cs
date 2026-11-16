@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Tests;
 /// 组合求解器工厂 / The composed-solver factories.
 /// </summary>
 public sealed class ComposedSolversTests {
-    /// <summary>**六个工厂各自的名字与基线一致** / All six factories carry the baseline's name.</summary>
+    /// <summary>**六个工厂各自的名字** / All six factories carry its name.</summary>
     /// <remarks>
     /// 名字是这些工厂**唯一的对外标识**：`"gwo"`、`"sca"`、`"mvo"` 与算法本身的对应关系只写在这里。
     /// 装错更新算子时结果仍然"像个优化结果"，**只有名字或横向对比能把它抓出来**。

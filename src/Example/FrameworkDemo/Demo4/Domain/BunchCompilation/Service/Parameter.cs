@@ -10,7 +10,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Serv
 /// </summary>
 /// <remarks>
 /// 默认值移植自 fsra-proof 基础设施参数。
-/// Default values ported from fsra-proof infrastructure parameters.
+/// Default values derived from fsra-proof infrastructure parameters.
 /// </remarks>
 /// <param name="FleetBalanceSlack">非基地机场车队平衡松弛惩罚 / Fleet balance slack penalty for non-base airports.</param>
 /// <param name="FleetBalanceBaseSlack">基地机场车队平衡松弛惩罚 / Fleet balance slack penalty for base airports.</param>

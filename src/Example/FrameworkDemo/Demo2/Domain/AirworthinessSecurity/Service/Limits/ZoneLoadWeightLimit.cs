@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 区域载荷重量上限 / The upper bound on load weight per fuselage zone.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/ZoneLoadWeightLimit.kt`：每个限区一行
+/// 逐条对齐：每个限区一行
 /// `Σ (系数 × 该舱位估计装载重量) + 救生筏重量 ≤ 区域最大载荷`，名字 `{name}_{区域名}`。
 ///
 /// 四处容易做错：
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 3. **整区没有可用舱位就跳过**，不是失败。这是合法配置（该区本就不装货）。
 /// 4. **名字带区域名**。多个区域同名时"第 2 条约束不可行"不知道是哪个区。
 ///
-/// Mirrors the baseline: one row per limit zone, `Σ (coefficient × estimated load weight) + liferaft weight ≤ zone maximum`, named `{name}_{zone}`. Four easy mistakes: (1) **the
+/// one row per limit zone, `Σ (coefficient × estimated load weight) + liferaft weight ≤ zone maximum`, named `{name}_{zone}`. Four easy mistakes: (1) **the
 /// coefficient is not 1** — a position can straddle two zones and each takes a share in proportion to the overlap; (2) **the liferaft weight is a constant term**, not a monomial,
 /// since it does not vary with decisions; (3) **a zone with no available position is skipped**, not failed — that is a legitimate configuration; (4) **the name carries the zone**,
 /// or "constraint 2 is infeasible" does not say which zone.

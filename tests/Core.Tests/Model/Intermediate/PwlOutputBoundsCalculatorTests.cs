@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 分段输出范围：只在端点取值 / Only the endpoints are sampled.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `DeferredFunctionFallback.kt` 的 `calculatePwlOutputBounds` 与 `PwlOutputBounds`。
+/// 对齐的 `calculatePwlOutputBounds` 与 `PwlOutputBounds`。
 ///
 /// **端点足够，只因为每段是线性的。**
 ///

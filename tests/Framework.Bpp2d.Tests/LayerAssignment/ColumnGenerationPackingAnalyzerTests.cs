@@ -123,7 +123,7 @@ public class ColumnGenerationPackingAnalyzerTests {
     }
 
     /// <summary>
-    /// **空装箱不除零，键名照抄基线** / An empty packing divides by nothing, and the key names match the baseline.
+    /// **空装箱不除零，键名照做** / An empty packing divides by nothing, and the key names match the code.
     /// </summary>
     /// <remarks>
     /// 三点成对：

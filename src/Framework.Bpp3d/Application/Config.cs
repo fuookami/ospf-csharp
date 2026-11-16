@@ -95,22 +95,22 @@ public static class ContinuousRadiusSolverHelpers {
     /// 基线 `continuousRadiusSolverPrototypesFromItems` 的做法：**只取竖直圆柱**，为每个这样的货物生成一个原型，
     /// 按变量名去重（先到先得），并保持插入顺序。
     ///
-    /// **门控是半径权重函数键**：基线的 `continuousRadiusSelectionResult` 在该键为 null 时返回 null，
+    /// **门控是半径权重函数键**：`continuousRadiusSelectionResult` 在该键为 null 时返回 null，
     /// 于是**没有键的竖直圆柱不产生原型**。
     ///
     /// 实现时 C# 的形状模型**还没有这个键**，只能对所有竖直圆柱产出原型，并在文档里记下这处偏差。
     /// 给 `CylinderPackingShape3` 补上了 `RadiusWeightFunctionKey`（以及 `RadiusMin / RadiusMax`），
-    /// **门控随之恢复**，实现与基线一致。
+    /// **门控随之恢复**，实现。
     ///
-    /// The baseline takes **vertical cylinders only**, builds one prototype per such item, de-duplicates by variable name (first wins) and preserves insertion
+    /// The code takes **vertical cylinders only**, builds one prototype per such item, de-duplicates by variable name (first wins) and preserves insertion
     /// order.
     ///
-    /// **The gate is the radius weight-function key**: the baseline's `continuousRadiusSelectionResult` returns null when that key is null, so **a vertical
+    /// **The gate is the radius weight-function key**: its `continuousRadiusSelectionResult` returns null when that key is null, so **a vertical
     /// cylinder without the key produces no prototype**.
     ///
     /// implemented this while the C# shape model **still lacked that key**, so it produced prototypes for every vertical cylinder and recorded the
     /// deviation in the documentation. added `RadiusWeightFunctionKey` (plus `RadiusMin / RadiusMax`) to `CylinderPackingShape3`, **restoring the gate** and
-    /// bringing the implementation in line with the baseline.
+    /// bringing the implementation in line with the code.
     /// </remarks>
     public static IReadOnlyList<ContinuousCylinderRadiusSolverPrototype> PrototypesFromItems(IReadOnlyList<Item> items) {
         var prototypes = new Dictionary<string, ContinuousCylinderRadiusSolverPrototype>(StringComparer.Ordinal);
@@ -122,8 +122,8 @@ public static class ContinuousRadiusSolverHelpers {
                 continue;
             }
 
-            // **没有半径权重函数键的竖直圆柱不参与连续半径优化**，与基线一致。
-            // **A vertical cylinder without a radius weight-function key does not participate in continuous-radius optimisation**, matching the baseline.
+            // **没有半径权重函数键的竖直圆柱不参与连续半径优化**。
+            // **A vertical cylinder without a radius weight-function key does not participate in continuous-radius optimisation**, matching the code.
             if (cylinder.RadiusWeightFunctionKey is null) {
                 continue;
             }

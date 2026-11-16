@@ -14,18 +14,18 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 0.76 米汞柱等于一个大气压，所以大气压要除下来 / 0.76 m of mercury is one atmosphere, so divide.
 /// </summary>
 /// <remarks>
-/// 补 5 个压力单位（基线 `Pressure.kt`）：`Hectopascal` / `StandardAtmosphericPressure` /
+/// 补 5 个压力单位：`Hectopascal` / `StandardAtmosphericPressure` /
 /// `MeterMercury` / `InchOfMercury` / `Millibar`。
 ///
-/// **其中 `MeterMercury` 没有照抄基线，因为基线的公式与它自己的注释矛盾**：
+/// **其中 `MeterMercury` 没有照做，因为公式与它自己的注释矛盾**：
 /// 基线写 `标准大气压 × 0.76`，得到 77007 Pa，于是 mmHg = 77.007 Pa；
 /// **而基线自己在上方注释里写着 "1 mmHg ≈ 133.322 Pa"。**
 ///
 /// **0.76 米的汞柱恰好压出一个标准大气压，所以要从大气压"除"回 0.76 米（133322.37 Pa），不是乘。**
 /// 本仓按注释与物理事实实现，并让 mmHg 由 mHg 派生，使"千分之一"成为恒等式。
 ///
-/// **`MeterMercury` is not copied from the baseline, because the baseline formula contradicts its own comment**:
-/// the baseline writes "standard atmosphere times 0.76", yielding 77007 Pa and so mmHg = 77.007 Pa,
+/// **`MeterMercury` is not copied from the code, because the code formula contradicts its own comment**.
+/// the code writes "standard atmosphere times 0.76", yielding 77007 Pa and so mmHg = 77.007 Pa,
 /// **while its comment just above says "1 mmHg is about 133.322 Pa".**
 ///
 /// **A column of mercury 0.76 m tall weighs out exactly one standard atmosphere, so the atmosphere is divided back
@@ -36,10 +36,10 @@ public class ExtendedPressureUnitsTests
 {
     /// <summary>**米汞柱比大气压大，不是小** / A metre of mercury exceeds an atmosphere.</summary>
     /// <remarks>
-    /// **这条是"方向"判据，而它是这里唯一能抓住照抄基线的地方。**
+    /// **这条是"方向"判据，而它是这里唯一能抓住沿用地方。**
     /// **乘法会得到 77007，除法得 133322.37——两者都"是个压力值"，只有方向区分得开。**
     ///
-    /// **This is the direction criterion, and it is the only thing here that catches copying the baseline.**
+    /// **This is the direction criterion, and it is the only thing here that catches copying the code.**
     /// **Multiplying yields 77007 and dividing yields 133322.37 — both "a pressure"; only the direction separates them.**
     /// </remarks>
     [Fact]
@@ -61,9 +61,9 @@ public class ExtendedPressureUnitsTests
 
     /// <summary>**毫米汞柱约 133.322 Pa** / A millimetre of mercury is about 133.322 Pa.</summary>
     /// <remarks>
-    /// **这条钉的是基线自己的注释**——**而照抄基线的公式会得到 77.007，与它自己的注释差 42%。**
+    /// **这条钉的是基线自己的注释**——**而沿用公式会得到 77.007，与它自己的注释差 42%。**
     ///
-    /// **This pins the baseline's own comment** — **and copying its formula yields 77.007, 42% off that comment.**
+    /// **This pins its own comment** — **and copying its formula yields 77.007, 42% off that comment.**
     /// </remarks>
     [Fact]
     public void TheMillimeterOfMercury_ShouldBeAboutOneThirtyThreePascals()
@@ -133,7 +133,7 @@ public class ExtendedPressureUnitsTests
             "the two names denote the same pressure, and they must not drift apart");
     }
 
-    /// <summary>**单位清单与基线一致（加上本仓原有的两个）** / The unit list covers the baseline plus two.</summary>
+    /// <summary>**单位清单（加上本仓原有的两个）** / The unit list covers the code plus two.</summary>
     [Fact]
     public void TheUnitList_ShouldCoverTheBaseline()
     {

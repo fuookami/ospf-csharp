@@ -10,9 +10,9 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 扰动观察的构造器 / Constructors for perturbation observations.
 /// </summary>
 /// <remarks>
-/// **这是 `ConstraintPerturbationAnalyzer.kt` 的 `unknownObservation` 的移植。**
+/// **这是 的 `unknownObservation` 的移植。**
 ///
-/// 基线把它写成"只填三个字段、其余全默认"的工厂：
+/// 它写成"只填三个字段、其余全默认"的工厂：
 ///
 /// | 字段 | 值 | 为什么 |
 /// | --- | --- | --- |
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **`Status` and `Outcome` must both be `Unknown`.** Changing only one produces a self-contradictory observation: the status says "unknown" while the outcome says "no effect" — **and "no effect" is
 /// a conclusion.**
 ///
-/// **The baseline writes this as a factory filling three fields and defaulting the rest:**
+/// **The code writes this as a factory filling three fields and defaulting the rest:**
 /// </remarks>
 public static class PerturbationObservationFactory {
     /// <summary>

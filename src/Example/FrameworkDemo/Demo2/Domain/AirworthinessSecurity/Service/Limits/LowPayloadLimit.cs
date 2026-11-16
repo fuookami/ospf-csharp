@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 低甲板载荷下界 / The lower bound on the low-deck payload.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/LowPayloadLimit.kt`：一行 `lower_estimate_payload ≥ min_low_payload`。
+/// 逐条对齐：一行 `lower_estimate_payload ≥ min_low_payload`。
 ///
 /// 这是**下界**，不是上界。下舱装得太少会让重心太靠前，所以"至少要装多少"是安全要求。写成上界能编译、能求解，
 /// 而且大多数算例里恰好在最优解上都不起作用——那正是这种错最危险的地方：它不报错，只是把一条安全约束变成了一条容量约束。
 ///
-/// Mirrors the baseline: one row `lower_estimate_payload ≥ min_low_payload`. It is a **lower** bound: too little in the lower hold puts the centre of gravity too far forward,
+/// one row `lower_estimate_payload ≥ min_low_payload`. It is a **lower** bound: too little in the lower hold puts the centre of gravity too far forward,
 /// so "at least this much" is a safety requirement. Writing it as an upper bound compiles, solves, and in most instances happens not to bind at the optimum — exactly what
 /// makes the mistake dangerous: nothing reports it, a safety constraint just became a capacity one.
 /// </remarks>

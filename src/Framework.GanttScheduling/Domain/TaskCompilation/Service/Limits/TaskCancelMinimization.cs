@@ -46,8 +46,8 @@ public class TaskCancelMinimization<T, E, A>
         string name = "task_cancel_minimization") {
         _tasks = tasks;
         _compilation = compilation;
-        // 基线的默认系数是 `Flt64.one`：没有系数就是"每个取消一视同仁"。
-        // The baseline's default coefficient is `Flt64.one`: without one, every cancellation counts the same.
+        // 默认系数是 `Flt64.one`：没有系数就是"每个取消一视同仁"。
+        // The code's default coefficient is `Flt64.one`: without one, every cancellation counts the same.
         _coefficient = coefficient ?? (_ => Flt64.One);
         _name = name;
     }
@@ -65,11 +65,11 @@ public class TaskCancelMinimization<T, E, A>
     /// 三处与基线不同，都是"无法表达"而不是"换个说法"：
     /// <list type="number">
     /// <item>取消未启用时基线返回 `Ok`——**这里保留**：那条目标本就不存在，无事可做不是"假装做了"；</item>
-    /// <item>系数提取失败时基线用无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败；</item>
+    /// <item>系数提取失败时无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败；</item>
     /// <item>编译没实现 `ICompilationColumns` 时失败，而不是加一个不存在的目标。</item>
     /// </list>
     ///
-    /// The baseline minimises `Σ coefficient(task) * y[task]` when `taskCancelEnabled`, only over tasks with `cancelEnabled`. Three departures, all "cannot express" rather than
+    /// The code minimises `Σ coefficient(task) * y[task]` when `taskCancelEnabled`, only over tasks with `cancelEnabled`. Three departures, all "cannot express" rather than
     /// "rephrase": cancellation disabled still returns `Ok` (**kept** — the objective does not exist, doing nothing is not pretending); an extraction failure uses infinity in the
     /// baseline and `Flt64` has none (the same limit), so it fails here; and a compilation that does not implement `ICompilationColumns` fails instead of adding a nonexistent
     /// objective.
@@ -95,8 +95,8 @@ public class TaskCancelMinimization<T, E, A>
 
         var monomials = new List<LinearMonomial<Flt64>>();
         foreach (T task in _tasks) {
-            // 基线只对允许取消的任务计成本：不允许取消的任务 `y == 0`，加进去也只是个恒零项。
-            // The baseline charges only tasks that may be cancelled: a task that cannot cancel has `y == 0`, so adding it would be a permanently-zero term.
+            // 对允许取消的任务计成本：不允许取消的任务 `y == 0`，加进去也只是个恒零项。
+            // The code charges only tasks that may be cancelled: a task that cannot cancel has `y == 0`, so adding it would be a permanently-zero term.
             if (!task.CancelEnabled) {
                 continue;
             }

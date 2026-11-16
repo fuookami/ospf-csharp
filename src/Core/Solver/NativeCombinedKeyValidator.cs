@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 跨三类 native 结构的键冲突检查 / Cross-structure key-conflict checking over the three native kinds.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText`。
+/// 对齐的 `validateCombinedStructureKeys` 与 `keyText`。
 ///
 /// **这是唯一一处同时看 PWL、ABS、MAX 三类结构的检查，而它做的是<b>两件不同的事</b>：**
 ///
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **失败消息只给出<b>重复的那个键</b>，不给出<b>谁先占用了它</b>。**
 /// **这是一个真实的诊断缺口：看到 `key is duplicated` 之后，调用方还得自己去找是哪两个结构。**
-/// **这里照抄基线不改消息格式，但把它记下来。**
+/// **这里照做不改消息格式，但把它记下来。**
 ///
 /// **This is the only check that looks at all three kinds at once, and it does <b>two different things</b>:**
 ///
@@ -54,7 +54,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **The failure message names only the <b>duplicated key</b>, never <b>who claimed it first</b>.** **That is a real
 /// diagnostic gap: after `key is duplicated` the caller still has to find the two structures itself.** ** copies
-/// the baseline's message format and records the gap.**
+/// its message format and records the gap.**
 /// </remarks>
 public static class NativeCombinedKeyValidator
 {

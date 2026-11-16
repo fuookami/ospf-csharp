@@ -24,13 +24,13 @@ public static class ResistanceUnits {
     //
     // The two below are baseline-named aliases.
     //
-    // **This repo used `Kilohm`/`Megohm`, the baseline uses `Kiloohm`/`Megaohm`, and both spellings are current.**
+    // **This repo used `Kilohm`/`Megohm`, the code uses `Kiloohm`/`Megaohm`, and both spellings are current.**
     // **Two names for one unit is not redundancy, because a caller looking up by name knows only one of them.**
     // **They have to point at the same value, and a SameAs criterion pins that.**
 
-    /// <summary>**千欧（基线命名）** / Kiloohm, the baseline spelling.</summary>
+    /// <summary>**千欧（基线命名）** / Kiloohm, the code spelling.</summary>
     public static readonly PhysicalUnit Kiloohm = Kilohm;
-    /// <summary>**兆欧（基线命名）** / Megaohm, the baseline spelling.</summary>
+    /// <summary>**兆欧（基线命名）** / Megaohm, the code spelling.</summary>
     public static readonly PhysicalUnit Megaohm = Megohm;
     /// <summary>毫欧 / Milliohm.</summary>
     public static readonly PhysicalUnit Milliohm = new DerivedUnit(Ohm.ScaleMultiply(Scale.Milli), "milliohm", "mohm");

@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 函数展开策略，默认 <see cref="Eager"/> / Function expansion policy, defaulting to eager.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 的 `FunctionExpansionPolicy`。
+/// 对齐的 `FunctionExpansionPolicy`。
 ///
 /// **三个值的区别只在"什么时候决定走原生接口"：**
 ///
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **`Eager` 是默认值**：**"先试原生"看起来更好，但它让每个结构都需要一份"我能不能原生"的判断，
 /// 而那个判断本身就是最容易写错的地方。**
 ///
-/// Following the baseline's `FunctionExpansionPolicy`.
+/// Following its `FunctionExpansionPolicy`.
 ///
 /// **The three values differ only in <i>when</i> the native path is chosen:**
 ///
@@ -57,7 +57,7 @@ public enum FunctionExpansionPolicy
 /// <see cref="DeferredFunctionStructure"/> 的分派表 / The dispatch table over <see cref="DeferredFunctionStructure"/>.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `FunctionExpansion.kt` 中五个 `DeferredFunctionStructure` 扩展函数。
+/// 对齐中五个 `DeferredFunctionStructure` 扩展函数。
 ///
 /// **这五个函数是"标记接口"付出代价的地方**：**接口本身没有成员（已说明理由：
 /// 它只做类型层面的集合划分），于是<b>所有具体信息都要靠一次类型分派取出来</b>。**
@@ -67,13 +67,13 @@ public enum FunctionExpansionPolicy
 /// 表达的正是"这个结构没有保留结果列"，而不是"我还没写完"。**
 ///
 /// **本实现只覆盖本程序集已有的结构（`IndicatorStructure`）。**
-/// **其余结构在基线里各有分支，但它们在本仓库还不存在——
+/// **其余结构在各有分支，但它们在本仓库还不存在——
 /// 等它们落地时，<b>必须同时在这里加分支</b>。**
 /// **漏加不会编译失败，只会让那个结构静默地报"没有结果列"，
 /// 而调用方拿到 `null` 后通常走"不需要保留"的分支，于是模型少了一列。**
 /// **这是本文件唯一的真实危险，判据用"未登记的结构返回 `null`/`false`"把它钉住。**
 ///
-/// Following the baseline's five `DeferredFunctionStructure` extensions.
+/// Following its five `DeferredFunctionStructure` extensions.
 ///
 /// **These five are where the marker interface pays its price**: **the interface has no members (it
 /// only partitions types), so <b>every concrete fact must be pulled out through a type dispatch</b>.**
@@ -82,7 +82,7 @@ public enum FunctionExpansionPolicy
 /// unknown structure says "this structure retains no result column", not "I am unfinished".**
 ///
 /// **This implementation covers only the structures this assembly has (`IndicatorStructure`).**
-/// **The baseline has a branch for each of the others, but they do not exist here yet — <b>whoever lands one must add a
+/// **The code has a branch for each of the others, but they do not exist here yet — <b>whoever lands one must add a
 /// branch here too</b>.**
 /// **Forgetting does not fail the build; the structure silently reports "no result column", the caller usually takes the
 /// "no retention needed" path, and the model ends up short one column.**

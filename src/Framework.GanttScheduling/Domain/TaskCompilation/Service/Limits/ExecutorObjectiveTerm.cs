@@ -1,7 +1,7 @@
 // 执行器目标项的代价 / Cost of an executor objective term.
-// 与固定 Kotlin 基线 `task_compilation/Service/...` 的 `ExecutorLeisureMinimization.kt` 与
-// `ExecutorCostMinimization.kt` 对应：两者的判定结构完全相同，只差被罚的列。
-// Mirrors the pinned baseline's `ExecutorLeisureMinimization.kt` and `ExecutorCostMinimization.kt`, whose decision structure
+// 与`task_compilation/Service/...` 的 与
+// 对应：两者的判定结构完全相同，只差被罚的列。
+// And, whose decision structure
 // is identical and differs only in the penalised column.
 
 using System;
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 把"没配置"当成"禁止"，一个没打算惩罚任何人的调用方会**让所有执行器都不可选**；
 /// 把"不可定价"当成"权重一"，本该禁止的选项变得很便宜。
 ///
-/// The baseline writes `coefficient?.let { ... }` around `it(e) ?: Flt64.infinity`. There are **three states** that differ by one `?`:
+/// The code writes `coefficient?.let { ... }` around `it(e) ?: Flt64.infinity`. There are **three states** that differ by one `?`:
 ///
 /// | Case | Meaning | Behaviour |
 /// | --- | --- | --- |

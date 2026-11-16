@@ -1,7 +1,7 @@
 // 远程求解运行时配置 / Remote solve runtime options.
-// 与固定 Kotlin 基线 `RemoteSolverRuntimeConfig` 对应：由调用方注入任务／切片标识、节点、租户与调度参数，
+// 与`RemoteSolverRuntimeConfig` 对应：由调用方注入任务／切片标识、节点、租户与调度参数，
 // 而不是由适配器自己编造。
-// Corresponds to the pinned Kotlin baseline's `RemoteSolverRuntimeConfig`: the caller injects the task/slice
+// `RemoteSolverRuntimeConfig`: the caller injects the task/slice
 // identity, node, tenant and scheduling parameters instead of the adapter inventing them.
 
 using System;

@@ -20,10 +20,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 同来源 / 同目的地相邻 / The same-source and same-destination adjacency indicators.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/model/TransferAdjacentLoading.kt` 对齐：为一个（来源, 相邻舱位对）与一个
+/// 与对齐：为一个（来源, 相邻舱位对）与一个
 /// （目的地, 相邻舱位对）各造一个指示符号，表示"这两个相邻舱位都装了同一来源（或目的地）的货"。
 ///
-/// 六处必须照抄：
+/// 六处必须沿用：
 ///
 /// 1. **第一个舱位需要配载或调整时才用 `IfFunction`**（基线判 `position1.status.stowageNeeded || adjustmentNeeded`）。
 ///    判的是**第一个**舱位，不是两个都判。
@@ -35,8 +35,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 5. **两个矩阵的维度是（来源/目的地 × 相邻舱位对）**，不是反过来。
 /// 6. 符号名带来源（或目的地）与两个舱位。
 ///
-/// Aligned with the baseline: one indicator per (source, adjacent pair) and one per (destination, adjacent pair), meaning "both adjacent positions carry cargo of the same source (or
-/// destination)". Six things must be copied: **the `IfFunction` branch fires only when the first position needs stowage or adjustment** — the baseline tests
+/// One indicator per (source, adjacent pair) and one per (destination, adjacent pair), meaning "both adjacent positions carry cargo of the same source (or
+/// destination)". Six things must be copied: **the `IfFunction` branch fires only when the first position needs stowage or adjustment** — the code tests
 /// `position1.status.stowageNeeded || adjustmentNeeded`, i.e. the **first** position, not both; **the condition is `loadAmount1 + loadAmount2 − 2 + ε`** with
 /// `ε = NONZERO_TOLERANCE = 1e-10`, and `strictBoundary` **also takes that ε** (measured: 0.5 is rejected by `SafeLattice`); **when the first position needs no stowage there are two
 /// degenerate branches** — a constant-zero symbol if `loadAmount1` is identically zero, otherwise a symbol whose polynomial **is** `loadAmount1`, so it is **not** always zero; **`loadAmount`
@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// </remarks>
 public sealed class TransferAdjacentLoading
 {
-    /// <summary>浮点边界余量：与基线的 `NONZERO_TOLERANCE` 一致 / The floating-point margin, matching the baseline's `NONZERO_TOLERANCE`.</summary>
+    /// <summary>浮点边界余量：与`NONZERO_TOLERANCE` 一致 / The floating-point margin, matching its `NONZERO_TOLERANCE`.</summary>
     private const double NonzeroTolerance = 1e-10;
 
     private readonly IReadOnlyList<(StowagePosition First, StowagePosition Second)> _adjacentPositions;

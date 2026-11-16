@@ -1,7 +1,7 @@
 // BLA 领域上下文 / BLA domain context.
-// 与固定 Kotlin 基线 `bpp2d/domain/bla/BlaContext.kt`（41 行）对应：把排样算法包成一个可复用的上下文对象，
+// 与固定 Kotlin 对应：把排样算法包成一个可复用的上下文对象，
 // 调用方不必自己组装 `BottomUpLeftJustifiedAlgorithm`。
-// Mirrors the pinned baseline: wraps the layout algorithm into a reusable context so callers need not assemble
+// Wraps the layout algorithm into a reusable context so callers need not assemble
 // `BottomUpLeftJustifiedAlgorithm` themselves.
 //
 // 至此 `bla` 域在 C# 侧闭合：`Bla2dLayoutResult` + `BottomUpLeftJustifiedAlgorithm` + `BlaContext`。

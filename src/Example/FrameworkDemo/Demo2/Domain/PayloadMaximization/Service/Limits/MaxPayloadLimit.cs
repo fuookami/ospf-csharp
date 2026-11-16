@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization.S
 /// 最大业载目标 / The maximum-payload objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `payload_maximization/service/limits/MaxPayloadLimit.kt` 对齐：把 `payload.estimatePayload` **整体乘以一个系数**后作为**最大化**目标。
+/// 与对齐：把 `payload.estimatePayload` **整体乘以一个系数**后作为**最大化**目标。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **它是最大化目标**，不是约束。写成 `AddConstraint` 会变成"业载必须 ≤ 某值"，语义完全相反。
 /// 2. **系数同时乘单项式和常数**。基线写的是 `monomials.map { c * it.coefficient }` **加** `constant = c * polynomial.constant`，
@@ -29,9 +29,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization.S
 /// 4. **`estimatePayload` 未注册时明确失败**。它是配载域 `Payload.Register` 建的符号，缺了说明注册顺序错了；
 ///    返回一个空目标会让模型"没有目标"，而求解器照样给出一个解。
 ///
-/// Aligned with the baseline: multiply `payload.estimatePayload` **as a whole** by a coefficient and use it as a **maximisation** objective. Four things must be copied: **it is a
+/// Multiply `payload.estimatePayload` **as a whole** by a coefficient and use it as a **maximisation** objective. Four things are carried over: **it is a
 /// maximisation objective**, not a constraint (writing `AddConstraint` makes it "payload must be at most some value", the exact opposite); **the coefficient multiplies both the
-/// monomials and the constant** — the baseline maps the monomial coefficients **and** sets `constant = c * polynomial.constant`, and multiplying only the monomials drops the
+/// monomials and the constant** — the code maps the monomial coefficients **and** sets `constant = c * polynomial.constant`, and multiplying only the monomials drops the
 /// constant term (the estimated payload can carry a non-zero one); **the coefficient is injected** (`parameter.weightRecommendationPayload`), not a constant one; and **an
 /// unregistered `estimatePayload` is an explicit failure**, since it is a symbol the stowage domain's `Payload.Register` builds and its absence means the registration order is
 /// wrong — returning an empty objective would leave the model with no objective while the solver still returns a solution.

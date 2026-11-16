@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 
 /// <summary>二次四元弹性模型构建器（内部）/ Quadratic tetrad elastic model builder (internal)</summary>
 /// <remarks>
-/// 基线 `QuadraticTetradElasticBuilder.kt` **只有一个函数** `buildElasticModel`：为每条约束和每个变量加松弛列，
+/// **只有一个函数** `buildElasticModel`：为每条约束和每个变量加松弛列，
 /// 并在目标里惩罚它们。
 ///
 /// **本类的五个方法此前全部是空壳**，而且不是无害的空壳：它们都构造一个
@@ -27,12 +27,12 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 现在：**只保留有基线依据的 `BuildElasticModel`，并且真正实现**。
 ///
 /// **删掉了另外四个变体**（下界弹性、上界弹性、二值松弛、minmax 松弛）：基线
-/// `QuadraticTetradElasticBuilder.kt` **只有 `buildElasticModel` 一个函数**，那四个名字在基线里
+/// **只有 `buildElasticModel` 一个函数**，那四个名字在
 /// **根本不存在**。它们是 C# 侧臆造的 API——没有基线对应、没有生产调用方，
 /// **唯一的"用户"是我为它们写的那条 `VariantsWithoutBaselineBacking_ShouldThrow` 测试**。
 /// 留着它们等于维护四个永远抛错的公开方法，还附一条测试去断言"它们确实抛错"。
 ///
-/// The baseline `QuadraticTetradElasticBuilder.kt` has **exactly one function**, `buildElasticModel`: add a slack column per constraint and per variable,
+/// **Exactly one function**, `buildElasticModel`: add a slack column per constraint and per variable,
 /// then penalise them in the objective.
 ///
 /// **All five methods here used to be shells, and not harmless ones** — the snippet above **keeps the variable table, drops every constraint and the entire
@@ -41,8 +41,8 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 ///
 /// Now: **only `BuildElasticModel`, the one with baseline backing, remains, and it is genuinely implemented.**
 ///
-/// **deleted the other four variants** (lower-bound elasticity, upper-bound elasticity, binary slack, minmax slack): the baseline
-/// `QuadraticTetradElasticBuilder.kt` has **exactly one function, `buildElasticModel`**, and those four names **do not exist there at all**. They were invented
+/// **deleted the other four variants** (lower-bound elasticity, upper-bound elasticity, binary slack, minmax slack): the code
+/// has **exactly one function, `buildElasticModel`**, and those four names **do not exist there at all**. They were invented
 /// on the C# side — no baseline counterpart, no production caller, and **their only "user" was the `VariantsWithoutBaselineBacking_ShouldThrow` test I wrote for
 /// them**. Keeping them meant maintaining four public methods that always throw, plus a test asserting that they do throw.
 /// </remarks>
@@ -66,7 +66,7 @@ internal static class QuadraticTetradElasticBuilder {
     /// **原变量的边界被改成 ±∞**，边界约束改由新增的弹性行表达——这是"弹性"的实质：
     /// 越界不再是不可行，而是有代价。
     ///
-    /// `elasticPenalty` 用作松弛列的目标系数。基线用 `Flt64.one`，此处把它参数化以便按量级调权。
+    /// `elasticPenalty` 用作松弛列的目标系数。`Flt64.one`，此处把它参数化以便按量级调权。
     ///
     /// Per-constraint slack columns (see the table above), then per-variable bound-slack rows classified by how free the variable is — structurally
     /// identical to the linear `LinearTriadModel.BuildElastic`. **Free and already-normalised columns get none**; `PositiveFree` gets only a lower bound;
@@ -75,7 +75,7 @@ internal static class QuadraticTetradElasticBuilder {
     /// **The original variables' bounds become ±∞**, with the bound constraints expressed by the new elastic rows instead — that is the substance of
     /// "elastic": exceeding a bound is no longer infeasible, merely costly.
     ///
-    /// `elasticPenalty` is used as the objective coefficient of the slack columns; the baseline uses `Flt64.one`, parameterised here so the weight can be tuned.
+    /// `elasticPenalty` is used as the objective coefficient of the slack columns; the code uses `Flt64.one`, parameterised here so the weight can be tuned.
     /// </remarks>
     public static QuadraticTetradModel BuildElasticModel(
         BasicQuadraticTetradModel model,

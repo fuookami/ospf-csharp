@@ -29,12 +29,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 实现上不另写编码：基线自己也是 AbsFunction 再 MaxFunction 拼出来的，
 /// 这里照做——手写会产生第二套 Big-M，而两套 Big-M 在同一模型里会互相挤掉对方的可行域。
 ///
-/// The DeadZoneFunction from the baseline.
+/// The DeadZoneFunction from the code.
 ///
 /// It means “no response within ±delta, linear in the excess beyond it” — mechanical backlash, sensor dead bands
 /// and controller tolerance bands all take this shape.
 ///
-/// No separate encoding is written: the baseline itself composes AbsFunction with MaxFunction, and this follows
+/// No separate encoding is written: the code itself composes AbsFunction with MaxFunction, and this follows
 /// suit — hand-writing one would produce a second set of Big-Ms, and two sets in one model eat into each other's
 /// feasible region.
 /// </remarks>

@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 补 `ElectricCharge`(6) / `Bandwidth`(5) / `Frequency.CyclePerHour`(1)，
 /// 并新建 `CapacitanceUnits`(5)。
 ///
-/// **基线把法拉系列写在 `ElectricCharge.kt` 里，却声明 `Capacitance` 量纲**——
+/// **法拉系列写在 里，却声明 `Capacitance` 量纲**——
 /// **跟着文件名会把它建成电荷单位，跟着声明的量纲才对。**
 ///
 /// Adds and creates `CapacitanceUnits` (5).
 ///
-/// **The baseline writes the farad family in `ElectricCharge.kt` while declaring `Capacitance`** —
+/// **The code writes the farad family while declaring `Capacitance`** —
 /// **following the file name builds charge units; following the declared quantity is right.**
 /// </remarks>
 public class ChargeCapacitanceBandwidthTests

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// PWL 求值：插值在夹紧之后的位置，以及 ABS 列级校验 / Interpolation after clamping, and ABS column checks.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseEvaluations` 与 `validateNativeAbsColumns`。
+/// 对齐的 `piecewiseEvaluations` 与 `validateNativeAbsColumns`。
 ///
 /// Adds </remarks>
 public class NativePiecewiseEvaluationTests

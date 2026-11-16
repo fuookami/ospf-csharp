@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 上界式在非最优阈值处严格大于 CVaR / The upper bound strictly exceeds the CVaR off the optimum.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `Cvar.kt` 的 `CvarEpigraphFunction`。
+/// 对齐的 `CvarEpigraphFunction`。
 ///
 /// **`ResultPolynomial` 不是 CVaR，而是它的一个上界**——
 /// **只在最优阈值处取等号，其余处严格大于。**

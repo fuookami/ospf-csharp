@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// **"跨语言互通只做了一部分"这句话，在此之前没有任何可执行的东西支撑它**——
 /// **现在每一节各有一条判据，而没断言到的节会被点名。**
 ///
-/// `Fixtures/analysis-contract.tsv` is **copied verbatim** from the pinned baseline, **and the Kotlin side asserts the same file.**
+/// `Fixtures/analysis-contract.tsv` is **copied verbatim** , **and the Kotlin side asserts the same file.**
 /// **"Cross-language interop is only partly measured" had nothing executable behind it** — **now each section has a criterion, and any unasserted section is named.**
 /// </remarks>
 public class AnalysisContractTests

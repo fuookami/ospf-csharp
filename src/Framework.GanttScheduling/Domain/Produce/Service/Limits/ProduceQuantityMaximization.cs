@@ -58,7 +58,7 @@ public sealed class ProduceQuantityMaximization<P> : IPipeline<object>
     /// 列表为空时**照旧加一个空目标**（基线四个"数量"目标如此）。
     ///
     /// A zero threshold charges the quantity symbol itself; a non-zero one builds a threshold slack that **carries its own rows** and charges its positive part, with the coefficient multiplying
-    /// outside the slack. An empty list still adds an empty objective, as the baseline's four "quantity" objectives do.
+    /// outside the slack. An empty list still adds an empty objective, as its four "quantity" objectives do.
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);

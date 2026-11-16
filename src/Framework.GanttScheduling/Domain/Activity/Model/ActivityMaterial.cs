@@ -1,6 +1,6 @@
 // 活动物料库存模型 / Activity material inventory model.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-activity-context/.../activity/model/ActivityMaterial.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `ActivityMaterial.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using System;
 using System.Collections.Generic;

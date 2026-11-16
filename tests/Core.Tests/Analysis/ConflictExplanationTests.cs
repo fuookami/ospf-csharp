@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 ///
 /// 判据钉的每一条，**都是"报告看起来有结论，但证据撑不住"的形状**。
 ///
-/// **The report side only is ported**: baseline line 630 has `solver.solve(...)` and line 755 has `session.solve(assumptions =...)`, with both analyzers after them.
-/// **That needs a real CP backend, so it was neither ported nor stubbed.** Every criterion here blocks a shape where **the report looks concluded but the evidence does not
+/// **The report side only is implemented**: baseline line 630 has `solver.solve(...)` and line 755 has `session.solve(assumptions =...)`, with both analyzers after them.
+/// **That needs a real CP backend, so it was neither implemented nor stubbed.** Every criterion here blocks a shape where **the report looks concluded but the evidence does not
 /// carry it**.
 /// </remarks>
 public class ConflictExplanationTests {

@@ -1,6 +1,5 @@
 // 带显式父弧和深度证据的根有向树组件 / Rooted directed tree with explicit parent arcs and depth certificates.
-// 与固定 Kotlin 基线 `structure/model/RootedTreeComponent.kt`（12783 字节）对应。
-// Mirrors the pinned baseline's `RootedTreeComponent.kt`.
+// 与固定 Kotlin （12783 字节）对应。
 
 using System;
 using System.Collections.Generic;

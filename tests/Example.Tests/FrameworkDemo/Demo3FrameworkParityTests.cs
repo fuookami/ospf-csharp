@@ -87,7 +87,7 @@ public class Demo3FrameworkParityTests {
     /// does not. Pinning internal behaviour needs a real solver. The criterion stays, but **it is not claimed to cover pipeline correctness**.
     ///
     /// Runs the whole pipeline with `MockColumnGenerationSolver`. This does **not** check optimality — a stub cannot produce it — but that the **pipeline completes, throws
-    /// nothing, and returns a solution**. That is exactly the precondition for rewriting Demo3: **if the framework pipeline itself does not run, porting Demo3 is pointless.**
+    /// nothing, and returns a solution**. That is exactly the precondition for rewriting Demo3: **if the framework pipeline itself does not run, implementation Demo3 is pointless.**
     /// </remarks>
     [Fact]
     public async Task FrameworkPipeline_ShouldRunToCompletionWithAStubSolver() {
@@ -100,7 +100,7 @@ public class Demo3FrameworkParityTests {
         solution.Produce.Should().NotBeNull("the solution must carry a produce aggregate");
     }
 
-    /// <summary>**贪心定价会漏掉改进列**——记录 Demo3 与基线的实质差异 / Greedy pricing misses improving columns — Demo3's substantive difference from the baseline.</summary>
+    /// <summary>**贪心定价会漏掉改进列**——记录 Demo3 与实质差异 / Greedy pricing misses improving columns — Demo3's substantive difference from the code.</summary>
     /// <remarks>
     /// **这条判据的第一版反例是错的。** 我原本用宽度 `45 / 45 / 10`、卷长 100，
     /// 以为贪心会先吃两个 45 然后装不下 10——**实测贪心拿了 2×45 + 1×10 = 100**，

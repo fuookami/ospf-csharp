@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Material;
 /// **面积账、重叠与工艺一致性** / Area arithmetic, overlaps and process consistency.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Pattern2.kt`。放置类型来自几何层（当前住在 `Bpp2d` 里，见 `Framework.Csp2d.csproj` 的 ponytail 记档）。
+/// 对应。放置类型来自几何层（当前住在 `Bpp2d` 里，见 `Framework.Csp2d.csproj` 的 ponytail 记档）。
 ///
-/// Mirrors the baseline `Pattern2.kt`. Placements come from the geometry layer, which currently lives in `Bpp2d` (see the ponytail note in
+///. Placements come from the geometry layer, which currently lives in `Bpp2d` (see the ponytail note in
 /// `Framework.Csp2d.csproj`).
 /// </remarks>
 public class Pattern2Tests {
@@ -70,13 +70,13 @@ public class Pattern2Tests {
 
     /// <summary>**单位不一致时必须报错，而不是静默把面积算成 0** / A unit mismatch must be reported, not silently zeroed.</summary>
     /// <remarks>
-    /// 基线的 `quantitySum(...) ?: quantityZeroOf(...)` 在这一格会给出 `0`，于是"利用率 0%"看起来像一个合法结果，
+    /// `quantitySum(...) ?: quantityZeroOf(...)` 在这一格会给出 `0`，于是"利用率 0%"看起来像一个合法结果，
     /// 而真实情况是**这笔账根本算不成**。这里用一个**量纲根本不是面积**的放置制造这一格：
     /// 一个宽为米、高为千克的"件"，它的 `area` 是米·千克。
     ///
     /// Here a placement whose **dimension is not an area at all** produces that case: a "piece" one metre wide and one kilogram tall has an area of metre-kilogram.
     ///
-    /// The baseline's `quantitySum(...) ?: quantityZeroOf(...)` yields `0` here, so "0% utilization" looks like a legal result while the real situation is that
+    /// The code's `quantitySum(...) ?: quantityZeroOf(...)` yields `0` here, so "0% utilization" looks like a legal result while the real situation is that
     /// **the arithmetic cannot be done at all**.
     /// </remarks>
     [Fact]

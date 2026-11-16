@@ -134,15 +134,15 @@ public class Csp1dShadowPriceNonZeroTests {
         // **设备容量约束现在由真实路径产生。**
         //
         // 时这里要手工补一条，因为"只由初始方案构成的模型不产生设备约束"——
-        // 那一批还据此把"设备符号构造阶段不登记"记成"与基线一致"。
+        // 那一批还据此把"设备符号构造阶段不登记"记成""。
         //
-        // **查证那是错的**：基线在 `register` 里用 `PlanBatchTerms` 填充设备符号，
+        // **查证那是错的**：`register` 里用 `PlanBatchTerms` 填充设备符号，
         // C# 补齐之后，初始方案就会产生 `machine_capacity_0`。**手工补的那条因此成了重复项**
         // （实测 `19.0 = 9.5 × 2`）。判据现在走**真实路径**，比合成约束强。
         //
         // **The machine capacity constraint now comes from the real path.** In it had to be added by hand because "a model made only of initial plans produces no
-        // machine constraint" — and that batch recorded "machine symbols are not populated in the constructor" as "consistent with the baseline". **proved that wrong**:
-        // the baseline fills them via `PlanBatchTerms` in `register`, and once C# was fixed the initial plans produce `machine_capacity_0`. **The hand-added constraint then
+        // machine constraint" — and that batch recorded "machine symbols are not populated in the constructor" as "consistent with the code". **proved that wrong**:
+        // the code fills them via `PlanBatchTerms` in `register`, and once C# was fixed the initial plans produce `machine_capacity_0`. **The hand-added constraint then
         // became a duplicate** (measured `19.0 = 9.5 × 2`). The criterion now exercises **the real path**, which is stronger than a synthetic constraint.
 
         var lifecycle = new Csp1dShadowPriceLifecycle<Flt64>(Millimetres(1.0).Value, context.CgPipelines);

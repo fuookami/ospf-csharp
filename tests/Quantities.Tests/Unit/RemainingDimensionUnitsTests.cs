@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// `LuminousIntensity`(1) / `AngularVelocity`(2) / `AngularAcceleration`(2),
 /// plus the four area units `Stress` depends on (`SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`).
 ///
-/// **The three conversions that are not decimal multiples are the ones worth pinning here**:
+/// **The three conversions that are not decimal multiples are the ones worth pinning here**.
 /// **`SquareDegree` is `(π/180)²`**, **`EnzymeUnit` is `1/60000000`**, **`DegreePerSecond` rides on `π/180`** —
 /// **none of them is right by swapping a prefix, and none of them fails loudly when wrong.**
 /// </remarks>

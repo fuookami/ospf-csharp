@@ -26,11 +26,11 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 1. **预分配模式下业载必须等于目标业载**。基线加的是一行 `eq` 约束，不是目标函数里的软项。少了它，预分配算出来的总量
 /// 可以偏离货主要多少，而每个舱位单独看都合法。
-/// 2. **按谓词取装载量**（`load_amount_of_{舱位}`）。基线的用途是"只看主舱货"或"只看某类货"装了几件，与全部货物的
+/// 2. **按谓词取装载量**（`load_amount_of_{舱位}`）。用途是"只看主舱货"或"只看某类货"装了几件，与全部货物的
 ///    `load_amount` 是**两个不同的量**——它们共用同一批 `stowage` 符号，所以同一份解里必然自洽。
 ///
-/// Two things: (1) under predistribution the payload must **equal** the target — the baseline adds an `eq` row, not a soft objective term; without it the planned total drifts
-/// from the shipper's figure while every position looks legal on its own. (2) **Predicate-scoped amounts** (`load_amount_of_{position}`), which the baseline uses for "main-deck
+/// Two things: (1) under predistribution the payload must **equal** the target — the code adds an `eq` row, not a soft objective term; without it the planned total drifts
+/// from the shipper's figure while every position looks legal on its own. (2) **Predicate-scoped amounts** (`load_amount_of_{position}`), which the code uses for "main-deck
 /// pieces only" or "pieces of one class" — a **different quantity** from the all-items `load_amount`, sharing the same `stowage` symbols so one solution is consistent by
 /// construction.
 /// </remarks>
@@ -205,11 +205,11 @@ public class Demo2PayloadConservationTests {
     /// </summary>
     /// <remarks>
     /// 成对：重复的舱位下标只落一个 key（两个符号值相同但对象不同，所以能查到重复是**字典按 key 覆盖**而不是某个守卫的结果），
-    /// 且 `ItemIndicesOf` 保留调用方顺序与重复项——基线的签名是 `List<Int>` 而不是 `Set`，转成集合会静默吞掉重复项，
+    /// 且 `ItemIndicesOf` 保留调用方顺序与重复项——签名是 `List<Int>` 而不是 `Set`，转成集合会静默吞掉重复项，
     /// 而重复项在"同一件货算两次"这种用法里是有意的。
     ///
     /// Paired: a repeated position index lands on one key (two symbols would be equal in value but distinct objects, so a duplicate surviving would mean the dictionary does not
-    /// replace by key), and `ItemIndicesOf` keeps the caller's order and duplicates — the baseline signature is `List<Int>`, not `Set`, and converting would silently drop
+    /// replace by key), and `ItemIndicesOf` keeps the caller's order and duplicates — the code signature is `List<Int>`, not `Set`, and converting would silently drop
     /// duplicates that are deliberate in "count this item twice" usages.
     /// </remarks>
     [Fact]

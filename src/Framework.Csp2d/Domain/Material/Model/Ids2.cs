@@ -1,6 +1,6 @@
 // 二维套裁的标识与生产对象契约 / 2D cutting stock identifiers and production object contracts.
-// 与固定 Kotlin 基线 `csp2d/domain/material/model/Ids2.kt` 对应。
-// Mirrors the pinned Kotlin baseline's `Ids2.kt`.
+// 与固定 Kotlin 对应。
+// The pinned Kotlin: .
 
 using Fuookami.Ospf.Math.Algebra.Concept;
 using Fuookami.Ospf.Quantities.Quantity;
@@ -42,10 +42,10 @@ public interface IPlanId2 {
 /// </summary>
 /// <param name="Value">裸值 / The raw value.</param>
 /// <remarks>
-/// **一个类同时实现四个生产对象编号**，与基线一致：产品、物料、设备、副产物共享同一编号口径，
+/// **一个类同时实现四个生产对象编号**：产品、物料、设备、副产物共享同一编号口径，
 /// 各自只在**接口层面**区分。拆成四个类会让调用方每次都要多写一次转换，而**语义区分本来靠接口就够了**。
 ///
-/// **One class implements all four production-object identifiers**, matching the baseline: products, materials, machines and by-products share one identifier convention
+/// **One class implements all four production-object identifiers**, matching the code: products, materials, machines and by-products share one identifier convention
 /// and differ only **at the interface level**. Splitting into four classes would force a conversion at every call site while **the interface already carries the
 /// distinction**.
 /// </remarks>
@@ -97,17 +97,17 @@ public static class Csp2dIds {
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// **`SheetShape` 这里未移植**：基线返回 `Sheet2Shape&lt;V&gt;`，而这个类型当前住在 `Framework.Bpp2d` 里。
+/// **`SheetShape` 这里未实现**：基线返回 `Sheet2Shape&lt;V&gt;`，而这个类型当前住在 `Framework.Bpp2d` 里。
 /// 让 `Csp2d` 依赖 `Bpp2d` 会把模块归属倒过来（套裁去依赖装箱），所以先只保留面积与尺寸，
 /// **等第二个消费者出现时再把形状类型提到公共层**。
 ///
-/// **`Area` 同样未移植**：C# 的 `Quantity&lt;V&gt;` **没有乘积运算符**，唯一的乘积助手 `QuantityArithmetic.Product` 住在 `Framework.Bpp2d` 里——
+/// **`Area` 同样未实现**：C# 的 `Quantity&lt;V&gt;` **没有乘积运算符**，唯一的乘积助手 `QuantityArithmetic.Product` 住在 `Framework.Bpp2d` 里——
 /// 用它就是同一处归属倒挂。**等公共层的量运算出现时一并接上。**
 ///
-/// **`Area` is not ported either**: C# `Quantity&lt;V&gt;` **has no product operator**, and the only product helper `QuantityArithmetic.Product` lives in
+/// **`Area` is not implemented either**: C# `Quantity&lt;V&gt;` **has no product operator**, and the only product helper `QuantityArithmetic.Product` lives in
 /// `Framework.Bpp2d` — using it is the same ownership inversion. **It comes back when a shared quantity-arithmetic layer exists.**
 ///
-/// **`SheetShape` is not ported here**: the baseline returns `Sheet2Shape&lt;V&gt;`, which currently lives in `Framework.Bpp2d`. Making `Csp2d` depend on `Bpp2d`
+/// **`SheetShape` is not implemented here**: the code returns `Sheet2Shape&lt;V&gt;`, which currently lives in `Framework.Bpp2d`. Making `Csp2d` depend on `Bpp2d`
 /// inverts module ownership (cutting stock depending on bin packing), so only area and dimensions are kept for now — **the shape type moves to a shared layer once a
 /// second consumer appears**.
 /// </remarks>

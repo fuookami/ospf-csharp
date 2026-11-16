@@ -1,6 +1,6 @@
 // 局部搜索更新算子（此前：模式搜索与组合器）/ Local-search update operators (pattern search and composites).
-// 与固定 Kotlin 基线 `operator/update/LocalSearchUpdates.kt`（11735 B）的后四个实现对应。
-// Mirrors the last four implementations of the pinned baseline's `LocalSearchUpdates.kt`.
+// 与固定 Kotlin （11735 B）的后四个实现对应。
+// The last four implementations of the: .
 
 using System;
 using System.Collections.Generic;
@@ -25,10 +25,10 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// **Invalid parameters yield an empty list**: `initialStep` must be finite and positive, `contraction` must lie in `(0, 1)`, and
 /// `sweeps` must be positive. A `contraction >= 1` means the mesh never shrinks and the search keeps probing a whole plane **while the
 /// iteration counter looks entirely normal**.
-/// **与基线的差异（预算感知）**：基线通过 `model is SearchEvaluation &amp;&amp; model.remaining &lt;= 2` 提前退出，C# 侧在 earlier 已把约束与预算
+/// **与差异（预算感知）**：基线通过 `model is SearchEvaluation &amp;&amp; model.remaining &lt;= 2` 提前退出，C# 侧在 earlier 已把约束与预算
 /// 从模型上剥离（`SearchConstraints` 取代模型装饰器），因此这里**没有**模型侧预算读取。调用方必须用 `SearchBudget` 包住整次调用；
 /// 否则单次调用的评估量只受 `sweeps × 维数 × 2` 约束，一个宽网格就可能把整轮预算吃光。
-/// **Divergence from the baseline (budget awareness)**: the baseline exits early via `model is SearchEvaluation &amp;&amp; model.remaining &lt;= 2`;
+/// **Divergence from the code (budget awareness)**: the code exits early via `model is SearchEvaluation &amp;&amp; model.remaining &lt;= 2`;
 /// the C# side detached constraints and budgets from the model in earlier (`SearchConstraints` replaced the model decorator), so there
 /// is **no** model-side budget read here. The caller must wrap the whole call in a `SearchBudget`; otherwise the evaluation count per call
 /// is bounded only by `sweeps * dimension * 2`, and a wide mesh can consume an entire run's budget.

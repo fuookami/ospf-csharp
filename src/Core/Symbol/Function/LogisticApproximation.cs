@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 逻辑斯谛（sigmoid）的分段线性近似 / Piecewise-linear approximation of the logistic curve.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NonlinearPiecewise.kt` 的 `LogisticApproximationFunction`。
+/// 对齐的 `LogisticApproximationFunction`。
 ///
 /// <c>σ(z) = 1 / (1 + e^(−z))</c>，其中 <c>z = k(x − m)</c>（`k` 是陡度、`m` 是中点）。
 ///
-/// **基线把源函数写成两支**：
+/// **源函数写成两支**：
 /// ```
 /// z >= 0 ? 1 / (1 + exp(-z)) : exp(z) / (1 + exp(z))
 /// ```
@@ -35,16 +35,16 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 于是中间量是「无穷」而不是一个数**——**最终结果仍然是 0（正确），但中间量已经不可信，
 /// 而任何在中间量上做判断的代码（例如"是否有限"）会在这里做出错误决定。**
 ///
-/// The logistic curve from the baseline's `NonlinearPiecewise.kt`.
+/// The logistic curve from its.
 ///
 /// <c>σ(z) = 1 / (1 + e^(−z))</c> with <c>z = k(x − m)</c> (`k` the steepness, `m` the midpoint).
 ///
-/// **The baseline writes the source in two branches**:
+/// **The code writes the source in two branches**.
 /// ```
 /// z >= 0 ? 1 / (1 + exp(-z)) : exp(z) / (1 + exp(z))
 /// ```
 ///
-/// **The branches are mathematically identical, so they are copied here, but why they exist is worth stating**:
+/// **The branches are mathematically identical, so they are copied here, but why they exist is worth stating**.
 /// **the single-branch form `1/(1+e^(−z))` overflows `e^(−z)` to infinity for very negative `z`, so an intermediate
 /// is "infinity" rather than a number** — **the final result is still 0 (correct), but the intermediate is no longer
 /// trustworthy, and anything judging that intermediate (a finiteness check, say) makes a wrong decision there.**

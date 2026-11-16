@@ -23,12 +23,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 容差带内返回 `null`，不是猜一个 / The tolerance band returns `null`, not a guess.
 /// </summary>
 /// <remarks>
-/// 对齐基线把 `QuadraticInStepRangeFunction` 与 `QuadraticLinearFunction` 两个空壳换成真实编码。
+/// 对齐`QuadraticInStepRangeFunction` 与 `QuadraticLinearFunction` 两个空壳换成真实编码。
 ///
 /// **区间归属是三段语义**：**在内给 `x`、明确在外给 0、容差带内给 `null`。**
 /// **第三段是核心**：**把容差带并进任意一侧都会让"明确在外"失去意义。**
 ///
-/// Replaces two stubs with real encodings, following the baseline.
+/// Replaces two stubs with real encodings, following the code.
 ///
 /// **The membership is three-way**; **the third case is the point** — **folding the band into either side destroys
 /// "clearly out".**
@@ -93,10 +93,10 @@ public class QuadraticInStepRangeFunctionTests
     /// **容差带的边界是闭的：`lower − tol` 属于"明确在外"** / The band's outer edge is inclusive.
     /// </summary>
     /// <remarks>
-    /// **`x = lower − tol` 恰好落在"明确在外"那一侧**（基线用 `<=`）。
+    /// **`x = lower − tol` 恰好落在"明确在外"那一侧**（`<=`）。
     /// **这条钉的是容差的方向：容差让带变宽，而不是让区间变宽。**
     ///
-    /// **`x = lower − tol` falls on the "clearly out" side** (the baseline uses `<=`).
+    /// **`x = lower − tol` falls on the "clearly out" side** (the code uses `<=`).
     /// **This pins the direction of the tolerance: it widens the band, not the interval.**
     /// </remarks>
     [Fact]

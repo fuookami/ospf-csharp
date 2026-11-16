@@ -1,6 +1,5 @@
 // 连续变异算子 / Continuous mutation operators.
-// 与固定 Kotlin 基线 `core/solver/heuristic/operator/mutation/ContinuousMutations.kt`（12067 字节）对应。
-// Mirrors the pinned baseline's `ContinuousMutations.kt`.
+// 与固定 Kotlin （12067 字节）对应。
 
 using System;
 using System.Collections.Generic;

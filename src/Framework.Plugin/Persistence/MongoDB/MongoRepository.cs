@@ -80,7 +80,7 @@ public abstract class MongoRepository<T> : IRepository<T> where T : class {
         // **翻译失败要原样返回失败，不能退化成"查全部"**：
         // **退化成查全部会让一个写错的谓词返回整个集合，而调用方以为条件生效了。**
         //
-        // **A failed translation is returned as a failure, never degraded to "fetch everything"**:
+        // **A failed translation is returned as a failure, never degraded to "fetch everything"**.
         // **degrading returns the whole collection for a mistyped predicate while the caller believes it filtered.**
         Result<BsonDocument?, ErrorCode, Error<ErrorCode>> translated =
             MongoBooleanTranslator.Translate(predicate, resolveFieldName);

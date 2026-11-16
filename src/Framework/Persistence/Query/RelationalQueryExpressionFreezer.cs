@@ -1,7 +1,7 @@
 // 关系查询表达式冻结 / Relational query expression freezing.
-// 与固定 Kotlin 基线 `freezeBoolean`／`freezeScalar`／`freezeCustomValue` 对应：构造计划时把表达式树深度复制，
+// 与`freezeBoolean`／`freezeScalar`／`freezeCustomValue` 对应：构造计划时把表达式树深度复制，
 // 使调用方在构造之后修改自己的容器不再影响计划。
-// Mirrors the pinned Kotlin baseline's `freezeBoolean`/`freezeScalar`/`freezeCustomValue`: the expression tree
+// The pinned Kotlin: /`freezeScalar`/`freezeCustomValue`: the expression tree
 // is deep-copied while constructing the plan, so a caller mutating its own containers afterwards no longer
 // affects the plan.
 
@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Framework.Persistence.Query;
 /// 关系查询表达式冻结器 / Relational query expression freezer.
 /// </summary>
 /// <remarks>
-/// **与基线的一处实质差异**：基线还有 `findExpressionCycle`，因为 Kotlin 的表达式树可以经由可变容器成环。
+/// **与一处实质差异**：基线还有 `findExpressionCycle`，因为 Kotlin 的表达式树可以经由可变容器成环。
 /// C# 的表达式节点是不可变记录、只能自底向上构造，**结构上无法成环**，所以这里没有树级循环检测——移植过来
 /// 只会是不可达代码。真正可能成环的是自定义 payload 携带的容器，这里用递归深度上限兜住。
 ///
-/// **A substantive difference from the baseline**: the baseline also has `findExpressionCycle`, because a Kotlin
+/// **A substantive difference from the code**: the code also has `findExpressionCycle`, because a Kotlin
 /// expression tree can cycle through mutable containers. C# expression nodes are immutable records built
 /// bottom-up, so a structural cycle is **impossible** and a tree-level check would be dead code. The real risk is
 /// a container inside a custom payload, bounded here by a recursion-depth limit.
@@ -57,11 +57,11 @@ internal static class RelationalQueryExpressionFreezer {
     /// 查找无法安全复制的自定义 payload / Find a custom payload that cannot be copied safely.
     /// </summary>
     /// <remarks>
-    /// 基线在构造计划时**拒绝**这类 payload，而不是原样保留引用：保留引用等于计划与调用方共享可变状态，
+    /// 构造计划时**拒绝**这类 payload，而不是原样保留引用：保留引用等于计划与调用方共享可变状态，
     /// "构造后不可变"就成了假的。可复制集合与 <see cref="FreezePayload(object?)"/> 的判定保持一致——两者分叉会让
     /// "冻结时放过、校验时拒绝"或反之。
     ///
-    /// The baseline **rejects** such payloads at construction rather than keeping the reference: keeping it means
+    /// The code **rejects** such payloads at construction rather than keeping the reference: keeping it means
     /// the plan shares mutable state with the caller and "immutable after construction" becomes false. The copyable
     /// set is kept identical to <see cref="FreezePayload(object?)"/>; if the two diverge, one would freeze what the other
     /// rejects.

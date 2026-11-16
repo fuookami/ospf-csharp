@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 航材与散货互斥约束 / The AOG/MAT versus bulk exclusivity rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/AOGMATBulkConflictLimit.kt`。**三支互斥**，按顺序判定，每支处理完就 `continue`：
+/// 对齐。**三支互斥**，按顺序判定，每支处理完就 `continue`：
 ///
 /// | 支 | 舱位条件 | 加的行 |
 /// | --- | --- | --- |
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 ///
 /// 外层只看**可用**散货舱位（`!unavailable` 与 `location.bulk` 同时成立）。少了 `location.bulk` 会给主甲板舱位也加行，而那些行的语义完全不同。
 ///
-/// Aligned with the baseline. **Three mutually exclusive branches**, judged in order, each ending in `continue`: tabulated above. The **order** is a hard requirement — branches
+/// **Three mutually exclusive branches**, judged in order, each ending in `continue`: tabulated above. The **order** is a hard requirement — branches
 /// one and two each close one direction and branch three adds "at most one of a pair". Swapping the order emits branch three's rows first and branch one's after, more rows with
 /// duplicated meaning; dropping a `continue` fires two branches at once and forbids both directions for the same position, making the model infeasible. The outer loop covers
 /// **available bulk** positions only; without `location.bulk` the main-deck positions get rows whose meaning is entirely different.
@@ -62,8 +62,8 @@ public sealed class AOGMATBulkConflictLimit
         _items = items;
         _positions = positions;
         _stowage = stowage;
-        // 基线里的名字就是 `aot_mat_bulk_conflict_limit`（`AOG` 打成了 `AOT`）。照抄，不"顺手改正"——改名会让按名字定位的调用方找不到它。
-        // The baseline's name literally is `aot_mat_bulk_conflict_limit` (`AOG` typed as `AOT`). Copied as-is rather than "fixed": renaming breaks any caller that locates the
+        // 的名字就是 `aot_mat_bulk_conflict_limit`（`AOG` 打成了 `AOT`）。沿用，不"顺手改正"——改名会让按名字定位的调用方找不到它。
+        // The code's name literally is `aot_mat_bulk_conflict_limit` (`AOG` typed as `AOT`). Copied as-is rather than "fixed": renaming breaks any caller that locates the
         // pipeline by name.
         Name = name;
     }

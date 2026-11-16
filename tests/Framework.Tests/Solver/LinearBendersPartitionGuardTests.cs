@@ -115,7 +115,7 @@ public class LinearBendersPartitionGuardTests
     /// **变量一律镜像进子问题**，于是"收窄追索"靠的是行，不是变量——本仓 曾把这一点读成"结构上限"，其实**两边的规则一致**。
     /// 这条判据把规则钉在行为上：主问题的行数必须等于"只含决策变量的行"条数。
     ///
-    /// This is the baseline's row rule (`LinearBendersPartition.build`, 12fdb587): `target = if (cells.all { it.token.variable in decisions }) master else sub`.
+    /// This is its row rule (`LinearBendersPartition.build`, 12fdb587): `target = if (cells.all { it.token.variable in decisions }) master else sub`.
     /// **Every variable is mirrored into the sub**, so narrowing the recourse is done by **rows**, not variables — misread this as a structural ceiling, while
     /// **both sides follow the same rule**. This criterion pins the rule behaviourally: the master row count must equal the number of decisions-only rows.
     /// </remarks>

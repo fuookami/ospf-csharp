@@ -74,8 +74,8 @@ public sealed class SoftSecurityContext
         ArgumentNullException.ThrowIfNull(parameter);
         ArgumentNullException.ThrowIfNull(model);
 
-        // 与基线一致：**先注册聚合的符号，再跑管线**。顺序反了会让管线找不到 `DivideEmptyLoading` 的中间符号。
-        // As in the baseline: **register the aggregation's symbols, then run the pipelines**. The reverse order leaves the pipelines unable to find
+        // ：**先注册聚合的符号，再跑管线**。顺序反了会让管线找不到 `DivideEmptyLoading` 的中间符号。
+        // **register the aggregation's symbols, then run the pipelines**. The reverse order leaves the pipelines unable to find
         // `DivideEmptyLoading`'s intermediate symbols.
         Try registered = Aggregation.Register(stowageMode, model);
         if (!registered.IsOk)

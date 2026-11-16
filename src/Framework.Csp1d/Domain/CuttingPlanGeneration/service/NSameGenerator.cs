@@ -112,7 +112,7 @@ public sealed class NSameGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
     /// 对应基线 `NSameGenerator.generateMaterial`：**遍历需求 → 产品宽度 → 数量**，
     /// 每个组合产出一个**单切片方案**（"N 个相同切片"）。
     ///
-    /// 与基线的三点差异，均已记录：
+    /// 与三点差异，均已记录：
     ///
     /// | 基线 | 这里 | 原因 |
     /// | --- | --- | --- |
@@ -122,9 +122,9 @@ public sealed class NSameGenerator<V> : ICsp1dInitialCuttingPlanGenerator<Cuttin
     ///
     /// **这些差异都让能力变弱而不让结果变错**：产出的方案是基线结果的子集，且每条都经过约束检查。
     ///
-    /// Mirrors the baseline's `NSameGenerator.generateMaterial`: **walk demands → product widths → amounts**, emitting one **single-slice plan** ("N same
-    /// slices") per combination. The three differences from the baseline are recorded above; **all of them make the capability weaker without making results
-    /// wrong** — the emitted plans are a subset of the baseline's, each still passing the constraint checks.
+    /// **walk demands → product widths → amounts**, emitting one **single-slice plan** ("N same
+    /// slices") per combination. The three differences from the code are recorded above; **all of them make the capability weaker without making results
+    /// wrong** — the emitted plans are a subset of its, each still passing the constraint checks.
     /// </remarks>
     private void GenerateForMaterial(
         Material<V> material,

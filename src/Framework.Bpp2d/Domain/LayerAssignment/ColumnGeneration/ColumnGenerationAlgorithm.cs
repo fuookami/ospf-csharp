@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 与基线 `ColumnGenerationAlgorithm` 对齐。**循环里六件事的顺序不能换**：
 ///
 /// 1. **先查时间上限**，再求解——反了会让最后一步超时后才被记成"因时间结束"。
-/// 2. **没有 RMP 求解器就 break**，不报错：基线把它当正常结束，因为只跑初始列也是一种用法。
+/// 2. **没有 RMP 求解器就 break**，不报错：它当正常结束，因为只跑初始列也是一种用法。
 /// 3. **求解结果先落盘再建列**：影子价格是建列请求的输入，顺序反了会用上一轮的价格。
 /// 4. **候选为空就 break**，不算一次迭代——`Iterations` 只在真有新列时加一。
 /// 5. **去重放在合并之后**：先各自去重再合并会让两批之间的重复留下。
@@ -33,12 +33,12 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// - **`FinalMilpEnabled` 为真但求解器为空时静默跳过**（基线如此），`FinalSolved` 保持 `false`；
 /// - **失败分析器的返回值参与错误合并**：分析器失败 → 把它的错误也拼进去，而不是丢掉原错误。
 ///
-/// Aligned with the baseline's `ColumnGenerationAlgorithm`. **The order of six things inside the loop must not change**: the time limit is checked **before** solving, or the final step would
-/// be recorded as time-terminated only after overrunning; **a missing RMP solver breaks rather than failing**, as the baseline treats it as a normal ending because running only the initial
+/// Aligned with its `ColumnGenerationAlgorithm`. **The order of six things inside the loop must not change**: the time limit is checked **before** solving, or the final step would
+/// be recorded as time-terminated only after overrunning; **a missing RMP solver breaks rather than failing**, as the code treats it as a normal ending because running only the initial
 /// columns is a valid use; **the solve result is stored before the request is built**, since the shadow prices are that request's input and reversing it would use the previous round's
 /// prices; **an empty candidate set breaks without counting an iteration**, so `Iterations` only advances when real columns arrive; **deduplication happens after merging**, because
 /// deduplicating each batch first lets cross-batch duplicates through; and **the iteration-limit flag is evaluated after the loop**, not at the break, or "stopped at the limit" and "stopped
-/// with no candidates" would blur together. Two more conventions: **a non-null `FinalMilpEnabled` with a null solver is skipped silently** (as in the baseline) leaving `FinalSolved` false, and
+/// with no candidates" would blur together. Two more conventions: **a non-null `FinalMilpEnabled` with a null solver is skipped silently** (as in the code) leaving `FinalSolved` false, and
 /// **the failure analyser's own result joins the error list** rather than replacing the original errors.
 /// </remarks>
 public sealed class ColumnGenerationAlgorithm
@@ -280,7 +280,7 @@ public sealed class ColumnGenerationAlgorithm
     /// <remarks>
     /// **分析器失败时把它的错误也拼进去**，不丢掉原错误——只要有一个错误就报 `Failed`，多个报 `Fatal`（基线口径）。
     ///
-    /// **When the analyser fails, its errors are appended** rather than dropping the originals: one error yields `Failed`, several yield `Fatal`, per the baseline.
+    /// **When the analyser fails, its errors are appended** rather than dropping the originals: one error yields `Failed`, several yield `Fatal`, per the code.
     /// </remarks>
     private async Task<Result<T, ErrorCode, Error<ErrorCode>>> FailedAsync<T>(
         ColumnGenerationFailureStage stage,

@@ -27,10 +27,10 @@ public class CrossLanguageFixtureCorpusTests
 {
     /// <summary>**六份都还在，一个字节都没变** / All six survive, byte for byte.</summary>
     /// <remarks>
-    /// 哈希取自 `git cat-file -p 12fdb587:<path>` 的输出——**是基线那一侧算的**，不是本仓算完抄过来的。
+    /// 哈希取自 `git cat-file -p 12fdb587:<path>` 的输出——**是一侧算的**，不是本仓算完抄过来的。
     /// 这条判据钉的是"文件没被改过"，**不证明内容语义正确**；语义靠解码判据与逐字契约表。
     ///
-    /// The hashes come from `git cat-file -p 12fdb587:<path>` — **computed on the baseline side**, not copied after hashing here. This pins "the file was not edited"; it
+    /// The hashes come from `git cat-file -p 12fdb587:<path>` — **computed on the code side**, not copied after hashing here. This pins "the file was not edited"; it
     /// **does not prove the semantics**, which the decoding criteria and the verbatim contract table carry.
     /// </remarks>
     [Fact]

@@ -38,7 +38,7 @@ public static class OnnxShapeTransform
     /// **不写"无处可写"的后果是静默的：** **形状换了、表达式没换，** **下游若按位置去接（`MatMul`、`Concat`），**
     /// **拿到的就是错位的元素，而模型照常求解。** **所以顺序敏感的算子在多元素张量上必须拒绝，而不是装作支持。**
     ///
-    /// Mirrors the baseline: reshape and flatten carry input.elements unchanged while transpose permutes them by coordinate. **Each binding here holds one scalar expression
+    /// reshape and flatten carry input.elements unchanged while transpose permutes them by coordinate. **Each binding here holds one scalar expression
     /// plus a shape and no element list, so the permutation has nowhere to be written down.**
     ///
     /// **The consequence of not writing that down is silent: the shape changes and the expression does not, and a downstream operator that reads positionally (MatMul, Concat)
@@ -53,7 +53,7 @@ public static class OnnxShapeTransform
     /// **其中 `Conv`／`MaxPool`／`AveragePool` 只用于判断"下游会不会按位置读"，本身并未实现；** '
     /// **基线 `dee897d2` 也没有实现它们。**
     ///
-    /// **Of these, Conv, MaxPool and AveragePool serve only to decide whether a downstream reads positionally; they are not implemented here, and the baseline does not implement them either.**
+    /// **Of these, Conv, MaxPool and AveragePool serve only to decide whether a downstream reads positionally; they are not implemented here, and the code does not implement them either.**
     /// </summary>
     /// <remarks>
     /// **重排只有在被这些算子读到的时候才是可见的：** **它们按"第几个元素"取值，** **而逐元素的加法、激活、`Reshape` 都不看位置。**

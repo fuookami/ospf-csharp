@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// **逐元素算子按元素配对，而不是把整个张量当成一个数** / Elementwise operators pair by element instead of treating a tensor as one number.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `lowerElementwiseBinary`：**基线里每个张量是 `OnnxTensorExpr(shape, elements)`，所以"加"天然就是逐位置加。**
+/// 对齐基线 `lowerElementwiseBinary`：**每个张量是 `OnnxTensorExpr(shape, elements)`，所以"加"天然就是逐位置加。**
 /// **C# 侧此前把多元素张量压成一个标量表达式——** **那在数学上是一个错误但自洽的表示，一旦两个不同形状的多元素张量相遇就会把两个不同的东西相加。**
 ///
 /// **判据读的是中间绑定：** **图输出多元素时会明确拒绝（按元素取输出还没接），而中间结果仍留在上下文里，**
 /// **所以"配对对不对"可以直接看，而不是只能断言"失败了"。**
 ///
-/// Syncs `lowerElementwiseBinary`: **in the baseline every tensor is OnnxTensorExpr(shape, elements), so "add" is per position by construction.** The C# side used to collapse a
+/// Syncs `lowerElementwiseBinary`: **in the code every tensor is OnnxTensorExpr(shape, elements), so "add" is per position by construction.** The C# side used to collapse a
 /// multi-element tensor into one scalar expression — **a self-consistent but mathematically wrong representation that adds two different things the moment two differently shaped
 /// multi-element tensors meet.**
 ///
@@ -100,9 +100,9 @@ public class OnnxElementwiseTests
 
     /// <summary>**多元素图输出被明确拒绝，而不是交出第一个位置** / A multi-element graph output is refused rather than handing back the first position.</summary>
     /// <remarks>
-    /// **这是"宁可不做也不静默算错"的那条线：** **多元素绑定没有唯一的标量表达式，** **而按元素取输出（基线的 `elementIndex`）还没接。**
+    /// **这是"宁可不做也不静默算错"的那条线：** **多元素绑定没有唯一的标量表达式，** **而按元素取输出（`elementIndex`）还没接。**
     ///
-    /// **This is the line between "not done" and "silently wrong": a multi-element binding has no single scalar expression, and element-indexed output selection (the baseline's
+    /// **This is the line between "not done" and "silently wrong": a multi-element binding has no single scalar expression, and element-indexed output selection (its
     /// elementIndex) is not wired yet.**
     /// </remarks>
     [Fact]

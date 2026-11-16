@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 指示结构：保留列集合必须在递归之前完整 / The retained set must be complete before recursing.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativeIndicator.kt` 的 `prepareNativeIndicator` / `prepareIndicator`。
+/// 对齐的 `prepareNativeIndicator` / `prepareIndicator`。
 ///
 /// Adds </remarks>
 public class NativeIndicatorTests
@@ -63,7 +63,7 @@ public class NativeIndicatorTests
     /// **所以本层那个 `bandTolerance >= tolerance` 永远走不到——
     /// 走到那里时它已经被上游拒掉了。**
     ///
-    /// **这份实现照抄了基线的重复检查（基线也有这两层），所以<b>保留</b>它；
+    /// **这份实现沿用了重复检查（有这两层），所以<b>保留</b>它；
     /// 但判据必须说清楚<b>是哪一层</b>在生效，否则下一个人会以为本层被覆盖了。**
     ///
     /// **判据现在的断言是：三档都被拒/通过，但原因记在上游。**
@@ -80,7 +80,7 @@ public class NativeIndicatorTests
     /// **So this layer's own `bandTolerance >= tolerance` never runs — by the time control reaches it, the upstream has
     /// already refused.**
     ///
-    /// **This implementation copies the baseline's duplicate check (the baseline has both layers too), so it is
+    /// **This implementation copies its duplicate check (the code has both layers too), so it is
     /// <b>kept</b>; but the criterion must say <b>which layer</b> is doing the work, otherwise the next reader assumes this
     /// one is covered.**
     ///
@@ -314,7 +314,7 @@ public class NativeIndicatorTests
     /// The conditional value must not be a retained column, yet it may be the consequent's result.
     /// </summary>
     /// <remarks>
-    /// **这是两套集合的不对称，照抄基线：**
+    /// **这是两套集合的不对称，照做：**
     ///
     /// | 集合 | 内容 | 谁被拒 |
     /// | --- | --- | --- |
@@ -324,7 +324,7 @@ public class NativeIndicatorTests
     /// **所以一个变量可以同时是"条件数值结果"与"某一族的等价结果"而不冲突——
     /// 而它如果是主输入的项就会被拒。**
     ///
-    /// **The asymmetry between two sets, copied from the baseline** (see the table above).
+    /// **The asymmetry between two sets, copied from the code** (see the table above).
     ///
     /// **So a variable can be both a conditional-value result and some family's equivalent result without conflict — while
     /// the same variable as a main-input term is refused.**

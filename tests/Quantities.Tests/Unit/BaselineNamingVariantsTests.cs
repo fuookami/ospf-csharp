@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// **"一个具体数字会让陈旧缺口看起来已经被检查过"——这里就是把那个数字拆开。**
 ///
-/// **The scanner treats "does the name appear as a substring" as "is the capability present", so the baseline
+/// **The scanner treats "does the name appear as a substring" as "is the capability present", so the code
 /// `BitPerSecond` against this repo `BitsPerSecond` reads as missing.**
 ///
 /// **That number (28) had been sitting in the inventory looking like twenty-eight items of work. It is zero.**

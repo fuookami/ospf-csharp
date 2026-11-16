@@ -20,8 +20,8 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// Gurobi 只额外提供原生 ranging 钩子，两端共用同一条经测试的实现路径"。**
 /// **所以判据测的是<b>串联关系**，不是"这个类做了什么"。**
 ///
-/// **This connects the counterpart of the baseline's `gurobiFixedIntegerLpBackend`.** **It must not implement solving itself:
-/// the baseline says the backend-neutral layer is reused and Gurobi adds only a ranging hook, with both backends sharing one
+/// **This connects the counterpart of its `gurobiFixedIntegerLpBackend`.** **It must not implement solving itself:
+/// the code says the backend-neutral layer is reused and Gurobi adds only a ranging hook, with both backends sharing one
 /// tested path.** **So the criteria test the <em>composition</em>, not "what this class does".**
 /// </remarks>
 public class GurobiFixedIntegerLpBackendTests
@@ -52,7 +52,7 @@ public class GurobiFixedIntegerLpBackendTests
     /// 那意味着两个后端从此走两条路径——而基线明确说过不存在重复逻辑。**
     ///
     /// **The criterion checks the returned type's <b>name</b>, because "is the same path reused" is visible in the type: if
-    /// someone ever writes a new `GurobiFixedIntegerLpSolver` here, the two backends would take two paths — and the baseline
+    /// someone ever writes a new `GurobiFixedIntegerLpSolver` here, the two backends would take two paths — and the code
     /// explicitly says there is no duplicated logic.**
     /// </remarks>
     [Fact]

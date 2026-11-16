@@ -1,6 +1,5 @@
 // 多目标求解器 / The multi-objective solvers.
-// 与固定 Kotlin 基线 `solver/MultiObjectiveSolvers.kt`（6491 B）对应。
-// Mirrors the pinned baseline's `solver/MultiObjectiveSolvers.kt` (6491 B).
+// 与固定 Kotlin （6491 B）对应。
 
 using System;
 using System.Collections.Generic;
@@ -48,10 +47,10 @@ public interface IMultiObjectiveSolver<V>
 /// NSGA 系列求解器 / An NSGA-family solver.
 /// </summary>
 /// <remarks>
-/// **名称一律从 runner 取，不从包装类型取**。基线的 II 与 III 共用同一个包装类型，区别只在 runner；
+/// **名称一律从 runner 取，不从包装类型取**。II 与 III 共用同一个包装类型，区别只在 runner；
 /// 若把名称写死成 `"nsga-ii"`，**那么用 NSGA-III 跑出来的东西会自称 NSGA-II，而结果本身完全正常**——
 /// 这是最难被发现的一类错误：**结果对、标签错**。
-/// **The name always comes from the runner, never from the wrapper type.** The baseline shares one wrapper between II and III, with only
+/// **The name always comes from the runner, never from the wrapper type.** The code shares one wrapper between II and III, with only
 /// the runner differing; hard-coding `"nsga-ii"` makes **an NSGA-III run call itself NSGA-II while its results are perfectly normal** —
 /// the hardest kind of error to spot: **right results, wrong label**.
 /// </remarks>
@@ -171,8 +170,8 @@ public static class MultiObjectiveSolvers {
         int archiveAmount = 100,
         int divisions = 8)
         where V : struct, IRealNumber<V>, INumberField<V> =>
-        // 与基线一致：II 与 III 共用同一个包装类型，区别只在 runner。
-        // As in the baseline: II and III share one wrapper type and differ only in the runner.
+        // ：II 与 III 共用同一个包装类型，区别只在 runner。
+        // II and III share one wrapper type and differ only in the runner.
         new Nsga2Solver<V>(new Nsga3Runner<V>(
             objectivesOf, dominance,
             update ?? new SimulatedBinaryCross(new Flt64(20.0)),

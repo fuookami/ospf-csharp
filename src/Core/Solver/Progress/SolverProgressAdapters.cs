@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Core.Solver.Progress;
 /// **这是 移植核心类型时漏掉的另一半**：核心类型（`SolverProgressContext` 等）只提供"怎么上报"，
 /// 适配器提供"从哪里接"。没有适配器，进度上报**存在但无人调用**。
 ///
-/// 三个适配器对应基线的三个函数，**全部保留原回调**：适配后仍会调用 `delegate`，
+/// 三个适配器对应三个函数，**全部保留原回调**：适配后仍会调用 `delegate`，
 /// 所以接入进度上报**不会让既有的回调失效**。
 ///
-/// **This is the half missed when ported the core types**: the core types only provide "how to report", while the adapters provide "where to hook in". Without
+/// **This is the half missed when implemented the core types**: the core types only provide "how to report", while the adapters provide "where to hook in". Without
 /// them progress reporting **exists but nothing calls it**.
 ///
-/// The three adapters correspond to the baseline's three functions and **all preserve the original callback**: after adapting, `delegate` is still invoked, so
+/// The three adapters correspond to its three functions and **all preserve the original callback**: after adapting, `delegate` is still invoked, so
 /// wiring in progress reporting **does not disable any existing callback**.
 /// </remarks>
 public static class SolverProgressAdapters {
@@ -91,10 +91,10 @@ public static class SolverProgressAdapters {
     /// <param name="delegate">原回调 / Original callback.</param>
     /// <returns>组合回调 / The composed callback.</returns>
     /// <remarks>
-    /// **gap 解析失败时进度取 0**，与基线一致（`gap.toString.toDoubleOrNull` 为 null 则 `progress = 0`）。
+    /// **gap 解析失败时进度取 0**（`gap.toString.toDoubleOrNull` 为 null 则 `progress = 0`）。
     /// 总体进度按 `stage.kind` 分四档，**四档的系数必须逐字对齐**——它们决定进度条在各阶段的区间。
     ///
-    /// **When the gap cannot be parsed, progress is 0**, matching the baseline. Overall progress has four branches by `stage.kind`, and **the coefficients must match
+    /// **When the gap cannot be parsed, progress is 0**, matching the code. Overall progress has four branches by `stage.kind`, and **the coefficients must match
     /// exactly** — they decide which band of the progress bar each stage occupies.
     /// </remarks>
     public static SolvingStatusCallBack SolvingCallback(
@@ -143,11 +143,11 @@ public static class SolverProgressAdapters {
     /// <returns>解析值或 null / The parsed value, or null.</returns>
     /// <remarks>
     /// **`Flt64` 有 `ToDouble`，不需要文本往返。** 首版写成"先 `ToString` 再 `TryParse`"，
-    /// 那是照搬基线的 `toString.toDoubleOrNull`——但**基线那么写是因为 Kotlin 的 `Flt64` 没有直接的
+    /// 那是照搬`toString.toDoubleOrNull`——但**么写是因为 Kotlin 的 `Flt64` 没有直接的
     /// double 转换**，C# 有。这里直接取值，**语义相同、少一次解析、也不会因格式设置出错**。
     ///
-    /// **`Flt64` has `ToDouble`, so no text round-trip is needed.** The first version did "`ToString` then `TryParse`", copying the baseline's
-    /// `toString.toDoubleOrNull` — but **the baseline does that because Kotlin's `Flt64` has no direct double conversion**; C# does. Taking the value directly
+    /// **`Flt64` has `ToDouble`, so no text round-trip is needed.** The first version did "`ToString` then `TryParse`", copying its
+    /// `toString.toDoubleOrNull` — but **the code does that because Kotlin's `Flt64` has no direct double conversion**; C# does. Taking the value directly
     /// is **semantically identical, skips a parse, and cannot break on format settings**.
     /// </remarks>
     private static double? ParseGap(Fuookami.Ospf.Math.Algebra.Number.Flt64 gap) => gap.ToDouble();
@@ -159,10 +159,10 @@ public static class SolverProgressAdapters {
     /// <param name="total">总量文本 / Total text.</param>
     /// <returns>百分比 0..100 / Percentage 0..100.</returns>
     /// <remarks>
-    /// **`total == 0` 时返回 100**，与基线一致——总量为零意味着"已经全部完成"，
+    /// **`total == 0` 时返回 100**——总量为零意味着"已经全部完成"，
     /// 而不是"进度为 0"。这一条在初始化瞬间会触发，容易写成 0 而让进度条从 0 开始跳。
     ///
-    /// **Returns 100 when `total == 0`**, matching the baseline — a zero total means "everything is done", not "progress is zero". This fires at the first instant
+    /// **Returns 100 when `total == 0`**, matching the code — a zero total means "everything is done", not "progress is zero". This fires at the first instant
     /// of initialisation and is easy to write as 0, which makes the progress bar jump from zero.
     /// </remarks>
     private static int Percentage(object? ready, object? total) {
@@ -190,25 +190,25 @@ public static class SolverProgressBands {
     /// Progress-band remapping: squeeze a sub-context's in-stage progress into the parent's `[start, end]`.
     /// </summary>
     /// <remarks>
-    /// 对齐基线的 `SolverProgressContext.phase(start, end)`：用一个新的上报器包装父上下文，
+    /// 对齐`SolverProgressContext.phase(start, end)`：用一个新的上报器包装父上下文，
     /// 把子快照的 `overallProgress` 改写成 `start + progressInStage * (end - start) / 100`。
     ///
     /// **关键点一：重映射用的是 `progressInStage`，不是子上下文的 `overallProgress`。**
     /// 子求解器的阶段内进度（0—100）**线性映射**到父级的一个带，父级其它带不受影响。
     /// 若误用 `overallProgress`，子上下文的 0—100 会被二次挤压，结果仍然"看起来合理"却**落错带**。
     ///
-    /// **关键点二：新的子上下文不传 `isCancelled`。** 基线只转发 `reporter` 与 `locale`，
+    /// **关键点二：新的子上下文不传 `isCancelled`。** 转发 `reporter` 与 `locale`，
     /// 取消判定**留在父上下文**——子上下文取消时**不会自己抛**，依赖父级检查点。
     /// 这里照做，并记为**已知偏离风险**：若将来子求解器依赖 `IsCancelled`，需要在 `Phase` 里转发。
     ///
-    /// Aligns with the baseline's `SolverProgressContext.phase(start, end)`: wraps the parent context with a reporter that rewrites the sub-snapshot's
+    /// Aligns with its `SolverProgressContext.phase(start, end)`: wraps the parent context with a reporter that rewrites the sub-snapshot's
     /// `overallProgress` as `start + progressInStage * (end - start) / 100`.
     ///
     /// **Key point one: the remap uses `progressInStage`, not the sub-context's `overallProgress`.** The sub-solver's in-stage progress (0—100) is **linearly mapped**
     /// onto one parent band, leaving the parent's other bands untouched. Using `overallProgress` instead would squash it twice — the result would still **look
     /// plausible** while **landing in the wrong band**.
     ///
-    /// **Key point two: the new sub-context does not receive `isCancelled`.** The baseline forwards only `reporter` and `locale`, leaving cancellation **with the
+    /// **Key point two: the new sub-context does not receive `isCancelled`.** The code forwards only `reporter` and `locale`, leaving cancellation **with the
     /// parent** — a cancelled sub-context **does not throw on its own**; that relies on the parent's checkpoints. Copied as-is and recorded as a **known divergence
     /// risk**: if a future sub-solver relies on `IsCancelled`, `Phase` must forward it.
     /// </remarks>
@@ -261,7 +261,7 @@ internal static class TryChaining {
     /// 这条语义保证"进度上报失败时**不会**继续调用原回调"——否则一次上报失败会让下游回调
     /// 在错误的时机被调用。
     ///
-    /// Aligns with the baseline `Try.then`: **only `Ok` runs `next`**; `Failed` / `Fatal` propagate unchanged. This semantics guarantees "when progress reporting
+    /// Aligns with the code `Try.then`: **only `Ok` runs `next`**; `Failed` / `Fatal` propagate unchanged. This semantics guarantees "when progress reporting
     /// fails, the original callback is **not** invoked" — otherwise a failed report would fire downstream callbacks at the wrong moment.
     /// </remarks>
     public static Result<Success, ErrorCode, Error<ErrorCode>> Then(

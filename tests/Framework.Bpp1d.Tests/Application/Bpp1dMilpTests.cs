@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **一维普通 MILP 入口** / The ordinary BPP1D MILP entry.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Bpp1dSolver.kt` 的 `Bpp1dMilp`。这里只做“生成候选 → 最终整数模型”这一条路径，
+/// 对应的 `Bpp1dMilp`。这里只做“生成候选 → 最终整数模型”这一条路径，
 /// 带 LP 定价循环的 `Bpp1dColumnGeneration` 留到后续。
 ///
 /// **判据分两层，而第一层不需要任何求解器。** 这里真正新增的能力是那条**错误翻译**判断

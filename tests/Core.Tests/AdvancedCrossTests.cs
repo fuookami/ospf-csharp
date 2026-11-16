@@ -217,9 +217,9 @@ public sealed class PermutationCrossTests {
     /// <summary>**循环交叉在映射成环时会终止** / The cycle crossover terminates when the map forms a loop.</summary>
     /// <remarks>
     /// `index = firstIndices[cycleSource[index]]` 沿值→位置映射跳转；一旦映射成环，没有上限的循环会永远转下去，
-    /// **而每次迭代看起来都完全正常**。基线用 `guard &lt;= size` 兜住。
+    /// **而每次迭代看起来都完全正常**。`guard &lt;= size` 兜住。
     /// `index = firstIndices[cycleSource[index]]` hops along the value-to-position map; once it forms a cycle an unbounded loop spins
-    /// forever **while every iteration looks perfectly normal**. The baseline caps it with `guard &lt;= size`.
+    /// forever **while every iteration looks perfectly normal**. The code caps it with `guard &lt;= size`.
     /// </remarks>
     [Fact]
     public void CycleCross_ShouldTerminateOnSelfCycle() {

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-// 任务提前时间最小化的代价核心 / Cost core of task advance time minimization.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-task-compilation-context/.../TaskAdvanceTimeMinimiaztion.kt`
-// （基线文件名拼作 `Minimiaztion`）的 `invoke` 里那两分支代价对应。
-// Mirrors the two-branch cost inside `invoke` of the pinned baseline's `TaskAdvanceTimeMinimiaztion.kt`
-// (the baseline file name is spelled `Minimiaztion`).
+// 任务提前时间最小化的代价核心：两个分支，按"是否超过允许提前量"分别计价。
+// Cost core of task advance time minimization: two branches, priced by whether the advance exceeds the allowance.
 
 using Fuookami.Ospf.Math.Algebra.Number;
 using Fuookami.Ospf.Utils.Error;
@@ -16,20 +13,20 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 任务提前时间的代价核心 / The cost core of task advance time.
 /// </summary>
 /// <remarks>
-/// 基线在 `invoke` 里走两条分支：阈值恰为零时直接线性计入 `coefficient * advanceTime`；
+/// `invoke` 里走两条分支：阈值恰为零时直接线性计入 `coefficient * advanceTime`；
 /// 阈值非零时引入一个松弛变量，只罚超出阈值的部分。**两条分支的取值必须相同**——
 /// 零阈值只是省掉一个变量，不是换一套语义。若它们哪怕差一点点，"设了阈值"和"没设阈值"就会给出不同的解，
 /// 而这在配置层面完全看不出。
 ///
-/// The baseline has two branches in `invoke`: with a threshold of exactly zero it charges `coefficient * advanceTime` linearly; with a non-zero threshold it introduces a slack
+/// The code has two branches in `invoke`: with a threshold of exactly zero it charges `coefficient * advanceTime` linearly; with a non-zero threshold it introduces a slack
 /// variable and penalises only the excess. **Both branches must give the same value** — a zero threshold merely saves one variable, it does not swap semantics. If they diverge
 /// even slightly, "configured a threshold" and "no threshold" produce different solutions, and that is invisible at the configuration level.
 ///
-/// **提不出系数不是"系数为一"**。基线在 `coefficient(task)` 返回空时取 `infinity`，即该任务的提前时间**不可定价**。
+/// **提不出系数不是"系数为一"**。`coefficient(task)` 返回空时取 `infinity`，即该任务的提前时间**不可定价**。
 /// C# 的 `Flt64` 基于 `decimal`，没有无穷；静默取 `1` 会把"禁止提前"变成"每单位罚 1"，
 /// 于是本该被拒绝的排程被轻松接受。所以这里返回失败。
 ///
-/// **A missing coefficient is not "one"**. The baseline takes `infinity` when `coefficient(task)` is null, meaning that task's advance **cannot be priced**. C#'s `Flt64` is built on
+/// **A missing coefficient is not "one"**. The code takes `infinity` when `coefficient(task)` is null, meaning that task's advance **cannot be priced**. C#'s `Flt64` is built on
 /// `decimal` and has no infinity; silently defaulting to `1` turns "advance prohibited" into "penalty 1 per unit", so a schedule that should be rejected is accepted cheaply. Hence
 /// the failure here.
 /// </remarks>
@@ -69,10 +66,10 @@ public static class TaskAdvanceTimeCost {
     /// <param name="scheduled">任务是否已排定 / Whether the task is scheduled.</param>
     /// <returns>是否参与 / Whether it takes part.</returns>
     /// <remarks>
-    /// 基线只在**全局开关打开时**才筛选，且筛选条件是"任务允许提前 **且** 已排定"。
+    /// 在**全局开关打开时**才筛选，且筛选条件是"任务允许提前 **且** 已排定"。
     /// 未排定的任务没有提前时间可言；不允许提前的任务就算算进去也恒为零。两者都算进去只会让目标多项式变长。
     ///
-    /// The baseline filters only when the **global switch is on**, and the condition is "the task allows advancing **and** is scheduled". An unscheduled task has no advance to
+    /// The code filters only when the **global switch is on**, and the condition is "the task allows advancing **and** is scheduled". An unscheduled task has no advance to
     /// speak of; a task that forbids advancing contributes a constant zero. Including either only lengthens the objective polynomial.
     /// </remarks>
     public static IReadOnlyList<T> Select<T>(

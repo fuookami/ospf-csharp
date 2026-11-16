@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Client;
 /// <remarks>
 /// 最优判定沿用固定基线：<c>solutionPresence == OPTIMAL</c> 且 <c>proofStatus != NONE</c>。
 /// 间隙为 0 不足以声明最优；未知枚举一律按未知处理，绝不推断为成功。
-/// Optimality follows the pinned baseline: <c>solutionPresence == OPTIMAL</c> and <c>proofStatus != NONE</c>.
+/// Optimality follows the reference: <c>solutionPresence == OPTIMAL</c> and <c>proofStatus != NONE</c>.
 /// A zero gap is insufficient to claim optimality, and unknown enum values stay unknown rather than becoming success.
 /// </remarks>
 public static class RemoteReportMapping {
@@ -105,10 +105,10 @@ public static class RemoteReportMapping {
     /// 解析带索引的远程 issue 字段 / Parse indexed remote issue fields.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：字段形如 <c>&lt;prefix&gt;.&lt;index&gt;.code|category|message|details.&lt;key&gt;</c>；
+    /// ：字段形如 <c>&lt;prefix&gt;.&lt;index&gt;.code|category|message|details.&lt;key&gt;</c>；
     /// 索引按数值升序；缺失 code/category/message 或类别无法识别都返回 `ORSolutionInvalid`；
     /// 任何以 <c>&lt;prefix&gt;.</c> 开头但不匹配该形状的键都判为畸形字段，不静默忽略。
-    /// Mirrors the baseline: fields look like
+    /// fields look like
     /// <c>&lt;prefix&gt;.&lt;index&gt;.code|category|message|details.&lt;key&gt;</c>, indexes sort
     /// numerically, a missing code/category/message or an unrecognized category yields
     /// `ORSolutionInvalid`, and any key starting with <c>&lt;prefix&gt;.</c> that does not match the shape is
@@ -178,9 +178,9 @@ public static class RemoteReportMapping {
     /// 解析远程诊断 / Parse remote diagnostics.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：只允许 <c>infeasibility.</c>／<c>warning.</c>／<c>error.</c> 前缀，未知前缀返回
+    /// ：只允许 <c>infeasibility.</c>／<c>warning.</c>／<c>error.</c> 前缀，未知前缀返回
     /// `ORSolutionInvalid`；警告与错误分别按带索引形式解析。
-    /// Mirrors the baseline: only <c>infeasibility.</c>/<c>warning.</c>/<c>error.</c> prefixes are
+    /// only <c>infeasibility.</c>/<c>warning.</c>/<c>error.</c> prefixes are
     /// allowed and an unknown prefix yields `ORSolutionInvalid`; warnings and errors are parsed from their
     /// indexed forms.
     /// </remarks>
@@ -243,10 +243,10 @@ public static class RemoteReportMapping {
     /// 解析不可行证据 / Parse infeasibility evidence.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：没有任何 <c>infeasibility.</c> 字段时返回 null；五个枚举字段全部必填且必须逐字匹配，
+    /// ：没有任何 <c>infeasibility.</c> 字段时返回 null；五个枚举字段全部必填且必须逐字匹配，
     /// 五个列表字段是 JSON 数组编码的字符串，畸形即失败。`variableBoundRefs` 与 `members` 里的
     /// <c>bound:</c> 形式共用 <c>id:Side</c> 编码，用最后一个冒号切分，因此变量标识本身可以含冒号。
-    /// Mirrors the baseline: no <c>infeasibility.</c> field yields null; all five enum fields are
+    /// no <c>infeasibility.</c> field yields null; all five enum fields are
     /// required and must match verbatim, and the five list fields are JSON-array-encoded strings where
     /// malformed content fails. The <c>variableBoundRefs</c> and <c>bound:</c> member forms share the
     /// <c>id:Side</c> encoding and split on the last colon, so a variable identifier may contain colons.
@@ -354,9 +354,9 @@ public static class RemoteReportMapping {
             }
         }
 
-        // 尾段字段（耗时、不可用原因、外部引用、复验次数、终止原因）按基线各自可选。
+        // 尾段字段（耗时、不可用原因、外部引用、复验次数、终止原因）各自可选。
         // The tail fields (elapsed, unavailable reason, external reference, verification checks and
-        // termination reason) are each optional in the baseline.
+        // termination reason) are each optional in the code.
         TimeSpan? elapsed = null;
         if (fields.TryGetValue("infeasibility.elapsedMs", out string? elapsedMs)) {
             if (!long.TryParse(elapsedMs, out long elapsedValue) || elapsedValue < 0) {
@@ -533,9 +533,9 @@ public static class RemoteReportMapping {
     /// 计算模型指纹 / Compute the model fingerprint.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：对 snapshot 的规范化编码取 SHA-256，输出小写十六进制。指纹绑定的是**编码后的字节**，
+    /// ：对 snapshot 的规范化编码取 SHA-256，输出小写十六进制。指纹绑定的是**编码后的字节**，
     /// 因此它同时约束了模型内容与编码方式——任一处不同都会得到不同的指纹。
-    /// Mirrors the baseline: SHA-256 over the snapshot's canonical encoding, as lower-case hex. The
+    /// SHA-256 over the snapshot's canonical encoding, as lower-case hex. The
     /// fingerprint binds the **encoded bytes**, so it constrains both the model content and the encoding;
     /// any difference in either yields a different value.
     /// </remarks>
@@ -558,14 +558,14 @@ public static class RemoteReportMapping {
     /// 计算配置指纹 / Compute the configuration fingerprint.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：把有效配置拼成"长度前缀 + 键 + 长度前缀 + 值"的规范化串后取 SHA-256。长度前缀让拼接
+    /// ：把有效配置拼成"长度前缀 + 键 + 长度前缀 + 值"的规范化串后取 SHA-256。长度前缀让拼接
     /// 无歧义（否则 <c>a</c>+<c>bc</c> 与 <c>ab</c>+<c>c</c> 会撞车），空值编码为长度 <c>-1</c>，
     /// <c>solverParams</c> 按 key 排序后逐对展开。
     ///
-    /// 与基线一致：<c>threads</c> 缺失时取 <see cref="DefaultRemoteCpThreads"/>，因此"未指定线程数"与
+    /// ：<c>threads</c> 缺失时取 <see cref="DefaultRemoteCpThreads"/>，因此"未指定线程数"与
     /// "指定为 8"得到相同指纹——这与后端实际行为一致（未指定就用 8）。
     ///
-    /// Mirrors the baseline: the effective configuration is flattened into length-prefixed key/value pairs
+    /// the effective configuration is flattened into length-prefixed key/value pairs
     /// and hashed with SHA-256. Length prefixes keep the concatenation unambiguous (otherwise <c>a</c>+
     /// <c>bc</c> and <c>ab</c>+<c>c</c> would collide), a null value encodes as length <c>-1</c>, and
     /// <c>solverParams</c> is expanded in key order. A missing <c>threads</c> becomes
@@ -625,7 +625,7 @@ public static class RemoteReportMapping {
     /// 3. **配置指纹**：v2+ 且带观测时，配置指纹必须与本次请求一致——否则无法把结果归因于这组超参数。
     /// 4. v1 结果允许缺模型指纹，但一旦给出就必须一致。
     ///
-    /// 与基线一致：上述"是否带观测"的判定决定了要求的严格程度，因此纯后端故障（无观测）不会被误判为
+    /// ：上述"是否带观测"的判定决定了要求的严格程度，因此纯后端故障（无观测）不会被误判为
     /// 串台。
     ///
     /// This is the critical cross-talk guard of the whole remote path: a plausible-looking result may
@@ -721,10 +721,10 @@ public static class RemoteReportMapping {
     /// 这里有两个真相源：后端直接返回的原始结果，以及存储里的稳定解工件。**两者必须一致**——否则无法判断
     /// 最终交给用户的是哪一份。因此宁可拒绝，也不静默择一。
     ///
-    /// 与基线一致的宽严规则：v2+ 要求工件字段**逐一相等**；v1 工件允许缺省（字段为 null），但一旦给出就
+    /// 的宽严规则：v2+ 要求工件字段**逐一相等**；v1 工件允许缺省（字段为 null），但一旦给出就
     /// 必须相等。这反映了历史后端可能不下发全部字段，而新后端必须完整。
     ///
-    /// 与基线的一处字段差异（不是放宽）：基线比较 `serialized.optimal != result.optimal` 两个布尔；C# 的
+    /// 与一处字段差异（不是放宽）：基线比较 `serialized.optimal != result.optimal` 两个布尔；C# 的
     /// <see cref="SliceResult"/> 没有独立 optimal 布尔，最优性由 <see cref="SliceResult.SolutionPresence"/>
     /// 编码，因此改为比较「工件的 optimal」与「原始结果的存在性是否为 OPTIMAL」，语义等价。
     ///
@@ -732,7 +732,7 @@ public static class RemoteReportMapping {
     /// artifact in storage. They **must** agree, otherwise it is impossible to tell which one the caller is
     /// being handed, so a disagreement is rejected rather than silently resolved either way. As in the
     /// baseline, v2+ requires field-by-field equality while a v1 artifact may omit fields (null) but must
-    /// match on any field it does carry. One field differs without being loosened: the baseline compares two
+    /// match on any field it does carry. One field differs without being loosened: the code compares two
     /// `optimal` booleans, while C#'s <see cref="SliceResult"/> has no separate optimal flag because
     /// <see cref="SliceResult.SolutionPresence"/> encodes it, so the artifact's optimal flag is compared
     /// against "presence is OPTIMAL" — semantically the same check.
@@ -894,10 +894,10 @@ public static class RemoteReportMapping {
     /// 合法化历史 1.0 结果的证明状态 / Normalize a legacy 1.0 result's proof status.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：<c>1.0</c> 结果若是"不可行 + 已完成 + 未给证明状态"，说明它来自一个早于证明字段的
+    /// ：<c>1.0</c> 结果若是"不可行 + 已完成 + 未给证明状态"，说明它来自一个早于证明字段的
     /// 后端，此时记为 <c>CLAIMED</c> 而不是 <c>NONE</c>——否则"明确没有证明"与"该字段不存在"会被混为
     /// 一谈。这里不加强任何结论，只补足缺失的语义。
-    /// Mirrors the baseline: a <c>1.0</c> result that is infeasible, completed and carries no proof status
+    /// a <c>1.0</c> result that is infeasible, completed and carries no proof status
     /// came from a backend older than the proof field, so it becomes <c>CLAIMED</c> rather than <c>NONE</c>
     /// — otherwise "explicitly unproven" and "field absent" would be conflated. No conclusion is
     /// strengthened; only the missing semantics is filled in.
@@ -931,10 +931,10 @@ public static class RemoteReportMapping {
     /// - `bestBound`／`gap` 统计字段必须可解析为数值。
     /// - 结果引用与 artifact 摘要必须成对出现。
     ///
-    /// 本方法作用于 C# 的 <see cref="SliceResult"/>，它恰好携带基线的全部相关字段；基线的
+    /// 本方法作用于 C# 的 <see cref="SliceResult"/>，它恰好携带全部相关字段；
     /// <c>SolveResult</c> 与 C# 的同名精简类型不是一回事，因此不按名对齐而按字段对齐。
     ///
-    /// Corresponds rule for rule to the baseline's <c>validateRawResult</c>. The shared purpose is to
+    /// Corresponds rule for rule to its <c>validateRawResult</c>. The shared purpose is to
     /// reject a contradictory result rather than hand a self-contradictory conclusion downstream: the
     /// schema major must be 1 or 2 (future majors are rejected, not best-effort interpreted); feasibility
     /// must agree with problem status, optimality, proof status and solution presence; an infeasible result
@@ -1020,10 +1020,10 @@ public static class RemoteReportMapping {
                 "远程 CP 结果引用与 artifact 摘要必须成对出现 / "
                 + "Remote CP result references and artifact digests must be provided together");
         }
-        // 基线的 expectedPresence 由独立的 optimal／feasible 两个布尔推导；C# 的 SliceResult 没有独立的
+        // expectedPresence 由独立的 optimal／feasible 两个布尔推导；C# 的 SliceResult 没有独立的
         // optimal 布尔，presence 本身就是最优性的编码，因此这里只能做非循环的那部分校验：有解必须可行，
         // 无解必须不可行。
-        // The baseline derives expectedPresence from independent optimal/feasible booleans; C#'s
+        // The code derives expectedPresence from independent optimal/feasible booleans; C#'s
         // SliceResult has no separate optimal flag because presence encodes it, so only the non-circular
         // half of the check remains: a present solution must be feasible and an absent one must not be.
         bool claimsSolution = slice.SolutionPresence is

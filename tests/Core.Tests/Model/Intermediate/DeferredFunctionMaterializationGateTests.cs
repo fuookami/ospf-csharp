@@ -21,12 +21,12 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// <remarks>
 /// 补 `FunctionExpansionPolicy` 与它的第一道守卫。
 ///
-/// **这里只做基线那个四段函数的第一段，因为它是唯一只需要一个只读属性的一段。**
+/// **这里只做个四段函数的第一段，因为它是唯一只需要一个只读属性的一段。**
 /// **把能单独成立的一段先做出来，是为了让<b>剩余缺口保持清晰</b>——
 /// 现在缺的是两个集合（`DeferredFunctionStructures`、`DeferredFunctionConstraintRegions`），
 /// 而不是"整个函数"。**
 ///
-/// **Only the first of the baseline's four parts is done, because it is the only one that needs a single read-only
+/// **Only the first of its four parts is done, because it is the only one that needs a single read-only
 /// property.** **Doing the part that stands alone first keeps the <b>remaining gap sharp</b>: what is missing is two
 /// collections, not "the whole function".**
 /// </remarks>

@@ -1,6 +1,5 @@
 // 已注册广义流弧表达式的只读视图 / Read-only view of registered generalized-flow arc expressions.
-// 与固定 Kotlin 基线 `model/GeneralizedFlowExpressions.kt`（2177 字节）对应。
-// Mirrors the pinned baseline's `GeneralizedFlowExpressions.kt`.
+// 与固定 Kotlin （2177 字节）对应。
 //
 // 这一层只依赖 `LinearPolynomial`，不依赖元模型，因此可以在 Core 元模型层补齐之前先落地。
 // This layer depends only on `LinearPolynomial`, not on the meta-model, so it can land before the Core meta-model layer exists.

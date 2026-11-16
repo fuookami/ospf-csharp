@@ -92,13 +92,13 @@ public class CoptFunctionCapabilitiesTests
     /// **所以这里必须用 `GetMethod` 而不是 `GetMember`／`GetMethods` 过滤名字。**
     ///
     /// **这条判据与 `GurobiFunctionCapabilities` 形成对照：** **那里只查名字，并记了一个 `ponytail:` 天花板。
-    /// 这里查签名，因为基线的 COPT 探测就查签名。**
+    /// 这里查签名，因为COPT 探测就查签名。**
     ///
     /// **`AddSos` has three overloads; matching by name hits any of them, and only `(Var[], double[], int)` is the one PWL
     /// needs.** **So `GetMethod` must be used, not a name filter over `GetMethods`.**
     ///
     /// **This contrasts with `GurobiFunctionCapabilities`, which checks names only and records a `ponytail:` ceiling. This
-    /// one checks signatures, because the baseline's COPT probe does.**
+    /// one checks signatures, because its COPT probe does.**
     /// </remarks>
     [Fact]
     public void TheProbe_ShouldMatchBySignature() {

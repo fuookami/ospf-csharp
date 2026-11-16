@@ -133,7 +133,7 @@ public sealed record YieldAggregation(
         // **这正是在余料代理那里刚批评过的同一类混淆**（
         // "没有数据"与"零浪费"必须分开）。**这里的方向相反，但错误相同。**
         //
-        // **An empty list is an empty list, not null.** The baseline's two fields are `List<...> = emptyList` — **never null**, with "no deficit" expressed by an
+        // **An empty list is an empty list, not null.** The code's two fields are `List<...> = emptyList` — **never null**, with "no deficit" expressed by an
         // **empty list**. C# used `Count > 0 ? list : null`, turning the empty list into null. Callers then cannot tell "none" from "not computed" — **the same conflation
         // criticised in the rest-material proxy just one batch earlier** . **Opposite direction, same mistake.**
         return new YieldModelingResult<Flt64>(

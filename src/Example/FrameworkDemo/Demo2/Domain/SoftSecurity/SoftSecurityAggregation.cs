@@ -18,16 +18,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity;
 /// 软性安全聚合根 / The soft-security aggregation.
 /// </summary>
 /// <remarks>
-/// 与基线 `soft_security/Aggregation.kt` 对齐：七个上游模型 + 一个自建的 `DivideEmptyLoading`。
+/// 与对齐：七个上游模型 + 一个自建的 `DivideEmptyLoading`。
 ///
-/// 三处必须照抄：
+/// 三处必须沿用：
 ///
 /// 1. **`DivideEmptyLoading` 在构造时就建好**，相邻对由舱位表推出（按甲板分组、组内按装载顺序排序、取相邻）。
 /// 2. **`Register` 只注册分隔空载的符号**，不跑任何管线——管线由 `PipelineListGenerator` 组装，由上下文执行。
 /// 3. **`RegisterForBendersMP` 就是 `Register`**（软安全约束属于主问题）；**`RegisterForBendersSP` 是空操作**——
 ///    软安全不向子问题贡献任何东西。
 ///
-/// Aligned with the baseline: seven upstream models plus a self-built `DivideEmptyLoading`. Three things must be copied: **`DivideEmptyLoading` is built at construction**, its
+/// Seven upstream models plus a self-built `DivideEmptyLoading`. Three things must be copied: **`DivideEmptyLoading` is built at construction**, its
 /// adjacent pairs derived from the position table (grouped by deck, sorted by loading order, consecutive); **`Register` only registers the divide-empty symbols** and runs no
 /// pipeline, since `PipelineListGenerator` assembles them and the context executes them; and **`RegisterForBendersMP` is `Register`** (soft-security constraints belong to the
 /// master problem) while **`RegisterForBendersSP` is a no-op** — soft security contributes nothing to the sub-problem.

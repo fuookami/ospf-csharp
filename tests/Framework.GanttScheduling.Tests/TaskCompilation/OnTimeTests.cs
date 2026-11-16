@@ -21,16 +21,16 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **准时 / 不准时从"没有这两张表"变成真指示** / On-time / not-on-time go from "no such tables" to real indicators.
 /// </summary>
 /// <remarks>
-/// 基线的 `taskTime.onTime` / `taskTime.notOnTime` 之前根本不存在，`TaskOnTimeMaximization` / `TaskNotOnTimeMinimization` 也直接返回 `Failed`。
+/// `taskTime.onTime` / `taskTime.notOnTime` 之前根本不存在，`TaskOnTimeMaximization` / `TaskNotOnTimeMinimization` 也直接返回 `Failed`。
 ///
 /// 三种静默失效：
 /// <list type="number">
-/// <item>**把 `NotOnTime` 当成 `1 − OnTime`**：基线有**死区**——只有"整整晚/早一个时间窗"才算不准时，否则两者都不含该任务；</item>
+/// <item>**把 `NotOnTime` 当成 `1 − OnTime`**：**死区**——只有"整整晚/早一个时间窗"才算不准时，否则两者都不含该任务；</item>
 /// <item>**漏掉"任务允许移动"的判断**：不允许移动的任务 `on_time` 恒为零，而计费却把它当成一次"准时"；</item>
 /// <item>**把 `OnTime` 与 `NotOnTime` 方向写反**：`on_last_end_time` 是"不晚于最晚结束"，`on_earliest_end_time` 是"不早于最早结束"。</item>
 /// </list>
 ///
-/// The baseline's `onTime` / `notOnTime` did not exist and both objectives returned `Failed`. Three silent failures: (1) **treating `NotOnTime` as `1 − OnTime`** — the baseline
+/// The code's `onTime` / `notOnTime` did not exist and both objectives returned `Failed`. Three silent failures: (1) **treating `NotOnTime` as `1 − OnTime`** — the code
 /// has a **dead band**, only "a whole window late/early" counts, so a task can be in neither map; (2) **missing the "task may move" test** — an immovable task's `on_time` is
 /// constant zero, yet billing it would count as one "on time"; (3) **swapping the two directions** — `on_last_end_time` is "not after the last end", `on_earliest_end_time` is
 /// "not before the earliest end".

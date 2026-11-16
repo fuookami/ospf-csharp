@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **乘客行程** / Passenger itineraries.
 /// </summary>
 /// <remarks>
-/// 三条规则组成一条行程：非空、全是航班任务、**相邻航段首尾相接**。基线用 Kotlin 的 `assert`，它在 release 构建里整个消失——
+/// 三条规则组成一条行程：非空、全是航班任务、**相邻航段首尾相接**。Kotlin 的 `assert`，它在 release 构建里整个消失——
 /// 也就是生产上一条不连通的行程会被安静接受。C# 侧改成抛异常，**这里是外部数据进来的地方**。
 ///
-/// Three rules make an itinerary: non-empty, all flight tasks, and **adjacent legs connect**. The baseline uses Kotlin's `assert`, which vanishes in release builds — so in production a
+/// Three rules make an itinerary: non-empty, all flight tasks, and **adjacent legs connect**. The code uses Kotlin's `assert`, which vanishes in release builds — so in production a
 /// disconnected itinerary is quietly accepted. The C# side throws instead, because **this is where external data enters**.
 /// </remarks>
 public class Demo4PassengerTests {
@@ -104,7 +104,7 @@ public class Demo4PassengerTests {
     /// 三点成对：北京→上海接 北京→广州（不连通）→ **抛 `ArgumentException`** / 空行程 → 抛 / 连通的两段 → 正常构造。
     /// 基线这里是 `assert`，release 构建里不执行——**"生产上悄悄放过"正是这条判据存在的理由**。
     ///
-    /// Three paired points: 北京→上海 followed by 北京→广州 (disconnected) **throws `ArgumentException`**; an empty itinerary throws; and two connected legs construct fine. The baseline uses
+    /// Three paired points: 北京→上海 followed by 北京→广州 (disconnected) **throws `ArgumentException`**; an empty itinerary throws; and two connected legs construct fine. The code uses
     /// `assert` here, which does not run in release builds — **"quietly accepted in production" is exactly why this criterion exists**.
     /// </remarks>
     [Fact]

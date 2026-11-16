@@ -1,7 +1,7 @@
 // 对称特征分解、岛屿迁移与约束排序 / Symmetric eigendecomposition, island migration and constraint ranking.
-// 与固定 Kotlin 基线 `operator/linear/SymmetricEigen.kt`、`operator/migration/IslandMigration.kt`、
-// `operator/fitness/ConstraintRanking.kt` 对应。
-// Mirrors the pinned baseline's `SymmetricEigen.kt`, `IslandMigration.kt` and `ConstraintRanking.kt`.
+// 与固定 Kotlin 、
+// 对应。
+// , and.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// <remarks>
 /// **`vectors` 是"每项一个特征向量"，不是矩阵的行**。基线显式转置过；按行读取会让调用方拿到的"主方向"其实是另一组正交基，
 /// 而每个向量仍然满足正交归一性，**检查向量本身完全看不出异常**。
-/// **`vectors` holds one eigenvector per entry, not the matrix's rows.** The baseline transposes explicitly; reading them as rows gives
+/// **`vectors` holds one eigenvector per entry, not the matrix's rows.** The code transposes explicitly; reading them as rows gives
 /// the caller "principal directions" that are actually a different orthonormal basis while every vector still looks orthonormal —
 /// **inspecting the vectors alone reveals nothing**.
 /// </remarks>
@@ -213,9 +213,9 @@ public static class IslandMigrationSupport {
     /// tolerance), `Sort` silently produces an undefined order; repeated minimum selection is slower but **stays reproducible under a
     /// non-transitive comparator**.
     /// </remarks>
-    /// **比较的是 `fitness` 而不是 `objective`**：基线用 `compareStrictly(model, fitness, ...)`，因为目标值类型是任意的，
+    /// **比较的是 `fitness` 而不是 `objective`**：`compareStrictly(model, fitness, ...)`，因为目标值类型是任意的，
     /// 而适应度是标量。比较目标值需要目标值类型自带序，而它并没有。
-    /// **The comparison uses `fitness`, not `objective`**: the baseline uses `compareStrictly(model, fitness, ...)` because the objective
+    /// **The comparison uses `fitness`, not `objective`**: the code uses `compareStrictly(model, fitness, ...)` because the objective
     /// type is arbitrary while fitness is a scalar. Comparing objectives would require the objective type to be ordered, which it is not.
     /// <typeparam name="T">个体类型 / The individual type.</typeparam>
     /// <param name="island">岛屿 / The island.</param>
@@ -296,7 +296,7 @@ public sealed class RingMigration<ObjValue, V>(double rate) : IIslandMigration<O
             // **保留的是 `local` 的"最优部分"（前段），被替换的是末尾的"最差部分"**。基线写 `local.dropLast(amount)`，
             // 即丢掉末尾；写成 `local.Take(local.Count - amount)` 在这里恰好等价，但若误取 `Skip(amount)` 就会丢掉**最优个体**
             // 而保留最差——岛屿的最优值单调变差，而规模与迁移率完全正常。
-            // **The retained part is `local`'s best prefix and the replaced part is the worst suffix.** The baseline writes
+            // **The retained part is `local`'s best prefix and the replaced part is the worst suffix.** The code writes
             // `local.dropLast(amount)`, i.e. drop the tail; `Take(local.Count - amount)` is equivalent here, but `Skip(amount)` would drop
             // the **best** individuals and keep the worst — the island's best value degrades monotonically while size and migration
             // rate look perfectly normal.
@@ -422,7 +422,7 @@ public sealed record ConstraintAssessment<T>(T Value, Flt64 Objective, Flt64 Vio
 /// looks only at the objective and floods the early stages with infeasible solutions.
 /// **`av == bv` 时也按目标值比较**。两个违反量相同时按违反量比较没有意义（相等），而基线显式把这种情况并入目标值分支——
 /// 少了这个条件，排序会退化成"保持原序"，看起来只是"稳定排序"。
-/// **Equal violations also compare by objective.** Comparing by violation is meaningless when both are equal, and the baseline folds
+/// **Equal violations also compare by objective.** Comparing by violation is meaningless when both are equal, and the code folds
 /// that case into the objective branch; without it the sort degenerates into "keep the input order", which merely looks like a stable
 /// sort.
 /// **`epsilon` 的夹取在指数之前**：`(1 - step/horizon)` 夹到 `[0, 1]`，避免 `step &gt; horizon` 时出现负底数的幂。
@@ -518,8 +518,8 @@ public static class ConstraintRankingSupport {
 /// 而结果完全正确——**只是慢，且看不出异常**。
 /// **Bail out as soon as one bubble pass makes no swap.** Without it every pass runs to completion and `repeat(size)` performs `O(n²)`
 /// comparisons even on sorted input while the result is perfectly correct — **just slow, with nothing looking wrong**.
-/// **每轮之后重新判断是否需要继续**：基线的 `repeat(size)` 是上界，真正的退出靠 `swapped`。
-/// **Re-evaluate after each pass**: the baseline's `repeat(size)` is the upper bound and the real exit is `swapped`.
+/// **每轮之后重新判断是否需要继续**：`repeat(size)` 是上界，真正的退出靠 `swapped`。
+/// **Re-evaluate after each pass**: its `repeat(size)` is the upper bound and the real exit is `swapped`.
 /// </remarks>
 /// <param name="ObjectiveProbability">按目标值比较的概率 / The probability of comparing by objective.</param>
 public sealed record StochasticRanking(double ObjectiveProbability = 0.45) {

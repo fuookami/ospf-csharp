@@ -15,9 +15,9 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Infrastructure;
 /// **刀缝、退化与包含** / Kerf, degeneracy and containment.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Region2.kt`。**裁切与装箱的差别就在这个类型**——装箱只关心放在哪里，套裁还关心每一刀切成哪两块。
+/// 对应。**裁切与装箱的差别就在这个类型**——装箱只关心放在哪里，套裁还关心每一刀切成哪两块。
 ///
-/// Mirrors the baseline `Region2.kt`. **This type is where cutting stock differs from bin packing**: packing only cares where something sits, cutting stock also cares
+///. **This type is where cutting stock differs from bin packing**: packing only cares where something sits, cutting stock also cares
 /// which two pieces each cut produces.
 /// </remarks>
 public class Region2Tests {

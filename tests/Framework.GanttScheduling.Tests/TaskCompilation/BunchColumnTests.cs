@@ -231,13 +231,13 @@ public class BunchColumnTests {
     /// </summary>
     /// <remarks>
     /// 只把束从束列表里删掉是不够的：列变量和它的成本系数还在，求解器可以继续选它——"移除"变成只影响报告、不影响求解。
-    /// 基线的做法是两步：范围钉成 0，再从模型里 `remove`。
+    /// 做法是两步：范围钉成 0，再从模型里 `remove`。
     ///
     /// 判据**成对**：被移除的列退役、范围钉死、模型变量数下降；被保留的列既不退役也没被摘掉。
     /// 只测前者会让"把谁都移除"通过，只测后者会让"谁都不移除"通过。
     ///
     /// Dropping the bunch from the bunch list is not enough: its column variable and cost coefficient remain and the solver keeps selecting it — "removal" then only affects
-    /// reporting. The baseline pins the range to 0 and then `remove`s it. The criterion is **paired**: the removed column is retired, pinned and gone from the variable count, while
+    /// reporting. The code pins the range to 0 and then `remove`s it. The criterion is **paired**: the removed column is retired, pinned and gone from the variable count, while
     /// the kept column is neither. Testing only the first passes if everything is removed; only the second, if nothing is.
     /// </remarks>
     [Fact]

@@ -90,9 +90,9 @@ public class RankConstraintCandidatesTests {
     /// <summary>**上限小于等于 0 返回空，不是"不设上限"** / A non-positive limit is empty, not unlimited.</summary>
     /// <remarks>
     /// **这是最容易被写成反义的一条**：`limit <= 0` 直觉上像"不限"，
-    /// **而基线的语义是"不要任何候选"——写成不限会让上游的 0 变成全量分析。**
+    /// **而语义是"不要任何候选"——写成不限会让上游的 0 变成全量分析。**
     ///
-    /// **This is the one most easily inverted**: `limit <= 0` reads like "no cap", **while the baseline means "no candidates at all" — inverting it turns an upstream zero into a full analysis.**
+    /// **This is the one most easily inverted**: `limit <= 0` reads like "no cap", **while the code means "no candidates at all" — inverting it turns an upstream zero into a full analysis.**
     /// </remarks>
     [Theory]
     [InlineData(0)]

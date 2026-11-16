@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// fatal one satisfies it). A repo-wide scan finds **499** `IsFailed.Should.BeTrue` sites, **458** of which are the **only** assertion about the failure (no
 /// `.Error.Code`, no message check). **374 sit in `Core.Tests`**, which tests the `Result` type itself, where the failure *is* the subject — **legitimate**. The rest
 /// mostly guard single-cause failures (a `null!` argument, an unknown id) and are defensible; the risky ones are those with **several possible failures**. Judging all
-/// 465 by hand is manual work, but **growth** can be blocked automatically: this criterion pins the baseline to the constant below, so **a new bare assertion reds it**,
+/// 465 by hand is manual work, but **growth** can be blocked automatically: this criterion pins the code to the constant below, so **a new bare assertion reds it**,
 /// forcing the author either to pin the error code or message, or to lower the constant — **pay for a decrease, never for an increase**.
 /// </remarks>
 public sealed class VacuousFailureAssertionBudgetTests

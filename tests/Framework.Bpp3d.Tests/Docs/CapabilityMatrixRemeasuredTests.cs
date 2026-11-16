@@ -69,8 +69,8 @@ public class CapabilityMatrixRemeasuredTests
             .Select(DocsFile.ReadAllText));
 
         foreach (string name in Capabilities) {
-            // **`record` 和 `class` 都算**：这不是风格问题，`Appointment` 在基线里就是个普通类。
-            // **Both `record` and `class` count** — not a style question: `Appointment` is a plain class in the baseline too.
+            // **`record` 和 `class` 都算**：这不是风格问题，`Appointment` 在就是个普通类。
+            // **Both `record` and `class` count** — not a style question: `Appointment` is a plain class in the code too.
             // **名字后面必须是空白或 `{`**：`class AppointmentLimit` 不算声明了 `Appointment`。
             // **The name must be followed by whitespace or `{`**: `class AppointmentLimit` does not declare `Appointment`.
             bool declared = IsDeclared(all, name);

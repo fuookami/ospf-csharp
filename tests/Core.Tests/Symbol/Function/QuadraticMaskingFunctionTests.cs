@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 二次掩码：桥接等式必须真的进模型 / The bridge equality must reach the model.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `QuadraticMasking.kt` 的 `QuadraticMaskingFunction`。
+/// 对齐的 `QuadraticMaskingFunction`。
 ///
 /// **结构是"先桥接、再掩码"**：**`MaskingFunction` 只接受线性输入，
 /// 二次项必须先被一个桥接变量取代。**
@@ -153,7 +153,7 @@ public class QuadraticMaskingFunctionTests
         // 读不到输入给 `null`"。**
         //
         // **`MaskingFunction` reads the <b>bridge variable</b>, not the original input.**
-        // **So the value must be supplied for the bridge; otherwise it reads "no such symbol", and the baseline rule is
+        // **So the value must be supplied for the bridge; otherwise it reads "no such symbol", and the code rule is
         // "a missing mask gives zero, a missing input gives `null`".**
         QuadraticMaskingFunction function = Quadratic();
         function.Evaluate(new Dictionary<ISymbol, Flt64> {

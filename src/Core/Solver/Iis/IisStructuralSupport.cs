@@ -16,10 +16,10 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// <param name="LowerBound">保留下界；`null` 表示下界不属于 IIS / Retained lower bound; `null` means it is not part of the IIS.</param>
 /// <param name="UpperBound">保留上界；`null` 表示上界不属于 IIS / Retained upper bound; `null` means it is not part of the IIS.</param>
 /// <remarks>
-/// 对应基线 `Quadratic.kt` 的 `RelatedVariable`。**两个边界都可空是核心语义**：
+/// 对应的 `RelatedVariable`。**两个边界都可空是核心语义**：
 /// IIS 只保留"导致不可行"的那些边界，其余边界要被丢弃。
 ///
-/// Mirrors `RelatedVariable` in the baseline. **Both bounds being nullable is the core semantics**: an IIS keeps only the bounds that cause infeasibility and drops the
+/// Mirrors `RelatedVariable` in the code. **Both bounds being nullable is the core semantics**: an IIS keeps only the bounds that cause infeasibility and drops the
 /// rest.
 /// </remarks>
 internal sealed record IisRelatedVariable(
@@ -32,14 +32,14 @@ internal sealed record IisRelatedVariable(
 /// </summary>
 /// <remarks>
 /// 这些函数**不调用求解器**，只做模型形状的读写，因此**可以在无 SDK 的环境里完整验证**。
-/// 基线的 `Quadratic.kt` 里它们是 `performElasticFiltering` / `performDeletionFiltering`
+/// 里它们是 `performElasticFiltering` / `performDeletionFiltering`
 /// 的基础设施——解析出关联行和关联变量，再把子模型喂给求解器。
 ///
 /// **`RelatedRows` 原本写在 `LinearLegacyIisCompute` 里，但它的签名和实现都与线性无关**
 /// （只要变量列表与松弛行号），所以这里**提取到共享位置**，让二次侧直接复用，
 /// 而不是复制一份。
 ///
-/// These functions **never call a solver** — they only read and write model shape — so they **can be fully verified without an SDK**. In the baseline they are the
+/// These functions **never call a solver** — they only read and write model shape — so they **can be fully verified without an SDK**. In the code they are the
 /// infrastructure the elastic and deletion filters build on: resolve related rows and variables, then hand the submodel to the solver. **`RelatedRows` used to live in
 /// `LinearLegacyIisCompute`, but neither its signature nor its body is linear-specific** (it only needs a variable list and slack row indices), so
 /// **extracts it to a shared location** for the quadratic side to reuse instead of copying it.
@@ -86,7 +86,7 @@ internal static class IisStructuralSupport {
     /// 同一变量被多次标记时**取或**（`MarkBound` 的累积语义），所以"既是边界又是系数"时边界会保留。
     /// 最终 `LowerBound`/`UpperBound` 为 `null` 表示**该侧边界不属于 IIS**。
     ///
-    /// **Marking rules (matching the baseline line by line)**: table above. Repeated marks on one variable **OR together** (the accumulation in `MarkBound`), so a
+    /// **Marking rules (matching the code line by line)**: table above. Repeated marks on one variable **OR together** (the accumulation in `MarkBound`), so a
     /// variable that is both a bound and a coefficient keeps its bound. A `null` bound in the result means **that side is not part of the IIS**.
     /// </remarks>
     public static List<IisRelatedVariable> RelatedVariables(
@@ -136,22 +136,22 @@ internal static class IisStructuralSupport {
     /// <param name="oldToNewVariableIndexMap">旧列索引到新列索引的映射 / Old-to-new column index map.</param>
     /// <returns>裁剪后的约束批处理 / The trimmed constraint batch.</returns>
     /// <remarks>
-    /// 对应基线的 `filterConstraintByRowIndex`。**两条丢弃规则**：
+    /// 对应`filterConstraintByRowIndex`。**两条丢弃规则**：
     ///
-    /// 1. 行去重后**升序**排列——基线的 `distinct.sorted`；
+    /// 1. 行去重后**升序**排列——`distinct.sorted`；
     /// 2. 单元格的 `Col1`（以及存在的 `Col2`）**必须在映射表里**，否则整格丢弃。
     ///
     /// 第 2 条是**成对丢弃**：二次项 `(i, j)` 只要有一端被裁掉，整个二次项都不能留——
     /// 留下半截会让重映射后的矩阵指向不存在的列。
     ///
-    /// **与基线的差异（有意）**：基线的身份信息拆成五条并行列表
+    /// **与差异（有意）**：身份信息拆成五条并行列表
     /// （`ids` / `identityScopes` / `identityOrigins` / `identityProvenance`），
     /// C# 的 `ModelElementIdentity` 把 Kind / Id / Scope / Origin / Provenance
     /// **打包在一个记录里**，所以这里只需**按行索引过滤一个列表**，
     /// 不需要逐条对齐五份数据。
     ///
-    /// Mirrors the baseline's `filterConstraintByRowIndex`, with **two discard rules** (above). Rule 2 is a **paired discard**: if either end of a quadratic term `(i, j)` is
-    /// trimmed, the whole term must go — keeping half would leave the remapped matrix pointing at a non-existent column. **Deliberate difference from the baseline**: the
+    /// With **two discard rules** (above). Rule 2 is a **paired discard**: if either end of a quadratic term `(i, j)` is
+    /// trimmed, the whole term must go — keeping half would leave the remapped matrix pointing at a non-existent column. **Deliberate difference from the code**: the
     /// baseline splits identity into five parallel lists, while C#'s `ModelElementIdentity` **bundles** Kind / Id / Scope / Origin / Provenance, so this only has to
     /// **filter one list by row index** instead of aligning five.
     /// </remarks>
@@ -212,7 +212,7 @@ internal static class IisStructuralSupport {
     /// <param name="filterSlackIndices">构成 IIS 的松弛列索引 / Slack column indices forming the IIS.</param>
     /// <returns>子系统与行/列溯源 / The subsystem plus row/column provenance.</returns>
     /// <remarks>
-    /// 对应基线的 `dump(model, slackVariables)`。流程：
+    /// 对应`dump(model, slackVariables)`。流程：
     ///
     /// 1. 由松弛列回溯关联行（`RelatedRows`）；
     /// 2. 由关联行与松弛边界收集关联变量及其保留边界（`RelatedVariables`）；
@@ -227,7 +227,7 @@ internal static class IisStructuralSupport {
     /// **复用**：变量重建走 `LinearIisCompute.ProjectColumn`（与线性版同一份实现，
     /// 变量的字段集合与线性/二次无关），不复制第二份。
     ///
-    /// Mirrors the baseline's `dump(model, slackVariables)`; the six steps are listed above. **Step 6 is the semantic core of an IIS**: `null` does not mean "no bound"
+    /// ; the six steps are listed above. **Step 6 is the semantic core of an IIS**: `null` does not mean "no bound"
     /// but "this bound does not take part in the infeasibility", and substituting `±∞` is what lets the subsystem stay feasible once that bound is gone — proving it was
     /// necessary. **Reuse**: variable rebuilding goes through `LinearIisCompute.ProjectColumn` (the same implementation as the linear side; a variable's field set is
     /// unrelated to linear vs quadratic), so no second copy is written.

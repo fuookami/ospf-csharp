@@ -21,18 +21,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 /// 货物优先级目标 / The item-priority objective.
 /// </summary>
 /// <remarks>
-/// 与基线 `express_effectiveness/service/limits/ItemPriorityLimit.kt` 对齐：把**每个（货物, 舱位）**的
+/// 与对齐：把**每个（货物, 舱位）**的
 /// `系数 × 绝对优先级系数 × 配载变量` 求和，作为**最大化**目标，名为 `item priority`（带空格）。
 ///
-/// 四处必须照抄：
+/// 四处必须沿用：
 ///
 /// 1. **是最大化目标**，不是最小化。
 /// 2. **目标名带空格**：`"item priority"`，与管线名 `item_priority_limit` 不同。
 /// 3. **两重求和**：外层货物、内层舱位，**每个组合都进目标**（不可放置的组合由配载变量本身为 0 处理）。
 /// 4. **系数来自 `parameter.priority`**，且是**按货物**取，不是按优先级。
 ///
-/// Aligned with the baseline: the sum over every (item, position) of `coefficient × absolutePriority × stowageVariable` becomes a **maximisation** objective named `item priority`
-/// (with a space). Four things must be copied: **it is a maximisation**; **the objective name has a space**, unlike the pipeline name `item_priority_limit`; **there are two nested
+/// The sum over every (item, position) of `coefficient × absolutePriority × stowageVariable` becomes a **maximisation** objective named `item priority`
+/// (with a space). Four things are carried over: **it is a maximisation**; **the objective name has a space**, unlike the pipeline name `item_priority_limit`; **there are two nested
 /// sums** — items outside, positions inside, with **every combination entering the objective**, unplaceable ones handled by their stowage variable being zero; and **the coefficient
 /// comes from `parameter.priority`**, taken **per item**, not per priority.
 /// </remarks>

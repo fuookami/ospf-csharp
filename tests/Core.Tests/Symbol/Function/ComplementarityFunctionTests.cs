@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 两个大 M 的符号相反 / The two big-M terms have opposite signs.
 /// </summary>
 /// <remarks>
-/// 补 `ComplementarityFunction`（基线 `Complementarity.kt`）。
+/// 补 `ComplementarityFunction`。
 ///
 /// **六条约束、一个二值变量 `s`**，而第 5、6 行各自只有一个大 M 项：
 /// **`s = 0` 时第 5 行把 `x` 逼到 0、`s = 1` 时第 6 行把 `y` 逼到 0——靠的是两侧都非负。**
@@ -102,10 +102,10 @@ public class ComplementarityFunctionTests
 
     /// <summary>**`Evaluate` 是违反指示，不是满足指示** / `Evaluate` reports a violation, not satisfaction.</summary>
     /// <remarks>
-    /// **两侧同时严格为正时返回 1，否则返回 0。** **这是基线的语义，也是最容易读反的一处**——
+    /// **两侧同时严格为正时返回 1，否则返回 0。** **这是语义，也是最容易读反的一处**——
     /// **如果读成"满足时返回 1"，那么 1 会被当成"互补成立"，而它恰恰相反。**
     ///
-    /// **Returns 1 when both sides are strictly positive and 0 otherwise.** **That is the baseline's semantics and the
+    /// **Returns 1 when both sides are strictly positive and 0 otherwise.** **That is its semantics and the
     /// easiest thing here to read backwards** — **read as "1 means satisfied", it would be taken to mean
     /// complementarity holds, which is the opposite.**
     /// </remarks>

@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// 方案分析器 / The solution analyzer.
 /// </summary>
 /// <remarks>
-/// 与基线 `stowage/service/SolutionAnalyzer.kt` 对齐：从求解器的**原始解值向量**里提取配载域方案。三张表：
+/// 与对齐：从求解器的**原始解值向量**里提取配载域方案。三张表：
 ///
 /// | 表 | 来源 | 判定 |
 /// | --- | --- | --- |
@@ -26,17 +26,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// | 谓词装载重量 | `y_j` | 值**大于 0** 才收录 |
 /// | 推荐装载重量 | `z_j` | 值**大于 0** 才收录 |
 ///
-/// 四处必须照抄基线：
+/// 四处必须照做：
 ///
 /// 1. **阈值是 `0.5`，不是 `0`**。二元变量在数值上可能回来 `1e-9` 或 `0.999`，用 `> 0` 会把浮点噪声当成"装了"。
 /// 2. **`y` 与 `z` 的单位是变量自带的**（`aircraftModel.weightUnit`），不是 `mlw` 的单位。
-/// 3. **`z` 是整数数量，却按重量输出**——基线的 `z` 是件数变量，分析器却把它转成重量单位。照抄：这是基线声明 `z` 时带 `weightUnit`
+/// 3. **`z` 是整数数量，却按重量输出**——`z` 是件数变量，分析器却把它转成重量单位。沿用：这是基线声明 `z` 时带 `weightUnit`
 ///    造成的**语义缺陷**，此处保留并记录，不擅自"修好"。
 /// 4. **token 缺失是失败**，不是 0。折成 0 会造出"什么都没装"的方案，而那个方案**在下游可能看起来可行**。
 ///
-/// Aligned with the baseline: three tables extracted from the solver's **raw value vector**, tabulated above. Four things must be copied verbatim: **the threshold is `0.5`, not
+/// Three tables extracted from the solver's **raw value vector**, tabulated above. Four things must be copied verbatim: **the threshold is `0.5`, not
 /// `0`** (a binary variable may come back as `1e-9` or `0.999`, and `> 0` would read float noise as "loaded"); **`y` and `z` carry the variable's own unit**
-/// (`aircraftModel.weightUnit`), not `mlw`'s; **`z` is an integer count yet is emitted as a weight** — the baseline declares it as a piece-count variable and then converts it to a
+/// (`aircraftModel.weightUnit`), not `mlw`'s; **`z` is an integer count yet is emitted as a weight** — the code declares it as a piece-count variable and then converts it to a
 /// weight unit, a **semantic defect** kept as-is and recorded rather than silently "fixed"; and **a missing token is a failure, not a zero**, since folding to zero fabricates a
 /// "loads nothing" solution that may look feasible downstream.
 /// </remarks>

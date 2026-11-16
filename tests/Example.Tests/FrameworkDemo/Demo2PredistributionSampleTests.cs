@@ -52,7 +52,7 @@ public sealed class Demo2PredistributionSampleTests
     /// **预配载的应用路径有八个域，含冗余** / The predistribution application path has eight domains, redundancy included.
     /// </summary>
     /// <remarks>
-    /// 基线的 `PredistributionPipelineContext.rest` 是"全配载七域 + 余度"，**八个**。本仓走过两次弯路：
+    /// `PredistributionPipelineContext.rest` 是"全配载七域 + 余度"，**八个**。本仓走过两次弯路：
     ///
     /// 1. 之前只注册**四个**，`rows49`，SCIP 直接报不可行——**漏域不报错，只是少约束**。
     /// 2. 补到七个，`rows52`； 查明差的 2 行是 `StowageContext.Init` 没收到模式。七个域 + 模式 = `rows54`。
@@ -61,7 +61,7 @@ public sealed class Demo2PredistributionSampleTests
     ///
     /// **行数因此不是这条判据的锚点**（接不接余度都是 54），锚点必须是整串形状。
     ///
-    /// The baseline's register list is "full load's seven + redundancy", **eight**. The port took three wrong turns: four domains formerly (`rows49`, SCIP called it infeasible,
+    /// The code's register list is "full load's seven + redundancy", **eight**. The port took three wrong turns: four domains formerly (`rows49`, SCIP called it infeasible,
     /// because **a missing domain never errors**); seven domains at (`rows52`), where found the missing two rows were `StowageContext.Init` not receiving the mode;
     /// and，where redundancy was written (799 lines) but **never had a consumer**, so "seven" was really seven plus nothing. Wired up it is
     /// `rows54,symbols82,objective10` — **the row count does not move, six symbols and two objectives join**, because redundancy's two pipelines add **objectives**, not

@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 非折叠蕴含：前置成立时，把输入压进给定区间 / A non-folded implication: gate the input into an interval.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `ImpliedCondition.kt`。
+/// 对齐。
 ///
 /// **语义**：**`antecedent = 1` 时要求 `input ∈ [bounds.lower, bounds.upper]`；
 /// `antecedent = 0` 时这两条行不起作用。**
@@ -36,12 +36,12 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`③` 是必需的一行**：**只写 ①② 时 `indicator` 是自由的，
 /// 求解器可以为了满足区间而把它设成 1，于是"蕴含"变成"永远成立"。**
 ///
-/// Following the baseline's `ImpliedCondition.kt`.
+/// Following its.
 ///
 /// **Semantics**: **when `antecedent = 1` the input must lie in `[bounds.lower, bounds.upper]`; when
 /// `antecedent = 0` these rows do nothing.**
 ///
-/// **Three rows, each with a reason to exist**:
+/// **Three rows, each with a reason to exist**.
 /// **① `input − lowerAdjust·(indicator + antecedent) ≥ lower − lowerAdjust` — the lower gate;**
 /// **② `input − upperAdjust·(indicator − antecedent) ≤ upperAdjust` — the upper gate;**
 /// **③ `antecedent − indicator ≤ 0` — linking the two binary quantities.**
@@ -119,11 +119,11 @@ public sealed record ImpliedCondition
             return Fail("the condition bounds must be finite");
         }
 
-        // **基线的两个界检查**：**`lower > 0` 与 `upper < tolerance` 都被拒绝。**
+        // **两个界检查**：**`lower > 0` 与 `upper < tolerance` 都被拒绝。**
         // **理由是这两个情形下 `lowerAdjust` 或 `upperAdjust` 会变成 0 或负数，
         // 于是门控行的系数消失，前置为假时约束不再松弛。**
         //
-        // **The baseline rejects `lower > 0` and `upper < tolerance`.** **In both cases `lowerAdjust` or
+        // **The code rejects `lower > 0` and `upper < tolerance`.** **In both cases `lowerAdjust` or
         // `upperAdjust` becomes zero or negative, the gate coefficient vanishes, and the constraint no longer relaxes
         // when the antecedent is false.**
         if (Bounds.Lower.CompareTo(Flt64.Zero) > 0) {

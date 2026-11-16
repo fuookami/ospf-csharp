@@ -19,21 +19,21 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service.Limit
 /// 装载顺序约束 / The loading order rows.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `stowage/service/limits/LoadingOrderLimit.kt`：对每条拓扑装载顺序邻接，加一行
+/// 对齐：对每条拓扑装载顺序邻接，加一行
 /// <c>actualLoaded_{j1} ≥ actualLoaded_{j2}</c>——先装的舱位不能比后装的舱位装得少，否则后装的货被先装的挡住。
 ///
-/// **只在不处于散货舱时加行**：散货舱是"倒进去"的，没有顺序可言。基线的条件是
+/// **只在不处于散货舱时加行**：散货舱是"倒进去"的，没有顺序可言。条件是
 /// `position1.unavailable || position2.unavailable || position1.bulk || position2.bulk → continue`，
 /// 也就是说**可用性与散货两两组合共四种情况都要跳过**。少查 `bulk` 会给散货舱加一条无意义的顺序约束，
 /// 而它在物理上不可能被违反，只会白占约束表。
 ///
 /// 这条管线**只在预配载模式下加入**（见基线 `PipelineListGenerator`），因为它约束的是"怎么装"而不是"装什么"。
 ///
-/// Aligned with the baseline: for every topological loading-order adjacency, add <c>actualLoaded_{j1} ≥ actualLoaded_{j2}</c> — the earlier position must not carry less than the
-/// later one, or the later cargo is blocked by the earlier. **Rows are skipped for bulk holds**, which are simply poured in and have no order: the baseline's condition is
+/// For every topological loading-order adjacency, add <c>actualLoaded_{j1} ≥ actualLoaded_{j2}</c> — the earlier position must not carry less than the
+/// later one, or the later cargo is blocked by the earlier. **Rows are skipped for bulk holds**, which are simply poured in and have no order: its condition is
 /// `position1.unavailable || position2.unavailable || position1.bulk || position2.bulk → continue`, i.e. all four combinations of availability and bulk must skip. Dropping the
 /// `bulk` checks adds a meaningless order row to a bulk hold that can never be violated physically, merely filling the table. This pipeline is **added only in predistribution
-/// mode** (see the baseline's `PipelineListGenerator`) because it constrains *how* to load rather than *what* to load.
+/// mode** (see its `PipelineListGenerator`) because it constrains *how* to load rather than *what* to load.
 /// </remarks>
 public sealed class LoadingOrderLimit
 {

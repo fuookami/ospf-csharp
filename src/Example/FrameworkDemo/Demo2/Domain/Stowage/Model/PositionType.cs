@@ -10,10 +10,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 舱位类型码 / Position type code.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `demo2/domain/stowage/model/Position.kt` 的 `PositionTypeCode`（7 项）。**名字必须一一对上**：
+/// 逐条对齐的 `PositionTypeCode`（7 项）。**名字必须一一对上**：
 /// `enabled` 的十几条规则全是"这个码在不在集合里"，改一个名字就等于悄悄关掉一条规则。
 ///
-/// Mirrors the baseline `PositionTypeCode` member for member (7 entries). **The names must match exactly**: a dozen of `enabled`'s rules are "is this code in the set", so renaming
+/// `PositionTypeCode` member for member (7 entries). **The names must match exactly**: a dozen of `enabled`'s rules are "is this code in the set", so renaming
 /// one silently disables a rule.
 /// </remarks>
 public enum PositionTypeCode

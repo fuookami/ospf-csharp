@@ -1,6 +1,5 @@
 // 路径行边界管线 / Path row-bound pipeline.
-// 与固定 Kotlin 基线 `path_compilation/service/PathCompilationRows.kt`（1708 字节）对应。
-// Mirrors the pinned baseline's `path_compilation/service/PathCompilationRows.kt`.
+// 与固定 Kotlin （1708 字节）对应。
 
 using System;
 using System.Collections.Generic;

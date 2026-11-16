@@ -18,18 +18,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 压舱物重量下限 / The lower bound on ballast weight.
 /// </summary>
 /// <remarks>
-/// 逐条对齐基线 `service/limits/BallastWeightLimit.kt`：一行 `ballast_weight ≥ min_ballast_weight`，名字固定为 `ballast_weight_limit`
+/// 逐条对齐：一行 `ballast_weight ≥ min_ballast_weight`，名字固定为 `ballast_weight_limit`
 /// （**不**带 `name` 前缀——基线写死了字符串）。
 ///
 /// 三处容易做错：
 ///
 /// 1. **两个前提都满足才加行**：没有可用压舱舱位，或没有最低压舱重量，都直接返回成功。这是合法配置——不装压舱物的航班不该有这条约束。
-/// 2. **名字写死**。看起来应当用 `{name}`，但基线用的是字面量 `"ballast_weight_limit"`；改名会让既有报告对不上。
+/// 2. **名字写死**。看起来应当用 `{name}`，但的是字面量 `"ballast_weight_limit"`；改名会让既有报告对不上。
 /// 3. **下限用的是 `AdaptiveMinBallastWeightSymbol`**，不是 `MinBallastWeight` 那个裸数字。前者在软安保下已注册进模型，后者只是构造参数。
 ///
-/// Mirrors the baseline: one row `ballast_weight ≥ min_ballast_weight`, named the literal `ballast_weight_limit` (**not** prefixed with `name` — the baseline hard-codes it). Three
+/// one row `ballast_weight ≥ min_ballast_weight`, named the literal `ballast_weight_limit` (**not** prefixed with `name` — the code hard-codes it). Three
 /// easy mistakes: (1) **both preconditions must hold** — no available ballast position or no minimum ballast weight both return success, because a flight that carries no ballast
-/// should not have this constraint; (2) **the name is hard-coded**; it looks like it should use `{name}`, but the baseline uses the literal, and renaming breaks existing reports;
+/// should not have this constraint; (2) **the name is hard-coded**; it looks like it should use `{name}`, but the code uses the literal, and renaming breaks existing reports;
 /// (3) **the lower bound is `AdaptiveMinBallastWeightSymbol`**, not the raw `MinBallastWeight` number — the former is registered in the model under soft security, the latter is just
 /// a constructor argument.
 /// </remarks>

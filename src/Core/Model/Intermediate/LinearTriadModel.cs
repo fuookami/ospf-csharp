@@ -261,7 +261,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     private MechanismMatrixSnapshot? _relaxationSnapshot;
     // **对偶模型保存原模型的行身份快照。**
     //
-    // **基线在这一处是"把约束对象引用塞进 `dualOrigin`"，而对偶模型的行就是原模型的行，
+    // **这一处是"把约束对象引用塞进 `dualOrigin`"，而对偶模型的行就是原模型的行，
     // 所以那把 key 天生就是原约束。C# 的对偶模型是<b>新建</b>的约束（构造时看不到原身份），
     // 于是必须把原身份<b>带过来</b>，否则 `DualOrigin.RowIndex` 在对偶模型里指向的是一个
     // 它自己都没有的身份集合。**
@@ -269,7 +269,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // **快照而不是引用：视图的全部意义是可复制的快照，而持有一个活的原模型会让对偶模型的生命周期
     // 绑在原模型上——原模型被 `Dispose` 之后，对偶模型的对偶整理就会失败。**
     //
-    // **a dual model keeps a snapshot of the primal's row identities.** **The baseline puts a constraint object
+    // **a dual model keeps a snapshot of the primal's row identities.** **The code puts a constraint object
     // reference into `dualOrigin` and the dual's rows <b>are</b> the primal's, so that key is naturally the primal
     // constraint. C#'s dual model builds <b>new</b> constraints (the originals are not visible at construction), so the
     // original identities must be <b>carried over</b> — otherwise `DualOrigin.RowIndex` points into an identity set the
@@ -412,8 +412,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // `constraints.origins`。**
     //
  // **C# 的视图不持有约束对象引用，所以能给的 key 是
-    // `ConstraintId`——而在<b>有</b> `ConstraintId` 的情况下，它就是基线那把 key 的身份层内容：
-    // 基线用一个对象引用表达"哪一行"，C# 用一个身份字符串表达同一件事。**
+    // `ConstraintId`——而在<b>有</b> `ConstraintId` 的情况下，它就是把 key 的身份层内容：
+    // 一个对象引用表达"哪一行"，C# 用一个身份字符串表达同一件事。**
     //
     // **行对偶（`Dual` 模型）用 `DualOrigin.RowIndex` 回查**，因为那个模型的行序是原模型的列序，
     // 而它的对偶变量的 `DualOrigin` 恰好记着"我来自哪一行"——**这正是该字段的用途第一次被真正用上。**
@@ -424,11 +424,11 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // 这个返回带身份的字典（供按身份对账的调用方）。两者都保留，因为"数第几行"与"这是哪条约束"
     // 是两种不同的消费方式，而强行统一会让其中一方要么丢信息、要么多做一次映射。**
     //
-    // **The baseline returns `Map&lt;Constraint, Flt64>`: the dual model goes through `dualOrigin`, an ordinary model
+    // **The code returns `Map&lt;Constraint, Flt64>`: the dual model goes through `dualOrigin`, an ordinary model
     // through `constraints.origins`.**
     //
     // **A C# view holds no constraint object references (a recorded representation difference), so the best key
-    // available is `ConstraintId` — which, when present, is exactly the identity content of the baseline's key: the
+    // available is `ConstraintId` — which, when present, is exactly the identity content of its key: the
     // baseline expresses "which row" with an object reference, C# expresses the same thing with an identity string.**
     //
     // **A dual model (`Dual`) resolves through `DualOrigin.RowIndex`, because its rows are the primal's columns and its
@@ -452,7 +452,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         IReadOnlyList<Flt64> aligned = ((Ok<IReadOnlyList<Flt64>, ErrorCode, Error<ErrorCode>>)tidy).Value;
         var table = new Dictionary<ConstraintId, Flt64>(aligned.Count, ConstraintIdComparer.Instance);
 
-        // **基线的两种走法在这里合流成一个：**
+        // **两种走法在这里合流成一个：**
         //
         // - **对偶模型**：`dualOrigin` 记着"这个变量是第几行的对偶"——行号直接取它。
         // - **普通（行对齐）模型**：第 `index` 个值就是第 `index` 行的对偶——行号就是 `index`。
@@ -463,7 +463,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         // **界对偶列与松弛列不是任何一行的对偶，它们本来就不该进这张表——
         // 而它们之所以不会进，是因为它们的对偶值不在前 `rows` 个位置上（`TidyDualSolution` 只截前 `rows` 个）。**
         //
-        // **The baseline's two branches converge here into one:** **on a dual model `dualOrigin` records which row a
+        // **The code's two branches converge here into one:** **on a dual model `dualOrigin` records which row a
         // variable is the dual of, while on a row-aligned model position `index` *is* the row.** **They converge because
         // both answer "which row does this value belong to", differing only in where the row number is stored — on the
         // variable, or in the position.** **So use `DualOrigin` when present and fall back to `index`; no third
@@ -581,7 +581,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             string rowName = constraints.Names[row];
             // **对偶变量记录它的来源行与那一行的关系。**
             // **这正是基线 `dualOrigin` 承载的信息，只是在扁平视图里用行号表达而不是对象引用。**
-            // **a dual variable records its origin row and that row's relation — exactly what the baseline's
+            // **a dual variable records its origin row and that row's relation — exactly what its
             // `dualOrigin` carries, expressed as a row index rather than an object reference in a flat view.**
             dualVariables.Add(new ModelViewVariable(
                 index: row,
@@ -756,14 +756,14 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         int colIndex = 0;
         // **Farkas 列带上派生身份。**
         //
-        // **`role` 与 `discriminator` 来自基线 `LinearTriadModel.kt` 的 `withDerivedIdentity` 调用点，
+        // **`role` 与 `discriminator` 来自的 `withDerivedIdentity` 调用点，
         // 其余六个参数（源 ID、作用域、主来源、完整来源、命名空间、schema）由 `FarkasSource(...)` 从被指向的
         // 那个源元素（约束行或原变量）取出。**
         //
         // **`FarkasSource` 是一个统一的取值函数而不是六个参数：** **因为"源是谁"取决于这一列指向哪一行/哪一列，
         // 而"源的哪几个身份字段"在两处完全相同——把后者提出去，前者的调用点就只剩一个索引。**
         //
-        // **Farkas columns carry derived identities.** **`role` and `discriminator` come from the baseline's
+        // **Farkas columns carry derived identities.** **`role` and `discriminator` come from its
         // `withDerivedIdentity` call sites; the other six inputs (source id, scope, origin, provenance, namespace,
         // schemaVersion) come from whichever element this column points at, through `FarkasSource(...)`.**
         //
@@ -805,18 +805,18 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             return column;
         }
         // **取源元素身份。基线 `derivedDiscriminator` 的语义是
-        // "源 ID 为空则用 model-local 判别串，否则用稳定判别串"，这里照抄。**
+        // "源 ID 为空则用 model-local 判别串，否则用稳定判别串"，这里沿用。**
         //
         // **`RowSource` 取第 `row` 行约束的身份，`ColumnSource` 取第 `col` 个原变量的身份。**
         // **两者都返回 `(身份, 命名空间, schema)` 三元组，因为 C# 把后两个字段放在视图变量/约束上而不是身份上，
-        // 与基线把 `identityNamespace`／`identitySchemaVersion` 放在 `Variable` 上是同一层次。**
+        // 与`identityNamespace`／`identitySchemaVersion` 放在 `Variable` 上是同一层次。**
         //
         // **`RowSource` 越界时退化为 `null` 而不是伪造：源行没有身份时不该造一个。**
         //
-        // **read the source element's identity. The baseline's `derivedDiscriminator` means "model-local
+        // **read the source element's identity. The code's `derivedDiscriminator` means "model-local
         // discriminator when the source id is null, stable one otherwise", copied here.** **Both lookups return
         // `(identity, namespace, schema)`, because C# keeps the last two on the view variable/constraint rather than on
-        // the identity, the same layer where the baseline keeps them on `Variable`.** **`RowSource` degrades to `null`
+        // the identity, the same layer where the code keeps them on `Variable`.** **`RowSource` degrades to `null`
         // out of range rather than inventing an identity for a row that has none.**
         (ModelElementIdentity? Identity, string? Namespace, string? SchemaVersion) RowSource(int row) {
             if (row < 0 || row >= Constraints.Identities.Count) {
@@ -829,7 +829,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             return (primal.Identity, primal.IdentityNamespace, primal.IdentitySchemaVersion);
         }
         // **基线 `derivedDiscriminator(sourceId, stable, modelLocal)`：源 ID 为空时用 model-local 那个。**
-        // **The baseline's `derivedDiscriminator(sourceId, stable, modelLocal)`: model-local when the source id is null.**
+        // **The code's `derivedDiscriminator(sourceId, stable, modelLocal)`: model-local when the source id is null.**
         string Discriminator(string? sourceId, string stable, string modelLocal) =>
             sourceId is null ? modelLocal : stable;
 

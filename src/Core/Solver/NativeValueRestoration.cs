@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 把 native 解还原成原始 token 顺序的值 / Restore a native solution into the original token order.
 /// </summary>
 /// <remarks>
-/// 对齐基线 `NativePiecewiseReport.kt` 的 `restoreValues` 与 `maxInputValues`。
+/// 对齐的 `restoreValues` 与 `maxInputValues`。
 ///
 /// **五路查找的<b>顺序就是语义</b>：**
 ///

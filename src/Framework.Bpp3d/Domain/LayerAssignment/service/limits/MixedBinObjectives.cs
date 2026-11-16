@@ -12,11 +12,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// Bin volume consumption minimisation: the coefficient is the weight times the bin type's volume.
 /// </summary>
 /// <remarks>
-/// 与基线 `MixedBinObjectives.kt` 的 `BinVolumeMinimization` 对应。基线把系数写成
+/// 与的 `BinVolumeMinimization` 对应。系数写成
 /// `weight * solverValueAdapter.volumeToSolver(bin.type.volume)`，把数值换算留给适配器；这里同样只产出**系数**，
 /// 不替调用方决定符号域——**注册多项式是模型侧的事，判据能测的是"哪个箱拿到什么系数"。**
 ///
-/// Mirrors the baseline's `BinVolumeMinimization`. The baseline writes the coefficient as
+/// The code writes the coefficient as
 /// `weight * solverValueAdapter.volumeToSolver(bin.type.volume)` and leaves the value conversion to an adapter; this does the same and only produces the
 /// **coefficient** — registering the polynomial is the model's business, and what a criterion can check is "which bin gets what coefficient".
 /// </remarks>
@@ -45,11 +45,11 @@ public sealed record BinVolumeMinimization(Flt64? Weight = null) {
 /// </summary>
 /// <remarks>
 /// 与基线 `BinTypeCostMinimization` 对应，三个跳过条件逐条照搬：**成本表为空**、**权重为零**、**该箱型未配置成本或系数恰好为零**。
-/// 最后一条是基线的 `mapIndexedNotNull`：**未配置成本的箱型根本不进多项式**，而不是以 0 系数进去——
+/// 最后一条是`mapIndexedNotNull`：**未配置成本的箱型根本不进多项式**，而不是以 0 系数进去——
 /// 0 系数项在求和中是噪声，在报告里却会被读成"这个箱型免费"。
 ///
-/// Mirrors the baseline's `BinTypeCostMinimization` and copies its three skip conditions: an empty cost table, a zero weight, and a bin type with no
-/// configured cost or a coefficient that lands on zero. The last one is the baseline's `mapIndexedNotNull`: a type without a cost never enters the
+/// And copies its three skip conditions: an empty cost table, a zero weight, and a bin type with no
+/// configured cost or a coefficient that lands on zero. The last one is its `mapIndexedNotNull`: a type without a cost never enters the
 /// polynomial at all rather than entering with a zero coefficient — zero terms are noise in the sum while reading as "this bin type is free" in a report.
 /// </remarks>
 /// <param name="TypeCost">箱型代码到成本的映射 / Bin type code to cost.</param>

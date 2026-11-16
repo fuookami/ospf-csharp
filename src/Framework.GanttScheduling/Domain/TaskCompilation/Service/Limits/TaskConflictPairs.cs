@@ -1,8 +1,10 @@
 // 通用冲突对枚举 / Generic conflicting-pair enumeration.
-// 与固定 Kotlin 基线 `gantt-scheduling-domain-task-compilation-context/.../TaskConflictConstraint.kt` 的
-// `conflict(executor, tasks[i], tasks[j])` 双循环对应；`TaskTimeConflictConstraint` 是它的特例。
-// Mirrors the `conflict(executor, tasks[i], tasks[j])` double loop in the pinned baseline's `TaskConflictConstraint.kt`;
-// `TaskTimeConflictConstraint` is the special case.
+// 与固定 Kotlin 的
+// 双循环为每个执行器上的每对任务生成冲突项：`conflict(executor, tasks[i], tasks[j])`。
+// `TaskTimeConflictConstraint` 是它在时间维度上的特例。
+//
+// A double loop emits one conflict term per executor and per task pair: `conflict(executor, tasks[i], tasks[j])`.
+// `TaskTimeConflictConstraint` is its special case along the time axis.
 
 using System;
 using System.Collections.Generic;
@@ -13,14 +15,14 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Service
 /// 通用冲突对枚举 / Generic conflicting-pair enumeration.
 /// </summary>
 /// <remarks>
-/// 基线的冲突族里有**两份几乎一样的双循环**：`TaskConflictConstraint` 用一个注入的 `conflict` 判定，
+/// 冲突族里有**两份几乎一样的双循环**：`TaskConflictConstraint` 用一个注入的 `conflict` 判定，
 /// `TaskTimeConflictConstraint` 直接把判定写成"时段相交"。两者的循环结构、下标范围、
 /// "每对只出现一次"的约定完全相同，差别只在那一行判定。
 ///
 /// 所以这里只实现一份：判定作为参数传进来。**同一条规则写两遍，改一处忘另一处就是漏一对，
 /// 而漏一对是双重占用。**
 ///
-/// The baseline's conflict family has **two almost identical double loops**: `TaskConflictConstraint` takes an injected `conflict` predicate, and `TaskTimeConflictConstraint`
+/// The code's conflict family has **two almost identical double loops**: `TaskConflictConstraint` takes an injected `conflict` predicate, and `TaskTimeConflictConstraint`
 /// hard-codes the predicate as "intervals intersect". The loop structure, index ranges and the "each pair once" convention are identical; only that one line differs.
 ///
 /// So only one implementation lives here, with the predicate as a parameter. **Writing the same rule twice and forgetting the other copy means missing a pair, and a missed pair

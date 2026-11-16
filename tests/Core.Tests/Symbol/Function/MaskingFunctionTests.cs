@@ -183,12 +183,12 @@ public class MaskingFunctionTests {
 
     /// <summary>**边界取自输入的有限值域；`bigM` 只是兜底** / The bounds come from the input's finite range; `bigM` is only the fallback.</summary>
     /// <remarks>
-    /// 基线的顺序是 `bounds?.upper ?: bigM`——**有限值域优先**。判据给输入变量设一个明确的 `[-3, 3]`，
+    /// 顺序是 `bounds?.upper ?: bigM`——**有限值域优先**。判据给输入变量设一个明确的 `[-3, 3]`，
     /// 于是即使传 `bigM = 5`，边界也必须收成 3。反过来只测"没传 bigM 时用 1e6"会让"永远用 bigM"通过，
     /// 而那条路会让 `mask = 1` 时的 `y = x` 约束在 `y` 超出 `bigM` 时**不可行**——
     /// 报出来是"无解"，看起来像排不下而不是掩码写错。
     ///
-    /// The baseline order is `bounds?.upper ?: bigM` — **finite range first**. The criterion gives the input an explicit `[-3, 3]`, so even with `bigM = 5` the bounds must shrink to 3.
+    /// The code order is `bounds?.upper ?: bigM` — **finite range first**. The criterion gives the input an explicit `[-3, 3]`, so even with `bigM = 5` the bounds must shrink to 3.
     /// Testing only "1e6 when no bigM is passed" would let "always use bigM" pass, and that path makes "y = x when mask = 1" **infeasible** once `y` exceeds `bigM` — reported as
     /// "no solution", looking like an unschedulable plan rather than a wrong mask.
     /// </remarks>
@@ -209,8 +209,8 @@ public class MaskingFunctionTests {
         function.Bounds.Lower.ToDouble().Should().BeApproximately(-3.0, 1e-9,
             "the input's own range wins over the explicit Big-M");
         function.Bounds.Upper.ToDouble().Should().BeApproximately(3.0, 1e-9);
-        // 一个无界的输入推导不出有限边界，于是回退到基线的 1e6——**不是 1**。
-        // An unbounded input yields no finite bounds, so it falls back to the baseline's 1e6 — **not 1**.
+        // 一个无界的输入推导不出有限边界，于是回退到1e6——**不是 1**。
+        // An unbounded input yields no finite bounds, so it falls back to its 1e6 — **not 1**.
         (unbounded.Bounds.Upper.ToDouble() > 1e5).Should().BeTrue(
             "the fallback is the baseline's 1e6, not a constant 1: " + unbounded.Bounds.Upper.ToDouble());
     }

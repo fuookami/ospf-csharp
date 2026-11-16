@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **最大装载重量模型本体** / The maximum load weight model itself.
 /// </summary>
 /// <remarks>
-/// 基线 `MaxLoadWeight.kt` 的三支判断是这里的焦点：
+/// 的三支判断是这里的焦点：
 ///
 /// | 分段规格 | 已知零油重 | 取值 |
 /// | --- | --- | --- |
@@ -207,7 +207,7 @@ public class Demo2MaxLoadWeightModelTests {
     /// **符号是常数，没有单项式** / The symbol is a constant with no monomials.
     /// </summary>
     /// <remarks>
-    /// 基线的三种取值都是**数值**（`position.mlw(zfw)` 返回 `Quantity`），不是关于决策变量的表达式。把它写成含单项式的
+    /// 三种取值都是**数值**（`position.mlw(zfw)` 返回 `Quantity`），不是关于决策变量的表达式。把它写成含单项式的
     /// 符号会让"最大装载重量"变成可优化的量——那与"规格"是两件事，而求解器会很乐意把规格调到对自己有利的位置。
     ///
     /// All three baseline values are **numbers** (`position.mlw(zfw)` returns a `Quantity`), not expressions over decision variables. Making it carry monomials would turn a
@@ -229,11 +229,11 @@ public class Demo2MaxLoadWeightModelTests {
     /// </summary>
     /// <remarks>
     /// 分段的取值是**查表**，需要的是一个数；`estimate_total_weight_zerofuel` 是决策变量的表达式，代入分段规格会得到一个非线性表达式。
-    /// 基线用的是 `totalWeight.computedTotalWeight[FlightPhase.ZeroFuel]`——一个 `Quantity?`，不是符号。这条判据钉住"用的是哪个来源"：
+    /// 的是 `totalWeight.computedTotalWeight[FlightPhase.ZeroFuel]`——一个 `Quantity?`，不是符号。这条判据钉住"用的是哪个来源"：
     /// 把 `ComputedTotalWeight` 换成"从符号里取常数"就会在这一支里拿到零，从而永远走"取最大值"。
     ///
     /// Segment lookup needs a **number**; `estimate_total_weight_zerofuel` is an expression over decisions, and substituting it into the piecewise spec yields a nonlinear
-    /// expression. The baseline reads `totalWeight.computedTotalWeight[FlightPhase.ZeroFuel]` — a `Quantity?`, not a symbol. This criterion pins the source: swapping it for
+    /// expression. The code reads `totalWeight.computedTotalWeight[FlightPhase.ZeroFuel]` — a `Quantity?`, not a symbol. This criterion pins the source: swapping it for
     /// "the constant of the symbol" would read zero here and always take the maximum.
     /// </remarks>
     [Fact]

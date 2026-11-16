@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 求解器说"我给你找到了一个解"。**这个解可能不属于这个模型、可能越界、可能违反原始约束、
 /// 也可能根本不满足目标。** 任何一条不查，报出去的 `Reachable` 就是一个没验过的断言。
 ///
-/// **This is the port of `validateTargetWitness`, and the only ground under the word "reachable".** The solver says "I found a solution". **It may belong to another model, be out of domain, violate an
+/// **This is the implementation of `validateTargetWitness`, and the only ground under the word "reachable".** The solver says "I found a solution". **It may belong to another model, be out of domain, violate an
 /// original constraint, or simply not meet the target.** Skip any one check and the `Reachable` you report is an assertion nobody verified.
 ///
 /// **五道检查，顺序固定：**
@@ -51,11 +51,11 @@ public static class TargetWitness
     /// <param name="solution">求解器报出的解 / The solution the solver reported.</param>
     /// <returns>问题描述，或 <c>null</c> 表示通过 / The problem, or <c>null</c> when it holds up.</returns>
     /// <remarks>
-    /// **`snapshot` 必须是求解时那份，不是基线那份。** 删除复验求解的是选择性重建的模型，
+    /// **`snapshot` 必须是求解时那份，不是份。** 删除复验求解的是选择性重建的模型，
     /// 它的值域和激活约束与基线不同——**拿基线校验重建模型的解，会把合法的解判成越界。**
     ///
-    /// **`snapshot` has to be the one that was solved, not the baseline.** Deletion checks solve a selectively rebuilt model whose domains and active constraints differ from the baseline — **validating
-    /// the rebuilt model's solution against the baseline reports a legitimate solution as out of domain.**
+    /// **`snapshot` has to be the one that was solved, not the code.** Deletion checks solve a selectively rebuilt model whose domains and active constraints differ from the code — **validating
+    /// the rebuilt model's solution against the code reports a legitimate solution as out of domain.**
     /// </remarks>
     public static string? Validate(
         ConstraintProgrammingModelSnapshot snapshot,

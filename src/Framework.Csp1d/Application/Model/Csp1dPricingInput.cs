@@ -21,19 +21,14 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Model;
 /// default "benefit &gt; cost".
 /// </param>
 /// <remarks>
-/// **这三个扩展点照抄基线 `Csp1dPricingInput`**。基线签名：
-///
-/// ```kotlin
-/// val pricingBenefitModifiers: List&lt;(CuttingPlan&lt;V&gt;, V) -&gt; V&gt; = emptyList,
-/// val pricingCostModifiers: List&lt;(CuttingPlan&lt;V&gt;, V) -&gt; V&gt; = emptyList,
-/// val isImprovingJudges: List&lt;(CuttingPlan&lt;V&gt;, V, V) -&gt; Boolean?&gt; = emptyList,
-/// ```
+/// **三个扩展点都是可选列表，默认为空**：收益修正器 `(CuttingPlan&lt;V&gt;, V) → V`、
+/// 成本修正器 `(CuttingPlan&lt;V&gt;, V) → V`、是否改善判断器 `(CuttingPlan&lt;V&gt;, V, V) → Boolean?`。
 ///
 /// **`isImprovingJudges` 的三值语义是关键**：返回 `null` 表示"这条判据不表态"，继续问下一条；
 /// **只有全都不表态时才回退默认逻辑**。若实现把 `null` 当成 `false`，
 /// 一条"只管某类方案"的判据会把**其余所有方案**都判成不改善——**列生成立刻枯竭**。
 ///
-/// **These three extension points copy the baseline `Csp1dPricingInput`** (signatures above).
+/// **These three extension points copy the code `Csp1dPricingInput`** (signatures above).
 ///
 /// **The three-valued semantics of `isImprovingJudges` is the crux**: `null` means "this judge abstains", so the next one is asked; **only when all abstain does the
 /// default logic apply**. Treating `null` as `false` would make a judge that only handles one kind of plan **reject every other plan** — **column generation would dry

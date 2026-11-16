@@ -1,6 +1,6 @@
 // 组合式图案生成上下文 / The composite pattern generation context.
-// 与固定 Kotlin 基线 `csp2d/domain/pattern_generation/PatternGenerationContext2.kt` 的上下文部分对应。
-// Mirrors the context part of the pinned Kotlin baseline's `PatternGenerationContext2.kt`.
+// 与固定 Kotlin 的上下文部分对应。
+// The context part of the pinned Kotlin: .
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Csp2d.Domain.Material.Model;
