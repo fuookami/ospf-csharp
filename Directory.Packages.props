@@ -3,6 +3,9 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <!-- ONNX 推理运行时（B1338 起 Core.Plugin.Onnx 依赖它）。实测可还原可用，但包内不含模型协议类型。 -->
+    <!-- The ONNX runtime, a dependency of Core.Plugin.Onnx since B1338. Restorable and usable; it carries no model-protocol types. -->
+    <PackageVersion Include="Microsoft.ML.OnnxRuntime" Version="1.20.1" />
     <PackageVersion Include="Tomlyn" Version="0.19.0" />
     <PackageVersion Include="xUnit" Version="2.9.3" />
     <PackageVersion Include="xUnit.runner.visualstudio" Version="2.8.2" />

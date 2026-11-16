@@ -54,33 +54,22 @@ public class OnnxOperatorRegistryTests
             .Should().BeTrue("quadratic mode exists precisely for this");
     }
 
-    /// <summary>**需要区间的激活在缺区间时被拒绝** / An activation without bounds is refused.</summary>
+    /// <summary>**需要界这件事由 `OnnxInputBounds` 报告，不在这里** / Bounds are reported by InputBounds, not here.</summary>
     /// <remarks>
-    /// **`Relu` 是"精确"的，但它仍需要区间：** **因为在 LP 里正部函数是一条分段线性的曲线，** **没有界就无从知道分段该覆盖到哪里。**
-    /// **这条与"近似算子才需要区间"的直觉相反，判据把它写明白。**
+    /// **两个阶段都报会让同一个问题出现两条消息、两个阶段名，** **而调用方会以为那是两件事。** '
+    /// **这条判据钉住分工：本阶段只管"这个算子支不支持、阶数够不够"。**
     ///
-    /// **Relu is "exact" yet still needs bounds: the positive part is piecewise-linear inside an LP, and without a bound there is no telling what the pieces should
-    /// cover. This runs against the intuition that only approximated operators need bounds, so the criterion states it.**
+    /// **Both stages reporting gives one problem two messages and two stage names, and the caller takes them for two problems.** **The criterion pins the division:
+    /// this stage answers only "is the operator supported and is the degree enough".**
     /// </remarks>
     [Fact]
-    public void AnActivationWithoutBounds_ShouldBeRefused() {
-        OnnxGraph graph = Graph(Node("Relu", "x", "y"));
+    public void Bounds_ShouldNotBeReportedHere() {
+        OnnxOperatorRegistry.PreflightResult result = OnnxOperatorRegistry.Preflight(Graph(Node("Relu", "x", "y")), new OnnxImportOptions());
 
-        OnnxOperatorRegistry.PreflightResult result = OnnxOperatorRegistry.Preflight(graph, new OnnxImportOptions());
-        result.IsValid.Should().BeFalse();
-        result.Failure.Should().Contain("x");
-
-        var withBounds = new OnnxImportOptions(inputBounds: new Dictionary<string, OnnxBounds> { ["x"] = new(-1.0, 1.0) });
-        OnnxOperatorRegistry.Preflight(graph, withBounds).IsValid.Should().BeTrue();
+        result.IsValid.Should().BeTrue("Relu is supported at linear degree; whether x has a range is the next stage's question");
     }
 
     /// <summary>**加法不需要区间** / Addition needs no bounds.</summary>
-    /// <remarks>
-    /// **要求所有输入都给区间会让最简单的模型也被挡在门外：** **一条纯线性链没有分段近似，** **强制要求区间等于把"能跑"变成"必须配置"。**
-    ///
-    /// **Requiring bounds for every input would block the simplest models: a purely linear chain has no piecewise approximation, so demanding bounds turns "it works"
-    /// into "it has to be configured".**
-    /// </remarks>
     [Fact]
     public void Addition_ShouldNotNeedBounds() {
         OnnxOperatorRegistry.Preflight(Graph(Node("Add", "a", "b")), new OnnxImportOptions()).IsValid.Should().BeTrue();

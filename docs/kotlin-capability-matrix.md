@@ -2722,7 +2722,11 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 
 - **数据层：** `OnnxDataType`（14 类型）、`OnnxError`（13 变体）、`OnnxTensorConstant`、`ProtoReader`（手写线格式读取器）、`OnnxModelParser`（模型结构，字段号逐条判据）；
 - **语义层：** `OnnxPiecewiseApproximation`（切分策略）、`OnnxActivationSemantics`（八算子语义与默认值）、`OnnxShape`／`OnnxShapeOperators`（形状算术与六个算子）、`OnnxGraphValidator`（拓扑序与可用性）、`OnnxConstantFolding`、`OnnxOutputSelection`、`OnnxImportOptions`；
+- **`2e72a17c` 的中间变量实现：** 线性与二次表达式符号都有开关、辅助变量、令牌注册与 `RealizationConstraint()`（二次版左侧为二次多项式）。
 - **降阶层：** `OnnxOperatorRegistry`（算子表与前置检查）、`OnnxActivationLowering`（精确算子化简）、`OnnxApproximationLowering`（近似算子切分与符号）、`OnnxInputBounds`（界判定）、`OnnxAffineChain`（仿射链求值）、`OnnxAffineModelBuilder`（仿射 → 线性模型）；
+- **模型层：** `OnnxBoundsConstraints`（输入界 → 闭区间约束对）+ `OnnxModelAttachment`（挂进 `LinearMetaModel` 并走框架管线求解，已在 Gurobi 上验证界真的生效）。
+- **推理：** `OnnxInference`（接 `Microsoft.ML.OnnxRuntime`，只做输入名/形状核对、错误转译与生命周期收束；用手工编码的 `z = x + y` 模型真跑对照手算）。
+- **单一入口：** `OnnxImporter`（解析 → 图校验 → 前置检查 → 界解析 → 仿射求值，失败时报告发生在哪一步）。
 - **端到端：** 一个 ONNX 图经仿射链组装成线性模型后**真的被求解器解出**，最优值与手算一致（`OnnxAffineEndpointGurobiIntegrationTest`）。
 
 **判据 131 条**（ONNX 测试工程）**+ 2 条端到端求解判据**，覆盖"不抛异常却会读错/算错"的那一类错误。
@@ -2730,5 +2734,5 @@ books the eight gaps and pins the numbers, **so the next batch starts from "4558
 **明确未落地（不是"没找到"，是没做）：**
 
 - **模型层接线：** 把输入界真正注册到变量、把降阶结果挂进 `MechanismModel`——**跨层，需要模型机制**；
-- **子图**（`OnnxSubgraph` 586 行）与**推理**（`OnnxInference` 472 行）：后者需要真实 `.onnx` 文件与 `InferenceSession`；
+- **子图**（`OnnxSubgraph` 586 行）：`If`／`Loop` 尚未移植；
 - **形状与归约算子接进模型：** 目前只做形状推导，不改写模型形状。

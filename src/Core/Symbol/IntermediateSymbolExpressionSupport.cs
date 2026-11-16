@@ -348,6 +348,28 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
     public Fuookami.Ospf.Core.Variable.IVariableItem? IntermediateVariable =>
         UseIntermediateVariable ? _realizationVariable.Value : null;
 
+    /// <summary>
+    /// `aux == 定义式` 的二次等式约束；未开启中间变量实现时为 null /
+    /// The quadratic `aux == definition` equality, or null when the switch is off.
+    /// </summary>
+    /// <remarks>
+    /// **与线性版同构，但左侧必须是二次多项式：** **把辅助变量包成 `QuadraticMonomial.Linear` 而不是直接塞进线性多项式，**
+    /// **否则这条等式在二次模型里会被当成"阶数不一致"而静默走另一条路径。**
+    ///
+    /// ** homologous to the linear version, with a quadratic left-hand side: the auxiliary is wrapped as `QuadraticMonomial.Linear` rather than pushed into a linear
+    /// polynomial, or the equality would look degree-mismatched in a quadratic model and silently take another path.**
+    /// </remarks>
+    /// <returns>二次等式约束或 null / The quadratic equality, or null.</returns>
+    public QuadraticInequalityOf<Flt64>? RealizationConstraint() {
+        if (!UseIntermediateVariable) {
+            return null;
+        }
+        var lhs = new QuadraticPolynomial<Flt64>(
+            new[] { QuadraticMonomial<Flt64>.Linear(Flt64.One, _realizationVariable.Value) },
+            Flt64.Zero);
+        return new QuadraticInequalityOf<Flt64>(lhs, Polynomial, Comparison.EQ, Name + "__realization");
+    }
+
     public QuadraticExpressionSymbol(
         MutableQuadraticPolynomial<Flt64> polynomial,
         Category? category = null,

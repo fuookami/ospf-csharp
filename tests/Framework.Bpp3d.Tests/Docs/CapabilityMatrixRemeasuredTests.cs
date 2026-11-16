@@ -256,7 +256,10 @@ public class CapabilityMatrixRemeasuredTests
             // B1333：新增 OnnxAffineEndpointGurobiIntegrationTest（ONNX 仿射链的端到端求解），
             // GUROBI 门内文件数随之 32 → 33。这是实测事实变了，不是口径变了。
             // B1333: the endpoint test for the ONNX affine chain adds one gate file, so GUROBI goes 32 -> 33. The measurement changed, not the rule.
-            ("SCIP", 46), ("GUROBI", 33), ("CPLEX", 4), ("COPT", 6),
+            // B1337：新增 OnnxModelAttachmentGurobiIntegrationTest（ONNX 仿射结果挂进 LinearMetaModel 求解），
+            // GUROBI 门内文件数 33 → 34。
+            // B1337: the attachment test adds one gate file, so GUROBI goes 33 -> 34.
+            ("SCIP", 46), ("GUROBI", 34), ("CPLEX", 4), ("COPT", 6),
             ("MINDOPT", 2), ("HEXALY", 1), ("MOSEK", 1),
         ];
 

@@ -123,18 +123,8 @@ public static class OnnxOperatorRegistry
                     + " 阶 / the operator needs a higher degree than the import mode allows",
                     node.Name);
             }
-            if (requirement.NeedsBounds) {
-                foreach (string input in node.Inputs) {
-                    if (input.Length == 0) {
-                        continue;
-                    }
-                    if (!options.InputBounds.ContainsKey(input)) {
-                        return new PreflightResult(
-                            "算子 '" + node.OpType + "' 的输入 '" + input + "' 缺少有限区间 / the input has no finite bounds, which this operator needs",
-                            node.Name);
-                    }
-                }
-            }
+            // 界缺失由 OnnxInputBounds 统一报告：界是配置问题、算子支持是代码问题，两者不该在同一处混报。
+            // Missing bounds are reported by OnnxInputBounds: a bound is a configuration problem and operator support a code problem, and one place should not report both.
         }
         return new PreflightResult(null);
     }

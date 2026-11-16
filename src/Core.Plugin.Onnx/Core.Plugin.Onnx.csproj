@@ -7,6 +7,10 @@
     <InternalsVisibleTo Include="Fuookami.Ospf.Core.Plugin.Onnx.Tests" />
   </ItemGroup>
   <ItemGroup>
+    <!-- ONNX 推理运行时：实测可还原可用，但包内不含模型协议类型。 / The ONNX runtime: restorable and usable, but it carries no model-protocol types. -->
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj" />
     <ProjectReference Include="..\Math\Math.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
