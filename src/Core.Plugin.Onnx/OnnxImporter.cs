@@ -8,6 +8,7 @@ using Fuookami.Ospf.Core.Plugin.Onnx.Model;
 using Fuookami.Ospf.Core.Plugin.Onnx.Proto;
 using Fuookami.Ospf.Core.Variable;
 using Fuookami.Ospf.Math.Algebra.Number;
+using Fuookami.Ospf.Math.Symbol.Monomial;
 using Fuookami.Ospf.Math.Symbol.Polynomial;
 
 namespace Fuookami.Ospf.Core.Plugin.Onnx;
@@ -106,11 +107,77 @@ public static class OnnxImporter
             variables[input.Name] = new RealVar(input.Name);
         }
 
+        // 带控制流的图走逐节点求值：`If` 的分支体要递归走一遍，而仿射链只看节点、不看子图。
+        // 两条路都收敛到同一个 `LinearPolynomial`，所以返回类型不变。
+        //
+        // A graph with control flow goes through node-by-node evaluation: an If body has to be walked recursively, while the affine chain looks at nodes and not at
+        // subgraphs. Both paths end in the same LinearPolynomial, so the return type is unchanged.
+        if (HasControlFlow(graph)) {
+            return ImportThroughEvaluator(graph, variables);
+        }
+
         OnnxAffineChain.Result chain = OnnxAffineChain.Evaluate(graph, variables);
         if (chain.Failure is not null) {
             return new Imported(null, null, "evaluate", chain.Failure);
         }
 
         return new Imported(chain.Polynomial, variables, null, null);
+    }
+
+    private static bool HasControlFlow(OnnxGraph graph) {
+        foreach (OnnxNode node in graph.Nodes) {
+            if (node.OpType == "If" || node.OpType == "Loop" || node.OpType == "Scan") {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Imported ImportThroughEvaluator(OnnxGraph graph, Dictionary<string, RealVar> variables) {
+        var context = new OnnxLoweringContext();
+        foreach (KeyValuePair<string, RealVar> entry in variables) {
+            var polynomial = new LinearPolynomial<Flt64>(
+                new[] { new LinearMonomial<Flt64>(Flt64.One, entry.Value) },
+                Flt64.Zero);
+            context.TryBind(entry.Key, polynomial, Array.Empty<int>(), out _);
+        }
+
+        // 常量初值必须交给求值器：`If` 的条件常常是一个 initializer，
+        // 它既不是变量也不是节点输出，只作为常量存在。
+        //
+        // Initialisers have to reach the evaluator: an If condition is often an initializer, which is neither a variable nor a node output and exists only as a constant.
+        var constants = new Dictionary<string, double>(StringComparer.Ordinal);
+        var arrays = new Dictionary<string, IReadOnlyList<double>>(StringComparer.Ordinal);
+        foreach (OnnxTensor initializer in graph.Initializers) {
+            if (initializer.Name is null) {
+                continue;
+            }
+            if (initializer.FloatData is { Count: > 0 } floats) {
+                constants[initializer.Name] = floats[0];
+                // 整个数组也要留下：`Scan` 的长度与每轮切片都来自它，只留第一个元素会让扫描长度恒为 1。
+                // The whole array has to survive as well: Scan takes both its length and its slices from it, and keeping only the first element makes every scan length one.
+                var values = new List<double>(floats.Count);
+                foreach (float value in floats) {
+                    values.Add(value);
+                }
+                arrays[initializer.Name] = values;
+            }
+            else if (initializer.Int64Data is { Count: > 0 } integers) {
+                constants[initializer.Name] = integers[0];
+            }
+        }
+
+        OnnxGraphEvaluator.Result evaluated = OnnxGraphEvaluator.Evaluate(graph, context, constants, arrays);
+        if (!evaluated.IsOk) {
+            return new Imported(
+                null,
+                variables,
+                "evaluate",
+                evaluated.NodeName is null ? evaluated.Failure : evaluated.Failure + "（节点 " + evaluated.NodeName + "）");
+        }
+        if (graph.Outputs.Count == 0) {
+            return new Imported(null, variables, "evaluate", "图没有输出 / the graph declares no output");
+        }
+        return new Imported(evaluated.Outputs![graph.Outputs[0].Name].Expression, variables, null, null);
     }
 }

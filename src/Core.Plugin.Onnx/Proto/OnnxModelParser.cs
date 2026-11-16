@@ -40,6 +40,7 @@ public sealed record OnnxValueInfo(string Name, int ElementType, IReadOnlyList<O
 /// <param name="Texts">字符串列表 / The string list.</param>
 /// <param name="Tensor">常量张量 / The constant tensor.</param>
 /// <param name="Kind">`AttributeProto.AttributeType` 编号 / The `AttributeProto.AttributeType` id.</param>
+/// <param name="Graph">`AttributeProto.g`（`If`／`Loop`／`Scan` 的分支体）/ The body of If, Loop or Scan.</param>
 public sealed record OnnxAttribute(
     string Name,
     float? Float,
@@ -49,7 +50,8 @@ public sealed record OnnxAttribute(
     IReadOnlyList<long>? Integers,
     IReadOnlyList<string>? Texts,
     OnnxTensor? Tensor,
-    int Kind);
+    int Kind,
+    OnnxGraph? Graph = null);
 
 /// <summary>常量张量 / A constant tensor.</summary>
 /// <param name="Name">名称 / The name.</param>
@@ -258,6 +260,7 @@ public static class OnnxModelParser
         List<long>? integers = null;
         List<string>? texts = null;
         OnnxTensor? tensor = null;
+        OnnxGraph? graph = null;
         int kind = 0;
 
         while (reader.TryReadTag(out int field, out int wire)) {
@@ -277,6 +280,11 @@ public static class OnnxModelParser
                 case 5: // AttributeProto.t
                     tensor = ParseTensor(reader.ReadBytes());
                     break;
+                case 6: // AttributeProto.g —— If / Loop / Scan 的分支体就在这里
+                    // AttributeProto.g holds the body of If / Loop / Scan. Parsing it is what turns a control-flow node from "an operator we refuse" into
+                    // "an operator we can unroll": without it the subgraph exists in the file and nowhere in memory.
+                    graph = ParseGraph(reader.ReadBytes());
+                    break;
                 case 7: // AttributeProto.floats（packed）
                     floats = wire == 2 ? reader.ReadPackedFloat() : new List<float> { BitConverter.Int32BitsToSingle((int)reader.ReadFixed32()) };
                     break;
@@ -295,7 +303,7 @@ public static class OnnxModelParser
                     break;
             }
         }
-        return new OnnxAttribute(name, floatValue, integerValue, textValue, floats, integers, texts, tensor, kind);
+        return new OnnxAttribute(name, floatValue, integerValue, textValue, floats, integers, texts, tensor, kind, graph);
     }
 
     /// <summary>解析 `TensorProto` / Parse a `TensorProto`.</summary>

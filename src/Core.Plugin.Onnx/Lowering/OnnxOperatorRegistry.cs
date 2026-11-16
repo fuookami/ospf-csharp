@@ -43,6 +43,14 @@ public static class OnnxOperatorRegistry
     public static readonly IReadOnlyDictionary<string, Requirement> Requirements =
         new Dictionary<string, Requirement>(StringComparer.Ordinal) {
             // 逐元素线性 / elementwise linear
+            // 控制流：一阶（分支体与循环体目前只表达仿射），且不需要算子级的界——
+            // 界由输入张量自己提供，不因为"这里有控制流"而变得必要。
+            //
+            // Control flow: first degree (bodies currently express affine forms only) and no operator-level bound requirement — bounds come from the input tensors and do
+            // not become necessary merely because control flow is present.
+            ["If"] = new("If", 1, false),
+            ["Loop"] = new("Loop", 1, false),
+            ["Scan"] = new("Scan", 1, false),
             ["Add"] = new("Add", 1, false),
             ["Sub"] = new("Sub", 1, false),
             ["Sum"] = new("Sum", 1, false),
