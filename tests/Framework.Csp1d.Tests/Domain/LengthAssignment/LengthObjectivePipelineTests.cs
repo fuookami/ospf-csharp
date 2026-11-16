@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.LengthAssignment;
 /// **长度目标项：总长惩罚、超长惩罚、批次系数** / The length objective: total-length penalty, over-length penalty, batch coefficient.
 /// </summary>
 /// <remarks>
-/// **B381 记的缺口**："`LengthObjectivePipeline` 无判据"。
+/// **记的缺口**："`LengthObjectivePipeline` 无判据"。
 ///
 /// 三部分各自写错的后果：
 ///
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.LengthAssignment;
 /// | 超长惩罚 | `sum(overLengthPenalty[id] × over_i)` | 用错产品的系数 ⇒ 惩罚错位 |
 /// | 批次系数 | `1 + batchMinPenalty` | **写成 `1 × penalty` 或 `penalty` ⇒ 批次成本全错** |
 ///
-/// **B381's gap**: "`LengthObjectivePipeline` has no criteria". Each part fails differently (table above). The last row is the sharpest: `1 + penalty` written as `1 * penalty`
+/// **the earlier gap**: "`LengthObjectivePipeline` has no criteria". Each part fails differently (table above). The last row is the sharpest: `1 + penalty` written as `1 * penalty`
 /// or plain `penalty` gets the batch cost entirely wrong.
 /// </remarks>
 public class LengthObjectivePipelineTests {

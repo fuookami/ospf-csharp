@@ -25,8 +25,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **两者在只有两个输入时相同，三个及以上时才分得开。**
 ///
-/// adds
-///
 /// **The two agree for two inputs and only separate from three upward.**
 /// </remarks>
 public class RangeFunctionTests

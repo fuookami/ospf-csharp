@@ -129,7 +129,7 @@ public sealed class PackerTest {
     }
 
     /// <summary>
-    /// 物料汇总本批**刻意留空**：`materialAmounts` 随物料模块缺失尚未移植，宁可给空列表也不编一个数字。
+    /// 物料汇总这里**刻意留空**：`materialAmounts` 随物料模块缺失尚未移植，宁可给空列表也不编一个数字。
     /// The material summary is **deliberately empty**: `materialAmounts` is missing along with the material module, so
     /// an empty list is returned rather than an invented number.
     /// </summary>

@@ -20,12 +20,10 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 半连续：两条行只在成对时才强制 0 / Two rows force zero only as a pair.
 /// </summary>
 /// <remarks>
-/// B1190 按基线 `FunctionExpansion.kt` 的 `SemiStructure` 与 `DeferredFunctionFallback.kt` 的
+/// 对齐基线 `FunctionExpansion.kt` 的 `SemiStructure` 与 `DeferredFunctionFallback.kt` 的
 /// `DeferredFunctionFallbackConstraints` 补。
 ///
 /// **指示 = 0 时，上界行只说"不超过 0"、下界行只说"不小于 0"——单独任何一行都只是半边。**
-///
-/// adds
 ///
 /// **At indicator 0 the upper row says only "≤ 0" and the lower only "≥ 0" — either alone is half.**
 /// </remarks>
@@ -35,7 +33,7 @@ public class SemiStructureTests
     /// **指示 = 0 时两行一起把结果钉在 0 上** / As a pair the rows pin the result to zero.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **判据分三步断言，缺一步都证明不了"成对"：**
     ///

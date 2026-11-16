@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B849：基线 Demo5 的每个文件，C# 侧都有对应物 / Every baseline Demo5 file has a counterpart here.
+/// 基线 Demo5 的每个文件，C# 侧都有对应物 / Every baseline Demo5 file has a counterpart here.
 /// </summary>
 /// <remarks>
 /// 计划里"Demo5 迁移"挂了很久，**查下来已经做完了**：基线 `framework_demo/demo5/` 的六个文件，

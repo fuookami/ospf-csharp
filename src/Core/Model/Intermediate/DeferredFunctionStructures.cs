@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **`Eager` 是默认值**：**"先试原生"看起来更好，但它让每个结构都需要一份"我能不能原生"的判断，
 /// 而那个判断本身就是最容易写错的地方。**
 ///
-/// B1187, following the baseline's `FunctionExpansionPolicy`.
+/// Following the baseline's `FunctionExpansionPolicy`.
 ///
 /// **The three values differ only in <i>when</i> the native path is chosen:**
 ///
@@ -59,7 +59,7 @@ public enum FunctionExpansionPolicy
 /// <remarks>
 /// 对齐基线 `FunctionExpansion.kt` 中五个 `DeferredFunctionStructure` 扩展函数。
 ///
-/// **这五个函数是"标记接口"付出代价的地方**：**接口本身没有成员（B1180 已说明理由：
+/// **这五个函数是"标记接口"付出代价的地方**：**接口本身没有成员（已说明理由：
 /// 它只做类型层面的集合划分），于是<b>所有具体信息都要靠一次类型分派取出来</b>。**
 ///
 /// **分派里每个 `else` 分支都是真实的语义，不是占位：**
@@ -73,9 +73,9 @@ public enum FunctionExpansionPolicy
 /// 而调用方拿到 `null` 后通常走"不需要保留"的分支，于是模型少了一列。**
 /// **这是本文件唯一的真实危险，判据用"未登记的结构返回 `null`/`false`"把它钉住。**
 ///
-/// B1187, following the baseline's five `DeferredFunctionStructure` extensions.
+/// Following the baseline's five `DeferredFunctionStructure` extensions.
 ///
-/// **These five are where the marker interface pays its price**: **the interface has no members (B1180 explains why: it
+/// **These five are where the marker interface pays its price**: **the interface has no members (it
 /// only partitions types), so <b>every concrete fact must be pulled out through a type dispatch</b>.**
 ///
 /// **Each `else` branch is real semantics, not a placeholder**: **`ResultVariableOrNull` returning `null` for an
@@ -108,10 +108,10 @@ public static class DeferredFunctionStructures
     /// 单输入多项式，没有则 <c>null</c> / The single input polynomial, or <c>null</c>.
     /// </summary>
     /// <remarks>
-    /// **`MaxStructure` 走的是 `inputs.singleOrNull()`——多输入时返回 `null` 而不是取第一个。**
+    /// **`MaxStructure` 走的是 `inputs.singleOrNull`——多输入时返回 `null` 而不是取第一个。**
     /// **"取第一个"会让一个二元 `max` 被当成一元的，而调用方无从发现。**
     ///
-    /// **`MaxStructure` uses `inputs.singleOrNull()` — it returns `null` for several inputs rather than taking the
+    /// **`MaxStructure` uses `inputs.singleOrNull` — it returns `null` for several inputs rather than taking the
     /// first.** **Taking the first would treat a binary `max` as unary, with nothing telling the caller.**
     /// </remarks>
     public static LinearPolynomial<Flt64>? InputOrNull(this DeferredFunctionStructure structure) =>
@@ -218,13 +218,13 @@ public static class DeferredFunctionStructures
     /// Project an `Abs` function symbol into its deferred structure snapshot.
     /// </summary>
     /// <remarks>
-    /// B1250 起的是"<b>真实函数符号 → 结构快照</b>"这条路。**在此之前，十三批的所有判据都手工构造
+    /// 已有的是"<b>真实函数符号 → 结构快照</b>"这条路。**在此之前，此前的所有判据都手工构造
     /// `DeferredFunctionStructure`，而生产路径上<b>没有任何地方</b>构造它。**
     ///
     /// **这个投影之所以几乎是机械的，是因为 `AbsFunction` 早就把物化需要的东西全带在身上了：**
     /// **`ResultVar`、`PositiveVar`、`NegativeVar`、`SignVar`、两个 Big-M、输入多项式。**
     /// **它们在大 M 推导时就被创建并设好了范围（`ResultVar` 与 `PositiveVar` 都是非负的）——
-    /// 这正是 B1244 里那条"辅助变量必须非负"的契约在生产路径上不会踩坑的原因。**
+    /// 这正是"辅助变量必须非负"这条契约在生产路径上不会踩坑的原因。**
     ///
     /// **转换器不由函数符号提供，由调用方传入：** **它是模型级的（`metaModel.Converter`），
     /// 而一个函数符号不拥有模型。** **把它作为参数写出来，比让函数符号回去问模型更不容易出错。**
@@ -232,13 +232,13 @@ public static class DeferredFunctionStructures
     /// **返回可空：** **`AbsStructure` 只对 `Flt64` 存在，所以这个扩展只作用于 `AbsFunction(&lt;Flt64&gt;)`。
     /// 别的数值类型没有对应的结构快照，那里的延迟展开还没有去处——这一点写在签名里而不是注释里。**
     ///
-    /// **B1250 starts the "real function symbol → structure snapshot" road.** **Before it, all thirteen batches'
+    /// **The "real function symbol → structure snapshot" road starts here.** **Before it, every
     /// criteria built `DeferredFunctionStructure` by hand while <b>nothing</b> on the production path built one.**
     ///
     /// **The projection is almost mechanical because `AbsFunction` already carries everything materialisation needs:
     /// `ResultVar`, `PositiveVar`, `NegativeVar`, `SignVar`, both Big-M values and the input polynomial.** **They are
     /// created during Big-M inference with ranges already set (`ResultVar` and `PositiveVar` are non-negative) — which is
-    /// exactly why B1244's "helpers must be non-negative" contract cannot be hit on the production path.**
+    /// exactly why the earlier "helpers must be non-negative" contract cannot be hit on the production path.**
     ///
     /// **The converter comes from the caller, not the function symbol: it is model-level (`metaModel.Converter`) and a
     /// function symbol owns no model.** **Making it an explicit parameter is harder to get wrong than having the symbol ask
@@ -438,7 +438,7 @@ public static class DeferredFunctionStructures
     //
     // **So the road is cut on the symbol side: the projection is not missing, the symbol did not keep what
     // materialisation needs.** Restoring it means storing the binary inputs in `XorFunction`, which is another change (it
-    // touches XOR's eager row generation). **And XOR already carries a baseline defect at n >= 3 (recorded in B1195), so
+    // touches XOR's eager row generation). **And XOR already carries a baseline defect at n >= 3 (recorded), so
     // this is not urgent.**
 
     /// <summary>四种逻辑投影共用的 body / The body shared by the four logic projections.</summary>

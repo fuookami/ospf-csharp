@@ -13,13 +13,13 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph.lowerLoop`。**`If` 只做"选"，`Loop` 要做"重复并且把上一轮的结果带进下一轮"——**
 /// **于是它多出三件 `If` 没有的东西：迭代变量的绑定、循环携带值（累加器）的初值与更新、以及展开后的规模。**
 ///
-/// **本批只做契约判定，不做展开本身：** **展开需要子图体的递归降阶（把子图节点真正走一遍求值），** **那一步依赖多数算子的降阶路径，还没到。**
+/// **这里只做契约判定，不做展开本身：** **展开需要子图体的递归降阶（把子图节点真正走一遍求值），** **那一步依赖多数算子的降阶路径，还没到。**
 /// **把契约与展开分开，是为了让"次数对不对、累加器齐不齐"能有自己的证据。**
 ///
 /// Syncs `lowerLoop`. **If only chooses; Loop repeats and carries the previous round's result into the next, so it has three things If does not: binding the iteration
 /// variable, the initial value and update of each carried value, and the size after unrolling.**
 ///
-/// **This batch decides the contract, not the unrolling: unrolling needs the recursive lowering of the body, which depends on most operators' lowering paths and is not
+/// ** decides the contract, not the unrolling: unrolling needs the recursive lowering of the body, which depends on most operators' lowering paths and is not
 /// here yet. Keeping the contract apart lets "is the count right, are the accumulators complete" have evidence of its own.**
 /// </remarks>
 public static class OnnxLoopExpansion

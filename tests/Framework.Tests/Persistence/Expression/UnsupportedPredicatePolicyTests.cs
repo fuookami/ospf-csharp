@@ -1,4 +1,4 @@
-// 不支持谓词策略（B692）的判据 / Criteria for the unsupported predicate policy (B692).
+// 不支持谓词策略的判据 / Criteria for the unsupported predicate policy.
 
 using System;
 using FluentAssertions;
@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Persistence.Expression;
 
 /// <summary>
-/// **不支持谓词策略（B692）** / The unsupported predicate policy (B692).
+/// **不支持谓词策略** / The unsupported predicate policy.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**策略决定错误码**（三个码各指一种处置）、**只有 `AlwaysFalse` 会被降级**、

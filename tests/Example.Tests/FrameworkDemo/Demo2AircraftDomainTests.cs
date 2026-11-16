@@ -17,7 +17,7 @@ using AircraftPositionPair = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Ai
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **飞机域（B613）** / The aircraft domain (B613).
+/// **飞机域** / The aircraft domain.
 /// </summary>
 /// <remarks>
 /// 三个部件：物理邻接、间接物理邻接、聚合初始化。判据的重点是那些"看起来等价但结果不同"的写法——
@@ -78,7 +78,7 @@ public class Demo2AircraftDomainTests {
         // **实测出来的基线形状，三条都很反直觉，逐条钉住**：
         //
         // 1. **"同线且不同侧"分支不可达**：它要求 `onSameLine`（内含"都在左"）与 `!onSameSide`（不同侧）同时成立，
-        //    而"都在左"与"不同侧"互斥。所以**左右两侧的舱位永不物理相邻**（实测 `left+right partial -> 0`）。
+        // 而"都在左"与"不同侧"互斥。所以**左右两侧的舱位永不物理相邻**（实测 `left+right partial -> 0`）。
         // 2. **同侧分支在两舱位纵向完全重叠时恒不通过**：`Between` 会把两个舱位**自身**也算进去，`none` 恒假
         //    （实测 `left+left identical -> 0`）。
         // 3. **部分重叠才相邻**（实测 `left+left partial -> 1`、`right+right partial -> 1`）。
@@ -193,7 +193,7 @@ public class Demo2AircraftDomainTests {
     ///
     /// 1. A 与 B **纵向完全重叠**（`0..50` 对 `0..50`），不存在"间隙"，`nearEnough` 走重叠分支返回真，于是补出。
     /// 2. 把 A 的纵向范围拉远到 `0..50` 之外（`-200..-150`）→ 间隙远超 `0.5 × min(长度)`，**补不出**。
-    ///    第二点同时证明"距离判定真的在起作用"，而不只是"有共邻就补"。
+    /// 第二点同时证明"距离判定真的在起作用"，而不只是"有共邻就补"。
     ///
     /// Two paired points on the same fixture: A and B **overlap longitudinally** (`0..50` against `0..50`), so there is no gap, `nearEnough` takes the overlap branch and returns
     /// true, and the pair is inferred; moving A out to `-200..-150` makes the gap far exceed `0.5 × min(length)` and the pair is **not** inferred, which also proves the distance
@@ -284,9 +284,9 @@ public class Demo2AircraftDomainTests {
         Message(Request(positions: new[] { new PositionInput("P1", 1000.0, 100.0, 0.0, "MAIN", "DEFAULT", 0, null) }))
             .Should().Contain("有限正矩形边界");
         // 8d. **几何退化**（`front == back`）——这一条与 8c 分开，因为"缺几何"与"几何为零宽"是两件事：
-        //     只测 8c 会让"把 `>=` 判断删掉"的变异存活（实测存活过一次）。
+        // 只测 8c 会让"把 `>=` 判断删掉"的变异存活（实测存活过一次）。
         // 8d. **Degenerate geometry** (`front == back`), kept apart from 8c because "missing geometry" and "zero-width geometry" are different things: testing only 8c lets a mutant
-        //     that deletes the `>=` comparison survive (measured once).
+        // that deletes the `>=` comparison survive (measured once).
         Message(Request(positions: new[] { new PositionInput("P1", 1000.0, 100.0, 0.0, "MAIN", "DEFAULT", 0, new PositionGeometryInput(100.0, 100.0, -60.0, -10.0)) }))
             .Should().Contain("有限正矩形边界");
         // 8e. 横向退化（`left == right`）。

@@ -12,14 +12,14 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// `Position` must be **value-equal by <see cref="Position.Id"/>**, matching the baseline `data class`'s observable behaviour.
 /// </summary>
 /// <remarks>
-/// B297 之前 `Position` 是 `sealed class` 且**没有 `Equals`/`GetHashCode`**，所以
+/// 之前 `Position` 是 `sealed class` 且**没有 `Equals`/`GetHashCode`**，所以
 /// **所有以 `Position` 为键的集合都按引用比较**：两个 `Id` 相同的位置对象会被当成不同的键。
 ///
 /// 这个缺陷最难发现的形态是：**`HashSet` 里"加进去又找不到"**。
 /// `Add` 返回 `true`（因为引用不同），随后 `Contains` 也返回 `true`——**看起来全对**，
 /// 只是集合里悄悄多了一份。所以这里的判据是**集合的元素个数**，不是 `Contains` 的返回值。
 ///
-/// Before B297 `Position` was a `sealed class` **without `Equals`/`GetHashCode`**, so **every collection keyed by `Position` compared by reference**: two
+/// Before `Position` was a `sealed class` **without `Equals`/`GetHashCode`**, so **every collection keyed by `Position` compared by reference**: two
 /// position objects with the same `Id` became distinct keys.
 ///
 /// The hardest form of this defect to notice is **"added to a `HashSet` and then not found"**. `Add` returns `true` (different reference), then `Contains`
@@ -59,12 +59,12 @@ public class Demo2PositionEqualityTests {
 
     /// <summary>**不同 `Id` 的哈希必须不同** / Different `Id`s must hash differently.</summary>
     /// <remarks>
-    /// 只断言"同 `Id` 同哈希"时，`GetHashCode() => 0` **完全通过**——它在功能上正确，只是把字典退化成链表。
+    /// 只断言"同 `Id` 同哈希"时，`GetHashCode => 0` **完全通过**——它在功能上正确，只是把字典退化成链表。
     /// 那种实现不会让任何断言失败，只会在数据量上来后变慢，**而"变慢"没有测试会说话**。
     ///
     /// 所以这里要求**不同 `Id` 落到不同的桶**。这条判据不是"性能测试"，是**哈希函数真的用了 `Id`** 的证据。
     ///
-    /// Asserting only "same `Id`, same hash" lets `GetHashCode() => 0` **pass completely** — it is functionally correct, merely degrading dictionaries to
+    /// Asserting only "same `Id`, same hash" lets `GetHashCode => 0` **pass completely** — it is functionally correct, merely degrading dictionaries to
     /// linked lists. Nothing fails; it only gets slower as data grows, **and "slower" has no test to speak for it**.
     ///
     /// So this requires **different `Id`s to land in different buckets**. That is not a "performance test" but evidence that **the hash really uses `Id`**.

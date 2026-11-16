@@ -27,7 +27,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **适航安全上下文（B602）** / The airworthiness security context (B602).
+/// **适航安全上下文** / The airworthiness security context.
 /// </summary>
 /// <remarks>
 /// 上下文的 `Register` 是**两步**：聚合注册（只建符号）→ 14 条管线（才成行）。判据的重点在第二步——
@@ -96,23 +96,23 @@ public class Demo2SecurityContextTests {
         new("zone", new HashSet<DeckLocation> { DeckLocation.Main }, 500.0, 900.0, 3000.0);
 
     /// <summary>
-    /// **从三层上游真的建出聚合（B779）** / The aggregation is really built from the three upstream contexts (B779).
+    /// **从三层上游真的建出聚合** / The aggregation is really built from the three upstream contexts.
     /// </summary>
     /// <remarks>
     /// 五点成对：飞机 → 配载 → MAC 逐层初始化都成功 / 适航上下文在 `Init` 之前 `Aggregation` 是 `null` / `Init` 之后非空 /
-    /// 再看一次得到的是**同一个实例** / 三次上游没变。B778 记下的缺口就是这条正路——没有它，`Init` 可以把"看起来成功"演给所有人看：
+    /// 再看一次得到的是**同一个实例** / 三次上游没变。 记下的缺口就是这条正路——没有它，`Init` 可以把"看起来成功"演给所有人看：
     /// **返回 `Ok`、`Aggregation` 却还是 `null`，而之后每一次注册都会以"尚未初始化"失败**，调用方会一路怀疑上游。
     ///
     /// Five paired points: aircraft → stowage → MAC each initialise successfully; the airworthiness context's `Aggregation` is `null` before `Init`; it is non-null after; a second
-    /// call yields **the same instance**; and the three upstreams are untouched. This is the path B778 recorded as missing: without it, `Init` can perform "looks successful" for
+    /// call yields **the same instance**; and the three upstreams are untouched. This is the path recorded as missing: without it, `Init` can perform "looks successful" for
     /// everyone — **returning `Ok` while `Aggregation` stays `null`, so every later registration fails with "not initialised"** and the caller blames the upstreams.
     /// </remarks>
     [Fact]
     public void Init_ShouldBuildTheAggregationFromTheUpstreamContexts() {
         RequestDTO input = AircraftLoadingDemo.CreateSampleRequest();
-        // **示例请求自身也必须过得了飞机初始化器**：B613 给 `PositionInput` 补了空间归属、装载顺序与矩形边界，
+        // **示例请求自身也必须过得了飞机初始化器**： 给 `PositionInput` 补了空间归属、装载顺序与矩形边界，
         // 示例请求一度没跟上，"演示"连第一步都走不过去。这三条钉的就是那份请求的形状。
-        // **The sample request itself must get past the aircraft initialiser too**: B613 added space ownership, loading order and rectangle bounds to `PositionInput` and the
+        // **The sample request itself must get past the aircraft initialiser too**: added space ownership, loading order and rectangle bounds to `PositionInput` and the
         // sample request fell behind, so the "demo" could not clear its first step. These three pin that request's shape.
         input.Spaces.Should().NotBeNullOrEmpty("positions name a space, so the space table must exist");
         input.Positions.Should().OnlyContain(position => position.Geometry != null);
@@ -336,13 +336,13 @@ public class Demo2SecurityContextTests {
     /// 但**力矩按窄体建**（没有 `clim` 符号），于是 `max_clim_limit` 那一步必然失败。
     ///
     /// 成对——同一个聚合在力矩也按宽体建的模型上成功，在这个模型上失败。把 `if (!invoked.IsOk) return invoked;`
-    /// 换成 `_ = pipeline.Invoke(model);`，整条注册会"成功"，而 CLIM 的上下界一行都没有——**这正是 B599 记过的那种静默缺陷**。
+    /// 换成 `_ = pipeline.Invoke(model);`，整条注册会"成功"，而 CLIM 的上下界一行都没有——**这正是 记过的那种静默缺陷**。
     ///
     /// 第一版用的是"缺业载符号"的模型，**失败在聚合那一步**而不是管线那一步，所以那个变异存活。失败点必须落在**管线**里。
     ///
     /// Builds a "the aggregation passes, a pipeline fails" scenario: a **wide-body type with a non-empty CLIM point list** (so the aggregation builds `MaxCLIM`) but a torque
     /// built as a **narrow body** (no `clim` symbol), which makes `max_clim_limit` fail. Paired — the same aggregation succeeds when the torque is wide too. Replacing
-    /// `if (!invoked.IsOk) return invoked;` with `_ = pipeline.Invoke(model);` makes the registration "succeed" with no CLIM bound at all: the silent defect B599 recorded. The
+    /// `if (!invoked.IsOk) return invoked;` with `_ = pipeline.Invoke(model);` makes the registration "succeed" with no CLIM bound at all: the silent defect recorded. The
     /// first draft used a model missing the payload symbol, which **failed inside the aggregation** rather than inside a pipeline, so the mutation survived; the failure has to
     /// land in the pipeline.
     /// </remarks>
@@ -426,12 +426,12 @@ public class Demo2SecurityContextTests {
     /// **没有上游聚合时 `Init` 明确失败，绝不返回空聚合** / Without an upstream aggregation `Init` fails explicitly and never returns an empty one.
     /// </summary>
     /// <remarks>
-    /// 这条判据在 B602 时断言的是"初始化器尚未移植，所以失败"。B605 把初始化器实现了，那条断言随之过时——现在失败来自**上游聚合为空**
+    /// 这条判据在 时断言的是"初始化器尚未移植，所以失败"。 把初始化器实现了，那条断言随之过时——现在失败来自**上游聚合为空**
     /// （`StowageContext` 没有聚合，初始化器拒绝空位置表），而不是"未移植"。
     ///
     /// 成对：失败后 `Aggregation` 仍是 `null`，不会有半个聚合被交出去。
     ///
-    /// This criterion asserted in B602 that "the initialiser is not ported, hence failure". B605 ported the initialiser, making that assertion stale — the failure now comes
+    /// This criterion asserted that "the initialiser is not ported, hence failure". ported the initialiser, making that assertion stale — the failure now comes
     /// from an **empty upstream aggregation** (the `StowageContext` has no aggregation and the initialiser rejects an empty position list), not from "not ported". Paired: after the
     /// failure `Aggregation` is still `null`, so no half-built aggregation is handed out.
     /// </remarks>

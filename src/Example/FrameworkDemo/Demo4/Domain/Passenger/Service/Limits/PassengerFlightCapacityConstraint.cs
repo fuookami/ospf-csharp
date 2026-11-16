@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// <remarks>
 /// 基线 `PassengerFlightCapacityConstraint.kt`：对每个航班、每个舱位加 `人数[航班, 舱位] ≤ 容量[航班, 舱位]`。
 ///
-/// 这是乘客域与机队层之间**唯一的接缝**：左边是乘客域的人数表达式（B760），右边是批次汇编里按机型分档的容量表达式（B744）。
+/// 这是乘客域与机队层之间**唯一的接缝**：左边是乘客域的人数表达式，右边是批次汇编里按机型分档的容量表达式。
 /// 两侧都靠符号名对上，所以判据必须**同时认住左边与右边是哪个符号**——只数行数会让"两边都写成本侧"的实现通过：
 /// 那种模型永远可行，`人数 ≤ 人数`。
 ///
@@ -35,8 +35,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 ///
 /// The baseline's `PassengerFlightCapacityConstraint.kt` adds `amount[flight, cabin] ≤ capacity[flight, cabin]` per flight and cabin.
 ///
-/// This is **the only seam** between the passenger domain and the fleet layer: the left side is the passenger amount expression (B760), the right side the per-cabin capacity expression
-/// built during bunch compilation (B744). Both sides are matched by symbol name, so the criterion must **pin down which symbol sits on each side** — counting rows would let an
+/// This is **the only seam** between the passenger domain and the fleet layer: the left side is the passenger amount expression , the right side the per-cabin capacity expression
+/// built during bunch compilation . Both sides are matched by symbol name, so the criterion must **pin down which symbol sits on each side** — counting rows would let an
 /// implementation with the same symbol on both sides pass: such a model is always feasible, `amount ≤ amount`.
 ///
 /// Another easy miss: a passenger aircraft's capacity table only covers **the flights it is actually scheduled on**. Treating a missing entry as "capacity zero" kills a legal schedule,

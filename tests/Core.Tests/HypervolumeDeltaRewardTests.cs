@@ -70,7 +70,7 @@ public sealed class HypervolumeDeltaRewardTests {
 
     /// <summary>**未校准前一律返回 `delta = 0` 且 `calibrated = false`** / Before calibration the delta is 0 and calibrated is false.</summary>
     /// <remarks>
-    /// 跳过校准直接算会让参考点由第一批候选决定，**而第一批候选往往远离真实前沿，整段搜索的增量从此系统性地偏大**。
+ /// 跳过校准直接算会让参考点由此前候选决定，**而此前候选往往远离真实前沿，整段搜索的增量从此系统性地偏大**。
     /// Skipping calibration lets the first batch decide the reference point, and **since that first batch is typically far from the true
     /// front, every later delta is systematically inflated**.
     /// </remarks>

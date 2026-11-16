@@ -27,10 +27,10 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 /// **超产约束管线与超产目标项** / The over-production constraint pipeline and its objective terms.
 /// </summary>
 /// <remarks>
-/// **B383 记的缺口**："`YieldConstraintPipeline` / `YieldObjectivePipeline` 无判据"——
+/// **记的缺口**："`YieldConstraintPipeline` / `YieldObjectivePipeline` 无判据"——
 /// 这两条此前只在超产面积一路**间接**出现过，没有直接判据。
 ///
-/// **B383's gap**: these two had only ever been exercised **indirectly** through the over-production area path.
+/// **the earlier gap**: these two had only ever been exercised **indirectly** through the over-production area path.
 /// </remarks>
 public class YieldPipelineTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -85,7 +85,7 @@ public class YieldPipelineTests {
 
     /// <summary>**`args` 里的键必须能被 `Refresh` 找回**——否则约束建了也白建 / The `args` key must be findable by `Refresh`, or the constraint is pointless.</summary>
     /// <remarks>
-    /// **B384 记的缺口**：约束带上了 `YieldOverProductionBoundShadowPriceKey`，
+    /// **记的缺口**：约束带上了 `YieldOverProductionBoundShadowPriceKey`，
     /// 但"影子价格回填时能不能按这个键找回"没测过。
     ///
     /// 这条走**完整路径**：
@@ -94,12 +94,12 @@ public class YieldPipelineTests {
     /// 3. 调 `Refresh`；
     /// 4. 用**硬编码的键**（不是从约束上读的）查回填结果。
     ///
-    /// **第 4 步必须硬编码**——B367 的教训：从约束自己的 `args` 读键再查，
+    /// **第 4 步必须硬编码**—— 的教训：从约束自己的 `args` 读键再查，
     /// **键写错了也查得回来**，判据全绿。硬编码 `("A", "mm")` 才能钉住键的身份。
     ///
-    /// **B384's gap**: the constraint carries a `YieldOverProductionBoundShadowPriceKey`, but whether the shadow price can be found by that key was untested. This walks
+    /// **the earlier gap**: the constraint carries a `YieldOverProductionBoundShadowPriceKey`, but whether the shadow price can be found by that key was untested. This walks
     /// the **full path**: build the constraint, fabricate a `MetaDualSolution` giving it a **non-zero** dual of 7.5, call `Refresh`, then look the result up by a
-    /// **hard-coded key** — B367's lesson: reading the key off the constraint's own `args` makes the lookup succeed **even when the key is wrong**. Hard-coding
+    /// **hard-coded key** — the earlier lesson: reading the key off the constraint's own `args` makes the lookup succeed **even when the key is wrong**. Hard-coding
     /// `("A", "mm")` pins the key's identity.
     /// </remarks>
     [Fact]
@@ -143,12 +143,12 @@ public class YieldPipelineTests {
 
     /// <summary>**两条同键约束的对偶必须相加，且别的管线的约束不能串味** / Two same-key constraints must accumulate, and another pipeline's constraint must not leak in.</summary>
     /// <remarks>
-    /// **B385 记的两个缺口合成一条判据**：
+    /// **记的两个缺口合成一条判据**：
     ///
     /// 1. **累加语义**：同一 key 被多条约束命中时，默认实现是
     ///    `prices[key] = (prices.TryGetValue(key, out p) ? p : Zero) + price`——**相加**。
     /// 2. **分组正确性**：`ConstraintsOfGroup(this)` 按 Range 取本组约束。
-    ///    若它把别的管线的约束也算进来，影子价格会**串味**。
+    /// 若它把别的管线的约束也算进来，影子价格会**串味**。
     ///
     /// 构造：同一产品的**两条需求**（键相同 `("A","mm")`），对偶分别是 3 和 4；
     /// 再加一条**属于别的管线**的约束，对偶是 100。
@@ -161,7 +161,7 @@ public class YieldPipelineTests {
     /// | 分组把别的管线算进来 | 107 |
     /// | 正确 | **7** |
     ///
-    /// **B385's two gaps in one criterion**: (1) **accumulation** — the default implementation sums prices for the same key; (2) **grouping** — `ConstraintsOfGroup(this)` takes
+    /// **the earlier two gaps in one criterion**: (1) **accumulation** — the default implementation sums prices for the same key; (2) **grouping** — `ConstraintsOfGroup(this)` takes
     /// a Range, and if it swept in another pipeline's constraints the shadow prices would **leak**. Fixture: two demands of the same product (same key `("A","mm")`) with
     /// duals 3 and 4, plus a **foreign** constraint from another pipeline with dual 100. Expected **7** — not 3, not 4, and certainly not 107 (table above).
     /// </remarks>

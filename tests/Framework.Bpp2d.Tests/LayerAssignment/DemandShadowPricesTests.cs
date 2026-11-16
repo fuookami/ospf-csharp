@@ -1,4 +1,4 @@
-// 需求影子价格提取（B662）的判据 / Criteria for the demand shadow-price extraction (B662).
+// 需求影子价格提取的判据 / Criteria for the demand shadow-price extraction.
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **需求影子价格提取（B662）** / Demand shadow-price extraction (B662).
+/// **需求影子价格提取** / Demand shadow-price extraction.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**取下界约束的对偶值而不是上界**、**缺项跳过而不补零**、**键与约束名同源**、
@@ -118,11 +118,11 @@ public class DemandShadowPricesTests {
     ///
     /// 1. 用**非默认前缀** `custom_demand` 登记约束，再按同一前缀提取 → 拿到价格。
     /// 2. 按**默认前缀** `demand` 提取 → **空表**：两种前缀是不同的名字，默认值不能悄悄顶替。
-    /// 3. 这一条是为杀掉"忽略前缀"的变异——**默认前缀就是 `demand`，用默认值时忽略前缀也照样通过**（B649/B661 同类）。
+    /// 3. 这一条是为杀掉"忽略前缀"的变异——**默认前缀就是 `demand`，用默认值时忽略前缀也照样通过**。
     ///
     /// Three paired points: constraints registered under the **non-default** prefix `custom_demand` and extracted with the same prefix **do** yield prices; extracting with the **default** prefix
     /// `demand` yields **an empty table**, since the two are different names and the default must not quietly stand in; and this case exists to kill the "prefix ignored" mutant, because **the
-    /// default prefix is already `demand` and with it an implementation that ignores the prefix still passes** (the B649/B661 family).
+    /// default prefix is already `demand` and with it an implementation that ignores the prefix still passes** (the / family).
     /// </remarks>
     [Fact]
     public void Extract_ShouldHonourTheConstraintNamePrefix() {

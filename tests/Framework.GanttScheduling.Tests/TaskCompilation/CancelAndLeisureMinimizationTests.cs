@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **取消成本与空闲成本从空壳变成真目标（B545）** / Cancellation and leisure costs go from stubs to real objectives (B545).
+/// **取消成本与空闲成本从空壳变成真目标** / Cancellation and leisure costs go from stubs to real objectives.
 /// </summary>
 /// <remarks>
 /// 两条目标各有一个**容易看漏的"什么都不做"**，而且理由完全不同：

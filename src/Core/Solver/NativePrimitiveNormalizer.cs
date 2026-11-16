@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// &lt;summary>
 /// 归一化后的分段线性结构 / A normalized piecewise structure.
 /// &lt;/summary>
-/// &lt;remarks>B1204 按基线 `NormalizedPiecewise` 补。 / B1204 adds the baseline's `NormalizedPiecewise`.&lt;/remarks>
+/// &lt;remarks>按基线 `NormalizedPiecewise` 补。 / Adds the baseline's `NormalizedPiecewise`.&lt;/remarks>
 public sealed record NormalizedPiecewise(
     VariableItemKey InputKey,
     VariableItemKey ResultKey,
@@ -24,7 +24,7 @@ public sealed record NormalizedPiecewise(
 /// &lt;summary>
 /// 归一化后的绝对值结构 / A normalized absolute-value structure.
 /// &lt;/summary>
-/// &lt;remarks>B1204 按基线 `NormalizedAbs` 补。 / B1204 adds the baseline's `NormalizedAbs`.&lt;/remarks>
+/// &lt;remarks>按基线 `NormalizedAbs` 补。 / Adds the baseline's `NormalizedAbs`.&lt;/remarks>
 public sealed record NormalizedAbs(
     VariableItemKey InputKey,
     VariableItemKey ResultKey,
@@ -36,7 +36,7 @@ public sealed record NormalizedAbs(
 /// 把结构列表归一化成 primitive 数据 / Normalize structure lists into primitive data.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1204 按基线 `NativePiecewiseReport.kt` 的 `normalizePiecewiseStructures` 与
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `normalizePiecewiseStructures` 与
 /// `normalizeAbsStructures` 补。
 ///
 /// **两层唯一性检查，管的不是同一件事：**
@@ -44,7 +44,7 @@ public sealed record NormalizedAbs(
 /// | 层 | 检查 | 范围 |
 /// | --- | --- | --- |
 /// | **primitive** | **一个结构内部五键（PWL 是结果+选择）互不相同** | **单个结构** |
-/// | **归一化**（本批） | **结果键在<b>整个列表</b>里唯一** | **跨结构** |
+/// | **归一化**（这里） | **结果键在<b>整个列表</b>里唯一** | **跨结构** |
 ///
 /// **所以两者都不能省：** **一个结构自己没问题，仍然可能和另一个结构抢同一列。**
 ///
@@ -52,21 +52,21 @@ public sealed record NormalizedAbs(
 /// `resultKey`/`positive`/`negative`/`sign` 四个。**
 /// **所以两个 ABS 共用同一个输入列是<b>允许</b>的——`abs(x)` 与 `abs(x)` 可以合法地出现两次（结果列不同）。**
 ///
-/// **PWL 的 selector 数量检查是<b>有条件的</b>：`selectorKeys.isNotEmpty() &amp;&amp; ...`。**
+/// **PWL 的 selector 数量检查是<b>有条件的</b>：`selectorKeys.isNotEmpty &amp;&amp; ...`。**
 ///
 /// **也就是说<b>零个选择变量能通过归一化</b>。**
-/// **而 B1199 的行生成里 `SelectorVariables.Count != segments` 直接拒绝。**
+/// **而行生成里 `SelectorVariables.Count != segments` 直接拒绝。**
 ///
 /// **两层严格程度不同，而宽松的那一层在前。** **这不是矛盾——归一化只保证"数据形状可用"，
 /// 行生成才保证"能建出约束"——但它意味着<b>一个零选择的快照会走到很后面才被拒</b>。**
-/// **本批照抄基线，并把这件事写成判据，让它成为一个被记录的事实。**
+/// **这里照抄基线，并把这件事写成判据，让它成为一个被记录的事实。**
 ///
 /// **Two levels of uniqueness, checking different things:**
 ///
 /// | Level | Check | Scope |
 /// | --- | --- | --- |
 /// | **primitive** | **five keys of one structure are pairwise distinct** | **a single structure** |
-/// | **normalization** (this batch) | **the result key is unique <b>across the whole list</b>** | **across structures** |
+/// | **normalization** (here) | **the result key is unique <b>across the whole list</b>** | **across structures** |
 ///
 /// **Neither can be dropped: a structure that is fine on its own can still fight another one for the same column.**
 ///
@@ -74,14 +74,14 @@ public sealed record NormalizedAbs(
 /// registers `resultKey`/`positive`/`negative`/`sign`.** **So two ABS structures sharing one input column are
 /// <b>allowed</b> — `abs(x)` may legitimately appear twice with different result columns.**
 ///
-/// **The PWL selector-count check is <b>conditional</b>: `selectorKeys.isNotEmpty() &amp;&amp; ...`.**
+/// **The PWL selector-count check is <b>conditional</b>: `selectorKeys.isNotEmpty &amp;&amp; ...`.**
 ///
-/// **So <b>zero selectors passes normalization</b>**, while B1199's row generation rejects
+/// **So <b>zero selectors passes normalization</b>**, while the earlier row generation rejects
 /// `SelectorVariables.Count != segments` outright.**
 ///
 /// **The two layers differ in strictness and the lenient one comes first.** **Not a contradiction — normalization only
 /// guarantees "the data shape is usable" while row generation guarantees "constraints can be built" — but it does mean
-/// a zero-selector snapshot travels a long way before being rejected.** **This batch copies the baseline and turns that
+/// a zero-selector snapshot travels a long way before being rejected.** ** copies the baseline and turns that
 /// into a criterion so it is a recorded fact.**
 /// &lt;/remarks>
 public static class NativePrimitiveNormalizer

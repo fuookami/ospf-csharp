@@ -43,7 +43,7 @@ public sealed record BendersRuntimeMetrics(
 /// <param name="TimeMs">耗时（毫秒）/ Elapsed time in milliseconds</param>
 /// <param name="BendersIterations">Benders 迭代次数 / Benders iteration count</param>
 /// <param name="RuntimeMetrics">运行时指标（可选）/ Runtime metrics (optional)</param>
-/// <param name="Status">收敛状态：`converged` / `stalled` / `iteration_limit`（B835）/ Convergence status: `converged`, `stalled` or `iteration_limit` (B835)</param>
+/// <param name="Status">收敛状态：`converged` / `stalled` / `iteration_limit`/ Convergence status: `converged`, `stalled` or `iteration_limit` </param>
 public sealed record BendersResult(
     double Obj,
     double[] Solution,
@@ -107,8 +107,8 @@ public static class BendersSolver
         double? bestObj = null;
         int stallCount = 0;
         int objStallCount = 0;
-        // 最后一次主问题解与"为什么没收敛"（B835）：两者都要交出去。
-        // **The last master solution and the reason it did not converge** (B835): both are handed back.
+        // 最后一次主问题解与"为什么没收敛"：两者都要交出去。
+        // **The last master solution and the reason it did not converge**: both are handed back.
         double[]? lastMasterValues = null;
         string finalStatus = "iteration_limit";
 
@@ -117,10 +117,10 @@ public static class BendersSolver
             cancellationToken.ThrowIfCancellationRequested();
 
             // 1. Solve master problem (one iteration at a time)
-            // **框架接口的主问题重载没有取消令牌参数**（B836）：框架版与 Core 版的 `IBendersDecompositionSolver` 签名不同，
+            // **框架接口的主问题重载没有取消令牌参数**：框架版与 Core 版的 `IBendersDecompositionSolver` 签名不同，
             // 这里按框架版调用——**因为只有框架版有实现者**（Copt / Cplex / Gurobi / Gurobi11 / Mindopt / Scip 六个插件全实现它）。
             //
-            // **The framework master overload takes no cancellation token** (B836): the framework and core versions differ, and this calls the framework one —
+            // **The framework master overload takes no cancellation token**: the framework and core versions differ, and this calls the framework one —
             // **because only the framework one has implementers** (all six plugins implement it).
             var masterResult = await solver.SolveMasterAsync(
                 $"benders_master_{iteration}",
@@ -273,7 +273,7 @@ public static class BendersSolver
             }
         }
 
-        // **没收敛也要交出最后一次主问题解**（B835）：此前这里返回 `Array.Empty<double>()`——
+        // **没收敛也要交出最后一次主问题解**：此前这里返回 `Array.Empty<double>`——
         // 一个"成功"的结果配一个**空解向量**，而 `Obj` 是最后一次主问题目标。调用方拿到它之后
         // `BuildAssignments` 按"货 × 舱位"去读一个零长向量，**读出空分配**，而响应看起来是成功的。
         //
@@ -281,7 +281,7 @@ public static class BendersSolver
         // 并把 `result.status` 记成备注 `benders_status=…`。这里对齐：**解照交、状态照报**，
         // 让"是否收敛"成为诊断里的一句话，而不是藏在空向量里。
         //
-        // **An unconverged run still hands back the last master solution** (B835): it used to return `Array.Empty<double>()` — a "successful" result carrying an
+        // **An unconverged run still hands back the last master solution**: it used to return `Array.Empty<double>` — a "successful" result carrying an
         // **empty solution vector** while `Obj` held the last master objective. `BuildAssignments` then reads zero-length data through the cargo × position layout
         // and **produces empty assignments**, with the response looking successful. The baseline does not do that: it maps `LinearBendersAlgorithm`'s values
         // through `master.tokens.tokensInSolver` and records `result.status` as `benders_status=…`. This aligns: **hand back the solution, report the status**, so

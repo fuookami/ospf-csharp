@@ -1,4 +1,4 @@
-// 改签的时间可行性（B767）/ Time feasibility of re-bookings (B767).
+// 改签的时间可行性/ Time feasibility of re-bookings.
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **改签的时间可行性（B767）** / Time feasibility of re-bookings (B767).
+/// **改签的时间可行性** / Time feasibility of re-bookings.
 /// </summary>
 /// <remarks>
 /// 指示变量写反**不会报错**：改签要么被整片放开、要么被整片封死，求解照样成功。所以判据既要认住行与指示变量的形态，
@@ -129,11 +129,11 @@ public class Demo4PassengerFlightChangeConstraintTests {
     /// <remarks>
     /// 四点成对：两个方向各产生**一条行**（第一段赶下一段、第二段从上段赶过来）/ 行名带管道名前缀 / 左侧是改签变量（系数 1）/
     /// **右侧是 `人数 × 指示变量`**（系数 3、符号名以 `_if` 结尾）。
-    /// 只数行数不能分辨"约束接上了"与"约束是空行"——**空行在 B766 已经出现过一次**。
+    /// 只数行数不能分辨"约束接上了"与"约束是空行"——**空行在 已经出现过一次**。
     ///
     /// Four paired points: each direction yields **one row** (the first leg catching the next, the second leg coming from the previous); the names carry the pipeline prefix; the left side
     /// is the re-booking variable with coefficient 1; and **the right side is `head count × indicator`** (coefficient 3, symbol name ending in `_if`). Counting rows cannot tell "the
-    /// constraint is wired" from "the row is empty" — **empty rows already happened once in B766**.
+    /// constraint is wired" from "the row is empty" — **empty rows already happened once**.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldBoundTheChangeByTheIndicator() {

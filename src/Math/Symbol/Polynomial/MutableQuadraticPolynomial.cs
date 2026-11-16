@@ -12,8 +12,8 @@ using System.Linq;
 namespace Fuookami.Ospf.Math.Symbol.Polynomial;
 /// <summary>
 /// 可变二次多项式 / Mutable Quadratic Polynomial.
-/// 增量构建用，构建完成后调用 ToQuadraticPolynomial() 转不可变。
-/// Incremental builder; freeze via ToQuadraticPolynomial().
+/// 增量构建用，构建完成后调用 ToQuadraticPolynomial 转不可变。
+/// Incremental builder; freeze via ToQuadraticPolynomial.
 /// </summary>
 public sealed class MutableQuadraticPolynomial<T>
     where T : struct, INumberField<T>, IRealNumber<T> {

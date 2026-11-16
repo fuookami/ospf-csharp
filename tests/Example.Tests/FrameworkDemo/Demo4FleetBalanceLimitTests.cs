@@ -1,4 +1,4 @@
-// 机队平衡的约束与目标（B753）/ The fleet balance's constraint and objective (B753).
+// 机队平衡的约束与目标/ The fleet balance's constraint and objective.
 
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **机队平衡的约束与目标（B753）** / The fleet balance's constraint and objective (B753).
+/// **机队平衡的约束与目标** / The fleet balance's constraint and objective.
 /// </summary>
 /// <remarks>
 /// 基线 `FleetBalanceLimit.kt` 干两件事：每个检查点加一条 `slack ≥ 机数`，再把 `Σ 系数 × slack` 放进最小化目标。

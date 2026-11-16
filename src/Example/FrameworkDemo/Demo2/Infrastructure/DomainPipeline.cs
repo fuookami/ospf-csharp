@@ -47,11 +47,11 @@ public sealed class DomainPipelineContext
     /// 冗余上下文 / The redundancy context.
     /// </summary>
     /// <remarks>
-    /// **只在预配载模式下参与**（B817）：基线的 `PredistributionPipelineContext` 是"全配载七域 + 余度"，
+    /// **只在预配载模式下参与**：基线的 `PredistributionPipelineContext` 是"全配载七域 + 余度"，
     /// 全配载与建议打板都没有它。这个域在本仓早就写完了（799 行，带自己的判据），却**从来没有消费者**——
     /// 于是预配载少了一整组约束，而所有判据都是绿的。
     ///
-    /// **Only participates in predistribution mode** (B817): the baseline's `PredistributionPipelineContext` is "full load's seven domains + redundancy"; neither full load
+    /// **Only participates in predistribution mode**: the baseline's `PredistributionPipelineContext` is "full load's seven domains + redundancy"; neither full load
     /// nor weight recommendation has it. The domain has long been finished here (799 lines with its own criteria) but **never had a consumer** — so predistribution was missing
     /// a whole family of constraints while every criterion stayed green.
     /// </remarks>
@@ -61,10 +61,10 @@ public sealed class DomainPipelineContext
     /// 推荐重量均衡上下文 / The recommended-weight-equalization context.
     /// </summary>
     /// <remarks>
-    /// **建议打板独有**（B818）：基线 `WeightRecommendationPipelineContext` 用它替换掉全配载的软安全、重心优化、装卸效率三域。
+    /// **建议打板独有**：基线 `WeightRecommendationPipelineContext` 用它替换掉全配载的软安全、重心优化、装卸效率三域。
     /// 本仓的通用上下文一直没有它，于是"建议打板模式"在这个上下文里**仍按七域建模**——形状与真实的建议打板路径不同。
     ///
-    /// **Weight recommendation only** (B818): the baseline's context swaps it in for full load's soft security, mac optimization and loading effectiveness. The generic
+    /// **Weight recommendation only**: the baseline's context swaps it in for full load's soft security, mac optimization and loading effectiveness. The generic
     /// context here never had it, so "weight recommendation mode" was **still modelled as seven domains** — a different shape from the real weight-recommendation path.
     /// </remarks>
     public RecommendedWeightEqualizationContext RecommendedWeightEqualizationContext { get; } = new();
@@ -72,7 +72,7 @@ public sealed class DomainPipelineContext
     /// <summary>
     /// 载荷最大化上下文 / The payload-maximization context.
     /// </summary>
-    /// <remarks>**建议打板独有**（B818），与均衡域一起构成那条六域管线。 / **Weight recommendation only** (B818), forming that six-domain pipeline with equalization.</remarks>
+    /// <remarks>**建议打板独有**，与均衡域一起构成那条六域管线。 / **Weight recommendation only** , forming that six-domain pipeline with equalization.</remarks>
     public PayloadMaximizationContext PayloadMaximizationContext { get; } = new();
 
     /// <summary>
@@ -83,11 +83,11 @@ public sealed class DomainPipelineContext
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
     /// **模式必须一路传到装配器**：`PositionStatus.From` 用模式决定谓词/推荐重量旗标，而 `Load` 靠那两个旗标决定要不要建变量。
-    /// 这个参数以前不存在，于是三次 `Init` 都把 `FullLoad` 写死——**B795 加的模式判断在生产路径上是死的**：
+    /// 这个参数以前不存在，于是三次 `Init` 都把 `FullLoad` 写死——**加的模式判断在生产路径上是死的**：
     /// 预配载装配出来的仍是全配载的模型，三种模式的指纹完全一样。
     ///
     /// **The mode has to travel all the way to the initialiser**: `PositionStatus.From` uses it to decide the predicate/recommended weight flags, and `Load` uses those
-    /// flags to decide whether to create variables. This parameter did not exist before, so all three `Init` calls hard-coded `FullLoad` — **the mode check B795 added was
+    /// flags to decide whether to create variables. This parameter did not exist before, so all three `Init` calls hard-coded `FullLoad` — **the mode check added was
     /// dead on the production path**: predistribution still assembled the full-load model and the three modes had identical fingerprints.
     /// </remarks>
     public Try Init(RequestDTO request, StowageMode stowageMode = StowageMode.FullLoad)
@@ -155,8 +155,8 @@ public sealed class DomainPipelineContext
             }
         }
 
-        // 建议打板独有的两域（B818）：基线用它们替换掉软安全、重心优化、装卸效率。
-        // The two weight-recommendation-only domains (B818): the baseline swaps them in for soft security, mac optimization and loading effectiveness.
+        // 建议打板独有的两域：基线用它们替换掉软安全、重心优化、装卸效率。
+        // The two weight-recommendation-only domains : the baseline swaps them in for soft security, mac optimization and loading effectiveness.
         if (stowageMode == StowageMode.WeightRecommendation)
         {
             Try r10 = RecommendedWeightEqualizationContext.Init(AircraftContext, StowageContext, request);
@@ -193,12 +193,12 @@ public sealed class DomainPipelineContext
         ArgumentNullException.ThrowIfNull(parameter);
         ArgumentNullException.ThrowIfNull(model);
 
-        // **三条管线是三种不同的组成，不是一个集合加加减减**（B818）：
+        // **三条管线是三种不同的组成，不是一个集合加加减减**：
         // 全配载/预配载七域（软安全、重心优化、装卸效率），建议打板六域（时效、均衡、载荷最大化）。
         // 以前这里只有七域一套，于是"建议打板模式"建出来的模型**和真正的建议打板路径不同形状**——
         // 指纹表里那个 `54/71/53/2` 就是这种"七域的建议打板"，基线从来不会建它。
         //
-        // **Three pipelines, three different compositions, not one set plus or minus members** (B818): full load and predistribution take seven domains (soft security,
+        // **Three pipelines, three different compositions, not one set plus or minus members**: full load and predistribution take seven domains (soft security,
         // mac optimization, loading effectiveness); weight recommendation takes six (express effectiveness, equalization, payload maximization). Only the seven-domain set
         // used to exist here, so "weight recommendation mode" produced **a different shape from the real path** — the `54/71/53/2` in the fingerprint table was exactly that
         // "seven-domain weight recommendation", which the baseline never builds.
@@ -222,8 +222,8 @@ public sealed class DomainPipelineContext
             ];
         if (stowageMode == StowageMode.Predistribution)
         {
-            // 余度在预配载下多注册一层（B817）；全配载与建议打板都没有它。
-            // Redundancy adds one more layer under predistribution (B817); full load and weight recommendation do not have it.
+            // 余度在预配载下多注册一层；全配载与建议打板都没有它。
+            // Redundancy adds one more layer under predistribution ; full load and weight recommendation do not have it.
             registrations = [
                 ..registrations,
                 RedundancyContext.Register(stowageMode, parameter, model),

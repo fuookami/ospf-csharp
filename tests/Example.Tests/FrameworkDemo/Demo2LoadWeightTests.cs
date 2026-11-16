@@ -1,4 +1,4 @@
-// 装载模型第二批的判据：重量符号与已装载符号 / Criteria for the second load slice: weight and loaded symbols.
+// 装载模型此前的判据：重量符号与已装载符号 / Criteria for the second load slice: weight and loaded symbols.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **重量与已装载符号（B578）** / Weight and loaded symbols (B578).
+/// **重量与已装载符号** / Weight and loaded symbols.
 /// </summary>
 /// <remarks>
 /// 四族符号，两两成对：
@@ -75,9 +75,9 @@ public class Demo2LoadWeightTests {
                 recommendedWeightNeeded: recommendedWeightNeeded),
             mlw: new MaxLoadWeightLimit(1000.0),
             mla: mla,
-            // B582 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
+            // 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
             // （跳过会让 `y` 无下界参照，模型照解）。这批既有 fixture 默认给了 `mlw` 那一口径的值。
-            // Since B582 "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
+            // Since "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
             // `y` with no reference bound and the model still solves). These pre-existing fixtures default the bounds to the `mlw` figure.
             plw: new PositionPredicateLoadWeight(Plw: 1000.0, Min: 0.0, Max: 1000.0));
     }

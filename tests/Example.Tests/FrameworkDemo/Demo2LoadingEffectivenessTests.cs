@@ -24,7 +24,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **装载效能域基础（B617）** / The loading-effectiveness foundation (B617).
+/// **装载效能域基础** / The loading-effectiveness foundation.
 /// </summary>
 /// <remarks>
 /// 只覆盖不依赖 `IfFunction` 的部分：拖车模型、相邻与有序舱位对、优先级顺序限制、同来源早装限制。
@@ -85,10 +85,10 @@ public class Demo2LoadingEffectivenessTests {
     }
 
     /// <summary>
-    /// **`Trailer.ToString()` 只返回名字** / `Trailer.ToString()` returns the name alone.
+    /// **`Trailer.ToString` 只返回名字** / `Trailer.ToString` returns the name alone.
     /// </summary>
     /// <remarks>
-    /// 两点成对：名字是 `"T1"` 时 `ToString()` 就是 `"T1"`；而**默认记录输出会带上类型名与全部成员**，长度远超名字。
+    /// 两点成对：名字是 `"T1"` 时 `ToString` 就是 `"T1"`；而**默认记录输出会带上类型名与全部成员**，长度远超名字。
     /// 这个 `ToString` 直接进约束名，泄漏会让名字不可读且不可比对。
     ///
     /// Two paired points: a trailer named `"T1"` stringifies to `"T1"`; and **the default record output carries the type name and every member**, far longer than the name. This

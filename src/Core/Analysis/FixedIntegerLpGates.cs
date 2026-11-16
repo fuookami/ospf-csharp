@@ -151,7 +151,7 @@ public static class FixedIntegerLpGates
     /// **这里单开一个名字，是为了让 `solveTriad` 的读法贴近基线**：基线在那一行写的就是
     /// "多行 lowering 不得冒充单个约束的范围"。
     ///
-    /// **It forwards to `ProvenanceDualMapping.MapRanges`** because the rule is identical (ported in B1020). **The separate name keeps `solveTriad` readable against the baseline**, which
+    /// **It forwards to `ProvenanceDualMapping.MapRanges`** because the rule is identical (ported). **The separate name keeps `solveTriad` readable against the baseline**, which
     /// says at that line "a multi-row lowering must not impersonate a single constraint's range".
     /// </remarks>
     public static IReadOnlyDictionary<ConstraintId, SensitivityRange> RemapSingleRowRanges<T>(

@@ -2,9 +2,9 @@
 // 与固定 Kotlin 基线 `layer_assignment/model/SolverValueAdapter.kt`（56 行）对应。
 // Mirrors the pinned baseline's `SolverValueAdapter.kt`.
 //
-// `Bpp2dSolverAmount` 已在 Batch 89 随 `LayerAssignmentMath` 落地，本批补齐其余三项并把四个函数归到同一个静态类，
+// `Bpp2dSolverAmount` 已在 earlier 随 `LayerAssignmentMath` 落地，这里补齐其余三项并把四个函数归到同一个静态类，
 // 便于调用方按基线的心智模型找到它们。
-// `Bpp2dSolverAmount` landed with `LayerAssignmentMath` in Batch 89; this batch adds the remaining three and groups all
+// `Bpp2dSolverAmount` landed with `LayerAssignmentMath` in earlier; the remaining three and groups all
 // four in one static class so callers find them the way the baseline's mental model expects.
 
 using System;

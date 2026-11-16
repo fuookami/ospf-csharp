@@ -1,4 +1,4 @@
-// PWL 十进制口径（B695）的判据 / Criteria for the decimal PWL domain (B695).
+// PWL 十进制口径的判据 / Criteria for the decimal PWL domain.
 
 using System;
 using FluentAssertions;
@@ -11,7 +11,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Infra;
 
 /// <summary>
-/// **PWL 十进制口径（B695）** / The decimal PWL domain (B695).
+/// **PWL 十进制口径** / The decimal PWL domain.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**误差在十进制域内算完，不往返 `double`**、**相对误差的分母是真值 `r²` 而不是近似值**、
@@ -30,11 +30,11 @@ public class PwlDecimalDomainTests {
     /// 三点成对：
     ///
     /// 1. 每个断点处 `ActualError` **恰为 `FltX.Zero`**（十进制域内相减，同一个数减自己就是 0）。
-    /// 2. `double` 重载在同一处给出的是**近似 0**——两者不一致正是本批要修的：往返转换让"精确"变成"大约"。
+    /// 2. `double` 重载在同一处给出的是**近似 0**——两者不一致正是这里要修的：往返转换让"精确"变成"大约"。
     /// 3. 区间中点处误差**严格大于 0**（弦在凸函数下方）。
     ///
     /// Three paired points: at every breakpoint `ActualError` **is exactly `FltX.Zero`**, since the subtraction happens in the decimal domain where a number minus itself is zero; the `double`
-    /// overload gives merely approximately zero there, and that discrepancy is what this batch fixes, a round trip turning "exact" into "roughly"; and at the interval midpoint the error is
+    /// overload gives merely approximately zero there, and that discrepancy is what fixes, a round trip turning "exact" into "roughly"; and at the interval midpoint the error is
     /// **strictly positive**, since the chord lies below the convex function.
     /// </remarks>
     [Fact]

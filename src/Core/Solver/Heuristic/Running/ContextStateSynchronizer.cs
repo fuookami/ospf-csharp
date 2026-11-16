@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **速度算不出来时整体失败，而不是"跳过一个"**。跳过会让调用方拿到一个"部分同步"的状态却以为同步成功，
 /// **于是两个上下文从此各自演化而不自知**。
 /// **When the velocity cannot be computed the whole merge fails, rather than "skipping one"**. Skipping hands the caller a partially
-/// synced state that looks successful, **so the two contexts silently diverge from then on**.
+/// Sync
 /// **`clpso` 复用 `particles` 的规则，然后把学习对象重置成"该粒子自己的下标"**（基线的 `List(size) { index }` 闭包里取的是外层
 /// `mapIndexed` 的 `index`，不是列表元素下标）。照抄这一点是有意的：它让同步后的粒子拥有一个"确定但无意义"的学习起点，
 /// 由后续的停滞刷新去纠正。改成随机下标会让同步这一步额外消耗随机数，**而两个上下文的随机流就此错位**。

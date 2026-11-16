@@ -32,14 +32,14 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// </summary>
 /// <remarks>
 /// **前面的批次只证明了两端：** **ONNX 侧能产出二次多项式、求解器侧能解二次目标；** **中间那一段——"产出的多项式真能挂进元模型并求解"——**
-/// **一直没验证过。** **这一批补的就是那一段。**
+/// **一直没验证过。** **这里补的就是那一段。**
 ///
 /// **模型是 `(x − 3)²`：** **它在 `[0,10]` 上的最小值是 0（落在 `x = 3`），** **在 `[5,10]` 上是 4（落在 `x = 5`）。** '
 /// **两条成对，理由与二次目标那批相同：** **只测 `[0,10]` 时，一个丢掉 `x²` 的一次模型会在 `x = 0` 给 9、一个"总返回 0"的实现也会通过；** '
 /// **`[5,10]` 上的 4 能同时排除这两者。**
 ///
-/// **The earlier batches only proved the two ends: the ONNX side produces quadratic polynomials and the solver side solves a quadratic objective; the middle segment — "the polynomial
-/// really attaches to a meta model and solves" — was never verified.** **This batch fills that segment.**
+/// **Earlier work only proved the two ends: the ONNX side produces quadratic polynomials and the solver side solves a quadratic objective; the middle segment — "the polynomial
+/// really attaches to a meta model and solves" — was never verified.** ** fills that segment.**
 ///
 /// **The model is (x − 3)²: its minimum on [0,10] is 0 at x = 3, and on [5,10] it is 4 at x = 5.** The pair exists for the same reason as the quadratic-objective batch: **on [0,10] alone a
 /// first-degree model without x² gives 9 at x = 0 and an implementation that always returns 0 would also pass; 4 on [5,10] rules out both.**

@@ -1,4 +1,4 @@
-// 精确层分配（B650）的判据 / Criteria for the precise layer assignment (B650).
+// 精确层分配的判据 / Criteria for the precise layer assignment.
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **精确层分配（B650）** / The precise layer assignment (B650).
+/// **精确层分配** / The precise layer assignment.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**份数上界至少为 1**（`maxCopies` 为 0 时不能让该层被强制不用）、**`Register` 幂等**（第二次失败而不是翻倍）。
@@ -47,7 +47,7 @@ public class PreciseAssignmentTests {
     ///
     /// 1. 注册后**每层都有变量**，越界下标返回 null。
     /// 2. **`maxCopies` 为 0 时上界仍为 1**——这是基线的 `if (upper < 1) 1 else upper`；上界 0 会让该层被强制不用，
-    ///    而列生成正要用它判断"用不用"。
+    /// 而列生成正要用它判断"用不用"。
     /// 3. 上界按 `maxCopies` 取值（给 3 就是 3）。
     /// 4. **`maxCopies` 短于层数时缺失项按 1**，不抛越界。
     ///

@@ -9,7 +9,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **`Unknown` 不是"其他"，而是"还不知道"**——**它与 `LinearExpression` 的区别决定了
 /// 原生展开能不能被允许：`Unknown` 一律走保守路径。**
 ///
-/// B1179, following the baseline's `FunctionInputShape`.
+/// Following the baseline's `FunctionInputShape`.
 ///
 /// **`Unknown` is not "other" but "not yet known"** — **the difference from `LinearExpression` decides whether native
 /// lowering is permitted at all: `Unknown` always takes the conservative path.**
@@ -32,7 +32,7 @@ public enum FunctionInputShape {
 /// **`Discontinuous` 与 `Unknown` 是两件事**：**前者是"知道有断点"，后者是"没查过"。**
 /// **把后者当后者处理会拒绝本可展开的函数；把前者当后者处理会生成一条断点处的错误行。**
 ///
-/// B1179, following the baseline's `PiecewiseContinuity`.
+/// Following the baseline's `PiecewiseContinuity`.
 ///
 /// **`Discontinuous` and `Unknown` differ**: **the former means "a break is known", the latter "nobody looked".**
 /// **Treating the latter as the former rejects functions that could expand; treating the former as the latter emits a
@@ -56,7 +56,7 @@ public enum PiecewiseContinuity {
 /// 它的"位置"应当是被引用——因为那是最强的保留理由。**
 /// **把顺序调换会让一个被引用的函数被报成"仅目标"，而调用方据此省掉结果变量，模型就错了。**
 ///
-/// B1179, following the baseline's `FunctionUsageLocation`.
+/// Following the baseline's `FunctionUsageLocation`.
 ///
 /// **`Nested` and `External` come <b>before</b> `ObjectiveAndConstraint`, and the order carries meaning**: **a function
 /// that appears in both, and is also referenced by another structure, should report as referenced — that is the
@@ -102,7 +102,7 @@ public enum FunctionUsageLocation {
 /// **目标里一个多变量的线性表达式无法被"仅目标"的原生接口表达——
 /// 那个接口只接受单变量分段函数。**
 ///
-/// B1179, following the baseline's `FunctionUsageSummary`.
+/// Following the baseline's `FunctionUsageSummary`.
 ///
 /// **The four booleans are "collected facts"; the three derived members are "decisions taken from them".**
 /// **Keeping them apart is deliberate: the caller supplies facts and this type computes the decision, so the rule for

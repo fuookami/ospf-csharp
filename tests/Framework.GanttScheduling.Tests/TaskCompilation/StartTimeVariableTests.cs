@@ -16,11 +16,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **结束时间从常量变成"开始 + 时长"（B547）** / End times go from constants to "start + duration" (B547).
+/// **结束时间从常量变成"开始 + 时长"** / End times go from constants to "start + duration".
 /// </summary>
 /// <remarks>
-/// B546 的结束时间是**窗口结束点的常量**——完工时间因此只反映"计划什么时候结束"，最小化它等于什么都没做。
-/// 本批引入基线里的 `est`（开始时间变量），结束时间变成 `est + 时长`，完工时间才第一次**可被排程推动**。
+/// 的结束时间是**窗口结束点的常量**——完工时间因此只反映"计划什么时候结束"，最小化它等于什么都没做。
+/// 这里引入基线里的 `est`（开始时间变量），结束时间变成 `est + 时长`，完工时间才第一次**可被排程推动**。
 ///
 /// 这条链上有三处特别容易反：
 /// <list type="number">
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <item>离散时间窗的整数变量**尚未接线**，必须显式失败——塞一个 `UInt64` 变量出去会被求解器在注册阶段拒，或者更糟，静默失真。</item>
 /// </list>
 ///
-/// B546's end times were **constants at the window end**, so the makespan only reflected "when the plan says it ends" and minimising it did nothing. This batch introduces the
+/// the earlier end times were **constants at the window end**, so the makespan only reflected "when the plan says it ends" and minimising it did nothing. introduces the
 /// baseline's `est` (start-time variable), making the end time `est + duration` and the makespan **pushable by the schedule** for the first time. Three links invert easily:
 /// (1) with advance/delay disabled `est` must be **pinned** to the window start — "relaxed" would allow arbitrary movement while looking better; (2) `est` must be **unsigned** —
 /// signed, the "advance allowed" branch sinks to negative infinity and yields a negative makespan; (3) the discrete-window integer variable is **not wired** and must fail
@@ -243,9 +243,9 @@ public class StartTimeVariableTests {
 
     /// <summary>**重复注册幂等，`est` 不会重复添加** / Re-registering is idempotent and does not re-add `est`.</summary>
     /// <remarks>
-    /// B539 在 `Compilation.Register` 上栽过一次：第二次注册撞 `SymbolRepetitive`。
+    /// 在 `Compilation.Register` 上栽过一次：第二次注册撞 `SymbolRepetitive`。
     ///
-    /// B539 once tripped `SymbolRepetitive` on the second `Compilation.Register`.
+    /// once tripped `SymbolRepetitive` on the second `Compilation.Register`.
     /// </remarks>
     [Fact]
     public void StartVariable_ShouldBeIdempotent() {

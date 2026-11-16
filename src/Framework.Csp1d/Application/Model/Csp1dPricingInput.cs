@@ -24,9 +24,9 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Model;
 /// **这三个扩展点照抄基线 `Csp1dPricingInput`**。基线签名：
 ///
 /// ```kotlin
-/// val pricingBenefitModifiers: List&lt;(CuttingPlan&lt;V&gt;, V) -&gt; V&gt; = emptyList(),
-/// val pricingCostModifiers: List&lt;(CuttingPlan&lt;V&gt;, V) -&gt; V&gt; = emptyList(),
-/// val isImprovingJudges: List&lt;(CuttingPlan&lt;V&gt;, V, V) -&gt; Boolean?&gt; = emptyList(),
+/// val pricingBenefitModifiers: List&lt;(CuttingPlan&lt;V&gt;, V) -&gt; V&gt; = emptyList,
+/// val pricingCostModifiers: List&lt;(CuttingPlan&lt;V&gt;, V) -&gt; V&gt; = emptyList,
+/// val isImprovingJudges: List&lt;(CuttingPlan&lt;V&gt;, V, V) -&gt; Boolean?&gt; = emptyList,
 /// ```
 ///
 /// **`isImprovingJudges` 的三值语义是关键**：返回 `null` 表示"这条判据不表态"，继续问下一条；

@@ -25,12 +25,12 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 函数符号自动派生结构，且跳过急切注册 / Function symbols derive structures and skip eager registration.
 /// </summary>
 /// <remarks>
-/// B1251 把 B1250 留下的那个缺口补上：**投影有了、没人调用。**
+/// 把那个缺口补上：**投影有了、没人调用。**
 ///
 /// **而补的方式不是"加一个调用"，是"派生与跳过一起做"：** **`AbsFunction` 注册时会同时生成自己的急切约束，
 /// 所以只接投影就会得到两套描述同一个 `abs` 的行。**
 ///
-/// B1251 closes the gap B1250 left: the projection existed and nobody called it.
+/// Closes the gap left there: the projection existed and nobody called it.
 ///
 /// **And closing it is not "add a call" but "derive and skip together": `AbsFunction` also registers its own eager
 /// constraints, so wiring the projection alone yields two row sets describing the same `abs`.**
@@ -81,7 +81,7 @@ public class DeferredFunctionAutoDerivationTests
     /// **行不会翻倍** / The rows do not double.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据，而它数的是<b>行数</b>。**
+    /// **这是这里的核心判据，而它数的是<b>行数</b>。**
     ///
     /// **只接投影（不跳过急切注册）会得到两套行，而模型完全合法、求解成功——
     /// 唯一的痕迹就是行数多了一倍。**

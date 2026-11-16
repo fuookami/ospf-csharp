@@ -16,13 +16,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// Each starter's README **module list** must correspond one-to-one with the csproj's **actual references**.
 /// </summary>
 /// <remarks>
-/// B287 只验证了"引用了该引用的模块"，没有验证"README 说了该说的模块"。这两件事会各自漂移：
+/// 只验证了"引用了该引用的模块"，没有验证"README 说了该说的模块"。这两件事会各自漂移：
 /// 加一个 `ProjectReference` 而忘了写 README，读者就看不到它；写了 README 而没有引用，读者就以为能拿到。
-/// B288 的交叉核对抓到了一处真实不一致——`GanttScheduling` 引用了 `Framework.NetworkScheduling`
+/// 的交叉核对抓到了一处真实不一致——`GanttScheduling` 引用了 `Framework.NetworkScheduling`
 /// 而 README 一字未提。
 ///
-/// B287 verified "it references what it should"; it did not verify "the README says what it should". Those two drift independently: add a
-/// `ProjectReference` without the README and readers miss it; write the README without the reference and readers assume they get it. The B288 cross-check
+/// verified "it references what it should"; it did not verify "the README says what it should". Those two drift independently: add a
+/// `ProjectReference` without the README and readers miss it; write the README without the reference and readers assume they get it. The cross-check
 /// caught a real mismatch — `GanttScheduling` referenced `Framework.NetworkScheduling` while the README never mentioned it.
 /// </remarks>
 public sealed class StarterReadmeConsistencyTests {

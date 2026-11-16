@@ -28,7 +28,7 @@
 
 `LayerGenerationContext` 按调用方给的 `ScoreByShadowPrice` 函数
 （`Func<Layer<V>, Bpp2dLayerGenerationRequest<V>, V>`）给候选层排序；未提供时退回按面积降序。
-这正是 `Framework.Bpp3d` 在 Batch 273 照搬的强类型形态——Bpp3d 之前只有一个没人读的 `object?` 占位。
+这正是 `Framework.Bpp3d` 在 earlier 照搬的强类型形态——Bpp3d 之前只有一个没人读的 `object?` 占位。
 
 ## 验证
 

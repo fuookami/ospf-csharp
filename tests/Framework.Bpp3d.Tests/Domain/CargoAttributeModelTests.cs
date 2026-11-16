@@ -16,12 +16,12 @@ using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 
 /// <summary>
-/// B1305 补齐的货物属性模型：十二个类型都在，而且没有改变任何算法行为 /
-/// The cargo attribute model B1305 filled in: all twelve types exist and no algorithm changed.
+/// 补齐的货物属性模型：十二个类型都在，而且没有改变任何算法行为 /
+/// The cargo attribute model filled in here: all twelve types exist and no algorithm changed.
 /// </summary>
 /// <remarks>
 /// 复审发现基线 `PackageAttribute.kt` 的十二个类型在 C# 侧一个都没有，而三份文档也从未提到它们。
-/// 这一批补齐后要钉住两件事：
+/// 这里补齐后要钉住两件事：
 ///
 /// ① 十二个类型真的都在（反射列名，而不是"我以为我写了"）；② 生产代码里没有任何人构造它们——
 /// 基线里它们只被 `PackageAttribute.kt` 自身读取，所以 C# 侧也必须是"只有模型"的状态。
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 ///
 /// 策略本身的行为另有判据： 用一个最小 `ICargoView` 替身把四道门限各撞一次。
 ///
-/// The review found none of the baseline's twelve types on the C# side and no mention of them in any document. After this batch two things
+/// The review found none of the baseline's twelve types on the C# side and no mention of them in any document. After two things
 /// need pinning: the twelve types really exist (by reflection, not by memory), and nothing in production code constructs them — in the baseline they
 /// are read only inside `PackageAttribute.kt`, so the C# side must be "model only" too. The second check also guarantees "adding a model" did not
 /// quietly become "changing behaviour". The policies' behaviour has its own criteria: a minimal `ICargoView` double walks each gate once.
@@ -65,12 +65,12 @@ public class CargoAttributeModelTests
     /// 这些类型公开可构造：能力可以被用 / The types are public and constructible: the capability can be used.
     /// </summary>
     /// <remarks>
-    /// B1312 换掉了原来的判据。原来那条断言"全仓没有一处构造这些策略"，用来支撑"仅模型、不改行为"——而它把"没人用"变成了永久要求：
-    /// 谁只要在框架里写一次 new FilterStackingOnPolicy()，判据就红。本项目是框架，只提供能力、不保证项目内必然有使用的地方；
+    /// **判据换过一次：原来那条断言"全仓没有一处构造这些策略"，用来支撑"仅模型、不改行为"——而它把"没人用"变成了永久要求：
+    /// 谁只要在框架里写一次 new FilterStackingOnPolicy，判据就红。本项目是框架，只提供能力、不保证项目内必然有使用的地方；
     /// 把使用当成违规是反的。现在钉的是"能力可用"：七个具体类型公开且有公开构造函数、五个槽位可赋值、递归与几何助手的入口都在。
     /// 至于谁去用它们，那是使用方的事。
     ///
-    /// B1312 replaces the old criterion. It asserted "nothing anywhere constructs these policies" to support "model only, no behaviour change" — and that
+    /// Replaces the old criterion. It asserted "nothing anywhere constructs these policies" to support "model only, no behaviour change" — and that
     /// turned "nobody uses it" into a permanent requirement: the first caller inside the framework would turn it red. This project is a framework: it provides
     /// capabilities and does not guarantee an in-project use site, so treating use as a violation is backwards. What is pinned now is that the capability is
     /// usable: seven public types with public constructors, five assignable slots, and the recursion and geometry entry points present. Who uses them is the

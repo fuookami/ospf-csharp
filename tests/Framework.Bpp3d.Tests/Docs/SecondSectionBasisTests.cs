@@ -12,12 +12,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **空白备注等于"没人写过它凭什么 ✅"** / An empty remark means nobody wrote down why this is ✅.
 /// </summary>
 /// <remarks>
-/// B963 核了矩阵第二节四行：`元模型与线性模型`、`求解器接口与注册`、`组合求解器`、`启发式算子`，**四行都是 ✅ 配空白备注**。
+/// 核了矩阵第二节四行：`元模型与线性模型`、`求解器接口与注册`、`组合求解器`、`启发式算子`，**四行都是 ✅ 配空白备注**。
 /// 空白不等于"没问题"：下一个人要判断"这个模块能不能用"，只能自己去把源码读一遍。
 ///
-/// **唯一一处真张力**：`元模型与线性模型` 是 ✅，而 §九 第 3、6 条说函数展开层整层缺失。两者不矛盾，**但只有写清楚才不矛盾**。
+/// **唯一一处真张力**：`元模型与线性模型` 是 ✅，而 §九第 3、6 条说函数展开层整层缺失。两者不矛盾，**但只有写清楚才不矛盾**。
 ///
-/// B963 checked section two's four rows — **all ✅ with an empty remark**, and empty does not mean "fine": the next reader has to re-read the source to judge usability.
+/// checked section two's four rows — **all ✅ with an empty remark**, and empty does not mean "fine": the next reader has to re-read the source to judge usability.
 /// **The one real tension**: the metamodel row is ✅ while §九 items 3 and 6 say the function expansion layer is entirely missing; they do not contradict **only if it is
 /// spelled out**.
 /// </remarks>
@@ -63,11 +63,11 @@ public class SecondSectionBasisTests
         // **必须排除 `bin/` 与 `obj/`：** **`SearchOption.AllDirectories` 会把 SDK 生成的文件也算进去**
         // **（`*.AssemblyInfo.cs`、`*.GlobalUsings.g.cs`），于是这个数字取决于"当时 obj 里生成了几个文件"。**
         //
-        // **B1265 实测到这一点：** **同一个工作区，清掉 `obj/` 之前这条数是 16，清掉之后重建又变成 14。**
+        // **这一点被实测到：** **同一个工作区，清掉 `obj/` 之前这条数是 16，清掉之后重建又变成 14。**
         // **一条每次构建都可能变数的判据，测的是机器，不是代码。**
         //
         // **`bin/` and `obj/` must be excluded: `SearchOption.AllDirectories` also counts SDK-generated files, so the number
-        // depends on how many were generated at that moment.** **B1265 measured it: in one workspace the count was 16 before
+        // depends on how many were generated at that moment.** **Measured: in one workspace the count was 16 before
         // `obj/` was cleared and 14 after a rebuild — a criterion whose number can change per build measures the machine, not
         // the code.**
         int heuristicTests = Directory
@@ -86,7 +86,7 @@ public class SecondSectionBasisTests
 
     /// <summary>**✅ 与函数展开缺口必须同时出现** / The ✅ and the missing expansion layer must appear together.</summary>
     /// <remarks>
-    /// 这条判据钉的是**张力被写出来**，不是张力消失：`元模型与线性模型` 那一行要同时提到自己的 ✅ 范围与 §九 的函数缺口。
+    /// 这条判据钉的是**张力被写出来**，不是张力消失：`元模型与线性模型` 那一行要同时提到自己的 ✅ 范围与 §九的函数缺口。
     /// 缺任何一半，读者都可能把"线性模型完整"读成"函数也能落成行"。
     ///
     /// This pins that **the tension is written down**, not that it is gone: the metamodel row has to mention its own ✅ scope and §九's function gap together. With either half

@@ -313,11 +313,11 @@ public abstract class ExtremumFunctionBase<V> :
     /// **是否取最小值 / Whether this computes the minimum.**
     /// </summary>
     /// <remarks>
-    /// **B1252 新增。 `Min` 与 `Max` 是同一个类的两个构造，而"是哪一种"此前只存在于私有字段里——
+    /// **`Min` 与 `Max` 是同一个类的两个构造，而"是哪一种"此前只存在于私有字段里——
     /// 于是任何想<b>读</b>这个区分的代码（比如把符号投影成延迟结构）都做不到，
     /// 而写错方向的后果是静默的：`min` 会被当成 `max` 物化，模型照样能解。**
     ///
-    /// **Added in B1252. `Min` and `Max` are two constructions of one class, and which one it is existed only in a private
+    /// **Added. `Min` and `Max` are two constructions of one class, and which one it is existed only in a private
     /// field — so any code that needs to <b>read</b> the distinction (projecting the symbol into a deferred structure,
     /// say) could not, and getting it wrong is silent: a `min` materialises as a `max` and the model still solves.**
     /// </remarks>
@@ -327,13 +327,13 @@ public abstract class ExtremumFunctionBase<V> :
     /// **显式给出的大 M（可能为 null）/ The explicitly supplied Big-M, if any.**
     /// </summary>
     /// <remarks>
-    /// **B1252 把它的可见性从 `private protected` 放宽到 `public`。**
+    /// **它的可见性从 `private protected` 放宽到 `public`。**
     ///
     /// **理由：投影需要用它<b>重算</b>那组大 M（构造时算出的值没有存下来）。**
     /// **而放宽可见性比"把算出的那组存下来"更小：后者要多一个字段、多一处赋值，
     /// 且要保证两处永远一致。**
     ///
-    /// **B1252 relaxes it from `private protected` to `public`.**
+    /// **Its visibility is relaxed from `private protected` to `public`.**
     ///
     /// **The projection needs it to <b>recompute</b> the Big-M set (the values computed at construction time were not kept).
     /// Widening the visibility is smaller than storing the computed set: the latter adds a field, an assignment, and an

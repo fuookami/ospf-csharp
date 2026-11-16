@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// <remarks>
 /// 与基线 `AirworthinessSecurityContext.kt` 对齐。它把"建聚合"与"往模型里注册"分成两步：
 ///
-/// 1. <see cref="Init"/> 建聚合（B605 起可用，见 <see cref="AggregationInitializer"/>）。
-/// 2. <see cref="Register"/> 用聚合注册约束——**已实现**，顺序是 聚合注册 → 生成管线 → 逐条执行。
+/// 1. <see cref="Init"/> 建聚合（起可用，见 <see cref="AggregationInitializer"/>）。
+/// 2. <see cref="Register"/> 用聚合注册约束——**已实现**，顺序是聚合注册 → 生成管线 → 逐条执行。
 ///
 /// 三处容易做错：
 ///
@@ -59,11 +59,11 @@ public sealed class AirworthinessSecurityContext
     /// <param name="aggregation">适航安全聚合 / The airworthiness security aggregation.</param>
     /// <remarks>
     /// **两条入口并存：`Init` 从上游聚合建，这个构造直接收现成的聚合**（依赖注入、或调用方已经建好了）。基线只有 `init` 一条，
-    /// 多出来的这条不是"等移植的临时通道"——**`Init` 早就在了**（B605 起 `AggregationInitializer` 真正构造聚合），
+    /// 多出来的这条不是"等移植的临时通道"——**`Init` 早就在了**（起 `AggregationInitializer` 真正构造聚合），
     /// 所以这里不再有"唯一入口"这种说法。
     ///
     /// **Two entry points coexist: `Init` builds from the upstream aggregations, this constructor takes a ready-made one** (dependency injection, or a caller that already
-    /// built it). The baseline has only `init`; the extra one is not a "temporary channel waiting for the port" — **`Init` has been there since B605**, so there is no
+    /// built it). The baseline has only `init`; the extra one is not a "temporary channel waiting for the port" — **`Init` has been there since then**, so there is no
     /// "only entry point" left to speak of.
     /// </remarks>
     public AirworthinessSecurityContext(AirworthinessSecurityAggregation aggregation) {
@@ -84,10 +84,10 @@ public sealed class AirworthinessSecurityContext
     /// <param name="input">请求 DTO / Request DTO</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// 与基线一致：**已初始化过就不再重建**。B605 起 `AggregationInitializer` 真正构造聚合，失败只可能来自 DTO 校验
+    /// 与基线一致：**已初始化过就不再重建**。 起 `AggregationInitializer` 真正构造聚合，失败只可能来自 DTO 校验
     /// （没有舱位、上限为负、包线区间反了等），而不是"尚未移植"。
     ///
-    /// As in the baseline, **an existing aggregation is not rebuilt**. Since B605 `AggregationInitializer` really builds the aggregation, so a failure can only come from DTO
+    /// As in the baseline, **an existing aggregation is not rebuilt**. Since `AggregationInitializer` really builds the aggregation, so a failure can only come from DTO
     /// validation (no positions, a negative limit, an inverted envelope interval) rather than "not ported yet".
     /// </remarks>
     public Try Init(AircraftContext aircraftContext, StowageContext stowageContext, MacContext macContext, RequestDTO input) {

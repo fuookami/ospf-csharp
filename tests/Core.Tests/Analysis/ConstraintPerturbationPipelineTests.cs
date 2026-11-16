@@ -55,7 +55,7 @@ public class ConstraintPerturbationPipelineTests {
     /// <summary>**两项都不允许** / Neither stage is allowed.</summary>
     /// <remarks>
     /// **第一次我只禁了删除测试，RHS 仍可用**，于是前置门判"继续"，判据红。
-    /// **这是本会话第五次"夹具与判据不符"。**
+    /// **这是第五次"夹具与判据不符"。**
     ///
     /// **The first version disabled only the removal test while RHS stayed available**, so the gate said "proceed" and the criterion went red. **This is the fifth time the fixture did not
     /// match what the criterion claimed.**

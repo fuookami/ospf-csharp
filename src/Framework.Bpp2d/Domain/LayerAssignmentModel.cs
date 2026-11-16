@@ -4,9 +4,9 @@
 // Mirrors the pinned baseline's `LayerAggregation.kt`, the demand portion of `Load.kt`, the key in `ShadowPriceMap.kt`
 // and `ReducedCost.kt`.
 //
-// **本批不含求解器符号层**：`Load`／`Capacity`／`Assignment`／`Objectives` 需要列生成求解器的线性符号与模型机制
-// （`LinearExpressionSymbols1` 等）。本批只移植**不依赖求解器**的那部分：聚合管理、需求结构、检验数计算。
-// **The solver-symbol layer is not in this batch**: `Load` / `Capacity` / `Assignment` / `Objectives` need the column
+// **这里不含求解器符号层**：`Load`／`Capacity`／`Assignment`／`Objectives` 需要列生成求解器的线性符号与模型机制
+// （`LinearExpressionSymbols1` 等）。这里只移植**不依赖求解器**的那部分：聚合管理、需求结构、检验数计算。
+// **The solver-symbol layer is not covered here**: `Load` / `Capacity` / `Assignment` / `Objectives` need the column
 // generation solver's linear symbols and model machinery. Only the **solver-independent** portion is ported here:
 // aggregation management, demand structures and reduced-cost computation.
 
@@ -72,7 +72,7 @@ public sealed class LayerAggregation<V> where V : struct, IFloatingNumber<V> {
     /// 添加新列并去重 / Add new columns with deduplication.
     /// </summary>
     /// <remarks>
-    /// 双重去重：先在本批内部去重，再与已有层去重。只做后者会把同一批里的重复列都留下，随后候选数统计与列数不符。
+    /// 双重去重：先在这里内部去重，再与已有层去重。只做后者会把同一批里的重复列都留下，随后候选数统计与列数不符。
     /// Adds each batch to <see cref="LayersIteration"/> **even when it is empty** after deduplication: the iteration
     /// history must stay aligned with the iteration index so callers can correlate rounds.
     /// </remarks>

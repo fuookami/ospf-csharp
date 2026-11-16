@@ -17,12 +17,10 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// sigmoid 的两个参数各有各的失效方式 / The sigmoid's two parameters fail in different ways.
 /// </summary>
 /// <remarks>
-/// B1151 补 `LogisticApproximationFunction`（基线 `NonlinearPiecewise.kt`）与 `ZeroBand`（基线 `ZeroBand.kt`）。
+/// 补 `LogisticApproximationFunction`（基线 `NonlinearPiecewise.kt`）与 `ZeroBand`（基线 `ZeroBand.kt`）。
 ///
 /// **中点搞错，曲线整体平移；陡度搞错，曲线整体变平或反号——两者都不报错。**
 /// **而"值都在 0 与 1 之间"这条对任何 sigmoid 形态的实现都成立，分不开它们。**
-///
-/// adds
 ///
 /// **A wrong midpoint shifts the curve; a wrong steepness flattens or mirrors it — neither throws.**
 /// **And "values lie between 0 and 1" holds for any sigmoid-shaped implementation, so it separates nothing.**
@@ -121,7 +119,7 @@ public class LogisticAndZeroBandTests
 
     /// <summary>**极端输入下源函数仍是有限数且落在 [0, 1] 内** / The source stays finite and inside [0, 1] at the extremes.</summary>
     /// <remarks>
-    /// **我第一版在这里断言"永远不会取到 0 与 1"，被实测打红**：
+    /// **最初在这里断言"永远不会取到 0 与 1"，被实测打红**：
     /// **`σ(-800)` 在双精度下下溢成 `0.0`，`σ(700)` 舍入成 `1.0`**——
     /// **`e^(-800) ≈ 10^-347` 小于最小次正规数，而 `1/(1+10^-305)` 舍入到 1。**
     ///

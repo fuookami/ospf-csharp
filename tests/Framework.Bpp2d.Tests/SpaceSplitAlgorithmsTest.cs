@@ -86,7 +86,7 @@ public sealed class SpaceSplitAlgorithmsTest {
     /// </summary>
     /// <remarks>
     /// **必须用异质物品**：单一物品类型时，首块按 7×7 铺满角落后，两条余下条带都窄于该物品，递归必然放不下任何东西，
-    /// 深度对结果完全没有影响。这个性质在本会话里先用 2×2、再用 3×3 各验证了一次，最后才定位到原因——它不是缺陷，
+    /// 深度对结果完全没有影响。这个性质在曾先用 2×2、再用 3×3 各验证了一次，最后才定位到原因——它不是缺陷，
     /// 而是 DFS"只沿块边界切分"的直接后果。
     ///
     /// **Heterogeneous items are required**: with a single item type the first block fills the corner and both leftover

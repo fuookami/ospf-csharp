@@ -32,9 +32,9 @@ public sealed class SoftSecurityContext
     /// <returns>执行结果 / Execution result</returns>
     public Try Init(AircraftContext aircraftContext, StowageContext stowageContext, RequestDTO input)
     {
-        // **上游聚合可能为 null**（B606 起 `StowageContext.Aggregation` 可空），也可能飞机侧尚未初始化。
+        // **上游聚合可能为 null**（起 `StowageContext.Aggregation` 可空），也可能飞机侧尚未初始化。
         // 取非空会抛 `NullReferenceException`，而那是崩溃不是失败——调用方拿不到任何可报告的原因。
-        // **The upstream aggregation may be null** (nullable since B606) and the aircraft side may be uninitialised. Taking non-null throws a `NullReferenceException`, which is a
+        // **The upstream aggregation may be null** (nullable since then) and the aircraft side may be uninitialised. Taking non-null throws a `NullReferenceException`, which is a
         // crash rather than a failure — the caller gets no reportable reason.
         if (aircraftContext.Aggregation is not { } aircraftAggregation)
         {

@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// <see cref="CuttingPlanGenerationStatistics"/>.
 /// </summary>
 /// <remarks>
-/// B299 之前这两项**从来没被赋值**：`Report()` 里没有它们，collector 里也没有对应字段。
+/// 之前这两项**从来没被赋值**：`Report` 里没有它们，collector 里也没有对应字段。
 /// 而下游是完整的——`Csp1dSolutionEnrichment` 读它们写进 KPI，`Csp1dColumnGeneration` 合并它们，
 /// 记录类型里也有这两个参数。**整条管线都在等一个永远为 0 的值。**
 ///
 /// 判据必须落在**具体数值**上，不能是"字段存在"——那两个参数本来就在，一直是 0。
 ///
-/// Before B299 these two were **never assigned**: `Report()` did not include them and the collector had no fields for them. The downstream was complete —
+/// Before these two were **never assigned**: `Report` did not include them and the collector had no fields for them. The downstream was complete —
 /// `Csp1dSolutionEnrichment` reads them into KPIs, `Csp1dColumnGeneration` merges them, and the record type declares both parameters. **The whole pipeline
 /// was waiting on a value that was always zero.**
 ///
@@ -91,13 +91,13 @@ public class GenerationCollectorQuantityCacheTests {
 
     /// <summary>**跨贡献策略下被拒绝的候选记进跨贡献计数** / Under the cross-contribution strategy, a rejected candidate counts as cross-contribution.</summary>
     /// <remarks>
-    /// B301 之前 `_dominanceStrategy` **只被赋值、从不被读取**，所以 `CrossContribution` 与 `SameContribution`
+    /// 之前 `_dominanceStrategy` **只被赋值、从不被读取**，所以 `CrossContribution` 与 `SameContribution`
     /// 的行为完全相同——只有统计字段名不同，且两个都恒为 0。
     ///
     /// 这里的判据是**两个策略下两个计数器各是多少**：同一次拒绝，同贡献策略记 `DominatedCandidates`，
     /// 跨贡献策略记 `CrossContributionDominated`。**只断言"拒绝发生了"抓不到策略没生效。**
     ///
-    /// Before B301 `_dominanceStrategy` was **assigned but never read**, so `CrossContribution` and `SameContribution` behaved identically — only the statistics
+    /// Before `_dominanceStrategy` was **assigned but never read**, so `CrossContribution` and `SameContribution` behaved identically — only the statistics
     /// field names differed, and both were always zero.
     ///
     /// The criterion here is **what each of the two counters holds under each strategy**: for the same rejection, the same-contribution strategy records
@@ -135,10 +135,10 @@ public class GenerationCollectorQuantityCacheTests {
 
     /// <summary>**跨贡献 dominance 计数必须真的进报告** / The cross-contribution count must reach the report.</summary>
     /// <remarks>
-    /// B300 之前这个字段标着 `#pragma warning disable CS0649 // Intentionally unassigned: reserved for future use`——
+    /// 之前这个字段标着 `#pragma warning disable CS0649 // Intentionally unassigned: reserved for future use`——
     /// **编译器被告知"这个字段永远不会被赋值"，而那条 `pragma` 正是缺陷的痕迹**。
     ///
-    /// Before B300 this field carried `#pragma warning disable CS0649 // Intentionally unassigned: reserved for future use` — **the compiler was told
+    /// Before this field carried `#pragma warning disable CS0649 // Intentionally unassigned: reserved for future use` — **the compiler was told
     /// "this field will never be assigned", and that `pragma` was itself the trace of the defect**.
     /// </remarks>
     [Fact]
@@ -168,10 +168,10 @@ public class GenerationCollectorQuantityCacheTests {
 
     /// <summary>**dominance 策略必须被真的保存下来** / The dominance strategy must really be stored.</summary>
     /// <remarks>
-    /// 这条测试防的是 B300 发现的缺陷形态：**参数被存进字段、字段却从不被读取**。
+    /// 这条测试防的是 发现的缺陷形态：**参数被存进字段、字段却从不被读取**。
     /// 只断言"构造不抛异常"是抓不到的。
     ///
-    /// This guards the defect shape B300 found: **the argument is stored into a field, and the field is never read**. Asserting only "the constructor does not
+    /// This guards the defect shape found: **the argument is stored into a field, and the field is never read**. Asserting only "the constructor does not
     /// throw" cannot catch it.
     /// </remarks>
     [Fact]

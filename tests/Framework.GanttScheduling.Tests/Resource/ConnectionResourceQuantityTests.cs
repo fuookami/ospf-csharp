@@ -1,4 +1,4 @@
-// 连接资源使用的数量表（B714）/ The connection resource usage's quantity tables (B714).
+// 连接资源使用的数量表/ The connection resource usage's quantity tables.
 
 using System;
 using System.Collections.Generic;
@@ -17,17 +17,17 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **连接资源使用的数量表（B714）** / The connection resource usage's quantity tables (B714).
+/// **连接资源使用的数量表** / The connection resource usage's quantity tables.
 /// </summary>
 /// <remarks>
 /// 第三个、也是最后一个空 `Register`。连接资源的数量形状与执行资源相同（常数 = 初始数量），
 /// 差别在 `invoke`：连接按"任务与时间槽的关联量"挂项，那是装配流水线的事，不属于 `register`。
 ///
-/// 这一批同时把三种资源使用里**逐字相同**的超量 \/ 不足两张表收进 `ResourceUsageSlackHelper`——
+/// 这里同时把三种资源使用里**逐字相同**的超量 \/ 不足两张表收进 `ResourceUsageSlackHelper`——
 /// 三份抄下来，改一处必然漏两处。
 ///
 /// The third and last bare `Register`. The connection resource's quantity has the same shape as the execution one (constant = the initial quantity); the difference is at `invoke`, where a
-/// connection attaches terms by "the task-slot relation quantity", which belongs to the assembly pipeline rather than to `register`. This batch also folds the **word-for-word identical**
+/// connection attaches terms by "the task-slot relation quantity", which belongs to the assembly pipeline rather than to `register`. also folds the **word-for-word identical**
 /// over and less tables of all three usages into `ResourceUsageSlackHelper` — three copies would guarantee that fixing one misses the other two.
 /// </remarks>
 public class ConnectionResourceQuantityTests {

@@ -358,16 +358,15 @@ public class LinearTriadDualTest {
                 rhs: [new Flt64(4), new Flt64(1), infiniteRhs ? new Flt64(Pos) : Flt64.Zero],
                 names: ["c0", "", "c2"],
                 sources: [ConstraintSource.Origin, ConstraintSource.Origin, ConstraintSource.Origin],
-                // **B1224：可选地给三行标上稳定身份。不给时行为与之前完全相同。**
-                // **B1224: optionally stamp the three rows with stable identities; without them nothing changes.**
+                // **可选地给三行标上稳定身份。不给时行为与之前完全相同。**
+                // **optionally stamp the three rows with stable identities; without them nothing changes.**
                 // **`Stable` 身份必须带命名空间、schema 与非空来源——`ValidateIdentity` 会拒绝缺任何一项的稳定身份
-                // （B1225 读源码确认；B1224 初版只给了 `Kind`/`Id`/`Scope`，于是 `Dual()` 在那一关失败）。**
+                // （只给 `Kind`/`Id`/`Scope` 会被它拒掉，`Dual` 就在那一关失败）。**
                 // **这里给的是模型<b>内</b>身份（`ModelLocal`），因为它不需要注册表，正好用于"行身份存在但不稳定"
                 // 这一侧；稳定的那一侧由真实注册流程覆盖。**
                 //
                 // **A `Stable` identity must carry a namespace, a schema and non-empty provenance — `ValidateIdentity`
-                // rejects a stable identity missing any of them (read from the source in B1225; B1224's first version
-                // supplied only `Kind`/`Id`/`Scope`, so `Dual()` failed there).** **These are <b>model-local</b> identities,
+                // rejects a stable identity missing any of them (supplying only `Kind`/`Id`/`Scope` makes `Dual` fail there).** **These are <b>model-local</b> identities,
                 // which need no registry and are exactly the "row identity present but not stable" side; the stable side
                 // is covered by the real registration flow.**
                 identities: withRowIdentities
@@ -448,8 +447,8 @@ public class LinearTriadDualTest {
         name: name);
 
     /// <summary>
-    /// **真实 `Dual()` 路径上，每个行对偶变量都带着来源行与关系** /
-    /// On the real `Dual()` path every row-dual variable carries its origin row and relation.
+    /// **真实 `Dual` 路径上，每个行对偶变量都带着来源行与关系** /
+    /// On the real `Dual` path every row-dual variable carries its origin row and relation.
     /// </summary>
     /// <remarks>
     /// **这条判据存在的唯一理由是回答"`DualOrigin` 是不是装饰"。**
@@ -457,7 +456,7 @@ public class LinearTriadDualTest {
     /// **一个永远为 `null` 的属性比不存在的属性更糟：不存在的属性会编译失败，
     /// 而永远为 `null` 的属性会让读者以为信息在那里。**
     ///
-    /// **所以这条判据走<b>真实</b>的对偶构造，而不是手工 `new ModelViewVariable(dualOrigin: ...)`——
+    /// **所以这条判据走<b>真实</b>的对偶构造，而不是手工 `new ModelViewVariable(dualOrigin:...)`——
     /// 后者只证明"能赋值"，不证明"有人赋过"。**
     ///
     /// **同时它钉住了行号的含义：** **对偶变量表的第 `i` 个行对偶列，其 `DualOrigin.RowIndex` 必须是 `i`，
@@ -470,7 +469,7 @@ public class LinearTriadDualTest {
     /// permanently `null` property makes the reader believe the information is there.**
     ///
     /// **So this goes through the <b>real</b> dual construction rather than a hand-built
-    /// `new ModelViewVariable(dualOrigin: ...)`, which would only prove "assignable".**
+    /// `new ModelViewVariable(dualOrigin:...)`, which would only prove "assignable".**
     ///
     /// **It also pins what the row index means: the `i`-th row-dual column must have `DualOrigin.RowIndex == i` and a
     /// relation equal to the primal's `i`-th row.** **If the dual column order ever changes without the origin following,
@@ -515,7 +514,7 @@ public class LinearTriadDualTest {
     /// Every Farkas-generated column has an identity, and they are all distinct.
     /// </summary>
     /// <remarks>
-    /// B1223 按基线 `LinearTriadModel.kt` 的 `withDerivedIdentity` 调用点补上三种角色：
+    /// 对齐基线 `LinearTriadModel.kt` 的 `withDerivedIdentity` 调用点补上三种角色：
     /// `farkas-constraint`（行乘子）、`farkas-slack`（等式行正负松弛）、`farkas-bound`（界乘子）。
     ///
     /// **底层 `DerivedModelElementIdentity.Create` 早就在，`MatrixIdentitySupport` 一直在用；
@@ -556,7 +555,7 @@ public class LinearTriadDualTest {
     /// **基线有三种角色，分别来自三处不同的调用点，所以"三种都在"更接近这个批次真正做的事。**
     ///
     /// **"Has an identity" would let through an implementation that wired only one role.** **The three roles come from
-    /// three call sites, so "all three appear" is closer to what this batch did.**
+    /// three call sites, so "all three appear" is closer to what did.**
     /// </remarks>
     [Fact]
     public void FarkasDual_ShouldCarryAllThreeRoles() {
@@ -606,14 +605,12 @@ public class LinearTriadDualTest {
     /// </summary>
     /// <remarks>
  /// **`Dual` 路径不带派生身份（基线也不带），而 `FarkasDual` 路径带。**
-    /// **所以这条断言只能用在对偶列上——它此前被 Farkas 断言复用，B1223 让 Farkas 列有了身份之后那两处就红了。**
+    /// **所以这条断言只能用在对偶列上——Farkas 列有了派生身份之后，复用它的那两处就红了。**
     ///
     /// **这正是"判据前提被有意改变"的典型情形：** **红的原因是实现按基线前进，
     /// 而不是实现退化。所以是拆分判据，不是回退实现。**
     ///
-    /// **The `Dual()` path carries no derived identity (nor does the baseline), while `FarkasDual()` does (added in
-    /// B1223).** **So this assertion only applies to dual columns — it was previously reused for Farkas columns, and
-    /// those two went red once Farkas columns gained identities.**
+    /// **The `Dual` path carries no derived identity (nor does the baseline), while `FarkasDual` does.** **So this assertion only applies to dual columns — the two places that reused it for Farkas columns went red once those gained identities.**
     ///
     /// **This is the textbook "the criterion's premise was deliberately changed" case: the red is because the
     /// implementation moved toward the baseline, not away.** **So split the criterion; do not revert the
@@ -623,7 +620,7 @@ public class LinearTriadDualTest {
     /// **没有行身份时空表是正确答案，不是失败** / An empty table is the correct answer when rows carry no identity.
     /// </summary>
     /// <remarks>
-    /// **这一条是本批<b>第一个写错方向</b>的判据，值得原样记下来。**
+    /// **这一条是这里<b>第一个写错方向</b>的判据，值得原样记下来。**
     ///
     /// **初版写的是"表必须覆盖每一行"，跑起来红了：期望 3，实得 0。**
     ///
@@ -635,7 +632,7 @@ public class LinearTriadDualTest {
     ///
     /// **真正的判据要分两支：没有身份 ⇒ 空表；有身份 ⇒ 完整覆盖。** **第二支在下面两条里用<b>带身份</b>的模型测。**
     ///
-    /// **The first criterion of this batch pointed the wrong way, and is worth recording verbatim.**
+    /// **The first criterion of pointed the wrong way, and is worth recording verbatim.**
     ///
     /// **The first version said "the table must cover every row"; it went red, expecting 3 and getting 0.**
     ///
@@ -669,24 +666,24 @@ public class LinearTriadDualTest {
     /// Row-aligned path: with row identities the table covers every row, every key is a real identity, and none repeat.
     /// </summary>
     /// <remarks>
-    /// **这一条走<b>行对齐</b>路径（对原模型自己调 `TidyDualSolutionByIdentity`），而不是走 `Dual()`。**
+    /// **这一条走<b>行对齐</b>路径（对原模型自己调 `TidyDualSolutionByIdentity`），而不是走 `Dual`。**
     ///
     /// **原因是造一个"带身份的模型"比想象的难：** **初版我给三行塞了手写的 `ModelElementIdentity`，
-    /// 于是 `Dual()` 在身份集合校验那一关就失败了——那些身份不在任何注册表里。**
+    /// 于是 `Dual` 在身份集合校验那一关就失败了——那些身份不在任何注册表里。**
     ///
     /// **而这件事本身是有意义的发现：** **身份不是"填个字符串"，它必须与一份注册表自洽。**
-    /// **所以判据要么走真实注册流程、要么就绕开 `Dual()`。</b>本批选后者，
+    /// **所以判据要么走真实注册流程、要么就绕开 `Dual`。</b>这里选后者，
     /// 因为行对齐路径<b>不需要</b>派生身份，它只需要行身份，而 `Ids` 就够。**
     ///
     /// **This one takes the <b>row-aligned</b> path (calling `TidyDualSolutionByIdentity` on the primal itself), not
-    /// `Dual()`.**
+    /// `Dual`.**
     ///
     /// **Because building an "identity-carrying model" is harder than it looks: the first version stamped three
-    /// hand-written `ModelElementIdentity` values and `Dual()` failed at identity-set validation — those identities are
+    /// hand-written `ModelElementIdentity` values and `Dual` failed at identity-set validation — those identities are
     /// in no registry.**
     ///
     /// **That is itself a useful finding: an identity is not "a string you fill in"; it must be self-consistent with a
-    /// registry.** **So a criterion must either run the real registration flow or avoid `Dual()`.** **This batch takes
+ /// registry.** **So a criterion must either run the real registration flow or avoid `Dual`.** ** takes
     /// the latter: the row-aligned path needs no derived identities, only row identities, and `Ids` suffices.**
     /// </remarks>
     [Fact]
@@ -711,7 +708,7 @@ public class LinearTriadDualTest {
     /// **对偶模型把原模型的行身份快照带过来了** / The dual model carries the primal's row-identity snapshot.
     /// </summary>
     /// <remarks>
-    /// **这一条钉的是本批最容易被忽略的一步：** **对偶模型是<b>新建</b>的，它的 `Constraints.Ids` 是自己的行身份
+    /// **这一条钉的是这里最容易被忽略的一步：** **对偶模型是<b>新建</b>的，它的 `Constraints.Ids` 是自己的行身份
     /// （构造时看不到原模型），而 `DualOrigin.RowIndex` 指向的是<b>原模型</b>的行。**
     ///
     /// **所以对偶模型必须把原模型的行身份<b>带过来</b>，否则那两半永远对不上。**
@@ -719,7 +716,7 @@ public class LinearTriadDualTest {
     /// **基线在这一处不需要"带"：它的 `dualOrigin` 是约束对象引用，天生就指回原约束。
     /// C# 因为用行号表达同一件事，必须补一次快照——这是表示差异带来的<b>额外一步</b>，不是额外能力。**
     ///
-    /// **This pins the step most easily missed in this batch:** **a dual model is <b>newly built</b>; its own
+    /// **This pins the step most easily missed in:** **a dual model is <b>newly built</b>; its own
     /// `Constraints.Ids` are its own rows (the originals are not visible at construction), while `DualOrigin.RowIndex`
     /// points at the <b>primal's</b> rows.**
     ///
@@ -734,34 +731,34 @@ public class LinearTriadDualTest {
     /// The dual model carries the primal's row identities, and the tidy table uses them.
     /// </summary>
     /// <remarks>
-    /// **B1224 把这条判据记为"未测"，B1225 让它可测了。**
+    /// **这条判据此前记为"未测"，现在可测了。**
     ///
-    /// **B1224 的阻塞点是：给三行塞手写 `ModelElementIdentity` 后 `Dual()` 失败。
-    /// B1225 读了 `ValidateIdentity` 的源码，发现原因很具体——`Stable` 作用域<b>必须</b>带
-    /// 命名空间、schema 与非空来源，而 B1224 那三份只给了 `Kind`/`Id`/`Scope`。**
+    /// **阻塞点是：给三行塞手写 `ModelElementIdentity` 后 `Dual` 失败。
+    /// 读 `ValidateIdentity` 的源码可以看到原因很具体——`Stable` 作用域<b>必须</b>带
+    /// 命名空间、schema 与非空来源，而那三份只给了 `Kind`/`Id`/`Scope`。**
     ///
-    /// **改用 `ModelLocal` 作用域后 `Dual()` 直接通过：** **模型内身份不需要注册表，
+    /// **改用 `ModelLocal` 作用域后 `Dual` 直接通过：** **模型内身份不需要注册表，
     /// 而它在这个判据里与稳定身份等价——两者都能让"行有身份"这件事成立。**
     ///
-    /// **于是那条变异（"完全不读 `PrimalRowIdentities`"）现在能被抓住了，见本批的计划文档。**
+    /// **于是那条变异（"完全不读 `PrimalRowIdentities`"）现在能被抓住了。**
     ///
-    /// **这一批没有改任何产品代码是对的：** **B1224 的判断"需要更大的改动"是错的，
+    /// **这里没有改任何产品代码是对的：** **"需要更大的改动"这个判断是错的，
     /// 真正的阻碍只是测试模型少给了三个字段——而那个判断是在<b>没读校验源码</b>时下的。**
     ///
     /// **"做不到"这个结论必须先读一遍拒绝它的那段代码，否则它只是"我没找到办法"的另一种说法。**
     ///
-    /// **B1224 recorded this criterion as "untested"; B1225 made it testable.**
+    /// **This criterion was recorded as "untested"; it is testable now.**
     ///
-    /// **The blocker in B1224 was: hand-written `ModelElementIdentity` values made `Dual()` fail. B1225 read
-    /// `ValidateIdentity` and found the cause precisely — a `Stable` scope <b>must</b> carry a namespace, a schema and
-    /// non-empty provenance, and B1224 supplied only `Kind`/`Id`/`Scope`.**
+    /// **The blocker was: hand-written `ModelElementIdentity` values made `Dual` fail. Reading `ValidateIdentity`
+    /// shows the cause precisely — a `Stable` scope <b>must</b> carry a namespace, a schema and
+    /// non-empty provenance, and only `Kind`/`Id`/`Scope` were supplied.**
     ///
-    /// **Switching to `ModelLocal` let `Dual()` pass immediately: a model-local identity needs no registry, and it is
+    /// **Switching to `ModelLocal` let `Dual` pass immediately: a model-local identity needs no registry, and it is
     /// equivalent to a stable one for this criterion — both make "the row has an identity" true.**
     ///
-    /// **So the mutation ("do not read `PrimalRowIdentities` at all") is now caught; see this batch's plan.**
+    /// **So the mutation ("do not read `PrimalRowIdentities` at all") is now caught; see's plan.**
     ///
-    /// **Changing no product code was the right call: B1224's judgement "this needs a bigger change" was wrong, and
+    /// **Changing no product code was the right call: the judgement "this needs a bigger change" was wrong, and
     /// the real obstacle was three missing fields on a test model — a judgement made <b>without reading the validation
     /// source</b>.**
     ///
@@ -783,12 +780,12 @@ public class LinearTriadDualTest {
     /// The dual path keys the table by the primal's identities, not its own rows.
     /// </summary>
     /// <remarks>
-    /// **这一条是 B1224 那条"未测"的<b>正题</b>：** **对偶模型自己的 `Constraints.Ids` 与
+    /// **这一条是那条"未测"的<b>正题</b>：** **对偶模型自己的 `Constraints.Ids` 与
     /// `PrimalRowIdentities` 是两套不同的东西，而表必须用后者。**
     ///
     /// **如果实现退回读 `Constraints.Ids`，键就会变成对偶模型自己的行身份，这条会红。**
     ///
-    /// **This is the <b>point</b> of B1224's "untested": the dual model's own `Constraints.Ids` and its
+    /// **This is the <b>point</b> of that "untested" note: the dual model's own `Constraints.Ids` and its
     /// `PrimalRowIdentities` are two different sets, and the table must use the latter.**
     ///
     /// **If the implementation fell back to `Constraints.Ids`, the keys would become the dual model's own row

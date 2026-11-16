@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// Syncs `OnnxTensorExpr`. **This is the layer the checklist's items 2 and 3 both lack:** **the existing implementation holds one scalar expression per name, so a Transpose has
 /// nowhere to write the permutation and a Scan runtime slice has nowhere to be cut.**
 ///
-/// **This batch builds the layer itself without wiring it: Transpose permutes by coordinate and SliceLeading cuts along the leading axis, both pure functions, and both can be pinned
+/// ** builds the layer itself without wiring it: Transpose permutes by coordinate and SliceLeading cuts along the leading axis, both pure functions, and both can be pinned
 /// directly by "is the element at this position the same one as before".** **Wiring touches every call site of the evaluator, which is the next batch — verifying that the
 /// permutation is computed correctly first gives the wiring something to compare against.**
 /// </remarks>
@@ -266,7 +266,7 @@ public sealed class OnnxElementList
     ///
     /// **Rank-1 operands participate as (1,K)/(K,1) with that dimension squeezed at the end, as in the baseline; rank 0 is refused.**
     ///
-    /// **This batch covers the linear case where at least one side is constant.** **With variables on both sides each element becomes quadratic while this layer holds linear polynomials —
+ /// ** covers the linear case where at least one side is constant.** **With variables on both sides each element becomes quadratic while this layer holds linear polynomials —
     /// the baseline can do it because it has OnnxDegreeMode, and the quadratic path on the C# side is separate (OnnxQuadraticProduct).** **So it is refused with the reason named, rather than
     /// quietly stuffing a quadratic product into a linear polynomial.**
     ///

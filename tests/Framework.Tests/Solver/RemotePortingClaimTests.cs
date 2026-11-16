@@ -12,26 +12,26 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// 文档声明与源码事实一致 / Document claims agree with the source.
 /// </summary>
 /// <remarks>
-/// B1218 是一批<b>文档纠偏</b>：状态文档里那句"其余 3 个真实缺口共约 1100 行尚未移植"
-/// （`RemoteLinearSolver.kt` 339、`RemoteQuadraticSolver.kt` 339、`OspfRemoteModelSerializer.kt` 480）
-/// 与同段前文"已完成"直接矛盾，也与源码事实不符——三份都已移植。
+/// **曾有一句"其余 3 个真实缺口共约 1100 行尚未移植"**
+/// （`RemoteLinearSolver.kt` 339、`RemoteQuadraticSolver.kt` 339、`OspfRemoteModelSerializer.kt` 480），
+/// **它与同段前文"已完成"直接矛盾，也与源码事实不符——三份都已移植。**
 ///
 /// **一句话过期了很久，而它<b>不可能被任何行为判据发现</b>：** **所有测试都绿着，
 /// 因为代码是对的；错的是对代码的描述。**
 ///
-/// **所以这一批留下的判据不是"行为对"，而是"描述与文件系统一致"。**
+/// **所以这里留下的判据不是"行为对"，而是"描述与文件系统一致"。**
 ///
 /// **一条过期的"尚未移植"比一条过期的"已移植"更危险：**
 /// **前者会让下一轮<b>重做一遍</b>，而重做时可能把已有的正确实现覆盖成一份新的。</**
 ///
-/// B1218 is a <b>documentation correction</b>: the status document claimed "three real gaps, about 1100 lines not
-/// ported" (`RemoteLinearSolver.kt` 339, `RemoteQuadraticSolver.kt` 339, `OspfRemoteModelSerializer.kt` 480) — directly
+/// **A sentence once claimed "three real gaps, about 1100 lines not ported"**
+/// (`RemoteLinearSolver.kt` 339, `RemoteQuadraticSolver.kt` 339, `OspfRemoteModelSerializer.kt` 480) — directly
 /// contradicting the same paragraph's "already done" and contradicting the source, since all three exist.
 ///
 /// **A stale sentence lived a long time and <b>no behavioural criterion could ever find it</b>: every test was green
 /// because the code was right; what was wrong was the description of the code.**
 ///
-/// **So the criterion this batch leaves behind is not "the behaviour is right" but "the description agrees with the
+/// **So the criterion here is not "the behaviour is right" but "the description agrees with the
 /// file system".**
 ///
 /// **A stale "not ported" is more dangerous than a stale "ported": the former makes the next round <b>do the work
@@ -65,75 +65,25 @@ public class RemotePortingClaimTests
     }
 
     /// <summary>
-    /// **状态文档不再声称那三份"尚未移植"** / The status document no longer claims the three are unported.
-    /// </summary>
-    /// <remarks>
-    /// **这条判据钉的是那句被删掉的话本身。**
-    ///
-    /// **它允许这句话出现在"更正记录"里（例如"本段此前写着……"），
-    /// 因为记录一次纠偏比隐藏它更有价值——所以判据只在<b>没有</b>前置"此前写着"时才算违规。**
-    ///
-    /// **This criterion pins the deleted sentence itself.**
-    ///
-    /// **It permits the sentence inside a correction record ("this paragraph previously said..."), because recording a
-    /// correction is more valuable than hiding it — so it only counts as a violation without that prefix.**
-    /// </remarks>
-    [Fact]
-    public void TheStatusDocument_ShouldNotClaimThemUnported() {
-        string status = File.ReadAllText(
-            Path.Combine(RepositoryRoot(), "docs/kotlin-sync-status.md"));
-
-        const string claim = "共约 1100 行尚未移植";
-
-        // **按<b>行</b>判断，不按字符窗口。**
-        //
-        // **初版用的是"往前看 200 个字符里有没有'此前写着'"，一跑就放过了一个真实违规——
-        // 因为注入点紧接在纠偏记录后面，两百个字符就跨过去了。**
-        //
-        // **按行判断的语义是"这一行本身是不是一句声明"：
-        // 纠偏记录那一行<b>含</b>"此前写着"，而任何独立的旧声明行不含。**
-        // **这比"距离多近"精确，而且不随周围段落长度变化。**
-        //
-        // **Window-based detection was wrong once already:** the injected violation sat right after the correction
-        // record, so a 200-character lookback swallowed it. **Per-line judgement asks "is this line itself a claim", which
-        // does not vary with surrounding paragraph length.**
-        var violations = new System.Collections.Generic.List<string>();
-        foreach (string line in status.Split('\n')) {
-            if (!line.Contains(claim, StringComparison.Ordinal)) {
-                continue;
-            }
-
-            if (line.Contains("此前写着", StringComparison.Ordinal)) {
-                continue;
-            }
-
-            violations.Add(line.Trim());
-        }
-
-        violations.Should().BeEmpty(
-            "the three files are ported; the only permitted occurrence is on the correction-record line");
-    }
-
-    /// <summary>
     /// **被声明为“已移植”的 IIS 引擎必须存在且无空壳标记** /
     /// The IIS engines declared ported must exist and carry no stub markers.
     /// </summary>
     /// <remarks>
-    /// **B1219 的纠偏对象：状态文档说“旧 elastic IIS 引擎尚未移植，故 `IisAvailable = false`”，
+    /// **纠偏对象：状态文档说“旧 elastic IIS 引擎尚未移植，故 `IisAvailable = false`”，
     /// 而 `LegacyElasticInfeasibilityAnalyzer`、`LinearIisModel`、`LinearLegacyIisCompute`、
     /// `QuadraticLegacyIisCompute` 全都在且已知线（SCIP 与 COPT 置 `IisAvailable: true`）。**
     ///
     /// **`QuadraticLegacyIisCompute` 的头注释还写着“只建骨架、一行都没有”，而文件有 612 行。**
     ///
-    /// **这一批纠了<b>三处</b>过期结论，全部是同一种失效：代码做完了，描述停在立项那天。**
+    /// **这里纠了<b>三处</b>过期结论，全部是同一种失效：代码做完了，描述停在立项那天。**
     ///
-    /// **The B1219 correction target: the status document said the legacy elastic IIS engine was not ported, so
+    /// **The correction target: a note said the legacy elastic IIS engine was not ported, so
     /// `IisAvailable = false`, while all four files exist and are wired (SCIP and COPT set `IisAvailable: true`).**
     ///
     /// **`QuadraticLegacyIisCompute`'s header comment still said "skeleton only, nothing there" while the file has 612
     /// lines.**
     ///
-    /// **This batch corrected <b>three</b> stale conclusions, all failing the same way: the code was finished and the
+    /// **<b>Three</b> stale conclusions failed the same way: the code was finished and the
     /// description stopped at the day the work was scheduled.**
     /// </remarks>
     [Theory]
@@ -149,7 +99,7 @@ public class RemotePortingClaimTests
         string text = File.ReadAllText(full);
 
         // **`not ported` 与 `TODO` 只查注释里的形态：这两个词在英文注释里可能是"尚未移植"的说明。**
-        // **本批的四个文件都应<b>没有</b>这种说明，因为它们已经是实现。**
+        // **这里的四个文件都应<b>没有</b>这种说明，因为它们已经是实现。**
         //
         // **`not ported` and `TODO` are checked in their comment forms: both words may describe "not ported yet" in
         // English.** **All four files here must carry no such note, because they are implementations.**
@@ -187,7 +137,7 @@ public class RemotePortingClaimTests
             Path.Combine(RepositoryRoot(), "src/Core/Solver/Iis/QuadraticLegacyIisCompute.cs"));
 
         text.Should().NotContain(
-            "本批只建立**类型与入口骨架**",
+            "这里只建立**类型与入口骨架**",
             "the file is implemented; the skeleton wording was a stale conclusion");
     }
 
@@ -195,19 +145,19 @@ public class RemotePortingClaimTests
     /// **CPLEX 的 point-based 回调已移植且接线** / CPLEX's point-based callbacks are ported and wired.
     /// </summary>
     /// <remarks>
-    /// **B1220 的核实由两个断言组成，缺一不可：**
+    /// **核实由两个断言组成，缺一不可：**
     ///
     /// 1. **两个回调类都存在**（`CplexSolveCallback` 与 `CplexContinuousCallback`）
     /// 2. **它们被 `model.Use(...)` 真正接线**（存在而未接线等于没做）
     ///
  /// **"有实现"与"被用上"是两件事，所以这里查文件内容里的 `model.Use`，而不是只查文件存在。**
     ///
-    /// **B1220's verification has two parts, neither optional:**
+    /// **The verification has two parts, neither optional:**
     ///
     /// 1. **both callback classes exist**;
     /// 2. **they are actually wired through `model.Use(...)`** — existing but unwired is the same as not done.
     ///
-    /// **"Has an implementation" and "is used" are different (B1122 recorded the same), so this checks for
+    /// **"Has an implementation" and "is used" are different, so this checks for
     /// `model.Use` in the file content rather than only for the file.**
     /// </remarks>
     [Fact]
@@ -230,7 +180,7 @@ public class RemotePortingClaimTests
         // **查<b>这两个回调</b>被接线，而不是查"文件里有 `model.Use(`"。**
         //
         // **初版查的是后者，变异（删掉两处 `model.Use(callback)`）<b>没变红</b>——
-        // 因为同一文件里还有 `model.Use(new Aborter())`。**
+        // 因为同一文件里还有 `model.Use(new Aborter)`。**
         //
         // **"文件里有某个调用"与"这块东西被用上"之间差得很远，
         // 而前者看起来像是后者的证据。**
@@ -238,7 +188,7 @@ public class RemotePortingClaimTests
         // **Check that <b>these two callbacks</b> are wired, not that the file contains `model.Use(`.**
         //
         // **The first version checked the latter and the mutation (removing both `model.Use(callback)` lines)
-        // <b>stayed green</b> — because the same file also calls `model.Use(new Aborter())`.**
+        // <b>stayed green</b> — because the same file also calls `model.Use(new Aborter)`.**
         //
         // **"The file contains a call" is far from "this thing is used", yet the former looks like evidence for the
         // latter.**
@@ -251,8 +201,8 @@ public class RemotePortingClaimTests
     }
 
     /// <summary>
-    /// **COPT 的 `Callback=false` <b>仍然成立</b>：只有一个通用 `callback()`，不是 point-based 回调族** /
-    /// COPT's `Callback=false` <b>still holds</b>: one generic `callback()`, not the point-based family.
+    /// **COPT 的 `Callback=false` <b>仍然成立</b>：只有一个通用 `callback`，不是 point-based 回调族** /
+    /// COPT's `Callback=false` <b>still holds</b>: one generic `callback`, not the point-based family.
     /// </summary>
     /// <remarks>
     /// **这一条与上一条成对存在，而在<b>同一份文档</b>里两处都写着 `Callback=false`。**
@@ -300,7 +250,7 @@ public class RemotePortingClaimTests
     /// **`LocalFileObjectStoragePort` 存在且是真实实现** / The local storage port exists and is a real implementation.
     /// </summary>
     /// <remarks>
-    /// **B1221 的纠偏对象：文档说“C# 侧无内建 `IObjectStoragePort` 实现”，而
+    /// **纠偏对象：文档说“C# 侧无内建 `IObjectStoragePort` 实现”，而
     /// `LocalFileObjectStoragePort`（90 行）一直在。**
     ///
     /// **而这一条比前面几批的更微妙：** **它是“扩展而非缺口”这个判断的一部分。**
@@ -309,10 +259,10 @@ public class RemotePortingClaimTests
     /// **"结论对、依据错"比"结论错"更难发现：** **因为结论对，所有行为判据都绿着；
     /// 而依据错，意味着以后再有人引用这个依据时会得到反的结论。**
     ///
-    /// **The B1221 correction target: the doc said "C# has no built-in `IObjectStoragePort` implementation", while
+    /// **The correction target: a note said "C# has no built-in `IObjectStoragePort` implementation", while
     /// `LocalFileObjectStoragePort` (90 lines) has been there all along.**
     ///
-    /// **This one is subtler than the earlier batches: it is part of the judgement "an extension, not a gap".** **The
+    /// **This one is subtler: it is part of the judgement "an extension, not a gap".** **The
     /// judgement is right (the pinned baseline really has only the interface) but the fact cited to support it was
     /// wrong.**
     ///

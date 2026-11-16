@@ -284,9 +284,9 @@ public sealed class ControlledSearchSession<ObjValue, V> : ISearchSession<ObjVal
         }
         SearchSessionSnapshot baseline = ((Ok<SearchSessionSnapshot, ErrorCode, Error<ErrorCode>>)native).Value;
         // **`LocalArchive` 同理必须是真正的 JSON `null`**：`default(JsonElement)` 会让 `JsonElementConverter.Write` 抛异常，
-        // 而异常发生在 `Snapshot()` 内部、调用方只看到一个未处理异常。
+        // 而异常发生在 `Snapshot` 内部、调用方只看到一个未处理异常。
         // **`LocalArchive` likewise must be a real JSON `null`**: `default(JsonElement)` makes `JsonElementConverter.Write` throw, and the
-        // exception happens inside `Snapshot()` so the caller only sees an unhandled exception.
+        // exception happens inside `Snapshot` so the caller only sees an unhandled exception.
         var payload = new ControlledSnapshot(
             baseline, slots, JsonDocument.Parse("null").RootElement.Clone(),
             _initialized, _decisions, _stagnation, rewardState, rewardVersion);

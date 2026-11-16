@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// **用真实 SCIP 跑通框架列生成** / Drive the framework's column generation with real SCIP.
 /// </summary>
 /// <remarks>
-/// **B408 推翻了"环境里没有求解器"的记录**：机器上 `/c/environment/solver/scip924` 在 PATH 上，
-/// `libscip.dll` 可加载。本批把这条能力接到**框架层**——
+/// **推翻了"环境里没有求解器"的记录**：机器上 `/c/environment/solver/scip924` 在 PATH 上，
+/// `libscip.dll` 可加载。这里把这条能力接到**框架层**——
 /// 在此之前 `Framework.Csp1d.Tests` **没有任何真实求解测试**（8 个插件工程有集成开关，框架层没有）。
 ///
-/// **这直接补掉 B397 的判据弱点**：那里的框架链路判据用 `MockColumnGenerationSolver`，
+/// **这直接补掉 的判据弱点**：那里的框架链路判据用 `MockColumnGenerationSolver`，
 /// 只能断言"不抛异常、返回非 null"，**对内部实现完全不敏感**（两个变异都存活）。
 /// 桩求解器的 `LpObjective` 没有意义，而真实 SCIP 的 LP 目标值是**真实的数值**。
 ///
@@ -36,8 +36,8 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// | `LpObjective` 是有限真实值 | ❌ 无意义 | ✅ |
 /// | `TerminationReason` 是收敛 | ❌ | ✅ |
 ///
-/// **B408 overturned the record "there is no solver in this environment"** (table above explains why this matters): `Framework.Csp1d.Tests` had **no real-solve test at
-/// all**. This closes B397's criterion weakness — that one used `MockColumnGenerationSolver` and could only assert "does not throw, returns non-null", staying
+/// **overturned the record "there is no solver in this environment"** (table above explains why this matters): `Framework.Csp1d.Tests` had **no real-solve test at
+/// all**. This closes the earlier criterion weakness — that one used `MockColumnGenerationSolver` and could only assert "does not throw, returns non-null", staying
 /// **completely insensitive to internals** (two mutants survived). A stub's `LpObjective` is meaningless, whereas real SCIP produces a genuine LP optimum.
 /// </remarks>
 public class ScipColumnGenerationIntegrationTests {

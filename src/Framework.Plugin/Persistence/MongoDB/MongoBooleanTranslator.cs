@@ -17,13 +17,13 @@ namespace Fuookami.Ospf.Framework.Plugin.Persistence.MongoDB;
 /// <summary>**布尔表达式 → Mongo 过滤器** / Boolean expression → a Mongo filter.</summary>
 /// <remarks>
 /// 基线 `MongoBooleanTranslator`（**422 行**）是四个 Mongo 翻译器里最大、也最容易出错的一个。
-/// B1118—B1120 补了标量、排序、更新三个，这一批补最后一个。
+/// 标量、排序、更新三个翻译器已就位，这里是最后一个。
 ///
 /// **查询写错不抛异常，它只是答错**——而这一层里有四处"看起来对、实际反了或漏了"的地方：
 /// **反转比较**、**null 与"字段缺失"**、**正则转义顺序**、**不支持的谓词按策略处理**。
 ///
 /// The baseline's `MongoBooleanTranslator` (**422 lines**) is the largest of the four Mongo translators and the easiest to get wrong.
-/// B1118—B1120 added the scalar, sort and update translators; this batch adds the last one.
+/// The scalar, sort and update translators are in place; this is the last one.
 ///
 /// **A wrong query does not throw; it answers wrongly** — and this layer has four places that look right but are reversed or incomplete:
 /// **reversed comparisons**, **null versus "field missing"**, **regex escaping order**, and **unsupported predicates handled by policy**.
@@ -126,7 +126,7 @@ public static class MongoBooleanTranslator
         var rightRef = comparison.Right as ScalarReference<object?>;
         var rightConst = comparison.Right as ScalarConstant<object?>;
 
-        // **引用 与 常量**：直接写成 `{field: {$op: value}}`。
+        // **引用与 常量**：直接写成 `{field: {$op: value}}`。
         // **Reference versus constant**: written directly as `{field: {$op: value}}`.
         if (leftRef is not null && rightConst is not null)
         {
@@ -134,7 +134,7 @@ public static class MongoBooleanTranslator
                 resolveFieldName, comparison, policy);
         }
 
-        // **常量 与 引用**：**运算符必须反转**——`5 < x` 就是 `x > 5`。
+        // **常量与 引用**：**运算符必须反转**——`5 < x` 就是 `x > 5`。
         // **Constant versus reference**: **the operator has to be reversed** — `5 < x` is `x > 5`.
         if (leftConst is not null && rightRef is not null)
         {

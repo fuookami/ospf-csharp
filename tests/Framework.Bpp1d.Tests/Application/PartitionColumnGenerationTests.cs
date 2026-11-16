@@ -10,9 +10,9 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **分区列生成预算的四条规则** / The four budget rules of partition column generation.
 /// </summary>
 /// <remarks>
-/// 对应基线 `solve()` 开头的那一条复合判断。**判据不需要求解器**：它是一个纯函数。
+/// 对应基线 `solve` 开头的那一条复合判断。**判据不需要求解器**：它是一个纯函数。
 ///
-/// Mirrors the single compound guard at the top of the baseline's `solve()`. **No criterion needs a solver**: it is a pure function.
+/// Mirrors the single compound guard at the top of the baseline's `solve`. **No criterion needs a solver**: it is a pure function.
 /// </remarks>
 public class PartitionColumnGenerationTests {
     /// <summary>**列数上限必须能容纳每个分区一列** / The column budget must fit one column per partition.</summary>

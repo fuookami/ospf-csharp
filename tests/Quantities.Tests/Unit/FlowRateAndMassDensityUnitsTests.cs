@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **两个都叫"每升"，但一个按秒一个按分** / Two units both called "per litre", one by second and one by minute.
 /// </summary>
 /// <remarks>
-/// B1126 补了速度与加速度，B1127 继续补 `FlowRate` 与 `MassDensity` 两个量纲。
+/// 补了速度与加速度之后，继续补 `FlowRate` 与 `MassDensity` 两个量纲。
 ///
-/// **这一批的两个风险都不是"算错"，而是"拿错"**：
+/// **这里的两个风险都不是"算错"，而是"拿错"**：
 /// **`LitersPerMinute` 与 `LitersPerSecond` 只差一个词，混用差 60 倍**；
 /// **`GramsPerCubicCentimeter` 与 `KilogramsPerCubicMeter` 描述同一杯水，数值差 1000 倍。**
 ///
-/// B1126 added speed and acceleration; B1127 adds the `FlowRate` and `MassDensity` dimensions.
+/// Added
 ///
 /// **Neither risk here is "computing wrong"; both are "picking the wrong unit"**:
 /// **`LitersPerMinute` and `LitersPerSecond` differ by one word and by a factor of 60**;

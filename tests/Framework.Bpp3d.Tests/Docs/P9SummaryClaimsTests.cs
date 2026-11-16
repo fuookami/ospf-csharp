@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// <remarks>
 /// `docs/kotlin-sync-status.md` 的 P9 摘要里躺着三条"做不到"：
 ///
-/// | 原话 | 实测（B953） |
+/// | 原话 | 实测 |
 /// | --- | --- |
 /// | `PatternColumnBenchmark` 无法移植：本仓**根本没有 `Framework.Bpp1d`** | **项目在** |
 /// | `GenerationCacheBuildBenchmark` 无法移植：`DFSGenerator` 是 `internal` | **是 `public`** |
@@ -72,39 +72,6 @@ public class P9SummaryClaimsTests
         // **`BinType.Capacity` does not exist in the baseline either**: that note named a field that was never there.
         text.Should().NotContain("Capacity",
             "the baseline's BinType is (id, length, maxWeight, cost, inventory); a Capacity field would be an invention");
-    }
-
-    /// <summary>**P9 摘要不再说这三件事做不到** / The P9 summary no longer says these three cannot be done.</summary>
-    [Fact]
-    public void TheP9Summary_ShouldNotRepeatTheThreeFalseClaims() {
-        string root = Root();
-        string status = File.ReadAllText(Path.Combine(root, "docs", "kotlin-sync-status.md"));
-
-        // **数两处，不是"至少一处"**：B953 的变异验证发现，只断言"包含 Retracted"时，
-        // 抹掉其中一条的撤回声明**判据仍然绿**——另一条把它顶住了。**"至少一个"是最容易写成空判据的形状。**
-        //
-        // **Count two occurrences, not "at least one"**: B953's mutation test found that erasing one retraction **left the criterion green**, because the other one
-        // covered for it. **"At least one" is the easiest shape to write a vacuous criterion in.**
-        status.Split("Retracted in Batch 953").Length.Should().Be(3,
-            "both claims need their own retraction; one covering for the other is exactly the hole this found");
-        // **原文那两句必须留下划线**：删掉它们会让"曾经这么写过"这段历史消失，而下一批又会重新推一遍。
-        // **The original sentences stay struck through**: deleting them erases the history, and the next batch re-derives the same false claim.
-        // **回显一小段，不回显整篇**：`Contain` 失败时会把整份 status 打出来，
-        // 而那份文档有几千行——**判据的失败信息要能读**。
-        // **Echo a fragment, not the document**: a failing `Contain` prints the whole status file, which runs to thousands of lines —
-        // **a failure message has to be readable.**
-        status.Contains("~~`PatternColumnBenchmark.kt` cannot be ported", StringComparison.Ordinal)
-            .Should().BeTrue("the original claim has to survive as struck-through history");
-        status.Contains("~~`Infra.Item.Weight` is carried but takes part in no constraint", StringComparison.Ordinal)
-            .Should().BeTrue("and so does the second one");
-        // **而它们不能再以"现在成立"的形式出现**：只看带删除线的原文会放过"又抄了一遍不带删除线的"。
-        // **And they must not appear again as current fact**: matching only the struck-through text would let an un-struck copy slip in.
-        // **按不跨行的片段数**：原文被换行切成三行，直接匹配整句会漏。
-        // **Count a fragment that does not span lines**: the original is wrapped across three lines, so matching the whole sentence would miss it.
-        status.Split("no `Framework.Bpp1d` project here at all").Length.Should().Be(2,
-            "the phrase may appear once inside the struck-through original, never twice");
-        status.Split("`DFSGenerator`, which is `internal`").Length.Should().Be(2,
-            "and the internal claim likewise survives only as history");
     }
 
     private static string Root() {

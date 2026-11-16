@@ -1,4 +1,4 @@
-// 链接是松弛，不是硬约束（B746）/ A link is a slack, not a hard constraint (B746).
+// 链接是松弛，不是硬约束/ A link is a slack, not a hard constraint.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **链接是松弛，不是硬约束（B746）** / A link is a slack, not a hard constraint (B746).
+/// **链接是松弛，不是硬约束** / A link is a slack, not a hard constraint.
 /// </summary>
 /// <remarks>
 /// 基线 `FlightLink.kt` 一直被当作"约束"来理解，实际是**松弛**：链接成不成立交给目标去压，而不是硬性禁止。

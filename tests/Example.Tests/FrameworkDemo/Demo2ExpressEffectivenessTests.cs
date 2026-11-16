@@ -29,7 +29,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **货物时效域（B616）** / The express-effectiveness domain (B616).
+/// **货物时效域** / The express-effectiveness domain.
 /// </summary>
 /// <remarks>
 /// 三个模型（绝对顺序、相对顺序）与三条管线。判据的重点：**装载模式二选一**、绝对系数公式的两处加一、
@@ -115,7 +115,7 @@ public class Demo2ExpressEffectivenessTests {
     ///
     /// 1. 相对顺序的条件常数与 `strictBoundary` 都是 **1e-10**，即基线 `NONZERO_TOLERANCE` 的值。
     /// 2. **1e-9 会改变行为**：条件常数与边界同时放大时 `SafeLattice` 仍能通过（因为两者同步走），
-    ///    所以只有把这个常量本身钉住才能发现偏差。它是一个**校准旋钮**，不是可以随手改的实现细节。
+    /// 所以只有把这个常量本身钉住才能发现偏差。它是一个**校准旋钮**，不是可以随手改的实现细节。
     ///
     /// Two paired points: the relative order's condition constant and `strictBoundary` are both **1e-10**, the baseline's `NONZERO_TOLERANCE`; and **1e-9 changes behaviour**, yet
     /// `SafeLattice` still passes because the constant and the boundary scale together, so only pinning the constant itself catches the drift. It is a **calibration knob**, not an
@@ -200,7 +200,7 @@ public class Demo2ExpressEffectivenessTests {
     /// 1. 三个不同优先级 → 3 个有序货物对（全组合，不是相邻 2 对）。
     /// 2. 两个舱位 → 1 个有序舱位对。
     /// 3. **两个货物都能放到两个舱位时，注册成功**——`IfFunction` 的 `strictBoundary` 取 `NONZERO_TOLERANCE = 1e-10`
-    ///    就能通过 `SafeLattice`（此前取 0.5 被拒，那是本仓的调用错误，不是框架限制）。
+    /// 就能通过 `SafeLattice`（此前取 0.5 被拒，那是本仓的调用错误，不是框架限制）。
     /// 4. 符号矩阵是 **3 × 1**，每个位置都有符号。
     ///
     /// Four paired points: three distinct priorities give 3 ordered item pairs (all combinations, not 2 adjacent); two positions give 1 ordered position pair; **registration succeeds when
@@ -210,8 +210,8 @@ public class Demo2ExpressEffectivenessTests {
     [Fact]
     public void RelativeOrder_ShouldFillEverySlot() {
         var items = new List<Item> { MakeItem("A", 3), MakeItem("B", 2), MakeItem("C", 1) };
-        // **三个舱位**，才能让同一货物对配上多个舱位对：位置 `ToString()` 没覆写时这些符号会重名。
-        // **Three positions**, so one item pair maps onto several position pairs; without a `ToString()` override those symbols collide.
+        // **三个舱位**，才能让同一货物对配上多个舱位对：位置 `ToString` 没覆写时这些符号会重名。
+        // **Three positions**, so one item pair maps onto several position pairs; without a `ToString` override those symbols collide.
         var positions = new List<StowagePosition> {
             MakePosition("P1", 1UL, 1), MakePosition("P2", 2UL, 2), MakePosition("P3", 3UL, 3),
         };
@@ -229,9 +229,9 @@ public class Demo2ExpressEffectivenessTests {
                 relative.Reversal(p1, p2).Should().NotBeNull("every slot carries a symbol, zero or not");
             }
         }
-        // **符号名必须互不相同**：`Item` 或 `StowagePosition` 少了 `ToString()` 覆写就会全部退化成类型全名，
+        // **符号名必须互不相同**：`Item` 或 `StowagePosition` 少了 `ToString` 覆写就会全部退化成类型全名，
         // 注册时报 `Repeated "…"`（实测）。这一条同时钉住两个覆写。
-        // **Every symbol name must differ**: without a `ToString()` override on either `Item` or `StowagePosition` they all degrade to the full type name and registration fails with
+        // **Every symbol name must differ**: without a `ToString` override on either `Item` or `StowagePosition` they all degrade to the full type name and registration fails with
         // `Repeated "…"` (measured). This single assertion pins both overrides.
         var names = new List<string>();
         for (int p1 = 0; p1 < relative.OrderedItems.Count; ++p1) {
@@ -324,7 +324,7 @@ public class Demo2ExpressEffectivenessTests {
     /// <remarks>
     /// 两点成对：
     ///
-    /// 1. **单个货物没有有序对** → `ItemPriorityReverseLimit` 直接返回成功且**不加目标**（基线的 `if (monomials.isEmpty()) return ok`）。
+    /// 1. **单个货物没有有序对** → `ItemPriorityReverseLimit` 直接返回成功且**不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
     /// 2. 该路径**不需要 `IfFunction`**，因为循环体一次都不执行——所以它能落地，而可放置组合那条路径不能。
     ///
     /// Two paired points: **one item has no ordered pair**, so `ItemPriorityReverseLimit` returns success and **adds no objective** (the baseline's early return); and this path **does

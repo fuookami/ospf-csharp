@@ -27,14 +27,14 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **未显式指定上下界时，动态产品的边界必须被推导出来** / When bounds are unspecified, dynamic products must get derived ones.
 /// </summary>
 /// <remarks>
-/// **B378 记的缺口**："`ResolveDefaultLengthBounds` 的派生逻辑无判据——它是 `private static`，
+/// **记的缺口**："`ResolveDefaultLengthBounds` 的派生逻辑无判据——它是 `private static`，
 /// 要走完整求解路径才能观察。"
 ///
-/// 本批走 `SolveAsync` + mock 求解器，从 `MilpResult.Model` 里**看变量在不在**——
+/// 这里走 `SolveAsync` + mock 求解器，从 `MilpResult.Model` 里**看变量在不在**——
 /// 派生成功 ⇒ `assigned_length_*` 与 `over_length_*` 变量被建出来并被约束；
 /// 派生失败 ⇒ 变量根本不出现（因为 `BuildAssignedLength` 要求 `hasBound || hasPenalty`）。
 ///
-/// **B378's gap**: "`ResolveDefaultLengthBounds` has no criterion — it is `private static` and needs the full solve path to observe." This batch drives
+/// **the earlier gap**: "`ResolveDefaultLengthBounds` has no criterion — it is `private static` and needs the full solve path to observe." drives
 /// `SolveAsync` with the mock solver and inspects `MilpResult.Model` for **whether the variables exist**: a successful derivation creates and constrains
 /// `assigned_length_*` / `over_length_*`; a failed one leaves them absent entirely (because `BuildAssignedLength` requires `hasBound || hasPenalty`).
 /// </remarks>
@@ -155,7 +155,7 @@ public class Csp1dLengthBoundDerivationTests {
         // （`maxOverProduceLength`），不是 60（需求兜底）。
         //
         // **Checking the names alone is not enough.** Measured: making the `maxOverProduceLength` branch always false falls back to "max demand" and **the constraint is still
-        // added**, leaving a name-only criterion green. So the **right-hand constants** must be checked: the lower bound's right side is 0 (the baseline uses `zero`) and
+        // Added
         // the upper bound's is 500 (`maxOverProduceLength`), not 60 (the demand fallback).
         MathConstraint lowerConstraint = result.Value!.Model.Constraints
             .First(c => c.Name.Contains("assigned_length") && c.Name.Contains("lower"));
@@ -209,7 +209,7 @@ public class Csp1dLengthBoundDerivationTests {
     }
 
     /// <remarks>
-    /// **`assigned_length` 的"恒建"变异钉不住——这是本批如实记录的等价变异。**
+    /// **`assigned_length` 的"恒建"变异钉不住——这是这里如实记录的等价变异。**
     ///
     /// 原因：`ResolveDefaultLengthBounds` 只要产品是动态的、且有需求，就**一定会推出下界**，
     /// 于是 `hasBound` 恒为真，`isDynamic && (hasBound || hasPenalty)` 与 `isDynamic` **在所有可达状态下等价**。
@@ -285,7 +285,7 @@ public class Csp1dLengthBoundDerivationTests {
 
     /// <summary>**没有需求时不建长度变量**——与基线一致，不是缺口 / No demand means no length variables — consistent with the baseline, not a gap.</summary>
     /// <remarks>
-    /// **本批一开始把这个当成缺口，是错的。**
+    /// **这里一开始把这个当成缺口，是错的。**
     ///
     /// 基线 `LengthAggregation` 的 `assignedLength` / `overLength` 都是
     /// **`demands.mapIndexed`** ——**按需求索引**。没有需求 ⇒ 没有变量 ⇒ 没有约束，
@@ -296,7 +296,7 @@ public class Csp1dLengthBoundDerivationTests {
     ///
     /// **判据记录这个一致性**：它防止下一个人"顺手"把变量改成按产品建。
     ///
-    /// **This batch first recorded this as a gap — that was wrong.** The baseline's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
+ /// ** first recorded this as a gap — that was wrong.** The baseline's `assignedLength` / `overLength` are both **`demands.mapIndexed`** — **indexed by demand**.
     /// No demand means no variables and no constraints, even though the derivation step can find the product from a plan's contribution. So the "find the product from a
     /// contribution" branch in `ResolveDefaultLengthBounds` **only affects the derived config values**, which are **unused when there is no demand**. C# matches the
     /// baseline, and this criterion records that consistency — it stops the next person from "helpfully" switching the variables to be per-product.

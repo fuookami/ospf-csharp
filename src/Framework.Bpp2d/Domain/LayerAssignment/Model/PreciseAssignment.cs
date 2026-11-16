@@ -37,13 +37,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 ///    而列生成恰恰要靠它判断"这一层到底用不用"。基线写的是 `if (upper &lt; 1) 1 else upper`。
 /// 2. **`Register` 幂等**：基线的写法是"已初始化就跳过创建，但仍调 `model.add`"，所以第二次注册**复用同一个变量对象**。
 ///    实测 `model.Add(variable)` 对重复注册是**容忍的**（与 `ImpreciseAssignment` 的符号注册不同，那里会因重名失败）——
-///    这一点是 B650 实测出来的，不是我照抄的推断。
+///    这一点是 实测出来的，不是我照抄的推断。
 ///
 /// Aligned with the baseline's `PreciseAssignment` — **the foundation of the column-generation final phase**: one integer variable `y_i` per candidate layer (how many copies), bounded by the
 /// maximum copy count estimated from demand. **`v` and `tail` are missing and recorded as such**: they are inputs to `SheetCapacityConstraint` and `TailBinAssignmentConstraint`, which are also
 /// not ported to bpp2d yet, so no plausible-looking binarisation symbol is fabricated here. Two details must be copied: **the upper bound is at least 1**, since `maxCopies[i]` can be 0 and a
 /// bound of 0 would force the layer unused while column generation needs the variable to decide exactly that; and **`Register` is idempotent** in the baseline's specific sense — it skips
-/// creation when already initialised but still calls `model.add`, so a second registration **reuses the same variable object**. Measured in B650: `model.Add(variable)` **tolerates** a
+/// creation when already initialised but still calls `model.add`, so a second registration **reuses the same variable object**. Measured: `model.Add(variable)` **tolerates** a
 /// duplicate registration, unlike the symbol registration in `ImpreciseAssignment`, which fails on a duplicate name.
 /// </remarks>
 public sealed class PreciseAssignment

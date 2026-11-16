@@ -24,8 +24,8 @@ public sealed record YieldModelingConfig<V>(
 /// <param name="UnderProductions">欠产变量值 / Under-production variable values.</param>
 /// <param name="OverProductions">超产变量值 / Over-production variable values.</param>
 /// <remarks>
-/// **两个字段永不为 null**，与基线 `= emptyList()` 一致：**"没有欠产"由空列表表达**（B376）。
-/// **Neither field is ever null**, matching the baseline's `= emptyList()`: **"no deficit" is expressed by an empty list** (B376).
+/// **两个字段永不为 null**，与基线 `= emptyList` 一致：**"没有欠产"由空列表表达**。
+/// **Neither field is ever null**, matching the baseline's `= emptyList`: **"no deficit" is expressed by an empty list** .
 /// </remarks>
 public sealed record YieldModelingResult<V>(
     IReadOnlyList<ModeledUnderProduction<V>> UnderProductions,

@@ -131,10 +131,10 @@ public sealed class SurfaceDensity
                     monomial.Coefficient.Times(coefficient),
                     monomial.Symbol));
             }
-            // ponytail: 本仓所有算例里 `estimateLoadWeight` 的常数项都是 0（B589 实测），所以这一行**当前不可观测**——
+            // ponytail: 本仓所有算例里 `estimateLoadWeight` 的常数项都是 0，所以这一行**当前不可观测**——
             // ponytail: 把它去掉，变异也检不出来。保留是因为"按系数缩放整个多项式"才是对的；常数项若哪天真非零，
             // ponytail: 漏掉它的后果是表面密度少算一截，而没有任何判据会报警。等出现非零常数的算例时补一条判据。
-            // ponytail: Every example configuration in this repo gives `estimateLoadWeight` a zero constant (measured in B589), so this line is **currently unobservable** — removing
+            // ponytail: Every example configuration in this repo gives `estimateLoadWeight` a zero constant (measured), so this line is **currently unobservable** — removing
             // ponytail: it survives mutation testing. It stays because scaling the whole polynomial is the correct thing; if the constant ever became non-zero, dropping it would
             // ponytail: understate the surface density with no criterion to warn. Add a criterion once a configuration has a non-zero constant.
             polynomial.AddConstant(new Flt64(loadWeight.Polynomial.Constant.ToDouble()).Times(coefficient));

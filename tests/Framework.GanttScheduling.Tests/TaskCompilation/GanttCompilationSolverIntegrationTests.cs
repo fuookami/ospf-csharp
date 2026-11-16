@@ -31,13 +31,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 因此默认通过数不含它们——能力文档里两个数分开报。
 ///
 /// 之前所有编译判据都是**看模型内容**（约束条数、多项式成分、变量值域）。那些判据在"约束写对了但模型不可解"时
-/// 仍然全绿。这一批把模型交给真实 SCIP：**能解出来，且解满足约束**，才算接线完成。
+/// 仍然全绿。这里把模型交给真实 SCIP：**能解出来，且解满足约束**，才算接线完成。
 ///
 /// Compiled and run only with `-p:RunScipIntegration=true` (the constant is defined at **build** time). In the default suite these cases **do not exist**, so the two pass counts are
 /// reported separately in the capability document.
 ///
 /// Every earlier compilation criterion inspected the **model content** (constraint counts, polynomial make-up, variable ranges). Those stay green even when "the constraints are written
-/// right but the model is unsolvable". This batch hands the model to real SCIP: the wiring counts as done only when it **solves and the solution satisfies the constraints**.
+/// right but the model is unsolvable". hands the model to real SCIP: the wiring counts as done only when it **solves and the solution satisfies the constraints**.
 /// </remarks>
 public class GanttCompilationSolverIntegrationTests {
     /// <summary>
@@ -84,10 +84,10 @@ public class GanttCompilationSolverIntegrationTests {
     /// **被固定为 0 的组合在解里真的是 0** / A combination pinned to 0 really is 0 in the solution.
     /// </summary>
     /// <remarks>
-    /// 值域收紧（B509）只写进变量的 `Range`。若某条路径把它丢了，模型**仍然可解**——只是求解器会去选那条本该禁止的组合。
+    /// 值域收紧只写进变量的 `Range`。若某条路径把它丢了，模型**仍然可解**——只是求解器会去选那条本该禁止的组合。
     /// 判据让 `T1` 只允许 `E2`，然后看解里 `(T1, E1)` 是不是 0。
     ///
-    /// Range tightening (B509) only lands on the variable's `Range`. If some path drops it the model **still solves** — the solver merely selects the combination that should be
+    /// Range tightening only lands on the variable's `Range`. If some path drops it the model **still solves** — the solver merely selects the combination that should be
     /// forbidden. The criterion lets `T1` use only `E2`, then checks whether `(T1, E1)` is 0 in the solution.
     /// </remarks>
     [Fact]
@@ -136,7 +136,7 @@ public class GanttCompilationSolverIntegrationTests {
     /// **代价口径真的驱动选择**：两个执行器成本不同，最小化 `bunch_cost` 必须选便宜的那个 / Different executor costs: minimising `bunch_cost` must pick the cheaper one.
     /// </summary>
     /// <remarks>
-    /// 这一条覆盖 B544 接线的整条链路：`AddColumns` 把成本写进 `bunch_cost` → `TaskCostMinimization` 把 `bunch_cost` 加进目标 →
+    /// 这一条覆盖 接线的整条链路：`AddColumns` 把成本写进 `bunch_cost` → `TaskCostMinimization` 把 `bunch_cost` 加进目标 →
     /// 真实求解器解出来。任何一环错，答案都会不同：
     /// <list type="bullet">
     /// <item>成本加到了错的列上 → 选中的是被写错的那一列；</item>
@@ -145,7 +145,7 @@ public class GanttCompilationSolverIntegrationTests {
     /// </list>
     /// 所以判据同时看**选了谁**和**目标值**，只看目标值会让"两个都选"蒙混过关。
     ///
-    /// This covers the whole B544 wiring: `AddColumns` writes the cost into `bunch_cost` → `TaskCostMinimization` puts `bunch_cost` into the objective → a real solver solves it.
+    /// This covers the whole wiring: `AddColumns` writes the cost into `bunch_cost` → `TaskCostMinimization` puts `bunch_cost` into the objective → a real solver solves it.
     /// Either link being wrong changes the answer, so the criterion checks **who was selected** as well as **the objective value**; the value alone would let "select both" slip through.
     /// </remarks>
     [Fact]
@@ -197,11 +197,11 @@ public class GanttCompilationSolverIntegrationTests {
     /// `taskCompilation[t] == 1` 只说"完成或取消"，**选哪个由成本决定**。这一条把承接成本设成 100、取消成本设成 1，
     /// 于是最优解必须取消：`y == 1`、所有 `x == 0`。
     ///
-    /// 反过来（取消成本 100、承接 1）在 B543 的普通编译判据里已经验过"每个任务恰好一列"。两条合起来才说明
+    /// 反过来（取消成本 100、承接 1）在 的普通编译判据里已经验过"每个任务恰好一列"。两条合起来才说明
     /// **成本真的进入了决策**，而不是"约束恰好只允许一种解"。
     ///
     /// `taskCompilation[t] == 1` only says "done or cancelled"; **cost decides which**. With an assignment cost of 100 and a cancellation cost of 1 the optimum must cancel:
-    /// `y == 1` and every `x == 0`. The converse (cancellation 100, assignment 1) was covered by B543's plain-compilation criterion, which sees exactly one column per task. Together
+    /// `y == 1` and every `x == 0`. The converse (cancellation 100, assignment 1) was covered by the earlier plain-compilation criterion, which sees exactly one column per task. Together
     /// they show **cost really enters the decision**, rather than "the constraints happened to allow only one answer".
     /// </remarks>
     [Fact]
@@ -242,15 +242,15 @@ public class GanttCompilationSolverIntegrationTests {
     /// **完工时间第一次能被排程推动** / The makespan becomes pushable by the schedule for the first time.
     /// </summary>
     /// <remarks>
-    /// 这是 B547 的**唯一真正分辨力所在**。B546 的结束时间是常量，最小化完工时间等于什么都没做——解里
-    /// 目标值永远是"计划最晚结束"，无论排程怎么做。本批结束时间变成 `est + 时长`，允许提前的 `est` 下界是 0，
+    /// 这是 的**唯一真正分辨力所在**。 的结束时间是常量，最小化完工时间等于什么都没做——解里
+    /// 目标值永远是"计划最晚结束"，无论排程怎么做。这里结束时间变成 `est + 时长`，允许提前的 `est` 下界是 0，
     /// 于是最小化会把开始时间拉到 0：3 小时开始、持续 2 小时的任务，完工时间从 **18000 秒降到 7200 秒**。
     ///
     /// 只检查"目标是个正数"或"目标等于某个结束时间"都发现不了这件事；只有**两组对照**能：不允许提前时是 18000，
     /// 允许时是 7200。两者都用真实求解，差额正好是时间窗开始那 3 小时。
     ///
-    /// This is where B547's only real discriminating power lives. B546's end times were constants, so minimising the makespan did nothing — the objective was always "the plan's
-    /// latest end", whatever the schedule did. This batch makes the end time `est + duration`, and an advance-allowed `est` has a lower bound of 0, so minimisation pulls the start
+    /// This is where the earlier only real discriminating power lives. the earlier end times were constants, so minimising the makespan did nothing — the objective was always "the plan's
+ /// latest end", whatever the schedule did. makes the end time `est + duration`, and an advance-allowed `est` has a lower bound of 0, so minimisation pulls the start
     /// to 0: a task starting at 3h and lasting 2h goes from a **18000 s makespan to 7200 s**. Checking "the objective is positive" or "it equals some end time" catches none of
     /// this; only the **pair** does — 18000 without advance, 7200 with it, both under a real solve, differing by exactly the 3h window start.
     /// </remarks>
@@ -307,7 +307,7 @@ public class GanttCompilationSolverIntegrationTests {
     /// 掩码行是四行 Big-M 加一行定义，最可能的失效是**把模型写不可行**——那种失败报"无解"，看起来像任务排不下。
     /// 这里最大化掩码后的延迟时间：`task_compilation` 被强制为 1，于是掩码等于恒等，值必须仍是 `21 × 3600`。
     ///
-    /// **本批的 ceiling 记在这里**：C# 里 `task_compilation == 1` 是强制的（`AddCompilationConstraints`），所以普通编译下
+    /// **这里的 ceiling 记在这里**：C# 里 `task_compilation == 1` 是强制的（`AddCompilationConstraints`），所以普通编译下
     /// 这层掩码**恒等 1**，与基线一致。它真正起作用的地方是迭代编译（任务可能不在当前批次里），而那条路径还没接线。
     ///
     /// The masking rows are four Big-M rows plus a definition, and the likeliest failure is **making the model infeasible** — reported as "no solution", looking like an

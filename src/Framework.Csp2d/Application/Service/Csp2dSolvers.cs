@@ -149,11 +149,11 @@ public sealed class Csp2dMilp {
 /// </summary>
 /// <remarks>
 /// **本阶段由剩余需求驱动，而不是由检验数驱动**——两者都属于列生成思想，但后者需要从 LP 对偶里取出需求约束的影子价格。
-/// 对偶提取留作后续，**这里不声称已实现**。`LpResult.DualSolution` 已经在手边，接上是下一步而不是本批。
+/// 对偶提取留作后续，**这里不声称已实现**。`LpResult.DualSolution` 已经在手边，接上是下一步而不是这里。
 ///
 /// **Driven by the residual demand, not by reduced costs** at this stage — both belong to column generation, but the latter needs the demand shadow prices from the LP
 /// duals. Dual extraction is left for a later stage and **is not claimed here**; `LpResult.DualSolution` is already within reach, so wiring it is a next step rather
-/// than this batch.
+/// than this change.
 /// </remarks>
 public sealed class Csp2dColumnGeneration {
     private readonly IColumnGenerationSolver _solver;

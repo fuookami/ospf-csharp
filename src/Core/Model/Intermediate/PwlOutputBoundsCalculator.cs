@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// </summary>
 /// <remarks>
 /// 对齐基线 `DeferredFunctionFallback.kt` 的 `PwlOutputBounds`。
-/// **B1193, following the baseline's `PwlOutputBounds`.**
+/// **Following the baseline's `PwlOutputBounds`.**
 /// </remarks>
 /// <param name="Lower">输出下界 / Output lower bound.</param>
 /// <param name="Upper">输出上界 / Output upper bound.</param>
@@ -43,7 +43,7 @@ public sealed record PwlOutputBounds(Flt64 Lower, Flt64 Upper);
 /// 然后在"端点求值"那一步以"输出非有限或无界"失败——那条消息指向数值，
 /// 而真正的原因是"没有段可算"。**
 ///
-/// B1193, following the baseline's `calculatePwlOutputBounds`.
+/// Following the baseline's `calculatePwlOutputBounds`.
 ///
 /// **Only the two endpoints of each segment are evaluated, never an interior point — and that holds only for
 /// <b>linear</b> pieces.**

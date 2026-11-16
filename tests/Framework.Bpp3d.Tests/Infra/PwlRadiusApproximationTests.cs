@@ -12,10 +12,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Infra;
 /// **弦必须是 r² 的弦，断点必须真盖住区间** / The chord must be r²'s chord, and breakpoints must actually cover the interval.
 /// </summary>
 /// <remarks>
-/// `PWLRadiusApproximation.cs` 早就存在，本批做的是**补上它缺的断点校验**并给既有行为立判据。
+/// `PWLRadiusApproximation.cs` 早就存在，这里做的是**补上它缺的断点校验**并给既有行为立判据。
 /// 之所以值得写判据：自定义断点不校验时会被静默接受，然后给出一个"看起来正常"但误差远超标称的近似。
 ///
-/// `PWLRadiusApproximation.cs` already existed; this batch **adds the missing breakpoint validation** and pins the existing behaviour. Criteria are worth writing
+/// `PWLRadiusApproximation.cs` already existed; **adds the missing breakpoint validation** and pins the existing behaviour. Criteria are worth writing
 /// because unvalidated custom breakpoints are accepted silently and then produce an approximation that looks normal while its error is far beyond what was claimed.
 /// </remarks>
 public class PwlRadiusApproximationTests {
@@ -67,7 +67,7 @@ public class PwlRadiusApproximationTests {
     /// **自定义断点没盖住区间必须被拒** / Breakpoints that miss the interval must be rejected.
     /// </summary>
     /// <remarks>
-    /// 这条正是本批补的能力。校验缺失时，`[2, 3]` 这样只盖住区间中段的断点会被接受，
+    /// 这条正是这里补的能力。校验缺失时，`[2, 3]` 这样只盖住区间中段的断点会被接受，
     /// 于是 `[rMin, 2)` 与 `(3, rMax]` 全靠外推，而外推的误差**不在** `MaxRelativeError` 里体现。
     ///
     /// This is the capability added here. Without validation, breakpoints covering only the middle of the interval — `[2, 3]` — are accepted, so `[rMin, 2)` and

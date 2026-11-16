@@ -85,9 +85,9 @@ public sealed record DiscreteLoadingSolveResult<V>(
 /// </summary>
 /// <typeparam name="V">领域数值 / Domain number.</typeparam>
 /// <remarks>
-/// **本批只做 MILP 路径，Benders 路径未移植。** 基线有两条路径，`preferBenders` 时先试 Benders、
+/// **这里只做 MILP 路径，Benders 路径未移植。** 基线有两条路径，`preferBenders` 时先试 Benders、
 /// 失败后可回退。Benders 那半边的依赖（`LinearBendersPartition.BuildAsync`、`LinearBendersAlgorithm`、
-/// `LinearBendersResult`）**C# 侧都在**，但本批预算不够把两条路径都做完——**所以显式拒绝 `preferBenders`，
+/// `LinearBendersResult`）**C# 侧都在**，但这里预算不够把两条路径都做完——**所以显式拒绝 `preferBenders`，
 /// 而不是静默走 MILP**。静默降级会让调用方以为拿到了 Benders 的轨迹与终止原因。
 ///
 /// **`finish` 里的**目标复核**是本类最要紧的部分**：求解器报的目标与**按完整模型重新算一遍**的目标
@@ -267,26 +267,26 @@ public sealed class DiscreteLoadingApplicationService<V>
         // **The objective is recomputed from the full model and must match the solver's number.** Each sub-objective is accumulated with its sign: **same category as
         // the model's objective is added, the opposite is subtracted**.
         // **必须先把解写回模型 token**：`DiscreteLoadingContext.ExtractSolution` 读的是**模型 token 上的值**，
-        // 不是传进来的 `values`。少了这一句，取解会报"缺少装载变量值"——**B444 的端到端判据就是这样抓到的**，
-        // 而只走桩求解器的判据（B433/B435）**全都抓不到**，因为那些桩自己写了 token。
+        // 不是传进来的 `values`。少了这一句，取解会报"缺少装载变量值"——**的端到端判据就是这样抓到的**，
+        // 而只走桩求解器的判据**全都抓不到**，因为那些桩自己写了 token。
         //
         // **The solution must first be written back onto the model tokens**: `DiscreteLoadingContext.ExtractSolution` reads **values held by the model's tokens**, not the
-        // `values` handed in. Without this line extraction fails with "missing loading value" — **which B444's end-to-end criterion caught**, while the stub-solver
-        // criteria in B433/B435 **could never catch it**, because those stubs wrote the tokens themselves.
+        // `values` handed in. Without this line extraction fails with "missing loading value" — **which the earlier end-to-end criterion caught**, while the stub-solver
+        // criteria/ **could never catch it**, because those stubs wrote the tokens themselves.
         registration.Model.Tokens.SetSolution(byVariable);
 
-        // **目标子项必须先展平到变量级**（B930）：`MetaSubObjects` 的单项式里可以有**表达式符号**
+        // **目标子项必须先展平到变量级**：`MetaSubObjects` 的单项式里可以有**表达式符号**
         // （`stowage_{i}_{j}` 这类 `LinearExpressionSymbol`），它们本身不是变量、也不在解表里。
-        // 基线用的是 `model.objectiveSnapshot()`，那一步就是展平；C# 这边一直缺这一步，于是只要某个域的目标
+        // 基线用的是 `model.objectiveSnapshot`，那一步就是展平；C# 这边一直缺这一步，于是只要某个域的目标
         // 引用表达式符号，这里就报"目标引用缺少变量值"——**报的措辞还会让人去查解表，而解表是全的**。
         //
-        // 复现：B929 把分区列生成接上之后，真 SCIP 后端跑完链，停在这一句上（`rows52,symbols76`）。
+        // 复现： 把分区列生成接上之后，真 SCIP 后端跑完链，停在这一句上（`rows52,symbols76`）。
         //
-        // **Objective sub-objects must be flattened to variable level first** (B930): a monomial inside `MetaSubObjects` may carry an **expression symbol**
+        // **Objective sub-objects must be flattened to variable level first**: a monomial inside `MetaSubObjects` may carry an **expression symbol**
         // (`LinearExpressionSymbol` such as `stowage_{i}_{j}`), which is not a variable and is not in the solution table. The baseline goes through
-        // `model.objectiveSnapshot()`, and that step *is* the flattening; this port never had it, so any domain objective referencing an expression symbol failed here
+        // `model.objectiveSnapshot`, and that step *is* the flattening; this port never had it, so any domain objective referencing an expression symbol failed here
         // with "missing objective variable" — **a message that sends you to inspect the solution table, which is complete**.
-        // Reproduced in B929: with partition column generation wired, the real SCIP backend ran the chain and stopped exactly here (`rows52,symbols76`).
+        // Reproduced: with partition column generation wired, the real SCIP backend ran the chain and stopped exactly here (`rows52,symbols76`).
         Flt64 evaluated = Flt64.Zero;
         IReadOnlyList<MetaSubObject<Flt64>>? snapshot = registration.Model.ObjectiveSnapshot();
         if (snapshot is null) {

@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// skipping it **under-penalises part of the switch time** while the schedule looks entirely normal.
 /// </remarks>
 public class SwitchCostTriplesTests {
-    /// **三元组数量是 执行器 × 任务 × 任务** / The triple count is executor × task × task.
+    /// **三元组数量是执行器 × 任务 × 任务** / The triple count is executor × task × task.
     [Fact]
     public void All_ShouldBeTheFullCartesianProduct() {
         var executors = new List<string> { "E1", "E2" };
@@ -35,7 +35,7 @@ public class SwitchCostTriplesTests {
     /// </summary>
     /// <remarks>
     /// 判据直接断言 `(E1, A, A)` 存在。若实现加了 `if (left == right) continue`，这里立刻失败——
-    /// 而"数量是不是 执行器 × 任务 × (任务−1)"这种间接断言也能测，但直接查对角线更难写错。
+    /// 而"数量是不是执行器 × 任务 × (任务−1)"这种间接断言也能测，但直接查对角线更难写错。
     ///
     /// The criterion asserts `(E1, A, A)` directly. An implementation adding `if (left == right) continue` fails here immediately — an indirect assertion such as
     /// "count is executor × task × (task − 1)" would also work, but checking the diagonal directly is harder to get wrong.

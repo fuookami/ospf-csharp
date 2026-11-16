@@ -22,7 +22,7 @@ public enum Comparison {
 }
 
 /// <summary>
-/// 比较运算扩展 / Comparison behavior (Kotlin enum computed properties + reverse()).
+/// 比较运算扩展 / Comparison behavior (Kotlin enum computed properties + reverse).
 /// </summary>
 public static class ComparisonExtensions {
     /// <summary>获取比较符号 / Gets the comparison symbol string.</summary>

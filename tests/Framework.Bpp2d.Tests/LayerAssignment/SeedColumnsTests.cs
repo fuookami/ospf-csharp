@@ -1,4 +1,4 @@
-// 种子列构造（B665）的判据 / Criteria for seed-column construction (B665).
+// 种子列构造的判据 / Criteria for seed-column construction.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **种子列构造（B665）** / Seed-column construction (B665).
+/// **种子列构造** / Seed-column construction.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**种子的状态是"迭代 0 + 空列"**、**上限用调用方的值而不是默认值**、**结果按值去重**。

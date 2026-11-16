@@ -16,14 +16,14 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **取消/空闲这两条目标本来与编译种类无关（B569）** / The cancellation/leisure objectives are compilation-agnostic (B569).
+/// **取消/空闲这两条目标本来与编译种类无关** / The cancellation/leisure objectives are compilation-agnostic.
 /// </summary>
 /// <remarks>
-/// 两条目标都只要求 `ICompilation` + `ICompilationColumns`，而任务束编译从 B563 起就实现了后者。
+/// 两条目标都只要求 `ICompilation` + `ICompilationColumns`，而任务束编译从 起就实现了后者。
 /// 之前 Demo4 的注释写"这两条未接线，注册进来只会让管线失败"——真实原因是 `BunchCompilation` **当时没有实现那些接口**，
 /// 与目标本身无关。现在补判据，把"能用在任务束编译上"这件事**实测**一遍，而不是靠注释断言。
 ///
-/// Both objectives only need `ICompilation` + `ICompilationColumns`, and the bunch compilation has implemented the latter since B563. Demo4 used to say "these two are unwired;
+/// Both objectives only need `ICompilation` + `ICompilationColumns`, and the bunch compilation has implemented the latter since then. Demo4 used to say "these two are unwired;
 /// registering them would only make the pipeline fail" — the real reason was that `BunchCompilation` **did not implement those interfaces** at the time, nothing to do with the
 /// objectives. These criteria measure "usable on a bunch compilation" instead of asserting it in a comment.
 /// </remarks>

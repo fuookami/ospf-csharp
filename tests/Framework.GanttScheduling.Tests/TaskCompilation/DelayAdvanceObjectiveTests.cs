@@ -16,10 +16,10 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **延迟/提前两条目标接线（B549）** / The delay and advance objectives get wired (B549).
+/// **延迟/提前两条目标接线** / The delay and advance objectives get wired.
 /// </summary>
 /// <remarks>
-/// 两条目标原来是同一句 `Failed(... 尚未接线 ...)`。本批把它们接成
+/// 两条目标原来是同一句 `Failed(... 尚未接线...)`。这里把它们接成
 /// `Σ coefficient(task) × delayTime/advanceTime[task]`，任务集由
 /// <see cref="TimeDeviationSelection"/>（全局开关 + 任务开关 + **有排定时间**）筛出。
 ///
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <item>**两个方向的映射互换**：延迟实际收的是提前的正部。</item>
 /// </list>
 ///
-/// Both objectives used to be the same `Failed(... not wired yet ...)` line. This batch wires them to
+/// Both objectives used to be the same `Failed(... not wired yet...)` line. wires them to
 /// `Σ coefficient(task) × delayTime/advanceTime[task]` over the task set from <see cref="TimeDeviationSelection"/>. Four silent failures: (1) **direction swapped** — filtering the delay
 /// objective with `advanceEnabled` gives an **equally plausible** task set with the money charged to the wrong tasks; (2) **billing without a scheduled time** — deviation relative to
 /// what? that quantity is undefined; (3) **coefficient dropped** — the objective still "has the term", only weighted 1; (4) **the two maps swapped** — delay actually collects the
@@ -215,10 +215,10 @@ public class DelayAdvanceObjectiveTests {
 
     /// <summary>**系数提取失败必须报错，不能静默用 1** / A failed extraction must fail, not silently use 1.</summary>
     /// <remarks>
-    /// 基线用 `Flt64.infinity` 兜底；`Flt64` 没有无穷（B505 的同一处限制）。**静默退回 1 会把"计费未知"变成"计费 1"**，
+    /// 基线用 `Flt64.infinity` 兜底；`Flt64` 没有无穷。**静默退回 1 会把"计费未知"变成"计费 1"**，
     /// 而目标看上去完全正常。
     ///
-    /// The baseline falls back to `Flt64.infinity`; `Flt64` has none (same limit as B505). **Silently falling back to 1 turns "unknown charge" into "charge 1"** while the objective
+    /// The baseline falls back to `Flt64.infinity`; `Flt64` has none (the same limit). **Silently falling back to 1 turns "unknown charge" into "charge 1"** while the objective
     /// looks perfectly normal.
     /// </remarks>
     [Fact]
@@ -276,12 +276,12 @@ public class DelayAdvanceObjectiveTests {
 
     /// <summary>**取消与延迟同时启用 → 偏移量乘上 `task_compilation` 掩码** / Cancellation plus delay → the deviation is masked by `task_compilation`.</summary>
     /// <remarks>
-    /// 被取消掉的任务不该累计偏移量，所以基线写 `delay_time = pos × taskCompilation`。C# 的 `MaskingFunction` 在 B550 才做实。
+    /// 被取消掉的任务不该累计偏移量，所以基线写 `delay_time = pos × taskCompilation`。C# 的 `MaskingFunction` 在 才做实。
     ///
     /// 这条判据盯的是"**掩码真的乘上去了**"：符号必须是 `MaskingWithPolyMaskFunction` 的适配器（内部自带一个二值 `m`），
     /// 而不是裸的 `est_slack_*_pos`。只看"注册成功"会让"忘了乘掩码"通过——而忘了乘之后解同样合法，只是被取消的任务也在计费。
     ///
-    /// A cancelled task must not accrue deviation, so the baseline writes `delay_time = pos × taskCompilation`. C#'s `MaskingFunction` only became real in B550. The criterion
+    /// A cancelled task must not accrue deviation, so the baseline writes `delay_time = pos × taskCompilation`. C#'s `MaskingFunction` only became real. The criterion
     /// targets "**the mask is really applied**": the symbol must be a `MaskingWithPolyMaskFunction` adapter (carrying its own binary `m`), not a bare `est_slack_*_pos`. Checking
     /// only "registration succeeded" would let a missing mask through — and without it the solution is still legal, just with cancelled tasks being charged too.
     /// </remarks>

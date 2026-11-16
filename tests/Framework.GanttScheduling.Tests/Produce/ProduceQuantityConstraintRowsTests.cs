@@ -1,4 +1,4 @@
-// 两个数量约束（B704）的判据 / Criteria for the two quantity constraints (B704).
+// 两个数量约束的判据 / Criteria for the two quantity constraints.
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Produce;
 
 /// <summary>
-/// **两个数量约束（B704）** / The two quantity constraints (B704).
+/// **两个数量约束** / The two quantity constraints.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**有松弛时行加在 `polyX` 上而不是数量本身**、**上下界方向不反**、**影子价格键挂在行上**。
@@ -103,7 +103,7 @@ public class ProduceQuantityConstraintRowsTests {
     /// 三点成对：
     ///
     /// 1. 上界行的左端**同时含** `produce_quantity_0` 与 `produce_over_quantity_0_pos`，且后者的系数为**负**——
-    ///    这就是 `x - pos`。加在数量本身的话超量变量失去意义：超出的部分照样违反上界。
+    /// 这就是 `x - pos`。加在数量本身的话超量变量失去意义：超出的部分照样违反上界。
     /// 2. 下界行的左端**只有** `produce_quantity_0`（不足没启用）。
     /// 3. 两个符号的系数都非零，且正负相反——只查"含两个符号"分不出 `x + pos` 与 `x - pos`。
     ///
@@ -146,7 +146,7 @@ public class ProduceQuantityConstraintRowsTests {
     /// 三点成对：
     ///
     /// 1. 下界行的左端**同时含** `produce_quantity_0` 与 `produce_less_quantity_0_neg`，后者系数为**正**——
-    ///    这就是 `x + neg`。加在数量本身的话不足变量失去意义：低于下界的部分照样违反下界。
+    /// 这就是 `x + neg`。加在数量本身的话不足变量失去意义：低于下界的部分照样违反下界。
     /// 2. 上界行的左端**只有** `produce_quantity_0`（超量没启用）。
     /// 3. 两个系数都非零且**同号**——与上界那一侧（异号）相反，这正是两个方向不能互换的实证。
     ///
@@ -234,9 +234,9 @@ public class ProduceQuantityConstraintRowsTests {
     /// </summary>
     /// <remarks>
     /// 两点成对：未注册时 `Invoke` 返回 `Failed`；传非线性模型也返回 `Failed`。
-    /// 这条钉住的正是本批修掉的形状——原来的两个 `Invoke` 对任何输入都返回 `Ok`。
+    /// 这条钉住的正是这里修掉的形状——原来的两个 `Invoke` 对任何输入都返回 `Ok`。
     ///
-    /// Two paired points: while unregistered `Invoke` returns `Failed`, and a non-linear model returns `Failed` too. This pins exactly the shape this batch removed: the old two `Invoke` methods
+    /// Two paired points: while unregistered `Invoke` returns `Failed`, and a non-linear model returns `Failed` too. This pins exactly the shape that was removed: the old two `Invoke` methods
     /// returned `Ok` for every input.
     /// </remarks>
     [Fact]

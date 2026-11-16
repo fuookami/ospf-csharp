@@ -115,10 +115,10 @@ public sealed record SolverProgressSnapshot(
     /// <returns>收敛后的快照 / The clamped snapshot.</returns>
     /// <remarks>
     /// `ResolvedStageLabel` / `ResolvedSubStageLabel` 为 null 时**按基线的默认值补上**：
-    /// 基线这两个属性的默认值是 `stage.fallbackLabel` 与 `subStage?.renderDefault()`，
+    /// 基线这两个属性的默认值是 `stage.fallbackLabel` 与 `subStage?.renderDefault`，
     /// 而 C# 的可选参数不能引用其它参数，所以在属性访问处补。
     ///
-    /// When null, **the baseline defaults are supplied**: the baseline defaults these to `stage.fallbackLabel` and `subStage?.renderDefault()`, but C# optional
+    /// When null, **the baseline defaults are supplied**: the baseline defaults these to `stage.fallbackLabel` and `subStage?.renderDefault`, but C# optional
     /// parameters cannot reference other parameters, so it is done at the property accessor instead.
     /// </remarks>
     public SolverProgressSnapshot Normalized() => this with {
@@ -206,11 +206,11 @@ public sealed class SolverProgressContext {
     /// </summary>
     /// <remarks>
     /// 基线抛 `CancellationException`；C# 的对应物是 `OperationCanceledException`，
-    /// 它也是 `CancellationToken.ThrowIfCancellationRequested()` 抛出的同一类型——
+    /// 它也是 `CancellationToken.ThrowIfCancellationRequested` 抛出的同一类型——
     /// **这样两套取消机制对调用方是同一种异常**。
     ///
     /// The baseline throws `CancellationException`; the C# counterpart is `OperationCanceledException`, the same type
-    /// `CancellationToken.ThrowIfCancellationRequested()` throws — **so both cancellation mechanisms surface as one exception type to callers**.
+    /// `CancellationToken.ThrowIfCancellationRequested` throws — **so both cancellation mechanisms surface as one exception type to callers**.
     /// </remarks>
     public void ThrowIfCancelled() {
         if (IsCancelled()) {
@@ -224,18 +224,18 @@ public sealed class SolverProgressContext {
     /// <param name="snapshot">进度快照 / The progress snapshot.</param>
     /// <returns>成功或错误 / Success or an error.</returns>
     /// <remarks>
-    /// **顺序必须与基线一致**：先 `throwIfCancelled()`，再解析标签，最后过单调状态后上报。
+    /// **顺序必须与基线一致**：先 `throwIfCancelled`，再解析标签，最后过单调状态后上报。
     ///
     /// 三处细节逐条对齐：
     /// 1. **取消检查在最前**——已取消时**一次都不上报**，也不做本地化。
-    /// 2. 无解析器时**直接 `Normalized()`**，不清空已解析标签。
-    /// 3. 有解析器时**覆盖**两个已解析标签，然后 `Normalized()`。
+    /// 2. 无解析器时**直接 `Normalized`**，不清空已解析标签。
+    /// 3. 有解析器时**覆盖**两个已解析标签，然后 `Normalized`。
     ///
-    /// **The order must match the baseline**: `ThrowIfCancelled()` first, then label resolution, then through the monotonic state before reporting.
+    /// **The order must match the baseline**: `ThrowIfCancelled` first, then label resolution, then through the monotonic state before reporting.
     ///
     /// Three details aligned item by item: (1) **the cancellation check comes first** — when cancelled, **nothing is reported** and no localization happens;
-    /// (2) without a resolver, call `Normalized()` directly and do not clear the already-resolved labels; (3) with a resolver, **overwrite** both resolved labels and
-    /// then `Normalized()`.
+    /// (2) without a resolver, call `Normalized` directly and do not clear the already-resolved labels; (3) with a resolver, **overwrite** both resolved labels and
+    /// then `Normalized`.
     /// </remarks>
     public Result<Success, ErrorCode, Error<ErrorCode>> Report(SolverProgressSnapshot snapshot) {
         ThrowIfCancelled();

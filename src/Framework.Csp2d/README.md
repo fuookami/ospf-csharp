@@ -20,14 +20,14 @@ rather than duplicated — bin packing already owns it.
 
 | Capability | Status |
 | --- | --- |
-| Material / product / pattern / plan model, ids and validation | ✅ all 18 baseline main sources ported (B447—B465) |
+| Material / product / pattern / plan model, ids and validation | ✅ all 18 baseline main sources ported |
 | Cut tree: two-stage and three-stage guillotine, stage rules | ✅ `CutTree2` with real `Validate` against placements |
 | Region cutting with kerf | ✅ `Region2.Cut`, non-positive kerf treated as zero |
 | Pattern generators: shelf (`Freeform` / two-stage) and three-stage | ✅ real row packing, prefixes, per-process cut trees |
 | Master problem: demand, material, machine, over-production, consumed length | ✅ five constraint families + three objectives |
 | Sheet assignment: consumed length, sheet count, over-length | ✅ pure function, no model access needed |
-| MILP path (`Csp2dMilp`) | ✅ **verified against real SCIP** (B466) |
-| Column generation path (`Csp2dColumnGeneration`) | ✅ **verified against real SCIP** (B466) |
+| MILP path (`Csp2dMilp`) | ✅ **verified against real SCIP** |
+| Column generation path (`Csp2dColumnGeneration`) | ✅ **verified against real SCIP** |
 | Column addition driven by **reduced costs** | ❌ **not implemented** — see below |
 
 ## The one claim this module does not make

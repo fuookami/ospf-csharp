@@ -21,12 +21,12 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 分析会话 / The analysis session.
 /// </summary>
 /// <remarks>
-/// **B973 补 `CriticalConstraintAnalysisSession`（基线 341 行），并更正 B972 的账。**
+/// 补 `CriticalConstraintAnalysisSession`（基线 341 行），并更正 的账。**
 ///
-/// B972 记的是"持有活的求解器实例，要真实后端"。**那是 grep 代理读错了**：唯一带 `ConstraintProgrammingSolver`
+/// 记的是"持有活的求解器实例，要真实后端"。**那是 grep 代理读错了**：唯一带 `ConstraintProgrammingSolver`
 /// 的参数**只用来读 `Descriptor`**。所以它**完全不需要后端**——判据里的第一条就是证明这一点。
 ///
-/// **B973 ported `CriticalConstraintAnalysisSession` (341 baseline lines) and corrects B972's ledger.** B972 recorded "holds a live solver instance, needs a real backend".
+/// **ported `CriticalConstraintAnalysisSession` (341 baseline lines) and corrects the earlier ledger.** recorded "holds a live solver instance, needs a real backend".
 /// **That was the grep proxy misleading the reading**: the one parameter typed `ConstraintProgrammingSolver` **is used only to read its `Descriptor`**. It therefore **needs no
 /// backend at all**, and the first criterion here is the proof.
 /// </remarks>
@@ -52,9 +52,9 @@ public class CriticalConstraintAnalysisSessionTests {
 
     /// <summary>**没有求解器也能建会话** / A session builds without a solver.</summary>
     /// <remarks>
-    /// 这是对 B972 那条账的直接反驳：**只给快照，什么都不缺。**
+    /// 这是对 那条账的直接反驳：**只给快照，什么都不缺。**
     ///
-    /// This directly refutes B972's entry: **given only a snapshot, nothing is missing.**
+    /// This directly refutes the earlier entry: **given only a snapshot, nothing is missing.**
     /// </remarks>
     [Fact]
     public void TheSession_ShouldNeedNoSolver() {

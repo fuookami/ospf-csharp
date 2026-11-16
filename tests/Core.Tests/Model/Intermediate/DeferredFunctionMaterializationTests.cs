@@ -27,18 +27,18 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟函数物化的整体入口 / The whole entry point for deferred-function materialisation.
 /// </summary>
 /// <remarks>
-/// B1239 补完基线四段函数的最后两段，于是四段现在都在一个函数里。
+/// 补完基线四段函数的最后两段，于是四段现在都在一个函数里。
 ///
-/// **这一批最重要的发现不在"补完"，而在核对第三、四段时才看见的一件事：**
+/// **这里最重要的发现不在"补完"，而在核对第三、四段时才看见的一件事：**
 /// **驱动把区域记录放进<b>返回值</b>，而返回值的唯一消费者是测试——
 /// 于是 `DeferredFunctionConstraintRegions` 在真实路径上永远是空的，
-/// 而 B1238 刚补的第三个过滤条件因此<b>永远不会生效</b>。**
+/// 而第三个过滤条件因此<b>永远不会生效</b>。**
 ///
-/// B1239 completes the last two of the baseline's four parts.
+/// Completes the last two of the baseline's four parts.
 ///
 /// **The important find here is not the completion but something only visible while checking parts three and four: the
 /// driver put region records in its <b>return value</b>, whose only consumer was tests — so
-/// `DeferredFunctionConstraintRegions` stayed empty on the real path, and the third filter condition B1238 just added could
+/// `DeferredFunctionConstraintRegions` stayed empty on the real path, and the third filter condition just added could
 /// <b>never</b> fire.**
 /// </remarks>
 public class DeferredFunctionMaterializationTests
@@ -128,7 +128,7 @@ public class DeferredFunctionMaterializationTests
     /// Region records really land on the model, not only in a return value.
     /// </summary>
     /// <remarks>
-    /// **这一条是本批发现的那个缺陷的判据。**
+    /// **这一条是这里发现的那个缺陷的判据。**
     ///
     /// **它跑的是<b>完整入口</b>，而不是直接调驱动：** **因为缺陷恰恰在"驱动返回的东西没人接"这两层之间，
  /// 只测驱动的那条判据一直是绿的。**
@@ -136,7 +136,7 @@ public class DeferredFunctionMaterializationTests
     /// **所以测"每一层都对"无法发现"层与层之间没接上"——
     /// 需要一条判据从用户入口进去、在另一头断言。**
     ///
-    /// **This criterion is for the defect this batch found.**
+    /// **This criterion is for the defect found.**
     ///
     /// **It runs the <b>full entry point</b> rather than calling the driver directly: the defect sat precisely between the
  /// driver's return value and its absent consumer, while the driver-level criterion stayed green.**
@@ -188,7 +188,7 @@ public class DeferredFunctionMaterializationTests
     /// </summary>
     /// <remarks>
     /// **"保留源模型"有两层意思：** **失败时不污染，以及<b>成功时也不改</b>。**
-    /// **前者由 B1200 的事务解决，后者只能靠复制——而只做前者的实现会让"再物化一次"这个动作在第二次时看到
+    /// **前者由事务解决，后者只能靠复制——而只做前者的实现会让"再物化一次"这个动作在第二次时看到
     /// 一个已经被改过的源，于是第三次的结果与第一次不同。**
     ///
     /// **"Preserving the source" has two meanings: not polluting it on failure, and <b>not changing it on success</b>.**

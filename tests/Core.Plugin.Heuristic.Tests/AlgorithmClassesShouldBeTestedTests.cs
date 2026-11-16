@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// **每个算法类都必须被某个测试真正构造过** / Every algorithm class must be constructed by some test.
 /// </summary>
 /// <remarks>
-/// **B1270 删掉了 8 个只返回 `"not implemented"` 的桩。B1271 问的是：<b>它们当初有没有可能被更早发现**？</b>
+/// **仓里曾有过 8 个只返回 `"not implemented"` 的桩，现已删除。** **问题是：<b>它们当初有没有可能被更早发现**？</b>
 ///
 /// **能。** **它们与剩下 6 个类的区别只有一条，而这一条是可测的：**
 ///
@@ -28,12 +28,12 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// **所以这条不变量是<b>更早的探测器**：**
 /// **一个算法类如果没有任何测试构造它，那它要么是桩、要么是死代码，两种都该处理。**
 ///
-/// ### 这条不变量在本批之前不成立
+/// ### 这条不变量在这里之前不成立
 ///
-/// **用它去量 B1270 之前的仓，会点名那 8 个桩——而那时它们还在。**
-/// **也就是说：** **这条判据如果早一点写下来，B1269／B1270 两批就不必发生。**
+/// **用它去量此前的仓，会点名那 8 个桩——而那时它们还在。**
+/// **也就是说：** **这条判据如果早一点写下来，那两次改动就不必发生。**
 ///
-/// **B1270 deleted eight stubs that only returned `"not implemented"`. B1271 asks: <b>could they have been caught earlier?</b>
+/// **Eight stubs that only returned `"not implemented"` once existed and are gone. The question is <b>whether they could have been caught earlier</b>.
 /// Yes — and the difference between them and the six remaining classes is a single measurable trait:** **the eight were never
 /// <b>constructed by any test</b>; the six are (`GeneAlgorithmTest` really calls `new` and asserts behaviour).**
 ///
@@ -41,9 +41,9 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// **So this invariant is <b>an earlier detector</b>: an algorithm class nothing constructs is either a stub or dead code, and both
 /// need handling.**
 ///
-/// **This invariant did not hold before this batch: measuring the repo as it stood before B1270 would have named those eight
-/// stubs while they were still there.** **In other words, had this criterion been written earlier, B1269 and B1270 would not have
-/// been needed.**
+/// **This invariant did not hold back then: measuring the repo as it stood would have named those eight
+/// stubs while they were still there.** **In other words, had this criterion been written earlier, those two changes would not
+/// have been needed.**
 /// </remarks>
 public class AlgorithmClassesShouldBeTestedTests
 {
@@ -53,10 +53,10 @@ public class AlgorithmClassesShouldBeTestedTests
     /// </summary>
     /// <remarks>
     /// **判据按"测试里是否出现 `new X(` 或 `new X<`"来定，不按名字出现——
-    /// B1269 的第二次误判（把方法名当类型名）就是因为按名字搜。**
+    /// 第二次误判（把方法名当类型名）就是因为按名字搜。**
     ///
-    /// **The criterion tests for `new X(` / `new X<` in tests, not for the bare name — B1269's second misjudgement came from
-    /// searching by name and hitting a method with the same name.**
+    /// **The criterion tests for `new X(` / `new X<` in tests, not for the bare name — searching by name once hit a method of the same
+    /// name and produced a wrong conclusion.**
     /// </remarks>
     [Fact]
     public void EveryAlgorithmClass_ShouldBeConstructedByATest() {
@@ -73,7 +73,7 @@ public class AlgorithmClassesShouldBeTestedTests
 
         algorithmClasses.Should().HaveCount(
             6,
-            "six algorithm classes remain after B1270's deletion; a different count means the surface moved");
+            "six algorithm classes remain after the stubs were deleted; a different count means the surface moved");
 
         string[] testSources = Directory
             .EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
@@ -99,7 +99,7 @@ public class AlgorithmClassesShouldBeTestedTests
     /// **基线的启发式插件只有工厂函数，没有类** / The baseline heuristic plugin has factory functions, not classes.
     /// </summary>
     /// <remarks>
-    /// **这一条是这一批唯一无法在仓内验证的断言——它说的是基线。**
+    /// **这一条是这里唯一无法在仓内验证的断言——它说的是基线。**
     /// **所以它在这里的写法是<b>记录**而不是断言：断言它会让门禁依赖 `../ospf-kotlin` 的存在。**
     ///
  /// **记录的内容：** **基线 `GA.kt` 只有一个 `fun islandGenetic(...)`，
@@ -111,10 +111,10 @@ public class AlgorithmClassesShouldBeTestedTests
     /// **两者都留着不算错（类被测试、函数被调用），但<b>必须有人写下来</b>——
     /// 否则下一个人会以为其中一套是另一套的旧版。**
     ///
-    /// **This is the one claim this batch cannot verify inside the repo, because it is about the baseline; it is therefore
+    /// **This is the one claim cannot verify inside the repo, because it is about the baseline; it is therefore
     /// <b>recorded</b> rather than asserted, since asserting it would make the gate depend on `../ospf-kotlin` existing.**
     ///
-    /// **Measured in B1271: the baseline's `GA.kt` holds only `fun islandGenetic(...)` and `HS.kt` only
+    /// **Measured: the baseline's `GA.kt` holds only `fun islandGenetic(...)` and `HS.kt` only
     /// `fun harmonySearch(...)` — <b>no classes</b>. So these six classes were not ported; they are C#'s equivalent algorithm
     /// surface, while the real baseline counterpart is `ComposedSolvers` (35 entry points).** **Keeping both is not wrong (the
     /// classes are tested, the functions are called), but <b>someone must write it down</b>, or the next reader will take one set

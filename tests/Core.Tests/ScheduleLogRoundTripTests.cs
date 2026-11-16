@@ -80,10 +80,10 @@ public sealed class ScheduleLogRoundTripTests {
 
     /// <summary>**调度日志可以经存储层往返** / A schedule log survives the storage layer's round trip.</summary>
     /// <remarks>
-    /// Batch 192 曾记录"往返损坏"并因此跳过这条测试。本批把那句话当作待验证的假设重新测一次：
+ /// earlier 曾记录"往返损坏"并因此跳过这条测试。这里把那句话当作待验证的假设重新测一次：
     /// **要么它成立（那么这是真缺陷），要么它不成立（那么记录本身就是错的）**，两种结果都必须写下来。
     ///
-    /// Batch 192 recorded a "broken round trip" and skipped this test because of it. This batch treats that claim as a hypothesis to re-test:
+ /// earlier recorded a "broken round trip" and skipped this test because of it. treats that claim as a hypothesis to re-test:
     /// **either it holds (a real defect) or it does not (the record itself was wrong)**, and both outcomes must be written down.
     /// </remarks>
     [Fact]

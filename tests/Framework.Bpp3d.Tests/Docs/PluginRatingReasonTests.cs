@@ -12,10 +12,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **空着的备注比写错的备注更难发现** / An empty remark is harder to catch than a wrong one.
 /// </summary>
 /// <remarks>
-/// B959 核了矩阵第三节：SCIP 那行写着"**没有真实原生求解的实测**"，而门禁里 `Scip.Tests` **149 通过**，对偶、CP、Benders 报告、IIS、跨语言弹性对照都在里面；
+/// 核了矩阵第三节：SCIP 那行写着"**没有真实原生求解的实测**"，而门禁里 `Scip.Tests` **149 通过**，对偶、CP、Benders 报告、IIS、跨语言弹性对照都在里面；
 /// Mosek / MindOpt / Hexaly 三行**备注空着**，而三者都有真实代码（1388 / 3009 / 2619 行），卡在许可或 SDK。
 ///
-/// **写错的会被人核**（B955、B958 就是这么抓出来的），**空着的只会被当成"没什么可说的"**——而这三行每一行都有实测过的话要说。
+/// **写错的会被人核**，**空着的只会被当成"没什么可说的"**——而这三行每一行都有实测过的话要说。
 ///
 /// The SCIP row claimed "no real native solving was measured" while the gate runs `Scip.Tests` with **149 passing**; the Mosek / MindOpt / Hexaly rows left the remark
 /// **empty** while all three carry real code and are blocked on a licence or SDK. **A wrong remark gets checked; an empty one reads as "nothing to say"** — and each of
@@ -43,8 +43,8 @@ public class PluginRatingReasonTests
         rows.Should().NotBeEmpty("the plugin table names plugin projects");
 
         foreach (string row in rows) {
-            // **末尾那一格就是备注**：`| … | ◐ |  |` 的最后一格为空，正是 B959 抓到的形状。
-            // **The trailing cell is the remark**: `| … | ◐ |  |` leaves it empty, which is exactly the shape B959 found.
+            // **末尾那一格就是备注**：`| … | ◐ |  |` 的最后一格为空，正是 抓到的形状。
+            // **The trailing cell is the remark**: `| … | ◐ |  |` leaves it empty, which is exactly the shape found.
             string[] cells = row.Trim().Trim('|').Split('|')
                 .Select(cell => cell.Trim())
                 .ToArray();

@@ -1,4 +1,4 @@
-// 单位加工时长用得上批次时长（B736）/ The unit processing time uses the batch duration (B736).
+// 单位加工时长用得上批次时长/ The unit processing time uses the batch duration.
 
 using System;
 using System.Collections.Generic;
@@ -17,15 +17,15 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **单位加工时长用得上批次时长（B736）** / The unit processing time uses the batch duration (B736).
+/// **单位加工时长用得上批次时长** / The unit processing time uses the batch duration.
 /// </summary>
 /// <remarks>
-/// B735 的注释说 C# 的 `IProductionAction` 没有 `BatchDuration`——**那是错的**：它从 B4xx 起就在，只是没人用。
+/// 的注释说 C# 的 `IProductionAction` 没有 `BatchDuration`——**那是错的**：它从 B4xx 起就在，只是没人用。
 /// 结果是 `operationTime` 的系数恒为 1，`x` 的单位变成"件"而不是"时长"，一个时隙只能装 1 件。
-/// 这一批把基线的规则接上：**离散动作有 `BatchDuration` 就用它，否则取时间窗刻度**。
+/// 这里把基线的规则接上：**离散动作有 `BatchDuration` 就用它，否则取时间窗刻度**。
 ///
-/// B735's comment claimed C#'s `IProductionAction` has no `BatchDuration` — **wrong**: it has existed since B4xx, just unused. The consequence was an `operationTime` coefficient
-/// pinned at 1, making `x` measured in pieces rather than durations, so a slot held exactly one piece. This batch wires the baseline's rule: **a discrete action with
+/// the earlier comment claimed C#'s `IProductionAction` has no `BatchDuration` — **wrong**: it has existed since B4xx, just unused. The consequence was an `operationTime` coefficient
+/// pinned at 1, making `x` measured in pieces rather than durations, so a slot held exactly one piece. wires the baseline's rule: **a discrete action with
 /// `BatchDuration` uses it, otherwise the window scale**.
 /// </remarks>
 public class CapacityBatchDurationTests {

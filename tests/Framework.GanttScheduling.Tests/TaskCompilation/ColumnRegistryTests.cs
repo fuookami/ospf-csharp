@@ -36,7 +36,7 @@ public class ColumnRegistryTests {
     /// **同名任务在两轮里互不覆盖** / A same-named task in two rounds does not overwrite.
     /// </summary>
     /// <remarks>
-    /// 这是本批的核心：`A` 在两轮里都出现，两轮各自都算"含有 A"。
+    /// 这是这里的核心：`A` 在两轮里都出现，两轮各自都算"含有 A"。
     /// 若实现用扁平的单一映射，第二轮会把第一轮的 `A` 覆盖掉（或反过来），
     /// 于是跨轮冲突找不到"别的轮次里的 A"。
     ///

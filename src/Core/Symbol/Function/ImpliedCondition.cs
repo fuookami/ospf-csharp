@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`③` 是必需的一行**：**只写 ①② 时 `indicator` 是自由的，
 /// 求解器可以为了满足区间而把它设成 1，于是"蕴含"变成"永远成立"。**
 ///
-/// B1166, following the baseline's `ImpliedCondition.kt`.
+/// Following the baseline's `ImpliedCondition.kt`.
 ///
 /// **Semantics**: **when `antecedent = 1` the input must lie in `[bounds.lower, bounds.upper]`; when
 /// `antecedent = 0` these rows do nothing.**

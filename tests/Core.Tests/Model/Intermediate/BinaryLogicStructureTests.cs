@@ -27,8 +27,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **只数行数证明不了任何东西——一个行数完全正确而符号写反的实现，行数判据全绿。**
 ///
-/// adds
-///
 /// **The four encodings differ in row count and direction. The real criterion is: <b>substitute every binary assignment;
 /// exactly the operation's assignments are feasible</b>.**
 ///

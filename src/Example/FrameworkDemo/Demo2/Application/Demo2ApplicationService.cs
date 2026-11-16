@@ -18,20 +18,20 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 /// 三条装载路径的统一门面 / One facade in front of the three loading paths.
 /// </summary>
 /// <remarks>
-/// **基线把三条 `Execute` 收在这个门面后面**（`Demo2ApplicationService.solve`），本仓的 B790/B791 只把三条路径分别接了线——
+/// **基线把三条 `Execute` 收在这个门面后面**（`Demo2ApplicationService.solve`），本仓的 只把三条路径分别接了线——
 /// 三条各自能跑，**合起来却没有统一入口**。调用方按 `StowageMode` 分派，不该自己 `switch` 三个应用类。
 ///
-/// **这一批只做分派**，不搬基线的编排：心跳、列生成、Benders 质量守卫、`render()` 都不在这里。
+/// **这里只做分派**，不搬基线的编排：心跳、列生成、Benders 质量守卫、`render` 都不在这里。
 /// 基线那份是**一个 130 行的编排器**，硬把它的空壳搬过来只会得到"每个方法都返回未实现"的空架子——**空壳是最糟的缺口**。
 /// 分派先站住，其余按基线逐条补，补一条加一条判据。
 ///
 /// 基线里"分区列生成与 Benders 不能同时启用"这条校验**搬不了**：本仓的 `SolvePolicy` 没有 `PartitionColumnGeneration`
 /// 字段（这是 `infrastructure/dto` 整域缺口的一部分）。**校验依赖的输入都不存在，写一个假校验只会骗人。**
 ///
-/// **The baseline puts all three `Execute` paths behind this facade** (`Demo2ApplicationService.solve`); B790 and B791 wired them separately — each runs,
+/// **The baseline puts all three `Execute` paths behind this facade** (`Demo2ApplicationService.solve`); and wired them separately — each runs,
 /// **but together they have no single entry point**. Callers dispatch on `StowageMode` instead of switching over three application classes themselves.
 ///
-/// **This batch only dispatches**; it does not move the baseline's orchestration. Heartbeats, column generation, the Benders quality guard and `render()` stay
+/// ** only dispatches**; it does not move the baseline's orchestration. Heartbeats, column generation, the Benders quality guard and `render` stay
 /// out. That baseline method is **a 130-line orchestrator**, and dragging its shell over here would only produce an empty frame where every method returns
 /// "not implemented" — **an empty shell is the worst kind of gap**. Dispatch first; the rest lands per baseline item, one criterion each.
 ///
@@ -81,15 +81,15 @@ public static class Demo2ApplicationService {
             TimeSpan.Zero,
             Flt64.Zero));
 
-        // **两条策略校验放在分派之前**（B826）：它们是"请求本身互相矛盾"，与走哪条装载路径无关。
+        // **两条策略校验放在分派之前**：它们是"请求本身互相矛盾"，与走哪条装载路径无关。
         // 位置与基线一致（`Demo2ApplicationService.solve` 在心跳之前校验）。
         //
-        // **Both policy checks run before dispatch** (B826): they are "the request contradicts itself", independent of which loading path is taken. The position matches
+        // **Both policy checks run before dispatch**: they are "the request contradicts itself", independent of which loading path is taken. The position matches
         // the baseline, which checks before the running heartbeat.
-        // **机型守卫在策略校验之前**（B827）：基线的顺序就是 `supportedAircraft` → 策略互斥 → 心跳。顺序不是装饰——
+        // **机型守卫在策略校验之前**：基线的顺序就是 `supportedAircraft` → 策略互斥 → 心跳。顺序不是装饰——
         // 机型不支持时"策略互斥"这件事根本轮不到讨论，先报会让人去改策略，改完还是不支持。
         //
-        // **The aircraft guard comes before the policy checks** (B827): the baseline's order is `supportedAircraft` then policy then heartbeat. The order is not
+        // **The aircraft guard comes before the policy checks**: the baseline's order is `supportedAircraft` then policy then heartbeat. The order is not
         // decoration — when the aircraft is unsupported there is no point discussing strategy exclusion: reporting that first sends the caller to change a policy that
         // will not help.
         if (!BendersStrategy.SupportedAircraft(request.AircraftType))
@@ -126,14 +126,14 @@ public static class Demo2ApplicationService {
         }
         if (policy.PartitionColumnGeneration)
         {
-            // **B929 接上了**：B826 那句"注册与分区配置没接起来"两半都不成立——注册一直都在，
-            // 分区配置在 B928 落地，`PartitionColumnGenerationRunner` 只是把两块交给框架层的循环。
+            // **接上了**： 那句"注册与分区配置没接起来"两半都不成立——注册一直都在，
+            // 分区配置在 落地，`PartitionColumnGenerationRunner` 只是把两块交给框架层的循环。
             //
             // **仍然明确拒绝，但理由换了**：分派现在缺的是**求解器**。不给后端却跑一条列生成，只能得到一个空结果，
             // 而"没后端"与"列生成没结果"是两件事——把后者的措辞用在前者上，下一个人会去查模型。
             //
-            // **Wired in B929**: B826's "the registration and the partition configuration are not wired" was wrong on both halves — the registration was always there and
-            // the configuration landed in B928; `PartitionColumnGenerationRunner` only hands the two to the framework loop.
+            // **Wired**: the earlier "the registration and the partition configuration are not wired" was wrong on both halves — the registration was always there and
+            // the configuration landed; `PartitionColumnGenerationRunner` only hands the two to the framework loop.
             // **Still an explicit refusal, with a different reason**: what the dispatch lacks now is a **solver**. Running column generation with no backend can only
             // produce an empty result, and "no backend" and "column generation produced nothing" are different stories — using the latter's wording for the former sends
             // the next person to inspect the model.
@@ -189,10 +189,10 @@ public static class Demo2ApplicationService {
     /// <param name="finished">收尾回调 / The finishing callback.</param>
     /// <returns>原样返回结果 / The outcome, unchanged.</returns>
     /// <remarks>
-    /// **抽出来是因为策略校验的两条提前返回也要发心跳**（B826）：校验失败和列生成未移植都是"结束了，而且失败了"，
+    /// **抽出来是因为策略校验的两条提前返回也要发心跳**：校验失败和列生成未移植都是"结束了，而且失败了"，
     /// 而"只报成功的心跳等于没有心跳"。
     ///
-    /// **Extracted because the two early returns need the beat too** (B826): a policy conflict and an unported path are both "it ended, and it failed", and
+    /// **Extracted because the two early returns need the beat too**: a policy conflict and an unported path are both "it ended, and it failed", and
     /// "heartbeats that only report success are no heartbeats at all".
     /// </remarks>
     private static (ResponseDTO Response, RenderDTO? Render) Finish(
@@ -225,16 +225,16 @@ public static class Demo2ApplicationService {
     /// </remarks>
     private static ErrorCode CodeOf(string? status) => status switch {
         "UnknownStowageMode" or "InitFailed" or "UnsupportedAircraft" => ErrorCode.IllegalArgument,
-        // **基线 `fail()` 只产出三个状态**：`ORModelInfeasible` → `"Infeasible"`、
+        // **基线 `fail` 只产出三个状态**：`ORModelInfeasible` → `"Infeasible"`、
         // `OREngineSolvingException` → `"NotConverged"`、**其余 → `"Error"`**。
         // **本仓曾经自造 `DirectSolveFailed`/`DomainRegisterFailed`/`ModelBuildFailed` 三个，
-        // 而基线里搜不到它们——B1104/B1105 已把全部产出点改回基线的三个状态。**
+        // 而基线里搜不到它们——全部产出点已改回基线的三个状态。**
         // **留着旧名字的映射会让"没人产出的字符串"看起来像一条真实分支。**
         //
-        // **The baseline `fail()` produces exactly three statuses**: `ORModelInfeasible` → `"Infeasible"`,
+        // **The baseline `fail` produces exactly three statuses**: `ORModelInfeasible` → `"Infeasible"`,
         // `OREngineSolvingException` → `"NotConverged"`, **everything else → `"Error"`**.
         // **This port once invented `DirectSolveFailed`/`DomainRegisterFailed`/`ModelBuildFailed`, which appear nowhere in the baseline —
-        // B1104/B1105 moved every producer back to the baseline's three.** **Keeping the old names would make strings nobody emits look like real branches.**
+        // Every producer now uses the baseline's three.** **Keeping the old names would make strings nobody emits look like real branches.**
         "NotConverged" => ErrorCode.OREngineSolvingException,
         _ => ErrorCode.ApplicationFailed,
     };

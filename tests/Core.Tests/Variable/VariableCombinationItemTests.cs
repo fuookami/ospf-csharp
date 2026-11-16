@@ -29,14 +29,14 @@ public class VariableCombinationItemTests {
     /// **`UIntVariable2` 存在、二维可取、元素是 `UInt64` 且上界可收紧** / `UIntVariable2` exists, indexes in two dimensions, holds `UInt64` and accepts a tightened upper bound.
     /// </summary>
     /// <remarks>
-    /// B630 之前 Core 里只有 `UIntVariable1`，二维那张"箱 × 层"矩阵无处落脚。判据钉四件事：
+    /// 之前 Core 里只有 `UIntVariable1`，二维那张"箱 × 层"矩阵无处落脚。判据钉四件事：
     ///
     /// 1. 按 `[i, j]` 取得到元素，且维度顺序是 `(d1, d2)` 而不是反过来。
     /// 2. 元素个数等于 `d1 * d2`。
     /// 3. 元素的值类型是 `UInt64`（无符号，不是 `Int64`）。
     /// 4. **上界可收紧**：`PreciseAssignment` 靠 `x[i, j].Range.leq(容量)` 把装载量压到容量以下，上界不生效这条类型就没用。
     ///
-    /// Before B630 Core only had `UIntVariable1`, leaving the two-dimensional (bin × layer) matrix nowhere to live. The criterion pins four things: indexing by `[i, j]` with the
+    /// Before Core only had `UIntVariable1`, leaving the two-dimensional (bin × layer) matrix nowhere to live. The criterion pins four things: indexing by `[i, j]` with the
     /// dimension order `(d1, d2)` rather than reversed; an element count of `d1 * d2`; a `UInt64` element type (unsigned, not `Int64`); and **a tighten-able upper bound**, since
     /// `PreciseAssignment` clamps loads with `x[i, j].Range.leq(capacity)` and the type is useless if that does not take effect.
     /// </remarks>

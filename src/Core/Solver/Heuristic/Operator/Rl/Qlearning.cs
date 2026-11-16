@@ -116,9 +116,9 @@ public sealed class QTable {
     /// <param name="state">状态下标 / The state index.</param>
     /// <returns>动作价值 / The action values.</returns>
     /// <remarks>
-    /// **返回的是拷贝而不是活视图**。基线写 `entries[state].toList()`；返回活视图会让调用方持有的"价值快照"在后续更新后
+    /// **返回的是拷贝而不是活视图**。基线写 `entries[state].toList`；返回活视图会让调用方持有的"价值快照"在后续更新后
     /// 静默变化，而选择器读到的值与它决策时的值不再一致。
-    /// **A copy is returned, not a live view.** The baseline writes `entries[state].toList()`; a live view makes the caller's "value
+    /// **A copy is returned, not a live view.** The baseline writes `entries[state].toList`; a live view makes the caller's "value
     /// snapshot" change silently after later updates, so the selector reads values that no longer match what it decided on.
     /// </remarks>
     public IReadOnlyList<Flt64> ValuesOf(int state) {
@@ -234,11 +234,11 @@ public sealed class QTable {
     /// </summary>
     /// <returns>表的副本 / A copy of the table.</returns>
     public IReadOnlyList<IReadOnlyList<Flt64>> Snapshot() {
-        // **必须逐行拷贝**。`Array.AsReadOnly(row)` 只是对内部数组的活视图，`Clear()` 或后续更新会同步改掉"快照"，
-        // 于是恢复出来的仍是清空后的表——而快照调用本身返回成功，看不出任何异常。基线用的是 `it.toList()`，即拷贝。
-        // **Each row must be copied.** `Array.AsReadOnly(row)` is only a live view over the internal array, so `Clear()` or any later
+        // **必须逐行拷贝**。`Array.AsReadOnly(row)` 只是对内部数组的活视图，`Clear` 或后续更新会同步改掉"快照"，
+        // 于是恢复出来的仍是清空后的表——而快照调用本身返回成功，看不出任何异常。基线用的是 `it.toList`，即拷贝。
+        // **Each row must be copied.** `Array.AsReadOnly(row)` is only a live view over the internal array, so `Clear` or any later
         // update mutates the "snapshot" too and the restore yields the cleared table — while the snapshot call itself succeeds and
-        // nothing looks wrong. The baseline uses `it.toList()`, i.e. a copy.
+        // nothing looks wrong. The baseline uses `it.toList`, i.e. a copy.
         var copy = new List<IReadOnlyList<Flt64>>(_entries.Length);
         foreach (Flt64[] row in _entries) {
             var cloned = new Flt64[row.Length];

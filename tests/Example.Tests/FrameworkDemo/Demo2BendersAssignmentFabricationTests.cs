@@ -11,20 +11,20 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B839：Benders 路径**不许**把主问题的解当成配载分配 / The Benders path must not read the master solution as a loading plan.
+/// Benders 路径**不许**把主问题的解当成配载分配 / The Benders path must not read the master solution as a loading plan.
 /// </summary>
 /// <remarks>
 /// `BendersSolver` 交回来的 `Solution` 是**主问题模型 token 顺序**的值（theta 加二元变量），而 `FullLoadApplication.BuildAssignments`
-/// 按"货 × 舱位"读它。长度碰巧相等时它会"成功"地读出**错位**的分配；不相等时读出空分配（B835 记录过）。
+/// 按"货 × 舱位"读它。长度碰巧相等时它会"成功"地读出**错位**的分配；不相等时读出空分配。
 ///
-/// 这一批把最后那句 `BuildAssignments(request, result.Solution)` 去掉：目标值与状态照报，**分配留空并写明原因**
+/// 这里把最后那句 `BuildAssignments(request, result.Solution)` 去掉：目标值与状态照报，**分配留空并写明原因**
 /// （`benders_assignments=not_decoded:master_solution_length=N`）。等到 demo2 换成框架的 `DiscreteLoadingApplicationService`
-/// （B838 已确认那条才是基线路径），分配才由框架侧按变量身份合并解码。
+/// ，分配才由框架侧按变量身份合并解码。
 ///
 /// `BendersSolver` hands back the **master model's token-ordered** values (theta plus binaries), while `FullLoadApplication.BuildAssignments` reads them as
-/// "cargo x position". On a length coincidence it "succeeds" at reading a **misaligned** plan; otherwise it reads an empty one (B835 recorded that). This batch
+/// "cargo x position". On a length coincidence it "succeeds" at reading a **misaligned** plan; otherwise it reads an empty one. 
 /// drops the final `BuildAssignments(request, result.Solution)`: the objective and status are still reported, **assignments stay empty with a stated reason**
-/// (`benders_assignments=not_decoded:master_solution_length=N`). Only when demo2 moves to the framework `DiscreteLoadingApplicationService` (B838 established that
+/// (`benders_assignments=not_decoded:master_solution_length=N`). Only when demo2 moves to the framework `DiscreteLoadingApplicationService` ( established that
 /// as the baseline path) does the framework merge and decode assignments by variable identity.
 /// </remarks>
 public sealed class Demo2BendersAssignmentFabricationTests
@@ -45,11 +45,11 @@ public sealed class Demo2BendersAssignmentFabricationTests
             SolvePolicy = new SolvePolicy(PreferBenders: true, BendersFallbackToMilp: false),
         };
 
-        // **这条判据守的是旧路径的"不解码"行为**（B893 分派切到单模型链之后，必须**直接调用**旧路径才量得到）：
-        // `SolveWithBenders` 在 B892 改成 `internal`，正是为了这一刻。
+        // **这条判据守的是旧路径的"不解码"行为**（ 分派切到单模型链之后，必须**直接调用**旧路径才量得到）：
+        // `SolveWithBenders` 在 改成 `internal`，正是为了这一刻。
         //
-        // **This criterion guards the old route's "no decoding" behaviour** (after B893 switched dispatch it must call the old route **directly**); `SolveWithBenders` was made
-        // `internal` in B892 exactly for this.
+        // **This criterion guards the old route's "no decoding" behaviour** (after switched dispatch it must call the old route **directly**); `SolveWithBenders` was made
+        // `internal` exactly for this.
         var application = new FullLoadApplication();
         application.Init(request).IsOk.Should().BeTrue();
         List<string> notes = [];
@@ -85,7 +85,7 @@ public sealed class Demo2BendersAssignmentFabricationTests
             SolvePolicy = new SolvePolicy(PreferBenders: true, BendersFallbackToMilp: false),
         };
 
-        // 同上：**直接调旧路径**（B893）/ same as above: call the old route directly (B893).
+        // 同上：**直接调旧路径**/ same as above: call the old route directly.
         var application = new FullLoadApplication();
         application.Init(request).IsOk.Should().BeTrue();
         List<string> notes = [];
@@ -106,13 +106,13 @@ public sealed class Demo2BendersAssignmentFabricationTests
     /// **凭空的解码器不许回来** / The fabricating decoder must not come back.
     /// </summary>
     /// <remarks>
-    /// B862 删掉了 `BuildAssignments`：它**零调用点**（只有注释在提它），而且它读的布局不是任何模型产出的——
+    /// 删掉了 `BuildAssignments`：它**零调用点**（只有注释在提它），而且它读的布局不是任何模型产出的——
     /// `c * numPositions + p` 假设解向量前若干项是"货 × 舱位"的 0/1 决策，而主模型里只有一个 theta。
     /// 留着它就是留一把**随时能被别人捡起来的假分配工具**。
     ///
     /// 判据扫**代码行**、注释不算（这条约定本轮踩过三次）。
     ///
-    /// B862 deleted `BuildAssignments`: it had **zero call sites** (only comments named it) and read a layout no model produces — `c * numPositions + p` assumes
+    /// deleted `BuildAssignments`: it had **zero call sites** (only comments named it) and read a layout no model produces — `c * numPositions + p` assumes
     /// the leading entries are 0/1 "cargo × position" decisions while the master holds a single theta. Keeping it meant keeping **a fabrication tool anyone could pick
     /// up again**. The criterion scans **code lines only**; comments do not count (a convention this round has tripped over three times).
     /// </remarks>

@@ -18,15 +18,14 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// CVaR 是尾部平均，不是平均值，也不是分位点 / CVaR is a tail average, not a mean and not a quantile.
 /// </summary>
 /// <remarks>
-/// B1136 补 CvarFunction（基线 Cvar.kt）。
+/// 补 CvarFunction（基线 Cvar.kt）。
 /// 定义是 min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ]。
 ///
 /// 三个容易混淆的量：**平均值**（全部情景）、**VaR**（一个分位点）、**CVaR**（尾部平均）。
-/// 在离散分布上，**CVaR 介于 VaR 与最坏情况之间**，而这条不等式是这一批唯一能同时否掉
+/// 在离散分布上，**CVaR 介于 VaR 与最坏情况之间**，而这条不等式是这里唯一能同时否掉
 /// “写成平均值”和“写成分位点”的判据。
 ///
-/// adds
-/// Defined as min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ].
+/// Adds Defined as min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ].
 ///
 /// Three quantities get confused: **the mean** (all scenarios), **VaR** (a quantile) and **CVaR** (the tail average).
 /// On a discrete distribution **CVaR sits between VaR and the worst case**, and that inequality is the only thing

@@ -13,18 +13,18 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// Why four kinds have no projection, each pinned at the side where it is cut.
 /// </summary>
 /// <remarks>
-/// B1254 是一批<b>结清</b>而不是一批"再做一点"：B1253 结尾说"`CapturedInputBounds` 由谁填必须回答"，
-/// 这一批回答它，并把四种仍未投影的结构各自断在哪一侧写成可执行事实。
+/// **<b>结清</b>而不是"再做一点"：此前结尾说"`CapturedInputBounds` 由谁填必须回答"，
+/// 这里回答它，并把四种仍未投影的结构各自断在哪一侧写成可执行事实。
 ///
 /// **四条断点归成两类：**
 ///
 /// - **符号没保留物化需要的东西**：`XorFunction` 没存二元输入；`MaskingFunction` 没存 `ConditionBounds`
 /// - **前提捕获了却拿不到，或根本没有源**：`PWL` 的边界捕获在 `BoundDependencySnapshot` 里，
-///   而它是 `internal` 且只提供 `IsCurrent()`；`IndicatorStructure` 没有对应的函数符号
+/// 而它是 `internal` 且只提供 `IsCurrent`；`IndicatorStructure` 没有对应的函数符号
 ///
 /// **四者都不是"写一个投影就能解决"，所以它们不在派生分派里。**
 ///
-/// B1254 is a batch that <b>closes a question</b> rather than doing a little more: B1253 ended with "who fills
+/// **A step that <b>closes a question</b> rather than doing a little more: it ended with "who fills
 /// `CapturedInputBounds` must be answered", and this answers it, pinning where each of the four unprojected kinds is cut.
 ///
 /// **The four cuts fall into two classes: the symbol did not keep what materialisation needs, or the precondition was
@@ -61,7 +61,7 @@ public class DeferredProjectionBlockersTests
             "if an IndicatorFunction appears, this criterion must be flipped — the blocker is that no source exists");
 
  // **不用 `Select`：本仓的 `Result` 扩展也定义了一个。**
- // **Not `Select`: this repo's `Result` extensions define one too .**
+ // **Not `Select`: this repo's `Result` extensions define one too.**
         string[] files = Directory.GetFiles(
             System.IO.Path.Combine(root, "src/Core/Symbol/Function"), "*ndicator*.cs", SearchOption.AllDirectories);
         var indicators = new System.Collections.Generic.List<string>(files.Length);
@@ -85,12 +85,12 @@ public class DeferredProjectionBlockersTests
     /// **`MaskingFunction` 存了 `Input`、`Mask`、`ResultVar`，<b>没存边界</b>。**
     ///
     /// **所以投影要填那个边界，只能自己编一个。** **"编一个"与"从一个真边界捕获"的区别，
-    /// 就是 B1243 那条"shape matches, defence does not"的判据在防的东西。**
+    /// 就是那条"shape matches, defence does not"的判据在防的东西。**
     ///
     /// **`MaskingStructure` needs a `ConditionalValue`, and that needs `ConditionBounds`. `MaskingFunction` stores
     /// `Input`, `Mask` and `ResultVar` but <b>no bounds</b>.**
     ///
-    /// **So a projection would have to invent one — exactly what B1243's "shape matches, defence does not" criterion guards
+    /// **So a projection would have to invent one — exactly what the earlier "shape matches, defence does not" criterion guards
     /// against.**
     /// </remarks>
     [Fact]
@@ -114,12 +114,12 @@ public class DeferredProjectionBlockersTests
     /// **`PWL` 的边界捕获读不回来** / The piecewise bounds capture cannot be read back.
     /// </summary>
     /// <remarks>
-    /// **这是本批最重要的一条，因为它回答的正是 B1253 留下的那个问题：**
+    /// **这是这里最重要的一条，因为它回答的正是此前留下的那个问题：**
     ///
     /// **`CapturedInputBounds` 由谁填？** **答案：<b>没有人填，而且现在也填不了。</b>**
     ///
     /// **`UnivariateLinearPiecewiseFunction` 确实捕获了它（`_inputDependencies`），
-    /// 但那个类型是 `internal` 的 `BoundDependencySnapshot`，并且只公开一个 `IsCurrent()`——
+    /// 但那个类型是 `internal` 的 `BoundDependencySnapshot`，并且只公开一个 `IsCurrent`——
     /// 它只能回答"边界还是当初那些吗"，<b>不能回答"当初是哪些"</b>。**
     ///
     /// **所以投影要填 `CapturedInputBounds`，只能拿当前范围充数——**
@@ -129,11 +129,11 @@ public class DeferredProjectionBlockersTests
     /// **补它要先让那个捕获能被读出（放开可见性并加一个只读出口），那会改变"快照只用于核对"
     /// 这个既有语义——所以那是单独一批的事。**
     ///
-    /// **This is the batch's most important criterion, because it answers exactly what B1253 left open: who fills
+    /// **This is the most important criterion here, because it answers exactly what was left open: who fills
     /// `CapturedInputBounds`? The answer is <b>nobody, and today nobody can.</b>**
     ///
     /// **`UnivariateLinearPiecewiseFunction` does capture it (`_inputDependencies`), but that type is the `internal`
-    /// `BoundDependencySnapshot` exposing only `IsCurrent()` — it can answer "are the bounds still those" but <b>not "which
+    /// `BoundDependencySnapshot` exposing only `IsCurrent` — it can answer "are the bounds still those" but <b>not "which
     /// were they"</b>.**
     ///
     /// **So a projection could only fill the proof with the current range — making the proof a tautology and the

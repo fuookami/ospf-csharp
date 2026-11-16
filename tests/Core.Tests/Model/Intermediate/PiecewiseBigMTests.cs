@@ -18,8 +18,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **同一个非正值，自动路径修复、显式路径拒绝。**
 ///
-/// adds
-///
 /// **The same non-positive value is repaired on the automatic path and rejected on the explicit one.**
 /// </remarks>
 public class PiecewiseBigMTests
@@ -28,7 +26,7 @@ public class PiecewiseBigMTests
     /// **同一个非正值，两条路径结果相反** / The same non-positive value splits by path.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **自动 M 是推导出来的估计，可以合理地是 0 或负数，
     /// 规范化成安全的正值不改变任何语义。**

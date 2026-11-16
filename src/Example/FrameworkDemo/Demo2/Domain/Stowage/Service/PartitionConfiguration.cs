@@ -24,12 +24,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Service;
 /// | `LoadingPartition` 列表 | `input.positions` 按 `partitionId` 分组 | `input.positions.groupBy { it.partitionId }` |
 /// | `PartitionDecision` 列表 | `aggregation.positions` 里 `predicateWeightNeeded` / `recommendedWeightNeeded` 的舱位 | `position.status.predicateWeightNeeded` / `recommendedWeightNeeded` |
 ///
-/// **为什么这一层值得单独存在**：B826 起 `partitionColumnGeneration` 在 demo2 里被**显式拒绝**（`NotYetPorted`），
+/// **为什么这一层值得单独存在**： 起 `partitionColumnGeneration` 在 demo2 里被**显式拒绝**（`NotYetPorted`），
 /// 理由是"注册与分区配置没接起来"。注册那一半由 `DiscreteLoadingContext.Register` 提供，**缺的就是这一半**。
 /// 把它做成**纯函数**（不碰求解器、不碰模型）后，那一半能被判据钉住，而剩下的求解器接线仍需真实后端。
 ///
 /// Aligned with the baseline's `partitionConfiguration`, **one for one**: the `LoadingPartition` list comes from grouping `input.positions` by `partitionId`, and the
-/// `PartitionDecision` list from the positions whose status needs a predicate or a recommended weight. **Why this layer earns its own file**: since B826
+/// `PartitionDecision` list from the positions whose status needs a predicate or a recommended weight. **Why this layer earns its own file**: since then
 /// `partitionColumnGeneration` is **explicitly refused** in demo2 (`NotYetPorted`) on the grounds that "the registration and the partition configuration are not wired".
 /// The registration half comes from `DiscreteLoadingContext.Register`; **this is the missing half**. Made a **pure function** (no solver, no model), that half becomes
 /// criterion-backed, while the remaining solver wiring still needs a real backend.

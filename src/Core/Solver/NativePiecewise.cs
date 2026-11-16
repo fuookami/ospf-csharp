@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// &lt;/summary>
 /// &lt;remarks>
 /// 对齐基线 `NativePiecewise.kt` 的 `NativePiecewiseData`。
-/// **B1203, following the baseline's `NativePiecewiseData`.**
+/// **Following the baseline's `NativePiecewiseData`.**
 /// &lt;/remarks>
 public sealed record NativePiecewiseData(
     VariableItemKey InputKey,
@@ -37,7 +37,7 @@ public sealed record NativePiecewiseData(
 ///
 /// **断点必须<b>严格</b>递增：`x[i-1] >= x[i]` 即拒。**
 ///
-/// **这与 B1202 的 `selectSegment` 形成对照：那里<b>没有</b>这项检查，
+/// **这与 `selectSegment` 形成对照：那里<b>没有</b>这项检查，
 /// 所以一组乱序断点在报告侧会落到 `no valid segment` 这条误导性的消息上。
 /// 而在这里，它得到的是准确的 `breakpoints must be strictly increasing`。**
 ///
@@ -61,7 +61,7 @@ public sealed record NativePiecewiseData(
 ///
 /// **Breakpoints must be <b>strictly</b> increasing: `x[i-1] >= x[i]` is rejected.**
 ///
-/// **This contrasts with B1202's `selectSegment`, which has <b>no</b> such check, so shuffled breakpoints land on the
+/// **This contrasts with the earlier `selectSegment`, which has <b>no</b> such check, so shuffled breakpoints land on the
 /// misleading `no valid segment` message there while here they get the accurate `breakpoints must be strictly
 /// increasing`.**
 ///

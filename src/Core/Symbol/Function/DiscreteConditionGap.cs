@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 而"从 `FixedValue` 推回去"要多一次空判断。**
 /// **冗余在这里换来的是调用点的直接性——这不是可以随便删的东西。**
 ///
-/// B1171, following the baseline's `DiscreteConditionLinearization`.
+/// Following the baseline's `DiscreteConditionLinearization`.
 ///
 /// **Five fields, two of which say whether a branch survives**:
 ///
@@ -81,7 +81,7 @@ public sealed record DiscreteConditionLinearization(
 /// **返回 `null` 表示"界定不下来"**，**而 `null` 与"两个分支都可能"是同一个意思——
 /// 不是"不知道"，是"需要指示变量"。**
 ///
-/// B1171, following the baseline's `boundsAvoidDiscreteConditionGap`.
+/// Following the baseline's `boundsAvoidDiscreteConditionGap`.
 ///
 /// **It answers "do we still need indicator constraints"**: **when the bounds already settle the answer, an indicator
 /// variable is pointless — hand back the truth value and save one binary variable and two rows.**

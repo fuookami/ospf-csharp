@@ -18,16 +18,15 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 断点上误差为零，而段中间不是 / The error is zero at the breakpoints and not in between.
 /// </summary>
 /// <remarks>
-/// B1132 补 ExpFunction。它不是“指数函数”，是“指数函数的分段线性近似”——
+/// 补 ExpFunction。它不是“指数函数”，是“指数函数的分段线性近似”——
 /// 这个区别决定了两件事：① 断点上误差恰好为零；② 段中间有误差，且段数越少误差越大。
 ///
-/// 所以“抽查几个断点”永远看不出段数不够，而那是这一批最容易写错的判据。
+/// 所以“抽查几个断点”永远看不出段数不够，而那是这里最容易写错的判据。
 ///
-/// adds
-/// and that distinction settles two things: ① the error is exactly zero at the breakpoints;
+/// Adds and that distinction settles two things: ① the error is exactly zero at the breakpoints;
 /// ② there is error in between, larger with fewer segments.
 ///
-/// So “spot-check a few breakpoints” can never reveal too few segments, and that is the criterion this batch was
+/// So “spot-check a few breakpoints” can never reveal too few segments, and that is the criterion was
 /// most likely to get wrong.
 /// </remarks>
 public class ExpApproximationTests

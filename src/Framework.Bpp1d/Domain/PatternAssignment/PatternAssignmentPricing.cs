@@ -45,8 +45,8 @@ public enum PackingModelStage {
 /// </summary>
 /// <typeparam name="V">领域数值 / Domain number.</typeparam>
 /// <remarks>
-/// **只有定价钩子。** 基线的扩展还带 `register`/`refresh` 两个建模钩子，它们随建模半边（B427）一起落地。
-/// **Pricing hook only.** The baseline extension also carries `register`/`refresh` modelling hooks, which land with the modelling half (B427).
+/// **只有定价钩子。** 基线的扩展还带 `register`/`refresh` 两个建模钩子，它们随建模半边一起落地。
+/// **Pricing hook only.** The baseline extension also carries `register`/`refresh` modelling hooks, which land with the modelling half .
 /// </remarks>
 public interface IPatternModelingExtension<V>
     where V : struct, IFloatingNumber<V> {
@@ -94,10 +94,10 @@ public sealed class PatternAggregation<V>
 /// </summary>
 /// <typeparam name="V">领域数值 / Domain number.</typeparam>
 /// <remarks>
-/// **本批只有定价半边。** 建模半边（`register`/`addColumns`/`removeColumns`/`refresh`/`extractSolution`）随 B427 落地；
-/// 这个类在 B427 会补上模型字段与那些方法。
+/// **这里只有定价半边。** 建模半边（`register`/`addColumns`/`removeColumns`/`refresh`/`extractSolution`）随 落地；
+/// 这个类在 会补上模型字段与那些方法。
 ///
-/// **Only the pricing half this batch.** The modelling half (`register`/`addColumns`/`removeColumns`/`refresh`/`extractSolution`) lands with B427, which adds the
+/// **Only the pricing half is here.** The modelling half (`register`/`addColumns`/`removeColumns`/`refresh`/`extractSolution`) lands with，which adds the
 /// model fields and those methods to this class.
 /// </remarks>
 public sealed class PatternAssignmentContext<V>
@@ -319,10 +319,10 @@ public sealed class PatternAssignmentContext<V>
             // `UIntVar` 的缺省上界是 `ulong.MaxValue`，换成 `double` 是 `1.8e19`，
             // **超过 binary64 能精确表示的整数上界 `2^53`**——求解器在注册阶段直接拒
             // （"整数变量边界须在二进制64精确整数范围内且有限"）。
-            // **B427 曾把上界写成一条约束行、并在文档里记成"有意偏离"，真实的 SCIP 一跑就露馅。**
+            // **曾把上界写成一条约束行、并在文档里记成"有意偏离"，真实的 SCIP 一跑就露馅。**
             //
             // **The bound must go into the variable's range, not into a constraint row alone.** `UIntVar`'s default upper bound is `ulong.MaxValue`, which as a `double`
-            // is `1.8e19` — **beyond binary64's exact-integer limit `2^53`** — so the solver refuses at registration. **B427 wrote the bound as a row and recorded that as a
+            // is `1.8e19` — **beyond binary64's exact-integer limit `2^53`** — so the solver refuses at registration. **wrote the bound as a row and recorded that as a
             // deliberate deviation; one real SCIP run exposed it.**
             variable.Range.Leq(new InvariantUInt64Wrapper(new UInt64(upper)));
 
@@ -356,7 +356,7 @@ public sealed class PatternAssignmentContext<V>
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
     /// **与基线的一处有意偏离：每次全量重建，不做"只追加新列"的增量。** 基线的增量靠
-    /// `asMutable().mutationVersion` 这个**可变版本号**来判断哪些符号没变过；
+    /// `asMutable.mutationVersion` 这个**可变版本号**来判断哪些符号没变过；
     /// C# 侧没有这个计数器，**也没有任何外部可观察的等价信号**。
     ///
     /// 增量的收益是少算几次，风险是**一旦判断错了就静默保留旧系数**。全量重建
@@ -364,7 +364,7 @@ public sealed class PatternAssignmentContext<V>
     /// `ponytail:` 每次刷新 O(列 × 项)；若列池规模成为瓶颈，再引入真正的脏标记。
     ///
     /// **One deliberate deviation: a full rebuild every time, no "append only the new columns" increment.** The baseline's increment relies on the **mutable
-    /// `asMutable().mutationVersion` counter** to decide which symbols changed, and C# has neither that counter **nor any externally observable equivalent**. The
+    /// `asMutable.mutationVersion` counter** to decide which symbols changed, and C# has neither that counter **nor any externally observable equivalent**. The
     /// increment saves a few recomputations and risks **silently keeping stale coefficients** when the judgement is wrong. A full rebuild produces **exactly the same
     /// result** with one less piece of state that only exists for optimisation. **That trades a constant factor for correctness, which is worth it.**
     /// `ponytail:` each refresh is O(columns × terms); introduce a real dirty flag if pool size ever becomes the bottleneck.
@@ -565,12 +565,12 @@ public sealed class PatternAssignmentContext<V>
 
         // **这条兜底分支通过公开接口走不到。** `RefreshShadowPrice` 已经拒绝了任何非有限价格，
         // 而 `_shadowPrice` 只有它一个写入点，所以 `allFinite` 恒真。
-        // **本批没为它写判据**——写一条"绕过守卫再调用"的判据只能测到构造函数，测不到真实路径，
-        // 那是"判据通过但没证明要证明的事"。**如实记录为不可达分支**（与 B415 的物料溢出分支同类）。
+        // **这里没为它写判据**——写一条"绕过守卫再调用"的判据只能测到构造函数，测不到真实路径，
+        // 那是"判据通过但没证明要证明的事"。**如实记录为不可达分支**（与 的物料溢出分支同类）。
         //
         // **This fallback is unreachable through the public API.** `RefreshShadowPrice` already rejects any non-finite price and `_shadowPrice` has no other writer, so
-        // `allFinite` is always true. **No criterion was written for it this batch** — a criterion that bypasses the guard only exercises the constructor, not the real path,
-        // and that is "passing without proving anything". **Recorded as an unreachable branch**, the same class as B415's material-overflow branch.
+        // `allFinite` is always true. **No criterion covers it** — a criterion that bypasses the guard only exercises the constructor, not the real path,
+        // and that is "passing without proving anything". **Recorded as an unreachable branch**, the same class as the earlier material-overflow branch.
         bool allFinite = true;
         foreach (KeyValuePair<MathConstraint, Flt64> pair in dual.Constraints) {
             if (!double.IsFinite(pair.Value.ToDouble())) {
@@ -727,12 +727,12 @@ public sealed class PatternAssignmentContext<V>
             return Results.OkInstance;
         }
 
-        // **不需要 `RemoveObjectiveTerms`。** B429 把目标改成**单一来源**（聚合符号），
+        // **不需要 `RemoveObjectiveTerms`。** 把目标改成**单一来源**（聚合符号），
         // 而 `Refresh` 已经按剩余列池重建了符号内容——逐列目标项根本不存在，没有东西可清。
-        // B428 移植时用的那条 API 在这里变成多余的一步。**删掉，不留"以防万一"的调用。**
+        // 移植时用的那条 API 在这里变成多余的一步。**删掉，不留"以防万一"的调用。**
         //
-        // **`RemoveObjectiveTerms` is not needed.** B429 made the objective a **single source** (the aggregate symbol) and `Refresh` already rebuilds its contents from the
-        // remaining pool, so per-column objective terms no longer exist and there is nothing to clear. The call ported in B428 becomes a redundant step here.
+        // **`RemoveObjectiveTerms` is not needed.** made the objective a **single source** (the aggregate symbol) and `Refresh` already rebuilds its contents from the
+        // remaining pool, so per-column objective terms no longer exist and there is nothing to clear. The call ported becomes a redundant step here.
         foreach (UIntVar variable in variables) {
             model.Remove(variable);
         }

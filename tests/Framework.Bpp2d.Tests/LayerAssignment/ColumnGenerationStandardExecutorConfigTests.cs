@@ -1,4 +1,4 @@
-// 标准执行器配置（B648）的判据 / Criteria for the standard-executor config (B648).
+// 标准执行器配置的判据 / Criteria for the standard-executor config.
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **标准执行器配置（B648）** / The standard-executor config (B648).
+/// **标准执行器配置** / The standard-executor config.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**`SheetAmountWeight` 默认极小**（它是平局权重，不是普通权重）、**两个容差默认 `1e-6`**、

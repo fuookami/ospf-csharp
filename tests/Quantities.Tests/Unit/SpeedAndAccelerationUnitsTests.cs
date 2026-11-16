@@ -14,12 +14,12 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **只补海里不补节，等于让两种单位换不到一起** / Adding the miles without the knots leaves them unconvertible.
 /// </summary>
 /// <remarks>
-/// B1125 补齐了四个地区海里，**而它们的配套"节"仍然缺**——
+/// 补齐了四个地区海里，**而它们的配套"节"仍然缺**——
 /// **海里不同，节就不同**，**而只补一半会让"用 UK 海里算的航程"与"用 UK 节算的速度"对不上。**
 ///
 /// **两者都是这台机器算出来的，所以没人会怀疑。**
 ///
-/// B1125 added the four regional nautical miles **while their paired knots were still missing** —
+/// Added
 /// **different miles mean different knots**, **and half a pair makes a voyage in UK miles disagree with a speed in UK knots.**
 ///
 /// **Both come out of this same machine, so nobody suspects either.**

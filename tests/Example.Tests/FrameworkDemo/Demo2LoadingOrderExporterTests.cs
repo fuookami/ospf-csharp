@@ -1,4 +1,4 @@
-// 装载顺序导出器的判据（B797）/ Criteria for the loading-order exporter (B797).
+// 装载顺序导出器的判据/ Criteria for the loading-order exporter.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **导出器：三处照抄基线，一处必须偏离** / The exporter: three behaviours copied from the baseline, one deliberate divergence (B797).
+/// **导出器：三处照抄基线，一处必须偏离** / The exporter: three behaviours copied from the baseline, one deliberate divergence.
 /// </summary>
 /// <remarks>
 /// 四点成对：行格式 `"{id}: {spaceName} (order={order})"` / **排序按"甲板 → 顺序号 → id 的字符串字典序"**（第三级是字典序，`"10"` 排在 `"2"` 前）/

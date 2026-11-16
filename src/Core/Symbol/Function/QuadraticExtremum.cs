@@ -21,20 +21,18 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次极值三兄弟共用的桥接与委托 / The bridging and delegation shared by the three quadratic extremum adapters.
 /// </summary>
 /// <remarks>
-/// B1162 按基线 `QuadraticMax.kt`、`QuadraticMaxMin.kt`、`QuadraticMinMax.kt` 补三个类。
+/// 对齐基线 `QuadraticMax.kt`、`QuadraticMaxMin.kt`、`QuadraticMinMax.kt` 补三个类。
 ///
-/// **三者与 B1161 的 `QuadraticIf` 系列是同一个形状**：**把每个二次多项式桥接成一个实变量，
+/// **三者与 `QuadraticIf` 系列是同一个形状**：**把每个二次多项式桥接成一个实变量，
 /// 再交给已有的线性 `Max`/`MaxMin`/`MinMax`。**
 /// **极值编码本身没有任何新增。**
 ///
-/// **空输入时基线塞一个零多项式**（`inputs.ifEmpty { listOf(LinearPolynomial(emptyList(), zero)) }`）——
+/// **空输入时基线塞一个零多项式**（`inputs.ifEmpty { listOf(LinearPolynomial(emptyList, zero)) }`）——
 /// **不是"拒绝"，而是"最大值/最小值的单位元是 0 对空集无意义，所以给一个零"。**
 /// **这看起来像补丁，但它让 `MaxFunction` 不必处理空表**，
 /// **而代价是"空输入"与"输入一个常数 0"无法区分。**
 ///
-/// adds
-///
-/// **They share the shape of B1161's `QuadraticIf` family**: **bridge each quadratic polynomial to a real variable and
+/// **They share the shape of the earlier `QuadraticIf` family**: **bridge each quadratic polynomial to a real variable and
 /// hand them to the existing linear `Max`/`MaxMin`/`MinMax`.**
 /// **No extremum encoding is new.**
 ///
@@ -173,7 +171,7 @@ internal static class QuadraticExtremumBridging
 /// <remarks>
 /// 对齐基线 `QuadraticMax.kt`。
 ///
-/// B1162, following the baseline's `QuadraticMax.kt`. **No extremum encoding here.**
+/// Following the baseline's `QuadraticMax.kt`. **No extremum encoding here.**
 /// </remarks>
 public sealed class QuadraticMaxFunction : IMathFunctionSymbol<Flt64>, IHasResultPolynomial<Flt64> {
     private readonly QuadraticPolynomial<Flt64>[] _polynomials;
@@ -267,7 +265,7 @@ public sealed class QuadraticMaxFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// <remarks>
 /// 对齐基线 `QuadraticMaxMin.kt`。
 ///
-/// B1162, following the baseline's `QuadraticMaxMin.kt`.
+/// Following the baseline's `QuadraticMaxMin.kt`.
 /// </remarks>
 public sealed class QuadraticMaxMinFunction : IMathFunctionSymbol<Flt64>, IHasResultPolynomial<Flt64> {
     private readonly QuadraticPolynomial<Flt64>[] _polynomials;
@@ -364,7 +362,7 @@ public sealed class QuadraticMaxMinFunction : IMathFunctionSymbol<Flt64>, IHasRe
 /// **`max min` 与 `min max` 不是同一个量**：**前者是先取最小再取最大，后者相反。**
 /// **两者的判据必须给出<b>不同</b>的期望值，否则"写反了"测不出来。**
 ///
-/// B1162, following the baseline's `QuadraticMinMax.kt`.
+/// Following the baseline's `QuadraticMinMax.kt`.
 ///
 /// **`max min` and `min max` are different quantities**: **the first minimises then maximises, the second the other
 /// way round.** **Their criteria must expect <b>different</b> values, or a swap goes unnoticed.**

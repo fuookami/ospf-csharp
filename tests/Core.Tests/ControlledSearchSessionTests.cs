@@ -66,7 +66,7 @@ public sealed class ControlledSearchSessionTests {
     /// <summary>**第二次决策产生一条转移** / The second decision produces one transition.</summary>
     [Fact]
     public async Task Step_ShouldRecordTransitionAfterInitialization() {
-        // **必须让脚本会话真的使用算子池**：否则 `usedAction` 恒为 `null`，池会走 `discard` 分支，永远不产生转移。
+        // **必须让脚真的使用算子池**：否则 `usedAction` 恒为 `null`，池会走 `discard` 分支，永远不产生转移。
         // **The scripted session must actually use the pool**: otherwise `usedAction` stays `null`, the pool takes the `discard` branch,
         // and no transition is ever produced.
         ControlledSearchSession<double, Flt64> session = BuildSession(
@@ -235,7 +235,7 @@ public sealed class ControlledSearchSessionTests {
                 },
                 new TabularSelectionPolicy("fixed", new[] { "p" }), new SearchRandom(2), Array.Empty<string>());
         }
-        // **`useOperator` 让脚本会话真的把算子池标记为已使用**：否则 `usedAction` 恒为 `null`，
+        // **`useOperator` 让脚真的把算子池标记为已使用**：否则 `usedAction` 恒为 `null`，
         // 所有池都会走 `discard` 分支，奖励与反馈路径根本不会被触达。
         // **`useOperator` makes the scripted session actually mark the pool used**: otherwise `usedAction` stays `null`, every pool takes
         // the `discard` branch, and the reward/feedback paths are never reached at all.

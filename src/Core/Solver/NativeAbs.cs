@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// </summary>
 /// <remarks>
 /// 对齐基线 `NativeAbs.kt` 的 `NativeAbsData`。
-/// **B1201, following the baseline's `NativeAbsData`.**
+/// **Following the baseline's `NativeAbsData`.**
 /// </remarks>
 /// <param name="InputKey">输入变量键 / Input variable key.</param>
 /// <param name="ResultKey">结果变量键 / Result variable key.</param>

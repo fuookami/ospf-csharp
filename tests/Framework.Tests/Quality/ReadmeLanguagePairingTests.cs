@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Quality;
 
 /// <summary>
-/// B860：双语文档的**两种约定**，每个 README 必须至少满足一种 / Two conventions for bilingual docs, and every README must satisfy one.
+/// 双语文档的**两种约定**，每个 README 必须至少满足一种 / Two conventions for bilingual docs, and every README must satisfy one.
 /// </summary>
 /// <remarks>
 /// 仓里实际存在两种约定：
@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// | 同目录两个文件 | `src/Framework.Bpp3d/README.md` + `README_ch.md` | 兄弟文件存在 |
 /// | 单文件双节 | `src/Starters/Core/README.md` 里 `## [zh]` 与 `## [en]` | 两个节标题都在 |
 ///
-/// **两种都行，一种都不满足就不行。** B860 之前没有任何判据管这件事：新加一个只写中文的 README 不会红，
+/// **两种都行，一种都不满足就不行。** 之前没有任何判据管这件事：新加一个只写中文的 README 不会红，
 /// 而"双语文档"这句计划里的验收项就此变成一句没人核对的话。
 ///
-/// The repository actually uses two conventions (table above). **Either is fine; neither is not.** Before B860 nothing watched this: adding a Chinese-only README red
+/// The repository actually uses two conventions (table above). **Either is fine; neither is not.** Before nothing watched this: adding a Chinese-only README red
 /// nothing, and the plan's "bilingual documentation" acceptance line became a sentence nobody checks.
 /// </remarks>
 public sealed class ReadmeLanguagePairingTests
@@ -50,9 +50,9 @@ public sealed class ReadmeLanguagePairingTests
 
     /// <summary>**兄弟文件不能是空壳** / The sibling file must not be an empty shell.</summary>
     /// <remarks>
-    /// 空文件能骗过"文件存在"，却什么都没说——本仓记录过好几次这种空壳（B817）。
+    /// 空文件能骗过"文件存在"，却什么都没说——本仓记录过好几次这种空壳。
     ///
-    /// An empty file passes "the file exists" while saying nothing — an empty shell this repository has recorded before (B817).
+    /// An empty file passes "the file exists" while saying nothing — an empty shell this repository has recorded before.
     /// </remarks>
     [Fact]
     public void TheChineseSibling_ShouldNotBeAnEmptyShell() {

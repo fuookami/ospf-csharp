@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **两个超最大偏移约束从"返回 `Failed`"变成真的行（B557）** / The two over-max constraints go from "returns `Failed`" to real rows (B557).
+/// **两个超最大偏移约束从"返回 `Failed`"变成真的行** / The two over-max constraints go from "returns `Failed`" to real rows.
 /// </summary>
 /// <remarks>
 /// 三种静默失效：

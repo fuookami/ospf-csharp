@@ -1,6 +1,6 @@
 // 超启发式配置的预检 / Preflight validation for a hyper-heuristic configuration.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `open()` 前半段的校验阶梯。
-// Mirrors the validation ladder in the first half of `open()` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B).
+// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `open` 前半段的校验阶梯。
+// Mirrors the validation ladder in the first half of `open` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B).
 
 using System;
 using System.Collections.Generic;
@@ -48,11 +48,11 @@ public static class HyperHeuristicDefaults {
 /// 超启发式配置的预检 / Preflight validation for a hyper-heuristic configuration.
 /// </summary>
 /// <remarks>
-/// **这一步存在的原因**：`open()` 会真的构造运行器、分配模型、申请令牌表。若配置有误，那些构造在半路失败，
+/// **这一步存在的原因**：`open` 会真的构造运行器、分配模型、申请令牌表。若配置有误，那些构造在半路失败，
 /// 调用方拿到的错误往往指向**第一个碰巧失败的构造函数**，而不是配置里那一行写错的字段。
 /// 预检把"能不能跑"与"跑起来"分成两步，**让错误早一步、且指向配置**。
 ///
-/// **Why this step exists**: `open()` really constructs runners, allocates models and claims token tables. On a bad configuration those constructions
+/// **Why this step exists**: `open` really constructs runners, allocates models and claims token tables. On a bad configuration those constructions
 /// fail midway, and the error the caller sees usually points at **whichever constructor happened to fail first**, not at the misspelt field in the
 /// configuration. The preflight splits "could this run" from "run it", **so the error comes one step earlier and points at the configuration**.
 ///

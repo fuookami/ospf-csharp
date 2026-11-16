@@ -1,4 +1,4 @@
-// 容量表达式真的按任务算（B745）/ The capacity expressions really follow the tasks (B745).
+// 容量表达式真的按任务算/ The capacity expressions really follow the tasks.
 
 using System;
 using System.Collections.Generic;
@@ -16,18 +16,18 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **容量表达式真的按任务算（B745）** / The capacity expressions really follow the tasks (B745).
+/// **容量表达式真的按任务算** / The capacity expressions really follow the tasks.
 /// </summary>
 /// <remarks>
-/// B744 留下两条没判据的规则：**零容量的束不进表达式**、**列变量按去重后的顺序取**。两条都需要真的任务实例，
-/// 而造一个 `FlightTask` 要 `FlightLegPlan`（14 个参数）+ 飞机 + 机场。这一批把那套最小夹具立起来，两条规则就能钉了。
+/// 留下两条没判据的规则：**零容量的束不进表达式**、**列变量按去重后的顺序取**。两条都需要真的任务实例，
+/// 而造一个 `FlightTask` 要 `FlightLegPlan`（14 个参数）+ 飞机 + 机场。这里把那套最小夹具立起来，两条规则就能钉了。
 ///
 /// 判据的关键是**看系数**：`Y` 舱 120 座的飞机，束的列变量系数就该是 120；同一航班用 0 座的飞机构造的束，
 /// **一项都不该进表达式**——而"进了一项系数为 0 的单项式"是最容易发生的错误形态：
 /// 解上完全等价，展开却多一项、目标里多一个列变量。
 ///
-/// B744 left two unpinned rules: **zero-capacity bunches stay out of the expression** and **column variables follow the deduplicated order**. Both need real task instances,
-/// and building a `FlightTask` takes a `FlightLegPlan` (14 parameters) plus an aircraft and an airport. This batch stands that minimal fixture up so the two rules become pinnable.
+/// left two unpinned rules: **zero-capacity bunches stay out of the expression** and **column variables follow the deduplicated order**. Both need real task instances,
+/// and building a `FlightTask` takes a `FlightLegPlan` (14 parameters) plus an aircraft and an airport. stands that minimal fixture up so the two rules become pinnable.
 ///
 /// The criterion turns on **the coefficient**: an aircraft with 120 seats in cabin `Y` must give the bunch's column variable a coefficient of 120, while a bunch built for the same
 /// flight on a 0-seat aircraft must contribute **nothing at all** — and "one monomial with a zero coefficient" is the easiest wrong form to ship: identical in the solution, but one
@@ -89,10 +89,10 @@ public class Demo4FlightCapacityTaskTests {
     /// 四点成对：客运容量注册成功 / 有座位的束给 `Y` 舱表达式带来**恰好一个**单项式、系数 120 /
     /// **零座位的束一个单项式都不带来**（不是系数为 0 的单项式）/ 货运开关关闭时 `Cargo` 为 `null`。
     ///
-    /// 第二、三点是这一批的正题：**"系数为 0 的单项式"和"没有单项式"在解上等价，在展开上不同**。
+    /// 第二、三点是这里的正题：**"系数为 0 的单项式"和"没有单项式"在解上等价，在展开上不同**。
     ///
     /// Four paired points: the passenger capacity registers; the bunch with seats contributes **exactly one** monomial to the `Y` expression with coefficient 120; **the zero-seat bunch
-    /// contributes no monomial at all** (not one with a zero coefficient); and the cargo table is null when the switch is off. The second and third are this batch's point:
+    /// contributes no monomial at all** (not one with a zero coefficient); and the cargo table is null when the switch is off. The second and third are's point:
     /// **"a zero-coefficient monomial" and "no monomial" are equivalent in the solution but differ in the expansion.**
     /// </remarks>
     [Fact]

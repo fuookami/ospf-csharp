@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 /// 缺源占位键只有一份定义 / The no-origin placeholder key has exactly one definition.
 /// </summary>
 /// <remarks>
-/// B1226 把六个后端各自的同一份 `FallbackMathConstraint` 合并到 `Core`。
+/// 把六个后端各自的同一份 `FallbackMathConstraint` 合并到 `Core`。
 ///
 /// **合并前的六份<b>逐字相同</b>，而其中四份用了四个不同的类名前缀**
 /// （`Copt`／`Cplex`／`Mindopt`／`Hexaly`），另外两份都叫 `FallbackMathConstraint` 却在不同命名空间里。
@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 /// **六份相同的代码并不比一份贵六倍，它贵在"没人知道它们相同，于是没人敢改任何一份"。**
 ///
 /// **判据的形状因此不是"行为对"（行为一直对），而是"定义只有一处"：
-/// 源码树里 `record ... : MathConstraint` 形式的占位键声明必须恰好一个。**
+/// 源码树里 `record... : MathConstraint` 形式的占位键声明必须恰好一个。**
 ///
 /// **这是少见的"结构判据"而不是"行为判据"，而它在这件事上是唯一有效的形状：**
 /// **行为判据在六份实现上都是绿的，因为六份都正确。**
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Mechanism;
 /// identical copies do not cost six times one, they cost the confidence to change any of them.**
 ///
 /// **The criterion is therefore not behavioural (behaviour was always right) but structural: the source tree must
-/// contain exactly one placeholder-key declaration of the form `record ... : MathConstraint`.**
+/// contain exactly one placeholder-key declaration of the form `record... : MathConstraint`.**
 ///
 /// **This is a rare structural criterion rather than a behavioural one, and here it is the only shape that works: a
 /// behavioural criterion is green on all six copies, because all six are correct.**
@@ -113,24 +113,23 @@ public class FallbackMathConstraintSingleDefinitionTests
     /// **行号到来源键的解析也只有一个定义** / Row-to-origin key resolution also has exactly one definition.
     /// </summary>
     /// <remarks>
-    /// B1227 与 B1226 同源：**占位键只剩一份定义之后，造占位键的那段三元表达式还在四个后端各写了一遍。**
+    /// **占位键只剩一份定义之后，造占位键的那段三元表达式还在四个后端各写了一遍。**
     ///
     /// **判据同样是结构的，理由也一样：** **行为在四份实现上都是绿的，因为它们都正确。**
     ///
-    /// **但这一批的合并没有把四份整文件合并，只合并了那个纯函数。**
+    /// **但这里没有把四份整文件合并，只合并了那个纯函数。**
     /// **原因写在这里，因为"为什么只合这一点"比"合了什么"更容易丢失：**
     /// **四个 `XxxDualSupport` 的其余部分依赖各自的 `LinearMechanismModel` 泛型特化与各自的后端结果类型，
     /// 整文件合并会牵动 18 个调用文件；而那个三元表达式不依赖任何后端类型。**
     ///
-    /// **"同一个形状的重复"不等于"同样大的一步"，这两批的差别就是证据。**
+    /// **"同一个形状的重复"不等于"同样大的一步"。**
     ///
-    /// **B1227 is the same story as B1226: once the placeholder key had one definition, the ternary that builds it was
-    /// still written out in four backends.**
+    /// **Once the placeholder key had one definition, the ternary that builds it was still written out in four backends.**
     ///
     /// **The criterion is structural again, for the same reason: behaviour is green on all four because all four are
     /// correct.**
     ///
-    /// **But this batch did not merge the four whole files, only that pure function. The reason is recorded here because
+    /// **But the four whole files were not merged, only that pure function. The reason is recorded here because
     /// "why only this much" is easier to lose than "what was merged":**
     ///
     /// **the rest of each `XxxDualSupport` depends on its own `LinearMechanismModel` generic specialisation and its own
@@ -180,20 +179,19 @@ public class FallbackMathConstraintSingleDefinitionTests
     /// **来源映射与对偶整理各只有一个定义** / The origin map and the dual tidy each have exactly one definition.
     /// </summary>
     /// <remarks>
-    /// B1228 与 B1226／B1227 同一动机，但**这一批的可行性是上一批<b>先不合并</b>换来的**。
+    /// **这一步的可行性是此前<b>先不合并</b>换来的。**
     ///
-    /// **B1227 只合了那个纯函数，理由是"其余部分依赖各自的泛型特化"。**
-    /// **本批核对下来，`OriginMap` 与 `ToDualSolution` 依赖的泛型特化<b>完全相同</b>——
+    /// **先前只合了那个纯函数，理由是"其余部分依赖各自的泛型特化"。**
+    /// **这里核对下来，`OriginMap` 与 `ToDualSolution` 依赖的泛型特化<b>完全相同</b>——
     /// 四个插件都用同一个 `LinearMechanismModel<Flt64>` 与 `IConstraint<Flt64, LinearCategory>`。**
     ///
-    /// **所以上一批那个理由对 `Key` 成立、对这两个函数不成立，而这恰恰验证了当时的判断方式：
+    /// **所以那个理由对 `Key` 成立、对这两个函数不成立，而这恰恰验证了这种判断方式：
     /// 不确定时先不合，核对之后再合，而不是先合再发现类型对不上。**
     ///
-    /// **B1228 shares B1226/B1227's motive, but its feasibility was bought by the previous batch <b>declining</b> to
-    /// merge.**
+    /// **This step's feasibility was bought by <b>declining</b> to merge earlier.**
     ///
-    /// **B1227 merged only the pure function, reasoning that "the rest depends on each backend's generic
-    /// specialisation".** **This batch's check shows `OriginMap` and `ToDualSolution` depend on the <b>same</b>
+    /// **Only the pure function was merged at first, reasoning that "the rest depends on each backend's generic
+ /// specialisation".** **the check shows `OriginMap` and `ToDualSolution` depend on the <b>same</b>
     /// specialisation — all four plugins use one `LinearMechanismModel<Flt64>` and
     /// `IConstraint<Flt64, LinearCategory>`.**
     ///
@@ -246,17 +244,17 @@ public class FallbackMathConstraintSingleDefinitionTests
     /// **Farkas 整理也只有一个定义** / The Farkas tidy also has exactly one definition.
     /// </summary>
     /// <remarks>
-    /// B1229 与 B1226—B1228 同一动机，闭掉最后一份对偶辅助函数的重复。
+    /// **闭掉最后一份对偶辅助函数的重复。**
     ///
     /// **它与 `ToDualSolution` 的差别只有两点，而判据必须能把这两点区分开，
     /// 否则"合并"会退化成"悄悄改变语义"：** **零值在这里被丢弃、全零在这里是失败。**
-    /// 两条都由 `ScipLpDualSupportTest` 的既有判据覆盖，本批只是换了实现位置。
+    /// 两条都由 `ScipLpDualSupportTest` 的既有判据覆盖，这里只是换了实现位置。
     ///
-    /// **B1229 shares B1226–B1228's motive and closes the last duplicated dual helper.**
+    /// **Closes the last duplicated dual helper.**
     ///
     /// **It differs from `ToDualSolution` in exactly two ways, and the criteria must separate them or the merge would
     /// degrade into a silent semantic change: zeros are dropped here, and all-zeros is a failure here.** **Both are
-    /// covered by existing `ScipLpDualSupportTest` criteria; this batch only moved the implementation.**
+    /// covered by existing `ScipLpDualSupportTest` criteria; only moved the implementation.**
     /// </remarks>
     [Fact]
     public void TheFarkasTidy_ShouldHaveExactlyOneDefinition() {
@@ -299,7 +297,7 @@ public class FallbackMathConstraintSingleDefinitionTests
     /// **占位键只在共享解析器里被构造** / The placeholder key is only ever constructed inside the shared resolver.
     /// </summary>
     /// <remarks>
-    /// B1230 把最后三处"自己解析来源键"的地方也接上共享实现：Gurobi 的列生成、Gurobi 的 Benders 分解、
+    /// 把最后三处"自己解析来源键"的地方也接上共享实现：Gurobi 的列生成、Gurobi 的 Benders 分解、
     /// 以及 Hexaly 一处内联的 `Origin ?? new FallbackMathConstraint(index)`。
     ///
     /// **最后那一处值得单独看：它连函数都没抽出来，只是一行 `??`。**
@@ -310,14 +308,14 @@ public class FallbackMathConstraintSingleDefinitionTests
     /// **它必须恰好出现在共享解析器里一次——因为那是唯一知道"缺源时该造什么"的地方。**
     ///
     /// **判据的锚点决定了它能看见什么。** **前几批数"声明"，于是看不见内联表达式；
-    /// 这一批数"构造"，于是看见了。**
+    /// 这里数"构造"，于是看见了。**
     ///
-    /// **B1230 wires the last three self-resolving sites onto the shared implementation: Gurobi's column generation,
+    /// **The last three self-resolving sites are wired onto the shared implementation: Gurobi's column generation,
     /// Gurobi's Benders decomposition, and one inline `Origin ?? new FallbackMathConstraint(index)` in Hexaly.**
     ///
     /// **That last one deserves its own note: it never even became a function, just a `??` in an expression.** **This
     /// shape is the hardest to find by "look for duplicate implementations", because it is not a <b>declaration</b> but
-    /// an <b>expression</b> — and the previous four batches' criteria all looked at declarations.**
+    /// an <b>expression</b> — and the criteria up to then all looked at declarations.**
     ///
     /// **So this criterion re-anchors: instead of counting declarations it counts occurrences of
     /// `new FallbackMathConstraint(`.** **Exactly one, inside the shared resolver, because that is the only place that

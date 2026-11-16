@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **而"第一个命中就赢"意味着：同一个键出现在两路里时，<b>前一路静默胜出</b>。**
 ///
-/// **这不是理论问题：** **B1209 发现 `absHelperValues` <b>不</b>拒绝"解里含有辅助列"，
+/// **这不是理论问题：** **发现 `absHelperValues` <b>不</b>拒绝"解里含有辅助列"，
 /// 所以一个解里带着陈旧的 `positiveKey`，`nativeValues` 会赢——
 /// 那个陈旧的值会原样进到还原结果里，而重建出来的正确值被丢掉。**
 ///
@@ -47,7 +47,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **And "first hit wins" means a key present in two sources has the <b>earlier one silently win</b>.**
 ///
-/// **This is not theoretical: B1209 found that `absHelperValues` does <b>not</b> reject a solution containing helpers, so a
+/// **This is not theoretical: measurement shows that `absHelperValues` does <b>not</b> reject a solution containing helpers, so a
 /// solution carrying a stale `positiveKey` lets `nativeValues` win — the stale value reaches the restored result and the
 /// correctly reconstructed one is dropped.**
 ///
@@ -164,8 +164,8 @@ public static class NativeValueRestoration
             IReadOnlyList<double> inputs =
                 ((Ok<IReadOnlyList<double>, ErrorCode, Error<ErrorCode>>)evaluated).Value;
 
-            // **`indexOf(maxOrNull())` 取的是第一个极值：并列时先出现的那支胜出。**
-            // **`indexOf(maxOrNull())` takes the first extreme: on a tie the earlier input wins.**
+            // **`indexOf(maxOrNull)` 取的是第一个极值：并列时先出现的那支胜出。**
+            // **`indexOf(maxOrNull)` takes the first extreme: on a tie the earlier input wins.**
             int chosen = 0;
             for (int index = 1; index < inputs.Count; ++index) {
                 bool better = structure.Minimum

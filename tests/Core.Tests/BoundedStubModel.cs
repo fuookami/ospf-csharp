@@ -1,12 +1,12 @@
 // 带边界的回调模型测试替身 / A bounded call-back-model test double.
 //
 // **为什么需要它**：在此之前全仓没有任何测试能走到"边界夹紧"这条路径。`StubModel` 的令牌表为空，
-// `NumericSupport.LowerBoundOf` 恒返回 `null`，于是从 Batch 159（变异）到 Batch 168（解更新）之间所有
+// `NumericSupport.LowerBoundOf` 恒返回 `null`，于是从 earlier（变异）到 earlier（解更新）之间所有
 // "结果在边界内"的断言都是恒真的——生成值本来就落在那个区间里，断言无论如何都通过。
 //
 // **Why it exists**: before this, no test in the repository could reach the bound-clamping path. `StubModel`'s token table is empty,
-// `NumericSupport.LowerBoundOf` always returns `null`, so every "result is within bounds" assertion between Batch 159 (mutation) and
-// Batch 168 (solution update) was vacuously true — the generated values already sat inside the interval and the assertion passed
+// `NumericSupport.LowerBoundOf` always returns `null`, so every "result is within bounds" assertion between earlier (mutation) and
+// earlier (solution update) was vacuously true — the generated values already sat inside the interval and the assertion passed
 // regardless.
 //
 // 关键点在于 `ExpressionRange.SetRange` 是 public 的：给变量挂上区间只需要一行，不必经约束系统。

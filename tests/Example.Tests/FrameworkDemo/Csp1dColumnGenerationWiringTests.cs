@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// **`Csp1dProblem` never appears anywhere in the test project** — meaning **the entire column-generation chain has no tests at all**, and "a generator was
 /// injected" **was never verified to be used**.
 ///
-/// This batch proves it with **recording doubles**: the double records whether it was called, and the criterion looks at the **call record**, not at "the result is
+/// proves it with **recording doubles**: the double records whether it was called, and the criterion looks at the **call record**, not at "the result is
 /// non-empty" — the latter would also pass through some other path when the generator returns nothing.
 /// </remarks>
 public class Csp1dColumnGenerationWiringTests {
@@ -129,10 +129,10 @@ public class Csp1dColumnGenerationWiringTests {
 
     /// <summary>**已取消的令牌必须让求解立即抛出** / An already-cancelled token must make the solve throw immediately.</summary>
     /// <remarks>
-    /// 基线 `Csp1dColumnGeneration` 在 4 个可中断边界调用 `progressContext?.throwIfCancelled()`。
+    /// 基线 `Csp1dColumnGeneration` 在 4 个可中断边界调用 `progressContext?.throwIfCancelled`。
     /// **C# 侧原先一个检查点都没有**——`grep CancellationToken` 在该文件里零命中。
     ///
-    /// 后果不是"取消得慢"，而是**取消根本不生效**：调用方 `Cancel()` 之后，
+    /// 后果不是"取消得慢"，而是**取消根本不生效**：调用方 `Cancel` 之后，
     /// 求解会继续跑完整轮迭代与 MILP。对长跑任务而言这等于没有取消能力。
     ///
     /// 这条判据用**已取消的令牌**（不是中途取消），因为那是最确定、最不依赖时序的形式。
@@ -142,21 +142,21 @@ public class Csp1dColumnGenerationWiringTests {
     /// **三个一起删才会红**。因为三个检查点互为冗余，任何**一个**生效就足以让入口处抛出。
     ///
     /// 也就是说：**这条判据无法区分"有 3 个检查点"与"只有 1 个"**。
-    /// 要验证"每轮迭代都会检查取消"，需要**中途取消**的测试（在迭代进行中 `Cancel()` 并断言及时抛出），
-    /// 那依赖时序，本批没有做。**这里如实记录，不假装判据更强。**
+    /// 要验证"每轮迭代都会检查取消"，需要**中途取消**的测试（在迭代进行中 `Cancel` 并断言及时抛出），
+    /// 那依赖时序，这里没有做。**这里如实记录，不假装判据更强。**
     ///
     /// **The criterion's limits must be stated**: it can only prove "**at least one** checkpoint works". Mutation testing confirmed that deleting **any single**
     /// one of the three leaves this test green; **only deleting all three turns it red**, because the checkpoints are redundant and any **one** suffices to throw at
     /// the entry.
     ///
     /// In other words: **this criterion cannot tell "3 checkpoints" from "1 checkpoint"**. Verifying that "every iteration checks cancellation" needs a
-    /// **mid-flight** cancellation test (call `Cancel()` during the loop and assert prompt throwing), which depends on timing and was not done in this batch.
+    /// **mid-flight** cancellation test (call `Cancel` during the loop and assert prompt throwing), which depends on timing and was not done in.
     /// **Recording that honestly rather than pretending the criterion is stronger.**
     ///
-    /// The baseline `Csp1dColumnGeneration` calls `progressContext?.throwIfCancelled()` at 4 interruptible boundaries. **The C# side had no checkpoints at
+    /// The baseline `Csp1dColumnGeneration` calls `progressContext?.throwIfCancelled` at 4 interruptible boundaries. **The C# side had no checkpoints at
     /// all** — `grep CancellationToken` found zero hits in that file.
     ///
-    /// The consequence is not "cancellation is slow" but **cancellation does not work at all**: after the caller calls `Cancel()`, the solve keeps running the
+    /// The consequence is not "cancellation is slow" but **cancellation does not work at all**: after the caller calls `Cancel`, the solve keeps running the
     /// full iteration loop and MILP. For long-running work that amounts to having no cancellation capability.
     ///
     /// This uses an **already-cancelled token** (not a mid-flight cancel) because that is the most deterministic form and does not depend on timing.

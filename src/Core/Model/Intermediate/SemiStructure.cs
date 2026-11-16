@@ -56,7 +56,7 @@ public sealed record DeferredFunctionFallbackConstraints(
 /// 因为那时指示 = 1 的区间本身包含 0，"要么 0 要么 ≥ L"就没有区分力。**
 /// **本实现不做基线没有的校验，但把这个后果写在这里。**
 ///
-/// B1190, following the baseline's `SemiStructure`.
+/// Following the baseline's `SemiStructure`.
 ///
 /// **Semi-continuous means "either zero or inside `[L, U]`".**
 /// **Two rows, and <b>they force zero only as a pair</b>:**

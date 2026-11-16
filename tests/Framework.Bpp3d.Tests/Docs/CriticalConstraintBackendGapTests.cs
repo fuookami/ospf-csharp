@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// Critical-constraint analysis has its framework, and none of the two backends' six functions.
 /// </summary>
 /// <remarks>
-/// **B1278 逐层查 P9 的分析能力，撞上的形状与 B1268／B1270 同一族，但方向相反：**
+/// **逐层查 P9 的分析能力，撞上的形状与另两处同一族，但方向相反：**
 ///
-/// - **B1268 是"申报了 13 项原生能力，零写入零读取"——申报在前，实现没有**
-/// - **这一批是"<b>框架全齐、后端全无**"——接口在前，实现没有**</b>
+/// - **那两处是"申报了原生能力，零写入零读取"——申报在前，实现没有**
+/// - **这里是"<b>框架全齐、后端全无**"——接口在前，实现没有**</b>
 ///
 /// **实测的两侧：**
 ///
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **"0"和"还差 6 个函数"对工作量的含义完全不同，而前者把后者藏起来了。**
 ///
-/// **B1278 walked the P9 analysis layers and hit the same shape as B1268/B1270, inverted: B1268 declared thirteen native
+/// **Walking the P9 analysis layers hits the same shape as two other places, inverted: those declared native
 /// capabilities with zero writers and zero readers; this one has the <b>framework complete and both backends absent</b> —
 /// interface first, implementation missing.**
 ///
@@ -93,10 +93,10 @@ public class CriticalConstraintBackendGapTests
     public void TheTwoEnds_ShouldExistAndStillLackRanges() {
         string root = RepositoryRoot();
 
-        // **B1281 把这条判据整个换掉了，因为它的题材变了。**
+        // **这条判据被整个换掉了，因为它的题材变了。**
         //
-        // **B1278 写它的时候，插件侧一个后端都没有，所以判据断言"不存在"是对的。**
-        // **而 B1280／B1281 各接上一端之后，那条"不存在"仍然<b>绿着**——
+        // **它刚写下时插件侧一个后端都没有，所以断言"不存在"是对的。**
+        // **而两端各接上一端之后，那条"不存在"仍然<b>绿着**——
         // 因为新文件叫 `GurobiFixedIntegerLpBackend.cs`，而判据找的是 `CriticalConstraintAnalysis` 这个子串。
         //
         // **这正是本仓反复记的那类失败：<b>判据搜索的字符串与被实现的东西不是一回事**。
@@ -105,8 +105,8 @@ public class CriticalConstraintBackendGapTests
         // **换成的版本不再问"有没有文件"，而是问两件真实的事：**
         // **① 两端都在（不然就是退步）；② 区间与扰动<b>都没接**（常量必须这么说）。**
         //
-        // **B1281 replaced this criterion entirely, because its subject changed.** **When B1278 wrote it no plugin-side backend
-        // existed, so asserting absence was right.** **After B1280/B1281 connected one end each, that absence assertion was
+        // **This criterion was replaced entirely, because its subject changed.** **When it was written no plugin-side backend
+        // existed, so asserting absence was right.** **After one end was connected on each side, that absence assertion was
         // <b>still green</b> — because the new file is named `GurobiFixedIntegerLpBackend.cs` while the criterion searched for the
         // substring `CriticalConstraintAnalysis`.** **This is the failure mode this repo keeps recording: <b>the string a criterion
         // searches and the thing that got implemented are not the same thing</b>.** **Replaced with a version that stops asking
@@ -118,36 +118,36 @@ public class CriticalConstraintBackendGapTests
             root, "src", "Core.Plugin.Scip", "ScipFixedIntegerLpBackend.cs");
 
         File.Exists(gurobiFactory).Should().BeTrue(
-            "B1280 connected the Gurobi end; its absence would be a regression, not a gap to document");
+            "the Gurobi end is connected; its absence would be a regression, not a gap to document");
         File.Exists(scipFactory).Should().BeTrue(
-            "B1281 connected the SCIP end");
+            "the SCIP end is connected");
 
         string gurobi = File.ReadAllText(gurobiFactory);
         string scip = File.ReadAllText(scipFactory);
 
-        // **B1282 之后 Gurobi 这一端有区间了，所以这一格从"必须说 false"翻成"必须说 true 并且真有那条路径"。**
+        // **此后 Gurobi 这一端有区间了，所以这一格从"必须说 false"翻成"必须说 true 并且真有那条路径"。**
         //
         // **这正是这条判据的用处：** **它不是在记录事实，而是在<b>逼着事实与文档同时改**。**
         //
-        // **After B1282 the Gurobi end does supply ranges, so this assertion flips from "must say false" to "must say true and the
+        // **The Gurobi end does supply ranges now, so this assertion flips from "must say false" to "must say true and the
         // path must exist".** **That is the point of the criterion: it does not record a fact, it forces the fact and the document to
         // move together.**
         gurobi.Should().Contain(
             "SuppliesSensitivityRanges = true",
-            "B1282 captured the native ranging attributes; the constant has to say so");
+            "the native ranging attributes are captured; the constant has to say so");
         File.ReadAllText(System.IO.Path.Combine(root, "src", "Core.Plugin.Gurobi", "GurobiLinearSolver.cs"))
             .Should().Contain("SARHSLow", "a true constant without a ranging path would be a lie");
         scip.Should().Contain(
             "SuppliesSensitivityRanges = false",
             "SCIP has no ranging capability yet either");
-        // **B1283 把这一格翻成 true：两个插件现在都给出可被流水线扰动的 CP 求解器。**
-        // **B1283 flips this to true: both plugins now hand back a solver the pipeline can perturb with.**
+        // **这一格翻成 true：两个插件现在都给出可被流水线扰动的 CP 求解器。**
+        // **This flips to true: both plugins now hand back a solver the pipeline can perturb with.**
         // **这条常量在另一个文件里：`ScipPerturbationBackend.cs`。**
         // **第一版在这里读 `ScipFixedIntegerLpBackend.cs`，判据当场红——**
-        // **又一次"在错误的文件里找东西"，而这正是 B1276 记过的那类错。**
+        // **又一次"在错误的文件里找东西"——这类错已经出现过一次。**
         //
         // **The constant lives in another file: `ScipPerturbationBackend.cs`.** **The first version read
-        // `ScipFixedIntegerLpBackend.cs` and went red at once — looking in the wrong file again, the very mistake B1276 recorded.**
+        // `ScipFixedIntegerLpBackend.cs` and went red at once — looking in the wrong file again, a mistake already made once.**
         foreach (string relative in new[] {
             "src/Core.Plugin.Scip/ScipPerturbationBackend.cs",
             "src/Core.Plugin.Gurobi/GurobiPerturbationBackend.cs",

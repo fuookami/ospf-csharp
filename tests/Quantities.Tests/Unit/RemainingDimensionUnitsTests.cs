@@ -14,16 +14,16 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **剩下七个量纲一次补齐** / The last seven dimensions, in one batch.
 /// </summary>
 /// <remarks>
-/// B1129 补齐 `quantities` 最后七个量纲，共 **19 个单位**：
+/// 补齐 `quantities` 最后七个量纲，共 **19 个单位**：
 /// `SolidAngle`(2) / `Stress`(7) / `Wavenumber`(1) / `CatalyticActivity`(4) /
 /// `LuminousIntensity`(1) / `AngularVelocity`(2) / `AngularAcceleration`(2)，
 /// 并补上 `Stress` 所依赖的四个面积单位（`SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`）。
 ///
-/// **这一批最值得钉的是三个"不是十进倍数"的换算**：
+/// **这里最值得钉的是三个"不是十进倍数"的换算**：
 /// **`SquareDegree` 是 `(π/180)²`**、**`EnzymeUnit` 是 `1/60000000`**、**`DegreePerSecond` 依赖 `π/180`**——
 /// **它们都不是"换个前缀"就能写对的，而写错了不会报错。**
 ///
-/// B1129 completes the last seven `quantities` dimensions with **19 units**:
+/// Completes the last seven `quantities` dimensions with **19 units**:
 /// `SolidAngle`(2) / `Stress`(7) / `Wavenumber`(1) / `CatalyticActivity`(4) /
 /// `LuminousIntensity`(1) / `AngularVelocity`(2) / `AngularAcceleration`(2),
 /// plus the four area units `Stress` depends on (`SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`).

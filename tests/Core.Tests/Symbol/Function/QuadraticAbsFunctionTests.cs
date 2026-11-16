@@ -21,11 +21,9 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 正部是 `max(p, 0)`，不是负部 / The positive part is `max(p, 0)`, not the negative one.
 /// </summary>
 /// <remarks>
-/// B1163 按基线 `QuadraticAbs.kt`、`QuadraticPositivePart.kt` 补两个类。
+/// 对齐基线 `QuadraticAbs.kt`、`QuadraticPositivePart.kt` 补两个类。
 ///
 /// **正部的编码是 `max(p, 0) = −min(−p, 0)`**：**外层那个取负就是"正部"与"负部"的全部差别。**
-///
-/// adds
 ///
 /// **The positive part is encoded as `max(p, 0) = −min(−p, 0)`**: **the outer negation is the whole difference between
 /// the positive and negative parts.**
@@ -116,7 +114,7 @@ public class QuadraticAbsFunctionTests
     /// **于是 `min(−p, 0) = −p` 直接成立，不需要选。**
     ///
     /// **为什么不用 `x²`**：**`QuadraticBounds.Of` 对 `x·x` 用四角法，在 `[−10, 10]` 上给出 `[−100, 100]`——
-    /// 它<b>看不到</b>"平方恒非负"。** **这是真实的能力局限，不是本批引入的**，
+    /// 它<b>看不到</b>"平方恒非负"。** **这是真实的能力局限，不是这里引入的**，
     /// **判据因此改用界明确的线性输入来测这一分支。**
     ///
     /// **`p = x + 10` over `x ∈ [−10, 10]` has bounds `[0, 20]`, so it is necessarily non-negative**,

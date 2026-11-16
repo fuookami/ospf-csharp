@@ -1,4 +1,4 @@
-// 资源容量约束的两行（B711）/ The resource capacity constraint's two rows (B711).
+// 资源容量约束的两行/ The resource capacity constraint's two rows.
 
 using System;
 using System.Collections.Generic;
@@ -22,16 +22,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **资源容量约束的两行（B711）** / The resource capacity constraint's two rows (B711).
+/// **资源容量约束的两行** / The resource capacity constraint's two rows.
 /// </summary>
 /// <remarks>
 /// 这条管线以前是 `public Try Invoke(object model) => Results.Ok&lt;Success&gt;(...)`——一行都不加。
-/// 上一个批次把数量 \/ 超量 \/ 不足三张表补齐，这一批才轮到它们派上用场。
+/// 上一个批次把数量 \/ 超量 \/ 不足三张表补齐，这里才轮到它们派上用场。
 ///
 /// 三件必须照抄基线：**`polyX` 不是数量本身**（有松弛时左端是 `x − pos` / `x + neg`）、
 /// **没有松弛时退回数量**、**数量表没注册就失败**（当成零数量会让容量永远不紧，模型照样可解）。
 ///
-/// This pipeline used to be `Invoke(object model) => Ok` — not a single row. The previous batch built the quantity / over / less tables; this one is where they finally pay off. Three things must
+/// This pipeline used to be `Invoke(object model) => Ok` — not a single row. the previous step built the quantity / over / less tables; this one is where they finally pay off. Three things must
 /// be copied from the baseline: **`polyX` is not the quantity itself** (with a slack the left side is `x - pos` / `x + neg`), **fall back to the quantity when there is no slack**, and **fail
 /// when the quantity table was never registered** (treating it as quantity zero leaves capacity never tight while the model stays solvable).
 /// </remarks>
@@ -205,10 +205,10 @@ public class ResourceCapacityConstraintRowsTests {
     /// </summary>
     /// <remarks>
     /// 两点成对：非模型 → `Failed` / `null` → 抛 `ArgumentNullException`。两者都是"没成功"，只查 `IsFailed` 分不出，
-    /// 所以分别断言（B704 的同一课）。
+    /// 所以分别断言。
     ///
     /// Two paired points: a non-model gives `Failed` and `null` throws `ArgumentNullException`. Both are "did not succeed", so checking `IsFailed` alone cannot tell them apart — the same
-    /// lesson as B704 — and each is asserted separately.
+    /// lesson as — and each is asserted separately.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldRejectANonModel() {

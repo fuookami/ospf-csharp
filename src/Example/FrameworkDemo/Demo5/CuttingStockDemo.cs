@@ -88,7 +88,7 @@ public sealed class CuttingStockDemo {
     /// In a full column generation implementation:
     ///   1. Solve the LP relaxation of this master problem.
     ///   2. Extract dual prices (shadow prices) for each demand constraint.
-    ///      Dual price[d] = marginal value of one additional unit of demand d.
+    /// Dual price[d] = marginal value of one additional unit of demand d.
     ///   3. Pass dual prices to the pricing subproblem to generate new patterns.
     ///
     /// The master problem structure:
@@ -114,7 +114,7 @@ public sealed class CuttingStockDemo {
             dualPrices.Add(0.0);
         }
 
-        // The master problem model is already built by BuildModel().
+        // The master problem model is already built by BuildModel.
         // In practice, after solving the LP relaxation:
         //   dualPrices[d] = LP solver.GetDualPrice(constraint_d);
         //

@@ -1,4 +1,4 @@
-// 逐域累积指纹的钉子（B799）/ Pins on the cumulative per-domain fingerprint (B799).
+// 逐域累积指纹的钉子/ Pins on the cumulative per-domain fingerprint.
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **七个域的累积指纹：任何一批改了模型形状，这张表都得跟着改** / The cumulative fingerprint of the seven domains: any batch that changes the model shape updates this table (B799).
+/// **七个域的累积指纹：任何一批改了模型形状，这张表都得跟着改** / The cumulative fingerprint of the seven domains: any batch that changes the model shape updates this table.
 /// </summary>
 /// <remarks>
 /// 表里的四个数是**注册到该域为止的累积值**：行数、符号数、决策变量数、目标份数。它钉的不是"模型对不对"（那要靠语义判据），
@@ -55,11 +55,11 @@ public sealed class Demo2DomainFingerprintTests {
 
     /// <summary>预配载 / Predistribution.</summary>
     /// <remarks>
-    /// **需要请求里给出谓词装载重量规格**（B801）：没有它 `Register` 直接失败，这张表也就无从测起。
+    /// **需要请求里给出谓词装载重量规格**：没有它 `Register` 直接失败，这张表也就无从测起。
     /// 给出之后与全配载的差别是"多 4 行、多 8 个变量、目标多一份"（52/76/60/7 → 54/76/59/8）：
     /// 谓词重量变量**既加变量也加目标**——这正是"预配载要预估重量"的模型含义。
     ///
-    /// **The request has to carry the predicate load weight specification** (B801): without it `Register` fails outright and this table cannot be measured at all.
+    /// **The request has to carry the predicate load weight specification**: without it `Register` fails outright and this table cannot be measured at all.
     /// Once supplied, the difference from full load is "4 more rows, 8 more variables, one more objective part" (52/76/60/7 → 54/76/59/8): the predicate weight
     /// **adds both variables and an objective part** — the model-side meaning of "predistribution has to estimate weights".
     /// </remarks>
@@ -75,20 +75,20 @@ public sealed class Demo2DomainFingerprintTests {
 
     /// <summary>建议打板 / Weight recommendation.</summary>
     /// <remarks>
-    /// **这是六域，不是七域**（B818）。基线的 `WeightRecommendationPipelineContext` 用时效、推荐重量均衡、载荷最大化**替换掉**
+    /// **这是六域，不是七域**。基线的 `WeightRecommendationPipelineContext` 用时效、推荐重量均衡、载荷最大化**替换掉**
     /// 软安全、重心优化、装卸效率——所以这张表的行名与前两张**不同**，不是"同一批域少了几行"。
     ///
-    /// B800 之前这里记的是"与全配载完全相同"，那是**模式还没接通时测出来的假数据**；B814~B816 之间它记的是"七域的建议打板"
-    /// （`54/71/53/2`），那是**基线从来不建的形状**——通用上下文的 `Register` 只有七域一套。B818 按模式分开组成之后，
+    /// 之前这里记的是"与全配载完全相同"，那是**模式还没接通时测出来的假数据**； ~ 之间它记的是"七域的建议打板"
+    /// （`54/71/53/2`），那是**基线从来不建的形状**——通用上下文的 `Register` 只有七域一套。 按模式分开组成之后，
     /// 这里第一次量到真正的建议打板：`55/64/34/2`，与 `WeightRecommendationApplication` 的 `direct_model=rows55,symbols64,objective2` 一致。
     ///
     /// 另一个形状细节：**均衡域只加符号与目标、不加行**（`50/64/34/0` → `55/64/34/1`）。
     ///
-    /// **This is six domains, not seven** (B818). The baseline swaps in express effectiveness, recommended-weight equalization and payload maximization **for** soft
+    /// **This is six domains, not seven**. The baseline swaps in express effectiveness, recommended-weight equalization and payload maximization **for** soft
     /// security, mac optimization and loading effectiveness, so the row names here differ from the two tables above — it is not "the same domains with fewer rows".
-    /// Before B800 this table said "identical to full load", which was **fake data measured while the mode was not yet connected**; between B814 and B816 it recorded a
+    /// Before this table said "identical to full load", which was **fake data measured while the mode was not yet connected**; between and it recorded a
     /// "seven-domain weight recommendation" (`54/71/53/2`), **a shape the baseline never builds** because the generic context's `Register` only had the seven-domain set.
-    /// With the composition split by mode in B818 this is the first real measurement: `55/64/34/2`, matching `WeightRecommendationApplication`'s
+    /// With the composition split by mode this is the first real measurement: `55/64/34/2`, matching `WeightRecommendationApplication`'s
     /// `direct_model=rows55,symbols64,objective2`. One further shape note: **equalization adds symbols and objectives but no rows** (`50/64/34/0` → `55/64/34/1`).
     /// </remarks>
     private static readonly (string Domain, int Rows, int Symbols, int Variables, int Objectives)[] WeightRecommendation = [
@@ -108,18 +108,18 @@ public sealed class Demo2DomainFingerprintTests {
         RequestDTO request = RequestWithPredicateSpec();
         var pipeline = new DomainPipelineContext();
         // **`Init` 必须收到模式**：装配器靠它决定谓词/推荐重量旗标。只把模式传给 `Register` 而 `Init` 拿默认值，
-        // 装配出来的仍是全配载模型——**这正是 B800 抓到的那个"模式在生产路径上是死的"缺陷**。
+        // 装配出来的仍是全配载模型——**这正是 抓到的那个"模式在生产路径上是死的"缺陷**。
         //
         // **`Init` must receive the mode**: the initialiser uses it to decide the predicate/recommended weight flags. Passing the mode only to `Register` while `Init`
-        // takes the default still assembles the full-load model — **exactly the "the mode is dead on the production path" defect B800 caught**.
+        // takes the default still assembles the full-load model — **exactly the "the mode is dead on the production path" defect caught**.
         pipeline.Init(request, mode).IsOk.Should().BeTrue();
 
         using var model = new LinearMetaModel<Flt64>();
         Parameter parameter = new();
-        // **三条管线是三种组成**（B818）：全配载/预配载七域，建议打板六域。步表跟着模式走——
+        // **三条管线是三种组成**：全配载/预配载七域，建议打板六域。步表跟着模式走——
         // 以前这里一张固定的七域表应付三种模式，于是建议打板那一行量的其实是"七域的建议打板"，基线从来不建它。
         //
-        // **Three pipelines, three compositions** (B818): seven domains for full load and predistribution, six for weight recommendation. The step list follows the mode;
+        // **Three pipelines, three compositions**: seven domains for full load and predistribution, six for weight recommendation. The step list follows the mode;
         // one fixed seven-domain list used to serve all three, so the weight-recommendation row measured a "seven-domain weight recommendation" the baseline never builds.
         List<(string Name, Func<Try> Run)> steps = mode == StowageMode.WeightRecommendation
             ? [
@@ -153,10 +153,10 @@ public sealed class Demo2DomainFingerprintTests {
 
     [Fact]
     public void TheThreeModes_ShouldHaveDifferentShapes() {
-        // **三种模式的形状必须真的不同**：B795 让 `PositionStatus.From` 按模式决定旗标，B800 才把这个模式真正传进装配器。
+        // **三种模式的形状必须真的不同**： 让 `PositionStatus.From` 按模式决定旗标，才把这个模式真正传进装配器。
         // 在此之前三个模式装配出的是同一个模型，而那三张"指纹"是假的。
         //
-        // **The three modes must really differ**: B795 made `PositionStatus.From` decide the flags by mode, and only B800 actually threaded the mode into the
+        // **The three modes must really differ**: made `PositionStatus.From` decide the flags by mode, and only actually threaded the mode into the
         // initialiser. Before that all three assembled the same model, and those three "fingerprints" were fake.
         FullLoad.Should().NotEqual(Predistribution);
         FullLoad.Should().NotEqual(WeightRecommendation);
@@ -168,10 +168,10 @@ public sealed class Demo2DomainFingerprintTests {
         // **Only assert the directions the data supports**: both predistribution and weight recommendation carry more rows than full load (the predicate and
         // recommended weight variables each bring their own rows), while objective parts peak in predistribution and bottom out in weight recommendation —
         // **"more variables" cannot be stated loosely**, since the two modes' variable counts cross over in the middle domains.
-        // **建议打板不能按索引比**（B818）：它是**六域**、行名都不同，`WeightRecommendation[i]` 与 `FullLoad[i]` 根本不是同一个域。
-        // 按索引比在它变短之后直接越界——上一批就是那样红的。这里只按索引比**共享前缀**的预配载，建议打板单独比总量。
+        // **建议打板不能按索引比**：它是**六域**、行名都不同，`WeightRecommendation[i]` 与 `FullLoad[i]` 根本不是同一个域。
+        // 按索引比在它变短之后直接越界——此前就是那样红的。这里只按索引比**共享前缀**的预配载，建议打板单独比总量。
         //
-        // **Weight recommendation must not be compared by index** (B818): it is **six domains** with different row names, so `WeightRecommendation[i]` and `FullLoad[i]`
+        // **Weight recommendation must not be compared by index**: it is **six domains** with different row names, so `WeightRecommendation[i]` and `FullLoad[i]`
         // are not the same domain at all; comparing by index runs off the end once it is shorter — which is exactly how it went red. Only predistribution shares the
         // prefix and is compared by index; weight recommendation is compared on totals.
         for (int i = 0; i < FullLoad.Length; ++i) {
@@ -186,10 +186,10 @@ public sealed class Demo2DomainFingerprintTests {
 
     [Fact]
     public void Predistribution_ShouldAssembleOnceTheSpecExists() {
-        // **B800 记的是"装配不出来"，B801 把它翻面**：请求给了谓词装载重量规格之后，配载域必须能注册成功。
+        // **记的是"装配不出来"，把它翻面**：请求给了谓词装载重量规格之后，配载域必须能注册成功。
         // 这条判据记的是缺口，缺口补上就得改判据——**不是为了让测试变绿而放宽**。
         //
-        // **B800 recorded "cannot be assembled"; B801 flips it**: once the request carries the predicate load weight specification, the stowage domain must register
+        // **recorded "cannot be assembled"; flips it**: once the request carries the predicate load weight specification, the stowage domain must register
         // successfully. This criterion records a gap, and closing the gap means changing the criterion — **it is not relaxed just to turn the test green**.
         RequestDTO request = RequestWithPredicateSpec();
         var pipeline = new DomainPipelineContext();
@@ -204,10 +204,10 @@ public sealed class Demo2DomainFingerprintTests {
 
     [Fact]
     public async Task Predistribution_ShouldBuildTheTriad() {
-        // **B802 记的是"建不出三元模型"，B803 把它翻面**：给表达式符号声明上下界之后，Big-M 推得出来，建模型成功。
+        // **记的是"建不出三元模型"，把它翻面**：给表达式符号声明上下界之后，Big-M 推得出来，建模型成功。
         // 这条判据记的是缺口，缺口补上就得改判据——**不是为了让测试变绿而放宽**。
         //
-        // **B802 recorded "cannot build the triad"; B803 flips it**: once the expression symbols declare bounds the Big-M is inferable and the model builds. This
+        // **recorded "cannot build the triad"; flips it**: once the expression symbols declare bounds the Big-M is inferable and the model builds. This
         // criterion records a gap, and closing the gap means changing the criterion — **it is not relaxed just to turn the test green**.
         RequestDTO request = RequestWithPredicateSpec();
         var pipeline = new DomainPipelineContext();
@@ -251,11 +251,11 @@ public sealed class Demo2DomainFingerprintTests {
 
     [Fact]
     public void Predistribution_ShouldRejectAMissingSpecDuringAssembly() {
-        // **B940 把这条判据的落点提前了。** 它原本断言"装配成功、注册阶段才拒"。
+        // 把这条判据的落点提前了。** 它原本断言"装配成功、注册阶段才拒"。
         // 去读基线：`predicateLoadWeightMin == null` 那道守卫**在 `AggregationInitializer` 里**，也就是**装配阶段**。
         // 所以旧判据钉的是本仓的一处实现偏差（守卫放晚了），不是基线行为。
         //
-        // **B940 moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Read the baseline: the
+        // **moved where this criterion lands.** It used to assert "assembly succeeds and registration refuses". Read the baseline: the
         // `predicateLoadWeightMin == null` guard sits **in `AggregationInitializer`**, i.e. **during assembly**. The old criterion therefore pinned a local deviation
         // (the guard sat one step late), not the baseline's behaviour.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest();
@@ -272,10 +272,10 @@ public sealed class Demo2DomainFingerprintTests {
 
     /// <summary>示例请求 + 谓词装载重量规格 / The sample request plus the predicate load weight specification.</summary>
     /// <remarks>
-    /// **规格只在要跑预配载时才有意义**，所以没有塞进 `CreateSampleRequest()`：那会让每一条既有判据测到的模型形状都变，
+    /// **规格只在要跑预配载时才有意义**，所以没有塞进 `CreateSampleRequest`：那会让每一条既有判据测到的模型形状都变，
     /// 而它们与预配载无关。**需要的判据自己带规格。**
     ///
-    /// **The spec only means something when predistribution runs**, so it does not go into `CreateSampleRequest()`: that would change the model shape measured by every
+    /// **The spec only means something when predistribution runs**, so it does not go into `CreateSampleRequest`: that would change the model shape measured by every
     /// existing criterion, none of which is about predistribution. **Criteria that need it bring it themselves.**
     /// </remarks>
     private static RequestDTO RequestWithPredicateSpec() {
@@ -309,16 +309,16 @@ public sealed class Demo2DomainFingerprintTests {
 
 #if SCIP_INTEGRATION
     /// <summary>
-    /// **预配载现在真的解得出可行解** / Predistribution really solves now (B803).
+    /// **预配载现在真的解得出可行解** / Predistribution really solves now.
     /// </summary>
     /// <remarks>
-    /// B793 那条"预配载不可行"是在模式死掉、装配失败的前提下得出的；B801 补规格、B803 补界之后，
+    /// 那条"预配载不可行"是在模式死掉、装配失败的前提下得出的； 补规格、 补界之后，
     /// **三种模式都能解**。这条判据钉住预配载的解：成功、目标有限、**赋值非空**。
     ///
     /// **目标值不是零**（实测 1.0）：预配载的谓词重量是要花代价的，全零解在这里不成立——
     /// 这比"求解成功"更能说明模型真的在做预配载该做的事。
     ///
-    /// B793's "predistribution is infeasible" came from a dead mode and a failing assembly; after B801 supplied the specification and B803 supplied the bounds,
+    /// the earlier "predistribution is infeasible" came from a dead mode and a failing assembly; after supplied the specification and supplied the bounds,
     /// **all three modes solve**. This pins predistribution's solution: success, a finite objective, and **a non-empty assignment**. **The objective is not zero**
     /// (measured: 1.0), because predistribution's predicate weight costs something and the all-zero answer does not hold here — which says more about the model
     /// doing what predistribution is for than "the solve succeeded" does.
@@ -370,11 +370,11 @@ public sealed class Demo2DomainFingerprintTests {
         var pipeline = new DomainPipelineContext();
         pipeline.Init(request, mode).IsOk.Should().BeTrue();
 
-        // **用请求自己解析出来的参数，而不是 `new Parameter()`**（B818）：`ResolvedParameter` 才带上推荐重量的那些系数
-        // （B808 实测：默认参数下载荷最大化的系数是 0，于是建议打板的目标恒为 0——形状对、数值无意义）。
+        // **用请求自己解析出来的参数，而不是 `new Parameter`**：`ResolvedParameter` 才带上推荐重量的那些系数
+        // （ 实测：默认参数下载荷最大化的系数是 0，于是建议打板的目标恒为 0——形状对、数值无意义）。
         // 三个应用路径用的也是 `request.ResolvedParameter`，这里跟着它，两条路径才可比。
         //
-        // **Use the parameter the request resolves, not `new Parameter()`** (B818): only `ResolvedParameter` carries the recommendation coefficients (measured in B808: with
+        // **Use the parameter the request resolves, not `new Parameter`**: only `ResolvedParameter` carries the recommendation coefficients (measured: with
         // defaults the payload-maximization coefficient is 0, so the weight-recommendation objective is identically 0 — right shape, meaningless number). All three
         // application paths use `request.ResolvedParameter` as well, so following it here is what makes the two paths comparable.
         using var model = new LinearMetaModel<Flt64>();
@@ -408,16 +408,16 @@ public sealed class Demo2DomainFingerprintTests {
     public void TheThreeSolutions_ShouldBeDistinguishable() {
         // **三对 (目标值, 非零个数) 必须两两不同**：全配载 (0, 38) / 预配载 (1, 42) / 建议打板 (-14, 22)。
         //
-        // **这条判据的前半句在本批翻转了**（B818）：它以前写着"两个模式目标值都是 0，所以没有非零个数这一维就分不开"——
-        // 那时建议打板的目标恒为 0，因为**均衡域压根没进模型**（B816/B818 才补上）。现在三个目标值互不相同，
+        // **这条判据的前半句在这里翻转了**：它以前写着"两个模式目标值都是 0，所以没有非零个数这一维就分不开"——
+        // 那时建议打板的目标恒为 0，因为**均衡域压根没进模型**。现在三个目标值互不相同，
         // 那句"目标值分不开"不再成立，**判据里钉着它的那半条也跟着删掉**，否则它就成了描述一个已不存在状态的话。
         //
         // 非零个数这一维仍然保留：它抓的是"结构变了"（少一条约束、多一个本该为零的变量），目标值抓不到那一类。
         //
         // **The three (objective, non-zero count) pairs must be pairwise distinct**: full load (0, 38), predistribution (1, 42), weight recommendation (-14, 22).
-        // **The first half of this criterion flipped in this batch** (B818): it used to say "two modes share an objective of zero, so without the non-zero dimension
+        // **The first half of this criterion flipped in**: it used to say "two modes share an objective of zero, so without the non-zero dimension
         // full load and weight recommendation would be indistinguishable" — at that time weight recommendation's objective was identically 0 because **equalization never
-        // reached the model** (added in B816/B818). The three objectives now differ, so that claim is dead and **the half of the criterion that pinned it is dropped**;
+        // reached the model** (added/ ). The three objectives now differ, so that claim is dead and **the half of the criterion that pinned it is dropped**;
         // leaving it in would keep describing a state that no longer exists. The non-zero dimension stays: it catches "the structure moved", which the objective does not.
         System.Linq.Enumerable.Select(Solutions, entry => (entry.Objective, entry.NonZero)).Should().OnlyHaveUniqueItems();
         System.Linq.Enumerable.Count(System.Linq.Enumerable.Distinct(System.Linq.Enumerable.Select(Solutions, entry => entry.Objective)))

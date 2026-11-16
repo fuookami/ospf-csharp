@@ -3,9 +3,9 @@
 // `layer_generation/service/CircleGridGenerator.kt`（259 行）对应。
 // Mirrors the pinned baseline's `LayerGenerationRequest.kt` and `service/CircleGridGenerator.kt`.
 //
-// 这是 `layer_generation` 域的第一批：物料与层模型在 Batch 82／83 落地后，请求与圆形网格生成器已无未移植依赖。
+// 这是 `layer_generation` 域的此前：物料与层模型在 earlier／83 落地后，请求与圆形网格生成器已无未移植依赖。
 // `LayerGenerationContext.kt`（597 行）仍需后续批次。
-// This is the first batch of the `layer_generation` domain: with the material and layer models landed in Batch 82/83,
+// This is the first batch of the `layer_generation` domain: with the material and layer models landed in earlier/83,
 // the request and the circle grid generator have no unported dependencies left. `LayerGenerationContext.kt` (597 lines)
 // still needs later batches.
 
@@ -380,7 +380,7 @@ public static class CircleGridGenerator {
     /// </summary>
     /// <remarks>
     /// 逐次加一而不是拼字面量：`V` 只有数值约束，没有可用的静态常量访问面；实例的 `Constants` 是唯一入口
-    /// （本会话早先踩过 `V.Constants` 被判为 `CS0704` 的坑）。
+    /// （`V.Constants` 曾被判为 `CS0704`）。
     /// Increments one at a time rather than assembling a literal: `V` carries only numeric constraints, so the
     /// instance-level `Constants` is the only entry point (an earlier round in this session hit `CS0704` trying
     /// `V.Constants`).

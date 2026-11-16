@@ -12,16 +12,16 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// **删掉的那 8 个死桩，以及它们为什么该被删** / The eight dead stubs that were deleted, and why.
 /// </summary>
 /// <remarks>
-/// **B1269 发现 8 个类只返回 `ApplicationError` + `"not implemented"`，从不被构造，而<b>真实实现在组合路径上**
+/// **发现 8 个类只返回 `ApplicationError` + `"not implemented"`，从不被构造，而<b>真实实现在组合路径上**
 /// （`ComposedSolvers.HarmonySearch` = `Swarm(...)` + `HarmonySearchUpdate`，与基线 `HS.kt` 一致）。**
 ///
 /// **那一批把矩阵从 ◐ 改回 ✅，并把状态钉住。而那个状态其实是<b>该删**。</b>
 ///
-/// ### 为什么这一批删了它们
+/// ### 为什么这里删了它们
 ///
 /// **因为它们唯一的可观测效果是"让读者以为这块没做"。**
 ///
-/// **B1269 的注释里写着一句话：** **"死代码的危害不是占地方，而是它会被读成'未完成'"。
+/// **注释里写着一句话：** **"死代码的危害不是占地方，而是它会被读成'未完成'"。
 /// 而当时的处置是把它<b>记录**下来——记录等于承认它该留。</b>
 ///
 /// **真正的处置是删掉。** **删掉之后，那条风险<b>不存在了**，而不是被<b>描述**了。</b>
@@ -35,14 +35,14 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 ///
 /// ### 判据翻转
 ///
-/// **沿 B1260／B1263／B1266 的做法：缺口判据在缺口闭合时必须变红、逼着改写。**
+/// **缺口判据在缺口闭合时必须变红、逼着改写。**
 /// **这里缺口<b>由删除闭合**，所以判据现在断言"它们不在，而覆盖它们的东西在"。</b>
 ///
-/// **B1269 found eight classes returning `ApplicationError` + `"not implemented"`, never constructed, while the real
+/// **Found eight classes returning `ApplicationError` + `"not implemented"`, never constructed, while the real
 /// implementation lives on the composed path — exactly as the baseline's `HS.kt` composes operators.** **That batch restored the
 /// matrix to ✅ and pinned the state; but the state was <b>"delete them".</b>**
 ///
-/// **Their only observable effect was making a reader believe the area is unfinished.** **B1269's own note said "the harm of dead
+/// **Their only observable effect was making a reader believe the area is unfinished.** **the earlier own note said "the harm of dead
 /// code is not that it takes up space — it is that it reads as 'unfinished'", and the response then was to record it — and
 /// recording it is admitting it should stay.** **The actual response is deletion, after which that risk <b>does not exist</b>
 /// rather than being <b>described</b>.**
@@ -51,7 +51,7 @@ namespace Fuookami.Ospf.Core.Plugin.Heuristic.Tests;
 /// but tests of something real, namely that it had not been done. With the implementation gone, their only remaining function was
 /// to guard something I should have deleted.**
 ///
-/// **The criterion flips as in B1260/B1263/B1266: a gap criterion must go red and force a rewrite when the gap closes.** **Here
+/// **A gap criterion must go red and force a rewrite when the gap closes.** **Here
 /// the gap closed by deletion, so it now asserts "they are absent, and what covered them is present".**
 /// </remarks>
 public class HeuristicDeadStubDeletionTests
@@ -86,12 +86,12 @@ public class HeuristicDeadStubDeletionTests
 
         // **不再搜 "not implemented" 这个字符串。** **它现在是注释与文档里的正常英文短语**
         // **（`BuiltInAlgorithms.cs` 的注释就在解释"未知算法"与"未实现"的区别），**
-        // **而一条会把散文也算进去的判据，与 B1264 那次"判据被自己的说明文字弄红"是同一个毛病。**
+        // **而一条会把散文也算进去的判据，与"判据被自己的说明文字弄红"是同一个毛病。**
         // **要钉的是<b>那 8 个类型不在</b>，上面八个断言已经做到了。**
         //
         // **The `"not implemented"` string is no longer searched: it is ordinary English prose in comments and docs now
         // (`BuiltInAlgorithms.cs` explains the difference between "unknown algorithm" and "not implemented"), and a criterion
-        // that counts prose is the same flaw as B1264's criterion reddened by its own explanation.** **What must be pinned is
+        // that counts prose is the same flaw as the earlier criterion reddened by its own explanation.** **What must be pinned is
         // that those eight types are gone — the eight assertions above already do that.**
     }
 

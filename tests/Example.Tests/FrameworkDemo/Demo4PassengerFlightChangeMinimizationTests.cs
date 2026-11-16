@@ -1,4 +1,4 @@
-// 航班变更最小化（B765）/ The flight-change objective (B765).
+// 航班变更最小化/ The flight-change objective.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **航班变更最小化（B765）** / The flight-change objective (B765).
+/// **航班变更最小化** / The flight-change objective.
 /// </summary>
 /// <remarks>
 /// 比舱位变更那层多一维：**乘客 × 目标航班 × 舱位**。两个"空表即空目标"的入口也要钉住——没开开关、没有可替换航班时，

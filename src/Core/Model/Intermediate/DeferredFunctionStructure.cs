@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **一个没有成员的接口在 C# 里是罕见的，所以必须写清它为什么存在——
 /// 否则下一个人会以为它是没写完。**
 ///
-/// B1180, following the baseline's `DeferredFunctionStructure`.
+/// Following the baseline's `DeferredFunctionStructure`.
 ///
 /// **A <b>pure marker interface</b> with no members.**
 ///

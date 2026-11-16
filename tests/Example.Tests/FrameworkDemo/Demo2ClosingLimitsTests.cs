@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **三个收尾限制（B598）** / The three closing bounds (B598).
+/// **三个收尾限制** / The three closing bounds.
 /// </summary>
 /// <remarks>
 /// | 限制 | 容易做错的地方 |
@@ -200,8 +200,8 @@ public class Demo2ClosingLimitsTests {
         HorizontalStabilizer.Limit limit) {
         var model = new LinearMetaModel<Flt64>();
         HorizontalStabilizer stabilizer = MakeStabilizer(limit);
-        // **B614 起 `Register` 收装载模式**：`withMacOptimization` 为真时才注册警告松弛。
-        // **Since B614 `Register` takes the stowage mode**: the warning slack is registered only when `withMacOptimization` is true.
+        // **起 `Register` 收装载模式**：`withMacOptimization` 为真时才注册警告松弛。
+        // **Since `Register` takes the stowage mode**: the warning slack is registered only when `withMacOptimization` is true.
         stabilizer.Register(StowageMode.FullLoad, model).IsOk.Should().BeTrue();
         return (model, new Dictionary<HorizontalStabilizer.Key, HorizontalStabilizer> { [stabilizer.Configuration] = stabilizer });
     }
@@ -260,10 +260,10 @@ public class Demo2ClosingLimitsTests {
     /// **水平安定面：建议模式无警告值时退回 `_ub` 而不是 `_warn_ub`** / Recommended mode without a warning value falls back to `_ub`, not `_warn_ub`.
     /// </summary>
     /// <remarks>
-    /// 这是本批最细的一处：**取值**用 `warnMaxTrim ?? maxTrim`，**命名**用"`warnMaxTrim` 是否非空"。两者是不同的条件。
+    /// 这是这里最细的一处：**取值**用 `warnMaxTrim ?? maxTrim`，**命名**用"`warnMaxTrim` 是否非空"。两者是不同的条件。
     /// 只有 `maxTrim` 时，取值是 10、名字是 `_ub`。用同一个条件时会产生 `_warn_ub` 这个名字却没有警告值——而报告里看不出区别。
     ///
-    /// The finest point of this batch: the **value** uses `warnMaxTrim ?? maxTrim` while the **name** follows whether `warnMaxTrim` is non-null — two different conditions. With only
+    /// The finest point of: the **value** uses `warnMaxTrim ?? maxTrim` while the **name** follows whether `warnMaxTrim` is non-null — two different conditions. With only
     /// `maxTrim` the value is 10 and the name is `_ub`. One condition for both yields a `_warn_ub` row carrying no warning value, and no report would show it.
     /// </remarks>
     [Fact]
@@ -327,7 +327,7 @@ public class Demo2ClosingLimitsTests {
 
         // 候选力臂 = **区域两端 + 区域舱位的前后力臂**，去重后排序。本例两舱位的 `FrontArm` 都是 500、`BackArm` 都是 900，
         // 与区域两端重合，所以候选只有 {500, 900} —— **700 不在候选集里**，因为没有任何舱位的边界落在 700。
-        // 我第一版把 700 当成了候选，判据当场红了。
+        // 最初把 700 当成了候选，判据当场红了。
         // Candidate arms are the **zone ends plus the zone positions' front and back arms**, deduplicated and sorted. Here both positions have `FrontArm` 500 and `BackArm` 900,
         // coinciding with the zone ends, so the candidates are only {500, 900} — **700 is not a candidate**, because no position boundary falls there. The first draft assumed
         // 700 was one and went red.

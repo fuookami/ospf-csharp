@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **这里的费用在断点处连续，而全量折扣在那里会<b>跳降</b>。**
 /// **两者用同一组断点与费率时在第一个区间内完全相同，所以只测小值的判据分不开它们。**
 ///
-/// B1155, following the baseline's `IncrementalTariff`.
+/// Following the baseline's `IncrementalTariff`.
 ///
 /// `cost(b₀) = baseCost`, then `cost(bᵢ₊₁) = cost(bᵢ) + rateᵢ · (bᵢ₊₁ − bᵢ)`.
 /// **It is continuous at every breakpoint** — **that is what "incremental" means: past a breakpoint only the portion
@@ -132,7 +132,7 @@ public static class IncrementalTariff
 /// **`boundaryGap` 让档位区间在断点处收半开**：**没有它，断点同时属于两个档位，
 /// 而 one-hot 约束不禁止两个 selector 同时为 1，于是 `result = Σ masked` 会把两个档位加起来。**
 ///
-/// B1155, following the baseline's `AllUnitsDiscountFunction`.
+/// Following the baseline's `AllUnitsDiscountFunction`.
 ///
 /// `cost = quantity · rate(tier)` — **the unit price is picked from the whole quantity, so the cost is linear in the
 /// quantity with a slope change at each breakpoint.**

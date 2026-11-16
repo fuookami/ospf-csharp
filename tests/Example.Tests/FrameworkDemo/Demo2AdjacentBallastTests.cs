@@ -20,7 +20,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **相邻载荷间隙与压舱物（B597）** / The adjacent gap bound and the ballast model (B597).
+/// **相邻载荷间隙与压舱物** / The adjacent gap bound and the ballast model.
 /// </summary>
 /// <remarks>
 /// 两件事各自的风险都在"少做一半"上：
@@ -263,11 +263,11 @@ public class Demo2AdjacentBallastTests {
     /// 成对：软安保下有两个符号（`ballast_weight` 与 `min_ballast_weight`）；另一模式只有 `ballast_weight`。
     /// 非软安保下注册它会让约束生成器以为有一条最低压舱要求可加。
     ///
-    /// **`WithSoftSecurity()` 的定义是 `mode != WeightRecommendation`** —— 软安保是预配载与全配载，**不是**"建议打板"。
-    /// 这个名字很容易反着猜（"建议"听起来最软），我第一版就猜错了，判据当场红了。判据按定义写，不按名字猜。
+    /// **`WithSoftSecurity` 的定义是 `mode != WeightRecommendation`** —— 软安保是预配载与全配载，**不是**"建议打板"。
+    /// 这个名字很容易反着猜（"建议"听起来最软），最初就猜错了，判据当场红了。判据按定义写，不按名字猜。
     ///
     /// Paired: soft security yields two symbols, the other mode only `ballast_weight`. Registering it under non-soft security tells the constraint generator there is a minimum
-    /// ballast requirement to add. **`WithSoftSecurity()` is defined as `mode != WeightRecommendation`** — soft security is predistribution and full load, **not** "weight
+    /// ballast requirement to add. **`WithSoftSecurity` is defined as `mode != WeightRecommendation`** — soft security is predistribution and full load, **not** "weight
     /// recommendation". The name invites the opposite guess ("recommendation" sounds softest); the first draft made exactly that guess and went red. Criteria follow the definition,
     /// not the name.
     /// </remarks>

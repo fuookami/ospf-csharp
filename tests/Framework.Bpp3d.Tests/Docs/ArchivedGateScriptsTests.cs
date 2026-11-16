@@ -13,14 +13,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 归档的门禁脚本必须自洽 / An archived gate script has to agree with its own number.
 /// </summary>
 /// <remarks>
-/// **B1070 没有新增源码。** 它钉住归档脚本的编号自洽性。
+/// **纯文档，无新增源码。** 它钉住归档脚本的编号自洽性。
 ///
-/// **B1069 我把 `g1070.ps1` 改坏了**——补丁写进了上一批的脚本，**而它已经跑过、日志已经归档。**
+/// **`g1070.ps1` 曾被改坏**——补丁写进了此前的脚本，**而它已经跑过、日志已经归档。**
 /// 发现它靠的是"我记得 g1070 不该有那段"，**而不是任何判据。**
 /// **下一个会话不会有这段记忆。**
 ///
-/// **B1070 added no source code.** It pins the numbering consistency of the archived gate scripts.
-/// **In B1069 I corrupted `g1070.ps1`** — the patch landed in the previous batch's script, **which had already run and been archived.** I caught it by **remembering that g1070 should not have that block**, **not
+/// **No source change.** It pins the numbering consistency of the archived gate scripts.
+/// **`g1070.ps1` was once corrupted** — the patch landed in the previous step's script, **which had already run and been archived.** I caught it by **remembering that g1070 should not have that block**, **not
 /// by any criterion.** **The next session will not have that memory.**
 /// </remarks>
 public class ArchivedGateScriptsTests
@@ -55,10 +55,10 @@ public class ArchivedGateScriptsTests
 
     /// <summary>**临时日志名必须是自己的批次号** / The temp log has to carry the script's own number.</summary>
     /// <remarks>
-    /// 一个从上一批复制过来、只改了部分数字的脚本，**会把这一批的日志写进上一批的名字里**——
+    /// 一个从此前复制过来、只改了部分数字的脚本，**会把这里的日志写进此前的名字里**——
     /// **于是两批的证据混在一起，而两条记录都仍然读得通顺。**
     ///
-    /// A script copied from the last batch with only some numbers bumped **writes this batch's logs under the last batch's names** — **the two batches' evidence then mixes, and both records still read
+    /// A script copied from an earlier script with only some numbers bumped **writes its own logs under the other run's names** — **the two runs' evidence then mixes, and both records still read
     /// plausibly.**
     /// </remarks>
     [Fact]
@@ -84,7 +84,7 @@ public class ArchivedGateScriptsTests
  /// **门禁脚本叫 `gNNNN`，归档叫 `p8-batch(NNNN−2)`**。
     /// **这个偏移量是约定，而约定只在不被写错时成立。**
     ///
-    /// **The gate script is `gNNNN` and the archive is `p8-batch(NNNN−2)`** (since B1058 the two differ by two). **The offset is a convention, and a convention holds only while nobody mistypes it.**
+    /// **The gate script is `gNNNN` and the archive is `p8-batch(NNNN−2)`** (since then the two differ by two). **The offset is a convention, and a convention holds only while nobody mistypes it.**
     /// </remarks>
     [Fact]
     public void TheArchiveTarget_ShouldBeTwoBelowTheScriptNumber()
@@ -112,7 +112,7 @@ public class ArchivedGateScriptsTests
     /// **而那些日志正是这次运行最后才写出来的。** 第一版没有跳过，
     /// **于是在 `g1072` 自己的运行里红了**——**一条判据在自己的运行中必然为假，那不是发现，是设计错误。**
     ///
- /// **A script with no logs means that batch's "it ran" has no evidence**; **logs with no script mean how those numbers were produced is no longer checkable** .
+ /// **A script with no logs means that batch's "it ran" has no evidence**; **logs with no script mean how those numbers were produced is no longer checkable**.
     /// **The newest one has to be skipped, or this criterion refutes itself**: it demands logs that **that very run writes at the end.** The first version did not skip it, **so it went red inside `g1072`'s own run** — **a criterion that is necessarily false while its own run is in flight is a design error, not a finding.**
     /// </remarks>
     [Fact]

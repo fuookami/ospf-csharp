@@ -47,14 +47,14 @@ internal static class GenerationSumSearch {
     ///
     /// **为什么只在叶子产出**：跳过分支会把**同一组切片**沿下标链一路传播，若每个栈帧都产出，
     /// 同一条方案会在下标 1、2、3 各被产出一次。**去重会把重复静默吸收，方案集合看起来完全正常**，
-    /// 唯一痕迹是候选计数——这正是 B307 撞到的那一处。
+    /// 唯一痕迹是候选计数——这正是 撞到的那一处。
     ///
     /// A frame holds "(entry index, chosen slices, used width)". On pop it: computes the non-negative remainder; **emits only at a leaf** (entries exhausted, or
     /// nothing fits any more); otherwise pushes the "skip this entry" and "cut 1..maxAmount times" branches.
     ///
     /// **Why emit only at a leaf**: the skip branch propagates **the same slice list** along the index chain, so emitting from every frame emits one plan again at
     /// index 1, 2 and 3. **De-duplication silently absorbs the repeats and the plan set looks entirely normal** — the only trace is the candidate counter,
-    /// exactly what B307 ran into.
+    /// exactly what ran into.
     /// </remarks>
     public static void Run<V>(
         Material<V> material,

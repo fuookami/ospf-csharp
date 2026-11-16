@@ -28,11 +28,11 @@ public static class MongoOrderByTranslator
 {
     /// <summary>把一个 `SortBy` 翻成 `$sort` 文档 / Translate a `SortBy` into a `$sort` document.</summary>
     /// <remarks>
-    /// **空排序返回 `null` 而不是空文档**：基线原文是 `if (sortBy == null || sortBy.isEmpty()) return Ok(null)`。
+    /// **空排序返回 `null` 而不是空文档**：基线原文是 `if (sortBy == null || sortBy.isEmpty) return Ok(null)`。
     /// **空 `$sort: {}` 在 Mongo 里是合法但无意义的阶段**，而返回 `null` 让调用方整个省掉这个阶段。
     ///
     /// **An empty sort returns `null`, not an empty document**: the baseline reads
-    /// `if (sortBy == null || sortBy.isEmpty()) return Ok(null)`.
+    /// `if (sortBy == null || sortBy.isEmpty) return Ok(null)`.
     /// **An empty `$sort: {}` is legal but meaningless in Mongo**, while `null` lets the caller drop the stage entirely.
     /// </remarks>
     public static Result<BsonDocument?, ErrorCode, Error<ErrorCode>> Translate(

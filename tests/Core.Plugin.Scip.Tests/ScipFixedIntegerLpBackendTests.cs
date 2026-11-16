@@ -17,14 +17,14 @@ namespace Fuookami.Ospf.Core.Plugin.Scip.Tests;
 /// **基线里这两个后端各有一个自己的 `…FixedIntegerLpBackend` 类，
 /// 把"降阶 → dump → 求解 → 取对偶"写了两遍。**
 ///
-/// **本仓不照抄那份重复：** **B1279 把这条链抽成了一层与后端无关的实现，
+/// **本仓不照抄那份重复：** **这条链已经抽成了一层与后端无关的实现，
 /// 于是两个插件工厂现在<b>是同一句话，只换了求解器**。
 ///
 /// **而"是同一句话"这件事本身要能被判据看见——否则下一个人照基线把 SCIP 那份重复抄回来，
 /// 一切测试照样绿，而两个后端从此可能悄悄分叉。**
 ///
 /// **The baseline has a separate `…FixedIntegerLpBackend` class in each plugin, writing the "lower → dump → solve → duals" chain
-/// twice.** **This repo does not copy that: B1279 extracted the chain into a backend-neutral layer, so the two plugin factories
+/// twice.** **This repo does not copy that: the chain is extracted into a backend-neutral layer, so the two plugin factories
 /// are now the same sentence with a different solver.** **And "the same sentence" must be visible to a criterion — otherwise the
 /// next person can copy the baseline's SCIP duplication back, every test stays green, and the two backends may quietly diverge.**
 /// </remarks>
@@ -70,7 +70,7 @@ public class ScipFixedIntegerLpBackendTests
     /// Both plugins must hand their solver to the shared layer; neither may implement solving itself.
     /// </summary>
     /// <remarks>
-    /// **B1281 这条判据原本比的是"两份 `Create` 方法体逐字相同"。B1282 把它推翻了，而推翻它是对的：**
+    /// **这条判据原本比的是"两份 `Create` 方法体逐字相同"。** 把它推翻了，而推翻它是对的：**
     /// **Gurobi 那一端现在要在主求解里顺手读 `SARHSLow`／`SARHSUp`，而 SCIP 这端没有 ranging 能力——
     /// 两者不可能再是同一句话。**
     ///
@@ -79,7 +79,7 @@ public class ScipFixedIntegerLpBackendTests
     /// 而它挡的正是基线的重复：`ScipCriticalConstraintAnalysis.kt` 里那个自己重写一遍
     /// "降阶 → dump → 求解 → 取对偶"的类。**
     ///
-    /// **B1281 compared the two `Create` bodies verbatim; B1282 refuted that, and correctly: the Gurobi end now reads
+    /// **An earlier criterion compared the two `Create` bodies verbatim; that was refuted,hat, and correctly: the Gurobi end now reads
     /// `SARHSLow`/`SARHSUp` during the primary solve while SCIP has no ranging capability, so they cannot be the same
     /// sentence any more.** **The criterion now asserts the invariant that still matters: both factories wrap the solver they were
     /// given in the shared layer, and neither writes its own solving.** **That holds whether or not the bodies match, and it is what

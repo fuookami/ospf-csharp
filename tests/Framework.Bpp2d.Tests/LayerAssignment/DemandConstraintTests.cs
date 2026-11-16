@@ -1,4 +1,4 @@
-// 需求约束（B639）的判据 / Criteria for the demand constraint (B639).
+// 需求约束的判据 / Criteria for the demand constraint.
 
 using System;
 using System.Collections.Generic;
@@ -17,11 +17,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **需求约束（B639）** / The demand constraint (B639).
+/// **需求约束** / The demand constraint.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**下界永远在**、**上界可有可无**、**tag 来自模式而不是索引**。
-/// 第一条是本批最要紧的：只注册上界时模型完全正常、目标值更小、需求全未满足——静默的错解。
+/// 第一条是这里最要紧的：只注册上界时模型完全正常、目标值更小、需求全未满足——静默的错解。
 ///
 /// The criteria focus on **the lower bound always being present**, **the upper bound being optional**, and **the tag coming from the mode rather than the index**. The first matters most:
 /// with only an upper bound the model looks fine and the objective is even smaller while no demand is met — a silent wrong answer.
@@ -62,10 +62,10 @@ public class DemandConstraintTests {
     /// <param name="symbolCount">装载变量个数，默认等于需求数 / The number of load variables, defaulting to the demand count.</param>
     /// <returns>装载 / The load.</returns>
     /// <remarks>
-    /// **B643**：本类的构造参数从裸符号表换成 `Load` 之后，夹具也必须走 `ImpreciseLoad`——但这恰好让
+    /// ****：本类的构造参数从裸符号表换成 `Load` 之后，夹具也必须走 `ImpreciseLoad`——但这恰好让
     /// "装载变量个数少于需求数"这种真实错配变得可测（`symbolCount` 参数）。
     ///
-    /// **B643**: after the constructor moved from a bare symbol table to `Load`, the fixture must go through `ImpreciseLoad` too — which incidentally makes a real mismatch, fewer load
+    /// ****: after the constructor moved from a bare symbol table to `Load`, the fixture must go through `ImpreciseLoad` too — which incidentally makes a real mismatch, fewer load
     /// variables than demands, testable through `symbolCount`.
     /// </remarks>
     private static ImpreciseLoad MakeLoad(

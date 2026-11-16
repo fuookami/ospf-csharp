@@ -22,7 +22,7 @@ public sealed class SimulatedBinaryCrossTests {
     /// SBX 的子代公式是 `0.5*((1+β)a + (1-β)b)` 与 `0.5*((1-β)a + (1+β)b)`，相加恰好等于 `a + b`——这是它的定义性质。
     ///
     /// **子代本来就可以越出父代区间**：`β &lt; 0` 时两个子代落在父代区间之外，这正是 SBX 用来扩大搜索范围的手段。
-    /// 我第一版断言"子代在 `[0, 10]` 之间"（父代取 0 与 10），实测给出 `10.379…` 与 `-0.379…`——断言错在把 SBX 当成了线性插值。
+    /// 最初断言"子代在 `[0, 10]` 之间"（父代取 0 与 10），实测给出 `10.379…` 与 `-0.379…`——断言错在把 SBX 当成了线性插值。
     /// The SBX child formulas are `0.5*((1+β)a + (1-β)b)` and `0.5*((1-β)a + (1+β)b)`, which add up to exactly `a + b` — the defining
     /// property. **The children may legitimately leave the parents' interval**: with `β &lt; 0` both land outside, which is exactly how
     /// SBX widens the search. The first version asserted "children lie within `[0, 10]`" (parents at 0 and 10) and measured `10.379…`

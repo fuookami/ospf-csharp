@@ -12,9 +12,9 @@ namespace Fuookami.Ospf.Framework.Csp1d.Domain.CuttingPlanGeneration.Model;
 /// dominance 剪枝策略 / Dominance pruning strategy.
 ///
 /// - SameContribution：按精确需求贡献分组，只比较相同贡献的方案余宽
-///   Group by exact demand contribution, compare rest width only for same-contribution plans
+/// Group by exact demand contribution, compare rest width only for same-contribution plans
 /// - CrossContribution：按产品集合分组，贡献超集 + 余宽更优的方案 dominate 旧方案
-///   Group by product set, contribution superset + better rest width dominates old plans
+/// Group by product set, contribution superset + better rest width dominates old plans
 /// </summary>
 public enum DominanceStrategy {
     /// <summary>同贡献 dominance / Same-contribution dominance.</summary>

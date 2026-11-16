@@ -36,10 +36,10 @@ public class ConstraintTests {
 
     /// <summary>**每只箱子一条右端项，数值就是它的载重** / One right-hand side per bin, carrying its weight capacity.</summary>
     /// <remarks>
-    /// 修复前 `RightHandSide()` **恒返回空字典**，测试还把"返回空"写成预期。两条箱子 100 kg / 50 kg 的夹具
+    /// 修复前 `RightHandSide` **恒返回空字典**，测试还把"返回空"写成预期。两条箱子 100 kg / 50 kg 的夹具
     /// 同时钉住"有条目""数值对""条数对"——只断言"非空"会放过"两条都填第一只箱子的载重"。
     ///
-    /// Before the fix `RightHandSide()` **always returned an empty dictionary**, and the test asserted the empty result as expected. A two-bin fixture
+    /// Before the fix `RightHandSide` **always returned an empty dictionary**, and the test asserted the empty result as expected. A two-bin fixture
     /// of 100 kg / 50 kg pins "there are entries", "the values are right" and "the count is right" — asserting only "not empty" would let an
     /// implementation that fills both entries with the first bin's capacity pass.
     /// </remarks>
@@ -102,10 +102,10 @@ public class ConstraintTests {
 
     /// <summary>**每只箱子一条深度右端项** / One depth right-hand side per bin.</summary>
     /// <remarks>
-    /// 修复前 `RightHandSide()` **恒返回空字典**。两条箱深 10 / 4 的夹具同时钉住条数与数值——
+    /// 修复前 `RightHandSide` **恒返回空字典**。两条箱深 10 / 4 的夹具同时钉住条数与数值——
     /// 只断言"非空"会放过"两条都填第一只箱子的深度"。
     ///
-    /// Before the fix `RightHandSide()` **always returned an empty dictionary**. Two bins of depth 10 / 4 pin both the count and the values — asserting
+    /// Before the fix `RightHandSide` **always returned an empty dictionary**. Two bins of depth 10 / 4 pin both the count and the values — asserting
     /// only "not empty" would let an implementation that fills both with the first bin's depth pass.
     /// </remarks>
     [Fact]

@@ -55,7 +55,7 @@ public class TaskNotOnTimeCostTests {
     /// **与准时奖励同输入不同答案** / Same inputs, different answers from the on-time reward.
     /// </summary>
     /// <remarks>
-    /// 这是本批最重要的一条：它把"罚超出"与"奖到顶"钉成**两个不同的函数**。
+    /// 这是这里最重要的一条：它把"罚超出"与"奖到顶"钉成**两个不同的函数**。
     /// 若两条管线写成了同一个形态，这里只会出现一个数字。
     ///
     /// This is the batch's most important criterion: it pins "charge the excess" and "reward up to the cap" as **two different functions**. If both pipelines shared one form,

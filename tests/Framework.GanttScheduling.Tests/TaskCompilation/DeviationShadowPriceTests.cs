@@ -1,4 +1,4 @@
-// 偏移约束两侧的行键与对偶回填（B707）/ Row keys and dual refresh on both deviation sides (B707).
+// 偏移约束两侧的行键与对偶回填/ Row keys and dual refresh on both deviation sides.
 
 using System;
 using System.Collections.Generic;
@@ -19,16 +19,16 @@ using LinearCategory = Fuookami.Ospf.Math.Symbol.LinearCategory;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **偏移约束两侧的行键与对偶回填（B707）** / Row keys and dual refresh on both deviation sides (B707).
+/// **偏移约束两侧的行键与对偶回填** / Row keys and dual refresh on both deviation sides.
 /// </summary>
 /// <remarks>
-/// `TaskAdvanceTimeConstraint` / `TaskDelayTimeConstraint` 的 `Extractor()` 一直都在，`Refresh` 一直是返回空 `Ok` 的桩，
+/// `TaskAdvanceTimeConstraint` / `TaskDelayTimeConstraint` 的 `Extractor` 一直都在，`Refresh` 一直是返回空 `Ok` 的桩，
 /// 而**行上根本没有键**——三段链断了两段。于是提取器读一张永远空的表，列生成按零价格挑列**且不报错**。
 ///
-/// 本批只修两处：行挂键、`Refresh` 按键收价。判据分开钉住两段，任何一段断掉都要失败。
+/// 这里只修两处：行挂键、`Refresh` 按键收价。判据分开钉住两段，任何一段断掉都要失败。
 ///
-/// Both `TaskAdvanceTimeConstraint` and `TaskDelayTimeConstraint` had `Extractor()` all along, `Refresh` was a stub returning an empty `Ok`, and **the rows carried no key at all** — two of the three
-/// links were broken. The extractor therefore read a forever-empty table and column generation selected at zero prices **without raising**. This batch fixes exactly two things: keys on the rows and
+/// Both `TaskAdvanceTimeConstraint` and `TaskDelayTimeConstraint` had `Extractor` all along, `Refresh` was a stub returning an empty `Ok`, and **the rows carried no key at all** — two of the three
+/// links were broken. The extractor therefore read a forever-empty table and column generation selected at zero prices **without raising**. fixes exactly two things: keys on the rows and
 /// `Refresh` collecting by key. The criteria pin each link separately so that breaking either one fails.
 /// </remarks>
 public class DeviationShadowPriceTests {

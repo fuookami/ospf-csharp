@@ -260,13 +260,13 @@ public sealed class ConstraintProgrammingModelSnapshot {
     /// <param name="derived">派生结果 / The derived snapshot.</param>
     /// <returns>该约束是否存在 / Whether the constraint exists.</returns>
     /// <remarks>
-    /// **B993 补这个方法，是因为扰动与冲突分析都需要"改一条约束、别的一模一样"的快照**，
+    /// 补这个方法，是因为扰动与冲突分析都需要"改一条约束、别的一模一样"的快照**，
     /// 而 C# 的快照是 sealed class + 私有构造器，**没有 Kotlin `copy` 那样的派生手段。**
     ///
     /// **找不到就返回 `false`，不返回原快照**：把"没改"当成"改好了"，会让后续求解解的是一份没被扰动的模型，
     /// **而报告会照常写上一个改善量。**
     ///
-    /// **B993 adds this because perturbation and conflict analysis both need "one constraint changed, everything else identical"**, and the C# snapshot is a sealed class
+    /// adds this because perturbation and conflict analysis both need "one constraint changed, everything else identical"**, and the C# snapshot is a sealed class
     /// with a private constructor — **there is no `copy`-style derivation the way Kotlin has one.** **A miss returns `false` rather than the original snapshot**: treating "nothing
     /// changed" as "changed" would solve an unperturbed model, **and the report would still print an improvement number.**
     /// </remarks>

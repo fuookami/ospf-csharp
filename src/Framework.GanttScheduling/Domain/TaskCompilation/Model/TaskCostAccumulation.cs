@@ -1,7 +1,7 @@
 // 任务代价的累加 / Accumulation of task cost.
 // 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的 `addColumns` 里
-// `taskCost.flush()` + 只对新列追加 `cost(task) * x[task]` 对应。
-// Mirrors `taskCost.flush()` followed by appending `cost(task) * x[task]` for the new columns only,
+// `taskCost.flush` + 只对新列追加 `cost(task) * x[task]` 对应。
+// Mirrors `taskCost.flush` followed by appending `cost(task) * x[task]` for the new columns only,
 // inside `addColumns` in the pinned baseline's `task_compilation/model/Compilation.kt`.
 
 using System;
@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 任务代价的累加 / Accumulation of task cost.
 /// </summary>
 /// <remarks>
-/// 基线的 `addColumns` 每次都先 `taskCost.flush()`，然后**只对本次新增的列**追加 `cost × x[task]`。
+/// 基线的 `addColumns` 每次都先 `taskCost.flush`，然后**只对本次新增的列**追加 `cost × x[task]`。
 /// 于是目标里只留下**最近一次迭代**的代价项，之前迭代的列虽然还在模型里（`_x` 累积、约束照旧），
 /// 它们的**代价项已经不在目标中了**。
 ///
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// ponytail: 照抄基线的 flush 语义；若要让目标覆盖全部历史列，改成**累积字典**（`task → weight`，
 /// 每轮 `Add` 而非 `Clear`），并把 `RetainedIterations` 改成"全部"。
 ///
-/// The baseline's `addColumns` always calls `taskCost.flush()` first and then appends `cost × x[task]` for **this iteration's new columns only**. So the objective keeps only the
+/// The baseline's `addColumns` always calls `taskCost.flush` first and then appends `cost × x[task]` for **this iteration's new columns only**. So the objective keeps only the
 /// **most recent iteration's** cost terms; earlier columns are still in the model (`_x` accumulates, the constraints remain) but their **cost terms are gone from the objective**.
 ///
 /// This is the baseline verbatim, not a typo, and this implementation copies it. The consequences are concrete:
@@ -70,10 +70,10 @@ public class TaskCostAccumulation<T> {
     /// <param name="costOf">代价提取器 / The cost extractor.</param>
     /// <returns>成功或失败 / Success or a failure.</returns>
     /// <remarks>
-    /// **先清空再加入**，照抄基线的 `taskCost.flush()`。表里于是只剩本轮——
+    /// **先清空再加入**，照抄基线的 `taskCost.flush`。表里于是只剩本轮——
     /// 之前的列还在模型里，但它们的代价项已经不在目标中。
     ///
-    /// **Clears first, then adds**, copying the baseline's `taskCost.flush()`. Only this round survives; earlier columns remain in the model but their cost terms are gone from
+    /// **Clears first, then adds**, copying the baseline's `taskCost.flush`. Only this round survives; earlier columns remain in the model but their cost terms are gone from
     /// the objective.
     /// </remarks>
     public Result<IReadOnlyList<Term>, ErrorCode, Error<ErrorCode>> AddRound(

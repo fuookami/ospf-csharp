@@ -1,4 +1,4 @@
-// 二维量纲模型（B634）的判据 / Criteria for the quantity-based 2D models (B634).
+// 二维量纲模型的判据 / Criteria for the quantity-based 2D models.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.Item;
 
 /// <summary>
-/// **二维量纲模型（B634）** / The quantity-based 2D models (B634).
+/// **二维量纲模型** / The quantity-based 2D models.
 /// </summary>
 /// <remarks>
 /// 判据的重点：两种形状的映射、**旋转要换掉形状本身**、以及物料目录里没有的物料**被丢掉而不是报错**。

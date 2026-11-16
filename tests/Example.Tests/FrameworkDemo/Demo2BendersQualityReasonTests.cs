@@ -7,7 +7,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B830：质量原因的**优先级**与"弱间隙"这道闸 / The precedence of the quality reasons, and the weak-gap gate.
+/// 质量原因的**优先级**与"弱间隙"这道闸 / The precedence of the quality reasons, and the weak-gap gate.
 /// </summary>
 /// <remarks>
 /// `ResolveQualityReason` 里五个原因**是一个链条**，不是五个独立判断：
@@ -190,11 +190,11 @@ public sealed class Demo2BendersQualityReasonTests
     /// **一项风险都不冒时评分正好是 0，五项全冒时正好是 100** / All risks at zero scores exactly 0; all five saturated scores exactly 100.
     /// </summary>
     /// <remarks>
-    /// 这两条替代了原来的 `> = 0` 与 `< = 100`（B830）。那两句在 `Clamp(0, 100)` 之后**恒真**，等于只证明了"函数返回了个 double"。
+    /// 这两条替代了原来的 `> = 0` 与 `< = 100`。那两句在 `Clamp(0, 100)` 之后**恒真**，等于只证明了"函数返回了个 double"。
     /// 换成"正好 0 / 正好 100"就有内容了：**要让 100 落地，五个风险必须各自饱和到 1，而且五个权重必须和为 1**——
     /// 漏掉任何一项、或者某个权重没归一化，都到不了 100。
     ///
-    /// These two replace the former `>= 0` and `<= 100` (B830). After `Clamp(0, 100)` both held **unconditionally**, proving only that the function returns a
+    /// These two replace the former `>= 0` and `<= 100`. After `Clamp(0, 100)` both held **unconditionally**, proving only that the function returns a
     /// double. "Exactly 0 / exactly 100" has content: **hitting 100 requires all five risks to saturate at 1 and all five weights to sum to 1** — drop a term or leave
     /// a weight unnormalised and 100 becomes unreachable.
     /// </remarks>

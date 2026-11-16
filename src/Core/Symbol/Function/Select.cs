@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **四条边里 `dL` 与 `dU` 的位置不能互换**：**`zero_upper` 用 `dU`（因为 `mask = 0` 时它必须允许 `z = 0`）、
 /// `one_lower` 用 `dU`；写成 `zero_upper` 用 `dL` 会让 `mask = 0` 时 `z` 被迫为负。**
 ///
-/// B1153, following the baseline's `SelectFunction`.
+/// Following the baseline's `SelectFunction`.
 ///
 /// **The encoding turns on "the masked difference"**: let `d = then − otherwise` and an auxiliary `z = mask · d`.
 /// Then `result = otherwise + z` — **one equality suffices; no pair of branch inequalities is needed.**

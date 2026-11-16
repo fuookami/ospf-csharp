@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// **这不是笔误可以推断的地方**——**保留它是因为那是基线的签名**，
 /// **但判据会钉住"改 b 不改变轨迹"这件事**，**以免下一个人以为 b 有效而调它。**
 ///
-/// The Sprott attractor from the baseline, added in B1146.
+/// The Sprott attractor from the baseline.
 ///
 /// <c>dx = a(y−x)</c>, <c>dy = y(c−x) − y</c>, <c>dz = xy − cz</c>, then <c>x += h·dx</c>.
 ///

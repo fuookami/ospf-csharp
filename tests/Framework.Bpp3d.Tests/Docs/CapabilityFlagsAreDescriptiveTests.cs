@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **九个能力布尔是"描述"，不是"决策"** / The nine capability booleans describe; they do not decide.
 /// </summary>
 /// <remarks>
-/// **B1268 在计划里留了一句"13 项原生能力申报：零写入、零读取"。B1290 去把它量清楚，而量出来的东西与那句话不同：**
+/// **曾有一句"13 项原生能力申报：零写入、零读取"。量清楚之后，量出来的东西与那句话不同：**
 ///
 /// | 测量 | 结果 |
 /// | --- | --- |
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **这个区别很重要：** **读者看到 `Capabilities.Dual = true` 会以为"求解器会检查它"，
 /// 而实际上它只是一个描述——** **一旦有人据此写分支，判据会红，逼着回来把这句话重新写。**
 ///
-/// **B1268 left "13 native capability declarations: zero writers, zero readers". B1290 measured it, and the measurement differs:
+/// **A note claimed "13 native capability declarations: zero writers, zero readers". Measuring it gives a different answer:
 /// nine booleans, plenty of writers, and readers limited to the fingerprinting file plus the capability matrix — with <b>zero</b>
 /// branch sites.** **So the precise statement is: they are declared, copied into the fingerprint and the matrix, and no code changes
 /// behaviour because of them.** **The distinction matters because `Capabilities.Dual = true` reads like "the solver checks this",
@@ -116,19 +116,19 @@ public class CapabilityFlagsAreDescriptiveTests
     /// **13 项函数接口申报仍然没有生产读取方** / The thirteen function-interface claims still have no production reader.
     /// </summary>
     /// <remarks>
-    /// **这是 B1268 那一项，与上面那 9 个布尔<b>是两件事**。
+    /// **这是同一项的另一面，与上面那 9 个布尔<b>是两件事**。
     ///
-    /// **B1290 先把它们混成一件：** **量了 `SolverCapabilities` 的布尔，就拿那个结果去改计划里"13 项原生能力申报"那条注记**——
+    /// **曾把它们混成一件：** **量了 `SolverCapabilities` 的布尔，就拿那个结果去改计划里"13 项原生能力申报"那条注记**——
     /// **而那条注记说的其实是 `*FunctionCapabilities`（从 SDK 反射出的函数接口能力）。**
-    /// **这是我的<b>第四次找错地方**（前三：B1276 找错层、B1277 名不等、B1283 找错文件）。**
+    /// **这是<b>第四次找错地方**（前三：找错层、名不等、找错文件）。**
     ///
     /// **差点造成的后果是：** **一条<b>仍然成立**的缺口被改写掉，而新的测量结果被塞进它的位置。**
     /// **判据把两件事分开钉：这一条钉"没有读取方"。**
     ///
-    /// **This is B1268's item, and it is <b>not</b> the nine booleans above.** **B1290 first conflated them: it measured the
+    /// **This is the same item's other face, and it is <b>not</b> the nine booleans above.** **They were first conflated: the
     /// `SolverCapabilities` booleans and then rewrote the plan's "thirteen capability declarations" note with that result — while that
     /// note speaks about `*FunctionCapabilities`, the function-interface capabilities reflected from the SDK.** **That is the fourth
-    /// wrong-place lookup (after B1276 wrong layer, B1277 name equality, B1283 wrong file).** **What it nearly caused: a gap that is
+    /// wrong-place lookup (after wrong layer, name equality, wrong file).** **What it nearly caused: a gap that is
     /// <b>still true</b> being overwritten, with a fresh measurement put in its place.** **This criterion keeps the two apart.**
     /// </remarks>
     [Fact]

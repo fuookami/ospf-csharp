@@ -72,10 +72,10 @@ public abstract class CapacitySchedulingResourceUsage<S, R, C, V>
     /// <param name="resources">资源列表 / The resources.</param>
     /// <returns>时隙列表 / The slots.</returns>
     /// <remarks>
-    /// **两个子类的 `BuildTimeSlots` 逐字相同**（B729）：整份文件除名字字符串外没有任何差异，
+    /// **两个子类的 `BuildTimeSlots` 逐字相同**：整份文件除名字字符串外没有任何差异，
     /// 复制两份的唯一后果是改一处忘另一处。放到基类里，子类只剩名字。
     ///
-    /// **The two subclasses' `BuildTimeSlots` were byte-identical** (B729): the whole file differed only in the name string, and keeping two copies only guarantees that one edit forgets the
+    /// **The two subclasses' `BuildTimeSlots` were byte-identical**: the whole file differed only in the name string, and keeping two copies only guarantees that one edit forgets the
     /// other. It lives in the base now and the subclasses keep just their name.
     /// </remarks>
     private static IReadOnlyList<S> BuildTimeSlots(

@@ -87,24 +87,24 @@ public class SolverProgressPhaseTests {
     /// 上界那次把父级单调化状态推到 75，下界那次即使正确算出 20，**也会被单调化抬回 75**——
     /// 判据看到的是 75，误以为是夹取失效。
     ///
-    /// **这又是"判据作用域比它想守的东西宽"**（B324 同型）：我要测的是 `Phase` 的夹取，
+    /// **这又是"判据作用域比它想守的东西宽"**：我要测的是 `Phase` 的夹取，
     /// 却让父上下文的单调化参与了结果。隔离后两条各自成立。
     ///
     /// **The upper and lower bounds must use two independent parent contexts.** The first version put both reports in one parent: the upper-bound report pushed the
     /// parent's monotonic state to 75, so the lower-bound report — even computing 20 correctly — **was lifted back to 75 by the monotonic guard**, and the criterion
     /// read 75 as if the clamp had failed.
     ///
-    /// **This is again "the criterion's scope is wider than the thing it protects"** (same shape as B324): the intent was to test `Phase`'s clamp, but the parent's
+    /// **This is again "the criterion's scope is wider than the thing it protects"** (same shape as ): the intent was to test `Phase`'s clamp, but the parent's
     /// monotonic guard took part in the result. Isolated, both hold.
     ///
     /// **这条判据的另一处能力边界**：`Phase` 里的 `Math.Clamp` **没有独立可证伪性**。
     /// 变异（去掉 `Phase` 的夹取）**存活**——因为**子上下文自己的 `AcceptMonotonic` 已经夹过**
     /// `ProgressInStage`（`SolverProgressContext.AcceptMonotonic` 里对 `inStage` 做了 `Clamp(..., 0, 100)`），
-    /// 走到 `Phase` 的上报器时值已在区间内。**冗余**，与 B324 的 `Normalized()`、B329 的取消检查点同型。
+    /// 走到 `Phase` 的上报器时值已在区间内。**冗余**，与 的 `Normalized`、 的取消检查点同型。
     ///
     /// **Another limit of this criterion**: the `Math.Clamp` inside `Phase` **has no independent falsifiability**. The mutation (removing `Phase`'s clamp)
     /// **survives** — the sub-context's own `AcceptMonotonic` already clamps `ProgressInStage` (`Clamp(..., 0, 100)` on `inStage`), so the value is already in range by
-    /// the time it reaches `Phase`'s reporter. **Redundant**, the same shape as B324's `Normalized()` and B329's cancellation checkpoints.
+    /// the time it reaches `Phase`'s reporter. **Redundant**, the same shape as the earlier `Normalized` and the earlier cancellation checkpoints.
     /// </remarks>
     [Fact]
     public void Phase_ShouldClampOutOfRangeInStageProgress() {

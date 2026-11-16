@@ -170,10 +170,10 @@ internal static class GenerationQuantityMath {
     /// <param name="unit">物理单位 / Physical unit.</param>
     /// <returns>单位键 / The unit key.</returns>
     /// <remarks>
-    /// **与基线逐字一致**：基线 `PhysicalUnit.canonicalUnitKey()` 是 `symbol ?: name ?: toString()`，
-    /// 而 Kotlin 的 `toString()` 本身就是 `symbol ?: name ?: "${dimensionSymbol()}(${scale})"`。
+    /// **与基线逐字一致**：基线 `PhysicalUnit.canonicalUnitKey` 是 `symbol ?: name ?: toString`，
+    /// 而 Kotlin 的 `toString` 本身就是 `symbol ?: name ?: "${dimensionSymbol}(${scale})"`。
     ///
-    /// **B316 曾在这里加过 `GetType().FullName`，那是错的，B317 撤回。** 当时的理由是两个不同类型、
+    /// **曾在这里加过 `GetType.FullName`，那是错的，撤回。** 当时的理由是两个不同类型、
     /// 但换算规则相同的单位会撞成同一个键——**而那正是基线的行为**：基线只看符号/名称/量纲+比例，
     /// **不看类型**。C# 侧加类型名会让两个基线认为"同一单位"的单位在 C# 变成"不同单位"，
     /// 也就是**同一份输入在两种实现下得到不同的键**，这属于跨语言语义分叉。
@@ -181,10 +181,10 @@ internal static class GenerationQuantityMath {
     /// **这是单位键的唯一实现**：`GenerationWidthIndex.CanonicalUnitKey` 与
     /// `CrossContributionProjector.Measure` 都委托到这里，与基线"只有一个 private fun"一致。
     ///
-    /// **Byte-for-byte parity with the baseline**: the baseline's `PhysicalUnit.canonicalUnitKey()` is `symbol ?: name ?: toString()`, and Kotlin's `toString()` is
-    /// itself `symbol ?: name ?: "${dimensionSymbol()}(${scale})"`.
+    /// **Byte-for-byte parity with the baseline**: the baseline's `PhysicalUnit.canonicalUnitKey` is `symbol ?: name ?: toString`, and Kotlin's `toString` is
+    /// itself `symbol ?: name ?: "${dimensionSymbol}(${scale})"`.
     ///
-    /// **B316 once added `GetType().FullName` here; that was wrong and B317 reverts it.** The reasoning then was that two differently typed units with the same
+    /// **once added `GetType.FullName` here; that was wrong and reverts it.** The reasoning then was that two differently typed units with the same
     /// conversion rule collide on one key — **and that is exactly the baseline's behaviour**: it looks only at symbol/name/dimension+scale, **never at the type**.
     /// Adding the type name on the C# side makes two units the baseline considers "the same" become "different", i.e. **the same input yields different keys under
     /// the two implementations**, which is a cross-language semantic divergence.

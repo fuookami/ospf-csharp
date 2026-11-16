@@ -197,13 +197,13 @@ public sealed class Stowage
                 var symbol = new LinearExpressionSymbol(
                     polynomial,
                     name: "stowage_" + i + "_" + j);
-                // **给表达式符号声明上下界**（B803）：它是"货 i 是否在舱位 j"的 0/1 指示量，界就是 `[0, 1]`。
+                // **给表达式符号声明上下界**：它是"货 i 是否在舱位 j"的 0/1 指示量，界就是 `[0, 1]`。
                 // 不声明的话，`BigMValues.SymbolBounds` 拿不到范围，谓词重量的绝对值公式就**推不出 Big-M**——
-                // 而它推不出来时是**报错**而不是猜一个数（B802 实测：预配载建模型直接失败）。
+                // 而它推不出来时是**报错**而不是猜一个数（：预配载建模型直接失败）。
                 //
-                // **Declare bounds on the expression symbol** (B803): it is the 0/1 indicator "is item i in position j", so the bounds are `[0, 1]`. Without them
+                // **Declare bounds on the expression symbol**: it is the 0/1 indicator "is item i in position j", so the bounds are `[0, 1]`. Without them
                 // `BigMValues.SymbolBounds` has no range to read and the predicate weight's absolute-value formulation **cannot infer a Big-M** — and when it cannot,
-                // it **fails rather than guessing a number** (measured by B802: predistribution could not build the model at all).
+                // it **fails rather than guessing a number** .
                 SetExpressionRange(symbol, new Flt64(0), new Flt64(1));
                 Try added = model.Add(symbol);
                 if (!added.IsOk) {

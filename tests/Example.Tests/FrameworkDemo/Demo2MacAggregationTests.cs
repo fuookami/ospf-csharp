@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **MAC 域聚合（B604）** / The MAC domain aggregation (B604).
+/// **MAC 域聚合** / The MAC domain aggregation.
 /// </summary>
 /// <remarks>
 /// 这个域的 Benders 语义与配载域**相反**：这里 MP 等于 `Register`、SP 是空操作；配载域 MP 少两族、SP 换一套。
@@ -99,8 +99,8 @@ public class Demo2MacAggregationTests {
             var stowage = new Stowage(items, positions) { LoadingContext = MakeKernel(items, positions) };
             AircraftType type = wideBody ? AircraftType.B747 : AircraftType.B737;
             Aircraft = new AircraftModel(type, type.ToString(), new AircraftMinorModel(type.ToString()));
-            // `doiCorrection` 必须非零，否则"多项式里漏掉 DoiCorrection"是无操作、变异必然存活（B604 实测）。
-            // `doiCorrection` must be non-zero, or "dropping DoiCorrection from the polynomial" is a no-op and the mutation always survives (measured in B604).
+            // `doiCorrection` 必须非零，否则"多项式里漏掉 DoiCorrection"是无操作、变异必然存活。
+            // `doiCorrection` must be non-zero, or "dropping DoiCorrection from the polynomial" is a no-op and the mutation always survives (measured).
             Formula = new Formula(Aircraft, lip: 100.0, chord: 20.0, standardDatum: 120.0, forceDistanceCoefficient: 5000.0, doiCorrection: 7.0);
             Load = new Load(items, positions, stowage, withMultiLoadingSchema: true, aircraftModel: Aircraft, formula: Formula);
             var payload = new Payload(positions, Load, plannedPayload: 5000.0, maxPayload: 20000.0);

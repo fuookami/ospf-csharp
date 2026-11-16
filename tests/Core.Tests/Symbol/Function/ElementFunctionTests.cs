@@ -19,14 +19,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 没有下标等式，选择与下标就脱钩了 / Without the index row the selection is decoupled from the index.
 /// </summary>
 /// <remarks>
-/// B1154 补 `ElementFunction`（基线 `Element.kt`）。
+/// 补 `ElementFunction`（基线 `Element.kt`）。
 ///
 /// **编码是三段**：one-hot、每个表项一组屏蔽边、以及两条等式（下标等式与结果等式）。
 ///
 /// **最容易漏的是下标等式**：**没有它 `selector` 可以是任何 one-hot 组合，
 /// 而结果只是"某个表项的值"——模型仍然可行、目标值仍然合理，只是答案与输入无关。**
-///
-/// adds
 ///
 /// **The encoding has three parts**: one-hot, a masking group per entry, and two equalities (index and result).
 ///
@@ -74,7 +72,7 @@ public class ElementFunctionTests
 
     /// <summary>**下标等式真的存在，且系数是 `−i`** / The index row exists with coefficients `−i`.</summary>
     /// <remarks>
-    /// **这是本批最容易漏的一条**。**判据直接核对：`index` 的系数是 `+1`、`selector_i` 的系数是 `−i`、
+    /// **这是这里最容易漏的一条**。**判据直接核对：`index` 的系数是 `+1`、`selector_i` 的系数是 `−i`、
     /// 右端是 `lowerIndex`。**
     ///
     /// **This is the row most easily dropped.** **The criterion checks directly: `index` coefficient `+1`,

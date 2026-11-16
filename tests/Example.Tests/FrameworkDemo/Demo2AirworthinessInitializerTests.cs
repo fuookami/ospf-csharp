@@ -28,7 +28,7 @@ using AircraftPosition = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircra
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **适航安全聚合初始化器（B605）** / The airworthiness security aggregation initializer (B605).
+/// **适航安全聚合初始化器** / The airworthiness security aggregation initializer.
 /// </summary>
 /// <remarks>
 /// 这是一整片 DTO → 模型的翻译，没有算法。因此判据集中在**最容易抄漏的四个地方**：
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 4. 累积载荷两个区域的扫描方向相反（前向按后臂升序、后向按前臂降序）。
 ///
 /// It is one long DTO-to-model translation with no algorithm, so the criteria target **the four things most easily dropped**: the four validation boundaries (especially the
-/// negative payload bound and the inverted envelope interval); the `maxOf(1.0, ...)` divide-by-zero guard (with `maxOf(0.0, ...)` the envelope collapses); the low-deck payload
+/// negative payload bound and the inverted envelope interval); the `maxOf(1.0,...)` divide-by-zero guard (with `maxOf(0.0,...)` the envelope collapses); the low-deck payload
 /// floor being non-zero only **with a low-deck position**; and the two cumulative zones sweeping in opposite directions.
 /// </remarks>
 public class Demo2AirworthinessInitializerTests {
@@ -300,12 +300,12 @@ public class Demo2AirworthinessInitializerTests {
     }
 
     /// <summary>
-    /// **包线上端点用 `maxOf(1.0, …)` 而不是 `maxOf(0.0, …)`** / The envelope's upper weight end uses `maxOf(1.0, ...)`, not `maxOf(0.0, ...)`.
+    /// **包线上端点用 `maxOf(1.0, …)` 而不是 `maxOf(0.0, …)`** / The envelope's upper weight end uses `maxOf(1.0,...)`, not `maxOf(0.0,...)`.
     /// </summary>
     /// <remarks>
     /// 把业载上限与货量都设成 0，上端点仍必须是 `1.0`。写成 `maxOf(0.0, …)` 时两个端点重量相等、包线退化成一个点，插值会除以零。
     ///
-    /// With both the payload bound and the cargo set to zero the upper end must still be `1.0`. With `maxOf(0.0, ...)` the two end weights are equal, the envelope collapses to a
+    /// With both the payload bound and the cargo set to zero the upper end must still be `1.0`. With `maxOf(0.0,...)` the two end weights are equal, the envelope collapses to a
     /// point, and interpolation divides by zero.
     /// </remarks>
     [Fact]

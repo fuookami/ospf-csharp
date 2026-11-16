@@ -1,4 +1,4 @@
-// 组合求解报告支撑（B674）的判据 / Criteria for the combinatorial solve report support (B674).
+// 组合求解报告支撑的判据 / Criteria for the combinatorial solve report support.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// **组合求解报告支撑（B674）** / The combinatorial solve report support (B674).
+/// **组合求解报告支撑** / The combinatorial solve report support.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**"有 incumbent"需要两个条件**、**终止错误只映射三种状态**、

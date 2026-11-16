@@ -8,16 +8,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Quality;
 
 /// <summary>
-/// B843：**裸 `IsFailed` 的存量只减不增** / The stock of bare `IsFailed` assertions may only shrink.
+/// **裸 `IsFailed` 的存量只减不增** / The stock of bare `IsFailed` assertions may only shrink.
 /// </summary>
 /// <remarks>
-/// 本仓做过好几批"判据是空的"的修补（B811、B830、B832、B842）。B842 那次最典型：
+/// 本仓做过好几批"判据是空的"的修补。 那次最典型：
 ///
 /// ```csharp
-/// invalid.IsFailed.Should().BeTrue();   // 划分因为别的原因失败、甚至 Fatal，同样绿
+/// invalid.IsFailed.Should.BeTrue;   // 划分因为别的原因失败、甚至 Fatal，同样绿
 /// ```
 ///
-/// 全仓扫下来是 **499 条** `IsFailed.Should().BeTrue()`，其中 **458 条**是**"失败"就是它唯一的断言**——
+/// 全仓扫下来是 **499 条** `IsFailed.Should.BeTrue`，其中 **458 条**是**"失败"就是它唯一的断言**——
 /// 后面既没有 `.Error.Code`，也没有消息断言。**374 条在 `Core.Tests`**，那里测的是 `Result` 类型本身，
 /// 失败就是被测对象，**这些是正当的**。剩下的分布在框架与示例测试里，多数是"传了个 `null!`/未知 id"这种**单一失败原因**，
 /// 也说得过去；真正危险的是**有多种失败原因**的那些。
@@ -25,8 +25,8 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// 逐个判断 465 条是人工活，而**存量上涨**是可以自动挡住的：这条判据把基线钉在下面的常量上，
 /// **新加的裸断言会让它红**，逼作者要么补上错误码/消息，要么把这条判据的基线调低——**花钱买下降，不许花钱买上涨**。
 ///
-/// This repo has run several batches repairing "criteria that assert nothing" (B811, B830, B832, B842 — the last being the archetype: an unrelated failure or even a
-/// fatal one satisfies it). A repo-wide scan finds **499** `IsFailed.Should().BeTrue()` sites, **458** of which are the **only** assertion about the failure (no
+/// This repo has run several batches repairing "criteria that assert nothing" (，，— the last being the archetype: an unrelated failure or even a
+/// fatal one satisfies it). A repo-wide scan finds **499** `IsFailed.Should.BeTrue` sites, **458** of which are the **only** assertion about the failure (no
 /// `.Error.Code`, no message check). **374 sit in `Core.Tests`**, which tests the `Result` type itself, where the failure *is* the subject — **legitimate**. The rest
 /// mostly guard single-cause failures (a `null!` argument, an unknown id) and are defensible; the risky ones are those with **several possible failures**. Judging all
 /// 465 by hand is manual work, but **growth** can be blocked automatically: this criterion pins the baseline to the constant below, so **a new bare assertion reds it**,
@@ -34,28 +34,28 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// </remarks>
 public sealed class VacuousFailureAssertionBudgetTests
 {
-    /// <summary>B843 扫出来的存量 / The stock measured in B843.</summary>
+    /// <summary> 扫出来的存量 / The stock measured.</summary>
     /// <remarks>
     /// 数字变了就说明有人动过存量：**变小**请同步把这里改小（值得庆祝的事），**变大**请先补断言。
     ///
     /// A changed number means somebody moved the stock: if it **shrank**, lower this constant too (worth celebrating); if it **grew**, add the missing assertion first.
-    /// B843 记的是 **465**，B844 补了 7 条并**修正了口径**（注释不算行），于是是 **458**。
-    /// B843 recorded **465**; B844 pinned seven and **corrected the rule** (comments do not count lines), which makes it **458**.
+    /// 记的是 **465**，补了 7 条并**修正了口径**（注释不算行），于是是 **458**。
+    /// recorded **465**; pinned seven and **corrected the rule** (comments do not count lines), which makes it **458**.
     /// </remarks>
     private const int Budget = 458;
 
     private static readonly Regex BareFailure = new(@".IsFailed\.Should\(\)\.BeTrue\(\)", RegexOptions.Compiled);
     private static readonly Regex BareSuccess = new(@".IsOk\.Should\(\)\.BeTrue\(", RegexOptions.Compiled);
 
-    /// <summary>B845 量出的裸 `IsOk` 存量 / The bare `IsOk` stock measured in B845.</summary>
+    /// <summary> 量出的裸 `IsOk` 存量 / The bare `IsOk` stock measured.</summary>
     /// <remarks>
     /// `IsOk` 比 `IsFailed` 多得多（**3440** 条），其中 **912** 条后面没有任何"值是什么"的断言。
-    /// **口径的局限要说清楚**：很大一部分是**装配步骤**（`parent.Add(x).IsOk.Should().BeTrue()`），
+    /// **口径的局限要说清楚**：很大一部分是**装配步骤**（`parent.Add(x).IsOk.Should.BeTrue`），
     /// 那里"加进去了"就是全部主张，**算作裸断言其实是误判**。但棘轮只挡上涨、不逼人补断言，所以这个误判的代价是**可以接受的**：
     /// 它只会让新增装配步骤时被迫多写一句。**要挡的是"求解成功了"却没说结果是什么**那一类。
     ///
     /// `IsOk` outnumbers `IsFailed` (**3440**), and **912** of them say nothing about the value. **The limitation is worth stating**: many are **setup steps**
-    /// (`parent.Add(x).IsOk.Should().BeTrue()`), where "it was added" is the entire claim, **so counting them as bare is a misjudgement**. The ratchet only blocks
+    /// (`parent.Add(x).IsOk.Should.BeTrue`), where "it was added" is the entire claim, **so counting them as bare is a misjudgement**. The ratchet only blocks
     /// growth and never forces anyone to add an assertion, so that misjudgement is **acceptable**: it only costs an extra line when adding a setup step. **What it
     /// blocks is "the solve succeeded" with nothing said about the result.**
     /// </remarks>
@@ -89,12 +89,12 @@ public sealed class VacuousFailureAssertionBudgetTests
     /// **清单里记的存量必须与这里的常量一致** / The inventory's recorded stock must match the constant here.
     /// </summary>
     /// <remarks>
-    /// B850 发现清单里还写着 **465**，而 B844 之后代码里是 **458**——**文档和判据已经分家了一个批次**。
+    /// 发现清单里还写着 **465**，而 之后代码里是 **458**——**文档和判据已经分家了一个批次**。
     /// 这类分家不会让任何测试变红，只会让下一个人读到错的数字，然后据此做错的判断（比如以为还有 7 条要补）。
     ///
     /// 判据把两边的数字钉在一起：改常量必须同步改清单，改清单也必须同步改常量。
     ///
-    /// B850 found the inventory still saying **465** while the code had been at **458** since B844 — **the document and the criterion had drifted apart for a whole
+    /// found the inventory still saying **465** while the code had been at **458** since then — **the document and the criterion had drifted apart for a whole
     /// batch**. That drift reds no test; it only feeds the next reader a wrong number and a wrong decision (for instance, believing seven more sites need pinning). The
     /// criterion pins both numbers together: changing the constant means changing the inventory, and the other way round.
     /// </remarks>
@@ -123,7 +123,7 @@ public sealed class VacuousFailureAssertionBudgetTests
     /// <returns>条数 / The count.</returns>
     /// <summary>**接口继承型断言的总数只减不增** / The stock of interface-inheritance assertions may only shrink.</summary>
     /// <remarks>
-    /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should().BeTrue()` 永远不会单独变红。**
+    /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should.BeTrue` 永远不会单独变红。**
  /// 实测：把 `IFloatingNumber&lt;Flt64&gt;` 从 `Flt64` 的基接口列表里删掉，
     /// **`tests/Math.Tests` 立刻产生 1734 个编译错误**——**只要代码能编译，这条断言必然为真。**
     ///
@@ -133,7 +133,7 @@ public sealed class VacuousFailureAssertionBudgetTests
     ///
     /// **所以口径和裸 `IsFailed` 一样**：钉在下面的常量上，**新加的会让它红**，逼作者去写行为判据。
     ///
-    /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should().BeTrue()` can never go red on its own.**
+    /// **`typeof(IFoo&lt;T&gt;).IsAssignableFrom(typeof(T)).Should.BeTrue` can never go red on its own.**
  /// Measured : removing `IFloatingNumber&lt;Flt64&gt;` from the base-interface list of `Flt64`
     /// **produces 1734 compile errors in `tests/Math.Tests` at once** — **if the code compiles, the assertion is necessarily true.**
     ///
@@ -168,18 +168,18 @@ public sealed class VacuousFailureAssertionBudgetTests
                 || path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal)) {
                 continue;
             }
-            // **按"每条断言"而不是"每一行"数**：`IsAssignableFrom` 与 `.Should()` 经常不在同一行
-            // （`=> typeof(X).IsAssignableFrom(...)` 换行再接 `.Should().BeTrue();`），**只数同一行会漏掉近一半**。
+            // **按"每条断言"而不是"每一行"数**：`IsAssignableFrom` 与 `.Should` 经常不在同一行
+            // （`=> typeof(X).IsAssignableFrom(...)` 换行再接 `.Should.BeTrue;`），**只数同一行会漏掉近一半**。
             // 第一次写成逐行判定，量出 24 而真实是 41——**24 低于阈值 41，于是判据永远绿。**
             //
-            // **Count assertions, not lines**: `IsAssignableFrom` and `.Should()` often sit on different lines,
+            // **Count assertions, not lines**: `IsAssignableFrom` and `.Should` often sit on different lines,
             // **and a line-wise count misses nearly half**. The first version measured 24 against a real 41 —
             // **below the threshold of 41, so the criterion was always green.**
             // **数"断言条数"，不是"出现次数"**：`IsAssignableFrom` 也可能出现在被测表达式里，
-            // 而 `.Should()` 在更远处。**所以只要这一行是断言语句，整行就算一条。**
+            // 而 `.Should` 在更远处。**所以只要这一行是断言语句，整行就算一条。**
             //
             // **Count assertion statements, not occurrences**: `IsAssignableFrom` also appears inside
-            // the expression under test with `.Should()` further away. **Any line that is an assertion counts once.**
+            // the expression under test with `.Should` further away. **Any line that is an assertion counts once.**
             foreach (string line in File.ReadLines(path)) {
                 if (!line.Contains("IsAssignableFrom", StringComparison.Ordinal)) {
                     continue;
@@ -215,10 +215,10 @@ public sealed class VacuousFailureAssertionBudgetTests
     /// <param name="index">`IsFailed` 所在行 / The line holding the assertion.</param>
     /// <returns>钉住了就是 `true` / `true` when pinned.</returns>
     private static bool PinnedWithinFiveLines(string[] lines, int index, string[] pinnedBy) {
-        // **注释不算行**（B844）：B843 的初版规则按"后 5 行"数，于是把错误码写在注释之后的站点误判成裸断言——
+        // **注释不算行**： 的初版规则按"后 5 行"数，于是把错误码写在注释之后的站点误判成裸断言——
         // 判据的口径必须是"后 5 条**代码行**"，否则它奖励"少写注释"。
         //
-        // **Comments do not count** (B844): the first rule measured "the next 5 lines", so a site whose error code sat after a comment block was misread as bare. The
+        // **Comments do not count**: the first rule measured "the next 5 lines", so a site whose error code sat after a comment block was misread as bare. The
         // rule has to mean "the next 5 **code** lines", otherwise it rewards writing fewer comments.
         int checkedLines = 0;
         for (int offset = 1; checkedLines < 5 && index + offset < lines.Length; offset++) {

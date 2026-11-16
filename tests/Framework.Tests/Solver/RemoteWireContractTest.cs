@@ -733,7 +733,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 该 fixture 由固定 Kotlin 12fdb587 侧真实编码产出（本会话实测）。
+    /// 该 fixture 由固定 Kotlin 12fdb587 侧真实编码产出（实测）。
     /// This fixture was produced by a real encode on the pinned Kotlin 12fdb587 side (measured this session).
     /// </summary>
     [Fact]
@@ -871,7 +871,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 该 fixture 已被固定 Kotlin 12fdb587 侧用 <c>ignoreUnknownKeys = false</c> 严格解码成功（本会话实测）。
+    /// 该 fixture 已被固定 Kotlin 12fdb587 侧用 <c>ignoreUnknownKeys = false</c> 严格解码成功（实测）。
     /// This fixture was decoded successfully by the pinned Kotlin 12fdb587 side with
     /// <c>ignoreUnknownKeys = false</c> (measured this session).
     /// </summary>
@@ -1143,7 +1143,7 @@ public class RemoteWireContractTest {
     }
 
     /// <summary>
-    /// 该期望值由固定 Kotlin 12fdb587 侧真实计算并逐字比对通过（本会话实测），输入含 `=`、换行、
+    /// 该期望值由固定 Kotlin 12fdb587 侧真实计算并逐字比对通过（实测），输入含 `=`、换行、
     /// 反斜杠与非 ASCII，覆盖转义与排序边界。
     /// This expected value was produced by the pinned Kotlin 12fdb587 side and compared byte for byte
     /// (measured this session); the input contains `=`, a newline, a backslash and non-ASCII, covering
@@ -1583,11 +1583,11 @@ public class RemoteWireContractTest {
 
     /// <summary>
     /// 固定 Kotlin 基线只有 5 个路径：<c>POST /api/v1/tasks</c>、<c>GET /api/v1/capabilities</c>、
-    /// <c>GET /api/v1/tasks/{taskId}</c>、<c>POST .../stop</c>、<c>POST .../resume</c>。
+    /// <c>GET /api/v1/tasks/{taskId}</c>、<c>POST.../stop</c>、<c>POST.../resume</c>。
     /// 本测试钉死这 5 个，防止再次自造端点。
     /// The pinned Kotlin baseline has exactly five paths: <c>POST /api/v1/tasks</c>,
-    /// <c>GET /api/v1/capabilities</c>, <c>GET /api/v1/tasks/{taskId}</c>, <c>POST .../stop</c> and
-    /// <c>POST .../resume</c>. This test pins those five so endpoints are not invented again.
+    /// <c>GET /api/v1/capabilities</c>, <c>GET /api/v1/tasks/{taskId}</c>, <c>POST.../stop</c> and
+    /// <c>POST.../resume</c>. This test pins those five so endpoints are not invented again.
     /// </summary>
     [Fact]
     public async Task AllRequests_ShouldUseOnlyBaselineEndpoints() {
@@ -3147,7 +3147,7 @@ public class RemoteWireContractTest {
     /// 可行解应被完整物化：值、精确目标与最佳界都要落到分类结果上。
     ///
     /// 说明：本用例**没有**覆盖"值越界被拒"——夹具里的 `IntVar` 取整型全域，没有值会越界。越界拒绝的
-    /// 分支已在实现中存在，但要用受限值域的变量才能真正触发，留待下一批补夹具。
+    /// 分支已在实现中存在，但要用受限值域的变量才能真正触发，留待后续补夹具。
     /// A feasible solution should be materialized completely: values, exact objective and best bound all
     /// land on the classification. Note this case does **not** cover out-of-domain rejection — the fixture's
     /// `IntVar` spans the whole integer domain, so no value is out of domain. That branch exists in the

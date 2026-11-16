@@ -93,11 +93,11 @@ public class TaskAdvanceTimeConstraint<E, A>
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 本批接线：对每个"该钉住"的任务加一行 `est {op} 计划开始`。哪些任务该钉见 `DeviationConstraintRows` 的注释——
+    /// 这里接线：对每个"该钉住"的任务加一行 `est {op} 计划开始`。哪些任务该钉见 `DeviationConstraintRows` 的注释——
     /// 关键是**全局开关开着时才按任务开关过滤**：全局关着时任务本来就被钉在计划开始上，这行是冗余但无害的；
     /// 全局开着时若不过滤，就会把"允许晚一点"的任务也钉死，那等于把延迟开关作废。
     ///
-    /// Wired in this batch: one row `est {op} planned start` per task that must be pinned. Which tasks those are is documented on `DeviationConstraintRows` — the point is that
+    /// Wired here: one row `est {op} planned start` per task that must be pinned. Which tasks those are is documented on `DeviationConstraintRows` — the point is that
     /// the **per-task switch only filters while the global switch is on**: with it off the task is pinned anyway (redundant but harmless), and with it on, not filtering would pin
     /// even the tasks allowed to move, cancelling the delay switch outright.
     /// </remarks>

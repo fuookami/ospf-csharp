@@ -20,12 +20,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.LayerAssignment.Service.Limits;
 /// <remarks>
 /// 移植基线 `bpp3d/domain/layer_assignment/service/limits/BinCapacityConstraint.kt` 的**右端项**部分。
 ///
-/// **修复前**：这个类没有构造函数参数，`RightHandSide()` 恒返回**空字典**——一个永远"没有右端项"的约束。
+/// **修复前**：这个类没有构造函数参数，`RightHandSide` 恒返回**空字典**——一个永远"没有右端项"的约束。
 /// 而它同时挂着 `EnableFinalBinCapacityConstraint = true` 这个开关（默认开启），于是"容量约束已启用"与
 /// "容量约束什么都不做"同时成立，**两者在类型上无法区分**。测试更是把"返回空"写成了预期结果。
 ///
 /// Ports the **right-hand-side** half of the baseline's `BinCapacityConstraint.kt`.
-/// **Before the fix**: the class had no constructor parameters and `RightHandSide()` always returned an **empty dictionary** — a constraint that
+/// **Before the fix**: the class had no constructor parameters and `RightHandSide` always returned an **empty dictionary** — a constraint that
 /// always has no right-hand side. It also carried the `EnableFinalBinCapacityConstraint = true` switch (on by default), so "the capacity constraint is
 /// enabled" and "the capacity constraint does nothing" both held, **and no type could tell them apart**. The test even asserted the empty result as
 /// expected.

@@ -1,4 +1,4 @@
-// 板材容量约束（B654）的判据 / Criteria for the sheet-capacity constraint (B654).
+// 板材容量约束的判据 / Criteria for the sheet-capacity constraint.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **板材容量约束（B654）** / The sheet-capacity constraint (B654).
+/// **板材容量约束** / The sheet-capacity constraint.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**一列一行**（合并成一条求和约束会让求解器无法定位超限的列）、**板材面积为零的列被跳过**
@@ -95,7 +95,7 @@ public class SheetCapacityConstraintTests {
     ///
     /// 1. 三列里中间一层**没有板材类型** → **只有两行**。
     /// 2. **跳过的不是"面积为零的行"而是那一列整行**：留下会变成 `load_area_1 <= 0`，等于强制该列不用，
-    ///    而那正是列生成正在评估的候选。
+    /// 而那正是列生成正在评估的候选。
     /// 3. 剩下的两行下标**保持原样**（0 与 2，不是 0 与 1）——行名对应列号，重编号会让日志与列错位。
     /// 4. 全都没有板材类型时**零行且成功**。
     ///

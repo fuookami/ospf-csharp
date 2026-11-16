@@ -106,7 +106,7 @@ public static class PlacementFactory {
 /// 物品合并键 / Item merge key.
 /// </summary>
 /// <remarks>
-/// **不按 `PackingShape2` 自身哈希分组**。`PackingShape2` 是抽象 record，其实例哈希在本会话中已被证明不稳定
+/// **不按 `PackingShape2` 自身哈希分组**。`PackingShape2` 是抽象 record，其实例哈希已被证明不稳定
 /// （`Placement2`／`Layer` 都栽在同一处深值对象上），直接拿形状作字典键会让"两个同形状物品"分到不同组。
 /// 这里改为按**形状的结构签名**（类型 + 关键尺寸）取键：签名是字符串，稳定且可读，碰撞由后续 `Equals` 兜底。
 ///

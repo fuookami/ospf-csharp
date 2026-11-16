@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Core.Tests.Token;
 /// **结构变更会使索引失效，而重建后仍然正确** / A structural change invalidates the index, and the rebuild is still correct.
 /// </summary>
 /// <remarks>
-/// **这一条是 `TokenInvalidateRebuildBenchmark`（B1299 移植自基线 `19c72455`）的<b>行为前提**：
+/// **这一条是 `TokenInvalidateRebuildBenchmark`（对齐基线 ``）的<b>行为前提**：
 /// 那个基准假设"增删一个 token 会让索引失效、下一次读必须重建"，而重建<b>结果必须是对的**。
 /// 基准本身只测时间，测不出这件事——所以由这一条判据钉住。**
 ///
 /// **它也顺手覆盖了一个容易漏的方向：** **被移除的 token 不该还能查到，而新加的 token 必须立刻能查到。**
 ///
-/// **This is the behavioural premise of `TokenInvalidateRebuildBenchmark` (ported from the baseline in B1299): that benchmark assumes
+/// **This is the behavioural premise of `TokenInvalidateRebuildBenchmark` (ported from the baseline): that benchmark assumes
 /// adding or removing one token invalidates the index and the next read rebuilds it — and the rebuilt result must be correct.** **The
 /// benchmark times only; it cannot catch a wrong answer.** **It also covers both directions: a removed token must stop resolving, and a
 /// newly added one must resolve immediately.**

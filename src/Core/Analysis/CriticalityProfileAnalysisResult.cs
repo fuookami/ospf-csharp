@@ -41,9 +41,9 @@ public sealed record CriticalityProfileAnalysisResult(
     /// 与 <see cref="Reports"/> 同义的兼容名 / A compatibility name for <see cref="Reports"/>.
     /// </summary>
     /// <remarks>
-    /// **基线里这是一个 `get()` 别名。** 保留它是因为调用方读的是"目标报告"这个意图。
+    /// **基线里这是一个 `get` 别名。** 保留它是因为调用方读的是"目标报告"这个意图。
     ///
-    /// **The baseline has this as a `get()` alias.** It is kept because the caller reads the intent "target reports".
+    /// **The baseline has this as a `get` alias.** It is kept because the caller reads the intent "target reports".
     /// </remarks>
     public IReadOnlyList<CriticalConstraintAnalysisReport> TargetReports => Reports;
 
@@ -99,7 +99,7 @@ public sealed record CriticalityProfileAnalysisResult(
     /// 越靠左，这个批次能下的结论越少。**空批次给 `Unknown`**——没有报告就没有结论，
     /// **而不是"全部可达"。**
     ///
-    /// The order is **`Unsupported` &lt; `Unknown` &lt; `Unreachable` &lt; `Reachable`**: further left means fewer conclusions this batch can support. **An empty batch yields `Unknown`** — no report
+    /// The order is **`Unsupported` &lt; `Unknown` &lt; `Unreachable` &lt; `Reachable`**: further left means fewer conclusionsatch can support. **An empty batch yields `Unknown`** — no report
     /// means no conclusion, **never "everything is reachable".**
     /// </remarks>
     public static AnalysisStatus WeakestStatus(IReadOnlyList<AnalysisStatus> statuses) {

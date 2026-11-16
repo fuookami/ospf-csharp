@@ -1,4 +1,4 @@
-// 应用请求与执行器装配（B666）的判据 / Criteria for the application request and executor assembly (B666).
+// 应用请求与执行器装配的判据 / Criteria for the application request and executor assembly.
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **应用请求与执行器装配（B666）** / The application request and executor assembly (B666).
+/// **应用请求与执行器装配** / The application request and executor assembly.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**需求项经目录取形状**（目录缺项跳过）、**算法配置的三个上限来自请求**、
@@ -97,7 +97,7 @@ public class ColumnGenerationApplicationRequestTests {
     /// 四点成对：
     ///
     /// 1. 算法配置的**迭代上限、每轮列数、是否执行最终 MILP** 都是请求给的值（`7` / `3` / `false`），
-    ///    不是默认的 `64` / `32` / `true`。
+    /// 不是默认的 `64` / `32` / `true`。
     /// 2. 执行器组带过去的**面积系数与容差**是配置里的非默认值（`2.5` / `1e-3`）。
     /// 3. 执行器组的**需求项与请求派生的一致**。
     /// 4. 没给配置时用默认配置，且请求里的上限仍然生效。

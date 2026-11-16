@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </summary>
 /// <remarks>
 /// 1. `fixed` 与 `kept` 都会否决回收——它们存在的意义就是"这一列无论多贵都留着"。
-///    只判其中一个，另一类列会被撤掉，而撤掉的列**不会报错，只是从解里消失**。
+/// 只判其中一个，另一类列会被撤掉，而撤掉的列**不会报错，只是从解里消失**。
 /// 2. 按 `iteration` 取变量而不是按下标——两者在"每轮都加满列"时恰好相等，写错了也看不出来。
 ///
 /// 1. Both `fixed` and `kept` veto retirement — their whole point is "keep this column no matter how expensive". Testing only one retires the other kind, and a retired column

@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **两个冲突约束从空壳变成真约束行（B553）** / The two conflict constraints go from stubs to real rows (B553).
+/// **两个冲突约束从空壳变成真约束行** / The two conflict constraints go from stubs to real rows.
 /// </summary>
 /// <remarks>
 /// `TaskConflictConstraint` 与 `TaskTimeConflictConstraint` 原来都直接返回 `Failed`（比返回 `Ok` 好，但依然什么都没做）。

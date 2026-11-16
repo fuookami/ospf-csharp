@@ -259,7 +259,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     internal MechanismModelSolutionMapping? SolutionMapping { get; init; }
     private LinearTriadModel? _relaxationSource;
     private MechanismMatrixSnapshot? _relaxationSnapshot;
-    // **B1224：对偶模型保存原模型的行身份快照。**
+    // **对偶模型保存原模型的行身份快照。**
     //
     // **基线在这一处是"把约束对象引用塞进 `dualOrigin`"，而对偶模型的行就是原模型的行，
     // 所以那把 key 天生就是原约束。C# 的对偶模型是<b>新建</b>的约束（构造时看不到原身份），
@@ -269,7 +269,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // **快照而不是引用：视图的全部意义是可复制的快照，而持有一个活的原模型会让对偶模型的生命周期
     // 绑在原模型上——原模型被 `Dispose` 之后，对偶模型的对偶整理就会失败。**
     //
-    // **B1224: a dual model keeps a snapshot of the primal's row identities.** **The baseline puts a constraint object
+    // **a dual model keeps a snapshot of the primal's row identities.** **The baseline puts a constraint object
     // reference into `dualOrigin` and the dual's rows <b>are</b> the primal's, so that key is naturally the primal
     // constraint. C#'s dual model builds <b>new</b> constraints (the originals are not visible at construction), so the
     // original identities must be <b>carried over</b> — otherwise `DualOrigin.RowIndex` points into an identity set the
@@ -415,8 +415,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // `ConstraintId`——而在<b>有</b> `ConstraintId` 的情况下，它就是基线那把 key 的身份层内容：
     // 基线用一个对象引用表达"哪一行"，C# 用一个身份字符串表达同一件事。**
     //
-    // **行对偶（`Dual()` 模型）用 `DualOrigin.RowIndex` 回查**，因为那个模型的行序是原模型的列序，
-    // 而它的对偶变量的 `DualOrigin` 恰好记着"我来自哪一行"——**这正是 B1222 补那个字段的用途第一次被真正用上。**
+    // **行对偶（`Dual` 模型）用 `DualOrigin.RowIndex` 回查**，因为那个模型的行序是原模型的列序，
+    // 而它的对偶变量的 `DualOrigin` 恰好记着"我来自哪一行"——**这正是该字段的用途第一次被真正用上。**
     //
     // **普通模型（行对齐向量）直接用行号取 `Ids[row]`。**
     //
@@ -427,12 +427,12 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     // **The baseline returns `Map&lt;Constraint, Flt64>`: the dual model goes through `dualOrigin`, an ordinary model
     // through `constraints.origins`.**
     //
-    // **A C# view holds no constraint object references (B1222 recorded that representation difference), so the best key
+    // **A C# view holds no constraint object references (a recorded representation difference), so the best key
     // available is `ConstraintId` — which, when present, is exactly the identity content of the baseline's key: the
     // baseline expresses "which row" with an object reference, C# expresses the same thing with an identity string.**
     //
-    // **A dual model (`Dual()`) resolves through `DualOrigin.RowIndex`, because its rows are the primal's columns and its
-    // dual variables record "which row I came from" — the first real use of the field added in B1222.**
+    // **A dual model (`Dual`) resolves through `DualOrigin.RowIndex`, because its rows are the primal's columns and its
+    // dual variables record "which row I came from" — the first real use of the field.**
     //
     // **An ordinary model is row-aligned, so `Ids[row]` applies directly.**
     //
@@ -476,7 +476,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         // - **对偶/Farkas 模型**：`PrimalRowIdentities` 是原模型的行身份快照，行号取 `DualOrigin.RowIndex`。
         // - **普通（行对齐）模型**：第 `index` 个值就是第 `index` 行的对偶，身份取本模型的 `Ids[index]`。
         //
-        // **没有快照就说明这是普通模型——而不是"对偶模型但忘了带快照"，因为 `BuildDual()` 一定会带。
+        // **没有快照就说明这是普通模型——而不是"对偶模型但忘了带快照"，因为 `BuildDual` 一定会带。
         // 所以这个分支不是在猜，是在读一个由构造决定的属性。**
         //
         // **Two identity sources:**
@@ -485,7 +485,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         // `DualOrigin.RowIndex`; on an ordinary row-aligned model position `index` is the row and the identity comes
         // from this model's `Ids[index]`.**
         //
-        // **No snapshot means an ordinary model — not "a dual model that forgot its snapshot", because `BuildDual()`
+        // **No snapshot means an ordinary model — not "a dual model that forgot its snapshot", because `BuildDual`
         // always sets one.** **So the branch reads a construction-determined property rather than guessing.**
         IReadOnlyList<ConstraintId>? primalIdentities = PrimalRowIdentities;
         int rows = Constraints.Size;
@@ -579,9 +579,9 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
                 upper = maximum ? Flt64.Zero : positiveInfinity;
             }
             string rowName = constraints.Names[row];
-            // **B1222：对偶变量记录它的来源行与那一行的关系。**
+            // **对偶变量记录它的来源行与那一行的关系。**
             // **这正是基线 `dualOrigin` 承载的信息，只是在扁平视图里用行号表达而不是对象引用。**
-            // **B1222: a dual variable records its origin row and that row's relation — exactly what the baseline's
+            // **a dual variable records its origin row and that row's relation — exactly what the baseline's
             // `dualOrigin` carries, expressed as a row index rather than an object reference in a flat view.**
             dualVariables.Add(new ModelViewVariable(
                 index: row,
@@ -709,12 +709,12 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     /// <summary>构建 Farkas 对偶模型 / Build the Farkas dual model.</summary>
     /// <remarks>
-    /// 与 Kotlin <c>farkasDual()</c> 一致：每个原约束行生成一个带符号的 Farkas 列（<c>&lt;=</c> 非负、<c>&gt;=</c> 非正、
+    /// 与 Kotlin <c>farkasDual</c> 一致：每个原约束行生成一个带符号的 Farkas 列（<c>&lt;=</c> 非负、<c>&gt;=</c> 非正、
     /// <c>=</c> 自由），等式行再补正负松弛列把乘子绝对值化；每个有界原列生成上下界对偶列。归一化行强制
     /// Σ rhs·y + Σ lb·μ&lt;sub>lb&lt;/sub> + Σ ub·μ&lt;sub>ub&lt;/sub> = -1，因此可行基不存在时乘子必非零；目标极小化乘子幅度。
     /// 前 m 个列与原约束行同序，可交给 <see cref="TidyDualSolution"/> 取回逐行乘子；Farkas 模型不含原目标，
     /// 因此与 <see cref="Dual"/> 一样只描述不可行性证据。
-    /// Mirrors Kotlin <c>farkasDual()</c>: one signed Farkas column per primal row (<c>&lt;=</c> non-negative,
+    /// Mirrors Kotlin <c>farkasDual</c>: one signed Farkas column per primal row (<c>&lt;=</c> non-negative,
     /// <c>&gt;=</c> non-positive, <c>=</c> free), plus positive/negative slack columns that absolute the multipliers of
     /// equality rows, and bound dual columns for every bounded primal column. The normalization row forces
     /// Σ rhs·y + Σ lb·μ&lt;sub>lb&lt;/sub> + Σ ub·μ&lt;sub>ub&lt;/sub> = -1, so the multipliers cannot all vanish when no feasible
@@ -754,7 +754,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         var negativeSlacks = new ModelViewVariable?[rows];
         var objectiveCells = new List<LinearObjectiveCell>(rows * 3 + columns * 2);
         int colIndex = 0;
-        // **B1223：Farkas 列带上派生身份。**
+        // **Farkas 列带上派生身份。**
         //
         // **`role` 与 `discriminator` 来自基线 `LinearTriadModel.kt` 的 `withDerivedIdentity` 调用点，
         // 其余六个参数（源 ID、作用域、主来源、完整来源、命名空间、schema）由 `FarkasSource(...)` 从被指向的
@@ -763,7 +763,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         // **`FarkasSource` 是一个统一的取值函数而不是六个参数：** **因为"源是谁"取决于这一列指向哪一行/哪一列，
         // 而"源的哪几个身份字段"在两处完全相同——把后者提出去，前者的调用点就只剩一个索引。**
         //
-        // **B1223: Farkas columns carry derived identities.** **`role` and `discriminator` come from the baseline's
+        // **Farkas columns carry derived identities.** **`role` and `discriminator` come from the baseline's
         // `withDerivedIdentity` call sites; the other six inputs (source id, scope, origin, provenance, namespace,
         // schemaVersion) come from whichever element this column points at, through `FarkasSource(...)`.**
         //
@@ -804,7 +804,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
             dualVariables.Add(column);
             return column;
         }
-        // **B1223：取源元素身份。基线 `derivedDiscriminator` 的语义是
+        // **取源元素身份。基线 `derivedDiscriminator` 的语义是
         // "源 ID 为空则用 model-local 判别串，否则用稳定判别串"，这里照抄。**
         //
         // **`RowSource` 取第 `row` 行约束的身份，`ColumnSource` 取第 `col` 个原变量的身份。**
@@ -813,7 +813,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         //
         // **`RowSource` 越界时退化为 `null` 而不是伪造：源行没有身份时不该造一个。**
         //
-        // **B1223: read the source element's identity. The baseline's `derivedDiscriminator` means "model-local
+        // **read the source element's identity. The baseline's `derivedDiscriminator` means "model-local
         // discriminator when the source id is null, stable one otherwise", copied here.** **Both lookups return
         // `(identity, namespace, schema)`, because C# keeps the last two on the view variable/constraint rather than on
         // the identity, the same layer where the baseline keeps them on `Variable`.** **`RowSource` degrades to `null`
@@ -833,8 +833,8 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
         string Discriminator(string? sourceId, string stable, string modelLocal) =>
             sourceId is null ? modelLocal : stable;
 
-        // 行 Farkas 列先占满前 m 个索引，与 Dual() 一样让 TidyDualSolution 能按行序直接读取。
-        // Row Farkas columns fill the first m indexes, like Dual(), so TidyDualSolution reads them in row order.
+        // 行 Farkas 列先占满前 m 个索引，与 Dual 一样让 TidyDualSolution 能按行序直接读取。
+        // Row Farkas columns fill the first m indexes, like Dual, so TidyDualSolution reads them in row order.
         for (int row = 0; row < rows; row++) {
             ConstraintRelation sign = constraints.Signs[row];
             farkas[row] = NewColumn(
@@ -1018,13 +1018,13 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     /// <summary>构建可行性模型（最小化人工变量）/ Build the feasibility model (minimize artificial variables).</summary>
     /// <remarks>
-    /// 与 Kotlin <c>feasibility()</c> 一致：右端为负的整行取反并反转关系符号，每行改写为等式且右端取绝对值；
+    /// 与 Kotlin <c>feasibility</c> 一致：右端为负的整行取反并反转关系符号，每行改写为等式且右端取绝对值；
     /// 小于等于行新增系数 +1 的松弛列，大于等于行新增系数 -1 的松弛列与系数 +1 的人工列，等式行只新增系数 +1
     /// 的人工列；目标极小化人工列之和，因此最优值为 0 当且仅当原约束系统可行。松弛列与人工列都是连续
     /// [0, +inf)，原变量的边界与类型保持不变。派生行与派生列使用匿名 model-local 身份，且约束批次不承载
     /// origins、froms 与 priorities，因此这些元数据未复制。与 Kotlin 一致，松弛列会在
     /// <see cref="VariableSlack.Constraint"/> 中记录来源行的原始索引与原始关系符号，人工列不携带松弛元数据。
-    /// Mirrors Kotlin <c>feasibility()</c>: rows with a negative right-hand side are negated and their relation reversed,
+    /// Mirrors Kotlin <c>feasibility</c>: rows with a negative right-hand side are negated and their relation reversed,
     /// every row becomes an equality with an absolute right-hand side, a less-equal row gains a slack with coefficient
     /// +1, a greater-equal row gains a slack with -1 plus an artificial with +1, an equal row only gains an artificial
     /// with +1, and the objective minimizes the artificial sum, so an optimal value of 0 is exactly feasibility. Slacks
@@ -1139,7 +1139,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
 
     /// <summary>构建弹性模型（允许约束与边界被松弛）/ Build the elastic model (allow constraints and bounds to relax).</summary>
     /// <remarks>
-    /// 与 Kotlin <c>elastic()</c> 一致：每行按关系获得 <c>_lb_slack</c>、<c>_ub_slack</c> 或两者，关系符号与右端保持原值，
+    /// 与 Kotlin <c>elastic</c> 一致：每行按关系获得 <c>_lb_slack</c>、<c>_ub_slack</c> 或两者，关系符号与右端保持原值，
     /// 松弛列以 -1、+1 进入该行；每个非自由且未归一化的变量获得界松弛行 <c>x + s &gt;= lb</c> 与
     /// <c>x - s &lt;= ub</c>，其自身边界放开到无穷并改由这些行表达；目标改为极小化全部松弛之和（含可选 minmax 列），
     /// 原目标单元格全部丢弃。<paramref name="minSlackAmount"/> 为每个松弛建立二值指示列，并加入
@@ -1148,7 +1148,7 @@ public sealed class LinearTriadModel : BasicLinearTriadModel, ILinearTriadModelV
     /// 派生行与派生列使用匿名 model-local 身份，且约束批次不承载 origins、froms 与 priorities，因此这些元数据未复制；
     /// 行松弛列改用 <see cref="VariableSlack.Constraint"/> 记录来源行的原始索引与原始关系，界松弛列记录被松弛的变量，
     /// IIS 过滤因此可以把松弛回溯到原行或原边界。
-    /// Mirrors Kotlin <c>elastic()</c>: every row gets a lower slack, an upper slack or both by relation while keeping its
+    /// Mirrors Kotlin <c>elastic</c>: every row gets a lower slack, an upper slack or both by relation while keeping its
     /// original sign and right-hand side, with the slacks entering at -1 and +1; every bounded non-normalized variable
     /// gains the bound rows <c>x + s &gt;= lb</c> and <c>x - s &lt;= ub</c> and has its own bounds opened to infinity and
     /// expressed by those rows instead; the objective becomes the minimum of all slacks (plus the optional minmax

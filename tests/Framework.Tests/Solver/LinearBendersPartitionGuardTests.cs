@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// B842：主/子划分的两道守卫，必须**按名字**被拒绝 / The two partition guards must be rejected **by name**.
+/// 主/子划分的两道守卫，必须**按名字**被拒绝 / The two partition guards must be rejected **by name**.
 /// </summary>
 /// <remarks>
 /// `LinearBendersPartition.BuildAsync` 里有两条 `Invalid(...)`：
@@ -29,11 +29,11 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// ```
 ///
 /// 第一条**零判据**；第二条此前只在 `Partition_ShouldPlaceStagedContinuousObjectiveInRecourse` 里被断言成 `invalid.IsFailed`——
-/// 那个断言**什么都能通过**：划分因为别的原因失败、甚至 Fatal，它同样绿。这一批把它改成**按名字**拒绝，
+/// 那个断言**什么都能通过**：划分因为别的原因失败、甚至 Fatal，它同样绿。这里把它改成**按名字**拒绝，
 /// 于是"拒绝"这件事从此有了内容：拒绝的是**这一条**理由。
 ///
 /// Two `Invalid(...)` guards sit inside `LinearBendersPartition.BuildAsync` (snippet above). The first had **no criteria**; the second was only asserted as
-/// `invalid.IsFailed` elsewhere — an assertion **anything can satisfy**, including a failure for an unrelated reason or a fatal error. This batch turns the
+/// `invalid.IsFailed` elsewhere — an assertion **anything can satisfy**, including a failure for an unrelated reason or a fatal error. turns the
 /// rejection into one **by name**, so "rejected" finally has content: rejected **for this reason**.
 /// </remarks>
 public class LinearBendersPartitionGuardTests
@@ -112,11 +112,11 @@ public class LinearBendersPartitionGuardTests
     /// </summary>
     /// <remarks>
     /// 这是基线 `LinearBendersPartition.build` 的分行规则（12fdb587）：`target = if (cells.all { it.token.variable in decisions }) master else sub`。
-    /// **变量一律镜像进子问题**，于是"收窄追索"靠的是行，不是变量——本仓 B877 曾把这一点读成"结构上限"，其实**两边的规则一致**。
+    /// **变量一律镜像进子问题**，于是"收窄追索"靠的是行，不是变量——本仓 曾把这一点读成"结构上限"，其实**两边的规则一致**。
     /// 这条判据把规则钉在行为上：主问题的行数必须等于"只含决策变量的行"条数。
     ///
     /// This is the baseline's row rule (`LinearBendersPartition.build`, 12fdb587): `target = if (cells.all { it.token.variable in decisions }) master else sub`.
-    /// **Every variable is mirrored into the sub**, so narrowing the recourse is done by **rows**, not variables — B877 misread this as a structural ceiling, while
+    /// **Every variable is mirrored into the sub**, so narrowing the recourse is done by **rows**, not variables — misread this as a structural ceiling, while
     /// **both sides follow the same rule**. This criterion pins the rule behaviourally: the master row count must equal the number of decisions-only rows.
     /// </remarks>
     [Fact]

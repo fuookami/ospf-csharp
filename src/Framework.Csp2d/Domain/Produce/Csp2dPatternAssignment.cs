@@ -216,10 +216,10 @@ public sealed class Csp2dPatternAssignment {
     /// <param name="coefficientOf">从方案取系数的函数 / The function taking the coefficient from a plan.</param>
     /// <returns>可变线性多项式 / A mutable linear polynomial.</returns>
     /// <remarks>
-    /// **系数取不到量（单位不一致）时按零处理**：`WasteArea()` / `UsedArea()` 在量纲不可加时会失败，而主问题必须能注册。
+    /// **系数取不到量（单位不一致）时按零处理**：`WasteArea` / `UsedArea` 在量纲不可加时会失败，而主问题必须能注册。
     /// 代价是**一个坏图案会让它的贡献静默消失**——所以调用方必须先 `Pattern2.Validate` 过一遍。这条代价写在这里，不藏起来。
     ///
-    /// **A coefficient that cannot be read (unit mismatch) counts as zero**: `WasteArea()` / `UsedArea()` fail when the dimensions are not addable, and the master problem
+    /// **A coefficient that cannot be read (unit mismatch) counts as zero**: `WasteArea` / `UsedArea` fail when the dimensions are not addable, and the master problem
     /// must still register. The price is that **a broken pattern silently loses its contribution** — so callers must run `Pattern2.Validate` first. That price is written
     /// here rather than hidden.
     /// </remarks>

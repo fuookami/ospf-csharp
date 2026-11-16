@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 把 NaN 变成一次明确的拒绝 / Turning a NaN into an explicit rejection.
 /// </summary>
 /// <remarks>
-/// B1148 补 `LogFunction` / `PowerFunction` / `ReciprocalFunction`（基线 `NonlinearPiecewise.kt`）。
+/// 补 `LogFunction` / `PowerFunction` / `ReciprocalFunction`（基线 `NonlinearPiecewise.kt`）。
 ///
 /// **三者的源函数各在什么地方失效**：
 /// | 函数 | 失效条件 |
@@ -29,8 +29,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **如果不拦，`ln(0)` 给出 `-∞`、`1/0` 给出 `±∞`、`(-1)^0.5` 给出 `NaN`，
 /// 而这些值会一路塞进分段线性函数里——分段函数不拒绝它们，于是整条约束悄悄失效。**
-///
-/// adds
 ///
 /// **Where each source fails**:
 /// | Function | Fails when |
@@ -209,7 +207,7 @@ public class NonlinearPiecewiseFunctionTests
     /// <summary>**三条护栏都不误伤正常区间** / None of the three guards rejects an ordinary interval.</summary>
     /// <remarks>
     /// **上面五条都在测"该拒的拒了"，而没有一条测"该收的收了"**——
-    /// **一个 `return Invalid()` 无条件执行的实现能让它们全部通过。**
+    /// **一个 `return Invalid` 无条件执行的实现能让它们全部通过。**
     ///
     /// **The five criteria above test "the bad ones are rejected", and none tests "the good ones are accepted"** —
     /// **an implementation that returns a failure unconditionally passes all of them.**

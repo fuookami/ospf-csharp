@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Scip;
 /// **跨语言互通：C# 侧弹性模型的精确形状** / Cross-language parity: the exact shape of the C# elastic model.
 /// </summary>
 /// <remarks>
-/// **B413 推翻了一条记了很久的结论**："Kotlin 侧不可执行，所以互通测试做不到"。
+/// **推翻了一条记了很久的结论**："Kotlin 侧不可执行，所以互通测试做不到"。
 /// 实测：`/c/environment/maven/apache-maven-3.10.0` 在机器上，本地仓库 1.1 GB，
 /// `mvn -o -pl ospf-kotlin-core compile` **离线成功**，Kotlin 测试也能跑。
 ///
@@ -31,14 +31,14 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Scip;
 /// | 弹性后变量数 | `> 1`（基线只断言"更大"） | **固定值** |
 /// | 弹性后约束数 | `>= 1`（基线只断言"不小于"） | **固定值** |
 ///
-/// **基线判据是弱的**（`assertTrue(size > ...)`），本判据钉住**精确数字**，
+/// **基线判据是弱的**（`assertTrue(size >...)`），本判据钉住**精确数字**，
 /// 因为"更大"无法发现"多加了不该加的松弛列"。
 ///
-/// **B413 overturned a long-standing conclusion**: "Kotlin cannot run here, so parity testing is impossible". Measured: Maven is installed with a 1.1 GB local
+/// **overturned a long-standing conclusion**: "Kotlin cannot run here, so parity testing is impossible". Measured: Maven is installed with a 1.1 GB local
 /// repository, `mvn -o -pl ospf-kotlin-core compile` **succeeds offline**, and Kotlin tests run.
 ///
 /// So this criterion builds **the same model** on both sides and compares **exact numbers** (table above). **The baseline's criteria are weak**
-/// (`assertTrue(size > ...)`); this pins **exact figures**, because "bigger" cannot catch "added a slack column that should not exist".
+/// (`assertTrue(size >...)`); this pins **exact figures**, because "bigger" cannot catch "added a slack column that should not exist".
 /// </remarks>
 public class CrossLanguageElasticParityTests {
     /// <summary>**弹性模型的确切形状** / The exact shape of the elastic model.</summary>
@@ -58,9 +58,9 @@ public class CrossLanguageElasticParityTests {
         // **下面的数字是基线侧实测出来的**，不是我推断的。Kotlin 侧用
         // `mvn -o -pl ospf-kotlin-core test -Dtest=ParityProbeTest` 跑出的原话是：
         //
-        //     PARITY variables=4 constraints=3 objective=3 names=[x,c0_lb_slack,x_lb_slack,x_ub_slack]
+        // PARITY variables=4 constraints=3 objective=3 names=[x,c0_lb_slack,x_lb_slack,x_ub_slack]
         //
-        // C# 侧实测：**完全相同**。这是本会话第一份"两侧都真跑了"的互通证据。
+        // C# 侧实测：**完全相同**。这是第一份"两侧都真跑了"的互通证据。
         //
         // **These numbers were measured on the baseline side**, not inferred. The Kotlin run printed exactly the line quoted above; the C# side measured
         // **identically**. This is the session's first parity evidence where **both sides actually ran**.

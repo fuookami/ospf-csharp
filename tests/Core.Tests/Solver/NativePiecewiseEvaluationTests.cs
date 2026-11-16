@@ -19,8 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseEvaluations` 与 `validateNativeAbsColumns`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativePiecewiseEvaluationTests
 {
     /// <summary>
@@ -81,7 +80,7 @@ public class NativePiecewiseEvaluationTests
     /// **插值用的是<b>夹紧之后</b>的输入** / The interpolation uses the <b>clamped</b> input.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **`selectSegment` 在端点容差内会把输入夹到边界。** **一个比下界小 `1e-9` 的输入，
     /// 插值是在<b>边界上</b>做的，而不是在它自己的位置上。**
@@ -161,10 +160,10 @@ public class NativePiecewiseEvaluationTests
     /// **ABS 列校验：输入与结果必须<b>在</b>，辅助列必须<b>不在** / ABS columns: input and result present, helpers absent.
     /// </summary>
     /// <remarks>
-    /// **这与 B1209 的"解里不该有选择列"是同一件事的两个层次：那里查<b>值</b>，这里查<b>列</b>。**
+    /// **这与"解里不该有选择列"是同一件事的两个层次：那里查<b>值</b>，这里查<b>列</b>。**
     /// **一条在解投影之后，一条在列映射阶段——所以两处都需要，不能互相替代。**
     ///
-    /// **This is B1209's "the solution must omit selectors" at a different level: there it checks <b>values</b>, here
+    /// **This is the earlier "the solution must omit selectors" at a different level: there it checks <b>values</b>, here
     /// <b>columns</b>.** **One runs after solution projection and one at column mapping, so both are needed.**
     /// </remarks>
     [Fact]

@@ -1,4 +1,4 @@
-// 检验数（B659）的判据 / Criteria for the reduced cost (B659).
+// 检验数的判据 / Criteria for the reduced cost.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **检验数（B659）** / The reduced cost (B659).
+/// **检验数** / The reduced cost.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**阈值是负容差而不是零**（浮点检验数不会精确为零）、**零影子价格的需求跳过**、

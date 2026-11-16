@@ -145,20 +145,20 @@ public sealed class ScheduleLogValidationTests
     /// <summary>**校验和只验自洽，不防篡改——这一点必须写清楚** / The checksum checks self-consistency, not tampering — and that must be said.</summary>
     /// <remarks>
     /// **我原来写了一条"篡改事件但保留旧校验和必须被拒"，它假设错了。**
-    /// 实测：把 `complete` 的 `Evaluations` 从 5 改成 50，`Checksum != Digest()` **仍然为真**——
-    /// 因为 `Digest()` 是**基于当前 `Events` 重算**的，**改完再算，当然对得上**。
+    /// 实测：把 `complete` 的 `Evaluations` 从 5 改成 50，`Checksum != Digest` **仍然为真**——
+    /// 因为 `Digest` 是**基于当前 `Events` 重算**的，**改完再算，当然对得上**。
     ///
-    /// **基线的 `digest()` 也是同一个语义**（`Json.encodeToJsonElement(this).jsonObject - "checksum"`），
+    /// **基线的 `digest` 也是同一个语义**（`Json.encodeToJsonElement(this).jsonObject - "checksum"`），
     /// **所以这不是本仓的缺陷，是两边一致的"自洽性检查"。**
     ///
     /// **它挡的是"校验和写错/留空"，不是"内容被改过"。** 这条判据把这句话钉住，
-    /// **免得下一个人（或下一批的我）把它当成签名。**
+    /// **免得下一个人（或后续的我）把它当成签名。**
     ///
     /// **I originally wrote "tampering with events while keeping the old checksum must be refused", and the assumption was wrong.**
-    /// Measured: changing `complete`'s `Evaluations` from 5 to 50 leaves `Checksum != Digest()` **false** —
-    /// because `Digest()` **recomputes from the current `Events`**, **so of course it matches after the edit**.
+    /// Measured: changing `complete`'s `Evaluations` from 5 to 50 leaves `Checksum != Digest` **false** —
+    /// because `Digest` **recomputes from the current `Events`**, **so of course it matches after the edit**.
     ///
-    /// **The baseline's `digest()` has the same semantics**, **so this is not a defect here but an identical self-consistency check on both sides.**
+    /// **The baseline's `digest` has the same semantics**, **so this is not a defect here but an identical self-consistency check on both sides.**
     ///
     /// **What it stops is a wrong or empty checksum, not edited content.** This criterion pins that sentence
     /// **so nobody (including a later batch of me) treats it as a signature.**

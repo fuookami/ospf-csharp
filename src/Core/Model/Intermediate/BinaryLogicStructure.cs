@@ -61,7 +61,7 @@ public enum BinaryLogicOperation
 /// **二值性检查在生成之前，而且对结果列也查**：**结果列不是二值的话，这些行描述的
 /// 是一个连续值，而 AND/OR/XOR 对连续值没有意义。**
 ///
-/// B1195, following the baseline's `BinaryLogicStructure` and `BinaryLogicOperation`.
+/// Following the baseline's `BinaryLogicStructure` and `BinaryLogicOperation`.
 ///
 /// **The four encodings point in different directions, and each one's "which side is slack" has to be read
 /// separately:**

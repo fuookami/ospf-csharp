@@ -1,4 +1,4 @@
-// 八个数量目标（B703）的判据 / Criteria for the eight quantity objectives (B703).
+// 八个数量目标的判据 / Criteria for the eight quantity objectives.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Produce;
 
 /// <summary>
-/// **八个数量目标（B703）** / The eight quantity objectives (B703).
+/// **八个数量目标** / The eight quantity objectives.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**阈值 0 与阈值非零是两条不同的路**、**松弛自带约束**、**系数在松弛外面乘**、**空列表两边处理不同**。
@@ -111,7 +111,7 @@ public class ProduceQuantityObjectiveTests {
     /// 三点成对：
     ///
     /// 1. 松弛是 `SlackFunction`，`Constraint = true`——这四个目标不像超量 / 不足表那样自己加行，
-    ///    不带约束的话 `pos` 是个没有上界的自由变量：最小化时恒取 0（目标失效）、最大化时冲到无穷（模型无界）。
+    /// 不带约束的话 `pos` 是个没有上界的自由变量：最小化时恒取 0（目标失效）、最大化时冲到无穷（模型无界）。
     /// 2. `Threshold = true`、`WithNegative = false`、`WithPositive = true`。
     /// 3. 模型里确实多了 `*_pos` 的约束行（`_pos` 后缀的行名）。
     ///
@@ -195,11 +195,11 @@ public class ProduceQuantityObjectiveTests {
     /// 三点成对：
     ///
     /// 1. `ProduceQuantityMinimization` 传空列表 → **仍加**一个目标（名字 `produce quantity`，零项）。
-    /// 2. `ProduceOverQuantityMinimization` 传空列表 → **一个目标都不加**（基线外层有 `if (materials.isNotEmpty())`）。
+    /// 2. `ProduceOverQuantityMinimization` 传空列表 → **一个目标都不加**（基线外层有 `if (materials.isNotEmpty)`）。
     /// 3. 两者的差别**不是笔误**：基线就是这样写的，判据把这个不对称钉住。
     ///
     /// Three paired points: `ProduceQuantityMinimization` with an empty list **still adds** an objective (named `produce quantity`, with no terms); `ProduceOverQuantityMinimization` with an empty
-    /// list adds **no objective at all**, matching the baseline's `if (materials.isNotEmpty())`; and the difference is **not a typo** — that is how the baseline is written, and the criterion pins the
+    /// list adds **no objective at all**, matching the baseline's `if (materials.isNotEmpty)`; and the difference is **not a typo** — that is how the baseline is written, and the criterion pins the
     /// asymmetry.
     /// </remarks>
     [Fact]
@@ -235,9 +235,9 @@ public class ProduceQuantityObjectiveTests {
     /// </summary>
     /// <remarks>
     /// 两点成对：未注册时 `Invoke` 返回 `Failed`（取不到数量表）；传非线性模型也返回 `Failed`。
-    /// 这条钉住的正是本批修掉的形状——原来的八个 `Invoke` 对任何输入都返回 `Ok`。
+    /// 这条钉住的正是这里修掉的形状——原来的八个 `Invoke` 对任何输入都返回 `Ok`。
     ///
-    /// Two paired points: while unregistered `Invoke` returns `Failed` (no quantity table) and a non-linear model returns `Failed` too. This pins exactly the shape this batch removed: the old eight
+    /// Two paired points: while unregistered `Invoke` returns `Failed` (no quantity table) and a non-linear model returns `Failed` too. This pins exactly the shape that was removed: the old eight
     /// `Invoke` methods returned `Ok` for every input.
     /// </remarks>
     [Fact]

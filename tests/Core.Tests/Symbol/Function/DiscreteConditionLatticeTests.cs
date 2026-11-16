@@ -19,11 +19,9 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// <remarks>
 /// 对齐基线 `DiscreteCondition.kt` 的四个格点辅助函数。
 ///
-/// **补它的原因是一个已发现的缺口**：**B1168 只检查了"步长 ≥ δ"。**
+/// **补它的原因是一个已发现的缺口**：**只检查了"步长 ≥ δ"。**
 ///
-/// adds
-///
-/// **The reason is a gap already found**: **B1168 only checked "spacing ≥ δ".**
+/// **The reason is a gap already found**: **It only checked "spacing ≥ δ".**
 /// </remarks>
 public class DiscreteConditionLatticeTests
 {
@@ -31,7 +29,7 @@ public class DiscreteConditionLatticeTests
     /// **歪斜格点：步长够大但位置不对，仍然不安全** / A misaligned lattice is unsafe even with a large spacing.
     /// </summary>
     /// <remarks>
-    /// **这是本批唯一真正新增的判据，也是 B1168 缺的那一块。**
+    /// **这是这里唯一真正新增的判据，也是此前缺的那一块。**
     ///
     /// **`p = 3x + 2`、`δ = 2`。取值是 `2 + 3ℤ = …, −1, 2, 5, …`。**
     ///
@@ -41,7 +39,7 @@ public class DiscreteConditionLatticeTests
     ///
     /// **只有余数距离检查能挡住它。**
     ///
-    /// **This is the batch's only genuinely new criterion, and exactly what B1168 lacked.**
+    /// **This is the only genuinely new criterion here, and exactly what the earlier attempt lacked.**
     ///
     /// **`p = 3x + 2`, `δ = 2`. The values are `2 + 3ℤ = …, −1, 2, 5, …`.**
     ///

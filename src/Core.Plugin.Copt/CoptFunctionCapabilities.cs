@@ -11,27 +11,27 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// COPT 的原生能力探测 / Native capability detection for COPT.
 /// </summary>
 /// <remarks>
-/// B1234 按基线 `CoptFunctionCapabilities.kt`（30 行）补，与 B855 起的 `GurobiFunctionCapabilities` 同源。
+/// 对齐基线 `CoptFunctionCapabilities.kt`（30 行）补，与 起的 `GurobiFunctionCapabilities` 同源。
 ///
-/// **这一批的实际动机不是"补一个探测函数"，而是把 B1232／B1233 留下的那层区分写进用户能读到的地方。**
+/// **这里的实际动机不是"补一个探测函数"，而是把那层"读侧与写侧"的区分写进用户能读到的地方。**
 ///
 /// **那层区分是：** **PWL 的写侧已实现（我们的代码会调用 `addSos`），而"COPT 真的接受了它"从未实测。**
 ///
 /// **`Detect` 回答的正好是前者**：**它问的是"这个 SDK 有没有这个签名"，
 /// 不是"我们写进去的那条约束有没有被求解器采纳"。**
-/// **两者相差一次真跑，而这一批不声称跨过它。**
+/// **两者相差一次真跑，而这里不声称跨过它。**
 ///
 /// **follows the baseline's 30-line `CoptFunctionCapabilities.kt`, the same family as `GurobiFunctionCapabilities`
-/// since B855.**
+/// since then.**
 ///
-/// **The real motive is not "add a probe function" but to put the distinction B1232/B1233 left behind somewhere the user
+/// **The real motive is not "add a probe function" but to put the read-side/write-side distinction somewhere the userr
 /// can read it.**
 ///
 /// **That distinction: PWL's write side is implemented (our code calls `addSos`), while "COPT really accepted it" has never
 /// been measured.**
 ///
 /// **`Detect` answers exactly the former: it asks whether <b>this SDK has that signature</b>, not whether <b>the constraint
-/// we wrote was adopted by the solver</b>.** **The two differ by one real run, and this batch does not claim to cross
+/// we wrote was adopted by the solver</b>.** **The two differ by one real run, and not claim to cross
 /// it.**
 /// </remarks>
 public static class CoptFunctionCapabilities

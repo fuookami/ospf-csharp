@@ -21,8 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativeAbs.kt` 的 `NativeAbsData` 与 `prepareNativeAbs`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeAbsTests
 {
     /// <summary>
@@ -56,7 +55,7 @@ public class NativeAbsTests
     /// **`|M| >= maximumMagnitude` is rejected, not `> maximumMagnitude`.**
     ///
     /// **A value exactly at the SDK limit is unusable: it leaves no headroom and the solver overflows once another term is
-    /// added.**
+    /// Added
     ///
     /// **The criterion uses the pair `max = 100`, `M = 100`: equality must be rejected and `99.9` must pass.**
     /// **Testing one side leaves `>` and `>=` indistinguishable.**
@@ -207,12 +206,12 @@ public class NativeAbsTests
     /// **而本仓库目前<b>只有一个</b> `IIntoValue<Flt64>` 实现——内部的 `Flt64IdentityConverter`。**
     /// **没有缩放转换器，就构造不出"两层不一致"的输入，这个分支就打不到。**
     ///
-    /// **我最初把它写成了 `one` 的往返（`FromValue(IntoValue(one))`），那在任何转换器下都等于 `1.0`——
+ /// **最初把它写成了 `one` 的往返（`FromValue(IntoValue(one))`），那在任何转换器下都等于 `1.0`——
     /// 一个恒等式，什么都检查不到。改成读实际值之后逻辑是对的，但<b>判据仍然打不到它</b>，
     /// 因为恒等转换器让两层永远一致。**
     ///
     /// **变异验证证实了这一点：把实现退回成 `one` 的往返，七条判据全绿。**
-    /// **所以本批<b>不声称</b>这个分支被覆盖了。**
+    /// **所以这里<b>不声称</b>这个分支被覆盖了。**
     ///
     /// **保留它的理由**：**`IIntoValue` 是一个公开的注入点，未来会出现缩放转换器；
     /// 那时这一层必须已经在按求解器的数值验。删掉它等于把一个未来的正确性押在"转换器永远是恒等"上。**
@@ -231,7 +230,7 @@ public class NativeAbsTests
     /// identity converter keeps the two layers in agreement.**
     ///
     /// **The mutation confirms it: reverting the implementation to the round-trip leaves all seven criteria green.**
-    /// **So this batch does <b>not</b> claim that branch is covered.**
+    /// **So <b>not</b> claim that branch is covered.**
     ///
     /// **Why keep it**: **`IIntoValue` is a public injection point and scaling converters will appear; that layer must
     /// already be checking solver-side numbers.** **Deleting it would stake a future correctness on "the converter is

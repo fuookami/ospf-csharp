@@ -26,7 +26,7 @@ using StowageSolution = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **方案分析器（B610）** / The solution analyzer (B610).
+/// **方案分析器** / The solution analyzer.
 /// </summary>
 /// <remarks>
 /// 分析器把求解器的**原始值向量**翻译成配载域方案。判据的重点是三个**边界**：阈值 `0.5`、正值才收录、token 缺失是失败。

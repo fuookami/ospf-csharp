@@ -192,8 +192,8 @@ public sealed class CapacityOrderCompilation<A> : ICapacity<A>
         }
 
         // **选中标记也要读出来**：`Σ b ≤ 1` 与 `x ↔ b` 这两族约束只作用在 `b` 上，只读数量的话它们是否成立完全不可见
-        // （B733 的两条存活变异就是这么活下来的）。
-        // **The selection flags are read out too**: the two families that act on `b` alone are invisible to an amount-only read-back, which is exactly how B733's two mutations survived.
+        // （的两条存活变异就是这么活下来的）。
+        // **The selection flags are read out too**: the two families that act on `b` alone are invisible to an amount-only read-back, which is exactly how the earlier two mutations survived.
         var selections = new List<OrderSelection<A>>();
         for (int action = 0; action < _actions.Count; ++action) {
             for (int slot = 0; slot < _slots.Count; ++slot) {

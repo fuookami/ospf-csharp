@@ -469,7 +469,7 @@ public sealed class SqlRelationalQueryCompiler : IRelationalQueryCompiler<Compil
             compiled.Add(result.Value);
         }
         if (compiled.Count == 0) {
-            // 空 IN 集合在 SQL 里是语法错误；`x IN ()` 也不等价于任何真值，必须退化成常量。
+            // 空 IN 集合在 SQL 里是语法错误；`x IN ` 也不等价于任何真值，必须退化成常量。
             // An empty IN set is a syntax error in SQL and matches nothing, so it degrades to a constant.
             return Results.Ok(BooleanSql(Trivalent.Invoke(negated)));
         }
@@ -576,8 +576,8 @@ public sealed class SqlRelationalQueryCompiler : IRelationalQueryCompiler<Compil
             values.Add(result.Value);
         }
         if (values.Count == 0) {
-            // 空 AND 恒真、空 OR 恒假：拼出 `()` 会直接语法错误。
-            // An empty AND is true and an empty OR false; emitting `()` would be a syntax error.
+            // 空 AND 恒真、空 OR 恒假：拼出 `` 会直接语法错误。
+            // An empty AND is true and an empty OR false; emitting `` would be a syntax error.
             return Results.Ok(BooleanSql(Trivalent.Invoke(@operator == "AND")));
         }
         return Results.Ok(string.Join($" {@operator} ", values.Select(value => $"({value})")));

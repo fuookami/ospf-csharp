@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 /// 延迟物化之后的模型真的求解一次 / A materialised model is really solved once.
 /// </summary>
 /// <remarks>
-/// B1244 补这条线上最大的空白：**此前所有判据都止于"转换成三元模型"，真实求解一次都没跑过。**
+/// 补这条线上最大的空白：**此前所有判据都止于"转换成三元模型"，真实求解一次都没跑过。**
 ///
 /// **这条判据的设计要点是"行承重"：** **目标是最小化 `y`，约束是 `x = −3`，唯一把 `y` 压到 3 的东西
 /// 就是 `abs` 的 fallback 行。**
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 /// **"断言目标值等于 3"因此不是"顺便看看解对不对"，而是<b>行是否存在的唯一证据</b>：
 /// 少那几行，模型依然合法、依然能解，只是答案不对。**
 ///
-/// B1244 fills the biggest blank on this line: every criterion so far stopped at "converted to a triad model", and no real
+/// Fills the biggest blank on this line: every criterion so far stopped at "converted to a triad model", and no real
 /// solve had ever run.
 ///
 /// **The design point is that the rows carry the answer: the objective minimises `y`, the constraint fixes `x = −3`, and
@@ -63,9 +63,9 @@ public class DeferredMaterialisationSolveCplexIntegrationTest
         var positive = new RealVar("deferred-y-pos");
         var negative = new RealVar("deferred-y-neg");
         // **fallback 行不约束这两个辅助变量非负，它们依赖变量自己的范围——
-        // 不给下界，`y = pos + neg` 就可以一路走到 −∞（本批实测：解出 −4.5e15）。**
+        // 不给下界，`y = pos + neg` 就可以一路走到 −∞（这里实测：解出 −4.5e15）。**
         // **The fallback rows do not force these helpers non-negative; they rely on the variables' own ranges. Without a
-        // lower bound, `y = pos + neg` walks off to −∞ (measured this batch: −4.5e15).**
+        // lower bound, `y = pos + neg` walks off to −∞ (measured here: −4.5e15).**
         positive.Range.SetRange(ValueRange<Flt64>.Of(Flt64.Zero, new Flt64(100)).Value);
         negative.Range.SetRange(ValueRange<Flt64>.Of(Flt64.Zero, new Flt64(100)).Value);
         var sign = new BinVar("deferred-y-sign");
@@ -76,7 +76,7 @@ public class DeferredMaterialisationSolveCplexIntegrationTest
         // **物化产出的约束引用了这三个辅助变量，它们必须在 token 表里，
  // 否则 `AddConstraint` 解析不到。**
         // **The materialised rows reference these three helpers, so they must be in the token table or `AddConstraint`
-        // cannot resolve them — B1239 hit exactly that.**
+        // cannot resolve them — one earlier attempt hit exactly that.**
         Assert.True(parent.Add(positive).IsOk);
         Assert.True(parent.Add(negative).IsOk);
         Assert.True(parent.Add(sign).IsOk);
@@ -114,7 +114,7 @@ public class DeferredMaterialisationSolveCplexIntegrationTest
         using LinearMechanismModel<Flt64> model = built.Value;
 
  // **物化发生在转换里面，所以这一步之后三元模型才带上 fallback 行。**
- // **Materialisation happens inside the conversion , so only after this does the triad model carry
+ // **Materialisation happens inside the conversion, so only after this does the triad model carry
         // the fallback rows.**
         Result<LinearTriadModel, ErrorCode, Error<ErrorCode>> converted = model.ToLinearTriadModel();
         Assert.True(converted.IsOk, converted.ToString());

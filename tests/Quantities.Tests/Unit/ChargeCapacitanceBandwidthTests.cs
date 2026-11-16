@@ -15,14 +15,13 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 法拉在电荷文件里，但它是电容 / The farad sits in the charge file while being capacitance.
 /// </summary>
 /// <remarks>
-/// B1142 补 `ElectricCharge`(6) / `Bandwidth`(5) / `Frequency.CyclePerHour`(1)，
+/// 补 `ElectricCharge`(6) / `Bandwidth`(5) / `Frequency.CyclePerHour`(1)，
 /// 并新建 `CapacitanceUnits`(5)。
 ///
 /// **基线把法拉系列写在 `ElectricCharge.kt` 里，却声明 `Capacitance` 量纲**——
 /// **跟着文件名会把它建成电荷单位，跟着声明的量纲才对。**
 ///
-/// adds
-/// and creates `CapacitanceUnits` (5).
+/// Adds and creates `CapacitanceUnits` (5).
 ///
 /// **The baseline writes the farad family in `ElectricCharge.kt` while declaring `Capacitance`** —
 /// **following the file name builds charge units; following the declared quantity is right.**
@@ -123,10 +122,10 @@ public class ChargeCapacitanceBandwidthTests
 
     /// <summary>**带宽的 KB/s 是 1000 B/s，不是 1024** / KB/s is a thousand bytes per second.</summary>
     /// <remarks>
-    /// **这与 B1138 修掉的那个 KB/KiB 错误同源**：**如果 `InformationUnits.Kilobyte` 又被写成 1024，
+    /// **这与那个 KB/KiB 错误同源**：**如果 `InformationUnits.Kilobyte` 又被写成 1024，
     /// 这里会跟着错十倍进位的偏差**——**而带宽单位是从它派生的，所以一条判据同时护住两处。**
     ///
-    /// **The same root as the KB/KiB defect fixed in B1138**: **if `InformationUnits.Kilobyte` were 1024 again,
+    /// **The same root as the KB/KiB defect fixed**: **if `InformationUnits.Kilobyte` were 1024 again,
     /// this would inherit a decade-shaped error** — **bandwidth derives from it, so one criterion guards both.**
     /// </remarks>
     [Fact]

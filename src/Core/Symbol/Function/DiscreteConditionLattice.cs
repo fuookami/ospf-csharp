@@ -15,11 +15,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 离散条件的格点计算：合并同变量系数、判整数性、求步长、证平移安全 / Lattice arithmetic for discrete conditions.
 /// </summary>
 /// <remarks>
-/// B1172 按基线 `DiscreteCondition.kt` 的 `effectiveDiscreteConditionMonomials`、
+/// 对齐基线 `DiscreteCondition.kt` 的 `effectiveDiscreteConditionMonomials`、
 /// `isIntegerValuedDiscreteConditionNumber`、`discreteConditionCoefficientGcd`、
 /// `hasSafeDiscreteShiftProof` 四个辅助函数补。
 ///
-/// **补这一批的直接原因是一个已发现的缺口**：**B1168 的 `ProveShift` 只检查了
+/// **补这里的直接原因是一个已发现的缺口**：** `ProveShift` 只检查了
 /// "步长 ≥ δ"，而基线还要检查"常数到<b>会被误判那一侧</b>的最近格点距离 ≥ δ"。**
 /// **前者是必要条件，不是充分条件。**
 ///
@@ -46,9 +46,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **所以两处检查都必需：`spacing ≥ δ` 挡"格点太密"，余数距离挡"格点位置不对齐"。**
 ///
-/// adds
-///
-/// **The immediate reason for this batch is a gap already found**: **B1168's `ProveShift` only checked
+/// **The immediate reason is a gap already found**: **the earlier `ProveShift` only checked
 /// "spacing ≥ δ", while the baseline also checks "the distance from the constant to the nearest lattice point
 /// <b>on the side that would be misclassified</b> is at least δ".** **The former is necessary, not sufficient.**
 ///

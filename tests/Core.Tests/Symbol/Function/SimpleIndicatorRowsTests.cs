@@ -24,8 +24,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **`diff = lhs − rhs`，之后所有行只针对 `diff`。**
 ///
-/// adds
-///
 /// **`diff = lhs − rhs`, and every row then works on `diff` alone.**
 /// </remarks>
 public class SimpleIndicatorRowsTests
@@ -34,7 +32,7 @@ public class SimpleIndicatorRowsTests
     /// **差分里必须含 `rhs` 的项** / The difference must carry the right-hand side's terms.
     /// </summary>
     /// <remarks>
-    /// **这是本批最重要的判据。**
+    /// **这是这里最重要的判据。**
     ///
     /// **`lhs ≤ rhs` 写成 `x ≤ 5` 时，`rhs` 是常数——差分后 `diff = x − 5`。**
     /// **如果实现只拿 `lhs`，`diff` 就成了 `x`，条件变成 `x ≤ 0` 而不是 `x ≤ 5`。**
@@ -44,7 +42,7 @@ public class SimpleIndicatorRowsTests
     /// **判据取 `x ≤ 5`、`tolerance = 0`、指示 = 1，断言 `x = 5` 处 `_sat` 是紧的。**
     /// **若丢掉常数 5，紧点会落在 `x = 0`。**
     ///
-    /// **This is the batch's most important criterion.**
+    /// **This is the most important criterion here.**
     ///
     /// **With `x ≤ 5` the right-hand side is a constant, so `diff = x − 5`.**
     /// **Taking `lhs` alone makes `diff = x`, turning the condition into `x ≤ 0` instead of `x ≤ 5`.**
@@ -122,7 +120,7 @@ public class SimpleIndicatorRowsTests
     /// **违反侧用 `bigM + strictBoundary`，不是 `bigM`** / The violated side uses the relaxed M.
     /// </summary>
     /// <remarks>
-    /// **与 B1180 的下界行同一个理由：`strictBoundary` 是违反侧的间隔，
+    /// **与下界行同一个理由：`strictBoundary` 是违反侧的间隔，
     /// 照抄 `bigM` 会让违反侧多松 `strictBoundary`。**
     ///
     /// **取 `bigM = 100`、`strictBoundary = 2`：放松量应为 `102`。**
@@ -132,7 +130,7 @@ public class SimpleIndicatorRowsTests
     ///
     /// **直接核对数值更清楚：`RelaxBigM(100, 2) = 102`，而 `_violated` 的指示项系数是 `102` 而不是 `100`。**
     ///
-    /// **Same reason as B1180's lower row: `strictBoundary` is the violation-side gap, and copying `bigM` relaxes it by
+    /// **Same reason as the earlier lower row: `strictBoundary` is the violation-side gap, and copying `bigM` relaxes it by
     /// an extra `strictBoundary`.**
     ///
     /// **With `bigM = 100` and `strictBoundary = 2` the relaxation is `102`.**
@@ -222,13 +220,13 @@ public class SimpleIndicatorRowsTests
     /// **`EQ` 走零容差带，而不是被拒绝** / `EQ` goes through the zero band instead of being rejected.
     /// </summary>
     /// <remarks>
-    /// **`EQ` 曾经与 `LT`/`GT`/`NE` 一起被拒绝——那是 B1181 时零容差带还没就位的后果。**
+    /// **`EQ` 曾经与 `LT`/`GT`/`NE` 一起被拒绝——那是 当时零容差带还没就位的后果。**
     ///
     /// **`diff == 0` 的"偏离"有两个方向，所以需要方向列。**
     /// **调用方不给 `sideVar` 时临建一个，而<b>临建的列必须被调用方登记</b>——
     /// 否则它是自由的，方向就成了任意值，而模型完全可行。**
     ///
-    /// **`EQ` was rejected together with `LT`/`GT`/`NE` — a consequence of the zero band not existing in B1181.**
+    /// **`EQ` was rejected together with `LT`/`GT`/`NE` — a consequence of the zero band not existing.**
     ///
     /// **"Deviates from zero" has two directions, so `EQ` needs a direction column.**
     /// **One is created when the caller supplies none, and <b>a created column must be registered by the caller</b> —

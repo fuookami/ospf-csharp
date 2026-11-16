@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **"相对结束时间的偏移量"从不存在变成真的单边量（B558）** / The end-time deviations go from absent to real one-sided amounts (B558).
+/// **"相对结束时间的偏移量"从不存在变成真的单边量** / The end-time deviations go from absent to real one-sided amounts.
 /// </summary>
 /// <remarks>
 /// 之前只有相对**开始时间**的 `delay_time` / `advance_time`。两者不能互相代替：同一任务可以开始准时、结束却迟早了（工期被拉长或压缩）。
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 三种静默失效：
 /// <list type="number">
 /// <item>**提前取错了边**：`advance_earliest_end_time` 是 `max(最早结束 − estEnd, 0)`，取正部会把它算成"拖后多少"——
-///   两个量单位相同、都在 0 附近，从数值上看不出来；</item>
+/// 两个量单位相同、都在 0 附近，从数值上看不出来；</item>
 /// <item>**拿开始时间代替结束时间**：`x` 用了 `est` 而不是 `estEnd`，工期一变答案就错；</item>
 /// <item>**漏掉开关或目标时间**：不许移动、或没给目标结束时间的任务应当是常量零，否则每个任务都被计费。</item>
 /// </list>

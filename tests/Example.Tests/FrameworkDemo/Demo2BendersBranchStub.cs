@@ -18,15 +18,15 @@ using Fuookami.Ospf.Utils.Functional;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B874：最小的 Benders 求解器桩，只为让 demo2 的 Benders 分支**真的被进入** /
+/// 最小的 Benders 求解器桩，只为让 demo2 的 Benders 分支**真的被进入** /
 /// The smallest Benders solver stub, only so demo2's Benders branch is **actually entered**.
 /// </summary>
 /// <remarks>
 /// 这个桩**不解任何模型**，它只记录"主问题被要求求解过几次"，然后返回一个明确的失败。
-/// 它存在的理由只有一个：B873 证明"不带求解器时那条分支走不到"，于是**要判断这条分支能不能走，必须带一个**。
+/// 它存在的理由只有一个： 证明"不带求解器时那条分支走不到"，于是**要判断这条分支能不能走，必须带一个**。
 ///
 /// **它不假装求解成功**：返回成功就等于给出一条没有实测依据的"接上了"的证据。
-/// The stub **solves nothing**; it records how many times a master solve was requested and then fails explicitly. Its only reason to exist is B873's finding that the branch
+/// The stub **solves nothing**; it records how many times a master solve was requested and then fails explicitly. Its only reason to exist is the earlier finding that the branch
 /// is unreachable without a solver. **It never pretends to succeed**: returning success would be evidence of "it is wired" with nothing behind it.
 /// </remarks>
 public sealed class RecordingBendersSolver : IBendersDecompositionSolver

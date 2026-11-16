@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <remarks>
 /// 一个返回 `Ok` 的空壳等于宣称"该约束已施加且未违反"——而实际什么都没做。
 /// 这类缺陷不报错、不崩、只是结果偏掉，是最难查的一种。
-/// B501 就是在一条约束上撞到这件事（`Missing executor compilation expression` 之后才发现空壳一直在静默通过），
-/// 本批把这条规则扩到整个 `Service/Limits` 目录。
+/// 就是在一条约束上撞到这件事（`Missing executor compilation expression` 之后才发现空壳一直在静默通过），
+/// 这里把这条规则扩到整个 `Service/Limits` 目录。
 ///
 /// An empty stub returning `Ok` claims "this constraint was applied and is satisfied" while doing nothing at all. The defect raises nothing, crashes nothing and merely skews the
-/// result — the hardest kind to find. B501 hit exactly this on one constraint; this batch extends the rule to the whole `Service/Limits` directory.
+/// result — the hardest kind to find. hit exactly this on one constraint; extends the rule to the whole `Service/Limits` directory.
 /// </remarks>
 public class NoSilentLimitStubTests {
     /// <summary>源代码路径 / The source path.</summary>

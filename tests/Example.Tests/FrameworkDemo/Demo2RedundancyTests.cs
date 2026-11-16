@@ -22,7 +22,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **冗余域：备用容量、纵向平衡与两条目标（B580）** / The redundancy domain: spare capacity, longitudinal balance and two objectives (B580).
+/// **冗余域：备用容量、纵向平衡与两条目标** / The redundancy domain: spare capacity, longitudinal balance and two objectives.
 /// </summary>
 /// <remarks>
 /// 基线的冗余域只有 4 个 `.kt` 源文件，做两件事：
@@ -72,9 +72,9 @@ public class Demo2RedundancyTests {
             status: new PositionStatus(true, false, true, true),
             mlw: new MaxLoadWeightLimit(mlw),
             mla: mla,
-            // B582 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
+            // 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
             // （跳过会让 `y` 无下界参照，模型照解）。这批既有 fixture 默认给了 `mlw` 那一口径的值。
-            // Since B582 "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
+            // Since "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
             // `y` with no reference bound and the model still solves). These pre-existing fixtures default the bounds to the `mlw` figure.
             plw: new PositionPredicateLoadWeight(Plw: 1000.0, Min: 0.0, Max: 1000.0));
     }

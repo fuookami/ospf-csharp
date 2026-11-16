@@ -13,11 +13,11 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **CG 分派那一段的接线判据** / Wiring criteria for the CG dispatch.
 /// </summary>
 /// <remarks>
-/// B826 拒绝的三条里，"注册与分区配置没接起来"是**错的**（注册一直都在），分区配置 B928 补齐，B929 把两块交给框架循环。
+/// 拒绝的三条里，"注册与分区配置没接起来"是**错的**（注册一直都在），分区配置 补齐，把两块交给框架循环。
 /// 本文件钉的是**分派真的把请求带到了那条链上**，而不是"列生成能求出最优"——后者的前提是模型收敛，不属于接线。
 ///
-/// Of B826's three refusal reasons, "the registration and the partition configuration are not wired" was **wrong** (the registration was always there); B928 supplied the
-/// configuration and B929 hands both to the framework loop. This file pins that **the dispatch really carries the request onto that chain**, not that "column generation
+/// Of the earlier three refusal reasons, "the registration and the partition configuration are not wired" was **wrong** (the registration was always there); supplied the
+/// configuration and hands both to the framework loop. This file pins that **the dispatch really carries the request onto that chain**, not that "column generation
 /// reaches optimality" — the latter presumes convergence, which is not wiring.
 /// </remarks>
 public class Demo2ColumnGenerationWiringTests
@@ -52,8 +52,8 @@ public class Demo2ColumnGenerationWiringTests
         ResponseDTO response = Demo2ApplicationService.Solve(request, StowageMode.FullLoad).Response;
 
         response.Status.Should().Be("ColumnGenerationSolverNotSupplied");
-        // **不能报成 `NotYetPorted`**：那句话会把人送去补已经补好的分区配置（B928 的教训）。
-        // **Must not report `NotYetPorted`**: that wording sends people to rebuild the partition configuration that already exists (the B928 lesson).
+        // **不能报成 `NotYetPorted`**：那句话会把人送去补已经补好的分区配置。
+        // **Must not report `NotYetPorted`**: that wording sends people to rebuild the partition configuration that already exists (the lesson).
         response.Notes.Should().NotContain(note => note.Contains("尚未移植") || note.Contains("not yet dispatched"));
     }
 
@@ -67,23 +67,23 @@ public class Demo2ColumnGenerationWiringTests
 
         ResponseDTO response = Demo2ApplicationService.Solve(request, StowageMode.FullLoad).Response;
 
-        // **机型守卫仍然在策略分派之前**（B827 的顺序）：列生成接上了也不改变这个顺序。
-        // **The aircraft guard still precedes the policy dispatch** (B827's order): wiring CG does not reorder it.
+        // **机型守卫仍然在策略分派之前**：列生成接上了也不改变这个顺序。
+        // **The aircraft guard still precedes the policy dispatch** (the earlier order): wiring CG does not reorder it.
         response.Status.Should().Be("UnsupportedAircraft");
     }
 
 #if SCIP_INTEGRATION
     /// <summary>**真后端上整条链跑通** / The whole chain completes on a real backend.</summary>
     /// <remarks>
-    /// **B929 时这条判据钉的是"停在哪"**：链跑到收尾复核就失败，`目标引用缺少变量值`。
-    /// B930 补上 `MetaModel.ObjectiveSnapshot()`（基线一直有，C# 一直缺），这条**应声翻面**——现在必须是 `Optimal`。
+    /// **时这条判据钉的是"停在哪"**：链跑到收尾复核就失败，`目标引用缺少变量值`。
+    /// 补上 `MetaModel.ObjectiveSnapshot`（基线一直有，C# 一直缺），这条**应声翻面**——现在必须是 `Optimal`。
     ///
-    /// **这正是"缺口变成判据、补上时判据翻面"的用法**：B929 写下停点，B930 补上之后它立刻红了，
+    /// **这正是"缺口变成判据、补上时判据翻面"的用法**： 写下停点，补上之后它立刻红了，
     /// 提醒我改判据而不是让它默默绿着。
     ///
-    /// **B929 pinned where it stopped** — the chain failed at the final check with "missing objective variable". B930 added `MetaModel.ObjectiveSnapshot()`
+    /// **pinned where it stopped** — the chain failed at the final check with "missing objective variable". added `MetaModel.ObjectiveSnapshot`
     /// (the baseline always had it, this port never did) and this criterion **flipped immediately**: it must now be `Optimal`. **That is exactly what
-    /// "turn a gap into a criterion" buys** — the pin from B929 went red the moment the gap closed, forcing the criterion to be rewritten instead of quietly
+    /// "turn a gap into a criterion" buys** — the pin from went red the moment the gap closed, forcing the criterion to be rewritten instead of quietly
     /// staying green.
     /// </remarks>
     [Fact]
@@ -112,8 +112,8 @@ public class Demo2ColumnGenerationWiringTests
         // 3. **求解成功**，且目标复核通过（否则 `FinishAsync` 会报错）。
         // **The solve succeeds**, and the objective re-check passed (otherwise `FinishAsync` would have failed).
         response.Succeed.Should().BeTrue("the chain must complete; notes: " + joined);
-        // 4. **不许再出现 B929 那个停点**。
-        // **The B929 stop point must not come back.**
+        // 4. **不许再出现 那个停点**。
+        // **The stop point must not come back.**
         notes.Should().NotContain(note => note.Contains("目标引用缺少变量值") || note.Contains("Missing objective variable"),
             "B930 flattened the objective; this wording coming back means the flattening was lost; notes: " + joined);
     }

@@ -17,16 +17,16 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 货物属性模型：堆叠、悬挂、变形、重量 / The cargo attribute model: stacking, hanging, deformation, weight.
 /// </summary>
 /// <remarks>
-/// B1305 补齐基线 `PackageAttribute.kt` 里的 12 个类型。 复审发现它们在 C# 侧一个都没有，
+/// 补齐基线 `PackageAttribute.kt` 里的 12 个类型。 复审发现它们在 C# 侧一个都没有，
 /// 而三份文档也从未提到 `PackageAttribute`——所以这不是"待办"，是"从未被记录"。
 ///
 /// 一句话说明这次补齐的边界： 这些类型在基线里只被 `PackageAttribute.kt` 自身读取，没有任何生产判定依赖它们
-/// （B1297 实测：`MaterialPacker.kt` 只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
+/// （实测：`MaterialPacker.kt` 只在构造属性时填默认值）。 所以补进 C# 之后，算法行为不变——
 /// 判据 `CargoAttributeModelTests` 钉住这一点：十二个类型都在，而 `src/` 里没有生产代码构造它们。
 ///
-/// B1305 fills in the twelve types from the baseline's `PackageAttribute.kt`. The review found none of them on the C# side, and none of
+/// Fills in the twelve types from the baseline's `PackageAttribute.kt`. The review found none of them on the C# side, and none of
 /// the three documents ever mentioned `PackageAttribute` — so this is not "pending", it was never recorded. One sentence on the boundary: in the
-/// baseline these types are read only inside `PackageAttribute.kt` itself and no production decision depends on them (B1297 measured that
+/// baseline these types are read only inside `PackageAttribute.kt` itself and no production decision depends on them (measured that
 /// `MaterialPacker.kt` merely stamps default values while constructing an attribute). So porting them changes no algorithm, and a criterion pins
 /// exactly that: all twelve types exist while no production code in `src/` constructs them.
 /// </remarks>
@@ -64,11 +64,11 @@ public interface ICargoView {
     /// 允许的最大高度（长度）；未知时为 null / The allowed maximum height as a length, or null when unknown.
     /// </summary>
     /// <remarks>
-    /// B1305：基线把 `maxHeight` 存成 `Quantity&lt;FltX&gt;`（长度），而 C# 现有物品模型里 `MaxHeight` 是 `UInt64` 的层数。
+    /// 基线把 `maxHeight` 存成 `Quantity&lt;FltX&gt;`（长度），而 C# 现有物品模型里 `MaxHeight` 是 `UInt64` 的层数。
     /// 这是真实的语义差异，不能靠换算糊过去：把层数当长度用会让高度门限静默失效。
     /// 所以这里如实做成"未知即 null"，策略遇到未知高度一律判否。
     ///
-    /// B1305: the baseline stores `maxHeight` as a length (`Quantity&lt;FltX&gt;`), while the current C# item model keeps `MaxHeight` as a `UInt64` layer
+    /// the baseline stores `maxHeight` as a length (`Quantity&lt;FltX&gt;`), while the current C# item model keeps `MaxHeight` as a `UInt64` layer
     /// count. That is a real semantic difference and cannot be papered over by conversion: treating a layer count as a length would let the height
     /// gate silently pass. So it is modelled honestly as "unknown means null", and the policies refuse whenever the height is unknown.
     /// </remarks>
@@ -330,7 +330,7 @@ public sealed record WeightAttribute(UInt64 MaxLayer) : AbstractWeightAttribute 
 /// <summary>策略里用到的数量比较 / The quantity comparisons the policies need.</summary>
 /// <remarks>
 /// C# 的 `Quantity` 算术返回 `Result`（单位不匹配会失败），而基线的 `gr`／`leq` 直接给出布尔。 这里把两者对齐成
-/// "单位不匹配即判否"： 一个算不出来的比较不能当作"允许堆叠"。 这是本批唯一的行为选择，写在这里而不是散在四个策略里。
+/// "单位不匹配即判否"： 一个算不出来的比较不能当作"允许堆叠"。 这是这里唯一的行为选择，写在这里而不是散在四个策略里。
 ///
 /// C# `Quantity` arithmetic returns `Result` (a unit mismatch fails) while the baseline's `gr`/`leq` yield a boolean. The bridge here is "a unit
 /// mismatch decides false": a comparison that cannot be computed must never count as "stacking allowed". This is the batch's only behavioural

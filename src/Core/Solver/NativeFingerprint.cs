@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 全种类结构的审计指纹 / Audit fingerprint across every structure kind.
 /// &lt;/summary>
 /// &lt;remarks>
-/// B1214 按基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint` 补，
+/// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint` 补，
 /// **覆盖快路径与 PWL / ABS / MAX / 半连续 / 二值逻辑五类结构行**。
 ///
 /// **缺口（明确记录，不静默丢弃）：** **基线的这个函数还接受 `indicators` 与 `maskings` 两个列表，
@@ -26,12 +26,12 @@ namespace Fuookami.Ospf.Core.Solver;
 /// `impliedCondition`、`conditionalValue`、`equivalentResultKeys`，以及 `definition`**），
 /// **不是"补两个 record"就够的。**
 ///
-/// **所以本批<b>不接受</b>这两个参数，而不是接受之后忽略它们。**
+/// **所以这里<b>不接受</b>这两个参数，而不是接受之后忽略它们。**
 /// **"接受但忽略"会让指纹看起来覆盖了指示器，而实际上没有——
 /// 那是最坏的一种：一个安静的谎。**
 ///
 /// **同理，schema 阶梯里 `-functions-indicator-2..8` 与 `-functions-masking-1/2` 七个分支
-/// <b>本批不存在</b>：它们的前提（`indicators` / `maskings` 非空）在本签名下不可达。**
+/// <b>这里不存在</b>：它们的前提（`indicators` / `maskings` 非空）在本签名下不可达。**
 /// **七个分支是<b>缺的</b>，不是被合并成别的分支。**
 ///
 /// **快路径：所有非 PWL 结构都为空时，直接交给 `piecewiseFingerprint`。**
@@ -52,7 +52,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// `difference`, `impliedCondition`, `conditionalValue`, `equivalentResultKeys`, and `definition`**) — far more than "two
 /// records".**
 ///
-/// **So this batch <b>does not accept</b> those parameters rather than accepting and ignoring them.** **"Accepted but
+/// **So those parameters are <b>not accepted</b> at all, rather than accepted and ignored.** **"Accepted but
 /// ignored" would make the fingerprint look like it covers indicators while it does not — the worst kind: a quiet
 /// lie.**
 ///
@@ -91,10 +91,10 @@ public static class NativeFingerprint
         ArgumentNullException.ThrowIfNull(binaryLogic);
         ArgumentNullException.ThrowIfNull(backendName);
 
-        // **指示器与遮盖是可选参数：B1214 时它们还不存在，本批接进来但不破坏既有调用点。**
+        // **指示器与遮盖是可选参数：当时它们还不存在，这里接进来但不破坏既有调用点。**
         // **空集合与 `null` 等价，两种写法都表示"没有这一类结构"。**
         //
-        // **Indicators and maskings are optional: they did not exist in B1214, and this batch wires them in without
+        // **Indicators and maskings are optional: they did not exist, and them in without
         // breaking existing call sites.** **An empty collection and `null` are equivalent.**
         IReadOnlyList<NativeIndicatorData> indicatorList =
             indicators ?? Array.Empty<NativeIndicatorData>();
@@ -398,7 +398,7 @@ public static class NativeFingerprint
 
     /// &lt;summary>按基线阶梯选 schema 版本 / Pick the schema version following the baseline ladder.&lt;/summary>
     /// &lt;remarks>
-    /// **基线的阶梯有十三个分支，本批只有<b>五个</b>可达：**
+    /// **基线的阶梯有十三个分支，这里只有<b>五个</b>可达：**
     /// **`binary-logic-1`、`semi-1`、`max-1`、`abs-1`、`pwl-abs-1`。**
     ///
     /// **另外八个（`masking-1`、`masking-2`、`indicator-2..8`）的前提是指示器或遮盖非空，
@@ -409,7 +409,7 @@ public static class NativeFingerprint
     ///
     /// **所以要测的不是"某一个分支对不对"，而是<b>相邻两个同时非空时谁赢</b>。**
     ///
-    /// **The baseline ladder has thirteen branches; this batch has <b>five</b> reachable:**
+    /// **The baseline ladder has thirteen branches; <b>five</b> are reachable here:**
     /// **`binary-logic-1`, `semi-1`, `max-1`, `abs-1`, `pwl-abs-1`.**
     ///
     /// **The other eight (`masking-1/2`, `indicator-2..8`) presuppose indicators or maskings, absent from this signature —
@@ -570,7 +570,7 @@ public static class NativeFingerprint
     ///
     /// **The baseline's interpolation yields Kotlin's `true`/`false`, differing in <b>case</b> from .NET's
     /// `True`/`False`.** **Lowercase is used here to match the baseline's text shape — but since the fingerprint text is
-    /// not guaranteed to match across languages (recorded in B1213), this choice only affects self-consistency.**
+    /// not guaranteed to match across languages (recorded), this choice only affects self-consistency.**
     /// &lt;/remarks>
     public static string BoolText(bool value) => value ? "true" : "false";
 

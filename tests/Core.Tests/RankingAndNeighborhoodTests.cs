@@ -167,9 +167,9 @@ public sealed class NeighborhoodTests {
 
     /// <summary>**带边界时邻域解真的被夹到区间内** / With bounds the neighbour is really clamped into the interval.</summary>
     /// <remarks>
-    /// 这是 Batch 168 之前缺失的验证：`StubModel` 读不到边界，任何"在区间内"的断言都恒真。这里用 `BoundedStubModel([-10, 10])`，
+ /// 这是 earlier 之前缺失的验证：`StubModel` 读不到边界，任何"在区间内"的断言都恒真。这里用 `BoundedStubModel([-10, 10])`，
     /// 均匀扰动的步长是 `(unit - 0.5) * width = ±10`，起点取 9.5 使越界必然发生；**若夹紧失效值会超过 10**。
-    /// This validation was missing before Batch 168: `StubModel` cannot read bounds, so any "within the interval" assertion was vacuous.
+ /// This validation was missing before earlier: `StubModel` cannot read bounds, so any "within the interval" assertion was vacuous.
     /// Here `BoundedStubModel([-10, 10])` yields a uniform step of `(unit - 0.5) * width = ±10` from an origin of 9.5, so an overflow is
     /// guaranteed; **without clamping the value would exceed 10**.
     /// </remarks>

@@ -21,7 +21,7 @@ public static class PowerUnits {
     /// <summary>马力 / Horsepower (1 hp = 745.69987158 W).</summary>
     public static readonly PhysicalUnit Horsepower = new DerivedUnit(Watt.ScaleMultiply(Scale.Invoke(745.69987158)), "horsepower", "hp");
 
-    // 以下 4 个是 B1143 按基线 Power.kt 补的，**而这一组里有一个同名不同值的陷阱。**
+    // 以下 4 个按基线 `Power.kt` 补齐，**而这一组里有一个同名不同值的陷阱。**
     //
     // **基线的 `Horsepower` 是 735 W（公制马力 PS），而本仓的 `Horsepower` 是 745.69987 W（机械马力）。**
     // **同一个名字，两个差 1.4% 的值——而 `hp` 这个符号在两种语境下都在用。**
@@ -34,7 +34,7 @@ public static class PowerUnits {
     // **它忘了乘换算因子：550 × 0.3048 × 4.4482216152605 = 745.69987 W**，
     // **正好等于机械马力。所以 `UKHorsepower` 就是本仓既有的 `Horsepower`。**
     //
-    // The four below were added in B1143 from Power.kt, **and this group carries a same-name-different-value trap.**
+    // The four below were added from Power.kt, **and this group carries a same-name-different-value trap.**
     //
     // **The baseline `Horsepower` is 735 W (metric PS) while this repo Horsepower is 745.69987 W (mechanical).**
     // **One name, two values 1.4% apart, and the symbol `hp` is used in both senses.**
@@ -49,10 +49,10 @@ public static class PowerUnits {
 
     /// <summary>**焦耳每秒（与瓦特同值，独立成对象）** / Joule per second.</summary>
     /// <remarks>
-    /// **与 B1142 的 `AmpereSecond` 同理：数值相同而名字不同，所以必须是独立对象，不能做别名**——
+    /// **与 `AmpereSecond` 同理：数值相同而名字不同，所以必须是独立对象，不能做别名**——
     /// **否则按名字查 `J/s` 会拿到 `"watt"`，符号也跟着错。**
     ///
-    /// **Same as `AmpereSecond` in B1142: equal value, different name, so it must be its own object rather than an
+    /// **Same as `AmpereSecond`: equal value, different name, so it must be its own object rather than an
     /// alias** — **otherwise looking up `J/s` returns "watt", with the wrong symbol.**
     /// </remarks>
     public static readonly PhysicalUnit JoulePerSecond = new DerivedUnit(

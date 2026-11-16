@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// ① **`mod 1` 是取小数部分，不是取绝对值**——**负数坐标（环面上的左侧）取绝对值会折返到右边，破坏环面拓扑**；
 /// ② **两个方程都用同一个 `cos(2πx)`**，**而不是第二个用 `cos(2πy)`。**
 ///
-/// The Sinai map from the baseline, added in B1146.
+/// The Sinai map from the baseline.
 ///
 /// <c>x' = (x + y + r·cos(2πx)) mod 1</c>, <c>y' = (y + r·cos(2πx)) mod 1</c>.
 ///

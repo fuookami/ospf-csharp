@@ -17,17 +17,17 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// The quadratic elastic builder must **preserve the original constraints and objective**, not return a shell.
 /// </summary>
 /// <remarks>
-/// B310 之前五个方法全部返回**约束全空、目标为空**的模型：
+/// 之前五个方法全部返回**约束全空、目标为空**的模型：
 ///
 /// ```csharp
-/// new QuadraticConstraintBatch(new SparseQuadraticMatrix(), ..., Array.Empty<ConstraintSource>())
-/// QuadraticObjective.Create(ObjectCategory.Minimum, Array.Empty<QuadraticObjectiveCell>())
+/// new QuadraticConstraintBatch(new SparseQuadraticMatrix,..., Array.Empty<ConstraintSource>)
+/// QuadraticObjective.Create(ObjectCategory.Minimum, Array.Empty<QuadraticObjectiveCell>)
 /// ```
 ///
 /// **保留变量表、丢掉全部约束，然后报告成功**——调用方拿到的模型看起来合法，解出来是一个任意可行点，
 /// 而且没有任何报错。这些测试的核心判据就是**约束没被丢掉**。
 ///
-/// Before B310 all five methods returned a model with **zero constraints and an empty objective**. **Keeping the variable table while dropping every
+/// Before all five methods returned a model with **zero constraints and an empty objective**. **Keeping the variable table while dropping every
 /// constraint, then reporting success** — the caller receives something that looks legitimate, solves to an arbitrary feasible point, and sees no error. The
 /// core criterion here is that **the constraints are not dropped**.
 /// </remarks>
@@ -75,7 +75,7 @@ public class QuadraticTetradElasticBuilderTest {
     /// <remarks>
     /// **这是整批最重要的一条**：空壳实现返回的约束数是 0，而正确实现是"原约束 + 变量弹性行"。
     ///
-    /// **This is the batch's most important criterion**: the shell returns zero constraints, while a correct implementation returns "original rows plus
+    /// **This is the most important criterion here**: the shell returns zero constraints, while a correct implementation returns "original rows plus
     /// per-variable elastic rows".
     /// </remarks>
     [Fact]

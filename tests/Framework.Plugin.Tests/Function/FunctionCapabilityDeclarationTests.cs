@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// A declaration that is detected, recorded, and never read.
 /// </summary>
 /// <remarks>
-/// **B1265 发现 CPLEX／COPT 的 `PiecewiseLinearConstraint` 申报超过实际。B1268 顺着这个形状查了<b>全部</b>申报，
+/// **发现 CPLEX／COPT 的 `PiecewiseLinearConstraint` 申报超过实际。顺着这个形状查了<b>全部</b>申报，
 /// 结果比那一处严重得多：**
 ///
 /// 1. **三个插件合计申报 <b>13 项</b>原生能力**（Gurobi 8、CPLEX 2、COPT 3）
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// **它不是 bug：没有任何一个解因此算错。它是<b>一块镜子</b>——
 /// 照着 SDK 的样子，报告一份从不被使用、也从不被验证的能力清单。**
 ///
-/// **B1265 found CPLEX/COPT's `PiecewiseLinearConstraint` declaring beyond reality; B1268 checked <b>every</b> declaration
+/// **Found CPLEX/COPT's `PiecewiseLinearConstraint` declaring beyond reality; a follow-up checked <b>every</b> declaration
 /// and found something worse: 1) three plugins declare <b>13</b> native capabilities; 2) <b>not one</b> native constructor
 /// call exists anywhere in `src/`; 3) `Supports(...)` has <b>zero</b> production callers — only tests call it.**
 ///
@@ -135,7 +135,7 @@ public class FunctionCapabilityDeclarationTests
     /// names and order match one-to-one.** **The 6 qualifiers are not lost, they live in `FunctionUsageSummary`, which is a
     /// reasonable split.** **But "one member at a time" invites the next reader to verify a set that can <b>never</b> be equal.**
     /// **So the criterion now pins the <b>accurate</b> relation: 9 capabilities here, 6 qualifiers there.** **A claim that needs
-    /// discounting is worse than a statement of the split.****
+    /// discounting is worse than a statement of the split.**
     /// </remarks>
     [Fact]
     public void TheEnum_ShouldKeepMirroringTheBaseline() {

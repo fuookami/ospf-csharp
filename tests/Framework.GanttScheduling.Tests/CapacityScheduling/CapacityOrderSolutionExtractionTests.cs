@@ -1,4 +1,4 @@
-// 容量调度的解真的读得回来（B731）/ Capacity scheduling's solution is really read back (B731).
+// 容量调度的解真的读得回来/ Capacity scheduling's solution is really read back.
 
 using System;
 using System.Collections.Generic;
@@ -17,17 +17,17 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **容量调度的解真的读得回来（B731）** / Capacity scheduling's solution is really read back (B731).
+/// **容量调度的解真的读得回来** / Capacity scheduling's solution is really read back.
 /// </summary>
 /// <remarks>
 /// 三个 `ExtractSolution` 第一版都返回 `Ok` 加一个**分配表为空**的 `CapacitySchedulingSolution`。调用方读到的是
 /// 「排好了，什么都没排」——**空解和真解无法区分**，这是事后对账时最难发现的一类缺陷。
 ///
-/// B731 之后：`CapacityOrderCompilation` 真的从模型读回 `x[动作, 时隙, 顺序位]`，按 (动作, 时隙) 汇总；
+/// 之后：`CapacityOrderCompilation` 真的从模型读回 `x[动作, 时隙, 顺序位]`，按 (动作, 时隙) 汇总；
 /// 另外两个编译对象**没有决策变量**，所以显式失败，而不是给一份空计划。
 ///
 /// All three `ExtractSolution` bodies used to return `Ok` with an **empty allocation table**. The caller read "solved, nothing scheduled" — **an empty solution and a real one cannot be
-/// told apart**, the hardest defect to find afterwards. After B731, `CapacityOrderCompilation` really reads `x[action, slot, order position]` back and sums per (action, slot), while the
+/// told apart**, the hardest defect to find afterwards. After，`CapacityOrderCompilation` really reads `x[action, slot, order position]` back and sums per (action, slot), while the
 /// other two compilations **have no decision variables** and therefore fail explicitly instead of handing back an empty plan.
 /// </remarks>
 public class CapacityOrderSolutionExtractionTests {
@@ -108,8 +108,8 @@ public class CapacityOrderSolutionExtractionTests {
         ZeroAll(model, variables);
         Set(model, variables, 0, 0, 0, 3.0);
         Set(model, variables, 0, 0, 1, 2.0);
-        // **选中标记也要写回**：B734 起解读同时读 `b`，只写数量会让提取显式失败——这正是想要的行为。
-        // **The selection flags are written back too**: since B734 the extraction reads `b` as well, and writing amounts alone makes it fail explicitly — which is the intent.
+        // **选中标记也要写回**： 起解读同时读 `b`，只写数量会让提取显式失败——这正是想要的行为。
+        // **The selection flags are written back too**: since then the extraction reads `b` as well, and writing amounts alone makes it fail explicitly — which is the intent.
         SetSelection(model, variables, 0, 0, 0, 1.0);
         SetSelection(model, variables, 0, 0, 1, 1.0);
 

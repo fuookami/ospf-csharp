@@ -364,7 +364,7 @@ public sealed class RouteCompilation<V> where V : struct, IRealNumber<V> {
     /// <summary>
     /// 为指定新增列注册增量路线成本目标 / Register an incremental route-cost objective for the given columns.
     /// </summary>
-    /// <param name="objectiveRoutes">本批新增路线 / The routes added in this batch.</param>
+    /// <param name="objectiveRoutes">这里新增路线 / The routes added in.</param>
     /// <param name="model">线性元模型 / Linear meta model.</param>
     /// <param name="name">目标名称 / Objective name.</param>
     /// <returns>操作结果 / The operation result.</returns>

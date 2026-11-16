@@ -26,8 +26,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **mask 列可能共享，而共享决定了谁保留它。**
 ///
-/// adds
-///
 /// **The mask column may be shared, and sharing decides who retains it.**
 /// </remarks>
 public class MaskingStructureTests
@@ -36,7 +34,7 @@ public class MaskingStructureTests
     /// **只在定义 mask 时才保留它** / The mask is retained only when defined here.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **共享 mask 由别的结构定义，这里再登记一次会让同一个列被登记两遍。**
     /// **"登记两遍"在多数调用方那里表现为重复行，不是错误——求解照常。**

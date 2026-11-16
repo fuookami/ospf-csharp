@@ -1,4 +1,4 @@
-// 生成诊断的计数结构（B757）/ The generation diagnostics counters (B757).
+// 生成诊断的计数结构/ The generation diagnostics counters.
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **生成诊断的计数结构（B757）** / The generation diagnostics counters (B757).
+/// **生成诊断的计数结构** / The generation diagnostics counters.
 /// </summary>
 /// <remarks>
 /// 基线 `Diagnostics.kt` 是两个**纯计数**类型，不打印、不写文件。做成"打印函数"的版本没法在判据里断言——

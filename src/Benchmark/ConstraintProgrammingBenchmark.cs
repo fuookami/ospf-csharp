@@ -88,14 +88,14 @@ public class ConstraintProgrammingBenchmark {
         _schedulingModel = BuildSchedulingModel(count);
         _optionalSchedulingModel = BuildOptionalSchedulingModel(count);
         _variableDurationSchedulingModel = BuildVariableDurationSchedulingModel(count);
-        // **三份可求解夹具的作业数也必须来自 `Dataset`**（B924）：此前写死 4 / 3 / 3，
+        // **三份可求解夹具的作业数也必须来自 `Dataset`**：此前写死 4 / 3 / 3，
         // 于是三个排程求解基准三档测同一条路径。
         //
         // **但不能直接用 `count`**：`FakeConstraintProgrammingSolver` 是**穷举**的，作业数一上去组合数就爆
         // （实测 `count=8` 时单个测试跑了 **5 分 37 秒**）。所以这三份走**更缓的进阶** `count / 2 + 1` = 3 / 4 / 5：
         // 规模确实进到被测路径，穷举仍然跑得完。**基准要能反复跑，比"规模更大"重要。**
         //
-        // **The three solvable fixtures must take their job count from `Dataset`** (B924): they were hard-coded to 4 / 3 / 3, so the three scheduling solves measured one
+        // **The three solvable fixtures must take their job count from `Dataset`**: they were hard-coded to 4 / 3 / 3, so the three scheduling solves measured one
         // path. **But not `count` directly**: `FakeConstraintProgrammingSolver` **enumerates**, and the combination count explodes as jobs grow (measured: `count=8` took
         // **5 minutes 37 seconds** for a single test). These three therefore use a **gentler** progression `count / 2 + 1` = 3 / 4 / 5 — the scale reaches the measured path
         // and the enumeration still finishes. **A benchmark that runs repeatedly matters more than a bigger scale.**
@@ -184,21 +184,21 @@ public class ConstraintProgrammingBenchmark {
     /// <summary>主问题变量数 / Master variable count.</summary>
     /// <remarks>
     /// 给规模有效性判据读的：`BendersSolve` 的返回值是结果字符串，**看不出规模**，所以判据需要这个数字。
-    /// 它必须由 `Setup` 按 `Dataset` 填出来——**否则三档测的还是同一条路径**（B922）。
+    /// 它必须由 `Setup` 按 `Dataset` 填出来——**否则三档测的还是同一条路径**。
     ///
     /// Read by the scale-validity criterion: `BendersSolve` returns the result string, which **shows no scale**, so the criterion needs this number. `Setup` must fill
-    /// it from `Dataset` — **otherwise all three tiers measure one path** (B922).
+    /// it from `Dataset` — **otherwise all three tiers measure one path** .
     /// </remarks>
     public int MasterVariableCount => _bendersMasterModel.Tokens.Tokens.Count;
 
     /// <summary>可求解排程夹具的变量数 / Variable count of the solvable scheduling fixture.</summary>
     /// <remarks>
-    /// 给规模有效性判据读的。`SchedulingSolve` 返回的是**结果的 `ToString()`**——那个字符串长度**与作业数无关**
-    /// （B924 实测三档都是 2910 字符），所以判据必须读这个数字。
+    /// 给规模有效性判据读的。`SchedulingSolve` 返回的是**结果的 `ToString`**——那个字符串长度**与作业数无关**
+    /// （三档都是 2910 字符），所以判据必须读这个数字。
     /// **它量的是求解器真正消费的那个模型**，不是"配置里写了多少"。
     ///
-    /// Read by the scale-validity criterion. `SchedulingSolve` returns the **result's `ToString()`**, whose length **does not depend on the job count** (measured at
-    /// 2910 characters for all three tiers in B924), so the criterion must read this number. **It measures the model the solver actually consumes**, not what the
+    /// Read by the scale-validity criterion. `SchedulingSolve` returns the **result's `ToString`**, whose length **does not depend on the job count** (measured at
+    /// 2910 characters for all three tiers), so the criterion must read this number. **It measures the model the solver actually consumes**, not what the
     /// configuration says.
     /// </remarks>
     public int SolvableSchedulingVariableCount =>
@@ -431,11 +431,11 @@ public class ConstraintProgrammingBenchmark {
 
     private (LinearMetaModel<Flt64>, ConstraintProgrammingModel, LogicBasedBendersEngine)
         BuildBenders(int count) {
-        // **规模必须真的进到被测路径**（B922）：这张夹具此前**丢掉了 `Dataset`**，三档测的是同一条路径
+        // **规模必须真的进到被测路径**：这张夹具此前**丢掉了 `Dataset`**，三档测的是同一条路径
         // （实测 small/medium/large = 45.4/47.1/45.6 µs，分配**完全相同** 129.16 KB）。现在主问题变量、子问题变量、
         // 子问题约束与绑定条数全部按 `count` 生成。
         //
-        // **The scale must reach the measured path** (B922): this fixture **dropped `Dataset`**, so all three tiers measured one path (measured
+        // **The scale must reach the measured path**: this fixture **dropped `Dataset`**, so all three tiers measured one path (measured
         // small/medium/large = 45.4/47.1/45.6 µs with **identical** 129.16 KB allocations). Master variables, subproblem variables, subproblem constraints and
         // bindings are all generated from `count` now.
         var master = new LinearMetaModel<Flt64>(name: "benchmark-benders-master");
@@ -480,9 +480,9 @@ public class ConstraintProgrammingBenchmark {
     /// <param name="masterVariables">主问题变量 / The master variables.</param>
     /// <returns>键到值的映射 / Key-to-value map.</returns>
     /// <remarks>
-    /// B922 之前这里只写死一个 `"benders"` 键，于是**绑定条数一变就取不到值**——规模参数能进夹具，却进不了这条映射。
+    /// 之前这里只写死一个 `"benders"` 键，于是**绑定条数一变就取不到值**——规模参数能进夹具，却进不了这条映射。
     ///
-    /// Before B922 this hard-coded a single `"benders"` key, so **any change in the binding count lost the values** — the scale parameter could reach the fixture
+    /// Before this hard-coded a single `"benders"` key, so **any change in the binding count lost the values** — the scale parameter could reach the fixture
     /// but not this map.
     /// </remarks>
     private static Dictionary<string, Flt64> MasterValues(

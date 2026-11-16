@@ -179,8 +179,8 @@ public sealed class NetworkDesignAggregation<V> where V : struct, IRealNumber<V>
                 && !Construction.Facilities.ContainsKey(arc.To)) {
                 continue;
             }
-            // 容量行由 `Capacities()` 按 `arc:<id>` 命名生成；缺失即表示场景弧没有可联动的资源。
-            // Rows are named `arc:<id>` by `Capacities()`; a miss means the scenario arc has no resource to link against.
+            // 容量行由 `Capacities` 按 `arc:<id>` 命名生成；缺失即表示场景弧没有可联动的资源。
+            // Rows are named `arc:<id>` by `Capacities`; a miss means the scenario arc has no resource to link against.
             if (!capacityRows.TryGetValue($"arc:{arcId.Value}", out FlowCapacity<V>? row)) {
                 return NetworkSchedulingErrors.TryFailure(
                     $"缺失通道容量行：{arcId.Value} / Missing service capacity row: {arcId.Value}");

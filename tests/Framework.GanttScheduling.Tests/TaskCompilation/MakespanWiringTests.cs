@@ -16,10 +16,10 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **完工时间从空壳变成真符号（B546）** / The makespan goes from an empty stub to a real symbol (B546).
+/// **完工时间从空壳变成真符号** / The makespan goes from an empty stub to a real symbol.
 /// </summary>
 /// <remarks>
-/// `Makespan.Register` 原来返回 `Ok` 却什么都没做。本批：任务时间建 `estimate_end_time_*`（各任务时间窗结束点），
+/// `Makespan.Register` 原来返回 `Ok` 却什么都没做。这里：任务时间建 `estimate_end_time_*`（各任务时间窗结束点），
 /// 完工时间对它们取 `MaxFunction`，最小化把它加进目标。
 ///
 /// 这条链上每一环都能静默地错：
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// <item>取 `Min` 而不是 `Max` → 变成"最早完成的那个任务"，正好把排序反了。</item>
 /// </list>
 ///
-/// `Makespan.Register` used to return `Ok` and do nothing. This batch builds `estimate_end_time_*` (each task's window end) in the task time, takes a `MaxFunction` over them,
+/// `Makespan.Register` used to return `Ok` and do nothing. builds `estimate_end_time_*` (each task's window end) in the task time, takes a `MaxFunction` over them,
 /// and the minimisation adds it to the objective. Every link can fail silently: no end-time table → the makespan is the constant 0 and the objective minimises 0; skipping tasks
 /// without a window → a smaller makespan that still looks plausible; taking `Min` instead of `Max` → "the earliest finished task", exactly backwards.
 /// </remarks>
@@ -102,10 +102,10 @@ public class MakespanWiringTests {
 
     /// <summary>**重复注册是幂等的** / Re-registering is idempotent.</summary>
     /// <remarks>
-    /// B539 在 `Compilation.Register` 上栽过一次：第二次注册撞 `SymbolRepetitive`。
+    /// 在 `Compilation.Register` 上栽过一次：第二次注册撞 `SymbolRepetitive`。
     /// 这里同样要有闸——否则"注册两次"这条最普通的使用方式直接炸。
     ///
-    /// B539 hit this on `Compilation.Register`: the second registration tripped `SymbolRepetitive`. The same guard is needed here, or the most ordinary "register twice" blows up.
+    /// hit this on `Compilation.Register`: the second registration tripped `SymbolRepetitive`. The same guard is needed here, or the most ordinary "register twice" blows up.
     /// </remarks>
     [Fact]
     public void TaskTime_ShouldBeIdempotent() {

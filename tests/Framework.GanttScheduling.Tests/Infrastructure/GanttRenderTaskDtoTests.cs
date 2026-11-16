@@ -1,4 +1,4 @@
-// 甘特渲染 DTO（B678）的判据 / Criteria for the Gantt render DTOs (B678).
+// 甘特渲染 DTO的判据 / Criteria for the Gantt render DTOs.
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Infrastructure;
 
 /// <summary>
-/// **甘特渲染 DTO（B678）** / The Gantt render DTOs (B678).
+/// **甘特渲染 DTO** / The Gantt render DTOs.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**计划时刻与实际时刻分开**（只给必填项时计划为 null，不拿实际冒充）、

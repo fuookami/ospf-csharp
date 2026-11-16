@@ -19,10 +19,10 @@ public sealed class StowageContext
 {
     /// <summary>配载聚合；未初始化时为 `null` / The stowage aggregation, `null` before initialisation</summary>
     /// <remarks>
-    /// **可空**。B606 之前是 `null!`，调用方在未初始化时拿到 `null` 却看不到任何提示，`Init` 也永远返回 `Ok`——
+    /// **可空**。 之前是 `null!`，调用方在未初始化时拿到 `null` 却看不到任何提示，`Init` 也永远返回 `Ok`——
     /// 一个"成功"但什么都没做的上下文。现在未初始化就是 `null`，下游必须显式处理。
     ///
-    /// **Nullable.** Before B606 this was `null!`: a caller that had not initialised saw `null` with no hint, and `Init` always returned `Ok` — a context that "succeeded"
+    /// **Nullable.** Before this was `null!`: a caller that had not initialised saw `null` with no hint, and `Init` always returned `Ok` — a context that "succeeded"
     /// while doing nothing. Now an uninitialised context is simply `null`, which downstream must handle explicitly.
     /// </remarks>
     public StowageAggregation? Aggregation { get; private set; }
@@ -121,10 +121,10 @@ public sealed class StowageContext
     /// <param name="model">线性元模型 / Linear meta model</param>
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
-    /// **基线这一层是纯转发**（B825 实测）：`StowageContext.registerForBendersMP` 只调 `aggregation.registerForBendersMP`，没有任何自己的逻辑。
+    /// **基线这一层是纯转发**：`StowageContext.registerForBendersMP` 只调 `aggregation.registerForBendersMP`，没有任何自己的逻辑。
     /// 本仓此前没有它，于是 `StowageContext` 在 Benders 覆盖表上算"缺一套"。
     ///
-    /// **This layer is a pure forwarder in the baseline** (measured by B825): the context only delegates to the aggregation. It was missing here, which is why
+    /// **This layer is a pure forwarder in the baseline** : the context only delegates to the aggregation. It was missing here, which is why
     /// `StowageContext` counted as "one set short" in the Benders coverage table.
     /// </remarks>
     public Try RegisterForBendersMP(StowageMode stowageMode, LinearMetaModel<Flt64> model)
@@ -164,10 +164,10 @@ public sealed class StowageContext
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
     /// **前提是同一个模型上已经跑过 `RegisterForBendersMP`**：业载只能注册一次，重复会失败（判据实测过）。
-    /// 这里不接 `solution` 参数，因为该聚合的注册根本不读它（B833 钉住的前提）。
+    /// 这里不接 `solution` 参数，因为该聚合的注册根本不读它（钉住的前提）。
     ///
     /// **The premise is that `RegisterForBendersMP` already ran on the same model**: the payload can be registered only once and a repeat fails (measured by a
-    /// criterion). No `solution` parameter here, because that aggregation's registration never reads it (a premise pinned in B833).
+    /// criterion). No `solution` parameter here, because that aggregation's registration never reads it (a premise pinned).
     /// </remarks>
     public Try RegisterForBendersSPWithoutPayload(LinearMetaModel<Flt64> model)
     {
@@ -188,10 +188,10 @@ public sealed class StowageContext
     /// <returns>执行结果 / Execution result</returns>
     /// <remarks>
     /// **基线这里是个怪处，照抄并记下来**：`flushForBendersSP` 的转发目标是 `aggregation.registerForBendersSP`，**不是某个 flush**。
-    /// 换句话说"刷新"在配载域等同于"再注册一次子问题"。看起来像笔误，但**没有证据支持改写它**（B785→B786 的规矩），所以照抄。
+    /// 换句话说"刷新"在配载域等同于"再注册一次子问题"。看起来像笔误，但**没有证据支持改写它**，所以照抄。
     ///
     /// **This is the baseline quirk, copied and named**: the flush forwards to `aggregation.registerForBendersSP`, **not to any flush** — "flush" here means
-    /// "register the sub-problem again". It looks like a typo, but **there is no evidence to rewrite it** (the B785→B786 rule), so it is copied.
+    /// "register the sub-problem again". It looks like a typo, but **there is no evidence to rewrite it** , so it is copied.
     /// </remarks>
     public Try FlushForBendersSP(StowageMode stowageMode, LinearMetaModel<Flt64> model, IReadOnlyList<double> solution)
     {

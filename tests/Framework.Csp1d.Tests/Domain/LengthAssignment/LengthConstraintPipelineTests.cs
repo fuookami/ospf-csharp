@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.LengthAssignment;
 /// **长度约束管线的四条约束** / The length constraint pipeline's four constraints.
 /// </summary>
 /// <remarks>
-/// **B380 记的缺口**："`LengthConstraintPipeline` 的其余约束（超长上限等）没有判据"——
-/// 上一批只间接看到了下界/上界两条。
+/// **记的缺口**："`LengthConstraintPipeline` 的其余约束（超长上限等）没有判据"——
+/// 此前只间接看到了下界/上界两条。
 ///
 /// 四条约束各有各的**方向**与**系数**，写错的后果都是**静默的**：
 ///
@@ -33,11 +33,11 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.LengthAssignment;
 /// | 超长上限 | `over <= overBound` | 同上 |
 /// | **关联** | `assigned - over <= maxOver` | **系数写成 `+1` ⇒ 关联彻底失效** |
 ///
-/// 最后一行是本批的重点：`-1` 写成 `1` 时约束仍然"存在"、名字仍然对，
+/// 最后一行是这里的重点：`-1` 写成 `1` 时约束仍然"存在"、名字仍然对，
 /// **只有系数检查能发现**。
 ///
-/// **B380's gap**: "the pipeline's other constraints (over-length bound and the rest) have no criteria" — the previous batch only saw the lower and upper bounds
-/// indirectly. Each of the four has its own **direction** and **coefficient**, and every mistake fails **silently** (table above). The last row is this batch's focus:
+/// **the earlier gap**: "the pipeline's other constraints (over-length bound and the rest) have no criteria" — the previous step only saw the lower and upper bounds
+/// indirectly. Each of the four has its own **direction** and **coefficient**, and every mistake fails **silently** (table above). The last row is's focus:
 /// turning `-1` into `1` leaves the constraint present and correctly named — **only a coefficient check catches it**.
 /// </remarks>
 public class LengthConstraintPipelineTests {
@@ -114,7 +114,7 @@ public class LengthConstraintPipelineTests {
     /// `assigned + over <= maxOver`——**名字对、方向对、右端对，语义完全相反**：
     /// 它会把"超长量"变成"额外消耗"，**越超长越不可行**。
     ///
-    /// 这是本批唯一能钉住它的判据。
+    /// 这是这里唯一能钉住它的判据。
     ///
     /// This pins **only the coefficients**, since the direction and right-hand side are covered above. Turning the `-1` in `assigned - over <= maxOver` into `+1` gives
     /// `assigned + over <= maxOver` — **right name, right direction, right right-hand side, opposite meaning**: it makes the over-length amount an extra cost, so the

@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 从一个线性多项式推出区间 / Derive an interval from a linear polynomial.
 /// </summary>
 /// <remarks>
-/// B1156。**这段逻辑原本在 `SelectFunction` 与 `ElementFunction` 里各有一份，
+/// **这段逻辑原本在 `SelectFunction` 与 `ElementFunction` 里各有一份，
 /// 而 `ComplementarityFunction` 需要第三份**——**第三份出现时才抽出来，而不是第二份。**
 ///
 /// **推不出来就返回 `null`，不猜。** **猜一个界会让约束"构造成功"而夹在错误的区间上，
@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **返回 `null` 的三种情况**：**某个 monomial 的符号不是 `RealVar`**（它不是变量，没有区间）、
 /// **它的某个界缺失**、**某个界的值不可用**。
 ///
-/// B1156. **This logic was duplicated in `SelectFunction` and `ElementFunction`, and
+/// **This logic was duplicated in `SelectFunction` and `ElementFunction`, and
 /// `ComplementarityFunction` needed a third copy** — **it is extracted when the third appears, not the second.**
 ///
 /// **Returns `null` when it cannot be derived, never a guess.** **A guessed bound lets constraints "build fine" while

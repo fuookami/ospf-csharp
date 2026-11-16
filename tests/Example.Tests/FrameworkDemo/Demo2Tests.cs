@@ -95,8 +95,8 @@ public class Demo2InfrastructureTests
     {
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B737).Should().BeTrue();
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B757).Should().BeTrue();
-        // **B767 / B747 在基线里是支持的**（B827 实测）：基线只排除 `Unknown`。
-        // **B767 / B747 are supported in the baseline** (measured by B827): only `Unknown` is excluded.
+        // **/ 在基线里是支持的**：基线只排除 `Unknown`。
+        // **/ are supported in the baseline** : only `Unknown` is excluded.
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B767).Should().BeTrue();
         BendersStrategy.SupportedAircraft(AircraftTypeInput.B747).Should().BeTrue();
         BendersStrategy.SupportedAircraft(AircraftTypeInput.Unknown).Should().BeFalse();
@@ -235,14 +235,14 @@ public class Demo2ApplicationTests
     /// 所以备注里写着"P0 stub 预期如此"）。请求修好之后那条备注不再出现，**判据于是变红：它钉的是缺口，不是能力**。
     ///
     /// 现在钉两边：**不出现"域初始化失败"** / 模型对象的类别仍然是 `Minimum`（域建起来之后模型照样能建）。
-    /// `BuildModel` 成功路径上的注册与求解还没接（文件里三处 `TODO`），**那是一条独立的、早于本批的缺口**，不在这一条判据里假装已完成。
+    /// `BuildModel` 成功路径上的注册与求解还没接（文件里三处 `TODO`），**那是一条独立的、早于这里的缺口**，不在这一条判据里假装已完成。
     ///
     /// The old criterion pinned `Notes` being **non-empty** — and its only source was `Domain init failed:` (the sample request lacked the space table, loading orders and geometry,
     /// so the aircraft initialiser stopped it, and the note said "expected for P0 stubs"). With the request fixed that note never appears, **so the criterion went red: it pinned a gap,
     /// not a capability.**
     ///
     /// It now pins both sides: **no "domain init failed" note**; and the meta model's category is still `Minimum` (the model is still buildable once the domain exists). Registration and
-    /// solving on `BuildModel`'s success path are not wired yet (three `TODO`s in that file) — **a separate gap that predates this batch**, not something this criterion pretends is done.
+    /// solving on `BuildModel`'s success path are not wired yet (three `TODO`s in that file) — **a separate gap that predates**, not something this criterion pretends is done.
     /// </remarks>
     [Fact]
     public void BuildModel_ShouldInitialiseTheDomainInsteadOfNotingAFailure()
@@ -263,9 +263,9 @@ public class Demo2ApplicationTests
         demo.MetaModel.ObjectCategory.Should().Be(Fuookami.Ospf.Core.Model.Basic.ObjectCategory.Minimum);
 
         // **模型里必须真的有东西**：注册成功的唯一可观证据是 token 与约束/目标。只看"返回 Ok"会让
-        // "注册一个空聚合也返回 Ok"通过——**那正是 B769 记过的那种空壳**。
+        // "注册一个空聚合也返回 Ok"通过——**那正是 记过的那种空壳**。
         // **The model must really hold something**: the only observable evidence of registration is tokens plus constraints/objectives. Asserting "returns Ok" alone
-        // would let "registering an empty aggregation also returns Ok" pass — **exactly the shell B769 recorded**.
+        // would let "registering an empty aggregation also returns Ok" pass — **exactly the shell recorded**.
         demo.MetaModel.Tokens.Tokens.Should().NotBeEmpty("registration must produce decision variables");
         // 这条断言只需要名字，用内联循环而不是 LINQ：`Select` 在这里会撞上 `Result` 的同名扩展。
         // The assertion only needs names, so an inline loop is used instead of LINQ: `Select` here collides with the `Result` extension of the same name.
@@ -276,9 +276,9 @@ public class Demo2ApplicationTests
         string joined = string.Join(",", names);
         joined.Should().Contain("assignment_C1_P1", "the stowage model must be registered");
         joined.Should().Contain("occupied_P1", "the stowage model must register one occupancy variable per position");
-        // **B780 把这四层归结为"不新增 token"是错的——量错了计数器**：`Tokens.Tokens` 只装决策变量，
+        // 把这四层归结为"不新增 token"是错的——量错了计数器**：`Tokens.Tokens` 只装决策变量，
         // 而这四层叠的是**表达式符号**。逐层增量（约束/变量/符号）见 `Demo2RegistrationDeltaTests`，它把每一层都钉住了。
-        // **B780’s summary that these four layers add no tokens was wrong — it read the wrong counter**: `Tokens.Tokens` holds only decision variables,
+        // **’s summary that these four layers add no tokens was wrong — it read the wrong counter**: `Tokens.Tokens` holds only decision variables,
         // while these four layers stack **expression symbols**. The per-layer deltas (rows/variables/symbols) live in `Demo2RegistrationDeltaTests`, which pins every layer.
 
         demo.MetaModel.Constraints.Should().NotBeEmpty("registration must produce rows, not only variables");
@@ -301,10 +301,10 @@ public class Demo2P2ContextTests
     [Fact]
     public void SoftSecurityContext_Init_ShouldFailWhenUpstreamIsNotInitialised()
     {
-        // **B611 起软安全真正依赖上游聚合**，所以这条判据从"壳返回 Ok"改成"上游没初始化就明确失败"。
+        // **起软安全真正依赖上游聚合**，所以这条判据从"壳返回 Ok"改成"上游没初始化就明确失败"。
         // 旧判据在实现落地后反而成了"允许空壳"的许可证：它断言 `Ok`，而 `Ok` 正是空壳的形状。
         //
-        // **Since B611 soft security genuinely depends on the upstream aggregations**, so this criterion changed from "the shell returns Ok" to "an uninitialised upstream fails
+        // **Since soft security genuinely depends on the upstream aggregations**, so this criterion changed from "the shell returns Ok" to "an uninitialised upstream fails
         // explicitly". The old one had become a licence for the shell to stay empty: it asserted `Ok`, which is precisely the shell's shape.
         var aircraftCtx = new Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.AircraftContext();
         var stowageCtx = new Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.StowageContext();
@@ -325,10 +325,10 @@ public class Demo2P2ContextTests
     [Fact]
     public void MacOptimizationContext_Init_ShouldFailWhenUpstreamIsNotInitialised()
     {
-        // **B614 起重心优化真正依赖三个上游聚合**，所以这条判据从"壳返回 Ok"改成"上游没初始化就明确失败"。
+        // **起重心优化真正依赖三个上游聚合**，所以这条判据从"壳返回 Ok"改成"上游没初始化就明确失败"。
         // 旧判据断言 `Ok`，而 `Ok` 正是空壳的形状——实现落地后它成了"允许空壳"的许可证。
         //
-        // **Since B614 MAC optimisation genuinely depends on three upstream aggregations**, so this criterion changed from "the shell returns Ok" to "an uninitialised upstream fails
+        // **Since MAC optimisation genuinely depends on three upstream aggregations**, so this criterion changed from "the shell returns Ok" to "an uninitialised upstream fails
         // explicitly". The old one asserted `Ok`, which is precisely the shell's shape — after the implementation landed it became a licence for the shell to stay empty.
         var aircraftCtx = new Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.AircraftContext();
         var stowageCtx = new Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.StowageContext();
@@ -346,10 +346,10 @@ public class Demo2P2ContextTests
     [Fact]
     public void PayloadMaximizationContext_Init_ShouldFailWhenUpstreamIsNotInitialised()
     {
-        // **B612 起业载最大化真正依赖上游聚合**，所以这条判据从"壳返回 Ok"改成"上游没初始化就明确失败"。
+        // **起业载最大化真正依赖上游聚合**，所以这条判据从"壳返回 Ok"改成"上游没初始化就明确失败"。
         // 旧判据断言 `Ok`，而 `Ok` 正是空壳的形状——实现落地后它成了"允许空壳"的许可证。
         //
-        // **Since B612 payload maximization genuinely depends on the upstream aggregations**, so this criterion changed from "the shell returns Ok" to "an uninitialised upstream
+        // **Since payload maximization genuinely depends on the upstream aggregations**, so this criterion changed from "the shell returns Ok" to "an uninitialised upstream
         // fails explicitly". The old one asserted `Ok`, which is precisely the shell's shape — after the implementation landed it became a licence for the shell to stay empty.
         var aircraftCtx = new Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.AircraftContext();
         var stowageCtx = new Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.StowageContext();
@@ -378,9 +378,9 @@ public class Demo2P2ContextTests
     [Fact]
     public void SoftSecurityAggregation_ShouldRequireItsModels()
     {
-        // **B611 起这个聚合不再有无参构造**：它已经真正持有七个上游模型与一个自建的 `DivideEmptyLoading`。
+        // **起这个聚合不再有无参构造**：它已经真正持有七个上游模型与一个自建的 `DivideEmptyLoading`。
         // 这条判据从"壳返回 Ok"改成"壳的形态消失"——旧判据在实现落地后反而成了"允许空壳"的许可证。
-        // **Since B611 the aggregation has no parameterless constructor**: it genuinely holds seven upstream models plus a self-built `DivideEmptyLoading`. This criterion changed
+        // **Since the aggregation has no parameterless constructor**: it genuinely holds seven upstream models plus a self-built `DivideEmptyLoading`. This criterion changed
         // from "the shell returns Ok" to "the shell's shape is gone" — the old one had become a licence for the shell to stay empty.
         System.Type type = typeof(Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.SoftSecurityAggregation);
         type.GetConstructor(System.Type.EmptyTypes).Should().BeNull("there is no parameterless constructor any more");
@@ -390,9 +390,9 @@ public class Demo2P2ContextTests
     [Fact]
     public void MacOptimizationAggregation_ShouldRequireItsModels()
     {
-        // **B614 起这个聚合不再有无参构造**：它真正持有飞机型号、公式、总重、扭矩与安定面，并自建三个模型。
+        // **起这个聚合不再有无参构造**：它真正持有飞机型号、公式、总重、扭矩与安定面，并自建三个模型。
         // 旧判据只断言"`Register` 返回 Ok"，而 `Ok` 正是空壳的形状——实现落地后它成了"允许空壳"的许可证。
-        // **Since B614 the aggregation has no parameterless constructor**: it holds the aircraft model, formula, total weight, torque and stabilizers, and builds three models.
+        // **Since the aggregation has no parameterless constructor**: it holds the aircraft model, formula, total weight, torque and stabilizers, and builds three models.
         // The old criterion only asserted "`Register` returns Ok", which is precisely the shell's shape — after the implementation landed it became a licence for the shell to stay empty.
         System.Type type = typeof(Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.MacOptimizationAggregation);
         type.GetConstructor(System.Type.EmptyTypes).Should().BeNull("there is no parameterless constructor any more");
@@ -402,9 +402,9 @@ public class Demo2P2ContextTests
     [Fact]
     public void PayloadMaximizationAggregation_ShouldRequireItsModels()
     {
-        // **B612 起这个聚合不再有无参构造**：它真正持有飞机型号与业载模型。旧判据只断言"能创建"，
+        // **起这个聚合不再有无参构造**：它真正持有飞机型号与业载模型。旧判据只断言"能创建"，
         // 那在空壳阶段为真，实现落地后就成了"允许空壳"的许可证。
-        // **Since B612 the aggregation has no parameterless constructor**: it genuinely holds the aircraft model and the payload. The old criterion only asserted "creatable", true
+        // **Since the aggregation has no parameterless constructor**: it genuinely holds the aircraft model and the payload. The old criterion only asserted "creatable", true
         // while the shell existed and a licence for it to stay empty afterwards.
         System.Type type = typeof(Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.PayloadMaximization.PayloadMaximizationAggregation);
         type.GetConstructor(System.Type.EmptyTypes).Should().BeNull("there is no parameterless constructor any more");
@@ -529,10 +529,10 @@ public class Demo2BendersTests
 
         // Assert
         goodScore.Should().BeLessThan(poorScore);
-        // **`>= 0` 与 `<= 100` 是空断言**（B830）：`ResolveQualityScore` 最后一行就是 `Clamp(0, 100)`，
+        // **`>= 0` 与 `<= 100` 是空断言**：`ResolveQualityScore` 最后一行就是 `Clamp(0, 100)`，
         // 这两句在那之后恒真。换成"好的一半都不到"，那才是能红的东西。
         //
-        // **`>= 0` and `<= 100` were vacuous** (B830): the last line of `ResolveQualityScore` is `Clamp(0, 100)`, so both held unconditionally. "Less than half"
+        // **`>= 0` and `<= 100` were vacuous**: the last line of `ResolveQualityScore` is `Clamp(0, 100)`, so both held unconditionally. "Less than half"
         // is something that can actually fail.
         goodScore.Should().BeLessThan(poorScore / 2.0, "a run that converged in 3 iterations must be far better than one that used 60");
     }
@@ -559,8 +559,8 @@ public class Demo2BendersTests
             iterationSnapshots: stagnantSnapshots);
 
         // Assert - stagnant trajectory should give higher (worse) score
-        // **必须是严格的 `>`**（B830）：`>=` 在"轨迹风险完全没被计入"时也成立，等于没测这一项。
-        // **Strictly `>`** (B830): `>=` also holds when the trajectory risk is not counted at all, which tests nothing.
+        // **必须是严格的 `>`**：`>=` 在"轨迹风险完全没被计入"时也成立，等于没测这一项。
+        // **Strictly `>`**: `>=` also holds when the trajectory risk is not counted at all, which tests nothing.
         stagnantScore.Should().BeGreaterThan(improvingScore, "with equal gap, time and iterations only the trajectory term can differ");
     }
 

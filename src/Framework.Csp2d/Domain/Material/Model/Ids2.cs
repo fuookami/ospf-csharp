@@ -97,17 +97,17 @@ public static class Csp2dIds {
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// **`SheetShape()` 本批未移植**：基线返回 `Sheet2Shape&lt;V&gt;`，而这个类型当前住在 `Framework.Bpp2d` 里。
+/// **`SheetShape` 这里未移植**：基线返回 `Sheet2Shape&lt;V&gt;`，而这个类型当前住在 `Framework.Bpp2d` 里。
 /// 让 `Csp2d` 依赖 `Bpp2d` 会把模块归属倒过来（套裁去依赖装箱），所以先只保留面积与尺寸，
 /// **等第二个消费者出现时再把形状类型提到公共层**。
 ///
-/// **`Area()` 同样未移植**：C# 的 `Quantity&lt;V&gt;` **没有乘积运算符**，唯一的乘积助手 `QuantityArithmetic.Product` 住在 `Framework.Bpp2d` 里——
+/// **`Area` 同样未移植**：C# 的 `Quantity&lt;V&gt;` **没有乘积运算符**，唯一的乘积助手 `QuantityArithmetic.Product` 住在 `Framework.Bpp2d` 里——
 /// 用它就是同一处归属倒挂。**等公共层的量运算出现时一并接上。**
 ///
-/// **`Area()` is not ported either**: C# `Quantity&lt;V&gt;` **has no product operator**, and the only product helper `QuantityArithmetic.Product` lives in
+/// **`Area` is not ported either**: C# `Quantity&lt;V&gt;` **has no product operator**, and the only product helper `QuantityArithmetic.Product` lives in
 /// `Framework.Bpp2d` — using it is the same ownership inversion. **It comes back when a shared quantity-arithmetic layer exists.**
 ///
-/// **`SheetShape()` is not ported in this batch**: the baseline returns `Sheet2Shape&lt;V&gt;`, which currently lives in `Framework.Bpp2d`. Making `Csp2d` depend on `Bpp2d`
+/// **`SheetShape` is not ported here**: the baseline returns `Sheet2Shape&lt;V&gt;`, which currently lives in `Framework.Bpp2d`. Making `Csp2d` depend on `Bpp2d`
 /// inverts module ownership (cutting stock depending on bin packing), so only area and dimensions are kept for now — **the shape type moves to a shared layer once a
 /// second consumer appears**.
 /// </remarks>

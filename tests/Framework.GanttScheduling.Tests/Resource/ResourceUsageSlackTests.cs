@@ -1,4 +1,4 @@
-// 松弛的开关真的分两层管（B743）/ The slack switches really act at two levels (B743).
+// 松弛的开关真的分两层管/ The slack switches really act at two levels.
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **松弛的开关真的分两层管（B743）** / The slack switches really act at two levels (B743).
+/// **松弛的开关真的分两层管** / The slack switches really act at two levels.
 /// </summary>
 /// <remarks>
 /// `ResourceUsageSlackHelper.BuildSlacks` 有两层开关：**整体开关**（`overEnabled` / `lessEnabled`）与**逐时隙开关**

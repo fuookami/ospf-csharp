@@ -28,8 +28,8 @@ public class TargetWitnessTests {
     private const string X = "source:x";
 
     private static ConstraintProgrammingModelSnapshot Build(int lower, int upper, bool atLeast) {
-        // **目标方向必须与模型方向一致**，否则 `Snapshot()` 直接返回 null。
-        // **The objective direction has to match the model direction**, or `Snapshot()` returns null.
+        // **目标方向必须与模型方向一致**，否则 `Snapshot` 直接返回 null。
+        // **The objective direction has to match the model direction**, or `Snapshot` returns null.
         ObjectCategory category = atLeast ? ObjectCategory.Minimum : ObjectCategory.Maximum;
         using var model = new ConstraintProgrammingModel(name: "witness", objectCategory: category);
         var variable = new IntVar("x");

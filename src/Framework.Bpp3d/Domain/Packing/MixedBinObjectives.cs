@@ -2,11 +2,11 @@
 // 与固定 Kotlin 基线 `bpp3d/domain/.../MixedBinObjectives.kt` 的纯函数部分对应。
 // Mirrors the pure-function part of the pinned Kotlin baseline's `MixedBinObjectives.kt`.
 //
-// **B1306 更正：** **这里原来写着"基线里的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在）"，
+// **更正：** **这里原来写着"基线里的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在）"，
 // 而那句话早就不成立了——`src/Framework.Bpp3d/Domain/LayerAssignment/Model/PreciseAssignment.cs` 就在仓库里。**
 // **所以两个目标类已经补齐，在 `Domain/LayerAssignment/service/limits/MixedBinObjectives.cs`，本文件只留纯函数。**
 //
-// **B1306 correction:** **this used to claim "the baseline's two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the
+// **A correction:** **this used to claim "the baseline's two `*Minimization` classes depend on `PreciseAssignment`, which does not exist on the
 // C# side" — and that stopped being true long ago: `src/Framework.Bpp3d/Domain/LayerAssignment/Model/PreciseAssignment.cs` is right here in the repo.**
 // **So both objectives now exist in `Domain/LayerAssignment/service/limits/MixedBinObjectives.cs`; this file keeps only the pure functions.**
 

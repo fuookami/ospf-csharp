@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **模型属性在 C# 里挂在哪个类型上** / Which type each baseline model property lives on here.
 /// </summary>
 /// <remarks>
-/// **这一批的结论是一个测量方法失败，不是一次移植。** B942 想照 B940/B941 的办法，把基线
+/// **这里的结论是一个测量方法失败，不是一次移植。** 想照 / 的办法，把基线
 /// `AircraftModel.kt`/`Position.kt`/`Item.kt` 的 `val` 与 C# 同**文件**的属性做差集。
 /// 连修五轮（`Is` 前缀、record 位置参数、末位参数、枚举成员、嵌套类）**仍然大面积误报**——
 /// 因为这个代码库把模型的属性拆进了嵌套类型：`PositionShape.Length`、`ItemOrder.CarBoard`、`ItemLocation.IsNormalMain`。
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// to another public type and the callers moved with it", **which is a refactor the compiler neither catches nor should**. They are kept for one reason only: to write
 /// "where does it live" down as documentation, so nobody runs the source diff again. **No pretending to guard what the compiler already guards.**
 ///
-/// **The deliverable here is a failed measuring method, not a port.** B942 tried to mirror B940/B941 by diffing the baseline's
+/// **The deliverable here is a failed measuring method, not a port.** tried to mirror / by diffing the baseline's
 /// `AircraftModel.kt`/`Position.kt`/`Item.kt` `val`s against the C# properties in the **same file**. After five rounds of fixes (`Is` prefix, record positional parameters,
 /// last parameter, enum members, nested classes) it **still over-reported**, because this codebase splits model properties across nested types. **Per-file diffing does not
 /// fit this codebase.** The script is gone; this criterion pins **which type each property belongs to**, guarding against a property being moved or deleted.

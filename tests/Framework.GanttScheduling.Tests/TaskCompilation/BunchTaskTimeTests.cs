@@ -20,7 +20,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **任务束调度时间的 `Register` 从"静默 `Ok`"变成真的四张表（B561）** / The bunch scheduling time's `Register` goes from a silent `Ok` to four real tables (B561).
+/// **任务束调度时间的 `Register` 从"静默 `Ok`"变成真的四张表** / The bunch scheduling time's `Register` goes from a silent `Ok` to four real tables.
 /// </summary>
 /// <remarks>
 /// 之前 `Register` 直接返回 `Ok`：模型里什么都没有，而调用方以为"时间已经注册好了"。
@@ -65,9 +65,9 @@ public class BunchTaskTimeTests {
             task.EnabledExecutorSet.Add(executors[0]);
         }
         var compilation = new BunchCompilation<TestTaskBunch, TestTask, TestExecutor, TestAssignmentPolicy>(tasks, executors);
-        // 编译结果要先注册：任务时间的偏移要给 `task_compilation` 掩码列，那张表由编译结果的 `Register` 填（B563 之前它根本不存在）。
+        // 编译结果要先注册：任务时间的偏移要给 `task_compilation` 掩码列，那张表由编译结果的 `Register` 填。
         // The compilation must be registered first: the deviations are masked with the `task_compilation` column, a table filled by the compilation's own `Register` (which did
-        // not even exist before B563).
+        // not even exist before ).
         var model = new LinearMetaModel<Flt64>();
         compilation.Register(model).IsOk.Should().BeTrue();
         return (model, tasks, compilation);
@@ -314,10 +314,10 @@ public class BunchTaskTimeTests {
     /// **没有时间窗的任务仍然拿到 `est` / `estEnd`** / A task without a time window still gets `est` / `estEnd`.
     /// </summary>
     /// <remarks>
-    /// 这是本批修掉的一个缺陷：`est` / `estEnd` 来自钩子，与时间窗无关，所以"没有时间窗"只该跳过**偏离计划**那一族，不该连时间符号一起跳过。
+    /// 这是这里修掉的一个缺陷：`est` / `estEnd` 来自钩子，与时间窗无关，所以"没有时间窗"只该跳过**偏离计划**那一族，不该连时间符号一起跳过。
     /// 反过来（连 `est` 也跳过）会让读取方拿到 `null`，而 `null` 在调用方那里通常被当成"没有这个任务"。
     ///
-    /// This is a defect fixed in this batch: `est` / `estEnd` come from the hook and do not depend on the window, so "no time window" should skip only the **deviation from plan**
+    /// This is a defect fixed in: `est` / `estEnd` come from the hook and do not depend on the window, so "no time window" should skip only the **deviation from plan**
     /// family, not the time symbols themselves. The other way round (skipping `est` too) hands readers `null`, and callers usually read `null` as "no such task".
     /// </remarks>
     [Fact]

@@ -228,8 +228,8 @@ public sealed class HexalyColumnGenerationSolver : IColumnGenerationSolver {
                 ErrorCode.OREngineSolvingException,
                 $"对偶值数量与约束数量不一致 / Dual count {dualOk.Value.Count} does not match constraint count {constraints.Count}"));
         }
-        // **B1230：来源映射与缺源键都走共享实现，不再内联一次。**
-        // **B1230: the origin map and the no-origin key both go through the shared implementation.**
+        // **来源映射与缺源键都走共享实现，不再内联一次。**
+        // **the origin map and the no-origin key both go through the shared implementation.**
         MathConstraint?[] hexalyOriginMap = MathConstraintOrigins.OriginMap(mechanismModel);
         var dualSolution = new Dictionary<MathConstraint, Flt64>(constraints.Count);
         for (int index = 0; index < constraints.Count; index++) {

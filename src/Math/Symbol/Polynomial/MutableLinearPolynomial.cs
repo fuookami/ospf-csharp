@@ -12,8 +12,8 @@ using System.Linq;
 namespace Fuookami.Ospf.Math.Symbol.Polynomial;
 /// <summary>
 /// 可变线性多项式 / Mutable Linear Polynomial.
-/// 增量构建用，构建完成后调用 ToLinearPolynomial() 转不可变。
-/// Incremental builder; freeze via ToLinearPolynomial().
+/// 增量构建用，构建完成后调用 ToLinearPolynomial 转不可变。
+/// Incremental builder; freeze via ToLinearPolynomial.
 /// </summary>
 public sealed class MutableLinearPolynomial<T>
     where T : struct, INumberField<T>, IRealNumber<T> {

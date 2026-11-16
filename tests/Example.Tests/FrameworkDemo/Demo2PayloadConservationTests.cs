@@ -19,13 +19,13 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **业载守恒与按谓词的装载量（B587）** / Payload conservation and predicate-scoped amounts (B587).
+/// **业载守恒与按谓词的装载量** / Payload conservation and predicate-scoped amounts.
 /// </summary>
 /// <remarks>
 /// 两件事：
 ///
 /// 1. **预分配模式下业载必须等于目标业载**。基线加的是一行 `eq` 约束，不是目标函数里的软项。少了它，预分配算出来的总量
-///    可以偏离货主要多少，而每个舱位单独看都合法。
+/// 可以偏离货主要多少，而每个舱位单独看都合法。
 /// 2. **按谓词取装载量**（`load_amount_of_{舱位}`）。基线的用途是"只看主舱货"或"只看某类货"装了几件，与全部货物的
 ///    `load_amount` 是**两个不同的量**——它们共用同一批 `stowage` 符号，所以同一份解里必然自洽。
 ///

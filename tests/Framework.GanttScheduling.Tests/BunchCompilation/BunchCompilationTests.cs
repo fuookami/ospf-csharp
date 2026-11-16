@@ -367,9 +367,9 @@ public class BunchCompilationTests {
         var compilation = new BunchCompilation<TestTaskBunch, TestTask, TestExecutor, TestAssignmentPolicy>(
             tasks, executors);
 
-        // 这条判据原来是"注册到 `new object()` 也返回 Ok"——那正是本批删掉的静默成功。
+        // 这条判据原来是"注册到 `new object` 也返回 Ok"——那正是这里删掉的静默成功。
         // 接线之后它的意义变成:非模型仍然失败,注册到模型才建列。
-        // This criterion used to be "registering a `new object()` also returns Ok" — exactly the silent success removed in this batch. Once wired it means: a non-model still
+        // This criterion used to be "registering a `new object` also returns Ok" — exactly the silent success removed in. Once wired it means: a non-model still
         // fails, and only registering on a model builds the columns.
         Result<Success, ErrorCode, Error<ErrorCode>> result = compilation.Register(new object());
         result.IsOk.Should().BeFalse("a non-model must be rejected");

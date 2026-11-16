@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// </summary>
 /// <remarks>
 /// 矩阵里三行插件都写着"PWL 未移植"，第九节第 3 条写着"`PackingRendererAdapter` 里 0 处 `PWL`"。
-/// **那些都是症状，不是缺口的大小。** B954 量出来的是三层，状态各不相同：
+/// **那些都是症状，不是缺口的大小。** 量出来的是三层，状态各不相同：
 ///
 /// | 层 | C# |
 /// | --- | --- |
@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **把三层混成"未移植"，会让人以为补上最容易的那层就够了——而那层已经在了。**
 ///
-/// Three plugin rows said "PWL not ported" and item 3 said "no `PWL` in `PackingRendererAdapter`". **Those are symptoms, not the size of the gap.** B954 measured three
+/// Three plugin rows said "PWL not ported" and item 3 said "no `PWL` in `PackingRendererAdapter`". **Those are symptoms, not the size of the gap.** measured three
 /// layers with different states: the piecewise symbols are **present** and Demo2 really uses them; the **function expansion layer (576 lines in the baseline) is entirely
 /// absent**; the plugins have **no native writes**, Gurobi only detection. **Conflating them into "not ported" suggests that filling in the easiest layer would do — and
 /// that layer is already here.**
@@ -79,7 +79,7 @@ public class PwlLayerClaimsTests
         gurobi.Should().Contain("SetPWLObj").And.Contain("AddGenConstrPWL",
             "detection is the layer that is already ported, and the matrix now says so");
 
-        // **B1232：Copt 现在<b>有</b>原生分段文件了。**
+        // **Copt 现在<b>有</b>原生分段文件了。**
         //
         // **这条判据此前断言"Copt / Cplex 都没有 Piecewise 文件"。**
         // **判断哪一侧是基线的依据：** **基线 `CoptNativePiecewise.kt` 有 209 行，
@@ -88,12 +88,12 @@ public class PwlLayerClaimsTests
         // **改法：Copt 必须<b>有</b>写入器（否则缺口回来了），Cplex 仍然<b>没有</b>（那一侧还没做）。**
         // **两侧都保留断言，只是方向不同——因为能力矩阵现在对它们说的是不同的话。**
         //
-        // **B1232: Copt now <b>has</b> a native piecewise file.**
+        // **Copt now <b>has</b> a native piecewise file.**
         //
         // **How the baseline side was decided: the baseline `CoptNativePiecewise.kt` is 209 lines and C#'s read side
  // already existed — so the write side was the gap.**
         //
-        // **后来 B1233 也补上了 Cplex 的写侧，于是这一条现在断言<b>两者都有</b>。**
+        // **后来 Cplex 的写侧也补上了，于是这一条现在断言<b>两者都有</b>。**
         // **判据的方向跟着缺口走：缺口在哪一侧，断言就指向哪一侧；缺口消失，断言改成"必须有"。**
         string[] coptFiles = Directory.GetFiles(Path.Combine(root, "src", "Core.Plugin.Copt"), "*.cs")
             .Select(Path.GetFileName).ToArray()!;

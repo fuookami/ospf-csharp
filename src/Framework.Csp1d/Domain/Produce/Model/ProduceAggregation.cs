@@ -123,7 +123,7 @@ public sealed class ProduceAggregation<V> : ICsp1dAggregation<V>
         // 构建 canonical key 索引 / Build canonical key index
         _planKeyIndex = new Dictionary<CuttingPlanCanonicalKey, int>();
         // **基线按 `id` 与 `canonicalKey` **双键**去重**（`ProduceAggregation.kt:56`：
-        // `candidate.id !in registeredIds && candidate.canonicalKey() !in registeredKeys`）。
+        // `candidate.id !in registeredIds && candidate.canonicalKey !in registeredKeys`）。
         // C# 原本**只有键索引**，于是"同 id 不同内容"的两条方案会被同时接受。
         //
         // **The baseline dedupes by **two keys**, id and canonicalKey** (`ProduceAggregation.kt:56`). C# originally had **only the key index**, so two plans sharing an id but

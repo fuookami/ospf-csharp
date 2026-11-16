@@ -145,11 +145,11 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// <param name="model">元模型 / Meta model</param>
     /// <returns>操作结果 / Operation result</returns>
     /// <remarks>
-    /// 本批只实现**没有任务时间**的那一支（基线自己的 `taskTime == null` 分支）：换型指示 = 两个分配列同时为 1，
+    /// 这里只实现**没有任务时间**的那一支（基线自己的 `taskTime == null` 分支）：换型指示 = 两个分配列同时为 1，
     /// 且 `task1` 计划上紧跟在 `task2` 之前。有任务时间的那一支要用 `frontOf` / `betweenIn` 两层 `IfFunction` / `AndFunction`
     /// 组合，属于独立一批的量——**所以它显式失败**，而不是悄悄退化成无时间分支（那会假设计划顺序就是真实顺序）。
     ///
-    /// This batch implements only the **no-task-time** branch (the baseline's own `taskTime == null` path): the indicator is "both assignment columns are 1 and `task1`
+ /// implements only the **no-task-time** branch (the baseline's own `taskTime == null` path): the indicator is "both assignment columns are 1 and `task1`
     /// immediately precedes `task2` in the plan". The task-time branch needs `frontOf` / `betweenIn` built from two layers of `IfFunction` / `AndFunction` and is a batch of its
     /// own — **so it fails explicitly** instead of quietly degrading to the no-time branch (which would assume the planned order is the real order).
     /// </remarks>
@@ -392,7 +392,7 @@ public class TaskSchedulingSwitch<T, E, A> : ISwitch, ISwitchTables<T, E>
     /// `frontOf[from, to] = 1` exactly when `est[from]` is not later than `est[to]`. The baseline wraps an inequality in an `IfFunction`, turning "who comes first" into a
     /// **decision variable** rather than a static test — exactly what advance/delay makes necessary.
     ///
-    /// **本批 ceiling**：基线把 `estimateStartTime[task1].range.range!!` 当左侧值域传给约束输入，而 C# 里
+    /// **这里 ceiling**：基线把 `estimateStartTime[task1].range.range!!` 当左侧值域传给约束输入，而 C# 里
     /// `LinearExpressionSymbol.Range` 的写入**读不回来**（既有 ceiling），所以这里只能传全域。后果是 `IfFunction`
     /// 少一层收紧，不影响正确性，只影响松弛强度。
     ///

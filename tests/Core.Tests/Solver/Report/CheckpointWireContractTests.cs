@@ -69,13 +69,13 @@ public class CheckpointWireContractTests
             .ToArray();
 
         // **不能要求"九个 code 都能从枚举产出"**：契约里 `backend` 与 `external` 是**兜底代码**
-        // （原文 `backend ... Kotlin has no dedicated variant; preserved verbatim`），
+        // （原文 `backend... Kotlin has no dedicated variant; preserved verbatim`），
         // **它们本来就该由"原样保留"承载，而不是由某个枚举值产出。**
         //
         // **第一次我要求九项全可达，红了——而红的是我的判据，不是实现。**
         //
         // **Requiring all nine to be reachable from the enum would be wrong**: `backend` and `external` are **catch-all codes**
-        // (the contract says `backend ... Kotlin has no dedicated variant; preserved verbatim`),
+        // (the contract says `backend... Kotlin has no dedicated variant; preserved verbatim`),
         // **and they are meant to survive verbatim rather than come from an enum value.**
         // **My first version demanded all nine and went red — the criterion was wrong, not the implementation.**
         emitted.Should().OnlyContain(code => contractCodes.Contains(code, StringComparer.Ordinal),
@@ -100,10 +100,10 @@ public class CheckpointWireContractTests
             CancellationSource back = CancellationSourceExtensions.FromWireCode(code);
 
             // **`Other` 是契约里"没有专用变体"的落点**（`ToWireCode` 的 `_ =>` 兜底产出 `"external"`），
-            // **所以它读回来不可能是原值**——契约原文就写着 `external ... preserved verbatim`。
+            // **所以它读回来不可能是原值**——契约原文就写着 `external... preserved verbatim`。
             //
             // **`Other` is where the contract's "no dedicated variant" lands** (`ToWireCode`'s `_ =>` fallback emits `"external"`),
-            // **so it cannot come back as itself** — the contract says `external ... preserved verbatim`.
+            // **so it cannot come back as itself** — the contract says `external... preserved verbatim`.
             if (source is CancellationSource.Other) {
                 back.ToWireCode().Should().Be(code,
                     "the verbatim code has to survive even when the enum value does not");
@@ -186,7 +186,7 @@ public class CheckpointWireContractTests
         //
         // 1. **改类型**：`Origin` 是位置参数，改成枚举或加默认值 → **26 个编译错误**，构造不出来。
  // 2. **运行时规范化**：给 `Origin` 挂一个 `JsonConverter`，只放行 C# 枚举能产出的七个词，
-        //    **`"backend"` 立刻被改写成 `"user"`，这条判据红**（报错原文：`Expected json ... to contain ""backend""`）。
+        //    **`"backend"` 立刻被改写成 `"user"`，这条判据红**（报错原文：`Expected json... to contain ""backend""`）。
         //
         // **第二种才是真实风险**：有人为了"类型安全"给这个字段加转换器，
         // **而契约要求的是"原样保留"——两者正好相反，且加转换器的人不会觉得自己在破坏契约。**
@@ -194,8 +194,8 @@ public class CheckpointWireContractTests
         // **Two mutations were attempted; the "change the type" one cannot be built.**
         //
         // 1. **Change the type**: `Origin` is a positional parameter; an enum or a default **produces 26 compile errors** — it cannot be built.
-        // 2. **Runtime normalisation** (measured in B1113): attach a `JsonConverter` to `Origin` that only lets through the seven codes C# can emit,
-        //    **and `"backend"` is immediately rewritten to `"user"`, turning this criterion red** (the failure reads `Expected json ... to contain ""backend""`).
+        // 2. **Runtime normalisation** (measured): attach a `JsonConverter` to `Origin` that only lets through the seven codes C# can emit,
+        //    **and `"backend"` is immediately rewritten to `"user"`, turning this criterion red** (the failure reads `Expected json... to contain ""backend""`).
         //
         // **The second is the real risk**: somebody adds a converter here for "type safety",
         // **while the contract demands verbatim preservation — the two are opposites, and the person adding it will not feel like they are breaking a contract.**
@@ -218,7 +218,7 @@ public class CheckpointWireContractTests
 
     /// <summary>**信封字段的顺序与契约一致** / The envelope field order matches the contract.</summary>
     /// <remarks>
-    /// **契约的 `[envelope-field]` 一节给了 25 行的 `序号 名称 类型 可选`。**
+    /// **契约的 `[envelope-field]` 一节给了 25 行的 `序号名称类型可选`。**
     /// **这里钉前 17 个（0—16）**——它们是 `ConstraintProgrammingCheckpoint` 的**位置参数**，
     /// **位置参数顺序错了，序列化出来的 JSON 字段顺序就错了，而 `integritySha256` 正是按顺序算的。**
     ///
@@ -260,11 +260,11 @@ public class CheckpointWireContractTests
             .Select(entry => entry.Name!)
             .ToArray();
 
-        // **契约一共 25 行（0—24），B1111 只钉了前 17 个，这一批钉满。**
+        // **契约一共 25 行（0—24），此前只钉了前 17 个，这里钉满。**
         // **把整条读完的理由**：`integritySha256` 按顺序算，**第 18 个字段错位与前 17 个错位一样致命**，
         // **而"只钉了一半"在文档上看起来像"钉完了"。**
         //
-        // **The contract has 25 rows (0—24); B1111 pinned only the first 17 and this pins all of them.**
+        // **The contract has 25 rows (0—24); an earlier criterion pinned only the first 17 and this pins all of them.**
         // **Why read the whole thing**: `integritySha256` hashes in order, so **a misplaced 18th field is as fatal as a misplaced first**,
         // **and "pinned half of it" reads like "pinned it" in a document.**
         string[] contractTail = [

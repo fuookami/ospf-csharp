@@ -21,17 +21,17 @@ using StowageInitializer = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stow
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **配载初始化器与两个上下文的 Init（B606）** / The stowage initializer and both contexts' `Init` (B606).
+/// **配载初始化器与两个上下文的 Init** / The stowage initializer and both contexts' `Init`.
 /// </summary>
 /// <remarks>
-/// 这一批把两个"永远返回 `Ok`"的上下文壳（`StowageContext` / `MacContext`）换成真的 `Init`，并补上 `Stowage/Service/AggregationInitializer`
+/// 这里把两个"永远返回 `Ok`"的上下文壳（`StowageContext` / `MacContext`）换成真的 `Init`，并补上 `Stowage/Service/AggregationInitializer`
 /// 与 `LoadingContextFactory`。判据集中在三处：
 ///
 /// 1. **校验真的挡住**（六条各试一次，且成对给出好输入）。
 /// 2. **翻译真的落地**（货重、优先级档位、舱位最大重量、内核真的建起来）。
 /// 3. **上下文不再静默成功**（上游未初始化时明确失败）。
 ///
-/// This batch replaces two context shells that **always returned `Ok`** (`StowageContext` / `MacContext`) with real `Init` methods and adds the stowage
+/// replaces two context shells that **always returned `Ok`** (`StowageContext` / `MacContext`) with real `Init` methods and adds the stowage
 /// `AggregationInitializer` and the `LoadingContextFactory`. The criteria target three things: **the validations actually reject** (each of six tried once, paired with a good
 /// input); **the translation actually lands** (weights, priority buckets, position capacity, the kernel really built); and **the contexts no longer succeed silently**
 /// (an uninitialised upstream fails explicitly).
@@ -94,11 +94,11 @@ public class Demo2StowageInitializerTests {
     /// 逐项断言：货物数量与顺序、优先级档位（10 → 高、6 → 普通、4 → 普通）、舱位最大重量、计划业载是货重之和、最大业载取 DTO 上限、
     /// 且**装载内核真的建起来了**（`Stowage.LoadingContext` 非 `null`）。
     ///
-    /// 只断言 `IsOk` 无法区分"真的翻译了"与"返回一个空聚合"——后者正是 B606 之前两个上下文的形态。
+    /// 只断言 `IsOk` 无法区分"真的翻译了"与"返回一个空聚合"——后者正是 之前两个上下文的形态。
     ///
     /// Asserts item by item: the count and order, the priority buckets (10 → high, 6 → normal, 4 → normal), the position capacity, the planned payload as the sum of weights,
     /// the maximum payload from the DTO, and that **the loading kernel really exists** (`Stowage.LoadingContext` non-null). Asserting only `IsOk` cannot distinguish a real
-    /// translation from an empty aggregation — the shape both contexts had before B606.
+    /// translation from an empty aggregation — the shape both contexts had before.
     /// </remarks>
     [Fact]
     public void Initialize_ShouldTranslateTheRequestIntoTheAggregation() {
@@ -182,8 +182,8 @@ public class Demo2StowageInitializerTests {
     public void Initialize_ShouldRejectEachBadInputAtItsOwnBoundary() {
         RequestDTO good = AircraftLoadingDemo.CreateSampleRequest();
 
-        // `with` 表达式必须先括起来才能接成员访问，所以每条都先赋给局部变量再 `.Run()`。
-        // A `with` expression needs parentheses before member access, so each is assigned to a local first and then `.Run()`.
+        // `with` 表达式必须先括起来才能接成员访问，所以每条都先赋给局部变量再 `.Run`。
+        // A `with` expression needs parentheses before member access, so each is assigned to a local first and then `.Run`.
         RequestDTO noCargo = good with { Cargos = new List<CargoInput>() };
         new Rig(input: noCargo).Run().IsOk.Should().BeFalse("no cargo at all");
 
@@ -226,11 +226,11 @@ public class Demo2StowageInitializerTests {
     /// 三点成对：
     ///
     /// 1. 未初始化的 `StowageContext.Aggregation` 是 `null`（不是 `null!` 的假非空）。
-    /// 2. 上游飞机聚合缺失时 `Init` **失败**，且消息点明是飞机聚合——B606 之前它返回 `Ok`。
+    /// 2. 上游飞机聚合缺失时 `Init` **失败**，且消息点明是飞机聚合—— 之前它返回 `Ok`。
     /// 3. 正常初始化后 `Aggregation` 非 `null`，且**第二次 `Init` 不重建**（返回同一个实例）。
     ///
     /// Three paired points: an uninitialised `StowageContext.Aggregation` is `null` (not a fake non-null); `Init` **fails** with a message naming the aircraft aggregation when
-    /// that upstream is missing — before B606 it returned `Ok`; and after a normal initialisation `Aggregation` is non-null while a **second `Init` does not rebuild**
+    /// that upstream is missing — before it returned `Ok`; and after a normal initialisation `Aggregation` is non-null while a **second `Init` does not rebuild**
     /// (same instance).
     /// </remarks>
     [Fact]
@@ -315,10 +315,10 @@ public class Demo2StowageInitializerTests {
     /// **端到端：三个上下文串起来后适航安全的 `Init` 真的能建出聚合** / End to end: with the three contexts chained, the airworthiness `Init` really builds an aggregation.
     /// </summary>
     /// <remarks>
-    /// B605 让 `AirworthinessSecurityContext.Init` 可用，但当时上游两个上下文还是壳，所以它必然失败。这一批把上游接上，端到端路径因此第一次走得通：
+    /// 让 `AirworthinessSecurityContext.Init` 可用，但当时上游两个上下文还是壳，所以它必然失败。这里把上游接上，端到端路径因此第一次走得通：
     /// 飞机 → 配载 → MAC → 适航安全，四步全部成功，且适航聚合的 `MinPayload` 是真实算出来的数。
     ///
-    /// B605 made `AirworthinessSecurityContext.Init` usable, but the two upstream contexts were still shells then, so it had to fail. This batch wires the upstreams, making
+ /// made `AirworthinessSecurityContext.Init` usable, but the two upstream contexts were still shells then, so it had to fail. wires the upstreams, making
     /// the end-to-end path work for the first time: aircraft → stowage → MAC → airworthiness, all four succeeding, with the airworthiness aggregation's `MinPayload` a real
     /// computed number.
     /// </remarks>

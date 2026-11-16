@@ -13,15 +13,15 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **缺口清单必须说清"按什么对齐"和"谁真的缺"** / The inventory must state what it aligns by and who is really missing.
 /// </summary>
 /// <remarks>
-/// 这张表出过错：B468 按**工程名**对齐，把 `framework-bpp` 的 10 个主源码整模块误报成"不存在"，
+/// 这张表出过错： 按**工程名**对齐，把 `framework-bpp` 的 10 个主源码整模块误报成"不存在"，
 /// 而它们其实住在名为 `Framework.Bpp1d` 的工程里、命名空间是 `Fuookami.Ospf.Framework.Bpp.*`。
-/// B469 改成按**命名空间**对齐后，`framework-bpp` 与 `framework-bpp1d` 都是 0 缺口。
+/// 改成按**命名空间**对齐后，`framework-bpp` 与 `framework-bpp1d` 都是 0 缺口。
 ///
 /// 所以钉三件事：方法必须写明按命名空间对齐、0 缺口的结论必须在、误判这件事本身必须留档。
 /// **一个会误报的清单比没有清单更危险**，因为它会让人去重做已经做完的模块。
 ///
-/// The table got this wrong once: B468 aligned by **project name** and reported the whole `framework-bpp` module as missing, while its 10 main sources live in the project
-/// named `Framework.Bpp1d` under the `Fuookami.Ospf.Framework.Bpp.*` namespace. B469 aligned by **namespace** and both `framework-bpp` and `framework-bpp1d` have zero
+/// The table got this wrong once: aligned by **project name** and reported the whole `framework-bpp` module as missing, while its 10 main sources live in the project
+/// named `Framework.Bpp1d` under the `Fuookami.Ospf.Framework.Bpp.*` namespace. aligned by **namespace** and both `framework-bpp` and `framework-bpp1d` have zero
 /// gaps. So three things are pinned: the method must say it aligns by namespace, the zero-gap conclusion must stay, and the misjudgement itself must stay on record.
 /// **A table that misreports is worse than no table**, because it sends people to redo finished modules.
 /// </remarks>
@@ -51,12 +51,12 @@ public class GapInventoryTests {
     /// **"下一块"里的数字必须与上表一致** / The counts in the "what next" section must agree with the table above.
     /// </summary>
     /// <remarks>
-    /// B484 修的就是这件事：那段原本硬编码 `bpp3d（18 个）`/`bpp2d（14 个）`/`gantt（24 个）`，
+    /// 修的就是这件事：那段原本硬编码 `bpp3d（18 个）`/`bpp2d（14 个）`/`gantt（24 个）`，
     /// 而同一份文件的表里早已是 `15`/`9`/`21`——**一份自相矛盾的表比没有表更危险**，
     /// 因为它既让人去重做、又让人相信数字。
     /// 现在数字从扫描结果推导，并由这条判据逐项比对；将来谁再写死数字，这里会红。
     ///
-    /// This is what B484 fixed: that section hard-coded `bpp3d (18)` / `bpp2d (14)` / `gantt (24)` while the table in the same file already said `15` / `9` / `21` —
+    /// This is what fixed: that section hard-coded `bpp3d (18)` / `bpp2d (14)` / `gantt (24)` while the table in the same file already said `15` / `9` / `21` —
     /// **a self-contradicting table is worse than none**, because it both sends people to redo work and makes them trust the numbers. The counts now derive from the scan
     /// and this criterion compares them item by item; anyone hard-coding a number again turns it red.
     /// </remarks>
@@ -73,10 +73,10 @@ public class GapInventoryTests {
         }
         table.Should().NotBeEmpty("the results table must be parsed for the comparison to mean anything");
 
-        // **只比对当前段，不比对历史段**：文末保留 B629 原文以备追溯，那里也有一份排序列表。
-        // 整篇扫会把历史副本算进来——当前结论写 0、历史写着 8，这条判据就报 8；反过来更糟：按历史"通过"（B716/B717 撞过）。
-        // **Only the current region is compared, never the historical one**: the tail keeps the B629 original for traceability and it carries its own ranking list.
-        // Scanning the whole file counts that copy too, so the criterion reports the historical 8 — or worse, "passes" against history (B716 and B717 both ran into it).
+        // **只比对当前段，不比对历史段**：文末保留 原文以备追溯，那里也有一份排序列表。
+        // 整篇扫会把历史副本算进来——当前结论写 0、历史写着 8，这条判据就报 8；反过来更糟：按历史"通过"。
+        // **Only the current region is compared, never the historical one**: the tail keeps the original for traceability and it carries its own ranking list.
+        // Scanning the whole file counts that copy too, so the criterion reports the historical 8 — or worse, "passes" against history.
         int history = text.IndexOf("### 历史口径", StringComparison.Ordinal);
         string current = history > 0 ? text[..history] : text;
 
@@ -111,16 +111,16 @@ public class GapInventoryTests {
     }
 
     /// <summary>
-    /// **B629 复核：bpp3d 的 15 个里 8 个是误报** / The B629 review: 8 of bpp3d's 15 were false positives.
+    /// **复核：bpp3d 的 15 个里 8 个是误报** / The review: 8 of bpp3d's 15 were false positives.
     /// </summary>
     /// <remarks>
-    /// 这张表按**文件名子串**扫，凡是"已有但换了名字/换了语言形态"的都会被算成缺失。B629 逐条核对 bpp3d 那 15 个，
+    /// 这张表按**文件名子串**扫，凡是"已有但换了名字/换了语言形态"的都会被算成缺失。 逐条核对 bpp3d 那 15 个，
     /// 8 个不是缺口，7 个是——而其中一个还归属 bpp2d。
     ///
     /// 钉四件事：总体结论、四类误报各自的理由、`QuantityContainerCore` 那条"换了名字"的特例、以及两条约束的阻塞点
     /// 必须写成 `PreciseAssignment` 而不是含糊的"未实现"。
     ///
-    /// The table scans by **filename substring**, so anything that exists under a different name or language shape counts as missing. B629 checked bpp3d's fifteen one by one: eight are
+    /// The table scans by **filename substring**, so anything that exists under a different name or language shape counts as missing. checked bpp3d's fifteen one by one: eight are
     /// not gaps and seven are, one of which belongs to bpp2d. Four things are pinned: the overall verdict, each of the four false-positive reasons, the `QuantityContainerCore`
     /// "renamed" special case, and the two constraints' blocker, which must name `PreciseAssignment` rather than a vague "not implemented".
     /// </remarks>
@@ -146,22 +146,22 @@ public class GapInventoryTests {
     }
 
     /// <summary>
-    /// **B716 复核：bpp3d 真缺口 0 个** / The B716 review: bpp3d has no real gaps.
+    /// **复核：bpp3d 真缺口 0 个** / The review: bpp3d has no real gaps.
     /// </summary>
     /// <remarks>
-    /// B629 记了 7 个"真缺口"，其中两条还写着"被 `PreciseAssignment.v[]` / `.tail[]` 阻塞"。B716 逐条重核，
+    /// 记了 7 个"真缺口"，其中两条还写着"被 `PreciseAssignment.v[]` / `.tail[]` 阻塞"。 逐条重核，
     /// **7 个全部已在 C# 落地**，而那条阻塞理由今天也不成立——`PreciseAssignment` 已经有 `V(int)` 与 `Tail`。
     ///
     /// 三点钉住：
     ///
     /// 1. 表行改成 `105 | 0`，且 §bpp3d 的开头写明"真缺口 0 个"。
     /// 2. 五条落地路径逐条写在表里——只说"已落地"而不给位置，下一个人还得再考古一次。
-    /// 3. **过期的那两条旧结论只允许出现在历史段里**：本文档保留 B629 原文以备追溯，
-    ///    于是"钉字符串"这种判据可以被历史段满足而假通过（本批就撞上了）。所以这里断言它们的首次出现位置**晚于**历史段标题。
+    /// 3. **过期的那两条旧结论只允许出现在历史段里**：本文档保留 原文以备追溯，
+    /// 于是"钉字符串"这种判据可以被历史段满足而假通过（这里就撞上了）。所以这里断言它们的首次出现位置**晚于**历史段标题。
     ///
     /// Three things are pinned: the table row becomes `105 | 0` and the bpp3d section states "no real gaps"; each of the five landing paths is written into the table, because saying
-    /// "already landed" without a location forces the next reader to dig again; and **the two stale conclusions may only appear inside the historical section** — this document keeps the B629
-    /// original for traceability, so a string-pin criterion can be satisfied by that copy and pass falsely (this batch ran into exactly that), hence the assertion that their first occurrence
+    /// "already landed" without a location forces the next reader to dig again; and **the two stale conclusions may only appear inside the historical section** — this document keeps the 
+    /// original for traceability, so a string-pin criterion can be satisfied by that copy and pass falsely ( ran into exactly that), hence the assertion that their first occurrence
     /// comes **after** the historical section's heading.
     /// </remarks>
     [Fact]
@@ -193,10 +193,10 @@ public class GapInventoryTests {
     }
 
     /// <summary>
-    /// **B717 复核：`framework` 真缺口 0 个** / The B717 review: `framework` has no real gaps.
+    /// **复核：`framework` 真缺口 0 个** / The review: `framework` has no real gaps.
     /// </summary>
     /// <remarks>
-    /// B673 把机器段的 8 个收到 3 个"真缺口"，B674/B675/B676 逐个处理。B717 重核代码：三个都有对应物。
+    /// 把机器段的 8 个收到 3 个"真缺口"， / / 逐个处理。 重核代码：三个都有对应物。
     ///
     /// 三点钉住：表行改成 `70 | 0`、三条落地路径逐条给位置、以及 §framework 开头写明"真缺口 0 个"。
     ///
@@ -222,16 +222,16 @@ public class GapInventoryTests {
     }
 
     /// <summary>
-    /// **B718 复核：`framework-gantt-scheduling` 真缺口 0 个** / The B718 review: gantt has no real gaps.
+    /// **复核：`framework-gantt-scheduling` 真缺口 0 个** / The review: gantt has no real gaps.
     /// </summary>
     /// <remarks>
-    /// B679 曾判定 `ActivitySchedulingApplicationService` "暂不可开工"，理由是 `ActivitySchedulingContext` 只有 `Choices` + `ValidateNamespace`。
-    /// B718 直接读代码：三个转发方法都在（`Register` / `Validate` / `ExtractSolution`），聚合层也真的在取解值，应用服务本身也已在
+    /// 曾判定 `ActivitySchedulingApplicationService` "暂不可开工"，理由是 `ActivitySchedulingContext` 只有 `Choices` + `ValidateNamespace`。
+    /// 直接读代码：三个转发方法都在（`Register` / `Validate` / `ExtractSolution`），聚合层也真的在取解值，应用服务本身也已在
     /// `Application/Service/Activity/` 下。**阻塞理由又一次过期了**——它记的是当时的仓。
     ///
     /// 钉四件事：表行改成 `158 | 0`、开头写明"真缺口 0 个"、四条逐条结论、以及那两条过期判断（"暂不可开工"与"4 个"）只许留在历史段。
     ///
-    /// B679 once judged `ActivitySchedulingApplicationService` "not startable yet" because `ActivitySchedulingContext` only had `Choices` + `ValidateNamespace`. B718 reads the code
+    /// once judged `ActivitySchedulingApplicationService` "not startable yet" because `ActivitySchedulingContext` only had `Choices` + `ValidateNamespace`. reads the code
     /// directly: all three forwarding methods are there (`Register` / `Validate` / `ExtractSolution`), the aggregation really does read solution values, and the application service itself
     /// already lives under `Application/Service/Activity/`. **The blocking reason expired again** — it recorded the repo of that moment. Four things are pinned: the table row becomes
     /// `158 | 0`, the section states "no real gaps", the four per-item verdicts, and the two stale conclusions, confined to the historical section.
@@ -262,16 +262,16 @@ public class GapInventoryTests {
     }
 
     /// <summary>
-    /// **B719 复核：bpp2d 与 network 的"1 个"都归零** / The B719 review zeroes bpp2d and network.
+    /// **复核：bpp2d 与 network 的"1 个"都归零** / The review zeroes bpp2d and network.
     /// </summary>
     /// <remarks>
-    /// 这两条各自只挂着 1 个疑似未同步，B677/B631 已经核过，但**表行一直没跟着改**，于是"下一块"里它们仍按 1 个排着。
+    /// 这两条各自只挂着 1 个疑似未同步， / 已经核过，但**表行一直没跟着改**，于是"下一块"里它们仍按 1 个排着。
     ///
-    /// 这条判据的重点不是"结论段里有这句话"（那种查法 B716/B717/B718 三次都没抓到"表行没跟上"），
-    /// 而是**逐模块比对表行与结论段**：表里每个模块的缺口数，必须与 §B719 表里写的结论一致。
+    /// 这条判据的重点不是"结论段里有这句话"（那种查法 / / 三次都没抓到"表行没跟上"），
+    /// 而是**逐模块比对表行与结论段**：表里每个模块的缺口数，必须与 § 表里写的结论一致。
     ///
-    /// This criterion is not about the conclusion paragraph containing a phrase — that kind of check missed "the table row never caught up" three times in B716/B717/B718. It compares the
-    /// table row against the conclusion paragraph module by module: every module whose count the B719 table states must agree with the results table.
+    /// This criterion is not about the conclusion paragraph containing a phrase — that kind of check missed "the table row never caught up" three times/ /. It compares the
+    /// table row against the conclusion paragraph module by module: every module whose count the table states must agree with the results table.
     /// </remarks>
     [Fact]
     public void Inventory_ShouldZeroTheBpp2dAndNetworkRows() {
@@ -280,8 +280,8 @@ public class GapInventoryTests {
         text.Should().Contain("| `framework-bpp2d` | 56 | 0 |", "the machine row must agree with the review");
         text.Should().Contain("| `framework-network-scheduling` | 114 | 0 |");
         text.Should().Contain("### B719 复核：bpp2d 与 network 两个");
-        // **位置要在本批那一节里**：同一个路径在旧的 network 段也出现过，整篇查会被那份副本满足（这条变异存活过一次）。
-        // **The location must sit in this batch's section**: the same path also appears in the older network section, so a whole-file check is satisfied by that copy (this mutation
+        // **位置要在这里那一节里**：同一个路径在旧的 network 段也出现过，整篇查会被那份副本满足（这条变异存活过一次）。
+        // **The location must sit in's section**: the same path also appears in the older network section, so a whole-file check is satisfied by that copy (this mutation
         // survived once).
         int section = text.IndexOf("### B719 复核：bpp2d 与 network 两个", StringComparison.Ordinal);
         section.Should().BeGreaterThan(0);
@@ -304,7 +304,7 @@ public class GapInventoryTests {
     }
 
     /// <summary>
-    /// **B720 复核：plugin 的 48 个按能力分组后名称级缺口 0 个，但查出三个翻译器没接上** / The B720 review groups plugin's 48 files, finds no name-level gap, and catches one capability that exists but is never called.
+    /// **复核：plugin 的 48 个按能力分组后名称级缺口 0 个，但查出三个翻译器没接上** / The review groups plugin's 48 files, finds no name-level gap, and catches one capability that exists but is never called.
     /// </summary>
     /// <remarks>
     /// 48 个不是 48 件事。它们按方言 / 翻译器 / 绑定器 / 仓储 / 后端入口 / 查询编译 / 记录 / 谓词 schema / 杂项九组分布，

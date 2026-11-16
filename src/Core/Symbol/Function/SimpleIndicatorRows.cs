@@ -25,13 +25,11 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 而模型仍然可行（少了一个约束项，不是矛盾），只是条件算错了。**
 ///
 /// **`_violated` 行用的是 `relaxBigM(bigM, strictBoundary)`，不是 `bigM`。**
-/// **这与 B1180 的下界行是同一个理由：`strictBoundary` 是"违反"侧的间隔，
+/// **这与下界行是同一个理由：`strictBoundary` 是"违反"侧的间隔，
 /// 照抄 `bigM` 会让违反侧多松 `strictBoundary`。**
 ///
 /// **`nonnegativeIndicatorConstraints` 是"非负检测"，方向与正向指示相反**：
 /// **指示 = 1 时 `poly ≥ 0`（允许等于零），指示 = 0 时 `poly ≤ −tolerance`（严格负）。**
-///
-/// adds
 ///
 /// **`simpleIndicatorConstraints` takes the <b>difference</b> first: `diff = lhs − rhs`.**
 /// **Every row then works on `diff` alone.**
@@ -39,7 +37,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// feasible (a missing term, not a contradiction) while the condition is computed wrong.**
 ///
 /// **The `_violated` row uses `relaxBigM(bigM, strictBoundary)`, not `bigM`.**
-/// **Same reason as B1180's lower row: `strictBoundary` is the violation-side gap, and copying `bigM` relaxes the
+/// **Same reason as the earlier lower row: `strictBoundary` is the violation-side gap, and copying `bigM` relaxes the
 /// violation side by an extra `strictBoundary`.**
 ///
 /// **`nonnegativeIndicatorConstraints` is "non-negativity detection", the opposite polarity of a positive indicator**:

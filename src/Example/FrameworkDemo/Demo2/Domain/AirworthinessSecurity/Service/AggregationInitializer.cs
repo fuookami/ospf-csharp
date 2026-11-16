@@ -63,12 +63,12 @@ internal static class AggregationInitializer
         // `ponytail:` the unit factor is always 1 (no unit fields in this DTO, aircraft units fixed). Change here when the DTO gains units.
         // **力矩的换算因子必须跟着长度单位走**：模型内部长度单位是英寸（`AircraftModel.LengthUnit`），
         // 力矩 = 重量 x 长度，所以请求里的米制力矩边界要乘以 1/0.0254。这里写死成 `1.0` 会让
-        // "力臂已经换算成英寸、边界还是米"两边对不上——**力矩行于是把装载量整个否掉**（B788 隔离实测）。
+        // "力臂已经换算成英寸、边界还是米"两边对不上——**力矩行于是把装载量整个否掉**（隔离实测）。
         // 与 `Aircraft.AggregationInitializer.ToModelLength` 用同一套换算，两处不能各写一份。
         //
         // **The moment factor has to follow the length unit**: the model's internal length unit is the inch (`AircraftModel.LengthUnit`), and torque is weight over
         // length, so metre-scale moment bounds must be multiplied by 1/0.0254. Hard-coding `1.0` leaves "arms converted to inches but bounds still in metres", and the
-        // moment rows then reject the whole load (measured by B788's isolation). It mirrors `Aircraft.AggregationInitializer.ToModelLength` — one conversion, not two.
+        // moment rows then reject the whole load (measured by the earlier isolation). It mirrors `Aircraft.AggregationInitializer.ToModelLength` — one conversion, not two.
         double momentFactor = input.LengthUnit switch {
             LengthUnitInput.Meter => 1.0 / 0.0254,
             LengthUnitInput.Centimeter => 1.0 / 2.54,
@@ -197,8 +197,8 @@ internal static class AggregationInitializer
             }
             : null;
 
-        // 包线按**每个飞行阶段**各建一条。基线用 `phase.name.lowercase()`；C# 的 `ToLowerInvariant()` 对 `ZeroFuel` 同样给出 `zerofuel`。
-        // One envelope per **flight phase**. The baseline uses `phase.name.lowercase()`; C#'s `ToLowerInvariant()` yields `zerofuel` for `ZeroFuel` too.
+        // 包线按**每个飞行阶段**各建一条。基线用 `phase.name.lowercase`；C# 的 `ToLowerInvariant` 对 `ZeroFuel` 同样给出 `zerofuel`。
+        // One envelope per **flight phase**. The baseline uses `phase.name.lowercase`; C#'s `ToLowerInvariant` yields `zerofuel` for `ZeroFuel` too.
         var envelopes = new Dictionary<FlightPhase, IReadOnlyList<IEnvelope>>();
         foreach (FlightPhase phase in Enum.GetValues<FlightPhase>()) {
             string suffix = phase.ToString().ToLowerInvariant();

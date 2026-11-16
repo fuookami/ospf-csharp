@@ -22,10 +22,10 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 ///
 /// **覆盖范围明确有限：** **只有仿射链。** **激活与形状算子需要函数符号与模型机制，** **不在这一层里，也不假装在。**
 ///
-/// Syncs the "affine objective → linear model" fragment of `OnnxFunctionalModel`. **The output of this batch is the first hard evidence that the capability works: a graph
+/// Syncs the "affine objective → linear model" fragment of `OnnxFunctionalModel`. **The output is the first hard evidence that the capability works: a graph
 /// passing through here is actually solved and compared against hand arithmetic.**
 ///
-/// **The coverage is deliberately narrow: affine chains only. Activations and shape operators need function symbols and model machinery, are not in this batch, and are
+/// **The coverage is deliberately narrow: affine chains only. Activations and shape operators need function symbols and model machinery, are not in, and are
 /// not pretended to be.**
 /// </remarks>
 public static class OnnxAffineModelBuilder

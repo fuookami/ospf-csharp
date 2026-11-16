@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **基线的五个仓储操作在本仓有一一对应物** / The baseline's five repository operations map one-to-one.
 /// </summary>
 /// <remarks>
-/// **矩阵里那格写着"是否等价<B>尚未逐项核对**"。B1294 去核了，核的是契约层而不是方言层：**
+/// **矩阵里那格写着"是否等价<B>尚未逐项核对**"。核了，核的是契约层而不是方言层：**
 ///
 /// | 基线（`12fdb587`，三个表达式仓储） | 本仓 `ExpressionRepository&lt;E&gt;` |
 /// | --- | --- |
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **钉本仓那五个方法必须还在。** **少一个就是真的丢能力，而被删掉时没有任何别的东西会红。**
 ///
-/// **The matrix says "whether they are equivalent <B>has not been checked item by item</b>". B1294 checked the contract layer: the
+/// **The matrix says "whether they are equivalent <B>has not been checked item by item</b>". The contract layer was then checked: the
 /// three baseline expression repositories expose `{find, count, exists, update, delete}` and no insert, and `ExpressionRepository`
 /// exposes exactly those five.** **So what holds is precise: five operations map one-to-one, no more and no less; and what differs is
 /// equally precise: the baseline uses four dialect backends for one job while this repository uses one stack (EF Core) — a different

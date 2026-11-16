@@ -22,8 +22,8 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Scip;
 /// **二次弹性过滤的三层递进，用真实 SCIP 验证** / The three-tier quadratic elastic filter, verified against real SCIP.
 /// </summary>
 /// <remarks>
-/// **B398—B403 我一直以"无求解器"为由拒绝移植这三个函数。B408 证明那个前提是错的**，
-/// 本批据此把 `RelaxSpecificComponents` 与 `PerformElasticFiltering` 移植过来。
+/// **— 我一直以"无求解器"为由拒绝移植这三个函数。 证明那个前提是错的**，
+/// 这里据此把 `RelaxSpecificComponents` 与 `PerformElasticFiltering` 移植过来。
 ///
 /// 判据用的模型（两层递进的关键）：
 ///
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin.Scip;
 /// | 三层递进正确 | 第 1 层不可行、**第 2 层可行**，`s = 10` |
 /// | 直接跳到第 3 层 | 也可行，但**无法区分**——所以另有一条判据钉住"第 1 层优先" |
 ///
-/// **B398—B403 refused to port these three functions on the grounds that "there is no solver". B408 proved that premise false**, so this batch ports
+/// **— refused to port these three functions on the grounds that "there is no solver". proved that premise false**, so ports
 /// `RelaxSpecificComponents` and `PerformElasticFiltering`. The fixture is designed so that tier 1 **cannot** help but tier 2 can (tables above).
 /// </remarks>
 public class QuadraticElasticFilteringIntegrationTests {

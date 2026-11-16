@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests;
 ///
 /// **"端到端"该有的意思就在这里：** **不是"每部分都有一条判据"，而是"一个真实模型能从头走通，且结果与手算一致"。**
 ///
-/// Syncs the orchestration shape of `OnnxLowering`. **This batch joins three separately verified parts into one path: parsing the subgraph attribute, the importer
+/// Syncs the orchestration shape of `OnnxLowering`. ** joins three separately verified parts into one path: parsing the subgraph attribute, the importer
 /// recognising control flow, and the evaluator walking the body recursively.**
 ///
 /// **That is what end-to-end has to mean: not "every part has a criterion", but "a real model goes through and the result matches hand arithmetic".**
@@ -554,7 +554,7 @@ public class OnnxControlFlowImportTests
     /// **若 Linear 模式悄悄给出一次结果，模型照常求解而二次项不见了——** **那是这条判据要防的错法。**
     ///
     /// **The two modes each say their own thing and both say the truth: the linear refusal names OnnxImportMode.Quadratic, and quadratic mode hands back the second-degree terms.** If linear mode
-    /// quietly produced a first-degree result, the model would still solve with the quadratic terms gone — **the failure this batch exists to remove.**
+    /// quietly produced a first-degree result, the model would still solve with the quadratic terms gone — **the failure exists to remove.**
     /// </remarks>
     [Fact]
     public void AMatMulBetweenTwoSymbols_ShouldNeedQuadraticMode() {

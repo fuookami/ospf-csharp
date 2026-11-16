@@ -76,7 +76,7 @@ public class LegacyBridgeTests {
     /// </remarks>
     [Fact]
     public void ToBox2Geometry_ShouldReturnFailureOnAMismatchedWidth() {
-        // x：米 与 千克 混配；y：米-米，合法。
+        // x：米与 千克混配；y：米-米，合法。
         // x mixes metre with kilogram while y is metre-minus-metre and therefore legal.
         var mixedWidth = new Box2Need<FltX>(Metres(2), Metres(3), Kilograms(12), Metres(13));
 

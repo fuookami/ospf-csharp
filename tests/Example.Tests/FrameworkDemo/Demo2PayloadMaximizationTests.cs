@@ -32,7 +32,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **业载最大化域（B612）** / The payload-maximization domain (B612).
+/// **业载最大化域** / The payload-maximization domain.
 /// </summary>
 /// <remarks>
 /// 整域只有一条管线：把 `payload.estimatePayload` 乘系数后**最大化**。判据的重点是"目标是最大化不是约束"、"常数项也要乘"、

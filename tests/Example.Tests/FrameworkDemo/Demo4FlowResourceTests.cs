@@ -1,4 +1,4 @@
-// 流量终于是一种资源（B741）/ A flow is finally a resource (B741).
+// 流量终于是一种资源/ A flow is finally a resource.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **流量终于是一种资源（B741）** / A flow is finally a resource (B741).
+/// **流量终于是一种资源** / A flow is finally a resource.
 /// </summary>
 /// <remarks>
 /// Demo4 的 `Flow` 此前是个**普通类**：有 `Id`/`Airport`/`Scene`/`Capacities`，却不继承 `ConnectionResource`，所以**当不了资源**，

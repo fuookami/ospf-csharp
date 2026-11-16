@@ -22,12 +22,12 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// Gurobi 原生 IIS 分析器（二次模型）/ Gurobi native IIS analyzer for quadratic models.
 /// </summary>
 /// <remarks>
-/// **B981 补完了 `GurobiInfeasibilityAnalyzers.kt`（518 行）的最后一个类**，Gurobi 三个基线分析器到齐。
+/// 补完了 `GurobiInfeasibilityAnalyzers.kt`（518 行）的最后一个类**，Gurobi 三个基线分析器到齐。
 ///
 /// **二次版本不是线性版本的复制品**：约束是 `GRBQConstr`，成员判定读 `IISQConstr` 而不是 `IISConstr`。
 /// 抄线性那份会在**每一行都不算成员**的地方悄悄返回空 IIS——看起来像"没有不可行子系统"。
 ///
-/// **B981 completes the last class of `GurobiInfeasibilityAnalyzers.kt` (518 lines)**; all three baseline Gurobi analyzers are now present. **The quadratic version is not a copy of
+/// **completes the last class of `GurobiInfeasibilityAnalyzers.kt` (518 lines)**; all three baseline Gurobi analyzers are now present. **The quadratic version is not a copy of
 /// the linear one**: constraints are `GRBQConstr` and membership reads `IISQConstr`, not `IISConstr`. Copying the linear version would silently return an empty IIS **because
 /// no row ever counts as a member**, which reads like "there is no infeasible subsystem".
 /// </remarks>

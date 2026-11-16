@@ -65,7 +65,7 @@ public class TaskConflictPairsTests {
     /// </summary>
     /// <remarks>
     /// 判据让判定**只对第一个执行器为真**：若实现把执行器丢掉、或只扫第一个，结果都会变。
-    /// 只断言"数量等于 执行器数 × 对数"的话，一个忽略执行器的实现也能通过。
+    /// 只断言"数量等于执行器数 × 对数"的话，一个忽略执行器的实现也能通过。
     ///
     /// The predicate holds **only for the first executor**: dropping the executor, or sweeping only the first one, both change the outcome. Asserting merely "count equals
     /// executor count × pair count" would let an implementation that ignores the executor pass.

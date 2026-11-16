@@ -20,12 +20,12 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **定价生成器必须"先去重、再截断"** / The pricing generator must **deduplicate before truncating**.
 /// </summary>
 /// <remarks>
-/// **B364 记的缺口**：上一批覆盖的是**初始方案池**的去重+截断；定价器里"先截断再去重"仍无判据。
+/// **记的缺口**：此前覆盖的是**初始方案池**的去重+截断；定价器里"先截断再去重"仍无判据。
 ///
 /// 这里能钉住是因为**候选顺序可控**：用一个按固定顺序产出的枚举器，
 /// 默认的 `SimpleInitialGenerator` 每个（物料, 需求）只产一条，**永远不会重复**。
 ///
-/// **B364's gap**: the previous batch covered the **initial plan pool**; "truncate before dedupe" in the pricing generator still had no criterion.
+/// **the earlier gap**: the previous step covered the **initial plan pool**; "truncate before dedupe" in the pricing generator still had no criterion.
 ///
 /// It is pinnable here because **the candidate order is controllable**: an enumerator yielding a fixed order, whereas the default `SimpleInitialGenerator` yields one plan
 /// per (material, demand) pair and **never duplicates**.

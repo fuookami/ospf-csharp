@@ -153,7 +153,7 @@ public static class NativePiecewiseEvaluation
     /// | **结果列** | **必须在** | **它是被求解的量** |
     /// | **正部/负部/符号列** | **必须不在** | **它们在建模时被消掉了** |
     ///
-    /// **这与 B1209 的"解里不该有选择列"是同一件事的两个层次：**
+    /// **这与"解里不该有选择列"是同一件事的两个层次：**
     /// **那里查的是<b>值</b>，这里查的是<b>列</b>。**
     /// **一条在解投影之后，一条在列映射阶段——所以两处都需要，不能互相替代。**
     ///
@@ -165,7 +165,7 @@ public static class NativePiecewiseEvaluation
     /// | **result** | **must be present** | **it is what gets solved for** |
     /// | **positive/negative/sign** | **must be absent** | **eliminated at model build time** |
     ///
-    /// **This is the same fact as B1209's "the solution must omit selectors" at a different level: that one checks
+    /// **This is the same fact as the earlier "the solution must omit selectors" at a different level: that one checks
     /// <b>values</b>, this one checks <b>columns</b>.** **One runs after solution projection and one at the column mapping
     /// stage, so both are needed and neither replaces the other.**
     /// </remarks>

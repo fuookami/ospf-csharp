@@ -23,10 +23,10 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// The Gurobi native IIS diagnosis: `computeIIS` on the real backend.
 /// </summary>
 /// <remarks>
-/// **B980 补了 `GurobiInfeasibilityAnalyzers.kt` 里两个 IIS 类中的线性那个**。
+/// 补了 `GurobiInfeasibilityAnalyzers.kt` 里两个 IIS 类中的线性那个**。
 /// 二次那个（`GurobiQuadraticNativeIISAnalyzer`）仍缺——它要处理二次约束，不是同一条路径。
 ///
-/// **B980 ports the linear one of the two IIS classes in `GurobiInfeasibilityAnalyzers.kt`.** The quadratic one is still missing: it handles quadratic constraints, which is not
+/// **The linear one of the two IIS classes in `GurobiInfeasibilityAnalyzers.kt`. is ported** The quadratic one is still missing: it handles quadratic constraints, which is not
 /// the same path.
 /// </remarks>
 public class GurobiNativeIisDiagnosticTest {

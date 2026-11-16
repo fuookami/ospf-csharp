@@ -10,16 +10,16 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B826：分区列生成的两条策略校验 / The two partition column-generation policy checks.
+/// 分区列生成的两条策略校验 / The two partition column-generation policy checks.
 /// </summary>
 /// <remarks>
 /// 基线 `SolvePolicy` 有三个字段，本仓一直只有前两个。**第三个存在与否不是"整洁度问题"**：它是
 /// "分区列生成与 Benders 不能同时启用"那条校验的**唯一输入**。输入不在时写成校验只能是假的，
-/// 所以本仓此前明确记着"搬不了"；B826 把字段补上，校验随之落地。
+/// 所以本仓此前明确记着"搬不了"； 把字段补上，校验随之落地。
 ///
 /// The baseline's `SolvePolicy` has three fields; this port had two. **Whether the third exists is not a tidiness question**: it is the **only input** to the
 /// "partition CG and Benders cannot both be enabled" check. With no input, that check could only be faked, which is why this port recorded it as "cannot move";
-/// B826 adds the field and the check lands with it.
+/// adds the field and the check lands with it.
 /// </remarks>
 public sealed class Demo2SolvePolicyTests
 {
@@ -74,9 +74,9 @@ public sealed class Demo2SolvePolicyTests
         ResponseDTO response = Demo2ApplicationService.Solve(request, StowageMode.FullLoad).Response;
 
         response.Succeed.Should().BeFalse();
-        // **B929 换了状态码**：B826 的 `NotYetPorted` 是错的——注册一直都在，分区配置在 B928 落地，
+        // 换了状态码**： 的 `NotYetPorted` 是错的——注册一直都在，分区配置在 落地，
         // 分派现在只缺**求解器**。说"未移植"会把人送去查模型，而真正缺的是调用方没给后端。
-        // **B929 changed the status code**: B826's `NotYetPorted` was wrong — the registration was always there and the partition configuration landed in B928, so the
+        // **changed the status code**: the earlier `NotYetPorted` was wrong — the registration was always there and the partition configuration landed, so the
         // dispatch now lacks only a **solver**. Saying "not ported" sends people to inspect the model when the caller simply supplied no backend.
         response.Status.Should().Be("ColumnGenerationSolverNotSupplied");
         response.Notes.Should().Contain(
@@ -88,10 +88,10 @@ public sealed class Demo2SolvePolicyTests
     /// </summary>
     /// <remarks>
     /// 策略校验放在心跳**之前**（与基线一致），所以这两条提前返回很容易漏掉收尾心跳。而"只报成功的心跳等于没有心跳"——
-    /// 调用方最需要知道的恰恰是"它结束了、而且失败了"。B826 把收尾抽成 `Finish` 就是为了这个。
+    /// 调用方最需要知道的恰恰是"它结束了、而且失败了"。 把收尾抽成 `Finish` 就是为了这个。
     ///
     /// The checks run **before** the heartbeat (matching the baseline), so these two early returns are easy to ship without one. "Heartbeats that only report
-    /// success are no heartbeats at all" — what a caller most needs to know is that it **ended and failed**. B826 extracted `Finish` for exactly this.
+    /// success are no heartbeats at all" — what a caller most needs to know is that it **ended and failed**. extracted `Finish` for exactly this.
     /// </remarks>
     [Fact]
     public void ARefusedPolicy_ShouldStillEmitTheFinishingHeartbeat() {
@@ -112,12 +112,12 @@ public sealed class Demo2SolvePolicyTests
     /// **机型守卫只在 `Unknown` 上触发** / The aircraft guard fires only on `Unknown`.
     /// </summary>
     /// <remarks>
-    /// 本仓此前把 `SupportedAircraft` 写成 `B737 || B757`，于是 **B767 / B747 会被判为不支持** —— 而基线只排除 `Unknown`（B827 实测）。
+    /// 本仓此前把 `SupportedAircraft` 写成 ` || `，于是 **/ 会被判为不支持** —— 而基线只排除 `Unknown`。
     /// 这条判据同时钉住两端：三个"支持"的机型**必须能被分派**（不报 `UnsupportedAircraft`），`Unknown` **必须被拒**。
     /// **只钉后者的话，"全都不支持"也能让它绿。**
     ///
-    /// This port used to define `SupportedAircraft` as `B737 || B757`, so **B767 and B747 reported unsupported** — the baseline excludes only `Unknown` (measured by
-    /// B827). This criterion pins both ends: the three supported types **must reach dispatch** (no `UnsupportedAircraft`), and `Unknown` **must be refused**. With only
+    /// This port used to define `SupportedAircraft` as ` || `, so **and reported unsupported** — the baseline excludes only `Unknown` (measured by
+    /// ). This criterion pins both ends: the three supported types **must reach dispatch** (no `UnsupportedAircraft`), and `Unknown` **must be refused**. With only
     /// the second half, "nothing is supported" would stay green.
     /// </remarks>
     [Theory]
@@ -174,8 +174,8 @@ public sealed class Demo2SolvePolicyTests
 
     [Fact]
     public void TheSampleRequest_ShouldStillSolveThroughTheOrdinaryPath() {
-        // 三条校验都不触发时，行为必须与 B826 之前完全一致——**新增分支不能改变既有路径**。
-        // With none of the checks tripped, behaviour must match pre-B826 exactly — **a new branch must not change the existing path**.
+        // 三条校验都不触发时，行为必须与 之前完全一致——**新增分支不能改变既有路径**。
+        // With none of the checks tripped, behaviour must match pre- exactly — **a new branch must not change the existing path**.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest();
 
         (ResponseDTO Response, RenderDTO? Render) executed =

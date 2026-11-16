@@ -17,18 +17,18 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **任务束成本目标（B566）** / The bunch cost objective (B566).
+/// **任务束成本目标** / The bunch cost objective.
 /// </summary>
 /// <remarks>
 /// `BunchCostMinimization.Invoke` 原来是 `Results.Ok(...)`：**什么都不加，也什么都不报**。于是"目标里包含束成本"这件事只存在于注释里——
 /// 求解器照样给出一个解，代价是最小化的是**别的**东西。
 ///
-/// 本批把它做成真的：把 `bunch_cost`（`Σ 束成本 × x`）作为 `Minimum` 子目标加进模型。构造参数也从具体泛型
+/// 这里把它做成真的：把 `bunch_cost`（`Σ 束成本 × x`）作为 `Minimum` 子目标加进模型。构造参数也从具体泛型
 /// `BunchCompilation&lt;AbstractTaskBunch&lt;T,E,A&gt;,…&gt;` 换成 `ITaskCost`——泛型不变性让前者根本接不上
 /// `BunchCompilation&lt;FlightTaskBunch,…&gt;`，Demo4 当初正是因此把它跳过的。
 ///
 /// `BunchCostMinimization.Invoke` used to be `Results.Ok(...)`: **adds nothing and reports nothing**. So "the objective includes bunch cost" existed only in comments — the solver
-/// still produced a solution, except it minimised something else. This batch makes it real: `bunch_cost` (`Σ bunch cost × x`) goes in as a `Minimum` sub-objective. The constructor
+/// still produced a solution, except it minimised something else. makes it real: `bunch_cost` (`Σ bunch cost × x`) goes in as a `Minimum` sub-objective. The constructor
 /// parameter also moved from the concrete `BunchCompilation&lt;AbstractTaskBunch&lt;T,E,A&gt;,…&gt;` to `ITaskCost` — invariance made the former unusable with
 /// `BunchCompilation&lt;FlightTaskBunch,…&gt;`, which is exactly why Demo4 skipped it.
 /// </remarks>
@@ -78,10 +78,10 @@ public class BunchCostMinimizationTests {
     /// <summary>**没有列时不加空目标** / No columns, no empty objective.</summary>
     /// <remarks>
     /// 一列都没有时 `bunch_cost` 恒为零。加一个空子目标不会改变解，却会让"目标里有束成本"这句话在模型里**看起来成立**——
-    /// 而这正是本批要消灭的那种假象。
+    /// 而这正是这里要消灭的那种假象。
     ///
     /// With no columns `bunch_cost` is identically zero. An empty sub-objective does not change the solution but makes "the objective includes bunch cost" **look** true in the
-    /// model — precisely the illusion this batch removes.
+    /// model — precisely the illusion.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldAddNothingWhileThereAreNoColumns() {

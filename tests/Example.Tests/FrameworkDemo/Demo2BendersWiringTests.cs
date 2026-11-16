@@ -11,7 +11,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B831：另外两条路径没有 Benders 接线，必须说出来 / The other two paths have no Benders wiring and must say so.
+/// 另外两条路径没有 Benders 接线，必须说出来 / The other two paths have no Benders wiring and must say so.
 /// </summary>
 /// <remarks>
 /// 这两条路径此前是 **先 `ResolveSolveMode` 算模式、然后什么都不做**：模式被丢掉，永远走 MILP。
@@ -133,9 +133,9 @@ public sealed class Demo2BendersWiringTests
                         }
                         code.AppendLine(line);
                     }
-                    // **不写 `new `**：B863 的变异用**全限定名** `new Fuookami.Ospf.Framework.Solver.LinearBendersModels(` 绕过了第一版判据。
+                    // **不写 `new `**： 的变异用**全限定名** `new Fuookami.Ospf.Framework.Solver.LinearBendersModels(` 绕过了第一版判据。
                     // 只钉类型名加括号，限定与否都算。
-                    // **No `new ` prefix**: B863's mutation slipped past the first version by using the **fully qualified** type name; pinning the type name plus a
+                    // **No `new ` prefix**: the earlier mutation slipped past the first version by using the **fully qualified** type name; pinning the type name plus a
                     // parenthesis catches both spellings.
                     code.ToString().Should().NotContain("LinearBendersModels(", "assembling the models by hand needs an always-passing verify callback");
                 }
@@ -188,27 +188,27 @@ public sealed class Demo2BendersWiringTests
                 directory.FullName, "src", "Example", "FrameworkDemo", "Demo2", "Application", "FullLoadApplication.cs");
             if (global::System.IO.File.Exists(candidate)) {
                 string code = StripComments(candidate);
-                // **同一个文件里有两条构建路径，B893 之后分派走的是单模型那条**：`demo2_full_load_single` 是基线形状、也是现在的分派；
+                // **同一个文件里有两条构建路径，之后分派走的是单模型那条**：`demo2_full_load_single` 是基线形状、也是现在的分派；
                 // `demo2_full_load_master` / `_sub` 仍在（对照判据还用得上），但**不再被分派调用**。这里按**名字**数，而不是数前缀——
-                // 前缀计数在 B866 当天就红了一次，红的原因是"多了一条正确的路径"。
+                // 前缀计数在 当天就红了一次，红的原因是"多了一条正确的路径"。
                 //
-                // **Two construction paths live in one file, and since B893 dispatch takes the single-model one**: `demo2_full_load_single` is the baseline shape and what
+                // **Two construction paths live in one file, and since then dispatch takes the single-model one**: `demo2_full_load_single` is the baseline shape and what
                 // dispatch uses; `demo2_full_load_master` / `_sub` remain (the comparison criteria still need them) but **are no longer called by dispatch**. Counted **by
-                // name**, not by prefix — the prefix count went red the day B866 landed, and it went red because **a correct path had been added**.
+                // name**, not by prefix — the prefix count went red the day landed, and it went red because **a correct path had been added**.
                 //
-                // **After B866 there are two construction paths in one file**: dispatch still runs "master + sub" (`demo2_full_load_master` / `_sub`) while a
-                // single-model builder (`demo2_full_load_single`) sits beside it. So this counts **by name**, not by prefix — the prefix count went red the day B866
+                // **After there are two construction paths in one file**: dispatch still runs "master + sub" (`demo2_full_load_master` / `_sub`) while a
+                // single-model builder (`demo2_full_load_single`) sits beside it. So this counts **by name**, not by prefix — the prefix count went red the day 
                 // landed, and it went red because **a correct path had been added**.
                 CountOccurrences(code, "new LinearMetaModel<Flt64>(\"demo2_full_load_master\"").Should().Be(1);
                 CountOccurrences(code, "new LinearMetaModel<Flt64>(\"demo2_full_load_sub\"").Should().Be(1);
                 CountOccurrences(code, "new LinearMetaModel<Flt64>(\"demo2_full_load_single\"").Should().Be(1,
                     "the single-model builder is the baseline shape **and** what dispatch uses since B893");
-                // **旧路径没有生产调用方**（B913）：`SolveWithBenders` 在代码里只出现**一次**（它自己的声明）。
+                // **旧路径没有生产调用方**：`SolveWithBenders` 在代码里只出现**一次**（它自己的声明）。
                 // 它此刻唯一的消费者是对照判据（`Demo2BendersAssignmentFabricationTests` 两条直调）。
-                // **一旦这里变成 2，说明有人在分派里又把它接回去了**——那正是 B881/B889 被驳回两次的那件事。
+                // **一旦这里变成 2，说明有人在分派里又把它接回去了**——那正是 / 被驳回两次的那件事。
                 //
-                // **The old route has no production caller** (B913): `SolveWithBenders` appears **once** in code — its own declaration. Its only consumers now are the
-                // comparison criteria (two direct calls). **A count of 2 would mean someone wired it back into dispatch** — the very thing rejected twice in B881/B889.
+                // **The old route has no production caller**: `SolveWithBenders` appears **once** in code — its own declaration. Its only consumers now are the
+                // comparison criteria (two direct calls). **A count of 2 would mean someone wired it back into dispatch** — the very thing rejected twice/.
                 CountOccurrences(code, "SolveWithBenders(").Should().Be(1,
                     "dispatch takes the single-model chain since B893; the old route stays only for the comparison criteria");
                 return;
@@ -250,11 +250,11 @@ public sealed class Demo2BendersWiringTests
     /// **分派仍走两模型路径，且原因写在源码里** / Dispatch still takes the two-model route, with the reason in the source.
     /// </summary>
     /// <remarks>
-    /// B881 试过切到单模型路径，被实测驳回：脚本求解器在旧算法上收敛、在 `LinearBendersAlgorithm` 上直接失败。
+    /// 试过切到单模型路径，被实测驳回：脚本求解器在旧算法上收敛、在 `LinearBendersAlgorithm` 上直接失败。
     /// 这条判据钉住"分派**暂时**留在旧路径"这个事实——**不钉的话，下一个人会以为已经切了**。
     /// 等两套算法的调用契约对齐，这条就该改（那时才会删掉旧路径）。
     ///
-    /// B881 tried switching to the single-model route and measurement rejected it. This criterion pins the fact that dispatch **still** takes the old route — **without
+    /// tried switching to the single-model route and measurement rejected it. This criterion pins the fact that dispatch **still** takes the old route — **without
     /// it, the next reader believes the switch already happened**. Once the two algorithms' calling contracts agree, this criterion changes (that is when the old route goes away).
     /// </remarks>
     [Fact]
@@ -276,23 +276,28 @@ public sealed class Demo2BendersWiringTests
         // **A call in the code and a reason in the comments**: checked separately, because `StripComments` removes the reason.
         StripComments(path!).Should().Contain("SolveSingleModelBendersAsync(",
             "the dispatch must call the single-model chain; the old route stays reachable for comparison");
-        // **两次尝试都要在理由里留痕**（B889）：第一次是脚本不收敛，第二次是**默认门禁的假脚本不收敛而真后端收敛**——
+        // **两次尝试都要在理由里留痕**：第一次是脚本不收敛，第二次是**默认门禁的假脚本不收敛而真后端收敛**——
         // 两个理由不同，只留第一个会让人以为"再试一次就行了"。
         //
-        // **Both attempts must leave a trace** (B889): the first was a non-converging script, the second is **the default gate's fake script not converging while the real
+        // **Both attempts must leave a trace**: the first was a non-converging script, the second is **the default gate's fake script not converging while the real
         // backend does** — different reasons, and keeping only the first makes the next reader think "just try again".
-        global::System.IO.File.ReadAllText(path!).Should().Contain("B889 tried the switch a second time",
+        // **判据要的是"两次否决各自留下了理由"，不是"某个批次号还在"。** '
+        // **叙述清理把批次号去掉了，规则本身没变：两次尝试的理由不同，源码里都必须写明。**
+        //
+        // **What this needs is "each rejection left its own reason", not "a batch id is still there".** The narration cleanup removed the ids and **the rule is unchanged: the two attempts
+        // were rejected for different reasons, and both have to be written next to the code.**
+        global::System.IO.File.ReadAllText(path!).Should().Contain("tried the switch a second time and it was rejected again",
             "the second rejection needs its own reason next to the code");
-        global::System.IO.File.ReadAllText(path!).Should().Contain("B881 tried switching this line to the single-model route and measurement rejected it",
+        global::System.IO.File.ReadAllText(path!).Should().Contain("tried switching this line to the single-model route and measurement rejected it",
             "the reason has to live next to the code, otherwise the revert looks like an oversight");
     }
 
     /// <summary>**旧路径必须能被对照判据直接调用** / The old route must be callable by the comparison criteria.</summary>
     /// <remarks>
-    /// B892 把 `SolveWithBenders` 从 `private` 改成 `internal`，理由只有一个：**分派切走之后，对照关系还在**。
+    /// 把 `SolveWithBenders` 从 `private` 改成 `internal`，理由只有一个：**分派切走之后，对照关系还在**。
     /// 如果它留在 `private`，切换当天那些判据只能被删或改写，**"新旧对比"这件事就消失了**——而对比正是切换之后最需要的东西。
     ///
-    /// B892 changed `SolveWithBenders` from `private` to `internal` for one reason: **the comparison survives the switch**. Left private, the criteria could only be deleted or
+    /// changed `SolveWithBenders` from `private` to `internal` for one reason: **the comparison survives the switch**. Left private, the criteria could only be deleted or
     /// rewritten, and **the old-versus-new comparison would disappear** — exactly the thing that matters most after switching.
     /// </remarks>
     [Fact]

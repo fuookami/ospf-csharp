@@ -143,7 +143,7 @@ public sealed class PositionStatus
 ///
 /// 1. **阶跃而不是插值**。基线里那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**被注释掉了**，实际生效的是
 ///    `invoke(zfw)` 里的分段查找（`zfw` 落在哪段就用哪段的 `mlw`）。C# 照抄**生效的那一条**，不照抄注释掉的那条。
-/// 2. **构造时校验段序**。基线 `assert(piecewise.isNotEmpty())` 在 Kotlin 里默认关闭；C# 的 `ArgumentOutOfRangeException`
+/// 2. **构造时校验段序**。基线 `assert(piecewise.isNotEmpty)` 在 Kotlin 里默认关闭；C# 的 `ArgumentOutOfRangeException`
 ///    在 Release 下也生效。分段为空是调用方错误，静默接受会得到一个"永远返回 0"的规格。
 /// 3. **`mlw` 取各段最大值**，与基线 `maxWithThreeWayComparatorOrNull` 一致；段按 `minZfw` 升序排，与基线一致。
 ///
@@ -345,9 +345,9 @@ public sealed class StowagePosition
 
     /// <summary>舱位类型 / Position type</summary>
     /// <remarks>
-    /// `enabled()` 的判断大半落在"这个码在不在集合里"，所以类型必须在**舱位**上，而不是在规则里写死。
+    /// `enabled` 的判断大半落在"这个码在不在集合里"，所以类型必须在**舱位**上，而不是在规则里写死。
     ///
-    /// Most of `enabled()`'s checks are "is this code in the set", so the type belongs on the **position**, not hard-coded in the rules.
+    /// Most of `enabled`'s checks are "is this code in the set", so the type belongs on the **position**, not hard-coded in the rules.
     /// </remarks>
     public PositionType Type { get; }
 
@@ -360,16 +360,16 @@ public sealed class StowagePosition
     /// <param name="item">货物 / The cargo item.</param>
     /// <returns>能力与原因 / Capability and reason.</returns>
     /// <remarks>
-    /// 逐条对齐基线 `stowage/model/Position.kt` 的 `enabled()`：**货位互斥**（主/下、散/非散、头/尾）、
+    /// 逐条对齐基线 `stowage/model/Position.kt` 的 `enabled`：**货位互斥**（主/下、散/非散、头/尾）、
     /// **货类互斥**（虚拟装载物不进下舱；舱位类型码禁止刚硬/易碎/空集装器/放空；航材指定舱位只装航材；
     /// 普散货指定舱位不装航材；已装航材的散舱不装普通散货）、**散货同目的地**。
     ///
-    /// 两条集装器规则也已补上（B581）：`item.Uld.Code` 不在 `enabledULDs` 里就拒，命中 `Taboo[item]` 的编号区间也拒。
+    /// 两条集装器规则也已补上：`item.Uld.Code` 不在 `enabledULDs` 里就拒，命中 `Taboo[item]` 的编号区间也拒。
     ///
-    /// Copied rule by rule from the baseline `stowage/model/Position.kt`'s `enabled()`: **location exclusions** (main/lower, bulk/non-bulk, head/tail), **cargo-class exclusions**
+    /// Copied rule by rule from the baseline `stowage/model/Position.kt`'s `enabled`: **location exclusions** (main/lower, bulk/non-bulk, head/tail), **cargo-class exclusions**
     /// (virtual cargo does not enter the lower deck; position type codes forbid stiff/crush/empty/virtual; AOG-MAT appointed positions take only AOG/MAT; normal-bulk appointed
     /// positions take no AOG/MAT; a bulk hold already holding AOG/MAT takes no ordinary bulk), and **same-destination bulk**.
-    /// The two ULD rules are covered too (B581): a `Uld.Code` outside `enabledULDs` is refused, and so is a hit on a `Taboo[item]` number range.
+    /// The two ULD rules are covered too : a `Uld.Code` outside `enabledULDs` is refused, and so is a hit on a `Taboo[item]` number range.
     /// </remarks>
     public PositionCapability Enabled(Item item) {
         ArgumentNullException.ThrowIfNull(item);
@@ -465,10 +465,10 @@ public sealed class StowagePosition
     /// 名字 / The name.
     /// </summary>
     /// <remarks>
-    /// **必须覆写**，理由同 `Item.ToString()`：中间符号名拼了舱位，不覆写会让每个舱位得到同一串类型全名，
+    /// **必须覆写**，理由同 `Item.ToString`：中间符号名拼了舱位，不覆写会让每个舱位得到同一串类型全名，
     /// 模型注册报 `Repeated "…"`（实测）。
     ///
-    /// **Must override**, for the same reason as `Item.ToString()`: symbol names concatenate positions, and without this every position renders as the same type name, so model
+    /// **Must override**, for the same reason as `Item.ToString`: symbol names concatenate positions, and without this every position renders as the same type name, so model
     /// registration fails with `Repeated "…"` (measured).
     /// </remarks>
     /// <returns>舱位名 / The position name.</returns>

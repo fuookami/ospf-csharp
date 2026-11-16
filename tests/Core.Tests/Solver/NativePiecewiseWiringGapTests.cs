@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// **"申报了"与"用上了"之间的那段距离** / The distance between "declared" and "actually used".
 /// </summary>
 /// <remarks>
-/// **B1265 是第二十二次复核，而它发现的是<b>文档在说谎</b>，不是缺功能。**
+/// **一次复核发现的是<b>文档在说谎</b>，不是缺功能。**
 ///
 /// **能力矩阵上 CPLEX 与 COPT 两行都写着"原生 SOS2/PWL 选择与写入未实现"。**
 ///
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 ///
 /// **所以这两行的正确写法不是"未实现"，而是"已实现、未接线，而申报已越过实际"。**
 ///
-/// **B1265 is the survey's follow-up check, and what it found is that <b>the docs were lying</b> — not a missing feature.**
+/// **A follow-up check found that <b>the docs were lying</b> — not a missing feature.**
 ///
 /// **The matrix says of both CPLEX and COPT "native SOS2/PWL selection and writing are not implemented".** **In fact both
 /// `CplexNativePiecewise.cs` (172 lines, SOS2 lambda form, with point-count validation, key mapping and duplicate-result

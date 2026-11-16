@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Normalize a discrete condition into one linearization record.
 /// </summary>
 /// <remarks>
-/// B1174 按基线 `DiscreteCondition.kt` 的 `normalizeDiscreteCondition` 补，并补齐
+/// 对齐基线 `DiscreteCondition.kt` 的 `normalizeDiscreteCondition` 补，并补齐
 /// `transformForRelationIndicator`。
 ///
-/// **这一批只做装配**：**归一化范围、折叠判断、格点证明三块都已就位。**
+/// **这里只做装配**：**归一化范围、折叠判断、格点证明三块都已就位。**
 /// **装配本身仍有两处容易错，而两处都不报错**：
 ///
 /// **① 范围的变换必须与多项式变换用<b>同一个</b> `strictBoundary`。**
@@ -32,9 +32,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **反过来的话，折叠给出的"这个分支不可能"会被范围重算覆盖掉，
 /// 于是一个本可以省掉的指示变量又被生成——不报错，只是白算。**
 ///
-/// B1174, following the baseline's `normalizeDiscreteCondition`, plus `transformForRelationIndicator`.
+/// Following the baseline's `normalizeDiscreteCondition`, plus `transformForRelationIndicator`.
 ///
-/// **This batch is assembly only**: **range normalization , gap folding and lattice proofs
+/// ** is assembly only**: **range normalization , gap folding and lattice proofs
 /// are all in place.**
 /// **Two things in the assembly are still easy to get wrong, and neither throws**:
 ///

@@ -1,4 +1,4 @@
-// 装载模型第一批：装载重量/数量变量、装载量与满载符号 / The first slice of the load model: weight/count variables plus stowage-amount and full symbols.
+// 装载模型此前：装载重量/数量变量、装载量与满载符号 / The first slice of the load model: weight/count variables plus stowage-amount and full symbols.
 
 using System;
 using System.Collections.Generic;
@@ -26,10 +26,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 /// 装载模型 / The load model.
 /// </summary>
 /// <remarks>
-/// 基线 `demo2/domain/stowage/model/Load.kt` 共 585 行。本批落**第一批**：`y`（推荐装载重量）、`z`（推荐装载数量）、
+/// 基线 `demo2/domain/stowage/model/Load.kt` 共 585 行。这里落**此前**：`y`（推荐装载重量）、`z`（推荐装载数量）、
 /// `load_amount_{舱位}`（该舱位装了几件）、`full_{舱位}`（该舱位是否装满）。未落部分逐条记在 <see cref="Register"/> 的注释里。
 ///
-/// The baseline `Load.kt` is 585 lines. This batch lands the **first slice**: `y` (recommended load weight), `z` (recommended load count), `load_amount_{position}` and
+/// The baseline `Load.kt` is 585 lines. lands the **first slice**: `y` (recommended load weight), `z` (recommended load count), `load_amount_{position}` and
 /// `full_{position}`. What is not landed is listed on <see cref="Register"/>.
 /// </remarks>
 public sealed class Load
@@ -164,7 +164,7 @@ public sealed class Load
     /// <summary>
     /// 为一组舱位批量构造装载量 / Build the amounts for a group of positions at once.
     /// </summary>
-    /// <param name="positionIndices">本批需要的舱位下标 / The positions this batch needs.</param>
+    /// <param name="positionIndices">这里需要的舱位下标 / The positions needed here.</param>
     /// <param name="itemIndices">货物下标，保留调用方顺序及重复项 / Item indices, keeping the caller's order and duplicates.</param>
     /// <returns>按舱位下标的装载量符号 / The amount symbols by position index.</returns>
     /// <remarks>
@@ -276,7 +276,7 @@ public sealed class Load
         _index.TryGetValue(positionIndex, out LinearExpressionSymbol? symbol) ? symbol : null;
 
     /// <summary>
-    /// 注册第一批装载符号 / Register the first slice of load symbols.
+ /// 注册此前装载符号 / Register the first slice of load symbols.
     /// </summary>
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>操作结果 / Operation result.</returns>
@@ -304,9 +304,9 @@ public sealed class Load
         }
         _registeredIn = null;
         // `y`/`z` **无条件构建**：基线里它们不在任何 `if` 里，`if (withMultiLoadingSchema)` 只包 `estimateLoadWeight`。
-        // B577 曾把它们包进守卫（判断错了），结果是"谓词重量松弛"在单方案下拿不到 `y`——而基线那段松弛同样不看方案。
+        // 曾把它们包进守卫（判断错了），结果是"谓词重量松弛"在单方案下拿不到 `y`——而基线那段松弛同样不看方案。
         // **无条件**还有一层原因：`y`/`z` 的范围按舱位状态钉过零，单方案下它们本来就是常数零，不会虚增求解规模。
-        // `y`/`z` are **built unconditionally**: in the baseline they sit inside no `if` at all, and `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. B577 wrongly
+        // `y`/`z` are **built unconditionally**: in the baseline they sit inside no `if` at all, and `if (withMultiLoadingSchema)` wraps only `estimateLoadWeight`. wrongly
         // put them under the guard, which left the predicate weight slack without a `y` under the single schema — and that slack does not depend on the schema either.
         // `y`/`z` also have their ranges pinned to zero per position status, so under the single schema they are constants that inflate nothing.
         {
@@ -676,10 +676,10 @@ public sealed class Load
         }
 
         // 把 y/z 的重量**接进内核的容量约束**：不接就等于凭空多装了几百公斤，容量行看不见它们。
-        // **无条件**（基线不在任何 `if` 里）：B579 曾把它包进 `if (WithMultiLoadingSchema)`，于是单方案下 `load_amount` 的容量
+        // **无条件**（基线不在任何 `if` 里）： 曾把它包进 `if (WithMultiLoadingSchema)`，于是单方案下 `load_amount` 的容量
         // 联动整段消失——而单方案恰恰是最常用的那种。
         // Link the y/z weight **into the kernel's capacity row**: without it the slack is hundreds of kilograms the capacity row never sees.
-        // **Unconditionally** (the baseline has no `if` here): B579 wrapped this in `if (WithMultiLoadingSchema)`, so under the single schema the whole capacity link vanished — and the
+        // **Unconditionally** (the baseline has no `if` here): wrapped this in `if (WithMultiLoadingSchema)`, so under the single schema the whole capacity link vanished — and the
         // single schema is the common case.
         if (Y is not null && Z is not null) {
             for (int j = 0; j < _positions.Count; ++j) {

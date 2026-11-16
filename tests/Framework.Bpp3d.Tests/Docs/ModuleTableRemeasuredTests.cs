@@ -12,13 +12,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **一个过时的判断会被抄进更多地方** / A stale judgement gets copied into more places than one.
 /// </summary>
 /// <remarks>
-/// B955 只改了状态文档的 P9 摘要，**而矩阵里那两条一模一样的判断还活着**：基准"九个 / 两个依赖缺失或 `internal`"、持久化"只验证了仓储接口"。
-/// B960 在同一张表的第四到第七节又找出四处。
+/// 只改了状态文档的 P9 摘要，**而矩阵里那两条一模一样的判断还活着**：基准"九个 / 两个依赖缺失或 `internal`"、持久化"只验证了仓储接口"。
+/// 在同一张表的第四到第七节又找出四处。
 ///
 /// **两份拷贝里改一份等于没改**：读者遇到不一致时不会去查哪份新，**他只会信对自己更不利的那份**——然后重做一遍已经做过的事。
 ///
-/// B955 corrected only the status document **while the matrix kept the same two judgements**: "nine benchmarks, two blocked by a missing project or an `internal` type" and "only the
-/// repository interface was verified". B960 found four more in sections four through seven. **Fixing one of two copies is not fixing it**: a reader facing the disagreement does
+/// corrected only the status document **while the matrix kept the same two judgements**: "nine benchmarks, two blocked by a missing project or an `internal` type" and "only the
+/// repository interface was verified". found four more in sections four through seven. **Fixing one of two copies is not fixing it**: a reader facing the disagreement does
 /// not check which is newer, **he believes the one that costs him more** — and redoes work that was already done.
 /// </remarks>
 public class ModuleTableRemeasuredTests
@@ -89,10 +89,10 @@ public class ModuleTableRemeasuredTests
 
     /// <summary>**每一行的备注都不是空的，且项目名能对上目录** / No empty remark, and the project name matches a directory.</summary>
     /// <remarks>
-    /// B960 在第四到第七节找到两行备注空着（`BPP 2D 装箱` 与 `CoreDemo / FrameworkDemo`）。
-    /// **空着不等于"没问题"**：这一批给两行都填了能核对的事实。
+    /// 在第四到第七节找到两行备注空着（`BPP 2D 装箱` 与 `CoreDemo / FrameworkDemo`）。
+    /// **空着不等于"没问题"**：这里给两行都填了能核对的事实。
     ///
-    /// B960 found two empty remarks in sections four through seven. **Empty does not mean "fine"**; both got checkable facts in this batch.
+    /// found two empty remarks in sections four through seven. **Empty does not mean "fine"**; both got checkable facts in.
     /// </remarks>
     [Fact]
     public void EveryModuleRow_ShouldHaveARemarkOrAProvenStatus() {

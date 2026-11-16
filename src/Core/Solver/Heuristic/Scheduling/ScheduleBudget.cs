@@ -192,11 +192,11 @@ public static class ScheduleLogs {
     /// <remarks>
     /// **这里用静态工厂而不是第二个构造函数**：`ScheduleLog` 是带主构造函数的 record，再叠一个便捷构造函数会让
     /// `System.Text.Json` 无法选定反序列化目标，于是**序列化能成功、反序列化直接抛 `NotSupportedException`**。
-    /// 那正是 Batch 192 记下的"往返损坏"的真正成因。
+ /// 那正是 earlier 记下的"往返损坏"的真正成因。
     ///
     /// **A static factory rather than a second constructor**: `ScheduleLog` is a record with a primary constructor, and stacking a convenience
     /// constructor on it leaves `System.Text.Json` unable to pick a deserialisation target, so **serialisation succeeds while deserialisation throws
-    /// `NotSupportedException`**. That is the actual cause of the "broken round trip" recorded in Batch 192.
+ /// `NotSupportedException`**. That is the actual cause of the "broken round trip" recorded in earlier.
     /// </remarks>
     /// <param name="configuration">配置指纹 / The configuration fingerprint.</param>
     /// <param name="problem">问题指纹 / The problem fingerprint.</param>

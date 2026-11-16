@@ -1,4 +1,4 @@
-// 乘客域管线清单（B768）/ The passenger pipeline list (B768).
+// 乘客域管线清单/ The passenger pipeline list.
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ using PassengerAggregation = Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Pa
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **乘客域管线清单（B768）** / The passenger pipeline list (B768).
+/// **乘客域管线清单** / The passenger pipeline list.
 /// </summary>
 /// <remarks>
 /// 三条约束在前、三条目标在后。顺序反了**不会报错**：求解照样成功，只是列生成的定价拿不到可用的对偶信息——
@@ -155,10 +155,10 @@ public class Demo4PassengerPipelineListGeneratorTests {
     /// </summary>
     /// <remarks>
     /// 三点成对：六条全部 `Invoke` 成功 / 约束行数增加 / 模型里出现指示变量（`_if`）。
-    /// 只证明"六条各自能构造"是不够的：**它们可能一条行都不加**——B766 的空行就是这么出现的。
+    /// 只证明"六条各自能构造"是不够的：**它们可能一条行都不加**—— 的空行就是这么出现的。
     ///
     /// Three paired points: all six `Invoke` calls succeed; the constraint count grows; and indicator variables (`_if`) appear in the model. Proving "each of the six constructs" is not
-    /// enough: **they may add no rows at all** — that is exactly how B766's empty row came about.
+    /// enough: **they may add no rows at all** — that is exactly how the earlier empty row came about.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldAddRowsWhenAllSixRun() {
@@ -220,10 +220,10 @@ public class Demo4PassengerPipelineListGeneratorTests {
     /// </summary>
     /// <remarks>
     /// 两点成对：求解成功 / 机身层（容量）读出 **120**。
-    /// 只证明"六条各自成功"是不够的：**它们互相之间可能把模型写成不可行**——B752 的教训是"接上了"与"能一起解"是两件事。
+    /// 只证明"六条各自成功"是不够的：**它们互相之间可能把模型写成不可行**—— 的教训是"接上了"与"能一起解"是两件事。
     ///
     /// Two paired points: the solve succeeds; and the capacity layer reads **120**. Proving "each of the six succeeds" is not enough: **together they can write an infeasible model** —
-    /// B752's lesson is that "wired" and "solvable together" are two different things.
+    /// the earlier lesson is that "wired" and "solvable together" are two different things.
     /// </remarks>
     [Fact]
     public async System.Threading.Tasks.Task Invoke_ShouldSolveTogether() {

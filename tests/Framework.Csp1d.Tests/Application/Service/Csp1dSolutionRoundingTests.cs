@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **解提取必须四舍五入，不是截断** / Extracted solution amounts must round, not truncate.
 /// </summary>
 /// <remarks>
-/// **B371 发现的偏离**：基线是 `doubleValue.roundToLong().coerceAtLeast(0)`，
+/// 发现的偏离**：基线是 `doubleValue.roundToLong.coerceAtLeast(0)`，
 /// C# 原本是 `(long)doubleValue`——**截断**。
 ///
 /// 两个后果，第二个更严重：
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// `0.6` 那一行说明问题：**一条用了 0.6 次的方案会被当成"没用"而整条丢弃**，
 /// 物料用量、设备用量、欠产判定全部跟着少算。
 ///
-/// **B371's deviation**: the baseline is `doubleValue.roundToLong().coerceAtLeast(0)` while C# was `(long)doubleValue` — **truncation**. The table above shows the two
+/// **the earlier deviation**: the baseline is `doubleValue.roundToLong.coerceAtLeast(0)` while C# was `(long)doubleValue` — **truncation**. The table above shows the two
 /// consequences; the `0.6` row is the serious one — **a plan used 0.6 times is discarded as "unused"**, and the material, machine and deficit figures all under-count with it.
 /// </remarks>
 public class Csp1dSolutionRoundingTests {
@@ -134,14 +134,14 @@ public class Csp1dSolutionRoundingTests {
 
     /// <summary>**`SolutionAmount` 走的是同一条取整规则** / `SolutionAmount` follows the same rounding rule.</summary>
     /// <remarks>
-    /// **B371 只修了 `ExtractSolution`，漏了 `SolutionAmount`。** 两处基线都是
-    /// `roundToLong()`，C# 两处都是 `(long)`——**修一处等于没修**。
+    /// 只修了 `ExtractSolution`，漏了 `SolutionAmount`。** 两处基线都是
+    /// `roundToLong`，C# 两处都是 `(long)`——**修一处等于没修**。
     ///
     /// `SolutionAmount` 是 **waste 结果（余宽、余料、物料成本）的唯一入口**，
     /// 截断会让这些指标系统性偏低。这条判据通过 `ExtractWasteResult` 间接钉它：
     /// 余宽 40mm 用了 **0.5** 次，正确结果 20mm；截断给 **0**（因为 0.5 取成 0，整条跳过）。
     ///
-    /// **B371 fixed only `ExtractSolution` and missed `SolutionAmount`.** Both baseline sites are `roundToLong()` and both C# sites were `(long)` — **fixing one changed
+    /// **fixed only `ExtractSolution` and missed `SolutionAmount`.** Both baseline sites are `roundToLong` and both C# sites were `(long)` — **fixing one changed
     /// nothing**. `SolutionAmount` is **the only entry point for the waste results** (trim width, rest material, material cost), so truncation makes them systematically low.
     /// This criterion pins it through `ExtractWasteResult`: a 40mm rest width used **0.5** times gives 20mm correctly and **0** under truncation (0.5 becomes 0 and the
     /// whole plan is skipped).

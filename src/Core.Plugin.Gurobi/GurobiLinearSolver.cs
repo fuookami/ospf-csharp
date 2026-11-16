@@ -81,11 +81,11 @@ public sealed class GurobiLinearSolver : ILinearSolver {
     /// "Error at GRBConstr.Get."，而&lt;b&gt;原因可能有四种**——模型是 MIP、没有变量、没有最优基、或有二次项。**
     /// **一句话的异常让这四种长得完全一样，于是"没有区间"会变成一个查不下去的现象。**
     ///
-    /// **它记录下来的是行数、变量数、`IsMIP` 与状态**——**B1282 正是靠它发现夹具退化成 `vars=0` 的。**
+    /// **它记录下来的是行数、变量数、`IsMIP` 与状态**——**靠它才发现过夹具退化成 `vars=0`。**
     ///
     /// **Not debug residue but a necessity of this API: a failed `SARHSLow`/`SARHSUp` read throws only "Error at
     /// GRBConstr.Get." while at least four causes look identical — the model is a MIP, it has no variables, it has no optimal basis,
-    /// or it is quadratic.** **Recording row count, variable count, `IsMIP` and status is what let B1282 find that its own fixture had
+    /// or it is quadratic.** **Recording row count, variable count, `IsMIP` and status is what once revealed that a fixture fixture had
     /// degenerated to `vars=0`.**
     /// </remarks>
     public string? SensitivityRangeDiagnostic { get; private set; }

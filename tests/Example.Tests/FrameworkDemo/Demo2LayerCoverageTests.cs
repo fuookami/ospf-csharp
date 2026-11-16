@@ -9,13 +9,13 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B823：把"哪条判据跑在默认层"钉在源码上 / B823: pin which criteria run in the default layer.
+/// 把"哪条判据跑在默认层"钉在源码上 / : pin which criteria run in the default layer.
 /// </summary>
 /// <remarks>
-/// **放在单独的文件里，不是被钉的那份文件里**：B823 的第一版把这条判据写在同一个文件末尾，于是"把三条判据挪回 `#if`"这个变异
+/// **放在单独的文件里，不是被钉的那份文件里**： 的第一版把这条判据写在同一个文件末尾，于是"把三条判据挪回 `#if`"这个变异
 /// **连同这条判据一起挪进去了**——它自己被编译掉，当然不会红。**看守者不能睡在牢房里。**
 ///
-/// **It lives in its own file, not in the file it guards**: the first version of B823 put this criterion at the end of that very file, so the mutation "move the three
+/// **It lives in its own file, not in the file it guards**: the first version of put this criterion at the end of that very file, so the mutation "move the three
 /// criteria back inside `#if`" **moved this criterion too** — it was compiled out and of course never turned red. **A guard must not sleep inside the cell.**
 /// </remarks>
 public sealed class Demo2LayerCoverageTests
@@ -24,14 +24,14 @@ public sealed class Demo2LayerCoverageTests
     /// **哪些判据跑在默认层，必须被钉住** / Which criteria run in the default layer must be pinned.
     /// </summary>
     /// <remarks>
-    /// B821/B822 把三条判据搬出了 `#if SCIP_INTEGRATION`，让**没有求解器的机器**也能挡住"两条路径不一致"。
+    /// / 把三条判据搬出了 `#if SCIP_INTEGRATION`，让**没有求解器的机器**也能挡住"两条路径不一致"。
     /// 但这件事本身**没有任何东西记着**：谁把它们挪回 `#if` 里，覆盖率会静默下降，而所有判据依然全绿。
     ///
     /// 所以这里读**那份测试文件的源文本**，按行跟踪 `#if`/`#endif` 的深度，断言那三条的方法声明**在深度 0**；
     /// 同时断言**需要求解的那条在深度 > 0**——**后一半是前一半的校验**：如果深度跟踪写坏了、永远返回 0，
     /// 前三条照样过，只有后一条会红。**不成对的断言在这里等于没有断言。**
     ///
-    /// **Which criteria run in the default layer must be pinned.** B821/B822 moved three criteria out of `#if SCIP_INTEGRATION` so **a machine without a solver**
+    /// **Which criteria run in the default layer must be pinned.** / moved three criteria out of `#if SCIP_INTEGRATION` so **a machine without a solver**
     /// still catches "the two paths disagree". Nothing recorded that: move them back inside `#if` and coverage silently drops while everything stays green. So this reads
     /// **that test file's source**, tracks `#if`/`#endif` depth line by line, and asserts the three method declarations sit at **depth 0** — while asserting the one that
     /// genuinely needs a solve sits at **depth > 0**. **The second half validates the first**: a broken depth tracker that always returns 0 still passes the three and

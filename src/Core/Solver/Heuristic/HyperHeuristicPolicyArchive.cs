@@ -1,6 +1,6 @@
 // 策略档案的导出与恢复 / Exporting and restoring the policy archive.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.exportPolicy()` / `restorePolicy(saved)`。
-// Mirrors `HyperHeuristicRun.exportPolicy()` / `restorePolicy(saved)` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B).
+// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.exportPolicy` / `restorePolicy(saved)`。
+// Mirrors `HyperHeuristicRun.exportPolicy` / `restorePolicy(saved)` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B).
 
 using System;
 using System.Collections.Generic;

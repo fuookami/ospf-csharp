@@ -1,4 +1,4 @@
-// 非精确层分配（B641）的判据 / Criteria for the imprecise layer assignment (B641).
+// 非精确层分配的判据 / Criteria for the imprecise layer assignment.
 
 using System;
 using System.Collections.Generic;
@@ -17,11 +17,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **非精确层分配（B641）** / The imprecise layer assignment (B641).
+/// **非精确层分配** / The imprecise layer assignment.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**空列不建变量组**、**列变量上界是保守估计**、**面积是追加而不是重算**。
-/// 第一条是本批最容易顺手写错的：为一个空集合建 `x_1` 组不报错、不失败，只是白占一组变量。
+/// 第一条是这里最容易顺手写错的：为一个空集合建 `x_1` 组不报错、不失败，只是白占一组变量。
 ///
 /// The criteria focus on **no variable group for an empty column set**, **a conservative column upper bound**, and **area being appended rather than recomputed**. The first is the easiest to
 /// get wrong: building an `x_1` group for an empty set neither errors nor fails, it just wastes a variable group.
@@ -94,11 +94,11 @@ public class ImpreciseAssignmentTests {
     /// 2. **还没建组就取变量会抛异常**，不静默返回空。
     ///
     /// 上界的数值本身（`ceil(最大需求 / 件数)`）在公共 API 上看不到——`LinearMetaModel` 不暴露变量集合，
-    /// 与 B632 记的是同一处天花板。这里只钉"每个列拿到自己的变量"。
+    /// 与 记的是同一处天花板。这里只钉"每个列拿到自己的变量"。
     ///
     /// Two paired points: one batch of two columns yields two variables in the group, and `VariableOf` fetches them separately and **differently** (sharing one variable would make both
     /// columns share a bound and an objective coefficient); and **fetching before any group exists throws** rather than silently returning empty. The bound's value itself
-    /// (`ceil(largest demand / units)`) is invisible through the public API because `LinearMetaModel` exposes no variable collection — the same ceiling recorded in B632. This only pins that
+    /// (`ceil(largest demand / units)`) is invisible through the public API because `LinearMetaModel` exposes no variable collection — the same ceiling recorded. This only pins that
     /// each column gets its own variable.
     /// </remarks>
     [Fact]

@@ -266,14 +266,14 @@ public sealed class GenerationInput<V> where V : struct {
     /// **基线 `CuttingPlanGenerationInput.existingPlans` 的对应物。** 定价阶段靠它做去重——
     /// **不传的话，定价会把池里已有的方案再报一遍**，于是第一轮就"全部重复"。
     ///
-    /// **这解释了 B338 之前观察到的 `reason=AllDuplicates iters=1 priced=0` 的另一半原因**：
-    /// 那一半是"定价器不读对偶价格"（B338 已修），这一半是"**定价器不知道池里有什么**"。
+    /// **这解释了 之前观察到的 `reason=AllDuplicates iters=1 priced=0` 的另一半原因**：
+    /// 那一半是"定价器不读对偶价格"（已修），这一半是"**定价器不知道池里有什么**"。
     ///
     /// **The counterpart of the baseline's `CuttingPlanGenerationInput.existingPlans`.** Pricing uses it for deduplication — **without it, pricing re-reports plans
     /// already in the pool**, so the very first round is "all duplicates".
     ///
-    /// **This is the other half of the `reason=AllDuplicates iters=1 priced=0` observation from before B338**: one half was "pricing ignored the dual prices" (fixed in
-    /// B338), this half is "**pricing does not know what the pool already holds**".
+    /// **This is the other half of the `reason=AllDuplicates iters=1 priced=0` observation from at first**: one half was "pricing ignored the dual prices" (fixed in
+    /// ), this half is "**pricing does not know what the pool already holds**".
     /// </remarks>
     public IReadOnlyList<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>> ExistingPlans { get; init; }
         = Array.Empty<Fuookami.Ospf.Framework.Csp1d.Domain.Material.Model.CuttingPlan<V>>();

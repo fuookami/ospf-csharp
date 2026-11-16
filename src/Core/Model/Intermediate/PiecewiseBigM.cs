@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **两次校验（规范化前后各一次）也不是重复**：**规范化本身可能产出不可用的值，
 /// 而那时错误消息不同——"候选不可用"与"规范化后不可用"是两件事。**
 ///
-/// B1192, following the baseline's `resolvePwlBigM`.
+/// Following the baseline's `resolvePwlBigM`.
 ///
 /// **The same non-positive candidate yields opposite outcomes on the two paths:**
 ///

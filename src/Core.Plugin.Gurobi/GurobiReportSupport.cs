@@ -38,10 +38,10 @@ internal static class GurobiReportSupport {
         bool quadratic,
         GurobiBackendIdentity identity,
         string? nativeVersion) {
-        // **能力声明按证据写，不按"看起来应该支持"写**（B856）。三条都有代码出处：
+        // **能力声明按证据写，不按"看起来应该支持"写**。三条都有代码出处：
         // `Dual` / `Farkas` ← `GurobiBendersDecompositionSolver` 里 `Get(GRB.DoubleAttr.Pi)` 与
-        // `Get(GRB.DoubleAttr.FarkasDual)` 的实测取值（B856 之前这里写的是 `false`，**在报告里低于实际能力**）；
-        // `NativeIis` B979 起改为 `true`：Gurobi 现在有真的原生 IIS 分析器（`GurobiNativeIisInfeasibilityAnalyzer`），
+        // `Get(GRB.DoubleAttr.FarkasDual)` 的实测取值（之前这里写的是 `false`，**在报告里低于实际能力**）；
+        // `NativeIis` 起改为 `true`：Gurobi 现在有真的原生 IIS 分析器（`GurobiNativeIisInfeasibilityAnalyzer`），
         // 它读 `iisConfig`、跑 `computeIIS`、并在真实后端上验过。**此前写 `false` 的理由是旧入口不读 `iisConfig`——
         // 那个理由对诊断路径已经不成立了。**
         //
@@ -49,9 +49,9 @@ internal static class GurobiReportSupport {
         // 而 Gurobi 没有覆写 `Descriptor`（默认 `null`），**所以这个标志当前不参与过滤**，它只是报告里的能力声明。
         // 改它不是为了让分析器能跑——分析器本来就能跑；改它是因为**声明和实现对不上了**。
         //
-        // **Capabilities are written from evidence, not from "it ought to support that"** (B856). Each of the three has a code origin: `Dual` / `Farkas` come from
-        // the measured `Get(GRB.DoubleAttr.Pi)` and `Get(GRB.DoubleAttr.FarkasDual)` reads in `GurobiBendersDecompositionSolver` (before B856 this said `false`, i.e. the
-        // report **understated the real backend**); `NativeIis` became `true` in B979, when a real native-IIS analyzer (`GurobiNativeIisInfeasibilityAnalyzer`) started
+        // **Capabilities are written from evidence, not from "it ought to support that"** . Each of the three has a code origin: `Dual` / `Farkas` come from
+        // the measured `Get(GRB.DoubleAttr.Pi)` and `Get(GRB.DoubleAttr.FarkasDual)` reads in `GurobiBendersDecompositionSolver` (before this said `false`, i.e. the
+        // report **understated the real backend**); `NativeIis` became `true`, when a real native-IIS analyzer (`GurobiNativeIisInfeasibilityAnalyzer`) started
         // reading `iisConfig`, running `computeIIS` and being verified on the real backend. **The old reason for `false` — that the legacy entry never reads `iisConfig` — no
         // longer holds for the diagnostic path.** **Be precise about what it governs now**: `LinearIisCompute` hands the orchestrator `solver.Descriptor?.Capabilities`, and
         // Gurobi does not override `Descriptor` (it defaults to `null`), **so this flag does not currently take part in filtering** — it is a capability declaration in the

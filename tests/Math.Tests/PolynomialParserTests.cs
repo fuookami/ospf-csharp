@@ -133,10 +133,10 @@ public class PolynomialParserTests
 /// 解析结果落到规范多项式 / Lowering a parse result onto the canonical polynomial.
 /// </summary>
 /// <remarks>
-/// **B1086 之前这条路根本走不通**：`SymbolOfSerializedIdentifier` 对任何不带 `path:` 前缀的标识符
+/// **此前这条路根本走不通**：`SymbolOfSerializedIdentifier` 对任何不带 `path:` 前缀的标识符
 /// 直接抛异常，**而解析出来的记号全是这种**。**缺的是最简单的那个回退，不是 hex/JSON 那几段。**
 ///
-/// **Before B1086 this path did not work at all**: `SymbolOfSerializedIdentifier` threw for any identifier without a `path:` prefix,
+/// **This path did not work at all**: `SymbolOfSerializedIdentifier` threw for any identifier without a `path:` prefix,
 /// **and every parsed name is one of those**. **What was missing was the simplest fallback, not the hex/JSON segments.**
 /// </remarks>
 public class ParsedPolynomialLoweringTests
@@ -173,10 +173,10 @@ public class ParsedPolynomialLoweringTests
 
     /// <summary>**`SymbolOfSerializedIdentifier` 对普通名字不再抛** / The identifier factory no longer throws on plain names.</summary>
     /// <remarks>
-    /// **这一条直接钉 B1086 修掉的那个异常。** 判据看的是**它返回什么**，不是"它没抛"——
+    /// **这一条直接钉那个异常。** 判据看的是**它返回什么**，不是"它没抛"——
     /// **"没抛"单独立着说明不了任何事。**
     ///
-    /// **This pins the exception B1086 removed.** It looks at **what comes back**, not at "it did not throw" — **"did not throw" on its own states nothing.**
+    /// **This pins the exception that was removed.** It looks at **what comes back**, not at "it did not throw" — **"did not throw" on its own states nothing.**
     /// </remarks>
     [Fact]
     public void TheIdentifierFactory_ShouldReturnANamedSymbol()
@@ -333,11 +333,11 @@ public class LinearInequalityLoweringTests
 
     /// <summary>**两边各自保留，符号不搬** / Both sides survive as written; nothing moves.</summary>
     /// <remarks>
-    /// **第一版写的是 `Lhs.ToString() != Rhs.ToString()`，那什么也没证明**：
+    /// **第一版写的是 `Lhs.ToString != Rhs.ToString`，那什么也没证明**：
     /// **即使真的移了项，两边仍然不一样。** 改成**与单独解析 `2*x`、`3*y + 1` 的结果结构相等**——
     /// **移了项这颗钉子必红。**
     ///
-    /// **The first version asserted `Lhs.ToString() != Rhs.ToString()`, which proves nothing**:
+    /// **The first version asserted `Lhs.ToString != Rhs.ToString`, which proves nothing**:
     /// **even after rearranging the two sides would still differ.** This compares against parsing `2*x` and `3*y + 1` on their own instead —
     /// **and a rearranged result cannot pass.**
     /// </remarks>

@@ -20,15 +20,15 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 /// **"没有欠产"是空列表，不是 null** / "No deficit" is an empty list, not null.
 /// </summary>
 /// <remarks>
-/// **B376 发现的偏离**：基线 `YieldModelingResult` 的两个字段是 `List<...> = emptyList()`——
+/// 发现的偏离**：基线 `YieldModelingResult` 的两个字段是 `List<...> = emptyList`——
 /// **永不为 null**。C# 原本是 `Count > 0 ? list : null`，把空列表变成了 null。
 ///
 /// 后果：调用方拿到 null 只能猜是"没有"还是"没算"。
-/// **这正是 B375 在余料代理那里刚批评过的同一类混淆**（"没有数据"与"零浪费"必须分开），
+/// **这正是 在余料代理那里刚批评过的同一类混淆**（"没有数据"与"零浪费"必须分开），
 /// **方向相反，错误相同**。
 ///
-/// **B376's deviation**: the baseline's two fields are `List<...> = emptyList()` — **never null**. C# used `Count > 0 ? list : null`. Callers receiving null can only guess
-/// between "none" and "not computed" — **the same conflation criticised one batch earlier** in the rest-material proxy (B375). **Opposite direction, same mistake.**
+/// **the earlier deviation**: the baseline's two fields are `List<...> = emptyList` — **never null**. C# used `Count > 0 ? list : null`. Callers receiving null can only guess
+/// between "none" and "not computed" — **the same conflation criticised one batch earlier** in the rest-material proxy. **Opposite direction, same mistake.**
 /// </remarks>
 public class YieldEmptyListTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -81,14 +81,14 @@ public class YieldEmptyListTests {
 
     /// <summary>**两个字段的静态类型就是非空**——这条钉住"契约"，不是"运行时行为" / Both fields are statically non-null — this pins the contract, not the runtime behaviour.</summary>
     /// <remarks>
-    /// B376 只改了**运行时行为**（返回列表本身），字段类型仍是 `IReadOnlyList<...>?`，
+    /// 只改了**运行时行为**（返回列表本身），字段类型仍是 `IReadOnlyList<...>?`，
     /// 所以下游必须写 `?? []`。**类型签名允许 null 就是允许下一个人再写出那个 bug。**
     ///
-    /// 本批把类型改成非空。这条判据用**反射**确认字段的静态类型不可为空——
+    /// 这里把类型改成非空。这条判据用**反射**确认字段的静态类型不可为空——
     /// 若有人改回 `?`，它会红，而运行时判据**不会**。
     ///
-    /// B376 fixed only the **runtime behaviour** (return the lists themselves) while the field types stayed `IReadOnlyList<...>?`, so downstream had to write `?? []`.
-    /// **A nullable signature is an invitation for the next person to reintroduce the bug.** This batch makes the types non-null, and this criterion uses **reflection**
+    /// fixed only the **runtime behaviour** (return the lists themselves) while the field types stayed `IReadOnlyList<...>?`, so downstream had to write `?? []`.
+ /// **A nullable signature is an invitation for the next person to reintroduce the bug.** makes the types non-null, and this criterion uses **reflection**
     /// to confirm the static type is non-nullable — a revert to `?` fails here while the runtime criteria stay green.
     /// </remarks>
     [Fact]

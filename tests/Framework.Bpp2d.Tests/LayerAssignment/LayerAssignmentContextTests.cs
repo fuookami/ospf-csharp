@@ -1,4 +1,4 @@
-// 层分配上下文（B644）的判据 / Criteria for the layer-assignment context (B644).
+// 层分配上下文的判据 / Criteria for the layer-assignment context.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **层分配上下文（B644）** / The layer-assignment context (B644).
+/// **层分配上下文** / The layer-assignment context.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**`RegisterRmp` 真的把三件都装到模型上**（不是只造出构件）、**空的新列不追加装载项**、以及**失败会带出来**。

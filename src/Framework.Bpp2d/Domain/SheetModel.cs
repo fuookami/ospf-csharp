@@ -6,7 +6,7 @@
 //
 // **这是解除 Bpp2d 业务层阻塞的关键一批**：`layer_generation`／`layer_assignment`／物料汇总／`Sheet` 重载都卡在
 // 这四个类型上。移植它们之后，先前刻意用"扁平放置列表"替代 `Sheet` 的地方可以补回正规入口。
-// **This batch unblocks the Bpp2d business layer**: `layer_generation`, `layer_assignment`, the material summary and
+// ** unblocks the Bpp2d business layer**: `layer_generation`, `layer_assignment`, the material summary and
 // the `Sheet` overloads were all stuck on these four types. With them ported, places that deliberately used a flat
 // placement list instead of `Sheet` can regain their proper entry point.
 
@@ -270,10 +270,10 @@ public class Layer<V> : IComparable<Layer<V>> where V : struct, IFloatingNumber<
     /// 哈希只取**稳定且廉价**的字段 / Hash on stable, cheap fields only.
     /// </summary>
     /// <remarks>
-    /// 不用 `_units[0].GetHashCode()`：`Placement2` 是含形状与量值的深值对象，其哈希在本会话中实测**不稳定**
+    /// 不用 `_units[0].GetHashCode`：`Placement2` 是含形状与量值的深值对象，其哈希实测**不稳定**
     /// （同一实例两次取值不同），会让 `HashSet` 判重失效——`LayerAggregation.RemoveColumn` 的幂等性正是这样被破坏的。
     /// 按「件数 + 板材类型编码」取哈希既与 `Equals` 一致（两者都是必需的相等条件），又不会漂移；碰撞由 `Equals` 兜底。
-    /// Does **not** use `_units[0].GetHashCode()`: `Placement2` is a deep value object over shapes and quantities whose
+    /// Does **not** use `_units[0].GetHashCode`: `Placement2` is a deep value object over shapes and quantities whose
     /// hash measured **unstable** in this session (different across calls on the same instance), which breaks `HashSet`
     /// deduplication — exactly how `LayerAggregation.RemoveColumn` lost idempotence. Hashing on "count + sheet type code"
     /// is consistent with `Equals` (both are required equality conditions) and cannot drift; collisions fall back to

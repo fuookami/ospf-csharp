@@ -23,13 +23,13 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Domain.Produce;
 /// **新列的需求贡献必须真的写进中间符号** / A new column's demand contribution must actually reach the intermediate symbols.
 /// </summary>
 /// <remarks>
-/// **B341 记的缺口**："新列的需求贡献单项式是否真接上未验证"——那一批只验证了**变量注册**
+/// **记的缺口**："新列的需求贡献单项式是否真接上未验证"——那一批只验证了**变量注册**
 /// （`x_N` 出现在模型里），**没验证系数**。
 ///
 /// 系数写错的后果是**静默的**：需求约束的左边少了一项，求解器会认为"这条需求已被满足得更多"，
 /// **得到的解看起来可行、实际不满足需求**。
 ///
-/// **The gap recorded in B341**: "whether a new column's demand-contribution monomial is really wired is unverified" — that batch only verified **variable registration**
+/// **The gap recorded**: "whether a new column's demand-contribution monomial is really wired is unverified" — that batch only verified **variable registration**
 /// (`x_N` appearing in the model), **not the coefficient**.
 ///
 /// A wrong coefficient fails **silently**: the demand constraint's left side loses a term, so the solver believes the demand is better satisfied, and **the solution looks
@@ -116,7 +116,7 @@ public class ProduceAggregationDemandMonomialTests {
 
     /// <summary>**初始方案也必须填充中间符号**——第一轮 LP 靠它 / Initial plans must populate the intermediate symbols — the first LP depends on it.</summary>
     /// <remarks>
-    /// **B368 记的缺口**："初始方案的贡献单项式仍不登记"，并误以为"查基线后确认 `addInitialPlans` 只登记 id/键，两边一致"。
+    /// **记的缺口**："初始方案的贡献单项式仍不登记"，并误以为"查基线后确认 `addInitialPlans` 只登记 id/键，两边一致"。
     ///
     /// **那是错的。** 基线的 `register` 在 `addInitialPlans` **之后**还会建 `PlanBatchTerms`
     /// （`PlanBatchTerms.kt`），用它填 `demandQuantity` / `materialQuantity` /
@@ -125,7 +125,7 @@ public class ProduceAggregationDemandMonomialTests {
     ///
     /// 后果是**第一轮 LP 的需求与物料约束左边恒为零**——求解器会认为"什么都不做就已满足全部需求"。
     ///
-    /// **The gap recorded in B368** ("initial plans' contribution monomials are still unregistered") also wrongly assumed "the baseline's `addInitialPlans` only registers
+    /// **The gap recorded** ("initial plans' contribution monomials are still unregistered") also wrongly assumed "the baseline's `addInitialPlans` only registers
     /// ids/keys, so both sides agree". **That was wrong.** The baseline's `register` builds `PlanBatchTerms` (`PlanBatchTerms.kt`) **after** `addInitialPlans` and fills the
     /// four symbol families from it. C# **has no such class at all** (`grep PlanBatchTerms` finds nothing) and its constructor only creates empty symbols.
     ///

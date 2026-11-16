@@ -3,12 +3,12 @@
 // Mirrors the grouping and ordering behaviour of `Scheme` in the pinned baseline's `Schema.kt`.
 //
 // **与基线的一处结构差异**：基线 `Scheme` 在 `init` 块里做分组，分组结果作为构造期算好的 `patternedItems` 字段；
-// C# 的 `Schema<V>` 是纯数据 record（`BatchNo` + `PatternedItems`），没有构造期逻辑。本批把分组抽成**独立纯函数**
+// C# 的 `Schema<V>` 是纯数据 record（`BatchNo` + `PatternedItems`），没有构造期逻辑。这里把分组抽成**独立纯函数**
 // `SchemeGrouping.GroupByPattern`，而不是给 record 加 init 逻辑——record 的值语义要求构造只做赋值，混入计算会让
 // `Equals`／`GetHashCode` 与"实际内容"脱节。
 // **One structural difference from the baseline**: the baseline's `Scheme` groups inside an `init` block and stores the
 // result in a construction-time `patternedItems` field, whereas C#'s `Schema<V>` is a pure data record with no
-// construction-time logic. This batch extracts the grouping into a **standalone pure function**
+// construction-time logic. extracts the grouping into a **standalone pure function**
 // `SchemeGrouping.GroupByPattern` instead of adding init logic to the record: record value semantics require construction
 // to only assign, and mixing in computation would divorce `Equals` / `GetHashCode` from the actual content.
 
@@ -68,7 +68,7 @@ public static class SchemeGrouping {
     /// <remarks>
     /// **图样由批次号、仓库与包装属性共同决定**，三者任一不同就视为不同图样。这是 C# 侧对基线 `ItemPattern` 的等价表达：
     /// 基线有独立的 `ItemPattern` record，C# 的 `Item&lt;V&gt;` 是扁平结构，因此在此把同样的字段组合成键。
-    /// 用字符串签名而不是直接以 `PackageAttribute` 作字典键——本会话已有三次"深值对象做字典键"失效的先例。
+    /// 用字符串签名而不是直接以 `PackageAttribute` 作字典键——已有三次"深值对象做字典键"失效的先例。
     ///
     /// **A pattern is determined jointly by batch number, warehouse and package attribute**, and any difference means a
     /// different pattern. This is the C# equivalent of the baseline's `ItemPattern`: the baseline has a dedicated record

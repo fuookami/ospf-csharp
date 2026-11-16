@@ -39,7 +39,7 @@ public class OnnxAffineEndpointGurobiIntegrationTest
         var x = new RealVar("x");
         var y = new RealVar("y");
 
-        // 图：out = (x + y) - x  →  应当恰好等于 y。
+        // 图：out = (x + y) - x  → 应当恰好等于 y。
         var graph = new OnnxGraph(
             "g",
             new[] {

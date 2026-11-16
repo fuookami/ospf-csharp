@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 标准受限主问题求解器 / The standard restricted-master-problem solver.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationStandardExecutors.rmpSolver()` 对齐。这是列生成每轮的心脏，六步：
+/// 与基线 `ColumnGenerationStandardExecutors.rmpSolver` 对齐。这是列生成每轮的心脏，六步：
 ///
 /// 1. 建模型（名字 `前缀-迭代号`）。
 /// 2. 注册 RMP 构件（非精确分配、装载、需求约束）。
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 第 5、6 步是"求解 → 定价"这条链的两半：**LP 解本身没有用，对偶值才是下一轮的输入**。
 /// 求完 LP 不取对偶值，下一轮的检验数全是零，候选筛选会退化成"全要"或"全不要"。
 ///
-/// Aligned with the baseline's `rmpSolver()`, the heart of each column-generation round, in six steps: build the model (named `prefix-iteration`); register the RMP pieces (imprecise assignment,
+/// Aligned with the baseline's `rmpSolver`, the heart of each column-generation round, in six steps: build the model (named `prefix-iteration`); register the RMP pieces (imprecise assignment,
 /// load, demand constraints); **add columns only when there are new ones**, since adding an empty list would append the load terms twice; register the area-minimisation objective, the only
 /// objective in the RMP stage, with its coefficient from the config; solve the LP; and **read the demand shadow prices off the dual solution**, handing them back for the next round's candidate
 /// filtering. Steps five and six are two halves of one solve-then-price chain: **the LP solution itself is useless and the dual values are the next round's input**. Skipping them leaves every

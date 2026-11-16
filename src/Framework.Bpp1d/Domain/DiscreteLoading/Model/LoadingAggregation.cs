@@ -1,8 +1,8 @@
 // 稀疏求解器注册构件 / Sparse solver registration artifacts.
 // 与固定 Kotlin 基线 `bpp/domain/discrete_loading/model/LoadingAggregation.kt` 对应，
-// 并把基线 `DiscreteLoadingContext.register()` 里的"建变量 + 累计表达式"三圈提到这里复用。
+// 并把基线 `DiscreteLoadingContext.register` 里的"建变量 + 累计表达式"三圈提到这里复用。
 // Mirrors the baseline's `LoadingAggregation.kt` and lifts the "create variables, accumulate expressions" loops of
-// `DiscreteLoadingContext.register()` into a reusable builder.
+// `DiscreteLoadingContext.register` into a reusable builder.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -63,7 +63,7 @@ public sealed class LoadingAggregation {
     /// **这一圈只建变量、不加约束**——约束全在两个限制类里。把两件事分开的好处是：
     /// 变量与表达式的正确性可以**单独**验证，不必先跑一遍求解器。
     ///
-    /// **一条跳过规则必须看清**：`(!enabled 或 单件超重)` **且** `不是该货物的固定舱位` 时跳过这条分配。
+    /// **一条跳过规则必须看清**：`(!enabled 或单件超重)` **且** `不是该货物的固定舱位` 时跳过这条分配。
     /// 两个条件用 `且` 连接——**固定货物即使舱位禁用、即使单件超重，也仍然生成变量**，
     /// 因为固定装载是需求方的硬要求，不能因为"放不下"就悄悄不建变量。
     ///

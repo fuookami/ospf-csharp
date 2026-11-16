@@ -1,4 +1,4 @@
-// 顺序装载反转（B621）的判据 / Criteria for sequential-loading reversal (B621).
+// 顺序装载反转的判据 / Criteria for sequential-loading reversal.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **顺序装载反转（B621）** / Sequential-loading reversal (B621).
+/// **顺序装载反转** / Sequential-loading reversal.
 /// </summary>
 /// <remarks>
 /// `SequentialLoading` 与 `RelativeOrder` 结构相同，但排序键换成 `order.sequence`，且**没有装载顺序的货物被排除**。
@@ -143,12 +143,12 @@ public class Demo2SequentialLoadingTests {
     /// 四点成对：
     ///
     /// 1. 注册成功后符号矩阵是 **3 × 1**，每格都有符号。
-    /// 2. **符号名互不相同**（依赖 `Item`/`StowagePosition` 的 `ToString()` 覆写）。
+    /// 2. **符号名互不相同**（依赖 `Item`/`StowagePosition` 的 `ToString` 覆写）。
     /// 3. **可放置组合是真函数符号**（`LinearFunctionSymbolAdapter`），不是恒零——它的 `Polynomial` 在自己的
     ///    `ResultVar` 上是线性的，所以能展开进目标。
     /// 4. `ItemOrderReverseLimit` 因此**正常产出目标**，名为 `"item order reverse"`、类别 `Minimum`。
     ///
-    /// Four paired points: after registration the matrix is **3 × 1** with a symbol in every slot; **the names all differ** (relies on the `ToString()` overrides); **placeable combinations
+    /// Four paired points: after registration the matrix is **3 × 1** with a symbol in every slot; **the names all differ** (relies on the `ToString` overrides); **placeable combinations
     /// are real function symbols**, not constant zero, and their `Polynomial` is linear over their own `ResultVar`, so they expand into the objective; and `ItemOrderReverseLimit` therefore
     /// **produces an objective normally**, named `"item order reverse"` with category `Minimum`.
     /// </remarks>
@@ -204,7 +204,7 @@ public class Demo2SequentialLoadingTests {
     /// 两点成对：
     ///
     /// 1. 只有一件有顺序的货物 → 没有有序对 → **不加目标**，返回成功。
-    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty()) return ok` 不能省。
+    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty) return ok` 不能省。
     ///
     /// Two paired points: one item with a sequence gives no ordered pair, so **no objective** is added and success is returned; and the objective count is unchanged, since the
     /// baseline's early return must not be dropped.

@@ -20,9 +20,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// **甲板序号 → 装载顺序号 → 舱位 id 的字符串字典序**排好，每行写成 `"{id}: {spaceName} (order={order})"`。
 ///
 /// **三处照抄而不是"顺手改好"**：
-/// 1. 第三级排序键是 `id.toString()`，即**字符串字典序**——`"10"` 排在 `"2"` 前面。看着像 bug，但它是基线的行为，
+/// 1. 第三级排序键是 `id.toString`，即**字符串字典序**——`"10"` 排在 `"2"` 前面。看着像 bug，但它是基线的行为，
 ///    改了会让同一批输入的输出顺序与基线不同；要改得先确认调用方不依赖这个顺序。
-/// 2. 顺序号转成字符串再转回整数（`order.toString().toInt()`）——**等价于直接比数值**，保留这个形状是为了读代码时能一眼对上基线。
+/// 2. 顺序号转成字符串再转回整数（`order.toString.toInt`）——**等价于直接比数值**，保留这个形状是为了读代码时能一眼对上基线。
 /// 3. `status` 恒为 `"Optimal"`，由被调用的 DTO 工厂写死。
 ///
 /// **一处必须偏离**：基线的 `_loadingOrder` 是 `lateinit`，读得太早会抛 `UninitializedPropertyAccessException`；本仓把它建成可空的，
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Aircraft.Service;
 /// Mirrors the baseline exporter: flatten each deck's positions, sort by **deck ordinal → loading-order number → the position id's string order**, and render each
 /// line as `"{id}: {spaceName} (order={order})"`.
 ///
-/// **Three things copied rather than "fixed while at it"**: (1) the third key is `id.toString()`, i.e. **lexicographic** — `"10"` sorts before `"2"`. It looks
+/// **Three things copied rather than "fixed while at it"**: (1) the third key is `id.toString`, i.e. **lexicographic** — `"10"` sorts before `"2"`. It looks
 /// like a bug, but it is the baseline behaviour, and changing it makes the same input produce a different order than the baseline; that change needs a confirmed
 /// promise from callers first. (2) the order number is stringified then parsed back — **equivalent to a numeric compare**, kept only so this reads side by side
 /// with the baseline. (3) `status` is always the literal `"Optimal"`, hard-coded in the DTO factory.

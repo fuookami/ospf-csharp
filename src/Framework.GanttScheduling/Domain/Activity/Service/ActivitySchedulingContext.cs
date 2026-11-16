@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Service;
 ///
 /// 1. **命名空间必须合法**。基线要求 `[A-Za-z][A-Za-z0-9_]*`，因为这个名字会成为求解器里每条约束名的前缀。
 ///    放任任意字符串进去，两条不同上下文的约束名可能撞在一起，而求解器只按名字索引——**约束被静默覆盖**。
-/// 2. **候选清单必须是快照**。基线写的是 `choices.toList()`，即拷贝一份。若直接持有调用方的列表，
+/// 2. **候选清单必须是快照**。基线写的是 `choices.toList`，即拷贝一份。若直接持有调用方的列表，
 ///    调用方之后一次 `Add` 就会**静默改变这个上下文的候选集**，而上下文没有任何迹象表明自己变了。
 ///
 /// The context carries one registration: it holds the candidate list and forwards `register` / `validate` / `extractSolution` to the aggregation layer. Two boundaries are
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Activity.Service;
 ///
 /// 1. **The namespace must be legal.** The baseline requires `[A-Za-z][A-Za-z0-9_]*` because that name becomes the prefix of every constraint name in the solver. Letting
 ///    arbitrary strings through lets two different contexts collide on constraint names, and the solver indexes by name alone — **constraints are silently overwritten**.
-/// 2. **The candidate list must be a snapshot.** The baseline writes `choices.toList()`, a copy. Holding the caller's list directly means one later `Add` by the caller
+/// 2. **The candidate list must be a snapshot.** The baseline writes `choices.toList`, a copy. Holding the caller's list directly means one later `Add` by the caller
 ///    **silently changes this context's candidate set**, with the context showing no sign of having changed.
 /// </remarks>
 public sealed class ActivitySchedulingContext<V>

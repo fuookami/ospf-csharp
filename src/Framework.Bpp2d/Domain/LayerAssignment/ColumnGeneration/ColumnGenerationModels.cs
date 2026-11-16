@@ -93,10 +93,10 @@ public sealed record ColumnGenerationFinalResult(
 /// </summary>
 /// <remarks>
 /// **成员照抄基线**（`InitialColumns` / `RestrictedMasterProblem` / `CandidateFilter` / `FinalMilp` / `SolutionAnalysis`）。
-/// B645 凭印象写过一版 `Registration` / `LpSolving` / …，与基线不符——B646 读回基线源码时发现并改正。
+/// 凭印象写过一版 `Registration` / `LpSolving` / …，与基线不符—— 读回基线源码时发现并改正。
 /// 五个阶段正好对应主循环里五个可能失败的位置，多一个少一个都会让失败报告指错地方。
 ///
-/// **Members copied from the baseline.** B645 wrote a version from memory (`Registration` / `LpSolving` / …) that did not match, and B646 caught it when reading the baseline source back.
+/// **Members copied from the baseline.** wrote a version from memory (`Registration` / `LpSolving` / …) that did not match, and caught it when reading the baseline source back.
 /// The five stages line up exactly with the five places the main loop can fail, so adding or dropping one would misattribute failures.
 /// </remarks>
 public enum ColumnGenerationFailureStage

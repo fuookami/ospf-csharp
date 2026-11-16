@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// The four generators must be usable from an **external assembly**, not only from the test assembly.
 /// </summary>
 /// <remarks>
-/// B313 之前四个生成器全部是 `internal sealed class`，而 `Framework.Csp1d.csproj` 只给
+/// 之前四个生成器全部是 `internal sealed class`，而 `Framework.Csp1d.csproj` 只给
 /// **`Fuookami.Ospf.Framework.Csp1d.Tests`** 开了 `InternalsVisibleTo`。
 ///
 /// 结果是：接口 `ICsp1dInitialCuttingPlanGenerator` 是 `public`，实现有四个，
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 本文件所在的 `Example.Tests` **没有** `InternalsVisibleTo`，所以这里的编译通过本身就是证据：
 /// 若生成器仍为 `internal`，这些测试**连编译都过不去**。
 ///
-/// Before B313 all four generators were `internal sealed class`, and `Framework.Csp1d.csproj` granted `InternalsVisibleTo` only to
+/// Before all four generators were `internal sealed class`, and `Framework.Csp1d.csproj` granted `InternalsVisibleTo` only to
 /// **`Fuookami.Ospf.Framework.Csp1d.Tests`**.
 ///
 /// The result: the `ICsp1dInitialCuttingPlanGenerator` interface was `public` and there were four implementations, **yet no external consumer could

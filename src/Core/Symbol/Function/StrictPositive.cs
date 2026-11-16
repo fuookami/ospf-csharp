@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **它只是一个包装**：**`polynomial &gt; 0` 这件事全靠调用方按约定解释**，
 /// **记录本身不做任何检查。** **这正是它的用处——把一个"约定"变成类型。**
 ///
-/// B1168, following the baseline's `StrictPositiveCondition`.
+/// Following the baseline's `StrictPositiveCondition`.
 ///
 /// **It is only a wrapper**: **the meaning `polynomial &gt; 0` is a convention the caller must honour**, and the record
 /// itself checks nothing. **That is exactly its point — turning a convention into a type.**
@@ -47,7 +47,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// | `LT`（`p &lt; 0`） | `−p` | `−p &gt; 0` |
 /// | `LE`（`p ≤ 0`） | `−p + δ` | `−p + δ &gt; 0` |
 ///
-/// **`GE` 那一行是本批唯一真正需要解释的**：**`p ≥ 0` 与 `p &gt; 0` 不是同一个条件**，
+/// **`GE` 那一行是这里唯一真正需要解释的**：**`p ≥ 0` 与 `p &gt; 0` 不是同一个条件**，
 /// **而 `p + δ &gt; 0` 等价于 `p &gt; −δ`。**
 /// **这两者只在 <b>`p` 的取值落在步长为 `δ` 的格点上</b>时相同**——
 /// **因为没有落在 `(−δ, 0)` 里的格点。**
@@ -59,7 +59,7 @@ public sealed record StrictPositiveCondition(LinearPolynomial<Flt64> Polynomial)
 /// `p + 0.5 &gt; 0` 与 `p ≥ 0` 恰好等价；换成步长是 1 的变量就仍然等价；
 /// 但如果变量实际能取到 `−0.25`，等价性就没了，而模型仍然可行。**
 ///
-/// B1168, following the baseline's two `toStrictPositiveCondition` overloads.
+/// Following the baseline's two `toStrictPositiveCondition` overloads.
 ///
 /// **The rules**:
 ///

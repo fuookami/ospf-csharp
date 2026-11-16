@@ -1,4 +1,4 @@
-// 统一门面的判据（B793）/ Criteria for the unified facade (B793).
+// 统一门面的判据/ Criteria for the unified facade.
 
 using System;
 using System.Collections.Generic;
@@ -13,19 +13,19 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **三条路径有了统一入口** / The three paths now have one entry point (B793).
+/// **三条路径有了统一入口** / The three paths now have one entry point.
 /// </summary>
 /// <remarks>
 /// 三点成对（默认全量，不依赖后端）：三种模式都被分派到**真实路径**（都没带求解器时都返回 `MilpSolverNotSupplied`）/
 /// 未知模式**明确报 `UnknownStowageMode`** 而不是默落到全配载 / 门面**不重复实现装配**（它自己的源码里没有 `Register`、没有 `BuildLinearTriadModel`）。
 ///
 /// 第二点最要紧：**默认落到某一条路径会让"传错了模式"和"就是要那条路径"看起来一样**。
-/// 第三点钉的是本批的用意——门面只分派；一旦有人把装配抄回门面，两条实现就会开始分叉。
+/// 第三点钉的是这里的用意——门面只分派；一旦有人把装配抄回门面，两条实现就会开始分叉。
 ///
 /// Three paired points in the default suite without a backend: all three modes reach their **real** path (each reports `MilpSolverNotSupplied` when no solver is
 /// supplied); an unknown mode fails **explicitly as `UnknownStowageMode`** instead of falling through to full load; and the facade **duplicates no assembly**
 /// (its own source contains no `Register` and no `BuildLinearTriadModel`). The second point matters most: **falling through makes "the wrong mode was passed" and
-/// "that path was wanted" look identical**. The third pins this batch's intent — the facade only dispatches, and once someone copies assembly back into it the
+/// "that path was wanted" look identical**. The third pins's intent — the facade only dispatches, and once someone copies assembly back into it the
 /// two implementations start to diverge.
 /// </remarks>
 public sealed class Demo2ApplicationServiceTests {
@@ -34,10 +34,10 @@ public sealed class Demo2ApplicationServiceTests {
     [InlineData(StowageMode.Predistribution)]
     [InlineData(StowageMode.WeightRecommendation)]
     public void Solve_ShouldDispatchToTheRealPath(StowageMode mode) {
-        // **预配载要用带谓词规格的请求**（B940）：B940 补上基线"预配载必须有下限"的校验后，
+        // **预配载要用带谓词规格的请求**： 补上基线"预配载必须有下限"的校验后，
         // 全配载形状的请求会在装配阶段被拒——**那是基线行为，不是没接上路径**。
         //
-        // **Predistribution needs the request carrying the predicate spec** (B940): once B940 added the baseline's "predistribution requires a bound" check, a
+        // **Predistribution needs the request carrying the predicate spec**: once added the baseline's "predistribution requires a bound" check, a
         // full-load-shaped request is refused during assembly — **the baseline's behaviour, not an unwired path**.
         RequestDTO request = mode == StowageMode.Predistribution
             ? AircraftLoadingDemo.CreatePredistributionSampleRequest()
@@ -64,8 +64,8 @@ public sealed class Demo2ApplicationServiceTests {
 
     [Fact]
     public void Facade_ShouldNotReimplementAssembly() {
-        // **门面只分派**：装配逻辑一旦被抄回门面，两条实现就会分叉——B790 接线全配载时另外两条还在报"未移植"，就是分叉的第一天。
-        // **The facade only dispatches**: once assembly is copied back into it the two implementations diverge — B790 wiring full load while the other two still
+        // **门面只分派**：装配逻辑一旦被抄回门面，两条实现就会分叉—— 接线全配载时另外两条还在报"未移植"，就是分叉的第一天。
+        // **The facade only dispatches**: once assembly is copied back into it the two implementations diverge — wiring full load while the other two still
         // reported "not ported" was the first day of exactly that divergence.
         string source = System.IO.File.ReadAllText(Path("src/Example/FrameworkDemo/Demo2/Application/Demo2ApplicationService.cs"));
 
@@ -80,14 +80,14 @@ public sealed class Demo2ApplicationServiceTests {
     /// </summary>
     /// <remarks>
     /// 默认层区分不出分派对不对：三条路径没带求解器时都返回 `MilpSolverNotSupplied`——**分派表对调了也照样绿**。
-    /// 所以能区分这件事的判据必须真的解一次：全配载与建议打板解得出，预配载**拒收形状不符的请求**（B815 之前是"解出来不可行"）。
+    /// 所以能区分这件事的判据必须真的解一次：全配载与建议打板解得出，预配载**拒收形状不符的请求**。
     ///
     /// 这条判据钉的是"**三种模式给出三种不同结果**"，所以把任意两条的分派臂对调都会让它变红。
     /// **"测试绿了但分不清真假"比没有测试更糟**，这一层就是为那个盲点补的。
     ///
     /// The default layer cannot tell whether dispatch is correct: with no solver all three paths return `MilpSolverNotSupplied`, so **swapping the dispatch arms
     /// still passes**. Only a criterion that actually solves can distinguish them: full load and weight recommendation solve, and predistribution **rejects the
-    /// wrong-shaped request** (before B815 it "solved to infeasible"). This criterion pins **three modes producing three different outcomes**, so swapping any two arms turns it red.
+    /// wrong-shaped request** (before it "solved to infeasible"). This criterion pins **three modes producing three different outcomes**, so swapping any two arms turns it red.
     /// **A test that is green without being able to tell right from wrong is worse than no test**, and this layer covers that blind spot.
     /// </remarks>
     [Fact]
@@ -108,10 +108,10 @@ public sealed class Demo2ApplicationServiceTests {
             "notes: " + string.Join(" | ", (recommendation.Notes ?? Array.Empty<string>()).ToArray()));
         recommendation.Status.Should().Be("Optimal");
 
-        // **B940 把拒绝点提前到装配阶段**：基线那道守卫在 `AggregationInitializer` 里，不在注册阶段。
+        // 把拒绝点提前到装配阶段**：基线那道守卫在 `AggregationInitializer` 里，不在注册阶段。
         // 旧判据钉的 `DomainRegisterFailed` 是本仓守卫放晚了的产物。
         //
-        // **B940 moves the refusal to assembly**: the baseline keeps that guard in `AggregationInitializer`, not at registration. The old
+        // **moves the refusal to assembly**: the baseline keeps that guard in `AggregationInitializer`, not at registration. The old
         // `DomainRegisterFailed` pinned a local deviation.
         predistribution.Status.Should().Be("InitFailed",
             "the full-load sample has no predicate load weight specification, and the baseline refuses that during assembly");

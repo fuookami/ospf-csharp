@@ -205,16 +205,16 @@ public sealed class ColumnGenerationDemo {
     /// 用真实的 CSP1D 生成器产出初始切割模式 / Produce the initial cutting patterns with the real CSP1D generator.
     /// </summary>
     /// <remarks>
-    /// **B314 之前这里手写 `(int)(RawLength / Demands[d].Width)`**：每个需求一条"只用这一种产品装满"的模式。
+    /// **之前这里手写 `(int)(RawLength / Demands[d].Width)`**：每个需求一条"只用这一种产品装满"的模式。
     /// 那其实是在**重算生成器该算的东西**，而且它绕过了整个框架——
-    /// `Framework.Csp1d` 的四个生成器当时是 `internal`，示例程序集根本拿不到（B313 才修好）。
+    /// `Framework.Csp1d` 的四个生成器当时是 `internal`，示例程序集根本拿不到（才修好）。
     ///
     /// 现在改成调用 `FullSumGenerator`：它能产出**同一宽度多刀**与**多宽度混排**的模式，
     /// 比手写版本更接近"装满原料"的意图，并且**真的让框架代码在一条真实路径上跑起来**。
     ///
-    /// **Before B314 this hand-computed `(int)(RawLength / Demands[d].Width)`** — one "fill the raw length with this single product" pattern per demand.
+    /// **Before this hand-computed `(int)(RawLength / Demands[d].Width)`** — one "fill the raw length with this single product" pattern per demand.
     /// That was **recomputing what the generator is for**, and it bypassed the framework entirely: the four `Framework.Csp1d` generators were `internal`
-    /// and unreachable from the example assembly at the time (fixed only in B313).
+    /// and unreachable from the example assembly at the time (fixed only).
     ///
     /// It now calls `FullSumGenerator`, which produces patterns with **several cuts of one width** and **mixed widths** — closer to the intent of filling the raw
     /// length, and it **actually exercises framework code on a real path**.

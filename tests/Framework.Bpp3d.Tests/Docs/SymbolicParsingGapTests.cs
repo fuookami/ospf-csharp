@@ -45,10 +45,10 @@ public class SymbolicParsingGapTests
     /// <summary>两个解析目录 / Both parsing directories.</summary>
     /// <remarks>
     /// **`Parse/` 是多项式那一侧，`Expression/Parser/` 是表达式那一侧。**
-    /// **B1092 之前这里只扫前者，于是"表达式解析不在"这条判据从来没看过表达式解析的代码。**
+    /// **此前这里只扫前者，于是"表达式解析不在"这条判据从来没看过表达式解析的代码。**
     ///
     /// **`Parse/` holds the polynomial side and `Expression/Parser/` the expression side.**
-    /// **Before B1092 this scanned only the former, so the "expression parser is absent" criterion had never read any expression-parsing code.**
+    /// **It used to scan only the former, so the "expression parser is absent" criterion had never read any expression-parsing code.**
     /// </remarks>
     private static string[] ParseSources() => new[]
     {
@@ -79,18 +79,18 @@ public class SymbolicParsingGapTests
     /// **这条判据换过三次对象，每次都是因为我把缺口的位置认错了。**
     ///
  /// 1. 一开始钉"整条表达式解析栈不在"——**那是我读错了文件名差集，栈一直在。**
-    /// 2. 然后钉"三元与 `if-then-else` 不在"——**B1093/B1094 搬完之后它就该红，而我靠手工收窄才让它继续绿。**
+    /// 2. 然后钉"三元与 `if-then-else` 不在"——**它们搬完之后这条就该红，靠手工收窄才让它继续绿。**
     /// 3. 最后钉"标量解析器里没有 `PatternMatch`"——**而模式匹配根本不在 `ScalarParser.kt` 里，它在布尔侧 `Parser.kt`，
-    ///    C# 的 `Parser.cs` 早就实现了。我钉的是一个不存在的缺口。**
+    /// C# 的 `Parser.cs` 早就实现了。我钉的是一个不存在的缺口。**
     ///
     /// **现在钉的是能长期成立的那件事：优先级链的九层都在、顺序对、且比较确实不链式。**
     /// **这条不会因为"某块搬完了"而需要收窄，因为它钉的是结构，不是进度。**
     ///
     /// **This criterion has changed its target three times, each time because I mislocated the gap.**
  /// **1. It first pinned "the whole expression stack is absent" — my misreading of a filename diff ; the stack was there.**
-    /// **2. Then it pinned "ternaries and `if-then-else` are absent" — which should have gone red once B1093/B1094 landed, and stayed green only because I narrowed it by hand.**
+    /// **2. Then it pinned "ternaries and `if-then-else` are absent" — which should have gone red once they landed, and stayed green only because I narrowed it by hand.**
     /// **3. Finally it pinned "no `PatternMatch` in the scalar parser" — but pattern matching is not in `ScalarParser.kt` at all; it lives in the boolean `Parser.kt`,
-    ///    which C# has had all along. I was pinning a gap that did not exist.**
+    /// which C# has had all along. I was pinning a gap that did not exist.**
     /// **What it pins now can hold for good: all nine precedence layers are present, in order, and comparison does not chain.**
     /// **This one needs no narrowing when a piece lands, because it pins structure, not progress.**
     /// </remarks>
@@ -146,17 +146,17 @@ public class SymbolicParsingGapTests
 
     /// <summary>**按名字标识的符号已经有了** / A name-identified symbol now exists.</summary>
     /// <remarks>
-    /// **B1086 之前 C# 只有 `PathSymbol`，而符号反序列化对任何普通名字直接抛异常。**
+    /// **此前 C# 只有 `PathSymbol`，而符号反序列化对任何普通名字直接抛异常。**
     /// **这一条是正向的**：它记的是"哪一半已经填上了"。
     ///
-    /// **Before B1086 C# had only `PathSymbol`, and symbol deserialization threw on every plain name.**
+    /// **C# had only `PathSymbol` at first, and symbol deserialization threw on every plain name.**
     /// **This one is positive**: it records which half is already filled.
     /// </remarks>
     [Fact]
     public void TheNamedSymbol_ShouldExist()
     {
         typeof(Fuookami.Ospf.Math.Symbol.NamedSymbol).Should().NotBeNull(
-            "the polynomial layer needs a name-identified symbol, and it had none before B1086");
+            "the polynomial layer needs a name-identified symbol, and there was none");
     }
 
     /// <summary>**多项式文本解析还没有** / There is no polynomial text parser yet.</summary>
@@ -167,9 +167,9 @@ public class SymbolicParsingGapTests
             .Concat(Directory.GetFiles(Path.Combine(Root().FullName, "src", "Math"), "*Parser*.cs", SearchOption.AllDirectories))
             .Select(path => Path.GetFileName(path)!)
             .Where(name => name.Contains("Polynomial", StringComparison.Ordinal))
-            // **词法层 B1084、语法层 B1085 已搬，所以这里只钉标量解析那 713 行。**
+            // **词法层与语法层都已搬，所以这里只钉标量解析那 713 行。**
             // **`PolynomialLexer.cs` 与 `PolynomialParser.cs` 是已有的，不算命中。**
-            // **The lexical layer landed in B1084 and the grammar layer in B1085, so this pins only the 713-line scalar parser.**
+            // **The lexical layer landed and the grammar layer, so this pins only the 713-line scalar parser.**
             // **`PolynomialLexer.cs` and `PolynomialParser.cs` are expected and do not count.**
             .Where(name => !name.StartsWith("PolynomialLexer", StringComparison.Ordinal))
             .Where(name => !name.StartsWith("PolynomialParser", StringComparison.Ordinal))

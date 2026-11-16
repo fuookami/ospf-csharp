@@ -1,4 +1,4 @@
-// 活动定义（B685）的判据 / Criteria for the activity definitions (B685).
+// 活动定义的判据 / Criteria for the activity definitions.
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 
 /// <summary>
-/// **活动定义（B685）** / The activity definitions (B685).
+/// **活动定义** / The activity definitions.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**null 访问器返回空而不是 null**、**`Until` 为 null 表示"持续到结束"而不是零长度**、
@@ -70,7 +70,7 @@ public class ActivityDefinitionTests {
     /// 1. 同一活动的两个模式可以**时长不同**（2 小时与 5 小时）。
     /// 2. 成本也各自不同（100 与 250）——换模式就是换一整套参数。
     /// 3. `Activity` 本身**没有** `Duration` 或 `Cost` 属性：这类数只能从模式读，
-    ///    否则"活动的时长"会出现第二个来源。
+    /// 否则"活动的时长"会出现第二个来源。
     ///
     /// Three paired points: two modes of the same activity may **differ in duration** (2 hours and 5); their costs differ too (100 and 250), since switching mode swaps the whole parameter set; and
     /// `Activity` itself carries **no** `Duration` or `Cost` property, so those numbers have exactly one source rather than a second one on the activity.

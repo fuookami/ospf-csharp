@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 所以这一处不影响正确性。但若哪天改成不等式，方向就成了语义——
 /// 现在写成减数在前是有意的，不是随手。**
 ///
-/// B1194, following the baseline's `MaskingStructure`.
+/// Following the baseline's `MaskingStructure`.
 ///
 /// **The mask column may be <b>shared</b>, and sharing decides who retains it.**
 ///

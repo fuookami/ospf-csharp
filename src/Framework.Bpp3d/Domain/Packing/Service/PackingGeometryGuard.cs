@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Packing.Service;
 /// 移植基线 `PackingGeometryGuard.kt`（23023 B）的**终态重叠检测**：长方体-长方体、圆柱-长方体、
 /// 同轴圆柱-圆柱、异轴圆柱-圆柱四种配对。
 ///
-/// **本批不移植**：宽相位扫掠表（基线的 `candidateGeometryPairs` / `sweepScore`，大箱降复杂度用）、
+/// **这里不移植**：宽相位扫掠表（基线的 `candidateGeometryPairs` / `sweepScore`，大箱降复杂度用）、
 /// 越界检测。两者留在 P9 台账。
 ///
 /// Ports the baseline's **final-state overlap detection**: box-box, cylinder-box, same-axis cylinder-cylinder, and different-axis

@@ -18,8 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `selectorValues` 与 `absHelperValues`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeHelperReconstructionTests
 {
     /// <summary>
@@ -179,7 +178,7 @@ public class NativeHelperReconstructionTests
     /// Zero falls on the nonnegative side: sign is `1`, the positive part is `0`.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条，因为零点是唯一一个"看起来两可"的点。**
+    /// **这是这里最有内容的一条，因为零点是唯一一个"看起来两可"的点。**
     ///
     /// **`input < 0` 取 `0`，否则取 `1`，所以 `input == 0` 时符号是 `1`。**
     /// **而正部是 `0`（因为 `input > 0` 才取 `input`）。**
@@ -212,7 +211,7 @@ public class NativeHelperReconstructionTests
     /// ABS does not reject a solution containing helpers, unlike selectors.
     /// </summary>
     /// <remarks>
-    /// **这是一处<b>已知的不对称</b>，本批照抄基线不改。**
+    /// **这是一处<b>已知的不对称</b>，这里照抄基线不改。**
     /// **ABS 的辅助列同样是消掉的，但基线没写这条检查；
     /// 单方面加上会让两侧行为分岔。**
     ///
@@ -233,7 +232,7 @@ public class NativeHelperReconstructionTests
 
         result.Should().BeOfType<
             Ok<IReadOnlyDictionary<VariableItemKey, Flt64>, ErrorCode, Error<ErrorCode>>>(
-                "the baseline has no such check for ABS, and this batch copies the baseline");
+                "the baseline has no such check for ABS, and copies the baseline");
         result.Value[Positive.Key].ToDouble().Should().Be(
             5.0, "the stale value in the solution is overwritten, not trusted");
     }

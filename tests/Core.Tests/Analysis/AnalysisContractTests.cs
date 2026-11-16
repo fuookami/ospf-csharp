@@ -166,12 +166,12 @@ public class AnalysisContractTests
 
     /// <summary>**证据种类必须正好是契约那五个** / Evidence kinds are exactly the contract's five.</summary>
     /// <remarks>
-    /// **B1071 之前这里有第六个 `variable-bound`，契约里没有。**
+    /// **此前这里有第六个 `variable-bound`，契约里没有。**
     /// 它的 `StableId` 与两个具体边界**完全相同**，**于是同一份证据经中转一次 `Kind` 就变了**——
     /// **按 (stable_id, kind) 做的跨语言比对，结果取决于代码走了哪一支。**
     /// 现在 `Kind` 由边界方向派生，六个变体落到五个词上。
     ///
-    /// **Before B1071 there was a sixth kind, `variable-bound`, which the contract does not list.**
+    /// **There used to be a sixth kind, `variable-bound`, which the contract does not list.**
     /// Its `StableId` was **identical** to the two specific bounds, **so one round trip changed the `Kind` and kept the id** —
     /// **and a comparison keyed on (stable_id, kind) depended on which branch ran.**
     /// Now `Kind` derives from the bound side, and six variants land on five words.
@@ -189,13 +189,13 @@ public class AnalysisContractTests
 
     /// <summary>**同一份证据的 `Kind` 不因中转而改变** / A round trip may not change the kind.</summary>
     /// <remarks>
-    /// **这是 B1071 修掉的那条缺陷的直接判据。** `AsInfeasibilityMember` 与
+    /// **这是那条缺陷的直接判据。** `AsInfeasibilityMember` 与
     /// `FromInfeasibilityMember` 互为逆操作，**而"互逆"必须包括 `StableId` 与 `Kind` 两样。**
     ///
     /// 修复前：`VariableLowerBound` → `InfeasibilityMember` → `VariableBound`，
     /// **`StableId` 不变而 `Kind` 从 `variable-lower-bound` 变成 `variable-bound`。**
     ///
-    /// **This is the direct criterion for the defect B1071 fixed.** `AsInfeasibilityMember` and `FromInfeasibilityMember` are inverses, **and "inverse" has to cover both the `StableId` and the `Kind`.**
+    /// **This is the direct criterion for that defect.** `AsInfeasibilityMember` and `FromInfeasibilityMember` are inverses, **and "inverse" has to cover both the `StableId` and the `Kind`.**
     /// Before the fix: `VariableLowerBound` → `InfeasibilityMember` → `VariableBound`, **same id, different kind.**
     /// </remarks>
     [Theory]

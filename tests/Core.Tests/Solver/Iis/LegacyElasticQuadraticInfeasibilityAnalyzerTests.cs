@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Iis;
 /// 二次旧式 IIS 分析器已接入框架 / The quadratic legacy IIS analyzer is wired into the framework.
 /// </summary>
 /// <remarks>
-/// B1260 补的是一个"机器都在、只差适配器"的缺口：`QuadraticLegacyIisCompute`、`QuadraticIisModel`、
+/// 补的是一个"机器都在、只差适配器"的缺口：`QuadraticLegacyIisCompute`、`QuadraticIisModel`、
 /// `QuadraticElasticFilterResult`、二次的 `DiagnosticConstraintId` 全都在，线性版分析器也在，
 /// **唯独缺这个类——没有它，那整套二次 IIS 机器无法经分析器框架被调用。**
 ///
 /// **所以判据的第一件事不是"算得对"，而是"接进去了没有"：**
 /// **一个能力齐备但没有入口的东西，与没有这个东西，在能力矩阵上是同一格。**
 ///
-/// B1260 fills an "everything is here except an adapter" gap, so the criterion's first job is not correctness but
+/// Fills an "everything is here except an adapter" gap, so the criterion's first job is not correctness but
 /// reachability: **a capability with no entry point occupies the same cell of the matrix as no capability at all.**
 /// </remarks>
 public class LegacyElasticQuadraticInfeasibilityAnalyzerTests

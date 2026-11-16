@@ -20,15 +20,15 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Domain.Item.Model;
 /// 与基线三个文件对应：`PlacementTyping.kt`（`topItemPlacements`／`bottomItemPlacements`）、
 /// `Placement.kt`（`topPlacements`／`bottomPlacements`）、`PlacementFactory.kt`（`filterBottomOverlapped`）。
 ///
-/// B1311 更正一个语义分歧： 这里原来的 `TopItemPlacements` 取的是"全局最高一层的所有放置"，
+/// **这里原有的 `TopItemPlacements` 取的是"全局最高一层的所有放置"，**
 /// 而基线取的是"没有任何底面重叠且更高的放置压在它上面的放置"。 两者在一高一低的货堆上给出不同答案：
 /// 基线两件都算顶层（谁也不压谁），旧实现只返回高的那件——于是矮的那件被当成"被压住的"，而它上面其实什么都没有。
 /// 旧实现全仓零调用方，所以这次直接按基线替换，而不是并存两个同名不同义的方法。
 ///
-/// Corresponds to three baseline files. B1311 corrects a semantic divergence: the old `TopItemPlacements` returned "every placement on the globally
+/// Corresponds to three baseline files. **The old `TopItemPlacements` returned "every placement on the globally
 /// highest layer" while the baseline returns "every placement that no overlapping placement sits above". The two disagree on an uneven stack: the
 /// baseline counts both as top (neither covers the other) while the old one returned only the taller — so the short one was treated as covered when
-/// nothing was on it. The old implementation had zero callers (measured in B1311), so it is replaced rather than kept as a same-name-different-meaning
+/// nothing was on it. The old implementation had zero callers (measured), so it is replaced rather than kept as a same-name-different-meaning
 /// twin.
 /// </remarks>
 public static class PlacementTyping {

@@ -1,4 +1,4 @@
-// 四条目标的阈值分支（B700）的判据 / Criteria for the four objectives' threshold branches (B700).
+// 四条目标的阈值分支的判据 / Criteria for the four objectives' threshold branches.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **四条目标的阈值分支（B700）** / The four objectives' threshold branches (B700).
+/// **四条目标的阈值分支** / The four objectives' threshold branches.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**阈值非零时才建松弛**、**延迟/提前用正部而准时用截断部**、**三个开关各自钉住**。
@@ -46,9 +46,9 @@ public class ThresholdObjectiveTests {
         };
 
     // **任务必须挂执行器**：准时表的建立要遍历"任务 × 可用执行器"，没有执行器就一行都不建，
-    // 于是准时目标在"表缺项"上失败——那不是本批要测的失败。
+    // 于是准时目标在"表缺项"上失败——那不是这里要测的失败。
     // **Tasks need executors**: the on-time tables are built over "task x eligible executor", so with none no row is built and the objectives fail on a missing table entry, which is not the failure
-    // this batch is about.
+    // is about.
     private static TaskSchedulingTaskTime<TestTask, TestExecutor, TestAssignmentPolicy> Time(
         LinearMetaModel<Flt64> model,
         TimeWindow<Flt64> window,
@@ -240,7 +240,7 @@ public class ThresholdObjectiveTests {
             .OfType<LinearFunctionSymbolAdapter<Flt64>>()
             .Select(adapter => adapter.Function)
             .OfType<SlackFunction<Flt64>>()
-            // **只数本批四条目标的松弛**：`TaskTime` 自己也会建松弛（时间偏差那套），不加名字过滤会多数出来。
+            // **只数这里四条目标的松弛**：`TaskTime` 自己也会建松弛（时间偏差那套），不加名字过滤会多数出来。
             // **Count only the four objectives' slacks**: `TaskTime` builds its own (time-deviation) slacks, so without a name filter the count overshoots.
             .Where(slack => slack.Name.Contains("_threshold"))
             .ToList();

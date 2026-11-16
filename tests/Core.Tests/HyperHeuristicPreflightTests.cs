@@ -59,7 +59,7 @@ public sealed class HyperHeuristicPreflightTests {
     /// <summary>**依赖坐标的配置在无坐标时必须失败** / A coordinate-dependent configuration must fail without coordinates.</summary>
     /// <remarks>
     /// **这条测试抓不住"回报的坐标检查"**：把那条检查删掉，配置照样失败——因为默认接受策略 `not-worse` 也要坐标，
-    /// 它先一步报错。这是本会话第四次遇到"守卫相互遮挡"。
+    /// 它先一步报错。这是第四次遇到"守卫相互遮挡"。
     ///
     /// 保留测试，因为它固化的结论仍然成立（依赖坐标的配置不能在没有坐标时通过预检）；但**不能声称它守着回报那一行**。
     /// 那条检查属于纵深防御：一旦某个接受策略不需要坐标，它才成为唯一的防线。

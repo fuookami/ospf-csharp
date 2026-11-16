@@ -89,9 +89,9 @@ public sealed class ConfigurationFormatRoundTripTests {
             ConfigurationFormats.Decode("42", ConfigurationFormat.Yaml);
 
         decoded.Should().BeOfType<Failed<HyperHeuristicConfig, ErrorCode, Error<ErrorCode>>>();
-        // **必须断言错误内容**：把 YAML 根换成空对象后，`Validate()` 会以"缺 problem/algorithms"再拒一次——
-        // 于是"失败了"依然成立，**而"根必须是对象"这条检查可以整个删掉**。本批第一次变异正是这么存活的。
-        // **The error content must be asserted**: replacing the YAML root with an empty object makes `Validate()` reject it again for "missing
+        // **必须断言错误内容**：把 YAML 根换成空对象后，`Validate` 会以"缺 problem/algorithms"再拒一次——
+        // 于是"失败了"依然成立，**而"根必须是对象"这条检查可以整个删掉**。这里第一次变异正是这么存活的。
+        // **The error content must be asserted**: replacing the YAML root with an empty object makes `Validate` reject it again for "missing
         // problem/algorithms" — so "it failed" still holds and **the "root must be an object" check can be deleted outright**. That is exactly how this
         // batch's first mutation survived.
         ((Failed<HyperHeuristicConfig, ErrorCode, Error<ErrorCode>>)decoded)
@@ -105,12 +105,12 @@ public sealed class ConfigurationFormatRoundTripTests {
     /// `Expecting '=' after a key`）。所以 `FromNode` 里那条"根必须是对象"的检查**对 TOML 路径不可达**，
     /// 它实际守的是 YAML 路径——两个格式共用同一条校验链，这条检查因此仍然必要，但**不能声称它守住了 TOML**。
     ///
-    /// 本测试改为断言"空文档被拒"，这条走的是 `Validate()` 而非根类型检查，两者都指向"配置不完整"。
+    /// 本测试改为断言"空文档被拒"，这条走的是 `Validate` 而非根类型检查，两者都指向"配置不完整"。
     ///
     /// **`Tomlyn` simply cannot produce a document whose root is a scalar**: TOML's grammar requires key-value pairs at the root, so `"42"` is a
     /// **syntax error** (`Expecting '=' after a key`). The "root must be an object" check in `FromNode` is therefore **unreachable on the TOML path**;
     /// what it actually guards is the YAML path — the two formats share one validation chain, so the check remains necessary, but **it cannot be claimed
-    /// to guard TOML**. This test instead asserts that an empty document is rejected, which goes through `Validate()` rather than the root-type check;
+    /// to guard TOML**. This test instead asserts that an empty document is rejected, which goes through `Validate` rather than the root-type check;
     /// both point at "the configuration is incomplete".
     /// </remarks>
     [Fact]

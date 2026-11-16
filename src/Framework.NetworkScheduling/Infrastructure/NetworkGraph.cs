@@ -146,9 +146,9 @@ public sealed class NetworkGraph<N, A> {
     /// 获取视图中的起点 / Get the origin in this view.
     /// </summary>
     /// <remarks>
-    /// 反向视图中起点与终点**互换**，但载荷与标识不变——这正是 `Reverse()` 的全部效果。
+    /// 反向视图中起点与终点**互换**，但载荷与标识不变——这正是 `Reverse` 的全部效果。
     /// In a reversed view origin and destination **swap** while payloads and identities stay unchanged — that is the entire
-    /// effect of `Reverse()`.
+    /// effect of `Reverse`.
     /// </remarks>
     /// <param name="arc">弧 / Arc.</param>
     /// <returns>起点标识 / Origin identity.</returns>

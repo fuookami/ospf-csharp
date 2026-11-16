@@ -21,12 +21,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 线性输入什么都不做 / A linear input does nothing.
 /// </summary>
 /// <remarks>
-/// B1159 按基线 `QuadraticLinear.kt` 把空壳换成真实编码。
+/// 对齐基线 `QuadraticLinear.kt` 把空壳换成真实编码。
 ///
 /// **线性输入时不创建 `y`、不写约束、辅助变量为空**——
 /// **一条 `y = p` 的等式对本来就是线性的 `p` 只是把 `p` 抄了一遍。**
 ///
-/// B1159 replaces a stub with the real encoding.
+/// Replaces a stub with the real encoding.
 ///
 /// **A linear input creates no `y`, writes no row and has no helper** —
 /// **a `y = p` equality over an already-linear `p` only copies it.**

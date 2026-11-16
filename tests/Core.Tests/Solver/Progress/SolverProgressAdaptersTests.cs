@@ -19,16 +19,16 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Progress;
 /// The progress adapters must **preserve the original callback**, and **must not invoke it when reporting fails**.
 /// </summary>
 /// <remarks>
-/// B324 移植了核心类型（"怎么上报"），这批移植适配器（"从哪里接"）。**没有适配器，进度上报存在但无人调用**——
-/// 与 B313"可达 ≠ 在用"是同一类问题。
+/// 移植了核心类型（"怎么上报"），这批移植适配器（"从哪里接"）。**没有适配器，进度上报存在但无人调用**——
+/// 与 "可达 ≠ 在用"是同一类问题。
 ///
 /// 两条最要紧的语义：
 /// 1. **保留原回调**：接入进度上报**不得让既有回调失效**。
 /// 2. **`Try.then` 的短路**：基线的 `Try.then` 只在 `Ok` 时执行 `next`，
-///    所以**上报失败时原回调不会被调用**——否则一次上报失败会让下游回调在错误的时机触发。
+/// 所以**上报失败时原回调不会被调用**——否则一次上报失败会让下游回调在错误的时机触发。
 ///
-/// B324 ported the core types ("how to report"); this batch ports the adapters ("where to hook in"). **Without adapters progress reporting exists but nothing calls it** —
-/// the same class of problem as B313's "reachable ≠ in use".
+/// ported the core types ("how to report"); ports the adapters ("where to hook in"). **Without adapters progress reporting exists but nothing calls it** —
+/// the same class of problem as the earlier "reachable ≠ in use".
 ///
 /// Two critical semantics: (1) **preserve the original callback** — wiring in progress reporting **must not disable existing callbacks**; (2) **`Try.then`'s
 /// short-circuit** — the baseline's `Try.then` only runs `next` on `Ok`, so **when reporting fails the original callback is not invoked**; otherwise a failed

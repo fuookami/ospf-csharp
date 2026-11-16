@@ -76,9 +76,9 @@ public sealed class FrameworkModuleReadmeTests {
     /// <summary>**CSP1D 必须写明 DFS 路径缺失且缓存无使用者** / CSP1D must state the missing DFS path and the unused caches.</summary>
     [Fact]
     public void Csp1dReadme_ShouldStateTheShellGap() {
-        ReadReadme("Framework.Csp1d", "README.md").Should().Contain("deleted in Batch 281");
+        ReadReadme("Framework.Csp1d", "README.md").Should().Contain("**deleted**");
         ReadReadme("Framework.Csp1d", "README.md").Should().Contain("always zero");
-        ReadReadme("Framework.Csp1d", "README_ch.md").Should().Contain("Batch 281 已删除");
+        ReadReadme("Framework.Csp1d", "README_ch.md").Should().Contain("**已删除**");
         ReadReadme("Framework.Csp1d", "README_ch.md").Should().Contain("缓存命中 KPI 恒为 0");
     }
 

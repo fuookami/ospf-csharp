@@ -1,4 +1,4 @@
-// 每列最大份数与最终阶段（B655）的判据 / Criteria for the copy bound and the final phase (B655).
+// 每列最大份数与最终阶段的判据 / Criteria for the copy bound and the final phase.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **每列最大份数与最终阶段（B655）** / The copy bound and the final phase (B655).
+/// **每列最大份数与最终阶段** / The copy bound and the final phase.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**取最小份数**（最紧的物品决定份数）、**向上取整**（向下取整会少一份）、**面积需求不参与**、

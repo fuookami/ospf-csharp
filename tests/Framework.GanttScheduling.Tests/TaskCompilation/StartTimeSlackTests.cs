@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **开始时间松弛（B548）** / The start-time slack (B548).
+/// **开始时间松弛** / The start-time slack.
 /// </summary>
 /// <remarks>
 /// `est_slack` 量的不是"开始时间是多少"，而是"**开始时间比计划早/晚多少**"。这个差别是整个延迟/提前成本的计费基础：

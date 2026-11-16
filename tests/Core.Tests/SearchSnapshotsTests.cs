@@ -133,9 +133,9 @@ public sealed class SearchSnapshotsTests {
 
     /// <summary>**`default(JsonElement)` 不可序列化** / `default(JsonElement)` is not serializable.</summary>
     /// <remarks>
-    /// 这是本会话第三次踩到同一个坑（Batch 189 两处）。`JsonElementConverter.Write` 拒绝 `ValueKind == Undefined`，
+ /// 这是第三次踩到同一个坑（earlier 两处）。`JsonElementConverter.Write` 拒绝 `ValueKind == Undefined`，
     /// 而 `default(JsonElement)` 正是 `Undefined`。
-    /// This is the third time this session hit the same trap (twice in Batch 189). `JsonElementConverter.Write` refuses
+ /// This is the third time this session hit the same trap (twice in earlier). `JsonElementConverter.Write` refuses
     /// `ValueKind == Undefined`, and `default(JsonElement)` is exactly `Undefined`.
     /// </remarks>
     [Fact]

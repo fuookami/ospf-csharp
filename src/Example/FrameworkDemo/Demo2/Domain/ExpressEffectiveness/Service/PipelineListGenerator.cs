@@ -22,13 +22,13 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 ///
 /// 1. **`AbsoluteOrder` 非空才加 `ItemPriorityLimit`**（即仅预配载）。
 /// 2. **`RelativeOrder` 非空才加 `ItemPriorityReverseLimit`**（即仅全载）。
-/// 3. **`MustShipLimit` 的条件是"非预配载且下标非空"**。这里只判 `!= Predistribution`，不判 `WithMacOptimization()` 之类的谓词——
+/// 3. **`MustShipLimit` 的条件是"非预配载且下标非空"**。这里只判 `!= Predistribution`，不判 `WithMacOptimization` 之类的谓词——
 ///    写成那种谓词会让建议打板少一条约束。
 /// 4. **顺序**：优先级、反转、必须发货。
 ///
 /// Aligned with the baseline: **three conditional pipelines and no overall mode switch**. Four things must be copied: **`ItemPriorityLimit` only when `AbsoluteOrder` is non-null**
 /// (predistribution only); **`ItemPriorityReverseLimit` only when `RelativeOrder` is non-null** (full load only); **`MustShipLimit` requires "not predistribution and a non-empty index
-/// list"**, testing only `!= Predistribution` rather than a `WithMacOptimization()`-style predicate, which would drop a constraint under weight recommendation; and **the order** is
+/// list"**, testing only `!= Predistribution` rather than a `WithMacOptimization`-style predicate, which would drop a constraint under weight recommendation; and **the order** is
 /// priority, reversal, must-ship.
 /// </remarks>
 internal sealed class PipelineListGenerator

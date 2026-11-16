@@ -1,4 +1,4 @@
-// 产量 / 消耗量符号表与超量、不足表（B702）的判据 / Criteria for the quantity symbol tables and the over/less tables (B702).
+// 产量 / 消耗量符号表与超量、不足表的判据 / Criteria for the quantity symbol tables and the over/less tables.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Produce;
 
 /// <summary>
-/// **产量 / 消耗量符号表与超量、不足表（B702）** / The quantity symbol tables and the over/less tables (B702).
+/// **产量 / 消耗量符号表与超量、不足表** / The quantity symbol tables and the over/less tables.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**符号表真的进了模型**、**范围真的设上**、**超量用正侧而不足用负侧**、**松弛不自带约束**、**没有需求项是空符号**。
@@ -36,13 +36,13 @@ public class ProduceQuantityTableTests {
     /// <remarks>
     /// 四点成对：
     ///
-    /// 1. 注册后 `Quantity` **不是** `new object()`，而是按产品取得到符号的表；未注册时**抛**而不是返回空对象。
+    /// 1. 注册后 `Quantity` **不是** `new object`，而是按产品取得到符号的表；未注册时**抛**而不是返回空对象。
     /// 2. 模型里确实出现了 `produce_quantity_（产品）` 符号——只建表不 `Add` 的话求解器看不到它。
     /// 3. 有需求的产品**范围被设上**：`SolverValueRangeLower/Upper` 是 `[下界 − 不足, 上界 + 超量]`，
-    ///    所以下界 10、上界 100、不足 5、超量 10 ⇒ `[5, 110]`。
+    /// 所以下界 10、上界 100、不足 5、超量 10 ⇒ `[5, 110]`。
     /// 4. 没有需求的产品**范围是空的**（基线只在 `demand != null` 时设），不能凭空给个 `[0, 0]`。
     ///
-    /// Four paired points: after registration `Quantity` is **not** a bare `new object()` but a table the product can be looked up in, and before registration it **throws** rather than handing
+    /// Four paired points: after registration `Quantity` is **not** a bare `new object` but a table the product can be looked up in, and before registration it **throws** rather than handing
     /// back an empty object; the model really contains `produce_quantity_ (product)` symbols, since building the table without `Add` leaves the solver unable to see it; a product with a demand has
     /// its range set to `[lower - less, upper + over]` (10, 100, 5, 10 ⇒ `[5, 110]`); and a product without a demand has **no** range, matching the baseline's `demand != null` guard rather than an
     /// invented `[0, 0]`.
@@ -57,8 +57,8 @@ public class ProduceQuantityTableTests {
             (unbounded, (MaterialDemand?)null),
         });
 
-        // **注册前是 `null`，不是 `new object()`**：空对象会被当成"表已就绪"。
-        // **Null before registration, not `new object()`**: an empty object reads as "the table is ready".
+        // **注册前是 `null`，不是 `new object`**：空对象会被当成"表已就绪"。
+        // **Null before registration, not `new object`**: an empty object reads as "the table is ready".
         produce.Quantity.Should().BeNull("an unregistered table must not masquerade as an empty one");
 
         using var model = new LinearMetaModel<Flt64>();
@@ -70,16 +70,16 @@ public class ProduceQuantityTableTests {
         model.Tokens.Symbols.Select(symbol => symbol.Name)
             .Should().Contain("produce_quantity_0").And.Contain("produce_quantity_1");
 
-        // **`Range` 永不为 `null`**：`ExpressionRange.Create()` 的缺省就是全范围，所以"没设过"只能靠"仍是缺省"来认。
+        // **`Range` 永不为 `null`**：`ExpressionRange.Create` 的缺省就是全范围，所以"没设过"只能靠"仍是缺省"来认。
         // 有需求的那个被收窄到 `[5, 110]`，没有需求的仍停在缺省——两者必须**不同**，否则判据分不出设没设。
-        // **`Range` is never null**: `ExpressionRange.Create()` defaults to the full range, so "not set" can only be recognised as "still the default". The demanded product is narrowed to
+        // **`Range` is never null**: `ExpressionRange.Create` defaults to the full range, so "not set" can only be recognised as "still the default". The demanded product is narrowed to
         // `[5, 110]` while the other stays at the default — the two must **differ**, otherwise the criterion cannot tell whether a range was set at all.
         ValueRange<Flt64> boundedRange = table[bounded].Range.Range!;
         boundedRange.LowerBound.Value.Unwrap().Should().Be(new Flt64(5.0));
         boundedRange.UpperBound.Value.Unwrap().Should().Be(new Flt64(110.0));
 
-        // 没有需求的那个仍是 `ExpressionRange.Create()` 的缺省全范围——**上下界都比 `[5, 110]` 宽**。
-        // The undemanded one stays at `ExpressionRange.Create()`'s default full range, **wider than `[5, 110]` on both sides**.
+        // 没有需求的那个仍是 `ExpressionRange.Create` 的缺省全范围——**上下界都比 `[5, 110]` 宽**。
+        // The undemanded one stays at `ExpressionRange.Create`'s default full range, **wider than `[5, 110]` on both sides**.
         ValueRange<Flt64> unboundedRange = table[unbounded].Range.Range!;
         unboundedRange.Should().NotBe(boundedRange, "no demand means no narrowing");
         unboundedRange.LowerBound.Value.Unwrap().Ls(new Flt64(5.0)).Should().BeTrue(
@@ -95,7 +95,7 @@ public class ProduceQuantityTableTests {
     ///
     /// 1. 超量表里是 `SlackFunction`，`WithPositive = true` / `WithNegative = false`。
     /// 2. 不足量表里是 `SlackFunction`，`WithNegative = true` / `WithPositive = false`——**两侧反了的话超量和不足会互换**，
-    ///    而两者求值都是非负数，只查"非负"发现不了。
+    /// 而两者求值都是非负数，只查"非负"发现不了。
     /// 3. 两张表的松弛都是 `Constraint = false`：上界 / 下界行由表自己加，松弛自带约束会多出一对行。
     /// 4. 模型里确实有 `produce_over_quantity_ub` / `produce_less_quantity_lb` 行——只建松弛不加行，超量就没有上限。
     ///
@@ -177,10 +177,10 @@ public class ProduceQuantityTableTests {
     /// **非线性模型被拒，不是静默成功** / A non-linear model is rejected rather than silently succeeding.
     /// </summary>
     /// <remarks>
-    /// 两点成对：传 `new object()` 得到 `Failed`；传 `null` 抛 `ArgumentNullException`。
-    /// 这条判据钉住的正是本批修掉的形状——原来的 `Register` 对任何输入都返回 `Ok`。
+    /// 两点成对：传 `new object` 得到 `Failed`；传 `null` 抛 `ArgumentNullException`。
+    /// 这条判据钉住的正是这里修掉的形状——原来的 `Register` 对任何输入都返回 `Ok`。
     ///
-    /// Two paired points: passing `new object()` yields `Failed` and passing `null` throws `ArgumentNullException`. This criterion pins exactly the shape this batch removed: the old `Register`
+    /// Two paired points: passing `new object` yields `Failed` and passing `null` throws `ArgumentNullException`. This criterion pins exactly the shape that was removed: the old `Register`
     /// returned `Ok` for every input.
     /// </remarks>
     [Fact]

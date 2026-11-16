@@ -1,4 +1,4 @@
-// 二维影子价格映射（B638）的判据 / Criteria for the 2D shadow price map (B638).
+// 二维影子价格映射的判据 / Criteria for the 2D shadow price map.
 
 using System;
 using FluentAssertions;
@@ -11,12 +11,12 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **二维影子价格映射（B638）** / The 2D shadow price map (B638).
+/// **二维影子价格映射** / The 2D shadow price map.
 /// </summary>
 /// <remarks>
-/// 判据的重点：**模式与物品都参与键**（本批存在的理由就是共享基类把这两项折叠掉了），以及**累加、空键返回 null、提取器求和**三条基线语义。
+/// 判据的重点：**模式与物品都参与键**（这里存在的理由就是共享基类把这两项折叠掉了），以及**累加、空键返回 null、提取器求和**三条基线语义。
 ///
-/// The criteria focus on **both mode and item taking part in the key** — the whole reason this batch exists is that the shared base class collapsed those two — plus the three baseline
+/// The criteria focus on **both mode and item taking part in the key** — the whole reason exists is that the shared base class collapsed those two — plus the three baseline
 /// semantics: accumulation, null for an unregistered key, and summing extractors.
 /// </remarks>
 public class Bpp2dShadowPriceMapTests {
@@ -28,11 +28,11 @@ public class Bpp2dShadowPriceMapTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. 累加 `ItemAmount` 与 `ItemArea` 各一条 → **映射表里两条**（B637 里共享基类在这里只剩一条）。
+    /// 1. 累加 `ItemAmount` 与 `ItemArea` 各一条 → **映射表里两条**。
     /// 2. 分别取回，值互不影响。
     /// 3. **没登记的键取回 null**，不是零。
     ///
-    /// Three paired points: one `ItemAmount` plus one `ItemArea` gives **two entries** (the shared base class collapsed this to one in B637); each reads back independently; and **an
+    /// Three paired points: one `ItemAmount` plus one `ItemArea` gives **two entries** (the shared base class collapsed this to one); each reads back independently; and **an
     /// unregistered key returns null**, not zero.
     /// </remarks>
     [Fact]

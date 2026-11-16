@@ -74,10 +74,10 @@ internal static class GenerationMaterialWidthRangeKeyExtensions {
     /// <remarks>
     /// **委托给 `GenerationQuantityMath.UnitKey`，不再自己写一份。**
     ///
-    /// 这是本批发现的**第四份**单位键实现。四份各写一遍，任何一份与基线分叉都会让
+    /// 这是这里发现的**第四份**单位键实现。四份各写一遍，任何一份与基线分叉都会让
     /// "同一单位"在不同代码路径上判成不同结果，而**不会有任何测试发现**。
     ///
-    /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fourth** unit-key implementation found in this batch; with
+    /// **Delegates to `GenerationQuantityMath.UnitKey` instead of keeping its own copy.** This is the **fourth** unit-key implementation found in; with
     /// four copies, any one diverging from the baseline makes "the same unit" resolve differently on different code paths, and **no test would notice**.
     /// </remarks>
     private static string CanonicalUnitKey(PhysicalUnit unit) => GenerationQuantityMath.UnitKey(unit);

@@ -16,13 +16,13 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **两个成本目标从"返回 `Failed`"变成真的目标（B560）** / The two cost objectives go from "returns `Failed`" to real objectives (B560).
+/// **两个成本目标从"返回 `Failed`"变成真的目标** / The two cost objectives go from "returns `Failed`" to real objectives.
 /// </summary>
 /// <remarks>
 /// 三种静默失效：
 /// <list type="number">
 /// <item>**只遍历任务自己启用的执行器**：那些不可用组合本来被钉成 0，漏掉它们无害；但反过来"只遍历启用的"会让另一些组合**完全不计成本**，
-///   解依旧可行、目标依旧是个正常数；</item>
+/// 解依旧可行、目标依旧是个正常数；</item>
 /// <item>**成本提取失败静默取 0**：那个任务对目标不产生任何压力，看起来像"它很便宜"；</item>
 /// <item>**执行器成本在没有提取器时照样加目标**：基线明确"没给提取器就什么都不做"，多出来的目标会改变解。</item>
 /// </list>
@@ -145,7 +145,7 @@ public class CostObjectiveTests {
     /// </summary>
     /// <remarks>
     /// 两个执行器、一个任务，成本 5 与 1。目标最小值只能是 **1**：等于 5 说明选了贵的（没最小化），等于 0 说明分配变量根本没进目标。
-    /// 三个候选值互不相同，单点断言就能分辨——这一批终于不需要差值技巧。
+    /// 三个候选值互不相同，单点断言就能分辨——这里终于不需要差值技巧。
     ///
     /// Two executors, one task, costs 5 and 1. The minimum is **1**: 5 would mean the expensive one was chosen (nothing minimised) and 0 would mean the assignment variable never
     /// reached the objective. The three candidates are distinct, so a single assertion suffices here.

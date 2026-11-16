@@ -46,7 +46,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// （**否则两行里同一变量出现两次，`ind` 既在被判定的式子里又在判定它——自指**）；
 /// **③ 取负后仍要可用**（**`LT`/`LE` 会先取负，而取负会让一个大数变成负的大数**）。
 ///
-/// B1184, following the baseline's `relationIndicatorConstraints`.
+/// Following the baseline's `relationIndicatorConstraints`.
 ///
 /// **The first <b>big-M-free</b> indicator encoding in this direction, and not by accident**:
 /// **when the condition already has a known range `[qLower, qUpper]`, the relaxation can be <b>computed exactly</b> —

@@ -117,7 +117,7 @@ public sealed record NormalizedObjective(
 /// **`IdentityValidation` 是构造时算出来的，不是事后调用的**：
 /// **这样"不一致的模型"根本没有机会被创建出来。**
 ///
-/// B1175, following the baseline's six records and `validateNormalizedIdentityMetadata`.
+/// Following the baseline's six records and `validateNormalizedIdentityMetadata`.
 ///
 /// **The reason this family exists is the <b>stable fingerprint</b>**: **the same model rebuilt twice may order its
 /// variables, constraints and objective differently, while the fingerprint must not change.**
@@ -203,7 +203,7 @@ public sealed class NormalizedMathematicalModel
 /// **空白串按"没说"处理**——**`""` 与 `null` 都表示"没有指定"，
 /// 把空白串当成一个命名空间会让 `""` 与 `"A"` 被判为不一致，而那是一种无意义的失败。**
 ///
-/// B1175, following the baseline's `validateNormalizedIdentityMetadata`.
+/// Following the baseline's `validateNormalizedIdentityMetadata`.
 ///
 /// **It blocks "two namespaces inside one model".**
 ///

@@ -19,13 +19,13 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// `DFSGenerator` must really search and must check pruning constraints **while expanding**.
 /// </summary>
 /// <remarks>
-/// B308 之前 C# 侧**根本没有这个类**——基线的 `DFSGenerator`（484 行）从未移植。
+/// 之前 C# 侧**根本没有这个类**——基线的 `DFSGenerator`（484 行）从未移植。
 ///
-/// **本批的核心判据是差分**：DFS 与 FullSum 的搜索逻辑完全相同，唯一差别是
+/// **这里的核心判据是差分**：DFS 与 FullSum 的搜索逻辑完全相同，唯一差别是
 /// "扩展时是否检查剪枝约束"。所以判据不能只看"产出了一些方案"，
 /// 必须看**同一条剪枝约束下两者的产出不同**。
 ///
-/// Before B308 the class **did not exist at all** on the C# side — the baseline `DFSGenerator` (484 lines) had never been ported.
+/// Before the class **did not exist at all** on the C# side — the baseline `DFSGenerator` (484 lines) had never been ported.
 ///
 /// **The core criterion is differential**: DFS and FullSum share the identical search logic, differing only in whether pruning constraints are checked while
 /// expanding. So the criterion cannot be "it produced some plans"; it must be that **the same pruning constraint makes the two produce different results**.
@@ -188,7 +188,7 @@ public class DFSGeneratorOutputTests {
 
     /// <summary>**同一条剪枝约束下 DFS 与 FullSum 的产出必须不同** / The same pruning constraint must make DFS and FullSum differ.</summary>
     /// <remarks>
-    /// 这是本批**唯一能证明"两者真的是不同生成器"的判据**。
+    /// 这是这里**唯一能证明"两者真的是不同生成器"的判据**。
     ///
     /// 若两者的差别被抹平（例如都把 `applyPruningConstraints` 传成同一个值），
     /// 各自的行为测试**仍然全部通过**——只有差分测试会失败。

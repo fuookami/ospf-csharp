@@ -22,14 +22,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness;
 /// 注册时先派生四个子模型再生成十二条管线。
 ///
 /// **一处刻意的参数删减**：基线的 `init` 还收 `aircraftContext`，但本仓的 `AggregationInitializer` 用不到飞机的任何量
-/// （重量单位那条路径在 B624 已改成"调用方用同一单位"），所以这里**不接一个没有消费者的参数**——接了就只是把
+/// （重量单位那条路径在 已改成"调用方用同一单位"），所以这里**不接一个没有消费者的参数**——接了就只是把
 /// "这个参数必须有"变成一句空话。
 ///
 /// Aligned with the baseline: **initialisation is idempotent**, **`Init` takes the `stowageMode`**, and registration derives the four sub-models before generating the twelve
 /// pipelines.
 ///
 /// **One deliberate parameter omission**: the baseline's `init` also takes an `aircraftContext`, but this port's `AggregationInitializer` reads nothing from the aircraft (the weight-unit
-/// path became "the caller uses one unit" in B624), so this port **does not accept a parameter with no consumer** — accepting it would only turn "this parameter must exist" into an empty
+/// path became "the caller uses one unit"), so this port **does not accept a parameter with no consumer** — accepting it would only turn "this parameter must exist" into an empty
 /// promise.
 /// </remarks>
 public sealed class LoadingEffectivenessContext

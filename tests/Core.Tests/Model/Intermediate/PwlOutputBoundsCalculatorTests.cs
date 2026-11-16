@@ -19,8 +19,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **端点足够，只因为每段是线性的。**
 ///
-/// adds
-///
 /// **Endpoints suffice only because each piece is linear.**
 /// </remarks>
 public class PwlOutputBoundsCalculatorTests

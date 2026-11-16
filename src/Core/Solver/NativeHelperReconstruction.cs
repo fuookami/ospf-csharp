@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// **那时的选择列值与这里重建出来的可能不一致，而两个来源的同一个量是最难查的一类错。**
 ///
 /// **为什么 ABS 不检查这一条：** **ABS 的辅助列（正部/负部/符号）同样是消掉的，
-/// 但基线没写这条检查。** **本批照抄——单方面加检查会让两侧行为分岔。**
+/// 但基线没写这条检查。** **这里照抄——单方面加检查会让两侧行为分岔。**
 /// **记在这里，作为一处已知的不对称。**
 ///
 /// **为什么 ABS 不需要冲突检查：** **跨结构的辅助键唯一性已由
@@ -49,7 +49,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// containing one means the caller passed the <b>pre-elimination</b> vector.** **Its selector values may disagree with
 /// what is reconstructed here, and the same quantity from two sources is among the hardest mistakes to find.**
 ///
-/// **Why ABS does not check it: ABS helpers are eliminated too, but the baseline does not check.** **This batch copies the
+/// **Why ABS does not check it: ABS helpers are eliminated too, but the baseline does not check.** ** copies the
 /// baseline — adding a check the baseline lacks would fork the two sides' behaviour.** **Recorded as a known
 /// asymmetry.**
 ///

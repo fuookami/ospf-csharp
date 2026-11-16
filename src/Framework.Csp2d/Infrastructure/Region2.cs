@@ -33,11 +33,11 @@ public enum CutOrientation2 {
 /// **裁切与装箱的差别就在这个类型**：装箱只关心"放在哪里"，套裁还关心**每一刀把料切成哪两块**，
 /// 所以需要一个可递归切分的矩形区域，而不是只有"板"与"件"。
 ///
-/// **`MaxX()` / `MaxY()` 返回 `Result` 而不是直接抛**：物理量的加法在**单位不一致**时会失败，
+/// **`MaxX` / `MaxY` 返回 `Result` 而不是直接抛**：物理量的加法在**单位不一致**时会失败，
 /// 而抛异常会把一个可恢复的输入错误变成进程级事故。两个单位相同的区域相加永远成功。
 ///
 /// **This type is where cutting stock differs from bin packing**: packing only cares "where it sits", cutting stock also cares **which two pieces each cut produces**,
-/// so a recursively splittable region is needed rather than only "sheet" and "piece". **`MaxX()` / `MaxY()` return a `Result` instead of throwing**: adding physical
+/// so a recursively splittable region is needed rather than only "sheet" and "piece". **`MaxX` / `MaxY` return a `Result` instead of throwing**: adding physical
 /// quantities fails on **mismatched units**, and throwing would turn a recoverable input error into a process-level incident. Two regions with the same unit always add.
 /// </remarks>
 public sealed record Region2<V>(

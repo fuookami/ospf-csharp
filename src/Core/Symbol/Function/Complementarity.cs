@@ -46,7 +46,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`Evaluate` 返回的是"违反指示"而不是"满足指示"**：
 /// **两侧同时严格为正时返回 1，否则返回 0。** **这是基线的语义，也是最容易读反的一处。**
 ///
-/// B1156, following the baseline's `ComplementarityFunction`.
+/// Following the baseline's `ComplementarityFunction`.
 ///
 /// **Six rows and one binary `s`**:
 ///

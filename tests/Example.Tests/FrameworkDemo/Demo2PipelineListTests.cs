@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **适航安全管线列表（B601）** / The airworthiness security pipeline list (B601).
+/// **适航安全管线列表** / The airworthiness security pipeline list.
 /// </summary>
 /// <remarks>
 /// 基线是 14 条：11 条无条件 + 3 条条件（压舱重量 / CLIM / 相邻间隙）。判据只钉**顺序与条件位置**——
@@ -206,7 +206,7 @@ public class Demo2PipelineListTests {
     /// 1. 只有 CLIM 与相邻间隙时，两条**接在末尾**（第 12、13 位），前面 11 条不变。
     /// 2. 三个条件全开时是 14 条。
     /// 3. `ballast_weight_limit` 若存在，必须在 **`zone_load_weight_limit` 之后、`low_payload_limit` 之前**——
-    ///    把它挪到末尾会让后续每条约束的序号全部前移。
+    /// 把它挪到末尾会让后续每条约束的序号全部前移。
     ///
     /// Three paired points: with only CLIM and the gap they are **appended** (positions 12 and 13) and the first eleven are unchanged; with all three conditionals there are
     /// fourteen; and `ballast_weight_limit` must sit **after `zone_load_weight_limit` and before `low_payload_limit`** — moving it to the end shifts the index of every later

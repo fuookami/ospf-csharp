@@ -29,8 +29,6 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 于是"误差过大"的判据<b>静默通过</b>。**
 /// **漏掉 ② 会让 `ln` 在负值处给出 `NaN`、`1/x` 在零附近给出 `inf`，同样静默。**
 ///
-/// adds
-///
 /// **Why it is needed**: **all four piecewise functions (`exp`/`ln`/`1/x`/`x^p`) return only the <b>approximation</b>.**
 /// **Without the true value the approximation error <b>cannot be measured</b>** —
 /// **and "are there enough segments" is the one question this direction must answer.**

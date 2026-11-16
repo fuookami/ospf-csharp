@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 条件多项式与条件行的可用性检查 / Usability checks for condition polynomials and rows.
 /// </summary>
 /// <remarks>
-/// B1166 按基线 `DiscreteCondition.kt` 里的 `hasUsableConditionSolverValues` /
+/// 对齐基线 `DiscreteCondition.kt` 里的 `hasUsableConditionSolverValues` /
 /// `hasUsableConditionFlattenedValues` / `isUsableConditionBound` 三个私有助手补。
 ///
 /// **为什么这三个检查值得单独抽出来**：**它们挡的是同一类问题——
@@ -20,8 +20,6 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **`NaN` 尤其危险**：**`NaN ≥ 0` 与 `NaN ≤ 0` 都是 `false`，
 /// 于是"这个界有效"的判据静默通过，而求解器拿到一条无意义的行。**
-///
-/// adds
 ///
 /// **Why these checks deserve their own home**: **they all stop one class of problem — a coefficient that "looks
 /// like a number but is `NaN` or `inf`".** **Such a coefficient does not fail construction; it makes the constraint

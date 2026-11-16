@@ -92,7 +92,7 @@ public class TargetFeasibilityAnalyzerTests {
     /// <remarks>
     /// **这一条是这批最重要的**：把"后端没证出来"报成"不可达"，会让一个其实可达的目标被当成死路。
     ///
-    /// **The most important one in this batch**: reporting "not proven" as "unreachable" would turn a reachable target into a dead end.
+    /// **The most important one in**: reporting "not proven" as "unreachable" would turn a reachable target into a dead end.
     /// </remarks>
     [Fact]
     public async Task TheUnprovenInfeasibility_ShouldNotBeUnreachable() {

@@ -20,14 +20,14 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// **二次模型的旧式弹性过滤 IIS 分析器** / The legacy elastic-filter IIS analyzer for quadratic models.
 /// </summary>
 /// <remarks>
-/// **B1260 补的是"机器都在、只差一个适配器"的那种缺口。**
+/// **这里补的是"机器都在、只差一个适配器"的那种缺口。**
 ///
 /// **逐项核对的结果：** **`QuadraticLegacyIisCompute`（含 `ComputeLegacyIISAsync`）、`QuadraticIisModel`、
 /// `QuadraticElasticFilterResult`、`QuadraticIisEvidenceSource`、以及 `DiagnosticConstraintId` 的二次重载
 /// <b>全都在</b>；线性版的 `LegacyElasticInfeasibilityAnalyzer` 也在。**
 ///
 /// **缺的只是这个类：** **没有它，那整套二次 IIS 机器<b>无法经分析器框架被调用</b>——
-/// 与 B1250 的"投影有了、没人调用"是同一类缺口，只是这次缺的是一个适配器而不是一次调用。**
+/// 与"投影有了、没人调用"是同一类缺口，只是这次缺的是一个适配器而不是一次调用。**
 ///
 /// ### 与线性版的一处实质差别，必须写清
 ///
@@ -40,14 +40,14 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 ///
 /// **这不是缺陷，是<b>信息在传递中丢失</b>：** **`ComputeLegacyIISAsync` 内部其实知道松弛是否可行，
 /// 但它没有把这件事带出来。** **要修就得改那个返回类型，而那会牵动所有调用方，
-/// 所以本批选择"报弱"，并把原因写在这里。**
+/// 所以这里选择"报弱"，并把原因写在这里。**
 ///
-/// **B1260 fills the "everything is here except an adapter" kind of gap.**
+/// **Fills the "everything is here except an adapter" kind of gap.**
 ///
 /// **The survey found `QuadraticLegacyIisCompute`, `QuadraticIisModel`, `QuadraticElasticFilterResult`,
 /// `QuadraticIisEvidenceSource` and the quadratic `DiagnosticConstraintId` overload all present, along with the linear
 /// analyzer.** **Only this class was missing — and without it the whole quadratic IIS machinery <b>cannot be reached
-/// through the analyzer framework</b>, the same shape as B1250's "the projection exists and nobody calls it", except the
+/// through the analyzer framework</b>, the same shape as the earlier "the projection exists and nobody calls it", except the
 /// missing piece is an adapter rather than a call site.**
 ///
 /// **One substantive difference from the linear version, stated plainly: the linear analyzer uses
@@ -57,7 +57,7 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 ///
 /// **That is not a defect but <b>information lost in transit</b>: `ComputeLegacyIISAsync` does know whether the relaxation
 /// was feasible, it merely does not carry it out.** **Fixing that means changing the return type and touching every caller,
-/// so this batch reports weak and records why.**
+/// so the report stays weak and the reason is recorded here.**
 /// </remarks>
 public sealed class LegacyElasticQuadraticInfeasibilityAnalyzer :
     ICapabilityAwareInfeasibilityAnalyzer<IQuadraticTetradModelView>,

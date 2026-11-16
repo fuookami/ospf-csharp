@@ -25,22 +25,22 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **非零对偶必须被正确提取成物料/设备影子价格** / Non-zero duals must be extracted into material/machine shadow prices.
 /// </summary>
 /// <remarks>
-/// **B347 起一直记着**："物料/设备对偶价在真实 LP 里是否非零未验证——mock 返回全零对偶。"
+/// **起一直记着**："物料/设备对偶价在真实 LP 里是否非零未验证——mock 返回全零对偶。"
 ///
 /// **本环境没有进程内真实 LP 求解器**（只有 `RemoteSolverHttpClient`，需要服务器），
-/// 所以"真实求解器产出非零对偶"这件事**做不到**，本批**不宣称**。
+/// 所以"真实求解器产出非零对偶"这件事**做不到**，这里**不宣称**。
 ///
 /// 但**能做的另一半**是：拿一份**非零**的对偶字典喂给提取路径，验证
 /// `MaterialUsageShadowPriceKey` / `MachineCapacityShadowPriceKey` 真的带着**非零值**出来。
-/// 这才是 mock 全零一直掩盖的那段：**提取映射本身**（B342 的空表缺陷就出在这一层）。
+/// 这才是 mock 全零一直掩盖的那段：**提取映射本身**。
 ///
-/// **B347 onward记录**: "whether material/machine duals are non-zero against a real LP is unverified — the mock returns all-zero duals."
+/// **onward记录**: "whether material/machine duals are non-zero against a real LP is unverified — the mock returns all-zero duals."
 ///
 /// **There is no in-process real LP solver here** (only `RemoteSolverHttpClient`, which needs a server), so "a real solver yields non-zero duals" is **not achievable** and this
 /// batch **makes no such claim**.
 ///
 /// The **achievable half** is feeding a **non-zero** dual dictionary into the extraction path and verifying that `MaterialUsageShadowPriceKey` /
-/// `MachineCapacityShadowPriceKey` come out carrying **non-zero values** — the very layer the all-zero mock kept hiding (B342's empty-map defect lived here).
+/// `MachineCapacityShadowPriceKey` come out carrying **non-zero values** — the very layer the all-zero mock kept hiding (the earlier empty-map defect lived here).
 /// </remarks>
 public class Csp1dShadowPriceNonZeroTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -67,9 +67,9 @@ public class Csp1dShadowPriceNonZeroTests {
         var plan = new CuttingPlan<Flt64>(
             id: "p1",
             material: material,
-            // **必须带 `machineId`，否则设备约束不会被建出来**——这也是 B347 记的
+            // **必须带 `machineId`，否则设备约束不会被建出来**——这也是 记的
             // "物料/设备对偶从未验证"的一半原因：没有设备 id 就没有设备约束。
-            // **The `machineId` is required, or no machine constraint is created** — half the reason B347 recorded "material/machine duals never verified".
+            // **The `machineId` is required, or no machine constraint is created** — half the reason recorded "material/machine duals never verified".
             machineId: "K1",
             capacityConsumption: Millimetres(50.0),
             slices: new List<CuttingPlanSlice<Flt64>> { new(product, Millimetres(50.0)) },
@@ -96,11 +96,11 @@ public class Csp1dShadowPriceNonZeroTests {
     /// `MachineCapacityShadowPriceKey`** 给一个**互不相同的非零对偶值**，再提取。
     ///
     /// 断言取值**等于**赋给它的那个数，而不是"非零"——**"非零"是太弱的判据**
-    /// （B350 的教训：`NotBeNull()` 抓不住"接了但全空"）。
+    /// ` 抓不住"接了但全空"）。
     ///
     /// The method: walk the model constraints, assign **distinct non-zero duals** to those whose `Args` is a `MaterialUsageShadowPriceKey` /
-    /// `MachineCapacityShadowPriceKey`, then extract. The assertions check the **exact assigned value**, not merely "non-zero" — **"non-zero" is too weak a criterion** (B350's
-    /// lesson: `NotBeNull()` cannot catch "wired but empty").
+    /// `MachineCapacityShadowPriceKey`, then extract. The assertions check the **exact assigned value**, not merely "non-zero" — **"non-zero" is too weak a criterion** (the earlier
+    /// lesson: `NotBeNull` cannot catch "wired but empty").
     /// </remarks>
     [Fact]
     public void ExtractFromDualSolution_ShouldCarryTheNonZeroDualValues() {
@@ -133,15 +133,15 @@ public class Csp1dShadowPriceNonZeroTests {
 
         // **设备容量约束现在由真实路径产生。**
         //
-        // B367 时这里要手工补一条，因为"只由初始方案构成的模型不产生设备约束"——
+        // 时这里要手工补一条，因为"只由初始方案构成的模型不产生设备约束"——
         // 那一批还据此把"设备符号构造阶段不登记"记成"与基线一致"。
         //
-        // **B369 查证那是错的**：基线在 `register` 里用 `PlanBatchTerms` 填充设备符号，
+        // **查证那是错的**：基线在 `register` 里用 `PlanBatchTerms` 填充设备符号，
         // C# 补齐之后，初始方案就会产生 `machine_capacity_0`。**手工补的那条因此成了重复项**
         // （实测 `19.0 = 9.5 × 2`）。判据现在走**真实路径**，比合成约束强。
         //
-        // **The machine capacity constraint now comes from the real path.** In B367 it had to be added by hand because "a model made only of initial plans produces no
-        // machine constraint" — and that batch recorded "machine symbols are not populated in the constructor" as "consistent with the baseline". **B369 proved that wrong**:
+        // **The machine capacity constraint now comes from the real path.** In it had to be added by hand because "a model made only of initial plans produces no
+        // machine constraint" — and that batch recorded "machine symbols are not populated in the constructor" as "consistent with the baseline". **proved that wrong**:
         // the baseline fills them via `PlanBatchTerms` in `register`, and once C# was fixed the initial plans produce `machine_capacity_0`. **The hand-added constraint then
         // became a duplicate** (measured `19.0 = 9.5 × 2`). The criterion now exercises **the real path**, which is stronger than a synthetic constraint.
 
@@ -169,11 +169,11 @@ public class Csp1dShadowPriceNonZeroTests {
 
     /// <summary>**没有管线时提取结果必须为空**——反向对照 / With no pipelines the extraction must be empty — the reverse control.</summary>
     /// <remarks>
-    /// 这钉住"**空表缺陷**"（B342）：`ExtractFromDualSolution` 在 `_cgPipelines.Count == 0` 时
+    /// 这钉住"**空表缺陷**"：`ExtractFromDualSolution` 在 `_cgPipelines.Count == 0` 时
     /// **直接返回空表**，而不是"返回默认值"。若实现改成"没管线也照样造键"，
     /// 上一条仍会绿，而这条会红——**两条一起才能说明"有管线才提取"**。
     ///
-    /// This pins **the empty-map defect** (B342): with `_cgPipelines.Count == 0` it **returns an empty map** rather than "default values". If the implementation instead
+    /// This pins **the empty-map defect**: with `_cgPipelines.Count == 0` it **returns an empty map** rather than "default values". If the implementation instead
     /// invented keys without pipelines, the previous criterion would still pass and this one would fail — **only together do they show "extraction requires pipelines"**.
     /// </remarks>
     [Fact]

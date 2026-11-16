@@ -21,7 +21,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B816：建议打板的管线不是"全配载的七域" / The weight-recommendation pipeline is not "full load's seven domains".
+/// 建议打板的管线不是"全配载的七域" / The weight-recommendation pipeline is not "full load's seven domains".
 /// </summary>
 /// <remarks>
 /// 基线 `WeightRecommendationPipelineContext` 注册的是：配载、重心、适航、**时效**、**推荐重量均衡**、载荷最大化——
@@ -69,12 +69,12 @@ public sealed class Demo2WeightRecommendationPipelineTests
     /// <remarks>
     /// 三条路各自各跑一次，把 `direct_model=...` 那条备注取出来去重。**只断言"都不为空"是不够的**——三条路都返回同一条备注也能过。
     ///
-    /// **这条判据在默认层也跑**（B822）：形状备注在求解之前就写好（B821 实测），所以不开启 SCIP 集成时求解失败、备注照样在。
+    /// **这条判据在默认层也跑**：形状备注在求解之前就写好，所以不开启 SCIP 集成时求解失败、备注照样在。
     /// 需要求解的只剩"目标值 / 非零个数"那一维。
     ///
     /// Run each path once and de-duplicate the `direct_model=...` note. **Asserting "none is empty" is not enough** — three paths returning the same note would pass.
     ///
-    /// **This criterion also runs in the default layer** (B822): the shape note is written before solving (measured by B821), so without SCIP integration the solve fails and
+    /// **This criterion also runs in the default layer**: the shape note is written before solving, so without SCIP integration the solve fails and
     /// the note is still there. Only the "objective value / non-zero count" dimension genuinely needs a solve.
     /// </remarks>
     [Fact]
@@ -93,10 +93,10 @@ public sealed class Demo2WeightRecommendationPipelineTests
         System.Linq.Enumerable.ToList(System.Linq.Enumerable.Distinct(shapes)).Should().HaveCount(3,
             "the three pipelines are composed differently; sharing one shape means one of them is running another's domains");
 
-        // **每一条都钉成具体的形状，而不是"三条互不相同"**（B819）：三条各不相同但**全都错**同样能过上一句。
+        // **每一条都钉成具体的形状，而不是"三条互不相同"**：三条各不相同但**全都错**同样能过上一句。
         // 三个数字分别对应管线指纹的最后一行 / 预配载八域 / 建议打板六域，所以**应用路径与管线路径任一走偏都会红**。
         //
-        // **Pin each one as a concrete shape rather than "all three differ"** (B819): three different shapes that are **all wrong** would pass the assertion above.
+        // **Pin each one as a concrete shape rather than "all three differ"**: three different shapes that are **all wrong** would pass the assertion above.
         // The three numbers correspond to the fingerprint's last row / predistribution's eight domains / weight recommendation's six domains, so **either path drifting
         // turns this red**.
         shapes[0].Should().Contain("direct_model=rows52,symbols76,objective7",
@@ -112,14 +112,14 @@ public sealed class Demo2WeightRecommendationPipelineTests
     /// **应用路径与管线路径必须建出同一个模型** / The application path and the pipeline path must build the same model.
     /// </summary>
     /// <remarks>
-    /// 上一条判据把三个形状**写死**在测试里。写死有两个问题：两边同时走偏会一起绿；而 B814/B815/B816/B819 这四次缺陷**全都出在两边不一致**。
+    /// 上一条判据把三个形状**写死**在测试里。写死有两个问题：两边同时走偏会一起绿；而 / / / 这四次缺陷**全都出在两边不一致**。
     ///
     /// 所以这一条**不写死任何数字**：同一份请求、同一模式，分别走
     /// 1. `Demo2ApplicationService`（三个 Application）；
     /// 2. `DomainPipelineContext` + `BuildLinearTriadModelAsync`；
     /// 然后把两侧的"行/符号/目标"放在一起比。**两侧都由模型自己算，测试里没有常量可以漂移**。
     ///
-    /// The criterion above **hard-codes** the three shapes. Two problems: both sides drifting together stays green, and the four defects B814/B815/B816/B819 **were all
+    /// The criterion above **hard-codes** the three shapes. Two problems: both sides drifting together stays green, and the four defects / / / **were all
     /// about the two sides disagreeing**. This one **hard-codes nothing**: for one request and one mode it runs (1) `Demo2ApplicationService` (the three applications) and
     /// (2) `DomainPipelineContext` plus `BuildLinearTriadModelAsync`, then compares the row/symbol/objective counts **computed by the models themselves** — no constant here
     /// can drift.
@@ -131,10 +131,10 @@ public sealed class Demo2WeightRecommendationPipelineTests
     public void TheApplicationPath_ShouldMatchThePipelinePath(StowageMode mode) {
         RequestDTO request = AircraftLoadingDemo.CreatePredistributionSampleRequest();
 
-        // **这条判据搬到了默认层**（B821）：`direct_model=...` 那一行备注是在**求解之前**写进 notes 的，
+        // **这条判据搬到了默认层**：`direct_model=...` 那一行备注是在**求解之前**写进 notes 的，
         // 所以形状根本不需要求解成功——不开启 SCIP 集成时求解会失败，但备注已经在了。**默认全量测试因此也覆盖它。**
         //
-        // **This criterion moved to the default layer** (B821): the `direct_model=...` note is written **before** solving, so the shape does not need a successful solve —
+        // **This criterion moved to the default layer**: the `direct_model=...` note is written **before** solving, so the shape does not need a successful solve —
         // without SCIP integration the solve fails but the note is already there. **The default full-suite run therefore covers it too.**
         (ResponseDTO Response, RenderDTO? Render) executed =
             Demo2ApplicationService.Solve(request, mode, milpSolver: new ScipLinearSolver());

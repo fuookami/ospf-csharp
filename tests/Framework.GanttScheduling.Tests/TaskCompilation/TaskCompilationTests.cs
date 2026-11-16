@@ -166,10 +166,10 @@ public class TaskCompilationTests {
     /// **注册到真模型会建出真变量；注册到非模型必须失败** / Registering into a real model builds real variables; into a non-model it must fail.
     /// </summary>
     /// <remarks>
-    /// 这条判据原本传 `new object()` 并断言 `Ok`——它钉住的正是"空壳静默成功"那个缺陷（B529）。
+    /// 这条判据原本传 `new object` 并断言 `Ok`——它钉住的正是"空壳静默成功"那个缺陷。
     /// 现在 `Register` 真的往模型里加变量，传 `object` 只能失败。
     ///
-    /// This criterion used to pass `new object()` and assert `Ok` — pinning exactly the "silent stub" defect (B529). `Register` now really adds variables, so an `object` can only
+    /// This criterion used to pass `new object` and assert `Ok` — pinning exactly the "silent stub" defect. `Register` now really adds variables, so an `object` can only
     /// fail.
     /// </remarks>
     [Fact]
@@ -197,8 +197,8 @@ public class TaskCompilationTests {
         // 计数对占位对象也成立，所以还要钉住**类型**：只有真变量才能进模型。
         // Counts hold for placeholders too, so the **type** is pinned as well: only real variables can enter the model.
         compilation.Assignment.Values.Should().AllBeOfType<CombinationVariableItem<UInt8, Binary>>();
-        // `TaskAssignment` 是**中间符号**，与 `x` 变量同名不同物（B538）。
-        // `TaskAssignment` is the **intermediate symbol**, a different thing from the `x` variable that shares its name (B538).
+        // `TaskAssignment` 是**中间符号**，与 `x` 变量同名不同物。
+        // `TaskAssignment` is the **intermediate symbol**, a different thing from the `x` variable that shares its name.
         compilation.TaskAssignment.Should().HaveCount(4, "one intermediate symbol per (task, executor)");
         compilation.TaskAssignment.Values.Should().AllBeOfType<LinearExpressionSymbol>();
         compilation.Cancellation.Values.Should().AllBeOfType<CombinationVariableItem<UInt8, Binary>>();
@@ -430,10 +430,10 @@ public class TaskCompilationTests {
     /// **迭代编译注册到非模型必须失败** / Registering an iterative compilation into a non-model must fail.
     /// </summary>
     /// <remarks>
-    /// 与 `TaskCompilation` 同一条规则：这条判据原本传 `new object()` 并断言 `Ok`，
-    /// 钉住的正是"空壳静默成功"那个缺陷（B529）。
+    /// 与 `TaskCompilation` 同一条规则：这条判据原本传 `new object` 并断言 `Ok`，
+    /// 钉住的正是"空壳静默成功"那个缺陷。
     ///
-    /// Same rule as `TaskCompilation`: this criterion used to pass `new object()` and assert `Ok`, pinning exactly the "silent stub" defect (B529).
+    /// Same rule as `TaskCompilation`: this criterion used to pass `new object` and assert `Ok`, pinning exactly the "silent stub" defect.
     /// </remarks>
     [Fact]
     public void IterativeTaskCompilation_Register_ShouldRejectANonModel() {
@@ -506,10 +506,10 @@ public class TaskCompilationTests {
     /// **迭代编译的执行器编译用 `xor` 而不是 `OR`** / The iterative executor compilation uses `xor`, not `OR`.
     /// </summary>
     /// <remarks>
-    /// 理由同上：`x` 还不存在。基线用独立变量 `xor[e]`，其语义由跨轮冲突约束（B523）与 `xor` 下界（B522）钉住。
+    /// 理由同上：`x` 还不存在。基线用独立变量 `xor[e]`，其语义由跨轮冲突约束与 `xor` 下界钉住。
     ///
-    /// Same reason: `x` does not exist yet. The baseline uses a standalone `xor[e]`, whose meaning is pinned by the cross-round conflict constraints (B523) and the `xor` lower
-    /// bound (B522).
+    /// Same reason: `x` does not exist yet. The baseline uses a standalone `xor[e]`, whose meaning is pinned by the cross-round conflict constraints and the `xor` lower
+    /// bound.
     /// </remarks>
     [Fact]
     public void IterativeTaskCompilation_Register_ShouldUseXorInsteadOfAnOr() {
@@ -558,7 +558,7 @@ public class TaskCompilationTests {
     }
 
     /// <summary>
-    /// **`Makespan.Register` 已接线（B546）：非模型失败** / Wired as of B546; a non-model fails.
+    /// **`Makespan.Register` 已接线：非模型失败** / Wired as of，a non-model fails.
     /// </summary>
     /// <remarks>
     /// 这条判据原来是"注册返回 Ok"。接线之后它的意义变成"**施加到非模型上仍然失败**"——
@@ -600,10 +600,10 @@ public class TaskCompilationTests {
     /// **换型注册只接受线性模型，且要求编译已注册** / The switch only registers into a linear model, and only after the compilation.
     /// </summary>
     /// <remarks>
-    /// 原来这条判据断言 `Register(new object())` 返回 `Ok`——那是空壳的行为，绿灯亮在"什么都没做"上。B551 把换型做实之后，
+    /// 原来这条判据断言 `Register(new object)` 返回 `Ok`——那是空壳的行为，绿灯亮在"什么都没做"上。 把换型做实之后，
     /// 非模型必须被拒；同时登记"编译尚未注册"这一种，因为它原来会从循环里抛运行时异常。
     ///
-    /// This used to assert `Register(new object())` returns `Ok` — the stub's behaviour, a green light on doing nothing. Now that B551 made the switch real, a non-model must be
+    /// This used to assert `Register(new object)` returns `Ok` — the stub's behaviour, a green light on doing nothing. Now that made the switch real, a non-model must be
     /// rejected; the "compilation not registered" case is pinned too, since it used to throw from inside the loops.
     /// </remarks>
     public void TaskSchedulingSwitch_Register_ShouldRejectANonModelOrAnUnregisteredCompilation() {
@@ -637,7 +637,7 @@ public class TaskCompilationTests {
     }
 
     /// <summary>
-    /// **`TaskSchedulingTaskTime.Register` 已接线（B546）：非模型失败** / Wired as of B546; a non-model fails.
+    /// **`TaskSchedulingTaskTime.Register` 已接线：非模型失败** / Wired as of，a non-model fails.
     /// </summary>
     /// <remarks>
     /// 空任务列表也要先过模型检查：第一版若按"没有任务就没事可做"直接返回 `Ok`，
@@ -732,7 +732,7 @@ public class TaskCompilationTests {
     }
 
     /// <summary>
-    /// **`ExecutorLeisureMinimization` 已接线（B545），非模型仍然失败** / Wired as of B545; a non-model still fails.
+    /// **`ExecutorLeisureMinimization` 已接线，非模型仍然失败** / Wired as of，a non-model still fails.
     /// </summary>
     /// <remarks>
     /// 必须**给系数**才走到模型检查：没给系数时基线直接 `Ok`（`coefficient?.let { … }`），
@@ -754,7 +754,7 @@ public class TaskCompilationTests {
     }
 
     /// <summary>
-    /// **`TaskCancelMinimization` 已接线（B545），非模型仍然失败** / Wired as of B545; a non-model still fails.
+    /// **`TaskCancelMinimization` 已接线，非模型仍然失败** / Wired as of，a non-model still fails.
     /// </summary>
     [Fact]
     public void TaskCancelMinimization_Invoke_ShouldRejectANonModel() {
@@ -776,10 +776,10 @@ public class TaskCompilationTests {
         var constraint = new TaskCompilationConstraint<Executor, AssignmentPolicy<Executor>>(
             tasks, compilation);
         ((IMetaConstraintGroup)constraint).Name.Should().Be("task_compilation");
-        // **必须传真模型**：`Invoke` 现在真的加行，非模型只能失败。这条原本传 `new object()` 断言 `Ok`，
-        // 钉住的正是"空壳静默成功"——与 `TaskCompilation_Register_ShouldRejectANonModel` 同一个教训（B529）。
-        // **A real model is required**: `Invoke` now really adds rows, so a non-model can only fail. This used to pass `new object()` and assert `Ok`, pinning the "silent stub" defect —
-        // the same lesson as `TaskCompilation_Register_ShouldRejectANonModel` (B529).
+        // **必须传真模型**：`Invoke` 现在真的加行，非模型只能失败。这条原本传 `new object` 断言 `Ok`，
+        // 钉住的正是"空壳静默成功"——与 `TaskCompilation_Register_ShouldRejectANonModel` 同一个教训。
+        // **A real model is required**: `Invoke` now really adds rows, so a non-model can only fail. This used to pass `new object` and assert `Ok`, pinning the "silent stub" defect —
+        // the same lesson as `TaskCompilation_Register_ShouldRejectANonModel`.
         using var model = new LinearMetaModel<Flt64>();
         constraint.Invoke(new object()).IsOk.Should().BeFalse("a constraint can only be applied to a linear meta model");
         constraint.Invoke(model).IsOk.Should().BeTrue();
@@ -855,14 +855,14 @@ public class TaskCompilationTests {
         var minimization = new TaskExecutorCostMinimization<TestTask, Executor, AssignmentPolicy<Executor>>(
             tasks, executors, compilation);
         ((IMetaConstraintGroup)minimization).Name.Should().Be("task_executor_cost_minimization");
-        // 这条判据原来是"未接线就失败"。接线之后它的意义变成"**施加到非模型上仍然失败**"（B560）。
-        // This criterion used to be "fails while unwired"; once wired (B560) it means "**applying to a non-model still fails**".
+        // 这条判据原来是"未接线就失败"。接线之后它的意义变成"**施加到非模型上仍然失败**"。
+        // This criterion used to be "fails while unwired"; once wired it means "**applying to a non-model still fails**".
         minimization.Invoke(new object()).IsOk.Should().BeFalse(
             "applying the objective to a non-model must fail loudly");
     }
 
     /// <summary>
-    /// **`TaskCostMinimization` 已接线（B544），非模型仍然失败** / `TaskCostMinimization` is wired (B544); a non-model still fails.
+    /// **`TaskCostMinimization` 已接线，非模型仍然失败** / `TaskCostMinimization` is wired ; a non-model still fails.
     /// </summary>
     /// <remarks>
     /// 这条判据原来是"未接线就失败"。接线之后它的意义变成"**施加到非模型上仍然失败**"——

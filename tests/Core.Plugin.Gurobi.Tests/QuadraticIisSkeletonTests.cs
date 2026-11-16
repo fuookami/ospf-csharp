@@ -21,24 +21,24 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 /// **二次 IIS 入口存在、但显式报告未实现** / The quadratic IIS entry exists but reports "unimplemented" explicitly.
 /// </summary>
 /// <remarks>
-/// **B398 定位到最大单块缺失**：基线 `computeLegacyIIS` 有 **846 行 / 12 个函数**，
-/// C# 侧**一行都没有**。B399 建立了**类型与入口骨架**，本判据钉住它的行为契约。
+/// **定位到最大单块缺失**：基线 `computeLegacyIIS` 有 **846 行 / 12 个函数**，
+/// C# 侧**一行都没有**。 建立了**类型与入口骨架**，本判据钉住它的行为契约。
 ///
 /// **为什么先建骨架而不是直接移植**：
 ///
 /// | 前提 | 状态 |
 /// | --- | --- |
-/// | `QuadraticTetradElasticBuilder`（`model.elastic()` 的实现） | ✅ 已有 |
+/// | `QuadraticTetradElasticBuilder`（`model.elastic` 的实现） | ✅ 已有 |
 /// | `LinearLegacyIisCompute`（可对照的结构） | ✅ 490 行 / 9 函数 |
-/// | **真实二次求解器**（`performElasticFiltering` 反复求解可行性） | ✅ **B408 实测有 SCIP**，B411 已用它验证 |
+/// | **真实二次求解器**（`performElasticFiltering` 反复求解可行性） | ✅ **实测有 SCIP**，已用它验证 |
 ///
-/// **B408 推翻了"无求解器"的前提**：机器上有 SCIP 9.2，B411 已用它把完整流程跑通。
+/// **推翻了"无求解器"的前提**：机器上有 SCIP 9.2，已用它把完整流程跑通。
 /// 所以本文件现在钉住的是**实现后的契约**，不再是"未实现"的占位。
 ///
-/// **B408 overturned the "no solver" premise**: SCIP 9.2 is available and B411 drove the full flow through it, so this file now pins the **post-implementation
+/// **overturned the "no solver" premise**: SCIP 9.2 is available and drove the full flow through it, so this file now pins the **post-implementation
 /// contract** rather than an "unimplemented" placeholder.
 ///
-/// **B398 located the largest single missing block**: the baseline's `computeLegacyIIS` is **846 lines / 12 functions** with **nothing** on the C# side. B399 built the
+/// **located the largest single missing block**: the baseline's `computeLegacyIIS` is **846 lines / 12 functions** with **nothing** on the C# side. built the
 /// **types and entry skeleton**, and this criterion pins its behavioural contract. **Why a skeleton rather than a direct port** (table above): the elastic builder and a
 /// structural reference exist, but **a real quadratic solver does not**, so a full port **cannot be verified here**. The skeleton's value is turning "unimplemented" from a
 /// **doc note** into a **compilable, assertable structure that later batches can fill in**.
@@ -46,13 +46,13 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 public class QuadraticIisSkeletonTests {
     /// <summary>**没有可用二次求解器时入口返回 `Failed` 而不是抛异常** / With no usable quadratic solver the entry returns `Failed` rather than throwing.</summary>
     /// <remarks>
-    /// **B411 之前这条断言的是"二次 IIS 未实现"**。现在实现了，那个前提不再成立，判据改为钉住
+    /// **之前这条断言的是"二次 IIS 未实现"**。现在实现了，那个前提不再成立，判据改为钉住
     /// **真正的失败路径**：本工程编译的是 `GurobiUnavailable` 桩，`GurobiQuadraticSolver` 没有原生库，
     /// 所以入口必须把求解器的失败**如实传出来**，而不是抛异常或假装成功。
     ///
     /// 抛异常会让上层无法区分"不可行分析失败"与"程序出错"；`Failed` 是显式信号，调用方可以据此降级。
     ///
-    /// **Before B411 this asserted "quadratic IIS is unimplemented"**; it is now implemented, so the criterion pins a **failure path that is deterministic here**: an
+    /// **Before this asserted "quadratic IIS is unimplemented"**; it is now implemented, so the criterion pins a **failure path that is deterministic here**: an
     /// invalid config is rejected before any solving, so the result cannot depend on whether a native solver happens to be present. Throwing would make "infeasibility
     /// analysis failed" indistinguishable from "the program broke"; `Failed` is an explicit, degradable signal.
     ///
@@ -77,11 +77,11 @@ public class QuadraticIisSkeletonTests {
 
     /// <summary>**入口不再是"未实现"骨架** / The entry is no longer an "unimplemented" skeleton.</summary>
     /// <remarks>
-    /// B399 的判据要求失败信息里出现 `LinearLegacyIisCompute`——因为当时它就是个**占位**。
-    /// 现在二次 IIS 已经实现（B411 用真实 SCIP 跑通），**"去找线性实现"这句话本身就是误导**，
+    /// 的判据要求失败信息里出现 `LinearLegacyIisCompute`——因为当时它就是个**占位**。
+    /// 现在二次 IIS 已经实现，**"去找线性实现"这句话本身就是误导**，
     /// 所以这条判据反转成：**错误信息不应再让调用方改走线性路径**。
     ///
-    /// B399 required the failure message to mention `LinearLegacyIisCompute` because it was a **placeholder**. Quadratic IIS is now implemented (B411, verified against real
+    /// required the failure message to mention `LinearLegacyIisCompute` because it was a **placeholder**. Quadratic IIS is now implemented (，verified against real
     /// SCIP), so **"go use the linear one" is itself misleading**; this criterion is therefore inverted: the message must **no longer** redirect callers to the linear path.
     /// The invalid-config path is used so the assertion does not depend on solver availability.
     /// </remarks>

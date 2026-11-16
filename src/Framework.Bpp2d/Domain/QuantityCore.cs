@@ -182,13 +182,13 @@ public static class QuantityCore {
     /// <param name="selector">量值选择器 / Quantity selector.</param>
     /// <remarks>
     /// **`T` 必须是引用类型**。无约束泛型里的 `T?` 对值类型**不会**变成 `Nullable&lt;T&gt;`，空序列会返回 `default(T)`
-    /// 而不是 null——用它取"最大元组"会拿到一个成员全为默认值的元组，随后解引用即 NRE。这个坑在本会话 Batch 87 真实
+    /// 而不是 null——用它取"最大元组"会拿到一个成员全为默认值的元组，随后解引用即 NRE。这个坑曾经真实
     /// 踩到过，因此把约束写死成 `class`，让误用变成编译错误而不是运行期崩溃。值类型场景请用
     /// <see cref="TryMaxByQuantity{T, V}"/>。
     ///
     /// **`T` must be a reference type.** In an unconstrained generic, `T?` does **not** become `Nullable&lt;T&gt;` for
     /// value types, so an empty sequence returns `default(T)` rather than null — using it to pick a "largest tuple" hands
-    /// back a tuple of default members and the next dereference NREs. This was hit for real in Batch 87 of this session,
+ /// back a tuple of default members and the next dereference NREs. This was hit for real in earlier of this session,
     /// hence the `class` constraint so misuse becomes a compile error instead of a runtime crash. For value types use
     /// <see cref="TryMaxByQuantity{T, V}"/>.
     /// </remarks>

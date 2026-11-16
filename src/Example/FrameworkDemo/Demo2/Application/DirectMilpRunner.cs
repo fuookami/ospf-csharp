@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 /// </summary>
 /// <remarks>
 /// **一处实现，三个调用点**：全配载、预配载、建议打板三条 `Execute` 的收尾完全相同（装配 → 建三元模型 → 求解 → 回填响应），
-/// 差别只有 `StowageMode`。各写一份的后果是**三份会慢慢分叉**——B790 接线全配载时另外两条还在报"未移植"，
+/// 差别只有 `StowageMode`。各写一份的后果是**三份会慢慢分叉**—— 接线全配载时另外两条还在报"未移植"，
 /// 就是分叉的第一天。
 ///
 /// 装配顺序照抄基线：配载 → 重心 → 适航 → 软安全 → 重心优化。后面的域引用前面的符号，顺序错了**不会在这里报错**，
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 ///
 /// **One implementation, three call sites**: the tails of the full-load, predistribution and weight-recommendation `Execute` paths are identical (assemble,
 /// build the triad, solve, fill the response); the only difference is `StowageMode`. Writing it three times means **the three slowly diverge** — which is
-/// exactly what happened when B790 wired full load while the other two still reported "not ported".
+/// exactly what happened when wired full load while the other two still reported "not ported".
 ///
 /// Assembly order mirrors the baseline: stowage → MAC → airworthiness → soft security → MAC optimisation. Later domains reference earlier symbols, and a wrong
 /// order raises nothing here but explodes downstream as "a referenced token does not exist". A solve failure is not swallowed — the **error code** goes into the

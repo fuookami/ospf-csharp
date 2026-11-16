@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// The layer connecting a real linear solver: its two rules that fail silently.
 /// </summary>
 /// <remarks>
-/// **B1279 补的是 `ILoweredFixedIntegerLpSolver` 唯一的缺口：一个生产实现都没有。**
+/// **这里是 `ILoweredFixedIntegerLpSolver` 唯一的缺口：一个生产实现都没有。**
 /// **在它之前，`IFixedIntegerLpBackend`／`LoweredFixedIntegerLpBackend`／`ILoweredFixedIntegerLpSolver` 三样都在，
 /// 两个插件后端也都设计成依赖它——而它们全都接不上，因为中间那一层不存在。**
 ///
@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 ///
 /// **而这两条判据各自抓到了我的一次实现错误** —— 见各自注释。
 ///
-/// **B1279 fills the only gap of `ILoweredFixedIntegerLpSolver`: it had no production implementation.** **Before it the
+/// **Fills the only gap of `ILoweredFixedIntegerLpSolver`: it had no production implementation.** **Before it the
 /// interface, the lowering adapter and the delegate were all present and both plugin backends were designed to depend on it —
 /// and none could connect, because the middle layer did not exist.**
 ///

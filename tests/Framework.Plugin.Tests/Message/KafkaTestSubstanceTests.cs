@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Message;
 /// **"有方法"与"能用"之间的距离** / The distance between "has a method" and "works".
 /// </summary>
 /// <remarks>
-/// **B1266 查的是矩阵上 Kafka 那一行："有生产者/消费者，<b>没有真实 broker 往返测试</b>"。**
+/// **矩阵上 Kafka 那一行写的是："有生产者/消费者，<b>没有真实 broker 往返测试</b>"。**
 ///
 /// **查完之后那句话是对的，但它漏掉了更糟的一层：**
 ///
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Message;
 /// **一条只会因为<b>删掉一个方法</b>而变红的判据，本质上是一份编译期检查的副本——
 /// 而编译器本来就在做那件事。**
 ///
-/// **B1266 checks the matrix's Kafka row: "a producer and a consumer exist, <b>no real broker round trip</b>".**
+/// **The matrix's Kafka row says: "a producer and a consumer exist, <b>no real broker round trip</b>".**
 ///
 /// **After checking, that sentence is true but misses a worse layer: all <b>8 criteria in `KafkaInterfaceTests.cs` only
 /// check whether a member exists</b> (`IDisposable` implemented, `Send` present, `SendJson` present...).** **Not one invokes

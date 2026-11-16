@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **业载与总重（B585）** / Payload and total weight (B585).
+/// **业载与总重** / Payload and total weight.
 /// </summary>
 /// <remarks>
 /// 两个空壳一起落地。业载这一层的核心是一张**按装载模式的分支表**：

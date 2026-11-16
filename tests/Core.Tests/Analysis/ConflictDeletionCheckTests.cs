@@ -236,10 +236,10 @@ public class ConflictDeletionCheckTests {
 
     /// <summary>**`Shrink` 真的走 `ShouldStop`** / Shrink actually goes through ShouldStop.</summary>
     /// <remarks>
-    /// **这条挡的是"两份中止条件各自漂移"。** B1044 之前 `Shrink` 里有一份内联的副本，
+    /// **这条挡的是"两份中止条件各自漂移"。** 此前 `Shrink` 里有一份内联的副本，
     /// 与 `ShouldStop` 逐字相同——**而两份相同的代码只要改一份，就再也不相同。**
     ///
-    /// **This guards against two stop conditions drifting apart.** Before B1044 `Shrink` held an inline copy identical to `ShouldStop` — **and two identical copies stop being identical as soon as one is
+    /// **This guards against two stop conditions drifting apart.** `Shrink` used to hold an inline copy identical to `ShouldStop` — **and two identical copies stop being identical as soon as one is
     /// edited.**
     /// </remarks>
     [Fact]

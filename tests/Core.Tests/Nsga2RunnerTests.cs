@@ -422,10 +422,10 @@ public sealed class Nsga2RunnerTests {
             OrderHelpers.OrderOf((lhs?.Count ?? 0).CompareTo(rhs?.Count ?? 0));
 
         /// <inheritdoc/>
-        // **可行性由模型说了算，违约度回调只给"同层内的度量"**（B812 实测）：`ConstraintSatisfied` 恒为真时，
+        // **可行性由模型说了算，违约度回调只给"同层内的度量"**：`ConstraintSatisfied` 恒为真时，
         // 所有个体都落在可行层，`groups` 只剩一个桶，违约度再大也分不开——**接线看起来生效了，实际没改变任何选择**。
         //
-        // **Feasibility is decided by the model; the violation callback only supplies a within-tier measure** (measured by B812): with `ConstraintSatisfied`
+        // **Feasibility is decided by the model; the violation callback only supplies a within-tier measure** : with `ConstraintSatisfied`
         // always true every individual lands in the feasible tier, `Groups` collapses to one bucket, and no violation is large enough to split it — **the wiring
         // looks active while changing nothing**.
         public bool? ConstraintSatisfied(IReadOnlyList<Flt64> solution) => _feasible is null ? true : _feasible(solution);

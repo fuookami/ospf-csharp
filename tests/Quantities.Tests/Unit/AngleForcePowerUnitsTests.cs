@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 90 度必须是一个直角；而 735 与 745.7 都叫 "horsepower" / Ninety degrees must be one right angle.
 /// </summary>
 /// <remarks>
-/// B1143 补角度(4+2 别名) / 力(2) / 功率(4)。
+/// 补角度(4+2 别名) / 力(2) / 功率(4)。
 ///
 /// **两处基线问题**：
 /// ① 基线写 `RightAngle = Radian / 4.0`，**而直角是 π/2 弧度**——正确的式子是 `RoundAngle / 4`；
@@ -21,8 +21,6 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// **一处同名不同值**：基线的 `Horsepower` 是 735 W（公制），本仓的是 745.69987 W（机械），
 /// **同一个 `hp` 符号，差 1.4%。**
-///
-/// adds
 ///
 /// **Two baseline problems**:
 /// ① the baseline writes `RightAngle = Radian / 4.0`, **while a right angle is pi/2** — correct is `RoundAngle / 4`;
@@ -36,11 +34,11 @@ public class AngleForcePowerUnitsTests
 {
     /// <summary>**90 度恰好是一个直角** / Ninety degrees is exactly one right angle.</summary>
     /// <remarks>
-    /// **这是本批最强的一条判据**：**它把 `Degree`（来自周角）与 `RightAngle`（来自周角四等分）钉在一起。**
+    /// **这是这里最强的一条判据**：**它把 `Degree`（来自周角）与 `RightAngle`（来自周角四等分）钉在一起。**
     /// **基线写 `Radian / 4` 时，这条会红成 14.3 度对 90 度。**
     /// **而"`Gradian` 是直角的百分之一"那条仍会绿**——**因为两者一起错，比值不动。**
     ///
-    /// **The strongest criterion in this batch**: **it pins `Degree` (from the full turn) against `RightAngle`
+    /// **The strongest criterion in**: **it pins `Degree` (from the full turn) against `RightAngle`
     /// (from quartering the turn).** **With the baseline's `Radian / 4` it goes red at 14.3 degrees against 90.**
     /// **And "'Gradian' is a hundredth of a right angle" would still pass** — **both go wrong together and the ratio
     /// does not move.**
@@ -73,7 +71,7 @@ public class AngleForcePowerUnitsTests
     /// <summary>**百分度是直角的百分之一（π/200）** / A gradian is a hundredth of a right angle.</summary>
     /// <remarks>
     /// **这条单独不能发现基线那个错误**——**所以它必须与"90 度 = 直角"一起存在。**
-    /// **这也是本批的一个方法论要点：由错误派生出的单位，比值判据永远是绿的。**
+    /// **这也是这里的一个方法论要点：由错误派生出的单位，比值判据永远是绿的。**
     ///
     /// **This alone cannot catch the baseline error** — **so it has to sit beside "90 degrees = one right angle".**
     /// **That is the methodological point here: for a unit derived from a wrong one, ratio criteria stay green.**

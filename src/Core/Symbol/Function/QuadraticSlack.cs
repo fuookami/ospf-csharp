@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 三个二次"松弛/判定"类共用的减法与合并 / The subtraction and combination shared by the three classes.
 /// </summary>
 /// <remarks>
-/// B1164 按基线 `QuadraticInequality.kt`、`QuadraticSlack.kt`、`QuadraticSlackRange.kt` 补三个类。
+/// 对齐基线 `QuadraticInequality.kt`、`QuadraticSlack.kt`、`QuadraticSlackRange.kt` 补三个类。
 ///
 /// **这三个类讲的是同一件事：把"差了多少"变成非负量。**
 ///
@@ -34,8 +34,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **最容易写错的是"只取一侧"**：**`|l − r|` 只留 `max(l − r, 0)` 会在 `l &lt; r` 时给 0；
 /// 区间违背量只留一侧会在另一半给 0。** **两者都不报错，只是在半个定义域上悄悄变成 0。**
 ///
-/// adds
-/// **The last two are assembled from two `QuadraticPositivePartFunction`s and hold no extremum encoding.**
+/// Adds **The last two are assembled from two `QuadraticPositivePartFunction`s and hold no extremum encoding.**
 ///
 /// **The easy mistake is keeping only one side**: **using `max(l − r, 0)` alone gives zero when `l &lt; r`, and a
 /// one-sided range violation gives zero on the other half.** **Neither throws — each silently becomes zero over half
@@ -147,7 +146,7 @@ internal static class QuadraticSlackSupport
 ///
 /// **所以它的 `ResultPolynomial` 是 0/1 指示式**，**而 `Evaluate` 直接读真值分类**。
 ///
-/// B1164, following the baseline's `QuadraticInequality.kt`.
+/// Following the baseline's `QuadraticInequality.kt`.
 ///
 /// **The eighth "bridge then delegate".** **Unlike the previous seven, the delegate yields a <b>truth value</b>
 /// (0 or 1) rather than a polynomial value.**
@@ -259,7 +258,7 @@ public sealed class QuadraticInequalityFunction : IMathFunctionSymbol<Flt64>, IH
 /// **只留 `max(l − r, 0)` 会在 `l &lt; r` 时给 0，而正确值是 `r − l`——
 /// 在半个定义域上恒为 0 且不报错。**
 ///
-/// B1164, following the baseline's `QuadraticSlack.kt`.
+/// Following the baseline's `QuadraticSlack.kt`.
 ///
 /// **`max(l − r, 0) + max(r − l, 0)`, that is `|l − r|`.**
 /// **Each positive part comes from `QuadraticPositivePartFunction` ; this class only adds them.**
@@ -360,7 +359,7 @@ public sealed class QuadraticSlackFunction : IMathFunctionSymbol<Flt64>, IHasRes
 /// **`lower > upper` 必须拒绝**：**否则"区间"是空的，两侧违背量同时为正，
 /// 于是函数在任何点都非零——而模型仍然可行，只是目标值莫名其妙地大。**
 ///
-/// B1164, following the baseline's `QuadraticSlackRange.kt`.
+/// Following the baseline's `QuadraticSlackRange.kt`.
 ///
 /// **Zero inside, `lower − x` below, `x − upper` above.**
 /// **Both sides must be computed: keeping one makes the other half identically zero.**

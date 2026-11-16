@@ -18,8 +18,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `validateCombinedStructureKeys` 与 `keyText`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeCombinedKeyValidatorTests
 {
     /// <summary>
@@ -95,7 +94,7 @@ public class NativeCombinedKeyValidatorTests
     /// Reading someone's <b>result</b> is legal; reading their <b>helper</b> is not.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **结果列是真实输出，不会被消掉，所以拿它当输入是合法的——这正是"链式函数"这个正常情形。**
     /// **辅助列在建模后会被消掉（它们的值由其他列决定），所以拿它们当输入，
@@ -197,7 +196,7 @@ public class NativeCombinedKeyValidatorTests
     /// **消息只给键、不给占用者** / The message names the key but not the claimants.
     /// </summary>
     /// <remarks>
-    /// **这是一个真实的诊断缺口，本批照抄基线不改。**
+    /// **这是一个真实的诊断缺口，这里照抄基线不改。**
     ///
     /// **看到 `key is duplicated` 之后，调用方还得自己去找是哪两个结构。**
     /// **而 `owners` 字典里<b>本来就有</b>两个占用者的标签——第一个已经存在，

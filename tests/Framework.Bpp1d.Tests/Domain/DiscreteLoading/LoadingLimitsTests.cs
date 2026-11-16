@@ -43,10 +43,10 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 public class LoadingLimitsTests {
     /// <summary>**必装货物用 `==`，其余用 `≤`** / A mandatory cargo uses `==`, everything else `&lt;=`.</summary>
     /// <remarks>
-    /// **这是本批最重要的一条判据。** 两者约束名、列数、右端常数**完全一样**，只有**不等号方向**不同。
+    /// **这是这里最重要的一条判据。** 两者约束名、列数、右端常数**完全一样**，只有**不等号方向**不同。
     /// 任何"数约束条数"的判据都发现不了。
     ///
-    /// **The most important criterion in this batch.** The two rows have identical names, identical term counts and identical right-hand constants — only the
+    /// **The most important criterion in.** The two rows have identical names, identical term counts and identical right-hand constants — only the
     /// **comparison direction** differs. No constraint-counting assertion can find it.
     /// </remarks>
     [Fact]
@@ -185,10 +185,10 @@ public class LoadingLimitsTests {
 
     /// <summary>**禁用舱位上的固定货物仍然建变量** / A fixed cargo on a disabled position still gets its variable.</summary>
     /// <remarks>
-    /// **第一版判据用了"单件超重的固定货物"，跑不起来**：基线 `validate()` 的第 11 条
+    /// **第一版判据用了"单件超重的固定货物"，跑不起来**：基线 `validate` 的第 11 条
     /// "固定装载不超容量"**先把它拒了**——所以那种输入**根本到不了建变量这一步**。
     ///
-    /// 改用**禁用舱位**：`validate()` 允许（不是固定装载超容量），而 `register()` 会给该舱位
+    /// 改用**禁用舱位**：`validate` 允许（不是固定装载超容量），而 `register` 会给该舱位
     /// `range.eq(true)`（因为它是固定舱位之一）。此时跳过规则里的 `且` 决定一切：
     ///
     /// | 连接词 | 结果 |
@@ -196,9 +196,9 @@ public class LoadingLimitsTests {
     /// | **`且`（正确）** | 固定 ⇒ 不跳过 ⇒ 建变量 ⇒ 模型可满足 |
     /// | `或`（错） | 禁用 ⇒ 跳过 ⇒ **不建变量**，但占位变量被钉为 1 ⇒ **模型恒不可行** |
     ///
-    /// **The first version of this criterion used a fixed **overweight** cargo and could not run**: baseline `validate()`'s check 11, "fixed load within capacity",
-    /// **rejects it first**, so that input **never reaches variable creation**. A **disabled position** is used instead: `validate()` allows it (it is not an
-    /// over-capacity fixed load) while `register()` pins that position to `range.eq(true)` because it holds a fixed cargo. The `and` in the skip rule now decides
+    /// **The first version of this criterion used a fixed **overweight** cargo and could not run**: baseline `validate`'s check 11, "fixed load within capacity",
+    /// **rejects it first**, so that input **never reaches variable creation**. A **disabled position** is used instead: `validate` allows it (it is not an
+    /// over-capacity fixed load) while `register` pins that position to `range.eq(true)` because it holds a fixed cargo. The `and` in the skip rule now decides
     /// everything (table above): with `or`, the assignment is skipped, **no variable exists**, yet the occupancy variable is pinned to 1 — **the model becomes
     /// trivially infeasible**.
     /// </remarks>

@@ -51,7 +51,7 @@ public class Rtn64Test {
 
     [Fact]
     public void ZeroDenominator_ReturnsRet() {
-        // Of() should return Failed when denominator is zero
+        // Of should return Failed when denominator is zero
         Result<RtnX, ErrorCode, Error<ErrorCode>> result = RtnX.Of(1, 0);
         result.IsFailed.Should().BeTrue();
     }

@@ -26,13 +26,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Serv
 /// **第一版是 `Invoke =&gt; Ok`**：一条约束都没建，却对每个模型都报成功。空 `Ok` 是这里最坏的一种缺陷——上层无法区分
 /// "约束成立"和"根本没有约束"，于是产能超卖的解会静默通过。
 ///
-/// 第二版（B725）改成真的建行，但压的是 `CapacityUsageVariables` 那组**自由变量**——它们与数量之间没有任何行相连，
-/// 所以对数量毫无约束力。B735 起改为压 `CapacityLoadExpressions`：那里的容量是 `Σ 该执行器动作的数量`，
+/// 第二版改成真的建行，但压的是 `CapacityUsageVariables` 那组**自由变量**——它们与数量之间没有任何行相连，
+/// 所以对数量毫无约束力。 起改为压 `CapacityLoadExpressions`：那里的容量是 `Σ 该执行器动作的数量`，
 /// **约束才真的落在数量上**。
 ///
 /// **The first version was `Invoke =&gt; Ok`**: not one row was built yet every model was reported as fine. An empty `Ok` is the worst defect here — the caller cannot tell
-/// "the constraint holds" from "there is no constraint", so an oversubscribed solution passes silently. B725 made it build real rows, but they pressed on `CapacityUsageVariables`,
-/// **free variables** with no row tying them to the amounts, so they constrained nothing. Since B735 they press on `CapacityLoadExpressions`, where capacity is
+/// "the constraint holds" from "there is no constraint", so an oversubscribed solution passes silently. made it build real rows, but they pressed on `CapacityUsageVariables`,
+/// **free variables** with no row tying them to the amounts, so they constrained nothing. Since they press on `CapacityLoadExpressions`, where capacity is
 /// `the sum of that executor's amounts` — **the constraint now really lands on the amounts**.
 /// </remarks>
 /// <typeparam name="A">生产动作类型 / Production action type</typeparam>

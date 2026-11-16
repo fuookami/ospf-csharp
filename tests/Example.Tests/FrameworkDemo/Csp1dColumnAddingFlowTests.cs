@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// When pricing **produces new columns**, the flow must actually add them, grow the pool, and only then converge.
 /// </summary>
 /// <remarks>
-/// **B336 记录了一条覆盖盲区**：默认 fixture 的定价产不出新列，于是
+/// 记录了一条覆盖盲区**：默认 fixture 的定价产不出新列，于是
 /// `addedPlans.Count > 0` → `AddColumns` → 方案池增长这条路径**完全没有判据**。
 /// 那一批的变异"收尾方案数改用陈旧初始值"**存活**，正是因为 `initialCount == finalCount`。
 ///
@@ -29,11 +29,11 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **这是"替身比真实实现更好用"的一处**：真实定价依赖对偶价格驱动，难以稳定构造；
 /// 而加列逻辑本身与"列从哪来"无关——**替身正好隔离了这两件事**。
 ///
-/// **B336 recorded a coverage gap**: the default fixture's pricing produces no new columns, so the path
+/// **recorded a coverage gap**: the default fixture's pricing produces no new columns, so the path
 /// `addedPlans.Count > 0` → `AddColumns` → pool growth **had no criterion at all**. That batch's mutation "closing count uses the stale initial value" **survived**,
 /// precisely because `initialCount == finalCount`.
 ///
-/// This batch opens that path with a **controllable pricing double** (one new column on the first call, none afterwards).
+/// opens that path with a **controllable pricing double** (one new column on the first call, none afterwards).
 ///
 /// **This is a case where a double beats the real implementation**: real pricing is driven by dual prices and is hard to construct stably, while the column-adding
 /// logic itself is independent of "where the column came from" — **the double separates exactly those two concerns**.
@@ -93,10 +93,10 @@ public class Csp1dColumnAddingFlowTests {
 
     /// <summary>**定价产出新列时方案池必须增长** / The pool must grow when pricing yields a new column.</summary>
     /// <remarks>
-    /// 这是 B336 那条存活变异针对的分支。断言**第一轮 `PlanCountAfter > PlanCountBefore`**——
+    /// 这是 那条存活变异针对的分支。断言**第一轮 `PlanCountAfter > PlanCountBefore`**——
     /// 若加列被跳过（例如 `AddColumns` 的结果被丢弃），`After == Before`，判据红。
     ///
-    /// This is the branch B336's surviving mutation targeted. It asserts **iteration one has `PlanCountAfter > PlanCountBefore`** — if adding were skipped (say
+    /// This is the branch the earlier surviving mutation targeted. It asserts **iteration one has `PlanCountAfter > PlanCountBefore`** — if adding were skipped (say
     /// `AddColumns`' result dropped), `After == Before` and the criterion would be red.
     /// </remarks>
     [Fact]
@@ -146,10 +146,10 @@ public class Csp1dColumnAddingFlowTests {
 
     /// <summary>**收尾方案数必须是加列后的真实值，不是初始值** / The closing count must be the post-column value, not the initial one.</summary>
     /// <remarks>
-    /// **这正是 B336 存活的那条变异**：把收尾计数换成 `initialCount` 时，上一个 fixture 里两者相等，
+    /// **这正是 存活的那条变异**：把收尾计数换成 `initialCount` 时，上一个 fixture 里两者相等，
     /// 判据看不出来。这里两者**必然不等**（差一条新列），所以能区分。
     ///
-    /// **This is exactly B336's surviving mutation**: swapping the closing count for `initialCount` was invisible in the previous fixture because the two were equal.
+    /// **This is exactly the earlier surviving mutation**: swapping the closing count for `initialCount` was invisible in the previous fixture because the two were equal.
     /// Here they **necessarily differ** (by one added column), so it becomes detectable.
     /// </remarks>
     [Fact]

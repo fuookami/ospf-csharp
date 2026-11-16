@@ -30,14 +30,14 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **第二处，也是更要紧的一处：`maxEvaluations` <b>忽略 `structure.minimum`</b>。**
 ///
-/// **它永远取 `inputs.maxOrNull()`，所以一个 `minimum = true` 的结构会被拿去和<b>最大值</b>比。**
+/// **它永远取 `inputs.maxOrNull`，所以一个 `minimum = true` 的结构会被拿去和<b>最大值</b>比。**
 ///
 /// **这不是本仓库的偏差，是<b>基线的缺陷</b>：** **`NativeMaxData` 带着 `minimum` 标志，
 /// `restoreValues` 也按它取极值（`if (structure.minimum) minOrNull else maxOrNull`），
 /// 而 `maxEvaluations` 却没看这个标志。**
 /// **同一份数据在两条路径上被解释成两种含义。**
 ///
-/// **本批<b>照抄</b>以保持与基线的可比性，并把这一点写成判据，
+/// **这里<b>照抄</b>以保持与基线的可比性，并把这一点写成判据，
 /// 让"最小值的结构被当成最大值来评"成为一个被记录的事实而不是一个潜伏的错。**
 ///
 /// **Two asymmetries between the evaluators, both copied from the baseline and pinned by criteria.**
@@ -47,13 +47,13 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **Second and more importantly, `maxEvaluations` <b>ignores `structure.minimum`</b>.**
 ///
-/// **It always takes `maxOrNull()`, so a `minimum = true` structure is compared against the <b>maximum</b>.**
+/// **It always takes `maxOrNull`, so a `minimum = true` structure is compared against the <b>maximum</b>.**
 ///
 /// **This is not a deviation of this repository but a <b>baseline defect</b>**: **`NativeMaxData` carries the `minimum`
 /// flag and `restoreValues` honours it (`minOrNull`/`maxOrNull`), while `maxEvaluations` does not — the same data is
 /// interpreted two ways on two paths.**
 ///
-/// **This batch <b>copies</b> it to stay comparable with the baseline and turns it into a criterion, making "a minimum
+/// ** <b>copies</b> it to stay comparable with the baseline and turns it into a criterion, making "a minimum
 /// structure evaluated as a maximum" a recorded fact rather than a latent bug.**
 /// </remarks>
 public static class NativeConstraintEvaluations

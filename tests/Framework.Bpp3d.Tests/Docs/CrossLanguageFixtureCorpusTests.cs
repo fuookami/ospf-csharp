@@ -13,13 +13,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **低估自己的证据，和夸大一样贵** / Understating one's evidence costs as much as overstating it.
 /// </summary>
 /// <remarks>
-/// B951 只钉了 `RemoteFixtures/` 下那四份，第七节据此写"只有这三处实测"。B958 一数：**六份逐字节相同**——
+/// 只钉了 `RemoteFixtures/` 下那四份，第七节据此写"只有这三处实测"。 一数：**六份逐字节相同**——
 /// `Core.Tests/Fixtures/analysis-fixtures/` 下那两份**同样是逐字节复制**，从来没被算进这句话。
 ///
 /// **4.8 那一行早就写着 checkpoint fixture "与基线逐字节相同"，而第七节还在说四份。** 两处的账对不上，
 /// 下一个人只会信更保守的那个，然后**重做一遍已经做过的事**。
 ///
-/// B951 pinned only the four under `RemoteFixtures/`, which is why section seven said "only these three are measured". B958 counted **six byte-identical fixtures** — the two
+/// pinned only the four under `RemoteFixtures/`, which is why section seven said "only these three are measured". counted **six byte-identical fixtures** — the two
 /// under `Core.Tests/Fixtures/analysis-fixtures/` are **equally byte-identical** and were never counted. **Row 4.8 already called the checkpoint fixture byte-identical while
 /// section seven spoke of four**; given two disagreeing accounts the next reader trusts the conservative one and **redoes work that was already done.**
 /// </remarks>
@@ -95,10 +95,10 @@ public class CrossLanguageFixtureCorpusTests
     /// <summary>**缺的那两个文件仍然写着缺** / The two absent files are still stated as absent.</summary>
     /// <remarks>
     /// 第七节现在六份里有两份是 ✅ 新增的，容易让人以为"analysis 那两块也补上了"。
-    /// **`analysis-contract.tsv` 与 `analysis-cases.tsv` 不在那六份里**——它们根本不存在（B957）。
+    /// **`analysis-contract.tsv` 与 `analysis-cases.tsv` 不在那六份里**——它们根本不存在。
     ///
     /// Section seven now has two newly ✅ rows, which easily reads as "the analysis pieces were filled in too". **`analysis-contract.tsv` and `analysis-cases.tsv` are not
-    /// among the six** — they do not exist at all (B957).
+    /// among the six** — they do not exist at all.
     /// </remarks>
     [Fact]
     public void TheAnalysisContract_ShouldStillBeNamedAsMissing() {

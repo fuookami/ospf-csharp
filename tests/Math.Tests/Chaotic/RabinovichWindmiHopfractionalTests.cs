@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// 两条方程的不对称是定义，不是笔误 / The asymmetry between the two equations is the definition.
 /// </summary>
 /// <remarks>
-/// B1147 补 `RabinovichFabrikantAttractor` / `WindmiAttractor` / `HopfractionalMap` 与迭代器。
+/// 补 `RabinovichFabrikantAttractor` / `WindmiAttractor` / `HopfractionalMap` 与迭代器。
 ///
 /// **三处坑都不会报错**：
 /// ① Rabinovich–Fabrikant 的 `γ` 只乘第一条方程，**而两条都带 `xz` 项**；
@@ -20,8 +20,6 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// ③ Hopfractional 的 `(k·x)^q` 在负底数配分数指数时是 NaN。
 ///
 /// **两个失效参数**：Windmi 的 `g`、Hopfractional 迭代器的 `iterations`。
-///
-/// adds
 ///
 /// **Three traps, none of which throws**:
 /// ① Rabinovich–Fabrikant's `γ` multiplies only the first equation, **while both carry an `xz` term**;

@@ -21,8 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewise.kt` 的 `NativePiecewiseData` 与 `prepareNativePiecewise`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativePiecewiseTests
 {
     /// <summary>
@@ -61,7 +60,7 @@ public class NativePiecewiseTests
     /// **而 `double[]` 的默认值也是 `0`——所以"写 `yPoints[0]`"与"不写"给出<b>同一个结果</b>，
     /// 删掉那一行，判据照样全绿。**
     ///
-    /// **这正是"两个机制给出同一个答案"这一类盲区，与 B1199 的地板被类型修复掩盖是同一个形状。**
+    /// **这正是"两个机制给出同一个答案"这一类盲区，与地板被类型修复掩盖是同一个形状。**
     ///
     /// **判据改用 `[2, 5, 10]`：第一段 `slope 1, intercept 0` 在 `2` 处给 `2`，非零。**
     /// **第二段 `slope 0, intercept 5` 在 `5` 处给 `5`（与第一段右端相等，连续）在 `10` 处给 `5`。**
@@ -73,7 +72,7 @@ public class NativePiecewiseTests
     /// "write `yPoints[0]`" and "do not write it" produce <b>the same result</b> and deleting the line leaves the
     /// criterion green.**
     ///
-    /// **This is the same shape as B1199's floor being masked by the type repair: two mechanisms giving the same
+    /// **This is the same shape as the earlier floor being masked by the type repair: two mechanisms giving the same
     /// answer.**
     ///
     /// **The criterion uses `[2, 5, 10]`: `slope 1, intercept 0` gives `2` at `2` — nonzero.** **`slope 0, intercept 5`
@@ -129,7 +128,7 @@ public class NativePiecewiseTests
     /// **不连续的分段线性被拒** / A discontinuous piecewise function is rejected.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **native primitive 只吃一组 `(x_i, y_i)` 点，它没有"每段一个截距"的概念。**
     /// **所以不连续的分段线性在这种表示下<b>无法表达</b>。**
@@ -243,13 +242,13 @@ public class NativePiecewiseTests
     }
 
     /// <summary>
-    /// **与 B1202 的对照：同一份乱序断点在两层得到两种质量的消息** /
-    /// The B1202 contrast: the same shuffled breakpoints get messages of different quality at the two layers.
+    /// **与对照：同一份乱序断点在两层得到两种质量的消息** /
+    /// The contrast: the same shuffled breakpoints get messages of different quality at the two layers.
     /// </summary>
     /// <remarks>
-    /// **primitive 层（本批）给出 `breakpoints must be strictly increasing`——准确的，指向结构。**
+    /// **primitive 层（这里）给出 `breakpoints must be strictly increasing`——准确的，指向结构。**
     ///
-    /// **报告层（B1202 的 `selectSegment`）没有这项检查，而是把<b>最后一个</b>断点当定义域上界。**
+    /// **报告层（ `selectSegment`）没有这项检查，而是把<b>最后一个</b>断点当定义域上界。**
     /// **对 `[0, 10, 5]` 来说，上界被当成 `5`，于是 `7` 被判为 `outside its domain`——
     /// 尽管第一段 `[0, 10]` 实际覆盖 `7`。**
     ///
@@ -257,14 +256,14 @@ public class NativePiecewiseTests
     /// 而是一条会真的发出来、并且把人引向错误方向的消息。**
     /// **一个断点顺序错的结构，得到的是"你的输入越界了"。**
     ///
-    /// **我第一版判据断言的是 `no valid segment`，实测拿到的是 `outside its domain`——
+    /// **最初判据断言的是 `no valid segment`，实测拿到的是 `outside its domain`——
     /// 因为 `upper` 取最后一个断点。改判据之前先想清楚是判据错还是实现错：
     /// 这里是判据错，实现与基线一致。**
     ///
-    /// **The primitive layer (this batch) says `breakpoints must be strictly increasing` — accurate, pointing at the
+    /// **The primitive layer says `breakpoints must be strictly increasing` — accurate, pointing at the
     /// structure.**
     ///
-    /// **The reporting layer (B1202's `selectSegment`) has no such check and takes the <b>last</b> breakpoint as the
+    /// **The reporting layer (the earlier `selectSegment`) has no such check and takes the <b>last</b> breakpoint as the
     /// domain upper bound.** **For `[0, 10, 5]` the upper bound becomes `5`, so `7` is reported as `outside its domain` —
     /// although the first segment `[0, 10]` actually covers it.**
     ///

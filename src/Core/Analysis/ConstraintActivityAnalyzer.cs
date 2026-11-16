@@ -23,11 +23,11 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 与基线 `ConstraintActivityAnalyzer.kt`（566 行）的核心对应。**整数比较暴露精确的标量松弛度量；
 /// 全局约束与稀疏值域按语义契约求值，绝不伪造 LP 风格松弛。**
 ///
-/// **B970 只搬核心分析**：基线的三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
-/// 那一层还没搬，所以本批**只搬纯计算入口** `Analyze(snapshot, solution)`。**没搬的重载没有空跑版本。**
+/// 只搬核心分析**：基线的三个 `analyze(session, …)` 重载要 `CriticalConstraintAnalysisSession`（缓存与生命周期），
+/// 那一层还没搬，所以这里**只搬纯计算入口** `Analyze(snapshot, solution)`。**没搬的重载没有空跑版本。**
 ///
 /// Mirrors the core of the baseline's `ConstraintActivityAnalyzer.kt` (566 lines). **Integer comparisons expose an exact scalar slack metric; global constraints and sparse
-/// domains are evaluated through their semantic contract and never receive a fabricated LP-style slack.** **B970 ported the core analysis only**: the baseline's three
+/// domains are evaluated through their semantic contract and never receive a fabricated LP-style slack.** **ported the core analysis only**: the baseline's three
 /// `analyze(session, …)` overloads need `CriticalConstraintAnalysisSession` (cache and lifecycle), which is not ported yet, so only the pure `Analyze(snapshot, solution)`
 /// entry point came over. **The missing overloads were not stubbed.**
 /// </remarks>

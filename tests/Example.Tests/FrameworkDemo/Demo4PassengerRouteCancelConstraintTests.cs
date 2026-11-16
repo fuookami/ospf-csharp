@@ -1,4 +1,4 @@
-// 行程取消单调性（B762）/ Cancellation monotonicity along an itinerary (B762).
+// 行程取消单调性/ Cancellation monotonicity along an itinerary.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **行程取消单调性（B762）** / Cancellation monotonicity along an itinerary (B762).
+/// **行程取消单调性** / Cancellation monotonicity along an itinerary.
 /// </summary>
 /// <remarks>
 /// 行程上相邻两段之间：`cancel[前一段] ≤ cancel[后一段]`。方向写反**不会报错**——模型照样可行，只是解里会出现

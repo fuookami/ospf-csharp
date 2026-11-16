@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **离散装载输入校验** / Discrete-loading input validation.
 /// </summary>
 /// <remarks>
-/// 对应基线 `DiscreteLoadingContext.validate()` 的十一类校验。判据挑出**最隐蔽的三条**：
+/// 对应基线 `DiscreteLoadingContext.validate` 的十一类校验。判据挑出**最隐蔽的三条**：
 ///
 /// | # | 校验 | 为什么隐蔽 |
 /// | --- | --- | --- |
@@ -48,7 +48,7 @@ public class DiscreteLoadingValidatorTests {
 
         result.IsOk.Should().BeTrue(result.ToString());
         // **归一化的目标单位是 `WeightUnit`（这里是克），不是千克。**
-        // 我第一版写成 5.0（千克），实测 5000.0 —— **判据写错了，不是代码错了**。
+        // 最初写成 5.0（千克），实测 5000.0 —— **判据写错了，不是代码错了**。
         //
         // **The normalisation target is `WeightUnit` (grams here), not kilograms.** The first version expected 5.0 (kilograms) and measured 5000.0 — **the criterion was
         // wrong, not the code**.

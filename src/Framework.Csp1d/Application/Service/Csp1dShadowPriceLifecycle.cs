@@ -109,12 +109,12 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service {
             // C# 抛 `InvalidOperationException` 只是**把同一个失败写得更明确**。
             //
             // 两者的共同限制：**只有 `Flt64` 与 `FltX` 能实例化 CSP1D**，
-            // `Int64` / `Flt32` 会在**运行期**炸（B393 实测确认），而不是在类型层面被挡住。
+            // `Int64` / `Flt32` 会在**运行期**炸（确认），而不是在类型层面被挡住。
             // 这是**基线设计本身的限制**，本仓保持同步、不单方面收紧泛型约束。
             //
             // **This throw is equivalent to the baseline, not a C# deviation.** The baseline writes `(convertSolverValue(...) as Ok).value` — when `convertSolverValue`
             // returns `Failed`, `as Ok` yields null and `.value` throws immediately. C# throwing `InvalidOperationException` merely **states the same failure more
-            // clearly**. The shared limitation: **only `Flt64` and `FltX` can instantiate CSP1D**; `Int64` / `Flt32` **blow up at runtime** (measured in B393) instead of
+            // clearly**. The shared limitation: **only `Flt64` and `FltX` can instantiate CSP1D**; `Int64` / `Flt32` **blow up at runtime** (measured) instead of
             // being rejected at the type level. That is **the baseline design's own limitation**; this repository stays in sync and does not tighten the generic constraint
             // unilaterally.
             throw new InvalidOperationException(

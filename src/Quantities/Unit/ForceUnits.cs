@@ -23,9 +23,9 @@ public static class ForceUnits {
     /// <summary>磅力 / Pound-force (1 lbf = 4.4482216152605 N).</summary>
     public static readonly PhysicalUnit PoundForce = new DerivedUnit(Newton.ScaleMultiply(Scale.Invoke(4.4482216152605)), "pound-force", "lbf");
 
-    // 以下 2 个是 B1143 按基线 Force.kt 补的。
+    // 以下 2 个按基线 `Force.kt` 补齐。
     //
-    // The two below were added in B1143 from Force.kt.
+    // The two below were added from Force.kt.
 
     /// <summary>**克力（千克力的千分之一 = 0.00980665 N）** / Gram-force.</summary>
     public static readonly PhysicalUnit GramForce = new DerivedUnit(

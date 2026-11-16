@@ -10,10 +10,10 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Plugin.Scip.Tests;
 
 /// <summary>
-/// B857：SCIP 的能力声明与代码路径逐项对齐 / SCIP's declaration matched against its code paths, one field at a time.
+/// SCIP 的能力声明与代码路径逐项对齐 / SCIP's declaration matched against its code paths, one field at a time.
 /// </summary>
 /// <remarks>
-/// B856 在 Gurobi 上修了一处"声明低于实际"的错误。这一批按**同样的方法**核对 SCIP 的两份声明：
+/// 在 Gurobi 上修了一处"声明低于实际"的错误。这里按**同样的方法**核对 SCIP 的两份声明：
 /// 线性后端 `ScipLinearNativeSolver.LinearCapabilities` 与约束规划 `ScipConstraintProgrammingSolver`。
 ///
 /// 核对结果——**没有第二处同类错误**，但两处判断的理由不同，值得写下来：
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Plugin.Scip.Tests;
 /// | CP `Interrupt` | CP 路径全程传 `cancellationToken`（11 处） | 声明正确 |
 /// | 两者 `NativeIis` | 线性声明 `false`，CP 未声明——SCIP 这边确实没有 IIS 分析器（Copt 才有） | 声明正确 |
 ///
-/// B856 fixed one "the declaration is lower than the backend" bug on Gurobi. This batch checks SCIP's two declarations **the same way**: the linear backend's
+/// fixed one "the declaration is lower than the backend" bug on Gurobi. checks SCIP's two declarations **the same way**: the linear backend's
 /// `LinearCapabilities` and the constraint-programming solver's. The outcome is that **there is no second instance of that bug**, but the reasons differ between the two
 /// and are worth writing down (table above).
 /// </remarks>

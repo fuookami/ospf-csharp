@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **哨兵不是区间** / A sentinel is not a range.
 /// </summary>
 /// <remarks>
-/// **B1282 补的是基线 `captureSensitivityRanges` 的对应物：在主求解里读 `SARHSLow`／`SARHSUp`。**
+/// **这里补的是基线 `captureSensitivityRanges` 的对应物：在主求解里读 `SARHSLow`／`SARHSUp`。**
 ///
 /// **而这些属性有两个陷阱，都&lt;b&gt;不会抛异常、只会给出看起来合法的数字**：**
 ///

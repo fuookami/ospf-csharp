@@ -6,14 +6,14 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B829：质量守卫配置的合并与归一化 / The quality-guard merge and normalisation.
+/// 质量守卫配置的合并与归一化 / The quality-guard merge and normalisation.
 /// </summary>
 /// <remarks>
 /// 基线 `resolveQualityGuardConfig` 干两件事：**把 `null` 的字段用默认值补上**，然后**把五个风险权重归一化到和为 1**，
-/// 其余九个标量各自 `coerce` 进合法区间。本仓这块逐行一致（B829 核对），**同样一条判据都没有**。
+/// 其余九个标量各自 `coerce` 进合法区间。本仓这块逐行一致，**同样一条判据都没有**。
 ///
 /// The baseline's resolver does two things: **fill `null` fields from the defaults**, then **normalise the five risk weights to sum to one**, with the other nine
-/// scalars coerced into their valid ranges. This port matches line for line (checked in B829) and again **had no criterion at all**.
+/// scalars coerced into their valid ranges. This port matches line for line (checked) and again **had no criterion at all**.
 ///
 /// **归一化为什么重要**：质量评分是"风险 × 权重"的和。权重没归一化，一个把 `gap` 权重填成 `3.5` 的调用方会**把评分整体放大 10 倍**，
 /// 进而让"评分低于阈值"这条判定永远成立——**症状是守卫从不触发，看起来像"质量一直很好"。**

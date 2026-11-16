@@ -5,12 +5,12 @@
 // the quantity layer already ships rectangles, circles, boxes and their overlap tests, so this file **only adds
 // packing-oriented derived values without redefining them**.
 //
-// 因此这里**刻意不移植**基线中的 `boundingWidth()`／`boundingHeight()`／`minX()`／`minY()`／`maxX()`／`maxY()`／
-// `areaOf()`（矩形）：C# 的 `QuantityBox2.Width`／`Height`／`X`／`Y`／`MaxX()`／`MaxY()` 与
+// 因此这里**刻意不移植**基线中的 `boundingWidth`／`boundingHeight`／`minX`／`minY`／`maxX`／`maxY`／
+// `areaOf`（矩形）：C# 的 `QuantityBox2.Width`／`Height`／`X`／`Y`／`MaxX`／`MaxY` 与
 // `QuantityRectangle2.Area` 已经是同名能力，再加一层只是别名。只有**确实缺失**的两项被补上。
-// Therefore the baseline's `boundingWidth()`/`boundingHeight()`/`minX()`/`minY()`/`maxX()`/`maxY()`/
-// `areaOf()` (rectangle) are **deliberately not ported**: C# already has `QuantityBox2.Width`/`Height`/`X`/`Y`/
-// `MaxX()`/`MaxY()` and `QuantityRectangle2.Area` under those names, so another layer would be aliases only. Just
+// Therefore the baseline's `boundingWidth`/`boundingHeight`/`minX`/`minY`/`maxX`/`maxY`/
+// `areaOf` (rectangle) are **deliberately not ported**: C# already has `QuantityBox2.Width`/`Height`/`X`/`Y`/
+// `MaxX`/`MaxY` and `QuantityRectangle2.Area` under those names, so another layer would be aliases only. Just
 // the two genuinely missing pieces are added.
 
 using System;

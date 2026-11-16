@@ -273,7 +273,7 @@ public static class OnnxImporter
     /// **范围写在这里，是因为"偷偷把所有张量展开"会让 298 条依赖"一名一标量"的判据全部变义。**
     ///
     /// **Only inputs scanned by a Scan are expanded, because only there is an element list needed.** Every other multi-element input keeps "one name, one variable" — which is
-    /// mathematically wrong (a tensor treated as one number) but is the existing contract; **this batch does not change it quietly, it opens only the place that needs it.**
+    /// mathematically wrong (a tensor treated as one number) but is the existing contract; ** not change it quietly, it opens only the place that needs it.**
     ///
     /// **The scope is stated here because "quietly expand every tensor" would change the meaning of all 298 criteria that rely on one-name-one-scalar.**
     /// </remarks>

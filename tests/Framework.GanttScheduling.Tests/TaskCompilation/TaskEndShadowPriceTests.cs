@@ -23,18 +23,18 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **影子价格的回程（B571）** / The shadow-price round trip (B571).
+/// **影子价格的回程** / The shadow-price round trip.
 /// </summary>
 /// <remarks>
 /// "对偶 → 价格 → 约简成本"这条链有三段：**行上带键**、**从对偶解认回该行**、**按任务取价**。
 /// 之前三段全断：行上没有 `args`、`Refresh` 返回 `Ok` 不动表、提取器读一张永远空的表。
 /// 于是约简成本恒等于列自身的成本——列生成看起来在跑，其实按零价格在挑列，而且**不报错**。
 ///
-/// 本批把延后/提前两侧的结束时间约束接通，并**分段**验证：行上有没有键、价格有没有落表、提取器按任务对不对得上。
+/// 这里把延后/提前两侧的结束时间约束接通，并**分段**验证：行上有没有键、价格有没有落表、提取器按任务对不对得上。
 ///
 /// The chain "dual → price → reduced cost" has three links: **the row carries a key**, **the pipeline recognises that row in the dual solution**, and **the extractor resolves the
 /// price by task**. All three were broken: rows carried no `args`, `Refresh` returned `Ok` without touching the map, and the extractor read a forever-empty table. Reduced cost
-/// then degenerated to the column's own cost — column generation looked like it ran, selected at zero prices, and **raised nothing**. This batch wires the delay/advance end-time
+/// then degenerated to the column's own cost — column generation looked like it ran, selected at zero prices, and **raised nothing**. wires the delay/advance end-time
 /// constraints and verifies each link **separately**: is there a key on the row, did the price land in the map, and does the extractor answer per task.
 /// </remarks>
 public class TaskEndShadowPriceTests {

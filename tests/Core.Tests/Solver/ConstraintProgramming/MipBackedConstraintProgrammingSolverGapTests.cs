@@ -14,8 +14,8 @@ namespace Fuookami.Ospf.Core.Tests.Solver.ConstraintProgramming;
 /// Only SCIP has CP today, yet the foundation underneath is generic.
 /// </summary>
 /// <remarks>
-/// B1262 是逐项对照里唯一"真的要写实现"的块（基线 `MipBackedConstraintProgrammingSolver.kt`，503 行）。
-/// **这一批不写它，而是把缺口量化、并把依赖关系钉住——因为这块比前五块大一个量级，
+/// 逐项对照里唯一"真的要写实现"的块（基线 `MipBackedConstraintProgrammingSolver.kt`，503 行）。
+/// **这里不写它，而是把缺口量化、并把依赖关系钉住——因为这块比前五块大一个量级，
 /// 而半成品比不做更糟。**
 ///
 /// **调查结果有一件事与预期相反：** **编解码那一层<b>已经有了</b>
@@ -27,8 +27,8 @@ namespace Fuookami.Ospf.Core.Tests.Solver.ConstraintProgramming;
 ///
 /// **缺口因此是：** **Gurobi／Cplex／Copt 没有 CP 能力，而它们本来只差"把 lowerer 接到自己的线性求解器上"。**
 ///
-/// B1262 is the only "a real implementation is needed" block of the survey (baseline
-/// `MipBackedConstraintProgrammingSolver.kt`, 503 lines). **This batch does not write it; it sizes the gap and pins the
+/// The only "a real implementation is needed" block of the survey (baseline
+/// `MipBackedConstraintProgrammingSolver.kt`, 503 lines). ** does not write it; it sizes the gap and pins the
 /// dependency relation — because this block is an order of magnitude larger than the previous five, and a half-finished one
 /// would be worse than none.**
 ///
@@ -44,12 +44,12 @@ public class MipBackedConstraintProgrammingSolverGapTests
     /// **现在是两条后端：SCIP 与 MIP 驱动** / There are now two backends: SCIP and the MIP-backed one.
     /// </summary>
     /// <remarks>
-    /// **B1262 这条判据钉的是"只有一条后端"，并在注释里要求：接上第二个时必须列全它们。**
-    /// **B1263 接上了第二个，于是它红了——而它红的那一刻，正好是它该被改写的那一刻。**
+    /// **这条判据钉的是"只有一条后端"，并在注释里要求：接上第二个时必须列全它们。**
+    /// **第二个也接上了，于是它红了——而它红的那一刻，正好是它该被改写的那一刻。**
     ///
     /// **这条判据现在钉的是<b>名单</b>，不是数量：** **再出现第三条，它会红并要求点名。**
     ///
-    /// **B1262 pinned "only one backend" and asked, in its own note, that a second one be enumerated.** **B1263 added the
+    /// **It once pinned "only one backend" and asked, in its own note, that a second one be enumerated.** **It added the
     /// second, so it went red — and going red is exactly when it should be rewritten.** **It now pins the <b>roll call</b>,
     /// not the count: a third one makes it red and demands to be named.**
     /// </remarks>
@@ -74,7 +74,7 @@ public class MipBackedConstraintProgrammingSolverGapTests
     /// The generic class now exists, and it knows no concrete backend.
     /// </summary>
     /// <remarks>
-    /// **B1262 这条判据断言的是"它不在"；B1263 之后那句不再成立，于是它红了。**
+    /// **这条判据断言的是"它不在"；此后那句不再成立，于是它红了。**
     ///
     /// **而替代它的这条更硬：** **它不认识 `ScipLinearSolver`、也不认识任何别的具体求解器——**
     /// **因为它的全部意义就是"接受任意 `IAbstractLinearSolver`"。**
@@ -82,7 +82,7 @@ public class MipBackedConstraintProgrammingSolverGapTests
     /// **如果有一天有人在里面写死了一个后端，它就退化成了 SCIP 那份代码的复制品，
     /// 而复制品不会跟着后端一起修。**
     ///
-    /// **B1262 asserted "it is absent"; that stopped being true with B1263, so it went red.** **Its replacement is harder:
+    /// **An earlier criterion asserted "it is absent"; that stopped being true, so it went red.** **Its replacement is harder:
     /// the class must not know `ScipLinearSolver` or any other concrete solver — its whole point is accepting any
     /// `IAbstractLinearSolver`.** **If someone hard-codes a backend in it, it degrades into a copy of SCIP's code, and copies
     /// do not get fixed along with the backend.**

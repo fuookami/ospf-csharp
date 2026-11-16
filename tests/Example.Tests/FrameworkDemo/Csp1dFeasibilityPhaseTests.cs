@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **缺了第 1 步**：LP 一不可行就直接终止，**哪怕"加人工短缺就能解"**。
 /// **缺了第 2 步**：最终解带着人工短缺——**看起来可行，实际不可行**。
 ///
-/// 本批判据只覆盖**能被 mock 稳定触发的部分**：builder 的 `FeasibilityPhase()` 标志
+/// 这里判据只覆盖**能被 mock 稳定触发的部分**：builder 的 `FeasibilityPhase` 标志
 /// 与它带来的 yield 聚合。**两阶段切换本身需要让 mock 返回"模型不可行"**，
 /// 而 `MockColumnGenerationSolver` **只会成功或返回通用失败**，无法区分错误码——
 /// **这是判据的真实边界，记入缺口，不假装覆盖了。**
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **Without step 1** an infeasible LP terminates at once, **even when "an artificial deficit would make it solvable"**.
 /// **Without step 2** the final solution carries artificial deficits — **apparently feasible, actually infeasible**.
 ///
-/// These criteria only cover **what the mock can trigger deterministically**: the builder's `FeasibilityPhase()` flag and the yield aggregation it brings.
+/// These criteria only cover **what the mock can trigger deterministically**: the builder's `FeasibilityPhase` flag and the yield aggregation it brings.
 /// **The two-phase switch itself needs the mock to return "model infeasible"**, and `MockColumnGenerationSolver` **only succeeds or returns a generic failure**
 /// with no error code — **that is a real boundary of these criteria, recorded as a gap rather than pretended covered.**
 /// </remarks>
@@ -72,12 +72,12 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**可行性阶段必须让 LP 模式也构建 yield 聚合** / The feasibility phase must make an LP-mode build create the yield aggregation too.</summary>
     /// <remarks>
-    /// 基线是 `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`，C# 原本只有 `_mode == MILP`。
+    /// 基线是 `val yieldAgg = if (_mode == MILP || _feasibilityPhase)...`，C# 原本只有 `_mode == MILP`。
     ///
     /// **可观测的差异**：可行性阶段下 `Yield` 聚合非 null，**所以 yield 约束管线会被加进去**。
     /// 判据靠 `context.Yield` 是否存在。
     ///
-    /// The baseline is `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...` while C# only had `_mode == MILP`.
+    /// The baseline is `val yieldAgg = if (_mode == MILP || _feasibilityPhase)...` while C# only had `_mode == MILP`.
     ///
     /// **The observable difference**: under the feasibility phase the `Yield` aggregation is non-null, **so the yield constraint pipelines are added**. The criterion
     /// checks whether `context.Yield` exists.
@@ -137,21 +137,21 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**LP 首次「模型不可行」时必须回退到可行性主问题，而不是直接终止** / The first "model infeasible" LP must fall back to the feasibility master instead of terminating.</summary>
     /// <remarks>
-    /// **B351 明说这条没有判据**：mock 只会成功或返回通用失败，**无法触发「模型不可行」这个具体错误码**。
-    /// 本批给 mock 加了 `InfeasibleLpSolves`，可以让**前 N 次 LP 返回 `ORModelInfeasible`**。
+    /// **明说这条没有判据**：mock 只会成功或返回通用失败，**无法触发「模型不可行」这个具体错误码**。
+    /// 这里给 mock 加了 `InfeasibleLpSolves`，可以让**前 N 次 LP 返回 `ORModelInfeasible`**。
     ///
     /// 判据：让**第一次 LP 不可行**，然后断言
     ///
     /// - 流程**没有**以 `LpInfeasible` 终止；
     /// - 而且**跑出了结果**。
     ///
-    /// 若回退分支缺失（B351 之前的行为），第一次 LP 失败就直接 `break`，终止原因是 `LpInfeasible`。
+    /// 若回退分支缺失，第一次 LP 失败就直接 `break`，终止原因是 `LpInfeasible`。
     ///
-    /// **B351 said this had no criterion**: the mock only succeeded or returned a generic failure, **so the specific "model infeasible" code could not be produced**.
-    /// This batch adds `InfeasibleLpSolves` to the mock so **the first N LP calls return `ORModelInfeasible`**.
+    /// **said this had no criterion**: the mock only succeeded or returned a generic failure, **so the specific "model infeasible" code could not be produced**.
+ /// adds `InfeasibleLpSolves` to the mock so **the first N LP calls return `ORModelInfeasible`**.
     ///
     /// The criterion makes **the first LP infeasible** and asserts that the flow **does not** terminate with `LpInfeasible` and **does** produce a result. With the
-    /// fallback missing (the pre-B351 behaviour) the first failure `break`s immediately and the reason is `LpInfeasible`.
+    /// fallback missing (the pre- behaviour) the first failure `break`s immediately and the reason is `LpInfeasible`.
     /// </remarks>
     [Fact]
     public async Task SolveWithTraceAsync_ShouldFallBackToTheFeasibilityMasterWhenTheLpIsInfeasible() {
@@ -170,7 +170,7 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**目标值 `1e-6` 时不得恢复——这把阈值的上界钉到 `1e-6` 以下** / An objective of `1e-6` must not restore, pinning the threshold's upper bound below `1e-6`.</summary>
     /// <remarks>
-    /// **B354 记的缺口**："阈值分辨率只到下界 `1e-9`"——因为当时只有 `1.0` 与 `1e-9` 两个输入，
+    /// **记的缺口**："阈值分辨率只到下界 `1e-9`"——因为当时只有 `1.0` 与 `1e-9` 两个输入，
     /// `1e-6` 这样的阈值**两条判据都绿**，存活。
     ///
     /// 补上 `1e-6` 这个输入之后：
@@ -181,10 +181,10 @@ public class Csp1dFeasibilityPhaseTests {
     /// | `1e-6`（错误） | **3**（恢复） |
     /// | `1e-9` | **2** |
     ///
-    /// 所以阈值现在被**夹在 `(1e-9, 1e-6)`**——比 B354 只到"大于 `1e-9`"窄了一档。
+    /// 所以阈值现在被**夹在 `(1e-9, 1e-6)`**——比 只到"大于 `1e-9`"窄了一档。
     /// **精确到 `1e-7` 仍无判据**（`1e-6` 与 `1e-7` 之间没有输入），**这条仍记在缺口里**。
     ///
-    /// **The gap recorded in B354**: "threshold resolution only reaches the lower bound `1e-9`", because only `1.0` and `1e-9` were fed in, so a threshold like `1e-6`
+    /// **The gap recorded**: "threshold resolution only reaches the lower bound `1e-9`", because only `1.0` and `1e-9` were fed in, so a threshold like `1e-6`
     /// **left both criteria green** and survived.
     ///
     /// Adding the `1e-6` input gives the table above, so the threshold is now **bracketed by `(1e-9, 1e-6)`** — one notch tighter than "greater than `1e-9`".
@@ -207,11 +207,11 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**可行性达成后必须恢复原始主问题，而不是带着人工短缺继续跑** / Once feasible the original master must be restored rather than running on with artificial deficits.</summary>
     /// <remarks>
-    /// **B352 明说第二阶段没有判据**：它要求可行性 LP 的目标值 ≤ `1e-7`，而 mock 目标值固定。
+    /// **明说第二阶段没有判据**：它要求可行性 LP 的目标值 ≤ `1e-7`，而 mock 目标值固定。
     ///
-    /// **本批查到 mock 的目标值恰好恒为 `Flt64.Zero`**（`MakeFeasibleOutput()`），
+    /// **这里查到 mock 的目标值恰好恒为 `Flt64.Zero`**（`MakeFeasibleOutput`），
     /// 所以"进入可行性阶段"之后**必然**满足归零条件——**这个中间态其实造得出来**，
-    /// B352 的判断是错的。
+    /// 的判断是错的。
     ///
     /// 判据：首次 LP 不可行（触发第一阶段）→ 断言流程**跑完**，且**没有**以 `LpInfeasible` 终止。
     /// 若恢复分支被删，可行性主问题（带人工短缺）会被继续用作主问题——
@@ -221,10 +221,10 @@ public class Csp1dFeasibilityPhaseTests {
     /// 不可行 1 次 + 可行性阶段 1 次 + **恢复后 1 次**，共 3 次。
     /// **少于 3 次说明恢复分支没跑。**
     ///
-    /// **B352 said phase two had no criterion**: it needs the feasibility LP's objective ≤ `1e-7`, and the mock's objective is fixed.
+    /// **said phase two had no criterion**: it needs the feasibility LP's objective ≤ `1e-7`, and the mock's objective is fixed.
     ///
-    /// **This batch found the mock's objective is exactly `Flt64.Zero`** (`MakeFeasibleOutput()`), so once the feasibility phase is entered the zero condition
-    /// **necessarily** holds — **that intermediate state is in fact reachable**, and B352's judgement was wrong.
+ /// ** found the mock's objective is exactly `Flt64.Zero`** (`MakeFeasibleOutput`), so once the feasibility phase is entered the zero condition
+    /// **necessarily** holds — **that intermediate state is in fact reachable**, and the earlier judgement was wrong.
     ///
     /// The criterion: make the first LP infeasible (triggering phase one) and assert the flow **completes** without ending as `LpInfeasible`. If the restore branch were
     /// deleted, the feasibility master (with artificial deficits) would keep serving as the master and the flow would **still complete**, so "did it complete" **is not
@@ -249,16 +249,16 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**可行性目标仍大于阈值时不得恢复原始主问题** / The original master must not be restored while the feasibility objective is still above the threshold.</summary>
     /// <remarks>
-    /// **B353 记的缺口**：「可行性 LP 成功但目标非零」这个中间态造不出来，因为 mock 目标值恒为 0。
-    /// 本批让目标值可配（`LpObjectiveValue`），于是能构造 **目标值 `1.0`（远大于 `1e-7`）** 的情形。
+    /// **记的缺口**：「可行性 LP 成功但目标非零」这个中间态造不出来，因为 mock 目标值恒为 0。
+    /// 这里让目标值可配（`LpObjectiveValue`），于是能构造 **目标值 `1.0`（远大于 `1e-7`）** 的情形。
     ///
     /// 判据：这些调用**只加了一次不可行**，所以流程是
     /// 不可行 → 建可行性主问题 → 解（目标 1.0，**不满足阈值**）→ **不再恢复、不再多解一次**。
     ///
     /// 断言 `LpSolveCount == 2`：**恰好两次**。若恢复分支不看阈值，会多出第三次调用。
     ///
-    /// **The gap recorded in B353**: the "feasibility LP succeeds but with a non-zero objective" state was unreachable because the mock's objective was constant 0.
-    /// This batch makes it configurable (`LpObjectiveValue`), allowing **objective `1.0` (far above `1e-7`)**.
+    /// **The gap recorded**: the "feasibility LP succeeds but with a non-zero objective" state was unreachable because the mock's objective was constant 0.
+ /// makes it configurable (`LpObjectiveValue`), allowing **objective `1.0` (far above `1e-7`)**.
     ///
     /// The criterion: only one infeasible call is added, so the flow is infeasible → build feasibility master → solve (objective 1.0, **threshold not met**) →
     /// **no restore, no extra solve**.
@@ -381,11 +381,11 @@ public class Csp1dFeasibilityPhaseTests {
 
     /// <summary>**正常 LP 路径不受可行性阶段影响** / The ordinary LP path is unaffected by the feasibility-phase support.</summary>
     /// <remarks>
-    /// **反向判据**：不调用 `FeasibilityPhase()` 时 `Yield` 仍为 null。
+    /// **反向判据**：不调用 `FeasibilityPhase` 时 `Yield` 仍为 null。
     /// 只测正向时，一个"无条件构建 yield 聚合"的实现也会通过——而那样会**改变正常 LP 的模型形状**，
     /// 把 yield 变量塞进本来不该有的主问题里。
     ///
-    /// **The reverse criterion**: without calling `FeasibilityPhase()` the `Yield` aggregation stays null. Testing only the positive direction would let an
+    /// **The reverse criterion**: without calling `FeasibilityPhase` the `Yield` aggregation stays null. Testing only the positive direction would let an
     /// "always build it" implementation pass — and that would **change the shape of the ordinary LP model**, injecting yield variables into a master that should not have
     /// them.
     /// </remarks>

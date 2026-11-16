@@ -1,4 +1,4 @@
-// 建议重量管线上下文（B628）的判据 / Criteria for the weight-recommendation pipeline context (B628).
+// 建议重量管线上下文的判据 / Criteria for the weight-recommendation pipeline context.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **建议重量管线上下文（B628）** / The weight-recommendation pipeline context (B628).
+/// **建议重量管线上下文** / The weight-recommendation pipeline context.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**七个上下文都建了**、`Init` **首个失败即短路**（而不是七步全跑完再报）、以及**模式常量只有一个定义**。
@@ -31,10 +31,10 @@ public class Demo2WeightRecommendationPipelineContextTests {
     /// <remarks>
     /// 两点成对：
     ///
-    /// 1. 七个属性**都不为 `null`**——基线是把它们就地 `= XxxContext()` 初始化的。
+    /// 1. 七个属性**都不为 `null`**——基线是把它们就地 `= XxxContext` 初始化的。
     /// 2. 此刻**都还没初始化聚合**——构造不该有副作用。
     ///
-    /// Two paired points: all seven properties are **non-null**, matching the baseline's in-place `= XxxContext()` initialisation; and **none has an aggregation yet**, since construction
+    /// Two paired points: all seven properties are **non-null**, matching the baseline's in-place `= XxxContext` initialisation; and **none has an aggregation yet**, since construction
     /// must have no side effects.
     /// </remarks>
     [Fact]
@@ -110,21 +110,21 @@ public class Demo2WeightRecommendationPipelineContextTests {
     ///
     /// 1. 用现成的样例请求 `Init` **成功**，七个聚合**全部非空**。
     /// 2. `Register` **成功**。
-    /// 3. `MacContext.Register` 在这条路径上真的被调用——B628 之前它根本不存在，而缺失的方法骗不过这一步。
+    /// 3. `MacContext.Register` 在这条路径上真的被调用—— 之前它根本不存在，而缺失的方法骗不过这一步。
     ///
     /// 这一条才能覆盖"注册顺序"与"每个子域都真的注册了"，只靠失败路径的分支判据覆盖不到。
     ///
     /// Three paired points: `Init` with the ready-made sample request **succeeds** and all seven aggregations are **non-null**; `Register` **succeeds**; and `MacContext.Register` really
-    /// runs on this path — it did not exist before B628, and a missing method cannot fake this step. Only this criterion covers the registration order and "every sub-domain really
+    /// runs on this path — it did not exist before，and a missing method cannot fake this step. Only this criterion covers the registration order and "every sub-domain really
     /// registered"; failure-path criteria cannot reach them.
     /// </remarks>
     [Fact]
     public void InitAndRegister_ShouldRunTheWholeChain() {
         var context = new WeightRecommendationPipelineContext();
-        // **不能直接用 `CreateSampleRequest()`**：它早于 B613，两个舱位的 `LoadingOrder` 都是默认的 0
+        // **不能直接用 `CreateSampleRequest`**：它早于，两个舱位的 `LoadingOrder` 都是默认的 0
         // （重复 → 飞机初始化的第 8 条校验必拒），`Spaces` 也是空的。这里补上这两样，但**不动那个共享夹具**——
         // 别处有判据依赖它"必定失败"。
-        // **`CreateSampleRequest()` cannot be used as-is**: it predates B613, both positions share the default `LoadingOrder` of 0 (a duplicate, which the aircraft initializer's
+        // **`CreateSampleRequest` cannot be used as-is**: it predates，both positions share the default `LoadingOrder` of 0 (a duplicate, which the aircraft initializer's
         // eighth check always rejects) and `Spaces` is empty. This fills both in **without touching the shared fixture**, which other criteria rely on to fail.
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest() with {
             Spaces = new[] { new LoadingSpaceInput("MAIN", DeckLocationInput.Main) },
@@ -166,9 +166,9 @@ public class Demo2WeightRecommendationPipelineContextTests {
     /// **`MacContext.Register` 未初始化时报错** / `MacContext.Register` errors when uninitialised.
     /// </summary>
     /// <remarks>
-    /// B628 之前这个方法**根本不存在**，所以"它存在且守住了未初始化"需要一条自己的判据——整链路的判据只走成功路径。
+    /// 之前这个方法**根本不存在**，所以"它存在且守住了未初始化"需要一条自己的判据——整链路的判据只走成功路径。
     ///
-    /// Before B628 this method **did not exist at all**, so "it exists and guards the uninitialised case" needs its own criterion — the whole-chain criterion only walks the success
+    /// Before this method **did not exist at all**, so "it exists and guards the uninitialised case" needs its own criterion — the whole-chain criterion only walks the success
     /// path.
     /// </remarks>
     [Fact]

@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 2. **阈值为 `null` 的舱位给恒零符号**，不是跳过——矩阵维度必须与舱位数一致。
 /// 3. **数量松弛的被松弛量是 `Load.LoadAmount`**，重量松弛的是 `Load.EstimateLoadWeight`。
 /// 4. **两族符号名分别是 `advice_amount_slack_{position}` 与 `advice_weight_slack_{position}`**，
-///    依赖 `StowagePosition.ToString()` 覆写（B620 补上），否则全部重名。
+///    依赖 `StowagePosition.ToString` 覆写（补上），否则全部重名。
 /// 5. 只包一层 `LinearFunctionSymbolAdapter`，因为抽象模型只接受中间符号。
 ///
 /// **一处刻意的单位简化**：基线把被松弛量与阈值都换算到 `aircraftModel.weightUnit` 再相减；本仓要求调用方
@@ -41,8 +41,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// `SlackFunction`** — the baseline goes through `exampleThresholdSlack`, which becomes `SlackFunction(x = load, y = threshold, withNegative = false, withPositive = true, threshold = true,
 /// constraint = true)`, and **`withNegative = false`** is the key, since a lower side would grow the slack when the load is *below* the advice and invert the penalty; **a position with a null
 /// threshold gets a constant-zero symbol** rather than being skipped, since the matrix must match the position count; **the amount slack relaxes `Load.LoadAmount` and the weight slack
-/// `Load.EstimateLoadWeight`**; **the two families are named `advice_amount_slack_{position}` and `advice_weight_slack_{position}`**, relying on the `StowagePosition.ToString()` override
-/// added in B620, without which every name collides; and a single `LinearFunctionSymbolAdapter` wraps each, since the abstract model only accepts intermediate symbols.
+/// `Load.EstimateLoadWeight`**; **the two families are named `advice_amount_slack_{position}` and `advice_weight_slack_{position}`**, relying on the `StowagePosition.ToString` override
+/// Added
 ///
 /// **One deliberate unit simplification**: the baseline converts both the relaxed quantity and the threshold into `aircraftModel.weightUnit` before subtracting, while this port requires the
 /// caller to supply `Alw` and `EstimateLoadWeight` **in the same unit**. The two differ only by a **positive scale factor**, which the objective coefficient

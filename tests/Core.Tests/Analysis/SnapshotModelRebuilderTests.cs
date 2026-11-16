@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// **这批搬的是 `ConstraintProgrammingSnapshotBuilder.buildModel` 的普通路径**（全部成员激活）。
 /// 选择性停用证据的值域重绑、区间变量、目标过滤**没搬，而且遇到就报错**。
 ///
-/// **This batch ports the ordinary path of `buildModel`** (every member active). Domain rebinding when evidence is deactivated, interval variables and objective filtering are
+/// ** ports the ordinary path of `buildModel`** (every member active). Domain rebinding when evidence is deactivated, interval variables and objective filtering are
 /// **not ported, and each one is an error rather than a silent omission**.
 /// </remarks>
 public class SnapshotModelRebuilderTests {

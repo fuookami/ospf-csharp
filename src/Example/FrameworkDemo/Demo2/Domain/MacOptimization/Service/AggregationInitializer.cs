@@ -21,11 +21,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 ///
 /// 1. **只校验位置非空**。基线的这一条是"MAC 优化至少需要一个装载位置"；不加别的校验，也不翻译 DTO。
 /// 2. **`MACRange` 由聚合自己算**，初始化器不碰 `TotalWeight` 以外的重量数据。
-/// 3. **上游聚合可能为 null**（B606 起可空），取非空会抛 `NullReferenceException`——那是崩溃不是失败，所以显式守卫。
+/// 3. **上游聚合可能为 null**（起可空），取非空会抛 `NullReferenceException`——那是崩溃不是失败，所以显式守卫。
 ///
 /// Aligned with the baseline: **one check** — stowage positions must not be empty — then the five upstream parts are handed to the aggregation as-is. Three things must be copied:
 /// **only the position check**, matching the baseline's "MAC optimisation requires at least one stowage position", with no other validation and no DTO translation; **`MACRange` is
-/// computed by the aggregation**, and the initializer touches no weight data beyond `TotalWeight`; and **the upstream aggregations may be null** (nullable since B606), where taking
+/// computed by the aggregation**, and the initializer touches no weight data beyond `TotalWeight`; and **the upstream aggregations may be null** (nullable since then), where taking
 /// non-null throws a `NullReferenceException` — a crash rather than a failure — so they are guarded explicitly.
 /// </remarks>
 internal static class AggregationInitializer

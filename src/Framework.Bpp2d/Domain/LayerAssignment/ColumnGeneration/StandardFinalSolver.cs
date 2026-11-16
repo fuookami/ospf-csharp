@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 标准最终阶段求解器 / The standard final-stage solver.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationStandardExecutors.finalSolver()` 对齐。流程固定为六步：
+/// 与基线 `ColumnGenerationStandardExecutors.finalSolver` 对齐。流程固定为六步：
 ///
 /// 1. **没有列就直接返回**（`skipped=no_columns`），连模型都不建——建一个空模型再求解是纯浪费。
 /// 2. 注册最终阶段的四个构件（分配、装载、需求约束、容量）。
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 5. **把解写回模型令牌**，再按令牌读每列的份数——不写回就读到全零，板材会一块也不产出。
 /// 6. 按份数产出板材：一份一块。
 ///
-/// Aligned with the baseline's `finalSolver()`. The flow is fixed at six steps: **return immediately when there are no columns** (`skipped=no_columns`), not even building a model, since solving an
+/// Aligned with the baseline's `finalSolver`. The flow is fixed at six steps: **return immediately when there are no columns** (`skipped=no_columns`), not even building a model, since solving an
 /// empty one is pure waste; register the final stage's four artifacts (assignment, load, demand constraints, capacity); **register the three objectives in order** — area (primary), sheet count
 /// (secondary), per-type cost (tertiary); solve the MILP; **write the solution back into the model tokens** and only then read each column's copies, since skipping the write-back reads zeros and
 /// yields no sheets at all; and emit one sheet per copy.

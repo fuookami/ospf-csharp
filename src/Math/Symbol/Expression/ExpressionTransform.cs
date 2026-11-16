@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Math.Symbol.Expression;
 /// **后序**：子节点先变换，当前节点最后交给回调。顺序不是细节——前序版本会让回调看到一个**子节点还没变过**的树，
 /// 于是"把所有 `x` 换成 `y`"会漏掉嵌套在深处的那些。
 ///
-/// **B961 补**：这两个入口此前在本仓完全不存在（`grep -rn "Rebuild|WithChildren"` 在 `Math/Symbol/Expression/` 下零命中）。
+/// 补**：这两个入口此前在本仓完全不存在（`grep -rn "Rebuild|WithChildren"` 在 `Math/Symbol/Expression/` 下零命中）。
 /// 缺口是怎么找到的值得一提：**按文件名比出来的 91 个"缺失"里，绝大多数其实在别的文件里**
 /// （`Einsum`、`CombinatoricsAsync`、`EscapeTime` 都能找到，只是不在同名文件）。**名字对不上不等于能力缺失**——
 /// 这条要单独验，结果只剩这一个是真的。
@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Math.Symbol.Expression;
 /// Mirrors the baseline's `ExpressionTransform.kt` (113 lines): **rebuild the nodes only, without changing evaluation semantics or crossing the shared model boundary.**
 /// **Post-order**: children first, the current node last to the callback. The order is not a detail — a pre-order version hands the callback a tree whose children are
 /// **still untransformed**, so "replace every `x` with `y`" misses the deeply nested ones.
-/// **B961**: neither entry point existed here. How the gap was found matters: **of the 91 name-based "missing" files, almost all live inside differently-named files**
+/// ****: neither entry point existed here. How the gap was found matters: **of the 91 name-based "missing" files, almost all live inside differently-named files**
 /// (`Einsum`, `CombinatoricsAsync`, `EscapeTime` are all present) — **a name mismatch is not a missing capability**, so each had to be checked, and only this one was real.
 /// </remarks>
 public static class ExpressionTransform
@@ -71,14 +71,14 @@ public static class ExpressionTransform
     /// <param name="transformer">节点变换器 / The node transformer.</param>
     /// <returns>变换后的表达式 / The transformed expression.</returns>
     /// <remarks>
-    /// **这是基线 `BooleanExpression.transform` 那个重载，B1081 之前缺着。**
+    /// **这是基线 `BooleanExpression.transform` 那个重载，此前缺着。**
     /// 它做的是**两步**：先把标量节点按原样重走一遍（`it`），再把布尔结构交给变换器。
     /// **第一步看起来什么都没改，但它保证标量子树先被重建**——
     /// **省掉它，变换器拿到的仍然是原来那些标量实例，而"变换"就成了只改外壳。**
     /// **基线那一步用星投影（`ScalarExpression&lt;*&gt;`）；C# 没有星投影，所以要一个类型参数，**
     /// **而它不能瞎填：填 `decimal` 会让 `Comparison&lt;double&gt;` 落进叶子分支，"重建"就成了空转。**
     ///
-    /// **This is the baseline `BooleanExpression.transform` overload, missing until B1081.**
+    /// **This is the baseline `BooleanExpression.transform` overload, missing formerly.**
     /// It does **two** things: first it walks the scalar nodes through unchanged (`it`), then hands the boolean structure to the transformer.
     /// **The first step looks like it changes nothing, but it guarantees the scalar subtrees are rebuilt first** —
     /// **skip it and the transformer still receives the original scalar instances, so "transform" only changes the shell.**

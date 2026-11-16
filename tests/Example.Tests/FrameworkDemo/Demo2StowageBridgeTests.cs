@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **装载矩阵要把业务合法性和内核决策对上（B576）** / The stowage matrix must line up business legality with kernel decisions (B576).
+/// **装载矩阵要把业务合法性和内核决策对上** / The stowage matrix must line up business legality with kernel decisions.
 /// </summary>
 /// <remarks>
 /// 基线 `Stowage.kt` 只做两件事：判合法性（`StowageNeeded`/`AdjustmentNeeded`）、把内核的稀疏决策翻译成 `stowage_{i}_{j}` 与 `loaded_{i}`。
@@ -73,9 +73,9 @@ public class Demo2StowageBridgeTests {
                 recommendedWeightNeeded: false),
             mlw: new MaxLoadWeightLimit(1000.0),
             mla: 1UL,
-            // B582 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
+            // 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
             // （跳过会让 `y` 无下界参照，模型照解）。这批既有 fixture 默认给了 `mlw` 那一口径的值。
-            // Since B582 "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
+            // Since "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
             // `y` with no reference bound and the model still solves). These pre-existing fixtures default the bounds to the `mlw` figure.
             plw: new PositionPredicateLoadWeight(Plw: 1000.0, Min: 0.0, Max: 1000.0));
     }
@@ -114,9 +114,9 @@ public class Demo2StowageBridgeTests {
             MakeItem("I1", ItemStatus.Optional, ItemLocation.MainDeck, CargoCode.BAL),
             MakeItem("I2", ItemStatus.Optional, ItemLocation.LowNotBulk, CargoCode.BAL),
         };
-        // P1 在低舱、P2 在主舱。基线 `enabled()` 只查"主舱位拒下舱货"，**不查**"下舱位拒主舱货"——
+        // P1 在低舱、P2 在主舱。基线 `enabled` 只查"主舱位拒下舱货"，**不查**"下舱位拒主舱货"——
         // 所以 (I1, P1) 是合法的、(I2, P2) 不合法。这条单向性是基线原样，见下一条判据。
-        // P1 is lower, P2 is main. The baseline `enabled()` only checks "a main position refuses lower cargo" and **not** "a lower position refuses main cargo" —
+        // P1 is lower, P2 is main. The baseline `enabled` only checks "a main position refuses lower cargo" and **not** "a lower position refuses main cargo" —
         // so (I1, P1) is legal and (I2, P2) is not. That one-directionality is the baseline as written; see the next criterion.
         var positions = new List<StowagePosition> {
             MakePosition("P1", 1UL, PositionLocation.LowForwardNotBulkLocation),
@@ -157,16 +157,16 @@ public class Demo2StowageBridgeTests {
     /// **"下舱位拒主舱货"这条基线没查** / The baseline does not check "a lower position refuses main cargo".
     /// </summary>
     /// <remarks>
-    /// 基线 `enabled()` 只写了一个方向：`this.location.main && item.location.low`（主舱位拒下舱货）。
+    /// 基线 `enabled` 只写了一个方向：`this.location.main && item.location.low`（主舱位拒下舱货）。
     /// 反方向 `this.location.low && item.location.main` 只存在于 `ItemLocation.enabledIn(PositionLocation)`，
-    /// 而那个方法在 Demo2 里**没有调用方**（本批逐文件搜过）。
+    /// 而那个方法在 Demo2 里**没有调用方**（这里逐文件搜过）。
     ///
-    /// 结果：主舱货能装进下舱位。这是**基线原样**，不是本批引入的偏差；写在这里是为了让它留档——
+    /// 结果：主舱货能装进下舱位。这是**基线原样**，不是这里引入的偏差；写在这里是为了让它留档——
     /// 否则下一个人会以为是移植漏了，然后"顺手修好"，把跨语言行为改掉。
     ///
-    /// The baseline `enabled()` writes only one direction: `this.location.main && item.location.low` (a main position refuses lower cargo). The reverse
+    /// The baseline `enabled` writes only one direction: `this.location.main && item.location.low` (a main position refuses lower cargo). The reverse
     /// `this.location.low && item.location.main` exists only in `ItemLocation.enabledIn(PositionLocation)`, and that method has **no caller** anywhere in Demo2 (searched file by
-    /// file in this batch). Consequence: main-deck cargo can go into a lower position. That is **the baseline as written**, not a divergence introduced here — recorded so the
+    /// file in). Consequence: main-deck cargo can go into a lower position. That is **the baseline as written**, not a divergence introduced here — recorded so the
     /// next reader does not take it for a porting slip and "fix" the cross-language behaviour.
     /// </remarks>
     [Fact]

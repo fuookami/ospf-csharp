@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 固定整数 LP 的门控 / The fixed-integer LP gates.
 /// </summary>
 /// <remarks>
-/// **本文件在 B1040 被我自己截断过（脚本中断把文件写成 0 行），随后按源码 API 完整重写。**
+/// **本文件曾被一次脚本中断截断过（脚本中断把文件写成 0 行），随后按源码 API 完整重写。**
 /// 重写时补了一条原来没有的判据：**`AssembleSensitivities` 此前没有任何调用方，
 /// 也没有任何判据**——`LocalConstraintSensitivity` 这个类型存在但从来没有被构造过。
 ///
-/// **This file was truncated to zero lines by my own interrupted script in B1040, then rewritten against the source API.** The rewrite added a criterion that did not exist before:
+/// **This file was truncated to zero lines by my own interrupted script, then rewritten against the source API.** The rewrite added a criterion that did not exist before:
 /// **`AssembleSensitivities` had no caller and no criterion** — the `LocalConstraintSensitivity` type existed but was never constructed.
 /// </remarks>
 public class FixedIntegerLpGatesTests {
@@ -97,9 +97,9 @@ public class FixedIntegerLpGatesTests {
 
     /// <summary>**多行降阶不得冒充单个约束的范围** / A multi-row lowering must not impersonate one constraint's range.</summary>
     /// <remarks>
-    /// **直接转发到 `ProvenanceDualMapping.MapRanges`**，规则与 B1020 完全一致。
+    /// **直接转发到 `ProvenanceDualMapping.MapRanges`**，规则与前面一致完全一致。
     ///
-    /// **Forwards to `ProvenanceDualMapping.MapRanges`**, with the rule ported in B1020.
+    /// **Forwards to `ProvenanceDualMapping.MapRanges`**, with the rule ported.
     /// </remarks>
     [Fact]
     public void TheSingleRowRemap_ShouldDropMultiRowLowerings() {

@@ -23,8 +23,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **"用错物化器"与"能力还没有"是两件事，修法完全不同。**
 ///
-/// adds
-///
 /// **"Wrong materializer" and "capability absent" are different things with different fixes.**
 /// </remarks>
 public class DeferredFunctionFallbackMaterializersTests
@@ -33,7 +31,7 @@ public class DeferredFunctionFallbackMaterializersTests
     /// **类型不对与未移植给出不同的消息** / A wrong type and an unported row generator say different things.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **`Pwl` 物化器收到一个 `SemiStructure`：类型不对。**
     /// **`Pwl` 物化器收到一个 `UnivariateLinearPiecewiseStructure`：类型对，但行生成还没移植。**
@@ -66,10 +64,10 @@ public class DeferredFunctionFallbackMaterializersTests
         wrongMessage.Should().Contain("unsupported");
         wrongMessage.Should().Contain("SemiStructure");
 
-        // **B1199 之后"未移植"这一格空了：七个结构里已经没有不产生行的。
+        // **此后"未移植"这一格空了：七个结构里已经没有不产生行的。
         // 所以这里改为断言那条措辞<b>不再出现</b>——否则它就成了一个永远为假的类别。**
         //
-        // **After B1199 the "not ported" cell is empty: none of the seven structures lacks row generation.
+        // **The "not ported" cell is empty: none of the seven structures lacks row generation.
         // So this asserts that wording <b>no longer appears</b>, rather than keeping a category with no instances.**
         IDeferredFunctionFallbackMaterializer core = DeferredFunctionFallbackMaterializers.Core;
         foreach (DeferredFunctionStructure structure in new DeferredFunctionStructure[] {
@@ -98,15 +96,15 @@ public class DeferredFunctionFallbackMaterializersTests
     /// **判据逐个结构过一遍，把"能"与"不能"都固定下来：
     /// PWL、MAX 不能；SEMI、二值逻辑、指示、掩码、ABS 能。**
     ///
-    /// **B1197 补上 ABS 的行生成后，分法从 4/3 变成 5/2。**
+    /// **ABS 的行生成补上之后，分法从 4/3 变成 5/2。**
     ///
     /// **只断言"能的那四个能"的话，三个空着的格子永远不会被注意到。**
     ///
     /// **The layer's completeness is decided by <b>row generation</b>, not by the dispatch table.**
     ///
- /// **The criterion walks every structure; all seven materialize .**
+ /// **The criterion walks every structure; all seven materialize.**
     ///
-    /// **After B1197 fills ABS's row generation the split goes from 4/3 to 5/2.**
+    /// **With ABS row generation in place the split goes from 4/3 to 5/2.**
     ///
     /// **Asserting only that the four can work would leave the three blank cells unnoticed.**
     /// </remarks>
@@ -129,10 +127,10 @@ public class DeferredFunctionFallbackMaterializersTests
                 $"{structure.GetType().Name} should materialize, got: {detail}");
         }
 
-        // **B1199 之后没有"能/不能"的分法了——七格全满。**
-        // **After B1199 there is no can/cannot split left; all seven cells are full.**
+        // **此后没有"能/不能"的分法了——七格全满。**
+        // **There is no can/cannot split left; all seven cells are full.**
         PiecewiseMaterializes(core).Should().BeTrue(
-            "the last unported cell was PWL, closed by B1199");
+            "the last unported cell was PWL, and it is closed now");
     }
 
     /// <summary>
@@ -250,8 +248,8 @@ public class DeferredFunctionFallbackMaterializersTests
     // **`AbsStructure` needs three helper columns and two Big-Ms: positive, negative and sign.**
     private static AbsStructure Abs() => new(
         Input: new LinearPolynomial<Flt64>(Array.Empty<LinearMonomial<Flt64>>(), Flt64.Zero),
-        // **三个辅助列必须互不相同——B1197 的键唯一性校验会拒绝复用。**
-        // **The three helpers must be distinct; B1197's key-uniqueness check rejects reuse.**
+        // **三个辅助列必须互不相同——键唯一性校验会拒绝复用。**
+        // **The three helpers must be distinct; the earlier key-uniqueness check rejects reuse.**
         ResultVariable: Real, PositiveVariable: AbsPos, NegativeVariable: AbsNeg, SignVariable: Bit,
         PositiveBigM: new Flt64(100.0), NegativeBigM: new Flt64(100.0),
         Converter: IIntoValue<Flt64>.Identity);

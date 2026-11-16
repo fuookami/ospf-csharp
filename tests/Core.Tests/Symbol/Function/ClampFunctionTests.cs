@@ -18,13 +18,13 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **截断函数不是新原语，是把 max 与 min 拼起来** / Clamp is not a primitive; it is max and min composed.
 /// </summary>
 /// <remarks>
-/// B1130 的结论是"`core` 剩下的缺口不是少几个类，是少几层"。**B1131 先验证这个结论对不对**，
+/// 结论是"`core` 剩下的缺口不是少几个类，是少几层"。**先验证这个结论对不对**，
 /// 结果发现**函数层已经存在**：`IMathFunctionSymbol`、`IHasResultPolynomial`、`FunctionSymbol.cs`
 /// 与 **52 个函数类**都在，**缺的是具体函数，不是那一层。**
 ///
 /// **所以补一个函数是小增量**——**`ClampFunction` 直接用已有的 `MaxFunction` 与 `MinFunction` 拼。**
 ///
-/// B1130 concluded "what `core` lacks is layers, not classes". **B1131 checked that conclusion first** and found
+/// A survey concluded "what `core` lacks is layers, not classes". **That conclusion was then checked first** and found
 /// **the function layer already exists**: `IMathFunctionSymbol`, `IHasResultPolynomial`, `FunctionSymbol.cs`
 /// and **52 function classes** are all there — **what is missing is individual functions, not the layer.**
 ///

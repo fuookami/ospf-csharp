@@ -20,8 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeColumns`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeColumnProjectionTests
 {
     /// <summary>
@@ -69,7 +68,7 @@ public class NativeColumnProjectionTests
     /// **列错位被拒** / Misaligned columns are rejected.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **两个列表长度相同、键各自唯一，但顺序不一样：** **变量列是 `[A, B]`，token 列是 `[B, A]`。**
     ///
@@ -154,7 +153,7 @@ public class NativeColumnProjectionTests
     /// **列号取的是 token 的顺序，不是 `SolverIndex`** / Columns come from token order, not `SolverIndex`.
     /// </summary>
     /// <remarks>
-    /// **基线的 `keys.withIndex()` 用的是<b>列表下标</b>，不是 token 自己的 `solverIndex`。**
+    /// **基线的 `keys.withIndex` 用的是<b>列表下标</b>，不是 token 自己的 `solverIndex`。**
     ///
     /// **判据构造一个 `SolverIndex` 与列表下标不一致的输入：** **两个 token 的 `SolverIndex` 是 `5` 与 `9`，
     /// 而列表位置是 `0` 与 `1`。**
@@ -162,7 +161,7 @@ public class NativeColumnProjectionTests
     /// **正确的实现给出 `0` 与 `1`（列表下标）；如果误用 `SolverIndex`，会给出 `5` 与 `9`——
     /// 而那会让解向量按错误的列去索引。**
     ///
-    /// **The baseline's `keys.withIndex()` uses the <b>list index</b>, not the token's own `solverIndex`.**
+    /// **The baseline's `keys.withIndex` uses the <b>list index</b>, not the token's own `solverIndex`.**
     ///
     /// **The criterion builds an input where the two differ: `SolverIndex` values `5` and `9` at list positions `0` and
     /// `1`.**

@@ -1,4 +1,4 @@
-// 建议装载松弛（B624）的判据 / Criteria for the advised-load slack (B624).
+// 建议装载松弛的判据 / Criteria for the advised-load slack.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **建议装载松弛（B624）** / The advised-load slack (B624).
+/// **建议装载松弛** / The advised-load slack.
 /// </summary>
 /// <remarks>
 /// 判据的重点：`SlackFunction` 的单侧配置（`withNegative = false`）、阈值为 `null` 时给恒零、以及两条目标各自
@@ -235,7 +235,7 @@ public class Demo2AdviceLoadingTests {
     /// 两点成对：
     ///
     /// 1. 三个舱位**都没有** `Ala`/`Alw` → 两条目标都**不加**、返回成功。
-    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty()) return ok`。
+    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty) return ok`。
     ///
     /// Two paired points: three positions with **no** `Ala` or `Alw` give **no** objective from either limit, both returning success; and the objective count is unchanged, per the
     /// baseline's early return.

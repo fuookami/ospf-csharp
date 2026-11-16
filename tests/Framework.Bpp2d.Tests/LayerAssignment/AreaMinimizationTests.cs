@@ -1,4 +1,4 @@
-// 面积最小化目标（B649）的判据 / Criteria for the area-minimisation objective (B649).
+// 面积最小化目标的判据 / Criteria for the area-minimisation objective.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **面积最小化目标（B649）** / The area-minimisation objective (B649).
+/// **面积最小化目标** / The area-minimisation objective.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**未注册面积符号时直接失败**（不是加一个空目标）、**目标名与分类照抄基线**、

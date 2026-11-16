@@ -33,7 +33,7 @@ will silently accept a truncated search.
 
 ## Consumers
 
-`Framework.GanttNetworkScheduling` adapts these paths into business bunches (Batch 278). Note that
+`Framework.GanttNetworkScheduling` adapts these paths into business bunches (earlier). Note that
 This module **already references** `Framework.GanttScheduling`, which is why the bridge lives
 in its own project.
 

@@ -1,4 +1,4 @@
-// 装箱分析器（B647）的判据 / Criteria for the packing analyser (B647).
+// 装箱分析器的判据 / Criteria for the packing analyser.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **装箱分析器（B647）** / The packing analyser (B647).
+/// **装箱分析器** / The packing analyser.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**实际面积与外接面积是两个数**（圆形件上差别最大）、**装载率是各板材的平均**（不是总面积比）、

@@ -1,4 +1,4 @@
-// 资源使用量的三张表（B710）/ The resource usage's three tables (B710).
+// 资源使用量的三张表/ The resource usage's three tables.
 
 using System;
 using System.Collections.Generic;
@@ -16,17 +16,17 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **资源使用量的三张表（B710）** / The resource usage's three tables (B710).
+/// **资源使用量的三张表** / The resource usage's three tables.
 /// </summary>
 /// <remarks>
 /// 资源模块是唯一整块没接线的地方：`IResourceUsage` 连数量表都没有，三个实现的 `Register` 都是返回空 `Ok` 的桩，
-/// 于是容量约束那三条 `Invoke => Ok` 也就无米可炊。本批补最小的一片：**一个实现的 `quantity` / `overQuantity` / `lessQuantity` 三张表**。
+/// 于是容量约束那三条 `Invoke => Ok` 也就无米可炊。这里补最小的一片：**一个实现的 `quantity` / `overQuantity` / `lessQuantity` 三张表**。
 ///
 /// 三件必须照抄基线：**范围要设**（不设是全域，松弛可以任意大，"超出多少"永远算成零）、
 /// **超量取正部、不足取负部**、**槽自己的开关要单独看**（资源级开着不等于这个容量开）。
 ///
 /// The resource module is the one block never wired: `IResourceUsage` did not even have a quantity table, all three `Register` implementations were stubs returning an empty `Ok`, and the
-/// capacity constraint's three `Invoke => Ok` bodies had nothing to work with. This batch adds the smallest slice: **the `quantity` / `overQuantity` / `lessQuantity` tables for one
+/// capacity constraint's three `Invoke => Ok` bodies had nothing to work with. adds the smallest slice: **the `quantity` / `overQuantity` / `lessQuantity` tables for one
 /// implementation**. Three things must be copied from the baseline: **the range must be set** (unset is the full domain, the slack could be arbitrarily large, and "how much over" always
 /// computes to zero), **over takes the positive part and less the negative part**, and **each slot's own switch is checked separately** (a resource-level flag does not mean this capacity has it on).
 /// </remarks>
@@ -94,10 +94,10 @@ public class ResourceQuantityTableTests {
     /// </summary>
     /// <remarks>
     /// **键类型必须写具体时间槽**：`IReadOnlyDictionary` 的键类型不协变，转成以 `IResourceTimeSlot` 为键的字典恒抛
-    /// `InvalidCastException`——B705 在产量侧踩过同一个坑。
+    /// `InvalidCastException`—— 在产量侧踩过同一个坑。
     ///
     /// **The key type must be the concrete slot**: `IReadOnlyDictionary` is not covariant in its key type, so casting onto a map keyed by `IResourceTimeSlot` always throws
-    /// `InvalidCastException` — the same trap B705 hit on the produce side.
+    /// `InvalidCastException` — the same trap hit on the produce side.
     /// </remarks>
     private static IReadOnlyDictionary<ExecutionResourceTimeSlot<TestExecutionResource, ResourceCapacity<Flt64>, Flt64>,
         ILinearIntermediateSymbol<Flt64>> Table(object? table) {
@@ -192,11 +192,11 @@ public class ResourceQuantityTableTests {
     /// 1. 每个槽的超量松弛里**有且只有一个正部**（`_pos` 后缀的辅助变量），**没有负部**。
     /// 2. 不足松弛相反：**只有一个负部**，没有正部。
     /// 3. 两者都**不建约束**——度量归这里，约束归 `ResourceCapacityConstraint`。
-    /// 4. 松弛的 `X` 就是数量符号本身，不是它的多项式（展开数量符号等于没扣，B703 \/ B704 都踩过）。
+    /// 4. 松弛的 `X` 就是数量符号本身，不是它的多项式（展开数量符号等于没扣，\/ 都踩过）。
     ///
     /// Four paired points: each slot's over slack holds **exactly one positive part** (`_pos` helper) and **no negative part**; the less slack is the mirror; neither **builds a constraint**,
     /// since measuring belongs here and constraining to `ResourceCapacityConstraint`; and the slack's `X` is the quantity symbol itself rather than its polynomial (expanding a quantity
-    /// symbol costs nothing, as B703 and B704 both learned).
+    /// symbol costs nothing, as and both learned).
     /// </remarks>
     [Fact]
     public void Register_ShouldTakeThePositiveAndNegativeParts() {
@@ -212,9 +212,9 @@ public class ResourceQuantityTableTests {
             ILinearIntermediateSymbol<Flt64>> less = Table(real.LessQuantity);
 
         // **看的是多项式里的辅助变量，不是适配器自己的名字**：`Build` 用给定的名字建适配器，
-        // `_pos` / `_neg` 是它内部的辅助变量（B701 学到的同一课）。
+        // `_pos` / `_neg` 是它内部的辅助变量。
         // **Look at the helper variables inside the polynomial, not the adapter's own name**: `Build` names the adapter from the given name, while `_pos` / `_neg` are its internal helpers
-        // (the same lesson as B701).
+        // (the the same lesson).
         List<string> overNames = SlackNames(over.Values.First());
         overNames.Should().Contain(name => name.EndsWith("_pos"));
         overNames.Should().NotContain(name => name.EndsWith("_neg"));

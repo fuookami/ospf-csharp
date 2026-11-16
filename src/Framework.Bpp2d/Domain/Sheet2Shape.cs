@@ -65,10 +65,10 @@ public sealed record Sheet2Shape<V>(Quantity<V> Width, Quantity<V> Height)
     /// 板材面积 / Sheet area.
     /// </summary>
     /// <remarks>
-    /// 基线与 C# 常用写法都允许直接在实现类型上取 `area`／`originBox()`。C# 若用"默认接口成员 + 同名公开成员"
+    /// 基线与 C# 常用写法都允许直接在实现类型上取 `area`／`originBox`。C# 若用"默认接口成员 + 同名公开成员"
     /// 的写法，接口调用会分派到类成员从而**无限递归**，因此这里把两者都声明为接口成员、由实现类型给出唯一实现。
     ///
-    /// Both the baseline and ordinary C# usage read `area`/`originBox()` on the concrete type. Combining a
+    /// Both the baseline and ordinary C# usage read `area`/`originBox` on the concrete type. Combining a
     /// default interface member with a same-named public member makes the interface call dispatch back to the class
     /// member and **recurse forever**, so both are plain interface members with a single implementation here.
     /// </remarks>

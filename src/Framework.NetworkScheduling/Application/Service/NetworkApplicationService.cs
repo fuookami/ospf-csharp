@@ -34,8 +34,8 @@ namespace Fuookami.Ospf.Framework.NetworkScheduling.Application.Service;
 /// 解后处理器 / Solution post-processor.
 /// </summary>
 /// <remarks>
-/// 在 <c>VrptwApplicationService.Solve()</c> 末尾调用，可对求解结果做后处理（添加汇总 KPI、单位换算、记录日志等），而不必改动主流程。
-/// Called at the end of <c>VrptwApplicationService.Solve()</c>, so the solve result can be post-processed (aggregate KPIs, unit
+/// 在 <c>VrptwApplicationService.Solve</c> 末尾调用，可对求解结果做后处理（添加汇总 KPI、单位换算、记录日志等），而不必改动主流程。
+/// Called at the end of <c>VrptwApplicationService.Solve</c>, so the solve result can be post-processed (aggregate KPIs, unit
 /// conversion, logging) without touching the main flow.
 /// **多个 enricher 按声明顺序依次作用，后一个看到的是前一个的输出**。因此顺序是语义的一部分，不是无关细节——先换算单位再算 KPI 与
 /// 反过来的结果不同。

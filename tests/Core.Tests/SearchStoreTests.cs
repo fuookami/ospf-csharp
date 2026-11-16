@@ -87,7 +87,7 @@ public sealed class FileSearchStoreTests : IDisposable {
 
     /// <summary>**包含性检查是等价变异** / The containment check is an equivalent mutant.</summary>
     /// <remarks>
-    /// 我最初以为需要一个"只有规范化后检查才能拦下"的键来证伪这条防线，实测**做不到**：只要键里不含 `/`、`\`、`:` 且不是
+ /// 最初以为需要一个"只有规范化后检查才能拦下"的键来证伪这条防线，实测**做不到**：只要键里不含 `/`、`\`、`:` 且不是
     /// `..`，`Path.Combine(root, key)` 加 `GetFullPath` 就**不可能**逃出根目录——单段文件名没有逃逸手段。
     /// 把包含性检查改成 `true` 后，上面 `Key_ShouldRejectPathEscape` 的四项断言**仍然全部通过**。
     ///
@@ -209,20 +209,20 @@ public sealed class FileSearchStoreTests : IDisposable {
 
     /// <summary>**非法调度日志被拒绝写入** / An invalid schedule log is rejected before writing.</summary>
     /// <remarks>
-    /// **往返已由 `ScheduleLogRoundTripTests` 覆盖**（Batch 229 找到真正成因：`ScheduleLog` 有两个构造函数，
+ /// **往返已由 `ScheduleLogRoundTripTests` 覆盖**（earlier 找到真正成因：`ScheduleLog` 有两个构造函数，
     /// `System.Text.Json` 于是选不出反序列化目标）。本测试只保留"先校验后写入"这一步。
     ///
-    /// **The round trip is covered by `ScheduleLogRoundTripTests`** (Batch 229 found the actual cause: `ScheduleLog` had two constructors, leaving
+ /// **The round trip is covered by `ScheduleLogRoundTripTests`** (earlier found the actual cause: `ScheduleLog` had two constructors, leaving
     /// `System.Text.Json` unable to pick a deserialisation target). This test keeps only the "validate before write" step.
     ///`ScheduleLogs.Fingerprint` 用一份手工组装的字典序列化
     /// （`version`/`configuration`/`problem`/`events`），而 `ScheduleLog` 自身的 `JsonPropertyName` 序列化会带上
-    /// `checksum` 字段——两者产生的 JSON 不同，于是**读回后重算的摘要与原摘要不符**，`Validate()` 必然失败。
-    /// 这是 `ScheduleLog` 自身的问题（属于 Batch 183 的范围），不是存储层的问题；在这里测往返会得到一个
+    /// `checksum` 字段——两者产生的 JSON 不同，于是**读回后重算的摘要与原摘要不符**，`Validate` 必然失败。
+ /// 这是 `ScheduleLog` 自身的问题（属于 earlier 的范围），不是存储层的问题；在这里测往返会得到一个
     /// "看起来是存储 bug"的假象。已记入计划，留待 `ScheduleLog` 往返修复后补测。
-    /// **This batch only tests the "validate before write" step, not the round trip.** `ScheduleLogs.Fingerprint` serializes a
+ /// ** only tests the "validate before write" step, not the round trip.** `ScheduleLogs.Fingerprint` serializes a
     /// hand-assembled dictionary (`version`/`configuration`/`problem`/`events`), while `ScheduleLog`'s own `JsonPropertyName`
     /// serialization also carries `checksum` — the two JSON texts differ, so **the digest recomputed after reading back no longer
-    /// matches**, and `Validate()` necessarily fails. That is a `ScheduleLog` problem (Batch 183's scope), not a store problem; testing
+ /// matches**, and `Validate` necessarily fails. That is a `ScheduleLog` problem (earlier's scope), not a store problem; testing
     /// the round trip here would produce a false "looks like a store bug" signal. It is recorded in the plan and will be covered once
     /// `ScheduleLog` round-tripping is fixed.
     /// </remarks>

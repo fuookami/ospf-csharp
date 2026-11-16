@@ -173,10 +173,10 @@ public sealed class RelationalQueryPlanTest {
 
     /// <summary>
     /// 构造可用的 Join：关联条件必须是"被 Join 侧 ↔ 已绑定侧"的列对列关联，否则会被 Join 图校验拒绝（那正是
-    /// 笛卡尔积）。用 <c>BooleanConstant.True()</c> 当条件的计划在这条规则落地后已不再合法。
+    /// 笛卡尔积）。用 <c>BooleanConstant.True</c> 当条件的计划在这条规则落地后已不再合法。
     /// Build usable joins: the condition must be a column-to-column correlation between the joined side and a
     /// bound side, otherwise the join-graph check rejects it as a cross product. A plan whose conditions are
-    /// <c>BooleanConstant.True()</c> is no longer legal once that rule exists.
+    /// <c>BooleanConstant.True</c> is no longer legal once that rule exists.
     /// </summary>
     private static JoinSpec[] Joins(int count) =>
         Enumerable.Range(0, count)

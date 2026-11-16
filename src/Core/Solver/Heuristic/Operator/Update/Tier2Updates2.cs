@@ -23,12 +23,12 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Operator;
 /// degenerates to 1.0 and with 2.0 it collapses to the `1e-8` scale; only the default 1.5 yields a meaningful `0.6965745…`. Swapping
 /// `gamma` for an "equivalent" implementation such as `Math.Gamma` produces a **plausible-looking but different** trajectory, so the
 /// baseline's eight Lanczos coefficients are kept and checked against golden vectors computed by an independent Python implementation.
-/// **`v` 必须夹到 `1e-12` 以上**。`abs(normal())` 可能恰好为 0（四个均匀数之和恰为 2.0），于是 `u / 0^(1/1.5)` 是除零。
-/// **`v` must be clamped above `1e-12`.** `abs(normal())` can be exactly 0 (four uniform draws summing to 2.0), making
+/// **`v` 必须夹到 `1e-12` 以上**。`abs(normal)` 可能恰好为 0（四个均匀数之和恰为 2.0），于是 `u / 0^(1/1.5)` 是除零。
+/// **`v` must be clamped above `1e-12`.** `abs(normal)` can be exactly 0 (four uniform draws summing to 2.0), making
 /// `u / 0^(1/1.5)` a division by zero.
-/// **`normal()` 是"四个均匀数之和减 2"**，不是 `sqrt(12/n) * (sum - n/2)` 的标准近似。写成标准形式会改变分布方差，
+/// **`normal` 是"四个均匀数之和减 2"**，不是 `sqrt(12/n) * (sum - n/2)` 的标准近似。写成标准形式会改变分布方差，
 /// 步长尺度随之变化，而算法仍然收敛——只是收敛速度与基线不同。
-/// **`normal()` is "the sum of four uniform draws minus 2"**, not the standard `sqrt(12/n) * (sum - n/2)` approximation. Using the
+/// **`normal` is "the sum of four uniform draws minus 2"**, not the standard `sqrt(12/n) * (sum - n/2)` approximation. Using the
 /// standard form changes the distribution variance and hence the step scale, while the algorithm still converges — just at a different
 /// rate than the baseline.
 /// **放弃巢穴的分支按个体判定，但逐维重建**。`abandoned` 在个体级别抽一次，然后每一维各自均匀重建；把它挪到维度级别会让

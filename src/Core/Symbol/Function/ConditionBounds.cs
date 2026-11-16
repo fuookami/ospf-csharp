@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **构造时拒绝 `lower > upper`**：**反过来传不是"一个空区间"，而是调用方把两个字段写反了**，
 /// **而空区间会让包络的四条不等式互相矛盾、求解器只报告"不可行"，错误信息离原因很远。**
 ///
-/// B1152, following the baseline's `Conditional.kt`.
+/// Following the baseline's `Conditional.kt`.
 ///
 /// **It is the shared input type of `SelectFunction`, `ElementFunction` and `McCormickEnvelopeFunction`**,
 /// **so it comes first, together with one real consumer in the same batch** —

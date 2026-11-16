@@ -29,11 +29,11 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// **真实 SCIP 的对偶解驱动框架影子价格** / Real SCIP duals drive the framework's shadow prices.
 /// </summary>
 /// <remarks>
-/// **这是 B367 记了 40 多批的缺口，B413 补上。**
+/// **这是 记了 40 多批的缺口，补上。**
 ///
 /// 既有判据 `Csp1dShadowPriceNonZeroTests` 喂的是**手工塞进字典的常数**
 /// （`duals[constraint] = new Flt64(3.5)`）。它证明的是"**给定**非零对偶时映射不丢值"，
-/// **完全没有证明"真实求解器会产出非零对偶"**——后者才是 B367 的缺口。
+/// **完全没有证明"真实求解器会产出非零对偶"**——后者才是 的缺口。
 ///
 /// | 判据 | 对偶来源 | 证明什么 |
 /// | --- | --- | --- |
@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// 模型取"材料用量约束起作用"的最小情形：需求超过单张板材的容量，
 /// 于是材料约束的右端项收紧会抬高目标值 ⇒ 对偶**必然非零**。
 ///
-/// **This closes the gap B367 recorded for 40+ batches.** The existing criterion feeds **hand-written constants**; it proves "a *given* non-zero dual is not lost by the
+/// **This closes the gap recorded for 40+ batches.** The existing criterion feeds **hand-written constants**; it proves "a *given* non-zero dual is not lost by the
 /// mapping", **never that a real solver produces non-zero duals** — which is the actual gap. The model is the minimal case where the material-usage constraint binds, so
 /// tightening its right-hand side must raise the objective, making the dual **necessarily non-zero**.
 /// </remarks>
@@ -81,8 +81,8 @@ public class ScipShadowPriceIntegrationTests {
 
         // **非零对偶必须留下非零痕迹。** 只断言 "IsOk" 会让"把所有对偶都乘 0"的变异存活。
         // **Non-zero duals must leave a non-zero trace.** Asserting only `IsOk` would let "multiply every dual by 0" survive.
-        // **按已知键查，不按"约束自己带的键"查**（B367 的教训：查找用的键会跟着变异一起变）。
-        // **Look up by the known key**, not by "whatever key the constraint carries" (B367's lesson: a lookup key that mutates along with the mutant proves nothing).
+        // **按已知键查，不按"约束自己带的键"查**。
+        // **Look up by the known key**, not by "whatever key the constraint carries" (the earlier lesson: a lookup key that mutates along with the mutant proves nothing).
         // **实测该模型的对偶键族是需求与设备**，不是材料——因为方案已经覆盖了物料用量。
         // 需求约束起作用（需求 3 而方案只切 1 件），所以它的对偶**非零**（实测 0.020）。
         //

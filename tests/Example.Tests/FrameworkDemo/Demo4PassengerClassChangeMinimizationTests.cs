@@ -1,4 +1,4 @@
-// 舱位变更最小化（B764）/ The cabin-change objective (B764).
+// 舱位变更最小化/ The cabin-change objective.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **舱位变更最小化（B764）** / The cabin-change objective (B764).
+/// **舱位变更最小化** / The cabin-change objective.
 /// </summary>
 /// <remarks>
 /// 求和口径是这一层唯一容易错的地方：**不是"每位乘客一项"，而是"每位乘客 × 除自己以外的舱位"**。

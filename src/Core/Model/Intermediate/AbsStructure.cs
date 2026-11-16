@@ -62,7 +62,7 @@ public sealed record AbsHelperBoundsSnapshot(Flt64? Lower, Flt64? Upper);
 /// 如果系数是 2，那个 helper 属于 `2x` 而不是 `x`，
 /// 而两个不同的结构会被索引到同一个键上——后写入的那个悄悄覆盖前一个。**
 ///
-/// B1188, following the baseline's `AbsStructure`.
+/// Following the baseline's `AbsStructure`.
 ///
 /// **`|x|` needs three helper columns, not one:**
 ///

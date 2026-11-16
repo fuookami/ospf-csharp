@@ -75,25 +75,25 @@ public class GurobiColumnGenerationSolverTest {
         // Integration test: column generation for a cutting stock problem.
         //
         // 问题描述 / Problem description:
-        //   原料卷宽度 W = 10 / Raw roll width W = 10
-        //   需求: 宽度 4 的件 3 个, 宽度 3 的件 2 个 / Demands: 3 pieces of width 4, 2 pieces of width 3
+        // 原料卷宽度 W = 10 / Raw roll width W = 10
+        // 需求: 宽度 4 的件 3 个, 宽度 3 的件 2 个 / Demands: 3 pieces of width 4, 2 pieces of width 3
         //
         // 初始切割模式 / Initial cutting patterns:
-        //   p1 = (2, 0) → 2 个宽度 4 的件 / 2 pieces of width 4
-        //   p2 = (0, 3) → 3 个宽度 3 的件 / 3 pieces of width 3
-        //   p3 = (1, 2) → 1 个宽度 4 + 2 个宽度 3 / 1 of width 4 + 2 of width 3
+        // p1 = (2, 0) → 2 个宽度 4 的件 / 2 pieces of width 4
+        // p2 = (0, 3) → 3 个宽度 3 的件 / 3 pieces of width 3
+        // p3 = (1, 2) → 1 个宽度 4 + 2 个宽度 3 / 1 of width 4 + 2 of width 3
         //
         // RMP (LP 松弛) / RMP (LP relaxation):
-        //   min x1 + x2 + x3
-        //   s.t. 2*x1 + 0*x2 + 1*x3 >= 3  (需求约束 1 / demand constraint 1)
+        // min x1 + x2 + x3
+        // s.t. 2*x1 + 0*x2 + 1*x3 >= 3  (需求约束 1 / demand constraint 1)
         //        0*x1 + 3*x2 + 2*x3 >= 2  (需求约束 2 / demand constraint 2)
-        //        x1, x2, x3 >= 0
+        // x1, x2, x3 >= 0
         //
         // 定价子问题 (背包) / Pricing subproblem (knapsack):
-        //   max y1*a1 + y2*a2
-        //   s.t. 4*a1 + 3*a2 <= 10
-        //        a1, a2 >= 0, integer
-        //   若最优值 > 1, 则添加新列 / If optimal > 1, add new column
+        // max y1*a1 + y2*a2
+        // s.t. 4*a1 + 3*a2 <= 10
+        // a1, a2 >= 0, integer
+        // 若最优值 > 1, 则添加新列 / If optimal > 1, add new column
 
         if (!IsGurobiAvailable()) {
             return;
@@ -250,8 +250,8 @@ public class GurobiColumnGenerationSolverTest {
         // Verify LP dual value extraction correctness.
         //
         // 简单 LP: min x1 + x2
-        //   s.t. x1 + x2 >= 1  (对偶 y1)
-        //        x1 >= 0, x2 >= 0
+        // s.t. x1 + x2 >= 1  (对偶 y1)
+        // x1 >= 0, x2 >= 0
         // 最优解: obj = 1, 对偶: y1 = 1
 
         if (!IsGurobiAvailable()) {

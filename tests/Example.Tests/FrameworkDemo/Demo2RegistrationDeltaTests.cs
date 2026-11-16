@@ -1,4 +1,4 @@
-// 每一层注册都要留下痕迹（B781）/ Every registration layer must leave a mark (B781).
+// 每一层注册都要留下痕迹/ Every registration layer must leave a mark.
 
 
 
@@ -46,13 +46,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
 
-/// **每一层注册都要在模型里留下痕迹（B781）** / Every registration layer must leave a mark in the model (B781).
+/// **每一层注册都要在模型里留下痕迹** / Every registration layer must leave a mark in the model.
 
 /// </summary>
 
 /// <remarks>
 
-/// B780 记录过"后四层注册不新增 token"，据此判断它们是空转。**那个结论是错的，因为量错了计数器**：
+/// 记录过"后四层注册不新增 token"，据此判断它们是空转。**那个结论是错的，因为量错了计数器**：
 
 /// `Tokens.Tokens` 只装**决策变量**，而载重/总重/力矩注册的是**表达式符号**（派生量，本来就不是决策变量）。
 
@@ -66,7 +66,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 ///
 
-/// B780 recorded "the last four layers add no tokens" and concluded they did nothing. **That conclusion was wrong because the wrong counter was read**: `Tokens.Tokens` holds only
+/// recorded "the last four layers add no tokens" and concluded they did nothing. **That conclusion was wrong because the wrong counter was read**: `Tokens.Tokens` holds only
 
 /// **decision variables**, while payload/total-weight/torque register **expression symbols** (derived quantities that are not decision variables by design). Reading all three
 
@@ -210,7 +210,7 @@ public class Demo2RegistrationDeltaTests {
 
     /// <summary>
 
-    /// **七个域走完，模型里有目标** / After all seven domains, the model carries an objective (B782).
+    /// **七个域走完，模型里有目标** / After all seven domains, the model carries an objective.
 
     /// </summary>
 
@@ -220,7 +220,7 @@ public class Demo2RegistrationDeltaTests {
 
     /// 约束行数比只注册配载时多。
 
-    /// 只注册子模型（B780–B781 的做法）会得到"有变量、有行、没有目标"的模型——**求解器于是拿默认目标解出一个与业务无关的答案**，
+    /// 只注册子模型会得到"有变量、有行、没有目标"的模型——**求解器于是拿默认目标解出一个与业务无关的答案**，
 
     /// 而整个过程没有任何报错。这条判据钉的就是那个缺口。
 
@@ -228,7 +228,7 @@ public class Demo2RegistrationDeltaTests {
 
     /// Five paired points: all seven domains register; the objective parts are non-empty; **an effectiveness-domain objective is named** (`express` or `loading`); the
 
-    /// payload-derived symbol is in the symbol table; and there are more rows than stowage alone produced. Registering only the sub-models (what B780–B781 did) yields
+    /// payload-derived symbol is in the symbol table; and there are more rows than stowage alone produced. Registering only the sub-models (what did) yields
 
     /// "variables, rows, no objective" — **so the solver picks a default objective and returns an answer unrelated to the business goal**, with nothing reporting it. This
 
@@ -281,17 +281,17 @@ public class Demo2RegistrationDeltaTests {
 
 
     /// <summary>
-    /// **表达式符号的单式会被约束管线展开，不是退化** / Monomials holding expression symbols get expanded, they do not degenerate (B786).
+    /// **表达式符号的单式会被约束管线展开，不是退化** / Monomials holding expression symbols get expanded, they do not degenerate.
     /// </summary>
     /// <remarks>
-    /// B785 数出示例请求的 52 行里 35 行的左端含 `stowage_*` / `loaded_*` 这类表达式符号，并据此怀疑它们退化成常数比较。
-    /// **那怀疑是错的**：B786 在"配载 + 重心"这个本来可行的模型上做了 A/B——同一行业载下限，一种直接拿表达式符号建、一种先手工展开再建，
+    /// 数出示例请求的 52 行里 35 行的左端含 `stowage_*` / `loaded_*` 这类表达式符号，并据此怀疑它们退化成常数比较。
+    /// **那怀疑是错的**： 在"配载 + 重心"这个本来可行的模型上做了 A/B——同一行业载下限，一种直接拿表达式符号建、一种先手工展开再建，
     /// **两种都可行**。`Constraint.Create` 走 `ExpandIntermediateSymbols` 递归展开，所以表达式符号是完全受支持的写法。
     ///
     /// 这条判据钉的是**正向不变量**：拿表达式符号建的行能被接受，而且三元模型建得出来——不是"有多少行可疑"。
     ///
-    /// B785 counted 35 of 52 rows whose left side holds expression symbols such as `stowage_*` or `loaded_*` and suspected they degenerate into constant
-    /// comparisons. **That suspicion was wrong**: B786 ran an A/B on the otherwise feasible stowage + MAC model — the same payload floor row built once straight from
+    /// counted 35 of 52 rows whose left side holds expression symbols such as `stowage_*` or `loaded_*` and suspected they degenerate into constant
+    /// comparisons. **That suspicion was wrong**: ran an A/B on the otherwise feasible stowage + MAC model — the same payload floor row built once straight from
     /// the expression symbols and once pre-expanded by hand — and **both are feasible**. `Constraint.Create` goes through `ExpandIntermediateSymbols`, which expands
     /// recursively, so expression symbols are a fully supported form. This criterion pins the **positive invariant**: a row built on expression symbols is accepted and
     /// the triad model builds — not "how many rows look suspect".
@@ -353,19 +353,19 @@ public class Demo2RegistrationDeltaTests {
 
 
     /// <summary>
-    /// **表面密度系数等于货物重量，不是 1550 倍** / The surface-density coefficients are the cargo weights, not 1550x them (B787).
+    /// **表面密度系数等于货物重量，不是 1550 倍** / The surface-density coefficients are the cargo weights, not 1550x them.
     /// </summary>
     /// <remarks>
     /// 表面密度 = `装载重量 / 舱位面积`。示例请求里舱位是 1.0 x 1.0 米，面积 1.0 平方米，所以系数**应当就是货物重量** 8 / 6 / 4。
     ///
-    /// **B787 实测过不是**：`Aircraft.AggregationInitializer` 把矩形边界**硬编码成英寸**（`* 0.0254`），而力臂走 `ToModelLength`
+    /// **实测过不是**：`Aircraft.AggregationInitializer` 把矩形边界**硬编码成英寸**（`* 0.0254`），而力臂走 `ToModelLength`
     /// 按 `input.LengthUnit` 换算。请求里写的是米，于是面积变成 `0.0254 x 0.0254 = 0.000645` 平方米，系数被放大 1550 倍
     /// （8 kg 变成 12400），`≤ 1000` 的上限连**一件货**都装不下——表现为"任何正业载都不可行"，而所有约束看上去都加对了。
     ///
     /// 这条判据钉的就是那个系数：单位换算一旦再退回硬编码，它会立刻变红。
     ///
     /// Surface density is `loaded weight / position area`. The sample positions are 1.0 x 1.0 metres, so the area is 1.0 square metre and the coefficients **should be
-    /// exactly the cargo weights** 8 / 6 / 4. **B787 measured that they were not**: the aircraft aggregation initializer **hard-coded inches** for the rectangle
+    /// exactly the cargo weights** 8 / 6 / 4. **measured that they were not**: the aircraft aggregation initializer **hard-coded inches** for the rectangle
     /// (`* 0.0254`) while the arms went through `ToModelLength`, which honours `input.LengthUnit`. Requests are in metres, so the area became `0.0254 x 0.0254 =
     /// 0.000645` square metres and the coefficients were inflated 1550x (8 kg became 12400), leaving the `<= 1000` cap unable to fit **a single piece** — showing up as
     /// "any positive payload is infeasible" while every constraint looked correctly added. This criterion pins that coefficient: if the conversion ever goes back to
@@ -403,7 +403,7 @@ public class Demo2RegistrationDeltaTests {
     }
     /// <summary>
 
-    /// **模型是"可求解形状"：每个目标项都有方向和单式** / The model is solvable-shaped: every objective part has a direction and monomials (B783).
+    /// **模型是"可求解形状"：每个目标项都有方向和单式** / The model is solvable-shaped: every objective part has a direction and monomials.
 
     /// </summary>
 
@@ -481,7 +481,7 @@ public class Demo2RegistrationDeltaTests {
 
 
     /// <summary>
-    /// **基线里那份重复的货物调整行不该出现** / The baseline's duplicate item-adjustment rows must not appear (B794).
+    /// **基线里那份重复的货物调整行不该出现** / The baseline's duplicate item-adjustment rows must not appear.
     /// </summary>
     /// <remarks>
     /// 基线有 `ItemAssignmentLimit.kt` 与 `ItemAdjustmentLimit.kt` 两份文件，**加的是同一行**（`loaded[i] eq true`），
@@ -522,16 +522,16 @@ public class Demo2RegistrationDeltaTests {
 #if SCIP_INTEGRATION
 
     /// <summary>
-    /// **示例请求现在真的能解出来** / The sample request really solves now (B789).
+    /// **示例请求现在真的能解出来** / The sample request really solves now.
     /// </summary>
     /// <remarks>
-    /// B783—B788 一路看到的"示例请求不可行"是**两个单位缺陷**叠加的结果，B787 修了矩形的单位、B789 修了力矩的换算因子，
+    /// 一路看到的"示例请求不可行"是**两个单位缺陷**叠加的结果，修了矩形的单位、 修了力矩的换算因子，
     /// 于是这条判据从"回话如实报不可行"翻面成"真的解得出可行解"。
     ///
     /// 四点成对：求解成功 / 拿到变量取值 / 目标值有限 / **业载下限确实被满足**（地板 0.6 时 `≥ 10.8`，解出来的载荷不能是零）。
     /// 最后一点最要紧：**只钉"求解成功"会放过一个把载荷全钉零却依然可行的模型**——那种解是可行的，但什么都没装。
     ///
-    /// What B783—B788 kept observing as "the sample request is infeasible" was **two unit defects stacked**: B787 fixed the rectangle's unit and B789 fixed the moment
+    /// What kept observing as "the sample request is infeasible" was **two unit defects stacked**: fixed the rectangle's unit and fixed the moment
     /// conversion factor, so this criterion flips from "report infeasibility honestly" to "actually produce a feasible solution". Four paired points: the solve succeeds;
     /// variable values come back; the objective is finite; and **the payload floor is really met** (a 0.6 floor means `>= 10.8`, so the loaded weight cannot be zero).
     /// The last one matters most: **pinning "the solve succeeded" alone would let through a model that pinning everything to zero is still feasible** — a feasible answer
@@ -567,17 +567,17 @@ public class Demo2RegistrationDeltaTests {
 
 
     /// <summary>
-    /// **每一条适航行单独放开装载都不再挡路** / No single airworthiness row blocks loading any more (B788/B789).
+    /// **每一条适航行单独放开装载都不再挡路** / No single airworthiness row blocks loading any more.
     /// </summary>
     /// <remarks>
-    /// B788 用"每次只放一行 + 一条正业载下限"的隔离实验指认出三条挡路的行——`target_longitudinal_moment_limit`、
-    /// `lateral_imbalance_limit`、`envelope_limit`，**三条都读力矩**。B789 修掉力矩的换算因子之后，它们全部放开。
+    /// 用"每次只放一行 + 一条正业载下限"的隔离实验指认出三条挡路的行——`target_longitudinal_moment_limit`、
+    /// `lateral_imbalance_limit`、`envelope_limit`，**三条都读力矩**。 修掉力矩的换算因子之后，它们全部放开。
     ///
     /// 这条判据现在钉的是**十一行全部可行**。力矩的单位换算一旦再退回"力臂按英寸、边界按米"，
     /// 那三条会立刻重新变红——**这就是它比"能不能求解"更早报警的地方**。
     ///
-    /// B788 used "keep exactly one row plus a positive payload floor" to name three blocking rows — `target_longitudinal_moment_limit`, `lateral_imbalance_limit` and
-    /// `envelope_limit`, **all three reading torque**. Once B789 fixed the torque conversion factor they all let loading through. This criterion now pins **all eleven
+    /// used "keep exactly one row plus a positive payload floor" to name three blocking rows — `target_longitudinal_moment_limit`, `lateral_imbalance_limit` and
+    /// `envelope_limit`, **all three reading torque**. Once fixed the torque conversion factor they all let loading through. This criterion now pins **all eleven
     /// feasible**: if the unit conversion ever goes back to "arms in inches, bounds in metres", those three turn red immediately — **which is where it warns earlier
     /// than "can we solve at all"**.
     /// </remarks>

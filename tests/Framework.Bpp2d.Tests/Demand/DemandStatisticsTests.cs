@@ -1,4 +1,4 @@
-// 需求量统计（B636）的判据 / Criteria for the demand statistics (B636).
+// 需求量统计的判据 / Criteria for the demand statistics.
 
 using System;
 using FluentAssertions;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.Demand;
 
 /// <summary>
-/// **需求量统计（B636）** / The demand statistics (B636).
+/// **需求量统计** / The demand statistics.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**同类才合并**（`Amount` 与 `Area` 跨类型必须失败）、**缩放按类型分别处理**，以及**默认量纲域是离散**。

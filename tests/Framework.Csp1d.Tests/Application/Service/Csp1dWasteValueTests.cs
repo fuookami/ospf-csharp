@@ -23,16 +23,16 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **余料代理的绝对值，以及超产面积这一路** / The rest-material proxy's absolute value, and the over-production area path.
 /// </summary>
 /// <remarks>
-/// **B374 记的两条缺口**：
+/// **记的两条缺口**：
 ///
 /// 1. "`RestWidthByMaterialLengthProxy` 的绝对值无判据"——只钉了"4 次 = 4 倍"的**比值**；
 /// 2. "超产面积那一路仍无判据"——夹具成本高，那一批没做。
 ///
-/// 本批把两条一起补上。**绝对值判据比比值强**：比值判据对"余宽与长度乘反了"、
+/// 这里把两条一起补上。**绝对值判据比比值强**：比值判据对"余宽与长度乘反了"、
 /// "乘了别的量"都**不敏感**，绝对值判据当场就红。
 ///
-/// **The two gaps recorded in B374**: (1) the proxy's absolute value had no criterion — only the **ratio** "4 uses is 4 times"; (2) the over-production area path had none,
-/// because its fixture is expensive. This batch closes both. **An absolute criterion is stronger than a ratio**: a ratio is **insensitive** to "width and length
+/// **The two gaps recorded**: (1) the proxy's absolute value had no criterion — only the **ratio** "4 uses is 4 times"; (2) the over-production area path had none,
+/// because its fixture is expensive. closes both. **An absolute criterion is stronger than a ratio**: a ratio is **insensitive** to "width and length
 /// swapped" or "multiplied by something else", while an absolute one fails immediately.
 /// </remarks>
 public class Csp1dWasteValueTests {
@@ -166,14 +166,14 @@ public class Csp1dWasteValueTests {
 
     /// <summary>**超产面积 = 产品最大宽度 × 超产量** / Over-production area = product max width times the over-produced amount.</summary>
     /// <remarks>
-    /// **B374 记的缺口**：超产面积一路无判据。
+    /// **记的缺口**：超产面积一路无判据。
     ///
     /// 产品宽 60mm、超产量 **2** ⇒ 面积 **120**。
     ///
     /// 这条要 `Yield` 聚合在场（否则整段被 `Yield is not null` 跳过），
     /// 所以夹具要配 `YieldConfig`。**这也是该路一直没判据的原因。**
     ///
-    /// **B374's gap**: the over-production area path had no criterion. Product width 60mm with an over-produced amount of **2** gives an area of **120**. The criterion needs
+    /// **the earlier gap**: the over-production area path had no criterion. Product width 60mm with an over-produced amount of **2** gives an area of **120**. The criterion needs
     /// the `Yield` aggregation present (otherwise the whole block is skipped by `Yield is not null`), so the fixture must supply a `YieldConfig` — **the reason this path
     /// went untested**.
     /// </remarks>

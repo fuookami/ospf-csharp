@@ -84,11 +84,11 @@ public sealed class AircraftLoadingDemo
         // 4. 注册七个域 / Register all seven domains
         //
         // **走 `DomainPipelineContext.Register` 而不是逐个子模型注册**：每个域的 `Register` 除了子模型，还会把该域
-        // 的管线表跑一遍——约束加了，**目标也加了**。B780–B781 这两批只注册子模型，所以模型里有变量、有约束、
+        // 的管线表跑一遍——约束加了，**目标也加了**。这两批只注册子模型，所以模型里有变量、有约束、
         // **没有目标**；求解器会拿一个默认目标解出一个看起来合理的答案，而那个答案与业务目标无关。
         //
         // **Go through `DomainPipelineContext.Register` rather than registering sub-models one by one**: besides the sub-models, each domain's `Register` runs that
-        // domain's pipeline list, which adds constraints **and objectives**. B780–B781 only registered sub-models, so the model had variables and rows but **no objective**;
+        // domain's pipeline list, which adds constraints **and objectives**. only registered sub-models, so the model had variables and rows but **no objective**;
         // a solver would then pick a default objective and return a plausible-looking answer unrelated to the business goal.
         Try registered = _pipelineContext.Register(StowageMode.FullLoad, Parameter, _metaModel);
         if (registered is Failed<Success, ErrorCode, Error<ErrorCode>> registrationFailed) {
@@ -97,10 +97,10 @@ public sealed class AircraftLoadingDemo
         }
         // 5. 目标与求解还没接 / The objective and the solve are not wired yet
         //
-        // **这一批只到"模型里真的有东西"为止**。求解需要 `SCIP_INTEGRATION` 开关，把"演示能不能跑"绑在一个可选依赖上
+        // **这里只到"模型里真的有东西"为止**。求解需要 `SCIP_INTEGRATION` 开关，把"演示能不能跑"绑在一个可选依赖上
         // 会让默认全量测试失去这条判据——**所以先钉"注册成功 + 模型非空"，求解单独一批。**
-        // **This batch stops at "the model really holds something".** Solving needs the `SCIP_INTEGRATION` switch, and tying "can the demo run" to an optional dependency
-        // would cost the default suite that criterion — **so this batch pins "registration succeeded and the model is non-empty", and the solve gets its own batch.**
+ // ** stops at "the model really holds something".** Solving needs the `SCIP_INTEGRATION` switch, and tying "can the demo run" to an optional dependency
+        // would cost the default suite that criterion — **so the criterion pins "registration succeeded and the model is non-empty", and the solve gets its own batch.**
         return Results.Ok<Success>(Results.SuccessInstance);
     }
 
@@ -180,11 +180,11 @@ public sealed class AircraftLoadingDemo
                 new CargoInput("C2", 6.0, 6, "S2", "D1"),
                 new CargoInput("C3", 4.0, 4, "S1", "D2", RequiresSeparation: true)
             },
-            // **示例请求必须能过飞机初始化器**：B613 给 `PositionInput` 补了 `SpaceId`/`LoadingOrder`/`Geometry`，
+            // **示例请求必须能过飞机初始化器**： 给 `PositionInput` 补了 `SpaceId`/`LoadingOrder`/`Geometry`，
             // 而这里一直没跟上——示例请求会被"物理空间或装载顺序无效"挡在第一步，**演示因此连模型都建不出来**。
             // 现在补上空间表、互不相同的装载顺序与每舱位的矩形边界。
             //
-            // **The sample request must get past the aircraft initialiser**: B613 added `SpaceId`/`LoadingOrder`/`Geometry` to `PositionInput` and this call site never
+            // **The sample request must get past the aircraft initialiser**: added `SpaceId`/`LoadingOrder`/`Geometry` to `PositionInput` and this call site never
             // followed, so the sample request was stopped at the first step by "invalid physical space or loading order" — **the demo could not even build a model**.
             // The space table, distinct loading orders and each position's rectangle bounds are supplied now.
             Spaces: new[]
@@ -205,10 +205,10 @@ public sealed class AircraftLoadingDemo
             // **单位必须写清楚**：`RequestDTO.LengthUnit` 默认是英寸，而示例里的力臂与矩形边界都是**米**。
             // 不写这一行，1.0 x 1.0 的舱位会被算成 `0.0254 x 0.0254 = 0.000645` 平方米，
             // 表面密度系数因此放大 1550 倍（8 kg 变成 12400），`≤ 1000` 的上限连**一件货**都装不下——
-            // 表现为"任何正业载都不可行"，而所有约束看上去都加对了（B787 实测）。
+            // 表现为"任何正业载都不可行"，而所有约束看上去都加对了。
             // **The unit has to be stated**: `RequestDTO.LengthUnit` defaults to inches while the sample's arms and rectangles are in **metres**. Without this line a
             // 1.0 x 1.0 position is read as `0.0254 x 0.0254 = 0.000645` square metres, so the surface-density coefficient is inflated 1550x (8 kg becomes 12400) and the
-            // `<= 1000` cap cannot fit **a single piece** — which shows up as "any positive payload is infeasible" while every constraint looks correctly added (measured in B787).
+            // `<= 1000` cap cannot fit **a single piece** — which shows up as "any positive payload is infeasible" while every constraint looks correctly added (measured).
             LengthUnit: LengthUnitInput.Meter,
             AircraftType: AircraftTypeInput.B737,
             SolvePolicy: new SolvePolicy(),
@@ -229,10 +229,10 @@ public sealed class AircraftLoadingDemo
     /// </summary>
     /// <returns>请求 / The request.</returns>
     /// <remarks>
-    /// B906 量到 demo 造不出必装货，B907 把 `CargoInput.Required` 打通。这份请求是**它的第一个使用方**：
+    /// 量到 demo 造不出必装货，把 `CargoInput.Required` 打通。这份请求是**它的第一个使用方**：
     /// 零装载对必装货**不可行**，于是它才能区分"解出分配"和"什么都没装"——前九批缺的就是这个。
     ///
-    /// B906 measured that the demo cannot produce required cargo and B907 wired `CargoInput.Required`. This request is **its first consumer**: zero loading is **infeasible**
+    /// measured that the demo cannot produce required cargo and wired `CargoInput.Required`. This request is **its first consumer**: zero loading is **infeasible**
     /// for required cargo, so it can tell "decoded assignments" from "nothing was loaded" — what the previous nine batches lacked.
     /// </remarks>
     public static RequestDTO CreateRequiredSampleRequest() {
@@ -246,11 +246,11 @@ public sealed class AircraftLoadingDemo
     /// </summary>
     /// <returns>请求 / The request.</returns>
     /// <remarks>
-    /// B911 量到：三件必装**装不下**（两个舱位各一件），两件必装**可行且零装载不可行**。
-    /// 所以这是**唯一能区分"解出分配"和"什么都没装"的示例请求**——B896–B905 缺的就是它。
+    /// 量到：三件必装**装不下**（两个舱位各一件），两件必装**可行且零装载不可行**。
+    /// 所以这是**唯一能区分"解出分配"和"什么都没装"的示例请求**——缺的就是它。
     ///
-    /// Measured in B911: three required cargo **do not fit** (two positions, one item each) while two are **feasible with zero loading infeasible**. This is therefore the
-    /// **only sample request that can tell "decoded assignments" from "nothing was loaded"** — what B896-B905 lacked.
+    /// Measured: three required cargo **do not fit** (two positions, one item each) while two are **feasible with zero loading infeasible**. This is therefore the
+    /// **only sample request that can tell "decoded assignments" from "nothing was loaded"** — what lacked.
     /// </remarks>
     public static RequestDTO CreatePairRequiredSampleRequest() {
         RequestDTO required = CreateRequiredSampleRequest();
@@ -264,15 +264,15 @@ public sealed class AircraftLoadingDemo
     /// <remarks>
     /// **与全配载示例的唯一差别是每个舱位都带上谓词装载重量规格**：预配载模式下 `Load` 会为每个
     /// `PredicateWeightNeeded` 的舱位建谓词重量变量，它的上界与松弛右端都取自这份规格；没有它，装配阶段就报
-    /// `IllegalArgument`（B800 实测）。
+    /// `IllegalArgument`。
     ///
     /// **为什么不把这个规格塞进 `CreateSampleRequest`**：那会让**每一条既有判据**测到的模型形状都变，
-    /// 而它们与预配载无关（B801 立下的规矩：需要的判据自己带规格，示例请求不替所有调用方做决定）。
+    /// 而它们与预配载无关（立下的规矩：需要的判据自己带规格，示例请求不替所有调用方做决定）。
     ///
     /// **The only difference from the full-load sample is the predicate load weight specification on every position**: in predistribution mode `Load` creates a
     /// predicate weight variable for each `PredicateWeightNeeded` position and takes both its upper bound and the slack right-hand side from this spec; without it
-    /// assembly reports `IllegalArgument` (measured by B800). **Why it is not folded into `CreateSampleRequest`**: that would change the model shape measured by
-    /// **every existing criterion**, none of which is about predistribution (the rule B801 set: criteria that need it bring it themselves).
+    /// assembly reports `IllegalArgument` . **Why it is not folded into `CreateSampleRequest`**: that would change the model shape measured by
+    /// **every existing criterion**, none of which is about predistribution (the rule set: criteria that need it bring it themselves).
     /// </remarks>
     public static RequestDTO CreatePredistributionSampleRequest()
     {

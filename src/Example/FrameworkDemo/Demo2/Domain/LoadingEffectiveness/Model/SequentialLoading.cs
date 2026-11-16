@@ -30,16 +30,16 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 2. **有序对是全组合**，谓词是**严格小于**（顺序小的在前）。
 /// 3. **有序舱位对由调用方传入**（聚合算好的），不在本类里重算。
 /// 4. **条件多项式是 `s[i1,j2] + s[i2,j1] − 2 + ε`**，`ε = NONZERO_TOLERANCE = 1e-10`，
-///    `strictBoundary` **也取这个 ε**——它是真假分支的间隔，不是阈值。取 0.5 会被 `SafeLattice` 拒绝（B620 实测）。
+///    `strictBoundary` **也取这个 ε**——它是真假分支的间隔，不是阈值。取 0.5 会被 `SafeLattice` 拒绝。
 /// 5. **不可放置的组合给恒零符号**，不是跳过。
 /// 6. **符号名带三个元素**：`item_order_reverse_{item1}_{item2}_{position1}_{position2}`。
-///    这依赖 `Item` 与 `StowagePosition` 的 `ToString()` 覆写（B620 补上），否则全部重名。
+///    这依赖 `Item` 与 `StowagePosition` 的 `ToString` 覆写（补上），否则全部重名。
 ///
 /// Aligned with the baseline: one intermediate symbol per (ordered item pair, ordered position pair), meaning "this pair was loaded the wrong way round". Six things must be copied:
 /// **only items carrying a loading sequence are kept** (the baseline's filter), sorted by sequence then `Id`; **ordered pairs are all combinations** under a strict less-than
 /// predicate; **the ordered position pairs come from the caller** rather than being recomputed here; **the condition is `s[i1,j2] + s[i2,j1] − 2 + ε`** with `ε = NONZERO_TOLERANCE
-/// = 1e-10`, and `strictBoundary` **also takes that ε** — it is the true/false gap, not a threshold, and 0.5 is rejected by `SafeLattice` (measured in B620); **an unplaceable combination
-/// gets a constant-zero symbol** rather than being skipped; and **the name carries three elements**, which relies on the `ToString()` overrides added in B620.
+/// = 1e-10`, and `strictBoundary` **also takes that ε** — it is the true/false gap, not a threshold, and 0.5 is rejected by `SafeLattice` (measured); **an unplaceable combination
+/// gets a constant-zero symbol** rather than being skipped; and **the name carries three elements**, which relies on the `ToString` overrides added.
 /// </remarks>
 public sealed class SequentialLoading
 {

@@ -7,16 +7,16 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B806/B832/B833：Benders 路径**绝不编造方案** / The Benders path never invents a plan.
+/// / / ：Benders 路径**绝不编造方案** / The Benders path never invents a plan.
 /// </summary>
 /// <remarks>
 /// 这条判据一路跟着状态的**前进**走，每次改的是"最终拦路虎叫什么"，**不变的是"不许编造"**：
 ///
 /// | 批次 | 状态 | 原因 |
 /// | --- | --- | --- |
-/// | B806 | `BendersModelsNotRegistered` | 主/子模型都是空壳 |
-/// | B832 | `BendersSubModelNotRegistered` | 主问题接了，子问题待接 |
-/// | **B833** | **`BendersSolverUnavailable`** | 两个模型都接了，缺的是求解器 |
+/// | | `BendersModelsNotRegistered` | 主/子模型都是空壳 |
+/// | | `BendersSubModelNotRegistered` | 主问题接了，子问题待接 |
+/// | **** | **`BendersSolverUnavailable`** | 两个模型都接了，缺的是求解器 |
 ///
 /// 判据每次都保留最后三句：`Succeed` 为假、**没有任何分配**、**没有任何渲染**。那三句是这个文件的**存在理由**——
 /// 交出"最优解 + 造出来的分配"比交出一个失败**更有害**，因为调用方无从分辨。

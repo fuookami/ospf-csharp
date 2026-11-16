@@ -218,10 +218,10 @@ public sealed record HyperHeuristicConfig(
             return Invalid($"unsupported configuration version: {Version}");
         }
         // **反序列化缺失的必填字段会变成 `null`**：`Problem` 与 `Algorithms` 在记录上声明为不可空，但 `System.Text.Json`
-        // 不会因此拒绝一份缺少它们的文档。必须先判空，否则 `Validate()` 在 `Algorithms.Count` 上抛 `NullReferenceException`，
+        // 不会因此拒绝一份缺少它们的文档。必须先判空，否则 `Validate` 在 `Algorithms.Count` 上抛 `NullReferenceException`，
         // **调用方拿到的是未处理异常而不是"配置非法"**。
         // **Deserializing a missing required field yields `null`**: `Problem` and `Algorithms` are declared non-nullable on the record, but
-        // `System.Text.Json` does not reject a document lacking them. They must be null-checked first, otherwise `Validate()` throws
+        // `System.Text.Json` does not reject a document lacking them. They must be null-checked first, otherwise `Validate` throws
         // `NullReferenceException` on `Algorithms.Count`, **and the caller gets an unhandled exception instead of "illegal configuration"**.
         if (Problem is null || Algorithms is null) {
             return Invalid("configuration requires a problem and an algorithm list");
@@ -294,9 +294,9 @@ public static class HyperHeuristics {
     public static Result<HyperHeuristicConfig, ErrorCode, Error<ErrorCode>> Create(
         Action<HyperHeuristicBuilder> build) {
         ArgumentNullException.ThrowIfNull(build);
-        // **回调必须在边界内执行**（它可能抛异常），但 `Build()` 已经返回 `Result`，不能再包一层。
+        // **回调必须在边界内执行**（它可能抛异常），但 `Build` 已经返回 `Result`，不能再包一层。
         // 双层包装会得到 `Result<Result<...>>`，编译器只报"无法隐式转换"。
-        // **The callback must run inside the boundary** (it may throw), but `Build()` already returns a `Result` and must not be wrapped
+        // **The callback must run inside the boundary** (it may throw), but `Build` already returns a `Result` and must not be wrapped
         // again. Double wrapping yields `Result<Result<...>>`, and the compiler only reports "cannot convert implicitly".
         var builder = new HyperHeuristicBuilder();
         try {
@@ -400,9 +400,9 @@ public sealed class HyperHeuristicBuilder {
     /// </summary>
     /// <returns>配置 / The configuration.</returns>
     public Result<HyperHeuristicConfig, ErrorCode, Error<ErrorCode>> Build() {
-        // **必须给出 problem**：基线在 `build()` 里直接拒绝缺失的 problem，而不是塞一个默认值。
+        // **必须给出 problem**：基线在 `build` 里直接拒绝缺失的 problem，而不是塞一个默认值。
         // 塞默认值会让一份"忘了声明问题"的配置被当成"用模型问题"的配置，**而运行时会拿一个空模型去求解**。
-        // **A problem is required**: the baseline rejects a missing problem outright in `build()` rather than substituting a default.
+        // **A problem is required**: the baseline rejects a missing problem outright in `build` rather than substituting a default.
         // Substituting one turns "forgot to declare the problem" into "uses the model problem", **and the run then solves against an
         // empty model**.
         if (_problem is null) {

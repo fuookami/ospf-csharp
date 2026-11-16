@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 指示器与遮盖接进指纹 / Indicators and maskings wired into the fingerprint.
 /// </summary>
 /// <remarks>
-/// B1217 把 B1216 补出的 `NativeIndicatorData` 与 B1215 补出的 `NativeMaskingData` 接进 `NativeFingerprint`，
+/// 把 `NativeIndicatorData` 与 `NativeMaskingData` 接进 `NativeFingerprint`，
 /// 补齐基线 schema 阶梯里此前缺席的九个分支。
 ///
-/// B1217 wires the types from B1215/B1216 into the fingerprint, completing the nine previously absent schema rungs.
+/// Wires the indicator and masking types into the fingerprint, completing the nine previously absent schema rungs.
 /// </remarks>
 public class NativeFingerprintIndicatorTests
 {

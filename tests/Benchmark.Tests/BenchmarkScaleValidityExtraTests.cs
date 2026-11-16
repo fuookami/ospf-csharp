@@ -17,11 +17,11 @@ namespace Fuookami.Ospf.Benchmark.Tests;
 /// </summary>
 /// <remarks>
 /// 这三个基准**原本就有测试**，但那些测试问的是"构造对不对"（节点是不是四出边、行数是不是变量数的一半），
-/// **没有一条问"规模参数有没有进到被测路径"**。B291 的教训是：夹具变了、被测路径没变，测出来的趋势就是假的。
+/// **没有一条问"规模参数有没有进到被测路径"**。 的教训是：夹具变了、被测路径没变，测出来的趋势就是假的。
 /// 所以这里只加一个判据：**被测方法返回的计数必须随参数单调增长**。
 ///
 /// These three benchmarks **already had tests**, but those asked "is the construction right" (does every node have four outgoing arcs, is the row count
-/// half the variable count) — **not one asked whether the scale parameter reaches the measured path**. The B291 lesson is that a changed fixture with an
+/// half the variable count) — **not one asked whether the scale parameter reaches the measured path**. The lesson is that a changed fixture with an
 /// unchanged path yields a fake trend. So this adds exactly one criterion: **the measured method's returned count must grow monotonically with the
 /// parameter**.
 /// </remarks>
@@ -125,14 +125,14 @@ public sealed class BenchmarkScaleValidityExtraTests {
     }
     /// <summary>**Benders 基准的规模必须真的进到被测路径** / The Benders benchmark's scale must reach the measured path.</summary>
     /// <remarks>
-    /// B922 用多轮基准量到：`BendersSolve` 三档 **45.4 / 47.1 / 45.6 µs，分配完全相同（129.16 KB）**——
-    /// 夹具**丢掉了 `Dataset`**，三档测的是同一条路径。这正是 B290/B291 记过两次的那类错误，**第三次**。
+    /// 用多轮基准量到：`BendersSolve` 三档 **45.4 / 47.1 / 45.6 µs，分配完全相同（129.16 KB）**——
+    /// 夹具**丢掉了 `Dataset`**，三档测的是同一条路径。这正是 / 记过两次的那类错误，**第三次**。
     ///
     /// 判据不看耗时（耗时判据会抖），而是看**主问题变量数**：`Dataset` 变了它必须跟着变。
     /// 修复后 `small=4 / medium=6 / large=8`。
     ///
-    /// B922 measured with multi-round benchmarks: `BendersSolve` across three tiers was **45.4 / 47.1 / 45.6 µs with identical 129.16 KB allocations** — the fixture
-    /// **dropped `Dataset`** and all three tiers measured one path. This is the class of mistake recorded twice already (B290/B291), now **the third time**. The
+    /// measured with multi-round benchmarks: `BendersSolve` across three tiers was **45.4 / 47.1 / 45.6 µs with identical 129.16 KB allocations** — the fixture
+    /// **dropped `Dataset`** and all three tiers measured one path. This is the class of mistake recorded twice already, now **the third time**. The
     /// criterion looks at **the master variable count**, not the timing (timings jitter): changing `Dataset` must change it. After the fix: `small=4 / medium=6 / large=8`.
     /// </remarks>
     [Fact]
@@ -157,11 +157,11 @@ public sealed class BenchmarkScaleValidityExtraTests {
 
     /// <summary>**checkpoint 两个基准的规模必须真的进到被测路径** / The two checkpoint benchmarks must carry the scale.</summary>
     /// <remarks>
-    /// `BendersSolve` 刚被抓到丢了 `Dataset`（B922），**同一张夹具的邻居必须一起量**——这是 B923 存在的理由。
-    /// 两个基准都走 `_directModel.Snapshot()`，而 `_directModel` 按 `count` 建，所以**编码长度应当随档位增长**。
+    /// `BendersSolve` 刚被抓到丢了 `Dataset`，**同一张夹具的邻居必须一起量**——这是 存在的理由。
+    /// 两个基准都走 `_directModel.Snapshot`，而 `_directModel` 按 `count` 建，所以**编码长度应当随档位增长**。
     ///
-    /// B922 caught `BendersSolve` dropping `Dataset`; **the neighbours on the same fixture must be measured too**, which is why B923 exists. Both benchmarks go through
-    /// `_directModel.Snapshot()`, which is built from `count`, so **the encoded length must grow with the tier**.
+    /// caught `BendersSolve` dropping `Dataset`; **the neighbours on the same fixture must be measured too**, which is why exists. Both benchmarks go through
+    /// `_directModel.Snapshot`, which is built from `count`, so **the encoded length must grow with the tier**.
     /// </remarks>
     [Fact]
     public void CheckpointBenchmarks_ShouldScaleWithTheDataset() {
@@ -221,9 +221,9 @@ public sealed class BenchmarkScaleValidityExtraTests {
 
     /// <summary>**可选时长降阶随档位增长** / Optional-duration lowering grows with the tier.</summary>
     /// <remarks>
-    /// 这个夹具此前**写死 3 个 optional 作业**（B924 量到），所以三档返回同一个数——和 `BendersSolve` 丢 `Dataset` 是同一类问题。
+    /// 这个夹具此前**写死 3 个 optional 作业**，所以三档返回同一个数——和 `BendersSolve` 丢 `Dataset` 是同一类问题。
     ///
-    /// This fixture **hard-coded 3 optional jobs** (measured in B924), so all three tiers returned the same number — the same class of problem as `BendersSolve`
+    /// This fixture **hard-coded 3 optional jobs** (measured), so all three tiers returned the same number — the same class of problem as `BendersSolve`
     /// dropping `Dataset`.
     /// </remarks>
     [Fact]
@@ -267,9 +267,9 @@ public sealed class BenchmarkScaleValidityExtraTests {
     /// <remarks>
     /// 多轮基准量到 `VariableDurationSchedulingSolve` 三档 **209.2 / 201.0 / 198.4 µs，分配完全相同（317.27 KB）**——
     /// 三份 `BuildSolvableSchedulingModel` 的作业数**全部写死**（4 / 3 / 3），`Dataset` 到不了被测路径。
-    /// **这是同一类问题的第四次**（B922 BendersSolve、B923 邻居、B924 两个降阶夹具）。
+    /// **这是同一类问题的第四次**（ BendersSolve、 邻居、 两个降阶夹具）。
     ///
-    /// **判据不读结果字符串**：`SchedulingSolve` 返回的是 `ToString()`，长度与作业数无关（实测三档都是 2910 字符）。
+    /// **判据不读结果字符串**：`SchedulingSolve` 返回的是 `ToString`，长度与作业数无关（实测三档都是 2910 字符）。
     /// 改读**求解器真正消费的那个模型**的变量数。
     ///
     /// Multi-round measurement found `VariableDurationSchedulingSolve` at **209.2 / 201.0 / 198.4 µs with identical 317.27 KB allocations** — all three
@@ -290,17 +290,17 @@ public sealed class BenchmarkScaleValidityExtraTests {
     }
     /// <summary>**未覆盖的基准方法逐个量完** / The previously uncovered benchmark methods, measured one by one.</summary>
     /// <remarks>
-    /// B922—B924 修完 `ConstraintProgrammingBenchmark` 之后，这一批把另外四个基准类里**没被判据覆盖**的方法量一遍。
+    /// 修完 `ConstraintProgrammingBenchmark` 之后，这里把另外四个基准类里**没被判据覆盖**的方法量一遍。
     /// 结果分两类：**能当规模信号**的，和**不能的**。**不能的那些必须把原因写下来**，否则下一个人还会拿它当信号。
     ///
-    /// After B922-B924 fixed `ConstraintProgrammingBenchmark`, this batch measures the methods the criteria did **not** cover across the other four benchmark
+    /// After fixed `ConstraintProgrammingBenchmark`, measures the methods the criteria did **not** cover across the other four benchmark
     /// classes. They fall into two groups: **usable as a scale signal** and **not**. **The unusable ones need their reason on record**, otherwise the next person
     /// reaches for them again.
     /// </remarks>
     [Fact]
     public void UncoveredBenchmarkMethods_ShouldBeMeasuredOneByOne() {
-        // **能当规模信号的**：逐个断言严格增长，不做求和（B924 的教训）。
-        // **Usable as a scale signal**: each asserted to grow strictly, never summed (the B924 lesson).
+        // **能当规模信号的**：逐个断言严格增长，不做求和。
+        // **Usable as a scale signal**: each asserted to grow strictly, never summed (the lesson).
         Tiers("core transpose", "small", "medium", "large", static dataset => {
             var benchmark = new CoreHotPathBenchmark { Dataset = dataset };
             benchmark.Setup();

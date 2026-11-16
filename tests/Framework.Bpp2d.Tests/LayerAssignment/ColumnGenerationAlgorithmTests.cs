@@ -1,4 +1,4 @@
-// 列生成算法（B646）的判据 / Criteria for the column-generation algorithm (B646).
+// 列生成算法的判据 / Criteria for the column-generation algorithm.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **列生成算法（B646）** / The column-generation algorithm (B646).
+/// **列生成算法** / The column-generation algorithm.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**候选为空不计数**、**上限标记在循环之后判**、**没有求解器就正常结束**、**求解结果先落盘再建列**。

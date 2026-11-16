@@ -11,19 +11,19 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **`Enabled` 从"恒真壳"变成真判断（B575）** / `Enabled` goes from an always-true shell to a real decision (B575).
+/// **`Enabled` 从"恒真壳"变成真判断** / `Enabled` goes from an always-true shell to a real decision.
 /// </summary>
 /// <remarks>
-/// 之前它是 `// TODO: Port from Kotlin Position.enabled()` + `return new PositionCapability(true)`——**所有组合都合法**。
+/// 之前它是 `// TODO: Port from Kotlin Position.enabled` + `return new PositionCapability(true)`——**所有组合都合法**。
 /// 于是"主舱不能装下舱货"、"散货舱只装散货"这些规则一条都没生效，而 `Stowage`/`Load` 建在上面的每一列都是错的。
 ///
 /// 判据按**规则族**成对写：每条规则一个"该拒绝"、一个"该通过"，拒绝时还要断言**原因**。
-/// 只测拒绝会让"全拒绝"通过，只测通过会让"全通过"（本批修的就是这个）通过。
+/// 只测拒绝会让"全拒绝"通过，只测通过会让"全通过"（这里修的就是这个）通过。
 ///
-/// It used to be `// TODO: Port from Kotlin Position.enabled()` plus `return new PositionCapability(true)` — **every combination allowed**. So "main deck takes no lower-deck cargo",
+/// It used to be `// TODO: Port from Kotlin Position.enabled` plus `return new PositionCapability(true)` — **every combination allowed**. So "main deck takes no lower-deck cargo",
 /// "a bulk hold takes only bulk" and the rest were all inert, and every column `Stowage`/`Load` built on top was wrong. The criteria are **paired per rule family**: one "must refuse"
 /// and one "must allow" per rule, and a refusal also has to name **which rule** fired. Testing refusals only would pass if everything refused; testing passes only would pass the
-/// all-allow shell this batch removes.
+/// all-allow shell.
 /// </remarks>
 public class Demo2PositionEnabledTests {
     private static Item MakeItem(

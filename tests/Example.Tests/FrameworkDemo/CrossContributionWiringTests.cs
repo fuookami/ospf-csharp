@@ -19,19 +19,19 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// Cross-contribution pruning must **actually happen on a real generation path**, not merely exist as a class.
 /// </summary>
 /// <remarks>
-/// B302 写了判定、B303 写了投影器，但 **`GenerationCollector` 的 `crossContributionProjector` 参数
+/// 写了判定、 写了投影器，但 **`GenerationCollector` 的 `crossContributionProjector` 参数
 /// 从来没有被任何生成器传入过**——于是跨贡献剪枝在真实运行中**从不发生**，
 /// 而策略枚举、计数器、判定函数全都在，看起来一切正常。
 ///
-/// B315 用 `CrossContributionProjector.ForGenerator<V>()` 把四个生成器全部接上。
+/// 用 `CrossContributionProjector.ForGenerator<V>` 把四个生成器全部接上。
 ///
 /// **本文件的判据是差分**：同一次生成，只切换"策略 + 剪枝开关"，产出条数必须不同。
 /// 若投影器没接上，两种配置的产出**完全一样**——而任何单边断言（比如"产出非空"）都不会失败。
 ///
-/// B302 wrote the decision and B303 the projector, but **no generator ever passed `GenerationCollector`'s `crossContributionProjector`** — so cross-contribution
+/// wrote the decision and the projector, but **no generator ever passed `GenerationCollector`'s `crossContributionProjector`** — so cross-contribution
 /// pruning **never happened in a real run**, while the strategy enum, the counters and the decision function were all present and looked fine.
 ///
-/// B315 wires all four generators through `CrossContributionProjector.ForGenerator<V>()`.
+/// wires all four generators through `CrossContributionProjector.ForGenerator<V>`.
 ///
 /// **The criterion here is differential**: in one generation, toggling only "strategy plus pruning switch" must change the accepted count. If the projector were not
 /// wired, both configurations would produce **identical results** — and any one-sided assertion (such as "output is non-empty") would never fail.
@@ -82,7 +82,7 @@ public class CrossContributionWiringTests {
     ///
     /// **顺序不能反**：收集器的语义是"**已有方案支配新候选**时拒绝新候选"，
     /// 所以必须让**更优的 60mm 先到**，50mm 后到时才会被剪掉。若 50mm 先到，60mm 后到，
-    /// 两者互不支配（60mm 不"被"50mm 支配），**两条都会留下**——这一条我在本批实际踩过。
+    /// 两者互不支配（60mm 不"被"50mm 支配），**两条都会留下**——这一条我在这里实际踩过。
     ///
     /// **This input exists for `NSame` and cannot be dropped.** `NSame` emits one single-slice plan per "demand × width"; if the two widths belong to **different
     /// products** their contributions are incomparable (A does not dominate B) and **the dominance decision never fires**.

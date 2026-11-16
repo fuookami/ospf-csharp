@@ -158,10 +158,10 @@ public sealed class PackerGeometryTests {
 
     /// <summary>**放置通过货物自己的形状解析，而不是返回占位对象** / A placement resolves its real shape instead of a placeholder.</summary>
     /// <remarks>
-    /// 原先 `ResolvedPackingShape()` 返回 `new { Axis = (Axis3?)null }` —— 一个既无尺寸也无半径的匿名对象。
+    /// 原先 `ResolvedPackingShape` 返回 `new { Axis = (Axis3?)null }` —— 一个既无尺寸也无半径的匿名对象。
     /// **任何按它算包围盒的代码都只能得到零尺寸**，而零尺寸看起来和"没有体积"完全一样。
     ///
-    /// `ResolvedPackingShape()` used to return `new { Axis = (Axis3?)null }` — an anonymous object with neither extents nor a radius. **Any bounding box
+    /// `ResolvedPackingShape` used to return `new { Axis = (Axis3?)null }` — an anonymous object with neither extents nor a radius. **Any bounding box
     /// derived from it could only be zero-sized**, and a zero-sized box looks exactly like "has no volume".
     /// </remarks>
     [Fact]

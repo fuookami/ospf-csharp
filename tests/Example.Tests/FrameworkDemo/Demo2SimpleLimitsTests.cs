@@ -22,7 +22,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **三个简单上限（B595）** / The three simple bounds (B595).
+/// **三个简单上限** / The three simple bounds.
 /// </summary>
 /// <remarks>
 /// 业载、总重、CLIM 三条限制都是"一行或两行不等式"，没有插值也没有分支表。它们的风险全在**细节**上：
@@ -312,12 +312,12 @@ public class Demo2SimpleLimitsTests {
     /// **CLIM：窄体机上调用是调用方错误** / CLIM: invoking it on a narrow body is a caller error.
     /// </summary>
     /// <remarks>
-    /// 窄体机不注册 CLIM（B593 已钉住）。若这里静默成功，调用方会以为横向不平衡受约束，而模型里没有。
+    /// 窄体机不注册 CLIM。若这里静默成功，调用方会以为横向不平衡受约束，而模型里没有。
     ///
     /// **`MaxCLIM` 必须先注册成功**：否则"最大 CLIM 缺符号"那道守卫也会拦住，两条守卫里只要有一条还在，判据就绿——
     /// 这条变异（把 CLIM 符号换成横向力矩）第一次就是这样存活的。先让第二个守卫不触发，才只剩 CLIM 这一条在拦。
     ///
-    /// Narrow bodies register no CLIM (pinned in B593). Succeeding silently would tell the caller lateral imbalance is bounded when nothing is in the model.
+    /// Narrow bodies register no CLIM (pinned). Succeeding silently would tell the caller lateral imbalance is bounded when nothing is in the model.
     /// **`MaxCLIM` must register successfully first**: otherwise the "maximum CLIM missing" guard also fires and the criterion stays green while either guard survives — which is
     /// exactly how a mutation (substituting the lateral torque for the CLIM symbol) survived the first time. Disarming the second guard leaves only the CLIM one to catch it.
     /// </remarks>

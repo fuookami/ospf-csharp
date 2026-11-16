@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>**真实求解留下的数字** / The numbers a real solve leaves behind.</summary>
 /// <remarks>
-/// 前面几批比的是"字段在不在"（B940/B941）和"属性挂在哪"（B942），**都比不上"解出来是什么"**：一条约束没进模型时，
+/// 前面几批比的是"字段在不在"和"属性挂在哪"，**都比不上"解出来是什么"**：一条约束没进模型时，
 /// 字段和属性照样齐全，**只有结果会变**。
 ///
 /// 这里钉三样东西，都从**响应本身**读，不读源码：
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// **数字是先探针量出来的，不是猜的**：探针跑完才写下这些值。
 ///
-/// The earlier batches compared field presence (B940/B941) and property placement (B942); **neither beats "what came out of the solve"** — when a constraint never reaches
+/// Earlier work compared field presence and property placement; **neither beats "what came out of the solve"** — when a constraint never reaches
 /// the model, the fields and properties stay complete and **only the result changes**. Three things are pinned here, all read from the **response itself**, never from
 /// source: the row/symbol/objective counts (**one fewer constraint and it moves**), the non-zero variable count, and the status with its objective.
 /// **The numbers were measured by a probe first, not guessed.**

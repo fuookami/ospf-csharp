@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Core.Plugin.Scip;
 /// **基线的 SCIP 文件里有一个自己的 `ScipFixedIntegerLpBackend` 类，把"降阶 → dump → 求解 → 取对偶"
 /// 又写了一遍。**
 ///
-/// **本仓不照抄那个重复：** **B1279 已经把这条链抽成了一层与后端无关的实现
+/// **本仓不照抄那个重复：** **这条链已经抽成了一层与后端无关的实现
 /// （`LinearSolverFixedIntegerLpSolver`），而 `ScipLinearSolver` 与 `GurobiLinearSolver`
 /// 都实现同一个 `IAbstractLinearSolver`。**
 ///
@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Plugin.Scip;
 ///
 /// **This is the counterpart of `scipFixedIntegerLpBackend`.** **The baseline's SCIP file carries its own
 /// `ScipFixedIntegerLpBackend` class which writes the "lower → dump → solve → duals" chain a second time.** **This repo does not
-/// copy that duplication: B1279 already extracted the chain into a backend-neutral layer, and `ScipLinearSolver` and
+/// copy that duplication: the chain is already extracted into a backend-neutral layer, and `ScipLinearSolver` and
 /// `GurobiLinearSolver` implement the same `IAbstractLinearSolver`.** **So the two plugin factories are now &lt;b&gt;the same
 /// sentence with a different solver&lt;/b&gt; — not less code for its own sake, but the baseline's duplication removed, which turns
 /// "both backends behave the same" into a structural fact instead of something a person must maintain.**
@@ -62,14 +62,14 @@ public static class ScipFixedIntegerLpBackend
     /// **是否提供原生区间（为何是 false）** / Whether native ranges are supplied, and why not.
     /// </summary>
     /// <remarks>
-    /// **B1289 查清了到底差什么：** **`ScipNative.cs` 一次导入 53 个 SCIP 函数，其中&lt;b&gt;没有任何一个&lt;/b&gt;与 RHS 区间、灵敏度或最优基有关。**
+    /// **差的东西很具体：** **`ScipNative.cs` 一次导入 53 个 SCIP 函数，其中&lt;b&gt;没有任何一个&lt;/b&gt;与 RHS 区间、灵敏度或最优基有关。**
     ///
     /// **SCIP 也没有 Gurobi 那种 `SARHSLow`／`SARHSUp`：** **它的等价做法是"把 RHS 挪一点再解一次"——而那正是 `ConstraintPerturbationPipeline` 已经在做的事。**
     ///
     /// **所以这一端不是"少一块实现"，而是"换一条路走，而那条路已经存在"。**
     /// **判据：`ScipRangingAbsenceTests`。**
     ///
-    /// **B1289 established what is missing: the 53 imported SCIP functions contain none for RHS ranges, sensitivity or an optimal
+    /// **What is missing is specific: the 53 imported SCIP functions contain none for RHS ranges, sensitivity or an optimal
     /// basis, and SCIP has no `SARHSLow`/`SARHSUp` equivalent — its substitute is re-solving with a displaced RHS, which
     /// `ConstraintPerturbationPipeline` already does.** **So this is not "one implementation short" but "there is another road, and
     /// it already exists".** **Criterion: `ScipRangingAbsenceTests`.**

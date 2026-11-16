@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **判据钉住"`Last − First == Count`"，而不是钉住某个具体数值——
 /// 后者在改变 `First` 时会一起变，于是不变量看起来仍然成立。**
 ///
-/// B1191, following the baseline's `DeferredFunctionConstraintRegion`.
+/// Following the baseline's `DeferredFunctionConstraintRegion`.
 ///
 /// **`LastConstraintIndex` is an <b>exclusive</b> index, and that decides every arithmetic on it.**
 ///
@@ -130,7 +130,7 @@ public static class PiecewiseInputBounds
 /// 分段线性函数的结构与 fallback 证明快照 / Piecewise structure and fallback proof snapshot.
 /// </summary>
 /// <remarks>
-/// B1191 按基线 `FunctionExpansion.kt` 的 `UnivariateLinearPiecewiseStructure` 补其
+/// 对齐基线 `FunctionExpansion.kt` 的 `UnivariateLinearPiecewiseStructure` 补其
 /// `ValidateFallbackInputBounds` 部分；**行生成与选择列约束留给后续批次。**
 ///
 /// **这个校验的<b>第一件事</b>是看 `ExplicitM`：**
@@ -144,8 +144,7 @@ public static class PiecewiseInputBounds
 /// 所以那个分岔必须在最前面。** **把它放到后面，一个带显式 M 而缺转换器的快照会被判为非法——
 /// 而它其实是合法的。**
 ///
-/// adds
-/// **row generation and selector constraints are left to later batches.**
+/// Adds **row generation and selector constraints are left to later batches.**
 ///
 /// **The first thing the check does is look at `ExplicitM`:**
 ///

@@ -15,12 +15,12 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// <remarks>
 /// **这两条判据守的都不是"逻辑对不对"，而是"证据还能不能重新拿到"：**
 /// **① 四个集成开关必须留在测试工程里**——它们一消失，那九条真实往返就再也跑不起来，而失败方式是"什么都没发生"；
-/// **② `KafkaProducer.Dispose` 必须在释放前 flush**——B1307 实测过：不 flush 时消息静默丢失、topic 偏移停在 0。
+/// **② `KafkaProducer.Dispose` 必须在释放前 flush**—— 实测过：不 flush 时消息静默丢失、topic 偏移停在 0。
 /// **把 `Dispose` 改回一行销毁的实现，这条判据会红。**
 ///
 /// **Neither criterion guards correctness of the logic; both guard whether the evidence can be obtained again:** **the four integration switches must
 /// stay in the test project, because losing them makes the nine real round-trips unrunnable and the failure mode is "nothing happened", and
-/// `KafkaProducer.Dispose` must flush before disposing, because B1307 measured that without the flush messages are silently lost and the topic offset
+/// `KafkaProducer.Dispose` must flush before disposing, because measured that without the flush messages are silently lost and the topic offset
 /// stays at 0.** **Reverting `Dispose` to a one-line destroy turns this red.**
 /// </remarks>
 public class BackendIntegrationGateTests

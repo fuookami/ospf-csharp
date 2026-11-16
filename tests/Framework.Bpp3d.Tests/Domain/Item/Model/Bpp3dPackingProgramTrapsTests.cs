@@ -13,7 +13,7 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// **Bpp3d 的包装程序子图完全未接线，且与 Bpp2d 的同名类型容易混淆** / The Bpp3d packing-program sub-graph is entirely unwired and collides in name with Bpp2d's.
 /// </summary>
 /// <remarks>
-/// **本批推翻了两条长期记录**，并发现了第三条问题。
+/// **这里推翻了两条长期记录**，并发现了第三条问题。
 ///
 /// **一、`PackageShapeSpec` 不是孤例。** 它所在的整个子图**都没有接线**：
 ///
@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// | `PackingProgramMaterialValue` | 仅在本文件的派生方法内 | 仅本文件 |
 /// | `PackageSolutionLike{Quantity,MaterialItem,Node}` | **零** | **零** |
 ///
-/// 基线有 `PackageSolutionLikeNode.toPackingProgram()` **把这条链串起来**，
+/// 基线有 `PackageSolutionLikeNode.toPackingProgram` **把这条链串起来**，
 /// C# **没有移植它**——所以类型全在、转换全缺，**整条链悬空**。
 ///
 /// **二、两个 `PackingProgram` 同名不同义。**
@@ -39,10 +39,10 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 ///
 /// 这条判据钉住二三两点（它们可在无管线的情况下断言），
 /// 第一点写在此处作为记录——**"没有调用方"无法用单元测试可靠断言**，
-/// 只能靠人工核查，本批如实说明这个边界。
+/// 只能靠人工核查，这里如实说明这个边界。
 ///
-/// **This batch overturns two long-standing records** and finds a third problem. **1) `PackageShapeSpec` is not alone** — its whole sub-graph is unwired (table above).
-/// The baseline's `PackageSolutionLikeNode.toPackingProgram()` is what strings the chain together, and C# **never ported it**, so the types exist, the conversion does not,
+/// ** overturns two long-standing records** and finds a third problem. **1) `PackageShapeSpec` is not alone** — its whole sub-graph is unwired (table above).
+/// The baseline's `PackageSolutionLikeNode.toPackingProgram` is what strings the chain together, and C# **never ported it**, so the types exist, the conversion does not,
 /// and **the whole chain dangles**. **2) Two `PackingProgram` types share a name**: `Framework.Bpp2d.Domain.PackingProgram<V>` **is live** (constructed and tested) while
 /// `Framework.Bpp3d.Domain.Item.Model.PackingProgram` **is dead**; grepping by simple name conflates them and **fooled me on the first pass** (I read "14 references" as live).
 /// **3) Units disagree inside one file**: `PackageSolutionLikeQuantity.Weight` stores a **bare `Flt64`** (the baseline's `Quantity<V>` carries a unit) while the adjacent

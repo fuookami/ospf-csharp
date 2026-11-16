@@ -130,11 +130,11 @@ public sealed class CompiledActivityProblem<V>
 /// 把编译后的问题展开成线性行 / Expand a compiled problem into linear rows.
 /// </summary>
 /// <remarks>
-/// 与基线 `ActivitySchedulingRows.rows()` 对齐，覆盖**选择行 / 冻结行 / 存在性行 / 依赖行 / 附加行**五类。
+/// 与基线 `ActivitySchedulingRows.rows` 对齐，覆盖**选择行 / 冻结行 / 存在性行 / 依赖行 / 附加行**五类。
 /// 产能行与物料行分别由 `ActivityCapacitySweep` 与 `ActivityMaterialRows` 提供（两者都已有独立判据），
 /// 由聚合层拼接——这里不重复实现。
 ///
-/// Aligned with the baseline's `ActivitySchedulingRows.rows()`, covering **selection, frozen, presence, dependency and extra** rows. Capacity and material rows come from `ActivityCapacitySweep` and
+/// Aligned with the baseline's `ActivitySchedulingRows.rows`, covering **selection, frozen, presence, dependency and extra** rows. Capacity and material rows come from `ActivityCapacitySweep` and
 /// `ActivityMaterialRows` (both already carrying their own criteria) and are stitched together by the aggregation layer, so they are not re-implemented here.
 /// </remarks>
 public static class ActivitySchedulingRowBuilder {

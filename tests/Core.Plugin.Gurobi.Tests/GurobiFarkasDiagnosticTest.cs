@@ -23,10 +23,10 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// The Gurobi Farkas diagnosis: continuous-LP certificates on the real backend.
 /// </summary>
 /// <remarks>
-/// **B979 补了 `GurobiInfeasibilityAnalyzers.kt` 里 Farkas 那一条**。这个文件里的每一条判据都真跑 Gurobi，
+/// 补了 `GurobiInfeasibilityAnalyzers.kt` 里 Farkas 那一条**。这个文件里的每一条判据都真跑 Gurobi，
 /// **没有一条用假后端**——Farkas 证书存在与否只有真后端答得出来。
 ///
-/// **B979 ports the Farkas member of `GurobiInfeasibilityAnalyzers.kt`.** Every criterion here really runs Gurobi; **none uses a fake backend**, because whether a Farkas
+/// **The Farkas member of `GurobiInfeasibilityAnalyzers.kt`. is ported** Every criterion here really runs Gurobi; **none uses a fake backend**, because whether a Farkas
 /// certificate exists is something only a real backend can answer.
 /// </remarks>
 public class GurobiFarkasDiagnosticTest {
@@ -41,8 +41,8 @@ public class GurobiFarkasDiagnosticTest {
         IReadOnlyList<IInfeasibilityAnalyzer<ILinearTriadModelView>> analyzers =
             new GurobiLinearSolver().DiagnosticAnalyzers(new IisConfig());
 
-        // **B980 之后列表里有两个分析器**：原生 IIS 在前。这里只挑 Farkas 那个来验它的声明。
-        // **After B980 there are two analyzers**, native IIS first. This picks the Farkas one and checks its declaration.
+        // **之后列表里有两个分析器**：原生 IIS 在前。这里只挑 Farkas 那个来验它的声明。
+        // **After there are two analyzers**, native IIS first. This picks the Farkas one and checks its declaration.
         IInfeasibilityAnalyzer<ILinearTriadModelView> analyzer =
             analyzers.Single(candidate => candidate.Source == InfeasibilityEvidenceSource.Farkas);
         analyzer.Source.Should().Be(InfeasibilityEvidenceSource.Farkas);

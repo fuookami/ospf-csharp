@@ -75,7 +75,7 @@ public class TokenSharedReadBenchmark
         _tokenMap = _writer.Tokens.ToDictionary(token => token.Key, token => token);
         _warmList = new TokenList<Flt64>(_tokenMap);
         _ordered = _warmList.TokensInSolver;
-        // **先读一次把索引建起来：** **否则第一次测量里混着冷建表，而这一批要测的是稳态读。**
+        // **先读一次把索引建起来：** **否则第一次测量里混着冷建表，而这里要测的是稳态读。**
         // **Prime the index, or the first measurement would include the cold build.**
         _ = _warmList.IndexOf(_ordered[^1]);
 

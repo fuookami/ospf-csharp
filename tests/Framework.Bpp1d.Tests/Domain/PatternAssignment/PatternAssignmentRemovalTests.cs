@@ -25,23 +25,23 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// **删列与取解** / Column removal and solution extraction.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `removeColumns()` 与 `extractSolution()`。判据点出两处要害：
+/// 对应基线的 `removeColumns` 与 `extractSolution`。判据点出两处要害：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |
 /// | **删列顺序** | 先删目标项再刷新 | 刷新会把已删列**写回**表达式 |
 /// | **非整数用量** | 四舍五入 | 一个 LP 松弛值被当成整数用量报出去 |
 ///
-/// Mirrors the baseline's `removeColumns()` and `extractSolution()`; the two failure modes are in the table.
+/// Mirrors the baseline's `removeColumns` and `extractSolution`; the two failure modes are in the table.
 /// </remarks>
 public class PatternAssignmentRemovalTests {
     /// <summary>**删列后目标项真的消失** / Removing a column really drops its objective term.</summary>
     /// <remarks>
-    /// 基线依赖 `removeObjectiveTerms(variables)`。B427 曾把"清完目标为空"**读成"什么都没清"**，
+    /// 基线依赖 `removeObjectiveTerms(variables)`。 曾把"清完目标为空"**读成"什么都没清"**，
     /// 因而判定该 API 无效、把 `removeColumns` 记为缺口。**实测证明它有效**（一个目标里两项，移除一项后只剩另一项）。
     /// 这条判据把那个结论钉住。
     ///
-    /// The baseline relies on `removeObjectiveTerms(variables)`. B427 **read "objective empty after clearing" as "nothing was cleared"** and wrongly recorded
+    /// The baseline relies on `removeObjectiveTerms(variables)`. **read "objective empty after clearing" as "nothing was cleared"** and wrongly recorded
     /// `removeColumns` as blocked. **Measurement shows it works** (two terms in one objective; removing one leaves the other). This criterion pins that conclusion.
     /// </remarks>
     [Fact]
@@ -61,9 +61,9 @@ public class PatternAssignmentRemovalTests {
 
         result.IsOk.Should().BeTrue(result.ToString());
         // **目标是单一来源（聚合符号），所以"目标项消失"就是符号内容被重建。**
-        // B429 把逐列目标项删掉之后，这里断言的是符号本身的单项式条数。
+        // 把逐列目标项删掉之后，这里断言的是符号本身的单项式条数。
         //
-        // **The objective is a single source (the aggregate symbol), so "the term is gone" means the symbol was rebuilt.** After B429 dropped the per-column objective
+        // **The objective is a single source (the aggregate symbol), so "the term is gone" means the symbol was rebuilt.** After dropped the per-column objective
         // terms, this asserts the symbol's own monomial count.
         context.Aggregation.Objective!.Polynomial.Monomials.Count.Should().BeLessThan(
             before, "the removed column's objective term must be gone");

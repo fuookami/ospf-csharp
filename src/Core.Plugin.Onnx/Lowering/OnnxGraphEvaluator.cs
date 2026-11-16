@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// </remarks>
 public static class OnnxGraphEvaluator
 {
-    /// <summary>本批支持的算子 / The operators this batch supports.</summary>
+    /// <summary>这里支持的算子 / The operators supported here.</summary>
     public static readonly IReadOnlySet<string> Supported = new HashSet<string>(StringComparer.Ordinal) {
         "Identity", "Cast", "Add", "Sub", "Neg", "Mul", "Concat", "Split", "Gather", "MatMul", "Gemm", "ReduceSum",
         // 激活算子只在输入是常量时折叠：符号输入需要函数符号（分段线性 / 正部），那要挂进模型，
@@ -262,8 +262,8 @@ public static class OnnxGraphEvaluator
         switch (opType) {
             case "Identity":
             case "Cast": {
-                // Cast 在这里只做透传：本批的表达式都是 Flt64，转成别的类型不在范围内。
-                // Cast passes through here: this batch's expressions are all Flt64, and converting to another type is out of scope.
+                // Cast 在这里只做透传：这里的表达式都是 Flt64，转成别的类型不在范围内。
+                // Cast passes through here: these expressions are all Flt64, and converting to another type is out of scope.
                 if (operands.Count != 1) {
                     failure = "'" + opType + "' 需要恰好一个输入 / the operator needs exactly one input";
                     return null;

@@ -22,12 +22,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 空壳比缺失更危险 / A stub is more dangerous than an absence.
 /// </summary>
 /// <remarks>
-/// B1157 把 `QuadraticMinFunction` 从空壳换成真实编码（基线 `QuadraticMin.kt`）。
+/// 把 `QuadraticMinFunction` 从空壳换成真实编码（基线 `QuadraticMin.kt`）。
 ///
 /// **在此之前它是空壳**：**`Evaluate` 恒返回 `null`、`RegisterConstraints` 什么都不做。**
 /// **它能编译、有名字、能进注册表，所以"类型存在"的扫描把它算作已覆盖——而它对任何模型都没有作用。**
 ///
-/// B1157 replaces `QuadraticMinFunction`'s stub with the real encoding.
+/// Replaces `QuadraticMinFunction`'s stub with the real encoding.
 ///
 /// **Until now it was a stub**: **`Evaluate` always returned `null` and `RegisterConstraints` did nothing.**
 /// **It compiled, had a name and could be registered, so a "does the type exist" scan counted it as covered — while
@@ -180,13 +180,13 @@ public class QuadraticMinFunctionTests
     /// </summary>
     /// <remarks>
     /// **这条是被一次变异逼出来的**：**删掉 `Σuᵢ = 1` 的注册后，7 条判据全绿**——
-    /// **因为其余判据都只看 `OneHotRow()` 的<b>构造</b>，而不看它有没有被<b>注册</b>。**
+    /// **因为其余判据都只看 `OneHotRow` 的<b>构造</b>，而不看它有没有被<b>注册</b>。**
     ///
     /// **"构造出一个正确的行"与"这个行被交给模型"是两件事**，
     /// **而空壳的特征正是后者缺失：它照样能构造、照样编译。**
     ///
     /// **This criterion was forced by a mutation**: **dropping the registration of `Σuᵢ = 1` left all seven
-    /// criteria green**, **because every other criterion looks only at the <b>construction</b> of `OneHotRow()`, not at
+    /// criteria green**, **because every other criterion looks only at the <b>construction</b> of `OneHotRow`, not at
     /// whether it is <b>registered</b>.**
     ///
     /// **"A correct row is built" and "that row reaches the model" are two different things**,

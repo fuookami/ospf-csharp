@@ -20,10 +20,10 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **一维普通 MILP 入口** / The ordinary BPP1D MILP entry.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Bpp1dSolver.kt` 的 `Bpp1dMilp`。本批只做“生成候选 → 最终整数模型”这一条路径，
-/// 带 LP 定价循环的 `Bpp1dColumnGeneration` 留到下一批。
+/// 对应基线 `Bpp1dSolver.kt` 的 `Bpp1dMilp`。这里只做“生成候选 → 最终整数模型”这一条路径，
+/// 带 LP 定价循环的 `Bpp1dColumnGeneration` 留到后续。
 ///
-/// **判据分两层，而第一层不需要任何求解器。** 本批真正新增的能力是那条**错误翻译**判断
+/// **判据分两层，而第一层不需要任何求解器。** 这里真正新增的能力是那条**错误翻译**判断
 /// （“受限候选池无解不等于原问题不可行”），它与求解器实现无关，所以直接打在 `TranslateFinalFailure` 上。
 ///
 /// **曾经写过一整套桩求解器去端到端测它**——为了测一个纯函数而实现五个 `throw` 的接口成员，
@@ -36,10 +36,10 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 public class Bpp1dMilpTests {
     /// <summary>**受限候选池无解必须改报求解异常** / An infeasible restricted pool must surface as a solving exception.</summary>
     /// <remarks>
-    /// **本批最要紧的一条。** 候选**不完整**时求解器报 `ORModelInfeasible`，只说明**这一池**装不下；
+    /// **这里最要紧的一条。** 候选**不完整**时求解器报 `ORModelInfeasible`，只说明**这一池**装不下；
     /// 直接透出会让调用方**放弃一个其实有解的问题**。
     ///
-    /// **The most important criterion in this batch.** An `ORModelInfeasible` from an **incomplete** pool only says *this pool* cannot pack the problem; passing it
+    /// **The most important criterion in.** An `ORModelInfeasible` from an **incomplete** pool only says *this pool* cannot pack the problem; passing it
     /// through would make callers **abandon a problem that is actually solvable**.
     /// </remarks>
     [Fact]

@@ -23,9 +23,9 @@
 ## 已知缺口
 
 **尚未重新审计。** 早前批次记录过：甘特任务束编译、执行器/任务约束与取消目标仍含空实现，
-Demo4 未注册束成本管线。**这些记录在本会话中没有重新核实**，因此应视为**未确认**而非现状。
+Demo4 未注册束成本管线。**这些记录在中没有重新核实**，因此应视为**未确认**而非现状。
 
-`Framework.GanttNetworkScheduling` 桥接（Batch 278）是独立项目，
+`Framework.GanttNetworkScheduling` 桥接（earlier）是独立项目，
 因为 `Framework.NetworkScheduling` 本来就引用本模块。
 
 Demo4 的 `FlightTaskBunchGenerator` 用的是自己手写的标签搜索，不是共享的路径搜索内核。

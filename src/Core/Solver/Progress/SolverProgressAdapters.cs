@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Core.Solver.Progress;
 /// Progress adapters: adapt solver callbacks to unified progress reporting while preserving the original callbacks.
 /// </summary>
 /// <remarks>
-/// **这是 B324 移植核心类型时漏掉的另一半**：核心类型（`SolverProgressContext` 等）只提供"怎么上报"，
+/// **这是 移植核心类型时漏掉的另一半**：核心类型（`SolverProgressContext` 等）只提供"怎么上报"，
 /// 适配器提供"从哪里接"。没有适配器，进度上报**存在但无人调用**。
 ///
 /// 三个适配器对应基线的三个函数，**全部保留原回调**：适配后仍会调用 `delegate`，
 /// 所以接入进度上报**不会让既有的回调失效**。
 ///
-/// **This is the half missed when B324 ported the core types**: the core types only provide "how to report", while the adapters provide "where to hook in". Without
+/// **This is the half missed when ported the core types**: the core types only provide "how to report", while the adapters provide "where to hook in". Without
 /// them progress reporting **exists but nothing calls it**.
 ///
 /// The three adapters correspond to the baseline's three functions and **all preserve the original callback**: after adapting, `delegate` is still invoked, so
@@ -91,7 +91,7 @@ public static class SolverProgressAdapters {
     /// <param name="delegate">原回调 / Original callback.</param>
     /// <returns>组合回调 / The composed callback.</returns>
     /// <remarks>
-    /// **gap 解析失败时进度取 0**，与基线一致（`gap.toString().toDoubleOrNull()` 为 null 则 `progress = 0`）。
+    /// **gap 解析失败时进度取 0**，与基线一致（`gap.toString.toDoubleOrNull` 为 null 则 `progress = 0`）。
     /// 总体进度按 `stage.kind` 分四档，**四档的系数必须逐字对齐**——它们决定进度条在各阶段的区间。
     ///
     /// **When the gap cannot be parsed, progress is 0**, matching the baseline. Overall progress has four branches by `stage.kind`, and **the coefficients must match
@@ -142,12 +142,12 @@ public static class SolverProgressAdapters {
     /// <param name="gap">gap 数值 / Gap value.</param>
     /// <returns>解析值或 null / The parsed value, or null.</returns>
     /// <remarks>
-    /// **`Flt64` 有 `ToDouble()`，不需要文本往返。** 首版写成"先 `ToString()` 再 `TryParse`"，
-    /// 那是照搬基线的 `toString().toDoubleOrNull()`——但**基线那么写是因为 Kotlin 的 `Flt64` 没有直接的
+    /// **`Flt64` 有 `ToDouble`，不需要文本往返。** 首版写成"先 `ToString` 再 `TryParse`"，
+    /// 那是照搬基线的 `toString.toDoubleOrNull`——但**基线那么写是因为 Kotlin 的 `Flt64` 没有直接的
     /// double 转换**，C# 有。这里直接取值，**语义相同、少一次解析、也不会因格式设置出错**。
     ///
-    /// **`Flt64` has `ToDouble()`, so no text round-trip is needed.** The first version did "`ToString()` then `TryParse`", copying the baseline's
-    /// `toString().toDoubleOrNull()` — but **the baseline does that because Kotlin's `Flt64` has no direct double conversion**; C# does. Taking the value directly
+    /// **`Flt64` has `ToDouble`, so no text round-trip is needed.** The first version did "`ToString` then `TryParse`", copying the baseline's
+    /// `toString.toDoubleOrNull` — but **the baseline does that because Kotlin's `Flt64` has no direct double conversion**; C# does. Taking the value directly
     /// is **semantically identical, skips a parse, and cannot break on format settings**.
     /// </remarks>
     private static double? ParseGap(Fuookami.Ospf.Math.Algebra.Number.Flt64 gap) => gap.ToDouble();

@@ -30,14 +30,14 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **分区配置那一半必须自己站得住** / The partition-configuration half must stand on its own.
 /// </summary>
 /// <remarks>
-/// B826 起 `partitionColumnGeneration` 在 demo2 里被**显式拒绝**（`NotYetPorted`），理由是"注册与分区配置没接起来"。
-/// 注册那一半由 `DiscreteLoadingContext.Register` 提供；**这一半（`PartitionConfiguration`）是 B928 补的**。
+/// 起 `partitionColumnGeneration` 在 demo2 里被**显式拒绝**（`NotYetPorted`），理由是"注册与分区配置没接起来"。
+/// 注册那一半由 `DiscreteLoadingContext.Register` 提供；**这一半（`PartitionConfiguration`）是 补的**。
 /// 它是纯函数，所以**不需要求解器**就能钉住——而"整条 CG 链能跑"仍然需要真实后端，那个缺口不因为本文件而消失。
 ///
 /// 判据刻意分开写，不合并成一个"跑通了"：**五条各自能单独红**，红了就知道是哪一条规矩破了。
 ///
-/// Since B826 `partitionColumnGeneration` is **explicitly refused** in demo2 (`NotYetPorted`) because "the registration and the partition configuration are not wired".
-/// The registration half comes from `DiscreteLoadingContext.Register`; **this half (`PartitionConfiguration`) is what B928 adds**. Being a pure function it can be pinned
+/// Since `partitionColumnGeneration` is **explicitly refused** in demo2 (`NotYetPorted`) because "the registration and the partition configuration are not wired".
+/// The registration half comes from `DiscreteLoadingContext.Register`; **this half (`PartitionConfiguration`) is what adds**. Being a pure function it can be pinned
 /// **without a solver** — while "the whole CG chain runs" still needs a real backend, and this file does not make that gap go away. The criteria are deliberately split
 /// rather than merged into one "it works": **each of the five can red on its own**, and a red one names which rule broke.
 /// </remarks>
@@ -76,11 +76,11 @@ public class Demo2PartitionConfigurationTests
     /// 基线的 `owners.getValue(position.spaceName)` 在这里会抛 `NoSuchElementException`。**抛异常不是契约**，而且它连"是哪个舱位"都不说。
     ///
     /// **这条只能直接调被测函数**：`Aircraft.AggregationInitializer` 已经把空分区号并进"物理空间或装载顺序无效"这条合并消息
-    /// （B613 的取舍，不为这条判据改那边）。所以这里用**已装配好的聚合**配**故意改坏的请求**——被测函数自己那一层的守卫仍要单独成立。
+    /// 。所以这里用**已装配好的聚合**配**故意改坏的请求**——被测函数自己那一层的守卫仍要单独成立。
     ///
     /// The baseline's `owners.getValue(position.spaceName)` would throw `NoSuchElementException` here. **Throwing is not a contract**, and it does not even say which
     /// position is at fault. **This one has to call the subject directly**: the aircraft initialiser already folds a blank partition id into its merged "invalid physical
-    /// space or loading order" message (a B613 trade-off, not changed for this criterion), so an **already assembled aggregation** is paired with a **deliberately broken
+    /// space or loading order" message (a trade-off, not changed for this criterion), so an **already assembled aggregation** is paired with a **deliberately broken
     /// request** — the subject's own guard must still hold on its own.
     /// </remarks>
     [Fact]
@@ -184,17 +184,17 @@ public class Demo2PartitionConfigurationTests
     /// **不自己 `new` 聚合**：那条路要手搓 `Flight`/`Formula`/`Fuselage`/`Fuel` 等十来个对象，而真正要验的是"请求 → 分区"这一段。
     /// 走 `AircraftContext` + `StowageContext` 与生产完全同路，顺带保证这条判据不会因为装配方式不同而与真实调用分叉。
     ///
-    /// **No hand-built aggregation**: that path needs a dozen objects (`Flight`, `Formula`, `Fuselage`, `Fuel`, ...) while what is under test is "request to partitions".
+    /// **No hand-built aggregation**: that path needs a dozen objects (`Flight`, `Formula`, `Fuselage`, `Fuel`,...) while what is under test is "request to partitions".
     /// Going through `AircraftContext` plus `StowageContext` is the production route, which also keeps this criterion from diverging from real calls.
     /// </remarks>
     /// <summary>**给每个舱位补一份谓词装载重量规格** / Give every position a predicate load-weight specification.</summary>
     /// <param name="request">请求 / The request.</param>
     /// <returns>补齐后的请求 / The request with the spec filled in.</returns>
     /// <remarks>
-    /// `Predistribution` 的配载域注册**要求**这份规格（B800 记过缺口、B801 翻面）：没有它，
+    /// `Predistribution` 的配载域注册**要求**这份规格：没有它，
     /// `PositionStatus.PredicateWeightNeeded` 为真而对应的重量规格为空，注册只能失败。
     ///
-    /// The `Predistribution` stowage registration **requires** this specification (recorded as a gap in B800, flipped in B801): without it
+    /// The `Predistribution` stowage registration **requires** this specification (recorded as a gap, flipped): without it
     /// `PositionStatus.PredicateWeightNeeded` is true while the matching weight spec is absent, and registration can only fail.
     /// </remarks>
     private static RequestDTO WithPredicateSpec(RequestDTO request) {
@@ -238,12 +238,12 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**宽体走二维内核，窄体走一维** / Wide bodies take the 2-D kernel, narrow bodies the 1-D one.</summary>
     /// <remarks>
-    /// B934 之前 `LoadingContextFactory` **恒走一维**，理由写在类注释里（"Bpp2d 没有 `Context` 工厂"），那个理由已经不成立。
+    /// 之前 `LoadingContextFactory` **恒走一维**，理由写在类注释里（"Bpp2d 没有 `Context` 工厂"），那个理由已经不成立。
     ///
     /// **判据看的是冲突数**，不是"构造成功"：宽体请求的两个舱位在 `Geometry` 里**纵向错开、横向重叠**，
     /// 二维下不冲突；若内核退化成了一维，它们会被判成冲突。**这正是二维与一维唯一的分水岭。**
     ///
-    /// Before B934 `LoadingContextFactory` **always** went 1-D for a reason that no longer holds. **The criterion reads the conflict count**, not "it built":
+    /// Before `LoadingContextFactory` **always** went 1-D for a reason that no longer holds. **The criterion reads the conflict count**, not "it built":
     /// the wide-body request's two positions are **staggered longitudinally and overlapping laterally**, which 2-D calls disjoint — a kernel degraded back to 1-D
     /// would call them conflicting. **That is the one place the two differ.**
     /// </remarks>
@@ -268,8 +268,8 @@ public class Demo2PartitionConfigurationTests
 
         StowageAggregation aggregation = Aggregation(request);
         aggregation.Stowage.LoadingContext.Should().NotBeNull("the factory must have built a kernel");
-        // **判据先钉住前提**：机型真的是请求里那个，否则下面"走二维"的结论无从谈起（B934 之前这条恒为 B737）。
-        // **The criterion pins the premise first**: the type really is the requested one, or "took the 2-D path" means nothing (this was always B737 before B934).
+        // **判据先钉住前提**：机型真的是请求里那个，否则下面"走二维"的结论无从谈起。
+        // **The criterion pins the premise first**: the type really is the requested one, or "took the 2-D path" means nothing (this was always before ).
         aggregation.AircraftModel.Type.Should().Be(AircraftType.B767,
             "the request asked for B767; a hard-coded B737 would silently send every aircraft down the narrow-body path");
         aggregation.Stowage.LoadingContext!.Problem.Conflicts.Should().BeEmpty(
@@ -307,14 +307,14 @@ public class Demo2PartitionConfigurationTests
         // **The 1-D interval comes from `Geometry.Front/Back`** (the initialiser builds `PositionCoordinate` from it), so a shared longitudinal span conflicts.
         // **一维几何的 `SpaceId` 是舱位名**（`LoadingContextFactory` 里写的就是 `position.Name`），而 `Conflicts` **按 `SpaceId` 分桶**：
         // 两个舱位的 `SpaceId` 不同，于是**永远配不到一起**。所以一维内核在这条路径上**根本产生不了几何冲突**——
-        // 这是既有行为，B934 没有改它，**判据不该假装它会产生**。
+        // 这是既有行为，没有改它，**判据不该假装它会产生**。
         //
         // **The 1-D geometry's `SpaceId` is the position name** (that is what `LoadingContextFactory` writes), and `Conflicts` **buckets by `SpaceId`**: two positions
         // never share a bucket, so **they can never be paired**. The 1-D kernel therefore **produces no geometric conflict at all** on this path — existing behaviour
-        // B934 did not change, and **the criterion must not pretend otherwise**.
-        // **B934 修好 `SpaceId` 之后，一维路径真的会产生几何冲突了**。判据必须断言它——
+        // did not change, and **the criterion must not pretend otherwise**.
+        // **修好 `SpaceId` 之后，一维路径真的会产生几何冲突了**。判据必须断言它——
         // 断言"空"就等于把修复前的缺陷当成正确行为钉住。
-        // **After B934 fixed `SpaceId`, the 1-D path really does produce a geometric conflict**, and the criterion must assert it: asserting "empty" would pin the
+        // **After fixed `SpaceId`, the 1-D path really does produce a geometric conflict**, and the criterion must assert it: asserting "empty" would pin the
         // pre-fix defect as correct behaviour.
         aggregation.Stowage.LoadingContext!.Problem.Conflicts.Should().ContainSingle(
             "both positions sit in the MAIN space with the same longitudinal span, so the 1-D sweep must pair them");
@@ -322,16 +322,16 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**允许的指派是基线三支的并集** / Allowed assignments are the union of the baseline's three branches.</summary>
     /// <remarks>
-    /// B935 之前 `LoadingContextFactory` 只问 `StowageNeeded`，而它只对 `Preassigned`/`Optional` 为真。
+    /// 之前 `LoadingContextFactory` 只问 `StowageNeeded`，而它只对 `Preassigned`/`Optional` 为真。
     /// 于是 `AdjustmentNeeded` 的货物与"已在舱位里"的货物**一个允许指派都拿不到**——稀疏决策不给它们建变量，
     /// **没有变量就等于这件货不存在，而且不报错**。
     ///
     /// **这条判据直接问那两个谓词，不经过请求**：`AggregationInitializer` 把货物状态硬编码成 `ItemStatus.Optional`
-    /// （B935 实测），所以走请求根本到不了 `AdjustmentNeeded` 分支——**走请求的判据在这里会是空的**。
+    /// ，所以走请求根本到不了 `AdjustmentNeeded` 分支——**走请求的判据在这里会是空的**。
     ///
-    /// Before B935 the factory asked only `StowageNeeded`, true solely for `Preassigned`/`Optional`, so `AdjustmentNeeded` items and items already inside a
+    /// Before the factory asked only `StowageNeeded`, true solely for `Preassigned`/`Optional`, so `AdjustmentNeeded` items and items already inside a
     /// position **got no allowed assignment**: the sparse decisions created no variable for them, and **no variable reads as "this item does not exist", silently**.
-    /// **This criterion asks the two predicates directly, not through a request**: `AggregationInitializer` hard-codes `ItemStatus.Optional` (measured in B935),
+    /// **This criterion asks the two predicates directly, not through a request**: `AggregationInitializer` hard-codes `ItemStatus.Optional` (measured),
     /// so a request-driven criterion could never reach the `AdjustmentNeeded` branch and **would be vacuous here**.
     /// </remarks>
     [Fact]
@@ -353,20 +353,20 @@ public class Demo2PartitionConfigurationTests
     //
     // 所以"单位来自请求"这个修复**无法用相交结论钉住**。它仍然是正确的（基线用 `input.lengthUnit`，
     // 且硬编码的米会让一个舱位大 39.37 倍），只是**没有一条判据能在这个层次上看见它**。
-    // 我宁可留一条明说的空缺，也不留一条"改坏了也不红"的判据——那是 B928 记过的同一个坑。
+    // 我宁可留一条明说的空缺，也不留一条"改坏了也不红"的判据——那是 记过的同一个坑。
     //
     // **I deleted the unit criterion because it measures nothing.** I first wrote "the inch request and the metre request must agree on overlap", then reverted
     // the unit to hard-coded metres — **and it stayed green**. The reason is plain: a request carries a single `LengthUnit`, so **every rectangle scales by the same
     // factor, and overlap is invariant under uniform scaling**. "The unit comes from the request" therefore **cannot be pinned by an overlap verdict**. The fix is
     // still right (the baseline uses `input.lengthUnit`, and hard-coded metres inflate a position 39.37x); it simply **has no criterion that can see it at this
-    // level**. I would rather record an honest hole than keep a criterion that **stays green when the code is wrong** — the same trap B928 recorded.
+    // level**. I would rather record an honest hole than keep a criterion that **stays green when the code is wrong** — the same trap recorded.
 
     /// <summary>**已装载的货物必须固定在自己的舱位** / An already-loaded item must stay fixed to its position.</summary>
     /// <remarks>
-    /// B936 之前 `FixedPositionId` **硬编码 `null`**，于是已经装在某个舱位里的货物被当成自由货物，求解器可以把它挪走。
+    /// 之前 `FixedPositionId` **硬编码 `null`**，于是已经装在某个舱位里的货物被当成自由货物，求解器可以把它挪走。
     /// **而"挪走已装载货物"恰恰是调整模式要最小化的东西**——判据看的是装载上下文里的 `FixedPositionId`，不是"构造成功"。
     ///
-    /// Before B936 `FixedPositionId` was **hard-coded `null`**, so an item already inside a position counted as free and the solver could move it — **while moving
+    /// Before `FixedPositionId` was **hard-coded `null`**, so an item already inside a position counted as free and the solver could move it — **while moving
     /// loaded cargo is exactly what the adjustment mode minimises**. The criterion reads `FixedPositionId` in the loading context, not "it built".
     /// </remarks>
     [Fact]
@@ -393,7 +393,7 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**一件货不能固定在两个舱位** / One item cannot be fixed to two positions.</summary>
     /// <remarks>
-    /// 基线的第二条前置校验。**少了它，`toMap()` 会静默只留最后一个**，于是"固定在哪个舱位"取决于列表顺序——
+    /// 基线的第二条前置校验。**少了它，`toMap` 会静默只留最后一个**，于是"固定在哪个舱位"取决于列表顺序——
     /// 一个不报错、只给出错误解的行为。
     ///
     /// The baseline's second pre-check. **Without it a map keeps only the last entry**, so "which position it is fixed to" depends on list order — a behaviour that
@@ -487,11 +487,11 @@ public class Demo2PartitionConfigurationTests
     /// <summary>**甲板从请求穿到 `Item.location`** / The deck flows from the request into `Item.location`.
     /// </summary>
     /// <remarks>
-    /// **B937 把这条判据的落点换了。** 第一稿钉的是"下舱货拿不到主舱舱位"，变异测试发现**把甲板过滤关掉它照样绿**——
+    /// 把这条判据的落点换了。** 第一稿钉的是"下舱货拿不到主舱舱位"，变异测试发现**把甲板过滤关掉它照样绿**——
     /// 因为同一个 `DeckLocation` 早就换算成了 `Item.location`，`StowagePosition.Enabled(item)` 已经挡住了。
     /// 那道过滤因此被删掉（空转代码只会让人以为有两道防线），判据改为钉**真正起作用的那一步**。
     ///
-    /// **B937 moved where this criterion lands.** The first draft pinned "a lower-deck cargo cannot reach a main-deck position", and mutation testing showed it
+    /// **moved where this criterion lands.** The first draft pinned "a lower-deck cargo cannot reach a main-deck position", and mutation testing showed it
     /// **stayed green with the deck filter disabled** — the same `DeckLocation` already becomes `Item.location`, which `StowagePosition.Enabled(item)` enforces.
     /// That filter was therefore deleted (a no-op only makes people believe there are two lines of defence) and the criterion now pins **the step that does the work**.
     /// </remarks>
@@ -507,8 +507,8 @@ public class Demo2PartitionConfigurationTests
         };
 
         StowageAggregation aggregation = Aggregation(request);
-        // **基线是 `Main → normalMain`、其余 → `lowNotBulk`**；B937 之前这里恒为主舱。
-        // **The baseline maps `Main → normalMain` and everything else → `lowNotBulk`**; before B937 this was always main deck.
+        // **基线是 `Main → normalMain`、其余 → `lowNotBulk`**； 之前这里恒为主舱。
+        // **The baseline maps `Main → normalMain` and everything else → `lowNotBulk`**; before this was always main deck.
         Item lower = aggregation.Items.Single(item => item.Id == sample.Cargos[0].Name);
         Item main = aggregation.Items.Single(item => item.Id == sample.Cargos[1].Name);
         lower.Location.Tags.Should().Contain(ItemLocationTag.Low,
@@ -526,11 +526,11 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**最大装载件数来自请求** / The maximum item count comes from the request.</summary>
     /// <remarks>
-    /// B938 之前硬编码成 `1UL`（注释叫它"保守值"）：一个能装 20 件的舱位被当成只能装 1 件，**不报错，只是把可行解砍掉一大半**。
+    /// 之前硬编码成 `1UL`（注释叫它"保守值"）：一个能装 20 件的舱位被当成只能装 1 件，**不报错，只是把可行解砍掉一大半**。
     ///
     /// 判据同时看**模型侧**（`Mla`）和**内核侧**（`LoadingPosition.MaxCount`）：只钉一个的话，另一侧断了也不会红。
     ///
-    /// Before B938 this was hard-coded `1UL` ("conservative"): a position holding 20 items counted as holding 1 — **no error, just most of the solution space
+    /// Before this was hard-coded `1UL` ("conservative"): a position holding 20 items counted as holding 1 — **no error, just most of the solution space
     /// gone**. The criterion reads **both the model** (`Mla`) and **the kernel** (`LoadingPosition.MaxCount`); pinning one would miss the other going stale.
     /// </remarks>
     [Fact]
@@ -553,10 +553,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**建议装载件数/重量真的进了模型** / The advisory count/weight really reach the model.</summary>
     /// <remarks>
-    /// 基线的两条建议装载目标**只收非 `null` 的舱位**。B938 之前 DTO 没有这两个字段，于是那两条目标**永远是空表**——
+    /// 基线的两条建议装载目标**只收非 `null` 的舱位**。 之前 DTO 没有这两个字段，于是那两条目标**永远是空表**——
     /// 不报错，只是"建议装载"这个能力在模型里根本不存在。
     ///
-    /// The baseline's two advisory objectives **only collect positions with a non-null value**. Before B938 the DTO had neither field, so both objectives were
+    /// The baseline's two advisory objectives **only collect positions with a non-null value**. Before the DTO had neither field, so both objectives were
     /// **always empty** — no error, just "advisory loading" not existing in the model at all.
     /// </remarks>
     [Fact]
@@ -641,14 +641,14 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**请求里的重量数字在整条链上用同一个单位** / The request's weight numbers use one unit throughout the chain.</summary>
     /// <remarks>
-    /// B939 用脚本扫「硬编码常量冒充请求字段」（`logs/b939-scan.py`），扫到一个 `WeightUnit: MassUnits.Gram`。
+    /// 用脚本扫「硬编码常量冒充请求字段」（`logs/b939-scan.py`），扫到一个 `WeightUnit: MassUnits.Gram`。
     /// 逐条看下来它**不是缺陷**：货物重量、舱位上限、问题的 `WeightUnit` 三处都用克，内部一致。
     /// 但"内部一致"这件事**当时没有任何判据**——只要有一处改成千克，重量就会差 1000 倍，**而可行性往往看不出来**（全部等比缩放）。
     ///
     /// 这条判据把三者钉在一起：**把货物重量与舱位上限都换算到问题声明的单位，必须等于请求里的原始数字**。
     /// 任何一处换单位，这里立刻红。
     ///
-    /// B939 scanned for "hard-coded constants standing in for request fields" with a script and found a `WeightUnit: MassUnits.Gram`. Reviewed one by one, it
+    /// scanned for "hard-coded constants standing in for request fields" with a script and found a `WeightUnit: MassUnits.Gram`. Reviewed one by one, it
     /// is **not a defect**: cargo weights, position caps and the problem's `WeightUnit` all use grams, consistently. But **"consistent" had no criterion** —
     /// changing one of them to kilograms would make weights differ by 1000x, **and feasibility usually would not show it** (everything scales together). This
     /// criterion ties the three together: **converted into the unit the problem declares, the item weight and the position cap must equal the request's raw
@@ -757,10 +757,10 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**请求声明的业务互斥真的进装载问题** / The request's declared business exclusions really reach the loading problem.</summary>
     /// <remarks>
-    /// B941 之前这里恒为空集：**声明了也白声明，不报错，只是那条业务规则不存在**。
+    /// 之前这里恒为空集：**声明了也白声明，不报错，只是那条业务规则不存在**。
     /// 基线是"只增不减、不覆盖几何冲突"，所以这条判据同时要求**几何那一半还在**（不是被替换掉）。
     ///
-    /// Before B941 the set was always empty: **declaring one did nothing, with no error — the rule simply did not exist**. The baseline adds without ever replacing,
+    /// Before the set was always empty: **declaring one did nothing, with no error — the rule simply did not exist**. The baseline adds without ever replacing,
     /// so this criterion also requires **the geometric half to survive** rather than be replaced.
     /// </remarks>
     [Fact]
@@ -785,9 +785,9 @@ public class Demo2PartitionConfigurationTests
 
     /// <summary>**请求声明的布局组真的进装载问题** / The request's layout groups really reach the loading problem.</summary>
     /// <remarks>
-    /// B941 之前是空表，于是"区域或整机恰选一种布局"变成"随便几种"。判据逐字段看：组标识、受约束舱位、可选布局**一个都不能少**。
+    /// 之前是空表，于是"区域或整机恰选一种布局"变成"随便几种"。判据逐字段看：组标识、受约束舱位、可选布局**一个都不能少**。
     ///
-    /// Before B941 the list was empty, turning "exactly one layout per region" into "any number". The criterion checks every field: group id, governed
+    /// Before the list was empty, turning "exactly one layout per region" into "any number". The criterion checks every field: group id, governed
     /// positions and the available layouts **all have to be there**.
     /// </remarks>
     [Fact]

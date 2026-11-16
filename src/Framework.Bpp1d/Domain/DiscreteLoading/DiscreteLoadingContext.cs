@@ -1,7 +1,7 @@
 // 离散装载注册与取解入口 / Discrete-loading registration and solution-extraction entry.
 // 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的
-// `register()` 与 `extractSolution()` 对应（`validate()`/`verify()` 已在 B420/B421）。
-// Mirrors `register()` and `extractSolution()` of the pinned Kotlin baseline's `DiscreteLoadingContext.kt`.
+// `register` 与 `extractSolution` 对应（`validate`/`verify` 已在 ）。
+// Mirrors `register` and `extractSolution` of the pinned Kotlin baseline's `DiscreteLoadingContext.kt`.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Model.Mechanism;
@@ -126,7 +126,7 @@ public sealed class DiscreteLoadingContext<V>
     /// | 附加重量非负 | `additional &gt;= 0` | 外部塞进一个**负**表达式，就能在容量行里**抵消**真实载荷 |
     /// | 容量联动 | `weights_p + additional &lt;= capacity_p · occupied_p` | 附加重量**不受容量约束**，可以无限追加 |
     ///
-    /// **第一条与 B420 的"货物重量非负"、B421 的"附加重量非负"是同一种病**：
+    /// **第一条与 的"货物重量非负"、 的"附加重量非负"是同一种病**：
     /// 负值在求和里抵消正项，让一个超载方案"看起来"合规，而**求解器不会报错**。
     /// 区别是这一层是**对外的接口**——调用方自己传来的表达式，因此这里的守卫尤其重要。
     ///
@@ -134,7 +134,7 @@ public sealed class DiscreteLoadingContext<V>
     /// 只写附加重量会让"已有装载 + 追加"可以超容量。
     ///
     /// **Two rows, the first matters most** (table above): a negative expression injected from outside **cancels** real load in the capacity row, and without the capacity
-    /// link the additional weight is **unconstrained** and can grow forever. **The first check is the same disease as B420's "cargo weight non-negative" and B421's
+    /// link the additional weight is **unconstrained** and can grow forever. **The first check is the same disease as the earlier "cargo weight non-negative" and the earlier
     /// "additional weight non-negative"**: a negative value cancels positive terms and makes an overloaded plan look legal, with **no solver error** — and here it is an
     /// **outward-facing entry point** receiving a caller-supplied expression, so the guard matters more than in the internal paths. **The second row's left side must
     /// include the pre-existing `weights_p`**, or "already loaded plus appended" can exceed the capacity.
@@ -192,7 +192,7 @@ public sealed class DiscreteLoadingContext<V>
     /// | 同一件货物被两条分配选中 | 都收下 | `assignments` 是 `货物→舱位` 单值表，后者静默覆盖前者 |
     /// | 某个布局组不是恰好选中一种 | 少选或多选 | 组约束形同虚设或引用不存在的布局 |
     ///
-    /// **第二条是本批最要紧的**：`0.5` 不是浮点噪声，是**求解器在说"这个解不是整数解"**。
+    /// **第二条是这里最要紧的**：`0.5` 不是浮点噪声，是**求解器在说"这个解不是整数解"**。
     /// 四舍五入会把一个 LP 松弛解当成整数解报出去。
     ///
     /// **One deliberate deviation from the baseline**: it accepts a `values: List&lt;Flt64&gt;` and indexes by `tokens.indexOf(variable)`, whereas this reads

@@ -65,7 +65,7 @@ public class OnnxQuadraticElementListTests
 
     /// <summary>**二次域的批量维按 numpy 广播逐批相乘，不相容时拒绝** / Batch dimensions broadcast and multiply per batch; incompatible ones are refused.</summary>
     /// <remarks>
-    /// **** **原来这一条断言"二次域只做二维"，** **而批量维接上之后它会让一个能算的情形看起来仍然不行。** '
+    /// ** **原来这一条断言"二次域只做二维"，** **而批量维接上之后它会让一个能算的情形看起来仍然不行。** '
     /// **它同时钉两件事：** **`[2,1,2]·[2,2,1]` 广播成 `[2,2,1,1]`（四个元素），** **而 `[3,…]` 的批量维拒绝。**
     ///
     /// **the criterion used to assert "the second-degree domain is 2-D only", which after batch support would keep a working case looking unsupported.** It now pins two

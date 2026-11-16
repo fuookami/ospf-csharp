@@ -174,14 +174,14 @@ public sealed class BuiltInAlgorithmsTests {
 
     /// <summary>**22 个种群更新全部可装配，且不要求显式绑定** / All twenty-two population updates assemble without an explicit binding.</summary>
     /// <remarks>
-    /// **这条测试是 Batch 224 一处错误结论的更正**：那一批的代码注释与计划文档都写着"22 个种群更新没有 `ISolutionUpdate` 形态"，
+ /// **这条测试是 earlier 一处错误结论的更正**：那一批的代码注释与计划文档都写着"22 个种群更新没有 `ISolutionUpdate` 形态"，
     /// 实际它们一直都在（`Operator/Update/` 下 20 个 + `SinglePointCross`）。原因是我用 `grep "class X"` 去查，
     /// 而它们是 `sealed record` —— **用错误的声明形态搜索，得出的"缺失"必然是假的**。
     ///
     /// 现在按基线的 `populationUpdates` 映射表补齐默认工厂，这条测试逐个点名 22 个标识，
     /// **漏一项就会在这里失败**，而不是等到某个配置第一次用到它时安静地退回别的算子。
     ///
-    /// **This test corrects a wrong conclusion from Batch 224**: that batch's code comment and plan document both stated "the twenty-two population
+ /// **This test corrects a wrong conclusion from earlier**: that batch's code comment and plan document both stated "the twenty-two population
     /// updates have no `ISolutionUpdate` form", while they had always been there (twenty under `Operator/Update/` plus `SinglePointCross`). The cause
     /// was searching with `grep "class X"` while they are `sealed record`s — **searching with the wrong declaration shape necessarily yields a false
     /// "missing"**.
@@ -199,9 +199,9 @@ public sealed class BuiltInAlgorithmsTests {
                     "种群算法 " + type + " 应当可以装配 / population algorithm " + type + " must assemble");
         }
         // **逐项点名类型，而不只是"非空"**：只断言非空时，映射表里把 `de` 接到灰狼算子上也能通过——
-        // 那正是本批第一次做变异时暴露的弱点。
+        // 那正是这里第一次做变异时暴露的弱点。
         // **Assert the concrete type, not merely non-null**: asserting only non-null accepts a map that wires `de` to the grey-wolf operator —
-        // exactly the weakness the first mutation run of this batch exposed.
+        // exactly the weakness the first mutation run of exposed.
         BuiltInAlgorithms.PopulationUpdate("genetic").Should().BeSameAs(SinglePointCross.Instance);
         BuiltInAlgorithms.PopulationUpdate("gwo").Should().BeOfType<GreyWolfUpdate>();
         BuiltInAlgorithms.PopulationUpdate("de").Should().BeOfType<DifferentialCross>();
@@ -216,15 +216,15 @@ public sealed class BuiltInAlgorithmsTests {
     /// **不证明算法在这套夹具上产出了候选**——本夹具的候选一直是空的，我尝试了轨迹与 PSO 两条路径都是如此，
     /// 判断是该夹具构造不完整（模型没有目标函数），而不是装配有问题。
     ///
-    /// 与其为一个说不清的夹具硬凑断言，不如**把强度降下来并写明白**：运行器本身的可运行性已由 Batch 209—220 的
-    /// 各运行器测试套件覆盖，本批要证明的是"配置 → 运行器"的接线。
+ /// 与其为一个说不清的夹具硬凑断言，不如**把强度降下来并写明白**：运行器本身的可运行性已由 earlier—220 的
+    /// 各运行器测试套件覆盖，这里要证明的是"配置 → 运行器"的接线。
     ///
     /// **The strength of this test's evidence must be stated honestly**: it only proves the session is wired up, advances repeatedly, and never
     /// reports a failure. It **does not prove the algorithm produces candidates on this fixture** — candidates stayed empty here on both the
     /// trajectory and the PSO paths, which I read as an incomplete fixture (the model carries no objective function) rather than a wiring fault.
     ///
     /// Rather than force an assertion onto a fixture that cannot support it, **the strength is lowered and stated plainly**: runnability of the
-    /// runners themselves is covered by the per-runner suites of Batches 209—220; what this batch must prove is the "configuration to runner" wiring.
+    /// runners themselves is covered by the per-runner suites of Batches 209—220; what must prove is the "configuration to runner" wiring.
     ///
     /// </remarks>
     [Fact]

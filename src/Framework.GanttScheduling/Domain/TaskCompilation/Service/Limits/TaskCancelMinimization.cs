@@ -65,13 +65,13 @@ public class TaskCancelMinimization<T, E, A>
     /// 三处与基线不同，都是"无法表达"而不是"换个说法"：
     /// <list type="number">
     /// <item>取消未启用时基线返回 `Ok`——**这里保留**：那条目标本就不存在，无事可做不是"假装做了"；</item>
-    /// <item>系数提取失败时基线用无穷大；`Flt64` 没有无穷（B505 的同一处限制），所以这里失败；</item>
+    /// <item>系数提取失败时基线用无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败；</item>
     /// <item>编译没实现 `ICompilationColumns` 时失败，而不是加一个不存在的目标。</item>
     /// </list>
     ///
     /// The baseline minimises `Σ coefficient(task) * y[task]` when `taskCancelEnabled`, only over tasks with `cancelEnabled`. Three departures, all "cannot express" rather than
     /// "rephrase": cancellation disabled still returns `Ok` (**kept** — the objective does not exist, doing nothing is not pretending); an extraction failure uses infinity in the
-    /// baseline and `Flt64` has none (same limit as B505), so it fails here; and a compilation that does not implement `ICompilationColumns` fails instead of adding a nonexistent
+    /// baseline and `Flt64` has none (the same limit), so it fails here; and a compilation that does not implement `ICompilationColumns` fails instead of adding a nonexistent
     /// objective.
     /// </remarks>
     public Try Invoke(object model) {

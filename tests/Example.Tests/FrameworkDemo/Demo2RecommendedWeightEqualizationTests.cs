@@ -30,7 +30,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **推荐重量均衡域（B615）** / The recommended-weight-equalisation domain (B615).
+/// **推荐重量均衡域** / The recommended-weight-equalisation domain.
 /// </summary>
 /// <remarks>
 /// 四条管线：货物顺序（约束）、优先级预约（约束）、重量均衡（约束）、偏差目标（最大化）。判据的重点：**`precDepth` 恒为 0** 这个基线怪癖、
@@ -203,7 +203,7 @@ public class Demo2RecommendedWeightEqualizationTests {
         limit.OrderedPositions.Should().NotContain((positions[1], positions[0]),
             "the pairs run in ascending loading order, not descending");
         limit.OrderedPositions.Should().NotContain((positions[2], positions[0]));
-        // **排序本身不可观测，只能观测谓词的方向**。实测：把列表整体 `Reverse()` 后仍全绿——因为谓词
+        // **排序本身不可观测，只能观测谓词的方向**。实测：把列表整体 `Reverse` 后仍全绿——因为谓词
         // `order[a] < order[b]` 会在反转后的列表里重新筛出升序对，结果集与不反转相同。真正会改变结果的是
         // 排序的**第二级**（`Id` 字符串），而它只在**装载顺序相同**时才起作用，本 fixture 的三个舱位顺序互异。
         // 要在那里造出可观测差异，需要两个 `LoadingOrder.Order` 相同的舱位——而 `Aircraft.AggregationInitializer`

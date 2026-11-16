@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// ① 分母写成 alpha 而不是 1-alpha；② 忘了 max(...,0) 直接累加差值；③ 阈值取遍所有情景，
 /// 而不是只取一个“看起来对”的。
 ///
-/// The CvarFunction from the baseline, added in B1136.
+/// The CvarFunction from the baseline.
 ///
 /// Defined as <c>min over t of [ t + Σ p_i · max(L_i - t, 0) / (1 - alpha) ]</c> —
 /// the average loss over the worst (1-alpha) tail.

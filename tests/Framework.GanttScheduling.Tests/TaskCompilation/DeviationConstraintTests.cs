@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **两个偏移约束从空壳变成真约束行（B554）** / The two deviation constraints go from stubs to real rows (B554).
+/// **两个偏移约束从空壳变成真约束行** / The two deviation constraints go from stubs to real rows.
 /// </summary>
 /// <remarks>
 /// `TaskDelayTimeConstraint` 与 `TaskAdvanceTimeConstraint` 原来都直接返回 `Failed`。它们的行也是同一种，只差比较方向：
@@ -207,14 +207,14 @@ public class DeviationConstraintTests {
     /// **真实 SCIP：计划时间落在任务窗口之外时这条约束会让模型不可行** / Real SCIP: when the planned time falls outside the task window the row makes the model infeasible.
     /// </summary>
     /// <remarks>
-    /// **本批实测到的一个 ceiling**：`est` 在注册时就被钉在**任务自身窗口**的开始上（不允许延迟时 `est ≤ time.Start`），
+    /// **这里实测到的一个 ceiling**：`est` 在注册时就被钉在**任务自身窗口**的开始上（不允许延迟时 `est ≤ time.Start`），
     /// 所以 `est ≤ scheduledTime.Start` 这条约束只有在**计划时间早于任务窗口**时才是**紧的**；其余情况它一律更松，等于冗余行。
     /// 基线的行为一致（它也只写这一行），所以照抄，不擅自把行换成 `min(time.Start, scheduled.Start)`。
     ///
     /// 判据取"紧"的那一侧：任务窗口 03:00–05:00、计划 01:00 → `est ≥ 10800` 与 `est ≤ 3600` 直接矛盾。
     /// 有约束 → 不可行；去掉 → 可行。两边都跑，因为只测不可行会让"模型本来别处坏掉"通过。
     ///
-    /// **A ceiling measured in this batch**: `est` is pinned to the **task's own window** start at registration (`est ≤ time.Start` when delay is forbidden), so the row
+    /// **A ceiling measured in**: `est` is pinned to the **task's own window** start at registration (`est ≤ time.Start` when delay is forbidden), so the row
     /// `est ≤ scheduledTime.Start` is only **tight** when the planned time is earlier than the task window; otherwise it is looser and therefore redundant. The baseline behaves
     /// the same way (it writes only this row), so this copies it rather than quietly replacing it with `min(time.Start, scheduled.Start)`.
     ///

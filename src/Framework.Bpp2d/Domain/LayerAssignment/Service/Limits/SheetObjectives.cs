@@ -229,7 +229,7 @@ public sealed class SheetAreaMinimization
 /// 与基线 `MixedSheetObjectives.kt` 的 `SheetTypeCostMinimization` 对齐：按**板材类型**查成本表，把 `weight × cost` 作为该层的系数。
 ///
 /// **它是 `SheetAmountMinimization` 的一个系数实现，不是一个新算法**——判据证明的是同一件事：系数由"层 → 数"的函数给出。
-/// 本类只负责那个函数，目标本身复用 <see cref="SheetAmountMinimization"/>。这是 B651 把系数做成函数的直接收益。
+/// 本类只负责那个函数，目标本身复用 <see cref="SheetAmountMinimization"/>。这是 把系数做成函数的直接收益。
 ///
 /// 三处跳过，各有不同含义：
 ///
@@ -241,7 +241,7 @@ public sealed class SheetAreaMinimization
 ///
 /// Aligned with the baseline's `SheetTypeCostMinimization`: it looks up a cost by **sheet type** and uses `weight × cost` as that layer's coefficient. **It is a coefficient implementation for
 /// `SheetAmountMinimization`, not a new algorithm** — the criterion proves the same thing, that the coefficient comes from a "layer to number" function — and this class only supplies that
-/// function while the objective reuses `SheetAmountMinimization`, the direct payoff of making the coefficient a function in B651. Three skips with distinct meanings: **a layer without a sheet
+/// function while the objective reuses `SheetAmountMinimization`, the direct payoff of making the coefficient a function. Three skips with distinct meanings: **a layer without a sheet
 /// type** has no `TypeCode` to look up; **a type missing from the cost table is skipped rather than priced at zero**, since zero would mean "this type is free" and push the solver toward
 /// unpriced types; and **a zero product** (zero `weight` or zero cost) is skipped. Additionally, **an empty cost table or a zero `weight` builds no objective at all** (the baseline's
 /// `return ok`) and **still succeeds**, because "there is no cost to consider" is a legitimate input.

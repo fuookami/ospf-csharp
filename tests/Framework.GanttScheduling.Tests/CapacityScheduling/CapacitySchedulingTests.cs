@@ -326,8 +326,8 @@ public class CapacityCompilationTests {
             new[] { action }, slots, timeWindow);
 
         Result<CapacitySchedulingSolution<TestProductionAction>, ErrorCode, Error<ErrorCode>> result = compilation.ExtractSolution(new object());
-        // **B731 之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
-        // **B731 flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
+        // **之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
+        // **flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
         result.IsFailed.Should().BeTrue();
     }
 }
@@ -368,8 +368,8 @@ public class CapacityOrderCompilationTests {
             new[] { action }, slots, timeWindow, maxOrderPerSlot: 3);
 
         Result<CapacitySchedulingSolution<TestProductionAction>, ErrorCode, Error<ErrorCode>> result = compilation.ExtractSolution(new object());
-        // **B731 之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
-        // **B731 flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
+        // **之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
+        // **flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
         result.IsFailed.Should().BeTrue();
     }
 }
@@ -434,8 +434,8 @@ public class IterativeCapacityCompilationTests {
             new[] { executor }, new[] { action }, slots, timeWindow);
 
         Result<CapacitySchedulingSolution<TestProductionAction>, ErrorCode, Error<ErrorCode>> result = compilation.ExtractSolution(new object());
-        // **B731 之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
-        // **B731 flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
+        // **之后这条判据反过来**：没有决策变量的编译对象给不出解，显式失败而不是返回空计划。
+        // **flips this criterion**: a compilation without decision variables cannot produce a solution, so it fails explicitly instead of returning an empty plan.
         result.IsFailed.Should().BeTrue();
     }
 }

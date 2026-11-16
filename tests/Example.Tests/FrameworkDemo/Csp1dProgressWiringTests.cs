@@ -28,18 +28,18 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Application.Service;
 /// </summary>
 /// <remarks>
 /// 基线 `Csp1dColumnGeneration.solve` 与 `solveWithTrace` 都收 `progressContext` 参数，
-/// 并在 4 处调用 `progressContext?.throwIfCancelled()`。
+/// 并在 4 处调用 `progressContext?.throwIfCancelled`。
 ///
-/// C# 侧 B323 接入了 `CancellationToken`，B324/B325/B326 移植了整套进度上报与适配器，
+/// C# 侧 接入了 `CancellationToken`， / / 移植了整套进度上报与适配器，
 /// **但 CSP1D 链路一个都没接**——所以进度上报在 CSP1D 里**完全不生效**。
 ///
 /// **两套取消机制必须一起生效**：`cancellationToken` 与 `progressContext.IsCancelled` **语义相同、来源不同**，
 /// 调用方可能只给了其中之一。只查一套会让另一套静默失效。
 ///
-/// The baseline's `Csp1dColumnGeneration.solve` and `solveWithTrace` both take a `progressContext` parameter and call `progressContext?.throwIfCancelled()` at four
+/// The baseline's `Csp1dColumnGeneration.solve` and `solveWithTrace` both take a `progressContext` parameter and call `progressContext?.throwIfCancelled` at four
 /// points.
 ///
-/// B323 wired `CancellationToken` into the C# side and B324/B325/B326 ported the whole reporting system and adapters, **but the CSP1D chain got none of it** — so
+/// wired `CancellationToken` into the C# side and / / ported the whole reporting system and adapters, **but the CSP1D chain got none of it** — so
 /// progress reporting **does not work at all** inside CSP1D.
 ///
 /// **Both cancellation mechanisms must take effect together**: `cancellationToken` and `progressContext.IsCancelled` are **semantically identical but sourced
@@ -112,7 +112,7 @@ public class Csp1dProgressWiringTests {
 
     /// <summary>**进度序列必须与基线数值一致** / The snapshot sequence must match the baseline's numbers.</summary>
     /// <remarks>
-    /// **B329/B330 的数值是我自拟的（开场 60、收尾 100），不是基线的。** 这批核对了基线
+    /// **/ 的数值是我自拟的（开场 60、收尾 100），不是基线的。** 这批核对了基线
     /// `Csp1dColumnGeneration.kt` 的 4 处 `reportProgress`，拿到真实数值：
     ///
     /// | 位置 | 阶段 | 子阶段 | 阶段内 | 总体 |
@@ -125,7 +125,7 @@ public class Csp1dProgressWiringTests {
     /// **收尾上界是 99，不是 100**——基线的最终 MILP 拿的是 `phase(75, 99)`，所以进度**永远到不了 100**。
     /// 这条如实断言 99。
     ///
-    /// **B329/B330's numbers were my own invention (opening 60, closing 100), not the baseline's.** This batch checked the baseline's four `reportProgress` calls and took
+ /// **/the earlier numbers were my own invention (opening 60, closing 100), not the baseline's.** checked the baseline's four `reportProgress` calls and took
     /// the real values (table above).
     ///
     /// **The ceiling is 99, not 100** — the baseline's final MILP gets `phase(75, 99)`, so progress **never reaches 100**. This asserts 99 honestly.
@@ -189,7 +189,7 @@ public class Csp1dProgressWiringTests {
     /// <remarks>
     /// 基线 `:383` 把 `progressContext?.phase(iterationStart, iterationEnd)` 传给 `solveLpMaster`。
     ///
-    /// **判据靠"独立数值被替换掉"来区分**：B327 让 `SolveLPAsync(metaModel, options)` 在上报
+    /// **判据靠"独立数值被替换掉"来区分**： 让 `SolveLPAsync(metaModel, options)` 在上报
     /// `(MasterLp, 0, **30**)` 与 `(MasterLp, 100, **40**)`——那是它**脱离父级单独算**的数字。
     /// 一旦套上 `phase`，这两个数字被换成带内值，**30 与 40 都不该再出现**。
     ///
@@ -200,7 +200,7 @@ public class Csp1dProgressWiringTests {
     ///
     /// The baseline's `:383` passes `progressContext?.phase(iterationStart, iterationEnd)` to `solveLpMaster`.
     ///
-    /// **The criterion discriminates via "the standalone numbers are replaced"**: B327 made `SolveLPAsync(metaModel, options)` report `(MasterLp, 0, **30**)` and
+    /// **The criterion discriminates via "the standalone numbers are replaced"**: made `SolveLPAsync(metaModel, options)` report `(MasterLp, 0, **30**)` and
     /// `(MasterLp, 100, **40**)` — computed **standalone, without a parent**. Once `phase` wraps it, those become band-relative values, and **neither 30 nor 40 should
     /// appear**. If `Phase` were not wired and the parent context passed straight through, `MASTER_LP` snapshots would show 30 / 40 and this would be **red**.
     ///
@@ -231,20 +231,20 @@ public class Csp1dProgressWiringTests {
     /// <remarks>
     /// 基线 `:753` 把 `progressContext?.phase(75, 99)` 传给 `solveFinalMilp`。
     ///
-    /// **B333 曾说这条"观测不到"，理由是"`Register` 阶段就失败、走不到求解器"——那个结论是错的。**
+    /// **曾说这条"观测不到"，理由是"`Register` 阶段就失败、走不到求解器"——那个结论是错的。**
     /// 我当时只是读代码推断，没有实际跑到那里。实测：完整 CSP1D 流程**确实到达最终 MILP**，
     /// 快照里有 `REGISTRATION/-/100/99` 与 `MILP/incumbent/99/99`。
     ///
-    /// B333 判据失败的真正原因是**当时 `MockColumnGenerationSolver` 覆盖了带 options 的重载、
-    /// 把适配器包装摘掉了**（B335 修）。**"读代码推出的结论"与"实测的结论"在这里正好相反。**
+    /// 判据失败的真正原因是**当时 `MockColumnGenerationSolver` 覆盖了带 options 的重载、
+    /// 把适配器包装摘掉了**。**"读代码推出的结论"与"实测的结论"在这里正好相反。**
     ///
     /// The baseline's `:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
     ///
-    /// **B333 claimed this was "unobservable" because "`Register` fails and the solver is never reached" — that conclusion was wrong.** I inferred it from reading code
+    /// **claimed this was "unobservable" because "`Register` fails and the solver is never reached" — that conclusion was wrong.** I inferred it from reading code
     /// without actually running there. In fact the full CSP1D flow **does reach the final MILP**: the snapshots include `REGISTRATION/-/100/99` and `MILP/incumbent/99/99`.
     ///
-    /// The real reason B333's criterion failed was that **`MockColumnGenerationSolver` then overrode the options overload, removing the adapter wrapping** (fixed in
-    /// B335). **"A conclusion inferred from reading code" and "a measured conclusion" were exactly opposite here.**
+    /// The real reason the earlier criterion failed was that **`MockColumnGenerationSolver` then overrode the options overload, removing the adapter wrapping** (fixed in
+    /// ). **"A conclusion inferred from reading code" and "a measured conclusion" were exactly opposite here.**
     /// </remarks>
     [Fact]
     public async Task SolveAsync_ShouldRemapTheFinalMilpProgressIntoItsBand() {
@@ -273,18 +273,18 @@ public class Csp1dProgressWiringTests {
     /// predicate, this would be **red** — while a token-only implementation **passes every** `CancellationToken` criterion.
     ///
     /// **这条判据的能力边界要说清**：它**无法区分"有显式检查点"与"没有显式检查点"**。
-    /// 变异测试证实——把文件里**全部 3 处** `progressContext?.ThrowIfCancelled()` 一起删掉，这条**仍然绿**。
+    /// 变异测试证实——把文件里**全部 3 处** `progressContext?.ThrowIfCancelled` 一起删掉，这条**仍然绿**。
     ///
-    /// 原因是 `SolverProgressContext.Report` 内部**也会调 `ThrowIfCancelled()`**（B324 移植时对齐基线），
+    /// 原因是 `SolverProgressContext.Report` 内部**也会调 `ThrowIfCancelled`**，
     /// 而 CSP1D 在入口后必然上报一次阶段快照。所以取消**由 `Report` 兜住**，显式检查点是**冗余的第二道**。
     ///
     /// **冗余不是错误**：显式检查点能在"取消发生在两次上报之间"时更早抛出。但**它没有独立可证伪性**，
     /// 这里如实记录，不假装判据更强。
     ///
     /// **The criterion's limits must be stated**: it **cannot distinguish "there are explicit checkpoints" from "there are none"**. Mutation testing confirmed that
-    /// deleting **all 3** `progressContext?.ThrowIfCancelled()` calls still leaves this green.
+    /// deleting **all 3** `progressContext?.ThrowIfCancelled` calls still leaves this green.
     ///
-    /// The reason is that `SolverProgressContext.Report` **also calls `ThrowIfCancelled()` internally** (aligned with the baseline in B324), and CSP1D always reports
+    /// The reason is that `SolverProgressContext.Report` **also calls `ThrowIfCancelled` internally** (aligned with the baseline), and CSP1D always reports
     /// one stage snapshot after the entry. So cancellation **is caught by `Report`**, and the explicit checkpoints are a **redundant second layer**.
     ///
     /// **Redundancy is not a bug**: explicit checkpoints throw earlier when cancellation happens between two reports. But **they have no independent falsifiability**,

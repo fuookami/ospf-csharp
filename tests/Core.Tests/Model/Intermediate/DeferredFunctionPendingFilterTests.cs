@@ -24,12 +24,10 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟结构的集合与待处理过滤 / The deferred-structure collection and the pending filter.
 /// </summary>
 /// <remarks>
-/// B1237 补三样缺失状态里的第二样：`DeferredFunctionStructures`，以及基线四段函数的第二段。
+/// 补三样缺失状态里的第二样：`DeferredFunctionStructures`，以及基线四段函数的第二段。
 ///
 /// **这一段只实现了三个条件中的两个，第三个依赖仍缺的 `DeferredFunctionConstraintRegions`。**
 /// **而"缺一个条件"的正确写法与"缺三个条件"不同：** **前者要给一个能被看到的开关。**
-///
-/// adds
 ///
 /// **Two of its three conditions are implemented; the third needs the still-missing
 /// `DeferredFunctionConstraintRegions`.** **And "one condition missing" must be written differently from "three
@@ -126,7 +124,7 @@ public class DeferredFunctionPendingFilterTests
     /// **已物化过的结构不再进入待处理集合** / An already-materialised structure never re-enters the pending set.
     /// </summary>
     /// <remarks>
-    /// **这是 B1237 缺的第三个条件，也是这一批真正补上的东西。**
+    /// **这是第三个过滤条件，也是这里真正补上的东西。**
     ///
     /// **缺它的后果不是"少做一件事"，而是<b>多做一次</b>：** **同一个结构会被物化两次，
     /// 于是模型里出现两条描述同一个 `y` 的约束。**
@@ -137,7 +135,7 @@ public class DeferredFunctionPendingFilterTests
     /// **这类缺陷的发现方式是"模型的约束数不对"，而不是"求解失败"——
     /// 所以判据必须数<b>待处理集合的成员</b>，而不是等求解报错。**
     ///
-    /// **This is the third condition B1237 lacked and the thing this batch actually adds.**
+    /// **This is the third filter condition, and the thing this layer actually adds.**
     ///
     /// **Its absence does not leave one thing undone — it does one thing <b>twice</b>: the same structure is materialised
     /// again, leaving two constraint sets describing the same `y`.**
@@ -175,13 +173,13 @@ public class DeferredFunctionPendingFilterTests
     /// **那个临时开关应该已经不存在** / The temporary switch should be gone.
     /// </summary>
     /// <remarks>
-    /// **B1237 交付了一个 `skipBoundKeyFilter` 参数，它的用途是"让缺口在被使用的那一刻出现"。**
+    /// **曾经有一个 `skipBoundKeyFilter` 参数，它的用途是"让缺口在被使用的那一刻出现"。**
     /// **缺口补上之后，开关如果留着，就变成了一个<b>可以合法地物化两次</b>的入口——
     /// 那比没有开关更糟，因为它让错误看起来是被允许的。**
     ///
     /// **这条判据钉的是"后半部分已经履行"。** **只做前半部分的临时开关会沉淀成永久缺陷。**
     ///
-    /// **B1237 delivered a `skipBoundKeyFilter` parameter whose purpose was "make the gap appear at the moment it is
+    /// **A `skipBoundKeyFilter` parameter used to exist whose purpose was "make the gap appear at the moment it is
     /// used".** **Once the gap is closed, keeping it turns the switch into an entry point where materialising twice is
     /// <b>legal</b> — worse than no switch, because it makes the error look permitted.**
     ///
@@ -201,24 +199,24 @@ public class DeferredFunctionPendingFilterTests
     /// **三样状态现在都在** / All three pieces are now present.
     /// </summary>
     /// <remarks>
-    /// **B1236 这条断言"两个集合都不在"，B1237 改成"只剩最后一样"，B1238 改成"三样都在"。**
+    /// **这条断言经过三次改写：从"两个集合都不在"到"只剩最后一样"，再到"三样都在"。**
     ///
     /// **三次改动都是判据<b>变红</b>逼出来的，而不是有人想起来去更新它。**
     /// **这正是缺口判据的用途：** **它让"缺口被补上"这件事无法静默通过——
     /// 补的人必须回来把这句话也改掉，于是文档与代码不会分家。**
     ///
-    /// **而它现在还可以再测一件事：** **三样都在之后，这个判据不再有"下一批会变红"的预期，
+    /// **而它现在还可以再测一件事：** **三样都在之后，这个判据不再有"后续会变红"的预期，
     /// 所以它从此变成了一条普通的结构判据——它的生命周期结束了。**
     /// **一条缺口判据的终点，就是它不再会因为"变好"而变红。**
     ///
-    /// **B1236 said "neither collection is present", B1237 changed it to "only the last one is left", and B1238 changes it
-    /// to "all three are present".**
+    /// **This assertion went through three versions: "neither collection is present", "only the last one is left", and now
+    /// "all three are present".**
     ///
     /// **All three edits were forced by the criterion going <b>red</b>, not by someone remembering to update it.** **That is
     /// the point of a gap criterion: it makes closing a gap impossible to pass silently, since the closer must come back and
     /// change this sentence too, so docs and code cannot drift apart.**
     ///
-    /// **And it can now assert one more thing: with all three present it no longer expects to go red next batch, so it
+    /// **And it can now assert one more thing: with all three present it no longer expects to go red later, so it
     /// becomes an ordinary structural criterion — its lifecycle is over.** **A gap criterion ends the day it can no longer
     /// go red by things getting better.**
     /// </remarks>
@@ -236,11 +234,11 @@ public class DeferredFunctionPendingFilterTests
             .ToArray();
 
         code.Should().Contain(line => line.Contains("FunctionExpansionPolicy", StringComparison.Ordinal),
-            "B1236 added the policy");
+            "the policy is part of the build path");
         code.Should().Contain(line => line.Contains("DeferredFunctionStructures", StringComparison.Ordinal),
-            "B1237 added the structure snapshots");
+            "the structure snapshots are part of the build path");
         code.Should().Contain(line => line.Contains("DeferredFunctionConstraintRegions", StringComparison.Ordinal),
-            "B1238 added the region records, so the third filter condition can be applied");
+            "the region records are part of the build path, so the third filter condition can be applied");
     }
 
     private static string RepositoryRoot() {

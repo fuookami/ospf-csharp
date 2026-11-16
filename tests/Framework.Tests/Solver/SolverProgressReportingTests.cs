@@ -1,4 +1,4 @@
-// 求解进度上报（B657）的判据 / Criteria for solve-progress reporting (B657).
+// 求解进度上报的判据 / Criteria for solve-progress reporting.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// **求解进度上报（B657）** / Solve-progress reporting (B657).
+/// **求解进度上报** / Solve-progress reporting.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**求解前后各报一次**（0% 与 100%）、**失败时不报 100%**（进度停在中途）、

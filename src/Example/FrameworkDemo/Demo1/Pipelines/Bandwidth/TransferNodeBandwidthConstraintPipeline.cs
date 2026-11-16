@@ -62,7 +62,7 @@ public sealed class TransferNodeBandwidthConstraintPipeline : IPipeline<LinearMe
         SymbolCombination<LinearExpressionSymbol, Shape1> outFlow = _nodeBandwidth.OutFlow;
 
         foreach (Node node in _nodes.Where(n => n is NormalNode)) {
-            // node.maxOutDegree() * (1 - nodeAssignment[node]) + outFlow[node] <= node.maxOutDegree()
+            // node.maxOutDegree * (1 - nodeAssignment[node]) + outFlow[node] <= node.maxOutDegree
             Flt64 maxOut = node.MaxOutDegree().ToFlt64();
             LinearExpressionSymbol nodeAssignSym = nodeAssign[node.Index];
             LinearPolynomial<Flt64> nodeAssignPoly = nodeAssignSym.Polynomial;

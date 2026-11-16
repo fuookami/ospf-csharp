@@ -9,14 +9,14 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 立体角单位 / Solid angle units.
 /// </summary>
 /// <remarks>
-/// **B1129 按基线 `SolidAngle.kt` 新建。**
+/// **按基线 `SolidAngle.kt` 新建。**
 ///
-/// **`Steradian` 在基线里是 `PhysicalUnit()` 而不是 `DerivedPhysicalUnit(...)`**——
+/// **`Steradian` 在基线里是 `PhysicalUnit` 而不是 `DerivedPhysicalUnit(...)`**——
 /// **它是 SI 导出单位，但相对 SI 基准的因子恰好是 1，所以没有"导出"这一步。**
 ///
-/// **Created in B1129 from the baseline `SolidAngle.kt`.**
+/// **Created from the baseline `SolidAngle.kt`.**
 ///
-/// **`Steradian` is `PhysicalUnit()` in the baseline rather than `DerivedPhysicalUnit(...)`** —
+/// **`Steradian` is `PhysicalUnit` in the baseline rather than `DerivedPhysicalUnit(...)`** —
 /// **it is an SI derived unit whose factor against the SI base is exactly 1, so there is nothing to derive.**
 /// </remarks>
 public static class SolidAngleUnits

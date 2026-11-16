@@ -19,13 +19,13 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 真实函数符号投影成延迟结构 / A real function symbol projected into a deferred structure.
 /// </summary>
 /// <remarks>
-/// B1250 起的是"真实函数符号 → 结构快照"这条路。**在此之前，十三批的所有判据都<b>手工构造</b>
+/// 已有的是"真实函数符号 → 结构快照"这条路。**在此之前，此前的所有判据都<b>手工构造</b>
 /// `DeferredFunctionStructure`，而生产路径上没有任何地方构造它。**
 ///
 /// **而"手工造的结构能物化"与"用户写的函数能被物化"是两件事：**
 /// **前者证明物化器对不对，后者才证明这条路接没接上用户的写法。**
 ///
-/// B1250 starts the "real function symbol → structure snapshot" road. **Before it, all thirteen batches' criteria built
+/// The "real function symbol → structure snapshot" road starts here. **Before it, every criterion built
 /// `DeferredFunctionStructure` by hand while nothing on the production path built one.**
 ///
 /// **And "a hand-built structure materialises" is not "a function the user wrote gets materialised": the former proves the
@@ -43,7 +43,7 @@ public class DeferredFunctionStructureProjectionTests
     /// **理由很具体：** **`AbsFunction` 在构造时就把 `ResultVar`/`PositiveVar`/`NegativeVar`/`SignVar`
     /// 建好、设好范围、注册进了大 M 推导。** **如果投影<b>新造</b>一套变量，
     /// 那么物化出来的行会引用一套从未出现在模型里的变量——**
- /// **而 `AddConstraint` 会因此报 "variable ... is not registered"。**
+ /// **而 `AddConstraint` 会因此报 "variable... is not registered"。**
     ///
     /// **"相等的变量"与"同一个变量"在值语义下无法区分，而在注册表里差别是决定性的。**
     ///
@@ -52,7 +52,7 @@ public class DeferredFunctionStructureProjectionTests
     /// **The reason is concrete: `AbsFunction` builds `ResultVar`/`PositiveVar`/`NegativeVar`/`SignVar`, sets their ranges
     /// and registers them during Big-M inference.** **If the projection <b>invented</b> its own variables, the materialised
     /// rows would reference variables that never entered the model — and `AddConstraint` would report
-    /// "variable ... is not registered", exactly as B1239 hit.**
+    /// "variable... is not registered".**
     ///
     /// **"An equal variable" and "the same variable" are indistinguishable by value and decisive in a registry.**
     /// </remarks>
@@ -83,13 +83,13 @@ public class DeferredFunctionStructureProjectionTests
     /// **如果不认，它就会被待处理过滤器直接丢掉——而丢掉是<b>静默</b>的：
     /// 模型仍然能建、能解，只是少了那几行。**
     ///
-    /// **这与 B1234／B1235 那两次"看起来对、实际没接上"是同一个形状：
+    /// **这与"看起来对、实际没接上"是同一个形状：
     /// 一条投影写对了，而它在分派表里对不上号。**
     ///
     /// **If it were not recognised, the pending filter would drop it — and dropping is <b>silent</b>: the model still
     /// builds, still solves, and merely lacks those rows.**
     ///
-    /// **Same shape as B1234/B1235's "looks right, not connected": the projection is correct and it does not match the
+    /// **Same shape as "looks right, not connected": the projection is correct and it does not match the
     /// dispatch table.**
     /// </remarks>
     [Fact]
@@ -109,16 +109,16 @@ public class DeferredFunctionStructureProjectionTests
     /// The build path now derives structures itself and skips eager registration.
     /// </summary>
     /// <remarks>
-    /// **B1250 这条判据说的是"构建路径仍然不派生"，B1251 把它反过来——而它是<b>自己变红逼着改的</b>。**
+    /// **这条判据原本说"构建路径仍然不派生"，现在反过来——而它是<b>自己变红逼着改的</b>。**
     ///
     /// **这是缺口判据第七次生效。** **而这次它还有个特别之处：**
     /// **它当初把"为什么不能直接接"写成了三条可执行的事实（投影不存在于构建路径、
     /// 投影本身存在、`RegisterFunctionConstraints` 仍在），所以修改它的人必须同时面对那第三条。**
     ///
-    /// **如果当初只写"下一批把它接上"，那这一段就不会有"跳过"这半边——
+    /// **如果当初只写"后续把它接上"，那这一段就不会有"跳过"这半边——
     /// 而缺了跳过，模型里会有两套描述同一个 `abs` 的行，且求解成功。**
     ///
-    /// **B1250's version said "the build path still does not derive"; B1251 turns it around — and it was <b>the criterion
+    /// **It used to say "the build path still does not derive"; now it turns around — and it was <b>the criterion
     /// going red that forced the edit</b>.**
     ///
     /// **Seventh time a gap criterion has done its job.** **And this one is special: it had written "why it cannot be wired

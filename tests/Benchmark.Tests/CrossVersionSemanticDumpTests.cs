@@ -45,9 +45,9 @@ public sealed class CrossVersionSemanticDumpTests
 
     /// <summary>**每行都有段前缀，且布尔量是小写的** / Every line has a prefix and booleans are lowercase.</summary>
     /// <remarks>
-    /// **大写布尔是真实的跨语言陷阱：** **`bool.ToString()` 给 `True`，基线给 `true`——逐行 diff 会把每一行都算成差异。**
+    /// **大写布尔是真实的跨语言陷阱：** **`bool.ToString` 给 `True`，基线给 `true`——逐行 diff 会把每一行都算成差异。**
     ///
-    /// **A capitalised boolean is a real cross-language trap: `bool.ToString()` gives `True` while the baseline gives `true`, so a line-by-line diff
+    /// **A capitalised boolean is a real cross-language trap: `bool.ToString` gives `True` while the baseline gives `true`, so a line-by-line diff
     /// reports every line as different.**
     /// </remarks>
     [Fact]
@@ -98,10 +98,10 @@ public sealed class CrossVersionSemanticDumpTests
     /// Pending sections never overlap implemented ones; an empty list means all six are in.
     /// </summary>
     /// <remarks>
-    /// **B1309 之后清单是空的。** **这条判据因此多了一句断言"六段齐备"：** **否则"清单为空"与"某段悄悄消失"是同一个绿色——**
+    /// **此后清单是空的。** **这条判据因此多了一句断言"六段齐备"：** **否则"清单为空"与"某段悄悄消失"是同一个绿色——**
     /// **而后者正是这个文件最容易发生的事（少调一个 `Dump` 就少一整段，编译照样过）。**
     ///
-    /// **After B1309 the list is empty.** **The criterion therefore also asserts that all six sections are present: otherwise "the list is empty" and
+    /// **the list is empty.** **The criterion therefore also asserts that all six sections are present: otherwise "the list is empty" and
     /// "a section quietly disappeared" are the same green — and the latter is the easiest thing to do to this file, since dropping one `Dump` call
     /// compiles just fine.**
     /// </remarks>
@@ -178,11 +178,11 @@ public sealed class CrossVersionSemanticDumpTests
     /// The generation section: the budget really truncates, and the canonical keys are not all the same string.
     /// </summary>
     /// <remarks>
-    /// **第二条是本批实测抓到的缺陷：** **第一版用 `record.ToString()` 渲染规范键，而那个键的两个集合成员都是 `IReadOnlyList`，
+    /// **第二条是这里实测抓到的缺陷：** **第一版用 `record.ToString` 渲染规范键，而那个键的两个集合成员都是 `IReadOnlyList`，
     /// `ToString` 打印的是集合的类型名——于是前三个方案的摘要完全相同。** **一个"看起来有摘要、实际没有信息"的输出比没有摘要更糟：**
     /// **它会安静地通过"格式正确"这类判据。**
     ///
-    /// **The second assertion pins a defect this batch measured: the first version rendered the canonical key through `record.ToString()`, and both of
+    /// **The second assertion pins a defect measured: the first version rendered the canonical key through `record.ToString`, and both of
     /// that key's collection members are `IReadOnlyList`, so `ToString` printed the collection's type name — the first three plans hashed identically.**
     /// **A digest that looks informative and carries none is worse than no digest: it passes "the format is right" criteria quietly.**
     /// </remarks>

@@ -18,12 +18,12 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// CPLEX 原生分段线性写入 / Native piecewise-linear writing for CPLEX.
 /// </summary>
 /// <remarks>
-/// B1233 按基线 `CplexNativePiecewise.kt`（135 行）补写侧，与 B1232 的 COPT 同形。
+/// 对齐基线 `CplexNativePiecewise.kt`（135 行）补写侧，与 COPT 同形。
 ///
 /// **写出来的东西完全一样**（λ 组、`Σλ=1`、`x`／`y` 两条 linking、`SOS2`），
 /// **而校验比 COPT 多两条。这不是疏忽，是<b>后端之间真实的差别</b>：**
 ///
-/// | 校验 | COPT | CPLEX（本批） |
+/// | 校验 | COPT | CPLEX（这里） |
 /// | --- | --- | --- |
 /// | 断点数 ≥ 2 且与函数值等长 | ✅ | ✅ |
 /// | 输入／结果键不同、结果键不重复 | ✅ | ✅ |
@@ -37,8 +37,6 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// CPLEX 不需要哨兵，但它会直接接受非有限的断点，从而写出一行 NaN——那是 COPT 侧不会发生的失败。**
 ///
 /// **所以合并这两个写入器是错的：它们的<b>形状</b>一样，<b>防御</b>不一样。**
-///
-/// adds
 ///
 /// **What gets written is identical (λ group, `Σλ=1`, `x`/`y` linking rows, `SOS2`), while validation carries two more
 /// checks than COPT. That is not an oversight but a <b>real difference between the backends</b>.**

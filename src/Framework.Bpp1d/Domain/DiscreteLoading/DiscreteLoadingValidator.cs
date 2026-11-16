@@ -1,6 +1,6 @@
 // 离散装载输入校验 / Discrete-loading input validation.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的 `validate()` 对应。
-// Mirrors `validate()` from the pinned Kotlin baseline's `bpp/domain/discrete_loading/DiscreteLoadingContext.kt`.
+// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的 `validate` 对应。
+// Mirrors `validate` from the pinned Kotlin baseline's `bpp/domain/discrete_loading/DiscreteLoadingContext.kt`.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading.Model;
@@ -28,14 +28,14 @@ namespace Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading;
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// **本批只移植 `validate()`**，不移植 `register()`：后者要把整个问题写成线性元模型
+/// **这里只移植 `validate`**，不移植 `register`：后者要把整个问题写成线性元模型
 /// （`BinVar`、`LinearPolynomial`、布局选择组约束），属于下一层的接线工作。
 ///
-/// **`validate()` 本身价值很高**：基线里它承担了 11 类校验，任何一条漏掉都会让
+/// **`validate` 本身价值很高**：基线里它承担了 11 类校验，任何一条漏掉都会让
 /// **不可行或非法的输入进入建模阶段**，而建模阶段的失败信息离根因很远。
 ///
-/// **Only `validate()` is ported here**, not `register()`: the latter turns the whole problem into a linear meta model (`BinVar`, `LinearPolynomial`, layout-group
-/// constraints) and belongs to the next wiring layer. **`validate()` is valuable on its own**: the baseline performs eleven kinds of checks there, and missing any one
+/// **Only `validate` is ported here**, not `register`: the latter turns the whole problem into a linear meta model (`BinVar`, `LinearPolynomial`, layout-group
+/// constraints) and belongs to the next wiring layer. **`validate` is valuable on its own**: the baseline performs eleven kinds of checks there, and missing any one
 /// lets **infeasible or illegal input reach the modelling stage**, where the failure message is far from the root cause.
 /// </remarks>
 public sealed class DiscreteLoadingValidator<V>

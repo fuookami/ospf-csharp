@@ -155,11 +155,11 @@ public sealed class Item
 
     /// <summary>货物标识 / Item identifier</summary>
     /// <remarks>
-    /// 基线 `Item.id` 是**标识**，`toString()` 也返回它；C# 早期只有 `Name`，于是装载矩阵用名称做键，
+    /// 基线 `Item.id` 是**标识**，`toString` 也返回它；C# 早期只有 `Name`，于是装载矩阵用名称做键，
     /// 同名两件货会共用一列。`Id` 与 `Name` 分开是为了让"显示用的名字"和"身份"不再纠缠。
     /// 不给 `id` 时回落到名称，老调用方一行都不用改——但**同名两件货仍然会共用一列**，这是回落口径的已知上限。
     ///
-    /// The baseline's `Item.id` is the identity (its `toString()` returns it too); C# only had `Name`, so the stowage matrix keyed by name and two items sharing a name shared a
+    /// The baseline's `Item.id` is the identity (its `toString` returns it too); C# only had `Name`, so the stowage matrix keyed by name and two items sharing a name shared a
     /// column. Splitting `Id` from `Name` separates "display label" from "identity". Omitting `id` falls back to the name so existing callers need no change — but **two items with
     /// the same name still share a column**, a known ceiling of that fallback.
     /// </remarks>
@@ -167,9 +167,9 @@ public sealed class Item
 
     /// <summary>集装器 / The unit load device</summary>
     /// <remarks>
-    /// 基线 `enabled()` 有两条规则要用它（`enabledULDs` 与禁忌区间），此前 C# 的 `Item` 没有 `Uld`，两条都无从查起。
+    /// 基线 `enabled` 有两条规则要用它（`enabledULDs` 与禁忌区间），此前 C# 的 `Item` 没有 `Uld`，两条都无从查起。
     ///
-    /// The baseline's `enabled()` needs it for two rules (the `enabledULDs` check and the taboo range); C#'s `Item` had no `Uld`, so neither could be checked.
+    /// The baseline's `enabled` needs it for two rules (the `enabledULDs` check and the taboo range); C#'s `Item` had no `Uld`, so neither could be checked.
     /// </remarks>
     public ULD? Uld { get; }
     /// <summary>重量 / Weight (kg)</summary>
@@ -178,10 +178,10 @@ public sealed class Item
     public CargoPriority Priority { get; }
     /// <summary>货物类型 / Cargo type</summary>
     /// <remarks>
-    /// 单个货类是**主货类**的快捷方式，判定要用 <see cref="Cargos"/>：基线的 `enabled()` 反复问
+    /// 单个货类是**主货类**的快捷方式，判定要用 <see cref="Cargos"/>：基线的 `enabled` 反复问
     /// "这件货是不是 AOG **或** MAT"，而一件货可以同时是两者（`AOGMATAppointed` 那条规则就是为此存在的）。
     ///
-    /// The single type is a shortcut for the **primary** class; decide with <see cref="Cargos"/> instead: the baseline's `enabled()` repeatedly asks "is this item AOG **or** MAT",
+    /// The single type is a shortcut for the **primary** class; decide with <see cref="Cargos"/> instead: the baseline's `enabled` repeatedly asks "is this item AOG **or** MAT",
     /// and one item can be both — that is exactly why the `AOGMATAppointed` rule exists.
     /// </remarks>
     public CargoType CargoType { get; }
@@ -241,8 +241,8 @@ public sealed class Item
         Destination = destination;
         Status = status;
         Location = location;
-        // **显式的必装标志**（B907）：状态推断不出"必须装载"（`Optional` 的货可以是必装、`Loaded` 的货也可以只是已装）。
-        // **An explicit required flag** (B907): status cannot infer "must load" (an `Optional` cargo can still be mandatory).
+        // **显式的必装标志**：状态推断不出"必须装载"（`Optional` 的货可以是必装、`Loaded` 的货也可以只是已装）。
+        // **An explicit required flag**: status cannot infer "must load" (an `Optional` cargo can still be mandatory).
         Required = required || status is not (ItemStatus.Optional or ItemStatus.Reserved);
         Order = order;
     }
@@ -251,10 +251,10 @@ public sealed class Item
     /// 作业顺序 / The operational sequence.
     /// </summary>
     /// <remarks>
-    /// **可空**：不是每件货物都有作业时刻（B617 的 `loading_effectiveness` 域引入）。为 `null` 时
+    /// **可空**：不是每件货物都有作业时刻（的 `loading_effectiveness` 域引入）。为 `null` 时
     /// `ItemAheadLoadLimit` 的三个谓词全不成立，`ItemReweighNeededLimit` 把它当作"尚未复重"收进目标。
     ///
-    /// **Nullable**: not every item carries operational instants (introduced by the B617 `loading_effectiveness` domain). When null, `ItemAheadLoadLimit`'s three predicates all
+    /// **Nullable**: not every item carries operational instants (introduced by the `loading_effectiveness` domain). When null, `ItemAheadLoadLimit`'s three predicates all
     /// hold false and `ItemReweighNeededLimit` treats it as "not yet reweighed" and includes it in the objective.
     /// </remarks>
     public Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.Model.ItemOrder? Order { get; }
@@ -263,11 +263,11 @@ public sealed class Item
     /// 名字 / The name.
     /// </summary>
     /// <remarks>
-    /// **必须覆写**：基线的 Kotlin data class 自动生成基于构造属性的 `toString()`，而 C# 的 `class` 默认给类型全名。
+    /// **必须覆写**：基线的 Kotlin data class 自动生成基于构造属性的 `toString`，而 C# 的 `class` 默认给类型全名。
     /// 中间符号名是"货物 + 舱位"拼出来的，不覆写会让**每个**货物得到同一个名字，模型注册时直接报
     /// `Repeated "…"`（实测）。这不是命名美观问题，是符号唯一性问题。
     ///
-    /// **Must override**: the baseline's Kotlin data class generates `toString()` from its constructor properties, while a C# `class` defaults to the full type name. Intermediate symbol
+    /// **Must override**: the baseline's Kotlin data class generates `toString` from its constructor properties, while a C# `class` defaults to the full type name. Intermediate symbol
     /// names concatenate item and position, so not overriding gives **every** item the same name and model registration fails with `Repeated "…"` (measured). This is symbol uniqueness,
     /// not cosmetics.
     /// </remarks>

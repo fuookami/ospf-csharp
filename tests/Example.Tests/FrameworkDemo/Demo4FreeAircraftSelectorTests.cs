@@ -1,4 +1,4 @@
-// 自由飞机选择器（B756）/ The free-aircraft selector (B756).
+// 自由飞机选择器/ The free-aircraft selector.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **自由飞机选择器（B756）** / The free-aircraft selector (B756).
+/// **自由飞机选择器** / The free-aircraft selector.
 /// </summary>
 /// <remarks>
 /// 四道放行里有两处最容易写错：**禁忌表**（放过一次的飞机后续通道要跳过，否则第二、三通道立刻把同一架再放一次，等于只有一个通道）

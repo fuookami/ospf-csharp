@@ -20,18 +20,18 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// The MIP-backed CP path runs end to end on a real Gurobi backend.
 /// </summary>
 /// <remarks>
-/// **B1263 只用一个脚本化假求解器证明了"线性解被翻译成 CP 解"。那证明的是翻译那一层，不证明整条路。**
+/// **这里只用一个脚本化假求解器证明了"线性解被翻译成 CP 解"。那证明的是翻译那一层，不证明整条路。**
 ///
 /// **本仓有一条反复学到的教训：** **逐层绿什么也证明不了，直到有一次真实的端到端运行。**
 /// **假求解器返回的是我自己构造的 `SolveReport`，它不可能暴露
 /// "降阶出来的模型 Gurobi 解不了"或"列索引对不上"这类问题。**
 ///
-/// **所以这一条判据的价值不是再加一个测试，而是<b>把 B1263 那句话变成实测过的</b>：**
+/// **所以这一条判据的价值不是再加一个测试，而是<b>把 那句话变成实测过的</b>：**
 /// **"任意 MIP 后端都能当 CP 求解器"——`任意` 这个词，只有在一个真实后端上跑过之后才敢说。**
 ///
-/// **B1263 proved the translation with a scripted fake; a fake returns a `SolveReport` I built myself and cannot expose
+/// **The translation was proved with a scripted fake; a fake returns a `SolveReport` I built myself and cannot expose
 /// "Gurobi cannot solve the lowered model" or "the column indices do not line up".** **So this criterion's value is turning
-/// B1263's sentence into something measured: the word "any" is only earned on a real backend.**
+/// the earlier sentence into something measured: the word "any" is only earned on a real backend.**
 /// </remarks>
 public class MipBackedConstraintProgrammingGurobiIntegrationTest
 {

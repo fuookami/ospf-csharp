@@ -1,4 +1,4 @@
-// 心跳回调的判据（B798）/ Criteria for the heartbeat callbacks (B798).
+// 心跳回调的判据/ Criteria for the heartbeat callbacks.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **心跳要在成功和失败时都发** / Heartbeats must fire on success and on failure alike (B798).
+/// **心跳要在成功和失败时都发** / Heartbeats must fire on success and on failure alike.
 /// </summary>
 /// <remarks>
 /// 四点成对：分派前发一次 `RunningHeartBeat` / 收尾必发一次 `FinnishHeartBeat` / **成功时 `code == 0` 且 `message` 为空** /

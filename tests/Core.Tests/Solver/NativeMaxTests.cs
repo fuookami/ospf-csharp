@@ -22,8 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativeMax.kt` 的 `NativeMaxData` / `NativeMaxInputData` / `prepareNativeMax`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeMaxTests
 {
     /// <summary>
@@ -48,7 +47,7 @@ public class NativeMaxTests
     /// The Big-M coverage boundary: exactly the required amount <b>passes</b>, less is rejected.
     /// </summary>
     /// <remarks>
-    /// **这是本批最要紧的一条判据。**
+    /// **这是这里最要紧的一条判据。**
     ///
     /// **算例：两个输入 `x` 与 `y`，各自界 `[0, 10]。**
     /// **所以第一段的 `required = maxUpper - lower = 10 - 0 = 10`。**
@@ -313,7 +312,7 @@ public class NativeMaxTests
     /// <summary>造一个带上下界的连续变量 / Build a continuous variable with explicit bounds.</summary>
     /// <remarks>
     /// **仓库里没有 `BoundedReal` 这样的便捷类型，界是通过 `Range.Geq` / `Range.Leq` 设的。**
-    /// **本批的判据全靠真实的界，所以这个工厂是必需的而不是方便的。**
+    /// **这里的判据全靠真实的界，所以这个工厂是必需的而不是方便的。**
     ///
     /// **There is no `BoundedReal` convenience type in this repository; bounds are set through `Range.Geq` /
     /// `Range.Leq`.** **Every criterion here depends on real bounds, so this factory is necessary rather than

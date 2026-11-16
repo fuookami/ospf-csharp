@@ -50,9 +50,9 @@ public sealed record CuttingPlanSliceStub<V>(
 ///
 /// 约束分两类 / Two types of constraints:
 /// - 剪枝约束（IsPruning = true）：在搜索中间节点检查，用于提前剪枝无效分支
-///   Pruning constraints (IsPruning = true): checked at intermediate search nodes for early pruning
+/// Pruning constraints (IsPruning = true): checked at intermediate search nodes for early pruning
 /// - 叶节点约束（IsPruning = false）：仅在产出方案时检查，中间节点可能尚未满足
-///   Leaf constraints (IsPruning = false): only checked when emitting plans, may not be satisfied at intermediate nodes
+/// Leaf constraints (IsPruning = false): only checked when emitting plans, may not be satisfied at intermediate nodes
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric value type.</typeparam>
 public interface ICuttingPlanConstraint<V> where V : struct {

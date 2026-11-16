@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// `FullSumGenerator` must really search combinations that may repeat a width rather than merely construct a collector.
 /// </summary>
 /// <remarks>
-/// B307 之前它的方法体只有一行注释：`// Stub: FullSum search implementation deferred`。
+/// 之前它的方法体只有一行注释：`// Stub: FullSum search implementation deferred`。
 ///
-/// **本批的核心判据是"同一宽度可以多刀"**：这是 FullSum 与 `NSum` 的**唯一语义差别**。
+/// **这里的核心判据是"同一宽度可以多刀"**：这是 FullSum 与 `NSum` 的**唯一语义差别**。
 /// 若实现退化成"每个入口只取一次"（即 `NSum` 的语义），方案条数会**看起来完全合理**而语义错了。
 ///
-/// Before B307 its body was a single comment: `// Stub: FullSum search implementation deferred`.
+/// Before its body was a single comment: `// Stub: FullSum search implementation deferred`.
 ///
 /// **The core criterion is "one width may be cut several times"**: that is FullSum's **only semantic difference** from `NSum`. If the implementation
 /// degenerated to "take each entry once" (i.e. `NSum`'s semantics) the plan count would **look entirely plausible** while the semantics were wrong.

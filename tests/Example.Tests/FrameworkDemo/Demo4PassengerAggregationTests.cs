@@ -1,4 +1,4 @@
-// 乘客域聚合（B761）/ The passenger domain aggregation (B761).
+// 乘客域聚合/ The passenger domain aggregation.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **乘客域聚合（B761）** / The passenger domain aggregation (B761).
+/// **乘客域聚合** / The passenger domain aggregation.
 /// </summary>
 /// <remarks>
 /// 注册顺序是**取消 → 变更 → 人数**，顺序错了不会报错：人数表达式引用不到变更变量时就少项，而**解出来的人数看起来正常**。

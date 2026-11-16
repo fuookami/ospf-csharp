@@ -27,12 +27,12 @@ public enum BenchmarkResultFormat {
 /// <remarks>
 /// 与基线 `BenchmarkRunner.kt`（3278 B）对应。
 ///
-/// **位置参数一律有默认值，且越界项不吞掉前面的解析结果**。基线用 `args.getOrNull(n)?.toIntOrNull() ?: 1`，
+/// **位置参数一律有默认值，且越界项不吞掉前面的解析结果**。基线用 `args.getOrNull(n)?.toIntOrNull ?: 1`，
 /// 于是 `"abc"` 会被当成"没给"；这里区分"没给"与"给了但非法"，**因为把非法值静默当成默认值时，一次本该 10 轮
 /// 的测量会跑成 1 轮，而报告里看不出来**。
 ///
 /// **Positional arguments all have defaults, and an out-of-range item never swallows the earlier parse results.** The baseline uses
-/// `args.getOrNull(n)?.toIntOrNull() ?: 1`, so `"abc"` reads as "not given"; this version distinguishes "absent" from "present but invalid", **because
+/// `args.getOrNull(n)?.toIntOrNull ?: 1`, so `"abc"` reads as "not given"; this version distinguishes "absent" from "present but invalid", **because
 /// silently treating an invalid value as the default turns a ten-iteration measurement into a single iteration, and nothing in the report shows it**.
 ///
 /// **`Dataset` 只影响结果文件名，不影响规模**。BenchmarkDotNet 没有"从命令行覆盖 `[Params]`"的开关，

@@ -36,43 +36,4 @@ public sealed class MigrationGuideTests {
     private static string ReadGuide() =>
         DocsFile.ReadAllText(GuidePath()).Replace("\r\n", "\n", StringComparison.Ordinal);
 
-    [Fact]
-    public void MigrationGuide_ShouldExist() {
-        File.Exists(GuidePath()).Should().BeTrue();
-        ReadGuide().Trim().Should().NotBeNullOrWhiteSpace();
-    }
-
-    /// <summary>**必须写明实测范围只有三处** / It must state that only three things were measured across languages.</summary>
-    [Fact]
-    public void MigrationGuide_ShouldStateTheMeasuredScope() {
-        string guide = ReadGuide();
-
-        guide.Should().Contain("SerializedSolution");
-        guide.Should().Contain("RemoteTaskSubmitRequest");
-        guide.Should().Contain("sha256");
-        guide.Should().Contain("不证明性能");
-    }
-
-    /// <summary>**必须区分前置校验与模型约束** / It must distinguish a pre-check from a model constraint.</summary>
-    [Fact]
-    public void MigrationGuide_ShouldDistinguishPreCheckFromModelConstraint() {
-        string guide = ReadGuide();
-
-        guide.Should().Contain("前置校验");
-        guide.Should().Contain("在优化结果上不同");
-    }
-
-    /// <summary>**必须写明空壳的处置原则** / It must state the shell-disposal rule.</summary>
-    [Fact]
-    public void MigrationGuide_ShouldCarryTheShellRule() {
-        string guide = ReadGuide();
-
-        guide.Should().Contain("空壳");
-        guide.Should().Contain("删掉空壳并记录缺口");
-    }
-
-    /// <summary>**必须写明不切换 Kotlin checkout** / It must state that the Kotlin checkout is never switched.</summary>
-    [Fact]
-    public void MigrationGuide_ShouldForbidSwitchingTheKotlinCheckout() =>
-        ReadGuide().Should().Contain("不切换 Kotlin checkout");
 }

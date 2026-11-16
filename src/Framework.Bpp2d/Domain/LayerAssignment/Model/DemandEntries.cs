@@ -20,13 +20,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// 2. **面积需求按"单件包围面积 × 件数"**，用 `BoundingArea` 而不是 `Area`：圆形件的 `Area` 是圆面积，
 ///    但它在板材上占的是外接矩形，排版按包围面积算才不会低估。
 /// 3. **两条需求共用同一个物品 id，按物品顺序"先件数后面积"**：顺序决定了需求约束的索引，
-///    错位会让影子价格安到另一条需求上（B662 的教训）。
+///    错位会让影子价格安到另一条需求上（的教训）。
 /// 4. **每个物品各出一条（或两条）**，不去重、不合并：同一个物品出现两次是数据问题，不是这里该收拾的。
 ///
 /// Aligned with the baseline's `demandEntries`. Four things must be copied: **the amount demand is always added**, since the area one is an extra rather than a replacement and dropping the
 /// amount constraint leaves sheet counts unbounded; **the area demand is per-piece bounding area times the count**, using `BoundingArea` rather than `Area`, because a circle's `Area` is the circle
 /// itself while what it occupies on a sheet is its bounding box; **both entries share the item's id in "amount then area" order**, since that order fixes the demand constraint's index and a
-/// mismatch would attach the shadow price to the wrong demand (the B662 lesson); and **each item contributes one or two entries** with no deduplication or merging, duplicate items being a data
+/// mismatch would attach the shadow price to the wrong demand (the lesson); and **each item contributes one or two entries** with no deduplication or merging, duplicate items being a data
 /// problem rather than something to fix here.
 /// </remarks>
 public static class DemandEntries

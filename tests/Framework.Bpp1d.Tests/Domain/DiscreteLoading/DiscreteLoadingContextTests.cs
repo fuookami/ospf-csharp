@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **离散装载的注册与取解** / Registration and solution extraction.
 /// </summary>
 /// <remarks>
-/// 对应基线 `DiscreteLoadingContext.register()`（前半段）与 `extractSolution()`。四条拒绝条件：
+/// 对应基线 `DiscreteLoadingContext.register`（前半段）与 `extractSolution`。四条拒绝条件：
 ///
 /// | 条件 | 若放过 | 后果 |
 /// | --- | --- | --- |
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 ///
 /// **第二条最要紧**：`0.5` 不是浮点噪声，是**求解器在说"这不是整数解"**。
 ///
-/// Mirrors the baseline's `register()` prefix and `extractSolution()`. The four rejection rules are in the table; **the second matters most** — `0.5` is not floating
+/// Mirrors the baseline's `register` prefix and `extractSolution`. The four rejection rules are in the table; **the second matters most** — `0.5` is not floating
 /// noise, it is **the solver saying "this is not an integer solution"**.
 /// </remarks>
 public class DiscreteLoadingContextTests {
@@ -66,10 +66,10 @@ public class DiscreteLoadingContextTests {
 
     /// <summary>**非二元值必须被拒，不能四舍五入** / A non-binary value must be rejected, never rounded.</summary>
     /// <remarks>
-    /// **这是本批最重要的一条判据。** 求解器返回 `0.5` 意味着"这不是整数解"——
+    /// **这是这里最重要的一条判据。** 求解器返回 `0.5` 意味着"这不是整数解"——
     /// 四舍五入会把它当成"装了"或"没装"，然后**报告一个不可行的计划**。
     ///
-    /// **The most important criterion in this batch.** A `0.5` from the solver means "this is not an integer solution"; rounding turns it into "loaded" or "not loaded"
+    /// **The most important criterion in.** A `0.5` from the solver means "this is not an integer solution"; rounding turns it into "loaded" or "not loaded"
     /// and then **reports an infeasible plan**.
     /// </remarks>
     [Fact]
@@ -131,9 +131,9 @@ public class DiscreteLoadingContextTests {
 
         SetAllZero(model, context);
         SetValue(model, context.Aggregation.Assignments[new AssignmentKey("I1", "P1")], 1.0 + 1e-3);
-        // **占位也必须置 1。** 第一版漏了这一步，于是 `verify()` 先因为"有内容却没标占用"失败——
+        // **占位也必须置 1。** 第一版漏了这一步，于是 `verify` 先因为"有内容却没标占用"失败——
         // **判据绿了，但失败在别处**，把容差放宽到 `1e-2` 的变异因此存活。
-        // **The occupancy flag must be 1 as well.** The first version missed it, so `verify()` failed first on "content without occupancy" — **the criterion went green
+        // **The occupancy flag must be 1 as well.** The first version missed it, so `verify` failed first on "content without occupancy" — **the criterion went green
         // while failing elsewhere**, letting the "tolerance widened to 1e-2" mutant survive.
         SetValue(model, context.Aggregation.Occupied["P1"], 1.0);
 
@@ -171,17 +171,17 @@ public class DiscreteLoadingContextTests {
 
     /// <summary>**一个布局组选中两种布局必须被拒，且是"恰选一种"这条拦下的** / Selecting two layouts of one group must be rejected, and by the "exactly one" rule itself.</summary>
     /// <remarks>
-    /// **第一版夹具让 `verify()` 先拦下了。** 原来的布局是 `L1={P1}`、`L2={P2}`，
-    /// 选两种时 `verify()` 的"布局必须覆盖全部占用舱位"会先失败——**判据绿了，但没测到取解里的那条守卫**，
+    /// **第一版夹具让 `verify` 先拦下了。** 原来的布局是 `L1={P1}`、`L2={P2}`，
+    /// 选两种时 `verify` 的"布局必须覆盖全部占用舱位"会先失败——**判据绿了，但没测到取解里的那条守卫**，
     /// 变异会存活。
     ///
     /// 现在让**两种布局都覆盖占用舱位**：`L1={P1,P2}`、`L2={P1}`，占用的只有 `P1`。
-    /// 选 `L1` 与 `L2` 时 `verify()` **完全通过**（`L2` 覆盖 `P1`），
+    /// 选 `L1` 与 `L2` 时 `verify` **完全通过**（`L2` 覆盖 `P1`），
     /// **只有"恰选一种"那条能拦住**。
     ///
-    /// **The first fixture was caught by `verify()` instead.** It used `L1={P1}` and `L2={P2}`, so selecting both failed `verify()`'s "layout must cover every occupied
+    /// **The first fixture was caught by `verify` instead.** It used `L1={P1}` and `L2={P2}`, so selecting both failed `verify`'s "layout must cover every occupied
     /// position" first — **the criterion went green without exercising the extraction guard**, and the mutant would have survived. Now **both layouts cover the occupied
-    /// set**: `L1={P1,P2}` and `L2={P1}` with only `P1` occupied. Selecting `L1` and `L2` **passes `verify()` entirely** (`L2` covers `P1`), so **only the "exactly one"
+    /// set**: `L1={P1,P2}` and `L2={P1}` with only `P1` occupied. Selecting `L1` and `L2` **passes `verify` entirely** (`L2` covers `P1`), so **only the "exactly one"
     /// rule can catch it**.
     /// </remarks>
     [Fact]

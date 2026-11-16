@@ -23,12 +23,11 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// The region's exclusive end, and "an explicit M needs no range proof".
 /// </summary>
 /// <remarks>
-/// B1191 按基线 `FunctionExpansion.kt` 的 `DeferredFunctionConstraintRegion`、
+/// 对齐基线 `FunctionExpansion.kt` 的 `DeferredFunctionConstraintRegion`、
 /// `UnivariateLinearPiecewiseStructure`（限 `ValidateFallbackInputBounds`）与
 /// `DeferredFunctionFallback.kt` 的 `capturePwlInputBounds` 补。
 ///
-/// adds
-/// `UnivariateLinearPiecewiseStructure`, and `capturePwlInputBounds`.
+/// Adds `UnivariateLinearPiecewiseStructure`, and `capturePwlInputBounds`.
 /// </remarks>
 public class UnivariateLinearPiecewiseStructureTests
 {
@@ -64,7 +63,7 @@ public class UnivariateLinearPiecewiseStructureTests
     /// **给了显式 M 时，缺转换器与缺证明都不算错** / With an explicit M, a missing converter and proof are fine.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **自动 M 从输入范围推出，所以它必须证明"范围没有被后续约束放宽"。**
     /// **显式 M 是调用方给的数，与输入范围无关，也就不需要这份证明。**
@@ -182,11 +181,11 @@ public class UnivariateLinearPiecewiseStructureTests
         };
 
         // **常量 `11` 越过了捕获的上界 `10`。**
-        // **我这第一版写的是"常量 −5 越过下界"，而 `Bare()` 的输入常量其实是 `0`——
+        // **我这第一版写的是"常量 −5 越过下界"，而 `Bare` 的输入常量其实是 `0`——
         // 于是它落在 `[0, 10]` 内、判据变红。红的原因是我的输入选错。**
         //
         // **The constant `11` crosses the captured edge at `10`.**
-        // **My first version claimed "the constant −5 crosses the lower edge" while `Bare()`'s constant is actually `0`
+        // **My first version claimed "the constant −5 crosses the lower edge" while `Bare`'s constant is actually `0`
         // — inside `[0, 10]`, so the criterion reddened. Over my input again.**
         grown.ValidateFallbackInputBounds().Should()
             .BeOfType<Failed<Success, ErrorCode, Error<ErrorCode>>>(
@@ -301,7 +300,7 @@ public class UnivariateLinearPiecewiseStructureTests
 
     private static readonly RealVar FreeVariable = new("pwl-free");
 
-    // ===== B1199：行生成 =====
+    // ===== 行生成 =====
 
     /// <summary>
     /// **`1 + 4n` 行，名字与族** / `1 + 4n` rows, names and families.

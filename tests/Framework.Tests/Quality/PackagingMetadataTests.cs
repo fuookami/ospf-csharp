@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Quality;
 
 /// <summary>
-/// B846：打包元数据**必须是真的** / The packaging metadata must be real.
+/// 打包元数据**必须是真的** / The packaging metadata must be real.
 /// </summary>
 /// <remarks>
 /// `dotnet pack` 本来就跑得通——**这正是问题**：它默认打出 `1.0.0`、没有作者、没有自述文件，
@@ -61,7 +61,7 @@ public sealed class PackagingMetadataTests
         Match declared = Regex.Match(props, "<Version>([^<]+)</Version>");
         declared.Success.Should().BeTrue("the version must be declared explicitly, not left to the 1.0.0 default");
 
-        string status = ReadRepositoryFile(Path.Combine("docs", "kotlin-sync-status.md"));
+        string status = ReadRepositoryFile(Path.Combine("docs", "kotlin-capability-matrix.md"));
 
         status.Should().Contain(declared.Groups[1].Value,
             "the capability document records which baseline version this port tracks; a version that appears in only one of the two places is a lie in the other");
@@ -142,24 +142,24 @@ public sealed class PackagingMetadataTests
     /// **不许有 prerelease 依赖** / No prerelease dependencies.
     /// </summary>
     /// <remarks>
-    /// B848 之前 `Pomelo.EntityFrameworkCore.MySql` 是 `9.0.0-preview.3.efcore.9.0.0`，于是每次打包都报
+    /// 之前 `Pomelo.EntityFrameworkCore.MySql` 是 `9.0.0-preview.3.efcore.9.0.0`，于是每次打包都报
     /// **NU5104**："A stable release of a package should not have a prerelease dependency"——
     /// 我们的包版本是稳定的 `1.1.2`，依赖却是预览版。这个警告**从来没人处理**，因为它只是警告。
     ///
-    /// 判据直接扫 `Directory.Packages.props` 的 `<PackageVersion ... Version="..." />`，
+    /// 判据直接扫 `Directory.Packages.props` 的 `<PackageVersion... Version="..." />`，
     /// **任何带 `-preview` / `-alpha` / `-beta` / `-rc` 的版本都会红**——想用预览版，就得先改这条判据，也就得先说明理由。
     ///
-    /// Before B848 `Pomelo.EntityFrameworkCore.MySql` was `9.0.0-preview.3.efcore.9.0.0`, so every pack warned **NU5104**: "A stable release of a package should not have a
+    /// Before `Pomelo.EntityFrameworkCore.MySql` was `9.0.0-preview.3.efcore.9.0.0`, so every pack warned **NU5104**: "A stable release of a package should not have a
     /// prerelease dependency" — our packages are the stable `1.1.2` while the dependency was a preview. Nobody ever handled the warning, because it is only a warning.
-    /// This criterion scans the `<PackageVersion ... Version="..." />` entries in `Directory.Packages.props`: **any `-preview`, `-alpha`, `-beta` or `-rc` reds it** —
+    /// This criterion scans the `<PackageVersion... Version="..." />` entries in `Directory.Packages.props`: **any `-preview`, `-alpha`, `-beta` or `-rc` reds it** —
     /// wanting a preview means changing this criterion first, which means stating a reason first.
     /// </remarks>
     [Fact]
     public void NoDependency_ShouldBeAPrerelease() {
         string props = ReadRepositoryFile(Path.Combine("Directory.Packages.props"));
 
-        // **只看 XML 行**：注释里会提到预览版本号（B848 的说明就写着），把注释算进来会让判据红在自己的解释上。
-        // **Only XML lines**: the comments mention a preview version (B848's note spells it out), and counting them would red the criterion on its own explanation.
+        // **只看 XML 行**：注释里会提到预览版本号，把注释算进来会让判据红在自己的解释上。
+        // **Only XML lines**: the comments mention a preview version (the earlier note spells it out), and counting them would red the criterion on its own explanation.
         var offenders = new List<string>();
         foreach (string line in props.Split('\n')) {
             string trimmed = line.TrimStart();

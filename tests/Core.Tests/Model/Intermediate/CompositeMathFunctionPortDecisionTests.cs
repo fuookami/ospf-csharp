@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// Why the `CompositeMathFunction` base class is deliberately not ported.
 /// </summary>
 /// <remarks>
-/// B1258 做的是逐项对照里的 `CompositeFunctions.kt`（739 行）。**结果是一个"不移植"的决定，
+/// 逐项对照的对象是基线 `CompositeFunctions.kt`（739 行）。**结果是一个"不移植"的决定，
 /// 而它必须带着可执行的理由，否则下一个人会重新做一遍同样的调查。**
 ///
 /// 基线里那个基类只做三件事：
@@ -33,21 +33,21 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 调用在一个<b>已经存活</b>的模型上（比如重注册），那时"失败后留下半截行"会被观察到。
 /// 而本仓的构建流程是"每次 `InvokeAsync` 建一个新模型，失败就整个丢弃"——半截行没有观察者。**
 ///
-/// **第三条为什么不能照搬：** **B1256 已经查明，`CapturedInputBounds` 这一类字段在本仓
+/// **第三条为什么不能照搬：** **`CapturedInputBounds` 这一类字段在本仓
 /// <b>没有任何生产者</b>。** **照着基线把校验加进来，加到的就是一个恒为 null 的字段上的检查——
-/// 那正是 B1256 点名批评的"永不触发的检查"。**
+/// 那正是"永不触发的检查"。**
 ///
-/// **所以这一批的交付是<b>一个有理由的"不做"</b>，而不是"还没做"。**
+/// **所以这里的交付是<b>一个有理由的"不做"</b>，而不是"还没做"。**
 ///
-/// B1258 is the `CompositeFunctions.kt` (739 lines) item of the survey. **The result is a "do not port" decision that must
+/// The survey item is the baseline's `CompositeFunctions.kt` (739 lines). **The result is a "do not port" decision that must
 /// carry executable reasons, or the next person redoes the same investigation.**
 ///
 /// The baseline base class does exactly three things, and the three differ here: helper concatenation already exists per
 /// leaf; the atomic registration is <b>unobservable</b> because every `InvokeAsync` builds a fresh model and discards it on
 /// failure, so there is no observer for half-written rows; and the captured-bounds validation would attach to a field that
-/// <b>nothing produces</b> (established in B1256) — precisely the never-firing check B1256 called out.
+/// <b>nothing produces</b> — precisely the never-firing check that has to be avoided.
 ///
-/// **So this batch ships a <b>reasoned "no"</b>, not an unfinished "not yet".**
+/// **So this ships a <b>reasoned "no"</b>, not an unfinished "not yet".**
 /// </remarks>
 public class CompositeMathFunctionPortDecisionTests
 {
@@ -57,10 +57,10 @@ public class CompositeMathFunctionPortDecisionTests
     /// </summary>
     /// <remarks>
     /// **这条是缺口判据：** **有人开始移植这个基类（或给叶子加边界参数）时它会变红，
-    /// 而那时该做的是先回答"谁来生产那些边界"——那正是 B1256 留下的同一个问题。**
+    /// 而那时该做的是先回答"谁来生产那些边界"——那是同一个尚未回答的问题。**
     ///
     /// **This is the gap criterion: it goes red the moment someone starts porting the base (or adds a bounds argument to a
-    /// leaf), and then the first question to answer is "who produces those bounds" — the same question B1256 left.**
+    /// leaf), and then the first question to answer is "who produces those bounds" — a question still unanswered.**
     /// </remarks>
     [Fact]
     public void ThereShouldBeNoCompositeBaseAndNoBoundsArgument() {

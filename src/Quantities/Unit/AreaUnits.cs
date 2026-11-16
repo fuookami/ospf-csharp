@@ -19,10 +19,10 @@ public static class AreaUnits {
     public static readonly PhysicalUnit Hectare = new DerivedUnit(SquareMeter.ScaleMultiply(Scale.Invoke(10000)), "hectare", "ha");
     /// <summary>英亩 / Acre (1 ac = 4046.8564224 m^2).</summary>
     public static readonly PhysicalUnit Acre = new DerivedUnit(SquareMeter.ScaleMultiply(Scale.Invoke(4046.8564224)), "acre", "ac");
-    // **以下四个是 B1129 补的**：基线的 `Area.kt` 有 `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`，
+    // **以下四个按基线补齐**：基线的 `Area.kt` 有 `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`，
     // **而 `Stress` 量纲（psi/psf）正需要前两个**——**不补它们，英制压力单位就建不出来。**
     //
-    // **The four below were added in B1129**: the baseline's `Area.kt` has `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`,
+    // **The four below were added**: the baseline's `Area.kt` has `SquareInch`/`SquareFoot`/`SquareYard`/`SquareMile`,
     // **and the `Stress` dimension (psi/psf) needs the first two** — **without them the imperial pressure units cannot exist.**
     /// <summary>平方英寸 / Square inch.</summary>
     public static readonly PhysicalUnit SquareInch = new DerivedUnit(SquareMeter.ScaleMultiply(Scale.Invoke(0.00064516)), "square inch", "in2");
@@ -33,13 +33,13 @@ public static class AreaUnits {
     /// <summary>平方英里 / Square mile.</summary>
     public static readonly PhysicalUnit SquareMile = new DerivedUnit(SquareMeter.ScaleMultiply(Scale.Invoke(2589988.110336)), "square mile", "mi2");
 
-    // 以下 4 个是 B1144 按基线 Area.kt 补的。
+    // 以下 4 个按基线 `Area.kt` 补齐。
     //
     // **`SquareChain` 与 `SquareRod` 这两个名字里的 "square" 修饰的是长度单位，不是面积单位**：
     // **一个 `SquareRod` 是 1 rod × 1 rod = 16.5 ft 见方 ≈ 25.29 m²。**
     // **写成 "rod 的平方" 与写成 "边长为 1 rod 的正方形" 数值相同，但前者容易让人去找一个叫 rod² 的单位。**
     //
-    // The four below were added in B1144 from Area.kt.
+    // The four below were added from Area.kt.
     //
     // **The "square" in `SquareChain` and `SquareRod` modifies a length unit, not an area unit**:
     // **a square rod is 1 rod by 1 rod, i.e. 16.5 ft on a side, about 25.29 m2.**

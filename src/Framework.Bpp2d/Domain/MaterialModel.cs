@@ -4,7 +4,7 @@
 //
 // 这是解除"物料汇总"阻塞的一批：`IAbstractItem` 的 `materialAmounts` 需要 `MaterialKey`，`Packer` 的物料汇总
 // 一直因此留空。
-// This batch unblocks the material summary: `IAbstractItem.materialAmounts` needs `MaterialKey`, which is why
+// unblocks the material summary: `IAbstractItem.materialAmounts` needs `MaterialKey`, which is why
 // `Packer`'s material summary had been deliberately left empty.
 
 using System;
@@ -188,7 +188,7 @@ public static class MaterialSummaryOps {
     /// </summary>
     /// <remarks>
     /// 用 <see cref="MaterialKey"/> 作字典键是安全的：它实现了 `IEquatable` 与 `GetHashCode`，且相等性只依赖
-    /// 编号、类型、制造商、供应商四个**不可变**字段，不存在"哈希随状态漂移"的问题。这与本会话早先踩过的
+    /// 编号、类型、制造商、供应商四个**不可变**字段，不存在"哈希随状态漂移"的问题。这与曾经遇到的
     /// "深值对象当字典键"不是同一类情况。
     /// Using <see cref="MaterialKey"/> as a dictionary key is safe: it implements `IEquatable` and `GetHashCode` over
     /// four **immutable** fields, so its hash cannot drift with state. This is not the same hazard as the earlier

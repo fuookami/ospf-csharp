@@ -9,10 +9,10 @@
 // This is **remnant reporting**, not remnant inventory. Cross-job stock, priority and warehouse location management
 // are inventory semantics and stay outside this framework.
 //
-// 层模型（`Sheet`／`SheetLayer`／`Layer`）已在 Batch 82 移植，因此本类同时提供**接 `Sheet` 的正规入口**
+// 层模型（`Sheet`／`SheetLayer`／`Layer`）已在 earlier 移植，因此本类同时提供**接 `Sheet` 的正规入口**
 // （`AnalyzeSheets`）与接扁平放置列表的入口（`Analyze`／`AnalyzeSheet`）。两者共用同一套切片算法，差别只在
 // 如何取得占用区域。
-// The layer model (`Sheet` / `SheetLayer` / `Layer`) landed in Batch 82, so this offers both the **proper `Sheet`
+// The layer model (`Sheet` / `SheetLayer` / `Layer`) landed in earlier, so this offers both the **proper `Sheet`
 // entry point** (`AnalyzeSheets`) and the flat-placement one (`Analyze` / `AnalyzeSheet`). Both share one slicing
 // algorithm; only how the occupied regions are obtained differs.
 //

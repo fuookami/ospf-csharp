@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// `result` 变成一个介于 0 与 `input` 之间的原像——模型可行，结果是捏造出来的。**
 /// **③ `lower ≤ upper`** —— **倒序范围会让 `_zero_*` 把 `result` 夹进一个空区间。**
 ///
-/// B1178, following the baseline's `ConditionalValue`.
+/// Following the baseline's `ConditionalValue`.
 ///
 /// **The four rows are "two per branch", and the branches pull in opposite directions**:
 ///

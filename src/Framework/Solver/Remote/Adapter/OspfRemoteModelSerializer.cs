@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Adapter;
 /// 绝不"尽力序列化"一个身份不完整的模型。
 ///
 /// 基线里的线性／二次模型体序列化与 <c>ModelData</c> 工厂尚未移植——它们依赖的模型级身份访问器
-/// 见 <c>IBasicModelView.IdentityNamespace</c>／<c>IdentitySchemaVersion</c>，本批已作为默认接口成员
+/// 见 <c>IBasicModelView.IdentityNamespace</c>／<c>IdentitySchemaVersion</c>，这里已作为默认接口成员
 /// 补齐（不破坏任何现有实现）。
 ///
 /// Aligns with the fixed Kotlin baseline <c>OspfRemoteModelSerializer</c>. This class currently provides
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Framework.Solver.Remote.Adapter;
 /// serialization outright rather than best-effort serializing an incomplete identity.
 ///
 /// The baseline's linear/quadratic body serialization and the <c>ModelData</c> factories are not yet
-/// ported; the model-level identity accessors they need are supplied this batch as
+/// ported; the model-level identity accessors they need are supplied here as
 /// <c>IBasicModelView.IdentityNamespace</c>/<c>IdentitySchemaVersion</c> default interface members, which
 /// break no existing implementation.
 /// </remarks>
@@ -44,10 +44,10 @@ public static class OspfRemoteModelSerializer {
     /// 序列化线性三元模型 / Serialize a linear triad model.
     /// </summary>
     /// <remarks>
-    /// 与基线一致：先做**整模型身份校验**（C# 对应 <c>ValidateIdentity()</c>，它会拒绝混用多个命名空间或
+    /// 与基线一致：先做**整模型身份校验**（C# 对应 <c>ValidateIdentity</c>，它会拒绝混用多个命名空间或
     /// schema 的模型），再逐元素过身份闸门，任一失败即拒绝序列化。模型级命名空间取自约束批次——
     /// 因为整模型校验已保证全部元素共用同一套命名空间与 schema，取任一处都等价。
-    /// Mirrors the baseline: validate the whole model's identity first (C#'s <c>ValidateIdentity()</c>,
+    /// Mirrors the baseline: validate the whole model's identity first (C#'s <c>ValidateIdentity</c>,
     /// which rejects a model mixing several namespaces or schemas), then gate each element; any failure
     /// rejects serialization. The model-level namespace comes from the constraint batch because the
     /// whole-model check already guarantees every element shares one namespace and schema.

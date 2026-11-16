@@ -20,18 +20,18 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.LengthAssignment;
 /// **"没有分配"是空列表，不是 null** / "Nothing assigned" is an empty list, not null.
 /// </summary>
 /// <remarks>
-/// **B377 发现的偏离**：B376 修好了 `YieldAggregation` 的同一处问题，
+/// 发现的偏离**： 修好了 `YieldAggregation` 的同一处问题，
 /// **漏了 `LengthAggregation`**——那里是**一模一样的 `Count > 0 ? list : null`**。
 ///
-/// 基线 `LengthAssignmentModelingResult` 的两个字段是 `= emptyList()`，
+/// 基线 `LengthAssignmentModelingResult` 的两个字段是 `= emptyList`，
 /// 返回处直接传列表本身。
 ///
-/// **这是本会话第二次"修一处等于没修"**（第一次是 B373 的 `SolutionAmount`）。
+/// **这是第二次"修一处等于没修"**（第一次是 的 `SolutionAmount`）。
 /// 两次都是**同一个模式在另一个类里**。规律：**修完一处必须全仓搜该模式**。
 ///
-/// **B377's deviation**: B376 fixed this in `YieldAggregation` and **missed `LengthAggregation`**, which had **the identical `Count > 0 ? list : null`**. The baseline's two
-/// fields are `= emptyList()` and the return passes the lists through. **This is the second "fixing one place changes nothing"** in this session (the first was
-/// `SolutionAmount` in B373). Both were **the same pattern in another class**. The rule: **after fixing one site, search the whole repo for the pattern**.
+/// **the earlier deviation**: fixed this in `YieldAggregation` and **missed `LengthAggregation`**, which had **the identical `Count > 0 ? list : null`**. The baseline's two
+/// fields are `= emptyList` and the return passes the lists through. **This is the second "fixing one place changes nothing"** in this session (the first was
+/// `SolutionAmount`). Both were **the same pattern in another class**. The rule: **after fixing one site, search the whole repo for the pattern**.
 /// </remarks>
 public class LengthEmptyListTests {
     private static Quantity<Flt64> Millimetres(double value) =>

@@ -1,4 +1,4 @@
-// 板材类型成本目标（B652）的判据 / Criteria for the sheet-type cost objective (B652).
+// 板材类型成本目标的判据 / Criteria for the sheet-type cost objective.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **板材类型成本目标（B652）** / The sheet-type cost objective (B652).
+/// **板材类型成本目标** / The sheet-type cost objective.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**成本表缺该类型时跳过而不是按零计**（按零计等于"这个类型免费"）、**成本表为空或权重为零时不建目标**。

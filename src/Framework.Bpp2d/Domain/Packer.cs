@@ -4,14 +4,14 @@
 // Mirrors the pinned baseline: expands the laid-out sheets into 2D placements, computes the loading order, validates
 // the geometry, summarises materials and emits a `PackingResult`.
 //
-// 层模型已在 Batch 82 移植，因此本类同时提供**接 `Sheet` 的正规入口**（`InvokeSheets`）与接扁平放置列表的入口
+// 层模型已在 earlier 移植，因此本类同时提供**接 `Sheet` 的正规入口**（`InvokeSheets`）与接扁平放置列表的入口
 // （`Invoke`）。前者与基线签名一致，后者在只要放置、不关心层的场景下少一次包装。
-// The layer model landed in Batch 82, so this offers both the **proper `Sheet` entry point** (`InvokeSheets`) and the
+// The layer model landed in earlier, so this offers both the **proper `Sheet` entry point** (`InvokeSheets`) and the
 // flat-placement one (`Invoke`). The former matches the baseline signature; the latter skips a wrapper when only
 // placements matter.
 //
-// 物料汇总在 Batch 83 接通：`MaterialKey`／`Material` 与 `IAbstractItem.MaterialAmounts` 均已移植。
-// The material summary came online in Batch 83: `MaterialKey` / `Material` and `IAbstractItem.MaterialAmounts` are all
+// 物料汇总在 earlier 接通：`MaterialKey`／`Material` 与 `IAbstractItem.MaterialAmounts` 均已移植。
+// The material summary came online in earlier: `MaterialKey` / `Material` and `IAbstractItem.MaterialAmounts` are all
 // ported now.
 
 using System;

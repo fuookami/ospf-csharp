@@ -1,4 +1,4 @@
-// 两个目标注册助手（B660）的判据 / Criteria for the two objective-registration helpers (B660).
+// 两个目标注册助手的判据 / Criteria for the two objective-registration helpers.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **两个目标注册助手（B660）** / The two objective-registration helpers (B660).
+/// **两个目标注册助手** / The two objective-registration helpers.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**助手把参数原样交给目标**（读多项式系数，不只查"注册成功"）、
@@ -31,10 +31,10 @@ public class SheetObjectiveRegistrationTests {
     private static Quantity<FltX> Q(double value) => new(new FltX(value), LengthUnits.Millimeter);
 
     /// <remarks>
-    /// **层必须带板材类型**：`SheetAreaMinimization` 会跳过没有板材的层（B651 已记档），
+    /// **层必须带板材类型**：`SheetAreaMinimization` 会跳过没有板材的层，
     /// 层不带板材时目标注册成功却什么都不加，判据就会误判成"助手没生效"。
     ///
-    /// **The layer must carry a sheet type**: `SheetAreaMinimization` skips sheet-less layers (recorded in B651), so a layer without one makes the registration succeed while adding nothing and
+    /// **The layer must carry a sheet type**: `SheetAreaMinimization` skips sheet-less layers (recorded), so a layer without one makes the registration succeed while adding nothing and
     /// the criterion would misread that as the helper being inert.
     /// </remarks>
     private static Layer<FltX> Layer(double width, double height, string itemId) =>
@@ -70,12 +70,12 @@ public class SheetObjectiveRegistrationTests {
     /// 1. 默认权重 → 目标多项式里面积单项的系数是 **1**。
     /// 2. 传 `2.5` → 同一单项的系数是 **2.5**（不是 1）。**只看"注册成功"测不到这一点**，必须读系数。
     /// 3. 目标名落在模型里，是默认的 `sheet_area_minimization`。
-    /// 4. **重复注册不报错而是叠加**（实测：`AddObject` 容忍重名，与 B650 的变量容忍同类），
-    ///    所以调用方不能重复注册——这是风险而不是功能。
+    /// 4. **重复注册不报错而是叠加**（实测：`AddObject` 容忍重名，与 的变量容忍同类），
+    /// 所以调用方不能重复注册——这是风险而不是功能。
     ///
     /// Four paired points: the default weight gives an area monomial coefficient of **1**; passing `2.5` gives **2.5** rather than 1, which **a mere success check cannot detect** because it never
     /// reads the coefficient; the objective name reaches the model as `sheet_area_minimization`; and **a repeated registration stacks instead of failing** (measured: `AddObject` tolerates
-    /// duplicate names, the same family as B650's variables), so callers must not double-register — a risk, not a feature.
+    /// duplicate names, the same family as the earlier variables), so callers must not double-register — a risk, not a feature.
     /// </remarks>
     [Fact]
     public void RegisterSheetAreaMinimization_ShouldPassTheWeightThrough()
@@ -116,13 +116,13 @@ public class SheetObjectiveRegistrationTests {
     /// 四点成对：
     ///
     /// 1. 默认 → **至少一个单项**，系数 1。`null` 在 `SheetAmountMinimization` 里表示"缺数据"，会**跳过该层**，
-    ///    所以"单项数为 0"正是"系数为 null"的指纹（B652 的教训）。
+    /// 所以"单项数为 0"正是"系数为 null"的指纹。
     /// 2. 传 `0` → 单项**仍在**、系数为 0：零权重不等于缺数据。
     /// 3. 单项的符号是份数变量 `Y`，不是别的。
     /// 4. 目标名是默认的 `sheet_amount_minimization`。
     ///
     /// Four paired points: the default yields **at least one monomial** with coefficient 1; `null` means "missing data" in `SheetAmountMinimization` and **skips the layer**, so a zero monomial
-    /// count is the fingerprint of a null coefficient (the B652 lesson); passing `0` leaves the monomial **in place** with coefficient 0, since zero weight differs from missing data; and the
+    /// count is the fingerprint of a null coefficient (the lesson); passing `0` leaves the monomial **in place** with coefficient 0, since zero weight differs from missing data; and the
     /// monomial's symbol is the copy-count variable `Y`.
     /// </remarks>
     [Fact]

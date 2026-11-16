@@ -1,4 +1,4 @@
-// 箱装载顺序 / 尾箱分配（B633）的判据 / Criteria for the bin loading-order and tail-bin constraints (B633).
+// 箱装载顺序 / 尾箱分配的判据 / Criteria for the bin loading-order and tail-bin constraints.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.LayerAssignment;
 
 /// <summary>
-/// **箱装载顺序 / 尾箱分配（B633）** / The bin loading-order and tail-bin constraints (B633).
+/// **箱装载顺序 / 尾箱分配** / The bin loading-order and tail-bin constraints.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**只对相邻同型箱加行**、**每对两条**、以及尾箱两支的**不对称**（最后一箱比 `v`，其余比 `v[i+1]`）。

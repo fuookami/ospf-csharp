@@ -22,15 +22,15 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness;
 /// 与基线 `loading_effectiveness/Aggregation.kt` 的**基础部分**对齐：相邻舱位对、有序舱位对、来源与目的地集合、
 /// 以及 `PriorityOrderLimit` / `SourceEarlyLimit` 所需的两项派生量。
 ///
-/// **本批只落地不依赖 `IfFunction` 的部分**。基线的五个子模型里有四个（`SequentialLoading`、
+/// **这里只落地不依赖 `IfFunction` 的部分**。基线的五个子模型里有四个（`SequentialLoading`、
 /// `TransferAdjacentLoading`、`TrailerLoading`、`AdviceLoading` 的松弛项）都建立在
 /// `IfFunction(… − 2 + ε)` 之上，而本仓的 `IfFunction.Create` 对"带单项式且带非零常数"的条件一律拒绝——
-/// 与 B611、B616 同根。那四个模型连同依赖它们的十条限制留给后续批次，**不以恒零符号顶替**。
+/// 与 、 同根。那四个模型连同依赖它们的十条限制留给后续批次，**不以恒零符号顶替**。
 ///
 /// Aligned with the baseline's **foundation**: adjacent position pairs, ordered position pairs, the source and destination sets, and the two derived quantities that `PriorityOrderLimit`
-/// and `SourceEarlyLimit` need. **This batch lands only the `IfFunction`-free part.** Four of the baseline's five sub-models (`SequentialLoading`, `TransferAdjacentLoading`,
+/// and `SourceEarlyLimit` need. ** lands only the `IfFunction`-free part.** Four of the baseline's five sub-models (`SequentialLoading`, `TransferAdjacentLoading`,
 /// `TrailerLoading`, and `AdviceLoading`'s slack terms) all rest on `IfFunction(… − 2 + ε)`, which this port's `IfFunction.Create` rejects for any condition carrying both a monomial
-/// and a non-zero constant — the same root as B611 and B616. Those four models and the ten limits that depend on them are left to later batches, **not substituted with constant-zero
+/// and a non-zero constant — the same root. Those four models and the ten limits that depend on them are left to later batches, **not substituted with constant-zero
 /// symbols**.
 /// </remarks>
 public sealed class LoadingEffectivenessAggregation

@@ -1,4 +1,4 @@
-// 航班人数表达式（B760）/ The passenger-amount expressions (B760).
+// 航班人数表达式/ The passenger-amount expressions.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **航班人数表达式（B760）** / The passenger-amount expressions (B760).
+/// **航班人数表达式** / The passenger-amount expressions.
 /// </summary>
 /// <remarks>
 /// 每个（航班，舱位）一个表达式，由四件事合成：原人数、取消、变更出去、变更进来。最容易写错的是第三点的两个分支——
@@ -172,10 +172,10 @@ public class Demo4PassengerAmountTests {
     /// </summary>
     /// <remarks>
     /// 两点成对：模型里有 `passenger_amount_` 开头的符号 / 重注册不重复添加。
-    /// 只查 `Amounts` 那张表会让"建了符号没加进模型"通过——**内存里的表和模型里的符号是两件事**（这一族缺陷在 B740 已经出现过一次）。
+    /// 只查 `Amounts` 那张表会让"建了符号没加进模型"通过——**内存里的表和模型里的符号是两件事**（这一族缺陷在 已经出现过一次）。
     ///
     /// Two paired points: the model holds symbols starting with `passenger_amount_`; and re-registration adds nothing. Checking only the `Amounts` table lets "built the symbols but
-    /// never added them" pass — **an in-memory table and a model symbol are two different things** (this family of defects already appeared in B740).
+    /// never added them" pass — **an in-memory table and a model symbol are two different things** (this family of defects already appeared).
     /// </remarks>
     [Fact]
     public void Register_ShouldReachTheModelOnce() {

@@ -58,11 +58,11 @@ public class TailBinOptimizerTests {
 
     /// <summary>**卷长目标的分数必须换算到问题自己的单位** / The consumed-length score must be converted into the problem's own unit.</summary>
     /// <remarks>
-    /// **本批最要紧的一条。** 问题里的基准箱是**米**（0.5 m），被判分的箱是**毫米**（500 mm）。
+    /// **这里最要紧的一条。** 问题里的基准箱是**米**（0.5 m），被判分的箱是**毫米**（500 mm）。
     /// 不换算会把 `500` 直接当成 `0.5`——**差 1000 倍，而比较结果会因此毫无意义，错得还很安静**。
     /// 判据断言分数是 `0.5`，不是 `500`。
     ///
-    /// **The most important criterion in this batch.** The problem's reference bin is in **metres** (0.5 m) while the scored bin is in **millimetres** (500 mm).
+    /// **The most important criterion in.** The problem's reference bin is in **metres** (0.5 m) while the scored bin is in **millimetres** (500 mm).
     /// Without conversion `500` is treated as `0.5` — **a factor of 1000 that makes the comparison meaningless, silently**. The criterion asserts 0.5, not 500.
     /// </remarks>
     [Fact]
@@ -194,7 +194,7 @@ public class TailBinOptimizerTests {
     private static PackingResult<Flt64> MakeResult(params BinType<Flt64>[] types) {
         // **每个方案只放一件。** 需求 3 件的算例需要**三个方案**才合法，
         // 所以 gated 判据要传三个箱型——只传一个会让完整复核先报错，
-        // 而那个错误恰好也是 `IllegalArgument`，**判据就变成"因为别的原因失败"**（这是本会话反复踩到的形态）。
+        // 而那个错误恰好也是 `IllegalArgument`，**判据就变成"因为别的原因失败"**（这是反复踩到的形态）。
         //
         // **Each plan holds one piece.** A demand of 3 needs **three plans** to be legal, so the gated criteria pass three bin types; passing one makes the full
         // re-verification fail first with a code that is **also** `IllegalArgument`, turning the criterion into "fails for some other reason".
@@ -221,7 +221,7 @@ public class TailBinOptimizerTests {
     /// <remarks>
     /// **gated 判据必须用这个，不能用毫米箱型。** 第一版用 `MillimetreType("B1")`，而问题只声明了 `B0`——
     /// 完整复核先以 `IllegalArgument` 拒掉未知箱型，**判据于是"因为别的原因失败"**，
-    /// 去掉守卫的变异照样存活。这是本会话第七次撞上"判据失败的原因不是被测的守卫"。
+    /// 去掉守卫的变异照样存活。这是第七次撞上"判据失败的原因不是被测的守卫"。
     ///
     /// **The gated criteria must use this, not the millimetre type.** The first version used `MillimetreType("B1")` while the problem only declares `B0`, so the full
     /// re-verification rejected an unknown bin type with **`IllegalArgument`** first and the criterion **failed for some other reason**, letting the guard mutants survive.

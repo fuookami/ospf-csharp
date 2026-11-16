@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// <remarks>
 /// 对齐基线 `Cvar.kt` 的 `CvarEpigraphFunction`。
 ///
-/// **与 `CvarFunction` 的区别就是这一批的全部内容**：
+/// **与 `CvarFunction` 的区别就是这里的全部内容**：
 ///
 /// | | `CvarFunction` | `CvarEpigraphFunction` |
 /// | --- | --- | --- |
@@ -47,9 +47,9 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`θ` 的范围取所有损失界的并**：**窄了会把最优阈值排除在外，
 /// 于是最优解落在边界上、结果偏大，而模型仍然可行。**
 ///
-/// B1160, following the baseline's `CvarEpigraphFunction`.
+/// Following the baseline's `CvarEpigraphFunction`.
 ///
-/// **The difference from `CvarFunction` is the whole content of this batch**:
+/// **The difference from `CvarFunction` is the whole content here**:
 ///
 /// | | `CvarFunction` | `CvarEpigraphFunction` |
 /// | --- | --- | --- |

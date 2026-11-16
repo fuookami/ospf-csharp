@@ -128,10 +128,10 @@ public sealed record Material2<V>(
 /// <param name="MaxWidth">可加工最大幅宽 / The maximum processable width.</param>
 /// <param name="Capacity">产能 / The capacity.</param>
 /// <remarks>
-/// **`defaultProcess` 本批未移植**：它依赖 `CuttingProcess2`，而那是 `infrastructure` 里的类型，尚未落地。
+/// **`defaultProcess` 这里未移植**：它依赖 `CuttingProcess2`，而那是 `infrastructure` 里的类型，尚未落地。
 /// **先不带这个字段，好过先用一个占位枚举假装它已经被建模。**
 ///
-/// **`defaultProcess` is not ported in this batch**: it depends on `CuttingProcess2`, a type from `infrastructure` that has not landed yet. **Leaving the field out
+/// **`defaultProcess` is not ported here**: it depends on `CuttingProcess2`, a type from `infrastructure` that has not landed yet. **Leaving the field out
 /// beats a placeholder enum pretending it is modelled.**
 /// </remarks>
 public sealed record Machine2<V>(

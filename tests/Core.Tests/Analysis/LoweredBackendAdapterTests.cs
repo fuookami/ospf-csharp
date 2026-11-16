@@ -98,13 +98,13 @@ public class LoweredBackendAdapterTests {
     /// **等于把一个没降下来的模型交给一个只会读降阶模型的求解器**——
     /// **而它可能不报错，只是给出一个基于原始 CP 快照的、看起来合法的答案。**
     ///
-    /// **失败是构造出来的**：给 lowerer 一个上限为 0 的策略，`Policy.Validate()` 立刻拒绝。
+    /// **失败是构造出来的**：给 lowerer 一个上限为 0 的策略，`Policy.Validate` 立刻拒绝。
     /// **不去造一个"降阶不了的模型"**——那种 fixture 会随降阶器演进而失效，
     /// **而策略校验失败是这条路径上稳定存在的一道门。**
     ///
     /// **This matters more than "it calls on success".** Delegating after a failed lowering **hands a solver that only reads lowered models something that was never lowered** — **and it may not complain; it may return a
     /// plausible answer computed from the raw snapshot.**
-    /// **The failure is constructed**: a policy with a zero limit makes `Policy.Validate()` refuse at once. **Not by building an "unlowerable model"** — that fixture would rot as the lowerer evolves, **while a rejected
+    /// **The failure is constructed**: a policy with a zero limit makes `Policy.Validate` refuse at once. **Not by building an "unlowerable model"** — that fixture would rot as the lowerer evolves, **while a rejected
     /// policy is a gate that stays on this path.**
     /// </remarks>
     [Fact]
@@ -125,15 +125,15 @@ public class LoweredBackendAdapterTests {
     /// <summary>**委托抛异常时错误照常传出** / A throwing delegate still surfaces its failure.</summary>
     /// <remarks>
     /// **这一条故意只查"异常传出来了"，不查"降阶模型被关掉了"。**
-    /// `ConstraintProgrammingLoweredLinearModel.Dispose()` 只是把内部的 `Model` 转给
-    /// `LinearMetaModel.Dispose()`，**而那个对象在处置后仍非 `null`、也没有公开的处置状态**——
+    /// `ConstraintProgrammingLoweredLinearModel.Dispose` 只是把内部的 `Model` 转给
+    /// `LinearMetaModel.Dispose`，**而那个对象在处置后仍非 `null`、也没有公开的处置状态**——
     /// **于是"关没关"从外部根本观测不到。**
     ///
     /// **与其写一条永远绿的假判据，不如把它写成它真正能证明的东西**：
     /// **`finally` 不会把异常吞掉。** 关闭本身由 `finally` 保证，**而 `finally` 的存在由 `GateScriptContractTests`
     /// 之外的代码评审保证**——这里不假装测到了。
     ///
-    /// **This one deliberately checks only that the exception surfaces, not that the model closed.** `Dispose()` merely forwards the inner `Model` to `LinearMetaModel.Dispose()`, **and that object stays non-null with no
+    /// **This one deliberately checks only that the exception surfaces, not that the model closed.** `Dispose` merely forwards the inner `Model` to `LinearMetaModel.Dispose`, **and that object stays non-null with no
     /// public disposal state** — **so "did it close" cannot be observed from outside at all.**
     /// **Rather than a criterion that is green no matter what, it says what it can prove**: **`finally` does not swallow the exception.** The close itself is `finally`'s job, **and that it exists is code review's job** — this
     /// does not pretend to measure it.

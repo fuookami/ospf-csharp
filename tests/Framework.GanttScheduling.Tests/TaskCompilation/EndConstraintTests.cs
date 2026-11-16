@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **两个结束时间偏移约束从"返回 `Failed`"变成真的行（B559）** / The two end-time deviation constraints go from "returns `Failed`" to real rows (B559).
+/// **两个结束时间偏移约束从"返回 `Failed`"变成真的行** / The two end-time deviation constraints go from "returns `Failed`" to real rows.
 /// </summary>
 /// <remarks>
 /// 行是 `estEnd ≤ 最晚结束` / `estEnd ≥ 最早结束`——**镜像的一对**，方向写反不会让模型不可行，只会让计划悄悄偏到另一侧。
@@ -116,10 +116,10 @@ public class EndConstraintTests {
 
     /// <summary>**开关开着 → 只保留"不允许移动"的任务** / With the switch on only the immovable tasks are kept.</summary>
     /// <remarks>
-    /// 与 B557 的超最大约束同一处反直觉：开关打开反而收紧范围。但与那一批不同，这里**不跳过**任何行——`estEnd` 对不动任务照样存在。
+    /// 与 的超最大约束同一处反直觉：开关打开反而收紧范围。但与那一批不同，这里**不跳过**任何行——`estEnd` 对不动任务照样存在。
     /// 判据：开关开着时只有 T2（不许延迟）拿到行，T1（允许延迟）没有。
     ///
-    /// The same counter-intuitive point as B557: turning the switch on narrows the set. Unlike that batch, however, **no row is skipped** — `estEnd` exists for an immovable task
+    /// The same counter-intuitive point as : turning the switch on narrows the set. Unlike that batch, however, **no row is skipped** — `estEnd` exists for an immovable task
     /// too. The criterion: with the switch on only T2 (may not delay) gets a row, T1 (may delay) does not.
     /// </remarks>
     [Fact]

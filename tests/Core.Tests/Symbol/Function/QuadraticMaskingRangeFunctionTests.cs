@@ -22,15 +22,15 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 第 3、4 行才是"掩码关掉"的关键 / Rows 3 and 4 are what make "the mask is off" mean anything.
 /// </summary>
 /// <remarks>
-/// B1158 按基线 `QuadraticMaskingRange.kt` 把原本的空壳换成真实编码。
+/// 对齐基线 `QuadraticMaskingRange.kt` 把原本的空壳换成真实编码。
 ///
 /// **五条约束里，1、2 在 `z = 0` 时给 `y = p`，而 `y` 本该是 0——**
-/// **所以 3、4（`y ≤ M·z`、`y ≥ −M·z`）才是这一批的关键。**
+/// **所以 3、4（`y ≤ M·z`、`y ≥ −M·z`）才是这里的关键。**
 ///
-/// B1158 replaces a stub with the real encoding, following the baseline.
+/// Replaces a stub with the real encoding, following the baseline.
 ///
 /// **Of the five rows, 1 and 2 give `y = p` at `z = 0` while `y` should be zero —**
-/// **so rows 3 and 4 (`y ≤ M·z`, `y ≥ −M·z`) are what this batch turns on.**
+/// **so rows 3 and 4 (`y ≤ M·z`, `y ≥ −M·z`) are what turns on.**
 /// </remarks>
 public class QuadraticMaskingRangeFunctionTests
 {
@@ -87,13 +87,13 @@ public class QuadraticMaskingRangeFunctionTests
     /// **第 3、4 行真的被注册** / Rows 3 and 4 really reach the model.
     /// </summary>
     /// <remarks>
-    /// **这条是这一批的核心**：**几行里 1、2 在 `z = 0` 时给 `y = p`，而 `y` 本该是 0——
+    /// **这条是这里的核心**：**几行里 1、2 在 `z = 0` 时给 `y = p`，而 `y` 本该是 0——
     /// 只有 3、4 把它钉住。**
  /// **而"构造出第 3、4 行"与"它们被交给模型"是两件事**。
     ///
     /// **This is the point of the batch**: **rows 1 and 2 give `y = p` at `z = 0` while `y` should be zero — only 3
     /// and 4 pin it.**
- /// **And "rows 3 and 4 are built" is not "they reach the model" .**
+ /// **And "rows 3 and 4 are built" is not "they reach the model".**
     /// </remarks>
     [Fact]
     public async Task TheRegisterConstraints_ShouldWriteAllFourRows()

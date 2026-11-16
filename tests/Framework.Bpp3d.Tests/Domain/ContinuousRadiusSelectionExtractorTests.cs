@@ -1,4 +1,4 @@
-// 连续半径选择装配（B682）的判据 / Criteria for the continuous radius selection assembly (B682).
+// 连续半径选择装配的判据 / Criteria for the continuous radius selection assembly.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 
 /// <summary>
-/// **连续半径选择装配（B682）** / The continuous radius selection assembly (B682).
+/// **连续半径选择装配** / The continuous radius selection assembly.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**缺半径跳过、缺误差按 0**（两类缺失处理不同）、**求解结果里没有的变量名跳过**、
@@ -75,7 +75,7 @@ public class ContinuousRadiusSelectionExtractorTests {
     ///
     /// 1. 缺 `solverRadius` 的条目**跳过**（没有半径就没有结果）。
     /// 2. 缺 `pwlAbsoluteError` / `pwlRelativeError` / `maxPWLRelativeError` / `numSegments` 的条目**照样产出**，
-    ///    误差为 **0**、段数为 **1**——误差可以缺省为零，半径不能。
+    /// 误差为 **0**、段数为 **1**——误差可以缺省为零，半径不能。
     /// 3. `isWithinEnvelope` 用 **> 0.5** 判定：`0.6` → true、`0.4` → false。
     /// 4. 原型里没有的变量名**跳过**。
     /// 5. 空输入 → 空列表。

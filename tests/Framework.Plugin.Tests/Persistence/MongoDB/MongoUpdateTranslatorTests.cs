@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **更新写错比查询写错更贵** / A wrong update costs more than a wrong query.
 /// </summary>
 /// <remarks>
-/// 基线 `MongoUpdateTranslator`（**120 行**）。B1118 补标量、B1119 补排序，这一批补更新。
+/// 基线 `MongoUpdateTranslator`（**120 行**）。补齐标量、排序，这里补更新。
 ///
 /// **查询错了重新查一次就好，更新错了数据已经变了**——**而没有备份的地方，改错的值不会自己回来。**
 ///
-/// The baseline's `MongoUpdateTranslator` (**120 lines**). B1118 added the scalar translator, B1119 sorting, this batch updates.
+/// The baseline's `MongoUpdateTranslator` (**120 lines**). Added the scalar translator, sorting and updates.
 ///
 /// **A wrong query can be run again; a wrong update has already changed the data** — **and where there is no backup,
 /// a wrong value does not come back.**

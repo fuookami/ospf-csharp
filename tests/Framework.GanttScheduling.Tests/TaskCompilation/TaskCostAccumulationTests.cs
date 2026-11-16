@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **目标只保留最近一轮的代价项；这不是笔误，是基线原样** / The objective keeps only the latest round's cost terms, which is the baseline verbatim rather than a typo.
 /// </summary>
 /// <remarks>
-/// 基线的 `addColumns` 每次都先 `taskCost.flush()`，然后只对本次新增的列追加 `cost × x[task]`。
+/// 基线的 `addColumns` 每次都先 `taskCost.flush`，然后只对本次新增的列追加 `cost × x[task]`。
 /// 之前迭代的列还在模型里（`_x` 累积、约束照旧），但它们的**代价项已经不在目标中**——
 /// 目标值偏小，不会报错，列生成越久越明显。
 ///
-/// The baseline's `addColumns` always calls `taskCost.flush()` and then appends `cost × x[task]` for this iteration's new columns only. Earlier columns remain in the model
+/// The baseline's `addColumns` always calls `taskCost.flush` and then appends `cost × x[task]` for this iteration's new columns only. Earlier columns remain in the model
 /// (`_x` accumulates, constraints stay) but their **cost terms are gone from the objective** — the objective reads too small, nothing is reported, and it gets worse the longer
 /// column generation runs.
 /// </remarks>

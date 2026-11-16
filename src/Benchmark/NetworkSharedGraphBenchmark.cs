@@ -68,7 +68,7 @@ public class NetworkSharedGraphBenchmark
         _warmGraph = Create(_nodes, BuildArcs());
         WarmArcCount = _warmGraph.Outgoing(_nodes[0]).Count;
         _warm = new NetworkTopology<NetworkNodeId, Arc>(_warmGraph);
-        // **先做一次可达，把拓扑内部视图消费掉：** **否则第一次测量里混着冷建表，而这一批要测的是稳态读。**
+        // **先做一次可达，把拓扑内部视图消费掉：** **否则第一次测量里混着冷建表，而这里要测的是稳态读。**
         // **Prime the topology once, or the first measurement would include the cold build.**
         _ = Reachable(_warm, _nodes[0]);
     }

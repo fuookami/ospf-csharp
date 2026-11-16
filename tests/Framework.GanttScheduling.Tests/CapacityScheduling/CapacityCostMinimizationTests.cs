@@ -1,4 +1,4 @@
-// 产能成本目标真的建起来（B728）/ The capacity cost objective is really built (B728).
+// 产能成本目标真的建起来/ The capacity cost objective is really built.
 
 using System;
 using System.Collections.Generic;
@@ -17,16 +17,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **产能成本目标真的建起来（B728）** / The capacity cost objective is really built (B728).
+/// **产能成本目标真的建起来** / The capacity cost objective is really built.
 /// </summary>
 /// <remarks>
 /// 第一版 `Invoke` 是 `=&gt; Ok`：什么目标都没设却报成功。没有目标的模型会被当成"随便找一个可行解"，
 /// 而调用方以为它在最小化成本——**解是可行的，数字是错的**。
 ///
-/// 这一批建 `Σ unitCost(action, 时隙起点) · x[a, s, o]`，按 `ObjectCategory.Minimum` 挂到模型上。
+/// 这里建 `Σ unitCost(action, 时隙起点) · x[a, s, o]`，按 `ObjectCategory.Minimum` 挂到模型上。
 ///
 /// The first `Invoke` was `=&gt; Ok`: no objective was set while success was reported. A model without an objective is understood as "find any feasible solution" while the caller believes
-/// cost is being minimised — **the solution is feasible and the number is wrong**. This batch builds `sum of unitCost(action, slot start) · x[a, s, o]` and attaches it with
+/// cost is being minimised — **the solution is feasible and the number is wrong**. builds `sum of unitCost(action, slot start) · x[a, s, o]` and attaches it with
 /// `ObjectCategory.Minimum`.
 /// </remarks>
 public class CapacityCostMinimizationTests {
@@ -116,10 +116,10 @@ public class CapacityCostMinimizationTests {
     /// </summary>
     /// <remarks>
     /// 三点成对：未注册 → `Failed` 且模型里没有目标（第一版返回 `Ok` 且也没有目标——**这就是那个静默空洞**）/
-    /// 传入 `new object()` → `Failed` / 注册之后同一个调用 → `Ok` 且目标存在。
+    /// 传入 `new object` → `Failed` / 注册之后同一个调用 → `Ok` 且目标存在。
     ///
     /// Three paired points: unregistered yields `Failed` with no objective on the model (the first version returned `Ok` with no objective either — **that is the silent hole**);
-    /// `new object()` yields `Failed`; and after registration the same call yields `Ok` with an objective.
+    /// `new object` yields `Failed`; and after registration the same call yields `Ok` with an objective.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldFailInsteadOfSkipping() {

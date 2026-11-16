@@ -78,7 +78,7 @@ public interface ICGPipeline<Args, in MModel, TMap> : IPipeline<MModel>
 
     /// <summary>按键刷新影子价格 / Refresh shadow prices by key (static helper).</summary>
     /// <remarks>
-    /// **本仓没有任何调用方**（B387 实测 `grep` 全仓，只有定义处一行）。
+    /// **本仓没有任何调用方**（`grep` 全仓，只有定义处一行）。
     ///
     /// 基线的**每条**管线（`DemandConstraintPipeline` / `MachineConstraintPipeline` /
     /// `MaterialConstraintPipeline` / `YieldConstraintPipeline` / BPP3D 的 `DemandConstraint`）
@@ -92,7 +92,7 @@ public interface ICGPipeline<Args, in MModel, TMap> : IPipeline<MModel>
     /// **保留而不删**：删除会偏离基线结构，且它与默认实现等价、无行为风险。
     /// 记录在此，避免下一个人误以为它是活路径。
     ///
-    /// **Nothing in this repository calls it** (B387 grepped the whole tree; only the definition matched). In the baseline **every** pipeline explicitly overrides
+    /// **Nothing in this repository calls it** ( grepped the whole tree; only the definition matched). In the baseline **every** pipeline explicitly overrides
     /// `refresh` to call `refreshByKeyAsArgs`, while the baseline's **default `refresh` and `refreshByKeyAsArgs` are two equivalent implementations**. C# kept the
     /// default (which is what actually runs) and added **no overrides**, so this static copy **has no callers**. **It is line-for-line equivalent to the default**
     /// (same grouping, same key-type test, same accumulation), so it is not a defect — it is **dead code inherited from the baseline**. Kept rather than deleted:

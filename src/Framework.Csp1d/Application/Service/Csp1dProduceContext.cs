@@ -134,10 +134,10 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
     /// </summary>
     /// <remarks>
     /// 基线把这个标志直接传给 `setObjective` 与 yield 聚合；C# 原本只传给了 yield 聚合，
-    /// **目标函数看不到它**——于是第一阶段解得的是"批次最省"而非"短缺最小"（B370）。
+    /// **目标函数看不到它**——于是第一阶段解得的是"批次最省"而非"短缺最小"。
     ///
     /// The baseline passes this flag to both `setObjective` and the yield aggregation; C# originally forwarded it only to the yield aggregation, so **the objective never
-    /// saw it** — phase one solved "cheapest batches" instead of "smallest deficit" (B370).
+    /// saw it** — phase one solved "cheapest batches" instead of "smallest deficit" .
     /// </remarks>
     public bool FeasibilityPhase { get; }
 
@@ -256,11 +256,11 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
             // **必须四舍五入，不是截断。**
             //
-            // 基线是 `doubleValue.roundToLong().coerceAtLeast(0)`；C# 原本是 `(long)doubleValue`，
+            // 基线是 `doubleValue.roundToLong.coerceAtLeast(0)`；C# 原本是 `(long)doubleValue`，
             // **那是截断**：`2.7` 得 2、`0.6` 得 0。后者更糟——**一条用了 0.6 次的方案会被
             // 当成"没用"而整条丢弃**，物料用量、设备用量、欠产判定全部跟着少算。
             //
-            // **It must round, not truncate.** The baseline is `doubleValue.roundToLong().coerceAtLeast(0)`; C# was `(long)doubleValue`, **which truncates**: `2.7`
+            // **It must round, not truncate.** The baseline is `doubleValue.roundToLong.coerceAtLeast(0)`; C# was `(long)doubleValue`, **which truncates**: `2.7`
             // becomes 2 and `0.6` becomes 0. The latter is worse — **a plan used 0.6 times is discarded as "unused"**, and the material, machine and deficit figures all
             // under-count with it.
             var amount = new UInt64((ulong)System.Math.Max((long)System.Math.Round(doubleValue.Value, MidpointRounding.AwayFromZero), 0));
@@ -313,8 +313,8 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
         IAbstractLinearMetaModel<Flt64> model) {
         int planCountBefore = Produce.PlanCount;
 
-        // 1. 委托 ProduceAggregation.AddColumns() 完成变量、batch 和约束中间符号的原地增量
-        //    Delegate to ProduceAggregation.AddColumns() for in-place variable, batch and
+        // 1. 委托 ProduceAggregation.AddColumns 完成变量、batch 和约束中间符号的原地增量
+        // Delegate to ProduceAggregation.AddColumns for in-place variable, batch and
         //    constraint intermediate symbol increment
         Result<IReadOnlyList<CuttingPlan<V>>, ErrorCode, Error<ErrorCode>> addResult = Produce.AddColumns(iteration, newPlans, model);
         if (addResult is Failed<IReadOnlyList<CuttingPlan<V>>, ErrorCode, Error<ErrorCode>> addFailed) {
@@ -330,7 +330,7 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
         // 2. 追加新列目标项到模型 / Append new column objective terms to model
         //    为每个新增方案追加 minimize(batchCoefficient * x_j) 到目标函数
-        //    Append minimize(batchCoefficient * x_j) for each new plan to the objective
+        // Append minimize(batchCoefficient * x_j) for each new plan to the objective
         Flt64 baseBatchCoefficient = _lengthObjective?.BatchCoefficient() ?? Flt64.One;
         IReadOnlyList<IVariableItem>? latestBatch = Produce.LatestBatch;
         if (latestBatch is not null) {
@@ -634,7 +634,7 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
         //
         // ```
         // if (feasibilityPhase) {
-        //     monomials.addAll(yieldObjective?.objectiveMonomials() ?: emptyList())
+        //     monomials.addAll(yieldObjective?.objectiveMonomials ?: emptyList)
         //     model.minimize(polynomial = LinearPolynomial(monomials, Flt64.zero), name = "csp1d_phase_one")
         //     return
         // }
@@ -791,12 +791,12 @@ public sealed class Csp1dProduceContext<V> : ICsp1dIterativeContext<V>, ICsp1dMo
 
         // **与 `ExtractSolution` 同一处取整规则：四舍五入，不是截断。**
         //
-        // B371 只修了 `ExtractSolution`，**漏了这里**。基线两处都是 `roundToLong()`，
+        // 只修了 `ExtractSolution`，**漏了这里**。基线两处都是 `roundToLong`，
         // C# 两处都是 `(long)`——所以修一处等于没修：`SolutionAmount` 是
         // **waste 结果（余宽、余料、物料成本）的唯一入口**，截断会让这些指标系统性偏低。
         //
-        // **Same rounding rule as `ExtractSolution`: round, not truncate.** B371 fixed only `ExtractSolution` and **missed this one**. Both baseline sites are
-        // `roundToLong()` and both C# sites were `(long)`, so fixing one changed nothing: `SolutionAmount` is **the only entry point for the waste results** (trim width,
+        // **Same rounding rule as `ExtractSolution`: round, not truncate.** fixed only `ExtractSolution` and **missed this one**. Both baseline sites are
+        // `roundToLong` and both C# sites were `(long)`, so fixing one changed nothing: `SolutionAmount` is **the only entry point for the waste results** (trim width,
         // rest material, material cost), and truncation makes all of them systematically low.
         return new UInt64((ulong)System.Math.Max((long)System.Math.Round(value.Value, MidpointRounding.AwayFromZero), 0));
     }
@@ -925,11 +925,11 @@ public sealed class Csp1dProduceContextBuilder<V>
     /// <param name="enabled">是否启用 / Whether to enable.</param>
     /// <returns>构建器自身 / The builder itself.</returns>
     /// <remarks>
-    /// 基线的 `feasibilityPhase()` 只做一件事：**让 LP 模式下也构建 yield 聚合**。
+    /// 基线的 `feasibilityPhase` 只做一件事：**让 LP 模式下也构建 yield 聚合**。
     /// 基线里 `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`——
     /// C# 原本只有 `_mode == MILP`，所以**可行性阶段根本无法表达**。
     ///
-    /// The baseline's `feasibilityPhase()` does exactly one thing: **make an LP-mode build create the yield aggregation too**. The baseline has
+    /// The baseline's `feasibilityPhase` does exactly one thing: **make an LP-mode build create the yield aggregation too**. The baseline has
     /// `val yieldAgg = if (_mode == MILP || _feasibilityPhase) ...`, while C# only had `_mode == MILP`, so **the feasibility phase could not be expressed at all**.
     /// </remarks>
     public Csp1dProduceContextBuilder<V> FeasibilityPhase(bool enabled = true) {

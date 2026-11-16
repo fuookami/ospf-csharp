@@ -27,16 +27,16 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **`ExtractShadowPriceMap` 必须按 `constraint.Origin.Args` 的键回填，并累加同键对偶** / It must key off `constraint.Origin.Args` and accumulate same-key duals.
 /// </summary>
 /// <remarks>
-/// **B388 记的缺口**："生产代码传的那个 `converter` 无判据"。
+/// **记的缺口**："生产代码传的那个 `converter` 无判据"。
 ///
 /// 这个方法在**没有 model** 时用：直接读 `constraint.Origin.Args`，不走 CGPipeline refresh。
 /// 两条路径必须给出一致结果，否则**定价阶段的 reduced cost 取决于走了哪条路**。
 ///
-/// 本批同时删掉了一个**只写不读**的 `Csp1dDefaultShadowPriceMap`（基线与 C# 都有，
+/// 这里同时删掉了一个**只写不读**的 `Csp1dDefaultShadowPriceMap`（基线与 C# 都有，
 /// 每轮迭代白写一次、从不被读取或返回）。**删除不改变行为**，只是清理。
 ///
-/// **B388's gap**: "the `converter` production code passes has no criteria". This method is used **when there is no model**: it reads `constraint.Origin.Args` directly
-/// instead of going through CGPipeline refresh. Both paths must agree, or **reduced cost depends on which path ran**. This batch also deleted a **write-only**
+/// **the earlier gap**: "the `converter` production code passes has no criteria". This method is used **when there is no model**: it reads `constraint.Origin.Args` directly
+/// instead of going through CGPipeline refresh. Both paths must agree, or **reduced cost depends on which path ran**. also deleted a **write-only**
 /// `Csp1dDefaultShadowPriceMap` (present in both the baseline and C# — written once per iteration, never read or returned). **Deleting it changes no behaviour**, it is
 /// pure cleanup.
 /// </remarks>

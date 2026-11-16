@@ -10,8 +10,8 @@ namespace Fuookami.Ospf.Core.Model.Basic;
 /// 表达式值域，支持通过交集逐步收紧上下界
 /// Value range supporting progressive tightening via intersection.
 /// <para>
-/// 常量通过 NumericConstantsRegistry.For&lt;V&gt;() 获取，不使用 companion 反射。
-/// Constants are obtained via NumericConstantsRegistry.For&lt;V&gt;(), not companion reflection.
+/// 常量通过 NumericConstantsRegistry.For&lt;V&gt; 获取，不使用 companion 反射。
+/// Constants are obtained via NumericConstantsRegistry.For&lt;V&gt;, not companion reflection.
 /// </para>
 /// </summary>
 /// <typeparam name="V">数值类型 / The numeric type</typeparam>

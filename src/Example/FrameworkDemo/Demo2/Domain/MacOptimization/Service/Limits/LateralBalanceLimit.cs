@@ -24,11 +24,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 ///
 /// 1. **目标是 `Minimum` 类别**，且**只对宽体机存在**（生成器负责跳过）。
 /// 2. **目标名带空格**：`"lateral balance"`，与 `Name` 属性 `lateral_balance_limit` 不同。
-/// 3. **系数同时乘单项式与常数**。基线写 `LinearPolynomial(coefficient() * slack.value)`，即整个多项式乘系数。
+/// 3. **系数同时乘单项式与常数**。基线写 `LinearPolynomial(coefficient * slack.value)`，即整个多项式乘系数。
 ///
 /// Aligned with the baseline: the lateral slack scaled by a coefficient becomes a **minimisation** objective named `lateral balance`. Three things must be copied: **the objective is
 /// `Minimum` and exists only for wide-body aircraft** (the generator skips it otherwise); **the objective name has a space**, unlike the `Name` property `lateral_balance_limit`; and
-/// **the coefficient scales both the monomials and the constant**, since the baseline writes `LinearPolynomial(coefficient() * slack.value)`, multiplying the whole polynomial.
+/// **the coefficient scales both the monomials and the constant**, since the baseline writes `LinearPolynomial(coefficient * slack.value)`, multiplying the whole polynomial.
 /// </remarks>
 internal sealed class LateralBalanceLimit
 {

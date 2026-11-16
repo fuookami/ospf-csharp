@@ -1,4 +1,4 @@
-// 配载约束管线的判据（第三批）与生成器 / Criteria for the third pipeline batch and the generator.
+// 配载约束管线的判据（此前）与生成器 / Criteria for the third pipeline batch and the generator.
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,7 @@ using StowagePipelineListGenerator = Fuookami.Ospf.Example.FrameworkDemo.Demo2.D
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **配载约束管线第三批与生成器（B609）** / The third pipeline batch and the generator (B609).
+/// **配载约束管线此前与生成器** / The third pipeline batch and the generator.
 /// </summary>
 /// <remarks>
 /// 三个相邻/冲突类 + 生成器。判据的重点：

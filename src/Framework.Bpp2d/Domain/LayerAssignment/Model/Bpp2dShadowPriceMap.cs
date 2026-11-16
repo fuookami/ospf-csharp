@@ -21,8 +21,8 @@ public sealed record Bpp2dShadowPriceArguments(
 /// 二维层分配影子价格映射 / The 2D layer-assignment shadow price map.
 /// </summary>
 /// <remarks>
-/// **不继承共享的 `AbstractShadowPriceMap`**，理由记在 B637：那份基类的键 `ShadowPriceKey` 只存一个 `Type`、
-/// 没有载荷位，`ToKey()` 会把模式与物品编号折叠掉（实测：加两条只剩一条）。本类于是自己持有
+/// **不继承共享的 `AbstractShadowPriceMap`**，理由记在 ：那份基类的键 `ShadowPriceKey` 只存一个 `Type`、
+/// 没有载荷位，`ToKey` 会把模式与物品编号折叠掉（实测：加两条只剩一条）。本类于是自己持有
 /// `Dictionary&lt;Bpp2dDemandShadowPriceKey, Flt64&gt;`，键是**自带相等性的值对象**。
 ///
 /// 三处照抄基线的语义：
@@ -31,8 +31,8 @@ public sealed record Bpp2dShadowPriceArguments(
 /// 2. **没登记的键取回 null**，不是零（零会被读成"已知影子价格为 0"）；
 /// 3. `Invoke` 把已登记提取器的结果**求和**。
 ///
-/// **Deliberately does not derive from the shared `AbstractShadowPriceMap`** for the reason recorded in B637: that base class's key holds only a `Type` with no room for a payload, so
-/// `ToKey()` collapses the mode and item id (measured: two additions collapsed to one). This class keeps its own `Dictionary&lt;Bpp2dDemandShadowPriceKey, Flt64&gt;` keyed by a **value
+/// **Deliberately does not derive from the shared `AbstractShadowPriceMap`** for the reason recorded: that base class's key holds only a `Type` with no room for a payload, so
+/// `ToKey` collapses the mode and item id (measured: two additions collapsed to one). This class keeps its own `Dictionary&lt;Bpp2dDemandShadowPriceKey, Flt64&gt;` keyed by a **value
 /// object with its own equality**. Three baseline semantics are copied: **the same key accumulates** rather than overwriting, since one demand is priced repeatedly across iterations;
 /// **an unregistered key returns null** rather than zero, which would read as "a known shadow price of zero"; and `Invoke` **sums** the registered extractors.
 /// </remarks>

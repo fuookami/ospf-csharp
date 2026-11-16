@@ -19,10 +19,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 变量类型目录 / The variable type catalog.
 /// </summary>
 /// <remarks>
-/// **B985 加这个目录，是因为它是 `ConstraintProgrammingSnapshotBuilder` 的前置件。**
-/// 快照把一个变量的类型存成 `TypeKind.ToString()`——**一个类名**——而 C# 里没有任何反向解析。
+/// 加这个目录，是因为它是 `ConstraintProgrammingSnapshotBuilder` 的前置件。**
+/// 快照把一个变量的类型存成 `TypeKind.ToString`——**一个类名**——而 C# 里没有任何反向解析。
 ///
-/// **B985 adds this catalog because it is the prerequisite for `ConstraintProgrammingSnapshotBuilder`.** The snapshot stores a variable's type as `TypeKind.ToString()` —
+/// adds this catalog because it is the prerequisite for `ConstraintProgrammingSnapshotBuilder`.** The snapshot stores a variable's type as `TypeKind.ToString` —
 /// **a class name** — and nothing in C# parsed it back before this.
 /// </remarks>
 public class VariableTypeCatalogTests {
@@ -39,10 +39,10 @@ public class VariableTypeCatalogTests {
 
     /// <summary>**存储用的名字与目录里的名字必须一致** / The stored name and the catalog name have to agree.</summary>
     /// <remarks>
-    /// 快照编码的是 `TypeKind.ToString()`。**目录若与它不一致，存进去的类型就再也读不回来**——
+    /// 快照编码的是 `TypeKind.ToString`。**目录若与它不一致，存进去的类型就再也读不回来**——
     /// 而且读不回来时不报错，只是解析失败或被当成别的类型。
     ///
-    /// The snapshot encodes `TypeKind.ToString()`. **If the catalog disagreed with that, a stored type could never be read back** — and the failure would be silent: a failed
+    /// The snapshot encodes `TypeKind.ToString`. **If the catalog disagreed with that, a stored type could never be read back** — and the failure would be silent: a failed
     /// resolve or a different type entirely.
     /// </remarks>
     [Fact]
@@ -155,9 +155,9 @@ public class VariableTypeCatalogTests {
 /// 按名称造变量 / Creating a variable from a name.
 /// </summary>
 /// <remarks>
-/// **`RegisterVariable` 要的是变量实例，不是一个类型对象**——这是 B985 之后重建器差的最后一环。
+/// **`RegisterVariable` 要的是变量实例，不是一个类型对象**——这是 之后重建器差的最后一环。
 ///
-/// **`RegisterVariable` takes a variable instance, not a type object** — the last link the rebuilder was missing after B985.
+/// **`RegisterVariable` takes a variable instance, not a type object** — the last link the rebuilder was missing after.
 /// </remarks>
 public class VariableTypeFactoryTests {
     /// <summary>**八个名称各自造出正确类型的变量** / Each of the eight names creates the right variable type.</summary>
@@ -215,10 +215,10 @@ public class VariableTypeFactoryTests {
 /// 快照里找回的是原变量对象，不是新造一个 / A snapshot yields the original variable objects, not new ones.
 /// </summary>
 /// <remarks>
-/// **B987 更正了 B985 的判断**：基线的 `buildModel` 不从 `TypeName` 重建变量，
+/// **更正了 的判断**：基线的 `buildModel` 不从 `TypeName` 重建变量，
 /// 而是遍历表达式 AST 把 `IVariableItem` 引用**原样收出来**。
 ///
-/// **B987 corrected the B985 claim**: the baseline does not rebuild variables from `TypeName`; it walks the expression AST and reuses the `IVariableItem` references.**
+/// **corrected the claim**: the baseline does not rebuild variables from `TypeName`; it walks the expression AST and reuses the `IVariableItem` references.**
 /// </remarks>
 public class SnapshotVariableIdentityTests {
     /// <summary>**快照里的变量就是原来那个对象** / The variable in the snapshot is the original object.</summary>
@@ -244,10 +244,10 @@ public class SnapshotVariableIdentityTests {
 
     /// <summary>**造一个同名的不是"找回"** / Creating one with the same name is not "recovering".</summary>
     /// <remarks>
-    /// 这条是 B985 判断的直接反证：如果"造一个"就够了，那 `TryCreate` 就是重建器要的那一环。
+    /// 这条是 判断的直接反证：如果"造一个"就够了，那 `TryCreate` 就是重建器要的那一环。
     /// **新建的对象 `Identifier` / `Key` 都不同——注册进去就是另一个变量。**
     ///
-    /// **A direct counterexample to the B985 judgement**: if "create one" were enough, `TryCreate` would be the link the rebuilder needs. **A new object has a different
+    /// **A direct counterexample to the judgement**: if "create one" were enough, `TryCreate` would be the link the rebuilder needs. **A new object has a different
     /// `Identifier` / `Key`, so registering it introduces a different variable.**
     /// </remarks>
     [Fact]

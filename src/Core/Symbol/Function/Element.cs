@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`lowerIndex` 是偏移而不是截断**：**`lowerIndex = 1` 表示下标从 1 起，
 /// 而内部槽位仍然从 0 数——把两者搞混会让差一位。**
 ///
-/// B1154, following the baseline's `ElementFunction`.
+/// Following the baseline's `ElementFunction`.
 ///
 /// **The encoding has three parts**:
 /// ① **a one-hot `Σ selector_i = 1`**;
@@ -215,7 +215,7 @@ public sealed class ElementFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
     /// 下标等式 <c>index − Σ i·selector_i = lowerIndex</c> / The index equality.
     /// </summary>
     /// <remarks>
-    /// **这是本批最容易漏的一条**：**没有它，`selector` 可以是任何 one-hot 组合，
+    /// **这是这里最容易漏的一条**：**没有它，`selector` 可以是任何 one-hot 组合，
     /// 而结果只是"某个表项的值"——与 `index` 完全脱钩。**
     ///
     /// **This is the row most easily dropped**: **without it `selector` can be any one-hot combination and the result

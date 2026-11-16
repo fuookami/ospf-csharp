@@ -17,8 +17,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `selectSegment`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativePiecewiseReportTests
 {
     /// <summary>
@@ -112,7 +111,7 @@ public class NativePiecewiseReportTests
     /// **容差<b>不</b>作用于内部断点** / The tolerance does <b>not</b> apply to interior breakpoints.
     /// </summary>
     /// <remarks>
-    /// **这是本批最容易写错的一处：容差只包住定义域的两个端点，
+    /// **这是这里最容易写错的一处：容差只包住定义域的两个端点，
     /// 内部断点完全不在这个机制里。**
     ///
     /// **一个越过内部断点 `5` 的值直接落进第二段（下标 1），
@@ -195,12 +194,12 @@ public class NativePiecewiseReportTests
     /// **取最小的 `i` 使 `b_i >= v`；因为 `b_n >= v`，这样的 `i` 一定存在。**
     ///
     /// - **若 `i >= 1`：** **由最小性知 `b_{i-1} < v`，即 `b_{i-1} <= v`；又 `b_i >= v`。
-    ///   于是第 `i-1` 段 `[b_{i-1}, b_i]` <b>必然</b>包含 `v`，查找在它那里就命中了。**
+    /// 于是第 `i-1` 段 `[b_{i-1}, b_i]` <b>必然</b>包含 `v`，查找在它那里就命中了。**
     /// - **若 `i == 0`：** **说明 `b_0 >= v`，配合 `b_0 <= v` 得 `v == b_0`。
-    ///   此时第 0 段可能漏（若 `b_1 < b_0`）。但要后面所有段都漏，
-    ///   需要 `b_1 < v`；再对第 1 段要求 `b_2 < v`（因为 `b_1 < v <= b_2` 就会命中）；
-    ///   依此类推得所有 `b_j < v = b_0`，特别地 `b_n < v`——
-    ///   而 `b_n` 是上界，`v <= b_n` 矛盾。**
+    /// 此时第 0 段可能漏（若 `b_1 < b_0`）。但要后面所有段都漏，
+    /// 需要 `b_1 < v`；再对第 1 段要求 `b_2 < v`（因为 `b_1 < v <= b_2` 就会命中）；
+    /// 依此类推得所有 `b_j < v = b_0`，特别地 `b_n < v`——
+    /// 而 `b_n` 是上界，`v <= b_n` 矛盾。**
     ///
     /// **所以查找必然命中，`no valid segment` 是死代码。**
     ///
@@ -215,7 +214,7 @@ public class NativePiecewiseReportTests
     /// `[b_{i-1}, b_i] ∋ v` and the search hits there.** **If `i == 0` then `v == b_0`; for segment 0 to miss we need
     /// `b_1 < v`, and for segment 1 to miss `b_2 < v`, and so on, giving `b_n < v` — contradicting `v <= b_n`.**
     ///
-    /// **So the search always hits and `no valid segment` is dead code.** **The baseline keeps it and this batch copies
+    /// **So the search always hits and `no valid segment` is dead code.** **The baseline keeps it and copies
     /// the baseline; the criterion does not change that but <b>records the unreachability</b> and samples it, because dead
     /// code without a criterion gets read next time as "a case still unhandled".**
     /// </remarks>

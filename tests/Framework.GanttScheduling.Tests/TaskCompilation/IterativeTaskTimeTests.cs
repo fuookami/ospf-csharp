@@ -15,11 +15,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **迭代任务调度时间的 `Register` 从"静默 `Ok`"变成真的八张表（B562）** / The iterative task time's `Register` goes from a silent `Ok` to the eight real tables (B562).
+/// **迭代任务调度时间的 `Register` 从"静默 `Ok`"变成真的八张表** / The iterative task time's `Register` goes from a silent `Ok` to the eight real tables.
 /// </summary>
 /// <remarks>
 /// 之前 `Register` 直接返回 `Ok`：模型里什么都没有。它与任务调度时间**共用全部八张表**——那些表只依赖"每个任务的 `est` 是什么"。
-/// 本批把 est 的来源抽成虚方法（`BuildEstimatePolynomials`），迭代这支重写成**常量零**（基线在这一支就是这样，且 `estEnd` 不加工期）。
+/// 这里把 est 的来源抽成虚方法（`BuildEstimatePolynomials`），迭代这支重写成**常量零**（基线在这一支就是这样，且 `estEnd` 不加工期）。
 ///
 /// 三种静默失效：
 /// <list type="number">
@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </list>
 ///
 /// Previously `Register` returned `Ok` outright with nothing in the model. It **shares all eight tables** with task scheduling time — those depend only on "what is each task's
-/// `est`". This batch extracts the source of `est` into a virtual method (`BuildEstimatePolynomials`) and rewrites the iterative branch as **constant zero** (the baseline's shape
+/// `est`". extracts the source of `est` into a virtual method (`BuildEstimatePolynomials`) and rewrites the iterative branch as **constant zero** (the baseline's shape
 /// there, where `estEnd` does not add the duration either). Three silent failures: (1) **using the independent-variable scheme** — an iterative task has no independent start
 /// variable, so that would conjure a movable start for every task; (2) **adding the duration to `estEnd`** — the baseline does not in this branch, and mixing them inflates every
 /// end time by one duration; (3) **silently ignoring the redundancy range** — the baseline fails there ("the withRedundancy path is not implemented"), and ignoring it would let

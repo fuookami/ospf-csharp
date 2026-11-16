@@ -12,13 +12,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 门禁脚本必须真的能发现失败 / The gate script has to be able to notice a failure.
 /// </summary>
 /// <remarks>
-/// **B1058 没有新增源码。** 它给"门禁脚本"本身加了一道自检。
+/// **纯文档，无新增源码。** 它给"门禁脚本"本身加了一道自检。
 ///
 /// 门禁脚本每批都跑，而它的输出是**五个数字**。**五个数字全对不代表脚本在数东西**——
 /// 一个把 `Passed:` 正则写错的脚本会永远数出 0，**而 0 看起来像"这批没有测试"。**
 ///
-/// **B1058 added no source code.** It gave the gate script a self-check. The script runs every batch and its output is **five numbers**. **Five correct numbers do not mean the script is counting anything** — a
-/// script with a broken `Passed:` regex counts zero forever, **and zero reads as "this batch had no tests".**
+/// **No source change.** It gave the gate script a self-check. The script runs every batch and its output is **five numbers**. **Five correct numbers do not mean the script is counting anything** — a
+/// script with a broken `Passed:` regex counts zero forever, **and zero reads as " had no tests".**
 ///
 /// **判据钉的是脚本的"结构与能力"，不是它的输出。** 输出每批都变，结构不该变。
 ///

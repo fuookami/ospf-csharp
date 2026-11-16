@@ -1,7 +1,7 @@
 // 分配/编译聚合的重写规则 / Rewrite rules for the assignment and compilation aggregates.
 // 与固定 Kotlin 基线 `task_compilation/model/Compilation.kt` 的
-// `assign.flush() += sum(thisTasks.map { xi[it] })` 两段（分别按 `(key, executor)` 与 `key` 分组）对应。
-// Mirrors the two `assign.flush() += sum(thisTasks.map { xi[it] })` blocks (grouped by `(key, executor)` and by `key`)
+// `assign.flush += sum(thisTasks.map { xi[it] })` 两段（分别按 `(key, executor)` 与 `key` 分组）对应。
+// Mirrors the two `assign.flush += sum(thisTasks.map { xi[it] })` blocks (grouped by `(key, executor)` and by `key`)
 // in the pinned baseline's `task_compilation/model/Compilation.kt`.
 
 using System;
@@ -22,8 +22,8 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 两者键不同，这不是笔误：一个原始任务可能在不同执行器上有不同列，分配要按执行器分开；
 /// 而"这个任务是否达成"是跨执行器的总量。
 ///
-/// **`if (thisTasks.isNotEmpty())` 这个守卫不能省。** 守卫为假时不动聚合；若写成无条件重写，
-/// 每个原始任务每轮都会被 `flush()` 成空——所有指派关系消失，而**没有任何错误或警告**：
+/// **`if (thisTasks.isNotEmpty)` 这个守卫不能省。** 守卫为假时不动聚合；若写成无条件重写，
+/// 每个原始任务每轮都会被 `flush` 成空——所有指派关系消失，而**没有任何错误或警告**：
 /// 之后的换型、冲突、成本都读到零，模型只是"什么都没做"。
 ///
 /// In iterative compilation `taskAssignment` and `taskCompilation` are both **sums of columns**, rewritten every round:
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// The keys differ on purpose: one origin task may have columns on several executors, so the assignment must be split per executor, while "was this task achieved" is a total
 /// across executors.
 ///
-/// **The `if (thisTasks.isNotEmpty())` guard cannot be dropped.** When it is false the aggregate is left alone; an unconditional rewrite would `flush()` every origin task into an
+/// **The `if (thisTasks.isNotEmpty)` guard cannot be dropped.** When it is false the aggregate is left alone; an unconditional rewrite would `flush` every origin task into an
 /// empty sum every round — all assignment relations vanish with **no error or warning**: switching, conflicts and cost then read zero, and the model merely "does nothing".
 /// </remarks>
 public static class AssignmentAggregation {

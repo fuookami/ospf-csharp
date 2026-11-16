@@ -26,28 +26,26 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 物化驱动与真实模型之间的适配器 / The adapter between the driver and a real model.
 /// </summary>
 /// <remarks>
-/// B1235 补的是<b>接线的一半</b>：让 `IDeferredFunctionFallbackTarget` 有一个面向 `LinearMechanismModel` 的实现。
+/// 补的是<b>接线的一半</b>：让 `IDeferredFunctionFallbackTarget` 有一个面向 `LinearMechanismModel` 的实现。
 ///
 /// **在此之前那个接口<b>没有任何实现类</b>——驱动只在测试里被调用。**
 ///
-/// **这一批没有把整条链路接通，原因写在文档里而不是留白：**
+/// **这里没有把整条链路接通，原因写在文档里而不是留白：**
 /// **接线需要模型持有三样目前在它身上<b>不存在</b>的东西——**
 /// **`FunctionExpansionPolicy`、`DeferredFunctionStructures`、`DeferredFunctionConstraintRegions`。**
 /// **而这三样目前只是 `DeferredFunctionStructures.cs` 里的类型定义，从未挂到模型上。**
 ///
-/// **给模型加这三样状态并改求解路径，是一次比这一批大得多的改动。**
-/// **所以本批交付"适配器 + 截断原语"，并把剩余部分记成缺口。**
-///
-/// adds
+/// **给模型加这三样状态并改求解路径，是一次比这里大得多的改动。**
+/// **所以这里交付"适配器 + 截断原语"，并把剩余部分记成缺口。**
 ///
 /// **Before this, that interface had <b>no implementation at all</b> — the driver was called only from tests.**
 ///
-/// **This batch does not close the whole chain, and the reason is stated in the docs rather than left blank: closing it
+/// ** does not close the whole chain, and the reason is stated in the docs rather than left blank: closing it
 /// needs the model to carry three things it <b>does not currently have</b> — `FunctionExpansionPolicy`,
 /// `DeferredFunctionStructures` and `DeferredFunctionConstraintRegions`. All three are only type definitions in
 /// `DeferredFunctionStructures.cs` and were never attached to the model.**
 ///
-/// **Adding that state and changing the solve path is a much larger change than this batch.** **So the delivery is
+/// **Adding that state and changing the solve path is a much larger change than this change.** **So the delivery is
 /// "adapter + truncation primitive", with the rest recorded as a gap.**
 /// </remarks>
 public class LinearMechanismFallbackTargetTests
@@ -143,7 +141,7 @@ public class LinearMechanismFallbackTargetTests
 
         LinearInequality<Flt64> row = FakeRow(x, 1.0);
 
-        // **不写 那句裸成功断言：那一条在质量预算里被算作"裸成功断言"，
+        // **不写那句裸成功断言：那一条在质量预算里被算作"裸成功断言"，
         // 而它只说"没失败"。这里直接断言<b>行数变了多少</b>——那才是成功的内容。**
         // **No that bare success assertion: the quality budget counts that as a bare success assertion, and it only says "nothing
         // failed". What is asserted here is <b>how the row count moved</b> — that is the content of the success.**

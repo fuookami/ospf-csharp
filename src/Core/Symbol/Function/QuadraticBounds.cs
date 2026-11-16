@@ -15,14 +15,14 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次多项式的区间与求值 / A quadratic polynomial's interval and evaluation.
 /// </summary>
 /// <remarks>
-/// B1158。**`QuadraticMinFunction` 与 `QuadraticMaskingRangeFunction` 都需要这两件事，
+/// **`QuadraticMinFunction` 与 `QuadraticMaskingRangeFunction` 都需要这两件事，
 /// 而 `FunctionEvaluation` 只处理线性多项式。**
 ///
 /// **区间推导对双线性项是精确的（极值在角的四个顶点上），
 /// 对一般二次项只是保守估计。** **保守对大 M 是安全的（偏大只让约束变松，不会误约束），
 /// 但偏大也会让松弛变差——这是已知取舍。**
 ///
-/// B1158. **Both `QuadraticMinFunction` and `QuadraticMaskingRangeFunction` need these two things, and
+/// **Both `QuadraticMinFunction` and `QuadraticMaskingRangeFunction` need these two things, and
 /// `FunctionEvaluation` only handles linear polynomials.**
 ///
 /// **The interval derivation is exact for bilinear terms (the extremum is at one of the four corners) and only a

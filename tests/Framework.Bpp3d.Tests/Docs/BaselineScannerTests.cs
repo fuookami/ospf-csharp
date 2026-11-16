@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 基线扫描器必须一直在 / The baseline scanner has to keep existing.
 /// </summary>
 /// <remarks>
-/// **B1059—B1067 的缺口全部来自这个扫描**，而那几批的扫描是**每批临时写一次的 Python**。
+/// **缺口全部来自这个扫描**，而各轮的扫描是**每批临时写一次的 Python**。
 /// **临时脚本的结局是：下一会话不知道它存在，于是要么重写，要么相信"已经全搬完了"。**
 ///
 /// **而"相信已经全搬完了"是这里最贵的错**：它会让人跳过整个核对环节。
 ///
-/// **The B1059—B1067 gaps all came from this scan**, and each batch's scan was **throwaway Python**. **The fate of a throwaway script is that the next session does not know it exists, and either rewrites it or believes
+/// **All of the gaps came from this scan**, and each round'ss scan was **throwaway Python**. **The fate of a throwaway script is that the next session does not know it exists, and either rewrites it or believes
 /// everything is already ported.** **Believing that is the expensive error here**: it makes people skip the whole check.
 /// </remarks>
 public class BaselineScannerTests

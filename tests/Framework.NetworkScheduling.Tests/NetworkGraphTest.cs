@@ -170,7 +170,7 @@ public sealed class NetworkGraphTest {
     }
 
     /// <summary>
-    /// **反向视图互换起点与终点，但载荷与标识不变**：这是 `Reverse()` 的全部效果。
+    /// **反向视图互换起点与终点，但载荷与标识不变**：这是 `Reverse` 的全部效果。
     /// **A reversed view swaps origin and destination while payloads and identities stay unchanged**: the entire effect.
     /// </summary>
     [Fact]

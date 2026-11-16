@@ -13,9 +13,9 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// </summary>
 /// <remarks>
 /// 同步 Kotlin `dee897d2` 的 `lowerLoop`。**`If` 只做“选”，`Loop` 要做“重复并把上一轮的结果带进下一轮”，** **所以它多出三件 `If` 没有的东西。**
-/// **本批只做契约判定，不做展开本身。**
+/// **这里只做契约判定，不做展开本身。**
 ///
-/// Syncs `lowerLoop`. **If only chooses; Loop repeats and carries the previous round into the next, so it has three things If does not.** **This batch decides the contract,
+/// Syncs `lowerLoop`. **If only chooses; Loop repeats and carries the previous round into the next, so it has three things If does not.** ** decides the contract,
 /// not the unrolling.**
 /// </remarks>
 public class OnnxLoopExpansionTests

@@ -69,9 +69,9 @@ public sealed class PermutationMutationTests {
 
     /// <summary>**散射变异在相同种子下完全可重放** / Scramble mutation replays exactly under the same seed.</summary>
     /// <remarks>
-    /// 基线此处用 Kotlin 的 `shuffled()`（全局随机源），与注入熵源无关，同一份种子在散射变异上无法重放。C# 版改用注入熵源，
+    /// 基线此处用 Kotlin 的 `shuffled`（全局随机源），与注入熵源无关，同一份种子在散射变异上无法重放。C# 版改用注入熵源，
     /// 这条断言钉住的正是那个修正。
-    /// The baseline calls Kotlin's `shuffled()` (a global source) unrelated to the injected entropy, so the same seed cannot replay
+    /// The baseline calls Kotlin's `shuffled` (a global source) unrelated to the injected entropy, so the same seed cannot replay
     /// scramble mutation. This port uses the injected source, and this assertion pins that correction.
     /// </remarks>
     [Fact]

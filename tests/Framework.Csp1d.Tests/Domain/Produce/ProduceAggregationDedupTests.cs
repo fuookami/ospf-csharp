@@ -22,15 +22,15 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.Domain.Produce;
 /// / `ProduceAggregation.AddColumns` must dedupe by both `id` and `canonicalKey`.
 /// </summary>
 /// <remarks>
-/// **B361 记的缺口**写着"`ProduceAggregation._planKeyIndex` 仍用默认键"。查基线后发现**那半句判断是错的**：
-/// 基线 `ProduceAggregation.kt:56` 用的正是 **`candidate.canonicalKey()`（默认键）**，
+/// **记的缺口**写着"`ProduceAggregation._planKeyIndex` 仍用默认键"。查基线后发现**那半句判断是错的**：
+/// 基线 `ProduceAggregation.kt:56` 用的正是 **`candidate.canonicalKey`（默认键）**，
 /// 所以 C# 在这里用默认键**与基线一致**，不是缺口。
 ///
 /// **但同一条语句里还有第二个条件**：`candidate.id !in registeredIds`。C# 原本**只有键索引**，
 /// 于是"同 id、不同内容"的两条方案会被**同时接受**——这才是真缺口。
 ///
-/// **B361's ledger entry** said "`ProduceAggregation._planKeyIndex` still uses the default key". Checking the baseline showed **that half was wrong**: the baseline at
-/// `ProduceAggregation.kt:56` uses exactly **`candidate.canonicalKey()` (the default key)**, so C# matches the baseline there and it is not a gap.
+/// **the earlier ledger entry** said "`ProduceAggregation._planKeyIndex` still uses the default key". Checking the baseline showed **that half was wrong**: the baseline at
+/// `ProduceAggregation.kt:56` uses exactly **`candidate.canonicalKey` (the default key)**, so C# matches the baseline there and it is not a gap.
 ///
 /// **But that same statement has a second condition**: `candidate.id !in registeredIds`. C# originally had **only the key index**, so two plans sharing an id but differing
 /// in content would **both be accepted** — that was the real gap.
@@ -85,7 +85,7 @@ public class ProduceAggregationDedupTests {
     /// | 实现 | 结果 |
     /// | --- | --- |
     /// | 基线（双键） | **0 条被接受** |
-    /// | 仅键索引（B362 前） | **1 条被接受** |
+    /// | 仅键索引 | **1 条被接受** |
     ///
     /// The pool already holds `id = "p1"` (product A). The new column is **also `"p1"` but for product B** — a different canonical key, **only the id collides**
     /// (table above).
@@ -138,7 +138,7 @@ public class ProduceAggregationDedupTests {
 
     /// <summary>**第一次加列后，新 id 必须进入 id 集合** / After the first add, the new id must enter the id set.</summary>
     /// <remarks>
-    /// **这条是变异测试逼出来的。** 我最初只测"构造时已有的 id 会被拒"，
+ /// **这条是变异测试逼出来的。** 最初只测"构造时已有的 id 会被拒"，
     /// 于是变异"**加列后不把 id 记进 `_planIds`**"**存活**——因为没有任何判据连续加两次列。
     ///
     /// 判据：第一次接受 `p2`，第二次送一条**同样叫 `p2`、但内容不同**的列，必须被拒。

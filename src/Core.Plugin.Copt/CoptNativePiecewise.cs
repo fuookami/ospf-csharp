@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 /// <remarks>
 /// 对齐基线 `CoptNativePiecewise.kt` 的 `validateCoptNativePiecewiseData` 与 `addCoptNativePiecewise`。
 ///
-/// **这一批补的是<b>写侧</b>：把 `x/y` 断点翻译成 COPT 模型里的 λ 变量组、三条行与一条 SOS2。**
-/// **读侧（报告里的求值与指纹）B1211—B1214 早就有了。**
+/// **这里补的是<b>写侧</b>：把 `x/y` 断点翻译成 COPT 模型里的 λ 变量组、三条行与一条 SOS2。**
+/// **读侧（报告里的求值与指纹）早已有之。**
 ///
 /// **"读得有、写不出"是一种容易被忽略的半成品：** **报告能列出 PWL 结构、能算指纹、能校验列，
 /// 而求解器从来没收到过任何一条 PWL 约束——于是那些报告描述的是一份<b>从未生效</b>的模型。**
@@ -31,8 +31,8 @@ namespace Fuookami.Ospf.Core.Plugin.Copt;
 ///
 /// **follows the baseline's `validateCoptNativePiecewiseData` and `addCoptNativePiecewise`.**
 ///
-/// **This batch adds the <b>write</b> side: turning `x/y` breakpoints into COPT λ variables, three rows and one
-/// SOS2 per structure.** **The read side (report evaluation and fingerprints) has existed since B1211–B1214.**
+/// ** adds the <b>write</b> side: turning `x/y` breakpoints into COPT λ variables, three rows and one
+/// SOS2 per structure.** **The read side (report evaluation and fingerprints) has existed since then.**
 ///
 /// **"Readable but unwritable" is an easily missed half-finish: the report can list PWL structures, fingerprint them
 /// and validate their columns, while the solver never received a single PWL constraint — so those reports describe a
@@ -116,14 +116,14 @@ internal static class CoptNativePiecewise
     /// **缺第 5 条会怎样：** **λ 可以是任意凸组合，于是 `y` 会取到断点凸包内部的任意值，
     /// 而不是折线上的值——模型仍然可解，结果却是错的。**
     ///
-    /// **这就是"PWL 没有 SOS2 就只是一个凸包"这个事实，而它是这一批唯一真正需要求解器配合的地方。**
+    /// **这就是"PWL 没有 SOS2 就只是一个凸包"这个事实，而它是这里唯一真正需要求解器配合的地方。**
     ///
     /// **Each structure needs five parts, and they only mean anything together:** **the λ group with one variable per
     /// breakpoint, `Σλ = 1`, `x = Σ λᵢ·xᵢ`, `y = Σ λᵢ·yᵢ`, and `SOS2(λ, x breakpoints)`.** **The last is what makes it
     /// interpolation between two neighbouring points rather than an arbitrary convex combination.**
     ///
     /// **Without the SOS2 the model stays solvable and the answer is wrong: `y` can sit anywhere in the convex hull of the
-    /// breakpoints instead of on the polyline.** **That is the one place this batch genuinely needs the solver to
+    /// breakpoints instead of on the polyline.** **That is the one place the write side genuinely needs the solver to
     /// cooperate.**
     /// </remarks>
     /// <param name="model">COPT 模型 / The COPT model.</param>

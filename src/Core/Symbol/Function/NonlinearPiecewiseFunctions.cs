@@ -21,14 +21,14 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 非线性函数的分段线性采样 / Piecewise-linear sampling of a nonlinear function.
 /// </summary>
 /// <remarks>
-/// B1148。`LogFunction` / `PowerFunction` / `ReciprocalFunction` 三者只差一个源函数，
+/// `LogFunction` / `PowerFunction` / `ReciprocalFunction` 三者只差一个源函数，
 /// **所以采样逻辑共享一份，而不是复制三遍。**
 ///
 /// **采样里最重要的一件事是"检查每一个采样点是否有限"**：
 /// **`ln(0)`、`1/0`、`(-1)^0.5` 都会给出非有限值，而那些值会一路变成 NaN 塞进分段函数里**——
 /// **分段函数本身不会拒绝它们，于是整条约束悄悄地全部无效。**
 ///
-/// B1148. The three functions differ only by their source, **so the sampling is shared rather than tripled.**
+/// The three functions differ only by their source, **so the sampling is shared rather than tripled.**
 ///
 /// **The important part of sampling is checking that every sample is finite**:
 /// **`ln(0)`, `1/0` and `(-1)^0.5` all give non-finite values, and those become NaN inside the piecewise function** —
@@ -85,7 +85,7 @@ internal static class NonlinearSampling {
 /// **`ln` 在 0 处没有定义、在负值处是复数**——**所以区间必须严格在 0 的右侧。**
 /// **这条护栏不是"更严格"，而是"把 NaN 变成一次明确的拒绝"。**
 ///
-/// The natural logarithm from the baseline, added in B1148.
+/// The natural logarithm from the baseline.
 ///
 /// **`ln` is undefined at zero and complex for negatives** — **so the interval has to lie strictly right of zero.**
 /// **That guard is not extra strictness but a way to turn a NaN into an explicit rejection.**
@@ -212,7 +212,7 @@ public sealed class LogFunction<V> : IMathFunctionSymbol<V>, IHasResultPolynomia
 /// 于是分段函数"看起来构造成功"但完全错误。**
 /// **所以区间绝不能跨过 0，也不能以 0 为端点。**
 ///
-/// The reciprocal from the baseline, added in B1148.
+/// The reciprocal from the baseline.
 ///
 /// **`1/x` diverges at zero** — **piecewise-linear slopes grow near the singularity, and sampling across it yields one
 /// huge positive and one huge negative value, so the piecewise function "builds fine" while being completely wrong.**
@@ -343,7 +343,7 @@ public sealed class ReciprocalFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// **所以护栏分两条，而不是简单地"区间必须在 0 右侧"**——
 /// **那会把 `x²` 在 `[-1, 1]` 上这种完全合法的情况也拒掉，而立方与平方项在优化里很常见。**
 ///
-/// The power function from the baseline, added in B1148.
+/// The power function from the baseline.
 ///
 /// **`x^e` goes non-finite in two places, under different conditions**:
 /// ① **`e &lt; 0` with an interval containing zero** → `1/0`;

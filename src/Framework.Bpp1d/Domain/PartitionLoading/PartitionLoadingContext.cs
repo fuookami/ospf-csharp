@@ -738,10 +738,10 @@ public sealed class PartitionLoadingContext<V>
     /// <returns>结果 / The result.</returns>
     /// <remarks>
     /// **`LpResult.DualSolution` 已经是 `MathConstraint` 键**，与 `RefreshShadowPriceAsync` 需要的形状完全一致——
-    /// **没有"按行序贴价"这层映射**，所以贴错行在结构上不可能发生（B439 实测）。
+    /// **没有"按行序贴价"这层映射**，所以贴错行在结构上不可能发生。
     ///
     /// **`LpResult.DualSolution` is already keyed by `MathConstraint`**, exactly the shape `RefreshShadowPriceAsync` needs — **there is no row-order mapping**, so
-    /// attaching a price to the wrong row is structurally impossible (measured in B439).
+    /// attaching a price to the wrong row is structurally impossible (measured).
     /// </remarks>
     public Task<Result<Success, ErrorCode, Error<ErrorCode>>> RefreshShadowPriceAsync(
         ColumnMasterRegistration<Flt64> master,

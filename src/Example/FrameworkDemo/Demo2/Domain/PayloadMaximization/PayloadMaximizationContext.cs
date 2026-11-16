@@ -51,8 +51,8 @@ public sealed class PayloadMaximizationContext
             return Results.Ok<Success>(Results.SuccessInstance);
         }
 
-        // **上游可能未初始化**（B606 起配载聚合可空）。取非空会抛 `NullReferenceException`，那是崩溃不是失败。
-        // **The upstream may be uninitialised** (nullable since B606). Taking non-null throws a `NullReferenceException`, which is a crash rather than a failure.
+        // **上游可能未初始化**（起配载聚合可空）。取非空会抛 `NullReferenceException`，那是崩溃不是失败。
+        // **The upstream may be uninitialised** (nullable since then). Taking non-null throws a `NullReferenceException`, which is a crash rather than a failure.
         if (aircraftContext.Aggregation is not { } aircraftAggregation)
         {
             return Results.Failed<Success>(new Err<ErrorCode>(

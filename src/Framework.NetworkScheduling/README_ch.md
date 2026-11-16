@@ -32,7 +32,7 @@
 
 ## 调用方
 
-`Framework.GanttNetworkScheduling` 把这些路径适配成业务任务束（Batch 278）。
+`Framework.GanttNetworkScheduling` 把这些路径适配成业务任务束（earlier）。
 注意本模块**本来就引用** `Framework.GanttScheduling`，所以桥接放在独立项目里。
 
 ## 验证

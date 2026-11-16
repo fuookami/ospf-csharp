@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// CPLEX 的原生能力探测 / Native capability detection for CPLEX.
 /// </summary>
 /// <remarks>
-/// B1234 按基线 `CplexFunctionCapabilities.kt`（44 行）补，与同批的 `CoptFunctionCapabilities` 同源。
+/// 对齐基线 `CplexFunctionCapabilities.kt`（44 行）补，与同批的 `CoptFunctionCapabilities` 同源。
 ///
 /// **CPLEX 的探测与 COPT 有一处<b>实质</b>差别，而它不是笔误：**
 ///
@@ -28,8 +28,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex;
 /// **"两个后端都支持 SOS2"这句话是对的，而"它们用同一个方法支持 SOS2"是错的——
 /// 判据要能分开这两句话，否则"合写一个探测函数"会让其中一侧永远返回 `false`。**
 ///
-/// follows
-/// `CoptFunctionCapabilities`.
+/// Follows `CoptFunctionCapabilities`.
 ///
 /// **CPLEX's probe differs from COPT's in one <b>substantive</b> way, and it is not a typo:** **the method name is
 /// `AddSOS2` rather than `AddSos`, there are five overloads rather than three, and the return is the <b>interface</b>

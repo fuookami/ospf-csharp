@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// 而 `RemoteWireContractTest` 的几十条解码判据**照样全绿**——它们测的是"这份文件能解码"，
 /// **不是"这份文件来自基线"**。
 ///
-/// 这一批把四个 SHA-256 钉住。**换 fixture 必须同时改这里**，那时就会有人问"新文件从哪来"——
+/// 这里把四个 SHA-256 钉住。**换 fixture 必须同时改这里**，那时就会有人问"新文件从哪来"——
 /// 这正是要的：**来源变化必须是显式动作，不能是顺手一改。**
 ///
 /// The README says these four fixtures are byte-for-byte copies of the pinned Kotlin `12fdb587` fixtures, and **nothing guarded that claim**: a stray space edited into
@@ -102,10 +102,10 @@ public class RemoteFixtureProvenanceTests {
 
     /// <summary>**找源码目录，不是输出目录** / Find the source directory, not the output one.</summary>
     /// <remarks>
-    /// 输出目录里的 `remote-fixtures` **只拷 `.json`**，没有 `README.md`——而这一批要看 README。
+    /// 输出目录里的 `remote-fixtures` **只拷 `.json`**，没有 `README.md`——而这里要看 README。
     /// 所以从仓库根找源码目录：**证据文件在哪，来源说明就在哪。**
     ///
-    /// The output copy holds **only the `.json` files**, no `README.md`, and this batch reads the README. So it finds the source directory from the repository root:
+    /// The output copy holds **only the `.json` files**, no `README.md`, and reads the README. So it finds the source directory from the repository root:
     /// **the provenance note lives next to the evidence.**
     /// </remarks>
     private static string FixtureRoot() {

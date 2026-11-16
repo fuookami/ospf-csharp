@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///
 /// 1. **是 `Minimum`**。
 /// 2. **目标名带空格**：`"advice load weight"`。
-/// 3. **只收 `Alw` 非 `null` 的舱位**，且**一条都没有时不加目标**（基线的 `if (monomials.isEmpty()) return ok`）。
+/// 3. **只收 `Alw` 非 `null` 的舱位**，且**一条都没有时不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
 ///    注意这里"空"指**没有任何舱位带建议值**，不是"没有舱位"。
 /// 4. **系数按舱位取**，不是按舱位下标。
 ///

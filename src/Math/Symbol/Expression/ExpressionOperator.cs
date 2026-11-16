@@ -144,7 +144,7 @@ public static class OperatorSymbols {
 
 /// <summary>
 /// 比较操作符扩展 / Comparison operator extensions.
-/// Kotlin ComparisonOperator.inverse() (C# enums carry no instance methods).
+/// Kotlin ComparisonOperator.inverse (C# enums carry no instance methods).
 /// </summary>
 public static class ComparisonOperatorExtensions {
     /// <summary>返回比较操作符的反向操作符 / Return the inverse comparison operator.</summary>

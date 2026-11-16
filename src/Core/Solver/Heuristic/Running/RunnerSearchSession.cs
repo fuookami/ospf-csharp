@@ -36,11 +36,11 @@ namespace Fuookami.Ospf.Core.Solver.Heuristic.Running;
 /// **Only a fully valid evaluation enters the candidate set.** Every failure path returns `null` and stays "rejected", so the failure the
 /// caller observes matches the real cause.
 /// **基线那两个视图有消费者，本移植没有——这是既定形状差异，不是缺口。** 基线里 `FitnessEvaluator` 读 `rejected` 丢掉被拒的评估、
-/// `LocalSearchUpdates` 读 `remaining &lt;= 2` 提前退出；本移植在 Batch 157 把约束与预算从模型上剥离（`SearchConstraints` 取代模型装饰器，
+/// `LocalSearchUpdates` 读 `remaining &lt;= 2` 提前退出；本移植在 earlier 把约束与预算从模型上剥离（`SearchConstraints` 取代模型装饰器，
 /// 预算走 `SearchBudget`），算子拿不到模型侧的这两个读数，**调用方用 `SearchBudget` 包住整次调用**（见 `LocalSearchComposites`）。
 /// 补一个没人读的属性只会变成下一个人的困惑来源，所以**不补**。
 /// **The baseline's two views have consumers; this port has none — an established shape difference, not a gap.** The baseline's `FitnessEvaluator` reads `rejected` to drop a
-/// rejected evaluation, and `LocalSearchUpdates` reads `remaining &lt;= 2` to exit early; this port detached constraints and budgets from the model in Batch 157
+/// rejected evaluation, and `LocalSearchUpdates` reads `remaining &lt;= 2` to exit early; this port detached constraints and budgets from the model in earlier
 /// (`SearchConstraints` replaced the model decorator, budgets go through `SearchBudget`), so operators cannot reach either reading and **the caller wraps the whole call in a
 /// `SearchBudget`** (see `LocalSearchComposites`). Adding an unconsumed property would only become the next person's confusion, so **it stays out**.
 /// </remarks>
@@ -142,13 +142,13 @@ internal sealed class EvaluationModel<ObjValue, V>
     /// **这个转发不是可选优化，而是"经会话驱动的运行器能否启动"的唯一前提**。接口上的 `InitialSolutions` 有默认实现（返回空），
     /// 一个漏掉转发的包装器会让**每一个**经 `AbstractRunner.Run` 驱动的运行器都从空种群开始：
     /// 初始化拿到空集、`Advance` 原样返回空集、进程正常结束，**而结果是一个"成功的空结果"**。
-    /// 这个缺陷在 Batch 205 的 NSGA-II 上一直存在，直到 Batch 212 第一次从求解器入口调用 `Run` 才暴露——
+ /// 这个缺陷在 earlier 的 NSGA-II 上一直存在，直到 earlier 第一次从求解器入口调用 `Run` 才暴露——
     /// **所有此前的测试都直接调 `InitializeStep`/`AdvanceStep`，恰好绕开了会话。**
     /// **This forwarding is not an optional optimisation: it is the only precondition for "a session-driven runner can start at all".**
     /// `InitialSolutions` has a default implementation on the interface (returning empty), so a wrapper that forgets to forward makes **every**
     /// runner driven through `AbstractRunner.Run` start from an empty population: initialisation gets nothing, `Advance` returns it unchanged,
     /// the process ends normally, **and the result is a "successful empty result"**.
-    /// The defect lived in Batch 205's NSGA-II the whole time and only surfaced in Batch 212, when the solver entry point first called `Run` —
+ /// The defect lived in earlier's NSGA-II the whole time and only surfaced in earlier, when the solver entry point first called `Run` —
     /// **every earlier test called `InitializeStep`/`AdvanceStep` directly and happened to bypass the session.**
     /// </remarks>
     /// <param name="initialSolutionAmount">初始解数量 / The initial-solution amount.</param>

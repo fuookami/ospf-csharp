@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **线性密度上限（B591）** / The linear density cap (B591).
+/// **线性密度上限** / The linear density cap.
 /// </summary>
 /// <remarks>
 /// 与表面密度上限的区别不只是"面积换长度"，还有**求和的范围**：表面密度是**逐舱位各一行**，线性密度是**一条横截面一行**，

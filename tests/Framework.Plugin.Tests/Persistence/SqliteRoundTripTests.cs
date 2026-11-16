@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// 已有的 `SqliteRepositoryTests` 每条判据都在**同一个连接**里写和读。那证明的是"对象没被改坏"，
 /// **不证明"存下去了"**——一个只往内存字典里塞的实现也能全绿。
 ///
-/// 这一批因此**关掉连接再开一个新的**：只有真的落到了库里，第二次连接才看得见。
+/// 这里因此**关掉连接再开一个新的**：只有真的落到了库里，第二次连接才看得见。
 /// 这正是矩阵里"数据库持久化往返"那一行说"没有真实往返测试"时缺的东西。
 ///
 /// The existing `SqliteRepositoryTests` write and read **inside one connection**. That proves the object was not mangled, **not that it was stored** — an

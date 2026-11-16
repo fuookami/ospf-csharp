@@ -129,14 +129,14 @@ public class ExecutorSlotCompilationConstraint<E, A>
     /// 也就是"每个（执行器, 时隙）恰好编译一次"这条要求本身。少了它，编译量可以取任意值，
     /// 那个执行器在那个时隙上可以一个任务都不接，而排程看起来完全正常。
     ///
-    /// 表达式是**占位对象**时不加行也不失败：`CompilationTable.Build` 现在填的就是 `new object()`，
+    /// 表达式是**占位对象**时不加行也不失败：`CompilationTable.Build` 现在填的就是 `new object`，
     /// 占位是正常状态，改成失败会把全部分配打回。与 `TaskCompilationConstraint` 同一个天花板。
     ///
     /// **Returns a failure on the first missing pair** rather than collecting them all. The caller stops at the first failure anyway, so collecting is wasted work; and an
     /// implementation that instead "skips the missing one and continues" leaves the model **partially constrained**, which is worse than failing outright. **The row-adding half was
     /// missing**: it only validated. The baseline's `invoke` is `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))` — the requirement itself,
     /// that **each (executor, slot) is compiled exactly once**. Without it the compiled quantity may take any value and that executor may take no task in that slot while the schedule looks
-    /// normal. A **placeholder** expression adds no row and is not a failure: `CompilationTable.Build` fills `new object()` today, a placeholder is the normal state, and failing would reject
+    /// normal. A **placeholder** expression adds no row and is not a failure: `CompilationTable.Build` fills `new object` today, a placeholder is the normal state, and failing would reject
     /// every assignment — the same ceiling as `TaskCompilationConstraint`.
     /// </remarks>
     public Try Invoke(object model) {
@@ -188,14 +188,14 @@ public class ExecutorSlotCompilationConstraint<E, A>
     /// <returns>提取器 / The extractor.</returns>
     /// <remarks>
     /// **当前返回零，因为影子价格参数里还没有时隙信息**。C# 的 `IGanttSchedulingShadowPriceArguments` 只带执行器与任务，
-    /// 而这条约束的键是（执行器，时隙）。硬把时隙塞进来需要改整个参数接口，本批不做。
+    /// 而这条约束的键是（执行器，时隙）。硬把时隙塞进来需要改整个参数接口，这里不做。
     ///
     /// 这里返回零而不是抛异常：影子价格为零会让列生成**少一个加速项**，但结果仍然正确；
     /// 抛异常会让整条流水线停下来。**缺一个可选信息不该让主流程失败**。
     /// `ponytail:` 天花板——等影子价格参数接口需要携带时隙时再补上真实的查表。
     ///
     /// **It currently returns zero because the shadow-price arguments carry no slot yet.** C#'s `IGanttSchedulingShadowPriceArguments` only carries the executor and the task,
-    /// while this constraint's key is (executor, slot). Threading the slot through would require changing the whole argument interface, which this batch does not do.
+    /// while this constraint's key is (executor, slot). Threading the slot through would require changing the whole argument interface, which not do.
     ///
     /// Returning zero rather than throwing: a zero shadow price costs column generation **one acceleration term** while the answer stays correct; throwing would halt the
     /// entire pipeline. **A missing optional input should not fail the main flow.**

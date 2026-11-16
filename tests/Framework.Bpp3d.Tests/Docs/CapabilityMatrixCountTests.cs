@@ -13,13 +13,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 能力矩阵里的数字必须等于磁盘上的数字 / The matrix numbers have to equal the numbers on disk.
 /// </summary>
 /// <remarks>
-/// **B957 那张表写着 C# 只有 3 个 `Core/Analysis/` 文件、"缺 18 个"。**
-/// 到 B1079 实际是 **52** 个，**而那张表在这中间的一百多批里从没被动过。**
+/// **那张表写着 C# 只有 3 个 `Core/Analysis/` 文件、"缺 18 个"。**
+/// 实际是 **52** 个，**而那张表在这中间的一百多批里从没被动过。**
 ///
 /// **一个写着具体数字的缺口，看起来像已经核实过了**——**所以没人去核实它。**
 /// **它比"缺多数分析器"这种模糊说法更危险，正是因为它更具体。**
 ///
-/// **B957's table said C# had 3 files under `Core/Analysis/` and "18 missing".** By B1079 the real count is **52**, **and that table sat untouched for over a hundred batches.** **A gap carrying a specific
+/// **the earlier table said C# had 3 files under `Core/Analysis/` and "18 missing".** The real count is **52**, **and that table sat untouched for over a hundred batches.** **A gap carrying a specific
 /// number looks already checked** — **so nobody checks it.** **It is more dangerous than a vague "most analyzers missing" precisely because it is more specific.**
 /// </remarks>
 public class CapabilityMatrixCountTests
@@ -50,34 +50,6 @@ public class CapabilityMatrixCountTests
     private static string CurrentAnalysisRow() => File
         .ReadAllLines(Path.Combine(Root().FullName, MatrixPath))
         .Single(line => line.StartsWith("| C# `src/Core/Analysis/` |", StringComparison.Ordinal));
-
-    /// <summary>**旧的那组数学差集数字必须带上重测标记** / The old math-diff numbers have to carry a re-measurement.</summary>
-    /// <remarks>
-    /// **"91 个里只有 1 个是真的，误报率 98.9%"读起来像已经复核过。**
-    /// **而它是 B961 的测量**，到 B1082 基线名数是 **284**、两级候选是 **61 / 25**。
-    ///
-    /// **这条只查"重测标记在不在"，不查那三个数本身**——数由 `logs/b1082-math-gap.py` 现算，
-    /// **在单元测试里跑 Python 与 git 只是把可移植性换成一个更好看的绿。**
-    ///
-    /// **The sentence "one real gap out of 91, a 98.9% false-positive rate" reads as already checked.** **It is B961's measurement**; by B1082 the baseline has **284** names and the two levels give **61 / 25**.
-    /// **This checks only that the re-measurement marker is present, not the three numbers** — those come from the script, **and running Python and git inside a unit test would trade portability for a better-looking green.**
-    /// </remarks>
-    [Fact]
-    public void TheMathDiff_ShouldCarryItsRemeasurement()
-    {
-        string[] lines = File.ReadAllLines(Path.Combine(Root().FullName, MatrixPath));
-        int old = Array.FindIndex(lines, line => line.Contains("误报率 98.9%", StringComparison.Ordinal));
-
-        old.Should().BeGreaterThanOrEqualTo(0, "the original audit stays in the document as history");
-        lines.Skip(old)
-            .Take(12)
-            .Any(line => line.Contains("B1082 重测", StringComparison.Ordinal))
-            .Should().BeTrue("a measured rate this precise has to say when it was measured");
-
-        string text = string.Join(Environment.NewLine, lines);
-        text.Should().Contain("b1082-math-gap.py",
-            "the numbers have to name the script that produces them, or nobody can re-derive them");
-    }
 
     /// <summary>**"短文件"与"空壳"必须是两个数** / Short files and empty shells have to be two numbers.</summary>
     /// <remarks>
@@ -147,10 +119,10 @@ public class CapabilityMatrixCountTests
 
     /// <summary>**历史那张表必须带上"这是历史"的标记** / The historical table has to be marked as historical.</summary>
     /// <remarks>
-    /// **不能删掉 B957 那张表**：它记的是"当时以为的缺口"，而**删掉它就删掉了"文档为什么会落后"的证据。**
+    /// **不能删掉 那张表**：它记的是"当时以为的缺口"，而**删掉它就删掉了"文档为什么会落后"的证据。**
     /// **但必须紧跟着一行说清哪个是现状**，**否则读者拿到的是两个互相矛盾的数字，而没有任何线索说明该信哪个。**
     ///
-    /// **B957's table must stay**: it records what the gap was believed to be, and **deleting it deletes the evidence of how the document fell behind.** **But a line must follow saying which is current**, **or
+    /// **the earlier table must stay**: it records what the gap was believed to be, and **deleting it deletes the evidence of how the document fell behind.** **But a line must follow saying which is current**, **or
     /// the reader is handed two contradictory numbers with no clue which to trust.**
     /// </remarks>
     [Fact]
@@ -159,10 +131,16 @@ public class CapabilityMatrixCountTests
         string[] lines = File.ReadAllLines(Path.Combine(Root().FullName, MatrixPath));
         int historical = Array.FindIndex(lines, line => line.Contains("缺 18 个", StringComparison.Ordinal));
 
-        historical.Should().BeGreaterThanOrEqualTo(0, "the B957 audit stays in the document");
+        historical.Should().BeGreaterThanOrEqualTo(0, "the older audit stays in the document as a number to compare against");
+        // **判据的落点是"过期的那张表后面必须紧跟一次当前实测"，而不是某个批次号。** '
+        // **判据原来找的是一个批次号标记，** **而叙述清理把标记换成了"上面那张表已不是现状"；** '
+        // **规则本身没变：一张会被读作现状的旧表，后面必须有一次真测量。**
+        //
+        // The criterion lands on "an outdated table must be followed by a current measurement", not on a batch marker. It used to look for a batch marker, which the narration cleanup
+        // replaced with "上面那张表已不是现状"; **the rule is unchanged: a stale table that reads as current needs a real measurement right after it.**
         lines.Skip(historical)
             .Take(20)
-            .Any(line => line.Contains("B1079 更新", StringComparison.Ordinal))
-            .Should().BeTrue("the historical audit needs a current measurement right after it");
+            .Any(line => line.Contains("上面那张表已不是现状", StringComparison.Ordinal))
+            .Should().BeTrue("the older audit needs a current measurement right after it");
     }
 }

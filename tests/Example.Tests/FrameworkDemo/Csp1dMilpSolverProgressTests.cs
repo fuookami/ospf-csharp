@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// `Csp1dMilpSolver` must forward the progress context to the framework layer, giving the final MILP the 75—99 band.
 /// </summary>
 /// <remarks>
-/// **B333 加了透传但没有判据**：`Csp1dMilpSolver` 在 `tests/` 下**零覆盖**，而 CSP1D 的完整流程
+/// 加了透传但没有判据**：`Csp1dMilpSolver` 在 `tests/` 下**零覆盖**，而 CSP1D 的完整流程
 /// 在 `Register` 就失败、走不到求解器。这批用一个**能真正建模成功的输入**在 MILP 层直接验证。
 ///
 /// **判据靠带内值 vs 独立值区分**：框架层的求解回调本来报
@@ -35,8 +35,8 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 套上 `Phase(75, 99)` 后变成 **99**（注册，阶段内 100）与 **98**（求解，阶段内 99）。
 /// **两个数字都与未重映射的 30/99 不同**（注册那条恰好也落在 99，见下方判据说明）。
 ///
-/// **B333 added the forwarding but no criterion**: `Csp1dMilpSolver` has **zero coverage** under `tests/`, and CSP1D's full flow fails at `Register` and never reaches the
-/// solver. This batch verifies directly at the MILP layer with an input that **actually registers**.
+/// added the forwarding but no criterion**: `Csp1dMilpSolver` has **zero coverage** under `tests/`, and CSP1D's full flow fails at `Register` and never reaches the
+/// solver. verifies directly at the MILP layer with an input that **actually registers**.
 ///
 /// **The criterion discriminates banded vs standalone values**: the framework-layer callbacks natively report registration `10 + 100/5 = 30` and solving
 /// `30 + 99*7/10 = 99`. Under `Phase(75, 99)` these become **99** (registration, in-stage 100) and **98** (solving, in-stage 99) — see the criterion note about the
@@ -96,7 +96,7 @@ public class Csp1dMilpSolverProgressTests {
     ///
     /// 注册那条**可区分**：未重映射时是 `10 + 100/5 = **30**`，带内是 **99**。
     ///
-    /// **这是第三次撞上"单调化掩盖了判据想测的东西"**（B324 的 `Normalized()`、B329 的取消检查点、B332 的带下界）。
+    /// **这是第三次撞上"单调化掩盖了判据想测的东西"**`、 的取消检查点、 的带下界）。
     /// 每次的表现都是"判据绿/红得莫名其妙"，每次都要回到"谁先把这个值改了"。
     ///
     /// The baseline's `Csp1dColumnGeneration.kt:753` passes `progressContext?.phase(75, 99)` to `solveFinalMilp`.
@@ -107,7 +107,7 @@ public class Csp1dMilpSolverProgressTests {
     ///
     /// The registration one **can**: standalone it is `10 + 100/5 = **30**`, banded it is **99**.
     ///
-    /// **This is the third time "monotonic clamping masked what the criterion wanted to test"** (B324's `Normalized()`, B329's cancellation checkpoints, B332's band
+    /// **This is the third time "monotonic clamping masked what the criterion wanted to test"** (the earlier `Normalized`, the earlier cancellation checkpoints, the earlier band
     /// lower bound). Every time it looks like "the criterion is inexplicably green/red", and every time the answer is "who changed this value first".
     /// </remarks>
     [Fact]

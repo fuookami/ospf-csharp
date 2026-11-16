@@ -1,4 +1,4 @@
-// 准时 / 不准时 指示与两个目标的判据 / Criteria for the on-time / not-on-time indicators and both objectives.
+// 准时 / 不准时指示与两个目标的判据 / Criteria for the on-time / not-on-time indicators and both objectives.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **准时 / 不准时从"没有这两张表"变成真指示（B555）** / On-time / not-on-time go from "no such tables" to real indicators (B555).
+/// **准时 / 不准时从"没有这两张表"变成真指示** / On-time / not-on-time go from "no such tables" to real indicators.
 /// </summary>
 /// <remarks>
 /// 基线的 `taskTime.onTime` / `taskTime.notOnTime` 之前根本不存在，`TaskOnTimeMaximization` / `TaskNotOnTimeMinimization` 也直接返回 `Failed`。

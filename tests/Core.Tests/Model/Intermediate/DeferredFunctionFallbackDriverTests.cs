@@ -24,8 +24,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **回滚目标是"循环开始前的行数"，不是"上一个结构之前"。**
 ///
-/// adds
-///
 /// **The rollback target is the row count before the loop, not before the previous structure.**
 /// </remarks>
 public class DeferredFunctionFallbackDriverTests
@@ -35,7 +33,7 @@ public class DeferredFunctionFallbackDriverTests
     /// A failure rolls back to the starting count, undoing successful structures too.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **第一个结构成功（追加了 2 行），第二个失败。
     /// 如果只回滚"上一个结构之前"，那 2 行会留下，调用方拿到一个部分成功的模型层。**
@@ -242,13 +240,13 @@ public class DeferredFunctionFallbackDriverTests
 
         /// <summary>**驱动记下的区域，按顺序** / The regions the driver recorded, in order.</summary>
         /// <remarks>
-        /// **B1239 新增这个成员之后，这条判据才能验"区域真的被记下来了"。**
+        /// **这个成员加进来之后，这条判据才能验"区域真的被记下来了"。**
         /// **在此之前驱动只是把它们放进返回值，而返回值在一个函数返回后就被丢弃了。**
         ///
         /// **收在这里而不是只数次数：** **区域的<b>行号</b>才是第三个过滤条件要用的东西，
         /// 而"记了几条"证明不了行号对不对。**
         ///
-        /// **Only with this member (added in B1239) can a criterion check that regions are really recorded. Before it the
+        /// **Only with this member (added) can a criterion check that regions are really recorded. Before it the
         /// driver merely put them in a return value that was discarded when the function returned.**
         ///
         /// **Collected rather than counted: the region's <b>row numbers</b> are what the third filter condition needs, and

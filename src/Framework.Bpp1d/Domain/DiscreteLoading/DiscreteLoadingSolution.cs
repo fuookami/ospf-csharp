@@ -1,6 +1,6 @@
 // 离散装载解与其独立复核 / Discrete-loading solution and its solver-independent verification.
-// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的 `verify()` 对应。
-// Mirrors `verify()` from the pinned Kotlin baseline's `bpp/domain/discrete_loading/DiscreteLoadingContext.kt`.
+// 与固定 Kotlin 基线 `bpp/domain/discrete_loading/DiscreteLoadingContext.kt` 的 `verify` 对应。
+// Mirrors `verify` from the pinned Kotlin baseline's `bpp/domain/discrete_loading/DiscreteLoadingContext.kt`.
 
 using System.Collections.Generic;
 using Fuookami.Ospf.Framework.Bpp.Domain.DiscreteLoading.Model;

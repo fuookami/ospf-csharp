@@ -22,18 +22,17 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 条件数值与门控：包络证明的保守性 / The conservatism of an envelope proof.
 /// </summary>
 /// <remarks>
-/// B1215 按基线 `NativeIndicator.kt` 的 `prepareConditionalValue` 与
+/// 对齐基线 `NativeIndicator.kt` 的 `prepareConditionalValue` 与
 /// `NativeMasking.kt` 的 `prepareNativeMasking` 补。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeMaskingTests
 {
     /// <summary>
     /// **负系数必须对调上下界** / A negative coefficient must swap the bounds.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **包络算法是"按系数符号取对应的那一端"：**
     ///
@@ -120,7 +119,7 @@ public class NativeMaskingTests
     /// <remarks>
     /// **第九条"不可测"发现。**
     ///
-    /// **我原本写的是"无界变量被拒"。一跑就绿——但变异（把 `return Fail()` 改成 `continue`）也绿。**
+    /// **我原本写的是"无界变量被拒"。一跑就绿——但变异（把 `return Fail` 改成 `continue`）也绿。**
     ///
     /// **查下来：`RealVar` 的 `Range` <b>总是</b>有默认上下界（约 `±4.5e15`），
     /// 所以 `LowerBound is null` 在真实变量上永远不成立。**
@@ -140,7 +139,7 @@ public class NativeMaskingTests
     /// **The ninth "untestable" finding.**
     ///
     /// **I originally wrote "an unbounded variable is refused". It was green on the first run — but so was the mutation
-    /// (changing `return Fail()` to `continue`).**
+    /// (changing `return Fail` to `continue`).**
     ///
     /// **What it found: `RealVar`'s `Range` <b>always</b> carries default bounds (about `+-4.5e15`), so
     /// `LowerBound is null` never holds on a real variable.**

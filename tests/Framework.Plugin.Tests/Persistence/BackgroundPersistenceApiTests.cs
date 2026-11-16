@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 
 /// <summary>
-/// **后台处理重载（B693）** / The background-processing overload (B693).
+/// **后台处理重载** / The background-processing overload.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**同步响应立即返回且与处理结果类型不同**、**处理在后台跑、不阻塞返回**、

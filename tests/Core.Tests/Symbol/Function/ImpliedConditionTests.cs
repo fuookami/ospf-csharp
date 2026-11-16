@@ -20,12 +20,10 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 前置为假时门控必须松弛 / The gate must relax when the antecedent is false.
 /// </summary>
 /// <remarks>
-/// B1166 按基线 `ImpliedCondition.kt` 补非折叠蕴含。
+/// 对齐基线 `ImpliedCondition.kt` 补非折叠蕴含。
 ///
 /// **蕴含与合取的唯一区别就在"前置为假时"**：**如果那时约束仍然生效，
 /// 它就不是蕴含，而是合取——而两者在"前置为真"的点上完全一样。**
-///
-/// adds
 ///
 /// **The only difference between an implication and a conjunction is the false-antecedent case**: **if the constraint
 /// still bites there, it is a conjunction, not an implication — and the two agree completely wherever the antecedent
@@ -62,7 +60,7 @@ public class ImpliedConditionTests
     /// **前置为假时下界门控确实松弛** / The lower gate really relaxes on a false antecedent.
     /// </summary>
     /// <remarks>
-    /// **这是"蕴含"与"合取"的分界线，也是本批最重要的一条。**
+    /// **这是"蕴含"与"合取"的分界线，也是这里最重要的一条。**
     ///
     /// **把 `antecedent = 0`、`indicator = 0` 代入下界行**：
     /// **`input ≥ lower − lowerAdjust`，而 `lowerAdjust = tolerance − lower`**，
@@ -130,8 +128,8 @@ public class ImpliedConditionTests
             }
         }
 
-        // **注意：`Antecedent()` 每次返回同一个静态实例，所以这里能匹配上。**
-        // Note: Antecedent() returns the same static instance each time, so this matches.
+        // **注意：`Antecedent` 每次返回同一个静态实例，所以这里能匹配上。**
+        // Note: Antecedent returns the same static instance each time, so this matches.
         antecedentCoefficient.Should().BeApproximately(
             10.0, 1e-12, "the antecedent coefficient is +upper, so a true antecedent tightens the row");
     }

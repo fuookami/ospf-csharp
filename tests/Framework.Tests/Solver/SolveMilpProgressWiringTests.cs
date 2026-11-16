@@ -26,13 +26,13 @@ namespace Fuookami.Ospf.Framework.Tests.Solver;
 /// `SolveMILPAsync` must **really wrap the callbacks with the adapters**, not just store `ProgressContext`.
 /// </summary>
 /// <remarks>
-/// B325 移植了适配器，但 C# 的 `FrameworkSolveOptions` **没有 `ProgressContext` 字段**，
-/// 于是适配器**没有可接的位置**。B326 补上字段并在 `SolveMILPAsync` 里包装。
+/// 移植了适配器，但 C# 的 `FrameworkSolveOptions` **没有 `ProgressContext` 字段**，
+/// 于是适配器**没有可接的位置**。 补上字段并在 `SolveMILPAsync` 里包装。
 ///
 /// **判据不能只看"求解成功"**——那与进度无关。判据要看**上报器有没有收到快照**，
 /// 以及**原回调有没有被调用**：前者证明适配器被用了，后者证明它没把原回调吃掉。
 ///
-/// B325 ported the adapters, but the C# `FrameworkSolveOptions` **had no `ProgressContext` field**, so the adapters **had nowhere to hook in**. B326 adds the field and
+/// ported the adapters, but the C# `FrameworkSolveOptions` **had no `ProgressContext` field**, so the adapters **had nowhere to hook in**. adds the field and
 /// wraps inside `SolveMILPAsync`.
 ///
 /// **The criterion cannot just check "the solve succeeded"** — that has nothing to do with progress. It must check **whether the reporter received snapshots** and
@@ -214,13 +214,13 @@ public class SolveMilpProgressWiringTests {
 
     /// <summary>**主问题求解成功后必须上报收尾快照** / The master stage must report a closing snapshot on success.</summary>
     /// <remarks>
-    /// **B327 记录了一条缺口：收尾快照没有独立判据**——当时的替身返回失败，
+    /// 记录了一条缺口：收尾快照没有独立判据**——当时的替身返回失败，
     /// 而收尾快照**只在成功时上报**，所以那个分支从未被走到。
     ///
     /// 这条用一个**成功返回**的替身把它补上。**这是缺口，不是可选项**：
     /// 若实现忘了收尾上报，进度条会停在 30（开头那条的值），**永远不会到 40**。
     ///
-    /// **B327 recorded a gap: the closing snapshot had no criterion** — the double then returned a failure, and the closing snapshot **is only reported on success**,
+    /// **recorded a gap: the closing snapshot had no criterion** — the double then returned a failure, and the closing snapshot **is only reported on success**,
     /// so that branch was never reached.
     ///
     /// This fills it with a **success-returning** double. **It is a gap, not an optional extra**: if the implementation forgot the closing report, the progress bar
@@ -363,10 +363,10 @@ public class SolveMilpProgressWiringTests {
 
     /// <summary>**主问题阶段的适配器必须用 `MasterLP` 阶段** / The master adapters must use the `MasterLP` stage.</summary>
     /// <remarks>
-    /// 若包装时误用了 `Milp`（B326 那条路径的默认值），回调触发的快照会落在**错误的阶段**，
+    /// 若包装时误用了 `Milp`，回调触发的快照会落在**错误的阶段**，
     /// 而快照**数量**仍然正确。所以判据必须看**阶段 id**，不能只看数量。
     ///
-    /// If wrapping mistakenly used `Milp` (the default on B326's path), callback-driven snapshots would land in **the wrong stage** while the snapshot **count** stays
+    /// If wrapping mistakenly used `Milp` (the default on the earlier path), callback-driven snapshots would land in **the wrong stage** while the snapshot **count** stays
     /// correct. So the criterion must look at the **stage id**, not just the count.
     /// </remarks>
     [Fact]
@@ -436,11 +436,11 @@ public class SolveMilpProgressWiringTests {
 
     /// <summary>**包装后原回调仍必须被调用** / The original callbacks must still be invoked after wrapping.</summary>
     /// <remarks>
-    /// B325 的适配器内部会调原回调；这条在**接线层**再验证一次——
+    /// 的适配器内部会调原回调；这条在**接线层**再验证一次——
     /// 若 `SolveMILPAsync` 把 `options.RegistrationStatusCallBack` 换成适配器却忘了把它传给适配器，
     /// 原回调就会**静默失效**。
     ///
-    /// The B325 adapters invoke the original callback internally; this re-checks it **at the wiring layer** — if `SolveMILPAsync` replaced the callbacks with adapters but
+    /// The adapters invoke the original callback internally; this re-checks it **at the wiring layer** — if `SolveMILPAsync` replaced the callbacks with adapters but
     /// forgot to pass the originals into them, the original callbacks would **silently stop firing**.
     /// </remarks>
     [Fact]

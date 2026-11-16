@@ -24,22 +24,22 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 转换处的延迟物化接线 / The deferred-materialisation wiring at the conversion choke point.
 /// </summary>
 /// <remarks>
-/// B1241 把物化接到 `ToLinearTriadModel`——**七个后端插件、十四个调用点唯一的转换咽喉**。
+/// 把物化接到 `ToLinearTriadModel`——**七个后端插件、十四个调用点唯一的转换咽喉**。
 ///
 /// **接在这里的理由不是"方便"，而是<b>正确性</b>：三元模型装不下延迟结构。
 /// 一个带延迟结构的机制模型被直接转换，得到的不是一个"稍后展开"的三元模型，
 /// 而是一个<b>少了那几段约束</b>的三元模型——而它照样能求解、照样给解。**
 ///
-/// **而这一批还查出一件更大的事：没有任何生产模型<b>带得来</b>延迟结构。
+/// **而这里还查出一件更大的事：没有任何生产模型<b>带得来</b>延迟结构。
 /// 接线让整条链在原理上可达，而现在仍然不可达，因为唯一的构建路径不给这两个参数。
 /// 那条缺口由 `TheBuildPath_ShouldNotYetSupplyTheStructures` 钉住。**
 ///
-/// B1241 wires materialisation into `ToLinearTriadModel`, the single conversion choke point for seven plugin assemblies and
+/// Materialisation is wired into `ToLinearTriadModel`, the single conversion choke point for seven plugin assemblies and
 /// fourteen call sites.
 ///
 /// **The reason is <b>correctness</b>, not convenience: a triad model cannot hold deferred structures.**
 ///
-/// **This batch also found something bigger: no production model can <b>arrive</b> carrying deferred structures.**
+/// **Something bigger also showed up: no production model can <b>arrive</b> carrying deferred structures.**
 /// </remarks>
 public class DeferredFunctionConversionWiringTests
 {
@@ -47,23 +47,23 @@ public class DeferredFunctionConversionWiringTests
     /// **构建路径现在真的给这两个参数了** / The build path now really supplies both parameters.
     /// </summary>
     /// <remarks>
-    /// **B1241 这条判据说的是"还不给"，B1242 把它反过来——而<b>是它自己变红逼着改的</b>。**
+    /// **这条判据原本说的是"还不给"，现在是反过来——而<b>是它自己变红逼着改的</b>。**
     ///
     /// **这就是缺口判据的设计意图：** **它描述"现在缺什么"，于是"补上了"这件事无法静默通过。**
     /// **补的人必须回来把这句话改掉，而改的时候必然要确认"是不是真的补上了"。**
     ///
     /// **如果它当初写成"构造点应该传这两个参数"（一条<b>正常</b>判据），
-    /// 那它在 B1241 就是红的——而一个长期红的判据会被改成 `Should().BeTrue()`，
-    /// 于是六批之后没人知道它原本在等什么。**
+    /// 那它一开始就是红的——而一个长期红的判据会被改成 `Should.BeTrue`，
+    /// 于是后来没人知道它原本在等什么。**
     ///
-    /// **B1241's version of this criterion said "not yet supplied"; B1242 turns it around — and it was <b>the criterion going
+    /// **This criterion used to say "not yet supplied" and now says the opposite — and it was <b>the criterion going
     /// red that forced the edit</b>.**
     ///
     /// **That is the design intent: it describes "what is missing now", so closing the gap cannot pass silently.** **The
     /// closer must come back and change this sentence, and changing it forces them to confirm the gap really closed.**
     ///
     /// **Had it been written as "the construction site should pass these two parameters" — an <b>ordinary</b> criterion — it
-    /// would have been red in B1241, and a long-red criterion gets rewritten as `Should().BeTrue()`, so six batches later
+    /// would have been red from the start, and a long-red criterion gets rewritten as `Should.BeTrue`, so later on
     /// nobody would know what it was waiting for.**
     /// </remarks>
     [Fact]
@@ -80,9 +80,9 @@ public class DeferredFunctionConversionWiringTests
 
         call.Should().Contain("functionExpansionPolicy: functionExpansionPolicy",
             "the policy has to reach the model, or every production model stays Eager");
-        // **B1251 之后传的是 `effectiveStructures`（调用方显式给的，或从函数符号派生出来的），
+        // **此后传的是 `effectiveStructures`（调用方显式给的，或从函数符号派生出来的），
         // 所以这里钉"结构确实传到了"，而不是钉某个具体的变量名。**
-        // **After B1251 the argument is `effectiveStructures` (explicitly supplied, or derived from the function symbols),
+        // **The argument is `effectiveStructures` (explicitly supplied, or derived from the function symbols),
         // so this pins "the structures really arrive" rather than one particular variable name.**
         call.Should().Contain("deferredFunctionStructures: effectiveStructures",
             "the structures have to reach the model, or materialisation has nothing to expand");
@@ -93,11 +93,11 @@ public class DeferredFunctionConversionWiringTests
     /// End to end: a deferred model produced by the real build path gains rows when converted.
     /// </summary>
     /// <remarks>
-    /// **这条判据在 B1241 之前<b>写不出来</b>。**
+    /// **这条判据在此前<b>写不出来</b>。**
     ///
     /// **不是"没人写"，而是<b>写出来也跑不起来</b>：** **测试必须自己造模型，
     /// 而自己造的模型没有来源快照，转换直接返回"来源模型快照缺失"。**
-    /// **而 B1241 给副本补上快照继承之后，测试又发现另一半也不成立——
+    /// **而副本补上快照继承之后，同一个测试又发现另一半也不成立——
     /// 构建路径根本不产带延迟结构的模型。**
     ///
     /// **两端都通之后，这条判据才能同时满足：** **模型由 `InvokeAsync` 建（于是有快照），
@@ -106,17 +106,17 @@ public class DeferredFunctionConversionWiringTests
  /// **这是"一条判据跑不起来"作为线索的第二次收获：** **上一次它指向了副本丢快照，
     /// 这一次它指向了构建路径不供给输入——两个不同的缺陷，同一条跑不起来的判据。**
     ///
-    /// **This criterion <b>could not be written</b> before B1241.**
+    /// **This criterion <b>could not be written</b> at first.**
     ///
     /// **Not "nobody wrote it" but "<b>it could not run</b>": a test had to build its own model, and a hand-built model has no
-    /// source snapshot, so conversion returned "Source model snapshot is missing".** **After B1241 gave the copy snapshot
+    /// source snapshot, so conversion returned "Source model snapshot is missing".** **Once the copy had snapshot
     /// inheritance, the same test revealed the other half — the build path produced no deferred structures at all.**
     ///
     /// **With both ends open the criterion can finally hold: the model comes from `InvokeAsync` (so it has a snapshot), the
     /// structures come through parameters (so there is something to expand), conversion really expands, and the row
     /// difference is countable.**
     ///
-    /// **This is the second harvest from "a criterion that could not run": in B1241 it pointed at the lost snapshot, here at
+    /// **This is the second harvest from "a criterion that could not run": first it pointed at the lost snapshot, then at
     /// the build path not supplying its input — two different defects, one unrunnable criterion.**
     /// </remarks>
     [Fact]
@@ -202,7 +202,7 @@ public class DeferredFunctionConversionWiringTests
     /// The copy inherits the source snapshot, or it cannot convert at all.
     /// </summary>
     /// <remarks>
-    /// **这是本批抓到的一个<b>会让整条接线必然失败</b>的缺陷，而它的形态值得记住：**
+    /// **这是这里抓到的一个<b>会让整条接线必然失败</b>的缺陷，而它的形态值得记住：**
     ///
     /// **`_sourceSnapshot` 只在构建路径里赋值，而 `Materialize` 用 `new LinearMechanismModel<...>` 造副本——
     /// 副本没有快照，于是 `ValidateSourceSnapshot` 返回 `来源模型快照缺失`。**
@@ -214,7 +214,7 @@ public class DeferredFunctionConversionWiringTests
     /// 而那条判据<b>跑不起来</b>，因为测试自己造的模型同样没有快照。
     /// 这个"跑不起来"本身就是线索：一条链的两端都必须由真实构建路径供给，才有可能被端到端测到。**
     ///
-    /// **This is a defect found this batch that would have made the whole wiring fail every time.**
+    /// **This is a defect found that would have made the whole wiring fail every time.**
     ///
     /// **<b>Materialisation is right, conversion is right, the wiring point is right, and the chain fails every time.</b>**
     ///
@@ -278,11 +278,11 @@ public class DeferredFunctionConversionWiringTests
     /// </summary>
     /// <remarks>
     /// **注意变量要先注册进 meta model：** **物化产出的约束引用了它们，而 `AddConstraint` 通过 token 表解析；
-    /// 没注册就解析不到（B1239 踩过，报 `variable y is not registered`）。**
+    /// 没注册就解析不到（报 `variable y is not registered`）。**
     ///
     /// **Variables must be registered on the meta model first: the materialised constraints reference them and
-    /// `AddConstraint` resolves them through the token table.** **Unregistered ones cannot be resolved — B1239 hit exactly
-    /// that.**
+    /// `AddConstraint` resolves them through the token table.** **Unregistered ones cannot be resolved, and that failure
+    /// reads `variable y is not registered`.**
     /// </remarks>
     private static async Task<int> BuiltAndConvertedRowsAsync(FunctionExpansionPolicy policy) {
         var y = new RealVar("y");
@@ -333,10 +333,10 @@ public class DeferredFunctionConversionWiringTests
     /// </summary>
     /// <remarks>
     /// **没有这个，断言只会说"期望真、实际假"，而需要知道的是<b>为什么</b>。
-    /// 本批两次因此少绕一圈：`variable y is not registered` 与 `来源模型快照缺失`。**
+    /// 这里两次因此少绕一圈：`variable y is not registered` 与 `来源模型快照缺失`。**
     ///
     /// **Without this an assertion only says "expected true, got false", while what is needed is <b>why</b>.** **Two
-    /// detours were avoided this batch because the reason was visible.**
+    /// detours were avoided because the reason was visible.**
     /// </remarks>
     private static void Explain<T>(Result<T, ErrorCode, Error<ErrorCode>> result, string what) {
         if (result is Failed<T, ErrorCode, Error<ErrorCode>> failure) {

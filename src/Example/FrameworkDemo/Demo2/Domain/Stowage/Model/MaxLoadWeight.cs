@@ -25,12 +25,12 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Model;
 ///
 /// 第 2 支容易被"顺手合并"掉：既然分段要零油重，那没有零油重就当作第一段——**错**。分段的意义是"飞机越重允许装得越少"，
 /// 零油重未知时取任何一段都等于凭空假设一个装载状态；退回各段最大值则是"按最宽松的规格",至少在零油重真值偏轻时是对的。
-/// 这条与 B584 的"超出最后一段取最后一段"是不同的两件事：那一条里的零油重**是已知的**。
+/// 这条与 的"超出最后一段取最后一段"是不同的两件事：那一条里的零油重**是已知的**。
 ///
 /// Mirrors the baseline: one `max_load_weight_{position}` symbol per position, with three branches — (1) piecewise **and** a known zero-fuel weight takes `mlw(zfw)`;
 /// (2) piecewise but **no** known zero-fuel weight falls back to the maximum across segments; (3) no segments is the constant `mlw`. Branch 2 invites merging into branch 1
 /// ("no zero-fuel weight, so take the first segment") — that is wrong: segments mean "heavier aircraft, less cargo", so with the weight unknown any single segment is an invented
-/// loading state, while the maximum is the loosest specification and is at least correct when the true weight is light. This is a different thing from B584's "past the last segment
+/// loading state, while the maximum is the loosest specification and is at least correct when the true weight is light. This is a different thing from the earlier "past the last segment
 /// takes the last segment": there the zero-fuel weight **is** known.
 /// </remarks>
 public sealed class MaxLoadWeight

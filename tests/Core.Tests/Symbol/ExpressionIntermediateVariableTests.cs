@@ -17,11 +17,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 /// <remarks>
 /// 同步 Kotlin `2e72a17c`。基线给 `IntermediateSymbol` 一个默认为 null 的 `intermediateVariable`，并在
 /// `LinearExpressionSymbol`／`QuadraticExpressionSymbol` 上以 `useIntermediateVariable` 开关惰性创建辅助变量。
-/// **这一批做的是"能力可用"：** 槽位、开关、惰性辅助变量、令牌注册与展平当叶子；**模型层自动注册等式约束在 C# 侧还没有分派点，
+/// **这里做的是"能力可用"：** 槽位、开关、惰性辅助变量、令牌注册与展平当叶子；**模型层自动注册等式约束在 C# 侧还没有分派点，
 /// 明确记为未接线**（Kotlin 在 `MechanismModel` 里按符号类型分派，C# 没有这条路径）。
 ///
 /// Syncs Kotlin `2e72a17c`. The baseline defaults `intermediateVariable` to null and gives the expression symbols a `useIntermediateVariable` switch that lazily
-/// creates an auxiliary. **This batch delivers the capability: the slot, the switch, the lazy auxiliary, token registration and leaf treatment when flattening;
+/// creates an auxiliary. ** delivers the capability: the slot, the switch, the lazy auxiliary, token registration and leaf treatment when flattening;
 /// automatic equality registration at the model layer has no dispatch point on the C# side and is recorded as not wired** (the baseline dispatches per symbol
 /// type inside `MechanismModel`, which C# does not have).
 /// </remarks>
@@ -78,10 +78,10 @@ public class ExpressionIntermediateVariableTests
 
     /// <summary>**二次符号也有等式，且左侧是二次多项式** / The quadratic symbol gets an equality with a quadratic left-hand side.</summary>
     /// <remarks>
-    /// **B1315 只做到"开关 + 辅助变量 + 展平叶子"，二次等式当时留空。** **这里补上，并把"左侧必须是二次多项式"这件事写进判据：**
+    /// **只做到"开关 + 辅助变量 + 展平叶子"，二次等式当时留空。** **这里补上，并把"左侧必须是二次多项式"这件事写进判据：**
     /// **把辅助变量塞进线性多项式会让这条等式在二次模型里被当成阶数不一致而走另一条路径，而那条路径不报错。**
     ///
-    /// **B1315 stopped at "switch + auxiliary + leaf when flattening" and left the quadratic equality out. It is added here, and the criterion states that the left-hand
+    /// **It stops at "switch + auxiliary + leaf when flattening" and left the quadratic equality out. It is added here, and the criterion states that the left-hand
     /// side has to be a quadratic polynomial: pushing the auxiliary into a linear one would look degree-mismatched in a quadratic model and take another path, silently.**
     /// </remarks>
     [Fact]

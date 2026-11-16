@@ -16,11 +16,11 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Service.Limits;
 /// 混合板材目标与余料统计 / Mixed sheet objectives and waste statistics.
 /// </summary>
 /// <remarks>
-/// **余料率的分母是板材类型面积，不是层的外接矩形面积**。C# 侧 `Layer.Utilization()` 的分母是后者，
+/// **余料率的分母是板材类型面积，不是层的外接矩形面积**。C# 侧 `Layer.Utilization` 的分母是后者，
 /// 两者在同一层上会给出不同的数：一列只占了板材一角时，"利用率"按它自己的包围盒算可能接近 1，
 /// 而按板材算可能只有 0.1。把它们混用会让"这块板浪费多少"这个问题得到两个都合理、但都不对的答案。
 ///
-/// **The waste ratio divides by the sheet type's area, not by the layer's bounding rectangle.** C#'s `Layer.Utilization()` divides by the latter, and the two give different
+/// **The waste ratio divides by the sheet type's area, not by the layer's bounding rectangle.** C#'s `Layer.Utilization` divides by the latter, and the two give different
 /// numbers for the same layer: when a column occupies one corner of a sheet, "utilisation" measured against its own bounding box can approach 1 while measured against the
 /// sheet it may be 0.1. Mixing them gives two plausible but both wrong answers to "how much of this sheet is wasted".
 /// </remarks>

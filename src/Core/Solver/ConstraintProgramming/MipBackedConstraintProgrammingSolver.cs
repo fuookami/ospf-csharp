@@ -21,20 +21,20 @@ namespace Fuookami.Ospf.Core.Solver.ConstraintProgramming;
 /// **把任意 MIP 后端当作 CP 求解器** / Serve any MIP backend as a CP solver.
 /// </summary>
 /// <remarks>
-/// **B1263 实现的是 B1262 定下的设计。**
+/// **实现的设计很短：编码层早已存在，SCIP 的 CP 本来就由它驱动。**
 ///
 /// **为什么它这么短：** **编码那一层早就有了（`ConstraintProgrammingToLinearModelLowerer`），
 /// 而 SCIP 的 CP 支持本来就是由它驱动的。** **这个类做的事只有一件：
 /// 把 lowerer 接到<b>调用方给的</b>`IAbstractLinearSolver` 上，再把线性解翻译回 CP 解。**
 ///
-/// **所以在 B1262 之前，"Gurobi 不能做 CP"这句话的真实含义不是"缺一层算法"，
+/// **所以此前，"Gurobi 不能做 CP"这句话的真实含义不是"缺一层算法"，
 /// 而是"缺一个构造函数参数"——而那句判断只有在真正写出来之后才算被验证。**
 ///
 /// ### 一条明确拒绝
 ///
 /// **`CollectConflict` 被<b>拒绝</b>，不是静默忽略。**
 ///
-/// **理由来自 B1261：** **MIP 后端拿不到原生冲突证据，而静默忽略会让失败以
+/// **理由来自 ** **MIP 后端拿不到原生冲突证据，而静默忽略会让失败以
 /// "CP 输出缺少结构化 conflict 证据"的形式出现——读起来像求解器的问题。**
 /// **在入口处拒绝，错误信息才能指向真正的原因。**
 ///
@@ -42,15 +42,15 @@ namespace Fuookami.Ospf.Core.Solver.ConstraintProgramming;
 ///
 /// **① 返回的输出不带 `SolveReport`（`report: null`）。**
 /// **线性报告是 `SolveReport&lt;Flt64&gt;`，CP 要的是 `SolveReport&lt;Int64&gt;`，
-/// 中间那层逐字段翻译（SCIP 里由 `toConstraintProgrammingReport` 承担）本批没有做。**
+/// 中间那层逐字段翻译（SCIP 里由 `toConstraintProgrammingReport` 承担）这里没有做。**
 /// **调用方因此拿不到 CP 视角的 report，只能拿状态与解。**
 ///
 /// **② 不做 hint 施加（`applyHints`／interval hint）。**
 /// **提示被<b>忽略</b>比被<b>拒绝</b>更危险，所以——见 <see cref="HintsApplied"/>。**
 ///
-/// **B1263 implements the design B1262 laid down.** **It is short because the encoder already existed and SCIP's CP support
+/// **The design is short because the encoder already existed and SCIP's CP support
 /// was already driven by it; all this class does is connect the lowerer to <b>the caller's</b> `IAbstractLinearSolver` and
-/// translate the linear solution back into a CP one.** **So before B1262, "Gurobi cannot do CP" really meant "a constructor
+/// translate the linear solution back into a CP one.** **So "Gurobi cannot do CP" really meant "a constructor
 /// argument is missing" — and that judgement only counts once it is written.**
 ///
 /// **One explicit refusal: `CollectConflict` is <b>refused</b>, not silently ignored** — a MIP backend cannot produce native
@@ -174,12 +174,12 @@ public sealed class MipBackedConstraintProgrammingSolver : IConstraintProgrammin
     /// **拒绝冲突收集，并说明为什么** / Refuse conflict collection, and say why.
     /// </summary>
     /// <remarks>
-    /// **这是 B1261 的教训在这里的第二次应用：** **静默忽略一个"要收集冲突"的请求，
+    /// **这是教训在这里的第二次应用：** **静默忽略一个"要收集冲突"的请求，
     /// 会让失败以"CP 输出缺少结构化 conflict 证据"的形式出现，而那读起来像求解器的问题。**
     ///
     /// **拒绝时点名原因，错误信息才能指向真正的地方。**
     ///
-    /// **This is B1261's lesson applied a second time: silently ignoring a "collect conflicts" request makes the failure read
+    /// **This is that lesson applied a second time: silently ignoring a "collect conflicts" request makes the failure read
     /// as "CP output has no structured conflict evidence", which sounds like the solver's fault.** **Naming the cause in the
     /// refusal is what points at the right place.**
     /// </remarks>

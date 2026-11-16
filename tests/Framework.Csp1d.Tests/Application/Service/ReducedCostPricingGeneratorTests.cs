@@ -225,48 +225,48 @@ public class ReducedCostPricingGeneratorTests {
 
     /// <summary>**只有名称的单位必须用名称作键** / A name-only unit must key on its name.</summary>
     /// <remarks>
-    /// **变异测试发现的缺口**：把单位键写成 `Symbol ?? ToString()`（**丢掉 name 回退**）时判据全绿——
+    /// **变异测试发现的缺口**：把单位键写成 `Symbol ?? ToString`（**丢掉 name 回退**）时判据全绿——
     /// 因为当时唯一的自定义单位**既无 name 也无 symbol**，两条路径在它身上**结果相同**。
     ///
-    /// 基线的回退顺序是 `symbol ?: name ?: toString()`。**只测"都没有"的那种单位，
+    /// 基线的回退顺序是 `symbol ?: name ?: toString`。**只测"都没有"的那种单位，
     /// 无法区分"按顺序回退"与"跳过 name 直接 toString"**——两者在没有 name 时一致。
     ///
     /// 这条用一个**有 name、无 symbol** 的单位，把对偶价格存在 `"name-only-unit"` 下。
-    /// 若实现跳过 name 回退，会去查 `ToString()` 的渲染值，**查不到**。
+    /// 若实现跳过 name 回退，会去查 `ToString` 的渲染值，**查不到**。
     ///
     /// **这条判据原本是为了杀死一个变异，结果发现那个变异是"语义等价"的。**
-    /// 把单位键写成 `Symbol ?? ToString()`（丢掉显式的 name 回退）**仍然全绿**，原因是
-    /// `PhysicalUnit.ToString()` **自己就是 `Symbol ?? Name ?? "量纲(比例)"`**——显式回退与经由 `ToString()` 回退**结果相同**。
+    /// 把单位键写成 `Symbol ?? ToString`（丢掉显式的 name 回退）**仍然全绿**，原因是
+    /// `PhysicalUnit.ToString` **自己就是 `Symbol ?? Name ?? "量纲(比例)"`**——显式回退与经由 `ToString` 回退**结果相同**。
     ///
     /// **一个"杀不死"的变异有两种可能**：判据弱，或**变异本身不改变语义**。这里是后者。
     /// 我先前按"变异存活 = 判据有洞"处理，这次不成立；**判据保留仍是必要的**（它钉住了 name 回退的具体取值）。
     ///
     /// **本段最初还写过一条"真实隐患"，那是错的，已更正。** 原文称
-    /// `DerivedPhysicalUnit.ToString()` 是 `Symbol ?? ""`——**归属错了**：`DerivedPhysicalUnit`
-    /// **并不覆盖 `ToString()`**，它继承基类的三回退。写成 `Symbol ?? ""` 的是 **`AnonymousPhysicalUnit`**，
-    /// 而那与基线**逐字相同**（基线 `override fun toString() = symbol ?: ""`）。
+    /// `DerivedPhysicalUnit.ToString` 是 `Symbol ?? ""`——**归属错了**：`DerivedPhysicalUnit`
+    /// **并不覆盖 `ToString`**，它继承基类的三回退。写成 `Symbol ?? ""` 的是 **`AnonymousPhysicalUnit`**，
+    /// 而那与基线**逐字相同**（基线 `override fun toString = symbol ?: ""`）。
     ///
     /// 所以"匿名单位无 symbol 无 name 时键为空串、两个不同单位共键"**是基线行为，不是偏离**。
     /// 这一点现在由 `UnitKeyConvergenceTests.AnonymousUnit_ShouldKeyAsTheBaselineDoes` 钉住。
     ///
-    /// **This paragraph also once claimed a "real hazard" that was wrong and is corrected here.** It said `DerivedPhysicalUnit.ToString()` was `Symbol ?? ""` — **wrong
-    /// attribution**: `DerivedPhysicalUnit` **does not override `ToString()`** and inherits the base's three-step fallback. The `Symbol ?? ""` version belongs to
-    /// **`AnonymousPhysicalUnit`**, and that is **byte-for-byte identical** to the baseline (`override fun toString() = symbol ?: ""`).
+    /// **This paragraph also once claimed a "real hazard" that was wrong and is corrected here.** It said `DerivedPhysicalUnit.ToString` was `Symbol ?? ""` — **wrong
+    /// attribution**: `DerivedPhysicalUnit` **does not override `ToString`** and inherits the base's three-step fallback. The `Symbol ?? ""` version belongs to
+    /// **`AnonymousPhysicalUnit`**, and that is **byte-for-byte identical** to the baseline (`override fun toString = symbol ?: ""`).
     ///
     /// So "a symbol-less, nameless anonymous unit keys to an empty string, letting two distinct units collide" is **baseline behaviour, not a divergence**. It is now
     /// pinned by `UnitKeyConvergenceTests.AnonymousUnit_ShouldKeyAsTheBaselineDoes`.
     ///
-    /// **The criterion was written to kill a mutant that turned out to be semantically equivalent.** Writing the unit key as `Symbol ?? ToString()` (**dropping the
-    /// explicit name fallback**) **stays green**, because `PhysicalUnit.ToString()` **is itself `Symbol ?? Name ?? "dimension(scale)"`** — the explicit fallback and
-    /// the via-`ToString()` fallback **agree**.
+    /// **The criterion was written to kill a mutant that turned out to be semantically equivalent.** Writing the unit key as `Symbol ?? ToString` (**dropping the
+    /// explicit name fallback**) **stays green**, because `PhysicalUnit.ToString` **is itself `Symbol ?? Name ?? "dimension(scale)"`** — the explicit fallback and
+    /// the via-`ToString` fallback **agree**.
     ///
     /// **A mutant that cannot be killed has two explanations**: a weak criterion, or **the mutation does not change semantics**. This is the latter. I had been
     /// treating "the mutant survived" as "the criterion has a hole"; that does not hold here. **The criterion is still worth keeping** (it pins exactly what the name
     /// fallback yields).
     ///
-    /// **A real hazard found along the way**: `DerivedPhysicalUnit.ToString()` is `Symbol ?? ""` — it **neither falls back to the name nor renders the dimension**.
+    /// **A real hazard found along the way**: `DerivedPhysicalUnit.ToString` is `Symbol ?? ""` — it **neither falls back to the name nor renders the dimension**.
     /// So for a symbol-less, nameless derived unit, `GenerationQuantityMath.UnitKey` returns **an empty string**, making distinct derived units **share one key**. This
-    /// path **has no case constructed** in this batch (building a minimal derived unit is costly); recorded as a gap.
+    /// path **has no case constructed** in (building a minimal derived unit is costly); recorded as a gap.
     /// </remarks>
     [Fact]
     public void Generate_ShouldKeyOnTheNameWhenTheUnitHasNoSymbol() {
@@ -301,7 +301,7 @@ public class ReducedCostPricingGeneratorTests {
 
     /// <summary>**单位键必须与基线 `shadowPriceUnitSymbol` 一致（含第三条回退）** / The unit key must match the baseline's `shadowPriceUnitSymbol`, third fallback included.</summary>
     /// <remarks>
-    /// 基线：`unit.symbol ?: unit.name ?: unit.toString()`。
+    /// 基线：`unit.symbol ?: unit.name ?: unit.toString`。
     ///
     /// **这里曾经写成 `Symbol ?? Name ?? string.Empty`**——前两条一致，**第三条落空串**。
     /// 后果：所有"既无 symbol 又无 name"的单位**共用一个键**，`(产品, "")` 会让**不同单位的对偶价格互相命中**，
@@ -310,7 +310,7 @@ public class ReducedCostPricingGeneratorTests {
     /// 判据用**一个无 symbol、无 name 的自定义单位**，把对偶价格按 `GenerationQuantityMath.UnitKey(unit)`
     /// 的正确取值存入；若实现落空串，就**查不到**这条价格、返回空。
     ///
-    /// The baseline is `unit.symbol ?: unit.name ?: unit.toString()`.
+    /// The baseline is `unit.symbol ?: unit.name ?: unit.toString`.
     ///
     /// **This was once written as `Symbol ?? Name ?? string.Empty`** — the first two fallbacks agree, **the third lands on an empty string**. Consequence: every unit
     /// with neither symbol nor name **shares one key**, so `(product, "")` makes **dual prices of different units match each other**, pricing picks the wrong price and
@@ -354,7 +354,7 @@ public class ReducedCostPricingGeneratorTests {
     /// <remarks>
     /// **这条判据被反转过一次，值得记下。**
     ///
-    /// B355 加了"定价器过滤池里已有方案"，判据断言"已有方案不出列"。
+    /// 加了"定价器过滤池里已有方案"，判据断言"已有方案不出列"。
     /// 之后发现**基线把这个过滤放在 `deduplicatePlans`（列生成侧）**，定价器只做候选内部去重。
     /// 两者的可观测差别是终止原因：
     ///
@@ -369,7 +369,7 @@ public class ReducedCostPricingGeneratorTests {
     ///
     /// **This criterion was once inverted, which is worth recording.**
     ///
-    /// B355 added "the pricing generator filters plans already in the pool" together with a criterion asserting "an existing plan yields nothing". Later it turned out
+    /// added "the pricing generator filters plans already in the pool" together with a criterion asserting "an existing plan yields nothing". Later it turned out
     /// **the baseline puts that filter in `deduplicatePlans` (the column-generation side)**, with the pricing generator only deduping among candidates. The observable
     /// difference is the termination reason (table above).
     ///
@@ -411,14 +411,14 @@ public class ReducedCostPricingGeneratorTests {
     /// | **先去重再截断** | 去重得 `[A, B]` → **留下 2 条** |
     ///
     /// **上限必须是 2 而不是 1**：上限 1 时两种顺序都只留 1 条，**判据没有区分力**——
-    /// 我第一版就写了 1，**变异存活**，这是判据设计错误而不是实现错误。
+    /// 最初就写了 1，**变异存活**，这是判据设计错误而不是实现错误。
     ///
     /// **注意：本判据钉的是"去重生效"，不是"顺序"**。当前实现是**全员去重后再截断**，
     /// 所以"去掉 `seenKeys`"这个变异**恰好等价**——它只会让 `[A, A, B]` 变成 `[A, A]`，
     /// 再截断成 2 条，**输出仍是 2**。顺序在这个夹具下观察不到。
     ///
     /// **要真正钉住顺序，需要"重复项排在前、未重复项排在后"且上限恰好卡在中间**——
-    /// 而那要求初始生成器的产出顺序可控。本批**没有做到**，记入缺口。
+    /// 而那要求初始生成器的产出顺序可控。这里**没有做到**，记入缺口。
     ///
     /// 夹具：三个需求分别指向 A、A、B（**同一产品对象重复一次**），初始生成器产出 3 条，
     /// 规范化后是 `[A, A, B]`。
@@ -602,14 +602,14 @@ public class ReducedCostPricingGeneratorTests {
 
     /// <summary>**物料用量对偶价必须计入收益** / The material-usage dual must count toward the benefit.</summary>
     /// <remarks>
-    /// **B344 时这条判据写不出来**：物料项根本没实现，`MaterialUsageShadowPriceKey` **只有生产方没有消费方**。
+    /// **时这条判据写不出来**：物料项根本没实现，`MaterialUsageShadowPriceKey` **只有生产方没有消费方**。
     ///
     /// 夹具：需求收益只有 `50 × 0.01 = 0.5`（**低于成本 1，本该不出列**），
     /// 但物料 `M1` 的对偶价是 `1.0`——**加起来 1.5 > 1，必须出列**。
     ///
     /// **这条判据的鉴别力来自"单靠需求项不够"**：若实现漏掉物料项，收益停在 0.5，判据红。
     ///
-    /// **This criterion could not be written in B344**: the material term did not exist and `MaterialUsageShadowPriceKey` had **only a producer, no consumer**.
+    /// **This criterion could not be written**: the material term did not exist and `MaterialUsageShadowPriceKey` had **only a producer, no consumer**.
     ///
     /// The fixture: the demand benefit is only `50 × 0.01 = 0.5` (**below cost 1, so it should not emit**), but material `M1`'s dual is `1.0` — **totalling 1.5 > 1, so it
     /// must emit**.
@@ -699,13 +699,13 @@ public class ReducedCostPricingGeneratorTests {
     /// | 漏乘数（`2.0`） | `0.5 + 2.0 = 2.5` |
     ///
     /// **两者都出列**，所以要**直接断言收益**——这需要把 `ComputeDualBenefit` 暴露成可测的。
-    /// 本批把它改为 `internal static`，测试用 `InternalsVisibleTo` 可见。
+    /// 这里把它改为 `internal static`，测试用 `InternalsVisibleTo` 可见。
     ///
     /// **A gap found by mutation testing**: changing `consumption × dual` to `dual` left every criterion green — the existing ones only ask "**did it emit**", and both
     /// paths exceed the cost of 1.
     ///
     /// The fixture makes them **numerically different**: consumption `0.5`, dual `2.0` (table above). **Both emit**, so the criterion must **assert the benefit directly**,
-    /// which requires exposing `ComputeDualBenefit`; this batch makes it `internal static`, visible to tests.
+    /// which requires exposing `ComputeDualBenefit`; makes it `internal static`, visible to tests.
     /// </remarks>
     [Fact]
     public void ComputeDualBenefit_ShouldMultiplyTheConsumptionByTheCapacityDual() {
@@ -761,9 +761,9 @@ public class ReducedCostPricingGeneratorTests {
 
     /// <summary>**对偶收益不超过目标成本时不得出列** / A dual benefit not exceeding the objective cost must yield no column.</summary>
     /// <remarks>
-    /// **这是"减成本"的实质判据**，也是 B338 那版实现**没有**的一步。
+    /// **这是"减成本"的实质判据**，也是 那版实现**没有**的一步。
     ///
-    /// B338 把基线 `SimplePricingGenerator` 的语义（"对偶价为正就出列"）写进了
+    /// 把基线 `SimplePricingGenerator` 的语义（"对偶价为正就出列"）写进了
     /// **`ReducedCostPricingGenerator`** 这个类——**类名和语义对不上**。
     /// 基线里 `ReducedCostPricingGenerator` 是**包装器**：enumerator 枚举候选，
     /// 再按 `benefit > objectiveCost` 过滤（`objectiveCost` 基础值是 **1**）。
@@ -771,9 +771,9 @@ public class ReducedCostPricingGeneratorTests {
     /// 判据用"**收益 0.5、成本 1**"：对偶价为正（`0.01 > 0`，旧实现会出列），
     /// 但收益 `50 × 0.01 = 0.5` **不超过 1**——**这正是旧实现与新实现唯一分歧的地方**。
     ///
-    /// **This is the substantive "reduced cost" criterion**, and the step B338's version **lacked**.
+    /// **This is the substantive "reduced cost" criterion**, and the step the earlier version **lacked**.
     ///
-    /// B338 wrote the baseline `SimplePricingGenerator` semantics ("emit when the dual price is positive") into the class named
+    /// wrote the baseline `SimplePricingGenerator` semantics ("emit when the dual price is positive") into the class named
     /// **`ReducedCostPricingGenerator`** — **name and semantics disagreed**. In the baseline `ReducedCostPricingGenerator` is a **wrapper**: the enumerator enumerates
     /// candidates, which are then filtered by `benefit > objectiveCost` (whose base is **1**).
     ///
@@ -816,12 +816,12 @@ public class ReducedCostPricingGeneratorTests {
     /// 后成本 `3` → **收益 2.5 不够，不出列**。
     ///
     /// **同一条收益、只差配置**，这正是"成本算进判据"的直接证据。
-    /// 旧实现（B344）**完全没有配置项**，这条判据在它上面**根本写不出来**。
+    /// 旧实现**完全没有配置项**，这条判据在它上面**根本写不出来**。
     ///
     /// The benefit is fixed at `50 × 0.05 = 2.5`. **Without a penalty the cost is 1 → emit**; with `PlanUsagePenalty = 2` the cost is `3` → **2.5 falls short, no
     /// column**.
     ///
-    /// **Same benefit, only the config differs** — direct evidence that the cost feeds the test. The old implementation (B344) **had no config at all**, so this
+    /// **Same benefit, only the config differs** — direct evidence that the cost feeds the test. The old implementation  **had no config at all**, so this
     /// criterion **could not even be written** against it.
     /// </remarks>
     [Fact]

@@ -311,12 +311,12 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// **延迟函数结构快照** / Snapshots of the deferred function structures.
     /// </summary>
     /// <remarks>
-    /// 对齐基线 `LinearTriadModel.kt`。**基线是只读 `List`，默认 `emptyList()`，走构造函数。**
+    /// 对齐基线 `LinearTriadModel.kt`。**基线是只读 `List`，默认 `emptyList`，走构造函数。**
     ///
     /// **这是三样缺失状态里的第二样，而它是两样集合里较简单的一个：** **只增不删、只在构造时给定、之后只被读。**
     /// **`DeferredFunctionConstraintRegions` 依赖它（每条区域记录指回一个结构），所以顺序是先它。**
     ///
-    /// **默认 `emptyList()` 而不是"必须传"：** **绝大多数模型没有延迟结构。**
+    /// **默认 `emptyList` 而不是"必须传"：** **绝大多数模型没有延迟结构。**
     /// **把"没有"和"有但空"分开会让每个调用点都要写一次 `Array.Empty`——
     /// 而那一次写法不携带任何信息。**
     ///
@@ -803,7 +803,7 @@ public sealed class LinearMechanismModel<V> : BasicMechanismModel<V>,
     /// | --- | --- | --- |
     /// | `XorFunction` | 符号 | 没存二元输入（`And`／`Or`／`Not` 都存了） |
     /// | `MaskingFunction` | 符号 | 没存 `ConditionBounds`，而 `MaskingStructure` 要一个 `ConditionalValue` |
-    /// | `UnivariateLinearPiecewiseFunction` | 捕获 | 边界<b>捕获了</b>（`_inputDependencies`），但 `BoundDependencySnapshot` 是 `internal` 且只提供 `IsCurrent()`——只能核对，读不回来 |
+    /// | `UnivariateLinearPiecewiseFunction` | 捕获 | 边界<b>捕获了</b>（`_inputDependencies`），但 `BoundDependencySnapshot` 是 `internal` 且只提供 `IsCurrent`——只能核对，读不回来 |
     /// | `IndicatorStructure` | 源 | <b>根本没有对应的函数符号</b>，只有几个行生成器辅助类 |
     ///
     /// **前两种是"符号没保留物化需要的东西"，后两种是"前提捕获了却拿不到"与"没有源"。**

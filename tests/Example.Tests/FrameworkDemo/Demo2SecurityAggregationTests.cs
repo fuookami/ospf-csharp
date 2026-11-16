@@ -21,10 +21,10 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **适航安全聚合（B599）** / The airworthiness security aggregation (B599).
+/// **适航安全聚合** / The airworthiness security aggregation.
 /// </summary>
 /// <remarks>
-/// 这一批落的是**组装层**：把 4 个派生模型建起来并按基线顺序注册。三处风险：
+/// 这里落的是**组装层**：把 4 个派生模型建起来并按基线顺序注册。三处风险：
 ///
 /// | 处 | 做错了会怎样 |
 /// | --- | --- |
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// | 注册顺序 | 按序号引用约束的报告会指错行 |
 /// | Benders MP 是空操作 | 加上不该有的行，或以为它做了事 |
 ///
-/// This batch lands the **assembly layer**: build four derived models and register them in the baseline's order, with the three risks tabulated above.
+/// lands the **assembly layer**: build four derived models and register them in the baseline's order, with the three risks tabulated above.
 /// </remarks>
 public class Demo2SecurityAggregationTests {
     private static Quantity<Flt64> Grams(double value) => new(new Flt64(value), MassUnits.Gram);
@@ -342,7 +342,7 @@ public class Demo2SecurityAggregationTests {
     /// </summary>
     /// <remarks>
     /// 四点成对。**这里不能比 `Constraints.Count`**：适航安全聚合只注册符号，一行约束都不加，所以那个数恒为 0，
-    /// 拿它当判据会让"跳过注册"和"偷偷注册"都通过——我第一版就是这样，三条变异全部存活。可观测的是**符号**：
+    /// 拿它当判据会让"跳过注册"和"偷偷注册"都通过——最初就是这样，三条变异全部存活。可观测的是**符号**：
     /// 注册成功才把 `LinearDensitySymbol(0)` 填上。
     ///
     /// 1. `RegisterForBendersMP` 成功且**符号仍是 `null`**（空操作）。

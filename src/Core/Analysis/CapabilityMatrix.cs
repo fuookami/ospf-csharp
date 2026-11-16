@@ -62,12 +62,12 @@ public enum CapabilitySupport
 /// 与基线 `CapabilityMatrix.kt`（297 行）对应。**基础标志映射 `SolverCapabilities`，分析能力映射允许后端适配器覆盖某一阶段**——
 /// 因为有些阶段的可用性取决于通用求解器描述符推断不出的细节。
 ///
-/// **B966 补**：它不依赖原生后端（只依赖报告层与 CP 类型），所以能独立移植。
+/// 补**：它不依赖原生后端（只依赖报告层与 CP 类型），所以能独立移植。
 /// **一处刻意的保守**：`FallbackSatisfactionOnly` **只在后端声明了 CP 满足路径时才成立**。基线为此写过一条注释——
 /// 从任意模型类型推导，会让只支持线性/MIP 的后端**声称一个它兑现不了的回退**。
 ///
 /// Mirrors the baseline's `CapabilityMatrix.kt` (297 lines). **The primitive flags mirror `SolverCapabilities`, and the analysis map lets a backend adapter override a stage**
-/// because some stages depend on details the generic descriptor cannot infer. **B966**: it needs no native backend, only the report and CP types. **One deliberate
+/// because some stages depend on details the generic descriptor cannot infer. ****: it needs no native backend, only the report and CP types. **One deliberate
 /// conservatism**: `FallbackSatisfactionOnly` **holds only when the backend declares a CP satisfaction path** — deriving it from any model type would let a linear/MIP-only
 /// backend **advertise a fallback it cannot deliver**, which the baseline calls out in a comment.
 /// </remarks>

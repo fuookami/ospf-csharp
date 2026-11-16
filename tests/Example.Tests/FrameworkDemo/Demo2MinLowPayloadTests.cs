@@ -22,7 +22,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **最小低甲板载荷与低载荷下界（B588）** / The minimum low-deck payload and its lower bound (B588).
+/// **最小低甲板载荷与低载荷下界** / The minimum low-deck payload and its lower bound.
 /// </summary>
 /// <remarks>
 /// 这是 `AirworthinessSecurity` 域的第一块实际逻辑（此前整个域只有三个 `Max*` 是真代码，其余全是"返回 `Ok` 什么也不做"的空壳）。
@@ -30,13 +30,13 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 两条容易做反的事：
 ///
 /// 1. **这是下界**。`lower_estimate_payload ≥ min_low_payload`——下舱装得太少会让重心太靠前。写成上界能编译、能求解，而且大多数算例
-///    在最优解上恰好看不出差别；它不报错，只是把一条安全约束变成了一条容量约束。
-/// 2. **这里是插值，B584 的 `MaxLoadWeightLimit` 是阶跃**。两者都是基线的做法，差异来自数据：最大装载重量是按图表给出的阶梯规格，
-///    最小低载荷是一条连续的边界曲线。不要因为"看着不一致"就改掉其中一个。
+/// 在最优解上恰好看不出差别；它不报错，只是把一条安全约束变成了一条容量约束。
+/// 2. **这里是插值，的 `MaxLoadWeightLimit` 是阶跃**。两者都是基线的做法，差异来自数据：最大装载重量是按图表给出的阶梯规格，
+/// 最小低载荷是一条连续的边界曲线。不要因为"看着不一致"就改掉其中一个。
 ///
 /// This is the first piece of real logic in the `AirworthinessSecurity` domain (until now only three `Max*` classes were real; the rest were shells returning `Ok` while doing
 /// nothing). Two things are easy to get backwards: (1) it is a **lower** bound — too little in the lower hold puts the centre of gravity too far forward; an upper bound compiles,
-/// solves, and usually does not bind at the optimum, it just turns a safety constraint into a capacity one. (2) this one **interpolates** while B584's `MaxLoadWeightLimit`
+/// solves, and usually does not bind at the optimum, it just turns a safety constraint into a capacity one. (2) this one **interpolates** while the earlier `MaxLoadWeightLimit`
 /// **steps**; both are the baseline's behaviour, the difference comes from the data.
 /// </remarks>
 public class Demo2MinLowPayloadTests {

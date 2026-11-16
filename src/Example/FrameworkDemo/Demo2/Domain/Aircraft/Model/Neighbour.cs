@@ -41,11 +41,11 @@ public sealed record PositionPair(Position First, Position Second)
     /// <returns>位置对文本 / The pair text.</returns>
     /// <remarks>
     /// **必须显式重写**。`record` 的编译器生成 `PrintMembers` 会打印**全部公开可读属性**，包括 `Symmetrical`——而它又是
-    /// `PositionPair`，于是 `ToString()` 无限递归，实测抛 `InsufficientExecutionStackException`（不是 `StackOverflowException`，
+    /// `PositionPair`，于是 `ToString` 无限递归，实测抛 `InsufficientExecutionStackException`（不是 `StackOverflowException`，
     /// 因为 .NET 的 record 打印会先调用 `EnsureSufficientExecutionStack`）。只要有任何断言失败并尝试打印这一对，测试进程就崩。
     ///
     /// **This override is mandatory.** A `record`'s compiler-generated `PrintMembers` prints **every public readable property**, including `Symmetrical`, which is itself a
-    /// `PositionPair` — so `ToString()` recurses forever and throws `InsufficientExecutionStackException` (not `StackOverflowException`, since .NET's record printing calls
+    /// `PositionPair` — so `ToString` recurses forever and throws `InsufficientExecutionStackException` (not `StackOverflowException`, since .NET's record printing calls
     /// `EnsureSufficientExecutionStack` first). Any assertion that fails and tries to print a pair crashes the test process.
     /// </remarks>
     public override string ToString() => "(" + First.SpaceName + ", " + Second.SpaceName + ")";

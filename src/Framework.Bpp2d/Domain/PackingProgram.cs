@@ -2,12 +2,12 @@
 // 与固定 Kotlin 基线 `item/model/PackingProgram.kt`（79 行）对应。
 // Mirrors the pinned baseline's `PackingProgram.kt`.
 //
-// **本批不含 `ItemContext`**：它的 `aggregate` 依赖基线的 `Aggregation`（需求 + 板材上限的**入参**容器），而 C# 侧同名
+// **这里不含 `ItemContext`**：它的 `aggregate` 依赖基线的 `Aggregation`（需求 + 板材上限的**入参**容器），而 C# 侧同名
 // 概念 `PackingAggregation` 是**出参**结果类型（装 `PackedSheet` 的容器），两者语义不同。移植 `ItemContext` 需要先补齐
-// `Aggregation` 输入模型，留下批，不在本批硬套一个语义错位的类型。
-// **`ItemContext` is not in this batch**: its `aggregate` needs the baseline's `Aggregation` (an **input** container of
+// `Aggregation` 输入模型，留下批，不在这里硬套一个语义错位的类型。
+// **`ItemContext` is not covered here**: its `aggregate` needs the baseline's `Aggregation` (an **input** container of
 // demands and sheet limits), whereas the C# type of that name is an **output** result holding `PackedSheet`s — different
-// semantics. Porting `ItemContext` requires the `Aggregation` input model first, so it waits; this batch does not force a
+// semantics. Porting `ItemContext` requires the `Aggregation` input model first, so it waits; not force a
 // semantically mismatched type.
 
 using System;

@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Core.Solver.Report;
 /// 批量实验场景 / Batch experiment case.
 /// </summary>
 /// <remarks>
-/// **B1257 按基线 `OfflineExperiment.kt` 的 `SolveExperimentCase` 补。**
+/// **按基线 `OfflineExperiment.kt` 的 `SolveExperimentCase` 补。**
 ///
 /// **这一块是本仓此前<b>整块缺失</b>的：基线有 `SolveExperiment*`／`BatchSolveExperiment*`，
 /// 本仓一个文件都没有。** **而它依赖的 `SolveReport`／`SolveIssue`／`SolveIssueCategory`／
@@ -131,7 +131,7 @@ public sealed record GeneratedMilpSampleMetadata<V>(
 /// means the type may only be <b>observed</b>, never used to <b>drive</b> another solve — and the moment it is read into a
 /// configuration that boundary is gone.**
 ///
-/// **Nothing in this repo consumes it yet (B1257 only defines it), so the constraint currently holds by "no consumer
+/// **Nothing in this repo consumes it yet (it is only defined), so the constraint currently holds by "no consumer
 /// exists". The day one appears, "may it influence configuration" must be answered first.**
 /// </remarks>
 /// <typeparam name="V">数值类型 / The numeric type.</typeparam>
@@ -170,8 +170,6 @@ public sealed record OfflineSolveObservation<V>(
 ///
 /// **失败不抛：** **一个场景失败会变成一条带 `SolveIssue` 的结果，
 /// 其余场景继续跑完。** **批量实验里"一个坏样本中断整批"是最坏的行为。**
-///
-/// adds
 ///
 /// **Two determinism guarantees are the whole point of this layer, and both live in conventions outside the signature: cases
 /// are scheduled <b>after sorting by `Id`</b>, and results are returned <b>after sorting by `Id`</b>.**

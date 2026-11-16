@@ -56,7 +56,7 @@ public sealed record TypedTerm(LinearPolynomial<Flt64> Coefficient);
 ///
 /// 1. **约束归一成"左边减右边 + 右端常数"**：两个表达式相减时右端固定为零，表达式对常数时右端就是常数——
 ///    这样下游只处理一种形状，不用再分情况。
-/// 2. **模型可以为空块**：`Model()` 不带委托时产出一个空模型，不是 null。
+/// 2. **模型可以为空块**：`Model` 不带委托时产出一个空模型，不是 null。
 /// 3. **`Build` 是抽象方法**：本类只产出值，注册归子类——**父类不预设任何后端**。
 ///
 /// Three things copied: **constraints normalise to "left minus right plus a right-hand constant"** — subtracting two expressions fixes the constant at zero, while an expression against a constant
@@ -76,7 +76,7 @@ public abstract class TypedModelBuilder<T, R> {
     }
 
     /// <summary>
-    /// 造一个约束：表达式 对 表达式 / A constraint of expression against expression.
+    /// 造一个约束：表达式对 表达式 / A constraint of expression against expression.
     /// </summary>
     /// <param name="left">左边 / The left side.</param>
     /// <param name="sign">比较符 / The comparison sign.</param>
@@ -88,7 +88,7 @@ public abstract class TypedModelBuilder<T, R> {
         new(left.Coefficient - right.Coefficient, sign, new Flt64(0.0));
 
     /// <summary>
-    /// 造一个约束：表达式 对 常数 / A constraint of expression against a constant.
+    /// 造一个约束：表达式对 常数 / A constraint of expression against a constant.
     /// </summary>
     /// <param name="left">左边 / The left side.</param>
     /// <param name="sign">比较符 / The comparison sign.</param>

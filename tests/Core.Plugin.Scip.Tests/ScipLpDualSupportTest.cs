@@ -170,10 +170,10 @@ public class ScipLpDualSupportTest {
     /// **后端名真的进了错误消息** / The backend name really reaches the error message.
     /// </summary>
     /// <remarks>
-    /// **B1229 把四个后端的 `ToFarkasSolution` 合一，唯一按后端变化的参数是 `backendName`。**
+    /// **四个后端的 `ToFarkasSolution` 合一，唯一按后端变化的参数是 `backendName`。**
     ///
     /// **这条判据存在的理由是：** **那个参数很容易变成"传了但没用"——
-    /// 合并时最常见的退化是把 `$"{backendName} ..."` 写成固定字符串，而编译器不会抱怨，
+    /// 合并时最常见的退化是把 `$"{backendName}..."` 写成固定字符串，而编译器不会抱怨，
     /// 因为参数确实被"接收"了。**
     ///
     /// **而后果是可诊断性的丧失：** **用户看到"未提供可用的 Farkas 证书"，却不知道是哪个后端。**

@@ -122,9 +122,9 @@ public static class EffectiveDomain
     /// <returns>变量到有效定义域的映射 / A map from variable to effective domain.</returns>
     /// <remarks>
     /// **这是 `activeDomains` 的移植，而它此前在 C# 侧没有任何对应物**——
-    /// **`Compute` 本身从 B1023 起就被判据覆盖，却一个调用方都没有。**
+    /// **`Compute` 本身此后就被判据覆盖，却一个调用方都没有。**
     ///
-    /// **This is the port of `activeDomains`, and it had no counterpart on the C# side** — **`Compute` had been covered by criteria since B1023 while having no caller at all.**
+    /// **This is the port of `activeDomains`, and it had no counterpart on the C# side** — **`Compute` had been covered by criteria since then while having no caller at all.**
     /// </remarks>
     public static IReadOnlyDictionary<VariableId, IntegerDomain> ActiveDomains(
         ConstraintProgrammingModelSnapshot snapshot,

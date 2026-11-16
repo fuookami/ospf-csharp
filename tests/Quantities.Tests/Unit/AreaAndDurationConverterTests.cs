@@ -16,13 +16,11 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 整数时长截断是对的，负数时长截断到 0 是错的 / Truncating integer seconds is right; truncating negatives is not.
 /// </summary>
 /// <remarks>
-/// B1144 补 4 个面积单位与 2 个 Duration 转换器（基线 `Area.kt` / `DurationExtensions.kt`）。
+/// 补 4 个面积单位与 2 个 Duration 转换器（基线 `Area.kt` / `DurationExtensions.kt`）。
 ///
 /// **两个类型对"负时长"的处理必须不同**：
 /// **`IntX` 能表示负数，所以截断即可；`UIntX` 不能，所以负数必须拒绝。**
 /// **把 -5 秒变成 0 秒会让"早于基准点"的信息悄悄消失，而调用方看到的是一个合法的 0。**
-///
-/// adds
 ///
 /// **The two types must treat a negative duration differently**:
 /// **`IntX` can hold negatives, so truncation suffices; `UIntX` cannot, so negatives must be rejected.**
@@ -89,7 +87,7 @@ public class AreaAndDurationConverterTests
 
     /// <summary>**UIntX 转换器必须拒绝负时长，而不是截断到 0** / A negative duration is rejected, not zeroed.</summary>
     /// <remarks>
-    /// **这是本批最重要的一条判据。** **截断到 0 会让 -5 秒变成"合法的 0 秒"，
+    /// **这是这里最重要的一条判据。** **截断到 0 会让 -5 秒变成"合法的 0 秒"，
     /// 而调用方无法区分"正好在基准点"与"早于基准点 5 秒"。**
     ///
     /// **The most important criterion here.** **Zeroing turns -5 s into a legal 0 s,

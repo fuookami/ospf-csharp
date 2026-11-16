@@ -30,8 +30,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **结构是"先桥接、再掩码"**：**`MaskingFunction` 只接受线性输入，
 /// 二次项必须先被一个桥接变量取代。**
 ///
-/// adds
-///
 /// **Bridge first, then mask**: **`MaskingFunction` takes linear input only, so the quadratic terms must first be
 /// replaced by a bridge variable.**
 /// </remarks>
@@ -77,7 +75,7 @@ public class QuadraticMaskingFunctionTests
         // **The lower bound is `−100`, not `0`, because `QuadraticBounds.Of` takes the four corners — and one of them
         // is `(10)·(−10) = −100`.**
         //
-        // **"A square is never negative" is invisible to it** (the same limitation recorded in B1163).
+        // **"A square is never negative" is invisible to it** (the same limitation recorded).
         // **The consequence is a bridge range twice as wide as it needs to be: it runs, nothing errors, the relaxation
         // is merely a little looser. Recorded here rather than pretending the lower bound is zero.**
         ((ValueWrapper<Flt64>.Value)function.Bridge.Range.UpperBound!.Value).Number.ToDouble().Should().Be(
@@ -94,14 +92,14 @@ public class QuadraticMaskingFunctionTests
     /// **不写桥接等式时，桥接变量是自由的，掩码读一个任意值——而模型完全可行、目标值合理。**
     ///
     /// **判据按<b>名字</b>逐条核对，而不是只数总数**：**总数变大也可能只是多了一条无关的行，
-    /// 而"桥接那条在不在"才是本批要证的东西。**
+    /// 而"桥接那条在不在"才是这里要证的东西。**
     ///
     /// **This separates "the row was constructed correctly" from "the row reached the model".**
     /// **Without the bridge equality the bridge is free, the mask reads an arbitrary value — and the model stays
     /// feasible with a plausible objective.**
     ///
     /// **The criterion checks by <b>name</b> rather than counting**: **a larger total may just mean an unrelated row
-    /// appeared, while "is the bridge row there" is what this batch must prove.**
+    /// appeared, while "is the bridge row there" is what must prove.**
     /// </remarks>
     [Fact]
     public async Task TheRegister_ShouldPutTheBridgeRowAndTheMaskingRowsIntoTheModel()

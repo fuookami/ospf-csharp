@@ -18,9 +18,9 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// </summary>
 /// <remarks>
 /// 基线的 6 个 `fun interface` 是**挂起函数**，C# 侧对应 `Task`。它们不是"零实现的装饰"：
-/// <see cref="ColumnGenerationAlgorithm"/> 是本批的确定性实现者，缺任何一个都会让主循环少一臂。
+/// <see cref="ColumnGenerationAlgorithm"/> 是这里的确定性实现者，缺任何一个都会让主循环少一臂。
 ///
-/// The baseline's six `fun interface`s are suspend functions, which map to `Task` here. They are not decoration: `ColumnGenerationAlgorithm` in this batch is their concrete consumer, and
+/// The baseline's six `fun interface`s are suspend functions, which map to `Task` here. They are not decoration: `ColumnGenerationAlgorithm` in is their concrete consumer, and
 /// dropping any of them would leave the main loop one arm short.
 /// </remarks>
 public interface IColumnGenerationRmpSolver

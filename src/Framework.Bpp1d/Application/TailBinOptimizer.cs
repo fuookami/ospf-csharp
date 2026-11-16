@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Application;
 /// 这样分两段做的意义在于：**局部问题上的约束放宽不等于全局可行**，所以候选必须过完整复核。
 ///
 /// 基线的注释点明了另一半：**外部业务约束不能直接作用在局部问题上**——
-/// 它必须接收**完整结果**再判断。本批用一个 `accept` 回调承担这件事。
+/// 它必须接收**完整结果**再判断。这里用一个 `accept` 回调承担这件事。
 ///
 /// Keeps the prefix bins, re-solves only the **tail window**, then re-verifies the candidate against the **full problem**: relaxing constraints on a local model does
 /// not make a global solution feasible. The baseline's comment names the other half — **external business constraints cannot be applied to a local problem**; they

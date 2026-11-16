@@ -139,10 +139,10 @@ public sealed class LayerGenerationContextTest {
     }
 
     /// <summary>
-    /// 组合上下文默认装配八个生成器。Batch 85 时这里是 5（缺三个块装载生成器），Batch 88 补齐后改为 8——
+ /// 组合上下文默认装配八个生成器。earlier 时这里是 5（缺三个块装载生成器），earlier 补齐后改为 8——
     /// **这条断言随缺口关闭而更新，不是放宽**。
-    /// The composite context assembles eight generators. It was 5 at Batch 85 (missing the three block-loading ones) and
-    /// becomes 8 once Batch 88 closed the gap — **this assertion tracks the gap closing, it is not a relaxation**.
+ /// The composite context assembles eight generators. It was 5 at earlier (missing the three block-loading ones) and
+ /// becomes 8 once earlier closed the gap — **this assertion tracks the gap closing, it is not a relaxation**.
     /// </summary>
     [Fact]
     public void Context_ShouldShipAllBaselineGenerators() =>

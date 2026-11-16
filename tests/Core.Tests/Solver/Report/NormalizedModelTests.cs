@@ -20,8 +20,6 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// **这一族记录存在的理由是稳定指纹**：**同一个模型重建两次，元素顺序可能不同，而指纹必须相同。**
 /// **所以所有数值以字符串保存——`double` 一旦参与往返，"同一个数"会因为格式化差异变成两个指纹。**
 ///
-/// adds
-///
 /// **The family exists for a stable fingerprint**: **rebuilt twice, the same model may order its elements differently
 /// while the fingerprint must not change.** **Numbers are therefore strings — once a `double` round-trips, "the same
 /// number" can become two fingerprints over formatting alone.**
@@ -32,7 +30,7 @@ public class NormalizedModelTests
     /// **变量说 `A`、约束说 `B`，模型必须被拒绝** / A variable saying `A` and a constraint saying `B` is rejected.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **命名空间进指纹。两个都出现时，指纹里<b>同时</b>含 `A` 与 `B`，
     /// 而"哪个元素说了哪个"取决于遍历顺序——于是同一个模型能产生两个指纹。**

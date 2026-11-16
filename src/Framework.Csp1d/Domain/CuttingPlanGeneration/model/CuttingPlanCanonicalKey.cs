@@ -70,7 +70,7 @@ public sealed record CuttingPlanCanonicalKey(
     /// **record 的默认相等性对列表用的是引用比较**，所以两个**内容完全相同**的 canonical key 会被判为不等
     /// ——**结构化去重因此完全失效**。
     ///
-    /// B304 是在实现 NSame 生成器后由测试发现的：同一需求重复出现两次，产出**两条**方案，
+    /// 是在实现 NSame 生成器后由测试发现的：同一需求重复出现两次，产出**两条**方案，
     /// 而内部键集合的 Add 两次都返回 true。
     ///
     /// **这个缺陷比"生成器是空壳"更隐蔽**：生成器一实现，去重看起来就"在工作"
@@ -79,7 +79,7 @@ public sealed record CuttingPlanCanonicalKey(
     /// **The record's default equality compares lists by reference**, so two canonical keys with **identical content** compare unequal — **structural
     /// de-duplication therefore does nothing at all**.
     ///
-    /// B304 found this through a test after implementing the NSame generator: the same demand appearing twice produced **two** plans, and the internal key
+    /// found this through a test after implementing the NSame generator: the same demand appearing twice produced **two** plans, and the internal key
     /// set's Add returned true both times.
     ///
     /// **This defect is more hidden than "the generator is a shell"**: once the generator is implemented, de-duplication *looks* like it works (the duplicate

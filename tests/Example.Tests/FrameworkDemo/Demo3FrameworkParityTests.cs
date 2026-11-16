@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **Demo3 的手写列生成与框架链路是两套实现** / Demo3's hand-rolled column generation and the framework pipeline are two separate implementations.
 /// </summary>
 /// <remarks>
-/// **B396 记着"Demo3 仍绕过 `Csp1dColumnGeneration`"。** 本批查清了它到底是什么：
+/// **记着"Demo3 仍绕过 `Csp1dColumnGeneration`"。** 这里查清了它到底是什么：
 ///
 /// | 项 | 基线 | C# |
 /// | --- | --- | --- |
@@ -32,12 +32,12 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// 都在，且已有测试覆盖。**缺的是示例代码没有把它们串起来。**
 ///
 /// 这是**示例层缺口，不是框架缺口**。改 Demo3 需要真实求解器，而当前环境没有
-/// （B395 已确认无 Gurobi SDK），所以本批**不改 Demo3**，而是用判据钉住
+/// ，所以这里**不改 Demo3**，而是用判据钉住
 /// **"框架链路本身能跑通"** 这个前提——它一旦破了，Demo3 的改造就更无从谈起。
 ///
-/// **B396 recorded "Demo3 still bypasses `Csp1dColumnGeneration`".** This batch established exactly what that means (table above): **the framework capabilities are all
+/// **recorded "Demo3 still bypasses `Csp1dColumnGeneration`".** established exactly what that means (table above): **the framework capabilities are all
 /// present** and already tested; **what is missing is that the example never wires them together**. It is a **sample-layer gap, not a framework gap**. Rewriting Demo3
-/// needs a real solver, which this environment lacks (B395 confirmed no Gurobi SDK), so this batch **leaves Demo3 alone** and instead pins **"the framework pipeline itself
+/// needs a real solver, which this environment lacks, so **leaves Demo3 alone** and instead pins **"the framework pipeline itself
 /// runs"** — if that breaks, rewriting Demo3 is moot.
 /// </remarks>
 public class Demo3FrameworkParityTests {
@@ -78,13 +78,13 @@ public class Demo3FrameworkParityTests {
     /// 而桩求解器给不出有意义的解内容可供检查。
     ///
     /// **所以它的价值是"冒烟级"**：链路断了会红，链路内部退化不会。
-    /// 要钉住内部行为需要真实求解器（B395 确认当前环境没有）。
+    /// 要钉住内部行为需要真实求解器。
     /// 判据保留，但**不宣称它能覆盖链路正确性**。
     ///
     /// **This criterion is insensitive to the implementation — its inherent weakness.** Two mutants survived: adding `!` to `Solution` (no behaviour change) and replacing
     /// the `initialGenerator` injection with a hard-coded default. The reason is that it only asserts **"does not throw and returns non-null"**, **never inspecting the
     /// solution** — and a stub solver cannot produce meaningful content to inspect. **Its value is smoke-level**: a broken pipeline goes red, an internally degraded one
-    /// does not. Pinning internal behaviour needs a real solver (B395 confirmed none here). The criterion stays, but **it is not claimed to cover pipeline correctness**.
+    /// does not. Pinning internal behaviour needs a real solver. The criterion stays, but **it is not claimed to cover pipeline correctness**.
     ///
     /// Runs the whole pipeline with `MockColumnGenerationSolver`. This does **not** check optimality — a stub cannot produce it — but that the **pipeline completes, throws
     /// nothing, and returns a solution**. That is exactly the precondition for rewriting Demo3: **if the framework pipeline itself does not run, porting Demo3 is pointless.**

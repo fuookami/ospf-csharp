@@ -19,13 +19,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 2. **配置带调用方的两个上限**（迭代上限与每轮列数上限），不是执行器配置里的默认值——种子生成与列生成
 ///    用的是同一套上限，混用会让第一轮就超出调用方的预算。
 /// 3. **结果去重**：生成器可能对同一形状给出多个等价列，重复列在 RMP 里只会让约束矩阵多一列而目标相同。
-///    `Layer` 是值相等对象（`Equals` 比板材类型、形状与件数），所以 `Distinct()` 是真的按值去重。
+///    `Layer` 是值相等对象（`Equals` 比板材类型、形状与件数），所以 `Distinct` 是真的按值去重。
 ///
 /// Aligned with the baseline's `seedColumns`. Three things must be copied: **the seed state is "iteration 0 with empty columns"**, since the seed stage is independent of existing columns and
 /// passing the current ones in would let the first generation inherit the previous round, whereas seeding means the initial columns from scratch; **the config carries the caller's two limits**
 /// (iteration limit and per-round column limit) rather than the executor defaults, because seeding and column generation share one budget and mixing them would exceed the caller's allowance on the
 /// very first round; and **results are deduplicated**, since a generator may emit several equivalent columns for one shape and a duplicate only adds a column to the RMP matrix with an identical
-/// objective. `Layer` has value equality (`Equals` compares sheet type, shape and unit count), so `Distinct()` genuinely deduplicates by value.
+/// objective. `Layer` has value equality (`Equals` compares sheet type, shape and unit count), so `Distinct` genuinely deduplicates by value.
 /// </remarks>
 public static class SeedColumns
 {

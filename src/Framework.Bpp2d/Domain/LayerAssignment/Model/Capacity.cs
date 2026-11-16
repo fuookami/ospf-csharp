@@ -20,10 +20,10 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 /// <remarks>
 /// 与基线 `Capacity.kt` 的 `interface Capacity` 对齐。四个成员里两个是 `LinearIntermediateSymbols1&lt;FltX&gt;`——
 /// Kotlin 的 typealias，C# 无法表达（`src/Core/Symbol/SymbolCombination.cs:95`），因此用 `IReadOnlyList&lt;...&gt;`。
-/// **这是本仓第四次同样的处置**（B639、B641、B642 各一次），不是随手改的形状。
+/// **这是本仓第四次同样的处置**（三次各一次），不是随手改的形状。
 ///
 /// Aligned with the baseline's `interface Capacity`. Two of its four members are `LinearIntermediateSymbols1&lt;FltX&gt;`, a Kotlin typealias C# cannot express, so `IReadOnlyList&lt;...&gt;` is used —
-/// **the fourth time this repository has handled the same problem** (B639, B641 and B642), not an ad-hoc shape.
+/// **the fourth time this repository has handled the same problem** , not an ad-hoc shape.
 /// </remarks>
 public interface ICapacity
 {
@@ -56,14 +56,14 @@ public interface ICapacity
 /// | `loading_rate_i` | `该列实际占用面积 / 板材面积` | 装载率上限约束 |
 ///
 /// **`Layer.Area` 与 `Layer.Shape.Area` 是两个数**：前者是件面积之和（实际占用），后者是板材面积。
-/// 用错会让装载率恒为 1（B653 第一次就踩了这个，判据的 `200 vs 10000` 直接指出来）。
+/// 用错会让装载率恒为 1（第一次就踩了这个，判据的 `200 vs 10000` 直接指出来）。
 ///
 /// **三处必须照抄**：
 ///
 /// 1. **板材面积为零或缺失时装载率系数取零**，不做除法——除零会得到 `NaN`/`Infinity`，而求解器不会拒绝它，
 ///    只会给出无意义的最优解。基线的写法是 `if (denominator &lt;= 0) 0 else area / denominator`。
 /// 2. **`Register` 幂等**：已建好的符号组复用，重复注册**不再 `model.Add`**——符号注册对重名是拒绝的
-///    （与变量注册不同，B650 实测过变量注册容忍重名）。
+///    （与变量注册不同，实测过变量注册容忍重名）。
 /// 3. **两个符号组都注册**，只注册一个会让容量约束在另一半上找不到符号。
 ///
 /// Aligned with the baseline's `PreciseLoadCapacity`: two symbols per column, both linear in that column's copy variable `y_i`. **Three things must be copied**: **a zero or missing sheet area makes
@@ -166,9 +166,9 @@ public sealed class PreciseLoadCapacity : ICapacity
             _loadingRate = loadingRate;
         }
 
-        // **符号只注册一次**：符号注册对重名是**拒绝**的（与变量注册不同，见 B650 的实测），
+        // **符号只注册一次**：符号注册对重名是**拒绝**的（与变量注册不同，见 的实测），
         // 所以第二次调用复用已注册的符号、不再重复 `model.Add`。
-        // **Symbols are registered once**: symbol registration **rejects** a duplicate name (unlike variable registration, measured in B650), so a second call reuses the registered symbols
+        // **Symbols are registered once**: symbol registration **rejects** a duplicate name (unlike variable registration, measured), so a second call reuses the registered symbols
         // instead of adding them again.
         if (!_registered)
         {

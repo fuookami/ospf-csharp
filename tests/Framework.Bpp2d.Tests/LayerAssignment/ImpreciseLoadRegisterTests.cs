@@ -1,4 +1,4 @@
-// 超额 / 欠额符号层（B697）的判据 / Criteria for the over- and under-load symbol layers (B697).
+// 超额 / 欠额符号层的判据 / Criteria for the over- and under-load symbol layers.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **超额 / 欠额符号层（B697）** / The over- and under-load symbol layers (B697).
+/// **超额 / 欠额符号层** / The over- and under-load symbol layers.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**开关关着就一个都不建**、**初值是 `load` 的拷贝**、**只建一次**、**同名重复注册被拒**。
@@ -101,7 +101,7 @@ public class ImpreciseLoadRegisterTests {
     /// 三点成对：
     ///
     /// 1. 注册那一刻 `over_load_i` 的多项式 **与 `load_i` 相同**——表达的是"这个需求现在被超/欠了多少"。
-    /// 2. 追加新列之后 `load_0` 的项数**增加**，而 `over_load_0` **不变**——基线就是这样，本批照抄并记档。
+    /// 2. 追加新列之后 `load_0` 的项数**增加**，而 `over_load_0` **不变**——基线就是这样，这里照抄并记档。
     /// 3. 拷贝是**深拷贝**：`load_0` 后续 `Flush` 不会清空 `over_load_0` 的多项式。
     ///
     /// Three paired points: at registration `over_load_i`'s polynomial **equals `load_i`'s**, expressing by how much the demand is currently over-supplied; after appending new columns `load_0`'s term

@@ -322,7 +322,7 @@ public sealed class Envelope : IEnvelope
 /// 带条件切换的 CG 包络线（尚未实现）/ A CG envelope with conditional sides (not yet implemented).
 /// </summary>
 /// <remarks>
-/// 骨架留给下一批。**此前这里对任何输入都返回 `Ok`**，那等于告诉调用方"包络已加进模型"而实际上一行都没有——现在改成明确失败，至少不会假装成功。
+/// 骨架留给后续。**此前这里对任何输入都返回 `Ok`**，那等于告诉调用方"包络已加进模型"而实际上一行都没有——现在改成明确失败，至少不会假装成功。
 ///
 /// Kept as a skeleton for the next batch. **It used to return `Ok` for any input**, telling the caller the envelope was added while the model held nothing; it now fails explicitly
 /// rather than pretending.

@@ -61,7 +61,7 @@ public sealed class PolicyTrainingRunTests {
     public void Evaluate_ShouldNotMutateTheGivenArchive() {
         SearchRegistry<Flt64, Flt64> registry = Registry();
         // **必须用会递增修订号的选择策略（q-learning）**：轮转策略的 `Revision` 恒为 0，
-        // 于是"冻结失效"这个变异下修订号同样不变——断言"没涨"永远成立，测试等于没测。这是本会话第六次同型的"断言恒真"。
+        // 于是"冻结失效"这个变异下修订号同样不变——断言"没涨"永远成立，测试等于没测。这是第六次同型的"断言恒真"。
         // **The selection policy must be one that increments the revision (q-learning)**: round-robin keeps `Revision` at 0, so under a broken freeze the
         // revision also stays put — "did not grow" holds unconditionally and the test measures nothing. This is the session's sixth "always-true assertion".
         var config = new HyperHeuristicConfig(
@@ -124,11 +124,11 @@ public sealed class PolicyTrainingRunTests {
     [Fact]
     public void Evaluate_ShouldRequireAnEvaluationLimit() {
         SearchRegistry<Flt64, Flt64> registry = Registry();
-        // **必须用一份"能通过 `Validate()` 但没有评估额度"的配置**：`BudgetConfig` 全空会被 `Validate()` 先拒掉
-        // （"a global stopping limit is required"），于是这条检查根本轮不到——变异存活而测试看着还在。只设步数上限正好绕过 `Validate()`。
-        // **The fixture must pass `Validate()` while leaving the evaluation limit null**: an all-empty `BudgetConfig` is rejected by `Validate()` first
+        // **必须用一份"能通过 `Validate` 但没有评估额度"的配置**：`BudgetConfig` 全空会被 `Validate` 先拒掉
+        // （"a global stopping limit is required"），于是这条检查根本轮不到——变异存活而测试看着还在。只设步数上限正好绕过 `Validate`。
+        // **The fixture must pass `Validate` while leaving the evaluation limit null**: an all-empty `BudgetConfig` is rejected by `Validate` first
         // ("a global stopping limit is required"), so this check never runs — the mutation survives while the test still looks present. A step limit
-        // alone slips past `Validate()`.
+        // alone slips past `Validate`.
         var config = new HyperHeuristicConfig(
             new ComponentSpec("quadratic", new JsonObject()),
             new[] { new AlgorithmConfig("a", new ComponentSpec("pso", new JsonObject()), 20) },
@@ -188,8 +188,8 @@ public sealed class PolicyTrainingRunTests {
     [Fact]
     public void Train_ShouldRejectDuplicateSeeds() {
         SearchRegistry<Flt64, Flt64> registry = Registry();
-        // **划分必须合法**，否则 `split.Validate()` 会先拒掉，种子检查根本轮不到——变异存活而测试看着还在。
-        // **The split must be legal**, otherwise `split.Validate()` rejects it first and the seed check never runs — the mutation survives while the test
+        // **划分必须合法**，否则 `split.Validate` 会先拒掉，种子检查根本轮不到——变异存活而测试看着还在。
+        // **The split must be legal**, otherwise `split.Validate` rejects it first and the seed check never runs — the mutation survives while the test
         // still looks present.
         var split = new TrainingSplit(
             new[] { new TrainingCase("train", new ComponentSpec("quadratic", new JsonObject())) },

@@ -1,4 +1,4 @@
-// 非精确装载（B642）的判据 / Criteria for the imprecise load (B642).
+// 非精确装载的判据 / Criteria for the imprecise load.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **非精确装载（B642）** / The imprecise load (B642).
+/// **非精确装载** / The imprecise load.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**每个需求一项装载变量**、**注册幂等**、**未注册时追加不抛**。

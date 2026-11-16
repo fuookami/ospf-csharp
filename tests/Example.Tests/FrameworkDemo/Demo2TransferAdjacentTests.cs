@@ -1,4 +1,4 @@
-// 相邻同来源/同目的地（B622）的判据 / Criteria for same-source and same-destination adjacency (B622).
+// 相邻同来源/同目的地的判据 / Criteria for same-source and same-destination adjacency.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **相邻同来源 / 同目的地（B622）** / Same-source and same-destination adjacency (B622).
+/// **相邻同来源 / 同目的地** / Same-source and same-destination adjacency.
 /// </summary>
 /// <remarks>
 /// 判据的重点：`IfFunction` 分支**只看第一个舱位**、退化分支**不是一律给零**、以及两个目标都是**最大化**。

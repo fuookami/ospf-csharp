@@ -73,9 +73,9 @@ public sealed class SharedPrimeReadBenchmarkTests {
         for (int index = 0; index < 5; ++index) {
             benchmark.ReadyRead().Should().BeTrue();
         }
-        // **必须让同一个入口答一个 `false`**：只验证"素数读到 `true`"时，`ReadyRead()` 直接
+        // **必须让同一个入口答一个 `false`**：只验证"素数读到 `true`"时，`ReadyRead` 直接
         // `return true` 也能通过——**那条断言根本没证明它在读缓存**。
-        // **The same entry point must answer a `false`**: verifying only "a prime reads as `true`" also passes when `ReadyRead()` simply
+        // **The same entry point must answer a `false`**: verifying only "a prime reads as `true`" also passes when `ReadyRead` simply
         // `return true` — **that assertion never showed it reads the cache**.
         benchmark.Query = new Fuookami.Ospf.Math.Algebra.Number.UInt64(998UL);
         benchmark.ReadyRead().Should().BeFalse("998 不是素数 / 998 is not prime");

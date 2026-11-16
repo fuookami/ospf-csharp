@@ -20,17 +20,17 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Model;
 ///     val planUsagePenalty: V? = null,
 ///     val trimWidthPenalty: V? = null,
 ///     val restMaterialPenalty: V? = null,
-///     val materialCostPenalty: Map&lt;MaterialId, V&gt; = emptyMap()
+///     val materialCostPenalty: Map&lt;MaterialId, V&gt; = emptyMap
 /// )
 /// ```
 ///
-/// **四项惩罚全部可选**，默认 `null`/空表，此时成本就是基础值 `1`——与 B344 的实现一致。
+/// **四项惩罚全部可选**，默认 `null`/空表，此时成本就是基础值 `1`——与 的实现一致。
 /// 所以移植它**不会改变默认行为**，只是把"可配置"这条能力补上。
 ///
 /// Ported from the baseline's `Csp1dPricingObjectiveConfig`. It determines **the objective cost of a column during pricing**, and the reduced-cost test is
 /// `dual benefit > objective cost` — **get the cost wrong and the emit decision is wrong**.
 ///
-/// **All four penalties are optional**, defaulting to `null`/empty, in which case the cost is just the base `1` — matching B344's implementation. So porting it
+/// **All four penalties are optional**, defaulting to `null`/empty, in which case the cost is just the base `1` — matching the earlier implementation. So porting it
 /// **does not change default behaviour**; it only adds the "configurable" capability.
 /// </remarks>
 /// <param name="PlanUsagePenalty">方案使用惩罚 / Plan-usage penalty.</param>

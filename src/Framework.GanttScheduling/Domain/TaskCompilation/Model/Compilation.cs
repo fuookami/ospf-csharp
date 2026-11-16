@@ -112,11 +112,11 @@ public static class CompilationTable {
     /// <param name="name">变量名 / The variable name.</param>
     /// <returns>变量与表 / The variable and the table.</returns>
     /// <remarks>
-    /// **这里必须给出真正的变量，不能是 `new object()`。** 占位对象进不了模型，
-    /// 于是任何以它为系数的目标函数都无处可加——B529 之前那批空壳正是这么静默通过的。
+    /// **这里必须给出真正的变量，不能是 `new object`。** 占位对象进不了模型，
+    /// 于是任何以它为系数的目标函数都无处可加—— 之前那批空壳正是这么静默通过的。
     ///
-    /// **These must be real variables, not `new object()`.** A placeholder cannot enter the model, so any objective taking it as a coefficient has nowhere to go — exactly how the
-    /// silent stubs before B529 passed.
+    /// **These must be real variables, not `new object`.** A placeholder cannot enter the model, so any objective taking it as a coefficient has nowhere to go — exactly how the
+    /// silent stubs before passed.
     /// </remarks>
     public static (BinVariable1 Variable, IReadOnlyDictionary<T, object> Table) BuildCancelColumns<T>(
         IReadOnlyList<T> items,
@@ -308,11 +308,11 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
     /// <inheritdoc/>
     /// <remarks>
     /// **注册之后才是真的**：构造期这张表里放的是 `CompilationTable.Build` 造的占位对象，注册时 `task_compilation` 组合建好才被换成
-    /// 真符号。在此之前读它的调用方拿到的是 `new object()`——一个**看起来非空、转不成符号**的东西。
-    /// B550 给偏移量加掩码时就撞在这里：`InvalidCastException`，而报错只说"不能把 `System.Object` 转成符号"。
+    /// 真符号。在此之前读它的调用方拿到的是 `new object`——一个**看起来非空、转不成符号**的东西。
+    /// 给偏移量加掩码时就撞在这里：`InvalidCastException`，而报错只说"不能把 `System.Object` 转成符号"。
     ///
     /// **Only real after registration**: at construction this table holds placeholder objects from `CompilationTable.Build`, replaced by the real symbols once the
-    /// `task_compilation` combination is built. A caller reading it before that gets `new object()` — **non-null and unconvertible**. B550's deviation mask hit exactly this:
+    /// `task_compilation` combination is built. A caller reading it before that gets `new object` — **non-null and unconvertible**. the earlier deviation mask hit exactly this:
     /// `InvalidCastException` whose message only says the cast failed.
     /// </remarks>
     public IReadOnlyDictionary<IAbstractTask<E, A>, object> TaskCompilationTable { get; private set; }
@@ -345,31 +345,31 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
     /// <param name="model">元模型 / Meta model</param>
     /// <returns>操作结果 / Operation result</returns>
     /// <remarks>
-    /// 这里**第一次把占位列换成真变量**并送进模型。基线 `register` 依次做六件事，本批落地三件：
+    /// 这里**第一次把占位列换成真变量**并送进模型。基线 `register` 依次做六件事，这里落地三件：
     ///
-    /// | 表 | 本批 | 说明 |
+    /// | 表 | 这里 | 说明 |
     /// | --- | --- | --- |
-    /// | `x`（任务 × 执行器） | **已落地** | 含 B509 的值域收紧 |
+    /// | `x`（任务 × 执行器） | **已落地** | 含 的值域收紧 |
     /// | `y`（取消） | **已落地** | `taskCancelEnabled` 才建 |
     /// | `z`（空闲） | **已落地** | `withExecutorLeisure` 才建 |
     /// | `taskAssignment` / `taskCompilation` | 未落地 | 需要线性中间符号组合 |
     /// | `executorCompilation` | 未落地 | 需要 `OrFunction` 适配器 |
     ///
     /// **值域收紧不是优化，是语义**：不许执行的组合固定为 0、已定死的执行器固定为 1，
-    /// 与 `TaskAssignmentRange`（B509）同一条规则。漏掉它，模型只是"多搜了一些 0/1"，
+    /// 与 `TaskAssignmentRange`同一条规则。漏掉它，模型只是"多搜了一些 0/1"，
     /// 结果仍然可行——但那条"任务只能由这个执行器做"的约束就**不存在**了。
     ///
     /// This is where the placeholder columns are first **replaced by real variables** and handed to the model. The baseline's `register` does six things; three land here:
     ///
-    /// | Table | This batch | Note |
+ /// | Table | | Note |
     /// | --- | --- | --- |
-    /// | `x` (task × executor) | **landed** | with B509's range tightening |
+    /// | `x` (task × executor) | **landed** | with the earlier range tightening |
     /// | `y` (cancel) | **landed** | built only when `taskCancelEnabled` |
     /// | `z` (leisure) | **landed** | built only when `withExecutorLeisure` |
     /// | `taskAssignment` / `taskCompilation` | not landed | needs linear intermediate-symbol combinations |
     /// | `executorCompilation` | not landed | needs the `OrFunction` adapter |
     ///
-    /// **Range tightening is semantics, not an optimisation**: forbidden combinations are pinned to 0 and a fixed executor to 1, the same rule as `TaskAssignmentRange` (B509).
+    /// **Range tightening is semantics, not an optimisation**: forbidden combinations are pinned to 0 and a fixed executor to 1, the same rule as `TaskAssignmentRange` .
     /// Dropping it merely makes the model "search some more 0/1" and the answer stays feasible — but the "only this executor may do this task" constraint **does not exist**.
     /// </remarks>
     public Try Register(object model) {
@@ -383,7 +383,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
         //    基线的守卫只保证"变量只建一次"，`model.add` 是无条件的——对同一个模型重来会撞上重名符号。
         //    所以这里按**模型实例**记住，重复注册直接返回成功。
         //
-        //    Already registered on **this** model: registering again is a no-op. The baseline's guards only ensure "the variables are built once", while `model.add` is
+        // Already registered on **this** model: registering again is a no-op. The baseline's guards only ensure "the variables are built once", while `model.add` is
         //    unconditional — redoing it on the same model hits a repeated symbol. So the model instance is remembered and a repeat call succeeds outright.
         foreach (object registered in _registeredModels) {
             if (ReferenceEquals(registered, model)) {
@@ -436,7 +436,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
         }
 
         // 2. 两张聚合表**只建一次**：`taskCompilation == 1` 是约束，重复注册会把它加两遍。
-        //    The two aggregate tables are built **once**: `taskCompilation == 1` is a constraint, and re-registering would add it twice.
+        // The two aggregate tables are built **once**: `taskCompilation == 1` is a constraint, and re-registering would add it twice.
         if (_assignmentCombination is null) {
             Try aggregated = BuildAggregationTables(linear, taskList, _assignmentVariable);
             if (!aggregated.IsOk) {
@@ -684,7 +684,7 @@ public class TaskCompilation<T, E, A> : ICompilation, IExecutorCompilation<E>, I
     /// </summary>
     /// <param name="variable">分配变量 / The assignment variable.</param>
     /// <param name="tasks">任务列表 / The tasks.</param>
-    /// <remarks>逐条调用 `TaskAssignmentRange.For`（B509），**规则只有一份**。 / Each entry goes through `TaskAssignmentRange.For` (B509): **one rule, one place**.</remarks>
+    /// <remarks>逐条调用 `TaskAssignmentRange.For`，**规则只有一份**。 / Each entry goes through `TaskAssignmentRange.For` : **one rule, one place**.</remarks>
     private void TightenAssignmentRanges(BinVariable2 variable, IReadOnlyList<IAbstractTask<E, A>> tasks) {
         for (int taskIndex = 0; taskIndex < tasks.Count; ++taskIndex) {
             IAbstractTask<E, A> task = tasks[taskIndex];
@@ -915,7 +915,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     /// - `taskCompilation` 里**不能**有 `Σ x`：`x` 是每轮追加的，注册时还不知道有几轮。
     ///   写成 `Σ x` 会在注册那一刻固化成空和，之后每轮新加的列都进不了这条等式。
     /// - `executorCompilation` 里**不能**是 `OR(x)`：同上。基线用独立变量 `xor[e]`，
-    ///   它的语义由跨轮冲突约束（B523）与 `xor` 下界（B522）来钉，而不是由 `OR` 函数直接算。
+    ///   它的语义由跨轮冲突约束与 `xor` 下界来钉，而不是由 `OR` 函数直接算。
     ///
     /// 把迭代编译照抄普通编译的写法，模型**仍然可解**——只是 `taskCompilation` 恒等于 `y`，
     /// 于是"任务必须完成或取消"退化成"任务必须取消"，所有任务都被取消而没有任何报错。
@@ -933,7 +933,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     /// - `taskCompilation` must **not** contain `Σ x`: `x` is appended per round and the round count is unknown at registration. Writing `Σ x` freezes an empty sum at
     ///   registration, and every later round's columns stay out of that equation.
     /// - `executorCompilation` must **not** be `OR(x)`, same reason. The baseline uses a standalone `xor[e]` whose meaning is pinned by the cross-round conflict constraints
-    ///   (B523) and the `xor` lower bound (B522), not computed by an `OR` function.
+    ///    and the `xor` lower bound , not computed by an `OR` function.
     ///
     /// Copying the plain compilation's shape into the iterative one still **solves** — `taskCompilation` just equals `y`, so "a task is done or cancelled" degrades to "a task is
     /// cancelled": every task gets cancelled with no error at all.
@@ -945,10 +945,10 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
                 "任务编译只能注册到线性元模型 / a task compilation can only be registered into a linear meta model"));
         }
 
-        // 已经在**这个**模型上注册过：再注册一次是空操作。见 B539 的同一条规则。
+        // 已经在**这个**模型上注册过：再注册一次是空操作。见 的同一条规则。
         // 换模型则复用同一批符号，只在新模型上重新登记一次——否则第二个模型一个符号都没有。
         //
-        // Already registered on **this** model: registering again is a no-op, the same rule as B539. Another model reuses the very same symbols and merely registers them there —
+        // Already registered on **this** model: registering again is a no-op, the same rule. Another model reuses the very same symbols and merely registers them there —
         // otherwise the second model has no symbols at all.
         foreach (object registered in _registeredModels) {
             if (ReferenceEquals(registered, model)) {
@@ -1132,11 +1132,11 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     ///
     /// 右侧分支目前**走不到**：本类加的两族约束（`xor ≥ x`、`x + x' ≤ 1`）变量都在左侧、右侧是常数。
     /// 保留它是防御性的——将来若加一条把变量写在右侧的约束，按名字或只扫左侧都会漏。
-    /// 这一分支因此是**等价变异**（见计划文档 B542 的变异表），不是判据缺口。
+    /// 这一分支因此是**等价变异**（见计划文档 的变异表），不是判据缺口。
     ///
     /// The right-hand branch is currently **unreachable**: both constraint families this class adds (`xor ≥ x`, `x + x' ≤ 1`) carry their variables on the left with a constant on the
     /// right. It is kept defensively — a future constraint writing variables on the right would slip past either a name match or a left-side-only scan. That branch is therefore an
-    /// **equivalent mutant** (see the B542 mutation table in the plan document), not a criterion gap.
+    /// **equivalent mutant** (see the mutation table in the plan document), not a criterion gap.
     ///
     /// The test must look at **both sides' polynomials**, not the name: a constraint name carries the task and round, which need not match the variable name (`xor_E1_0_T1` vs
     /// `x_0_T1`). Matching by name would **fail silently** the moment the naming changes.
@@ -1162,12 +1162,12 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     /// | 步骤 | 为什么这个顺序 |
     /// | --- | --- |
     /// | 1. 建 `x_iteration` 并进模型 | 后面所有式子都要引用它 |
-    /// | 2. `taskCost.flush()` 后加本轮代价 | **先清空**：目标里只保留最近一轮（B520 已记录这条 ceiling） |
-    /// | 3. 重写 `taskAssignment`（按 `(key, executor)`） | 分组键见 B524 |
+    /// | 2. `taskCost.flush` 后加本轮代价 | **先清空**：目标里只保留最近一轮（已记录这条 ceiling） |
+    /// | 3. 重写 `taskAssignment`（按 `(key, executor)`） | 分组键见 |
     /// | 4. 重写 `taskCompilation`（只按 `key`） | 同上 |
     /// | 5. `xor[e] ≥ x[t]` 与跨轮冲突 | 这两条是**约束**，必须在列进模型之后 |
     ///
-    /// 第 2 步的 `flush()` 与第 3、4 步的 `flush()` 是同一个陷阱：**同一原始任务在新一轮拿到新列时，之前轮次的项会被清掉**。
+    /// 第 2 步的 `flush` 与第 3、4 步的 `flush` 是同一个陷阱：**同一原始任务在新一轮拿到新列时，之前轮次的项会被清掉**。
     /// 基线就是这么写的，本实现照抄并记录，不擅自"修好"——修好会偏离固定基线。
     ///
     /// The baseline's `addColumns` does five things, and the order is not free:
@@ -1175,12 +1175,12 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     /// | Step | Why this order |
     /// | --- | --- |
     /// | 1. build `x_iteration` and add it to the model | everything below references it |
-    /// | 2. `taskCost.flush()` then add this round's cost | **clear first**: the objective keeps only the latest round (ceiling already recorded in B520) |
-    /// | 3. rewrite `taskAssignment` (by `(key, executor)`) | grouping key per B524 |
+    /// | 2. `taskCost.flush` then add this round's cost | **clear first**: the objective keeps only the latest round (ceiling already recorded) |
+    /// | 3. rewrite `taskAssignment` (by `(key, executor)`) | grouping key per |
     /// | 4. rewrite `taskCompilation` (by `key` only) | same |
     /// | 5. `xor[e] ≥ x[t]` and the cross-round conflicts | these are **constraints** and must come after the columns enter the model |
     ///
-    /// The `flush()` in step 2 and those in steps 3–4 are the same trap: **when an origin task gains new columns in a later round, the earlier rounds' terms are cleared**. The
+    /// The `flush` in step 2 and those in steps 3–4 are the same trap: **when an origin task gains new columns in a later round, the earlier rounds' terms are cleared**. The
     /// baseline does exactly this; this implementation copies it and records it rather than "fixing" it, since fixing would diverge from the pinned baseline.
     /// </remarks>
     public Result<IReadOnlyList<IT>, ErrorCode, Error<ErrorCode>> AddColumns(
@@ -1217,13 +1217,13 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
         _x.Add(xi);
 
         // 2. 代价：先清空再加本轮。
-        //    Cost: clear, then add this round.
+        // Cost: clear, then add this round.
         MutableLinearPolynomial<Flt64> costPolynomial = _taskCost.AsMutable();
         costPolynomial.Clear();
         for (int index = 0; index < unduplicated.Count; ++index) {
             if (costOf(unduplicated[index]) is not { } weight) {
-                // 基线用无穷大，而 `Flt64` 没有无穷（B505 的同一处限制），所以这里失败而不是静默当零。
-                // The baseline uses infinity, which `Flt64` cannot represent (same limit as B505), so this fails instead of silently using zero.
+                // 基线用无穷大，而 `Flt64` 没有无穷（的同一处限制），所以这里失败而不是静默当零。
+                // The baseline uses infinity, which `Flt64` cannot represent (the same limit), so this fails instead of silently using zero.
                 return Results.Failed<IReadOnlyList<IT>>(new Err<ErrorCode>(
                     ErrorCode.ApplicationError,
                     "任务代价提取失败，该列不可定价 / Task cost extraction failed; this column cannot be priced"));
@@ -1264,7 +1264,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
         }
 
         // 6. 跨轮冲突：本轮每列与**之前每一轮**的冲突列不能同时选中。
-        //    Cross-round conflicts: no column of this round may coexist with a conflicting column from any earlier round.
+        // Cross-round conflicts: no column of this round may coexist with a conflicting column from any earlier round.
         for (int index = 0; index < unduplicated.Count; ++index) {
             for (int otherIteration = 0; otherIteration < _aggregation.TasksIteration.Count; ++otherIteration) {
                 IReadOnlyList<IT> otherTasks = _aggregation.TasksIteration[otherIteration];
@@ -1302,10 +1302,10 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     /// <param name="unduplicated">本轮新增的任务 / This round's new tasks.</param>
     /// <param name="xi">本轮变量 / This round's variable.</param>
     /// <remarks>
-    /// 分组键由 B524 的 `AssignmentAggregation` 决定，**没有第二份规则**：
+    /// 分组键由 的 `AssignmentAggregation` 决定，**没有第二份规则**：
     /// 分配按 `(key, executor)`，编译只按 `key`。空组不动聚合。
     ///
-    /// The grouping keys come from B524's `AssignmentAggregation`; there is **no second rule**: assignment by `(key, executor)`, compilation by `key` alone. An empty group leaves
+    /// The grouping keys come from the earlier `AssignmentAggregation`; there is **no second rule**: assignment by `(key, executor)`, compilation by `key` alone. An empty group leaves
     /// the aggregate untouched.
     /// </remarks>
     private void RewriteAggregates(IReadOnlyList<IT> unduplicated, BinVariable1 xi) {
@@ -1389,7 +1389,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     ///
     /// | 步骤 | 关键点 |
     /// | --- | --- |
-    /// | 1. 按检验数挑出可回收的列 | `fixed` 与 `kept` 双否决（B535） |
+    /// | 1. 按检验数挑出可回收的列 | `fixed` 与 `kept` 双否决 |
     /// | 2. 对**所有**已移除任务先固定为 0、再摘变量 | 不是只处理本轮新删的：基线遍历整个 `removedTasks` |
     /// | 3. 按剩余列数决定下一轮上限 | 超上限才衰减（`IterativeColumnPruning`） |
     ///
@@ -1400,7 +1400,7 @@ public class IterativeTaskCompilation<IT, T, E, A> : ICompilation, IExecutorComp
     ///
     /// | Step | Key point |
     /// | --- | --- |
-    /// | 1. pick the retireable columns by reduced cost | `fixed` and `kept` both veto (B535) |
+    /// | 1. pick the retireable columns by reduced cost | `fixed` and `kept` both veto  |
     /// | 2. pin **every** removed task to 0, then drop the variable | not just this round's: the baseline walks the whole `removedTasks` |
     /// | 3. derive the next cutoff from the remaining count | decay only above the ceiling (`IterativeColumnPruning`) |
     ///

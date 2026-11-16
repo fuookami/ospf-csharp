@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 电流、电压、电阻互相定义，缺一个另外两个就站不住 / The electrical trio defines each other.
 /// </summary>
 /// <remarks>
-/// B1141 新建 `CurrentUnits`（基线 `Current.kt` 的四个单位本仓一个都没有独立文件），
+/// **新建 `CurrentUnits`**（基线 `Current.kt` 的四个单位本仓一个都没有独立文件），
 /// 并补 `Voltage.Megavolt` 与 `Resistance` 的基线命名别名 `Kiloohm`/`Megaohm`。
 ///
 /// **为什么三个一起补**：基线里 `Volt = Watt / Ampere`、`Ohm = Volt / Ampere`——
 /// **缺了电流，电压与电阻的推导无从谈起。**
 ///
-/// B1141 creates `CurrentUnits` (none of the baseline's four current units had a file here)
+/// Creates `CurrentUnits` (none of the baseline's four current units had a file here)
 /// and adds `Voltage.Megavolt` plus the baseline spellings `Kiloohm`/`Megaohm`.
 ///
 /// **Why all three at once**: the baseline defines `Volt = Watt / Ampere` and `Ohm = Volt / Ampere` —

@@ -15,12 +15,12 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **排序错了不报错，只是顺序不对** / A wrong sort does not throw; it only orders wrongly.
 /// </summary>
 /// <remarks>
-/// 基线 `MongoOrderByTranslator`（**83 行**）。B1118 补了标量翻译器，这一批补排序。
+/// 基线 `MongoOrderByTranslator`（**83 行**）。补齐了标量翻译器，这里补排序。
 ///
 /// **为什么排序值得单独钉**：**分页建立在顺序之上。**
 /// 顺序不稳或方向反了，第 2 页会重复或漏掉第 1 页的记录——**而查询本身"成功"了。**
 ///
-/// The baseline's `MongoOrderByTranslator` (**83 lines**). B1118 added the scalar translator; this batch adds sorting.
+/// The baseline's `MongoOrderByTranslator` (**83 lines**). added the scalar translator; sorting.
 ///
 /// **Why sorting deserves its own criteria**: **paging is built on order.**
 /// Unstable or reversed order makes page 2 repeat or skip records from page 1 — **while the query itself "succeeded".**

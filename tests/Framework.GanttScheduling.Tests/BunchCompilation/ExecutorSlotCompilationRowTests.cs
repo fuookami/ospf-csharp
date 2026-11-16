@@ -1,4 +1,4 @@
-// 执行器-时隙编译约束真的加行（B709）/ The executor-slot compilation constraint really adds rows (B709).
+// 执行器-时隙编译约束真的加行/ The executor-slot compilation constraint really adds rows.
 
 using System;
 using System.Collections.Generic;
@@ -24,14 +24,14 @@ using LinearCategory = Fuookami.Ospf.Math.Symbol.LinearCategory;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.BunchCompilation;
 
 /// <summary>
-/// **执行器-时隙编译约束真的加行（B709）** / The executor-slot compilation constraint really adds rows (B709).
+/// **执行器-时隙编译约束真的加行** / The executor-slot compilation constraint really adds rows.
 /// </summary>
 /// <remarks>
-/// 与 B708 同一缺陷类，只是换了一条流水线：`Invoke` 以前**只校验、不加任何行**，`Extractor` 恒返回零，`Refresh` 是空 `Ok`。
+/// 与 同一缺陷类，只是换了一条流水线：`Invoke` 以前**只校验、不加任何行**，`Extractor` 恒返回零，`Refresh` 是空 `Ok`。
 /// 基线的 `invoke` 是 `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))`——
 /// "每个（执行器, 时隙）恰好编译一次"这条要求本身。少了它，那个执行器在那个时隙上可以一个任务都不接，排程看起来完全正常。
 ///
-/// The same defect class as B708 on a different pipeline: `Invoke` used to **validate only and add no row**, `Extractor` always returned zero, and `Refresh` was an empty `Ok`. The baseline's
+/// The same defect class as on a different pipeline: `Invoke` used to **validate only and add no row**, `Extractor` always returned zero, and `Refresh` was an empty `Ok`. The baseline's
 /// `invoke` is `addConstraint(expression eq 1, args = ExecutorSlotCompilationShadowPriceKey(executor, slot))` — the requirement itself, that **each (executor, slot) is compiled exactly once**.
 /// Without it that executor can take no task in that slot while the schedule looks entirely normal.
 /// </remarks>
@@ -122,10 +122,10 @@ public class ExecutorSlotCompilationRowTests {
     /// **占位表达式不加行，但也不算失败** / A placeholder adds no row and is not a failure either.
     /// </summary>
     /// <remarks>
-    /// 三点成对：表里是 `new object()` 时返回 `Ok`（占位是 `CompilationTable.Build` 的当前正常状态）/ 一行都不加 /
+    /// 三点成对：表里是 `new object` 时返回 `Ok`（占位是 `CompilationTable.Build` 的当前正常状态）/ 一行都不加 /
     /// 换成真符号后同一个调用就建出真行。
     ///
-    /// Three paired points: with `new object()` in the table the call returns `Ok` (a placeholder is `CompilationTable.Build`'s normal state today), no row is added, and switching to real
+    /// Three paired points: with `new object` in the table the call returns `Ok` (a placeholder is `CompilationTable.Build`'s normal state today), no row is added, and switching to real
     /// symbols makes the same call build real rows.
     /// </remarks>
     [Fact]

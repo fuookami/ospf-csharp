@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **本函数<b>不做</b>可用性检查**：**基线也没有做。**
 /// **它只是构造一行；检查在调用方。** **这一点要说清，否则读代码的人会以为这里已经把关了。**
 ///
-/// B1169, following the baseline's `fixedVariableEquality`.
+/// Following the baseline's `fixedVariableEquality`.
 ///
 /// **It is one row, but two things are easy to miss**:
 ///

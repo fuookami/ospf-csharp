@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B859：demo2 的回退状态**不许声称一件没发生的事** / demo2's fallback status must not claim something that did not happen.
+/// demo2 的回退状态**不许声称一件没发生的事** / demo2's fallback status must not claim something that did not happen.
 /// </summary>
 /// <remarks>
 /// `FullLoadApplication.SolveWithBenders` 在 Benders 失败且策略允许回退时，返回的状态是 `BendersFailed_MilpFallback`——
@@ -88,8 +88,8 @@ public sealed class Demo2BendersFallbackHonestyTests
             string candidate = Path.Combine(
                 directory.FullName, "src", "Example", "FrameworkDemo", "Demo2", "Application", "FullLoadApplication.cs");
             if (File.Exists(candidate)) {
-                // **只看代码行**：B859 在注释里解释过这两个字面值，把注释算进来会让判据红在自己的说明上（B850 同一条教训）。
-                // **Code lines only**: B859's comments explain both literals, and counting them would red the criterion on its own explanation (B850's lesson, again).
+                // **只看代码行**： 在注释里解释过这两个字面值，把注释算进来会让判据红在自己的说明上。
+                // **Code lines only**: the earlier comments explain both literals, and counting them would red the criterion on its own explanation (the earlier lesson, again).
                 var code = new System.Text.StringBuilder();
                 foreach (string line in File.ReadAllLines(candidate)) {
                     if (line.TrimStart().StartsWith("//", StringComparison.Ordinal)) {
@@ -109,10 +109,10 @@ public sealed class Demo2BendersFallbackHonestyTests
     /// **两种"没走回退"必须是两句话** / The two reasons not to fall back must be two sentences.
     /// </summary>
     /// <remarks>
-    /// 基线要求回退**重建一个新模型与新上下文**；本仓的域上下文是**一次性**的（B872 实测 `上下文已经注册`）。
+    /// 基线要求回退**重建一个新模型与新上下文**；本仓的域上下文是**一次性**的。
     /// 所以"调用方没给 MILP 求解器"和"给了求解器也建不出新模型"是**两个不同的原因**，混成一句会让后来的人以为补个求解器就好了。
     ///
-    /// The baseline requires the fallback to **rebuild a fresh model and context**; this port's domain contexts are **single-use** (measured in B872). So "no MILP solver
+    /// The baseline requires the fallback to **rebuild a fresh model and context**; this port's domain contexts are **single-use** (measured). So "no MILP solver
     /// was supplied" and "a solver was supplied but no fresh model can be built" are **two different reasons**; merging them makes the next reader think supplying a
     /// solver is enough.
     /// </remarks>

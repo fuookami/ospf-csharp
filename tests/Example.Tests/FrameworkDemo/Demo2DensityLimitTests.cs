@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **表面密度上限与线性密度（B590）** / The surface density cap and linear density (B590).
+/// **表面密度上限与线性密度** / The surface density cap and linear density.
 /// </summary>
 /// <remarks>
 /// 表面密度和线性密度是同一件事的两个方向：`重量 / 面积` 与 `重量 / 长度`。两处口径**不同**，都是基线的选择：

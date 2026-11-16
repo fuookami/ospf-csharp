@@ -26,13 +26,13 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 逻辑函数符号的投影 / The projections of the logic function symbols.
 /// </summary>
 /// <remarks>
-/// B1253 把投影从三种扩到六种（加上 `And`／`Or`／`Not`）。
+/// 把投影从三种扩到六种（加上 `And`／`Or`／`Not`）。
 ///
 /// **`Xor` 仍然没有投影，而那是一个<b>具体发现</b>而不是遗漏：** **`XorFunction` 只存多项式、结果列、
 /// 指示列、副列、容差与严格边界，<b>没存二元输入</b>；而 `And`／`Or`／`Not` 都存了。**
 /// **所以这条路在符号那一侧就断了——不是投影没写，是符号没保留物化需要的东西。**
 ///
-/// B1253 widens the projection to six kinds (adding `And`/`Or`/`Not`).
+/// Widens the projection to six kinds (adding `And`/`Or`/`Not`).
 ///
 /// **`Xor` still has no projection, and that is a <b>finding</b> rather than an omission: `XorFunction` stores the
 /// polynomials, result, indicators, side variables, tolerance and strict boundary but <b>not the binary inputs</b>, while

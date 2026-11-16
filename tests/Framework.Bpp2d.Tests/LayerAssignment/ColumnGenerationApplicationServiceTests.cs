@@ -1,4 +1,4 @@
-// 应用服务求解入口（B667）的判据 / Criteria for the application service's solve entry (B667).
+// 应用服务求解入口的判据 / Criteria for the application service's solve entry.
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **应用服务求解入口（B667）** / The application service's solve entry (B667).
+/// **应用服务求解入口** / The application service's solve entry.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**算法拿到的是请求的配置**、**尾板按需求裁剪后再装箱**（KPI 的件数是裁剪后的）、

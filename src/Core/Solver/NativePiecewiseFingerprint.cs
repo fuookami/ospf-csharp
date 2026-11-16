@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **第一处：行被<b>排序</b>之后才拼。**
 ///
-/// **`structureLines.sorted().joinToString("\n")`。**
+/// **`structureLines.sorted.joinToString("\n")`。**
 ///
 /// **所以同一个结构集合，无论以什么顺序给出，指纹相同。**
 /// **这不是"顺手排一下"——它是"指纹描述的是<b>集合</b>而不是<b>列表</b>"这个语义的直接体现。**
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Solver;
 ///
 /// **第二处：空列表时<b>不加换行</b>。**
 ///
-/// **`append(fingerprint.value)` 之后是 `if (structureLines.isNotEmpty()) { append('\n'); ... }`。**
+/// **`append(fingerprint.value)` 之后是 `if (structureLines.isNotEmpty) { append('\n'); ... }`。**
 ///
 /// **所以"没有 PWL 结构"时的内容就是上一阶段的指纹本身，
 /// 而不是"上一阶段指纹 + 一个换行"。**

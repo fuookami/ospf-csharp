@@ -12,14 +12,12 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// 环面用取小数部分，不是取绝对值 / The torus uses the fractional part, not the absolute value.
 /// </summary>
 /// <remarks>
-/// B1146 补 `SinaiMap` / `SprottAttractor` / `WangChenAttractor` 与它们的迭代器（基线同名 `.kt`）。
+/// 补 `SinaiMap` / `SprottAttractor` / `WangChenAttractor` 与它们的迭代器（基线同名 `.kt`）。
 ///
 /// **三个映射各有自己的坑，而三处都不会报错**：
 /// ① Sinai 的 `mod 1` 是取小数部分——**绝对值会把环面的左侧折到右侧**；
 /// ② Sprott 声明了参数 `b` 但公式里从未用它；
 /// ③ Wang–Chen 的 `dw` 里没有 `w`。
-///
-/// adds
 ///
 /// **Each map has its own trap, and none throws**:
 /// ① Sinai's `mod 1` is the fractional part — **an absolute value folds the torus's left side onto its right**;

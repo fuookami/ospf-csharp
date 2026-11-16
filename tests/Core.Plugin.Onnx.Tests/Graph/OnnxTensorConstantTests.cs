@@ -95,10 +95,10 @@ public class OnnxTensorConstantTests
 
         tensor.LongAt(0).Should().Be(big, "the integer path is exact");
 
-        // 第一版写的是 `DoubleAt(0).Should().NotBe(big)`，而 FluentAssertions 走 double 重载时会把 `big` 隐式转成 double,
+        // 第一版写的是 `DoubleAt(0).Should.NotBe(big)`，而 FluentAssertions 走 double 重载时会把 `big` 隐式转成 double,
         // 两边于是都成了 2^53——**判据自己把要证明的那个区别抹掉了。** 改成转回整数比较。
         //
-        // The first version wrote `DoubleAt(0).Should().NotBe(big)`, and FluentAssertions' double overload implicitly converts `big`, making both sides 2^53 —
+        // The first version wrote `DoubleAt(0).Should.NotBe(big)`, and FluentAssertions' double overload implicitly converts `big`, making both sides 2^53 —
         // **the criterion erased the very distinction it was proving.** Comparing back in the integer domain fixes it.
         ((long)tensor.DoubleAt(0)).Should().Be(
             big - 1,

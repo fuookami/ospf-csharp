@@ -23,7 +23,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// Syncs the "exact" half of `OnnxActivation`. **In an LP these are not function calls but a set of constraints plus a result variable: Relu is a positive-part curve,
 /// and writing the formula inline yields a non-linear objective — the solver either refuses it or relaxes where it must not.**
 ///
-/// **This batch does only the algebraic simplification (which cases collapse to a pure affine form and which must go to a function symbol), not constraint
+/// ** does only the algebraic simplification (which cases collapse to a pure affine form and which must go to a function symbol), not constraint
 /// generation: a wrong simplification drops constraints (a result that should be pinned stays free), and a dropped constraint never reports anything.**
 /// </remarks>
 public static class OnnxActivationLowering

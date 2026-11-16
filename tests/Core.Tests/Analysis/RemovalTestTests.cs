@@ -78,7 +78,7 @@ public class RemovalTestTests {
     /// <remarks>
     /// 8 → 10 在最大化下是 +2。**方向由 `ObjectCategory` 决定**，这批通过删除测试把它接上了。
     ///
-    /// 8 to 10 is +2 under maximisation. **The direction comes from `ObjectCategory`**, and this batch wires it through the removal test.
+    /// 8 to 10 is +2 under maximisation. **The direction comes from `ObjectCategory`**, and it through the removal test.
     /// </remarks>
     [Fact]
     public async Task TheImprovingRemoval_ShouldBeEffective() {

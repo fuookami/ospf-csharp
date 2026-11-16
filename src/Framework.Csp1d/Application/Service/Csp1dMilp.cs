@@ -93,9 +93,9 @@ public sealed class Csp1dMilp<V> where V : struct {
         // `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` (see baseline `Csp1dMilp.kt:139-176`), while C#'s MILP-direct path wired **none of them** —
         // so the same strategy works through column generation and **silently fails** through the MILP path.
         // **与列生成路径共用同一份投影**（`Csp1dGenerationStrategyProjection`）。
-        // B358—B361 两条路径各写一份，结果一条接了一条没接——**复制粘贴的代价**。
+        // — 两条路径各写一份，结果一条接了一条没接——**复制粘贴的代价**。
         //
-        // **Shares one projection with the column-generation path** (`Csp1dGenerationStrategyProjection`). B358—B361 wrote two copies, so one got wired and the other
+        // **Shares one projection with the column-generation path** (`Csp1dGenerationStrategyProjection`).  wrote two copies, so one got wired and the other
         // did not — **the cost of copy-paste**.
         IReadOnlyList<ICsp1dGenerationStrategy<V>> strategies = resolvedConfig.ExtensionSet.GenerationStrategies;
         IReadOnlyList<global::System.Func<CuttingPlan<V>, IReadOnlyList<CuttingPlan<V>>, bool>> candidateFilters =
@@ -463,25 +463,25 @@ public sealed class ReducedCostPricingGenerator<V>
         //
         // **去重必须在截断之前**：先截断再去重会把名额浪费在重复列上——
         // 上限 2、候选 `[A, A, B]` 时，先截断只剩 `[A, A]`，去重后**只剩 1 条**。
-        // 由 `Csp1dPricingOrderTests` 钉住（B365）。
+        // 由 `Csp1dPricingOrderTests` 钉住。
         //
         // **只做"候选内部去重"，不过滤池里已有的方案**：基线把"池里已有的"过滤放在
         // `deduplicatePlans`（**列生成侧**）。放在定价器里的话，由于 C# 的枚举器与初始池
         // 共用同一个生成器，第一轮就会被滤空 ⇒ 报 0 条 ⇒ `PricingConverged`；
         // 交给列生成侧 ⇒ 报 N 条、去重后 0 条 ⇒ `AllDuplicates`（基线行为，
-        // `Csp1dApplicationAcceptanceTest.kt:726`）。**这是 B356 的结论。**
+        // `Csp1dApplicationAcceptanceTest.kt:726`）。**这是 的结论。**
         //
         // **Order: dedupe within the candidates → benefit/cost filter → sort → truncate.**
         //
         // **Deduplication must precede truncation**: truncating first wastes slots on duplicates — with a limit of 2 and candidates `[A, A, B]`, truncation leaves `[A, A]`
-        // and deduping then yields **only 1**. Pinned by `Csp1dPricingOrderTests` (B365).
+        // and deduping then yields **only 1**. Pinned by `Csp1dPricingOrderTests` .
         //
         // **Only dedupe within the candidates; do not filter plans already in the pool**: the baseline puts that filter in `deduplicatePlans` (**the column-generation
         // side**). Doing it here would empty the first round (C#'s enumerator shares the initial pool's generator) ⇒ 0 reported ⇒ `PricingConverged`; leaving it downstream
-        // ⇒ N reported, 0 after dedup ⇒ `AllDuplicates` (the baseline behaviour, `Csp1dApplicationAcceptanceTest.kt:726`). **That is B356's conclusion.**
+        // ⇒ N reported, 0 after dedup ⇒ `AllDuplicates` (the baseline behaviour, `Csp1dApplicationAcceptanceTest.kt:726`). **That is the earlier conclusion.**
         //
         // **This paragraph used to claim "dedupe, then filter the pool, then truncate"** while the code only deduped — a comment describing behaviour the code no longer
-        // had. Corrected in B365.
+        // had. Corrected.
         //
         var seenKeys = new HashSet<CuttingPlanCanonicalKey>();
         var candidates = new List<PricedCandidate<V>>();
@@ -598,10 +598,10 @@ public sealed class ReducedCostPricingGenerator<V>
     /// <remarks>
     /// 基线公式：`benefit = Σ(贡献量 × 需求对偶价) + 物料对偶价 + 设备对偶价 + 产能消耗 × 设备产能对偶价`。
     ///
-    /// **B344 时这里只做了需求那一项**，理由是那三个键"只有生产方、没有消费方"。本批把消费方补上了——
+    /// **时这里只做了需求那一项**，理由是那三个键"只有生产方、没有消费方"。这里把消费方补上了——
     /// **现在四项齐全**，公式与基线逐项对齐。
     ///
-    /// **In B344 only the demand term was implemented**, on the grounds that those three keys had "only producers, no consumers". This batch adds the consumers —
+ /// **In only the demand term was implemented**, on the grounds that those three keys had "only producers, no consumers". adds the consumers —
     /// **all four terms are now present**, matching the baseline term by term.
     /// </remarks>
     internal static double ComputeDualBenefitForTest(CuttingPlan<V> plan, ShadowPriceMap<V> shadowPrices) {

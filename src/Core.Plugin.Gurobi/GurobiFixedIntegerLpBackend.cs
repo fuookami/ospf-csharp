@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// **`LoweredFixedIntegerLpBackend`（先降阶）→ `LinearSolverFixedIntegerLpSolver`（求解并对偶映射）
 /// → Gurobi 的线性求解器。**
 ///
-/// **B1279 之前，这条链的中间一层不存在，两个插件因此都接不上；
-/// 这一批把 Gurobi 这一端接上了。**
+/// **此前，这条链的中间一层不存在，两个插件因此都接不上；
+/// 这里把 Gurobi 这一端接上了。**
 ///
 /// ### 一处显式的"没有"
 ///
@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi;
 /// **This is the counterpart of `gurobiFixedIntegerLpBackend` in the baseline.** **The baseline says the implementation reuses
 /// the backend-neutral `LinearSolverFixedIntegerLpBackend`, with Gurobi adding only a native ranging hook, so both backends share
 /// one tested path with no duplicated logic.** **So this is a three-layer chain: lowering adapter → solver-and-dual-mapping →
-/// Gurobi's linear solver.** **Before B1279 the middle layer did not exist, which is why neither plugin could connect; this batch
+/// Gurobi's linear solver.** **The middle layer did not exist at first, which is why neither plugin could connect; this change
 /// connects Gurobi's end.**
 ///
 /// **One explicit absence: the baseline allows the ranging hook to be omitted, leaving `sensitivityRange` empty — "better absent

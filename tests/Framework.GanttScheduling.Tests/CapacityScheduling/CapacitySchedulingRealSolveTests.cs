@@ -1,4 +1,4 @@
-// 产能调度的第一次真实求解（B733）/ Capacity scheduling's first real solve (B733).
+// 产能调度的第一次真实求解/ Capacity scheduling's first real solve.
 
 using System;
 using System.Collections.Generic;
@@ -20,16 +20,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **产能调度的第一次真实求解（B733）** / Capacity scheduling's first real solve (B733).
+/// **产能调度的第一次真实求解** / Capacity scheduling's first real solve.
 /// </summary>
 /// <remarks>
-/// 到 B732 为止，整条链路只是"装得起来"——解还是手工写回模型里的。这一批让它**真的跑一次求解器**：
+/// 到 为止，整条链路只是"装得起来"——解还是手工写回模型里的。这里让它**真的跑一次求解器**：
 /// 注册 → 加需求行 → 真实 SCIP 求解 → 读回解，并检查解满足三族约束。
 ///
 /// 需求行由**测试**自己加（`Σ x = 需求`）。没有它，最小化成本的模型会把所有 `x` 都置 0，
 /// 那样"约束成立"就是空的——**一个恒取零的解满足任何上界约束**，判据会全绿却什么都没证明。
 ///
-/// Until B732 the chain only "assembles" — the solution was still written back by hand. This batch makes it **run a solver for real**: register, add a demand row, solve with real SCIP, read
+/// Until the chain only "assembles" — the solution was still written back by hand. makes it **run a solver for real**: register, add a demand row, solve with real SCIP, read
 /// the solution back and check it satisfies the three constraint families.
 ///
 /// The demand row is added by the **test** (`sum of x = demand`). Without it a cost-minimising model sets every `x` to 0, and then "the constraints hold" means nothing — **an all-zero
@@ -137,8 +137,8 @@ public class CapacitySchedulingRealSolveTests {
         variables.Amounts.Should().NotBeNull();
 
         // **选中标记也必须经得起检查**：每个 (时隙, 顺序位) 至多一个动作被选中；数量非零的格子必须被选中。
-        // 这两条正是 B733 那两条存活变异看不见的地方——只读数量时它们与解无关。
-        // **The selection flags must hold up too**: at most one action per (slot, position), and every non-zero cell must be selected. Those are exactly the two places B733's surviving
+        // 这两条正是 那两条存活变异看不见的地方——只读数量时它们与解无关。
+        // **The selection flags must hold up too**: at most one action per (slot, position), and every non-zero cell must be selected. Those are exactly the two places the earlier surviving
         // mutations were invisible, since amounts alone make them irrelevant to the solution.
         solution.Selections.Should().NotBeNull("the extraction must read `b` back");
         foreach (IGrouping<(int Slot, int Position), OrderSelection<TestSolveAction>> group in
@@ -166,12 +166,12 @@ public class CapacitySchedulingRealSolveTests {
     /// **需求超过设备产能就不可行——证明容量约束真的压在数量上** / A demand above the executor capacity is infeasible, proving the capacity row presses on the amounts.
     /// </summary>
     /// <remarks>
-    /// 一个时隙在窗口刻度下的可用时长是 `1`，单位加工时长也是 `1`，所以需求 2 **必须不可行**——这一条正是 B733 撤掉的那条断言
+    /// 一个时隙在窗口刻度下的可用时长是 `1`，单位加工时长也是 `1`，所以需求 2 **必须不可行**——这一条正是 撤掉的那条断言
     /// 现在能重新立起来的原因：那时容量是自由变量，与数量无关，需求多大都可行。
     ///
     /// 需求的**上界**（每个格子 5）在这里不起作用：2 < 5，只有容量约束能拦住它。
     ///
-    /// One slot offers `1` unit of available duration on the window scale and the unit processing time is `1`, so a demand of 2 **must be infeasible** — this is exactly why B733's
+    /// One slot offers `1` unit of available duration on the window scale and the unit processing time is `1`, so a demand of 2 **must be infeasible** — this is exactly why the earlier
     /// removed assertion can now stand: capacity was a free variable unrelated to the amounts, so any demand was feasible. The per-cell **upper bound** (5) plays no part here — 2 &lt; 5 —
     /// so only the capacity constraint can stop it.
     /// </remarks>

@@ -1,4 +1,4 @@
-// 板数与板材面积目标（B651）的判据 / Criteria for the sheet-amount and sheet-area objectives (B651).
+// 板数与板材面积目标的判据 / Criteria for the sheet-amount and sheet-area objectives.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **板数与板材面积目标（B651）** / The sheet-amount and sheet-area objectives (B651).
+/// **板数与板材面积目标** / The sheet-amount and sheet-area objectives.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**系数是函数，真的逐层调用**、**零系数项被跳过**、以及**没有板材类型的层被跳过**（与零系数跳过是两回事）。

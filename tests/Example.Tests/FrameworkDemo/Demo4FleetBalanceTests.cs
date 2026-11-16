@@ -1,4 +1,4 @@
-// 机队按检查点计数（B747）/ The fleet counts by checkpoint (B747).
+// 机队按检查点计数/ The fleet counts by checkpoint.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **机队按检查点计数（B747）** / The fleet counts by checkpoint (B747).
+/// **机队按检查点计数** / The fleet counts by checkpoint.
 /// </summary>
 /// <remarks>
 /// `FleetBalance` 算的是"今晚有多少架这种机型落在/停在某个机场"。检查点取法的两条分支不能合并：

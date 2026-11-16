@@ -213,27 +213,27 @@ public class DemandConstraintPipeline<V> : ICGPipeline<
     /// <param name="unit">物理单位 / Physical unit.</param>
     /// <returns>单位键 / The unit key.</returns>
     /// <remarks>
-    /// **这里曾经是 `unit.Symbol ?? unit.ToString()!`——跳过了 `Name` 回退**，是 B317 那个"多份单位键分叉"的**第六份**。
+    /// **这里曾经是 `unit.Symbol ?? unit.ToString!`——跳过了 `Name` 回退**，是 那个"多份单位键分叉"的**第六份**。
     ///
     /// 分叉的后果是**生产方与消费方不一致**：
-    /// - 本方法（**生产方**，写对偶价格键）旧写法：`Symbol ?? ToString()`
-    /// - 定价器（**消费方**，查对偶价格键）：`Symbol ?? Name ?? ToString()`（走 `GenerationQuantityMath.UnitKey`）
+    /// - 本方法（**生产方**，写对偶价格键）旧写法：`Symbol ?? ToString`
+    /// - 定价器（**消费方**，查对偶价格键）：`Symbol ?? Name ?? ToString`（走 `GenerationQuantityMath.UnitKey`）
     ///
-    /// 对**有 name、无 symbol** 的单位，生产方经 `ToString()` 得到 name（因为 `PhysicalUnit.ToString()` 自己回退到 name），
-    /// **这条恰好一致**；但对**匿名单位**，`AnonymousPhysicalUnit.ToString()` 是 `Symbol ?? ""`，
+    /// 对**有 name、无 symbol** 的单位，生产方经 `ToString` 得到 name（因为 `PhysicalUnit.ToString` 自己回退到 name），
+    /// **这条恰好一致**；但对**匿名单位**，`AnonymousPhysicalUnit.ToString` 是 `Symbol ?? ""`，
     /// **生产方得到空串、消费方得到 name**——**同一条需求在两边算出不同的键，对偶价格永远查不到**。
     ///
     /// 修法是复用唯一实现 `GenerationQuantityMath.UnitKey`。
     ///
-    /// **This used to be `unit.Symbol ?? unit.ToString()!` — skipping the `Name` fallback** — the **sixth** copy in B317's "multiple unit-key implementations diverge"
+    /// **This used to be `unit.Symbol ?? unit.ToString!` — skipping the `Name` fallback** — the **sixth** copy's "multiple unit-key implementations diverge"
     /// family.
     ///
     /// The divergence made **producer and consumer disagree**:
-    /// - this method (**producer**, writes dual-price keys): `Symbol ?? ToString()`
-    /// - the pricing generator (**consumer**, reads dual-price keys): `Symbol ?? Name ?? ToString()` (via `GenerationQuantityMath.UnitKey`)
+    /// - this method (**producer**, writes dual-price keys): `Symbol ?? ToString`
+    /// - the pricing generator (**consumer**, reads dual-price keys): `Symbol ?? Name ?? ToString` (via `GenerationQuantityMath.UnitKey`)
     ///
-    /// For a **named, symbol-less** unit the producer's `ToString()` yields the name (because `PhysicalUnit.ToString()` itself falls back to the name) — **that case
-    /// happens to agree**; but for an **anonymous unit**, `AnonymousPhysicalUnit.ToString()` is `Symbol ?? ""`, so **the producer gets an empty string while the consumer
+    /// For a **named, symbol-less** unit the producer's `ToString` yields the name (because `PhysicalUnit.ToString` itself falls back to the name) — **that case
+    /// happens to agree**; but for an **anonymous unit**, `AnonymousPhysicalUnit.ToString` is `Symbol ?? ""`, so **the producer gets an empty string while the consumer
     /// gets the name** — **the same demand yields different keys on the two sides, and the dual price is never found**.
     ///
     /// The fix is to reuse the single implementation, `GenerationQuantityMath.UnitKey`.

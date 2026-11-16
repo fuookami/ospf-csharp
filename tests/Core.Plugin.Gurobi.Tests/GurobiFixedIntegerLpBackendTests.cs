@@ -14,13 +14,13 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// Gurobi's end is connected, and "no ranges" is a stated boundary.
 /// </summary>
 /// <remarks>
-/// **B1280 接的是基线 `gurobiFixedIntegerLpBackend` 的对应物。**
+/// **这里接的是基线 `gurobiFixedIntegerLpBackend` 的对应物。**
 ///
 /// **它必须<b>不**自己实现求解：** **基线原话是"复用与后端无关的 `LinearSolverFixedIntegerLpBackend`，
 /// Gurobi 只额外提供原生 ranging 钩子，两端共用同一条经测试的实现路径"。**
 /// **所以判据测的是<b>串联关系**，不是"这个类做了什么"。**
 ///
-/// **B1280 connects the counterpart of the baseline's `gurobiFixedIntegerLpBackend`.** **It must not implement solving itself:
+/// **This connects the counterpart of the baseline's `gurobiFixedIntegerLpBackend`.** **It must not implement solving itself:
 /// the baseline says the backend-neutral layer is reused and Gurobi adds only a ranging hook, with both backends sharing one
 /// tested path.** **So the criteria test the <em>composition</em>, not "what this class does".**
 /// </remarks>
@@ -120,15 +120,15 @@ public class GurobiFixedIntegerLpBackendTests
     [Fact]
     public void TheRangingHook_ShouldBeDeclaredPresent() {
         GurobiFixedIntegerLpBackend.SuppliesSensitivityRanges.Should().BeTrue(
-            "B1282 captured SARHSLow/SARHSUp during the primary solve, so the constant must say so");
+            "SARHSLow/SARHSUp are captured during the primary solve, so the constant must say so");
 
         // **常量说 true，就必须真的有一条读范围的路径。**
         //
-        // **否则常量会变成一句谎话，而它比没有常量更糟——** **B1280 引入它的理由正是"能被判断"，
+        // **否则常量会变成一句谎话，而它比没有常量更糟——** **引入它的理由正是"能被判断"，
         // 那就得判断得住。**
         //
         // **If the constant says true, a range-reading path must really exist** — **otherwise the constant becomes a lie, which is
-        // worse than no constant; B1280 introduced it precisely so it could be judged, so it has to hold up.**
+        // worse than no constant; it was introduced precisely so it could be judged, so it has to hold up.**
         string solver = File.ReadAllText(System.IO.Path.Combine(
             RepositoryRoot(), "src/Core.Plugin.Gurobi/GurobiLinearSolver.cs"));
         solver.Should().Contain("SARHSLow", "the ranging attributes are the only source of these numbers");

@@ -19,14 +19,14 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// `NSameGenerator` must really emit plans rather than merely construct a collector.
 /// </summary>
 /// <remarks>
-/// B304 之前它的方法体只有一行注释：`// Stub: NSame generation implementation deferred`。
-/// 既有两项测试**全部通过**——一项断言空输入返回空（空壳自然满足），一项只断言 `NotBeNull()`。
+/// 之前它的方法体只有一行注释：`// Stub: NSame generation implementation deferred`。
+/// 既有两项测试**全部通过**——一项断言空输入返回空（空壳自然满足），一项只断言 `NotBeNull`。
 ///
 /// **这正是本项目反复出现的形态**：接口、统计、收集器都齐，唯独串起来的那个是空壳。
 /// 所以这里的判据必须落在**产出的方案本身**：条数、切片数、贡献、去重。
 ///
-/// Before B304 its method body was a single comment: `// Stub: NSame generation implementation deferred`. Both existing tests **passed** — one asserted
-/// empty input yields empty output (trivially true for a shell), the other only asserted `NotBeNull()`.
+/// Before its method body was a single comment: `// Stub: NSame generation implementation deferred`. Both existing tests **passed** — one asserted
+/// empty input yields empty output (trivially true for a shell), the other only asserted `NotBeNull`.
 ///
 /// **This is the recurring shape in this project**: interface, statistics and collector all present, and the one thing tying them together is a shell.
 /// So the criteria here must land on **the emitted plans themselves**: count, slice count, contributions, de-duplication.

@@ -1,4 +1,4 @@
-// 配载约束管线的判据（第一批）/ Criteria for the stowage constraint pipelines, first batch.
+// 配载约束管线的判据（此前）/ Criteria for the stowage constraint pipelines, first batch.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **配载约束管线第一批（B607）** / The first batch of stowage constraint pipelines (B607).
+/// **配载约束管线此前** / The first batch of stowage constraint pipelines.
 /// </summary>
 /// <remarks>
 /// 六个类，六个"容易顺手补一行/漏一行"的地方。每条的判据都成对：**该有的行在、不该有的行不在**。

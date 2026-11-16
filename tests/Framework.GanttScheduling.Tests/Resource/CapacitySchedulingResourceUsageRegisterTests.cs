@@ -1,4 +1,4 @@
-// 容量调度的资源用量：显式失败而不是静默 `Ok`（B715）/ Capacity scheduling's resource usage: an explicit failure, not a silent `Ok` (B715).
+// 容量调度的资源用量：显式失败而不是静默 `Ok`/ Capacity scheduling's resource usage: an explicit failure, not a silent `Ok`.
 
 using System;
 using System.IO;
@@ -19,18 +19,18 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **容量调度的资源用量：显式失败而不是静默 `Ok`（B715）** / Capacity scheduling's resource usage: an explicit failure, not a silent `Ok` (B715).
+/// **容量调度的资源用量：显式失败而不是静默 `Ok`** / Capacity scheduling's resource usage: an explicit failure, not a silent `Ok`.
 /// </summary>
 /// <remarks>
 /// 基线的 `register` 只做一件事：把子类填好的 `quantity` 表加进模型。那张表的内容是
 /// `Σ_action usedBy(action, slot.time) × x(action, slot)`——**要决策变量**。
 ///
-/// C# 侧还没有那个变量：`IterativeCapacityCompilation.LocateColumnDecision` 返回的是 `new object()` 占位，不是符号。
+/// C# 侧还没有那个变量：`IterativeCapacityCompilation.LocateColumnDecision` 返回的是 `new object` 占位，不是符号。
 /// 没有变量就没法填表；返回 `Ok` 等于告诉每个调用方"已经接好了"，而表里什么都没有、容量永远不紧、模型照样可解。
 ///
 /// The baseline's `register` does one thing: add the `quantity` table its subclass already filled, and that table holds
 /// `sum over actions of usedBy(action, slot.time) times x(action, slot)` — **it needs decision variables**. The C# side does not have them:
-/// `IterativeCapacityCompilation.LocateColumnDecision` returns a `new object()` placeholder rather than a symbol. Without variables the table cannot be filled, and returning `Ok` would tell every
+/// `IterativeCapacityCompilation.LocateColumnDecision` returns a `new object` placeholder rather than a symbol. Without variables the table cannot be filled, and returning `Ok` would tell every
 /// caller it is wired while the table holds nothing, capacity is never tight and the model stays solvable.
 /// </remarks>
 public class CapacitySchedulingResourceUsageRegisterTests {
@@ -99,14 +99,14 @@ public class CapacitySchedulingResourceUsageRegisterTests {
     /// **失败信息说得出原因** / The failure says why.
     /// </summary>
     /// <remarks>
-    /// **B729 起消息改口径**：决策变量本身已经存在（B724 的 `CapacityDecisionVariables`、B726 的
+    /// **起消息改口径**：决策变量本身已经存在（ 的 `CapacityDecisionVariables`、 的
     /// `CapacityOrderVariables`），旧消息却写着"决策变量尚未接入"——**一句过期的实话比一句含混的话更糟**，
     /// 它会让下一个读代码的人去找一个早就建好的东西。
     ///
     /// 现在钉两点：错误码仍是 `ApplicationError`（缺的是上层输入）/ 消息说的是**动作时隙与资源时隙的重叠换算**
     /// 这条映射没实现，而**不再**声称决策变量缺失。
     ///
-    /// **B729 changes the wording**: the decision variables themselves exist (`CapacityDecisionVariables` from B724, `CapacityOrderVariables` from B726) while the old message claimed they
+    /// **changes the wording**: the decision variables themselves exist (`CapacityDecisionVariables` from，`CapacityOrderVariables` from ) while the old message claimed they
     /// were not wired — **a stale true-sounding sentence is worse than a vague one**, because it sends the next reader hunting for something already built. Two points are pinned: the code
     /// stays `ApplicationError` (an upstream input is missing) and the message names the unimplemented **overlap conversion between action slots and resource slots** while **no longer**
     /// claiming the decision variables are absent.
@@ -135,14 +135,14 @@ public class CapacitySchedulingResourceUsageRegisterTests {
     }
 
     /// <summary>
-    /// **给了决策变量就真的填表（B730）** / With decision variables the table is really filled (B730).
+    /// **给了决策变量就真的填表** / With decision variables the table is really filled.
     /// </summary>
     /// <remarks>
-    /// 四点成对：注册 → `Ok`（B715 起的 `Failed` 只在缺变量时出现）/ 表里每个资源时隙一个符号 /
-    /// 符号真进了模型 / 单项式数量等于 `动作数 × 与该时隙重叠的动作时隙数`——重叠换算是这一批的核心，算错了这里就红。
+    /// 四点成对：注册 → `Ok`/ 表里每个资源时隙一个符号 /
+    /// 符号真进了模型 / 单项式数量等于 `动作数 × 与该时隙重叠的动作时隙数`——重叠换算是这里的核心，算错了这里就红。
     ///
-    /// Four paired points: registration yields `Ok` (the `Failed` from B715 now only happens when the variables are missing); the table holds one symbol per resource slot; the symbols
-    /// really entered the model; and the monomial count equals `actions x overlapping action slots` — the overlap conversion is this batch's core, and a wrong one turns this red.
+    /// Four paired points: registration yields `Ok` (the `Failed` from now only happens when the variables are missing); the table holds one symbol per resource slot; the symbols
+    /// really entered the model; and the monomial count equals `actions x overlapping action slots` — the overlap conversion is's core, and a wrong one turns this red.
     /// </remarks>
     [Fact]
     public void Register_ShouldFillTheTableWhenAmountsAreGiven() {
@@ -258,10 +258,10 @@ public class CapacitySchedulingResourceUsageRegisterTests {
     /// **切时隙只有一份实现** / Slot cutting has exactly one implementation.
     /// </summary>
     /// <remarks>
-    /// 三点成对：`BuildTimeSlots` 在基类里出现 / 两个子类里**都不出现**（B729 之前两边逐字相同，改一处忘另一处是必然的）/
+    /// 三点成对：`BuildTimeSlots` 在基类里出现 / 两个子类里**都不出现**/
     /// 两个子类仍各自存在且名字不同（对齐基线那两个类，不能合并成一个）。
     ///
-    /// Three paired points: `BuildTimeSlots` appears in the base class; it appears in **neither** subclass (before B729 the two were byte-identical, and one edit forgetting the other was
+    /// Three paired points: `BuildTimeSlots` appears in the base class; it appears in **neither** subclass (before the two were byte-identical, and one edit forgetting the other was
     /// certain); and both subclasses still exist with different names (they mirror two baseline classes and must not collapse into one).
     /// </remarks>
     [Fact]

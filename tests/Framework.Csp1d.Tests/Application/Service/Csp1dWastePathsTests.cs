@@ -22,9 +22,9 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **waste 的其余三路（余料、物料成本、超产面积）各自必须算对** / The other three waste paths (rest material, material cost, over-production area) must each be right.
 /// </summary>
 /// <remarks>
-/// **B373 记的缺口**："`ExtractWasteResult` 的其余三路无判据"——那一批只钉住了 `TotalTrimWidth`。
+/// **记的缺口**："`ExtractWasteResult` 的其余三路无判据"——那一批只钉住了 `TotalTrimWidth`。
 ///
-/// 三路**共用** `SolutionAmount` 这个入口（B373 已修），但**各自的乘子不同**：
+/// 三路**共用** `SolutionAmount` 这个入口，但**各自的乘子不同**：
 ///
 /// | 路 | 乘子 | 容易错的地方 |
 /// | --- | --- | --- |
@@ -32,11 +32,11 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// | 物料成本 | **按物料 id** 的单价惩罚 | 不同物料混在一起累加 |
 /// | 超产面积 | 产品**最大宽度** | 用错产品、漏乘超产量 |
 ///
-/// 第二行是本批的重点：`costByMaterial` 是**按物料分桶**的字典，
+/// 第二行是这里的重点：`costByMaterial` 是**按物料分桶**的字典，
 /// 两条不同物料的方案**必须各出一项**，而不是合成一项。
 ///
-/// **B373's gap**: "the other three paths of `ExtractWasteResult` have no criteria" — that batch pinned only `TotalTrimWidth`. The three paths **share** the
-/// `SolutionAmount` entry point (fixed in B373) but **each has a different multiplier** (table above). The second row is this batch's focus: `costByMaterial` is a
+/// **the earlier gap**: "the other three paths of `ExtractWasteResult` have no criteria" — that batch pinned only `TotalTrimWidth`. The three paths **share** the
+/// `SolutionAmount` entry point (fixed) but **each has a different multiplier** (table above). The second row is's focus: `costByMaterial` is a
 /// **per-material** dictionary, so two plans on different materials **must yield two entries**, not one merged entry.
 /// </remarks>
 public class Csp1dWastePathsTests {

@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Test.Benchmark;
 /// **每个带 `[Benchmark]` 的类都必须有测试覆盖** / Every class carrying `[Benchmark]` must have test coverage.
 /// </summary>
 /// <remarks>
-/// **B395 记着"十二个基准从未实跑"**，本批复核的是**夹具正确性**（不是执行）。
+/// **记着"十二个基准从未实跑"**，这里复核的是**夹具正确性**（不是执行）。
 ///
 /// 复核过程中我一度以为"四个基准没有对应测试"——**这个判断是错的**。
 /// 它们由 `BenchmarkScaleValidityTests` 统一覆盖，只是文件名与基准名不一一对应：
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Test.Benchmark;
 /// 枚举 `src/Benchmark` 程序集里所有带 `[Benchmark]` 方法的类型，
 /// 断言每一个都能在 `Benchmark.Tests` 程序集的测试里被找到（按类型名出现在测试源码中）。
 ///
-/// **B395 recorded "the twelve benchmarks never ran"**; this batch re-checks **fixture correctness** (not execution). While doing so I wrongly concluded "four
+/// **recorded "the twelve benchmarks never ran"**; re-checks **fixture correctness** (not execution). While doing so I wrongly concluded "four
 /// benchmarks have no tests" — **that was wrong** (table above): they are covered by `BenchmarkScaleValidityTests`, and `PackingGeometryPreparationBenchmark` is covered
 /// through its static `BuildResult`. **Matching by filename is an unreliable coverage check**, so this criterion uses **reflection**: enumerate every type in the
 /// `src/Benchmark` assembly carrying a `[Benchmark]` method and assert each one appears in the `Benchmark.Tests` sources by type name.
@@ -42,12 +42,12 @@ public class BenchmarkCoverageTests {
     /// <remarks>
     /// **判据无法钉住"枚举本身漏了类型"。**
     ///
-    /// 实测：把 `Where(name => ...)` 改成先排除 `SymbolCombineBenchmark` 再判断，
+    /// 实测：把 `Where(name =>...)` 改成先排除 `SymbolCombineBenchmark` 再判断，
     /// **判据仍然全绿**——因为其余 11 个都确实被覆盖，"未覆盖集合为空"照样成立。
     ///
     /// 这是**枚举型判据的固有性质**：它验证"枚举到的每个都有覆盖"，
     /// **不验证"枚举完整"**。要钉完整性需要一个**独立的预期清单**，
-    /// 而那会随基准增加而腐化——**本批选择不写**，并在文档里记下这个边界。
+    /// 而那会随基准增加而腐化——**这里选择不写**，并在文档里记下这个边界。
     ///
     /// 能钉住的是**读取方式**：把 `.Select(File.ReadAllText)` 去掉（退回只读路径），
     /// 判据立刻报出四个"未覆盖"。

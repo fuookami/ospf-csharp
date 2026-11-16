@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 装载效能管线生成器 / The loading-effectiveness pipeline generator.
 /// </summary>
 /// <remarks>
-/// 与基线 `loading_effectiveness/service/PipelineListGenerator.kt` 对齐：**十二条管线的条件与顺序**，本批已全部落地。
+/// 与基线 `loading_effectiveness/service/PipelineListGenerator.kt` 对齐：**十二条管线的条件与顺序**，这里已全部落地。
 ///
 /// 顺序（基线原样）：提前装载、预留 → 复重（条件） → 同来源相邻、同目的地相邻 → 建议数量、建议重量（条件） →
 /// 顺序反转（条件） → 拖车换装、拖车绕行（条件） → 优先级顺序（无条件） → 同来源早装（条件）。
@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// | 同来源相邻 / 同目的地相邻 / 优先级顺序 | **无条件** |
 /// | 同来源早装 | **非预配载且来源映射非空** |
 ///
-/// Aligned with the baseline: the **conditions and order of all twelve pipelines**, fully landed in this batch. The order is the baseline's own. Four gating conditions are easy to get wrong:
+/// Aligned with the baseline: the **conditions and order of all twelve pipelines**, fully landed. The order is the baseline's own. Four gating conditions are easy to get wrong:
 /// **ahead-load, reserve, both advice objectives and order reversal are predistribution-only**; **both trailer objectives are full-load-only**; **both adjacencies plus priority order are
 /// unconditional**; and **source-early needs "not predistribution and a non-empty source map"**.
 /// </remarks>

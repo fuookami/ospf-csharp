@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// * **容量为零的束不进表达式**（座位数或货量是 0 的束对这条表达式没有贡献，加进去只会拖长展开）；
 /// * **列变量按"去重后的顺序"取**，用 `Compilation.ColumnItem(iteration, bunch)` 而不是自己数一遍入参顺序。
 ///
-/// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush()` 再加，C# 的 `Flush()` 是空实现，所以这里显式 `Clear()`。
+/// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush` 再加，C# 的 `Flush` 是空实现，所以这里显式 `Clear`。
 /// 不做这一步，跑十轮之后同一个束会在表达式里出现十次——解上未必立刻错，展开是十倍的项。
 ///
 /// Each flight task and cabin gets one **expression symbol** whose content is "the seats each bunch offers in that cabin multiplied by that bunch's column variable". The baseline has
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// bunches stay out of the expression** (they contribute nothing and only lengthen expansion), and **column variables come from the deduplicated order**, via
 /// `Compilation.ColumnItem(iteration, bunch)` rather than recounting the argument order.
 ///
-/// **`AddColumns` replaces rather than appends**: the baseline flushes before adding each round, but C#'s `Flush()` is a no-op, so this clears explicitly. Without that step, ten rounds
+/// **`AddColumns` replaces rather than appends**: the baseline flushes before adding each round, but C#'s `Flush` is a no-op, so this clears explicitly. Without that step, ten rounds
 /// would put the same bunch into the expression ten times — the solution may not break immediately, but the expansion grows tenfold.
 /// </remarks>
 public sealed class FlightCapacity {
@@ -121,7 +121,7 @@ public sealed class FlightCapacity {
                     var monomials = new List<LinearMonomial<Flt64>>();
                     CollectPassenger(bunches, row.Key, cabin.Key, iteration, monomials);
                     if (monomials.Count > 0) {
-                        // 先清再加，等价于基线的 `flush()` / Clear, then add — the equivalent of the baseline's `flush()`.
+                        // 先清再加，等价于基线的 `flush` / Clear, then add — the equivalent of the baseline's `flush`.
                         MutableLinearPolynomial<Flt64> mutable = cabin.Value.AsMutable();
                         mutable.Clear();
                         mutable.Add(new LinearPolynomial<Flt64>(monomials.ToArray(), Flt64.Zero));

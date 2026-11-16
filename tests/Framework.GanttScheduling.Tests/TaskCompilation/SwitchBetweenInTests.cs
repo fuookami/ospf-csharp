@@ -11,10 +11,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **任两任务相同即恒零；端点不算中间；同一时刻仍可居中** / Any two coinciding tasks force zero, endpoints are not middles, and touching starts may still sit between.
 /// </summary>
 /// <remarks>
-/// 三条排除是 B512 那条对角线的三维推广。漏掉哪条都算得出来：
+/// 三条排除是 那条对角线的三维推广。漏掉哪条都算得出来：
 /// 不排除 `t1 == t2` 会让一个任务**自己与自己之间**；不排除端点相同会让**没有中间**的三元组成立。
 ///
-/// The three exclusions generalise B512's diagonal to three dimensions. Dropping either still computes: without `t1 == t2` a task ends up **between itself**; without the
+/// The three exclusions generalise the earlier diagonal to three dimensions. Dropping either still computes: without `t1 == t2` a task ends up **between itself**; without the
 /// endpoint exclusions a triple with **no middle** holds.
 /// </remarks>
 public class SwitchBetweenInTests {

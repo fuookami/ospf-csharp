@@ -1,4 +1,4 @@
-// 精确装载容量（B653）的判据 / Criteria for the precise load capacity (B653).
+// 精确装载容量的判据 / Criteria for the precise load capacity.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **精确装载容量（B653）** / The precise load capacity (B653).
+/// **精确装载容量** / The precise load capacity.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**板材面积为零时装载率系数为零而不做除法**（除零得到 `NaN`，求解器不会拒绝它）、
@@ -95,7 +95,7 @@ public class PreciseLoadCapacityTests {
     ///
     /// 1. 无板材类型的层 → 板材面积为 0 → **装载率系数为 0**。
     /// 2. **不是 `NaN`**：断言系数是零而不是"非数"。除零在 `FltX`（decimal）上会抛异常，在浮点上会得到 `NaN`，
-    ///    两条路都错——前者炸掉求解，后者让求解器给出无意义的最优解。
+    /// 两条路都错——前者炸掉求解，后者让求解器给出无意义的最优解。
     /// 3. `load_area` 仍然按实际面积给出系数（它不依赖板材面积）。
     /// 4. 三列里只有中间一层无板材 → 只有它的装载率系数为零。
     ///

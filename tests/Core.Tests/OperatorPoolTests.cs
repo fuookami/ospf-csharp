@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Core.Tests;
 /// 算子池 / The operator pools.
 /// </summary>
 public sealed class OperatorPoolTests {
-    /// <summary>**未 `Current()` 时不产生转移** / No transition appears before `Current()` is called.</summary>
+    /// <summary>**未 `Current` 时不产生转移** / No transition appears before `Current` is called.</summary>
     /// <remarks>
     /// 否则"选了但没用"的决策会被记成一次真实转移，策略会从一次并未发生的执行里学习。
     /// Otherwise a "selected but never used" decision is recorded as a real transition and the policy learns from an execution that never
@@ -35,7 +35,7 @@ public sealed class OperatorPoolTests {
             "未使用过的选择不得记录转移 / an unused selection must not record a transition");
     }
 
-    /// <summary>**`Current()` 之后才记录转移** / A transition appears after `Current()`.</summary>
+    /// <summary>**`Current` 之后才记录转移** / A transition appears after `Current`.</summary>
     [Fact]
     public void Observe_ShouldRecordAfterCurrent() {
         OperatorPool<string> pool = BuildPool(new[] { "a", "b" });
@@ -230,7 +230,7 @@ public sealed class OperatorBindingsTests {
         source.Value(new Iteration()).ToDouble().Should().Be(4.0);
     }
 
-    /// <summary>**每次取值都通过池的 `Current()`，不缓存算子** / Every read goes through the pool's `Current()`.</summary>
+    /// <summary>**每次取值都通过池的 `Current`，不缓存算子** / Every read goes through the pool's `Current`.</summary>
     /// <remarks>
     /// 把算子本身缓存进适配器会让后续 `Choose` 选出的新算子被忽略，**策略看起来仍在工作但实际一直执行第一个算子**。
     /// Caching the operator inside the adapter makes later `Choose` results ignored, so **the policy appears to work while the first

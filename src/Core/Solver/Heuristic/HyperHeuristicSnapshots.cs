@@ -1,6 +1,6 @@
 // 运行检查点 / Run checkpoints.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.checkpoint()` / `restore(saved)` / `exportPolicy()` / `restorePolicy(saved)`。
-// Mirrors `HyperHeuristicRun.checkpoint()` / `restore(saved)` / `exportPolicy()` / `restorePolicy(saved)` in the pinned baseline's
+// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)`。
+// Mirrors `HyperHeuristicRun.checkpoint` / `restore(saved)` / `exportPolicy` / `restorePolicy(saved)` in the pinned baseline's
 // `HyperHeuristicSolver.kt` (47241 B).
 
 using System;

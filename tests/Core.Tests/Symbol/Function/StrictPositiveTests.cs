@@ -24,8 +24,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **`p ≥ 0` 与 `p &gt; 0` 不是同一个条件**，**`p + δ &gt; 0` 等价于 `p &gt; −δ`。**
 /// **两者只在 `p` 落在步长 `δ` 的格点上时相同。**
 ///
-/// adds
-///
 /// **`p ≥ 0` and `p &gt; 0` are not the same condition**, and **`p + δ &gt; 0` is equivalent to `p &gt; −δ`.** **They agree
 /// only when `p` sits on a lattice of spacing `δ`.**
 /// </remarks>

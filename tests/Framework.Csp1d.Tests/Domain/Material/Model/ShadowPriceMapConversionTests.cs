@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Material.Model;
 /// **`ToShadowPriceMap` 必须保留所有 CSP1D 键，并转换值** / `ToShadowPriceMap` must keep every CSP1D key and convert the value.
 /// </summary>
 /// <remarks>
-/// **B387 记的缺口**："`ShadowPriceMap&lt;V&gt;` 与 `Csp1dDefaultShadowPriceMap` 的转换点无判据"。
+/// **记的缺口**："`ShadowPriceMap&lt;V&gt;` 与 `Csp1dDefaultShadowPriceMap` 的转换点无判据"。
 ///
 /// 转换点（`Csp1dProduceContext.cs:614` → `ToShadowPriceMap`）做两件事：
 ///
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Material.Model;
 /// 两个错法都**不报错**：定价阶段查不到某个键时，只会当作"没有对偶价格"，
 /// **那个产品的 reduced cost 就悄悄算错了**。
 ///
-/// **B387's gap**: "the conversion point between `ShadowPriceMap&lt;V&gt;` and `Csp1dDefaultShadowPriceMap` has no criteria". The conversion does two things (table above) and
+/// **the earlier gap**: "the conversion point between `ShadowPriceMap&lt;V&gt;` and `Csp1dDefaultShadowPriceMap` has no criteria". The conversion does two things (table above) and
 /// **both failure modes are silent**: a key that goes missing during pricing just reads as "no dual price", and **that product's reduced cost is quietly wrong**.
 /// </remarks>
 public class ShadowPriceMapConversionTests {

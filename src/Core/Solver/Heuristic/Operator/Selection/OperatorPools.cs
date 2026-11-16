@@ -58,9 +58,9 @@ public sealed record SlotSnapshot(
 /// </summary>
 /// <remarks>
 /// **必须是同一批池对象的视图，不能每次调用都新建包装**。`choose` 之后的状态（`usedAction`）保存在池实例上；
-/// 若每次取 `Pools()` 都新建包装，`choose` 与随后 `observe` 作用的会是不同对象，**决策被静默丢弃而每一步都返回成功**。
+/// 若每次取 `Pools` 都新建包装，`choose` 与随后 `observe` 作用的会是不同对象，**决策被静默丢弃而每一步都返回成功**。
 /// **It must be a view over the same pool objects, never a fresh wrapper per call.** The post-`choose` state (`usedAction`) lives on
-/// the pool instance; building a new wrapper each time `Pools()` is called makes `choose` and the following `observe` act on different
+/// the pool instance; building a new wrapper each time `Pools` is called makes `choose` and the following `observe` act on different
 /// objects, **silently dropping the decision while every step returns success**.
 /// </remarks>
 public interface IOperatorPool {
@@ -109,9 +109,9 @@ public interface IOperatorPool {
 /// 算子池 / An operator pool.
 /// </summary>
 /// <remarks>
-/// **`choose` 之后必须 `current()` 才算"用过"**。`observe` 只在 `used` 为真时才产生转移——否则"选了但没用"的决策会被记成
+/// **`choose` 之后必须 `current` 才算"用过"**。`observe` 只在 `used` 为真时才产生转移——否则"选了但没用"的决策会被记成
 /// 一次真实转移，策略会从一次并未发生的执行里学习。
-/// **`choose` must be followed by `current()` for the decision to count as used.** `observe` produces a transition only when `used`
+/// **`choose` must be followed by `current` for the decision to count as used.** `observe` produces a transition only when `used`
 /// is true — otherwise a "selected but never used" decision is recorded as a real transition and the policy learns from an execution
 /// that never happened.
 /// **`save` 跳过 `stateless` 集合里的候选**。无状态算子没有可保存的东西，把它们写进快照会让快照体积随候选数量增长，
@@ -360,10 +360,10 @@ public sealed class OperatorPool<T> : IOperatorPool where T : class {
 /// 这件事无处表达。
 /// **`Parameter` returns the default source when no pool exists rather than failing.** Parameters are optional, and forcing every
 /// algorithm to configure a pool for each parameter leaves "use the default" unexpressible.
-/// **`SolutionUpdate`/`MutationOperator`/`NeighborhoodOperator` 是每次取值都新建的适配器**。它们持有池的引用，`Current()` 在被调用时
+/// **`SolutionUpdate`/`MutationOperator`/`NeighborhoodOperator` 是每次取值都新建的适配器**。它们持有池的引用，`Current` 在被调用时
 /// 才取算子——把算子本身缓存进适配器会让后续 `Choose` 选出的新算子被忽略，**策略看起来仍在工作但实际一直执行第一个算子**。
 /// **The `SolutionUpdate`/`MutationOperator`/`NeighborhoodOperator` adapters are created fresh on every access.** They hold a reference
-/// to the pool and only call `Current()` when invoked; caching the operator itself inside the adapter makes later `Choose` results
+/// to the pool and only call `Current` when invoked; caching the operator itself inside the adapter makes later `Choose` results
 /// ignored, so **the policy appears to work while the first operator always executes**.
 /// </remarks>
 public sealed class OperatorBindings {
@@ -459,8 +459,8 @@ public sealed class OperatorBindings {
 /// 池化的参数源适配器 / A pooled parameter-source adapter.
 /// </summary>
 /// <remarks>
-/// **每次取值都通过池的 `Current()` 取算子**，而不是把某个具体源缓存下来。
-/// **Every read goes through the pool's `Current()`** instead of caching one concrete source.
+/// **每次取值都通过池的 `Current` 取算子**，而不是把某个具体源缓存下来。
+/// **Every read goes through the pool's `Current`** instead of caching one concrete source.
 /// </remarks>
 internal sealed class PooledParameterSource : IParameterSource {
     private readonly OperatorPool<IParameterSource> _pool;

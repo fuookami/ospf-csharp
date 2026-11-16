@@ -1,4 +1,4 @@
-// 分区列生成：文档与代码一致（B772）/ Partition CG: the docs match the code (B772).
+// 分区列生成：文档与代码一致/ Partition CG: the docs match the code.
 
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Docs;
 
 /// <summary>
-/// **分区列生成的文档与代码一致（B772）** / The partition-CG docs match the code (B772).
+/// **分区列生成的文档与代码一致** / The partition-CG docs match the code.
 /// </summary>
 /// <remarks>
 /// 两份 XML 注释原来说"最终整数主问题未移植""定价与主问题注册未移植"，而代码里这两半都在——`FinalAsync` 建整数主问题、

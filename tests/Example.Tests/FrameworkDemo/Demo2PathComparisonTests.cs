@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B872：两条构建路径的实测对比 / The measured comparison between the two build paths.
+/// 两条构建路径的实测对比 / The measured comparison between the two build paths.
 /// </summary>
 /// <remarks>
 /// **结论出乎预料**：两模型那条路在**全新的应用实例**上就失败——配载那一半报 `上下文已经注册 / Context already registered`；
@@ -32,8 +32,8 @@ public sealed class Demo2PathComparisonTests
             application.BuildSingleBendersModel(StowageMode.FullLoad, notes);
         model.Should().NotBeNull(string.Join("; ", notes));
 
-        // **实测数（B872）**：15 个 token、11 行、58 个符号、4 个目标。
-        // **Measured (B872)**: fifteen tokens, eleven rows, fifty-eight symbols, four objectives.
+        // **实测数**：15 个 token、11 行、58 个符号、4 个目标。
+        // **Measured **: fifteen tokens, eleven rows, fifty-eight symbols, four objectives.
         notes.Should().Contain("benders_single_model=built:tokens=15,rows=11,symbols=58,objectives=4");
         notes.Should().NotContain(note => note.Contains("failed", System.StringComparison.Ordinal));
     }
@@ -48,10 +48,10 @@ public sealed class Demo2PathComparisonTests
         FullLoadApplication.BendersModels models = application.BuildBendersModels(StowageMode.FullLoad, notes);
         models.MasterModel.Dispose();
         models.SubModel.Dispose();
-        // **实测（B872）**：两模型那条路在**单独跑**时注册成功、备注为空；而在**同一个进程里先跑过单模型那条路**之后，
+        // **实测**：两模型那条路在**单独跑**时注册成功、备注为空；而在**同一个进程里先跑过单模型那条路**之后，
         // 它的配载注册就被拒（`上下文已经注册 / Context already registered`）——**域上下文跨应用实例共享一次性状态**。
         //
-        // **Measured (B872)**: run alone the two-model path registers cleanly; but **after the single-model path has run in the same process**, its stowage
+        // **Measured **: run alone the two-model path registers cleanly; but **after the single-model path has run in the same process**, its stowage
         // registration is refused (`Context already registered`) — **the domain contexts share one-shot state across application instances**.
         notes.Should().BeEmpty("the two-model path registers cleanly when it runs first in the process");
     }

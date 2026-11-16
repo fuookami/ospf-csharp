@@ -13,13 +13,13 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 /// CPLEX 能力探测的契约 / The contract of CPLEX's capability probe.
 /// </summary>
 /// <remarks>
-/// B1234 与同批的 `CoptFunctionCapabilitiesTests` 同源，但重点不同：
+/// 与 `CoptFunctionCapabilitiesTests` 同源，但重点不同：
 /// **COPT 与 CPLEX"都支持 SOS2"是对的，而"它们用同一个方法支持 SOS2"是错的。**
 ///
 /// **CPLEX 用专用的 `AddSOS2`（返回接口 `ISOS2`），COPT 用 `AddSos` 加 `type` 参数（返回类 `Sos`）。**
 /// **判据要能分开这两句话——否则"合写一个探测函数"会让其中一侧永远返回 `false`。**
 ///
-/// B1234 shares its motive with this batch's `CoptFunctionCapabilitiesTests`, with a different focus:
+/// Shares its motive with's `CoptFunctionCapabilitiesTests`, with a different focus:
 /// **"COPT and CPLEX both support SOS2" is true; "they support it through the same method" is false.**
 ///
 /// **CPLEX uses a dedicated `AddSOS2` (returning the interface `ISOS2`); COPT uses `AddSos` with a `type` argument

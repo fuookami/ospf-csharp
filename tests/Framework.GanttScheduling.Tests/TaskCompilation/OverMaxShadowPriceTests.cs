@@ -1,4 +1,4 @@
-// 超越上限两侧的影子价格提取器（B706）/ Shadow-price extractors for the two over-max sides (B706).
+// 超越上限两侧的影子价格提取器/ Shadow-price extractors for the two over-max sides.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **超越上限两侧的提取器（B706）** / The two over-max extractors (B706).
+/// **超越上限两侧的提取器** / The two over-max extractors.
 /// </summary>
 /// <remarks>
 /// 这两条约束的行早已挂键、`Refresh` 也已按行的 `Args` 收价，**只有提取器没接线**——于是列生成按零价格挑列，
@@ -85,12 +85,12 @@ public class OverMaxShadowPriceTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. 本批之前行是**加了但不带键**的——`OverMaxConstraintRows.Add` 没传 `args`。那时提取器读一张永远空的表，
-    ///    列生成按零价格挑列**且不报错**，因此"行数对不对"完全看不出问题。
+    /// 1. 这里之前行是**加了但不带键**的——`OverMaxConstraintRows.Add` 没传 `args`。那时提取器读一张永远空的表，
+    /// 列生成按零价格挑列**且不报错**，因此"行数对不对"完全看不出问题。
     /// 2. 现在每一行都带本侧的键类型，键里的任务**就是**该行对应的任务。
     /// 3. 两侧的键类型**不同**——只用一侧的键类会让另一侧的价格串味。
     ///
-    /// Three paired points: before this batch the rows were **added without a key** (no `args` from `OverMaxConstraintRows.Add`), so the extractor read a forever-empty table and column generation
+    /// Three paired points: before the rows were **added without a key** (no `args` from `OverMaxConstraintRows.Add`), so the extractor read a forever-empty table and column generation
     /// selected at zero prices **without raising**, which is why "is the row count right" could never reveal it; now every row carries its side's key type naming that very task; and the two sides'
     /// key types differ, since sharing one would cross-contaminate their prices.
     /// </remarks>
@@ -130,13 +130,13 @@ public class OverMaxShadowPriceTests {
     /// <remarks>
     /// 四点成对：
     ///
-    /// 1. 两条管线的 `Extractor()` 都**不为 `null`**——接线之前那个方法根本不存在，这是最直接的证伪。
+    /// 1. 两条管线的 `Extractor` 都**不为 `null`**——接线之前那个方法根本不存在，这是最直接的证伪。
     /// 2. 各自的**行**挂各自的键类型（延后侧 `TaskOverMaxDelayShadowPriceKey`、提前侧 `TaskOverMaxAdvanceShadowPriceKey`）。
     /// 3. 对偶值落表后，`map.Invoke(该任务)` 得**那个价**。
     /// 4. 另一侧**拿不到**这个价：两侧键类型不同，所以把价写进延后表之后，提前侧的查询是零。
-    ///    只测一侧会让"两边共用同一个键"通过。
+    /// 只测一侧会让"两边共用同一个键"通过。
     ///
-    /// Four paired points: both pipelines' `Extractor()` are **not null** — the method did not exist at all before this batch, which is the most direct falsification; each side's **rows** carry its own
+    /// Four paired points: both pipelines' `Extractor` are **not null** — the method did not exist at all before, which is the most direct falsification; each side's **rows** carry its own
     /// key type; after the dual lands in the map, `map.Invoke(thatTask)` returns **that price**; and the other side **cannot** see it, since the key types differ, so a price written on the delay side reads
     /// zero on the advance side. Testing one side would pass even if both shared one key.
     /// </remarks>

@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次多项式的桥接变量：<c>y = p</c> / A bridge variable for a quadratic polynomial: `y = p`.
 /// </summary>
 /// <remarks>
-/// B1159 按基线 `QuadraticLinear.kt` 把空壳换成真实编码。
+/// 对齐基线 `QuadraticLinear.kt` 把空壳换成真实编码。
 ///
 /// **线性输入时什么都不做**：**`y` 不创建、约束不写、辅助变量为空**——
 /// **一条 `y = p` 的等式对本来就是线性的 `p` 只是把 `p` 抄了一遍，白添一个变量与一条等式。**
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **基线的注释明确记了这件事**：**`URealVar` 会在求解器边界把负值静默截断成 0——
 /// 于是同一个多项式在负半轴上的结果全错，而模型照样求解成功。**
 ///
-/// B1159 replaces a stub with the real encoding, following the baseline's `QuadraticLinear.kt`.
+/// Replaces a stub with the real encoding, following the baseline's `QuadraticLinear.kt`.
 ///
 /// **A linear input does nothing**: **no `y`, no row, no helper** —
 /// **a `y = p` equality over an already-linear `p` only copies it, adding a variable and a row for nothing.**

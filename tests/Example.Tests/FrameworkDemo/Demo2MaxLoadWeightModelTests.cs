@@ -19,10 +19,10 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **最大装载重量模型本体（B586）** / The maximum load weight model itself (B586).
+/// **最大装载重量模型本体** / The maximum load weight model itself.
 /// </summary>
 /// <remarks>
-/// 基线 `MaxLoadWeight.kt` 的三支判断是本批的焦点：
+/// 基线 `MaxLoadWeight.kt` 的三支判断是这里的焦点：
 ///
 /// | 分段规格 | 已知零油重 | 取值 |
 /// | --- | --- | --- |
@@ -159,7 +159,7 @@ public class Demo2MaxLoadWeightModelTests {
     /// **没有零油重时取各段最大值，不是第一段** / Without a zero-fuel weight it takes the maximum, not the first segment.
     /// </summary>
     /// <remarks>
-    /// 这是本批最容易写错的一支。成对断言：最大值在**中间**（800），第一段是 600、最后一段是 400，三个数互不相同，
+    /// 这是这里最容易写错的一支。成对断言：最大值在**中间**（800），第一段是 600、最后一段是 400，三个数互不相同，
     /// 所以"取最大值""取第一段""取最后一段"三种写法能被区分开。
     ///
     /// This is the branch most likely to be written wrong. Paired: the maximum sits **in the middle** (800) while the first segment is 600 and the last is 400 — three distinct

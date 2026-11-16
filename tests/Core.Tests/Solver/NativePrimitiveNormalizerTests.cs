@@ -22,8 +22,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `normalizePiecewiseStructures` 与 `normalizeAbsStructures`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativePrimitiveNormalizerTests
 {
     /// <summary>
@@ -49,10 +48,10 @@ public class NativePrimitiveNormalizerTests
     /// **零个选择变量<b>能</b>通过归一化** / Zero selectors <b>passes</b> normalization.
     /// </summary>
     /// <remarks>
-    /// **这是本批最值得记的一处：归一化的数量检查是有条件的
-    /// （`selectorKeys.isNotEmpty() && ...`），所以零个选择的快照<b>放行</b>。**
+    /// **这是这里最值得记的一处：归一化的数量检查是有条件的
+    /// （`selectorKeys.isNotEmpty &&...`），所以零个选择的快照<b>放行</b>。**
     ///
-    /// **而 B1199 的行生成里 `SelectorVariables.Count != segments` 直接拒绝。**
+    /// **而行生成里 `SelectorVariables.Count != segments` 直接拒绝。**
     ///
     /// **两层严格程度不同，而宽松的那一层在前**：**一个零选择的快照会走到很后面才被拒。**
     ///
@@ -60,9 +59,9 @@ public class NativePrimitiveNormalizerTests
     /// 而不是一个"某天有人发现归一化太松"的惊喜。**
     ///
     /// **This is the batch's most notable point: the count check is conditional
-    /// (`selectorKeys.isNotEmpty() && ...`), so a zero-selector snapshot <b>passes</b>.**
+    /// (`selectorKeys.isNotEmpty &&...`), so a zero-selector snapshot <b>passes</b>.**
     ///
-    /// **B1199's row generation rejects `SelectorVariables.Count != segments` outright.**
+    /// **the earlier row generation rejects `SelectorVariables.Count != segments` outright.**
     ///
     /// **The two layers differ in strictness and the lenient one comes first**: **a zero-selector snapshot travels a long
     /// way before being rejected.**

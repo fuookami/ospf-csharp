@@ -16,7 +16,7 @@ public interface IExtractor<in TIn, out TOut> {
 
 /// <summary>
 /// 生成器接口 / Generator interface.
-/// Kotlin fun interface Generator&lt;T&gt; { operator fun invoke(): T }.
+/// Kotlin fun interface Generator&lt;T&gt; { operator fun invoke: T }.
 /// 返回当前状态并推进一次 / Returns the current state, then advances by one step.
 /// </summary>
 public interface IGenerator<out T> {

@@ -13,16 +13,16 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service;
 /// Project the three `ICsp1dGenerationStrategy` hooks into callback lists.
 /// </summary>
 /// <remarks>
-/// **为什么要有这个类**：B358—B361 把三个扩展点接进了**两条**路径
+/// **为什么要有这个类**： 把三个扩展点接进了**两条**路径
 /// （`Csp1dColumnGeneration` 的列生成路径、`Csp1dMilp` 的直连路径），
-/// 而两次都是**各写一份**投影代码。B358—B360 只接了一条、另一条静默失效，
+/// 而两次都是**各写一份**投影代码。 只接了一条、另一条静默失效，
 /// **正是复制粘贴造成的**。
 ///
 /// 投影逻辑收在这里之后，**"两条路径投影不一致"在结构上不可能**——
 /// 除非有人绕过这个类重新手写一遍。
 ///
-/// **Why this class exists**: B358—B361 wired the three hooks into **two** paths (column generation in `Csp1dColumnGeneration` and the direct path in `Csp1dMilp`),
-/// **writing the projection twice**. B358—B360 wired only one and the other silently failed — **exactly what copy-paste causes**.
+/// **Why this class exists**:  wired the three hooks into **two** paths (column generation in `Csp1dColumnGeneration` and the direct path in `Csp1dMilp`),
+/// **writing the projection twice**. Wired only one and the other silently failed — **exactly what copy-paste causes**.
 ///
 /// With the projection here, **"the two paths project differently" is structurally impossible** unless someone bypasses this class and hand-writes it again.
 /// </remarks>

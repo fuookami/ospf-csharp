@@ -1,7 +1,7 @@
 // 超启发式求解器的门面 / The hyper-heuristic solver facade.
-// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicSolver` 的 `open()` / `invoke()`：
+// 对应固定 Kotlin 基线 `HyperHeuristicSolver.kt`（47241 B）里 `HyperHeuristicSolver` 的 `open` / `invoke`：
 // 预检 → 装配工作单元 → 解析全局组件 → 构造运行 → 可选恢复策略档案 → 跑完 → 汇总结果。
-// Mirrors `HyperHeuristicSolver`'s `open()` / `invoke()` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B): preflight, assemble the workers,
+// Mirrors `HyperHeuristicSolver`'s `open` / `invoke` in the pinned baseline's `HyperHeuristicSolver.kt` (47241 B): preflight, assemble the workers,
 // resolve the global components, construct the run, optionally restore a policy archive, run it, summarise.
 
 using System;
@@ -161,10 +161,10 @@ public static class HyperHeuristicSolver<O, V>
     /// 打开、跑完、关闭 / Open, run to completion, close.
     /// </summary>
     /// <remarks>
-    /// **关闭必须发生在 `finally` 里**：`Run()` 抛异常时若不关闭，工作单元的模型与令牌表会一直挂着，
+    /// **关闭必须发生在 `finally` 里**：`Run` 抛异常时若不关闭，工作单元的模型与令牌表会一直挂着，
     /// 而调用方只看到一个异常，**看不出还有资源没释放**。
     ///
-    /// **The close must happen in `finally`**: without it, an exception from `Run()` leaves the workers' models and token tables held, and the caller
+    /// **The close must happen in `finally`**: without it, an exception from `Run` leaves the workers' models and token tables held, and the caller
     /// only sees an exception, **with no sign of the unreleased resources**.
     /// </remarks>
     /// <param name="config">配置 / The configuration.</param>

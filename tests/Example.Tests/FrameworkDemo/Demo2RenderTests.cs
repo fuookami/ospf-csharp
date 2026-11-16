@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B805：渲染输出的判据 / Criteria for the render output (B805).
+/// 渲染输出的判据 / Criteria for the render output.
 /// </summary>
 public sealed class Demo2RenderTests
 {
@@ -42,13 +42,13 @@ public sealed class Demo2RenderTests
         // 于是正确的渲染顺序是 P2、P1。**按 id 排的实现会给出 P1、P2，这条会红。**
         //
         // **第三级键（id 的字符串字典序）在这份示例里观察不到**：示例的 id 是单位数，字典序与数值序一致，任何实现都排得对。
-        // B797 的 `LoadingOrderOutputExporter` 有同样的盲区。**不写一条假装能测它的判据**——那是"绿但空转"。
+        // 的 `LoadingOrderOutputExporter` 有同样的盲区。**不写一条假装能测它的判据**——那是"绿但空转"。
         //
         // **The second key (loading order) must beat the third (position id)**. The request is built with the order reversed: P1 loads at order 1 and P2 at order 0,
         // so the correct render order is P2, P1. **An implementation sorting by id would give P1, P2 and turn this red.**
         //
         // **The third key (the id's string order) is not observable in this sample**: the ids are single digits, so lexicographic and numeric order agree and every
-        // implementation gets it right. B797's `LoadingOrderOutputExporter` has the same blind spot. **No criterion pretends to test it** — that would be green but idle.
+        // implementation gets it right. the earlier `LoadingOrderOutputExporter` has the same blind spot. **No criterion pretends to test it** — that would be green but idle.
         Solution solution = SwappedLoadingOrderSolution();
 
         RenderDTO rendered = new SolutionRenderer().Invoke(solution);
@@ -89,10 +89,10 @@ public sealed class Demo2RenderTests
     [Fact]
     public async Task Execute_ShouldReturnARenderOnTheDirectPath() {
         // **端到端**：求解成功且调用方没要渲染时 `Render` 为 `null`；直连路径接了渲染之后，同样一次求解会带回舱位行。
-        // 这条判据证明渲染链**有生产消费者**——B805 之前 `RenderDTO` 是个空占位、`SolutionAnalyzer` 没有任何调用点。
+        // 这条判据证明渲染链**有生产消费者**—— 之前 `RenderDTO` 是个空占位、`SolutionAnalyzer` 没有任何调用点。
         //
         // **End to end**: a successful solve returns a `null` render when nobody asked for one, and the same solve brings back position rows once the direct path is
-        // wired. This proves the render chain **has a production consumer** — before B805 `RenderDTO` was an empty placeholder and `SolutionAnalyzer` had no call site.
+        // wired. This proves the render chain **has a production consumer** — before `RenderDTO` was an empty placeholder and `SolutionAnalyzer` had no call site.
         var application = new FullLoadApplication();
         RequestDTO request = AircraftLoadingDemo.CreateSampleRequest();
         (ResponseDTO Response, RenderDTO? Render) executed = application.Execute(

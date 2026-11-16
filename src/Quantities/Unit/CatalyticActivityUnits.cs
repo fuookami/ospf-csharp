@@ -9,13 +9,13 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 催化活度单位 / Catalytic activity units.
 /// </summary>
 /// <remarks>
-/// **B1129 按基线 `CatalyticActivity.kt` 新建，4 个单位。**
+/// **按基线 `CatalyticActivity.kt` 新建，4 个单位。**
 ///
-/// **`EnzymeUnit` 是这一批里唯一"不是十进倍数"的单位**：**它是 `Katal / 60000000`**，
+/// **`EnzymeUnit` 是这里里唯一"不是十进倍数"的单位**：**它是 `Katal / 60000000`**，
 /// **因为 1 U = 1 µmol/min，而 1 katal = 1 mol/s**——
 /// **换算里同时有 10⁻⁶（微）与 60（分转秒），合起来就是 6×10⁷。**
 ///
-/// **Created in B1129 from the baseline `CatalyticActivity.kt`, four units.**
+/// **Created from the baseline `CatalyticActivity.kt`, four units.**
 ///
 /// **`EnzymeUnit` is the only non-decimal unit here**: **it is `Katal / 60000000`**,
 /// **because 1 U = 1 µmol/min while 1 katal = 1 mol/s** —

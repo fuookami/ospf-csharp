@@ -16,10 +16,9 @@ public sealed record WimolBanlueAttractor<V>(V Alpha, V H)
     where V : struct, IFloatingNumber<V> {
     public Point<Dim3, V> Invoke(Point<Dim3, V> p) {
         V x = p[0]; V y = p[1]; V z = p[2];
-        // B1313 同步 Kotlin 966cafbc（B311）：回到标准 Wimol-Banlue 式 —— tanh(x)（不是 tan）、|y|（不是 |x|）。
+        // 同步 Kotlin 966cafbc：回到标准 Wimol-Banlue 式 —— tanh(x)（不是 tan）、|y|（不是 |x|）。
         // tanh 在物质上不同于 tan：前者有界于 ±1，后者有极点；换成 tan 会让轨道在 (π/2 + kπ) 附近发散。
-        // B1313 syncs Kotlin 966cafbc (B311): back to the standard Wimol-Banlue form — tanh(x) (not tan), |y| (not |x|). tanh is bounded by ±1 while tan
-        // has poles, so keeping tan lets the orbit diverge near (pi/2 + k*pi).
+        // Syncs has poles, so keeping tan lets the orbit diverge near (pi/2 + k*pi).
         double tanhVal = global::System.Math.Tanh(((Flt64)(object)x).Value);
         V dx = y.Minus(x);
         V dy = z.Negate().Times((V)(object)new Flt64(tanhVal));

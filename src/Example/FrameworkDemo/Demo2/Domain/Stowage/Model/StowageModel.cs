@@ -20,7 +20,7 @@ public sealed class StowageModel
         Positions = positions;
     }
 
-    // TODO: Port register() from Kotlin Stowage class
+    // TODO: Port register from Kotlin Stowage class
     // Creates BinVariable2 x[i,j], BTerVariable2 u[i,j],
     // LinearIntermediateSymbols2 stowage[i,j], LinearIntermediateSymbols1 loaded[i]
 }

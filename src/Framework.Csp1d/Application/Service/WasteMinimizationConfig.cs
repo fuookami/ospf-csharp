@@ -8,7 +8,7 @@ namespace Fuookami.Ospf.Framework.Csp1d.Application.Service;
 /// 超产面积度量口径 / Over-production area measure policy.
 /// </summary>
 public enum OverProductionAreaMeasure {
-    /// <summary>使用产品最大宽度代理: over_i * product.maxWidth() / Use product max width proxy: over_i * product.maxWidth().</summary>
+    /// <summary>使用产品最大宽度代理: over_i * product.maxWidth / Use product max width proxy: over_i * product.maxWidth.</summary>
     ProductMaxWidthProxy
 }
 

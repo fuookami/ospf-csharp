@@ -21,13 +21,13 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **指数函数的分段线性近似** / A piecewise-linear approximation of the exponential.
 /// </summary>
 /// <remarks>
-/// **B1132 按基线 `NonlinearPiecewise.kt` 的 `ExpFunction` 补。**
+/// **按基线 `NonlinearPiecewise.kt` 的 `ExpFunction` 补。**
 ///
 /// **`exp` 不是线性的，所以这里给的不是"指数函数"，是"指数函数在给定区间上的分段线性近似"。**
 /// **这个区别决定了两件事**：**① 断点上误差恰好为零；② 段中间有误差，且段数越少误差越大。**
 /// **所以"抽查几个断点"永远看不出段数不够。**
 ///
-/// **The `ExpFunction` from the baseline's `NonlinearPiecewise.kt`, added in B1132.**
+/// **The `ExpFunction` from the baseline's `NonlinearPiecewise.kt`.**
 ///
 /// **`exp` is not linear, so what this provides is not "the exponential" but "a piecewise-linear approximation of it
 /// over a given interval".**

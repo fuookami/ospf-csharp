@@ -26,8 +26,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **三条中少任何一条都必须返回 `null`，不能"尽力而为"。**
 ///
-/// adds
-///
 /// **Missing any of the three must yield `null`, never a best effort.**
 /// </remarks>
 public class AbsStructureTests
@@ -36,7 +34,7 @@ public class AbsStructureTests
     /// **系数不是 1 时不给键** / A coefficient other than one yields no key.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **这个方法的结果被用来"按输入变量索引 helper"。**
     /// **如果系数是 2，那个 helper 属于 `2x` 而不是 `x`，
@@ -201,11 +199,11 @@ public class AbsStructureTests
     /// **ABS 已经接入分派表** / ABS is wired into the dispatch table.
     /// </summary>
     /// <remarks>
-    /// **B1187 记录了这条危险：漏加分支不报错，结构会静默报"没有结果列"。**
-    /// **本批落地 `AbsStructure` 时同步加了分支，这条判据钉住它。**
+    /// **记录了这条危险：漏加分支不报错，结构会静默报"没有结果列"。**
+    /// **这里落地 `AbsStructure` 时同步加了分支，这条判据钉住它。**
     ///
-    /// **B1187 recorded this hazard: a missing branch is silent and the structure reports no result column.**
-    /// **This batch added the branches together with the structure, and this criterion pins them.**
+    /// **This hazard is recorded: a missing branch is silent and the structure reports no result column.**
+ /// ** added the branches together with the structure, and this criterion pins them.**
     /// </remarks>
     [Fact]
     public void TheAbsStructure_ShouldBeDispatched()
@@ -252,7 +250,7 @@ public class AbsStructureTests
         public string? DisplayName => null;
     }
 
-    // ===== B1197：行生成 =====
+    // ===== 行生成 =====
 
     /// <summary>
     /// **四行，两条等式加两条互补的上界** / Four rows: two equalities and two complementary caps.
@@ -350,7 +348,7 @@ public class AbsStructureTests
     /// Nonnegativity is a caller premise, not something the four rows give.
     /// </summary>
     /// <remarks>
-    /// **这是本批最需要写下来的一件事：四行里没有一行给 `pos ≥ 0` 或 `neg ≥ 0`。**
+    /// **这是这里最需要写下来的一件事：四行里没有一行给 `pos ≥ 0` 或 `neg ≥ 0`。**
     ///
     /// **取 `x = 5`、`result = 3`，则 `pos = 4`、`neg = −1`：
     /// `neg ≤ 0` 成立、`pos = 4 ≤ 100` 成立、两条等式都成立。**
@@ -454,9 +452,9 @@ public class AbsStructureTests
     /// **ABS 现在能真正物化了** / ABS can now actually materialize.
     /// </summary>
     /// <remarks>
-    /// **B1196 里它是"未移植"的三格之一；本批补上，所以 4/3 的分法变成 5/2。**
+    /// **它是"未移植"的三格之一；这里补上，所以 4/3 的分法变成 5/2。**
     ///
-    /// **In B1196 it was one of the three "not ported" cells; this batch fills it, so the 4/3 split becomes 5/2.**
+    /// **It was one of the three "not ported" cells; filling it, so the 4/3 split becomes 5/2.**
     /// </remarks>
     [Fact]
     public void TheAbs_ShouldNowMaterialize()

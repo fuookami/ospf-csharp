@@ -24,13 +24,13 @@ using Task = System.Threading.Tasks.Task;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **换型从空壳变成真表（B551）** / The switch goes from an empty stub to real tables (B551).
+/// **换型从空壳变成真表** / The switch goes from an empty stub to real tables.
 /// </summary>
 /// <remarks>
 /// `TaskSchedulingSwitch.Register` 原来直接返回 `Ok`——两张表都是 `null`，而 `SwitchCostMinimization` / `SwitchTimeMinimization`
 /// 也是空壳。于是"换型成本"这条目标从来不存在，"注册成功"的绿灯亮在什么都没做上。
 ///
-/// 本批的三种静默失效：
+/// 这里的三种静默失效：
 /// <list type="number">
 /// <item>**跳过对角线**：`switch[e, t, t]` 若在数据里非零（含准备时间），跳过就少罚了一部分；</item>
 /// <item>**"紧跟"判据漏掉中间任务**：`t1` 与 `t3` 之间还排着 `t2` 时仍然算换型，换型次数被高估；</item>
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </list>
 ///
 /// `TaskSchedulingSwitch.Register` used to return `Ok` outright — both tables were `null` and both objectives were stubs. The "switch cost" objective therefore never existed,
-/// and the green light shone on doing nothing. Three silent failures this batch targets: (1) **skipping the diagonal** — a non-zero `switch[e, t, t]` (setup time) then goes
+/// and the green light shone on doing nothing. Three silent failures targets: (1) **skipping the diagonal** — a non-zero `switch[e, t, t]` (setup time) then goes
 /// under-penalised; (2) **a "immediately precedes" test that misses a middle task** — `t1` and `t3` still count as a switch while `t2` sits between them, over-estimating the
 /// switch count; (3) **switch time without the mask** — the gap is charged even when nothing switches.
 /// </remarks>
@@ -423,15 +423,15 @@ public class SwitchTableTests {
     /// <remarks>
     /// 换型时间是 `(est[to] − end[from]) × 指示`，而目标对**所有有序对**求和。于是：
     /// <list type="bullet">
-    /// <item>最小化会把某个方向压成**负值**——它把后一个任务排到前一个任务之前，那一对的间隔就是负的。基线不夹这个负值（B515 的既有 ceiling），
-    ///   照抄，不偷偷 `max(0, ·)`。</item>
+    /// <item>最小化会把某个方向压成**负值**——它把后一个任务排到前一个任务之前，那一对的间隔就是负的。基线不夹这个负值，
+    /// 照抄，不偷偷 `max(0, ·)`。</item>
     /// <item>最大化会被推到**大于计划里的 3600 秒**。</item>
     /// </list>
     /// 这两条一起才钉得住"`x` 真的读了 `est`"：若 `x` 是常量间隔，求和只可能落在 `0` 或 `3600`，**永远出不了负值、也超不过 3600**。
     /// 第一版判据断言最小值是 0，实测 −14400——断言写的是我以为会发生的，不是实现做的。
     ///
     /// The switch time is `(est[to] − end[from]) × indicator` and the objective sums over **all ordered pairs**, so minimising drives one direction **negative** (it orders the
-    /// later task before the earlier one, whose gap is negative). The baseline does not clamp that (B515's ceiling) and this copies it rather than quietly taking `max(0, ·)`.
+    /// later task before the earlier one, whose gap is negative). The baseline does not clamp that (the earlier ceiling) and this copies it rather than quietly taking `max(0, ·)`.
     /// Maximising is pushed **above** the planned 3600 s. Together these pin "`x` really reads `est`": with a constant gap the sum could only be `0` or `3600`, never negative and
     /// never above 3600. The first version of this criterion asserted the minimum was 0 and measured −14400 — the assertion described what I expected, not what the code does.
     /// </remarks>

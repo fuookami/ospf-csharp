@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// The "find the counterpart by name" method cannot be trusted, and I have misjudged with it three times.
 /// </summary>
 /// <remarks>
-/// **B1277 想回答一个看起来很简单的问题：基线里有多少类型本仓没有？**
+/// **起初要回答一个看起来很简单的问题：基线里有多少类型本仓没有？**
 ///
 /// **我写了一个脚本，按文件名 + 类型声明名对照，得到的数字一路在变：**
 ///
@@ -36,12 +36,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **而 Kotlin 与 C# 的命名习惯不同（`Function` 后缀、`View`／`Item`／`Group` 后缀），
 /// 基线里还有大量 `typealias` 与纯函数文件——<b>名字本来就不该相等**。</b>
 ///
-/// ### 所以这一批不交付"缺多少"，交付"这个数字不可交付"
+/// ### 所以这里不交付"缺多少"，交付"这个数字不可交付"
 ///
 /// **判据断言的是：** **那几个我误判过的名字，在本仓确实有对应物**——
 /// **它防的不是"基线缺什么"，而是"下一次有人（包括我）重新跑同一个脚本，又得出一个数字"。**
 ///
-/// **B1277 set out to answer a simple-looking question: how many baseline types does this repo lack?** **I wrote a script
+/// **The question looked simple: how many baseline types does this repo lack?** **I wrote a script
 /// comparing file stems and declared type names, and the number kept moving: 110 by stem, 155 by exact type name, 133 after
 /// suffix and case tolerance — and spot checks showed every one of them was unusable while looking like a conclusion.**
 ///
@@ -52,7 +52,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// thing" — and Kotlin and C# name things differently (`Function`, `View`, `Item`, `Group` suffixes), while the baseline also
 /// carries many `typealias` and pure-function files, so <b>the names were never supposed to match</b>.**
 ///
-/// **So this batch does not deliver "how much is missing"; it delivers "that number is not deliverable".** **What the criterion
+/// **So not deliver "how much is missing"; it delivers "that number is not deliverable".** **What the criterion
 /// asserts is that the names I misjudged do have counterparts here — it guards not against "the baseline lacks something" but
 /// against "someone, myself included, runs the same script again and gets another number".**
 /// </remarks>

@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 报告的“未生效参数”只装真的未生效的 / The report's "not applied" bag holds only what was not applied.
 /// </summary>
 /// <remarks>
-/// B1231 更正了 SCIP 的一处披露：`parallel/maxnthreads` 被记进 `ignoredParameters`，而它<b>已经生效</b>。
+/// **SCIP 的一处披露被更正：**`parallel/maxnthreads` 被记进 `ignoredParameters`，而它<b>已经生效</b>。
 ///
 /// **`ignoredParameters` 的文档语义是"已声明但未生效的参数"（`SolverReportMetadata`）。**
 /// **于是这里出现了一个不可能的句子：一个被 `SetIntParameter` 成功设下去、失败时还会 `ParameterFailure` 的参数，
@@ -22,9 +22,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// 求解行为完全正确；错的只是那句关于自己的话。**
 ///
 /// **所以判据必须读源码，而不是跑求解。** **这与前几批的结构判据同源，但锚点不同：
-/// 前几批数"定义次数"，这一批查"某个键是否出现在某个表里"。**
+/// 前几批数"定义次数"，这里查"某个键是否出现在某个表里"。**
 ///
-/// B1231 corrects a SCIP disclosure: `parallel/maxnthreads` was recorded in `ignoredParameters` while it <b>is</b>
+/// **A SCIP disclosure was corrected:** `parallel/maxnthreads` was recorded in `ignoredParameters` while it <b>is</b>
 /// applied.
 ///
 /// **`ignoredParameters` is documented as "requested parameters that were not applied".** **So the report contained an
@@ -68,7 +68,7 @@ public class ScipIgnoredParameterDisclosureTests
     /// Both bags hold real parameters only, never "facts".
     /// </summary>
     /// <remarks>
-    /// **这一条钉的是本批<b>一度写错</b>的方向：** **我起初把差异塞成 `effective["concurrentSolving"]`，
+    /// **这一条钉的是这里<b>一度写错</b>的方向：** **我起初把差异塞成 `effective["concurrentSolving"]`，
     /// 那就凭空造出了一个 SCIP 没有的参数名——而读取方会以为它是一个可以下发的设置。**
     ///
     /// **"不是参数的事实"该写在文档里，不该伪装成参数。**
@@ -76,7 +76,7 @@ public class ScipIgnoredParameterDisclosureTests
     /// **判据因此检查两个表里都不出现 `concurrentSolving` 这个键。**
     /// **它同时挡住了"把能力差异写成参数"这种更隐蔽的失真。**
     ///
-    /// **This pins the direction this batch <b>got wrong once</b>: I first put the difference in as
+    /// **This pins the direction <b>got wrong once</b>: I first put the difference in as
     /// `effective["concurrentSolving"]`, which fabricates a parameter name SCIP does not have — and a reader would take it
     /// for a setting that can be sent.**
     ///

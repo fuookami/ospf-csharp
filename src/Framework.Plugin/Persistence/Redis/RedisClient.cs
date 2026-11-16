@@ -191,10 +191,10 @@ public static class Redis {
                 return new RedisClient(multiplexer, config.Database);
             }
             catch (Exception ex) {
-                // **B1298：这里原先吞掉异常直接返回 null，于是"连不上"与"没配置"对调用方完全一样。**
+                // **这里原先吞掉异常直接返回 null，于是"连不上"与"没配置"对调用方完全一样。**
                 // **保留一条诊断串，让"为什么没起来"至少可读。**
                 //
-                // **B1298: this used to swallow the exception and return null, making "cannot connect" and "not configured"
+                // **this used to swallow the exception and return null, making "cannot connect" and "not configured"
                 // indistinguishable. One diagnostic string makes the reason readable.**
                 LastInitError = $"{config.Name}@{string.Join(",", config.Urls)}: {ex.GetType().Name}: {ex.Message}";
                 return null;

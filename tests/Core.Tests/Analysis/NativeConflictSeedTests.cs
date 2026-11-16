@@ -53,7 +53,7 @@ public class NativeConflictSeedTests {
     /// **这是这批唯一真正容易写错的地方。** "顺手补全"会把边界也传进去，
     /// 而**后端可能根本没为那条边界建 activation**。
     ///
-    /// **This is the one thing in this batch that is really easy to get wrong.** A helpful completion would pass the bounds too, and **the backend may never have created an
+    /// **This is the one thing in that is really easy to get wrong.** A helpful completion would pass the bounds too, and **the backend may never have created an
     /// activation for that bound.**
     /// </remarks>
     [Fact]

@@ -1,4 +1,4 @@
-// 编译后的活动模型（B688）的判据 / Criteria for the compiled activity model (B688).
+// 编译后的活动模型的判据 / Criteria for the compiled activity model.
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 
 /// <summary>
-/// **编译后的活动模型（B688）** / The compiled activity model (B688).
+/// **编译后的活动模型** / The compiled activity model.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**变量索引就是选择顺序且成本同源**、**产能优先级不可换**

@@ -12,10 +12,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **守卫不能省；两张表的分组键不同** / The guard cannot be dropped, and the two tables group by different keys.
 /// </summary>
 /// <remarks>
-/// 守卫为假时不动聚合；若写成无条件重写，每个原始任务每轮都会被 `flush()` 成空——
+/// 守卫为假时不动聚合；若写成无条件重写，每个原始任务每轮都会被 `flush` 成空——
 /// 所有指派关系消失，而**没有任何错误或警告**：之后的换型、冲突、成本都读到零，模型只是"什么都没做"。
 ///
-/// When the guard is false the aggregate is left alone; an unconditional rewrite would `flush()` every origin task into an empty sum every round — all assignment relations vanish with
+/// When the guard is false the aggregate is left alone; an unconditional rewrite would `flush` every origin task into an empty sum every round — all assignment relations vanish with
 /// **no error or warning**: switching, conflicts and cost then read zero, and the model merely "does nothing".
 /// </remarks>
 public class AssignmentAggregationTests {

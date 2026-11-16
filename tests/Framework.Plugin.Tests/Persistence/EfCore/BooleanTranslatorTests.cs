@@ -1,4 +1,4 @@
-// 布尔翻译器不再恒返回 null（B722）/ The boolean translator stops returning null unconditionally (B722).
+// 布尔翻译器不再恒返回 null/ The boolean translator stops returning null unconditionally.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.EfCore;
 
 /// <summary>
-/// **布尔翻译器不再恒返回 null（B722）** / The boolean translator stops returning null unconditionally (B722).
+/// **布尔翻译器不再恒返回 null** / The boolean translator stops returning null unconditionally.
 /// </summary>
 /// <remarks>
 /// `DefaultBooleanTranslator.Translate` 第一版是 `=> null`：不看入参、恒不翻译。上层把 `null` 读成"这个形状翻不了"，

@@ -15,15 +15,13 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 求解入口处的延迟物化判定 / The deferred-materialisation decision at the solve entry.
 /// </summary>
 /// <remarks>
-/// B1240 补配置侧的策略，并把"两个策略任一 `Eager` 就短路"做成一个独立函数。
+/// 补配置侧的策略，并把"两个策略任一 `Eager` 就短路"做成一个独立函数。
 ///
-/// **这一批<b>没有</b>把 `Materialize` 接进求解器——原因写清楚，因为它是下一批的起点：**
+/// **这里<b>没有</b>把 `Materialize` 接进求解器——原因写清楚，因为它是后续的起点：**
 /// **接线需要一条从 `ILinearTriadModelView` 拿到策略的通路，而那个接口只有两个成员
 /// （继承自 `IModelView`），没有策略。而求解入口拿到的是视图，不是模型。**
 ///
-/// adds
-///
-/// **This batch does <b>not</b> wire `Materialize` into a solver — stated plainly because it is where the next batch
+/// ** does <b>not</b> wire `Materialize` into a solver — stated plainly because it is where the next batch
 /// starts: wiring needs a path from `ILinearTriadModelView` to the policy, and that interface (inheriting `IModelView`)
 /// carries no policy. The solve entry receives a view, not a model.**
 /// </remarks>

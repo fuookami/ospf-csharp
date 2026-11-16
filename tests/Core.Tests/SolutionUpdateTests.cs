@@ -62,11 +62,11 @@ public sealed class SolutionUpdateTests {
     /// <summary>**带边界时子代真的被夹到区间内** / With bounds the children really are clamped into the interval.</summary>
     /// <remarks>
     /// 这条是**可证伪**的：`BoundedStubModel` 的边界是 `[-10, 10]`，而带宽 0.1 配合宽度 20 会给出 ±2 的步长——不足以越界。因此下面的
-    /// 用例把带宽放大到 10（步长 ±200），**若夹紧失效，值会落到 ±200 附近而断言立刻失败**。Batch 168 之前这里写的是
+ /// 用例把带宽放大到 10（步长 ±200），**若夹紧失效，值会落到 ±200 附近而断言立刻失败**。earlier 之前这里写的是
     /// `value &gt;= -10 &amp;&amp; value &lt;= 10` 配上无边界模型，断定的是恒真命题。
     /// This one is **falsifiable**: `BoundedStubModel` bounds are `[-10, 10]`, while bandwidth 0.1 over width 20 gives a ±2 step —
     /// not enough to overflow. The case below therefore inflates the bandwidth to 10 (a ±200 step); **if clamping were broken the
-    /// values would land near ±200 and the assertion would fail immediately**. Before Batch 168 this spot asserted
+ /// values would land near ±200 and the assertion would fail immediately**. Before earlier this spot asserted
     /// `value &gt;= -10 &amp;&amp; value &lt;= 10` against an unbounded model, i.e. a tautology.
     /// </remarks>
     [Fact]
@@ -97,7 +97,7 @@ public sealed class SolutionUpdateTests {
     /// "缺边界时不产生 `NaN`/`∞`"，**不能**验证夹紧本身。
     ///
     /// `StubModel` 的令牌表为空意味着**全仓还没有任何测试真正走到夹紧路径**：`LowerBoundOf` 恒为 `null`，任何"结果在边界内"的断言都
-    /// 恒真。我最初写的正是这种空洞断言（`value &gt;= -10 &amp;&amp; value &lt;= 10`），而生成值本来就落在 [0, 4]，断言无论如何都通过。
+ /// 恒真。最初写的正是这种空洞断言（`value &gt;= -10 &amp;&amp; value &lt;= 10`），而生成值本来就落在 [0, 4]，断言无论如何都通过。
     /// 构造带边界的测试替身需要经约束系统给变量挂 `ValueRange`，属于独立的测试基建工作，已记入计划文档的后续项。
     /// This assertion is **falsifiable**: `StubModel`'s token table is empty, so `LowerBoundOf` always returns `null` and clamping never
     /// engages. What can be verified here is only "no `NaN`/`∞` without bounds", **not** the clamping itself.

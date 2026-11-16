@@ -3,9 +3,9 @@
 // Axis type aliases — re-export Math.Geometry axis types for quantity-layer consumers.
 // In C# there is no generic typealias, so consumers reference Math.Geometry types directly.
 // This file documents the mapping:
-//   QuantityAxis2      = Math.Geometry.Axis2
-//   QuantityAxis3      = Math.Geometry.Axis3
-//   QuantityAxisPlane3 = Math.Geometry.AxisPlane3
+// QuantityAxis2      = Math.Geometry.Axis2
+// QuantityAxis3      = Math.Geometry.Axis3
+// QuantityAxisPlane3 = Math.Geometry.AxisPlane3
 //
 // Additionally, non-generic aliases are provided as using directives for convenience.
 // The following aliases are available via 'using' in consuming files:

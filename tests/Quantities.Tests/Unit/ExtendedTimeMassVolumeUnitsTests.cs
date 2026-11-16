@@ -14,16 +14,14 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 三套吨、两套盎司、两套加仑：名字只差一点，量差很多 / Three tons, two ounces, two gallons: close names, far values.
 /// </summary>
 /// <remarks>
-/// B1137 补 Time(2) / Mass(12) / Volume(16) 共 30 个单位（基线 Time.kt / Mass.kt / Volume.kt）。
+/// 补 Time(2) / Mass(12) / Volume(16) 共 30 个单位（基线 Time.kt / Mass.kt / Volume.kt）。
 ///
-/// 这一批的风险集中在"同名不同量"：
+/// 这里的风险集中在"同名不同量"：
 /// 长吨 2240 磅 / 短吨 2000 磅 / 公吨 1000 千克；
 /// 常衡盎司 1/16 磅 / 金衡盎司 1/12 磅；
 /// UK 加仑 4.54609 L / US 加仑 3.78541 L。
 ///
 /// **每一对都只差一个词，而量差 10%—20%——写错了不会报错，只会让"3 吨"变成别的重量。**
-///
-/// adds
 ///
 /// The risk here is "same name, different size":
 /// long ton 2240 lb / short ton 2000 lb / metric ton 1000 kg;
@@ -51,11 +49,11 @@ public class ExtendedTimeMassVolumeUnitsTests
         double longTon = FactorOf(MassUnits.LongTon);
 
         // 因子的语义是"一个本单位等于多少个基准单位"，所以公吨的因子是 1000（基准是 kg）。
-        // **第一版把它当成 1，是又一次把"相对量"读成"绝对量"**——与 B1127 的密度判据同一个坑。
+        // **第一版把它当成 1，是又一次把"相对量"读成"绝对量"**——与密度判据同一个坑。
         //
         // The factor means "how many base units one of these is", so the metric ton's factor is 1000 (base is kg).
         // **The first version read it as 1, again confusing a relative quantity with an absolute one** —
-        // the same trap as B1127's density criterion.
+        // the same trap as the earlier density criterion.
         metric.Should().Be(1000.0, "the metric ton is exactly one thousand kilograms");
         shortTon.Should().BeLessThan(metric, "2000 lb is about 907 kg");
         longTon.Should().BeGreaterThan(metric, "2240 lb is about 1016 kg");

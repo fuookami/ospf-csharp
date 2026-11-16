@@ -162,9 +162,9 @@ public sealed record NotBetterLimit(ulong Limit) : IStoppingCriterion {
 /// </summary>
 /// <remarks>
 /// **依赖 `Iteration.Time` 是实时读数**。若 `Time` 只在推进迭代时更新，那么长时间不推进迭代的空档里，超时判据读到的是过期值——
-/// 而这恰恰是它最该准确的时刻。这正是 Batch 152 给 `Iteration` 补上实时读数与暂停/恢复的原因。
+/// 而这恰恰是它最该准确的时刻。这正是 earlier 给 `Iteration` 补上实时读数与暂停/恢复的原因。
 /// **Relies on `Iteration.Time` being a live reading.** If `Time` only moved when the iteration advanced, a timeout check during a
-/// long gap between iterations would read a stale value — exactly when it most needs to be accurate. That is why Batch 152 gave
+/// long gap between iterations would read a stale value — exactly when it most needs to be accurate. That is why earlier gave
 /// `Iteration` a live reading plus pause/resume.
 /// </remarks>
 /// <param name="Limit">时间上限 / The time limit.</param>

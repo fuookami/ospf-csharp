@@ -12,7 +12,7 @@
 // **Two type substitutions, stated here rather than left for the caller to guess**: (1) the baseline's
 // `PackedSheet.type` is `SheetType<FltX>` (carrying type code and batch/inventory semantics) which is not ported;
 // `Sheet2Shape<FltX>` is used instead, since aggregation needs only width, height and area — exactly its contents.
-// (2) `MaterialSummary.material` is the baseline's `MaterialKey`, ported in Batch 83 alongside `Material`.
+// (2) `MaterialSummary.material` is the baseline's `MaterialKey`, ported in earlier alongside `Material`.
 
 using System;
 using System.Collections.Generic;

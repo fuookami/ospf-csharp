@@ -20,11 +20,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 证明判定与分析侧投影 / Proof gating and the analysis-side projections.
 /// </summary>
 /// <remarks>
-/// **B977 补了 `ConstraintProgrammingAnalysisBackends.kt`（270 行）里不需要求解器的部分**：
+/// 补了 `ConstraintProgrammingAnalysisBackends.kt`（270 行）里不需要求解器的部分**：
 /// 两个证明判定、assumption 映射、固定值投影、后端失败传播。
 /// **没搬的是 `ConstraintProgrammingPerturbationBackend` 本身**——它要 `solver.CreateSession` 与 `session.Solve`。
 ///
-/// **B977 ports the solver-free parts of `ConstraintProgrammingAnalysisBackends.kt`**; **what did not come over is the backend itself.**
+/// **The solver-free parts of `ConstraintProgrammingAnalysisBackends.kt` is ported**; **what did not come over is the backend itself.**
 /// </remarks>
 public class ConstraintProgrammingAnalysisBackendsTests {
     private static ConstraintProgrammingFeasibleOutput Feasible(ProofStatus proofStatus) =>

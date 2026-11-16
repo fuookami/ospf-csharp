@@ -12,8 +12,8 @@ using System.Linq;
 namespace Fuookami.Ospf.Math.Symbol.Polynomial;
 /// <summary>
 /// 可变规范多项式 / Mutable Canonical Polynomial.
-/// 增量构建用，构建完成后调用 ToCanonicalPolynomial() 转不可变。
-/// Incremental builder; freeze via ToCanonicalPolynomial().
+/// 增量构建用，构建完成后调用 ToCanonicalPolynomial 转不可变。
+/// Incremental builder; freeze via ToCanonicalPolynomial.
 /// </summary>
 public sealed class MutableCanonicalPolynomial<T>
     where T : struct, INumberField<T>, IRealNumber<T> {

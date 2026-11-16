@@ -1,4 +1,4 @@
-// 设备产能约束压在数量上（B735）/ The executor capacity constraint presses on the amounts (B735).
+// 设备产能约束压在数量上/ The executor capacity constraint presses on the amounts.
 
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **设备产能约束压在数量上（B735）** / The executor capacity constraint presses on the amounts (B735).
+/// **设备产能约束压在数量上** / The executor capacity constraint presses on the amounts.
 /// </summary>
 /// <remarks>
-/// 两代缺陷叠在这里：第一版是 `Invoke =&gt; Ok`（什么都没建）；第二版（B725）建了行，但压的是 `CapacityUsageVariables`
+/// 两代缺陷叠在这里：第一版是 `Invoke =&gt; Ok`（什么都没建）；第二版建了行，但压的是 `CapacityUsageVariables`
 /// 那组**自由变量**——它们与数量之间没有任何行相连，所以"占用 ≤ 可用时长"对数量毫无约束力。
 ///
-/// B735 起容量是**表达式**：`capacity[e, s] = Σ_{执行器为 e 的动作} Σ_顺序位 x`，约束直接压到数量上。
+/// 起容量是**表达式**：`capacity[e, s] = Σ_{执行器为 e 的动作} Σ_顺序位 x`，约束直接压到数量上。
 ///
-/// Two generations of defects stack here: the first version was `Invoke =&gt; Ok` (building nothing); the second (B725) built rows but pressed on `CapacityUsageVariables`, **free variables**
-/// with no row tying them to the amounts, so "occupancy within available duration" constrained nothing. Since B735 capacity is an **expression** —
+/// Two generations of defects stack here: the first version was `Invoke =&gt; Ok` (building nothing); the second built rows but pressed on `CapacityUsageVariables`, **free variables**
+/// with no row tying them to the amounts, so "occupancy within available duration" constrained nothing. Since capacity is an **expression** —
 /// `sum of x over the executor's actions and positions` — and the constraint presses directly on the amounts.
 /// </remarks>
 public class ExecutorCapacityConstraintTests {
@@ -101,11 +101,11 @@ public class ExecutorCapacityConstraintTests {
     /// </summary>
     /// <remarks>
     /// 三点成对：E1 的容量表达式含 2 个 `operationTime`（每个动作一个）/ E2 的含 1 个 /
-    /// 两个执行器的表达式**不是同一个符号**。第一条正是 B725 那个自由变量版做不到的：那时左端只有一个变量项，
+    /// 两个执行器的表达式**不是同一个符号**。第一条正是 那个自由变量版做不到的：那时左端只有一个变量项，
     /// 与数量无关，所以超卖也不会被拦住。
     ///
     /// Three paired points: E1's capacity expression holds 2 `operationTime` symbols (one per action); E2's holds 1; and the two executors' expressions are
-    /// **not the same symbol**. The first is exactly what B725's free-variable version could not do: the left-hand side was a single variable item unrelated to the amounts, so
+    /// **not the same symbol**. The first is exactly what the earlier free-variable version could not do: the left-hand side was a single variable item unrelated to the amounts, so
     /// oversubscription could not be stopped.
     /// </remarks>
     [Fact]
@@ -118,10 +118,10 @@ public class ExecutorCapacityConstraintTests {
         var first = (Fuookami.Ospf.Core.Symbol.LinearExpressionSymbol)load.CapacityOf(0, 0);
         var second = (Fuookami.Ospf.Core.Symbol.LinearExpressionSymbol)load.CapacityOf(1, 0);
         // **容量表达式引用的是 `operationTime` 符号**（每个动作一个），不是直接铺开所有格子——两层表达式，
-        // 展开成数量要经 `operationTime` 这一层。B733 的自由变量版连这一层都没有。
+        // 展开成数量要经 `operationTime` 这一层。 的自由变量版连这一层都没有。
         //
         // **The capacity expression references the `operationTime` symbols** (one per action) rather than flattening every cell — two expression layers, and reaching the amounts goes
-        // through `operationTime`. B733's free-variable version had no such layer at all.
+        // through `operationTime`. the earlier free-variable version had no such layer at all.
         first.Polynomial!.Monomials.Should().HaveCount(2, "one operationTime per E1 action");
         second.Polynomial!.Monomials.Should().HaveCount(1, "one operationTime for the single E2 action");
     }
@@ -130,10 +130,10 @@ public class ExecutorCapacityConstraintTests {
     /// **非法入参显式失败，未注册的表达式层取用直接抛** / Invalid input fails explicitly and an unregistered layer throws on use.
     /// </summary>
     /// <remarks>
-    /// 两点成对：`new object()` → `Failed`（第一版这里返回 `Ok`）/ 未注册就取容量表达式 → `InvalidOperationException`，
+    /// 两点成对：`new object` → `Failed`（第一版这里返回 `Ok`）/ 未注册就取容量表达式 → `InvalidOperationException`，
     /// **不要返回一个空多项式冒充"零占用"**。
     ///
-    /// Two paired points: `new object()` yields `Failed` (the first version returned `Ok` here); and taking a capacity expression before registration throws
+    /// Two paired points: `new object` yields `Failed` (the first version returned `Ok` here); and taking a capacity expression before registration throws
     /// `InvalidOperationException` — **no empty polynomial pretending to be "zero occupancy"**.
     /// </remarks>
     [Fact]

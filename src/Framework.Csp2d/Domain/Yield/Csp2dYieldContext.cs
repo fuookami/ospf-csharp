@@ -76,8 +76,7 @@ public sealed class Csp2dOverProductionBoundConstraint {
     ///
     /// **An empty table returns immediately**: with no bound configured, no constraint belongs in the model, or "configured yield" and "no yield configuration" would
     /// produce the same model while the caller believes it was configured. **A bounded product that no plan covers is skipped too** — a constraint with no terms only
-    /// adds noise.
-    /// </remarks>
+    /// Adds </remarks>
     public Result<Success, ErrorCode, Error<ErrorCode>> Invoke(LinearMetaModel<Flt64> model) {
         if (_config.Bounds.Count == 0) {
             return Results.OkInstance;

@@ -181,13 +181,13 @@ internal sealed class GenerationCollector<TPlan> {
     /// 基线在 `GenerationCollector.kt` 的跨贡献分支里递增这个计数。C# 侧此前**只有字段与统计参数**，
     /// `_dominanceStrategy` 被存下来但**从不读取**，跨贡献分支根本不存在。
     ///
-    /// **本批只补计数通道，不补跨贡献判定本身**——判定需要 `relaxedDominanceKey` 与
+    /// **这里只补计数通道，不补跨贡献判定本身**——判定需要 `relaxedDominanceKey` 与
     /// `canCrossContributionDominate`，那是一个独立的能力缺口（见计划小节"仍然存在的缺口"）。
     ///
     /// The baseline increments this counter in `GenerationCollector.kt`'s cross-contribution branch. On the C# side there was previously **only the field and
     /// the statistics parameter**; `_dominanceStrategy` was stored but **never read**, and the cross-contribution branch did not exist at all.
     ///
-    /// **This batch adds only the counting channel, not the cross-contribution decision itself** — that decision needs `relaxedDominanceKey` and
+ /// ** adds only the counting channel, not the cross-contribution decision itself** — that decision needs `relaxedDominanceKey` and
     /// `canCrossContributionDominate`, which is a separate capability gap (see the plan section's "remaining gaps").
     /// </remarks>
     public void RecordCrossContributionDominated(long count = 1L) => _crossContributionDominated += count;

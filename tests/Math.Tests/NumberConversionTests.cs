@@ -1,4 +1,4 @@
-// 数值类型到 FltX 的转换（B698）的判据 / Criteria for converting numeric types to FltX (B698).
+// 数值类型到 FltX 的转换的判据 / Criteria for converting numeric types to FltX.
 
 using System;
 using FluentAssertions;
@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Math.Tests;
 
 /// <summary>
-/// **数值类型到 `FltX` 的转换（B698）** / Converting numeric types to `FltX` (B698).
+/// **数值类型到 `FltX` 的转换** / Converting numeric types to `FltX`.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**十二个数值类型全通**、**值真的传过去**、**未知类型抛出而不是返回 0**。
@@ -25,7 +25,7 @@ public class NumberConversionTests {
     /// 三点成对：
     ///
     /// 1. 十二个类型**逐个**转到 `FltX` 并等于期望值——不是"挑几个代表性的"。
-    ///    少一个就是运行期一处 `NotSupportedException`（`Flt32` / `Int32` / `UInt32` 原本各自缺在不同调用点）。
+    /// 少一个就是运行期一处 `NotSupportedException`（`Flt32` / `Int32` / `UInt32` 原本各自缺在不同调用点）。
     /// 2. `FltX` 转自己**值不变**（不能顺手降级成 `double`）。
     /// 3. 负值与小数**符号与量级都对**（负数转无符号类型会另说，这里只走有符号）。
     ///

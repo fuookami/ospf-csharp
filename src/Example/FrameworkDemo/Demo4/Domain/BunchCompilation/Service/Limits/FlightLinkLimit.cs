@@ -48,12 +48,12 @@ public sealed class FlightLinkShadowPriceKey(Link link) : ShadowPriceKey(typeof(
 /// </summary>
 /// <remarks>
 /// 基线 `FlightLinkLimit.kt`：每条链接加一条 `slack ≥ 1`，再把 `Σ 系数 × slack` 放进最小化目标。
-/// 与机队那一条（B753）**结构相同、阈值不同**：机队的右端项是机数，链接的右端项恒为 1——一条链接只要接上一次就算成立。
+/// 与机队那一条**结构相同、阈值不同**：机队的右端项是机数，链接的右端项恒为 1——一条链接只要接上一次就算成立。
 ///
 /// 阈值 1 与链接松弛的源多项式单位必须一致：源是 `link_k + 0.5·y[前驱] + 0.5·y[后继]`，`link_k` 数的是"这一轮几个束把它们接在一起"，
 /// 所以"至少一次"就是 1。**写成机数或成本会让这条约束变成另一件事。**
 ///
-/// The baseline's `FlightLinkLimit.kt` adds `slack ≥ 1` per link and puts `Σ coefficient × slack` into the minimisation objective. **The same shape as the fleet limit (B753) with a
+/// The baseline's `FlightLinkLimit.kt` adds `slack ≥ 1` per link and puts `Σ coefficient × slack` into the minimisation objective. **The same shape as the fleet limit  with a
 /// different threshold**: the fleet's right-hand side is an aircraft count, the link's is constantly 1 — a link holds as soon as it is stitched once.
 ///
 /// The threshold 1 has to agree with the units of the link slack's source: the source is `link_k + 0.5·y[prev] + 0.5·y[succ]`, and `link_k` counts "how many bunches of this round

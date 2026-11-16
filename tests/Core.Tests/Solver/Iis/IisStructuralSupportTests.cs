@@ -16,8 +16,8 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 /// **无需求解器即可验证的 IIS 结构辅助** / IIS structural helpers, verifiable without a solver.
 /// </summary>
 /// <remarks>
-/// **B398 定位到二次 IIS 整体缺失（846 行 / 12 函数）**，B399 建了骨架。
-/// 本批移植其中**四个不调用求解器的纯函数**——它们只读写模型形状，
+/// **定位到二次 IIS 整体缺失（846 行 / 12 函数）**，建了骨架。
+/// 这里移植其中**四个不调用求解器的纯函数**——它们只读写模型形状，
 /// 因此**在当前无 SDK 的环境里可以完整验证**，不像 `performElasticFiltering` 那样
 /// 必须先有真实求解器。
 ///
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Test.Core.Solver.Iis;
 ///
 /// 约束行 `0` 的条目：`(x, -1)`、`(x, y)` 二次项、`(s, -1)`、`(s_lb, -1)`。
 ///
-/// **B398 located the wholesale absence of quadratic IIS (846 lines / 12 functions)**; B399 built the skeleton. This batch ports the **four pure functions that never
+/// **located the wholesale absence of quadratic IIS (846 lines / 12 functions)**; built the skeleton. ports the **four pure functions that never
 /// call a solver** — they only read and write model shape, so they **can be fully verified in this SDK-less environment**, unlike `performElasticFiltering`, which needs a
 /// real solver first. Fixture shape (5 variables, 1 constraint): see the table above. Row `0` carries `(x, -1)`, the quadratic term `(x, y)`, `(s, -1)` and `(s_lb, -1)`.
 /// </remarks>
@@ -407,7 +407,7 @@ public class IisStructuralSupportTests {
 
     /// <summary>**关联变量为空时必须返回原模型快照，而不是空子系统** / An empty relation must yield the origin snapshot, not an empty subsystem.</summary>
     /// <remarks>
-    /// **B402 记着这个分支"只靠类型约束兜底"**，本批补齐。
+    /// **记着这个分支"只靠类型约束兜底"**，这里补齐。
     ///
     /// 触发条件：过滤的松弛列**既没有下界变量、也没有上界变量、更没有来源行**——
     /// 于是 `RelatedRows` 返回空、`RelatedVariables` 返回空。
@@ -421,7 +421,7 @@ public class IisStructuralSupportTests {
     /// 用**引用相等**断言"同一个实例"，而不是比较内容——内容相等的副本
     /// 会在后续被当作独立模型修改，失去快照语义。
     ///
-    /// **B402 recorded that this branch was "only guarded by the type constraint"**; this batch closes it. Trigger: the filtered slack column has **no bound variables and
+    /// **recorded that this branch was "only guarded by the type constraint"**; closes it. Trigger: the filtered slack column has **no bound variables and
     /// no source row**, so `RelatedRows` and `RelatedVariables` both come back empty (table above). The criterion asserts **reference equality** for "the same instance"
     /// rather than comparing contents, because an equal-valued copy would later be mutated as an independent model and lose snapshot semantics.
     /// </remarks>

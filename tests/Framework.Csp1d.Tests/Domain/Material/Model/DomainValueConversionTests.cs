@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Material.Model;
 /// **`ToFlt64` 必须能转换所有受支持的数值类型，且不静默归零** / `ToFlt64` must convert every supported numeric type and must not silently return zero.
 /// </summary>
 /// <remarks>
-/// **B383 发现的偏离**：`LengthObjectivePipeline` 与 `TopKCuttingPlans` 各有一份**手写的**
+/// 发现的偏离**：`LengthObjectivePipeline` 与 `TopKCuttingPlans` 各有一份**手写的**
 /// `ToFlt64`，对非 `Flt64` / `FltX` 的 `V` **静默返回 `Flt64.Zero`**。
 ///
 /// 后果都是**静默的**：
@@ -24,35 +24,35 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Material.Model;
 /// 而 `DomainValueConversion.ToFlt64` **本来就在**，用 `System.Convert.ToDouble` 兜底。
 /// **两份手写版本是重复实现，且都是错的。**
 ///
-/// **B383's deviation**: `LengthObjectivePipeline` and `TopKCuttingPlans` each carried a **hand-written** `ToFlt64` that **silently returned `Flt64.Zero`** for any `V` other
+/// **the earlier deviation**: `LengthObjectivePipeline` and `TopKCuttingPlans` each carried a **hand-written** `ToFlt64` that **silently returned `Flt64.Zero`** for any `V` other
 /// than `Flt64` / `FltX`. Both failures are **silent** (table above), while `DomainValueConversion.ToFlt64` **already existed** with a `System.Convert.ToDouble` fallback.
 /// **The two hand-written copies were duplicates, and both were wrong.**
 /// </remarks>
 public class DomainValueConversionTests {
     /// <summary>**静态调用必须走 `DomainValueConversion` 的分支，而不是实例方法** / A static call must use `DomainValueConversion`'s branches, not an instance method.</summary>
     /// <remarks>
-    /// **本批在这里栽了三次，最后才发现根因。**
+    /// **这里在这里栽了三次，最后才发现根因。**
     ///
-    /// 前两版判据都写成 `value.ToFlt64()`。**`FltX` 自己有一个实例方法 `ToFlt64()`**
+    /// 前两版判据都写成 `value.ToFlt64`。**`FltX` 自己有一个实例方法 `ToFlt64`**
     /// （`Floating.cs:461`），C# **优先绑定实例方法而不是扩展方法**——
     /// 所以判据**从来没调用到 `DomainValueConversion.ToFlt64`**，
     /// 于是删掉它的 `FltX` / `Int64` / `Flt64` 分支，判据**全部存活**。
     ///
     /// **这不是"变异等价"，是判据压根没测到目标。** 判据里必须**静态调用**。
     ///
-    /// 顺带说明为什么本批前两次变异"完整重建后仍存活"——原因就在这里，
+    /// 顺带说明为什么这里前两次变异"完整重建后仍存活"——原因就在这里，
     /// 不是增量编译的问题（那个方向当时也怀疑过，查了产物时间才排除）。
     ///
-    /// **This batch failed three times here before finding the root cause.** The first two versions called `value.ToFlt64()`, but **`FltX` has its own instance method
-    /// `ToFlt64()`** (`Floating.cs:461`), and C# **binds the instance method before the extension method** — so the criteria **never reached `DomainValueConversion.ToFlt64`**
+ /// ** failed three times here before finding the root cause.** The first two versions called `value.ToFlt64`, but **`FltX` has its own instance method
+    /// `ToFlt64`** (`Floating.cs:461`), and C# **binds the instance method before the extension method** — so the criteria **never reached `DomainValueConversion.ToFlt64`**
     /// and removing its `FltX` / `Int64` / `Flt64` branches left them **all green**. **That is not an equivalent mutant; the criterion simply never tested the target.** The
     /// criterion must call it **statically**.
     /// </remarks>
     /// <summary>**`ConvertSolverValue` 对 `Int64` / `Flt32` 必须返回 `Failed`，不是静默成功** / It must return `Failed` for `Int64` / `Flt32`, not silently succeed.</summary>
     /// <remarks>
-    /// **B392 记的缺口**："`ConvertSolverValue` 失败时抛 `InvalidOperationException`，本批未测"。
-    /// B392 当时猜它"需要不受支持的 `V`"，而本仓四个 `V` 里前三个都被支持——
-    /// **这个猜测是错的，本批实测推翻了它**：
+    /// **记的缺口**："`ConvertSolverValue` 失败时抛 `InvalidOperationException`，这里未测"。
+    /// 当时猜它"需要不受支持的 `V`"，而本仓四个 `V` 里前三个都被支持——
+    /// **这个猜测是错的，这里实测推翻了它**：
     ///
     /// | `V` | `ConvertSolverValue` 结果 |
     /// | --- | --- |
@@ -64,13 +64,13 @@ public class DomainValueConversionTests {
     /// 所以这条失败路径**完全可达**——只要有人用 `Int64` 或 `Flt32` 实例化 CSP1D。
     ///
     /// 下游 `Csp1dShadowPriceLifecycle.ConvertSolverValue` 遇到 `Failed` 会**抛
-    /// `InvalidOperationException`**。**这比静默返回零好**（B383 修的就是静默归零），
+    /// `InvalidOperationException`**。**这比静默返回零好**，
     /// 但意味着**用 `Int64` 实例化 CSP1D 会在运行期炸**，而不是在类型层面被挡住。
     ///
-    /// **B392's gap**: "`ConvertSolverValue` throws on failure, untested". B392 guessed it needed an unsupported `V` and that the first three of the four `V`s were
-    /// supported — **that guess was wrong, as measured this batch** (table above). `Int64` and `Flt32` **both return `Failed`**, so the failure path is **fully
+    /// **the earlier gap**: "`ConvertSolverValue` throws on failure, untested". guessed it needed an unsupported `V` and that the first three of the four `V`s were
+    /// supported — **that guess was wrong, as measured** (table above). `Int64` and `Flt32` **both return `Failed`**, so the failure path is **fully
     /// reachable**: anyone instantiating CSP1D with `Int64` or `Flt32` hits it. `Csp1dShadowPriceLifecycle.ConvertSolverValue` then **throws
-    /// `InvalidOperationException`** — **better than silently returning zero** (what B383 fixed), but it means **`Int64`/`Flt32` instances blow up at runtime** instead of
+    /// `InvalidOperationException`** — **better than silently returning zero** (what fixed), but it means **`Int64`/`Flt32` instances blow up at runtime** instead of
     /// being rejected at the type level.
     /// </remarks>
     [Fact]

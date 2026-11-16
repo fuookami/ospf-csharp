@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// <remarks>
 /// 对齐基线 `DeferredFunctionFallback.kt` 的 `DeferredFunctionFallbackMaterializer`。
 ///
-/// **B1196, following the baseline's `DeferredFunctionFallbackMaterializer`.**
+/// **Following the baseline's `DeferredFunctionFallbackMaterializer`.**
 /// </remarks>
 public interface IDeferredFunctionFallbackMaterializer
 {
@@ -44,7 +44,7 @@ public interface IDeferredFunctionFallbackMaterializer
 /// **第三种不能折成任何一种：** **内层的失败带着具体原因（例如二值逻辑的输入非法），
 /// 折成"不支持"会让那个原因消失。**
 ///
-/// **B1199 之后七个结构都能真正生成行。**
+/// **此后七个结构都能真正生成行。**
 ///
 /// | 结构 | 能物化吗 |
 /// | --- | --- |
@@ -58,8 +58,6 @@ public interface IDeferredFunctionFallbackMaterializer
 ///
 /// **物化层的完整性<b>由行生成决定，而不是由分派表决定</b>。
 /// 这句话值得写下来：分派表全绿而三个结构物化不了，是一个看起来完整、实际空着三格的层。**
-///
-/// adds
 ///
 /// **There are three failures, and they must stay apart:**
 ///
@@ -76,7 +74,7 @@ public interface IDeferredFunctionFallbackMaterializer
 /// **The third must not fold into either**: **the inner failure carries the concrete cause (say, invalid binary-logic
 /// inputs), and folding it into "unsupported" loses that cause.**
 ///
-/// **As of B1199 all seven structures can generate rows.**
+/// **All seven structures can generate rows.**
 ///
 /// **The materializer layer's completeness is decided by <b>row generation</b>, not by the dispatch table.
 /// Worth writing down: a fully green dispatch table with three unmaterializable structures is a layer that looks

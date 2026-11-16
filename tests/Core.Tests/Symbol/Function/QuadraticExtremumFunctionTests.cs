@@ -21,14 +21,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// `max min` 与 `min max` 不是同一个量 / `max min` and `min max` are different quantities.
 /// </summary>
 /// <remarks>
-/// B1162 按基线 `QuadraticMax.kt`、`QuadraticMaxMin.kt`、`QuadraticMinMax.kt` 补三个类。
+/// 对齐基线 `QuadraticMax.kt`、`QuadraticMaxMin.kt`、`QuadraticMinMax.kt` 补三个类。
 ///
-/// **三者与 B1161 的 `QuadraticIf` 系列同形**：**桥接每个二次多项式，再交给已有的线性极值函数。**
+/// **三者与 `QuadraticIf` 系列同形**：**桥接每个二次多项式，再交给已有的线性极值函数。**
 /// **极值编码本身没有任何新增。**
 ///
-/// adds
-///
-/// **Same shape as B1161's `QuadraticIf` family**: **bridge each quadratic polynomial and hand them to the existing
+/// **Same shape as the earlier `QuadraticIf` family**: **bridge each quadratic polynomial and hand them to the existing
 /// linear extremum functions.** **No extremum encoding is new.**
 /// </remarks>
 public class QuadraticExtremumFunctionTests
@@ -87,9 +85,9 @@ public class QuadraticExtremumFunctionTests
 
     /// <summary>**桥接行真的被写进模型** / The bridge rows really reach the model.</summary>
     /// <remarks>
-    /// **按行名逐条核对，而不是数总数**——**B1161 的教训：`BeGreaterThan` 会被别的行满足。**
+    /// **按行名逐条核对，而不是数总数**——**教训：`BeGreaterThan` 会被别的行满足。**
     ///
-    /// **Check each row by name rather than counting** — **B1161's lesson: a `BeGreaterThan` is satisfied by other
+    /// **Check each row by name rather than counting** — **the earlier lesson: a `BeGreaterThan` is satisfied by other
     /// rows.**
     /// </remarks>
     [Fact]
@@ -128,7 +126,7 @@ public class QuadraticExtremumFunctionTests
     /// **空输入补一个零，而不是拒绝** / An empty input gets a zero rather than a rejection.
     /// </summary>
     /// <remarks>
-    /// **基线的 `inputs.ifEmpty { listOf(LinearPolynomial(emptyList(), zero)) }`。**
+    /// **基线的 `inputs.ifEmpty { listOf(LinearPolynomial(emptyList, zero)) }`。**
     /// **代价是"空输入"与"输入一个常数 0"无法区分**——
     /// **而如果这里改成抛异常，基线的行为就变了，所以照抄。**
     ///

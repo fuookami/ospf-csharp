@@ -51,10 +51,10 @@ public sealed class Aggregation
         RecoveryNeededFlightTasks = recoveryNeededFlightTasks;
         TaskTime = new BunchSchedulingTaskTime<FlightTaskBunch, FlightTask, Aircraft, FlightTaskAssignment>(
             timeWindow, recoveryNeededFlightTasks, Compilation);
-        // **流量是连接资源用量**：基线的 `flow` 就是这么装的，只是 C# 侧此前连 `Flow` 都当不了资源（B741）。
+        // **流量是连接资源用量**：基线的 `flow` 就是这么装的，只是 C# 侧此前连 `Flow` 都当不了资源。
         // 缺省为空列表——**没有流量规则时不该建出任何流量行**，而不是建一堆恒零的符号。
         //
-        // **Flows are connection resource usage**: the baseline wires `flow` exactly this way, except the C# side could not even treat `Flow` as a resource (B741). The default is an empty
+        // **Flows are connection resource usage**: the baseline wires `flow` exactly this way, except the C# side could not even treat `Flow` as a resource . The default is an empty
         // list — **no flow rules must build no flow rows**, rather than a pile of always-zero symbols.
         Flow = new BunchSchedulingConnectionResourceUsage<Flow, FlowControl, Flt64>(
             timeWindow, flows ?? Array.Empty<Flow>(), "flow");
@@ -146,11 +146,11 @@ public sealed class Aggregation
                 _ => new Err<ErrorCode>(ErrorCode.ApplicationError, "任务时间加列失败 / task time column addition failed"),
             });
         }
-        // **注册接上了，加列也要接上**：B748 只接了注册，于是容量/机队/链接三层的表达式永远是空的，
-        // 求解成功但所有数字都是 0——**"求出来了"最容易骗过人的形态**。B752 的真实求解判据就是在这里红的。
+        // **注册接上了，加列也要接上**： 只接了注册，于是容量/机队/链接三层的表达式永远是空的，
+        // 求解成功但所有数字都是 0——**"求出来了"最容易骗过人的形态**。 的真实求解判据就是在这里红的。
         //
-        // **Wiring registration is not enough; column addition must follow**: B748 only wired registration, so the capacity, fleet and link expressions stayed empty, the solve succeeded and
-        // every number came back 0 — **the most deceptive form of "it solved"**. B752's real-solve criterion is what turned red here.
+        // **Wiring registration is not enough; column addition must follow**: only wired registration, so the capacity, fleet and link expressions stayed empty, the solve succeeded and
+        // every number came back 0 — **the most deceptive form of "it solved"**. the earlier real-solve criterion is what turned red here.
         Try fleetBalance = FleetBalance.AddColumns(iteration, undupBunches);
         if (fleetBalance.IsFailed) {
             return Results.Failed<IReadOnlyList<FlightTaskBunch>>(fleetBalance switch {

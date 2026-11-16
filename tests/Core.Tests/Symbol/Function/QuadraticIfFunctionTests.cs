@@ -23,12 +23,10 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 桥接变量必须被约束，否则它自由 / The bridge variable must be constrained or it is free.
 /// </summary>
 /// <remarks>
-/// B1161 按基线 `QuadraticIf.kt`、`QuadraticIfThen.kt`、`QuadraticIfIn.kt` 补三个类。
+/// 对齐基线 `QuadraticIf.kt`、`QuadraticIfThen.kt`、`QuadraticIfIn.kt` 补三个类。
 ///
 /// **三者都只做一件事**：**把二次多项式桥接成一个实变量，再交给已有的线性 `If*` 函数。**
 /// **分支编码本身没有任何新增。**
-///
-/// adds
 ///
 /// **All three do one thing**: **bridge a quadratic polynomial to a real variable and hand it to the existing linear
 /// `If*` functions.** **No branch encoding is new.**
@@ -162,12 +160,12 @@ public class QuadraticIfFunctionTests
 
         // **区间外返回 `null`，而不是 0**：**这是仓库既有的 `IfInFunction` 语义**
         // （**它的 `EvaluateCore` 在"明确在外"时 `Map(_ => null)`**），
-        // **不是本批引入的，也不是我实现错了。**
+        // **不是这里引入的，也不是我实现错了。**
         // **我原本以为它是"在外给 0"，判据因此红了一次——那是我的期望错。**
         //
         // **Outside the interval it returns `null`, not zero**: **that is the repository's existing `IfInFunction`
         // semantics** (**its `EvaluateCore` does `Map(_ => null)` when clearly outside**), **neither introduced here
-        // nor a mistake in this batch.** **I had assumed "zero when outside" and the criterion went red once — my
+        // nor a mistake in.** **I had assumed "zero when outside" and the criterion went red once — my
         // expectation was wrong.**
         function.Evaluate(Values(x: 1.0)).Should().BeNull(
             "one lies below four, and this function reports 'outside' as undefined rather than zero");

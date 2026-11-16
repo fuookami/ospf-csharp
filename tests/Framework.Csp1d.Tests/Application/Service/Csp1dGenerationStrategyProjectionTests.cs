@@ -18,19 +18,19 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **生成策略的投影必须只有一处实现** / The generation-strategy projection must have exactly one implementation.
 /// </summary>
 /// <remarks>
-/// **B361 记的缺口**："列生成侧与 MILP 侧的三组投影是两份复制代码，将来可能再次偏离。"
+/// **记的缺口**："列生成侧与 MILP 侧的三组投影是两份复制代码，将来可能再次偏离。"
 ///
-/// 这不是假想的风险：B358—B360 接三个扩展点时**列生成接了、MILP 直连没接**，
+/// 这不是假想的风险： 接三个扩展点时**列生成接了、MILP 直连没接**，
 /// 结果**同一个策略在两条入口下行为不同**。**复制粘贴就是那次缺陷的成因。**
 ///
-/// 本批把投影收进 `Csp1dGenerationStrategyProjection`，两条路径都调它。
+/// 这里把投影收进 `Csp1dGenerationStrategyProjection`，两条路径都调它。
 ///
-/// **B361's ledger entry**: "the three projections on the column-generation side and the MILP side are two copies that may diverge again".
+/// **the earlier ledger entry**: "the three projections on the column-generation side and the MILP side are two copies that may diverge again".
 ///
-/// This is not a hypothetical risk: when B358—B360 wired the three hooks, **column generation got them and the MILP path did not**, so **one strategy behaved
+/// This is not a hypothetical risk: when wired the three hooks, **column generation got them and the MILP path did not**, so **one strategy behaved
 /// differently per entry point**. **Copy-paste was the cause.**
 ///
-/// This batch moves the projection into `Csp1dGenerationStrategyProjection`, called by both paths.
+/// moves the projection into `Csp1dGenerationStrategyProjection`, called by both paths.
 /// </remarks>
 public class Csp1dGenerationStrategyProjectionTests {
     private static Quantity<Flt64> Millimetres(double value) =>

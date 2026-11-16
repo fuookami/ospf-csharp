@@ -20,7 +20,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **力矩模型（B593）** / The torque model (B593).
+/// **力矩模型** / The torque model.
 /// </summary>
 /// <remarks>
 /// 四族符号：纵向力矩（按阶段）、横向力矩、CLIM（仅宽体）、指数（按阶段）。四处容易做错：

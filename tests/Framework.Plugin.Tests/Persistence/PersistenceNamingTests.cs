@@ -1,4 +1,4 @@
-// 持久化层不再有撒谎的名字（B723）/ The persistence layer has no lying name left (B723).
+// 持久化层不再有撒谎的名字/ The persistence layer has no lying name left.
 
 using System;
 using System.Collections.Generic;
@@ -10,10 +10,10 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 
 /// <summary>
-/// **持久化层不再有撒谎的名字（B723）** / The persistence layer has no lying name left (B723).
+/// **持久化层不再有撒谎的名字** / The persistence layer has no lying name left.
 /// </summary>
 /// <remarks>
-/// B721 发现 `EfCoreRepository` 名字里有 EF Core、行为是 `List&lt;T&gt;`。B723 先把名字改对（`InMemoryRepository`，
+/// 发现 `EfCoreRepository` 名字里有 EF Core、行为是 `List&lt;T&gt;`。 先把名字改对（`InMemoryRepository`，
 /// 挪到 `Persistence/InMemory/`），再确认其余四个后端**本来就是真的**：
 ///
 /// | 后端 | 依赖的真实类型 |
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 ///
 /// **名字撒谎比没有名字更糟**：读代码的人会以为已经有 EF Core 实现，于是不再去找。
 ///
-/// B721 found `EfCoreRepository` with EF Core in the name and a `List&lt;T&gt;` in the body. B723 fixes the name first (`InMemoryRepository`, moved to `Persistence/InMemory/`), then confirms the other
+/// found `EfCoreRepository` with EF Core in the name and a `List&lt;T&gt;` in the body. fixes the name first (`InMemoryRepository`, moved to `Persistence/InMemory/`), then confirms the other
 /// four backends **were real all along** (see the table above). **A lying name is worse than no name**: a reader concludes an EF Core implementation already exists and stops looking.
 /// </remarks>
 public class PersistenceNamingTests {
@@ -76,8 +76,8 @@ public class PersistenceNamingTests {
         var expected = new Dictionary<string, string>(StringComparer.Ordinal) {
             [Path.Combine(persistence, "MySQL", "MySqlRepository.cs")] = "DbContext",
             [Path.Combine(persistence, "SQLite", "SqliteRepository.cs")] = "DbContext",
-            // **B926：PostgreSQL 也必须是真后端**（`DbContext` + Npgsql 提供程序），不是内存集合。
-            // **B926: PostgreSQL must be a real backend too** (`DbContext` plus the Npgsql provider), not an in-memory collection.
+            // PostgreSQL 也必须是真后端**（`DbContext` + Npgsql 提供程序），不是内存集合。
+            // PostgreSQL must be a real backend too** (`DbContext` plus the Npgsql provider), not an in-memory collection.
             [Path.Combine(persistence, "PostgreSQL", "PostgreSqlRepository.cs")] = "DbContext",
             [Path.Combine(persistence, "MongoDB", "MongoRepository.cs")] = "IMongoDatabase",
             [Path.Combine(persistence, "Redis", "RedisClient.cs")] = "IConnectionMultiplexer",

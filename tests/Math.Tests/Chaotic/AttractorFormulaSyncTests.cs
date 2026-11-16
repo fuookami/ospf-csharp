@@ -13,23 +13,23 @@ namespace Fuookami.Ospf.Math.Tests.Chaotic;
 /// **两个吸引子回到标准式** / Two attractors back to their standard forms.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `966cafbc`（其内部编号 B311）。C# 侧把**修复前**的公式原样搬了过来，于是同一个错误在这里又活了一轮——
+/// 同步 Kotlin `966cafbc`（其内部编号 ）。C# 侧把**修复前**的公式原样搬了过来，于是同一个错误在这里又活了一轮——
 /// 五个偏离点全在：Aizawa 的 `dx` 减的是完整 `dy`、`dz` 的线性项用 `alpha*x`、输出把 `dz`/`dy` 置换；
 /// Wimol-Banlue 用 `tan` 而不是 `tanh`、用 `|x|` 而不是 `|y|`。
 ///
 /// **判据不复述实现：** **它在测试里按标准式独立算一遍，再与实现的一步结果比较。** 复述实现的判据只能证明"代码没变"，
-/// 证明不了"公式对"——而这一批要的正是后者。
+/// 证明不了"公式对"——而这里要的正是后者。
 ///
-/// Syncs Kotlin `966cafbc` (its internal id B311). The C# side had copied the **pre-fix** formulas, so the same error lived on here: all five deviations
+/// Syncs Kotlin `966cafbc` (its internal id ). The C# side had copied the **pre-fix** formulas, so the same error lived on here: all five deviations
 /// were present. **The criteria do not restate the implementation: they recompute the standard form inside the test and compare it with one step of the
 /// implementation.** A criterion that restates the implementation only proves "the code did not change", not "the formula is right" — and the latter is what
-/// this batch is about.
+/// is about.
 /// </remarks>
 public class AttractorFormulaSyncTests
 {
     /// <summary>**Aizawa 的一步必须等于标准式** / One Aizawa step must equal the standard form.</summary>
     /// <remarks>
-    /// 标准式（Kotlin 966cafbc / B311）：
+    /// 标准式（Kotlin 966cafbc / ）：
     /// `dx = (z-β)x - δy`、`dy = δx + (z-β)y`、`dz = γ + αz - z³/3 - (x²+y²)(1+εz) + ζzx³`，输出 `(x+h·dx, y+h·dy, z+h·dz)`。
     ///
     /// The standard form: as above, with the outputs in dx, dy, dz order.
@@ -78,7 +78,7 @@ public class AttractorFormulaSyncTests
 
     /// <summary>**Wimol-Banlue 的一步必须等于标准式（tanh、|y|）** / One Wimol-Banlue step must equal the standard form.</summary>
     /// <remarks>
-    /// 标准式（Kotlin 966cafbc / B311）：`dx = y - x`、`dy = -z·tanh(x)`、`dz = -α + xy + |y|`。
+    /// 标准式（Kotlin 966cafbc / ）：`dx = y - x`、`dy = -z·tanh(x)`、`dz = -α + xy + |y|`。
     /// 两处偏离都在这里能分辨：`tan` 与 `tanh` 在 x≈1 已相差数倍；`|x|` 与 `|y|` 在符号相反时直接反号。
     ///
     /// The standard form: dx = y - x, dy = -z*tanh(x), dz = -alpha + x*y + |y|. Both deviations separate here: tan and tanh already differ by a factor at

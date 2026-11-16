@@ -22,10 +22,10 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Produce;
 /// **使用量变量的上界与聚合表达式** / The usage bounds and aggregate expressions.
 /// </summary>
 /// <remarks>
-/// 对应基线 `MasterProblem.kt` 的 `Csp2dPatternAssignment` / `safeCsp2dPolynomial`。这一批只落变量与四个聚合表达式，
-/// 三个约束与目标留给下一批。
+/// 对应基线 `MasterProblem.kt` 的 `Csp2dPatternAssignment` / `safeCsp2dPolynomial`。这里只落变量与四个聚合表达式，
+/// 三个约束与目标留给后续。
 ///
-/// Mirrors `Csp2dPatternAssignment` / `safeCsp2dPolynomial` from the baseline `MasterProblem.kt`. This batch lands the variables and the four aggregate expressions;
+/// Mirrors `Csp2dPatternAssignment` / `safeCsp2dPolynomial` from the baseline `MasterProblem.kt`. lands the variables and the four aggregate expressions;
 /// the three constraints and the objective come next.
 /// </remarks>
 public class Csp2dPatternAssignmentTests {

@@ -14,19 +14,19 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 那 28 个"未出现"的名字，全是拼写差异 / The twenty-eight absent names are all spellings.
 /// </summary>
 /// <remarks>
-/// B1145。**扫描器把"名字是否作为子串出现"当作"能力是否具备"，于是 `BitPerSecond`（基线）
+/// **扫描器把"名字是否作为子串出现"当作"能力是否具备"，于是 `BitPerSecond`（基线）
 /// 与 `BitsPerSecond`（本仓）被判成缺失。**
 ///
 /// **这个数字（28）此前一直躺在清单里，看起来像 28 个待办。实际上它们是 0 个待办。**
 ///
-/// **"一个具体数字会让陈旧缺口看起来已经被检查过"——这一批就是把那个数字拆开。**
+/// **"一个具体数字会让陈旧缺口看起来已经被检查过"——这里就是把那个数字拆开。**
 ///
-/// B1145. **The scanner treats "does the name appear as a substring" as "is the capability present", so the baseline
+/// **The scanner treats "does the name appear as a substring" as "is the capability present", so the baseline
 /// `BitPerSecond` against this repo `BitsPerSecond` reads as missing.**
 ///
 /// **That number (28) had been sitting in the inventory looking like twenty-eight items of work. It is zero.**
 ///
-/// **"A specific number makes a stale gap look already checked" — this batch takes the number apart.**
+/// **"A specific number makes a stale gap look already checked" — takes the number apart.**
 /// </remarks>
 public class BaselineNamingVariantsTests
 {

@@ -48,7 +48,7 @@ public sealed record NativeMaskingData(
 /// 条件数值与二值门控的准备 / Preparation for conditional values and binary masking.
 /// </summary>
 /// <remarks>
-/// B1215 按基线 `NativeIndicator.kt` 的 `prepareConditionalValue` 与
+/// 对齐基线 `NativeIndicator.kt` 的 `prepareConditionalValue` 与
 /// `NativeMasking.kt` 的 `prepareNativeMasking` / `prepareMasking` 补。
 ///
 /// **范围证明是这两格的实质：** **不能说"这个表达式在 `[lower, upper]` 内"，

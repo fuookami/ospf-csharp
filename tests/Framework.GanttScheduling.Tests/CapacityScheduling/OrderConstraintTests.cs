@@ -1,4 +1,4 @@
-// 顺序约束真的建行（B727）/ The order constraint really builds rows (B727).
+// 顺序约束真的建行/ The order constraint really builds rows.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **顺序约束真的建行（B727）** / The order constraint really builds rows (B727).
+/// **顺序约束真的建行** / The order constraint really builds rows.
 /// </summary>
 /// <remarks>
 /// 第一版 `Invoke` 是 `=&gt; Ok`：三族约束一条都没建。现在按基线建：
@@ -97,7 +97,7 @@ public class OrderConstraintTests {
     /// 三点成对：动作为 A1（上界 5）时 `x ≤ 5 · b`，右端单项式系数是 5 / 动作换成 A2（上界 7）时系数是 7 /
     /// 唯一性行的右端常数是 1、比较符是 `≤`——不是 `=`，也不是没有上界。
     ///
-    /// Three paired points: with action A1 (bound 5) the row reads `x &lt;= 5 . b` and the right monomial coefficient is 5; with A2 (bound 7) it is 7; and the uniqueness row has constant
+    /// Three paired points: with action A1 (bound 5) the row reads `x &lt;= 5. b` and the right monomial coefficient is 5; with A2 (bound 7) it is 7; and the uniqueness row has constant
     /// 1 on the right with comparison `&lt;=`, neither `=` nor unbounded.
     /// </remarks>
     [Fact]
@@ -119,7 +119,7 @@ public class OrderConstraintTests {
             "the uniqueness row sums over every action");
 
         // **两条关联式的方向也要钉住**：`x ≥ b` 与 `x ≤ M · b` 方向反了，行数、行名、系数全都还是对的。
-        // **The direction of both linking rows must be pinned too**: reversing `x >= b` or `x <= M . b` leaves the count, the names and the coefficients all looking right.
+        // **The direction of both linking rows must be pinned too**: reversing `x >= b` or `x <= M. b` leaves the count, the names and the coefficients all looking right.
         model.RelationConstraints.First(row => row.Name == "order_link_lb_0_0_0").Sign
             .Should().Be(Fuookami.Ospf.Math.Symbol.Inequality.Comparison.GE, "x >= b, not x <= b");
         model.RelationConstraints.First(row => row.Name == "order_link_ub_0_0_0").Sign
@@ -130,10 +130,10 @@ public class OrderConstraintTests {
     /// **未注册与非法入参显式失败** / Unregistered variables and invalid inputs fail explicitly.
     /// </summary>
     /// <remarks>
-    /// 三点成对：未注册 → `Failed` 且一行都没建（第一版这里返回 `Ok`）/ 传入 `new object()` → `Failed` /
+    /// 三点成对：未注册 → `Failed` 且一行都没建（第一版这里返回 `Ok`）/ 传入 `new object` → `Failed` /
     /// 注册之后同一个调用 → `Ok` 且行数非空。
     ///
-    /// Three paired points: unregistered yields `Failed` with no rows written (the first version returned `Ok` here); `new object()` yields `Failed`; and after registration the same call
+    /// Three paired points: unregistered yields `Failed` with no rows written (the first version returned `Ok` here); `new object` yields `Failed`; and after registration the same call
     /// yields `Ok` with rows present.
     /// </remarks>
     [Fact]

@@ -1,4 +1,4 @@
-// 局部搜索更新算子（第一批）/ Local-search update operators (first set).
+// 局部搜索更新算子（此前）/ Local-search update operators (first set).
 // 与固定 Kotlin 基线 `operator/update/LocalSearchUpdates.kt`（11735 B）的前三个实现对应。
 // Mirrors the first three implementations of the pinned baseline's `LocalSearchUpdates.kt`.
 

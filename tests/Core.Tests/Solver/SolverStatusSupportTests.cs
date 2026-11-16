@@ -15,7 +15,7 @@ public class SolverStatusSupportTests {
     [Fact]
     public void ResolveErrCode_Optimal_ReturnsNull() {
         ErrorCode? result = SolverStatus.Optimal.ResolveErrCode();
-        // ErrCode() returns null for Optimal; ResolveErrCode falls back to ErrorCode.OREngineSolvingException
+        // ErrCode returns null for Optimal; ResolveErrCode falls back to ErrorCode.OREngineSolvingException
         result.Should().Be(ErrorCode.OREngineSolvingException);
     }
 

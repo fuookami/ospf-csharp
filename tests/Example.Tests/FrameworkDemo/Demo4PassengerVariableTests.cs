@@ -1,4 +1,4 @@
-// 乘客取消与变更变量（B759）/ Passenger cancellation and change variables (B759).
+// 乘客取消与变更变量/ Passenger cancellation and change variables.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **乘客取消与变更变量（B759）** / Passenger cancellation and change variables (B759).
+/// **乘客取消与变更变量** / Passenger cancellation and change variables.
 /// </summary>
 /// <remarks>
 /// 三层变量都有一条共同的上界：**不超过这一位乘客的人数**。取消量或变更量超过人数在现实里不存在，

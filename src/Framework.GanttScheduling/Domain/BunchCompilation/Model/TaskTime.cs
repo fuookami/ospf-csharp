@@ -174,14 +174,14 @@ public class BunchSchedulingTaskTime<B, T, E, A> : TaskSchedulingTaskTime<T, E, 
     ///
     /// `est` / `estEnd` 已经在模型里，内容是**原地**改的（`LinearExpressionSymbol` 按需展开）。再 `Add` 一次只会撞重名。
     ///
-    /// 之前这里明确失败（"列变量那一层还没有"）；现在那一层有了（B565），失败换成真的累加。仍然会失败的是：
+    /// 之前这里明确失败（"列变量那一层还没有"）；现在那一层有了，失败换成真的累加。仍然会失败的是：
     /// 模型不是线性模型、或者这一轮还没加过列（调用方顺序错了）。
     ///
     /// Accumulates each bunch's `valueOf(bunch start) × x` onto the `est` of the tasks it covers, and `valueOf(bunch end) × x` onto `estEnd` — that is "select this column and these
     /// tasks start/end at the instant the bunch gives". The column variable `x` is created by the compilation's `AddColumns`, and is looked up here **by the column index the
     /// compilation recorded**, not by argument order: deduplication reorders, and miscounting puts the deviation on someone else's column. `est` / `estEnd` are already in the model
     /// and modified **in place** (lazily flattened symbols); adding again would only trip a repeated name. This used to fail loudly ("the column layer is missing"); that layer now
-    /// exists (B565) and the failure is replaced by real accumulation. What still fails: a non-linear model, or a round whose columns were never added (caller order is wrong).
+    /// exists  and the failure is replaced by real accumulation. What still fails: a non-linear model, or a round whose columns were never added (caller order is wrong).
     /// </remarks>
     public virtual Try AddColumns(ulong iteration, IReadOnlyList<B> bunches, object model) {
         ArgumentNullException.ThrowIfNull(bunches);

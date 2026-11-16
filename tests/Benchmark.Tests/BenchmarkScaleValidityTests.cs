@@ -12,11 +12,11 @@ namespace Fuookami.Ospf.Benchmark.Tests;
 /// These four benchmark groups' parameters must really change the input size, and the measured methods must really **consume** that size.
 /// </summary>
 /// <remarks>
-/// 基准最容易犯的错误是**夹具变了、被测路径没变**（B290 已记录过一次）。这里的判据是
+/// 基准最容易犯的错误是**夹具变了、被测路径没变**。这里的判据是
 /// **"结果随规模单调变化"**：如果被测方法返回的计数不随 `small → medium → large` 增长，
 /// 那三档测的就是同一条路径，报出来的"规模趋势"是假的。
 ///
-/// The easiest benchmark mistake is **changing the fixture while the measured path stays the same** (B290 recorded one). The criterion here is
+/// The easiest benchmark mistake is **changing the fixture while the measured path stays the same**. The criterion here is
 /// **"the result grows monotonically with the scale"**: if the measured method's returned count does not grow from `small → medium → large`, the three
 /// tiers measure one path and the reported "scale trend" is fake.
 /// </remarks>

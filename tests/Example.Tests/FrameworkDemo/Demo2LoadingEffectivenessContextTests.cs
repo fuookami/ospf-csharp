@@ -1,4 +1,4 @@
-// 装载效能上下文（B626）的判据 / Criteria for the loading-effectiveness context (B626).
+// 装载效能上下文的判据 / Criteria for the loading-effectiveness context.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **装载效能上下文（B626）** / The loading-effectiveness context (B626).
+/// **装载效能上下文** / The loading-effectiveness context.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**未初始化时报错而不是静默产出空**、`Init` 幂等、以及注册后**十二条管线整体落到模型上**。

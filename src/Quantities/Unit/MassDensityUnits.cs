@@ -8,13 +8,13 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 质量密度单位 / Mass density units.
 /// </summary>
 /// <remarks>
-/// **B1127 按基线 `MassDensity.kt` 新建。** 四个单位全部是 `质量 / 体积`。
+/// **按基线 `MassDensity.kt` 新建。** 四个单位全部是 `质量 / 体积`。
 ///
 /// **四个里有一个数量级差别极大**：`KilogramPerCubicMeter`（水约 1000）与
 /// `GramPerCubicCentimeter`（水正好 1）——**它们描述同一杯水，而数值差 1000 倍**，
 /// **因为前者用 SI 基本单位、后者用 CGS 惯例。**
 ///
-/// **Created in B1127 from the baseline `MassDensity.kt`.** All four are `mass / volume`.
+/// **Created from the baseline `MassDensity.kt`.** All four are `mass / volume`.
 ///
 /// **One pair differs by three orders of magnitude**: `KilogramPerCubicMeter` (water is about 1000) and
 /// `GramPerCubicCentimeter` (water is exactly 1) — **they describe the same glass of water with values 1000 apart**,

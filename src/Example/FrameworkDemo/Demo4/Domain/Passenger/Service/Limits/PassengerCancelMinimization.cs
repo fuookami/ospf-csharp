@@ -26,14 +26,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.Passenger.Service.Lim
 /// **系数是"取消这一位有多贵"**：普通旅客取消比要客便宜，缺省值让所有人为一体。
 ///
 /// **目标与上界必须成对**：取消变量本身有"不超过人数"的上界，没有这条目标它会被一直压到上界（**因为取消能给别人腾地方**）；
-/// 反过来只有目标没有上界，取消能压到零、上界就没有意义。这一批只加目标，上界在 B759 已经钉过。
+/// 反过来只有目标没有上界，取消能压到零、上界就没有意义。这里只加目标，上界在 已经钉过。
 ///
 /// The baseline's `PassengerCancelMinimization.kt` puts `Σ coefficient × cancel[passenger]` into the minimisation. The coefficient is per passenger and defaults to 1 — **it says how
 /// expensive it is to cancel this one**: an ordinary traveller is cheaper to drop than a VIP, and the default treats everyone the same.
 ///
 /// **The objective and the bound must come as a pair**: the cancellation variables already carry a "no more than the head count" bound, and without this objective they are pushed to
-/// that bound (**cancelling frees room for others**); conversely an objective without a bound would let cancellation go to zero and make the bound pointless. This batch adds only the
-/// objective; the bound was pinned back in B759.
+/// that bound (**cancelling frees room for others**); conversely an objective without a bound would let cancellation go to zero and make the bound pointless. adds only the
+/// objective; the bound was pinned back.
 /// </remarks>
 public sealed class PassengerCancelMinimization
     : ICGPipeline<IGanttSchedulingShadowPriceArguments<Aircraft, FlightTaskAssignment>, object, GanttSchedulingShadowPriceMap<Aircraft, FlightTaskAssignment>> {

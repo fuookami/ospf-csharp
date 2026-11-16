@@ -26,13 +26,13 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// 以它为系数的约束仍在、以它为系数的目标项仍在——**都不报错**，因为变量已被固定为 0。
 ///
 /// 这就是"行为对、模型脏"：解不变，但任何按符号表遍历模型的下游（导出、审计、二次求解）
-/// 都会看到悬空引用。本批提供的是**观测**，不是修复——清理会让模型偏离固定基线。
+/// 都会看到悬空引用。这里提供的是**观测**，不是修复——清理会让模型偏离固定基线。
 ///
 /// The baseline's `remove(item)` is one line: `tokens.remove(item)`. So after retirement the constraints using it as a coefficient remain, and so do the objective terms —
 /// **neither raises anything**, because the variable is already pinned to 0.
 ///
 /// That is "right behaviour, dirty model": the solution is unchanged, but any downstream walking the model by symbol table (export, audit, re-solve) sees a dangling reference.
-/// This batch offers **observation, not repair** — cleaning up would move the model away from the pinned baseline.
+/// offers **observation, not repair** — cleaning up would move the model away from the pinned baseline.
 /// </remarks>
 public class RetirementResidueTests {
     private static (LinearMetaModel<Flt64> Model, CombinationVariableItem<UInt8, Binary> Kept, CombinationVariableItem<UInt8, Binary> Retired) MakeModelWithOneConstraintEach() {

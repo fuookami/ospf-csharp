@@ -157,14 +157,14 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
     /// <param name="progressContext">进度上报上下文；为 null 时不启用 / Progress reporting context; off when null.</param>
     /// <returns>列生成结果（含追踪信息）/ Column generation result with trace.</returns>
     /// <remarks>
-    /// **取消有两套机制，必须一起生效。** `cancellationToken` 是平台原生的协作式取消（B323 接入），
-    /// `progressContext.IsCancelled` 是基线 `throwIfCancelled()` 用的判定（B324 移植）。
+    /// **取消有两套机制，必须一起生效。** `cancellationToken` 是平台原生的协作式取消（接入），
+    /// `progressContext.IsCancelled` 是基线 `throwIfCancelled` 用的判定（移植）。
     /// 两者**语义相同、来源不同**：调用方可能只给了其中之一。
     ///
     /// 所以这里**两条都查**，并在每轮迭代开头检查 `progressContext` 的阶段快照与取消。
     ///
-    /// **There are two cancellation mechanisms and both must take effect.** `cancellationToken` is the platform's cooperative cancellation (wired in B323);
-    /// `progressContext.IsCancelled` is the predicate the baseline's `throwIfCancelled()` uses (ported in B324). They are **semantically identical but sourced
+    /// **There are two cancellation mechanisms and both must take effect.** `cancellationToken` is the platform's cooperative cancellation (wired);
+    /// `progressContext.IsCancelled` is the predicate the baseline's `throwIfCancelled` uses (ported). They are **semantically identical but sourced
     /// differently**: a caller may supply only one of them.
     ///
     /// So **both are checked here**, and each iteration start checks the `progressContext`'s stage snapshot and cancellation.
@@ -194,12 +194,12 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         //
         // 基线的三个生成策略扩展点（`acceptCandidate` / `canonicalKeyFor` / `acceptDominance`）在 C# 里
         // **接口都定义了，却一个调用点都没有**——这是"接口在、连接件是空壳"的形态。
-        // 本批只接 `CanonicalKeyFor`（缺口清单里点名的那一项），另两个仍未接线。
+        // 这里只接 `CanonicalKeyFor`（缺口清单里点名的那一项），另两个仍未接线。
         //
         // **Resolve `ICsp1dGenerationStrategy.CanonicalKeyFor` into callback lists.**
         //
         // The baseline's three generation-strategy extension points (`acceptCandidate` / `canonicalKeyFor` / `acceptDominance`) are **all defined in C# with zero call
-        // sites** — the "interfaces present, connecting piece is a shell" shape. This batch wires only `CanonicalKeyFor` (the gap named in the ledger); the other two
+ // sites** — the "interfaces present, connecting piece is a shell" shape. wires only `CanonicalKeyFor` (the gap named in the ledger); the other two
         // remain unwired.
         IReadOnlyList<global::System.Func<CuttingPlan<V>, string?>> canonicalKeyOverrides =
             Csp1dGenerationStrategyProjection.CanonicalKeyOverrides(resolvedConfig.ExtensionSet.GenerationStrategies);
@@ -208,12 +208,12 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
         //
         // 收集器里的 `dominanceAcceptOverride` 钩子**早就实现了**（`GenerationCollector.cs:187`），
         // 但四个生成器构造时**一个都没传**——又一处"钩子在、没人喂"。
-        // 本批把它接上，同时把 `AcceptCandidate` 留给下一批。
+        // 这里把它接上，同时把 `AcceptCandidate` 留给后续。
         //
         // **The `AcceptDominance` projection; the semantics are "all must pass".**
         //
         // The collector's `dominanceAcceptOverride` hook **already existed** (`GenerationCollector.cs:187`), but **none of the four generators passed it** — another
-        // "hook present, nothing feeding it". This batch wires it and leaves `AcceptCandidate` for the next one.
+ // "hook present, nothing feeding it". wires it and leaves `AcceptCandidate` for the next one.
         IReadOnlyList<global::System.Func<CuttingPlan<V>, IReadOnlyList<CuttingPlan<V>>, bool>> dominanceAcceptOverrides =
             Csp1dGenerationStrategyProjection.DominanceAcceptOverrides(resolvedConfig.ExtensionSet.GenerationStrategies);
 
@@ -302,8 +302,8 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                 diagnostics: new Dictionary<string, string> { ["model"] = problem.Products.FirstOrDefault()?.Id ?? "" });
 
             for (int iteration = 0; iteration < iterationLimitBound; iteration++) {
-                // 每轮迭代开头检查取消，与基线 `progressContext?.throwIfCancelled()` 同位置。
-                // Check cancellation at the start of each iteration, matching the baseline's `progressContext?.throwIfCancelled()` position.
+                // 每轮迭代开头检查取消，与基线 `progressContext?.throwIfCancelled` 同位置。
+                // Check cancellation at the start of each iteration, matching the baseline's `progressContext?.throwIfCancelled` position.
                 cancellationToken.ThrowIfCancellationRequested();
                 progressContext?.ThrowIfCancelled();
                 var iterationNumber = new Int64(iteration);
@@ -406,21 +406,21 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                     });
 
                 // **把配置里的定价策略接进来**：基线从 `resolvedConfig.extensionSet.pricingPolicies` 取三个回调，
-                // 而 B348 时这三个参数在**生产路径上恒为 null**——`ICsp1dPricingPolicy` 存在、能从 builder 配到
+                // 而 时这三个参数在**生产路径上恒为 null**——`ICsp1dPricingPolicy` 存在、能从 builder 配到
                 // `SolveConfig`，但**从没到达定价器**。
                 //
                 // **Wire the config's pricing policies in**: the baseline derives the three callbacks from
-                // `resolvedConfig.extensionSet.pricingPolicies`, and as of B348 they were **always null on the production path** —
+                // `resolvedConfig.extensionSet.pricingPolicies`, and as of they were **always null on the production path** —
                 // `ICsp1dPricingPolicy` existed and flowed from the builder into `SolveConfig`, but **never reached the pricing generator**.
                 IReadOnlyList<ICsp1dPricingPolicy<V>> pricingPolicies = resolvedConfig.ExtensionSet.PricingPolicies;
                 // **基线从配置构造目标成本**：`pricingObjectiveConfig(resolvedConfig)` 取
                 // `lengthConfig.batchMinPenalty` 与 `wasteConfig` 的三个惩罚项。
                 // **不接的话 `ObjectiveConfig` 恒为 null，成本永远只有基础值 1**——
-                // 与 B348/B349 修的是同一类缺陷（配置项存在、没到达消费者）。
+                // 与 修的是同一类缺陷（配置项存在、没到达消费者）。
                 //
                 // **The baseline builds the objective cost from config**: `pricingObjectiveConfig(resolvedConfig)` reads
                 // `lengthConfig.batchMinPenalty` and the three waste penalties. **Without this, `ObjectiveConfig` is always null and
-                // the cost is always the base 1** — the same defect class as B348/B349 (the knob exists but never reaches its consumer).
+                // the cost is always the base 1** — the same defect class as (the knob exists but never reaches its consumer).
                 var pricingObjectiveConfig = new Csp1dPricingObjectiveConfig<V>(
                     PlanUsagePenalty: resolvedConfig.LengthConfig?.BatchMinPenalty,
                     TrimWidthPenalty: resolvedConfig.WasteConfig?.TrimWidthPenalty,
@@ -433,7 +433,7 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                         Costars = problem.Costars,
                         // **与基线一致：把池里已有的方案传进来。** 基线 `Csp1dColumnGeneration.kt:513` 正是这样做的。
                         //
-                        // **B355 曾判定"接上去比不接更糟"，那是错的。** 当时看到"接上后定价一条列都不产"就下了结论，
+                        // **曾判定"接上去比不接更糟"，那是错的。** 当时看到"接上后定价一条列都不产"就下了结论，
                         // 但去查基线验收测试（`Csp1dApplicationAcceptanceTest.kt:726`）后发现：
                         // **基线在同样的场景下也断言 `AllDuplicates`**——第一轮全是重复列**是预期行为**，不是缺陷。
                         //
@@ -442,7 +442,7 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
                         //
                         // **Matches the baseline: pass the plans already in the pool.** That is exactly what the baseline does at `Csp1dColumnGeneration.kt:513`.
                         //
-                        // **B355 concluded "wiring it is worse than not wiring it", which was wrong.** That conclusion came from seeing "pricing produces no columns"
+                        // **concluded "wiring it is worse than not wiring it", which was wrong.** That conclusion came from seeing "pricing produces no columns"
                         // without checking the baseline, whose acceptance test (`Csp1dApplicationAcceptanceTest.kt:726`) **also asserts `AllDuplicates`** in the same
                         // situation — an all-duplicate first round **is expected behaviour**, not a defect.
                         //
@@ -582,8 +582,8 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
             materials: problem.Materials,
             machines: problem.Machines);
 
-        // 收尾快照：没有它进度条会**停在 60**（B329 记录的缺口）。
-        // Closing snapshot: without it the progress bar **freezes at 60** (the gap recorded in B329).
+        // 收尾快照：没有它进度条会**停在 60**（记录的缺口）。
+        // Closing snapshot: without it the progress bar **freezes at 60** (the gap recorded).
         ReportProgress(
             context: progressContext,
             stage: SolverStages.ColumnGeneration,
@@ -703,7 +703,7 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
     /// <remarks>
     /// **可行性阶段额外做两件事**（照抄基线 `buildLpMaster(..., feasibilityPhase = true)`）：
     ///
-    /// 1. `context.FeasibilityPhase()` —— 让 LP 模式下**也构建 yield 聚合**（基线是 `_mode == MILP || _feasibilityPhase`）。
+    /// 1. `context.FeasibilityPhase` —— 让 LP 模式下**也构建 yield 聚合**（基线是 `_mode == MILP || _feasibilityPhase`）。
     /// 2. 用一个**只惩罚欠产、超产惩罚为零**的 `YieldModelingConfig`——这样目标函数就退化成
     ///    "最小化人工需求短缺"，解出来的就是**让硬约束可以被满足的最小短缺量**。
     ///
@@ -754,10 +754,10 @@ public sealed class Csp1dColumnGeneration<V> where V : struct {
     /// <remarks>
     /// 每条需求一个键：`ProductDemandShadowPriceKey(产品 id, 单位键)`，单位键走唯一实现
     /// `GenerationQuantityMath.UnitKey`——**与影子价格的键必须一致**，否则这里建的惩罚和
-    /// 后续读的对偶价格**对不上**（B343 修过同形的分叉）。
+    /// 后续读的对偶价格**对不上**（修过同形的分叉）。
     ///
     /// One key per demand, with the unit key from the single implementation `GenerationQuantityMath.UnitKey` — **it must match the shadow-price key**, or these penalties
-    /// and the duals read later **will not line up** (the same divergence fixed in B343).
+    /// and the duals read later **will not line up** (the same divergence fixed).
     /// </remarks>
     private static YieldModelingConfig<V> BuildFeasibilityYieldConfig(
         Csp1dProblem<V> problem,

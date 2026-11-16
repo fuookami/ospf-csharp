@@ -12,16 +12,16 @@ using NumUInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **两条集装器规则与决策身份（B581）** / The two ULD rules and decision identity (B581).
+/// **两条集装器规则与决策身份** / The two ULD rules and decision identity.
 /// </summary>
 /// <remarks>
-/// B575 把 `Enabled` 从恒真壳改成真判断时，留了两条**查不了**的规则：`item.uld.code !in enabledULDs` 与 `taboo[item]` 的编号区间。
-/// 原因是 C# 的 `Item` 没有 `Uld`、`StowagePosition` 没有 `Taboo`。本批把这两个前置补上，两条规则随即落地。
+/// 把 `Enabled` 从恒真壳改成真判断时，留了两条**查不了**的规则：`item.uld.code !in enabledULDs` 与 `taboo[item]` 的编号区间。
+/// 原因是 C# 的 `Item` 没有 `Uld`、`StowagePosition` 没有 `Taboo`。这里把这两个前置补上，两条规则随即落地。
 ///
 /// 同时 `Item` 补了 `Id`，装载矩阵的决策键从"名称"改成"身份"——基线一直如此，C# 之前用名称，**同名两件货会共用一列**。
 ///
-/// When B575 turned `Enabled` from an always-true shell into a real decision, two rules stayed **uncheckable**: `item.uld.code !in enabledULDs` and the `taboo[item]` number range,
-/// because C#'s `Item` had no `Uld` and `StowagePosition` had no `Taboo`. This batch adds those prerequisites and the rules follow. `Item` also gains an `Id`, so the stowage
+/// When turned `Enabled` from an always-true shell into a real decision, two rules stayed **uncheckable**: `item.uld.code !in enabledULDs` and the `taboo[item]` number range,
+/// because C#'s `Item` had no `Uld` and `StowagePosition` had no `Taboo`. adds those prerequisites and the rules follow. `Item` also gains an `Id`, so the stowage
 /// matrix keys by identity instead of name — as the baseline always did; keying by name made **two items with the same name share a column**.
 /// </remarks>
 public class Demo2UldRulesTests {

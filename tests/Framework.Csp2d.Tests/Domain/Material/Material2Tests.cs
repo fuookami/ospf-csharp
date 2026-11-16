@@ -14,10 +14,10 @@ namespace Fuookami.Ospf.Framework.Csp2d.Tests.Domain.Material;
 /// **物料形态、余料与设备限制** / Material kind, remnants and machine limits.
 /// </summary>
 /// <remarks>
-/// 对应基线 `Material2.kt` 里除几何（`region()` / `sheetArea()`）与校验（`validate()`）之外的部分。
+/// 对应基线 `Material2.kt` 里除几何（`region` / `sheetArea`）与校验（`validate`）之外的部分。
 /// **判据不需要求解器**：四条都是纯判断。
 ///
-/// Mirrors the parts of `Material2.kt` other than geometry (`region()` / `sheetArea()`) and validation (`validate()`). **No criterion needs a solver**: all four are pure
+/// Mirrors the parts of `Material2.kt` other than geometry (`region` / `sheetArea`) and validation (`validate`). **No criterion needs a solver**: all four are pure
 /// predicates.
 /// </remarks>
 public class Material2Tests {

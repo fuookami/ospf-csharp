@@ -1,4 +1,4 @@
-// 影子价格回填（B705）的判据 / Criteria for shadow-price refresh (B705).
+// 影子价格回填的判据 / Criteria for shadow-price refresh.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Produce;
 
 /// <summary>
-/// **影子价格回填（B705）** / Shadow-price refresh (B705).
+/// **影子价格回填** / Shadow-price refresh.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**只有挂键的行才有价格**、**按键累加而不是覆盖**、**对偶表里没有时什么都不写**、**表未建立时跳过整段**。
@@ -44,12 +44,12 @@ public class ProduceShadowPriceRefreshTests {
     /// <remarks>
     /// 四点成对：
     ///
-    /// 1. 约束行**都挂**了 `ShadowPriceKey`（B704 挂的）。
+    /// 1. 约束行**都挂**了 `ShadowPriceKey`。
     /// 2. 对偶表里给上界行一个价格 → 映射里出现**那一个**键，值是给的那个。
     /// 3. 下界行**没给**价格 → 不出现——不能写成零价，零价会被后续过滤掉，看起来像"算过"。
     /// 4. 映射只有一条。
     ///
-    /// Four paired points: the constraint rows **carry** a `ShadowPriceKey` (attached by B704); giving the upper row a price in the dual table makes **that one** key appear with that value; the lower
+    /// Four paired points: the constraint rows **carry** a `ShadowPriceKey` (attached by ); giving the upper row a price in the dual table makes **that one** key appear with that value; the lower
     /// row **is not given** a price and therefore does not appear, since writing a zero price would be filtered out later and look like "already computed"; and the map holds exactly one entry.
     /// </remarks>
     [Fact]
@@ -108,8 +108,8 @@ public class ProduceShadowPriceRefreshTests {
     [Fact]
     public void Refresh_ShouldAccumulateRatherThanOverwrite() {
         var product = new TestProduct("Widget", 0);
-        // **超量必须启用**：`Tables()` 只回填超量 / 不足两张表，不启用超量时表是 `null`，一条都取不到。
-        // **Over must be enabled**: `Tables()` refreshes only the over/less tables, so with over disabled the table is null and nothing is taken.
+        // **超量必须启用**：`Tables` 只回填超量 / 不足两张表，不启用超量时表是 `null`，一条都取不到。
+        // **Over must be enabled**: `Tables` refreshes only the over/less tables, so with over disabled the table is null and nothing is taken.
         var demand = new MaterialDemand(new Flt64(10.0), new Flt64(100.0), new Flt64(5.0), new Flt64(10.0));
         var produce = new BunchSchedulingProduce<TestProduct>(new[] { (product, (MaterialDemand?)demand) });
         using var model = new LinearMetaModel<Flt64>();
@@ -177,10 +177,10 @@ public class ProduceShadowPriceRefreshTests {
     ///
     /// 1. 消费的 `Refresh` 把价格写进映射。
     /// 2. 写进去的键是 `ConsumptionQuantityShadowPriceKey`，不是生产的——两个模块的影子价格不能串。
-    /// 3. 参数类型不对时**返回 `Failed`**：`null` 抛，`new object()` 作为映射 / 模型 / 对偶都失败。
+    /// 3. 参数类型不对时**返回 `Failed`**：`null` 抛，`new object` 作为映射 / 模型 / 对偶都失败。
     ///
     /// Three paired points: the consumption `Refresh` writes the price into the map; the key written is a `ConsumptionQuantityShadowPriceKey` rather than the produce one, since the two modules'
-    /// shadow prices must not cross; and wrong argument types **return `Failed`** — `null` throws, while `new object()` as the map, model or dual all fail.
+    /// shadow prices must not cross; and wrong argument types **return `Failed`** — `null` throws, while `new object` as the map, model or dual all fail.
     /// </remarks>
     [Fact]
     public void Refresh_ShouldWorkOnTheConsumptionSide() {

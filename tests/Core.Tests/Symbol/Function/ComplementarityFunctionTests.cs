@@ -19,12 +19,10 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 两个大 M 的符号相反 / The two big-M terms have opposite signs.
 /// </summary>
 /// <remarks>
-/// B1156 补 `ComplementarityFunction`（基线 `Complementarity.kt`）。
+/// 补 `ComplementarityFunction`（基线 `Complementarity.kt`）。
 ///
 /// **六条约束、一个二值变量 `s`**，而第 5、6 行各自只有一个大 M 项：
 /// **`s = 0` 时第 5 行把 `x` 逼到 0、`s = 1` 时第 6 行把 `y` 逼到 0——靠的是两侧都非负。**
-///
-/// adds
 ///
 /// **Six rows and one binary `s`**, with rows 5 and 6 carrying a single big-M term each:
 /// **at `s = 0` row 5 pins `x` to zero, at `s = 1` row 6 pins `y` to zero — relying on both sides being

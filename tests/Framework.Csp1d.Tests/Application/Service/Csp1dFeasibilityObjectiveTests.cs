@@ -24,14 +24,14 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **可行性阶段的目标只能有人工短缺项** / The feasibility phase's objective must contain only the artificial-deficit terms.
 /// </summary>
 /// <remarks>
-/// **B370 发现**：基线 `setObjective` 第一件事就是 `if (feasibilityPhase) { … return }`，
+/// 发现**：基线 `setObjective` 第一件事就是 `if (feasibilityPhase) { … return }`，
 /// 只放 yield 目标、命名为 `csp1d_phase_one`。
 ///
 /// C# **完全没有这个分支**：`_feasibilityPhase` 只被传给 yield 聚合，`SetObjective` 从未读过它。
 /// 于是第一阶段最小化的仍是**批次成本**，人工短缺项的系数虽然被设成 1，**却进不了目标**——
 /// **第一阶段解得的是"批次最省"，不是"短缺最小"**。
 ///
-/// **B370 finding**: the baseline's `setObjective` opens with `if (feasibilityPhase) { … return }`, emitting only the yield objective under the name `csp1d_phase_one`.
+/// **finding**: the baseline's `setObjective` opens with `if (feasibilityPhase) { … return }`, emitting only the yield objective under the name `csp1d_phase_one`.
 /// C# **had no such branch**: `_feasibilityPhase` was forwarded only to the yield aggregation and `SetObjective` never read it, so phase one still minimised **batch cost** —
 /// the deficits' coefficient of 1 **never reached the objective**, and phase one solved "cheapest batches" instead of "smallest deficit".
 /// </remarks>

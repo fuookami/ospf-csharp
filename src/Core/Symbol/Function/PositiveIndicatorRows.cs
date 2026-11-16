@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// Positive-indicator rows.
 /// </summary>
 /// <remarks>
-/// B1180 按基线 `BigM.kt` 的 `positiveIndicatorConstraints`、`safePositiveIndicatorConstraints`、
+/// 对齐基线 `BigM.kt` 的 `positiveIndicatorConstraints`、`safePositiveIndicatorConstraints`、
 /// `relaxBigM` 补。
 ///
 /// **两行，方向相反，而两侧用的 Big-M <b>不是同一个数</b>**：
@@ -39,7 +39,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **所以这条不是风格差异，是<b>松弛得刚好</b>与<b>多松一个 tolerance</b> 的差异。**
 /// **它不会让模型错——两种写法都允许所有合法解——但会让松弛变松，而且看不出原因。**
 ///
-/// B1180, following the baseline's `positiveIndicatorConstraints`, `safePositiveIndicatorConstraints` and
+/// Following the baseline's `positiveIndicatorConstraints`, `safePositiveIndicatorConstraints` and
 /// `relaxBigM`.
 ///
 /// **Two rows, opposite directions, and the two sides do <b>not</b> use the same Big-M**:

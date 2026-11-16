@@ -106,10 +106,10 @@ public class SolverProgressContextTests {
 
     /// <summary>**无解析器时不得伪造已解析标签** / Without a resolver, resolved labels must not be faked.</summary>
     /// <remarks>
-    /// 基线在无解析器时**直接 `Normalized()`**，不动两个已解析标签。若实现无条件填上默认标签，
+    /// 基线在无解析器时**直接 `Normalized`**，不动两个已解析标签。若实现无条件填上默认标签，
     /// 调用方就无法区分"本地化过"与"没本地化"。
     ///
-    /// The baseline calls **`Normalized()` directly** when there is no resolver and leaves the two resolved labels alone. If the implementation unconditionally filled
+    /// The baseline calls **`Normalized` directly** when there is no resolver and leaves the two resolved labels alone. If the implementation unconditionally filled
     /// in the defaults, callers could not tell "localized" from "not localized".
     /// </remarks>
     [Fact]
@@ -125,10 +125,10 @@ public class SolverProgressContextTests {
 
     /// <summary>**已取消时一次都不上报** / When cancelled, nothing is reported at all.</summary>
     /// <remarks>
-    /// 基线 `report` 的第一行就是 `throwIfCancelled()`。**顺序很重要**：若先上报再检查取消，
+    /// 基线 `report` 的第一行就是 `throwIfCancelled`。**顺序很重要**：若先上报再检查取消，
     /// 已取消之后仍会有快照流出去，下游会看到本不该发生的进度。
     ///
-    /// The baseline's `report` starts with `throwIfCancelled()`. **Order matters**: if it reported before checking, snapshots would still flow out after cancellation and
+    /// The baseline's `report` starts with `throwIfCancelled`. **Order matters**: if it reported before checking, snapshots would still flow out after cancellation and
     /// downstream would see progress that should not have happened.
     /// </remarks>
     [Fact]
@@ -172,15 +172,15 @@ public class SolverProgressContextTests {
     /// <summary>**百分比必须收敛到 0..100** / Percentages must clamp to 0..100.</summary>
     /// <remarks>
     /// **这条判据要绕开单调化**：首版直接走 `Report`，结果"不收敛"的变异**存活**——
-    /// 因为 `AcceptMonotonic` 里也有 `Math.Clamp`，它把 `Normalized()` 的错误兜住了。
+    /// 因为 `AcceptMonotonic` 里也有 `Math.Clamp`，它把 `Normalized` 的错误兜住了。
     ///
-    /// 判据的**作用域比它想守的东西宽**，于是守不住。改成直接调 `Normalized()`，
+    /// 判据的**作用域比它想守的东西宽**，于是守不住。改成直接调 `Normalized`，
     /// 隔离出这一层。
     ///
     /// **This criterion must bypass monotonisation.** The first version went through `Report` and the "not clamped" mutation **survived** — because
-    /// `AcceptMonotonic` also clamps, masking the error in `Normalized()`.
+    /// `AcceptMonotonic` also clamps, masking the error in `Normalized`.
     ///
-    /// The criterion's **scope was wider than the thing it meant to guard**, so it guarded nothing. It now calls `Normalized()` directly to isolate that layer.
+    /// The criterion's **scope was wider than the thing it meant to guard**, so it guarded nothing. It now calls `Normalized` directly to isolate that layer.
     /// </remarks>
     [Fact]
     public void Normalized_ShouldClampPercentages() {

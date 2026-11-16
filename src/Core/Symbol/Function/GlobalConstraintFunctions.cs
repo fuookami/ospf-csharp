@@ -20,19 +20,19 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **所以它的价值不在逻辑，而在"顺序"与"校验点"。**
 ///
 /// **三个入口各自转给自己的 `Create`，而三者都做了<b>同样的</b>非空检查。**
-/// **我最初以为只有 `AllDifferent` 查、另外两个不查——那是猜的，跑出来三条都拒绝空输入。**
+/// **最初以为只有 `AllDifferent` 查、另外两个不查——那是猜的，跑出来三条都拒绝空输入。**
 /// **门面这里<b>不重复</b>那层检查：重复只会让错误消息多一层翻译，
 /// 而"三处一致"这个事实由判据统一钉住。**
 ///
 /// **`Lower` 的两个重载不是重复**：**一个收可变模型、一个收不可变快照。**
-/// **收模型的那个在内部先 `Snapshot()` 再转给收快照的那个——
+/// **收模型的那个在内部先 `Snapshot` 再转给收快照的那个——
 /// 所以"从模型降阶"和"从快照降阶"走的是<b>同一条</b>实现，
 /// 而不是两份可能漂移的代码。**
 ///
 /// **`Policy` 默认 `Strict`**：**宽松策略会跳过一些校验，
 /// 而"默认宽松"会让调用方在不知情的情况下拿到一个未经校验的模型。**
 ///
-/// B1177, following the baseline's `GlobalConstraintFunctions`.
+/// Following the baseline's `GlobalConstraintFunctions`.
 ///
 /// **This is a <b>pure façade</b>: every method forwards to an implementation that already exists.**
 /// **Its value is therefore not logic but <b>ordering and validation points</b>.**
@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// message, and one criterion pins down the fact that the three agree.**
 ///
 /// **The two `Lower` overloads are not duplicates**: **one takes a mutable model, one an immutable snapshot.**
-/// **The model overload calls `Snapshot()` and delegates — so both routes share <b>one</b> implementation rather than
+/// **The model overload calls `Snapshot` and delegates — so both routes share <b>one</b> implementation rather than
 /// two that can drift apart.**
 ///
 /// **`Policy` defaults to `Strict`**: **a relaxed policy skips some checks, and "relaxed by default" hands callers an

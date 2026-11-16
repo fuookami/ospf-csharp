@@ -65,10 +65,10 @@ public class UnsupportedTargetFeaturesTests {
 
     /// <summary>**排序稳定** / The order is stable.</summary>
     /// <remarks>
-    /// **两份等价的消息才会被日志和 diff 当成同一条。** 集合的迭代顺序在 .NET 里不保证，
+    /// **两份等价的消息才会被日志和 diff 当成同一条。** 集合的迭代顺序在.NET 里不保证，
     /// **不排序的话同一次失败会在两次运行里产生两条不同的消息。**
     ///
-    /// **Two equivalent messages are what logs and diffs treat as the same event.** Set iteration order is not guaranteed in .NET, **so without sorting one failure produces two different messages across two
+    /// **Two equivalent messages are what logs and diffs treat as the same event.** Set iteration order is not guaranteed in.NET, **so without sorting one failure produces two different messages across two
     /// runs.**
     /// </remarks>
     [Fact]

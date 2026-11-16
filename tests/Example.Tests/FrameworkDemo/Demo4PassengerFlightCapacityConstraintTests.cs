@@ -1,4 +1,4 @@
-// 航班容量约束（B766）/ The flight capacity constraint (B766).
+// 航班容量约束/ The flight capacity constraint.
 
 using System;
 using System.Collections.Generic;
@@ -22,19 +22,19 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **航班容量约束（B766）** / The flight capacity constraint (B766).
+/// **航班容量约束** / The flight capacity constraint.
 /// </summary>
 /// <remarks>
-/// 这是乘客域与机队层之间**唯一的接缝**：左边是人数表达式（B760），右边是按机型分档的容量表达式（B744）。
+/// 这是乘客域与机队层之间**唯一的接缝**：左边是人数表达式，右边是按机型分档的容量表达式。
 ///
 /// **表达式符号不能直接塞进约束**：把两个表达式符号各包成一项交给 `AddConstraint`，存下来的行会是**空的**
-/// （两侧单项式与常数都被抹平），模型永远可行而求解成功——这一批的第一次实现就是这样，靠"130 人 120 座也能解"抓出来。
+/// （两侧单项式与常数都被抹平），模型永远可行而求解成功——这里的第一次实现就是这样，靠"130 人 120 座也能解"抓出来。
 /// 正确写法是把两侧的多项式**展开**再交进去。
 ///
-/// This is **the only seam** between the passenger domain and the fleet layer: the left side is the amount expression (B760), the right side the per-cabin capacity expression (B744).
+/// This is **the only seam** between the passenger domain and the fleet layer: the left side is the amount expression, the right side the per-cabin capacity expression.
 ///
 /// **An expression symbol cannot be dropped into a constraint as a term**: wrapping each expression in one monomial and handing it to `AddConstraint` stores an **empty** row (both sides'
-/// monomials and constants are wiped), the model stays always feasible and the solve still succeeds — that is exactly what this batch's first implementation did, and the "130 passengers
+/// monomials and constants are wiped), the model stays always feasible and the solve still succeeds — that is exactly what's first implementation did, and the "130 passengers
 /// into 120 seats still solves" case caught it. The correct form expands both polynomials before adding the row.
 /// </remarks>
 public class Demo4PassengerFlightCapacityConstraintTests {

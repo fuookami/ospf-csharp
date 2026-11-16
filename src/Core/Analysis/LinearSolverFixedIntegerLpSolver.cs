@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// - `IAbstractLinearSolver`、`ConstraintProgrammingToLinearModelLowerer` **都在**
 /// - **缺的正是把这几样接起来的那个实现**——而两个插件后端（Gurobi／SCIP）都依赖它
 ///
-/// **所以 B1278 那句"框架齐了、后端空着"要说得更准一层：**
+/// **所以"框架齐了、后端空着"要说得更准一层：**
 /// **空的不止是 6 个插件函数，中间还缺这一层。补上它，两个插件就只剩"接哪根线"的问题。**
 ///
 /// ### 语义边界（照基线，不自行放宽）
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// **This is the core step of the baseline's `LinearSolverFixedIntegerLpBackend`, and it had &lt;b&gt;no production implementation
 /// at all&lt;/b&gt; here: the interface, the lowering adapter and the delegate all exist, the linear solver and the lowerer all
 /// exist, and what was missing is exactly the piece that ties them together — the piece both plugin backends depend on.**
-/// **So B1278's "framework complete, backends empty" can be stated one layer more precisely: besides the six plugin functions,
+/// **So the earlier "framework complete, backends empty" can be stated one layer more precisely: besides the six plugin functions,
 /// this middle layer was missing too.**
 ///
 /// **Semantics copied from the baseline rather than loosened: duals are exposed only by original stable constraint ID; rows that

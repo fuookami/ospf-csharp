@@ -1,4 +1,4 @@
-// 渲染映射的类型覆盖（B698）的判据 / Criteria for the render mapper's type coverage (B698).
+// 渲染映射的类型覆盖的判据 / Criteria for the render mapper's type coverage.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using N = Fuookami.Ospf.Math.Algebra.Number;
 namespace Fuookami.Ospf.Framework.Csp1d.Tests.Material;
 
 /// <summary>
-/// **渲染映射的类型覆盖（B698）** / The render mapper's type coverage (B698).
+/// **渲染映射的类型覆盖** / The render mapper's type coverage.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**`Flt32` / `Int32` 这些原本抛 `NotSupportedException` 的类型现在能渲染**，
@@ -35,10 +35,10 @@ public class RenderMapperTypeCoverageTests {
     /// </summary>
     /// <remarks>
     /// 两点成对：每个类型渲染出的 `Width` **等于期望值**（不是只断言"没抛"）；
-    /// 且 `Flt32` 这类**原本会抛**的类型现在也在其中——那正是本批修的缺陷。
+    /// 且 `Flt32` 这类**原本会抛**的类型现在也在其中——那正是这里修的缺陷。
     ///
     /// Two paired points: every type's rendered `Width` **equals the expected value** rather than merely "did not throw", and the types that **used to throw**, such as `Flt32`, are among them —
-    /// which is exactly the defect this batch fixed.
+    /// which is exactly the defect fixed.
     /// </remarks>
     [Fact]
     public void ToRenderDto_ShouldCoverEveryNumericType() {
@@ -64,10 +64,10 @@ public class RenderMapperTypeCoverageTests {
     /// **没有宽度时渲染 0，而不是抛** / Rendering without a width yields zero rather than throwing.
     /// </summary>
     /// <remarks>
-    /// 两点成对：空宽度表的乘积 `MaxWidth()` 返回 `null`，渲染出的 `Width` 是 **`FltX.Zero`**；
+    /// 两点成对：空宽度表的乘积 `MaxWidth` 返回 `null`，渲染出的 `Width` 是 **`FltX.Zero`**；
     /// 且 `UnitLength` 为 **`null`**（缺值不伪装成 0，否则下游会把"未知长度"当"零长度"）。
     ///
-    /// Two paired points: a product with no widths makes `MaxWidth()` return `null` and the rendered `Width` is **`FltX.Zero`**; and `UnitLength` is **`null`**, since a missing value must not
+    /// Two paired points: a product with no widths makes `MaxWidth` return `null` and the rendered `Width` is **`FltX.Zero`**; and `UnitLength` is **`null`**, since a missing value must not
     /// masquerade as zero or downstream code would read "unknown length" as "zero length".
     /// </remarks>
     [Fact]

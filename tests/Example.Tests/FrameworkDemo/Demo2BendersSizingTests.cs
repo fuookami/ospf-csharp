@@ -10,15 +10,15 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B828：自适应调参表与二进制变量数 / The adaptive tuning table and the binary-variable count.
+/// 自适应调参表与二进制变量数 / The adaptive tuning table and the binary-variable count.
 /// </summary>
 /// <remarks>
 /// `BendersStrategy.tuneAdaptiveConfig` 在基线里是一张**按问题规模分档的表**：迭代上限加 0/8/16/32/64，
-/// 容差取底线与档位下限的较大者，两个停滞窗口各按档取值。本仓这块**已经是基线原样**（B828 逐行核对），
+/// 容差取底线与档位下限的较大者，两个停滞窗口各按档取值。本仓这块**已经是基线原样**，
 /// 这批判据把它钉住——**它此前一条判据都没有**，改错一个数字不会有任何东西变红。
 ///
 /// The baseline's `tuneAdaptiveConfig` is **a size-banded table**: iterations get +0/8/16/32/64, tolerance becomes the larger of the configured value and the
-/// band's floor, and the two stall windows take a band value. This port's version **is already the baseline's, line for line** (checked in B828) and had **no
+/// band's floor, and the two stall windows take a band value. This port's version **is already the baseline's, line for line** (checked) and had **no
 /// criterion at all** — a single changed digit would not have turned anything red.
 /// </remarks>
 public sealed class Demo2BendersSizingTests
@@ -92,15 +92,15 @@ public sealed class Demo2BendersSizingTests
     /// **二进制变量数按基线求和，不按乘积** / The binary-variable count follows the baseline's sum, not a product.
     /// </summary>
     /// <remarks>
-    /// **B937 把这条判据翻面了。** 它原本钉的是"`CargoInput` 仍然没有 `AllowedPositions`"这个**前提**，
+    /// 把这条判据翻面了。** 它原本钉的是"`CargoInput` 仍然没有 `AllowedPositions`"这个**前提**，
     /// 并写明"字段一落地它就红，届时必须把 `BendersStrategy.ResolveSolveMode` 那一行改成基线那种求和"。
-    /// **字段在 B937 落地，判据应声变红，那一行也照它说的改了。**
+    /// **字段在 落地，判据应声变红，那一行也照它说的改了。**
     ///
     /// 现在它钉的是**求和本身**：限制过的请求必须得到比乘积**更小**的数。少了这一条，
     /// "改成求和"可以退化成"换个写法的乘积"，而两者在无限制请求上完全一样——**判据会照样绿**。
     ///
-    /// **B937 flipped this criterion.** It used to pin the **premise** that `CargoInput` had no `AllowedPositions`, and said in so many words that when the field
-    /// landed it would red and the line in `ResolveSolveMode` would have to become the baseline's sum. **The field landed in B937, the criterion reddened, and the
+    /// **flipped this criterion.** It used to pin the **premise** that `CargoInput` had no `AllowedPositions`, and said in so many words that when the field
+    /// landed it would red and the line in `ResolveSolveMode` would have to become the baseline's sum. **The field landed, the criterion reddened, and the
     /// line was changed as instructed.** It now pins **the sum itself**: a constrained request must produce **fewer** than the product. Without that, "switch to a
     /// sum" can degrade into "a product written differently", and the two are identical on unconstrained requests — **the criterion would stay green**.
     /// </remarks>

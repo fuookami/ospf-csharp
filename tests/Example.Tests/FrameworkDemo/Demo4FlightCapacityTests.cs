@@ -1,4 +1,4 @@
-// 航班容量表达式层（B744）/ The flight capacity expression layer (B744).
+// 航班容量表达式层/ The flight capacity expression layer.
 
 using System;
 using System.Collections.Generic;
@@ -16,14 +16,14 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **航班容量表达式层（B744）** / The flight capacity expression layer (B744).
+/// **航班容量表达式层** / The flight capacity expression layer.
 /// </summary>
 /// <remarks>
 /// 基线 `FlightCapacity.kt` 在 C# 侧根本不存在：**"这一轮到底运了多少人、多少货"没有量可读**。补上之后还顺手修了两处
 /// "构造参数不是成员"的缺陷——`PassengerCapacity` 的舱位表和 `CargoCapacity` 的货量，**在类型外都读不到**。
 ///
 /// **天花板**：判据只覆盖"开关与表的存在性"，还没有任务实例走一遍 `AddColumns`——造一个 `FlightTask` 需要 `FlightLeg` 等一整套输入，
-/// 那是下一批的事。升级路径：有任务夹具之后补"零容量的束不进表达式"与"列变量按去重顺序取"。
+/// 那是后续的事。升级路径：有任务夹具之后补"零容量的束不进表达式"与"列变量按去重顺序取"。
 
 /// The baseline's `FlightCapacity.kt` did not exist on the C# side at all: **how many passengers or how much cargo a round really moves had no readable quantity**. Two "a
 /// constructor parameter is not a member" defects were fixed along the way — `PassengerCapacity`'s cabin table and `CargoCapacity`'s value were both **unreachable from outside**.

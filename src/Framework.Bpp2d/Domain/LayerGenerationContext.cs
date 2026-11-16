@@ -2,10 +2,10 @@
 // 与固定 Kotlin 基线 `bpp2d/domain/layer_generation/LayerGenerationContext.kt`（597 行）对应。
 // Mirrors the pinned baseline's `LayerGenerationContext.kt`.
 //
-// Batch 87 闭合了 `block_loading` 域，本批随即补上三个块装载生成器（`BlLocalLayerGenerator`／
-// `BlGlobalLayerGenerator`／`SpaceSplitLayerGenerator`），`DefaultGenerators()` 至此与基线一致（八个）。
-// Batch 87 closed the `block_loading` domain, so this batch adds the three block-loading generators
-// (`BlLocalLayerGenerator` / `BlGlobalLayerGenerator` / `SpaceSplitLayerGenerator`); `DefaultGenerators()` now matches the
+// earlier 闭合了 `block_loading` 域，这里随即补上三个块装载生成器（`BlLocalLayerGenerator`／
+// `BlGlobalLayerGenerator`／`SpaceSplitLayerGenerator`），`DefaultGenerators` 至此与基线一致（八个）。
+// earlier closed the `block_loading` domain, so the three block-loading generators
+// (`BlLocalLayerGenerator` / `BlGlobalLayerGenerator` / `SpaceSplitLayerGenerator`); `DefaultGenerators` now matches the
 // baseline (eight).
 
 using System;

@@ -19,9 +19,9 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy.Service.Li
 /// </summary>
 /// <remarks>
 /// 对齐基线 `service/limits/RedundancyLimit.kt`：`minimize(coefficient × redundancySlack)`。
-/// 系数是**调用时求值**的（基线是 `coefficient: () -> Flt64`），因为参数对象在管线构建之后还会被改。
+/// 系数是**调用时求值**的（基线是 `coefficient:  -> Flt64`），因为参数对象在管线构建之后还会被改。
 ///
-/// Mirrors the baseline: `minimize(coefficient × redundancySlack)`. The coefficient is **evaluated at invoke time** (the baseline takes `coefficient: () -> Flt64`) because the
+/// Mirrors the baseline: `minimize(coefficient × redundancySlack)`. The coefficient is **evaluated at invoke time** (the baseline takes `coefficient:  -> Flt64`) because the
 /// parameter object keeps being updated after the pipeline list is built.
 /// </remarks>
 public sealed class RedundancyLimit

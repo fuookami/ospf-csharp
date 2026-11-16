@@ -388,11 +388,11 @@ public sealed class DivideEmptyLoading
     //
     // **不能用 `Range.FixedValue`**：实测它对一个含 `stowage_0_0` 单项式的符号也返回 0——那个符号的表达式范围在注册阶段
     // 还没被求解器定界，范围退化成"固定 0"。用它判断会让**每一个**符号都走静态分支，三族惩罚全恒为零，整个目标失效。
-    // 这条是 B611 变异测试抓出来的：`IsFixedZero` 改成看范围后，判据仍全绿，直到我直接探查 `Range.FixedValue` 才看到 0。
+    // 这条是 变异测试抓出来的：`IsFixedZero` 改成看范围后，判据仍全绿，直到我直接探查 `Range.FixedValue` 才看到 0。
     //
     // "Fixed at zero" means **the polynomial has no monomials** (its sum is zero). **`Range.FixedValue` cannot be used**: measured, it returns 0 even for a symbol carrying a
     // `stowage_0_0` monomial, because the expression's range is not yet bounded by the solver at registration time and degenerates to "fixed 0". Judging by it sends **every**
-    // symbol down the static branch, pinning all three families to zero and disabling the objective. The B611 mutation run surfaced this: switching `IsFixedZero` to the range kept
+    // symbol down the static branch, pinning all three families to zero and disabling the objective. The mutation run surfaced this: switching `IsFixedZero` to the range kept
     // every criterion green until I probed `Range.FixedValue` directly and saw the 0.
     private static bool IsFixedZero(LinearExpressionSymbol symbol) =>
         symbol.Polynomial.Monomials.Count == 0;
@@ -438,7 +438,7 @@ public sealed class DivideEmptyLoading
     /// 条件分支构造 / Build through the conditional branch.
     /// </summary>
     /// <remarks>
-    /// **当前返回失败，并明确说明原因**——这是本批**唯一未落地**的一处，不是"先返回 Ok 以后再说"。
+    /// **当前返回失败，并明确说明原因**——这是这里**唯一未落地**的一处，不是"先返回 Ok 以后再说"。
     ///
     /// 基线用 `IfFunction(condition = …, converter, name)` 表达"第一舱位的装载量比第二舱位多出至少一件"。本仓的
     /// `IfFunction.From` 带**离散格点证明**（`SafeLattice`）：它要求条件多项式的系数与常数落在同一个整数格上，
@@ -455,7 +455,7 @@ public sealed class DivideEmptyLoading
     /// | `bounds` 显式给出 `[-n, n]` | 已给出 |
     ///
     /// 剩下的可能点在 `ExactLinearExpansion.Matches` 与 `SafeLattice` 对 `Comparison.LE` 的方向处理（`reverse` 分支把上下界取反）。
-    /// **不猜**：与其把条件悄悄降级成"恒零"（那会让整族惩罚失效而判据全绿——正是 B604 那次假绿的形态），不如让注册
+    /// **不猜**：与其把条件悄悄降级成"恒零"（那会让整族惩罚失效而判据全绿——正是 那次假绿的形态），不如让注册
     /// **明确失败**，并把这一处记进能力缺口。
     ///
     /// **This currently returns a failure and says why** — the batch's **one unlanded piece**, not a "return Ok for now". The baseline expresses "the first position holds at least
@@ -464,16 +464,16 @@ public sealed class DivideEmptyLoading
     /// reading should pass — yet it consistently returns "invalid constraint input or inexact expansion / invalid discrete proof". Everything tabulated above was checked. The
     /// remaining candidates are `ExactLinearExpansion.Matches` and `SafeLattice`'s direction handling for `Comparison.LE` (the `reverse` branch negates the bounds). **No
     /// guessing**: rather than silently degrading the condition to "identically zero" — which would disable the whole family while every criterion stays green, exactly the
-    /// false-green shape of B604 — registration **fails explicitly** and the gap is recorded.
+    /// false-green shape of — registration **fails explicitly** and the gap is recorded.
     /// </remarks>
     /// <remarks>
-    /// **用 `IfThenFunction.Create` 而不是把它记成不可移植**：B604 当时记的是"离散格点证明拒绝该条件"。本批实测下来，
+    /// **用 `IfThenFunction.Create` 而不是把它记成不可移植**： 当时记的是"离散格点证明拒绝该条件"。这里实测下来，
     /// 拒绝的原因是**条件常数里塞了 `NONZERO_TOLERANCE`**（`-1 + 1e-10` 落在整数格之外），而不是 `Comparison.LE` 的方向处理。
-    /// 去掉那 1e-10、把"严格大于"交给 `strictBoundary` 之后 `Create` 一次就过——**和 B770/B771 的条件包络是同一个用法**。
+    /// 去掉那 1e-10、把"严格大于"交给 `strictBoundary` 之后 `Create` 一次就过——**和 的条件包络是同一个用法**。
     ///
-    /// **`IfThenFunction.Create` instead of calling it unportable**: B604 recorded "the discrete-lattice proof rejects the condition". Measured here, the rejection came from the
+    /// **`IfThenFunction.Create` instead of calling it unportable**: recorded "the discrete-lattice proof rejects the condition". Measured here, the rejection came from the
     /// **`NONZERO_TOLERANCE` baked into the condition constant** (`-1 + 1e-10` sits off the integer lattice), not from `Comparison.LE`'s direction handling. With that 1e-10
-    /// removed and "strictly greater" delegated to `strictBoundary`, `Create` passes on the first try — **the same usage as the conditional envelope in B770/B771**.
+    /// removed and "strictly greater" delegated to `strictBoundary`, `Create` passes on the first try — **the same usage as the conditional envelope**.
     /// </remarks>
     private Result<ILinearIntermediateSymbol<Flt64>, ErrorCode, Error<ErrorCode>> Conditional(
         string name,

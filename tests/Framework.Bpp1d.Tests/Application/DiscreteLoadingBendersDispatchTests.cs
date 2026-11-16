@@ -35,15 +35,15 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **Benders 分派**：`PreferBenders` 到底把请求送到哪条路 / Where `PreferBenders` actually sends the request.
 /// </summary>
 /// <remarks>
-/// 这一批之前，`DiscreteLoadingApplicationService` 的 Benders 分支（`RunBendersAsync`、回退、`RequiresFreshModel` 守卫）
-/// **零判据**——代码在、没人验。B838 已经确认这条路径**就是**基线的生产路径（demo2 自己那份只有测试在调），
+/// 这里之前，`DiscreteLoadingApplicationService` 的 Benders 分支（`RunBendersAsync`、回退、`RequiresFreshModel` 守卫）
+/// **零判据**——代码在、没人验。 已经确认这条路径**就是**基线的生产路径（demo2 自己那份只有测试在调），
 /// 所以它是这个仓里最该有判据、却最没有判据的一段。
 ///
 /// 四条判据对应四个分派结果：没后端、回退成功、禁止回退、回退时复用同一模型。
 /// **三条不需要真求解器**：`milpSolver` 是函数参数，Benders 后端是接口，两者都能注入。
 ///
-/// Before this batch the service's Benders branch (`RunBendersAsync`, fallback, the `RequiresFreshModel` guard) had **no criteria at all** — code present, nobody
-/// verifying it. B838 established that this path **is** the baseline's production one (demo2's own copy is called only from tests), so it is the least covered and
+/// Before the service's Benders branch (`RunBendersAsync`, fallback, the `RequiresFreshModel` guard) had **no criteria at all** — code present, nobody
+/// verifying it. established that this path **is** the baseline's production one (demo2's own copy is called only from tests), so it is the least covered and
 /// most important stretch in this repo. The four criteria cover the four dispatch outcomes: no backend, fallback succeeded, fallback forbidden, and a fallback that
 /// reuses one model. **Three need no real solver**: `milpSolver` is a function parameter and the Benders backend is an interface, so both can be injected.
 /// </remarks>
@@ -198,11 +198,11 @@ public class DiscreteLoadingBendersDispatchTests
     /// **模型划分不了时，禁止回退就是失败** / An unpartitionable model fails outright when the fallback is forbidden.
     /// </summary>
     /// <remarks>
-    /// B841 留下的一条未覆盖分支：`PreferBenders` 给了后端，但 `BuildAsync` 因为**阶段引用了未知变量**而失败。
+    /// 留下的一条未覆盖分支：`PreferBenders` 给了后端，但 `BuildAsync` 因为**阶段引用了未知变量**而失败。
     /// 这条路径的分派与"后端求解失败"**走的是同一段代码**，但原因完全不同——一个是模型拼错、一个是后端拒绝。
     /// 判据要求失败信息说得出是**划分**这一步出的问题：只说"Benders 失败"会让调用方去查后端。
     ///
-    /// A branch B841 left uncovered: `PreferBenders` supplies a backend, but `BuildAsync` fails because **a stage names an unknown variable**. The dispatch takes
+    /// A branch left uncovered: `PreferBenders` supplies a backend, but `BuildAsync` fails because **a stage names an unknown variable**. The dispatch takes
     /// **the same code path** as "the backend failed", with a completely different cause — a misspelt model versus a refusing backend. The criterion requires the
     /// failure to say the problem is in **partitioning**: a bare "Benders failed" sends the caller to check the backend.
     /// </remarks>
@@ -224,12 +224,12 @@ public class DiscreteLoadingBendersDispatchTests
     /// **划分不了时，允许回退就真的去跑 MILP** / With the fallback allowed it really runs MILP.
     /// </summary>
     /// <remarks>
-    /// 与上一条成对。这里**不断言最终成功**，只断言**回退发生了**——因为这一批实测到一个意外：
+    /// 与上一条成对。这里**不断言最终成功**，只断言**回退发生了**——因为这里实测到一个意外：
     /// 划分失败时，`SolveAsync` 确实会走到 MILP（桩被调用），但**最终结果仍可能是失败**；
     /// 那条成功/失败的细节属于目标复核那一段（有它自己的判据），**不是这条要钉的东西**。
     /// 硬把它写成"应当成功"会让判据依赖另一个模块的行为，那时红的原因会指向错的地方。
     ///
-    /// Paired with the criterion above. It does **not** assert an eventual success, only that **the fallback happened** — because this batch measured a surprise:
+    /// Paired with the criterion above. It does **not** assert an eventual success, only that **the fallback happened** — because measured a surprise:
     /// on a partitioning failure `SolveAsync` does reach MILP (the stub is called) while **the final result can still be a failure**. That success/failure detail
     /// belongs to the objective re-check (which has its own criteria) and **is not what this one pins**. Writing it as "must succeed" would tie the criterion to
     /// another module's behaviour, so a red would point at the wrong place.

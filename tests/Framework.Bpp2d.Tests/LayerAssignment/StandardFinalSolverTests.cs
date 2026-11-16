@@ -1,4 +1,4 @@
-// 最终阶段求解器（B661）的判据 / Criteria for the final-stage solver (B661).
+// 最终阶段求解器的判据 / Criteria for the final-stage solver.
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **最终阶段求解器（B661）** / The final-stage solver (B661).
+/// **最终阶段求解器** / The final-stage solver.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**没有列就不建模型直接返回**、**解写回令牌后份数才读得到**（不写回就是全零）、
@@ -206,8 +206,8 @@ public class StandardFinalSolverTests {
     public async Task SolveAsync_ShouldEmitOneSheetPerCopy() {
         // 解向量按令牌顺序；这里前四项是份数变量（两列 × …），具体索引由模型决定，
         // 因此用"份数变量名 → 值"的方式给解。
-        // **前缀必须传非默认值**：默认前缀就是 `bpp2d-final`，用默认值时"忽略前缀"的实现也能通过（B649 的教训）。
-        // **The prefix must be non-default**: the default is already `bpp2d-final`, so with it an implementation that ignores the prefix still passes (the B649 lesson).
+        // **前缀必须传非默认值**：默认前缀就是 `bpp2d-final`，用默认值时"忽略前缀"的实现也能通过。
+        // **The prefix must be non-default**: the default is already `bpp2d-final`, so with it an implementation that ignores the prefix still passes (the lesson).
         var config = new ColumnGenerationStandardExecutorConfig(FinalSolveNamePrefix: "custom-final");
         var solver = new StandardFinalSolver(
             Demands(), SheetTypes(),

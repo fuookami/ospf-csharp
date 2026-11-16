@@ -44,8 +44,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **"参数位置对了、值传错了"是这个 helper 形状的代价：
 /// 三个同类型参数排在一起，编译器帮不上忙。**
 ///
-/// adds
-///
 /// **The normalized semantics come first: `relation` is relative to <b>zero</b>, and `bounds` is only `q`'s range.**
 ///
 /// **So `bounds` must <b>straddle zero</b>, or one branch is empty.**
@@ -94,7 +92,7 @@ public class RelationIndicatorRowsTests
     /// **两行在指示 = 1 与 = 0 时互换松紧** / The two rows swap binding sides.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **`_lower` 在指示 = 1 时紧、`_upper` 在指示 = 0 时紧。**
     /// **把两个松弛量写反，两条行都会落到错误位置，而<b>模型仍然可行</b>——

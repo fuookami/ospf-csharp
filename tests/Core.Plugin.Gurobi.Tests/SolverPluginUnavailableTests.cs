@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin;
 /// **无 SDK 时插件必须显式失败，不能假装成功** / Without the SDK a plugin must fail explicitly, never pretend success.
 /// </summary>
 /// <remarks>
-/// **B395 复核 P9 验收项**：「代表性真实求解闭环」仍未达成。本批查清了**为什么**：
+/// **复核 P9 验收项**：「代表性真实求解闭环」仍未达成。这里查清了**为什么**：
 ///
 /// | 项 | 实测结论 |
 /// | --- | --- |
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Test.Core.Plugin;
 /// 这条判据钉住的是**次优但正确**的行为：无 SDK 时**显式失败**，
 /// 而不是返回一个空解让调用方以为求解成功了。
 ///
-/// **B395 re-checked the P9 acceptance item** "representative real solve loop", still unmet. This batch established **why** (table above). **The real solve loop is
+/// **re-checked the P9 acceptance item** "representative real solve loop", still unmet. established **why** (table above). **The real solve loop is
 /// unreachable in this environment** — not a code gap but **the absence of a licence**. This criterion pins the **second-best but correct** behaviour: **fail explicitly**
 /// when the SDK is missing, rather than returning an empty solution that looks like a successful solve.
 /// </remarks>

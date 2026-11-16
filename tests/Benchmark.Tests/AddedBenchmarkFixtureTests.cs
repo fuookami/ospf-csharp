@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Test.Benchmark;
 
 /// <summary>
-/// B952 补齐的两个基准：**参数真的接到了夹具上** / The two benchmarks added in B952: the parameters really reach the fixture.
+/// 补齐的两个基准：**参数真的接到了夹具上** / The two benchmarks added: the parameters really reach the fixture.
 /// </summary>
 /// <remarks>
 /// 一个"参数没接上"的基准会在报告里给出漂亮的数字，**而它测的东西和参数无关**。

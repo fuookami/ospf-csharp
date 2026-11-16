@@ -55,7 +55,7 @@ public sealed class PackingGeometryOverlapTests {
 
     /// <summary>**真正相交的两个长方体被判为重叠** / Two genuinely intersecting boxes are reported as overlapping.</summary>
     /// <remarks>
-    /// 这条断言是本批存在的原因：修复前的 `ItemsOverlap` **恒返回 `false`**，守卫永远说"没有重叠"，
+    /// 这条断言是这里存在的原因：修复前的 `ItemsOverlap` **恒返回 `false`**，守卫永远说"没有重叠"，
     /// 而"全部通过"看起来和"数据真的合法"一模一样。
     ///
     /// This is why the batch exists: the pre-fix `ItemsOverlap` **always returned `false`**, so the guard never reported an overlap, and "everything
@@ -195,7 +195,7 @@ public sealed class PackingGeometryOverlapTests {
 
     /// <summary>**缺几何的箱子被拒绝，而不是被当成"没重叠"** / A bin lacking geometry is rejected rather than treated as "no overlap".</summary>
     /// <remarks>
-    /// 这是本批最重要的一条：**静默跳过缺几何的物品会让守卫对整条旧路径恒真**，
+    /// 这是这里最重要的一条：**静默跳过缺几何的物品会让守卫对整条旧路径恒真**，
     /// 而"全部通过"正是最容易被当成"数据合法"的输出。
     ///
     /// This is the most important assertion of the batch: **silently skipping items without geometry makes the guard vacuously true on the whole legacy

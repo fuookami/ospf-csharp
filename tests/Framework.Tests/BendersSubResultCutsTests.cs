@@ -11,27 +11,27 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests;
 
 /// <summary>
-/// B837：Benders 子问题结果**必须真的把割交出来** / A Benders sub-result must really hand back its cuts.
+/// Benders 子问题结果**必须真的把割交出来** / A Benders sub-result must really hand back its cuts.
 /// </summary>
 /// <remarks>
 /// 这三条判据原来钉在 **Core 版**的 `IBendersDecompositionSolver` 上——那一版把割放在一个**计算属性**里，
 /// 而派生记录用位置参数声明同名成员**压不住**它，于是接口转回基类、再转自己：**每次读 `Cuts` 都栈溢出**（实测 24,001 帧），
-/// 而且**传进去的列表根本没被保存**（B835 修的就是这个）。
+/// 而且**传进去的列表根本没被保存**。
 ///
-/// B836 发现 Core 版**一个实现者都没有**（六个插件实现的都是框架版），B837 直接把它删了，
+/// 发现 Core 版**一个实现者都没有**（六个插件实现的都是框架版），直接把它删了，
 /// 判据搬到框架版这份**唯一剩下的实现**上。框架版从结构上就不会出那个问题：
 /// **割是基类构造函数的参数**（`LinearSubResult(cuts)`），派生记录把同一个值传上去——存下来的，不是算出来的。
 ///
 /// 这三条判据的价值不只是"读一次不炸"，而是**钉住"交出来的就是传进去的那一份"**：位置参数与基类成员同名时，
-/// C# 很容易让参数被"吃掉"而不报警（B835 里就是这样），**只有 `BeSameAs` 能发现**。
+/// C# 很容易让参数被"吃掉"而不报警，**只有 `BeSameAs` 能发现**。
 ///
 /// These three criteria used to pin the **core** version of `IBendersDecompositionSolver`, which kept the cuts in a **computed property** while the derived records
 /// declared a same-named positional parameter that **could not override** it — the interface returned to the base and then to itself: **every read of `Cuts` overflowed
-/// the stack** (measured at 24,001 frames), and the list passed in **was never stored** (what B835 fixed). B836 found that the core version had **no implementers** at
-/// all (all six plugins implement the framework one), so B837 deleted it and moved the criteria onto the framework version — the only remaining implementation.
+/// the stack** (measured at 24,001 frames), and the list passed in **was never stored** (what fixed). found that the core version had **no implementers** at
+/// all (all six plugins implement the framework one), so deleted it and moved the criteria onto the framework version — the only remaining implementation.
 /// Structurally it cannot have that problem: **the cuts are a base-constructor parameter** (`LinearSubResult(cuts)`), and the derived records pass the same value up —
 /// stored, not computed. Their value is not just "reading does not crash" but **"the value handed out is the very one handed in"**: when a positional parameter and a
-/// base member share a name, C# can let the parameter be swallowed without any warning (which is what happened in B835), and **only `BeSameAs` catches it**.
+/// base member share a name, C# can let the parameter be swallowed without any warning (which is what happened), and **only `BeSameAs` catches it**.
 /// </remarks>
 public sealed class BendersSubResultCutsTests
 {

@@ -1,4 +1,4 @@
-// 活动排程聚合（B690）的判据 / Criteria for the activity scheduling aggregation (B690).
+// 活动排程聚合的判据 / Criteria for the activity scheduling aggregation.
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 
 /// <summary>
-/// **活动排程聚合（B690）** / The activity scheduling aggregation (B690).
+/// **活动排程聚合** / The activity scheduling aggregation.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**只能注册一次**、**`minimizeCost` 为真要求最小化模型**、

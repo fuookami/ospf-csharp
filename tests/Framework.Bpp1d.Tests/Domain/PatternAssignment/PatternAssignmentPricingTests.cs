@@ -21,8 +21,8 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// **方案定价** / Pattern pricing.
 /// </summary>
 /// <remarks>
-/// 对应基线 `PatternAssignmentContext` 的定价半边：`cost()`、`reducedCost()`、`reducedCosts()`、
-/// `refreshShadowPrice()`。判据点出三处要害：
+/// 对应基线 `PatternAssignmentContext` 的定价半边：`cost`、`reducedCost`、`reducedCosts`、
+/// `refreshShadowPrice`。判据点出三处要害：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |
@@ -89,11 +89,11 @@ public class PatternAssignmentPricingTests {
 
     /// <summary>**非有限的影子价格必须被拒** / Non-finite shadow prices must be rejected.</summary>
     /// <remarks>
-    /// **这是本批最重要的一条。** 一个 `NaN` 价格会让之后**每个**检验数都变 `NaN`；
+    /// **这是这里最重要的一条。** 一个 `NaN` 价格会让之后**每个**检验数都变 `NaN`；
     /// `NaN` 与原目标值比较恒为假 ⇒ **所有候选看起来都"不值得加入"** ⇒ 列生成**静默停止**，
     /// 而报告说的是"已收敛"。**这是最坏的一种失败：它看起来像正常结束。**
     ///
-    /// **The most important criterion in this batch.** A `NaN` price turns **every** later reduced cost into `NaN`; every comparison with `NaN` is false ⇒ **every
+    /// **The most important criterion in.** A `NaN` price turns **every** later reduced cost into `NaN`; every comparison with `NaN` is false ⇒ **every
     /// candidate looks "not worth adding"** ⇒ column generation **stops silently** while the report says "converged". **The worst kind of failure: it looks like a
     /// normal finish.**
     /// </remarks>
@@ -223,11 +223,11 @@ public class PatternAssignmentPricingTests {
     /// **`name` 必须逐行唯一。** `LinearInequalityConstraint` 是 `record`，**按值相等**——
     /// 三行参数相同、内容相同的 `demand:I1` 会**塌缩成一个字典键**，于是夹具里"三条需求行"
     /// 实际只有一条，**按对偶行顺序累加**那条判据也就无从区分。
-    /// 本批第一版正是这样，导致"不排序"的变异存活。
+    /// 这里第一版正是这样，导致"不排序"的变异存活。
     ///
     /// **`name` must be unique per row.** `LinearInequalityConstraint` is a `record` with **value equality** — three identical `demand:I1` rows **collapse into one
     /// dictionary key**, so the fixture's "three demand rows" were really one and the dual-row-order criterion could not discriminate. That is exactly how the first
-    /// version of this batch let the "no sorting" mutant survive.
+    /// version of let the "no sorting" mutant survive.
     /// </remarks>
     private static MetaDualSolution Dual(params (string Args, double Price)[] prices) {
         var constraints = new Dictionary<MathConstraint, Flt64>();
@@ -277,7 +277,7 @@ public class PatternAssignmentPricingTests {
     /// <param name="value">数值 / Value.</param>
     /// <returns>带单位的量 / The unit-carrying quantity.</returns>
     /// <remarks>
-    /// **重量单位用 SI 基准的千克。** 这一批的判据只关心**箱长**的量纲换算，
+    /// **重量单位用 SI 基准的千克。** 这里的判据只关心**箱长**的量纲换算，
     /// 重量的具体单位不影响系数；用基准单位可以少一次换算，也就少一处可能的误差源。
     ///
     /// **The weight unit is the SI-base kilogram**: these criteria only care about the **bin length** conversion, the exact mass unit does not affect the coefficient, and

@@ -37,9 +37,9 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// | 3 | 无后端或能力未声明 | `Unsupported` | 这条路走不通 |
 /// | 4 | 后端返回失败 | **原样带回** | 不吞成"零敏感度" |
 ///
-/// **第 2 与第 3 的顺序是本文件最容易被改坏的地方**（B1038 已单独钉过 `FixedIntegerLpGates.Preflight`）。
+/// **第 2 与第 3 的顺序是本文件最容易被改坏的地方**（已单独钉过 `FixedIntegerLpGates.Preflight`）。
 ///
-/// **The order of 2 and 3 is the easiest thing here to break** (pinned separately by `FixedIntegerLpGates.Preflight` in B1038).
+/// **The order of 2 and 3 is the easiest thing here to break** (pinned separately by `FixedIntegerLpGates.Preflight`).
 /// </remarks>
 public sealed class FixedIntegerLpSensitivityAnalyzer
 {

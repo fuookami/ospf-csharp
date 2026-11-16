@@ -30,7 +30,7 @@ Notable files:
 
 `LayerGenerationContext` ranks candidate layers by a caller-supplied `ScoreByShadowPrice` function
 (`Func<Layer<V>, Bpp2dLayerGenerationRequest<V>, V>`), falling back to descending area when no scorer is
-supplied. This is the strongly typed pattern that `Framework.Bpp3d` copied in Batch 273 — Bpp3d previously
+supplied. This is the strongly typed pattern that `Framework.Bpp3d` copied in earlier — Bpp3d previously
 carried an unread `object?` placeholder.
 
 ## Verification

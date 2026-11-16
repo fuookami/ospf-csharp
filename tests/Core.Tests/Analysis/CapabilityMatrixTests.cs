@@ -15,11 +15,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 分析能力矩阵 / The analysis capability matrix.
 /// </summary>
 /// <remarks>
-/// **B966 补 `CapabilityMatrix`（基线 297 行）**，它只依赖报告层与 CP 类型，不需要原生后端。
+/// 补 `CapabilityMatrix`（基线 297 行）**，它只依赖报告层与 CP 类型，不需要原生后端。
 ///
 /// 判据钉的是**推断链**：一个操作能不能用，取决于它的上游能不能用。**这条链错一步，上层就会选一条不存在的路径。**
 ///
-/// **B966 ported `CapabilityMatrix` (297 baseline lines)**, which needs no native backend. The criteria pin the **inference chain**: whether an operation is usable depends on
+/// **ported `CapabilityMatrix` (297 baseline lines)**, which needs no native backend. The criteria pin the **inference chain**: whether an operation is usable depends on
 /// whether its upstream is. **One wrong link and the layer above picks a path that does not exist.**
 /// </remarks>
 public class CapabilityMatrixTests {

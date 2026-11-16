@@ -1,4 +1,4 @@
-// 产能调度上下文真的装得起来（B732）/ The capacity scheduling context really assembles (B732).
+// 产能调度上下文真的装得起来/ The capacity scheduling context really assembles.
 
 using System;
 using System.Collections.Generic;
@@ -17,18 +17,18 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **产能调度上下文真的装得起来（B732）** / The capacity scheduling context really assembles (B732).
+/// **产能调度上下文真的装得起来** / The capacity scheduling context really assembles.
 /// </summary>
 /// <remarks>
-/// `ICapacitySchedulingContext` 从 B4xx 起就在，但**没有任何实现**——B724 的决策变量、B726 的排序变量、
-/// B727 的三族约束、B728 的成本目标全是"零件齐了、没装起来"。**一个没有实现的接口比没有接口更糟**：
+/// `ICapacitySchedulingContext` 从 B4xx 起就在，但**没有任何实现**—— 的决策变量、 的排序变量、
+/// 的三族约束、 的成本目标全是"零件齐了、没装起来"。**一个没有实现的接口比没有接口更糟**：
 /// 它让人以为整条链路已经能跑。
 ///
-/// 这一批给出唯一实现 `CapacitySchedulingContext`，并用一条端到端判据证明零件真的能装在一起：
+/// 这里给出唯一实现 `CapacitySchedulingContext`，并用一条端到端判据证明零件真的能装在一起：
 /// 注册 → 模型里同时有变量、三族约束和一个目标 → 写回取值 → 解读得回来。
 ///
-/// `ICapacitySchedulingContext` has existed since B4xx with **no implementation at all** — B724's decision variables, B726's order variables, B727's three constraint families and B728's cost
-/// objective were all "parts present, never assembled". **An interface with no implementation is worse than no interface**: it makes readers believe the chain already runs. This batch adds
+/// `ICapacitySchedulingContext` has existed since B4xx with **no implementation at all** — the earlier decision variables, the earlier order variables, the earlier three constraint families and the earlier cost
+/// objective were all "parts present, never assembled". **An interface with no implementation is worse than no interface**: it makes readers believe the chain already runs. adds
 /// the single implementation and one end-to-end criterion proving the parts really go together: register, see variables plus three constraint families plus one objective in the model, write
 /// values back, and read the solution out.
 /// </remarks>

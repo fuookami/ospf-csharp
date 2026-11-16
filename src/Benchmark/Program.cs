@@ -28,10 +28,10 @@ public static class Program {
     /// <summary>入口 / Entry point.</summary>
     /// <param name="args">命令行参数 / Command-line arguments.</param>
     public static void Main(string[] args) {
-        // **B1304：`--dump` 走跨版本文本转储，不计时。** **基线的 `CrossVersionSemanticDump` 是一个独立 main，
+        // **`--dump` 走跨版本文本转储，不计时。** **基线的 `CrossVersionSemanticDump` 是一个独立 main，
         // 本仓的基准项目只有一个入口，所以在这里分叉；** **它必须在参数解析之前，否则 `--dump` 会被当成非法参数。**
         //
-        // **B1304: `--dump` runs the cross-version text dump instead of timing.** **The baseline's dump is a separate main; this benchmark
+        // **`--dump` runs the cross-version text dump instead of timing.** **The baseline's dump is a separate main; this benchmark
         // project has a single entry point, so the fork lives here — and it must sit before argument parsing, or `--dump` would be rejected as
         // an invalid argument.**
         if (args.Length == 1 && string.Equals(args[0], "--dump", StringComparison.Ordinal)) {

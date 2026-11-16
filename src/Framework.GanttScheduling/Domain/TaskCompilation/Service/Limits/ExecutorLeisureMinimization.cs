@@ -55,7 +55,7 @@ public class ExecutorLeisureMinimization<E, A>
     /// <remarks>
     /// 基线：`withExecutorLeisure` 且**给了系数**时最小化 `Σ coefficient(e) * z[e]`。
     ///
-    /// 注意基线的两层保护，本批都照抄：
+    /// 注意基线的两层保护，这里都照抄：
     /// <list type="number">
     /// <item>空闲未启用 → 直接 `Ok`（`z` 根本不存在，无事可做不是假施加）；</item>
     /// <item>**没给系数 → 也直接 `Ok`**（`coefficient?.let { … }`）。这一条容易看漏：它意味着"空闲最小化默认不生效"，

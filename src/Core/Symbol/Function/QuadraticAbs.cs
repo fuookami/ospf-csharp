@@ -23,15 +23,15 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// <remarks>
 /// 对齐基线 `QuadraticAbs.kt`。
 ///
-/// **与 B1161、B1162 的六个类同形**：**桥接，然后委托。绝对值编码本身没有任何新增。**
+/// **与六个类同形**：**桥接，然后委托。绝对值编码本身没有任何新增。**
 ///
 /// **但这里有一个必须说清的差别**：**`AbsFunction` 接受的是<b>线性</b>多项式，
 /// 所以桥接之后 `|y|` 与 `|p|` 是同一个数——只要桥接等式真的成立。**
 /// **而桥接等式如果不成立（比如忘了注册），`|y|` 会取到任意值。**
 ///
-/// B1163, following the baseline's `QuadraticAbs.kt`.
+/// Following the baseline's `QuadraticAbs.kt`.
 ///
-/// **Same shape as the six classes in B1161 and B1162**: **bridge, then delegate. No absolute-value encoding is new.**
+/// **Same shape as the six classes**: **bridge, then delegate. No absolute-value encoding is new.**
 ///
 /// **One difference must be stated**: **`AbsFunction` takes a <b>linear</b> polynomial, so after bridging `|y|` equals
 /// `|p|` — as long as the bridge equality actually holds.** **If it does not (say the registration was forgotten),
@@ -144,7 +144,7 @@ public sealed class QuadraticAbsFunction : IMathFunctionSymbol<Flt64>, IHasResul
 /// **浮点里 `−0` 与 `0` 相等但可观察不同（比如格式化输出 `-0`），
 /// 而归一化让"正部在零点"给出干净的零。**
 ///
-/// B1163, following the baseline's `QuadraticPositivePart.kt`.
+/// Following the baseline's `QuadraticPositivePart.kt`.
 ///
 /// **The baseline's identity is `max(p, 0) = −min(−p, 0)`, with the `min` built from an `exact = true`
 /// `QuadraticMinFunction`.** **So this class has no extremum encoding of its own**: **it builds a

@@ -209,9 +209,9 @@ public sealed class LinearMechanismFallbackTarget : IDeferredFunctionFallbackTar
 /// <remarks>
 /// 对齐基线 `materializeMechanismFunctionFallbacks` 的<b>第一个守卫</b>。
 ///
-/// **基线那个函数有四段，本批只做第一段，理由写明：**
+/// **基线那个函数有四段，这里只做第一段，理由写明：**
 ///
-/// | 段 | 依赖 | 本批 |
+/// | 段 | 依赖 | 这里 |
 /// | --- | --- | --- |
 /// | `policy == EAGER` → 原样返回 | **只有策略属性** | ✅ |
 /// | 收集已被区域占用的结果键 | `DeferredFunctionConstraintRegions` | ❌ 模型上没有 |
@@ -272,7 +272,7 @@ public static class DeferredFunctionMaterializationGate
     ///
     /// | 条件 | 依赖 | 批次 |
     /// | --- | --- | --- |
-    /// | `supportsDeferredFallback()` | 结构自身 | — |
+    /// | `supportsDeferredFallback` | 结构自身 | — |
     /// | 结果键不在 `nativeFunctionKeys` 里 | 调用方参数 | — |
     /// | 结果键不在已绑定区域里 | `DeferredFunctionConstraintRegions` | — |
     ///
@@ -347,8 +347,8 @@ public static class DeferredFunctionMaterializationGate
 ///
 /// 1. **`Eager` 直接返回原模型**
 /// 2. **过滤待处理结构**（三个条件）
-/// 3. **逐结构校验输入边界**（本批）
-/// 4. **复制模型、搬区域记录、调用驱动**（本批）
+/// 3. **逐结构校验输入边界**（这里）
+/// 4. **复制模型、搬区域记录、调用驱动**（这里）
 ///
 /// **第三段只对两类结构做事：** **`UnivariateLinearPiecewiseStructure` 与 `MaxStructure` 需要校验输入边界，
 /// 别的结构 `ok`。** **这不是遗漏——只有这两个结构的 fallback 会用到创建时捕获的输入范围，

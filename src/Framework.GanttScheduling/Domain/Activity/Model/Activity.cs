@@ -72,11 +72,11 @@ public enum ActivityExecutionStatus {
 /// </remarks>
 /// <remarks>
 /// 任务与资源身份在这里用 `string`：C# 的 `Executor.Id` 是 `string`，而基线的 `ExecutorId` 是接口。
-/// 把接口继承体系搬过来会牵动整个 `Task` 领域，而本批只需要一个可用于分组与比较的键。
+/// 把接口继承体系搬过来会牵动整个 `Task` 领域，而这里只需要一个可用于分组与比较的键。
 /// `ponytail:` 天花板——等到活动与任务领域真正需要共享身份时，再引入 `ExecutorId` 接口。
 ///
 /// **The task and resource identities are `string` here**: C#'s `Executor.Id` is a `string` while the baseline's `ExecutorId` is an interface. Porting that interface
-/// hierarchy would drag in the whole `Task` domain, and this batch only needs a key to group and compare by.
+/// hierarchy would drag in the whole `Task` domain, and only needs a key to group and compare by.
 /// **`ponytail:` ceiling** — introduce an `ExecutorId` interface when the activity and task domains genuinely need to share identity.
 /// </remarks>
 public sealed record ActivityChoiceKey(string Task, string Mode, DateTimeOffset Start);

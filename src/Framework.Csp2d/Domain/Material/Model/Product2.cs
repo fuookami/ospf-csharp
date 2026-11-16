@@ -131,10 +131,10 @@ public sealed record ProductDemands2<V>(IReadOnlyList<ProductDemand2<V>> Demands
     /// </summary>
     /// <returns>需求映射 / The demand map.</returns>
     /// <remarks>
-    /// **后写覆盖先写**——所以调用前必须经过 `DuplicateProducts()` 的检查，否则**同一个产品只留下一条需求**，
+    /// **后写覆盖先写**——所以调用前必须经过 `DuplicateProducts` 的检查，否则**同一个产品只留下一条需求**，
     /// 而需求总量少了，**看起来像"需求更小、更容易做"**。
     ///
-    /// **A later entry overwrites an earlier one**, so `DuplicateProducts()` must run first; otherwise **one demand survives per product**, the total demand shrinks,
+    /// **A later entry overwrites an earlier one**, so `DuplicateProducts` must run first; otherwise **one demand survives per product**, the total demand shrinks,
     /// and it **looks like "a smaller, easier problem"**.
     /// </remarks>
     public IReadOnlyDictionary<string, ProductDemand2<V>> ByProduct() {

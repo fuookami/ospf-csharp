@@ -1,4 +1,4 @@
-// 带类型模型构造器（B675）的判据 / Criteria for the typed model builder (B675).
+// 带类型模型构造器的判据 / Criteria for the typed model builder.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Model;
 
 /// <summary>
-/// **带类型模型构造器（B675）** / The typed model builder (B675).
+/// **带类型模型构造器** / The typed model builder.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**约束归一成"左减右 + 右端常数"**（两个重载各自只有一种形状）、

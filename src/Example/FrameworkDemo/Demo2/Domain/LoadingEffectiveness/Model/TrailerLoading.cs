@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 4. **`trailer_change` 没有退化分支**，第一个舱位怎样都用 `IfFunction`。
 /// 5. **`trailer_circling` 用配载变量而不是装载量**：`s[i2,j1] + s[i1,j2] − 2 + ε`。
 /// 6. **`trailer_circling` 有恒零退化分支**（不可放置的组合），`trailer_change` 没有。
-/// 7. `ε = NONZERO_TOLERANCE = 1e-10`，`strictBoundary` **也取这个 ε**（B620 实测：0.5 会被 `SafeLattice` 拒绝）。
+/// 7. `ε = NONZERO_TOLERANCE = 1e-10`，`strictBoundary` **也取这个 ε**（：0.5 会被 `SafeLattice` 拒绝）。
 ///
 /// Aligned with the baseline, two matrices: `trailer_change` over (ordered trailer pair × adjacent position pair) meaning the two adjacent positions carry **different trailers'** cargo, and
 /// `trailer_circling` over (ordered item pair within a trailer × adjacent position pair) meaning two items of one trailer were placed **the wrong way round**. Seven things must be
@@ -46,7 +46,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// within each trailer, neither sorted nor filtered by sequence** (unlike `SequentialLoading`); **`trailer_change`'s condition is crossed** — `load(trailer2, pos1) + load(trailer1, pos2) − 2
 /// + ε`, the first term pairing the **second** trailer, and the same order would invert the meaning; **`trailer_change` has no degenerate branch**; **`trailer_circling` uses stowage
 /// variables rather than loads**; **`trailer_circling` has a constant-zero branch** for unplaceable combinations while `trailer_change` does not; and `ε = NONZERO_TOLERANCE = 1e-10`,
-/// with `strictBoundary` **also taking that ε** (measured in B620).
+/// with `strictBoundary` **also taking that ε** (measured).
 /// </remarks>
 public sealed class TrailerLoading
 {

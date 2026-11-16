@@ -9,14 +9,14 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **分段线性最大装载重量（B584）** / Piecewise-linear maximum load weight (B584).
+/// **分段线性最大装载重量** / Piecewise-linear maximum load weight.
 /// </summary>
 /// <remarks>
 /// 基线的 `PositionMaximumLoadWeight` 支持"按零油重分段"：同一舱位在飞机轻时允许装得多、重时允许装得少，为别的舱位留余量。
 /// 它有三处容易被"顺手写得更合理"的地方：
 ///
 /// 1. **阶跃，不是插值**。基线里那条平滑的 `UnivariateLinearPiecewiseFunction` 路径**是注释掉的**，生效的是分段查找。
-///    把它"补全"成插值是很自然的冲动，但那会把跨语言行为改掉。
+/// 把它"补全"成插值是很自然的冲动，但那会把跨语言行为改掉。
 /// 2. **零油重超过最后一段时取最后一段**，不是"无限制"。取无限制会让已经超重的飞机允许再装任意重量。
 /// 3. **`mlw` 是各段最大值**，不是第一段或最后一段——`y` 的变量上界用的就是它。
 ///
@@ -185,7 +185,7 @@ public class Demo2MaxLoadWeightTests {
     /// **空分段是错误** / An empty segment list is an error.
     /// </summary>
     /// <remarks>
-    /// 基线的 `assert(piecewise.isNotEmpty())` 在 Kotlin 里默认关闭；C# 的异常在 Release 下也生效。静默接受空分段会得到一个
+    /// 基线的 `assert(piecewise.isNotEmpty)` 在 Kotlin 里默认关闭；C# 的异常在 Release 下也生效。静默接受空分段会得到一个
     /// "永远返回 0"的规格——它不会崩，只会让每个舱位都不可用。
     ///
     /// The baseline's `assert` is off by default in Kotlin while C#'s exception fires in Release too. Silently accepting an empty list yields a specification that returns zero

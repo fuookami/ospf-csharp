@@ -21,8 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `restoreValues` 与 `maxInputValues`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeValueRestorationTests
 {
     /// <summary>
@@ -57,10 +56,10 @@ public class NativeValueRestorationTests
     /// <b>`nativeValues` silently wins over</b> ABS helpers.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条，而它是一条<b>负面</b>的事实。**
+    /// **这是这里最有内容的一条，而它是一条<b>负面</b>的事实。**
     ///
-    /// **B1209 发现 `absHelperValues` 不拒绝"解里含有辅助列"。**
-    /// **本批的 `??` 链让 `nativeValues` 先查，所以一个解里带着陈旧的 `positive = 999`
+    /// **发现 `absHelperValues` 不拒绝"解里含有辅助列"。**
+    /// **这里的 `??` 链让 `nativeValues` 先查，所以一个解里带着陈旧的 `positive = 999`
     /// 会<b>胜过</b>重建出来的正确值 `5`。**
     ///
     /// **而选择列没有这个问题，因为 `selectorValues` 会先把"解里含选择列"拒掉。**
@@ -72,7 +71,7 @@ public class NativeValueRestorationTests
     ///
     /// **The batch's most substantive criterion, and it records a <b>negative</b> fact.**
     ///
-    /// **B1209 found that `absHelperValues` does not reject a solution containing helpers.** **The `??` chain here looks at
+    /// **Found that `absHelperValues` does not reject a solution containing helpers.** **The `??` chain here looks at
     /// `nativeValues` first, so a solution carrying a stale `positive = 999` <b>beats</b> the correctly reconstructed
     /// `5`.**
     ///
@@ -160,12 +159,12 @@ public class NativeValueRestorationTests
     /// MAX selectors follow the largest value, taking the first on a tie.
     /// </summary>
     /// <remarks>
-    /// **基线的 `inputs.indexOf(inputs.maxOrNull()!!)` 取的是<b>第一个</b>极值。**
+    /// **基线的 `inputs.indexOf(inputs.maxOrNull!!)` 取的是<b>第一个</b>极值。**
     ///
     /// **并列时选哪一支不影响目标值（两支一样大），但它影响求解器看到的
     /// 选择变量值——而那是可复现性的一部分：同一个解必须重建出同一组选择列。**
     ///
-    /// **The baseline's `indexOf(maxOrNull())` takes the <b>first</b> extreme.**
+    /// **The baseline's `indexOf(maxOrNull)` takes the <b>first</b> extreme.**
     ///
     /// **On a tie the choice does not change the objective, but it does change the selector values the solver sees — and
     /// that is part of reproducibility: one solution must reconstruct one selector set.**

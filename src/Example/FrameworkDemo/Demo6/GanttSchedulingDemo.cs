@@ -122,7 +122,7 @@ public sealed class GanttSchedulingDemo {
     private Result<Success, ErrorCode, Error<ErrorCode>> InitObjective() {
         // minimize makespan = max over all tasks of (start[i] + processingTime[i])
         // The makespan variable is bounded below by each task's completion time
-        // via the completion constraints added in InitConstraints().
+        // via the completion constraints added in InitConstraints.
         var objPoly = new MutableLinearPolynomial<Flt64>(constant: Flt64.Zero);
         objPoly.AddMonomial(new LinearMonomial<Flt64>(Flt64.One, _makespanVar!));
         _makespan = new LinearExpressionSymbol(objPoly, name: "makespan");

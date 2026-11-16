@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// / Rebuilding the master from identical input must give the identical result — the reason the "restore failed" branch is unreachable.
 /// </summary>
 /// <remarks>
-/// **B361 起一直记着"恢复失败（`restored is null`）分支未被触发"。** 本批去查为什么：
+/// **起一直记着"恢复失败（`restored is null`）分支未被触发"。** 这里去查为什么：
 ///
 /// `Csp1dColumnGeneration` 的第二阶段在同一个迭代里用**同一批 `cuttingPlans`、同一个
 /// `domainValueSample`、同一份 `extensions`** 重建主问题，而这套输入**刚刚**在进入循环之前
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 ///
 /// **If this ever fails**, the "restore failed" branch becomes reachable and must be given its own criterion.
 ///
-/// **B361 onward记录"the restore-failed (`restored is null`) branch was never triggered".** This batch asks why.
+/// **onward记录"the restore-failed (`restored is null`) branch was never triggered".** asks why.
 ///
 /// The second phase rebuilds the master **within the same iteration** with **the same `cuttingPlans`, the same `domainValueSample` and the same `extensions`**, and that
 /// exact input **already** built successfully before the loop (otherwise `lpMaster` would be null and the loop would never start).

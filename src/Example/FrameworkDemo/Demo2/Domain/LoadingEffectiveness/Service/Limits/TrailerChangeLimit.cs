@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///
 /// 1. **是 `Minimum`**——换装是代价，不是奖励。
 /// 2. **目标名带空格**：`"trailer change"`。
-/// 3. **空集合时直接返回成功、不加目标**（基线的 `if (monomials.isEmpty()) return ok`）。
+/// 3. **空集合时直接返回成功、不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
 /// 4. **系数是交叉的**：`coefficient(position2, trailer1)`、`coefficient(position1, trailer2)`。
 ///
 /// Aligned with the baseline: the (trailer pair × adjacent position pair) indicators weighted and summed into a **minimisation** named `"trailer change"` (with a space). Four things must be

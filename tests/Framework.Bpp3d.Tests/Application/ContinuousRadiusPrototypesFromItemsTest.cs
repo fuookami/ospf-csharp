@@ -21,12 +21,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Application;
 /// Continuous-radius prototype extraction must **actually inspect item shapes** rather than always returning an empty list.
 /// </summary>
 /// <remarks>
-/// B311 之前的方法是：
+/// 之前的方法是：
 ///
 /// ```csharp
 /// var prototypes = new Dictionary...;
 /// // Stub: in full implementation, would inspect item shapes
-/// return prototypes.Values.ToList();
+/// return prototypes.Values.ToList;
 /// ```
 ///
 /// **它建了一个字典，从不填充，然后返回它。** 而 `ColumnGenerationAlgorithm` 在真实求解时**每一轮都调用它**
@@ -151,16 +151,16 @@ public class ContinuousRadiusPrototypesFromItemsTest {
 
     /// <summary>**没有半径权重函数键的圆柱不产出原型** / A cylinder without a radius weight-function key yields no prototype.</summary>
     /// <remarks>
-    /// 这是 B312 恢复的**基线门控**：基线的 `continuousRadiusSelectionResult()` 在该键为 null 时返回 null，
+    /// 这是 恢复的**基线门控**：基线的 `continuousRadiusSelectionResult` 在该键为 null 时返回 null，
     /// 于是无键圆柱**不进入**连续半径路径。
     ///
-    /// B311 因为 C# 形状模型还没有这个键，只能对所有竖直圆柱产出原型，并在文档里记下偏差。
+    /// 因为 C# 形状模型还没有这个键，只能对所有竖直圆柱产出原型，并在文档里记下偏差。
     /// **现在门控回来了，这条测试锁住它。**
     ///
-    /// This is the **baseline gate** restored in B312: the baseline's `continuousRadiusSelectionResult()` returns null when the key is null, so a keyless
+    /// This is the **baseline gate** restored: the baseline's `continuousRadiusSelectionResult` returns null when the key is null, so a keyless
     /// cylinder **stays out** of the continuous-radius path.
     ///
-    /// B311 could only produce prototypes for every vertical cylinder because the C# shape model lacked the key, and it recorded that deviation. **The gate is
+    /// could only produce prototypes for every vertical cylinder because the C# shape model lacked the key, and it recorded that deviation. **The gate is
     /// back now, and this test pins it.**
     /// </remarks>
     [Fact]

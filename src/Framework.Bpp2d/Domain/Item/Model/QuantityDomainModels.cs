@@ -72,10 +72,10 @@ public abstract record QuantityItemShape<V> where V : struct, IFloatingNumber<V>
     /// <param name="quantity">量 / The quantity.</param>
     /// <returns>`FltX` 量 / The `FltX` quantity.</returns>
     /// <remarks>
-    /// 走 `ToFlt64().ToDouble()` 再构造，而不是要求 `V` 实现某个转换接口——这是本仓既有的通用路径
+    /// 走 `ToFlt64.ToDouble` 再构造，而不是要求 `V` 实现某个转换接口——这是本仓既有的通用路径
     /// （`PackingRendererAdapter` 等处同样用法）。**单位原样带过去**。
     ///
-    /// Goes through `ToFlt64().ToDouble()` and reconstructs rather than requiring `V` to implement a conversion interface — the existing generic path here (used the same way in
+    /// Goes through `ToFlt64.ToDouble` and reconstructs rather than requiring `V` to implement a conversion interface — the existing generic path here (used the same way in
     /// `PackingRendererAdapter`). **The unit carries over unchanged.**
     /// </remarks>
     internal static Quantity<FltX> ToFltX(Quantity<V> quantity) =>
@@ -149,10 +149,10 @@ public sealed record QuantityItem<V>(
 /// </summary>
 /// <typeparam name="V">数值类型 / Numeric type.</typeparam>
 /// <remarks>
-/// 与基线 `QuantityLayerPlacement` 对齐。**旋转要落到形状上**：基线 `if (rotated) fltXShape.rotated() else fltXShape`，
+/// 与基线 `QuantityLayerPlacement` 对齐。**旋转要落到形状上**：基线 `if (rotated) fltXShape.rotated else fltXShape`，
 /// 所以 `Rotated` 不只是记录用的标记，它会换掉形状本身。只把标记传下去而形状不动，解算器看到的还是未旋转的那一件。
 ///
-/// Aligned with the baseline's `QuantityLayerPlacement`. **Rotation lands on the shape**: the baseline does `if (rotated) fltXShape.rotated() else fltXShape`, so `Rotated` rewrites the
+/// Aligned with the baseline's `QuantityLayerPlacement`. **Rotation lands on the shape**: the baseline does `if (rotated) fltXShape.rotated else fltXShape`, so `Rotated` rewrites the
 /// shape rather than merely recording a flag. Passing the flag through without rotating would leave the solver looking at the unrotated piece.
 /// </remarks>
 /// <param name="Shape">量纲形状 / The quantity shape.</param>

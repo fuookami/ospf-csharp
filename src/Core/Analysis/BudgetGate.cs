@@ -11,7 +11,7 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// <remarks>
 /// **这是 `ConflictAnalyzer.kt` 的 `budgetExceeded` 的移植。**
 ///
-/// 基线只有一行：`budget != null &amp;&amp; System.nanoTime() - startedAt &gt;= budget.inWholeNanoseconds`。
+/// 基线只有一行：`budget != null &amp;&amp; System.nanoTime - startedAt &gt;= budget.inWholeNanoseconds`。
 /// **它短到看起来不值得单独成文件，而它有一个容易写反的语义：没有预算就是永不超支。**
 ///
 /// The baseline is one line, **short enough to look unworthy of its own file, and it has a semantics that is easy to invert: no budget means never exceeded.**

@@ -83,11 +83,11 @@ public class TaskOverMaxDelayTimeMinimization<T, E, A>
     /// 基线：`overMaxDelayEnabled` 时最小化 `Σ coefficient(task) × over_max_delay[task]`，任务集是
     /// **允许延迟且给了最大允许量**的那些；开关关着时任务集为空，目标不存在。
     ///
-    /// 系数提取失败时基线用无穷大；`Flt64` 没有无穷（B505 的同一处限制），所以这里失败。
+    /// 系数提取失败时基线用无穷大；`Flt64` 没有无穷（的同一处限制），所以这里失败。
     /// `threshold` 分支仍未移植（构造函数没有 threshold 参数，`ThresholdSlack` 只是纯函数）。
     ///
     /// The baseline minimises `Σ coefficient(task) × over_max_delay[task]` when `overMaxDelayEnabled`, over the tasks that **may delay and carry a maximum**; with the
-    /// switch off the set is empty and the objective does not exist. An extraction failure uses infinity in the baseline and `Flt64` has none (same limit as B505), so it fails
+    /// switch off the set is empty and the objective does not exist. An extraction failure uses infinity in the baseline and `Flt64` has none (the same limit), so it fails
     /// here. The `threshold` branch is still unported (no threshold parameter; `ThresholdSlack` is a pure function).
     /// </remarks>
     public Try Invoke(object model) {

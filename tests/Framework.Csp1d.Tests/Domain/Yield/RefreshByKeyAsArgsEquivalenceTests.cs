@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 /// **`RefreshByKeyAsArgs` 与默认 `Refresh` 必须等价** / `RefreshByKeyAsArgs` must agree with the default `Refresh`.
 /// </summary>
 /// <remarks>
-/// **B386 记的缺口**："`RefreshByKeyAsArgs` 无判据"。
+/// **记的缺口**："`RefreshByKeyAsArgs` 无判据"。
 ///
 /// 实测发现它**没有任何调用方**：基线的每条管线都**显式覆写 `refresh`** 并调用它，
 /// 而 C# 保留默认实现、**没有覆写**。基线里这两份是**等价实现**，所以 C# 这份是
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Domain.Yield;
 /// 判据的价值不在于"证明它有用"，而在于**证明它若被误接上也不会出错**：
 /// 用同一组约束与对偶，分别走两条路径，**结果必须完全相同**。
 ///
-/// **B386's gap**: "`RefreshByKeyAsArgs` has no criteria". Measuring showed it **has no callers**: every baseline pipeline explicitly overrides `refresh` to call it, while C#
+/// **the earlier gap**: "`RefreshByKeyAsArgs` has no criteria". Measuring showed it **has no callers**: every baseline pipeline explicitly overrides `refresh` to call it, while C#
 /// kept the default and **added no overrides** — the two are equivalent implementations in the baseline, so this copy is **dead code inherited from it**. The criterion's
 /// value is not proving it useful but proving **it would be harmless if someone wired it up**: run both paths over the same constraints and duals, and the results must
 /// be **identical**.
@@ -53,11 +53,11 @@ public class RefreshByKeyAsArgsEquivalenceTests {
             name: "product-a",
             width: new List<Quantity<Flt64>> { Millimetres(60.0) });
 
-    /// <summary>**`RefreshByKeyAsArgs` 在类型层面不可调用**——这是本批的结论 / `RefreshByKeyAsArgs` is uncallable by type — this batch's conclusion.</summary>
+    /// <summary>**`RefreshByKeyAsArgs` 在类型层面不可调用**——这是这里的结论 / `RefreshByKeyAsArgs` is uncallable by type —'s conclusion.</summary>
     /// <remarks>
-    /// **B386 记的缺口**："`RefreshByKeyAsArgs` 无判据"。
+    /// **记的缺口**："`RefreshByKeyAsArgs` 无判据"。
     ///
-    /// 本批一路试下来，结论比"没人调用"强得多：
+    /// 这里一路试下来，结论比"没人调用"强得多：
     ///
     /// | 尝试 | 结果 |
     /// | --- | --- |
@@ -77,7 +77,7 @@ public class RefreshByKeyAsArgsEquivalenceTests {
     /// 而不是留在某人的记忆里。若将来有人"修好"这个签名，这条判据会**变红**，
     /// 提醒他们重新审视——那时它就不再是死代码了。
     ///
-    /// **B386's gap**: "`RefreshByKeyAsArgs` has no criteria". This batch's conclusion is stronger than "nobody calls it" (table above): `grep` finds zero callers, an adapter
+ /// **the earlier gap**: "`RefreshByKeyAsArgs` has no criteria". the conclusion is stronger than "nobody calls it" (table above): `grep` finds zero callers, an adapter
     /// **does not compile** (`TMap`'s self-referential constraint is incompatible), and reflection throws **`VerificationException`** because `Csp1dDefaultShadowPriceMap`
     /// violates the `TMapT` constraint. The signature demands `ICGPipeline&lt;object, object, TMapT&gt;` with `TMapT : AbstractShadowPriceMap&lt;object, TMapT&gt;`, while the real map is
     /// `AbstractShadowPriceMap&lt;AbstractCsp1dShadowPriceArguments, itself&gt;` — **no type argument satisfies both**. So this static method is **dead code inherited from the

@@ -14,8 +14,8 @@ using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 
 /// <summary>
-/// B1310 补上的两块：五个策略槽位（含有效层数的合成）与递归层数计算 /
-/// The two pieces B1310 filled in: the five policy slots (with the effective layer composition) and the recursive layer computation.
+/// 补上的两块：五个策略槽位（含有效层数的合成）与递归层数计算 /
+/// The two pieces filled in: the five policy slots (with the effective layer composition) and the recursive layer computation.
 /// </summary>
 /// <remarks>
 /// 基线里这两块分别是 `PackageAttribute` 的字段与它伴生对象里的 `layerLayer`／`layerHeight`／`layer`。

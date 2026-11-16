@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 用比较网络把若干多项式降序排列 / Sort polynomials descending with a comparison network.
 /// </summary>
 /// <remarks>
-/// B1150。基线 `OrderStatistic.kt` 的做法：**冒泡排序，每一对比较都换成一个 <c>MaxFunction</c> 与一个
+/// 基线 `OrderStatistic.kt` 的做法：**冒泡排序，每一对比较都换成一个 <c>MaxFunction</c> 与一个
 /// <c>MinFunction</c>**，于是"第 k 大"就变成"排序后第 k 个"。
 ///
 /// **代价是 O(n²) 对函数**——**n 个输入要 n(n−1) 个函数**。
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **只用 Max 得到的是"每对里的较大者"，重复使用会让同一个多项式出现在多个位置，
 /// 而"第 k 大"于是变成一个没有意义的量。**
 ///
-/// B1150, following the baseline's approach: **bubble sort where each comparison becomes one `MaxFunction` and one
+/// Following the baseline's approach: **bubble sort where each comparison becomes one `MaxFunction` and one
 /// `MinFunction`**, so "the k-th largest" is "the k-th after sorting".
 ///
 /// **The cost is O(n²) function pairs** — **n inputs need n(n−1) functions.** **That is the baseline's choice and this
@@ -121,7 +121,7 @@ internal sealed class DescendingOrder<V> where V : struct, IRealNumber<V>, INumb
 /// **`k` 从 0 开始**：**`k = 0` 是最大值，`k = n − 1` 是最小值。**
 /// **从 1 开始的约定会让 `k = 0` 与 `k = n` 都越界，而越界检查的边界会差一位。**
 ///
-/// The k-th largest from the baseline, added in B1150.
+/// The k-th largest from the baseline.
 ///
 /// **`k` is zero-based**: **`k = 0` is the maximum and `k = n − 1` the minimum.**
 /// **A one-based convention would put both `k = 0` and `k = n` out of range, and the bounds check would be off by
@@ -266,7 +266,7 @@ public sealed class KthLargestFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// **`k` 的合法范围是 `[0, n]`（**含 n**），与 `KthLargestFunction` 的 `[0, n−1]` 不同**——
 /// **两者边界差一，是因为"前 n 大之和"有意义而"第 n 大"不存在。**
 ///
-/// The sum of the k largest, added in B1150.
+/// The sum of the k largest.
 ///
 /// **With `k = 0` the result is the constant zero and with `k = n` it is the whole sum — both skip the sort**,
 /// **saving n(n−1) functions. That optimisation comes from the baseline, not from this repo.**

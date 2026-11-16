@@ -28,12 +28,12 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 七种延迟结构逐种走通 / Each of the seven deferred structures walked through the chain.
 /// </summary>
 /// <remarks>
-/// B1243 把"一种通了"扩到"每一种都通了"，并固定住"已声明但未实现"的那两种。
+/// 把"一种通了"扩到"每一种都通了"，并固定住"已声明但未实现"的那两种。
 ///
 /// **为什么必须逐种测：** **`SupportsDeferredFallback` 是一次<b>类型分派</b>，而物化器是<b>另一套</b>类型分派。
 /// 两套分派各自维护一张表，而<b>没有任何东西保证两张表一致</b>。**
 ///
-/// B1243 widens "one kind works" to "every kind works", and pins the two that are declared but not implemented.
+/// Widens "one kind works" to "every kind works", and pins the two that are declared but not implemented.
 ///
 /// **Why each kind must be tested: `SupportsDeferredFallback` is one <b>type dispatch</b> and the materialisers are
 /// <b>another</b>.** **Two tables, maintained separately, with <b>nothing guaranteeing they agree</b>.**
@@ -123,7 +123,7 @@ public class DeferredFunctionStructureCoverageTests
     /// The extremum's two row families flip with the direction, while the Big-M term does not.
     /// </summary>
     /// <remarks>
-    /// **B1255 的起点是一个具体缺陷：** **`MaxStructure.Minimum` 这个属性<b>没有任何地方读它</b>——
+    /// **起点是一个具体缺陷：** **`MaxStructure.Minimum` 这个属性<b>没有任何地方读它</b>——
  /// 声明了、`MaxFunction` 的投影也在填，而生成逻辑无论方向都产 MAX 行。**
     /// **于是 `min` 被当成 MAX 物化：模型合法、能解，只是答案是最大值。**
     ///
@@ -134,10 +134,10 @@ public class DeferredFunctionStructureCoverageTests
     /// **求解判据慢，但它是唯一能证明"这组行压出来的答案是对的"的东西。**
     ///
     /// **而这一条特意同时断言两件事：** **`result` 的系数随方向翻号，Big-M 的系数<b>不翻</b>。**
-    /// **B1255 第一版就是"全翻"，于是未选中的输入变成 `result ≥ input + M`，模型直接无解。**
+    /// **曾经"全翻"，于是未选中的输入变成 `result ≥ input + M`，模型直接无解。**
     ///
-    /// **B1255 starts from a concrete defect: `MaxStructure.Minimum` was <b>read by nothing</b> — declared, filled by the
- /// `MaxFunction` projection , and the generation produced MAX rows either way.** **So a `min` materialised as a
+    /// **The starting point is a concrete defect: `MaxStructure.Minimum` was <b>read by nothing</b> — declared, filled by the
+ /// `MaxFunction` projection, and the generation produced MAX rows either way.** **So a `min` materialised as a
     /// MAX: legal, solvable, answering with the maximum.**
     ///
     /// **This criterion is the <b>solver-free</b> half; the other half is `MinRows_ShouldPinTheAnswer` (a real solve, once
@@ -145,7 +145,7 @@ public class DeferredFunctionStructureCoverageTests
     /// the solve is slow and is the only thing that proves the rows force the right answer.**
     ///
     /// **It deliberately asserts two things at once: the coefficient of `result` flips with the direction, and the Big-M
-    /// coefficient <b>does not</b>.** **B1255's first version flipped everything, and an unselected input then read
+    /// coefficient <b>does not</b>.** **the earlier first version flipped everything, and an unselected input then read
     /// `result >= input + M` — infeasible outright.**
     /// </remarks>
     [Fact]
@@ -195,7 +195,7 @@ public class DeferredFunctionStructureCoverageTests
     /// **七种全覆盖** / All seven are covered.
     /// </summary>
     /// <remarks>
-    /// **B1246 这条判据说的是"六种覆盖、第七个是 Masking"，B1247 把它反过来——
+    /// **这条判据原本说"六种覆盖、第七个是 Masking"，后来反过来——
     /// 而它<b>是自己变红逼着改的</b>，因为 `masking` 一加进去它就报"不该出现"。**
     ///
     /// **这就是缺口判据的第六次生效：** **它描述"现在缺什么"，于是"补上了"无法静默通过。**
@@ -204,7 +204,7 @@ public class DeferredFunctionStructureCoverageTests
     /// 那么 `Theory` 会红在 `masking` 那一格，而不是红在这条判据上——
     /// 两种红指向完全不同的原因（"没跑通"与"没更新文档"），而红的位置说清是哪一种。**
     ///
-    /// **B1246 said "six covered, the seventh is Masking"; B1247 turns it around — and it was <b>the criterion going red
+    /// **It used to say "six covered, the seventh is Masking"; now it turns around — and it was <b>the criterion going red
     /// that forced the edit</b>, since adding `masking` made it complain "must not appear".**
     ///
     /// **That is the sixth time a gap criterion has done its job: it describes "what is missing now", so closing the gap
@@ -235,8 +235,8 @@ public class DeferredFunctionStructureCoverageTests
     /// PWL still requires captured input bounds, and it is now covered end to end.
     /// </summary>
     /// <remarks>
-    /// **B1243 这条判据说的是"本批覆盖不到 PWL"，B1244／B1245 之后它仍然是那个意思——
-    /// 而这一批把它改成了两件事：**
+    /// **这条判据原本说"这里覆盖不到 PWL"，后来它仍然是那个意思——
+    /// 而这里把它改成了两件事：**
     ///
     /// **① 前提仍然存在**：**`CapturedInputBounds` 为 null 时物化返回
     /// "has no input bounds proof"。这是<b>契约</b>，不是缺陷，而契约不会因为被覆盖而消失。**
@@ -249,7 +249,7 @@ public class DeferredFunctionStructureCoverageTests
     ///
     /// **一条判据同时钉"契约在这里"与"有人真的过了这道契约"，才是完整的。**
     ///
-    /// **B1243's criterion said "this batch cannot cover PWL"; it still means that through B1244/B1245 — and this batch
+    /// **The criterion used to say "this cannot cover PWL"; it still means that — and this
     /// splits it into two things:**
     ///
     /// **① The precondition still exists: with `CapturedInputBounds` null, materialisation returns "has no input bounds
@@ -402,7 +402,7 @@ public class DeferredFunctionStructureCoverageTests
             case "piecewise": {
                 // **输入变量的范围必须落在捕获的边界证明之内**：`ValidateFallbackInputBounds`
                 // 会把当前范围与 `CapturedInputBounds` 比较，超出了就报
-                // "input bounds ... exceed the captured Big-M proof"。
+                // "input bounds... exceed the captured Big-M proof"。
                 // **The input variable's range must sit inside the captured proof**: `ValidateFallbackInputBounds`
                 // compares the current range against `CapturedInputBounds` and refuses when it is wider.
                 y.Range.SetRange(ValueRange<Flt64>.Of(Flt64.Zero, new Flt64(10)).Value);

@@ -56,9 +56,9 @@ public sealed class ContinuousMutationTests {
 
     /// <summary>**带边界时变异结果真的被夹到区间内** / With bounds the mutated value is really clamped into the interval.</summary>
     /// <remarks>
-    /// 这是 Batch 168 之前缺失的验证：`StubModelCore` 的令牌表为空，`LowerBoundOf` 恒返回 `null`，任何"在区间内"的断言都恒真。
+ /// 这是 earlier 之前缺失的验证：`StubModelCore` 的令牌表为空，`LowerBoundOf` 恒返回 `null`，任何"在区间内"的断言都恒真。
     /// 这里用 `BoundedStubModel([-10, 10])` 并把起点放到 9.5，高斯扰动的标准差足以让它越界。
-    /// This validation was missing before Batch 168: `StubModelCore`'s token table is empty, `LowerBoundOf` always returns `null`, and
+ /// This validation was missing before earlier: `StubModelCore`'s token table is empty, `LowerBoundOf` always returns `null`, and
     /// any "within the interval" assertion was vacuous. `BoundedStubModel([-10, 10])` with an origin of 9.5 lets a Gaussian step
     /// overflow with near certainty.
     /// </remarks>

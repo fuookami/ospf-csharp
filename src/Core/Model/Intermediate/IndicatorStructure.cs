@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// Bidirectional positive indicator.
 /// </summary>
 /// <remarks>
-/// B1186 按基线 `IndicatorStructure.kt` 补，连同它循环依赖的 `ConjoinedIndicator`、`DifferenceIndicator`
+/// 对齐基线 `IndicatorStructure.kt` 补，连同它循环依赖的 `ConjoinedIndicator`、`DifferenceIndicator`
 /// 一起放进本文件——**三者互相引用，分开写会需要三份 partial 或者一个永远不会被单独使用的中间层。**
 ///
 /// **`ConjoinedIndicator.Condition` 的类型就是 `IndicatorStructure`，而 `IndicatorStructure` 又持有
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **把两步顺序调换，两条错误消息都会在对方的场景里出现——而两条都是"非法参数"，
 /// 调用方分不出来。**
 ///
-/// B1186, following the baseline's `IndicatorStructure`, with its mutually recursive `ConjoinedIndicator` and
+/// Following the baseline's `IndicatorStructure`, with its mutually recursive `ConjoinedIndicator` and
 /// `DifferenceIndicator` in the same file — **the three reference each other, so splitting them would need three partials
 /// or an intermediate layer that is never used alone.**
 ///

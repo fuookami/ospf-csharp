@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// **语义也不写在载体里**：**同一个容差经常被好几个函数共用，若把"多近算零"写在载体里，
 /// 各函数就没法各自解释它。**
 ///
-/// B1151, following the baseline's `ZeroBand.kt`.
+/// Following the baseline's `ZeroBand.kt`.
 ///
 /// **It is a pure data carrier and validates nothing**, matching the baseline.
 /// **The "reject a negative tolerance" check lives at the use site** (`DeadZoneFunction` already rejects a negative

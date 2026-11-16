@@ -15,12 +15,12 @@ public static class TimeUnits {
     /// <summary>天 / Day (86400 s).</summary>
     public static readonly PhysicalUnit Day = new DerivedUnit(SIBaseUnits.Second, Scale.Invoke(86400), "day", "d");
 
-    // 以下两个是 B1137 按基线 Time.kt 补的。
+    // 以下两个按基线 `Time.kt` 补齐。
     //
     // Week 与 Year 都不是"多少个基本单位"那么简单：
     // **Year 用的是儒略年 365.25 天**（与 LightYear 同源），不是 365，也不是 365.2425。
     //
-    // The two below were added in B1137 from the baseline Time.kt.
+    // The two below were added from the baseline Time.kt.
     //
     // Neither Week nor Year is a plain multiple of a base unit:
     // **Year uses the Julian year of 365.25 days** (the same source as LightYear), not 365 and not 365.2425.

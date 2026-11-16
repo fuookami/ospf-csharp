@@ -1,4 +1,4 @@
-// Demo4 的第一次真实求解（B752）/ Demo4's first real solve (B752).
+// Demo4 的第一次真实求解/ Demo4's first real solve.
 
 using System;
 using System.Collections.Generic;
@@ -21,14 +21,14 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **Demo4 的第一次真实求解（B752）** / Demo4's first real solve (B752).
+/// **Demo4 的第一次真实求解** / Demo4's first real solve.
 /// </summary>
 /// <remarks>
-/// 装配链闭合（B748）只证明了五层**都进了模型**，没证明它们能**一起解**。这一批把一轮列生成 + 真实求解跑通：
+/// 装配链闭合只证明了五层**都进了模型**，没证明它们能**一起解**。这里把一轮列生成 + 真实求解跑通：
 /// 强制把某一轮的一个束的列变量钉成 1，然后看容量层与机队层**是否跟着变**——
 /// 中间任何一层没接上，解都会是"求出来了，但数字全是 0"，而那正是"求出来了"最容易骗过人的形态。
 ///
-/// B748 proved the five layers **all reach the model**; it did not prove they **solve together**. This batch runs one round of column generation plus a real solve: it pins one bunch's
+/// proved the five layers **all reach the model**; it did not prove they **solve together**. runs one round of column generation plus a real solve: it pins one bunch's
 /// column variable to 1 and checks whether the capacity and fleet layers **follow** — with any layer unwired, the solve still succeeds but every number comes back 0, which is exactly
 /// how "it solved" fools a reviewer.
 /// </remarks>
@@ -159,13 +159,13 @@ public class Demo4RealSolveTests {
     /// 两点成对：把这一束钉成 1 时求解成功 / **目标值是 1**（一架飞机占满一个检查点，松弛压在边界上）。
     /// 目标值不是 0 是关键——**"有约束但没目标"在别的方向上也读不出差别**，而"有目标但没约束"会让它一路压到 0。
     ///
-    /// 未验证的一半：把这一束钉成 0 应当不可行（检查点要求至少 1 架而没有任何飞机被排上）。这一批没有断言它，
+    /// 未验证的一半：把这一束钉成 0 应当不可行（检查点要求至少 1 架而没有任何飞机被排上）。这里没有断言它，
     /// 因为再造一个模型只为看"不可行"要付一份完整的装配成本，而可行侧的目标值已经把两半都钉住了。
     ///
     /// Two paired points: pinning this bunch to 1 solves; and the **objective is 1** (one aircraft fills one checkpoint and the slack sits at its bound). The objective not being 0 is the
     /// key — **"constraint without objective" shows no difference in this direction either**, while "objective without constraint" drives it to zero.
     ///
-    /// The unverified half: pinning the bunch to 0 should be infeasible (the checkpoint demands at least one aircraft while none is scheduled). This batch does not assert it, because
+ /// The unverified half: pinning the bunch to 0 should be infeasible (the checkpoint demands at least one aircraft while none is scheduled). does not assert it, because
     /// standing up another model just to see "infeasible" costs a full assembly, and the feasible side's objective value already pins both halves.
     /// </remarks>
     [Fact]

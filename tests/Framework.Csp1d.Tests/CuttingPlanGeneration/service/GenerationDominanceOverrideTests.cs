@@ -19,16 +19,16 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// / `GenerationInput.DominanceAcceptOverrides` must actually affect generation.
 /// </summary>
 /// <remarks>
-/// **B358 记的缺口**：`ICsp1dGenerationStrategy.AcceptDominance` 在 `src/` 里**零调用点**。
+/// **记的缺口**：`ICsp1dGenerationStrategy.AcceptDominance` 在 `src/` 里**零调用点**。
 ///
 /// 更精确的情况是：`GenerationCollector` 里**早有** `_dominanceAcceptOverride` 钩子
 /// （第 187 行会检查它），但**四个生成器构造收集器时一个都没传**——
-/// 钩子在、没人喂。本批把 `AcceptDominance` 投影到 `GenerationInput` 并接到四个生成器。
+/// 钩子在、没人喂。这里把 `AcceptDominance` 投影到 `GenerationInput` 并接到四个生成器。
 ///
-/// **The gap recorded in B358**: `ICsp1dGenerationStrategy.AcceptDominance` has **zero call sites** in `src/`.
+/// **The gap recorded**: `ICsp1dGenerationStrategy.AcceptDominance` has **zero call sites** in `src/`.
 ///
 /// More precisely: `GenerationCollector` **already had** the `_dominanceAcceptOverride` hook (line 187 checks it), but **none of the four generators passed it** when
-/// constructing the collector — hook present, nothing feeding it. This batch projects `AcceptDominance` into `GenerationInput` and feeds all four generators.
+/// constructing the collector — hook present, nothing feeding it. projects `AcceptDominance` into `GenerationInput` and feeds all four generators.
 /// </remarks>
 public class GenerationDominanceOverrideTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -62,13 +62,13 @@ public class GenerationDominanceOverrideTests {
 
     /// <summary>**候选过滤返回 false 时，生成器必须一条都不产** / A candidate filter returning false must leave the generator empty.</summary>
     /// <remarks>
-    /// **B359 记的缺口**：`AcceptCandidate`（`candidateFilters`）在 `src/` 里零调用点。
+    /// **记的缺口**：`AcceptCandidate`（`candidateFilters`）在 `src/` 里零调用点。
     /// `GenerationCollector` 现在有了 `candidateFilter` 参数，四个生成器与 `SimpleInitialGenerator` 都传了。
     ///
     /// 判据：恒定拒绝的过滤 → `NSumGenerator` 产出为空。
     /// 若生成器没把过滤传下去，产出与不带过滤相同（**非空**），这条会红。
     ///
-    /// **The gap recorded in B359**: `AcceptCandidate` (`candidateFilters`) had zero call sites. `GenerationCollector` now has a `candidateFilter` parameter, and the four
+    /// **The gap recorded**: `AcceptCandidate` (`candidateFilters`) had zero call sites. `GenerationCollector` now has a `candidateFilter` parameter, and the four
     /// generators plus `SimpleInitialGenerator` all pass it.
     ///
     /// The criterion: an always-rejecting filter leaves `NSumGenerator` empty. If the generator failed to pass it down, the output would match the unfiltered run

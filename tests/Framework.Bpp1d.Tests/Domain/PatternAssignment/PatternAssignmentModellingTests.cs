@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// **方案建模半边** / The modelling half of pattern assignment.
 /// </summary>
 /// <remarks>
-/// 对应基线 `register()` / `addColumns()` / `refresh()`。判据点出四处要害：
+/// 对应基线 `register` / `addColumns` / `refresh`。判据点出四处要害：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |
@@ -38,15 +38,15 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.PatternAssignment;
 /// | **列上界是整数除法 `需求 / 件数`** | 浮点除法 | 允许 2.5 份，取解时被整数性检查拒 |
 /// | **重复键跳过而不报错** | 再建一次变量 | 同一方案被重复计费 |
 ///
-/// Mirrors the baseline's `register()`/`addColumns()`/`refresh()`; the table lists the four failure modes.
+/// Mirrors the baseline's `register`/`addColumns`/`refresh`; the table lists the four failure modes.
 /// </remarks>
 public class PatternAssignmentModellingTests {
     /// <summary>**需求行用 `==` 且右端是货物数量** / The demand row uses `==` with the item amount.</summary>
     /// <remarks>
-    /// **本批最要紧的一条。** `== 5` 与 `≤ 5` **约束名相同、项数相同**，只有不等号不同。
+    /// **这里最要紧的一条。** `== 5` 与 `≤ 5` **约束名相同、项数相同**，只有不等号不同。
     /// 写成 `≤` 时"少装一件"也算可行——**而求解器非常乐意把它当成更省的解**。
     ///
-    /// **The most important criterion in this batch.** `== 5` and `&lt;= 5` share the name and the term count; only the comparison differs. With `&lt;=`, "pack one fewer"
+    /// **The most important criterion in.** `== 5` and `&lt;= 5` share the name and the term count; only the comparison differs. With `&lt;=`, "pack one fewer"
     /// is feasible, and **the solver is happy to call that the cheaper solution**.
     /// </remarks>
     [Fact]
@@ -112,11 +112,11 @@ public class PatternAssignmentModellingTests {
         context.AddColumns(new List<PackingPattern<Flt64>> { Pattern("B1", ("I1", 2)) }, model)
             .IsOk.Should().BeTrue();
 
-        // **上界要看变量的区间，不能看约束行。** B427 曾把它写成一条约束行，并在文档里记成"有意偏离"；
+        // **上界要看变量的区间，不能看约束行。** 曾把它写成一条约束行，并在文档里记成"有意偏离"；
         // 真实的 SCIP 一跑就拒：`UIntVar` 的缺省上界 `ulong.MaxValue` 换 `double` 是 `1.8e19`，
         // 超过 binary64 能精确表示的整数上界 `2^53`。**区间上界不设，模型根本注册不上。**
         //
-        // **The bound belongs to the variable's range, not to a constraint row.** B427 recorded a row as a "deliberate deviation"; real SCIP refused it outright, since
+        // **The bound belongs to the variable's range, not to a constraint row.** recorded a row as a "deliberate deviation"; real SCIP refused it outright, since
         // `UIntVar`'s default `ulong.MaxValue` becomes `1.8e19` as a `double` — past `2^53`. **Without the range bound the model does not even register.**
         UIntVar variable = context.Aggregation.Variables[Pattern("B1", ("I1", 2)).Key];
         variable.Range.UpperBound.Should().NotBeNull();

@@ -21,8 +21,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `nativeFingerprint`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeFingerprintTests
 {
     /// <summary>
@@ -68,9 +67,9 @@ public class NativeFingerprintTests
     /// The ladder: when two neighbours are both non-empty, the <b>earlier</b> one wins.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
-    /// **基线阶梯的十三个分支里本批可达五个：** **`binary-logic-1` → `semi-1` → `max-1` →
+    /// **基线阶梯的十三个分支里这里可达五个：** **`binary-logic-1` → `semi-1` → `max-1` →
     /// `abs-1` / `pwl-abs-1`。**
     ///
     /// **要测的不是"某一个分支对不对"，而是<b>相邻两个同时非空时谁赢</b>——
@@ -316,7 +315,7 @@ public class NativeFingerprintTests
     /// <remarks>
     /// **这是一条<b>缺口判据</b>：它断言的是一个"不存在"。**
     ///
-    /// **基线的阶梯有十三个分支，本批只有五个可达。另外八个
+    /// **基线的阶梯有十三个分支，这里只有五个可达。另外八个
     /// （`masking-1`、`masking-2`、`indicator-2..8`）的前提是指示器或遮盖非空，
     /// 而这两个列表在本签名下不存在。**
     ///

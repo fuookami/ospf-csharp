@@ -1,4 +1,4 @@
-// 尝试元数据补齐（B696）的判据 / Criteria for filling in attempt metadata (B696).
+// 尝试元数据补齐的判据 / Criteria for filling in attempt metadata.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// **尝试元数据补齐（B696）** / Filling in attempt metadata (B696).
+/// **尝试元数据补齐** / Filling in attempt metadata.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**只有报告写了 `Cancelled` 才算取消**、**晚于完成时刻的取消记录不算数**、
@@ -122,7 +122,7 @@ public class AttemptMetadataTests {
     /// 1. `ParentAttemptId` 就是传入的那一个（**值相等**——`SolveAttemptId` 是 `record struct`，不是"某个非空值"）。
     /// 2. `Elapsed` **不为 null** 且**非负**。
     /// 3. 传入**很久以前**的时间戳时，`Elapsed` **大于**先传当前时间戳的那一次——
-    ///    这条把"现算"与"读报告"分开：报告里没有耗时，只有现算才有这个差别。
+    /// 这条把"现算"与"读报告"分开：报告里没有耗时，只有现算才有这个差别。
     ///
     /// Three paired points: `ParentAttemptId` **equals** the one passed in (`SolveAttemptId` is a `record struct`, so value equality, not merely non-null); `Elapsed` **is not null** and **non-negative**; and with a timestamp from
     /// **long ago** the elapsed time **exceeds** that of a run started now — which is what separates "computed on the spot" from "read off the report", since the report carries no elapsed time.

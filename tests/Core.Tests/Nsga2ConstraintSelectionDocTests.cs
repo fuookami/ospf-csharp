@@ -1,4 +1,4 @@
-// NSGA-II 的约束分组选择：说明与代码一致（B774）/ NSGA-II constraint-group selection: remarks match the code (B774).
+// NSGA-II 的约束分组选择：说明与代码一致/ NSGA-II constraint-group selection: remarks match the code.
 
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests;
 
 /// <summary>
-/// **NSGA-II 运行器的说明与代码一致（B774）** / The NSGA-II runner's remarks match the code (B774).
+/// **NSGA-II 运行器的说明与代码一致** / The NSGA-II runner's remarks match the code.
 /// </summary>
 /// <remarks>
 /// 说明原来说"没有移植模型自带约束分组这条路径"。查过之后：**能力在**——`SearchConstraints.SelectSurvivors` 就是基线的
@@ -53,8 +53,8 @@ public class Nsga2ConstraintSelectionDocTests {
 
         source.Should().Contain("SelectSurvivors");
         source.Should().NotContain("没有移植\"模型自带约束分组\"这条路径");
-        // **B810 接线之后，"接不上"这句话已经不成立了**：判据跟着改成"接线方式写在备注里"。
-        // **After B810 wired it, "not wired" no longer holds**: the criterion follows and asks for the wiring description instead.
+        // **接线之后，"接不上"这句话已经不成立了**：判据跟着改成"接线方式写在备注里"。
+        // **After wired it, "not wired" no longer holds**: the criterion follows and asks for the wiring description instead.
         source.Should().Contain("由构造参数 `constraints` 接进来");
         source.Should().NotContain("接不上");
     }

@@ -1,5 +1,5 @@
 // 二次 IIS 的类型与计算入口 / Types and computation entry for quadratic IIS.
-// **B1219 更正：文件头原写"入口骨架"，与实际实现不符，已改。**
+// **更正：文件头原写"入口骨架"，与实际实现不符，已改。**
 
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +26,10 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// <param name="OriginRows">每个子系统行对应的原模型行索引 / Origin row index for each subsystem row.</param>
 /// <param name="OriginColumns">每个子系统列对应的原模型列索引 / Origin column index for each subsystem column.</param>
 /// <remarks>
-/// **B398 曾把这里记为"最大单块缺失"**：基线的 `computeLegacyIIS`
+/// **曾把这里记为"最大单块缺失"**：基线的 `computeLegacyIIS`
 /// （`core/solver/iis/Quadratic.kt`，846 行 / 12 个函数）当时在 C# 侧一行都没有。
 ///
-/// **B1219 更正：本文件现有 612 行、`ComputeLegacyIISAsync` 已实现、
+/// **更正：本文件现有 612 行、`ComputeLegacyIISAsync` 已实现、
 /// 空壳标记计数为 0。
 /// "只建骨架"是一句过期结论，已删。**
 ///
@@ -44,10 +44,10 @@ namespace Fuookami.Ospf.Core.Solver.Iis;
 /// **"612 对 846"这组数字<b>不</b>等于"还缺 234 行"：** C# 用了不同的类型与错误表达，
 /// **行数不是可比单位。能比的是入口与函数覆盖，而不是行数。**
 ///
-/// **B398 once recorded this as the "largest single missing block"** — the baseline's `computeLegacyIIS`
+/// **once recorded this as the "largest single missing block"** — the baseline's `computeLegacyIIS`
 /// (846 lines, 12 functions) had nothing on the C# side then.
 ///
-/// **B1219 correction: this file now has 612 lines, `ComputeLegacyIISAsync` is implemented, and the
+/// **A correction: this file now has 612 lines, `ComputeLegacyIISAsync` is implemented, and the
 /// stub-marker count is zero.** **"Only a skeleton" was a stale
 /// conclusion and has been removed.**
 ///
@@ -92,7 +92,7 @@ public enum QuadraticIisEvidenceSource {
 /// <remarks>
 /// **本类刻意不实现算法。** 基线 `computeLegacyIIS` 的完整流程是：
 ///
-/// 1. `model.elastic()` 构建弹性模型；
+/// 1. `model.elastic` 构建弹性模型；
 /// 2. 统计弹性边界约束数与弹性约束数；
 /// 3. `performElasticFiltering` —— 先试弹性过滤；
 /// 4. 弹性过滤成功 ⇒ 上报状态、`dump` 出子系统、来源标 `ElasticFilter`；
@@ -100,12 +100,12 @@ public enum QuadraticIisEvidenceSource {
 /// 6. 删除结果为空 ⇒ 返回原模型快照；否则 `dump` 出子系统、来源标 `DeletionFilter`。
 ///
 /// **每一步都需要真实二次求解器**（`performElasticFiltering` 反复求解可行性），
-/// 而当前环境没有 Gurobi SDK（B395 已实测确认）。
-/// 所以本批**只建立入口**，让"二次 IIS 未实现"从一个**文档记录**变成一个
+/// 而当前环境没有 Gurobi SDK（已实测确认）。
+/// 所以这里**只建立入口**，让"二次 IIS 未实现"从一个**文档记录**变成一个
 /// **可编译、可断言、可被后续批次填充**的结构。
 ///
 /// **This class deliberately does not implement the algorithm.** The baseline's `computeLegacyIIS` runs the six steps above, and **every one needs a real quadratic
-/// solver** (`performElasticFiltering` repeatedly solves feasibility) — which this environment lacks (B395 measured it). So this batch **only establishes the entry
+/// solver** (`performElasticFiltering` repeatedly solves feasibility) — which this environment lacks (measured). So **only establishes the entry
 /// point**, turning "quadratic IIS is unimplemented" from a **doc note** into a **compilable, assertable structure that later batches can fill in**.
 /// </remarks>
 public static class QuadraticLegacyIisCompute {
@@ -125,7 +125,7 @@ public static class QuadraticLegacyIisCompute {
     /// 所以这里**按调整后的上界重建一个模型**再求解——语义等价（带松弛的变量上界置 `+∞` 或 `0`），
     /// 但**不修改调用方的模型**，因此不会把脏状态留在原对象上。
     ///
-    /// **基线为什么可以这么写**：Kotlin 侧每次 `performElasticFiltering` 都重新 `model.elastic()`，
+    /// **基线为什么可以这么写**：Kotlin 侧每次 `performElasticFiltering` 都重新 `model.elastic`，
     /// 改的是**新建的**弹性模型。C# 重建比"打开只读性"更安全，代价是一次模型构造。
     ///
     /// Mirrors the baseline's `relaxSpecificComponents`, with one **deliberate difference**: the baseline **mutates** `elasticModel.variables[i]._upperBound`, while C#'s
@@ -217,10 +217,10 @@ public static class QuadraticLegacyIisCompute {
     /// <remarks>
     /// **调用方不得 `using` 返回值。** 重建的模型**共享源模型的约束批次与目标**，
     /// 释放它会关闭那个批次，后续调用拿到 `ApplicationStopped / 约束批次已关闭`。
-    /// 实测：三层递进的第 2 层就是这样被打断的（B410）。
+    /// 实测：三层递进的第 2 层就是这样被打断的。
     ///
     /// **Callers must not `using` the result.** The rebuilt model **shares the source's constraint batch and objective**; disposing it closes that batch and later
-    /// calls fail with `ApplicationStopped / constraint batch is closed`. Measured: this is exactly what broke tier 2 of the escalation (B410).
+    /// calls fail with `ApplicationStopped / constraint batch is closed`. Measured: this is exactly what broke tier 2 of the escalation .
     /// </remarks>
     private static QuadraticTetradModel RebuildWithUpperBounds(
         IQuadraticTetradModelView source,
@@ -484,12 +484,12 @@ public static class QuadraticLegacyIisCompute {
     /// <param name="cancellationToken">取消令牌 / Cancellation token.</param>
     /// <returns>IIS 子系统，或失败 / The IIS subsystem, or a failure.</returns>
     /// <remarks>
-    /// **B411 之前这里恒返回 `Failed`**，因为弹性过滤与删除过滤都还没移植。现在两个都就位，本函数接上完整流程：
+    /// **之前这里恒返回 `Failed`**，因为弹性过滤与删除过滤都还没移植。现在两个都就位，本函数接上完整流程：
     ///
     /// | 阶段 | 说明 |
     /// | --- | --- |
-    /// | 1. 校验 | `config.ValidateRuntime()`，参数非法直接失败 |
-    /// | 2. 弹性化 | `model.Elastic()` 生成带松弛列的模型 |
+    /// | 1. 校验 | `config.ValidateRuntime`，参数非法直接失败 |
+    /// | 2. 弹性化 | `model.Elastic` 生成带松弛列的模型 |
     /// | 3. 弹性过滤 | 三层递进放宽，**命中即可行** ⇒ 直接出 IIS |
     /// | 4. 删除过滤 | 弹性过滤全不可行 ⇒ 逐个关掉松弛列求最小松弛集 |
     /// | 5. 回溯 | 由松弛列回溯原模型的行与列 |
@@ -497,7 +497,7 @@ public static class QuadraticLegacyIisCompute {
     /// **弹性过滤命中时 `OriginRows` 为空是正常的**：那表示"原始模型本身可行"，
     /// 不存在不可行子系统。基线在同样情形下也返回空集。
     ///
-    /// **Before B411 this always returned `Failed`** because neither filter was ported. Both are now in place, so this wires the full flow (table above). **An empty
+    /// **Before this always returned `Failed`** because neither filter was ported. Both are now in place, so this wires the full flow (table above). **An empty
     /// `OriginRows` when the elastic filter succeeds is expected**: it means the original model was feasible, so there is no infeasible subsystem — the baseline returns
     /// an empty set in that case too.
     /// </remarks>

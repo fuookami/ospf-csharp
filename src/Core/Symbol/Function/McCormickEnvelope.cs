@@ -42,7 +42,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **包络不是等式**：**`w` 只在 `x` 或 `y` 取到端点时才恰好等于 `x·y`；在区间内部它是松弛的。**
 /// **所以它只能用于松弛，不能用来"计算乘积"。**
 ///
-/// B1152, following the baseline's `McCormickEnvelope.kt`.
+/// Following the baseline's `McCormickEnvelope.kt`.
 ///
 /// Given `x ∈ [xL, xU]` and `y ∈ [yL, yU]`, an auxiliary `w` brackets `x·y`:
 ///

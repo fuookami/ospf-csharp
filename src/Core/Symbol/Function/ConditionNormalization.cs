@@ -25,7 +25,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **它告诉调用方"要不要把多项式取负"，而<b>忘了取负</b>会让整个真假判断反向——
 /// 模型仍然可行，只是条件被取反了。**
 ///
-/// B1173, following the baseline's `NormalizedCondition` and `normalizedCondition`.
+/// Following the baseline's `NormalizedCondition` and `normalizedCondition`.
 ///
 /// **"Normalising" here means folding the four relations into a <b>strictly true</b> shape.**
 /// **`LT`/`LE` negate the polynomial so the negative side becomes the positive one;**
@@ -56,7 +56,7 @@ public sealed record NormalizedCondition(
 /// 条件范围归一化与校验 / Normalize and validate condition ranges.
 /// </summary>
 /// <remarks>
-/// B1173 按基线 `Conditional.kt` 的 `normalizedCondition`、`validateConditionBounds`、
+/// 对齐基线 `Conditional.kt` 的 `normalizedCondition`、`validateConditionBounds`、
 /// `conditionBranchCoverage` 三个入口补。
 ///
 /// **三件事依次检查，最后一件最容易漏**：

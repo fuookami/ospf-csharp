@@ -10,11 +10,11 @@ using Xunit;
 
 // **不能叫 `...Persistence.MongoDB`**：`InterfaceVerificationTests` 里写着全限定的
 // `MongoDB.Driver.IMongoDatabase`，而我这个命名空间会把它解析成 `...Tests.Persistence.MongoDB.Driver`，
-// **于是"新加一个测试"让"一个已有测试"编译失败。** 编译错误实测：`CS0234 ... 不存在类型或命名空间名"Driver"`。
+// **于是"新加一个测试"让"一个已有测试"编译失败。** 编译错误实测：`CS0234... 不存在类型或命名空间名"Driver"`。
 //
 // **Not `...Persistence.MongoDB`**: `InterfaceVerificationTests` spells out `MongoDB.Driver.IMongoDatabase`,
 // and this namespace would resolve it to `...Tests.Persistence.MongoDB.Driver` —
-// **so adding a test broke an existing one.** The measured error: `CS0234 ... no type or namespace named "Driver"`.
+// **so adding a test broke an existing one.** The measured error: `CS0234... no type or namespace named "Driver"`.
 namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 
 /// <summary>
@@ -22,16 +22,16 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// </summary>
 /// <remarks>
 /// 基线 `MongoScalarTranslator`（**209 行**）把标量表达式翻成聚合管道里的值。
-/// **B1117 查明 C# 侧四个 Mongo 翻译器一个都没有**（`src/` 下 `BsonDocument` 出现 0 次），
-/// **而基线侧这四件共 18 条离线判据——全部不需要 Mongo 实例。** 这一批补第一个。
+/// **C# 侧四个 Mongo 翻译器一个都没有**（`src/` 下 `BsonDocument` 出现 0 次），
+/// **而基线侧这四件共 18 条离线判据——全部不需要 Mongo 实例。** 这里补第一个。
 ///
 /// **为什么"失败"这件事本身要钉**：把不支持的运算返回 `null` 或原样，
 /// **查询会返回一个错误的结果集，而调用方以为查对了**——
 /// **这是最难发现的一类错误：它不抛异常，只是答错了。**
 ///
 /// The baseline's `MongoScalarTranslator` (**209 lines**) turns scalar expressions into aggregation-pipeline values.
-/// **B1117 found that none of the four C# Mongo translators existed** (`BsonDocument` appeared 0 times under `src/`),
-/// **while the baseline carries 18 offline criteria across them — none needing a Mongo instance.** This batch adds the first.
+/// **Found that none of the four C# Mongo translators existed** (`BsonDocument` appeared 0 times under `src/`),
+/// **while the baseline carries 18 offline criteria across them — none needing a Mongo instance.** adds the first.
 ///
 /// **Why "fails" itself needs pinning**: returning `null` or the input for an unsupported operator
 /// **makes the query return a wrong result set while the caller believes it succeeded** —

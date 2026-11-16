@@ -262,7 +262,7 @@ public sealed class SearchRegistryTests {
         registry.Reward(Spec("hypervolume-delta")).Should()
             .BeOfType<Ok<IRewardPolicy, ErrorCode, Error<ErrorCode>>>();
         // **互斥用例必须两边都成对**：只给 `referenceX` 时，"分量必须成对"那条检查会先一步失败，
-        // 于是"互斥"是否生效根本无从判断——本批第一版正是这么写的，变异因此存活。
+        // 于是"互斥"是否生效根本无从判断——这里第一版正是这么写的，变异因此存活。
         // **The exclusivity case must provide both components**: with only `referenceX` the "components must come in pairs" check fails first,
         // leaving exclusivity untested — exactly how the first version of this test was written, which is why the mutation survived.
         registry.Reward(Spec("hypervolume-delta",
@@ -350,11 +350,11 @@ public sealed class SearchRegistryTests {
 
     /// <summary>**`not-worse` 是基线的默认接受策略，因此必须能构造出来** / `not-worse` is the baseline's default acceptance policy and must be constructible.</summary>
     /// <remarks>
-    /// **这是对 Batch 222/226 一次判断的反转**。当时以"注册表不该替问题做主"为由把 `not-worse` 留空，而那条理由站不住：
+ /// **这是对 earlier/226 一次判断的反转**。当时以"注册表不该替问题做主"为由把 `not-worse` 留空，而那条理由站不住：
     /// `Acceptance` 本来就接收 `SearchProblem`，支配判据与坐标投影就地可得。留空的后果是**基线默认配置根本跑不起来**
     /// （`HyperHeuristicConfig` 的 `acceptance` 默认值就是 `not-worse`）。
     ///
-    /// **This reverses a decision from Batch 222/226.** `not-worse` was left out on the grounds that "the registry must not decide for the problem",
+ /// **This reverses a decision from earlier/226.** `not-worse` was left out on the grounds that "the registry must not decide for the problem",
     /// and that reason does not hold: `Acceptance` already receives the `SearchProblem`, so the dominance predicate and the coordinate projection are
     /// right there. Leaving it out meant **the baseline's default configuration could not run at all** (`HyperHeuristicConfig`'s `acceptance` default
     /// is `not-worse`).

@@ -21,13 +21,13 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 活动性分析 / Activity analysis.
 /// </summary>
 /// <remarks>
-/// **B970 补 `ConstraintActivityAnalyzer` 的核心**（基线 566 行）。基线的 `analyze(session, …)` 重载要
-/// `CriticalConstraintAnalysisSession`（缓存与生命周期），那一层还没搬，**本批只搬纯计算入口，没搬的重载没有空跑版本**。
+/// 补 `ConstraintActivityAnalyzer` 的核心**（基线 566 行）。基线的 `analyze(session, …)` 重载要
+/// `CriticalConstraintAnalysisSession`（缓存与生命周期），那一层还没搬，**这里只搬纯计算入口，没搬的重载没有空跑版本**。
 ///
 /// 判据钉的是**"精确值分类、标量值展示"**这条分工：分类用 `BigInteger` 精确算，
 /// 标量只用于展示。**两者混用会让 `9007199254740993` 这类值在容差边界上分类错。**
 ///
-/// **B970 ported the core of `ConstraintActivityAnalyzer`** (566 baseline lines). The criteria pin the split between **"classify exactly, display a scalar"**: classification uses
+/// **ported the core of `ConstraintActivityAnalyzer`** (566 baseline lines). The criteria pin the split between **"classify exactly, display a scalar"**: classification uses
 /// `BigInteger`, the scalar is for display only. **Mixing them misclassifies values like `9007199254740993` at a tolerance boundary.**
 /// </remarks>
 public class ConstraintActivityAnalyzerTests {

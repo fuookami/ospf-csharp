@@ -37,7 +37,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`Evaluate` 直接按定义算，不走 `max`/`min`**：
 /// **这条路径与编码无关，所以它能独立验证编码对不对。**
 ///
-/// B1167, following the baseline's `RangeFunction`.
+/// Following the baseline's `RangeFunction`.
 ///
 /// **The range is not "the largest pairwise difference"** but `max(inputs) - min(inputs)`.
 /// **The two agree for two inputs and differ beyond that.**

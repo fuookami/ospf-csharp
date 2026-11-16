@@ -551,10 +551,10 @@ public class OnnxElementListTests
 
     /// <summary>**批量维逐批量相乘** / Batch dimensions multiply batch by batch.</summary>
     /// <remarks>
-    /// **手算：** **第一批 `A₀ · I = A₀`，第二批 `A₁ · 2I = 2A₁`。** '
-    /// **若批量维被当成普通维度，第一批判据就会错位——** **而形状完全对得上。**
+ /// **手算：** **此前 `A₀ · I = A₀`，此前 `A₁ · 2I = 2A₁`。** '
+ /// **若批量维被当成普通维度，此前判据就会错位——** **而形状完全对得上。**
     ///
-    /// **Hand-computed: batch 0 is A₀ · I = A₀ and batch 1 is A₁ · 2I = 2A₁.** **Treated as an ordinary dimension, the first batch would misalign while the shape still matches.**
+    /// **Hand-computed: the first group is A₀ · I = A₀ and the second is A₁ · 2I = 2A₁.** **Treated as an ordinary dimension, the first batch would misalign while the shape still matches.**
     /// </remarks>
     [Fact]
     public void MatMulWithBatches_ShouldMultiplyPerBatch() {

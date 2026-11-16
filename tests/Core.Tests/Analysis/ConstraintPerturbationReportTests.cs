@@ -14,11 +14,11 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 扰动报告与策略 / The perturbation report and policies.
 /// </summary>
 /// <remarks>
-/// **B975 补了 `ConstraintPerturbationAnalyzer.kt` 前 348 行的纯数据类型**（策略、请求、结果、观测、报告）。
+/// 补了 `ConstraintPerturbationAnalyzer.kt` 前 348 行的纯数据类型**（策略、请求、结果、观测、报告）。
 /// 第 349 行起是分析器本体，含 `activeBackend!!.solve(request)` 与 `backend!!.solve(request)`，
-/// **要真实重新优化后端，本批不搬，也不写空跑版本。**
+/// **要真实重新优化后端，这里不搬，也不写空跑版本。**
 ///
-/// **B975 ported the first 348 lines of `ConstraintPerturbationAnalyzer.kt`** — the policies, request, result, observation and report. From line 349 on is the analyzer itself, with
+/// **ported the first 348 lines of `ConstraintPerturbationAnalyzer.kt`** — the policies, request, result, observation and report. From line 349 on is the analyzer itself, with
 /// `activeBackend!!.solve(request)` and `backend!!.solve(request)`; **that needs a real reoptimization backend, so it was neither ported nor stubbed.**
 /// </remarks>
 public class ConstraintPerturbationReportTests {
@@ -102,12 +102,12 @@ public class ConstraintPerturbationReportTests {
             .RemovalEffective.Should().BeTrue();
         Observation(ConstraintPerturbationKind.Removal, PerturbationOutcome.NoObservedEffect)
             .RemovalEffective.Should().BeFalse();
-        // **B994 更正**：B975 这里断言的是 `false`，理由是"未知不能声称有效"。
+        // **更正**： 这里断言的是 `false`，理由是"未知不能声称有效"。
         // **那个理由成立，但结论错了**：`false` 不是"没有声称有效"，而是**声称了无效**。
         // 字段是 `bool?`，三态就是为了让"没测"能说出来；把 `Unknown` 压成 `false`，
         // 只看这个字段的调用方就分不清"测了无效"和"没测"。
         //
-        // **B994 correction**: B975 asserted `false` here, reasoning "an unknown result cannot claim effectiveness". **The reasoning holds, the conclusion does not**: `false`
+        // **correction**: asserted `false` here, reasoning "an unknown result cannot claim effectiveness". **The reasoning holds, the conclusion does not**: `false`
         // is not "claims no effectiveness", it **claims ineffectiveness**. The field is `bool?` precisely so "not measured" can be said; collapsing `Unknown` into `false`
         // leaves a caller that reads only this field unable to tell "measured, ineffective" from "not measured".
         Observation(ConstraintPerturbationKind.Removal, PerturbationOutcome.Unknown)

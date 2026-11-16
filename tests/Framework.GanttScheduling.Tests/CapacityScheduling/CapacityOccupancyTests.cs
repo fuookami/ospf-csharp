@@ -1,4 +1,4 @@
-// 占用是算出来的，不是"每个分配占满一个时隙"（B737）/ Occupancy is computed, not "each allocation fills a slot" (B737).
+// 占用是算出来的，不是"每个分配占满一个时隙"/ Occupancy is computed, not "each allocation fills a slot".
 
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **占用是算出来的，不是"每个分配占满一个时隙"（B737）** / Occupancy is computed, not "each allocation fills a slot" (B737).
+/// **占用是算出来的，不是"每个分配占满一个时隙"** / Occupancy is computed, not "each allocation fills a slot".
 /// </summary>
 /// <remarks>
-/// B731 起 `ExecutorCapacityResult.TotalDuration` 是把每个分配的 `Duration`（= 时隙长度）加起来。同一时隙里两个动作就会报
+/// 起 `ExecutorCapacityResult.TotalDuration` 是把每个分配的 `Duration`（= 时隙长度）加起来。同一时隙里两个动作就会报
 /// "两个时隙的占用"——**数字看着像产能，其实只是动作个数乘以时隙长度**。基线不是这么算的：
 /// `capacity[e, s]` 求值后经 `timeWindow.durationOf(...)` 换回时长。
 ///
 /// 现在从数量直接算：`占用 = Σ 单位加工时长 × 数量`，再换回时长。
 ///
-/// Since B731, `ExecutorCapacityResult.TotalDuration` summed every allocation's `Duration` (the slot length), so two actions in one slot reported "two slots of occupancy" —
+/// Since，`ExecutorCapacityResult.TotalDuration` summed every allocation's `Duration` (the slot length), so two actions in one slot reported "two slots of occupancy" —
 /// **a number that looks like capacity but is really the action count times the slot length**. The baseline evaluates `capacity[e, s]` and converts back through
 /// `timeWindow.durationOf(...)`. It is now computed from the amounts: `occupancy = sum of unit processing time x amount`, converted back to a duration.
 /// </remarks>

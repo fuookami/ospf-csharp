@@ -10,14 +10,14 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp1d.Tests;
 
 /// <summary>
-/// B838：装载服务里**真实**的 Benders 路径 / The real Benders path inside the loading service.
+/// 装载服务里**真实**的 Benders 路径 / The real Benders path inside the loading service.
 /// </summary>
 /// <remarks>
-/// 这一批本来要记"框架层 Benders 没移植"，**查下来结论相反**，所以判据改成钉"它其实在"：
+/// 这里本来要记"框架层 Benders 没移植"，**查下来结论相反**，所以判据改成钉"它其实在"：
 ///
 /// ```csharp
 /// private readonly IBendersDecompositionSolver? _bendersSolver;
-/// ...
+///...
 /// return await new LinearBendersAlgorithm(_bendersSolver).SolveAsync(models, config.Benders);
 /// ```
 ///
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests;
 /// 生产路径是这里的 `DiscreteLoadingApplicationService` + `bendersSolver`。
 /// **也就是说，本仓 demo2 在 `FullLoadApplication` 里手搓的那套主子模型，不是基线的生产路径。**
 ///
-/// This batch set out to record "the framework Benders path is not ported" and **found the opposite**, so the criteria pin that it exists (snippet above). The same
+/// set out to record "the framework Benders path is not ported" and **found the opposite**, so the criteria pin that it exists (snippet above). The same
 /// batch settled something more important: the baseline's demo2 `infrastructure/BendersSolver.kt` **is called only from tests** (all three call sites live under
 /// `src/test/`), and production goes through `DiscreteLoadingApplicationService` plus `bendersSolver`. **So the master/sub models demo2 hand-rolls in
 /// `FullLoadApplication` are not the baseline's production path.**

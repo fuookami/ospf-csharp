@@ -30,12 +30,12 @@ namespace Fuookami.Ospf.Benchmark;
 ///
 /// **基线第三个基准 `registerDependencyChain` 没有移植**：它依赖 `ManualTokenTable` 与
 /// `LinearIntermediateSymbol.dependencies` 这两个 **C# 侧不存在的入口**（C# 只有 `ConcurrentTokenTable` 与
-/// `ConcurrentMutableTokenTable`，没有"手工指定符号依赖"的公开构造）。**本批不写一个"看起来等价"的替代夹具**——
+/// `ConcurrentMutableTokenTable`，没有"手工指定符号依赖"的公开构造）。**这里不写一个"看起来等价"的替代夹具**——
 /// 那会让基准报告里的一个数字指向一段没人验证过的路径。该缺口保留在 P9 台账。
 ///
 /// **The baseline's third benchmark, `registerDependencyChain`, is not ported**: it relies on `ManualTokenTable` and
 /// `LinearIntermediateSymbol.dependencies`, **neither of which exists on the C# side** (C# has only `ConcurrentTokenTable` and
-/// `ConcurrentMutableTokenTable`, with no public way to declare symbol dependencies by hand). **This batch does not write a "looks equivalent"
+/// `ConcurrentMutableTokenTable`, with no public way to declare symbol dependencies by hand). ** does not write a "looks equivalent"
 /// stand-in fixture** — that would make one number in the benchmark report point at a path nobody validated. The gap stays on the P9 ledger.
 /// </remarks>
 [MemoryDiagnoser]

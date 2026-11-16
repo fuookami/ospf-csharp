@@ -204,10 +204,10 @@ public sealed record AlternativeImprovementPlan(ObjectiveTarget Target, Correcti
 
 /// <summary>修正集代数 / The correction-set algebra.</summary>
 /// <remarks>
-/// **B971 只搬这一半**：基线的 434 行里，尾部约 110 行要 `ConflictExplanation`，而后者住在
+/// 只搬这一半**：基线的 434 行里，尾部约 110 行要 `ConflictExplanation`，而后者住在
 /// **带后端求解**的 `ConflictAnalyzer.kt` 里。**没搬的那部分没有空跑版本。**
 ///
-/// **B971 ported only this half**: of the baseline's 434 lines, the last ~110 need `ConflictExplanation`, which lives inside the **backend-solving** `ConflictAnalyzer.kt`. **Nothing was
+/// **ported only this half**: of the baseline's 434 lines, the last ~110 need `ConflictExplanation`, which lives inside the **backend-solving** `ConflictAnalyzer.kt`. **Nothing was
 /// stubbed in its place.**
 /// </remarks>
 public static class CorrectionRecommendations
@@ -237,11 +237,11 @@ public static class CorrectionRecommendations
             .ToArray();
 
         // **基线在 `CorrectionSet` 的 `init` 里做这四条检查，所以构造出来就一定是合法的。**
-        // **C# 这边检查写在 `Validate()` 里，而直到 B1075 都没有任何构造路径调用它**——
+        // **C# 这边检查写在 `Validate` 里，而它没有任何构造路径调用**——
         // **于是"空候选"能造出一个修复不了任何东西的修复计划，"重复来源"能把同一份证据算两遍价。**
         //
         // **The baseline does these four checks in `CorrectionSet`'s `init`, so a constructed set is always legal.**
-        // **On the C# side the checks live in `Validate()`, and until B1075 no construction path called it** —
+        // **On the C# side the checks live in `Validate`, and formerly no construction path called it** —
         // **so empty candidates could produce a repair plan that repairs nothing, and a duplicate source could price the same evidence twice.**
         return Validated(new CorrectionSet(selected, selected.Sum(candidate => candidate.Weight * candidate.Relaxation)), settings);
     }
@@ -255,11 +255,11 @@ public static class CorrectionRecommendations
     /// <exception cref="ArgumentException">不变量被违反 / An invariant is violated.</exception>
     /// <remarks>
     /// **这是"把检查放在构造路径上"而不是"多提供一个 Validate 方法"。**
-    /// **`Validate()` 一直在，而它此前一个调用方都没有**——
+    /// **`Validate` 一直在，而它此前一个调用方都没有**——
     /// **一个没人调用的检查，和没写过的检查在出事那一刻完全一样。**
     ///
     /// **This puts the check on the construction path instead of merely offering a `Validate` method.**
-    /// **`Validate()` has always existed and had no caller at all** — **and a check nobody calls is indistinguishable from an unwritten one at the moment things go wrong.**
+    /// **`Validate` has always existed and had no caller at all** — **and a check nobody calls is indistinguishable from an unwritten one at the moment things go wrong.**
     /// </remarks>
     private static CorrectionSet Validated(CorrectionSet set, RelaxabilityPolicy policy) {
         Try validation = set.Validate(policy);

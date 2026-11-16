@@ -1,4 +1,4 @@
-// 资源超量 / 不足量目标（B712）/ The resource over / less quantity objectives (B712).
+// 资源超量 / 不足量目标/ The resource over / less quantity objectives.
 
 using System;
 using System.Collections.Generic;
@@ -18,16 +18,16 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **资源超量 / 不足量目标（B712）** / The resource over / less quantity objectives (B712).
+/// **资源超量 / 不足量目标** / The resource over / less quantity objectives.
 /// </summary>
 /// <remarks>
 /// 这两个目标以前都是 `Invoke => Ok`——模型里连一个目标项都没有，而"最小化超量"这句话听起来又完全成立。
-/// B710 把超量 / 不足两张表补齐，这一批才轮到它们。
+/// 把超量 / 不足两张表补齐，这里才轮到它们。
 ///
 /// 三件照抄基线：**阈值 0 时目标项是松弛符号本身**（每个槽一个单项式）、**阈值非零时另建带阈值的松弛并取正部**、
 /// **权重乘在目标项上而不是松弛内部**。
 ///
-/// Both objectives used to be `Invoke => Ok` — not a single term in the model, while "minimise the over quantity" sounds entirely true. B710 built the over and less tables; this batch is
+/// Both objectives used to be `Invoke => Ok` — not a single term in the model, while "minimise the over quantity" sounds entirely true. built the over and less tables; is
 /// where they pay off. Three things are copied from the baseline: **at a zero threshold the term is the slack symbol itself** (one monomial per slot), **a positive threshold builds a
 /// separate thresholded slack whose positive part becomes the term**, and **the weight multiplies the term** rather than sitting inside the slack.
 /// </remarks>
@@ -74,11 +74,11 @@ public class ResourceQuantityObjectiveTests {
     ///
     /// 1. 目标项数**等于槽数**——少一项就有槽不被计费。
     /// 2. 类别是 `Minimum`，名字固定，不随阈值分支变。
-    /// 3. 每个单项式的系数**正好是权重 2.5**（不是 1，也不是 2.5 的倍数——"是某个数的倍数"是弱断言，B701 的教训）。
+    /// 3. 每个单项式的系数**正好是权重 2.5**（不是 1，也不是 2.5 的倍数——"是某个数的倍数"是弱断言，的教训）。
     /// 4. 模型里**没有**阈值松弛符号，因为阈值是 0。
     ///
     /// Four paired points: the term count **equals the slot count**, since one missing term leaves a slot uncharged; the category is `Minimum` with a fixed name that does not vary with the
-    /// threshold branch; every monomial's coefficient is **exactly the weight 2.5** (not 1, and not "a multiple of 2.5" — a weak assertion, the lesson from B701); and the model holds **no**
+    /// threshold branch; every monomial's coefficient is **exactly the weight 2.5** (not 1, and not "a multiple of 2.5" — a weak assertion, the lesson from ); and the model holds **no**
     /// threshold slack, because the threshold is zero.
     /// </remarks>
     [Fact]
@@ -134,9 +134,9 @@ public class ResourceQuantityObjectiveTests {
             "the term is the slack's positive part, not the adapter itself");
 
         // **前缀要说"over"**：两个目标各建各的松弛，共用一个前缀时先加的那个赢、后加的直接 "Repeated" 失败，
-        // 而单看"有没有阈值松弛"分不出（B712 的这条变异存活过一次）。
+        // 而单看"有没有阈值松弛"分不出。
         // **The prefix must say "over"**: the two objectives build separate slacks, so a shared prefix makes the first win and the second fail outright with "Repeated", while
-        // "is there a threshold slack" alone cannot tell (this B712 mutation survived once).
+        // "is there a threshold slack" alone cannot tell (this mutation survived once).
         model.Tokens.Symbols.Select(symbol => symbol.Name)
             .Should().Contain(name => name.Contains("over_quantity_minimization_threshold"));
         model.Tokens.Symbols.Select(symbol => symbol.Name)
@@ -183,10 +183,10 @@ public class ResourceQuantityObjectiveTests {
     /// </summary>
     /// <remarks>
     /// 三点成对：未注册 → `Failed`（当成零计费会让模型照样可解，缺陷只在产出上留痕）/ 非模型 → `Failed` /
-    /// `null` → 抛 `ArgumentNullException`（与 `Failed` 不是同一条路径，B704 的同一课）。
+    /// `null` → 抛 `ArgumentNullException`（与 `Failed` 不是同一条路径，的同一课）。
     ///
     /// Three paired points: an unregistered table gives `Failed` (charging zero leaves the model solvable with the defect visible only in output); a non-model gives `Failed`; and `null`
-    /// throws `ArgumentNullException`, which is not the same path as `Failed` — the same lesson as B704.
+    /// throws `ArgumentNullException`, which is not the same path as `Failed` — the same lesson as.
     /// </remarks>
     [Fact]
     public void Objectives_ShouldRejectAnUnregisteredTableAndANonModel() {

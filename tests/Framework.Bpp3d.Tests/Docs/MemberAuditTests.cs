@@ -1,4 +1,4 @@
-// 成员级审计的钉子（B739）/ Pins on the member-level audit (B739).
+// 成员级审计的钉子/ Pins on the member-level audit.
 
 using System;
 using System.IO;
@@ -8,11 +8,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **成员级审计的钉子（B739）** / Pins on the member-level audit (B739).
+/// **成员级审计的钉子** / Pins on the member-level audit.
 /// </summary>
 /// <remarks>
 /// 文件 stem 扫只回答"文件在不在"，而"同名不等于完整"这条误差从来没有在产能调度与资源子域里逐个核实过。
-/// B739 写了一个按**类型名**比成员的脚本，跑出 19 个"缺成员/缺类型"的名字——**逐个核实后没有一个是真缺口**，
+/// 写了一个按**类型名**比成员的脚本，跑出 19 个"缺成员/缺类型"的名字——**逐个核实后没有一个是真缺口**，
 /// 全是语言能力差异（Kotlin `typealias`）、命名差异（`TaskScheduling*` 对 `BunchScheduling*`）、以及正则把泛型参数当成员。
 ///
 /// 真正查出来的只有一个**空壳**：`CapacityQuantityTypes` 一个成员都没有，却写着"数量类型工具方法"，已删除。
@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **自动比对必须人工过一遍再写进清单**——否则清单会把人送去做已经做完的事。
 ///
 /// The stem scan only answers "is the file present", and the "same name is not the same capability" error mode was never verified type by type in the capacity-scheduling and
-/// resource sub-domains. B739 wrote a script comparing members by **type name**; it flagged 19 names and **not one was a real gap** — all were language differences (Kotlin
+/// resource sub-domains. wrote a script comparing members by **type name**; it flagged 19 names and **not one was a real gap** — all were language differences (Kotlin
 /// `typealias`), naming differences (`TaskScheduling*` vs `BunchScheduling*`), or the regex counting generic parameters as members. The single genuine finding was an **empty shell**:
 /// `CapacityQuantityTypes` had no members at all while claiming "quantity type utility methods"; it is gone. Four things are pinned: the audit script exists, the inventory records
 /// its three error modes, the shell is really gone, and the "no real gaps" conclusion stays. **Automated comparisons need a human pass before reaching the inventory** — otherwise the

@@ -15,8 +15,8 @@ namespace Fuookami.Ospf.Core.Solver;
 /// </summary>
 public static class SolverStatusSupportExtensions {
     /// <summary>
-    /// 将求解器状态解析为错误码，使用现有的 ErrCode() 扩展方法，若为空则回退到指定错误码或 OREngineSolvingException。
-    /// Resolve solver status to error code using the existing ErrCode() extension, falling back to the specified code or OREngineSolvingException.
+    /// 将求解器状态解析为错误码，使用现有的 ErrCode 扩展方法，若为空则回退到指定错误码或 OREngineSolvingException。
+    /// Resolve solver status to error code using the existing ErrCode extension, falling back to the specified code or OREngineSolvingException.
     /// </summary>
     /// <param name="status">求解器状态 / Solver status</param>
     /// <param name="fallback">回退错误码（可选）/ Fallback error code (optional)</param>

@@ -24,7 +24,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **任务束的迭代列 `x_{iteration}`（B565）** / The bunch iteration columns `x_{iteration}` (B565).
+/// **任务束的迭代列 `x_{iteration}`** / The bunch iteration columns `x_{iteration}`.
 /// </summary>
 /// <remarks>
 /// 加列要同时做四件事，缺任何一件都会让"列加上了但没被算进去"：
@@ -80,10 +80,10 @@ public class BunchColumnTests {
     /// </summary>
     /// <remarks>
     /// `ICost&lt;V&gt;.SolverCostOrNull` 原来用 `Convert.ToDouble`：`V` 只承诺 `IRealNumber&lt;V&gt;`，不是 `IConvertible`，
-    /// 而 `Flt64` 恰恰不实现它——于是"读成本"这条路对 `Flt64` 一直抛异常。本批真的开始读成本（列的目标系数）才撞出来。
+    /// 而 `Flt64` 恰恰不实现它——于是"读成本"这条路对 `Flt64` 一直抛异常。这里真的开始读成本（列的目标系数）才撞出来。
     ///
     /// `ICost&lt;V&gt;.SolverCostOrNull` used `Convert.ToDouble`: `V` only promises `IRealNumber&lt;V&gt;`, not `IConvertible`, and `Flt64` does not implement it — so "read the cost" threw
-    /// for `Flt64` all along. This batch only surfaced it because it finally reads costs (the column's objective coefficient).
+ /// for `Flt64` all along. only surfaced it because it finally reads costs (the column's objective coefficient).
     /// </remarks>
     [Fact]
     public void SolverCost_ShouldReadAFlt64Cost() {
@@ -328,11 +328,11 @@ public class BunchColumnTests {
     /// **退役列不会在展开时把模型搞坏** / A retired column must not break expansion.
     /// </summary>
     /// <remarks>
-    /// 上一批把列钉 0 并从模型摘掉，但**目标项里可能还留着它**（`bunch_cost` 的单项式在加列时就写进去了）。
+    /// 此前把列钉 0 并从模型摘掉，但**目标项里可能还留着它**（`bunch_cost` 的单项式在加列时就写进去了）。
     /// 这条判据把"摘掉之后还能不能展开成求解模型"实测一遍：要么展开成功且目标项里没有那个变量，
     /// 要么明确失败——两种都是可接受的结果，**唯一不可接受的是"看起来成功但目标里指着一个不存在的变量"**。
     ///
-    /// The previous batch pinned the column to 0 and dropped it from the model, but an **objective term may still mention it** (`bunch_cost`'s monomials were written at column-add
+ /// the previous step pinned the column to 0 and dropped it from the model, but an **objective term may still mention it** (`bunch_cost`'s monomials were written at column-add
     /// time). This criterion measures "can the model still expand after the drop": either expansion succeeds and the objective has no such variable, or it fails loudly — both are
     /// acceptable; the only unacceptable outcome is **"looks successful while the objective points at a variable that is not there"**.
     /// </remarks>

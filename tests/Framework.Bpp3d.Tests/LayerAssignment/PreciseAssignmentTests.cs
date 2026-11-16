@@ -1,4 +1,4 @@
-// 精确层分配（B632）的判据 / Criteria for the precise layer assignment (B632).
+// 精确层分配的判据 / Criteria for the precise layer assignment.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.LayerAssignment;
 
 /// <summary>
-/// **精确层分配（B632）** / The precise layer assignment (B632).
+/// **精确层分配** / The precise layer assignment.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**不相容的格子被钉成 0 且不注册**、**上界向下取整**、以及四个符号都真的落到模型上。

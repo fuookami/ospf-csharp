@@ -28,12 +28,12 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.Produce.Model;
 /// 与基线 `ProduceSlack.kt` 对齐。基线的 `produceSlack` 与任务调度那边的 `thresholdSlack` **不是同一个函数**：
 /// 前者的阈值是一个**常量**（`y = 常数多项式`），后者允许 `y` 是多项式。这里照抄常量版。
 ///
-/// 三个开关的固定组合由调用方给，`constraint` 是本批的关键：**超量 / 不足表要自己加上界约束**，
+/// 三个开关的固定组合由调用方给，`constraint` 是这里的关键：**超量 / 不足表要自己加上界约束**，
 /// 所以松弛本身必须是 `constraint: false`——否则会多出一对 `x ± slack ≤/≥ y` 的行，把
 /// "超出上界多少"变成"与上界的绝对差"，超量和不足两个方向就都算错了。
 ///
 /// Aligned with the baseline's `ProduceSlack.kt`. Its `produceSlack` is **not** the same function as the task-scheduling `thresholdSlack`: here the threshold is a **constant**
-/// (`y` is a constant polynomial) while the other allows a polynomial `y`. This copies the constant form. The three switches are supplied by the caller, and `constraint` is the crux of this batch:
+/// (`y` is a constant polynomial) while the other allows a polynomial `y`. This copies the constant form. The three switches are supplied by the caller, and `constraint` is the crux of:
 /// **the over/less tables add their own upper-bound rows**, so the slack itself must be `constraint: false` — otherwise an extra pair of `x ± slack ≤/≥ y` rows appears and turns "how far past the
 /// bound" into "the absolute distance from it", making both the over and the less direction wrong.
 /// </remarks>
@@ -80,9 +80,9 @@ public static class ProduceSlackHelper {
         ArgumentNullException.ThrowIfNull(x);
 
         // **`x` 必须是"符号本身"，不能是它的多项式**：数量符号是空多项式（它就是一个变量），
-        // 用 `x.Polynomial` 会让松弛的 `X` 为空，`SignedLeft()` 于是只剩 `-pos`，上界行里数量项整个消失。
+        // 用 `x.Polynomial` 会让松弛的 `X` 为空，`SignedLeft` 于是只剩 `-pos`，上界行里数量项整个消失。
         // **`x` must be the symbol itself, not its polynomial**: a quantity symbol has an empty polynomial (it *is* a variable), so passing `x.Polynomial` leaves the slack's `X` empty,
-        // `SignedLeft()` then yields only `-pos`, and the quantity term vanishes from the bound row entirely.
+        // `SignedLeft` then yields only `-pos`, and the quantity term vanishes from the bound row entirely.
         return new LinearFunctionSymbolAdapter<Flt64>(
             new SlackFunction<Flt64>(
                 x: new LinearPolynomial<Flt64>(
@@ -106,8 +106,8 @@ public static class ProduceSlackHelper {
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
     /// **键是材料对象本身，不是下标**：基线的 `LinearIntermediateSymbols1` 按 `Shape1` 位置索引，而位置只有在索引连续时才等于索引；
-    /// 用对象做键就不必假设连续性。**符号名用 `Index` 而不是 `ToString()`**：基线的 `${{product}}` 是 Kotlin data class 的
-    /// `toString()`，C# 的普通类只给出类型名，两个产品会撞成同一个符号名（`SymbolRepetitive` 拒绝）。
+    /// 用对象做键就不必假设连续性。**符号名用 `Index` 而不是 `ToString`**：基线的 `${{product}}` 是 Kotlin data class 的
+    /// `toString`，C# 的普通类只给出类型名，两个产品会撞成同一个符号名（`SymbolRepetitive` 拒绝）。
     ///
     /// **The key is the material object, not a position**：`produce_quantity_（产品）` 的上界来自需求、消耗量的来自储备；
     /// 不设范围，求解器只会把产量顶到无穷远。**范围非法就失败**，不要静默跳过——基线是 `.value!!`，跳过等于把上界丢了。
@@ -276,7 +276,7 @@ public static class ProduceSlackHelper {
     /// <param name="category">最小化还是最大化 / Minimum or maximum.</param>
     /// <param name="objectiveName">目标名 / The objective name.</param>
     /// <param name="skipWhenEmpty">列表为空时是否连目标都不加 / Whether to add no objective at all when the list is empty.</param>
-    /// <param name="id">符号名里的键，缺省用 `ToString()` / The key used in symbol names, defaulting to `ToString()`.</param>
+    /// <param name="id">符号名里的键，缺省用 `ToString` / The key used in symbol names, defaulting to `ToString`.</param>
     /// <returns>执行结果 / Execution result.</returns>
     /// <remarks>
     /// 对应基线四个"数量"目标与四个"超量 / 不足"目标的公共形状。四处必须照抄：
@@ -287,14 +287,14 @@ public static class ProduceSlackHelper {
     ///    否则 `pos` 是个没有上界的自由变量，最小化时恒取 0、最大化时冲到无穷。
     /// 3. **系数在松弛外面乘**，与基线 `coefficient(x) * slack` 一致。
     /// 4. **空列表的处理两边不同**：基线四个"数量"目标照旧 `minimize` 一个空多项式，四个"超量 / 不足"目标
-    ///    外层有 `if (materials.isNotEmpty())`，为空时连目标都不加。这个差别由 `skipWhenEmpty` 承载。
+    ///    外层有 `if (materials.isNotEmpty)`，为空时连目标都不加。这个差别由 `skipWhenEmpty` 承载。
     ///
     /// Mirrors the shared shape of the baseline's four "quantity" objectives and four "over/less" ones. Four things must be copied: **a zero threshold charges the symbol itself and only a non-zero
     /// one builds a slack**, since building one at zero turns "the quantity" into "the part above zero" and the two differ whenever there is a lower bound (10 versus 0 at a bound of 10);
     /// **`constraint: true`**, because these four objectives do not add their own rows the way the over/less tables do, so the slack must carry "`x - pos` at most `threshold`" or `pos` is a free variable with
     /// no ceiling that minimisation pins at zero and maximisation drives to infinity; **the coefficient multiplies outside the slack**, matching the baseline's `coefficient(x) * slack`; and **the empty
     /// list is handled differently on the two sides**, the baseline's four "quantity" objectives minimising an empty polynomial anyway while the four "over/less" ones sit inside
-    /// `if (materials.isNotEmpty())` and add no objective at all — a difference carried by `skipWhenEmpty`.
+    /// `if (materials.isNotEmpty)` and add no objective at all — a difference carried by `skipWhenEmpty`.
     /// </remarks>
     public static Try BuildObjective<M>(
         IAbstractLinearMetaModel<Flt64> model,
@@ -316,10 +316,10 @@ public static class ProduceSlackHelper {
             return Results.Ok<Success>(Results.SuccessInstance);
         }
 
-        // **符号名要按调用方给的键，不能按 `ToString()`**：资源时间槽的 `ToString()` 只含资源与容量，
-        // 同一容量下的两个槽会得到同名符号，第二次 `Add` 直接失败（"Repeated"）。产量侧不传就用 `ToString()`，行为不变。
-        // **The symbol name comes from the caller's key, not `ToString()`**: a resource time slot's `ToString()` holds only the resource and capacity, so two slots under one capacity get
-        // the same name and the second `Add` fails outright ("Repeated"). Produce callers pass nothing and keep `ToString()`, so their behaviour is unchanged.
+        // **符号名要按调用方给的键，不能按 `ToString`**：资源时间槽的 `ToString` 只含资源与容量，
+        // 同一容量下的两个槽会得到同名符号，第二次 `Add` 直接失败（"Repeated"）。产量侧不传就用 `ToString`，行为不变。
+        // **The symbol name comes from the caller's key, not `ToString`**: a resource time slot's `ToString` holds only the resource and capacity, so two slots under one capacity get
+        // the same name and the second `Add` fails outright ("Repeated"). Produce callers pass nothing and keep `ToString`, so their behaviour is unchanged.
         id ??= item => item.ToString() ?? string.Empty;
 
         var monomials = new List<LinearMonomial<Flt64>>();
@@ -461,7 +461,7 @@ public static class ProduceSlackHelper {
     /// <remarks>
     /// 对应基线 `Produce.refresh` / `Consumption.refresh`，但**取价的入口不同**：基线从**符号的 `args`** 取键，
     /// 而 C# 的 `IIntermediateSymbol.Args` 是从 `Parent` 派生的只读属性（`IntermediateSymbol.cs:37`），
-    /// 符号建好之后挂不上去。B704 已经把键挂在**约束行**的 `Args` 上，而行正是对偶值的来源——从行取键是等价且更直接的。
+    /// 符号建好之后挂不上去。 已经把键挂在**约束行**的 `Args` 上，而行正是对偶值的来源——从行取键是等价且更直接的。
     ///
     /// 四处必须照抄：
     ///
@@ -471,7 +471,7 @@ public static class ProduceSlackHelper {
     /// 4. **表未建立时跳过整段**，不是失败：`refresh` 可能在注册之前被调用。
     ///
     /// Mirrors the baseline's `Produce.refresh` and `Consumption.refresh`, but **the entry point for the key differs**: the baseline reads it from **the symbol's `args`**, while C#'s
-    /// `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and cannot be attached after construction. B704 already attaches the key to the
+    /// `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and cannot be attached after construction. already attaches the key to the
     /// **constraint row's** `Args`, and the row is what the dual value is keyed by, so reading it from the row is equivalent and more direct. Four things must be copied: **only a row carrying a key has
     /// a price** and a row without one is skipped silently rather than being an error (the baseline's `when` has no `else`); **prices accumulate per row**, since one key can be hit by several rows and
     /// the baseline uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as "already computed"; and **a table that

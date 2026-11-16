@@ -135,5 +135,5 @@ public class ResultTest {
     }
 
     // Note: BindAsync/MapAsync extension method tests deferred to Phase 3
-    // (async extension methods require further investigation on .NET 10)
+    // (async extension methods require further investigation on.NET 10)
 }

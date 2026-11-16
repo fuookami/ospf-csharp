@@ -42,25 +42,25 @@ public sealed record FinalAssignmentArtifacts(
 /// 层分配上下文 / The layer-assignment context.
 /// </summary>
 /// <remarks>
-/// 与基线 `bpp2d-domain-layer-assignment-context/.../LayerAssignmentContext.kt` 对齐，**但本批只落 `RegisterRmp`**：
+/// 与基线 `bpp2d-domain-layer-assignment-context/.../LayerAssignmentContext.kt` 对齐，**但这里只落 `RegisterRmp`**：
 ///
 /// | 方法 | 状态 |
 /// | --- | --- |
-/// | `RegisterRmp` | 本批落地，三个前置（`ImpreciseAssignment` / `ImpreciseLoad` / `DemandConstraint`）都已就位 |
-/// | `AddColumns` | 本批落地（一行：新列非空才追加装载项） |
-/// | `RemoveColumns` | 本批落地（转给聚合） |
+/// | `RegisterRmp` | 这里落地，三个前置（`ImpreciseAssignment` / `ImpreciseLoad` / `DemandConstraint`）都已就位 |
+/// | `AddColumns` | 这里落地（一行：新列非空才追加装载项） |
+/// | `RemoveColumns` | 这里落地（转给聚合） |
 /// | `RegisterFinal` | **未落地**：要 `PreciseAssignment` / `PreciseLoad` 与五个尚未存在的约束（`AreaMinimization`、`SheetAmountMinimization`、`SheetCapacityConstraint`、`SheetTypeCostMinimization`、`SheetAreaMinimization`） |
 /// | `SetSolution` 等求解器回写 | **未落地**：要列生成求解器主循环 |
 ///
 /// 一处与基线的形状差异：基线的 `registerRmp` 在 `registerLoad` 之后还调 `load.register(model)` 注册装载的符号层
-/// （`AbstractLoad.register`）。本仓的 `ImpreciseLoad` **没有这一层**——`OverLoad` / `LessLoad` 仍是空表（B642 记档），
+/// （`AbstractLoad.register`）。本仓的 `ImpreciseLoad` **没有这一层**——`OverLoad` / `LessLoad` 仍是空表（记档），
 /// 所以这里不调它。**等松弛变量落地后要补这一句**，否则松弛约束会找不到符号。
 ///
-/// Aligned with the baseline's `LayerAssignmentContext`, **but this batch only lands `RegisterRmp`**: its three prerequisites (`ImpreciseAssignment`, `ImpreciseLoad`,
+/// Aligned with the baseline's `LayerAssignmentContext`, **but only `RegisterRmp` lands here**: its three prerequisites (`ImpreciseAssignment`, `ImpreciseLoad`,
 /// `DemandConstraint`) are all in place, while `RegisterFinal` needs `PreciseAssignment` / `PreciseLoad` plus five constraints that do not exist yet
 /// (`AreaMinimization`, `SheetAmountMinimization`, `SheetCapacityConstraint`, `SheetTypeCostMinimization`, `SheetAreaMinimization`), and the solver write-back needs the column-generation
 /// main loop. One structural difference: the baseline calls `load.register(model)` after `registerLoad` to register the load's symbol layer, but this repository's `ImpreciseLoad` has no such
-/// layer — `OverLoad` / `LessLoad` are still empty lists (recorded in B642) — so it is skipped here. **That call must be added once the slack variables land**, or the slack constraints will
+/// layer — `OverLoad` / `LessLoad` are still empty lists (recorded) — so it is skipped here. **That call must be added once the slack variables land**, or the slack constraints will
 /// not find their symbols.
 /// </remarks>
 public sealed class LayerAssignmentContext
@@ -112,8 +112,8 @@ public sealed class LayerAssignmentContext
             return Fail(loadRegistered);
         }
 
-        // 基线此处还有 `load.register(model)` 注册装载的符号层（超额 / 欠额）；B697 起本仓也有这一层了。
-        // The baseline also calls `load.register(model)` here to register the load's symbol layer (over- and under-load); as of B697 this repository has that layer too.
+        // 基线此处还有 `load.register(model)` 注册装载的符号层（超额 / 欠额）； 起本仓也有这一层了。
+        // The baseline also calls `load.register(model)` here to register the load's symbol layer (over- and under-load); as of this repository has that layer too.
         Try loadSymbols = load.Register(model);
         if (!loadSymbols.IsOk)
         {
@@ -187,12 +187,12 @@ public sealed class LayerAssignmentContext
     /// 2. **份数上界由 <see cref="MaxCopies.PerColumn"/> 算出**，不是常数：上界过小会让最终解欠需求，过大只是慢一点。
     /// 3. **容量约束可关**：`enableCapacityConstraint` 为假时仍注册容量符号（构件里要用），只是不加约束行。
     /// 4. **装载复用 `ImpreciseLoad`**：基线在最终阶段用 `PreciseLoad`，但它与 `ImpreciseLoad` 的差别只在松弛变量的注册层，
-    ///    而那一层本仓还没有（B642 记档）。**用同一个类型而不是复制一份几乎相同的代码**，差别写在注释里。
+    ///    而那一层本仓还没有（记档）。**用同一个类型而不是复制一份几乎相同的代码**，差别写在注释里。
     ///
     /// Aligned with the baseline's `registerFinal`, and **the order must not change**: **the precise assignment is built and `y` registered first**, since the other three artifacts reference it;
     /// **the copy bound comes from `MaxCopies.PerColumn`** rather than a constant, because a bound that is too small leaves the final solution short while a large one merely costs time; **the
     /// capacity constraint can be switched off** while the capacity symbols are still registered for the artifacts to use; and **the load reuses `ImpreciseLoad`** — the baseline uses `PreciseLoad`
-    /// here, but the two differ only in the slack-variable registration layer that this repository does not have yet (recorded in B642), so **one type is reused rather than duplicating nearly
+    /// here, but the two differ only in the slack-variable registration layer that this repository does not have yet (recorded), so **one type is reused rather than duplicating nearly
     /// identical code**, with the difference noted here.
     /// </remarks>
     public Result<FinalAssignmentArtifacts, ErrorCode, Error<ErrorCode>> RegisterFinal(

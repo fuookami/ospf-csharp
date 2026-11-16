@@ -17,11 +17,11 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **任务束编译的 `Register` 从"静默 `Ok`"变成真的六样东西（B563）** / The bunch compilation's `Register` goes from a silent `Ok` to six real things (B563).
+/// **任务束编译的 `Register` 从"静默 `Ok`"变成真的六样东西** / The bunch compilation's `Register` goes from a silent `Ok` to six real things.
 /// </summary>
 /// <remarks>
 /// 之前 `Register` 直接返回 `Ok`：模型里什么都没有。而任务束调度时间的偏移掩码要读 `task_compilation` 那张表，
-/// 于是整条路径只能失败——本批把这张表（连同 `y` / `bunch_cost` / 分配列占位 / `z` / `executor_compilation`）建出来。
+/// 于是整条路径只能失败——这里把这张表（连同 `y` / `bunch_cost` / 分配列占位 / `z` / `executor_compilation`）建出来。
 ///
 /// 三种静默失效：
 /// <list type="number">
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// </list>
 ///
 /// Previously `Register` returned `Ok` outright with nothing in the model. The bunch task time's deviation masks read the `task_compilation` table, so that whole path could only
-/// fail — this batch builds it (together with `y`, `bunch_cost`, the assignment placeholders, `z` and `executor_compilation`). Three silent failures: (1) **putting `Σ_e x[t,e]`
+/// fail — builds it (together with `y`, `bunch_cost`, the assignment placeholders, `z` and `executor_compilation`). Three silent failures: (1) **putting `Σ_e x[t,e]`
 /// into `task_compilation`** — a bunch's assignment columns are created **per round** and do not exist at registration; (2) **pinning locked cancellation tasks with a constraint** —
 /// the baseline pins the **range**, and a constraint would add one more row per round; (3) **making `executor_compilation` `null` without leisure** — it is the carrier of "how
 /// much this executor is used" and must be a constant zero.

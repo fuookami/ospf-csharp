@@ -44,7 +44,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **桥接等式必须真的写进模型**：**不写的桥接变量是自由的，掩码读的是一个任意值，而模型完全可行。**
 ///
-/// B1176, following the baseline's `QuadraticMaskingFunction`.
+/// Following the baseline's `QuadraticMaskingFunction`.
 ///
 /// **`Flt64`-only, like every other quadratic function here**: **the bridge itself is `Flt64`**
 /// (`QuadraticBridging.Bridge` takes `QuadraticPolynomial&lt;Flt64&gt;`), and **making the outer layer generic would only

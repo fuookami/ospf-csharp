@@ -36,12 +36,12 @@ internal sealed record IisRelatedVariable(
 /// 的基础设施——解析出关联行和关联变量，再把子模型喂给求解器。
 ///
 /// **`RelatedRows` 原本写在 `LinearLegacyIisCompute` 里，但它的签名和实现都与线性无关**
-/// （只要变量列表与松弛行号），所以本批**提取到共享位置**，让二次侧直接复用，
+/// （只要变量列表与松弛行号），所以这里**提取到共享位置**，让二次侧直接复用，
 /// 而不是复制一份。
 ///
 /// These functions **never call a solver** — they only read and write model shape — so they **can be fully verified without an SDK**. In the baseline they are the
 /// infrastructure the elastic and deletion filters build on: resolve related rows and variables, then hand the submodel to the solver. **`RelatedRows` used to live in
-/// `LinearLegacyIisCompute`, but neither its signature nor its body is linear-specific** (it only needs a variable list and slack row indices), so this batch
+/// `LinearLegacyIisCompute`, but neither its signature nor its body is linear-specific** (it only needs a variable list and slack row indices), so
 /// **extracts it to a shared location** for the quadratic side to reuse instead of copying it.
 /// </remarks>
 internal static class IisStructuralSupport {
@@ -138,7 +138,7 @@ internal static class IisStructuralSupport {
     /// <remarks>
     /// 对应基线的 `filterConstraintByRowIndex`。**两条丢弃规则**：
     ///
-    /// 1. 行去重后**升序**排列——基线的 `distinct().sorted()`；
+    /// 1. 行去重后**升序**排列——基线的 `distinct.sorted`；
     /// 2. 单元格的 `Col1`（以及存在的 `Col2`）**必须在映射表里**，否则整格丢弃。
     ///
     /// 第 2 条是**成对丢弃**：二次项 `(i, j)` 只要有一端被裁掉，整个二次项都不能留——

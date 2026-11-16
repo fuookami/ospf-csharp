@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// 2. **`min` / `max` 是构造参数**，不是 `Torque` 的字段。基线从 `targetLongitudinalMoment ± maxLongitudinalMomentDeviation`
 ///    算出来再传进来，本类只负责用它建两行。
 /// 3. **缺符号时明确失败**。基线的 `torque.longitudinalTorque[phase]!!` 会抛 `NullPointerException`；
-///    C# 侧改成返回 `ApplicationFailed` 并说明是哪个阶段。
+/// C# 侧改成返回 `ApplicationFailed` 并说明是哪个阶段。
 ///
 /// Mirrors the baseline: **two rows per flight phase**, `longitudinal_torque_{phase} ≥ min` (named `{name}_{phase}_minimum`) then `≤ max` (`..._maximum`).
 /// Three easy mistakes: (1) **`_minimum` comes first here** — `PayloadLimit` adds the upper row first and only the lower row carries a suffix, whereas this one suffixes both and
@@ -81,8 +81,8 @@ internal sealed class LongitudinalMomentLimit
                     "纵向力矩符号未注册 / the longitudinal torque symbol is not registered: " + phase));
             }
 
-            // 基线的 `phase.name.lowercase()`：`ZeroFuel` → `zerofuel`，不是 `zero_fuel`。
-            // The baseline's `phase.name.lowercase()`: `ZeroFuel` becomes `zerofuel`, not `zero_fuel`.
+            // 基线的 `phase.name.lowercase`：`ZeroFuel` → `zerofuel`，不是 `zero_fuel`。
+            // The baseline's `phase.name.lowercase`: `ZeroFuel` becomes `zerofuel`, not `zero_fuel`.
             string suffix = phase.ToString().ToLowerInvariant();
 
             string minimumName = Name + "_" + suffix + "_minimum";

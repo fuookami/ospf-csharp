@@ -23,11 +23,11 @@ namespace Fuookami.Ospf.Core.Analysis;
 ///
 /// **变量是"找回"的，不是"造"的**：遍历快照里已注册的表达式与目标，把其中的 `IVariableItem` 引用按
 /// `VariableId` 收进索引，再原样注册。**新建一个同名变量不是同一个变量**——`Identifier` / `Key` 都不同，
-/// 注册进去就是另一个（B987 更正）。
+/// 注册进去就是另一个（更正）。
 ///
 /// **This is the ordinary path of `ConstraintProgrammingSnapshotBuilder.buildModel`** (every member active), which all four remaining `core.analysis` analyzers go through.
 /// **Variables are *found*, not *created***: the registered expressions and objectives are walked, their `IVariableItem` references indexed by `VariableId`, and registered
-/// as-is. **A freshly built variable with the same name is a different variable** — `Identifier` / `Key` differ, so it registers as another one (B987 correction).
+/// as-is. **A freshly built variable with the same name is a different variable** — `Identifier` / `Key` differ, so it registers as another one ( correction).
 ///
 /// **没搬的部分，逐条在这里说明边界**：选择性停用证据时的值域重绑（`activeSources`）、区间变量、
 /// 以及目标过滤（`objectiveFilter`）。**它们不静默跳过——遇到就直接报错**，
@@ -177,14 +177,14 @@ public static class SnapshotModelRebuilder
                 break;
             case ConstraintProgrammingExpression.Linear:
                 // **线性项这里收不了**：`Term` 只有 `IVariableItem`，**没有 `VariableId`**，
-                // 而索引的键是 `VariableId`。用变量名当键就是猜——名字不是身份（B987）。
+                // 而索引的键是 `VariableId`。用变量名当键就是猜——名字不是身份。
                 // 所以这里不收集；漏掉的变量会在 `Rebuild` 里变成一条明确的报错。
                 //
                 // **A linear term cannot be indexed here**: `Term` carries only `IVariableItem`, **not a `VariableId`**, and the index is keyed by `VariableId`. Using the
-                // variable name as the key would be a guess — a name is not an identity (B987). A missed variable surfaces as a clear error in `Rebuild` instead.
+                // variable name as the key would be a guess — a name is not an identity . A missed variable surfaces as a clear error in `Rebuild` instead.
                 break;
             default:
-                // **其余节点的形状这一批没逐一确认过，所以不去猜**：漏收一个变量会在 `Rebuild` 里
+                // **其余节点的形状这里没逐一确认过，所以不去猜**：漏收一个变量会在 `Rebuild` 里
                 // 变成一条明确的报错，**而不是一个少了项的模型。**
                 //
                 // **The remaining node shapes were not confirmed one by one, so they are not guessed at**: a missed variable surfaces as a clear error in `Rebuild`, **not as
@@ -272,10 +272,10 @@ public static class SnapshotModelRebuilder
     /// <remarks>
     /// **转发到 `ObjectiveTargetBounds.IntegerBound`，不再自己算一遍舍入。**
     /// 这里原本有一份独立实现（`9.2e18` 上下界、非 `AtLeast` 一律向下取整），
-    /// **而两份相同的舍入规则只要改一份，就再也不相同**（与 B1045 的 `ShouldStop` 同一个形状）。
+    /// **而两份相同的舍入规则只要改一份，就再也不相同**（与 `ShouldStop` 同一个形状）。
     ///
     /// **Forwards to `ObjectiveTargetBounds.IntegerBound` instead of rounding again.** There used to be an independent copy here (a `9.2e18` window, floor for anything not `AtLeast`), **and two copies of one
-    /// rounding rule stop agreeing as soon as one is edited** (the same shape as `ShouldStop` in B1045).
+    /// rounding rule stop agreeing as soon as one is edited** (the same shape as `ShouldStop`).
     /// </remarks>
     public static bool TryIntegerBound(ObjectiveTarget target, out Int64 bound) {
         if (ObjectiveTargetBounds.IntegerBound(target) is { } exact) {

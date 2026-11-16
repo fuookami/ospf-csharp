@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Tests.Lowering;
 /// </summary>
 /// <remarks>
 /// 同步 Kotlin `dee897d2` 的做法：**基线里每个张量表达式都带 `elements`，所以 `transpose` 与 `sliceLeading` 都有东西可动。**
-/// **C# 侧此前只有"一个名字一个标量表达式"，本批给绑定加了<b>可选的**元素列表——**可空是有意的：**
+/// **C# 侧此前只有"一个名字一个标量表达式"，这里给绑定加了<b>可选的**元素列表——**可空是有意的：**
 /// **大多数绑定不需要它，于是这一层能逐步接进来，而"有没有元素"也成了一个可判断的事实。**
 ///
 /// Syncs `dee897d2`'s approach: **every tensor expression in the baseline carries elements, so transpose and sliceLeading have something to move.** The C# side had only "one name,
-/// one scalar expression"; this batch gives the binding an **optional** element list — **nullability on purpose: most bindings do not need it, so the layer wires in step by step, and
+/// one scalar expression"; gives the binding an **optional** element list — **nullability on purpose: most bindings do not need it, so the layer wires in step by step, and
 /// "are there elements" becomes a checkable fact.**
 /// </remarks>
 public class OnnxElementWiringTests

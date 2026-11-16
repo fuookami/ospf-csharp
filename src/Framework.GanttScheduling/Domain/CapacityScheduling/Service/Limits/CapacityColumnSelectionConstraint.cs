@@ -34,10 +34,10 @@ public sealed record CapacityColumnSelectionShadowPriceKey<E>(E Executor, TimeRa
 /// the solver to fill a combination that should stay empty, consuming capacity out of thin air.
 ///
 /// **组内缺表达式必须失败**：与 `ExecutorSlotCompilationConstraint` 同理，静默跳过会让该组合失去覆盖要求。
-/// 而**组外的组合必须跳过**——它们本来就不需要覆盖。两条规则的差别正是本批的核心。
+/// 而**组外的组合必须跳过**——它们本来就不需要覆盖。两条规则的差别正是这里的核心。
 ///
 /// **A missing expression inside the group must fail**: as with `ExecutorSlotCompilationConstraint`, skipping removes the coverage requirement. And **combinations outside the
-/// group must be skipped** — they need no coverage to begin with. The difference between those two rules is the heart of this batch.
+/// group must be skipped** — they need no coverage to begin with. The difference between those two rules is the heart of.
 /// </remarks>
 public sealed class CapacityColumnSelectionConstraint<E>
     where E : Executor {

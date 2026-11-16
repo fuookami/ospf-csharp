@@ -77,8 +77,8 @@ public sealed class AbsoluteOrder
                 // `(max − order + 1) × (priority + 1)`，两处加一都不能省。
                 // `(max − order + 1) × (priority + 1)`; neither plus one may be dropped.
                 var positionPreference = new Flt64(latestLoadingOrder - OrderOf(position) + 1.0);
-                // `UInt64.Value` 是 protected，用 `ToFlt64()`。
-                // `UInt64.Value` is protected, so `ToFlt64()` is used.
+                // `UInt64.Value` 是 protected，用 `ToFlt64`。
+                // `UInt64.Value` is protected, so `ToFlt64` is used.
                 return (priority.Priority.ToFlt64() + Flt64.One) * positionPreference;
             };
         }

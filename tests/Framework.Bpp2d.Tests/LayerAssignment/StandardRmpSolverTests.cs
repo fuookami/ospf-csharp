@@ -1,4 +1,4 @@
-// RMP 求解器（B663）的判据 / Criteria for the RMP solver (B663).
+// RMP 求解器的判据 / Criteria for the RMP solver.
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **RMP 求解器（B663）** / The RMP solver (B663).
+/// **RMP 求解器** / The RMP solver.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**求完 LP 必须取对偶值当影子价格**（不取的话下一轮检验数全为零）、
@@ -163,7 +163,7 @@ public class StandardRmpSolverTests {
     /// 1. 两条需求各给对偶价 `3.5` / `7.25` → **影子价格表两项**，键是 `(item_amount, 物品)`。
     /// 2. **目标值来自 LP 解**（`12.5`），不是自己估的。
     /// 3. 信息表有 `solver`、`model`、`lp_time_ms`、`lp_gap`、`lp_objective`、`column_count` 六项，
-    ///    模型名是 `前缀-迭代号`。
+    /// 模型名是 `前缀-迭代号`。
     /// 4. `column_count` 反映的是**输入状态的列数**（这里 0）。
     ///
     /// Four paired points: two demands priced `3.5` and `7.25` produce **two shadow-price entries** keyed by `(item_amount, item)`; **the objective comes from the LP solution** (`12.5`) rather than
@@ -178,8 +178,8 @@ public class StandardRmpSolverTests {
             : null);
         var solver = new StandardRmpSolver(
             Items(), Demands(), solverStub,
-            // **面积系数也传非默认值**：默认是 1，用默认值时"忽略系数"的实现照样通过（B649/B661/B662 同类）。
-            // **The area coefficient is also non-default**: the default is 1, and with it an implementation that ignores the coefficient still passes (the B649/B661/B662 family).
+            // **面积系数也传非默认值**：默认是 1，用默认值时"忽略系数"的实现照样通过。
+            // **The area coefficient is also non-default**: the default is 1, and with it an implementation that ignores the coefficient still passes (the / / family).
             new ColumnGenerationStandardExecutorConfig(
                 RmpSolveNamePrefix: "custom-rmp", RmpAreaCoefficient: new FltX(2.5)));
 

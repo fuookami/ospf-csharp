@@ -21,12 +21,11 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Iis;
 /// CP 冲突分析器 / The CP conflict analyzer.
 /// </summary>
 /// <remarks>
-/// B1261 按基线补这个分析器。**按 B1260 的经验先查依赖，结果又是"只差适配器"：
+/// 对齐基线补这个分析器。**按经验先查依赖，结果又是"只差适配器"：
 /// `IConstraintProgrammingSolver`、`ConstraintProgrammingInfeasibleOutput`、`SolveDiagnostics.InfeasibilityEvidence`、
 /// `CollectConflict`／`ShrinkConflict` 全都在。**
 ///
-/// adds
-/// missing" again.**
+/// Adds missing" again.**
 /// </remarks>
 public class ConstraintProgrammingConflictAnalyzerTests
 {
@@ -35,7 +34,7 @@ public class ConstraintProgrammingConflictAnalyzerTests
     /// It forces `CollectConflict` on even when the caller's options have it off.
     /// </summary>
     /// <remarks>
-    /// **这是本批最要紧的一条，因为那个失败是<b>误导性</b>的：** **一个"冲突分析器"在不收集冲突时什么也分析不出来，
+    /// **这是这里最要紧的一条，因为那个失败是<b>误导性</b>的：** **一个"冲突分析器"在不收集冲突时什么也分析不出来，
     /// 而失败会以"CP 输出缺少结构化 conflict 证据"的形式出现——看起来像求解器的问题，
     /// 其实是分析器没把开关打开。**
     ///

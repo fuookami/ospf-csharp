@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Math.Symbol.Operation;
 /// 支持快速累积模式：先使用 += 累积，最后一次性合并。
 /// Kotlin MutableCombineOps.kt 的对应实现。
 /// Provides in-place like-term combination for mutable polynomials.
-/// Supports FastSum pattern: accumulate with Add(), then combine once at the end.
+/// Supports FastSum pattern: accumulate with Add, then combine once at the end.
 /// </summary>
 public static class MutableCombineOps {
     // ===== MutableLinearPolynomial =====

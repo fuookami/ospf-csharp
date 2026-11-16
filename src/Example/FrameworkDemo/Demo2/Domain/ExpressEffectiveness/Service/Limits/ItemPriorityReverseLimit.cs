@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 ///
 /// 1. **是 `Minimum`**，与 `ItemPriorityLimit` 的 `Maximum` 相反。
 /// 2. **目标名带空格**：`"item priority reverse"`。
-/// 3. **空集合时直接返回成功，不加目标**。基线写 `if (monomials.isEmpty()) return ok`——这一条不能省，
+/// 3. **空集合时直接返回成功，不加目标**。基线写 `if (monomials.isEmpty) return ok`——这一条不能省，
 ///    否则零多项式目标会占掉一个目标位。
 /// 4. **系数按"两个（舱位, 货物）对"取**：`coefficient(position2 to item1, position1 to item2)`。注意**顺序是交叉的**——
 ///    第一项是 `(position2, item1)`，不是 `(position1, item1)`。
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.ExpressEffectiveness.
 ///
 /// Aligned with the baseline: the reversal symbols weighted by their coefficients are summed into a **minimisation** objective named `item priority reverse`. Five things must be copied:
 /// **it is `Minimum`**, the opposite of `ItemPriorityLimit`'s `Maximum`; **the objective name has a space**; **an empty set returns success without adding an objective**, since the
-/// baseline's `if (monomials.isEmpty()) return ok` must not be dropped, or a zero-polynomial objective would take up a slot; **the coefficient is taken per pair of (position, item)** —
+/// baseline's `if (monomials.isEmpty) return ok` must not be dropped, or a zero-polynomial objective would take up a slot; **the coefficient is taken per pair of (position, item)** —
 /// `coefficient(position2 to item1, position1 to item2)`, with the **crossed** ordering, the first being `(position2, item1)` rather than `(position1, item1)`; and **only pairs with
 /// symbols are collected**, where a missing symbol means the registration order is wrong and fails outright rather than skipping.
 /// </remarks>

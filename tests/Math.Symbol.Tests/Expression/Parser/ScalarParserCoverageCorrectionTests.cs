@@ -38,9 +38,8 @@ namespace Fuookami.Ospf.Math.Symbol.Tests.Expression.Parser;
 ///
 /// ### 这是第几次同一种错误
 ///
-/// **B1265 是"文档数字来自错误的计数口径"。**
-/// **B1269 是"死代码被读成未完成"。**
-/// **这次是"在错误的路径下找不到，被记成不存在"。**
+/// **同一种错误已经出现过三次：** **"文档数字来自错误的计数口径"、** **"死代码被读成未完成"、**
+/// **以及这一次的"在错误的路径下找不到，被记成不存在"。**
 ///
 /// **三次都是同一件事：<b>一个抽样动作的失败，被当成了关于世界的事实**。</b>
 ///
@@ -53,7 +52,7 @@ namespace Fuookami.Ospf.Math.Symbol.Tests.Expression.Parser;
 /// "absent".** **"I did not find it in that directory" and "it does not exist" are two sentences, and the matrix wrote them as
 /// one.**
 ///
-/// **This is the third of a kind: B1265 was "a doc number from the wrong counting convention", B1269 was "dead code read as
+/// **This is the third of a kind: "a doc number from the wrong counting convention", "dead code read as
 /// unfinished", and this is "not found at the wrong path, recorded as absent".** **All three are one thing: <b>a failed sampling
 /// action taken as a fact about the world</b>.**
 /// </remarks>
@@ -63,10 +62,10 @@ public class ScalarParserCoverageCorrectionTests
     /// **三个入口都在，而且都能解析** / All three entry points exist and all three actually parse.
     /// </summary>
     /// <remarks>
-    /// **判据不只断言"方法存在"——那正是 B1266／B1267 批评过的影子检查。**
+    /// **判据不只断言"方法存在"——那正是此前 批评过的影子检查。**
     /// **它对三个入口各跑一次真实解析，并核对结果。**
     ///
-    /// **The criterion does not merely assert the methods exist — that is exactly the shadow check B1266/B1267 criticised.**
+    /// **The criterion does not merely assert the methods exist — that is exactly the shadow check criticised.**
     /// **It runs one real parse through each of the three and checks the result.**
     /// </remarks>
     [Fact]

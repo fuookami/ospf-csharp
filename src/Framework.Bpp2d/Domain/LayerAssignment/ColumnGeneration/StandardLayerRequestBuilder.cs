@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 /// 标准执行器的建列请求构造器 / The standard executors' layer-request builder.
 /// </summary>
 /// <remarks>
-/// 与基线 `ColumnGenerationStandardExecutors.requestBuilder()` 对齐。**它只装配，不计算**：把物品、板材、已有列、
+/// 与基线 `ColumnGenerationStandardExecutors.requestBuilder` 对齐。**它只装配，不计算**：把物品、板材、已有列、
 /// 影子价格与锯齿缝宽装进一个请求对象，交给生成器。
 ///
 /// 四处必须照抄：
@@ -23,14 +23,14 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.ColumnGeneration;
 ///    不是"随便选一块"——没有兜底会让单板材配置直接失败。
 /// 2. **物品清单按 `_itemCatalogue` 过滤**：目录里没有的物品**跳过**而不是抛错。物品未登记是数据准备问题，
 ///    生成器仍能用其余物品产出候选；抛错会让整次列生成白跑。
-/// 3. **数量转 `int` 时截断**：基线的 `amount.toULong().toInt()` 在超出 `int` 范围时会回绕，
+/// 3. **数量转 `int` 时截断**：基线的 `amount.toULong.toInt` 在超出 `int` 范围时会回绕，
 ///    这是基线行为，本实现照抄并记档（见 `ponytail:` 注释）。
 /// 4. **`MaxCandidates` 来自列生成配置**，不是执行器配置——两者是不同的东西，混用会让每轮列数失控。
 ///
-/// Aligned with the baseline's `requestBuilder()`. **It only assembles, never computes**: it packs items, sheets, existing columns, shadow prices and kerf into a request for the generator. Four
+/// Aligned with the baseline's `requestBuilder`. **It only assembles, never computes**: it packs items, sheets, existing columns, shadow prices and kerf into a request for the generator. Four
 /// things must be copied: **the candidate sheet is the main one** (`IsMain`), falling back to the first only when none is main, since that fallback is the baseline's and without it a
 /// single-sheet configuration fails outright; **the item list is filtered by `_itemCatalogue`**, skipping items the catalogue lacks rather than throwing, because an unregistered item is a data
-/// preparation problem and throwing would waste the whole generation pass; **the amount truncates when cast to `int`**, which is the baseline's `toULong().toInt()` behaviour and is recorded as a
+/// preparation problem and throwing would waste the whole generation pass; **the amount truncates when cast to `int`**, which is the baseline's `toULong.toInt` behaviour and is recorded as a
 /// `ponytail:` note below; and **`MaxCandidates` comes from the column-generation config**, not the executor config, since mixing them lets the per-round column count run away.
 /// </remarks>
 public sealed class StandardLayerRequestBuilder : IColumnGenerationLayerRequestBuilder
@@ -85,9 +85,9 @@ public sealed class StandardLayerRequestBuilder : IColumnGenerationLayerRequestB
             {
                 continue;
             }
-            // ponytail: 数量按 `int` 截断，与基线的 `toULong().toInt()` 一致；单个物品需求超过 `int.MaxValue`
+            // ponytail: 数量按 `int` 截断，与基线的 `toULong.toInt` 一致；单个物品需求超过 `int.MaxValue`
             // 在板材排版里不可能出现，真出现时截断也比抛错更接近基线行为。
-            // ponytail: the amount truncates to `int` like the baseline's `toULong().toInt()`. A single-item demand past `int.MaxValue` cannot occur in sheet nesting, and truncation matches
+            // ponytail: the amount truncates to `int` like the baseline's `toULong.toInt`. A single-item demand past `int.MaxValue` cannot occur in sheet nesting, and truncation matches
             // the baseline more closely than throwing.
             result.Add((item, unchecked((int)entry.Value)));
         }

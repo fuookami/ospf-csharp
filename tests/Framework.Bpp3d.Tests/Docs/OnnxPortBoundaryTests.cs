@@ -58,7 +58,7 @@ public class OnnxPortBoundaryTests
         }
         counted.Should().BeGreaterThanOrEqualTo(1,
             "one row remains: the name-level parity that is deliberately not a goal "
-            + "(in-place loop bodies left in B1355, the approximated activations in B1361, the ir_version question in B1364 and the Scan runtime slices in B1368, which is why this "
+            + "(in-place loop bodies left, the approximated activations, the ir_version question and the Scan runtime slices, which is why this "
             + "count only goes down when a batch lands one. **It is 1 now because the list-semantics work is finished; a row is not invented to keep a number up.**");
     }
 

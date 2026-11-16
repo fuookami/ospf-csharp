@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 ///
 /// 四处必须照抄：
 ///
-/// 1. **判定是 `!= WeightRecommendation`**，不是 `WithMacOptimization()` 那种谓词。这里只认一个模式，写成"是推荐打板或别的"
+/// 1. **判定是 `!= WeightRecommendation`**，不是 `WithMacOptimization` 那种谓词。这里只认一个模式，写成"是推荐打板或别的"
 ///    会让预配载也跑均衡约束。
 /// 2. **四条的顺序**：货物顺序、优先级预约、重量均衡、偏差目标。前三条是约束、第四条是目标——顺序会影响约束在模型里的编号，
 ///    而下游按名字取值，所以照抄更安全。
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.RecommendedWeightEqua
 /// 4. **偏差目标的系数来自 `parameter.weightRecommendationBalance`**，不是常数。
 ///
 /// Aligned with the baseline: **weight recommendation only**, with four pipelines in a fixed order. Four things must be copied: **the test is `!= WeightRecommendation`**, not a
-/// `WithMacOptimization()`-style predicate — writing "recommendation or anything else" would run the equalisation constraints under predistribution too; **the order** is item order,
+/// `WithMacOptimization`-style predicate — writing "recommendation or anything else" would run the equalisation constraints under predistribution too; **the order** is item order,
 /// priority appointment, weight equalisation, deviation objective, where the first three are constraints and the fourth an objective, and the order affects constraint numbering in
 /// the model (downstream reads by name, so copying is safer); **`ItemOrderLimit` is built through its factory**, since it computes the ordered pairs itself, while the other three
 /// are plain `new`; and **the deviation coefficient comes from `parameter.weightRecommendationBalance`**, not a constant.

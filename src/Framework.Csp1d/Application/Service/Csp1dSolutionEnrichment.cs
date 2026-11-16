@@ -373,9 +373,9 @@ internal static class Csp1dSolutionEnrichmentHelper {
             return UInt64.Zero;
         }
 
-        // **不再需要 `?.Count ?? 0`**：B378 把两个字段改成了非空类型，
-        // "没有欠产"由空列表表达（B376/B377 的语义修正）。
-        // **`?.Count ?? 0` is no longer needed**: B378 made both fields non-null, with "no deficit" expressed by an empty list (the B376/B377 semantic fix).
+        // **不再需要 `?.Count ?? 0`**： 把两个字段改成了非空类型，
+        // "没有欠产"由空列表表达（的语义修正）。
+        // **`?.Count ?? 0` is no longer needed**: made both fields non-null, with "no deficit" expressed by an empty list (the semantic fix).
         return new UInt64((ulong)result.UnderProductions.Count)
              + new UInt64((ulong)result.OverProductions.Count);
     }

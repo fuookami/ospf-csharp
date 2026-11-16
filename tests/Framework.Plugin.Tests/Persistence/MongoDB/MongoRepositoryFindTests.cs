@@ -22,16 +22,16 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.MongoTranslators;
 /// **翻译器对了，不等于查询能按条件跑** / A correct translator is not a working filtered query.
 /// </summary>
 /// <remarks>
-/// B1118—B1121 补了四个 Mongo 翻译器（**38 条判据**），**而在这一批之前，它们没有被任何生产路径调用过**：
+/// 补了四个 Mongo 翻译器（**38 条判据**），**而在这里之前，它们没有被任何生产路径调用过**：
 /// `MongoRepository` 只会 `Filter.Eq("_id", …)` 与 `Filter.Empty`。
 ///
-/// **"有实现"与"被用上"是两件事**——这一批把 `FindAsync(predicate, sortBy)` 接到真实查询路径上，
+/// **"有实现"与"被用上"是两件事**——这里把 `FindAsync(predicate, sortBy)` 接到真实查询路径上，
 /// 并且钉住那条最要紧的行为：**翻译失败不能退化成"查全部"。**
 ///
-/// B1118—B1121 added the four Mongo translators (**38 criteria**), **and until this batch no production path called them**:
+/// Added the four Mongo translators (**38 criteria**), **and until no production path called them**:
 /// `MongoRepository` only did `Filter.Eq("_id", …)` and `Filter.Empty`.
 ///
-/// **"It exists" and "it is used" are two things** — this batch wires `FindAsync(predicate, sortBy)` into the real query path
+/// **"It exists" and "it is used" are two things** — `FindAsync(predicate, sortBy)` into the real query path
 /// and pins the behaviour that matters most: **a failed translation must not degrade to "fetch everything".**
 /// </remarks>
 public class MongoRepositoryFindTests
@@ -113,12 +113,12 @@ public class MongoRepositoryFindTests
 
     /// <summary>**只记录、不真的连库** / Records only; never connects.</summary>
     /// <remarks>
-    /// **这个探针不实现 `MongoRepository`**：那需要 `IMongoDatabase`（**40+ 个成员**，B1103 已经踩过一次），
-    /// **而这一批要验证的是"翻译失败时不碰集合"这个控制流**——
+    /// **这个探针不实现 `MongoRepository`**：那需要 `IMongoDatabase`（**40+ 个成员**，这一点已经踩过一次），
+    /// **而这里要验证的是"翻译失败时不碰集合"这个控制流**——
     /// **把 40 个成员伪造一遍，只会让判据看不出它到底在测什么。**
     ///
-    /// **This probe does not implement `MongoRepository`**: that needs `IMongoDatabase` (**40+ members**; B1103 already hit this),
-    /// **and what this batch verifies is the control flow "do not touch the collection when translation fails"** —
+    /// **This probe does not implement `MongoRepository`**: that needs `IMongoDatabase` (**40+ members**; a known hazard),
+    /// **and what verifies is the control flow "do not touch the collection when translation fails"** —
     /// **faking 40 members would only make the criteria unreadable.**
     ///
     /// **所以这里复刻的是那段控制流的形状**，而真正的 `MongoRepository.FindAsync` 由编译保证存在、由上面三条判据的

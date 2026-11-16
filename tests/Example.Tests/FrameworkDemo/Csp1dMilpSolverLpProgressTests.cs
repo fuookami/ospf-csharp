@@ -24,14 +24,14 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// `Csp1dMilpSolver.SolveLPAsync` must really solve and forward the progress context to the framework layer.
 /// </summary>
 /// <remarks>
-/// **B335 只覆盖了 `SolveAsync`，`SolveLPAsync` 一直零覆盖。** 这批补上，并顺带发现它**不收进度上下文**——
+/// 只覆盖了 `SolveAsync`，`SolveLPAsync` 一直零覆盖。** 这批补上，并顺带发现它**不收进度上下文**——
 /// 而基线 `solveLP(input, extensions, progressContext)` **收**。
 ///
 /// **零覆盖的危险在这里很具体**：`SolveLPAsync` 是列生成主问题每轮都要走的路，
 /// 它若悄悄退化成空壳（比如返回空的影子价格表），**上游只会看到"定价不产列、迅速收敛"**，
 /// 而那恰好与"真的收敛了"外观相同。
 ///
-/// **B335 covered only `SolveAsync`; `SolveLPAsync` had zero coverage.** This adds it and found it **accepted no progress context** — while the baseline
+/// **covered only `SolveAsync`; `SolveLPAsync` had zero coverage.** This adds it and found it **accepted no progress context** — while the baseline
 /// `solveLP(input, extensions, progressContext)` **does**.
 ///
 /// **The danger of zero coverage is concrete here**: `SolveLPAsync` is the path the master problem takes every round, and if it quietly degraded into a shell (say
@@ -100,9 +100,9 @@ public class Csp1dMilpSolverLpProgressTests {
         result.IsOk.Should().BeTrue("a valid input must reach and complete the LP solve");
         result.Value.Should().NotBeNull("a non-empty input must produce a result object");
         result.Value!.ShadowPrices.Should().NotBeNull("the LP result must carry a shadow-price table");
-        // **键的存在**才是"提取真的跑了"的证据：变异成 `new ShadowPriceMap()` 时该键缺失。
+        // **键的存在**才是"提取真的跑了"的证据：变异成 `new ShadowPriceMap` 时该键缺失。
         // 这里**不断言数值**——mock 返回的全零对偶，真实值就是 0，断言"非零"会假红。
-        // **The key's presence** is the evidence "extraction really ran": mutating to `new ShadowPriceMap()` drops it.
+        // **The key's presence** is the evidence "extraction really ran": mutating to `new ShadowPriceMap` drops it.
         // **The value is not asserted** — the mock returns all-zero duals, so the real value is 0; asserting non-zero would fail spuriously.
         // **键的存在**才是"提取真的跑了"的证据：不传 CGPipeline 时提取器空转，该键缺失。
         // 这里**不断言数值**——mock 返回全零对偶，真实值就是 0，断言"非零"会假红。

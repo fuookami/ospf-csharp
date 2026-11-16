@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **扰动在真实 Gurobi 上跑通一次** / Perturbation runs once on real Gurobi.
 /// </summary>
 /// <remarks>
-/// **B1283 补的是基线 `gurobiPerturbationBackend` 的对应物。而这条判据比工厂本身更重要：**
+/// **这里补的是基线 `gurobiPerturbationBackend` 的对应物。而这条判据比工厂本身更重要：**
 /// **工厂只是"给一个配置好的求解器"，而<b>扰动这条路到底能不能在真实后端上走完，
 /// 此前没有任何证据**。
 ///

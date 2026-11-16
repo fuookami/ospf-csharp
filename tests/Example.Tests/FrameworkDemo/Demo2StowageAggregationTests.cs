@@ -19,7 +19,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **配载聚合（B603）** / The stowage aggregation (B603).
+/// **配载聚合** / The stowage aggregation.
 /// </summary>
 /// <remarks>
 /// 三条注册路径的顺序各不相同，见 <see cref="StowageAggregation"/> 的说明。判据的重点是**它们确实不同**：
@@ -129,17 +129,17 @@ public class Demo2StowageAggregationTests {
     /// **构造时就建好派生模型，配重按机型可空** / The derived models exist right after construction, with the ballast nullable by type.
     /// </summary>
     /// <remarks>
-    /// **`BallastNeeded` 是 `B757 || B767`**——它既不是"窄体"也不是"宽体"。所以三种机型一起断言：
+    /// **`BallastNeeded` 是 ` || `**——它既不是"窄体"也不是"宽体"。所以三种机型一起断言：
     ///
     /// | 机型 | 窄体？ | 宽体？ | 需要配重？ |
     /// | --- | --- | --- | --- |
-    /// | B737 | 是 | 否 | **否** |
-    /// | B767 | 否 | 是 | **是** |
-    /// | B747 | 否 | 是 | **否** |
+    /// | | 是 | 否 | **否** |
+    /// | | 否 | 是 | **是** |
+    /// | | 否 | 是 | **否** |
     ///
-    /// B747 那一行是关键：它排除"配重按宽体判断"这个很自然的错误读法。我第一版就写成了"宽体机有配重"，判据直接红。
+    /// 那一行是关键：它排除"配重按宽体判断"这个很自然的错误读法。最初就写成了"宽体机有配重"，判据直接红。
     ///
-    /// **`BallastNeeded` is `B757 || B767`** — neither "narrow" nor "wide", so three types are asserted together, tabulated above. The B747 row is the point: it rules out the
+    /// **`BallastNeeded` is ` || `** — neither "narrow" nor "wide", so three types are asserted together, tabulated above. The row is the point: it rules out the
     /// very natural misreading "ballast follows the wide-body flag". The first draft said exactly that and turned red.
     /// </remarks>
     [Fact]
@@ -199,8 +199,8 @@ public class Demo2StowageAggregationTests {
     /// 而"少加多少"与"内核根本没喂"两种情况在本 fixture 下得到同样的约束集合。要区分它需要一条只有内核才存在的约束（当前 `Load.Register` 没有这种分支）。
     /// 因此这个变异记录为不可观测，而不是编一条假判据。
     ///
-    /// Paired: registration succeeds with the kernel and fails without it. **One unobservable recorded**: replacing `Load = new Load(items, positions, Stowage, ...)` with
-    /// `new Load(items, positions, new StowageModel(items, positions), ...)` (the load model not sharing the stowage instance) leaves **both criteria passing** in this fixture —
+    /// Paired: registration succeeds with the kernel and fails without it. **One unobservable recorded**: replacing `Load = new Load(items, positions, Stowage,...)` with
+    /// `new Load(items, positions, new StowageModel(items, positions),...)` (the load model not sharing the stowage instance) leaves **both criteria passing** in this fixture —
     /// `Load.Register` tolerates a `null` `LoadingContext` and merely adds fewer constraints, and "fewer" and "never supplied" produce the same constraint set here. Telling them
     /// apart needs a constraint that exists only with the kernel, which `Load.Register` has no branch for. The mutation is recorded as unobservable rather than papered over with a
     /// fake criterion.
@@ -287,11 +287,11 @@ public class Demo2StowageAggregationTests {
         rig.Aggregation.RegisterForBendersMP(StowageMode.FullLoad, model).IsOk.Should().BeTrue(
             "the master half registers stowage, load and payload into one model");
 
-        // **不断言"符号数增加"**：B865 第一版这么写了，实测是 13 → 13。
+        // **不断言"符号数增加"**： 第一版这么写了，实测是 13 → 13。
         // 原因是 `RegisterForBendersMP` 注册的业载已经带上了这些重量符号，再注册一次命中的是同一批名字。
         // **假设被实测推翻，就按实测写判据**，而不是把假设留下。
         //
-        // **No "symbol count grows" assertion**: B865's first version claimed that and measured 13 → 13. The payload registered by `RegisterForBendersMP` already carries
+        // **No "symbol count grows" assertion**: the earlier first version claimed that and measured 13 → 13. The payload registered by `RegisterForBendersMP` already carries
         // those weight symbols, so registering again hits the same names. **When a measurement overturns an assumption, the criterion follows the measurement.**
         rig.Aggregation.RegisterForBendersSPWithoutPayload(model).IsOk.Should().BeTrue(
             "the recourse half registers without touching the payload, which is what a single-model path needs");
@@ -305,10 +305,10 @@ public class Demo2StowageAggregationTests {
     /// **业载注册到底加了几个符号** / How many symbols the payload registration actually adds.
     /// </summary>
     /// <remarks>
-    /// B868 量到配载那一半只加 8 个符号（占用 2 + 分配 6），而「装载 → 业载」也在同一半里。
+    /// 量到配载那一半只加 8 个符号（占用 2 + 分配 6），而「装载 → 业载」也在同一半里。
     /// 若业载真的注册了，数字不可能只有 8。这条判据把一个模型只交给业载，实测它加多少。
     ///
-    /// B868 measured the stowage half adding only eight symbols (two occupancy plus six assignments), yet "load to payload" lives in the same half. If the payload really
+    /// measured the stowage half adding only eight symbols (two occupancy plus six assignments), yet "load to payload" lives in the same half. If the payload really
     /// registered, the number could not be eight. This hands a fresh model to the payload alone and measures what it adds.
     /// </remarks>
     [Fact]
@@ -321,12 +321,12 @@ public class Demo2StowageAggregationTests {
 
         int symbols = model.Tokens.Tokens.Count;
         model.Constraints.Count.Should().BeGreaterThanOrEqualTo(0);
-            // **实测（B869）：业载注册返回 `IsOk` 且 token 数保持 0**——`LinearExpressionSymbol` 不是 token，
-            // 所以"token +0"既不等于"什么都没做"，也不等于"符号没进模型"。B868 那条 `recourse:+0 tokens` 同样要这样读。
+            // **实测：业载注册返回 `IsOk` 且 token 数保持 0**——`LinearExpressionSymbol` 不是 token，
+            // 所以"token +0"既不等于"什么都没做"，也不等于"符号没进模型"。 那条 `recourse:+0 tokens` 同样要这样读。
             // **要判断一个注册半到底做了什么，得同时看约束与目标**，不能只看 token。
             //
-            // **Measured (B869): the payload registration returns `IsOk` while the token count stays 0** — a `LinearExpressionSymbol` is not a token, so "tokens +0"
-            // means neither "it did nothing" nor "the symbol never entered the model". B868's `recourse:+0 tokens` must be read the same way. **Judging what a registration
+            // **Measured : the payload registration returns `IsOk` while the token count stays 0** — a `LinearExpressionSymbol` is not a token, so "tokens +0"
+            // means neither "it did nothing" nor "the symbol never entered the model". the earlier `recourse:+0 tokens` must be read the same way. **Judging what a registration
             // half did needs the constraint and objective counts too, not tokens alone.**
             symbols.Should().Be(0,
                 "the recorded measurement: the payload half adds expression symbols, which this token count does not see");

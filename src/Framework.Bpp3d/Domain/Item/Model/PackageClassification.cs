@@ -1,8 +1,8 @@
 // 包装分类 / Package classification.
 // 与固定 Kotlin 基线 `infrastructure/PackageType.kt` 中 `PackageClassification` 部分对应，语义取自
-// `item/model/Package.kt` 的推导规则（`packages.isNullOrEmpty() ? Inner : Outer`）。
+// `item/model/Package.kt` 的推导规则（`packages.isNullOrEmpty ? Inner : Outer`）。
 // Mirrors `PackageClassification` from the pinned baseline's `PackageType.kt`; the derivation rule comes from
-// `Package.kt` (`packages.isNullOrEmpty() ? Inner : Outer`).
+// `Package.kt` (`packages.isNullOrEmpty ? Inner : Outer`).
 //
 // **与基线的一处已记录分歧**：基线的 `PackageType` 是七种包装形式（DutyCorrugatedBoardPedal／WoodenContainer／
 // HoneycombBox／Pallet／CartonPallet／CartonContainer／PackingFoam）加一个 `category` 映射，而 C# 侧早已存在一个**不同概念**
@@ -56,9 +56,9 @@ public static class PackageClassificationRules {
     /// 根据子包装数量判断分类，null 与空列表都视为无子包装 / Derive from a sub-package count; null and empty both mean none.
     /// </summary>
     /// <remarks>
-    /// null 与空列表**必须同等对待**：基线用的是 `packages.isNullOrEmpty()`，若把 null 当成"未知"再单独分支，会多出一条
+    /// null 与空列表**必须同等对待**：基线用的是 `packages.isNullOrEmpty`，若把 null 当成"未知"再单独分支，会多出一条
     /// 与空列表不一致的路径。
-    /// null and an empty list **must be treated identically**: the baseline uses `packages.isNullOrEmpty()`, and treating null
+    /// null and an empty list **must be treated identically**: the baseline uses `packages.isNullOrEmpty`, and treating null
     /// as "unknown" with its own branch would create a path inconsistent with the empty case.
     /// </remarks>
     /// <param name="subPackageCount">子包装数量，null 视为无 / Sub-package count, null meaning none.</param>

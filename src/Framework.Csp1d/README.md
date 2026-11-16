@@ -17,7 +17,7 @@ several sub-modules; **this project does not mirror that split**.
 | Capability | Status |
 | --- | --- |
 | Cutting-plan generators `FullSum` / `NSame` / `NSum` | ✅ three real generation paths |
-| **DFS generator** | ❌ **deleted in Batch 281** — it was an always-empty shell |
+| **DFS generator** | ❌ **deleted** — it was an always-empty shell |
 | Slice-template cache (sequential / concurrent) | ◐ **classes and interface exist, no consumers** |
 | Material width-index cache | ◐ same, no consumers |
 | Cache hit/miss statistics | ✅ fields, KPI keys and increment methods all exist — **but nothing calls them** |

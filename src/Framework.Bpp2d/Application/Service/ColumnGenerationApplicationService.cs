@@ -55,7 +55,7 @@ public delegate Task<Result<ColumnGenerationResult, ErrorCode, Error<ErrorCode>>
 /// <remarks>
 /// 与基线 `ColumnGenerationApplicationService.solve` 对齐，五步：
 ///
-/// 1. 从请求装出执行器组（B666）。
+/// 1. 从请求装出执行器组。
 /// 2. 用候选生成器产出**种子列**——首次 LP 必须可行，空变量模型的 RMP 会直接不可行、拿不到对偶解。
 /// 3. 跑列生成算法。
 /// 4. **尾板裁剪**：列生成保证"覆盖需求"，最后一块板材通常超出需求量，按需求裁剪后再装箱，
@@ -64,7 +64,7 @@ public delegate Task<Result<ColumnGenerationResult, ErrorCode, Error<ErrorCode>>
 ///
 /// 第 4 步是本服务独有的价值：**列生成只保证够用，不保证刚好**。
 ///
-/// Aligned with the baseline's `solve`, in five steps: assemble the executor set from the request (B666); produce **seed columns** with the candidate generator, since the first LP must be feasible
+/// Aligned with the baseline's `solve`, in five steps: assemble the executor set from the request ; produce **seed columns** with the candidate generator, since the first LP must be feasible
 /// and an empty-variable RMP is immediately infeasible with no dual solution; run the column-generation algorithm; **trim the tail sheet**, since column generation guarantees coverage and the last
 /// sheet usually overshoots the demand, so packing it untrimmed ships an extra piece and skews the remaining-area KPI; and pack and compute the KPIs. Step four is this service's own contribution:
 /// **column generation guarantees enough, never exactly enough**.

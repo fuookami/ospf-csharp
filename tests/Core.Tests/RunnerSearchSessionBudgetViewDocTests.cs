@@ -1,4 +1,4 @@
-// 评估会话的预算视图：说明与代码一致（B777）/ The evaluation session's budget views: remarks match the code (B777).
+// 评估会话的预算视图：说明与代码一致/ The evaluation session's budget views: remarks match the code.
 
 using System;
 using System.IO;
@@ -8,17 +8,17 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests;
 
 /// <summary>
-/// **`Rejected`/`Remaining` 是"既定形状差异"，不是缺口（B777）** / `Rejected`/`Remaining` are an established shape difference, not a gap (B777).
+/// **`Rejected`/`Remaining` 是"既定形状差异"，不是缺口** / `Rejected`/`Remaining` are an established shape difference, not a gap.
 /// </summary>
 /// <remarks>
 /// 说明原来说"本移植的算子尚未有消费者"。查过之后：**基线的消费者在**——`FitnessEvaluator` 读 `rejected` 丢掉被拒的评估、
-/// `LocalSearchUpdates` 读 `remaining <= 2` 提前退出。本移植在 Batch 157 把约束与预算从模型上剥离（`SearchConstraints` 取代模型装饰器，
+/// `LocalSearchUpdates` 读 `remaining <= 2` 提前退出。本移植在 earlier 把约束与预算从模型上剥离（`SearchConstraints` 取代模型装饰器，
 /// 预算走 `SearchBudget`），所以算子拿不到模型侧的读数，**调用方用 `SearchBudget` 包住整次调用**。
 ///
 /// 两句话的意思完全不同：前者是"这边还没人用"（暗示等有人用了就补），后者是"**架构上就不在那里**"（补了也没人用）。
 ///
 /// The remarks used to say "this port's operators have no consumer yet". Checking: the **baseline consumers exist** — `FitnessEvaluator` reads `rejected` to drop a rejected
-/// evaluation and `LocalSearchUpdates` reads `remaining <= 2` to exit early. This port detached constraints and budgets from the model in Batch 157 (`SearchConstraints`
+/// evaluation and `LocalSearchUpdates` reads `remaining <= 2` to exit early. This port detached constraints and budgets from the model in earlier (`SearchConstraints`
 /// replaced the model decorator, budgets go through `SearchBudget`), so operators cannot reach either reading and **the caller wraps the whole call in a `SearchBudget`**.
 ///
 /// The two sentences mean very different things: the first is "nobody uses it here yet" (implying it will come back once someone does), the second is "**it is architecturally not

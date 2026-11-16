@@ -19,11 +19,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// The real-geometry top/bottom placement helpers, the bottom-overlap filter, and the adapter into the recursion.
 /// </summary>
 /// <remarks>
-/// **B1311 之前这里有一个语义分歧：** **旧的 `TopItemPlacements` 返回"全局最高一层的所有放置"，
+/// **此前这里有一个语义分歧：** **旧的 `TopItemPlacements` 返回"全局最高一层的所有放置"，
 /// 而基线返回"没有任何底面重叠且更高的放置压在其上的放置"。** **一高一低并列时两者答案不同：** **基线两件都算顶层，旧实现只返回高的那件。**
 /// **旧实现全仓零调用方，所以按基线替换。** **第一条判据就是那个让两者分道的场景。**
 ///
-/// **Before B1311 there was a semantic divergence: the old `TopItemPlacements` returned "every placement on the globally highest layer" while the baseline
+/// **There used to be a semantic divergence: the old `TopItemPlacements` returned "every placement on the globally highest layer" while the baseline
 /// returns "every placement that no overlapping higher placement sits above".** **With a tall and a short item side by side the two disagree: the baseline
 /// counts both, the old one returned only the tall one.** **The old implementation had zero callers, so it is replaced by the baseline's. The first criterion
 /// is exactly the shape that separates them.**

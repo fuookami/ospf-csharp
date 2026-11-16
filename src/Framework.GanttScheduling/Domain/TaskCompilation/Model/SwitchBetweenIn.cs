@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// `betweenIn[t3, t1, t2]` 说的是"任务 3 排任务 1 与任务 2 之间"，展开为
 /// `frontOf[t1, t3] AND frontOf[t3, t2]`，即 `start[t1] ≤ start[t3] ≤ start[t2]`。
 ///
-/// 三条排除是 **B512 那条对角线的三维推广**：三个任务里有任意两个相同，结果就是恒零。
+/// 三条排除是 **那条对角线的三维推广**：三个任务里有任意两个相同，结果就是恒零。
 /// 两条排除各有用处，漏掉哪条都算得出来：
 ///
 /// | 漏掉的排除 | 后果 |
@@ -32,7 +32,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// `betweenIn[t3, t1, t2]` says "task 3 sits between task 1 and task 2", expanding to
 /// `frontOf[t1, t3] AND frontOf[t3, t2]`, i.e. `start[t1] ≤ start[t3] ≤ start[t2]`.
 ///
-/// The three exclusions are the three-dimensional generalisation of B512's diagonal: if any two of the three tasks coincide, the result is identically zero. Each exclusion
+/// The three exclusions are the three-dimensional generalisation of the earlier diagonal: if any two of the three tasks coincide, the result is identically zero. Each exclusion
 /// matters, and dropping either still computes:
 ///
 /// | Dropped exclusion | Consequence |

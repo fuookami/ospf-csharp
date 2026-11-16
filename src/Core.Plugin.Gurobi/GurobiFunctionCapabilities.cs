@@ -38,9 +38,9 @@ public static class GurobiFunctionCapabilities
     /// </summary>
     /// <param name="modelType">
     /// 待检查的类型；`null` **明确表示没有 SDK**，此时一项都不声明。**这里不去搜索程序集**——
-    /// 搜索是 `DetectLoaded` 的事，把两件事合成一件会让"没有 SDK"这条路径**无法被单独判据**（B855 第一次变异就因此漏检）。
+    /// 搜索是 `DetectLoaded` 的事，把两件事合成一件会让"没有 SDK"这条路径**无法被单独判据**（第一次变异就因此漏检）。
     /// The type to inspect; `null` **explicitly means no SDK**, in which case nothing is claimed. **This does not search assemblies** — that is `DetectLoaded`'s job,
-    /// and merging the two would make the "no SDK" path **impossible to pin on its own** (B855's first mutation slipped through exactly there).
+    /// and merging the two would make the "no SDK" path **impossible to pin on its own** (the earlier first mutation slipped through exactly there).
     /// </param>
     /// <param name="version">SDK 版本；`null` 表示未探测 / SDK version; `null` means not probed.</param>
     /// <returns>能力声明 / The capability declaration.</returns>

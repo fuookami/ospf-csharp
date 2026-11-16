@@ -22,7 +22,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **区域与累积载荷上限（B596）** / The zone and cumulative load bounds (B596).
+/// **区域与累积载荷上限** / The zone and cumulative load bounds.
 /// </summary>
 /// <remarks>
 /// 两条限制都按"重叠比例"把舱位重量分摊到区间里。四处容易做错：

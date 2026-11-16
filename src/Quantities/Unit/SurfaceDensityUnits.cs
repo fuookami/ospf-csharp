@@ -8,15 +8,15 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 面密度单位 / Surface density units.
 /// </summary>
 /// <remarks>
-/// **B1128 按基线 `SurfaceDensity.kt` 新建。** 两个单位都是 `质量 / 面积`。
+/// **按基线 `SurfaceDensity.kt` 新建。** 两个单位都是 `质量 / 面积`。
 ///
 /// **`KilogramPerSquareMeter` 与 `GramPerSquareMeter` 相差 1000 倍**，
-/// **而这两个名字只差一个词**——**与 B1127 的 `LitersPerMinute` / `LitersPerSecond` 是同一类风险。**
+/// **而这两个名字只差一个词**——**与 `LitersPerMinute` / `LitersPerSecond` 是同一类风险。**
 ///
-/// **Created in B1128 from the baseline `SurfaceDensity.kt`.** Both are `mass / area`.
+/// **Created from the baseline `SurfaceDensity.kt`.** Both are `mass / area`.
 ///
 /// **`KilogramPerSquareMeter` and `GramPerSquareMeter` differ by 1000**,
-/// **while their names differ by one word** — **the same risk as B1127's `LitersPerMinute` / `LitersPerSecond`.**
+/// **while their names differ by one word** — **the same risk as the earlier `LitersPerMinute` / `LitersPerSecond`.**
 /// </remarks>
 public static class SurfaceDensityUnits
 {

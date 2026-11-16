@@ -1,4 +1,4 @@
-// 存储资源使用的组合式数量（B713）/ The storage resource usage's combined quantity (B713).
+// 存储资源使用的组合式数量/ The storage resource usage's combined quantity.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **存储资源使用的组合式数量（B713）** / The storage resource usage's combined quantity (B713).
+/// **存储资源使用的组合式数量** / The storage resource usage's combined quantity.
 /// </summary>
 /// <remarks>
 /// 执行资源的数量是"一个已知的起点"，存储的不是：**初始量 + 供应 − 消耗**，三段代数和。
@@ -119,10 +119,10 @@ public class StorageResourceQuantityTests {
     /// **三张表都建、都进模型、范围都设** / All three tables are built, registered and ranged.
     /// </summary>
     /// <remarks>
-    /// 四点成对：三张表的条目数都等于槽数 / 三张表里的符号都在模型里（B710 的"表非空不等于进了模型"）/
+    /// 四点成对：三张表的条目数都等于槽数 / 三张表里的符号都在模型里/
     /// 数量符号的范围是 `[2 − 1, 30 + 4]`（下界减不足、上界加超量）/ 超量与不足是两个方向（`_pos` / `_neg`）。
     ///
-    /// Four paired points: all three tables hold one entry per slot; every symbol in them is in the model (B710's "non-empty is not registered"); the quantity symbol's range is
+    /// Four paired points: all three tables hold one entry per slot; every symbol in them is in the model (the earlier "non-empty is not registered"); the quantity symbol's range is
     /// `[2 - 1, 30 + 4]` (lower minus less, upper plus over); and the over and less slacks point in opposite directions (`_pos` / `_neg`).
     /// </remarks>
     [Fact]

@@ -24,8 +24,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **下界行用 `bigM + |tol|`，上界行用 `bigM`；这个差别只在指示 = 0 时显现。**
 ///
-/// adds
-///
 /// **The lower row uses `bigM + |tol|` and the upper row `bigM`; the difference shows only at indicator 0.**
 /// </remarks>
 public class PositiveIndicatorRowsTests
@@ -75,7 +73,7 @@ public class PositiveIndicatorRowsTests
     /// **下界行在指示 = 0 时放开到恰好 `−bigM`** / The lower row relaxes to exactly `−bigM`.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据，也是唯一能被写错且看不出来的地方。**
+    /// **这是这里的核心判据，也是唯一能被写错且看不出来的地方。**
     ///
     /// **下界行要的是 `poly ≥ tolerance − M·(1 − ind)`。** **照抄 `M` 会在指示 = 0 时得到
     /// `poly ≥ tolerance − M`，比 `−M` <b>多松了一个 tolerance</b>。**

@@ -140,11 +140,11 @@ public sealed class MaskingFunction<V> : IMathFunctionSymbol<V>, IHasResultPolyn
 
     /// <inheritdoc/>
     /// <remarks>
-    /// 基线有 `deferredStructure()` 一条路径（把掩码交给 `ConditionalValue` 那套中间结构去生成约束）。C# 没有
+    /// 基线有 `deferredStructure` 一条路径（把掩码交给 `ConditionalValue` 那套中间结构去生成约束）。C# 没有
     /// `MaskingStructure` / `ConditionalValue`，所以**只实现直接的四行 Big-M**——这也是基线在掩码不是二值类型时
     /// 自己走的那一支。
     ///
-    /// The baseline has a `deferredStructure()` path handing the mask to the `ConditionalValue` intermediate machinery. C# has no `MaskingStructure` / `ConditionalValue`, so only
+    /// The baseline has a `deferredStructure` path handing the mask to the `ConditionalValue` intermediate machinery. C# has no `MaskingStructure` / `ConditionalValue`, so only
     /// the direct four-row Big-M is implemented — which is also the branch the baseline itself takes when the mask is not binary.
     /// </remarks>
     public Try RegisterConstraints(IAbstractLinearMechanismModel<V> model) {
@@ -311,11 +311,11 @@ public sealed class MaskingWithPolyMaskFunction<V> : IMathFunctionSymbol<V>, IHa
 /// <remarks>
 /// **仍是空壳**（`Evaluate` 恒 `null`、`RegisterConstraints` 恒 `Ok`）。基线的 `MaskingRangeFunction` 与
 /// `MaskingFunction` 共用 `MaskingStructure` 那条延迟结构路径，而 C# 没有那套中间结构——把它做实要先把
-/// 等价的多行 Big-M 推导出来，属于独立一批的量。列在这里是为了不让人以为它已经被 B550 覆盖。
+/// 等价的多行 Big-M 推导出来，属于独立一批的量。列在这里是为了不让人以为它已经被 覆盖。
 ///
 /// **Still an empty stub** (`Evaluate` always null, `RegisterConstraints` always Ok). The baseline's `MaskingRangeFunction` shares the deferred `MaskingStructure` path with
 /// `MaskingFunction`, and C# has no such intermediate machinery — making it real requires deriving the equivalent multi-row Big-M separately. It is listed here so nobody assumes
-/// B550 covered it.
+/// covered it.
 /// </remarks>
 public sealed class MaskingRangeFunction : IMathFunctionSymbol<Flt64> {
     public string Name { get; set; }

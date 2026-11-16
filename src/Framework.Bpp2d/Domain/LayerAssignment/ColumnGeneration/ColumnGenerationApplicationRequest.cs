@@ -51,11 +51,11 @@ public sealed record ColumnGenerationApplicationRequest(
     /// <param name="withAreaDemand">是否附带面积需求 / Whether to add area demands.</param>
     /// <returns>需求项 / The demand entries.</returns>
     /// <remarks>
-    /// **按目录取形状**：物品清单只有 id 与件数，没有形状就算不出面积需求。目录里缺的物品**跳过**（B658 的同一口径：
+    /// **按目录取形状**：物品清单只有 id 与件数，没有形状就算不出面积需求。目录里缺的物品**跳过**（的同一口径：
     /// 未登记是数据准备问题，抛错会让整次求解白跑）。
     ///
     /// **Shapes come from the catalogue**: the item list carries only ids and amounts, and without a shape no area demand can be computed. Items missing from the catalogue are **skipped** —
-    /// the same stance as B658, where an unregistered item is a data preparation problem and throwing would waste the whole run.
+    /// the same stance as，where an unregistered item is a data preparation problem and throwing would waste the whole run.
     /// </remarks>
     public IReadOnlyList<Bpp2dAssignmentDemandEntry> ToDemandEntries(bool withAreaDemand = false)
     {

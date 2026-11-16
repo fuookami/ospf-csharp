@@ -22,11 +22,9 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 指示结构：三行链接的完备性，以及校验顺序 / Link completeness, and the order of checks.
 /// </summary>
 /// <remarks>
-/// B1186 按基线 `IndicatorStructure.kt` 补，连同循环依赖的 `ConjoinedIndicator`、`DifferenceIndicator`。
+/// 对齐基线 `IndicatorStructure.kt` 补，连同循环依赖的 `ConjoinedIndicator`、`DifferenceIndicator`。
 ///
 /// **合取需要<b>三</b>行而不是两行。**
-///
-/// adds
 ///
 /// **A conjunction needs <b>three</b> link rows, not two.**
 /// </remarks>
@@ -36,7 +34,7 @@ public class IndicatorStructureTests
     /// **合取的三行缺一行就会被常量 0 替换** / A conjunction missing one link collapses to the constant zero.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **`_link_ge` 说 `result ≤ primary`，`_link_le` 说 `result ≤ conditionResult`**
     /// （**合取不能比任一支大**）。
@@ -168,7 +166,7 @@ public class IndicatorStructureTests
         // **必须让<b>零带检查也真的会失败</b>，否则调换顺序看不见。**
         //
         // **我第一次只加了 `ZeroBand`，而零带检查的条件是
-        // "零带 且（条件范围 或 条件值 或 蕴含 或 等价列包含 side）"——
+        // "零带且（条件范围或 条件值或 蕴含或 等价列包含 side）"——
         // 四个附加项都是空的，所以那一步根本不触发。**
         //
         // **于是顺序调换之后两步都走不到，判据全绿。**

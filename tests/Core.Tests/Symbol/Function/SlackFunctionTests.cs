@@ -19,23 +19,23 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 
 /// <summary>
-/// **松弛变量函数从空壳变成真函数（B548）** / The slack function goes from an empty stub to a real function (B548).
+/// **松弛变量函数从空壳变成真函数** / The slack function goes from an empty stub to a real function.
 /// </summary>
 /// <remarks>
 /// 原来的 `SlackFunction` 是个**空壳**：`Evaluate` 恒返回 `null`，`RegisterConstraints` 恒返回 `Ok`，
 /// `HelperVariables` 是空数组。它出现在 `FunctionSymbolRegistrationTest` 的列表里，所以"注册通过"这条判据是绿的——
-/// 绿在**什么都没做**上。这不是理论风险：B547 的 `estSlack` 正好要用它。
+/// 绿在**什么都没做**上。这不是理论风险： 的 `estSlack` 正好要用它。
 ///
 /// 三段结构各自能静默地错：
 /// <list type="bullet">
 /// <item>**两个方向都开**时只写两行下界 → 求解器可以把 `neg` 与 `pos` 一起抬高，约束全满足，
-///   事后读出的松弛是**假的**。必须用四行绝对值公式；</item>
+/// 事后读出的松弛是**假的**。必须用四行绝对值公式；</item>
 /// <item>求值方向写反 → 仍然返回非负数，只查"非负"发现不了；</item>
 /// <item>两个方向都关 → 基线用 `require` 拒绝，这里抛 `ArgumentException`。</item>
 /// </list>
 ///
 /// The old `SlackFunction` was an **empty stub**: `Evaluate` always returned `null`, `RegisterConstraints` always `Ok`, `HelperVariables` empty. It appeared in
-/// `FunctionSymbolRegistrationTest`'s list, so "registration passes" was green — green on **doing nothing**. That was not theoretical: B547's `estSlack` needs exactly this.
+/// `FunctionSymbolRegistrationTest`'s list, so "registration passes" was green — green on **doing nothing**. That was not theoretical: the earlier `estSlack` needs exactly this.
 /// </remarks>
 public class SlackFunctionTests {
     private static LinearPolynomial<Flt64> Polynomial(params (double Coefficient, IVariableItem? Variable)[] terms) {

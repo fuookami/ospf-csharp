@@ -12,17 +12,17 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B833：Benders 两个模型的形状，以及"解参数是死的"这个前提 / Both Benders model shapes, and the "solution argument is dead" premise.
+/// Benders 两个模型的形状，以及"解参数是死的"这个前提 / Both Benders model shapes, and the "solution argument is dead" premise.
 /// </summary>
 /// <remarks>
-/// B833 把子问题也接上了：配载与适航安全各自往子模型里注册，实测 **29 行 / 25 个符号 / 0 个目标**。
-/// 主问题是 **11 / 50 / 4**（B832）。**两者的注册都发生在建模型阶段，不在迭代循环里**，
+/// 把子问题也接上了：配载与适航安全各自往子模型里注册，实测 **29 行 / 25 个符号 / 0 个目标**。
+/// 主问题是 **11 / 50 / 4**。**两者的注册都发生在建模型阶段，不在迭代循环里**，
 /// 因为本仓的两处子问题注册**根本不读那个解参数**（`StowageAggregation` 的签名里连都没有）。
 ///
 /// 这个前提单独钉了一条判据（反射）：**签名一变，那条就红**——那时必须把子问题注册挪进循环，而不是继续在循环外假装。
 ///
-/// B833 wires the sub-problem too: stowage and airworthiness each register into it, measured at **29 rows / 25 symbols / 0 objectives**; the master is **11 / 50 /
-/// 4** (B832). **Both registrations happen while building the models, not inside the iteration loop**, because neither sub registration in this port reads the
+/// wires the sub-problem too: stowage and airworthiness each register into it, measured at **29 rows / 25 symbols / 0 objectives**; the master is **11 / 50 /
+/// 4**. **Both registrations happen while building the models, not inside the iteration loop**, because neither sub registration in this port reads the
 /// solution argument (the `StowageAggregation` signature has no such parameter). That premise gets its own reflection criterion: **change the signature and it
 /// reds**, at which point the sub registration must move into the loop instead of pretending outside it.
 /// </remarks>
@@ -42,12 +42,12 @@ public sealed class Demo2BendersSubModelTests
     /// **现在唯一的拦路虎是求解器，不再是模型** / The only remaining blocker is the solver, not the models.
     /// </summary>
     /// <remarks>
-    /// B832 时状态还是 `BendersSubModelNotRegistered`。B833 之后子模型有 29 行约束了，于是**那道守卫被拿掉**，
+    /// 时状态还是 `BendersSubModelNotRegistered`。 之后子模型有 29 行约束了，于是**那道守卫被拿掉**，
     /// 路径走到求解器检查，报 `BendersSolverUnavailable`。
     ///
     /// **这条判据钉的是"进度前进了一格"**：如果谁把子问题注册删掉，状态会**退回去**——不是"报错形式变了"，而是**能力退步了**。
     ///
-    /// At B832 the status was still `BendersSubModelNotRegistered`. After B833 the sub model carries 29 constraints, so **that guard is gone** and the path reaches
+    /// At the status was still `BendersSubModelNotRegistered`. After the sub model carries 29 constraints, so **that guard is gone** and the path reaches
     /// the solver check, reporting `BendersSolverUnavailable`. **This criterion pins "one step forward"**: deleting the sub registration would **move the status
     /// back** — not "a different error", but **a capability regression**.
     /// </remarks>
@@ -67,17 +67,17 @@ public sealed class Demo2BendersSubModelTests
     /// **两个模型的形状必须与实测一致** / Both model shapes must match the measurement.
     /// </summary>
     /// <remarks>
-    /// 九个数字一次钉住。**为什么不用"大于 0"**：B832 的变异实验已经证明这种松论断看不见一个域悄悄消失。
+    /// 九个数字一次钉住。**为什么不用"大于 0"**： 的变异实验已经证明这种松论断看不见一个域悄悄消失。
     ///
-    /// Nine numbers pinned at once. **Why not "greater than zero"**: B832's mutation experiment already showed that a loose assertion cannot notice a domain
+    /// Nine numbers pinned at once. **Why not "greater than zero"**: the earlier mutation experiment already showed that a loose assertion cannot notice a domain
     /// quietly dropping out.
     /// </remarks>
     [Fact]
     public void BothModels_ShouldCarryTheirRegistrations() {
         (ResponseDTO _, string? shape, IReadOnlyList<string> _) = Run();
 
-        // **B893 分派切到单模型链**：这里是单模型的实测数（切换前的两模型数是对照判据用的）。
-        // **B893 switched dispatch to the single-model chain**: these are its measured numbers.
+        // **分派切到单模型链**：这里是单模型的实测数（切换前的两模型数是对照判据用的）。
+        // **switched dispatch to the single-model chain**: these are its measured numbers.
         shape.Should().Be(
             "benders_single_model=built:tokens=15,rows=11,symbols=58,objectives=4",
             "these are the measured numbers of the single model that dispatch now builds");

@@ -14,10 +14,10 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 /// **求和域是全部组合；缺一项就整表失败；缺省系数是占位** / The domain is the full product, one gap fails the whole table, and the default coefficient is a placeholder.
 /// </summary>
 /// <remarks>
-/// 求和域包含执行器对该任务不可用的组合。这看着浪费，但那些组合在 B509 已被钉成 `x = 0`，**加进去的项恒为零**。
+/// 求和域包含执行器对该任务不可用的组合。这看着浪费，但那些组合在 已被钉成 `x = 0`，**加进去的项恒为零**。
 /// 「不漏」比「少算」重要：按可用集合过滤的话，一旦收紧规则改了就会静默漏掉本该计费的组合。
 ///
-/// The domain includes combinations where the executor is unavailable for the task. That looks wasteful, but those are pinned to `x = 0` by B509, so **the added term is
+/// The domain includes combinations where the executor is unavailable for the task. That looks wasteful, but those are pinned to `x = 0` by，so **the added term is
 /// identically zero**. "Miss nothing" beats "compute less": filtering by the available set would silently drop combinations that should be charged once the rule changes.
 /// </remarks>
 public class TaskExecutorCostTermsTests {

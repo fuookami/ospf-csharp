@@ -19,13 +19,13 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.Service;
 /// `NSumGenerator` must really run a depth-first search rather than merely construct a collector.
 /// </summary>
 /// <remarks>
-/// B306 之前它的方法体只有一行注释：`// Stub: NSum search implementation deferred`。
+/// 之前它的方法体只有一行注释：`// Stub: NSum search implementation deferred`。
 /// 与 `NSame` 相同，既有测试只断言空输入返回空。
 ///
-/// **本批的核心判据是"组合"**：NSum 的语义是**多个不同宽度、总和不超过幅宽**。
+/// **这里的核心判据是"组合"**：NSum 的语义是**多个不同宽度、总和不超过幅宽**。
 /// 若实现退化成"每个宽度单独一条"（即 NSame 的语义），条数会**看起来合理**而语义完全错了。
 ///
-/// Before B306 its body was a single comment: `// Stub: NSum search implementation deferred`. As with `NSame`, the existing test only asserted empty input
+/// Before its body was a single comment: `// Stub: NSum search implementation deferred`. As with `NSame`, the existing test only asserted empty input
 /// yields empty output.
 ///
 /// **The core criterion here is "combinations"**: NSum's semantics is **several distinct widths whose total fits the material**. If the implementation
@@ -165,7 +165,7 @@ public class NSumGeneratorOutputTests {
 
     /// <summary>**同一组合只能被枚举一次** / Each combination must be enumerated exactly once.</summary>
     /// <remarks>
-    /// 这条测试是本批**唯一能抓住"候选下标不单调"的判据**。
+    /// 这条测试是这里**唯一能抓住"候选下标不单调"的判据**。
     ///
     /// 前一条测试断言"切片的产品集合互不相同"，但**那条判据抓不到缺陷**：候选下标不单调时，
     /// 搜索会把 {A,B} 枚举成 `[A,B]` 与 `[B,A]` 两次，**而去重按内容判等，第二次被静默丢掉**——
@@ -174,7 +174,7 @@ public class NSumGeneratorOutputTests {
     /// 唯一的痕迹在**候选计数**：`GeneratedCandidates` 会明显大于 `AcceptedPlans`。
     /// **这正是"去重把缺陷吸收了"的形态**，判据必须落在去重之前的那一层。
     ///
-    /// This is the **only criterion in this batch that catches a non-monotonic candidate index**.
+    /// This is the **only criterion in that catches a non-monotonic candidate index**.
     ///
     /// The preceding test asserts the plans' product sets are distinct, but **that criterion cannot catch the defect**: with a non-monotonic index the search
     /// enumerates {A,B} twice as `[A,B]` and `[B,A]`, **and de-duplication compares by content so the second is silently dropped** — the plan set is identical

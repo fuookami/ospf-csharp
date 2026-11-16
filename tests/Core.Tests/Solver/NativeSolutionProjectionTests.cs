@@ -19,8 +19,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `valuesByKey`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeSolutionProjectionTests
 {
     /// <summary>
@@ -68,7 +67,7 @@ public class NativeSolutionProjectionTests
     /// What is stored is the <b>original</b> `Flt64`, not the rounded double.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **`finiteSolverDouble` 的返回值被<b>丢掉</b>，存的是原来那个 `Flt64`。**
     ///

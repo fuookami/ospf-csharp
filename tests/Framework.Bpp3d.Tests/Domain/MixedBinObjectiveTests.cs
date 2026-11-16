@@ -17,14 +17,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 /// The two bin objectives — skip conditions and coefficients — and the stale "cannot be ported" note.
 /// </summary>
 /// <remarks>
-/// **这段代码原来是"搬不了"，理由是依赖 `PreciseAssignment`，而那个类一直在仓库里。** **所以这一批的第一件事不是写新代码，
+/// **这段代码原来是"搬不了"，理由是依赖 `PreciseAssignment`，而那个类一直在仓库里。** **所以这里的第一件事不是写新代码，
 /// 是<b>把那句过期结论改对**；**判据顺手把它钉住：** **文件里不得再出现"PreciseAssignment（C# 侧不存在）"这类断言。**
 ///
 /// **其余判据钉基线逐条照搬的三个跳过条件：** **成本表为空、权重为零、该箱型未配置成本——第三种<b>不进多项式**，
 /// 而不是以 0 系数进去。**
 ///
 /// **This code used to be "cannot be ported" because of a `PreciseAssignment` dependency that has been in the repository all along.** **So the first job of
-/// this batch is not new code but correcting that stale conclusion, and a criterion pins it: the file may no longer assert that
+/// is not new code but correcting that stale conclusion, and a criterion pins it: the file may no longer assert that
 /// `PreciseAssignment` is missing.** **The rest pin the baseline's three skip conditions: empty cost table, zero weight, and a type without a configured
 /// cost — the third never enters the polynomial, rather than entering with a coefficient of zero.**
 /// </remarks>
@@ -47,8 +47,13 @@ public class MixedBinObjectiveTests
         text.Should().NotContain(
             "基线里的两个 `*Minimization` 类依赖 `PreciseAssignment`（C# 侧不存在），见文末说明。",
             "the type exists in this very repository, so the note claiming otherwise is a stale conclusion");
+        // **判据要的是"更正被记下来"，不是"某个批次号还在"。** **叙述清理把批次号去掉了，** '
+        // **而这条规则本身没变：** **一个被改正过的结论必须留下更正，** **悄悄删掉不教任何人。**
+        //
+        // **What this needs is "the correction is recorded", not "a batch id is still there".** The narration cleanup removed the batch id and **the rule is unchanged: a claim that was
+        // corrected has to keep its correction — deleting it silently teaches nobody.**
         text.Should().Contain(
-            "B1306 更正",
+            "**更正：**",
             "the correction has to be recorded, not silently deleted; a removed claim teaches nobody");
 
         System.IO.File.Exists(System.IO.Path.Combine(

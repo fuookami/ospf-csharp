@@ -19,13 +19,11 @@ namespace Fuookami.Ospf.Core.Tests.Solver.Report;
 /// 批量实验运行器 / The batch experiment runner.
 /// </summary>
 /// <remarks>
-/// B1257 按基线 `OfflineExperiment.kt` 补上这块整块缺失的编排层。
+/// 对齐基线 `OfflineExperiment.kt` 补上这块整块缺失的编排层。
 ///
 /// **这一块的价值全在两条确定性保证上，而两条都不能靠"读起来对"来确认：**
 /// **输入顺序打乱 → 结果仍按 `Id` 排序；并发 > 1 → 报告顺序与并发无关。**
 /// **所以判据必须真的打乱输入并真的并发跑。**
-///
-/// adds
 ///
 /// **Its value is two determinism guarantees, and neither can be confirmed by reading:** **shuffle the input and the results
 /// still come back ordered by `Id`; run at concurrency &gt; 1 and the report order is unaffected.**
@@ -60,7 +58,7 @@ public class BatchSolveExperimentRunnerTests
     /// 记的是生效值而不是传入值。**
     ///
     /// **后者不是形式：** **传 0 时若不记生效值，报告会写"并发 0"，
-    /// 而下一个读报告的人会据此认为这一批是串行跑的。**
+    /// 而下一个读报告的人会据此认为这里是串行跑的。**
     ///
     /// **The criterion watches two things at once: the observed peak never exceeds the budget, and `ConcurrencyBudget` holds
     /// the effective value rather than the argument.** **The latter is not a formality: with budget 0 an unrecorded

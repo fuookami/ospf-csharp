@@ -39,12 +39,12 @@ public sealed class ConfigurationFormatsTests {
 
     /// <summary>**YAML 与 TOML 不再报"不支持"，而是真的能编码** / YAML and TOML no longer report "unsupported" and really encode.</summary>
     /// <remarks>
-    /// **这是对 Batch 196 记录的能力缺口的反转**：当时本仓库没有 `YamlDotNet`/`Tomlyn`，两种格式显式返回"不支持"。
-    /// Batch 241 引入了这两个库并接通了通道，因此这条测试必须反向——留着它会让"通道坏了"和"通道好了"都表现为**测试失败**，
+ /// **这是对 earlier 记录的能力缺口的反转**：当时本仓库没有 `YamlDotNet`/`Tomlyn`，两种格式显式返回"不支持"。
+ /// earlier 引入了这两个库并接通了通道，因此这条测试必须反向——留着它会让"通道坏了"和"通道好了"都表现为**测试失败**，
     /// 而失败原因完全不同。
     ///
-    /// **This reverses the capability gap recorded in Batch 196**: back then this repository had neither `YamlDotNet` nor `Tomlyn`, and both formats
-    /// explicitly reported "unsupported". Batch 241 adds those libraries and wires the channels up, so this test must invert — keeping it as it was
+ /// **This reverses the capability gap recorded in earlier**: back then this repository had neither `YamlDotNet` nor `Tomlyn`, and both formats
+ /// explicitly reported "unsupported". earlier adds those libraries and wires the channels up, so this test must invert — keeping it as it was
     /// would make both "the channel broke" and "the channel works" show up as **a failing test**, for entirely different reasons.
     /// </remarks>
     [Fact]

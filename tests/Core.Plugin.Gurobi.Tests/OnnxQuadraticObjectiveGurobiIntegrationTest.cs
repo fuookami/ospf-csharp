@@ -29,15 +29,15 @@ namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 /// **二次目标真的被求解：`(x−3)²` 的最小值是 0，落在 x = 3** / A quadratic objective is really solved.
 /// </summary>
 /// <remarks>
-/// 同步 Kotlin `dee897d2` 的 `Quadratic` 导入模式。**上一批把这一条记成"挂接没做成"，原因其实是我用错了类：** '
+/// 同步 Kotlin `dee897d2` 的 `Quadratic` 导入模式。**此前把这一条记成"挂接没做成"，原因其实是我用错了类：** '
 /// **二次的 `AddObject` 在 `QuadraticMetaModel` 上，不在 `LinearMetaModel` 上——编译器是对的，读错的是我。** '
-/// **这一批把它改正，并补上"二次模型要给一个参考点"这一步。**
+/// **这里把它改正，并补上"二次模型要给一个参考点"这一步。**
 ///
 /// **判据价值在于一个一次模型<b>不可能**凑出这个答案：** 展开成 `x² − 6x + 9` 后，一次项与常数都在，'
 /// **唯一的区别是 `x²`；没有它最小值落在端点（`x=0` 给 9、`x=10` 给 49 取小）。**
 ///
-/// Syncs the `Quadratic` import mode. **The previous batch recorded this as "attachment not done", and the real cause was that I used the wrong class: the quadratic AddObject
-/// lives on `QuadraticMetaModel`, not on `LinearMetaModel` — the compiler was right and I misread it.** This batch fixes that and adds the reference point a quadratic model
+/// Syncs the `Quadratic` import mode. **the previous step recorded this as "attachment not done", and the real cause was that I used the wrong class: the quadratic AddObject
+/// lives on `QuadraticMetaModel`, not on `LinearMetaModel` — the compiler was right and I misread it.** fixes that and adds the reference point a quadratic model
 /// needs.
 ///
 /// **The criterion matters because a first-degree model cannot fake the answer: expanded to `x² − 6x + 9` the linear and constant terms are all there and the only difference
@@ -69,7 +69,7 @@ public class OnnxQuadraticObjectiveGurobiIntegrationTest
 
         using QuadraticMechanismModel<Flt64> mechanism = (await QuadraticMechanismModel<Flt64>.InvokeAsync(meta)).Value;
         // 不传 fixedVariables：那个字典是"待代换的变量及其值"，也就是把变量固定住。
-        // 我第一版传了 x = 0，于是解就是 0，目标值恰为 f(0) = 9——看起来像"最优值"，其实是固定值。
+        // 最初传了 x = 0，于是解就是 0，目标值恰为 f(0) = 9——看起来像"最优值"，其实是固定值。
         //
         // No fixedVariables: that dictionary means "variables to substitute", i.e. pin them. The first version passed x = 0, so the solution was 0 and the objective was
         // f(0) = 9 — which looks like an optimum and is really a pinned value.

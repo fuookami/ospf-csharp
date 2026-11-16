@@ -66,7 +66,7 @@ public sealed record HypervolumeState(
 /// </summary>
 /// <remarks>
 /// **未配置显式参考点时先累积观测、再自动校准**，校准前一律返回 `delta = 0` 且 `calibrated = false`。跳过校准直接算
-/// 会让参考点由第一批候选决定，**而第一批候选往往远离真实前沿，整段搜索的增量从此系统性地偏大**。
+/// 会让参考点由此前候选决定，**而此前候选往往远离真实前沿，整段搜索的增量从此系统性地偏大**。
 /// **Without an explicit reference point the reward accumulates observations first and calibrates afterwards**; before calibration it
 /// always returns `delta = 0` with `calibrated = false`. Skipping calibration lets the first batch of candidates decide the reference
 /// point, **and since that first batch is typically far from the true front, every later delta is systematically inflated**.

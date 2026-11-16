@@ -44,15 +44,15 @@ public sealed class PipelineListGenerator(
             tasks: aggregation.RecoveryNeededFlightTasks,
             compilation: aggregation.Compilation));
 
-        // `BunchCostMinimization` 的构造参数现在是 `ITaskCost`，泛型不变性不再挡路（B566），所以这条目标真的接上了。
-        // The `BunchCostMinimization` constructor now takes `ITaskCost`, so invariance no longer blocks it (B566) and this objective is actually wired.
+        // `BunchCostMinimization` 的构造参数现在是 `ITaskCost`，泛型不变性不再挡路，所以这条目标真的接上了。
+        // The `BunchCostMinimization` constructor now takes `ITaskCost`, so invariance no longer blocks it  and this objective is actually wired.
         pipelines.Add(new BunchCostMinimization<FlightTask, Aircraft, FlightTaskAssignment>(aggregation.Compilation));
 
-        // 两条"编译无关"的目标现在真的接上了（B569）：它们只要 `ICompilation` + `ICompilationColumns`，
-        // 而任务束编译从 B563 起就实现了后者。原来那句"注册进来只会让管线失败"是因为当时接口没实现，
+        // 两条"编译无关"的目标现在真的接上了：它们只要 `ICompilation` + `ICompilationColumns`，
+        // 而任务束编译从 起就实现了后者。原来那句"注册进来只会让管线失败"是因为当时接口没实现，
         // 不是目标本身的问题。
-        // The two compilation-agnostic objectives are wired now (B569): they need only `ICompilation` + `ICompilationColumns`, and the bunch compilation has implemented the
-        // latter since B563. The old note said "registering them would only fail" because the interface was missing then — not because of the objectives.
+        // The two compilation-agnostic objectives are wired now : they need only `ICompilation` + `ICompilationColumns`, and the bunch compilation has implemented the
+        // latter since then. The old note said "registering them would only fail" because the interface was missing then — not because of the objectives.
         pipelines.Add(new TaskCancelMinimization<FlightTask, Aircraft, FlightTaskAssignment>(
             tasks: aggregation.RecoveryNeededFlightTasks,
             compilation: aggregation.Compilation,
@@ -61,11 +61,11 @@ public sealed class PipelineListGenerator(
             executors: aggregation.RecoveryNeededAircrafts,
             compilation: aggregation.Compilation,
             coefficient: _ => new Flt64(1)));
-        // **机队平衡的限制与目标（B753）**：约束与目标两半成对，缺一半都会让模型"可行但无意义"。
-        // **The fleet balance's constraint and objective (B753)**: the two halves are a pair, and dropping either leaves the model feasible but meaningless.
+        // **机队平衡的限制与目标**：约束与目标两半成对，缺一半都会让模型"可行但无意义"。
+        // **The fleet balance's constraint and objective **: the two halves are a pair, and dropping either leaves the model feasible but meaningless.
         pipelines.Add(new FleetBalanceLimit(aggregation.FleetBalance));
-        // **任务链接的限制与目标（B754）**：与机队那一条结构相同、右端项恒为 1（接上一次就成立）。
-        // **The task links' constraint and objective (B754)**: the same shape as the fleet one with a right-hand side of 1 (stitched once is enough).
+        // **任务链接的限制与目标**：与机队那一条结构相同、右端项恒为 1（接上一次就成立）。
+        // **The task links' constraint and objective **: the same shape as the fleet one with a right-hand side of 1 (stitched once is enough).
         pipelines.Add(new FlightLinkLimit(aggregation.FlightLink));
 
         return Results.Ok<IReadOnlyList<ICGPipeline<IGanttSchedulingShadowPriceArguments<Aircraft, FlightTaskAssignment>, object, GanttSchedulingShadowPriceMap<Aircraft, FlightTaskAssignment>>>>(pipelines);

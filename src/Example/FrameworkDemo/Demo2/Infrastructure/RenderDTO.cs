@@ -42,10 +42,10 @@ public sealed record RenderPositionDTO(
 /// 用于渲染的重量值 / A weight value for rendering.
 /// </summary>
 /// <remarks>
-/// **单位是字符串而不是枚举**：渲染侧要的是"能直接打出来的符号"，而单位枚举的 `ToString()` 跟基线的 `unit.symbol ?: unit.name` 不是一个东西。
+/// **单位是字符串而不是枚举**：渲染侧要的是"能直接打出来的符号"，而单位枚举的 `ToString` 跟基线的 `unit.symbol ?: unit.name` 不是一个东西。
 /// **`unit` 可空**——单位缺失时宁可留空，也不要编一个默认单位出来。
 ///
-/// **The unit is a string, not an enum**: the rendering side wants a symbol it can print, and an enum's `ToString()` is not the baseline's `unit.symbol ?: unit.name`.
+/// **The unit is a string, not an enum**: the rendering side wants a symbol it can print, and an enum's `ToString` is not the baseline's `unit.symbol ?: unit.name`.
 /// **`unit` is nullable** — when the unit is missing, leaving it blank beats inventing a default.
 /// </remarks>
 /// <param name="Value">重量数值 / The weight value</param>

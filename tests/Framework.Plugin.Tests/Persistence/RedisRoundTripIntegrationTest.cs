@@ -18,17 +18,17 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// **Redis 真实往返（连本机实例，不是影子检查）** / A real Redis round-trip against a live instance.
 /// </summary>
 /// <remarks>
-/// **这一条此前不存在，而原因是错误分类。** **矩阵与验收表把 Redis 记成"环境所限"，而 B1297 复审实测：
+/// **这一条此前不存在，而原因是错误分类。** **矩阵与验收表把 Redis 记成"环境所限"，而一次复审实测：
 /// `127.0.0.1:6379` 端口开着、`PING` 返回 `+PONG`、且不需要密码。** **所以"没有环境"不成立，
 /// 缺的只是<b>一条真的去连它的测试**。**
 ///
-/// **B1298 补的就是这一条：** **用生产入口 `RedisRegistry.Init(config)` 起客户端（不是直接 new，因为构造函数是 `internal`），
+/// **这里补的就是这一条：** **用生产入口 `RedisRegistry.Init(config)` 起客户端（不是直接 new，因为构造函数是 `internal`），
 /// 然后对五种取值形态各做一次真往返，并把写入的键删掉。**
 ///
 /// **它验证的正是之前没人验过的那件事：** **`RedisClient` 的 203 行代码在真实服务器上能不能用。**
 ///
 /// **This did not exist before, and the reason was a misclassification.** **The matrix and the acceptance table recorded Redis as
-/// "limited by the environment", while B1297 measured `127.0.0.1:6379` open, `PING` answering `+PONG`, and no password required.**
+/// "limited by the environment", while a measurement of `127.0.0.1:6379` showed it open, `PING` answering `+PONG`, and no password required.**
 /// **So the environment was there; what was missing was a test that actually connects.**adds that test: it starts the client
 /// through the production entry point `RedisRegistry.Init(config)` (the constructor is `internal`), round-trips all five value shapes, and
 /// deletes the keys it wrote.**

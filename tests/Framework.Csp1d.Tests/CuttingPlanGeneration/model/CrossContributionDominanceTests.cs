@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.model;
 /// </summary>
 /// <remarks>
 /// 基线判定：新方案支配旧方案当且仅当**余宽不劣**且**对每个产品的贡献不劣**，且**单位一致**。
-/// B301 记录"跨贡献剪枝仍然不会发生"——本批把判定本身补上。
+/// 记录"跨贡献剪枝仍然不会发生"——这里把判定本身补上。
 ///
 /// **每条规则单独一条测试**：合并断言时，某条规则写漏了也不会被看见。
 ///
-/// The baseline decides dominance iff **the rest width is no worse**, **every product contribution is no worse**, and **units agree**. B301 recorded that
-/// "cross-contribution pruning still never happens" — this batch adds the decision itself.
+/// The baseline decides dominance iff **the rest width is no worse**, **every product contribution is no worse**, and **units agree**. recorded that
+/// "cross-contribution pruning still never happens" — the decision itself.
 ///
 /// **One test per rule**: with merged assertions, an omitted rule goes unnoticed.
 /// </remarks>

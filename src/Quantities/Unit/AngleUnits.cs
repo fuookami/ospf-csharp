@@ -18,14 +18,14 @@ public static class AngleUnits {
     /// <summary>角秒 / Arcsecond.</summary>
     public static readonly PhysicalUnit Arcsecond = new DerivedUnit(Degree.ScaleMultiply(Scale.Invoke(1.0 / 3600.0)), "arcsecond", "\"");
 
-    // 以下 4 个角度单位与 2 个基线拼写别名是 B1143 按基线 PlaneAngle.kt 补的。
+    // 以下 4 个角度单位与 2 个基线拼写别名按基线 `PlaneAngle.kt` 补齐。
     //
     // **`RightAngle` 没有照抄基线：基线写 `Radian / 4.0`，而直角是 π/2 弧度。**
     // **正确的式子是把整个圆周（`RoundAngle` = 2π）四等分，即 `RoundAngle / 4`。**
     // 照抄会得到 0.25 rad（约 14.3°），**而"直角的一半是 45°"这类检查仍会通过**，
     // **因为错误的直角与由它派生的 Gradian 会一起错，比值依旧是 100。**
     //
-    // The four angle units and two baseline spellings below were added in B1143 from PlaneAngle.kt.
+    // The four angle units and two baseline spellings below were added from PlaneAngle.kt.
     //
     // **`RightAngle` is not copied: the baseline writes `Radian / 4.0`, while a right angle is pi/2 radians.**
     // **The correct expression quarters the full turn (`RoundAngle` = 2pi), i.e. `RoundAngle / 4`.**

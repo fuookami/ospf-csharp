@@ -26,8 +26,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **这个方向不对称，所以判据必须两个方向都测。**
 ///
-/// adds
-///
 /// **The direction is asymmetric, so a criterion must test both sides.**
 /// </remarks>
 public class MaxStructureTests
@@ -149,7 +147,7 @@ public class MaxStructureTests
     /// **The criterion leaves the capture null while the input's current value is `7` — read as `[0, 0]`, that value
     /// immediately exceeds the proof.**
     ///
-    /// **我第一版用的是常量 `0`，于是"当成零"的变异也全绿——因为 `0` 恰好落在 `[0, 0]` 里。
+    /// **曾经用的是常量 `0`，于是"当成零"的变异也全绿——因为 `0` 恰好落在 `[0, 0]` 里。
     /// 判据的输入必须<b>远离</b>那个错误值，否则它证明不了任何事。**
     /// </remarks>
     [Fact]
@@ -261,7 +259,7 @@ public class MaxStructureTests
 
     private static readonly BinVar FirstSelector = new("mx-sel-0");
 
-    // ===== B1198：行生成 =====
+    // ===== 行生成 =====
 
     /// <summary>
     /// **`2n + 1` 行，三族** / `2n + 1` rows in three families.
@@ -301,10 +299,10 @@ public class MaxStructureTests
         IReadOnlyList<LinearInequality<Flt64>> rows = Rows(2);
 
         // **可行 ≠ 紧：下界行在 `result = 7`、`x = 3` 时残差是 `+4`，而它是满足的。
-        // **要求所有残差为零，是把"可行"错当成"紧"——同一处错误在 B1197 已经犯过一次。**
+        // **要求所有残差为零，是把"可行"错当成"紧"——同一处错误此前已经犯过一次。**
         //
         // **Feasible ≠ tight: the lower row has residual `+4` at `result = 7`, `x = 3` and it holds.
-        // **Demanding every residual be zero confuses "feasible" with "binding" — the same mistake as in B1197.**
+        // **Demanding every residual be zero confuses "feasible" with "binding" — the same mistake as.**
         Feasible(rows, x: 3.0, y: 7.0, sel0: 0.0, sel1: 1.0, result: 7.0)
             .Should().BeTrue("sel = (0,1) makes the result seven");
 
@@ -323,7 +321,7 @@ public class MaxStructureTests
     /// **选择行是等式，不是 `≤ 1`** / The select row is an equality, not `≤ 1`.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据。**
+    /// **这是这里的核心判据。**
     ///
     /// **换成 `≤ 1` 的话，全零选择就可行：**
     /// **此时所有的上界都处于松弛状态（`result ≤ input_i + M_i`），
@@ -421,10 +419,10 @@ public class MaxStructureTests
     /// **MAX 现在能真正物化了** / MAX can now actually materialize.
     /// </summary>
     /// <remarks>
-    /// **B1196 里它是"未移植"的三格之一，B1197 划掉一格，本批划掉这一格。**
+    /// **它是"未移植"的三格之一，后来划掉一格，这里划掉这一格。**
     /// **举证：物化成功且行数是 `2n + 1`。**
     ///
-    /// **In B1196 it was one of the three "not ported" cells; B1197 removed one and this batch removes another.**
+    /// **It was one of the three "not ported" cells; one was removed,e and another.**
     /// **The evidence: it materializes with `2n + 1` rows.**
     /// </remarks>
     [Fact]

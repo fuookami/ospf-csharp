@@ -1,4 +1,4 @@
-// 活动排程问题（B686）的判据 / Criteria for the activity scheduling problem (B686).
+// 活动排程问题的判据 / Criteria for the activity scheduling problem.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 
 /// <summary>
-/// **活动排程问题（B686）** / The activity scheduling problem (B686).
+/// **活动排程问题** / The activity scheduling problem.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**除四项必填外全部可省且访问器返回空**、**行的上下界各自可空**、

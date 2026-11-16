@@ -143,12 +143,12 @@ public class TaskCompilationConstraint<E, A>
                     "缺少任务编译表达式：" + task
                     + " / Missing task compilation expression: " + task));
             }
-            // ponytail: 表达式是**占位对象**时这一条加不了行——`CompilationTable.Build` 现在填的是 `new object()`
+            // ponytail: 表达式是**占位对象**时这一条加不了行——`CompilationTable.Build` 现在填的是 `new object`
             // （`TaskCompilation` / `BunchCompilation` 两条路径都是），要建 `x = 1` 得先让那张表提供真正的列变量。
             // 升级路径：把 `CompilationTable.Build` 改成用 `SymbolCombination<LinearExpressionSymbol, Shape1>` 造符号，
             // 那时这一支自然走上面那条路。此刻**不能改成失败**：占位是当前的正常状态，失败就是把全部分配打回。
             //
-            // ponytail: a placeholder expression cannot produce a row — `CompilationTable.Build` fills `new object()` today (on both the `TaskCompilation` and `BunchCompilation` paths),
+            // ponytail: a placeholder expression cannot produce a row — `CompilationTable.Build` fills `new object` today (on both the `TaskCompilation` and `BunchCompilation` paths),
             // and building `x = 1` first needs that table to hand out real column variables. Upgrade path: make `CompilationTable.Build` mint symbols with
             // `SymbolCombination<LinearExpressionSymbol, Shape1>`, and this branch falls through to the row-building path. It must **not** be turned into a failure right now: a placeholder is
             // the normal state today, and failing would reject every assignment.
@@ -156,8 +156,8 @@ public class TaskCompilationConstraint<E, A>
                 continue;
             }
 
-            // **符号要包成单项式**：`LinearExpressionSymbol` 本身就是变量，展开它的多项式是空的（B704 踩过同一个坑）。
-            // **Wrap the symbol in a monomial**: a `LinearExpressionSymbol` *is* a variable and its polynomial is empty (the same trap as B704).
+            // **符号要包成单项式**：`LinearExpressionSymbol` 本身就是变量，展开它的多项式是空的（踩过同一个坑）。
+            // **Wrap the symbol in a monomial**: a `LinearExpressionSymbol` *is* a variable and its polynomial is empty (the the same trap).
             string rowName = _name + "_" + task.Id;
             Try added = linear.AddConstraint(
                 new Fuookami.Ospf.Math.Symbol.Inequality.LinearInequality<Flt64>(

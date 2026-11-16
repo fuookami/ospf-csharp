@@ -1,4 +1,4 @@
-// 内存仓储不再静默（B721）/ The in-memory repository stops being silent (B721).
+// 内存仓储不再静默/ The in-memory repository stops being silent.
 
 using System;
 using System.Collections.Generic;
@@ -10,18 +10,18 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence.EfCore;
 
 /// <summary>
-/// **内存仓储不再静默（B721）** / The in-memory repository stops being silent (B721).
+/// **内存仓储不再静默** / The in-memory repository stops being silent.
 /// </summary>
 /// <remarks>
 /// `InMemoryRepository` 是第一版叫 `EfCoreRepository` 的那个类：**名字里有 EF Core，行为上是一个 `List&lt;T&gt;`**。
-/// 名字撒谎比没有名字更糟，所以先改名（B723），再处理两个**静默空洞**：
+/// 名字撒谎比没有名字更糟，所以先改名，再处理两个**静默空洞**：
 ///
 /// * `GetByIdAsync` 对任何 id 都返回 `default`——调用方读成"没找到"，而它从来就没找过；
 /// * `UpdateAsync` 是 `Task.CompletedTask`——写入被吞掉，没有任何信号。
 ///
-/// 这一批判据钉的是"有信号"：给键匹配器就真按 id 找，不给就抛并说明缺什么；更新找不到实体也抛。
+/// 这里判据钉的是"有信号"：给键匹配器就真按 id 找，不给就抛并说明缺什么；更新找不到实体也抛。
 ///
-/// `InMemoryRepository` is the class first named `EfCoreRepository`: **EF Core in the name, a `List&lt;T&gt;` in the body.** A lying name is worse than none, so B723 renames it first, then handles two
+/// `InMemoryRepository` is the class first named `EfCoreRepository`: **EF Core in the name, a `List&lt;T&gt;` in the body.** A lying name is worse than none, so renames it first, then handles two
 /// **silent holes**: `GetByIdAsync` returned `default` for any id, which the caller reads as "not found" while nothing was ever looked up, and `UpdateAsync` was
 /// `Task.CompletedTask`, swallowing the write with no signal. These criteria pin "it signals": with a key matcher it really looks the id up, without one it throws naming what is
 /// missing, and an update that finds no entity throws too.

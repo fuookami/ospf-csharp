@@ -2,7 +2,7 @@
 // 覆盖 `Box2Need`／`Placement2Need`／`Projection2Need`／`PackingScene2`／`NeedGeometryMapping`。
 // Covers `Box2Need` / `Placement2Need` / `Projection2Need` / `PackingScene2` / `NeedGeometryMapping`.
 //
-// 本域源码在更早的批次已存在但**零测试覆盖**，本批补齐。这不只是补数量：`Box2Need` 的重叠/相交/内含是矩形口径下
+// 本域源码在更早的批次已存在但**零测试覆盖**，这里补齐。这不只是补数量：`Box2Need` 的重叠/相交/内含是矩形口径下
 // 所有校验的基础，一条判错的边界就足以让整片正常排布被当成非法。
 
 using System;
@@ -213,20 +213,20 @@ public sealed class CompatRectangularTest {
     /// plausible while being entirely wrong.
     /// </summary>
     /// <remarks>
-    /// **必须用不同量纲，而不是不同单位**。本会话最初用"米板材 + 厘米物料"，以为会失败，实测**通过**——cm² 到 m² 是
+    /// **必须用不同量纲，而不是不同单位**。最初用"米板材 + 厘米物料"，以为会失败，实测**通过**——cm² 到 m² 是
     /// 合法换算。要触发这条守卫，得让面积量纲本身不同（m² 对 s²）。这条经验写在这里，免得后来者重复同一个误判。
     /// **Different dimensions are required, not merely different units.** This session first used a metre sheet with
     /// centimetre items expecting a failure and measured **success** — cm² to m² is a legal conversion. To hit this guard
     /// the area dimensions themselves must differ (m² versus s²). Recorded here so nobody repeats the same misjudgement.
     /// </remarks>
     /// <remarks>
-    /// **实测结论比预期更尖锐**：量纲不匹配时**抛异常的是 `UsedArea()` 而不是 `Utilization()`**——`UsedArea` 用板材面积
-    /// 的零值作为累加起点，加第一件就撞上 `L^2` 与 `T^2` 不符。因此 `Utilization()` 里那道 `ConvertTo` 守卫**实际不可达**，
+    /// **实测结论比预期更尖锐**：量纲不匹配时**抛异常的是 `UsedArea` 而不是 `Utilization`**——`UsedArea` 用板材面积
+    /// 的零值作为累加起点，加第一件就撞上 `L^2` 与 `T^2` 不符。因此 `Utilization` 里那道 `ConvertTo` 守卫**实际不可达**，
     /// 它只是防御性代码。本测试断言可观察行为（抛出并带清晰消息），而不是假装守卫会返回失败结果。
     ///
-    /// **The measurement is sharper than the expectation**: on a dimension mismatch the exception comes from `UsedArea()`,
-    /// not `Utilization()` — `UsedArea` seeds its accumulator with the sheet area's zero and the very first addition hits
-    /// `L^2` against `T^2`. The `ConvertTo` guard inside `Utilization()` is therefore **unreachable in practice**, pure
+    /// **The measurement is sharper than the expectation**: on a dimension mismatch the exception comes from `UsedArea`,
+    /// not `Utilization` — `UsedArea` seeds its accumulator with the sheet area's zero and the very first addition hits
+    /// `L^2` against `T^2`. The `ConvertTo` guard inside `Utilization` is therefore **unreachable in practice**, pure
     /// defensive code. This test asserts the observable behaviour (a throw with a clear message) rather than pretending the
     /// guard returns a failure.
     /// </remarks>

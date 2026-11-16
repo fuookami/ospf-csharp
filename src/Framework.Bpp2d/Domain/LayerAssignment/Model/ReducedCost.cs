@@ -19,13 +19,13 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 ///
 /// 1. **影子价格为零的需求直接跳过**：乘零不改变结果，但会让"没有定价的需求"和"定价为零的需求"在求和里混在一起，
 ///    排查时看不出差别。
-/// 2. **系数用 `LayerDemandCoefficient`**，不是件数：面积需求下件数完全不对（B642 已记档同一处）。
-/// 3. **没有影子价格的需求跳过**（`continue`），不按零参与——缺失与零是两回事，与 B652 的教训相同。
+/// 2. **系数用 `LayerDemandCoefficient`**，不是件数：面积需求下件数完全不对（已记档同一处）。
+/// 3. **没有影子价格的需求跳过**（`continue`），不按零参与——缺失与零是两回事，与 的教训相同。
 ///
 /// Aligned with the baseline's `layerReducedCost`: `reduced cost = the column's actual area × the area coefficient − Σ(demand shadow price × that column's coefficient for the demand)`. Three
 /// things must be copied: **demands with a zero shadow price are skipped**, since multiplying by zero changes no total but blurs "unpriced demand" against "demand priced at zero" when
-/// debugging; **the coefficient comes from `LayerDemandCoefficient`** rather than the unit count, which is simply wrong for area demands (recorded in B642); and **demands without a shadow price
-/// are skipped** rather than entering as zero, since missing and zero differ — the same lesson as B652.
+/// debugging; **the coefficient comes from `LayerDemandCoefficient`** rather than the unit count, which is simply wrong for area demands (recorded); and **demands without a shadow price
+/// are skipped** rather than entering as zero, since missing and zero differ — the same lesson.
 /// </remarks>
 public static class ReducedCost
 {
@@ -96,9 +96,9 @@ public static class ReducedCost
         foreach (Bpp2dAssignmentDemandEntry entry in demandEntries)
         {
             // **复用 `DemandConstraint.ModeTag`**，不自己拼字符串：两处各写一份会让键在某一侧悄悄不匹配
-            // （B659 第一次用 `ToString().ToLowerInvariant()`，得到 `itemamount` 而不是 `item_amount`，价格全查不到）。
-            // **Reuse `DemandConstraint.ModeTag`** rather than formatting here: two copies of the mapping let the key silently mismatch on one side. B659 first used
-            // `ToString().ToLowerInvariant()`, which yields `itemamount` instead of `item_amount`, so no price was ever found.
+            // （第一次用 `ToString.ToLowerInvariant`，得到 `itemamount` 而不是 `item_amount`，价格全查不到）。
+            // **Reuse `DemandConstraint.ModeTag`** rather than formatting here: two copies of the mapping let the key silently mismatch on one side. first used
+            // `ToString.ToLowerInvariant`, which yields `itemamount` instead of `item_amount`, so no price was ever found.
             var modeKey = new DemandModeKey(
                 Service.Limits.DemandConstraint.ModeTag(entry.Mode), entry.ItemId.Value);
             if (!shadowPrices.TryGetValue(modeKey, out FltX price))

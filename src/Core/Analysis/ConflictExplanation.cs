@@ -59,10 +59,10 @@ public sealed record ConflictGroupSummary(string? Group, int Count);
 /// <remarks>
 /// `AvailableEvidence` 是完整的原始激活集合；`Members` 是当前冲突/MUS 候选，**绝不包含目标**。
 ///
-/// **B976 只搬报告侧**：基线第 630 行有 `solver.solve(...)`，第 755 行有 `session.solve(assumptions = ...)`，
+/// 只搬报告侧**：基线第 630 行有 `solver.solve(...)`，第 755 行有 `session.solve(assumptions = ...)`，
 /// 而 `ConflictAnalyzer` 与 `MinimalConflictAnalyzer` 都在这之后。**那部分要真实 CP 后端，没搬也没空跑。**
 ///
-/// `AvailableEvidence` is the complete original activation universe; `Members` is the current conflict/MUS candidate and **never includes the target**. **B976 ports the
+/// `AvailableEvidence` is the complete original activation universe; `Members` is the current conflict/MUS candidate and **never includes the target**. **ports the
 /// report side only**: baseline line 630 has `solver.solve(...)` and line 755 has `session.solve(assumptions = ...)`, and both `ConflictAnalyzer` and `MinimalConflictAnalyzer`
 /// come after them. **That needs a real CP backend, so it was neither ported nor stubbed.**
 /// </remarks>

@@ -13,15 +13,15 @@ namespace Fuookami.Ospf.Core.Plugin.Copt.Tests;
 /// COPT 能力探测的契约 / The contract of COPT's capability probe.
 /// </summary>
 /// <remarks>
-/// B1234 的这一层判断：**"SDK 有这个方法"与"我们写进去的约束被采纳"是两件事，
+/// 这一层判断：**"SDK 有这个方法"与"我们写进去的约束被采纳"是两件事，
 /// 而 `Detect` 只回答前者。**
 ///
-/// **这一批把这条区分写进用户能读到的地方**（能力声明），而不是只留在台账里。
+/// **这里把这条区分写进用户能读到的地方**（能力声明），而不是只留在台账里。
 ///
-/// The judgment behind B1234: **"the SDK has this method" and "the constraint we wrote was adopted" are two things, and
+/// The judgment: **"the SDK has this method" and "the constraint we wrote was adopted" are two things, and
 /// `Detect` answers only the first.**
 ///
-/// **This batch puts that distinction where the user can read it — the capability declaration — rather than leaving it in
+/// ** puts that distinction where the user can read it — the capability declaration — rather than leaving it in
 /// the ledger.**
 /// </remarks>
 public class CoptFunctionCapabilitiesTests
@@ -54,14 +54,14 @@ public class CoptFunctionCapabilitiesTests
     /// <remarks>
     /// **这一条判据的内容是<b>没有</b>某个东西：能力声明里不得出现任何"已验证 / verified / measured"的字样。**
     ///
-    /// **为什么值得单独钉：** **B1232／B1233 都明确写着"真跑求解器的验证未做"。
+    /// **为什么值得单独钉：** **它们都明确写着"真跑求解器的验证未做"。
     /// 而能力声明是用户读到的第一手材料——如果它在某处暗示"已验证"，
     /// 那么台账里那句诚实的说明就被覆盖了。**
     ///
     /// **This criterion is about <b>the absence</b> of something: the capability declaration must carry no
     /// "verified / measured" wording.**
     ///
-    /// **Why it is worth pinning: B1232 and B1233 both state plainly that the real-solver verification is not done. The
+    /// **Why it is worth pinning: the capability declarations state plainly that the real-solver verification is not done. The
     /// capability declaration is the first-hand material a user reads — if it implies "verified" anywhere, the honest note
     /// in the ledger is overridden.**
     /// </remarks>

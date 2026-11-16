@@ -1,4 +1,4 @@
-// 舱位状态码的判据（B795）/ Criteria for the position status code (B795).
+// 舱位状态码的判据/ Criteria for the position status code.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **舱位状态码必须真的能分开 `Loaded` 与 `Reserved`** / The position status code must really keep `Loaded` and `Reserved` apart (B795).
+/// **舱位状态码必须真的能分开 `Loaded` 与 `Reserved`** / The position status code must really keep `Loaded` and `Reserved` apart.
 /// </summary>
 /// <remarks>
 /// 本仓此前只有四个布尔旗标，没有状态码，装配器还恒写 `stowageNeeded = true`。结果是：

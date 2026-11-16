@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Fuookami.Ospf.Utils.Functional;
 // Type aliases (documented for reference):
-//   Try    = Result<Success, ErrorCode, Error<ErrorCode>>
-//   Ret<T> = Result<T, ErrorCode, Error<ErrorCode>>
-//   ExTry  = ExResult<Success, ErrorCode, Error<ErrorCode>>
-//   ExRet<T>= ExResult<T, ErrorCode, Error<ErrorCode>>
+// Try    = Result<Success, ErrorCode, Error<ErrorCode>>
+// Ret<T> = Result<T, ErrorCode, Error<ErrorCode>>
+// ExTry  = ExResult<Success, ErrorCode, Error<ErrorCode>>
+// ExRet<T>= ExResult<T, ErrorCode, Error<ErrorCode>>
 
 // ==================== Result<T,C,E> ====================
 public abstract record Result<T, C, E> where C : notnull where E : Error<C> {

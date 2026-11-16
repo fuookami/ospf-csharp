@@ -1,4 +1,4 @@
-// 需求项构造（B664）的判据 / Criteria for demand-entry construction (B664).
+// 需求项构造的判据 / Criteria for demand-entry construction.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **需求项构造（B664）** / Demand-entry construction (B664).
+/// **需求项构造** / Demand-entry construction.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**件数需求总是存在**（面积需求是额外的）、**面积用包围面积而不是面积**、
@@ -45,7 +45,7 @@ public class DemandEntriesTests {
     /// 2. 要求面积 → 每个物品**两条**，第一条件数、第二条面积。
     /// 3. 面积总量 = **包围面积 × 件数**：`20×10` 的件、4 件 → `800`。
     /// 4. **圆形件用包围面积**，不是圆面积：半径 `10` 的件外接矩形是 `20×20 = 400`，3 件 → `1200`；
-    ///    若用圆面积会得 `314.16 × 3 ≈ 942.5`——排版占的是外接矩形。
+    /// 若用圆面积会得 `314.16 × 3 ≈ 942.5`——排版占的是外接矩形。
     ///
     /// Four paired points: without the area demand each item yields **one amount entry**; with it each item yields **two**, amount first and area second; the area total is **bounding area times
     /// the count**, so a `20×10` item at four units gives `800`; and **a circular item uses its bounding area** (`diameter × diameter`) rather than the circle's area — a `10` diameter item at three
@@ -90,11 +90,11 @@ public class DemandEntriesTests {
     ///
     /// 1. 两个物品 → **四条**，每两条一组。
     /// 2. **顺序是"物品1件数、物品1面积、物品2件数、物品2面积"**：需求约束的索引就按这个顺序，
-    ///    打乱会让影子价格安到另一条需求上（B662 的教训）。
+    /// 打乱会让影子价格安到另一条需求上。
     /// 3. 空清单 → 空结果，不抛。
     ///
     /// Three paired points: two items yield **four entries** in two groups; the order is **item1-amount, item1-area, item2-amount, item2-area**, which is exactly the order the demand
-    /// constraints take their indices from, and shuffling it would attach shadow prices to the wrong demand (the B662 lesson); and an empty list yields an empty result rather than a throw.
+    /// constraints take their indices from, and shuffling it would attach shadow prices to the wrong demand (the lesson); and an empty list yields an empty result rather than a throw.
     /// </remarks>
     [Fact]
     public void Build_ShouldKeepTheItemOrder() {

@@ -129,19 +129,19 @@ internal static class AggregationInitializer
 
         // ---- 构造 ----
         // ---- Construction ----
-        // **机型必须来自请求**（B934）。B934 之前这里**硬编码成 `AircraftType.B737`**，请求里的机型只进了 `modelName`——
-        // 于是 `aggregation.AircraftModel.Type` 永远是 B737：**所有按机型分流的地方都走了窄体那条**，而且没有任何报错。
-        // B757/B767 的压舱物、主甲板门空位偏好、以及宽体的二维装载内核**全都因此从未生效**。
+        // **机型必须来自请求**。 之前这里**硬编码成 `AircraftType. `**，请求里的机型只进了 `modelName`——
+        // 于是 `aggregation.AircraftModel.Type` 永远是 ：**所有按机型分流的地方都走了窄体那条**，而且没有任何报错。
+        // 的压舱物、主甲板门空位偏好、以及宽体的二维装载内核**全都因此从未生效**。
         //
-        // **The type must come from the request** (B934). Before B934 this line **hard-coded `AircraftType.B737`** and let the requested type land only in
-        // `modelName`, so `aggregation.AircraftModel.Type` was always B737: **every type-dependent branch took the narrow-body path**, silently. B757/B767 ballast,
+        // **The type must come from the request** . Before this line **hard-coded `AircraftType. `** and let the requested type land only in
+        // `modelName`, so `aggregation.AircraftModel.Type` was always : **every type-dependent branch took the narrow-body path**, silently. ballast,
         // the main-deck-door preference and the wide-body 2-D kernel **had therefore never taken effect**.
         AircraftType aircraftType = input.AircraftType switch {
             AircraftTypeInput.B757 => AircraftType.B757,
             AircraftTypeInput.B767 => AircraftType.B767,
             AircraftTypeInput.B747 => AircraftType.B747,
-            // **`B737` 与 `Unknown` 都落到 B737**：`Unknown` 在上面的校验里已被拒，这里只是让 switch 穷尽。
-            // **Both `B737` and `Unknown` fall to B737**; `Unknown` is refused by the check above, so this only makes the switch exhaustive.
+            // **` ` 与 `Unknown` 都落到 **：`Unknown` 在上面的校验里已被拒，这里只是让 switch 穷尽。
+            // **Both ` ` and `Unknown` fall to **; `Unknown` is refused by the check above, so this only makes the switch exhaustive.
             _ => AircraftType.B737,
         };
         var aircraftModel = new AircraftModel(aircraftType, input.AircraftType.ToString(), new AircraftMinorModel(input.AircraftType.ToString()));
@@ -172,12 +172,12 @@ internal static class AggregationInitializer
                 DeckLocationInput.LowForward => PositionLocation.LowForwardNotBulkLocation,
                 _ => PositionLocation.LowAftNotBulkLocation,
             };
-            // **矩形边界必须和力臂用同一个单位**：B787 实测这里把几何**硬编码成英寸**（`* 0.0254`），而力臂走 `ToModelLength`
+            // **矩形边界必须和力臂用同一个单位**： 实测这里把几何**硬编码成英寸**（`* 0.0254`），而力臂走 `ToModelLength`
             // 按 `input.LengthUnit` 换算。请求里写的是米，于是 1.0 x 1.0 的舱位被算成 `0.0254 x 0.0254 = 0.000645` 平方米，
             // 表面密度系数放大 1550 倍（8 kg 变 12400），`≤ 1000` 的上限连一件货都装不下——**而所有约束看上去都加对了**。
             // 现在两边都走 `ToModelLength`：先换算成模型单位（英寸），再按 0.0254 折回平方米。
             //
-            // **The rectangle must use the same unit as the arms**: B787 measured that this line **hard-codes inches** (`* 0.0254`) while the arms go through
+            // **The rectangle must use the same unit as the arms**: measured that this line **hard-codes inches** (`* 0.0254`) while the arms go through
             // `ToModelLength`, which honours `input.LengthUnit`. Requests are written in metres, so a 1.0 x 1.0 position came out as `0.0254 x 0.0254 = 0.000645`
             // square metres, inflating the surface-density coefficient 1550x (8 kg became 12400) so the `<= 1000` cap could not fit a single piece — **while every
             // constraint looked correctly added**. Both now go through `ToModelLength`: convert to model units (inches), then fold back to square metres with 0.0254.

@@ -1,4 +1,4 @@
-// 圆柱半径选择结果（B680）的判据 / Criteria for the cylinder radius selection (B680).
+// 圆柱半径选择结果的判据 / Criteria for the cylinder radius selection.
 
 using System;
 using FluentAssertions;
@@ -12,7 +12,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Domain;
 
 /// <summary>
-/// **圆柱半径选择结果（B680）** / The cylinder radius selection (B680).
+/// **圆柱半径选择结果** / The cylinder radius selection.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**两个体积各用各自半径平方**、**四条不变量真的会拒**（不是只写了一行 `require` 没人验）。

@@ -75,7 +75,7 @@ public class TokenInvalidateRebuildBenchmark
         }
 
         _stable = _writer.TokensInSolver;
-        // **先做一次读，把索引建起来：** **否则第一次测量里混着"冷建表"，而这一批要测的是"失效后的重建"。**
+        // **先做一次读，把索引建起来：** **否则第一次测量里混着"冷建表"，而这里要测的是"失效后的重建"。**
         // **Prime the index first, or the first measurement would include the cold build.**
         _ = _writer.IndexOf(_stable[^1]);
 
@@ -105,7 +105,7 @@ public class TokenInvalidateRebuildBenchmark
                 _writer.Remove(probe);
             }
             // **`Add` 的结果必须被消费：** **重复注册会被拒，而这次失败会让"失效"没有真的发生，
-            // 于是这一批测到的仍是稳态读——一个静默的假测量。**
+            // 于是这里测到的仍是稳态读——一个静默的假测量。**
             //
             // **The `Add` result must be consumed: a rejected duplicate registration would mean the index was never invalidated,
             // and this benchmark would silently measure steady-state reads instead.**

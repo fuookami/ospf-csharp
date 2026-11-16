@@ -23,12 +23,12 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 容差带内返回 `null`，不是猜一个 / The tolerance band returns `null`, not a guess.
 /// </summary>
 /// <remarks>
-/// B1159 按基线把 `QuadraticInStepRangeFunction` 与 `QuadraticLinearFunction` 两个空壳换成真实编码。
+/// 对齐基线把 `QuadraticInStepRangeFunction` 与 `QuadraticLinearFunction` 两个空壳换成真实编码。
 ///
 /// **区间归属是三段语义**：**在内给 `x`、明确在外给 0、容差带内给 `null`。**
 /// **第三段是核心**：**把容差带并进任意一侧都会让"明确在外"失去意义。**
 ///
-/// B1159 replaces two stubs with real encodings, following the baseline.
+/// Replaces two stubs with real encodings, following the baseline.
 ///
 /// **The membership is three-way**; **the third case is the point** — **folding the band into either side destroys
 /// "clearly out".**
@@ -67,7 +67,7 @@ public class QuadraticInStepRangeFunctionTests
     /// **容差带内给 `null`，不是 0 也不是 `x`** / The tolerance band gives `null`.
     /// </summary>
     /// <remarks>
-    /// **这是这一批唯一真正区分"三段"与"两段"的判据。**
+    /// **这是这里唯一真正区分"三段"与"两段"的判据。**
     ///
     /// **容差是 `1e-6`，下界是 2，所以 `1.9999995` 落在 `(2 − 1e-6, 2)` 这个带里。**
     /// **两段实现会给它 0 或 2 附近的值，只有三段实现给 `null`。**

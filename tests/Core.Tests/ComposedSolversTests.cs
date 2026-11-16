@@ -328,7 +328,7 @@ public sealed class ComposedSolversTests {
 
     /// <summary>**六个蜂群式工厂给出六条不同的轨迹** / The six swarm-style factories produce six different trajectories.</summary>
     /// <remarks>
-    /// 与第一批同一条判据：装配同构、只有更新算子不同，因此**装错算子不会报错，只会让两个算法变成同一个**。
+ /// 与此前同一条判据：装配同构、只有更新算子不同，因此**装错算子不会报错，只会让两个算法变成同一个**。
     /// 六条轨迹必须两两不同。
     /// The same criterion as in the first group: identical assembly, only the update operator differs, so **a wrong operator raises no error and
     /// merely collapses two algorithms into one**. All six trajectories must be pairwise different.
@@ -352,17 +352,17 @@ public sealed class ComposedSolversTests {
         }
     }
 
-    /// <summary>**十二个第三批工厂都能在真实模型上跑完** / All twelve third-group factories run to completion on a real model.</summary>
+ /// <summary>**十二个此前工厂都能在真实模型上跑完** / All twelve third-group factories run to completion on a real model.</summary>
     /// <remarks>
-    /// **这一批没有做"两两不同"的判据，原因如实记在这里**：试过在 2 / 3 / 4 / 5 四种迭代上限下比较十二个工厂的最优值，
+    /// **这里没有做"两两不同"的判据，原因如实记在这里**：试过在 2 / 3 / 4 / 5 四种迭代上限下比较十二个工厂的最优值，
     /// `gsa`、`de`、`ba` 三者**在每一档上都撞到同一个值**。它们的更新算子确实不同，是**这个 fixture 的目标函数（一维平方）
     /// 在少量迭代内把许多轨迹压到同一个值上**，于是"两两不同"这个判据在这里根本不成立。
     ///
     /// 前两批之所以能用它，是因为那一批的目标值恰好在那个种子下互不相同——**换句话说，那条判据一直是有条件的，
-    /// 只是前两次的条件恰好满足**。这与 Batch 215 / 216 关于接受判据的缺口是同一个问题的另一面：
+ /// 只是前两次的条件恰好满足**。这与 earlier / 216 关于接受判据的缺口是同一个问题的另一面：
     /// **当判据依赖"结果恰好可分辨"时，它就不是一条可靠的判据**。
     ///
-    /// 因此本批改为"十二个工厂都能跑完并给出可行解"，并**明确记录：第三批的默认更新算子没有测试级保护**，
+ /// 因此这里改为"十二个工厂都能跑完并给出可行解"，并**明确记录：此前的默认更新算子没有测试级保护**，
     /// 只有代码层面的"每个工厂传自己的算子"这一处可直接阅读的事实。不伪造断言去补这个洞。
     ///
     /// **This group deliberately skips the pairwise-distinctness criterion, and the reason is recorded here**: the twelve factories were compared
@@ -371,7 +371,7 @@ public sealed class ComposedSolversTests {
     /// few iterations**, so "pairwise different" simply does not hold here.
     ///
     /// The first two groups could use it because their values happened to differ under that seed — **in other words, the criterion was always
-    /// conditional and the condition merely happened to hold twice**. This is the other face of the same gap as Batch 215 / 216's acceptance
+ /// conditional and the condition merely happened to hold twice**. This is the other face of the same gap as earlier / 216's acceptance
     /// criteria: **a criterion that depends on "the results happen to be distinguishable" is not a reliable criterion**.
     ///
     /// This group therefore asserts "all twelve run to completion and report a feasible solution", and **records explicitly that the third

@@ -19,8 +19,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **"归一化"是把四种关系折算成"严格真"的形态。**
 ///
-/// adds
-///
 /// **Normalising folds the four relations into a "strictly true" shape.**
 /// </remarks>
 public class ConditionNormalizationTests
@@ -83,14 +81,14 @@ public class ConditionNormalizationTests
     /// **`δ = 0` 被拒绝，因为两个分支会在零点相接** / A zero delta is rejected: the branches meet.
     /// </summary>
     /// <remarks>
-    /// **这是本批最重要的一条。**
+    /// **这是这里最重要的一条。**
     /// **`δ = 0` 时 `TrueLower = FalseUpper = 0`，于是"给定一个点，它算真还是假"没有答案——
     /// 而模型仍然可行，因为指示约束两边都能满足。**
     ///
     /// **基线报错。判据必须验证这个报错，而不只是"返回了失败"**——
     /// **因为它是"正间隔"规则在起作用，而不是别的检查先挡住了。**
     ///
-    /// **This is the batch's most important criterion.**
+    /// **This is the most important criterion here.**
     /// **At `δ = 0`, `TrueLower = FalseUpper = 0`, so "is this point true or false" has no answer — while the model
     /// stays feasible, because both sides of the indicator rows can be satisfied.**
     ///

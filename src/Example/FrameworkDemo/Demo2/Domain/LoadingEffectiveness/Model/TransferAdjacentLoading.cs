@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// 1. **第一个舱位需要配载或调整时才用 `IfFunction`**（基线判 `position1.status.stowageNeeded || adjustmentNeeded`）。
 ///    判的是**第一个**舱位，不是两个都判。
 /// 2. **条件多项式是 `loadAmount1 + loadAmount2 − 2 + ε`**，`ε = NONZERO_TOLERANCE = 1e-10`，
-///    `strictBoundary` **也取这个 ε**（B620 实测：取 0.5 会被 `SafeLattice` 拒绝）。
+///    `strictBoundary` **也取这个 ε**（：取 0.5 会被 `SafeLattice` 拒绝）。
 /// 3. **第一个舱位不需配载时走两条退化分支**：`loadAmount1` 恒为 0 就给恒零符号，否则给
 ///    "多项式就是 `loadAmount1` 本身"的符号。**不是一律给零**。
 /// 4. **`loadAmount` 是"该舱位上满足谓词的货物的装载量之和"**，谓词分别按来源、按目的地。
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 /// Aligned with the baseline: one indicator per (source, adjacent pair) and one per (destination, adjacent pair), meaning "both adjacent positions carry cargo of the same source (or
 /// destination)". Six things must be copied: **the `IfFunction` branch fires only when the first position needs stowage or adjustment** — the baseline tests
 /// `position1.status.stowageNeeded || adjustmentNeeded`, i.e. the **first** position, not both; **the condition is `loadAmount1 + loadAmount2 − 2 + ε`** with
-/// `ε = NONZERO_TOLERANCE = 1e-10`, and `strictBoundary` **also takes that ε** (measured in B620: 0.5 is rejected by `SafeLattice`); **when the first position needs no stowage there are two
+/// `ε = NONZERO_TOLERANCE = 1e-10`, and `strictBoundary` **also takes that ε** (measured: 0.5 is rejected by `SafeLattice`); **when the first position needs no stowage there are two
 /// degenerate branches** — a constant-zero symbol if `loadAmount1` is identically zero, otherwise a symbol whose polynomial **is** `loadAmount1`, so it is **not** always zero; **`loadAmount`
 /// is the summed load of the items on that position matching the predicate**, by source and by destination respectively; **the matrices are (source/destination × adjacent pair)**, not the
 /// reverse; and the names carry the source (or destination) and both positions.
@@ -243,9 +243,9 @@ public sealed class TransferAdjacentLoading
     /// 多项式是否恒为 0 / Whether the polynomial is identically zero.
     /// </summary>
     /// <remarks>
-    /// 判**单项式表为空**，不是判 `Range.FixedValue`——后者对携带单项式的符号也可能返回 0（B611 实测）。
+    /// 判**单项式表为空**，不是判 `Range.FixedValue`——后者对携带单项式的符号也可能返回 0。
     ///
-    /// Tests whether the **monomial list is empty**, not `Range.FixedValue`, which can return 0 even for a symbol carrying monomials (measured in B611).
+    /// Tests whether the **monomial list is empty**, not `Range.FixedValue`, which can return 0 even for a symbol carrying monomials (measured).
     /// </remarks>
     /// <param name="symbol">符号 / The symbol.</param>
     /// <returns>是否恒零 / Whether it is identically zero.</returns>

@@ -1,4 +1,4 @@
-// Demo4 服务层对齐的钉子（B755）/ Pins on Demo4's service-layer alignment (B755).
+// Demo4 服务层对齐的钉子/ Pins on Demo4's service-layer alignment.
 
 using System;
 using System.IO;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 
 /// <summary>
-/// **Demo4 服务层对齐的钉子（B755）** / Pins on Demo4's service-layer alignment (B755).
+/// **Demo4 服务层对齐的钉子** / Pins on Demo4's service-layer alignment.
 /// </summary>
 /// <remarks>
 /// 文件 stem 扫对 `service/` 无效——基线的 `CostCalculator.kt` 在 C# 侧整个合进了 `RuleServices.cs`。于是这一层只能**逐条人工核对**，
@@ -57,9 +57,9 @@ public class Demo4ServiceInventoryTests {
     /// **清单里的"已移植"必须真的在** / What the table calls ported must really be there.
     /// </summary>
     /// <remarks>
-    /// 三点成对：两条限制与 `RuleServices` 三处都在 / 四个规则类真的合并在那一个文件里 / 两条限制是 B753/B754 的产物（名字对得上）。
+    /// 三点成对：两条限制与 `RuleServices` 三处都在 / 四个规则类真的合并在那一个文件里 / 两条限制是 / 的产物（名字对得上）。
     ///
-    /// Three paired points: both limits and `RuleServices` are present; the four rule classes really live in that one file; and both limits are B753/B754's output (the names match).
+    /// Three paired points: both limits and `RuleServices` are present; the four rule classes really live in that one file; and both limits are /the earlier output (the names match).
     /// </remarks>
     [Fact]
     public void Inventory_ShouldMatchTheFilesThatExist() {

@@ -22,7 +22,7 @@ public static class PressureUnits {
     public static readonly PhysicalUnit Bar = new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(100000)), "bar", "bar");
     /// <summary>标准大气压 / Atmosphere (1 atm = 101325 Pa).</summary>
     public static readonly PhysicalUnit Atmosphere = new DerivedUnit(Pascal.ScaleMultiply(Scale.Invoke(101325)), "atmosphere", "atm");
-    // 以下 5 个是 B1140 按基线 Pressure.kt 补的：
+    // 以下 5 个按基线 `Pressure.kt` 补齐：
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar。
     //
     // **其中 MeterMercury 不能照抄基线，因为基线的公式与它自己的注释矛盾。**
@@ -33,7 +33,7 @@ public static class PressureUnits {
     // **这里按注释与物理事实实现（除法），并让 mmHg 由 mHg 派生**，
     // **使 "mmHg 是 mHg 的千分之一" 成为恒等式而不是巧合。**
     //
-    // The five below were added in B1140 from the baseline Pressure.kt:
+    // The five below were added from the baseline Pressure.kt:
     // Hectopascal / StandardAtmosphericPressure / MeterMercury / InchOfMercury / Millibar.
     //
     // **MeterMercury cannot be copied from the baseline, because its formula contradicts its own comment.**
@@ -94,11 +94,11 @@ public static class PressureUnits {
     /// <remarks>
     /// **由 `MeterMercury` 派生而不是写死 133.322**：**写死的 133.322 是它的四舍五入，
     /// 于是"千分之一"成了巧合；派生之后这条关系是恒等式。**
-    /// **B1140 改动，原值是字面量 133.322。**
+    /// **此处改动，原值是字面量 133.322。**
     ///
     /// **Derived from `MeterMercury` rather than hard-coding 133.322**: **the literal was its rounding,
     /// which made a thousandth a coincidence; derived, the relation is an identity.**
-    /// **Changed in B1140; the literal used to be 133.322.**
+    /// **Changed; the literal used to be 133.322.**
     /// </remarks>
     public static readonly PhysicalUnit MillimeterOfMercury =
         new DerivedUnit(MeterMercury.ScaleMultiply(Scale.Invoke(0.001)), "millimeter mercury", "mmHg");

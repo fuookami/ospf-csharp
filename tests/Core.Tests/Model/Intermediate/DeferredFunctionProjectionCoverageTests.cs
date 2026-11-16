@@ -26,15 +26,15 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 三种函数符号都能自动派生结构 / Three function symbols all derive their structures.
 /// </summary>
 /// <remarks>
-/// B1252 把投影从一种扩到三种（`Abs`、`Max`／`Min`、`Semi`），并把构建路径里的分派集中成一处 `switch`。
+/// 把投影从一种扩到三种（`Abs`、`Max`／`Min`、`Semi`），并把构建路径里的分派集中成一处 `switch`。
 ///
-/// **B1251 的判据只证明了 `Abs` 那条链通。而 `Max` 与 `Semi` 各有<b>一处</b>不是机械搬运——
+/// **判据只证明了 `Abs` 那条链通。而 `Max` 与 `Semi` 各有<b>一处</b>不是机械搬运——
 /// 那正是它们值得单独跑判据的原因。**
 ///
-/// B1252 widens the projection from one kind to three (`Abs`, `Max`/`Min`, `Semi`) and centralises the build path's
+/// Widens the projection from one kind to three (`Abs`, `Max`/`Min`, `Semi`) and centralises the build path's
 /// dispatch into one `switch`.
 ///
-/// **B1251's criterion only proved the `Abs` chain works. `Max` and `Semi` each have <b>one</b> place that is not
+/// **the earlier criterion only proved the `Abs` chain works. `Max` and `Semi` each have <b>one</b> place that is not
 /// mechanical — which is exactly why they deserve their own criteria.**
 /// </remarks>
 public class DeferredFunctionProjectionCoverageTests
@@ -44,12 +44,12 @@ public class DeferredFunctionProjectionCoverageTests
     /// A `Max`/`Min` structure must remember which one it is.
     /// </summary>
     /// <remarks>
-    /// **这是本批最要紧的一条：** **`Min` 与 `Max` 是同一个类的两个构造，而"是哪一种"此前只存在私有字段里。
+    /// **这是这里最要紧的一条：** **`Min` 与 `Max` 是同一个类的两个构造，而"是哪一种"此前只存在私有字段里。
     /// 如果投影忘掉这个方向，`min` 会被当成 `max` 物化——而模型照样能解，只是答案错了。**
     ///
     /// **所以判据必须<b>分别</b>建 `Min` 与 `Max` 两个符号，并各自核对。**
     ///
-    /// **This is the batch's most important criterion: `Min` and `Max` are two constructions of one class, and which one it
+    /// **This is the most important criterion here: `Min` and `Max` are two constructions of one class, and which one it
     /// is existed only in a private field. If the projection loses that direction, a `min` materialises as a `max` — the
     /// model still solves, merely with the wrong answer.**
     ///
@@ -111,12 +111,12 @@ public class DeferredFunctionProjectionCoverageTests
     /// **派生之后急切那一份被跳过，所以行不会翻倍** / Eager rows are skipped after deriving, so nothing doubles.
     /// </summary>
     /// <remarks>
-    /// **这一条把 B1251 的"派生与跳过一起做"扩到三种：** **如果 `switch` 只对 `Abs` 跳过、
+    /// **这一条把 "派生与跳过一起做"扩到三种：** **如果 `switch` 只对 `Abs` 跳过、
     /// 对 `Max` 只派生，那么 `Max` 就会有 4 行急切约束再加一份物化行。**
     ///
     /// **判据用"延迟下为 0 行"来卡，因为那是唯一能被观察到的痕迹。**
     ///
-    /// **This extends B1251's "derive and skip together" to three kinds: if the `switch` skipped only `Abs` while merely
+    /// **This extends the earlier "derive and skip together" to three kinds: if the `switch` skipped only `Abs` while merely
     /// deriving `Max`, then `Max` would keep its four eager rows plus a materialised copy.**
     ///
     /// **The criterion uses "zero rows under deferred" because that is the only observable trace.**

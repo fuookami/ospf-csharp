@@ -64,7 +64,7 @@ public sealed record CreditState(
 /// higher weight**, inverting the selection.
 /// **`frr-mab` 的探索项用"窗口内该动作的计数"，不是"全历史计数"**。用全历史会让窗口滚动失去意义，选择退化成 UCB1。
 /// **"未试过"的显式分支是等价变异**：删掉它之后，`counts == 0` 让探索项成为 `∞`，`>` 比较仍会选中该动作——变异测试证实
-/// 删掉后测试仍然通过。保留它只为把"依赖 `∞` 比较"变成显式判断，**没有行为差异**（与 Batch 184 的 `ucb1` 同理）。
+/// 删掉后测试仍然通过。保留它只为把"依赖 `∞` 比较"变成显式判断，**没有行为差异**（与 earlier 的 `ucb1` 同理）。
 /// **`frr-mab`'s exploration term uses the action's count inside the window, not its all-time count.** An all-time count makes the
 /// sliding window meaningless and degenerates the selector into UCB1.
 /// **`choice-function` 的归一化按"该映射内的绝对值最大者"缩放**，不是全局常数。用全局常数会让质量项与配对项的量级不可比，
@@ -78,7 +78,7 @@ public sealed record CreditState(
 /// selections and observations interleave.
 /// **同一决策号重复 `select` 必须报错**。允许覆盖会让前一次派发的前驱被静默丢弃，而后续 `observe` 仍能成功、只是记错了配对。
 /// **Selecting twice for the same decision must fail.** Allowing overwrite silently drops the earlier dispatch's predecessor, and the
-/// following `observe` still succeeds — it just records the wrong pair.
+/// Following
 /// **`adaptive-pursuit` 在全更新率（`rate == 1`）时直接取目标值**。基线的理由写的是"避免消去误差跌破概率下界"，但在双精度下
 /// `p + 1.0*(target - p)` 与 `target` 算术上完全相同——变异测试删掉这条捷径后测试**仍然通过**，是**等价变异**。
 /// 保留它是为了与基线逐字一致；把它说成"防止了数值下溢"会是假的。

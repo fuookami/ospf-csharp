@@ -1,4 +1,4 @@
-// 建列请求构造器（B658）的判据 / Criteria for the layer-request builder (B658).
+// 建列请求构造器的判据 / Criteria for the layer-request builder.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **建列请求构造器（B658）** / The layer-request builder (B658).
+/// **建列请求构造器** / The layer-request builder.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**候选板材取主板材**（无主板材才退到第一块）、**目录里没有的物品跳过**、

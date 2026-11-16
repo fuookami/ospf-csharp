@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次下包络 <c>y = min pᵢ</c> / A quadratic lower envelope `y = min pᵢ`.
 /// </summary>
 /// <remarks>
-/// B1157 按基线 `QuadraticMin.kt` 把原本的<b>空壳</b>换成真实编码。
+/// 对齐基线 `QuadraticMin.kt` 把原本的<b>空壳</b>换成真实编码。
 ///
 /// **这个类在此之前是空壳**：**`Evaluate` 恒返回 `null`、`RegisterConstraints` 什么都不做。**
 /// **它能编译、有名字、能进注册表，所以"类型存在"的扫描把它算作已覆盖——
@@ -45,7 +45,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`u` 是 `BinVar`、且 `Σuᵢ = 1`**：**没有这条，多个 `uᵢ` 可同时为 1，
 /// 于是 `y ≥ pᵢ` 对所有 i 同时成立，`y` 被迫 ≥ max 而不是 min。**
 ///
-/// B1157 replaces a stub with the real encoding, following the baseline's `QuadraticMin.kt`.
+/// Replaces a stub with the real encoding, following the baseline's `QuadraticMin.kt`.
 ///
 /// **The class was a stub until now**: **`Evaluate` always returned `null` and `RegisterConstraints` did nothing.**
 /// **It compiled, had a name and could be registered, so a "does the type exist" scan counted it as covered — while

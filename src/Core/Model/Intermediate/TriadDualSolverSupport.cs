@@ -15,10 +15,10 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 public static class TriadDualSolverSupport {
     /// <summary>求解对偶模型并取回原始约束的行对偶值 / Solve the dual model and return row duals for the original constraints.</summary>
     /// <remarks>
-    /// 用于后端逐行对偶不可信时的复核路径：先由 <see cref="LinearTriadModel.Dual()"/> 构造对偶模型，再交给
+    /// 用于后端逐行对偶不可信时的复核路径：先由 <see cref="LinearTriadModel.Dual"/> 构造对偶模型，再交给
     /// <paramref name="solver"/> 求解；求解失败或无解时原样传播，不伪造零对偶。行到机制约束的映射由调用方按行索引完成。
     /// Verification path for untrusted backend row duals: build the dual model with
-    /// <see cref="LinearTriadModel.Dual()"/>, then solve it with <paramref name="solver"/>. Failures and missing
+    /// <see cref="LinearTriadModel.Dual"/>, then solve it with <paramref name="solver"/>. Failures and missing
     /// solutions propagate unchanged instead of fabricating zero duals. Callers map rows back to mechanism constraints
     /// by row index.
     /// </remarks>
@@ -44,10 +44,10 @@ public static class TriadDualSolverSupport {
 
     /// <summary>求解 Farkas 对偶模型并取回原始约束的逐行乘子 / Solve the Farkas dual model and return row multipliers for the original constraints.</summary>
     /// <remarks>
-    /// 用于不可行 LP 的证书提取：先由 <see cref="LinearTriadModel.FarkasDual()"/> 构造 Farkas 对偶模型，再交给
+    /// 用于不可行 LP 的证书提取：先由 <see cref="LinearTriadModel.FarkasDual"/> 构造 Farkas 对偶模型，再交给
     /// <paramref name="solver"/> 求解；归一化行使乘子不可能全零，因此返回值就是原始约束行的 Farkas 乘子。
     /// 失败与无解原样传播，不伪造零证书。行到机制约束的映射由调用方按行索引完成。
-    /// Certificate extraction for an infeasible LP: build the model with <see cref="LinearTriadModel.FarkasDual()"/>,
+    /// Certificate extraction for an infeasible LP: build the model with <see cref="LinearTriadModel.FarkasDual"/>,
     /// then solve it with <paramref name="solver"/>. The normalization row makes an all-zero certificate impossible, so
     /// the returned values are the Farkas multipliers of the original rows. Failures and missing solutions propagate
     /// unchanged instead of fabricating a zero certificate. Callers map rows back to mechanism constraints by row index.

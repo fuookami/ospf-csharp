@@ -11,10 +11,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 流水线与冲突分析的选项 / The pipeline and conflict-analysis options.
 /// </summary>
 /// <remarks>
-/// **B982 补的是 `CriticalConstraintAnalysisPipeline.kt`（359 行）的选项层，没补编排器。**
+/// 补的是 `CriticalConstraintAnalysisPipeline.kt`（359 行）的选项层，没补编排器。**
 /// 编排器要依次调扰动、目标可行性、冲突三个分析器，**而这三个的分析器本体都还没搬**。
 ///
-/// **B982 ports the option layer of `CriticalConstraintAnalysisPipeline.kt` and not the orchestrator**: it calls the perturbation, target-feasibility and conflict analyzers,
+/// **The option layer of `CriticalConstraintAnalysisPipeline.kt` and not the orchestrator is ported**: it calls the perturbation, target-feasibility and conflict analyzers,
 /// **none of whose bodies is ported**.
 /// </remarks>
 public class CriticalAnalysisOptionsTests {
@@ -46,7 +46,7 @@ public class CriticalAnalysisOptionsTests {
 
     /// <summary>**流水线的默认扰动策略不能顺手换成策略类型自己的默认** / The pipeline's default perturbation must not be swapped for the policy's own default.</summary>
     /// <remarks>
-    /// 基线流水线默认 `deltas = emptyList(), removalTest = true`——只做删除测试；
+    /// 基线流水线默认 `deltas = emptyList, removalTest = true`——只做删除测试；
     /// 策略类型自己默认 `deltas = [1.0]`——要跑一串 RHS 扰动。**两者代价差一个数量级**，
     /// 而流水线是自动跑的，**取重的那个会让"跑一次分析"变成一件很贵的事。**
     ///
@@ -77,7 +77,7 @@ public class CriticalAnalysisOptionsTests {
     /// `CandidateLimit` 的默认是漏斗配置的候选上限（32），不是零。
     /// 上一版我把它写成了 0——**那会让默认的流水线只做筛选，永远不做扰动分析，而且没有任何报错。**
     ///
-    /// `CandidateLimit` defaults to the funnel's candidate limit (32), not zero. An earlier draft of this batch wrote 0 — **which would make the default pipeline screen only and
+    /// `CandidateLimit` defaults to the funnel's candidate limit (32), not zero. An earlier draft of wrote 0 — **which would make the default pipeline screen only and
     /// never run perturbation analysis, with no error at all.**
     /// </remarks>
     [Fact]

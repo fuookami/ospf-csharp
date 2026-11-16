@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Math.Algebra.ValueRange;
 /// 值包装器 / Value wrapper.
 /// 密封→抽象 record：Value 普通值、Infinity 正无穷、NegativeInfinity 负无穷。
 /// Sealed→abstract record: Value / Infinity / NegativeInfinity.
-/// 常量通过 NumericConstantsRegistry.For&lt;T&gt;() 解析，不使用 reified 反射。
+/// 常量通过 NumericConstantsRegistry.For&lt;T&gt; 解析，不使用 reified 反射。
 /// </summary>
 [JsonConverter(typeof(ValueWrapperJsonConverterFactory))]
 public abstract record ValueWrapper<T> :

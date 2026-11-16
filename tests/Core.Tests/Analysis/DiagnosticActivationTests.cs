@@ -12,13 +12,13 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 诊断激活集合与冲突提取层级 / The diagnostic activation set and the conflict-extraction tier.
 /// </summary>
 /// <remarks>
-/// **B968 补 `DiagnosticActivation`（基线 316 行）**：`ActivationState`、`DiagnosticActivation`、
-/// `ConflictExtractionTier` 与 `DiagnosticActivationSet`。它只依赖 B964 与 B966 已补的类型。
+/// 补 `DiagnosticActivation`（基线 316 行）**：`ActivationState`、`DiagnosticActivation`、
+/// `ConflictExtractionTier` 与 `DiagnosticActivationSet`。它只依赖 与 已补的类型。
 ///
 /// 判据钉的是**证据边界**：哪些来源被认为"在场"、后端返回的成员里哪些能穿过这层。
 /// **这层漏一个，求解器生成的辅助元素就会出现在公开报告里。**
 ///
-/// **B968 ported `DiagnosticActivation` (316 baseline lines)**. The criteria pin the **evidence boundary**: which sources count as present, and which backend members may cross
+/// **ported `DiagnosticActivation` (316 baseline lines)**. The criteria pin the **evidence boundary**: which sources count as present, and which backend members may cross
 /// it. **One leak here and a solver-generated auxiliary element shows up in a public report.**
 /// </remarks>
 public class DiagnosticActivationTests {

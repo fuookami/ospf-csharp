@@ -47,7 +47,7 @@ public class SimulatedAnnealingTest {
     }
 
     /// <summary>
-    /// SAA should converge on two separate runs (uses new Random() internally, not seed-reproducible).
+    /// SAA should converge on two separate runs (uses new Random internally, not seed-reproducible).
     /// </summary>
     [Fact]
     public async Task InvokeAsync_TwoRuns_ShouldBothConverge() {

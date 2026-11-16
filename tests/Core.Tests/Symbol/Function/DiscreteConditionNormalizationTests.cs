@@ -18,11 +18,11 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 装配：范围与多项式必须用同一个 δ / The range and the polynomial must share one delta.
 /// </summary>
 /// <remarks>
-/// B1174 按基线 `DiscreteCondition.kt` 的 `normalizeDiscreteCondition` 补，并补齐 `transformForRelationIndicator`。
+/// 对齐基线 `DiscreteCondition.kt` 的 `normalizeDiscreteCondition` 补，并补齐 `transformForRelationIndicator`。
 ///
-/// **这一批只做装配**——归一化范围、折叠判断、格点证明三块都已就位。
+/// **这里只做装配**——归一化范围、折叠判断、格点证明三块都已就位。
 ///
-/// B1174 assembles the pieces: range normalization, gap folding and lattice proofs are already in place.
+/// Assembles the pieces: range normalization, gap folding and lattice proofs are already in place.
 /// </remarks>
 public class DiscreteConditionNormalizationTests
 {
@@ -30,7 +30,7 @@ public class DiscreteConditionNormalizationTests
     /// **范围与多项式用同一个 `δ` 平移** / The range shifts by the same delta.
     /// </summary>
     /// <remarks>
-    /// **这是本批最重要的一条，也是最容易写错的一条。**
+    /// **这是这里最重要的一条，也是最容易写错的一条。**
     ///
     /// **`GE` 时多项式变成 `p + δ`，而范围必须变成 `[lower + δ, upper + δ]`。**
     /// **如果范围只平移 `0`，两者错开 `δ`，分支存在性判断就在一个偏移过的区间上做——
@@ -38,7 +38,7 @@ public class DiscreteConditionNormalizationTests
     ///
     /// **取 `δ = 2`、范围 `[−5, 3]`：正确结果是 `[−3, 5]`；只平移 0 会得到 `[−5, 3]`，相差 2。**
     ///
-    /// **This is the batch's most important criterion and the easiest to get wrong.**
+    /// **This is the most important criterion here and the easiest to get wrong.**
     ///
     /// **Under `GE` the polynomial becomes `p + δ`, so the range must become `[lower + δ, upper + δ]`.**
     /// **Leaving the range unshifted puts the two off by `δ`, and the branch-existence test then runs on a shifted

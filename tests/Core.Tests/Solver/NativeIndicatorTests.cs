@@ -24,8 +24,7 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativeIndicator.kt` 的 `prepareNativeIndicator` / `prepareIndicator`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativeIndicatorTests
 {
     /// <summary>
@@ -137,7 +136,7 @@ public class NativeIndicatorTests
     /// **输入不能碰自己这一族的保留列** / The input must not touch its own family's retained columns.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条：** **`resultKeys` 收集了结果列、等价结果、零带侧列、
+    /// **这是这里最有内容的一条：** **`resultKeys` 收集了结果列、等价结果、零带侧列、
     /// 以及合取/差值的两个结果列，而主输入的每一个项都不许是其中之一。**
     ///
     /// **判据逐个来源测：** **结果列、等价结果、零带侧列、合取结果、差值结果。**
@@ -187,7 +186,7 @@ public class NativeIndicatorTests
     /// **哪些拒绝由本层负责、哪些由上游负责** / Which refusals belong here and which to the upstream layer.
     /// </summary>
     /// <remarks>
-    /// **这是一条"归属"判据，写它是因为本批有两条变异<b>抓不住</b>，而原因都是上游先拒掉。**
+    /// **这是一条"归属"判据，写它是因为这里有两条变异<b>抓不住</b>，而原因都是上游先拒掉。**
     ///
     /// **`GenerateConstraints` 会检查的东西（本层的同名检查因此不可达）：**
     ///
@@ -211,10 +210,10 @@ public class NativeIndicatorTests
     /// **所以"本层的检查不可达"不等于"本层多余"——
     /// 而是说它的作用被上游覆盖了，本层的价值在别的几条。**
     ///
-    /// **这也解释了为什么本批只有 2 个变异能抓住：** **另外两个测的是上游的行为，
+    /// **这也解释了为什么这里只有 2 个变异能抓住：** **另外两个测的是上游的行为，
     /// 改本层当然不会红。**
     ///
-    /// **An "attribution" criterion, written because two mutations in this batch <b>could not be caught</b> — both because
+    /// **An "attribution" criterion, written because two mutations in <b>could not be caught</b> — both because
     /// the upstream refuses first.**
     ///
     /// **What `GenerateConstraints` checks, making this layer'schecks of the same name unreachable** (see the first table). **What is

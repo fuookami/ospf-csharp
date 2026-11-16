@@ -77,10 +77,10 @@ public sealed class ModelPreparationBenchmarkTests {
     /// <summary>**稀疏主问题能装配出行，且行数随列数增长** / The sparse master assembles rows, and the row count grows with the columns.</summary>
     /// <remarks>
     /// **必须调用 `[Benchmark]` 方法本身**，不能只调内部的 `RegisterMaster`：两者是**两份独立的调用点**，
-    /// 变异只改其中一份时，只测另一份的断言会静默通过（本批实测过一次）。
+    /// 变异只改其中一份时，只测另一份的断言会静默通过（这里实测过一次）。
     ///
     /// **The `[Benchmark]` method itself must be called**, not just the internal `RegisterMaster`: they are **two independent call sites**, and a mutation
-    /// that changes only one of them slips past an assertion that exercises only the other (observed once in this batch).
+    /// that changes only one of them slips past an assertion that exercises only the other (observed once in).
     /// </remarks>
     [Fact]
     public void AssembleSparseMaster_ShouldProduceRows() {

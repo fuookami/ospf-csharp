@@ -1,4 +1,4 @@
-// 乘客行程（B758）/ Passenger itineraries (B758).
+// 乘客行程/ Passenger itineraries.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **乘客行程（B758）** / Passenger itineraries (B758).
+/// **乘客行程** / Passenger itineraries.
 /// </summary>
 /// <remarks>
 /// 三条规则组成一条行程：非空、全是航班任务、**相邻航段首尾相接**。基线用 Kotlin 的 `assert`，它在 release 构建里整个消失——
@@ -101,7 +101,7 @@ public class Demo4PassengerTests {
     /// **不连通的行程被拒绝** / A disconnected itinerary is rejected.
     /// </summary>
     /// <remarks>
-    /// 三点成对：北京→上海 接 北京→广州（不连通）→ **抛 `ArgumentException`** / 空行程 → 抛 / 连通的两段 → 正常构造。
+    /// 三点成对：北京→上海接 北京→广州（不连通）→ **抛 `ArgumentException`** / 空行程 → 抛 / 连通的两段 → 正常构造。
     /// 基线这里是 `assert`，release 构建里不执行——**"生产上悄悄放过"正是这条判据存在的理由**。
     ///
     /// Three paired points: 北京→上海 followed by 北京→广州 (disconnected) **throws `ArgumentException`**; an empty itinerary throws; and two connected legs construct fine. The baseline uses

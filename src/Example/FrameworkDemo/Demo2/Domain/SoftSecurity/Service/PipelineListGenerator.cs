@@ -23,21 +23,21 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.SoftSecurity.Service;
 /// | 管线 | 条件 |
 /// | --- | --- |
 /// | `AdviceBallastWeightLimit` | `ballast != null` |
-/// | `EmptyHatedLimit` | **全配载**模式 **且** 机型是 **B757** **且** 主舱货 ≥ **5** 件 |
+/// | `EmptyHatedLimit` | **全配载**模式 **且** 机型是 **** **且** 主舱货 ≥ **5** 件 |
 /// | `MainDeckDoorEmptyLimit` | `aircraftModel.mainDeckDoorEmptyPrefer` |
 /// | `DivideEmptyLoadingLimit` | 无条件 |
 ///
 /// 三处必须照抄：
 ///
 /// 1. **`withSoftSecurity` 为假时直接返回空表**，一条管线都不加。这不是"优化"，而是软安全在这一模式下**整体关闭**。
-/// 2. **`EmptyHatedLimit` 的三个条件缺一不可**：全配载、B757、主舱货 ≥ 5。只写"全配载"会让 B737 也加这条目标；
+/// 2. **`EmptyHatedLimit` 的三个条件缺一不可**：全配载、 、主舱货 ≥ 5。只写"全配载"会让 也加这条目标；
 ///    阈值写成 `> 5` 会漏掉正好 5 件的情形（基线是 `>= 5`）。
 /// 3. **`MainDeckDoorEmptyLimit` 的权重是分类阶梯**（空板 1 / 非空板 2 / 箱 5 / 其它 0），再乘 `parameter.besideDoorMainPosition`。
 ///    把阶梯写成常数会让"舱门旁放空板"与"放箱"代价相同，整个偏好失效。**三个条件互斥，顺序不影响结果**（见 `DoorWeight`）。
 ///
 /// Aligned with the baseline: **four conditions, four distinct tests**, tabulated above. Three things must be copied: **a false `withSoftSecurity` returns an empty list**
-/// immediately — not an optimisation but soft security being **switched off entirely** in that mode; **`EmptyHatedLimit` needs all three conditions** — full-load, B757 and at least
-/// five main-deck items, since testing only "full-load" adds the objective for a B737 too, and `> 5` would miss exactly five (the baseline uses `>= 5`); and
+/// immediately — not an optimisation but soft security being **switched off entirely** in that mode; **`EmptyHatedLimit` needs all three conditions** — full-load, and at least
+/// five main-deck items, since testing only "full-load" adds the objective for a too, and `> 5` would miss exactly five (the baseline uses `>= 5`); and
 /// **`MainDeckDoorEmptyLimit`'s weight is a class ladder** (empty pallet 1, non-empty pallet 2, container 5, otherwise 0) multiplied by `parameter.besideDoorMainPosition`, since
 /// collapsing the ladder to a constant makes "an empty pallet by the door" cost the same as "a container", disabling the preference.
 /// </remarks>
@@ -80,8 +80,8 @@ internal sealed class PipelineListGenerator
             pipelines.Add(advice.Invoke);
         }
 
-        // 全配载 + B757 + 主舱货 ≥ 5，三个条件缺一不可。
-        // Full load, B757 and at least five main-deck items — all three.
+        // 全配载 + + 主舱货 ≥ 5，三个条件缺一不可。
+        // Full load, and at least five main-deck items — all three.
         if (stowageMode == StowageMode.FullLoad
             && _aggregation.AircraftModel.Type == AircraftType.B757
             && CountMainDeckItems() >= 5)

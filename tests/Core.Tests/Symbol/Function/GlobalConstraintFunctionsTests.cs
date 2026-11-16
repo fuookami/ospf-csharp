@@ -21,8 +21,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **这是一个纯门面，所以它的价值不在逻辑，而在"哪里做校验"。**
 ///
-/// adds
-///
 /// **A pure façade, so its value is not logic but where validation happens.**
 /// </remarks>
 public class GlobalConstraintFunctionsTests
@@ -122,12 +120,12 @@ public class GlobalConstraintFunctionsTests
     /// <summary>**`null` 输入是参数错误，不是"空约束"** / A null argument is an argument error.</summary>
     /// <remarks>
     /// **`ArgumentNullException` 与"返回一个失败结果"是两种不同的契约。**
-    /// **门面选择前者：`null` 是调用方的编程错误，`Enumerable.Empty()` 才是"空但合法"。**
+    /// **门面选择前者：`null` 是调用方的编程错误，`Enumerable.Empty` 才是"空但合法"。**
     ///
     /// **混同这两者会让一个空集合悄悄变成 `null` 的替身，而 `null` 通常在很久之后才炸。**
     ///
     /// **`ArgumentNullException` and "return a failure result" are two different contracts.**
-    /// **The façade picks the former: `null` is a caller's programming error, while `Enumerable.Empty()` is "empty but
+    /// **The façade picks the former: `null` is a caller's programming error, while `Enumerable.Empty` is "empty but
     /// legal".**
     ///
     /// **Conflating them lets an empty collection stand in for `null`, and `null` usually blows up much later.**
@@ -146,7 +144,7 @@ public class GlobalConstraintFunctionsTests
     /// **`Lower` 的两个重载走同一条实现** / Both `Lower` overloads share one implementation.
     /// </summary>
     /// <remarks>
-    /// **收模型的那个内部先 `Snapshot()` 再转给收快照的那个。**
+    /// **收模型的那个内部先 `Snapshot` 再转给收快照的那个。**
     ///
     /// **判据因此<b>对同一个模型分别走两条路，并比对结果</b>——
     /// **如果两者会漂移，这里就会红。**
@@ -154,7 +152,7 @@ public class GlobalConstraintFunctionsTests
     /// **断言的是"两条路的结论相同"，而不是"都没失败"**：
     /// **`IsOk` 只说明没抛，说不出降阶结果是否一致。**
     ///
-    /// **The model overload calls `Snapshot()` and delegates to the snapshot overload.**
+    /// **The model overload calls `Snapshot` and delegates to the snapshot overload.**
     ///
     /// **The criterion therefore walks <b>both routes on the same model and compares</b>** — **if they could drift,
     /// this reddens.**

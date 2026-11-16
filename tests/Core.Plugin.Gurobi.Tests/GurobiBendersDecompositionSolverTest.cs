@@ -76,15 +76,15 @@ public class GurobiBendersDecompositionSolverTest {
         //
         // 问题描述 / Problem description:
         //   2 个设施, 2 个客户 / 2 facilities, 2 customers
-        //   设施开设成本: f1=4, f2=5 / Opening costs: f1=4, f2=5
-        //   设施容量: cap1=10, cap2=10 / Capacities: cap1=10, cap2=10
-        //   客户需求: d1=5, d2=5 / Demands: d1=5, d2=5
-        //   运输成本: c11=2, c12=3, c21=4, c22=1 / Transport costs
+        // 设施开设成本: f1=4, f2=5 / Opening costs: f1=4, f2=5
+        // 设施容量: cap1=10, cap2=10 / Capacities: cap1=10, cap2=10
+        // 客户需求: d1=5, d2=5 / Demands: d1=5, d2=5
+        // 运输成本: c11=2, c12=3, c21=4, c22=1 / Transport costs
         //
         // 主问题 (Master): min 4*y1 + 5*y2 + theta, y binary
         // 子问题 (Sub, for fixed y*): min 2*x11+3*x12+4*x21+1*x22
-        //   s.t. x11+x12 <= 10*y1*, x21+x22 <= 10*y2*
-        //        x11+x21 = 5, x12+x22 = 5, xij >= 0
+        // s.t. x11+x12 <= 10*y1*, x21+x22 <= 10*y2*
+        // x11+x21 = 5, x12+x22 = 5, xij >= 0
         //
         // 最优解: y1=1, y2=1, obj=24 / Optimal: y1=1, y2=1, obj=24
 
@@ -356,9 +356,9 @@ public class GurobiBendersDecompositionSolverTest {
         // Verify sub-problem dual extraction correctness.
         //
         // 简单 LP: min 2*x1 + 3*x2
-        //   s.t. x1 + x2 <= 10  (对偶 pi1)
-        //        x1 + x2 >= 5   (对偶 pi2)
-        //        x1, x2 >= 0
+        // s.t. x1 + x2 <= 10  (对偶 pi1)
+        // x1 + x2 >= 5   (对偶 pi2)
+        // x1, x2 >= 0
         // 最优解: x1=5, x2=0 (or any with x1+x2=5), obj=10
         // 对偶: pi1=0 (slack), pi2=-2 (binding >= constraint)
 

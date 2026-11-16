@@ -1,4 +1,4 @@
-// 产能调度聚合类补齐总产能（B738）/ The capacity scheduling aggregation gains its total capacity (B738).
+// 产能调度聚合类补齐总产能/ The capacity scheduling aggregation gains its total capacity.
 
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.CapacityScheduling;
 
 /// <summary>
-/// **产能调度聚合类补齐总产能（B738）** / The capacity scheduling aggregation gains its total capacity (B738).
+/// **产能调度聚合类补齐总产能** / The capacity scheduling aggregation gains its total capacity.
 /// </summary>
 /// <remarks>
 /// `CapacitySchedulingAggregation` 早就在（按文件名扫也扫得出来），但它**只有计数和索引，缺基线的两个总产能成员**：

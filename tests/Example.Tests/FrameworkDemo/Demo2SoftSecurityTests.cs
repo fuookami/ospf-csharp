@@ -31,7 +31,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **软性安全域（B611）** / The soft-security domain (B611).
+/// **软性安全域** / The soft-security domain.
 /// </summary>
 /// <remarks>
 /// 整个子域从零落地：一个模型（`DivideEmptyLoading`，三族中间符号）+ 四条管线（**全是目标，不是约束**）+ 生成器的四个条件。
@@ -110,8 +110,8 @@ public class Demo2SoftSecurityTests {
                 LayoutGroups: new List<LayoutSelectionGroup>(),
                 WeightUnit: MassUnits.Gram);
 
-            // `MainDeckDoorEmptyPrefer` 是**由机型派生**的（B757/B767），不能注入——所以判据改用 B757 触发它。
-            // `MainDeckDoorEmptyPrefer` is **derived from the aircraft type** (B757/B767) and cannot be injected, so the criteria trigger it through a B757.
+            // `MainDeckDoorEmptyPrefer` 是**由机型派生**的，不能注入——所以判据改用 触发它。
+            // `MainDeckDoorEmptyPrefer` is **derived from the aircraft type** and cannot be injected, so the criteria trigger it through a.
             AircraftModel = new AircraftModel(aircraftType, aircraftType.ToString(), new AircraftMinorModel(aircraftType.ToString()));
             Decks = decks ?? new List<Deck>();
             var stowage = new StowageModel(Items, Positions) {
@@ -204,9 +204,9 @@ public class Demo2SoftSecurityTests {
         var lowForward = new PositionLocation(new HashSet<PositionLocationTag> { PositionLocationTag.Low, PositionLocationTag.LowForward });
         // **列表顺序与装载顺序刻意相反**：不排序的话相邻对会连成 `0-1`、`2-3`（跨甲板），排序后才是 `0-2`、`1-3`。
         // **List order deliberately opposes loading order**: without sorting the pairs would be `0-1` and `2-3` (crossing decks); sorted they are `0-2` and `1-3`.
-        // **同一甲板内，下标顺序与装载顺序必须相反**：否则按下标排（`bucket.Sort()`）会得到同样的对，
+        // **同一甲板内，下标顺序与装载顺序必须相反**：否则按下标排（`bucket.Sort`）会得到同样的对，
         // 排序那一步就不可观测了。Main 上 P1 装 2、P3 装 1，排序后是 `(2, 0)`，不排序是 `(0, 2)`。
-        // **Within one deck the index order must oppose the loading order**: otherwise sorting by index (`bucket.Sort()`) yields the same pairs and the sort step is
+        // **Within one deck the index order must oppose the loading order**: otherwise sorting by index (`bucket.Sort`) yields the same pairs and the sort step is
         // unobservable. On Main, P1 loads 2 and P3 loads 1, so sorting gives `(2, 0)` and not sorting gives `(0, 2)`.
         var twoDecks = new List<StowagePosition> {
             MakePosition("P1", 2UL),
@@ -253,15 +253,15 @@ public class Demo2SoftSecurityTests {
 
 
         // **三族符号都还没有落地**：注册在构造第一族时即明确失败。判据钉住"失败且说清原因"，
-        // 不钉住"符号存在"——后者在本批是假的。
+        // 不钉住"符号存在"——后者在这里是假的。
         // **None of the three families lands yet**: registration fails explicitly while building the first. The criterion pins "fails and says why", not "the symbols exist",
-        // which would be false this batch.
+        // which would be false.
         model.Tokens.Symbols.Select(symbol => symbol.Name).Should()
             .NotContain(name => name.StartsWith("empty_", System.StringComparison.Ordinal),
                 "no divide-empty symbol is registered while the conditional branch is unbuildable");
 
-        // **条件分支在本批不可构造**，注册明确失败并说明原因。判据钉住这件事，不钉住符号内容。
-        // **The conditional branch is not constructible this batch**; registration fails explicitly and says why. The criterion pins that, not the symbol contents.
+        // **条件分支在这里不可构造**，注册明确失败并说明原因。判据钉住这件事，不钉住符号内容。
+        // **The conditional branch is not constructible**; registration fails explicitly and says why. The criterion pins that, not the symbol contents.
     }
 
     /// <summary>
@@ -291,9 +291,9 @@ public class Demo2SoftSecurityTests {
 
         int constraintsBefore = model.Constraints.Count;
         int objectivesBefore = model.MetaSubObjects.Count;
-        // **B782 把这个缺口补上了**：`IfThenFunction.Create` 能构出条件符号，B604 记的"离散格点证明拒绝"其实是条件常数里那
+        // 把这个缺口补上了**：`IfThenFunction.Create` 能构出条件符号，记的"离散格点证明拒绝"其实是条件常数里那
         // 1e-10 造成的。判据随之翻面：注册**必须成功**，而且它加的是目标项、不是约束行。
-        // **B782 closed that gap**: `IfThenFunction.Create` can build the conditional symbol, and what B604 recorded as "the discrete-lattice proof rejects it" was the 1e-10 baked
+        // **closed that gap**: `IfThenFunction.Create` can build the conditional symbol, and what recorded as "the discrete-lattice proof rejects it" was the 1e-10 baked
         // into the condition constant. The criterion flips with it: registration **must succeed**, and it adds objective parts, not constraint rows.
         int constraintsBeforeConditional = model.Constraints.Count;
         Result<Success, ErrorCode, Error<ErrorCode>> registered = rig.Aggregation.DivideEmptyLoading.Register(model);
@@ -343,12 +343,12 @@ public class Demo2SoftSecurityTests {
     ///
     /// 1. `withSoftSecurity` 为假（预配载 / 建议打板）→ **零条**，即使其他条件都满足。
     /// 2. 无条件管线恒有一条（`DivideEmptyLoadingLimit`）。
-    /// 3. `EmptyHatedLimit` 需要**三个条件同时成立**：全配载 + B757 + 主舱货 ≥ 5。B737 即使有 5 件主舱货也**不加**。
-    /// 4. 主舱货 **4 件**的 B757 也**不加**（阈值是 `>= 5`，差一件就出局）。
+    /// 3. `EmptyHatedLimit` 需要**三个条件同时成立**：全配载 + + 主舱货 ≥ 5。 即使有 5 件主舱货也**不加**。
+    /// 4. 主舱货 **4 件**的 也**不加**（阈值是 `>= 5`，差一件就出局）。
     ///
     /// Four paired points: a false `withSoftSecurity` (predistribution / weight recommendation) gives **zero** pipelines even with every other condition satisfied; the
-    /// unconditional pipeline is always there; `EmptyHatedLimit` needs **all three** conditions — full-load, B757, at least five main-deck items — so a B737 with five main-deck items
-    /// gets **none**; and a B757 with **four** gets none either, since the threshold is `>= 5`.
+    /// unconditional pipeline is always there; `EmptyHatedLimit` needs **all three** conditions — full-load,，at least five main-deck items — so a with five main-deck items
+    /// gets **none**; and a with **four** gets none either, since the threshold is `>= 5`.
     /// </remarks>
     [Fact]
     public void PipelineListGenerator_ShouldHonourFourConditions() {
@@ -383,8 +383,8 @@ public class Demo2SoftSecurityTests {
         Generate(b757, StowageMode.Predistribution).Should().HaveCount(2, "predistribution still enables soft security");
         Generate(b757, StowageMode.WeightRecommendation).Should().BeEmpty("soft security is off in weight recommendation");
 
-        // 2/3. 全配载 + B757 + 5 件 → **三条**：空载厌恶 + 门舱偏好（B757 派生）+ 分隔空载。
-        // 2/3. Full load, B757, five items gives **three**: empty-hating, the door preference (B757-derived) and divide-empty.
+        // 2/3. 全配载 + + 5 件 → **三条**：空载厌恶 + 门舱偏好+ 分隔空载。
+        // 2/3. Full load,，five items gives **three**: empty-hating, the door preference and divide-empty.
         Generate(b757, StowageMode.FullLoad).Should().HaveCount(3);
 
         var b737 = new Rig(MainDeckItems(5), positions, AircraftType.B737);
@@ -392,13 +392,13 @@ public class Demo2SoftSecurityTests {
 
         // 4. 四件 → 差一件就出局。
         // 4. Four items: one short and out.
-        // B757 + 4 件：空载厌恶出局，但门舱偏好仍在 → 2 条。
-        // B757 with four items: empty-hating is out but the door preference remains, so two.
+        // + 4 件：空载厌恶出局，但门舱偏好仍在 → 2 条。
+        // with four items: empty-hating is out but the door preference remains, so two.
         var fourItems = new Rig(MainDeckItems(4), positions, AircraftType.B757);
         Generate(fourItems, StowageMode.FullLoad).Should().HaveCount(2, "the threshold is at least five, so only door plus divide-empty remain");
 
-        // 门舱偏好由机型派生：B757 一件主舱货 → 门舱 + 分隔空载 = 2 条（不足 5 件，无空载厌恶）。
-        // The door preference is derived from the type: a B757 with one main-deck item gives door plus divide-empty = 2 (fewer than five, so no empty-hating).
+        // 门舱偏好由机型派生： 一件主舱货 → 门舱 + 分隔空载 = 2 条（不足 5 件，无空载厌恶）。
+        // The door preference is derived from the type: a with one main-deck item gives door plus divide-empty = 2 (fewer than five, so no empty-hating).
         var door = new Rig(MainDeckItems(1), positions, AircraftType.B757);
         Generate(door, StowageMode.FullLoad).Should().HaveCount(2, "the B757 door preference adds its own pipeline");
 
@@ -438,7 +438,7 @@ public class Demo2SoftSecurityTests {
 
         // **恰好一个**目标项：多于一个说明管线跑了两次（`Register` 与生成器都在加），那是个真实缺陷。
         // **Exactly one** objective: more than one means the pipeline ran twice (`Register` and the generator both adding), a real defect.
-        model.MetaSubObjects.Should().ContainSingle("only the door pipeline lands this batch");
+        model.MetaSubObjects.Should().ContainSingle("only the door pipeline lands");
         Fuookami.Ospf.Core.Model.Mechanism.MetaSubObject<Flt64> doorTerm = model.MetaSubObjects[0];
         doorTerm.Name.Should().Be("main deck door empty");
         doorTerm.Polynomial.Monomials.Should().HaveCount(3, "all three items sit beside the door");

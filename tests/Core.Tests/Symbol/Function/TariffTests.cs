@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 累进是连续的，全量折扣会跳降 / Incremental is continuous; all-units jumps down.
 /// </summary>
 /// <remarks>
-/// B1155 补 `IncrementalTariff` 与 `AllUnitsDiscountFunction`（基线 `Tariff.kt`）。
+/// 补 `IncrementalTariff` 与 `AllUnitsDiscountFunction`（基线 `Tariff.kt`）。
 ///
 /// **两者在第一个区间内完全相同**——**所以只测小值的判据分不开它们。**
 /// **分开它们必须跨越一个断点**：
@@ -31,8 +31,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// | 100 | 990 + 1 × 5 = **995** | **100 × 5 = 500** |
 ///
 /// **全量折扣在断点处跳降（990 → 500），累进只涨了 5。**
-///
-/// adds
 ///
 /// **They agree exactly on the first segment** — **so a criterion that only tests small values cannot separate them.**
 /// **Separating them requires crossing a breakpoint**:

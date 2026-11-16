@@ -11,12 +11,10 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 使用位置：被引用优先于"目标与约束都有" / Referenced outranks "both".
 /// </summary>
 /// <remarks>
-/// B1179 按基线 `FunctionExpansion.kt` 的 `FunctionUsageSummary`、`FunctionUsageLocation`、
+/// 对齐基线 `FunctionExpansion.kt` 的 `FunctionUsageSummary`、`FunctionUsageLocation`、
 /// `FunctionInputShape`、`PiecewiseContinuity` 补。
 ///
 /// **四个布尔是事实，三个派生属性是决定——分开它们让"何时保留结果变量"只有一处规则。**
-///
-/// adds
 ///
 /// **Four booleans are facts, three derived members are decisions — keeping them apart puts "when to retain the result
 /// variable" in one place.**
@@ -27,7 +25,7 @@ public class FunctionUsageSummaryTests
     /// **被引用优先于"目标与约束都有"** / Referenced outranks "both".
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据，也是唯一能被写错的地方。**
+    /// **这是这里的核心判据，也是唯一能被写错的地方。**
     ///
     /// **一个既出现在目标、又出现在约束、同时被别的结构引用的函数，
     /// 位置应当报 `Nested`——因为"被引用"是最强的保留理由。**

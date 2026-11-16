@@ -1,4 +1,4 @@
-// 拖车换装/绕行（B623）的判据 / Criteria for trailer change and circling (B623).
+// 拖车换装/绕行的判据 / Criteria for trailer change and circling.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **拖车换装 / 绕行（B623）** / Trailer change and circling (B623).
+/// **拖车换装 / 绕行** / Trailer change and circling.
 /// </summary>
 /// <remarks>
 /// 判据的重点：拖车对只收"有货在本次装载里"的、拖车内货物对**不排序**、换装条件的**交叉**、以及两个目标都是最小化。
@@ -189,7 +189,7 @@ public class Demo2TrailerLoadingTests {
     /// 两点成对：
     ///
     /// 1. 只有一辆拖车 → 没有相邻对 → 换装目标**不加**、返回成功。
-    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty()) return ok`。
+    /// 2. 目标位数量不变——基线的 `if (monomials.isEmpty) return ok`。
     ///
     /// Two paired points: a single trailer gives no adjacent pair, so **no** change objective is added and success is returned; and the objective count is unchanged, per the baseline's
     /// early return.

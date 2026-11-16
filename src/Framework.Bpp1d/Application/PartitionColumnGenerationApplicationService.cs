@@ -42,13 +42,13 @@ public sealed record PartitionColumnGenerationOutcome<V>(
 /// 收尾复核不是可选项：它是本条链上**唯一能抓住模型/求解器错位**的地方。没收敛时状态写 `RestrictedFeasible`，
 /// 别让人以为手里的整数解是全局最优。
 ///
-/// 另一处刻意收窄：**批次定价（`BatchPricingEnabled`）显式拒绝**，与 B433 对 Benders 的处理一致——静默走单分区路径
+/// 另一处刻意收窄：**批次定价（`BatchPricingEnabled`）显式拒绝**，与 对 Benders 的处理一致——静默走单分区路径
 /// 会让调用方以为拿到了批次语义。
 ///
 /// **This class stops once the root LP converges.** The final integer master and the full loading result are **not ported**: that step must reuse the
 /// "recompute the objective from the full model" check in `DiscreteLoadingApplicationService.finish`, which is **the only thing on this path that catches a
 /// model/solver mismatch**. **Producing no result beats producing an unverified one.** The second deliberate narrowing: **batch pricing
-/// (`BatchPricingEnabled`) is refused explicitly**, matching B433's handling of Benders — silently taking the single-partition path would let callers believe they hold
+/// (`BatchPricingEnabled`) is refused explicitly**, matching the earlier handling of Benders — silently taking the single-partition path would let callers believe they hold
 /// batch semantics.
 /// </remarks>
 public sealed class PartitionColumnGenerationApplicationService<V>

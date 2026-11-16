@@ -135,7 +135,7 @@ public sealed class BenchmarkRunOptionsTests {
     /// **`IncludeRegex` 的语义是 glob，不是正则**——名字与文档都在误导 / `IncludeRegex` means a glob, not a regex — the name and docs both mislead.
     /// </summary>
     /// <remarks>
-    /// **B406 实跑基准时踩到的。** 传 `SymbolCombine`（当正则理解是合法的子串匹配）
+    /// **实跑基准时踩到的。** 传 `SymbolCombine`（当正则理解是合法的子串匹配）
     /// 结果是 **0 个基准执行**，BenchmarkDotNet 只打印可用列表。
     /// 换成 `*SymbolCombine*` 才跑起来——18 个基准、179 秒。
     ///
@@ -151,7 +151,7 @@ public sealed class BenchmarkRunOptionsTests {
     /// 判据钉住**参数被原样透传**：这样"名字叫正则、实际按 glob 用"这个坑不会被悄悄抹平。
     /// 若要修，正确做法是把属性**改名**为 `IncludeGlob` 并同步文档——那会让这条判据变红，正是提醒。
     ///
-    /// **Hit this while actually running benchmarks in B406.** Passing `SymbolCombine` (a valid substring match if read as a regex) executed **zero benchmarks**;
+    /// **Hit this while actually running benchmarks.** Passing `SymbolCombine` (a valid substring match if read as a regex) executed **zero benchmarks**;
     /// BenchmarkDotNet merely printed the available list. `*SymbolCombine*` ran **18 benchmarks in 179 s**. The cause: `ToCommandLine` drops `IncludeRegex` **verbatim**
     /// into BenchmarkDotNet's `--filter`, which is a **glob** pattern (`*`) and knows nothing of `|`, `+` or `\d` (table above). The criterion pins the **verbatim
     /// pass-through** so the trap cannot be papered over. Fixing it properly means **renaming** the property to `IncludeGlob` plus a docs update — which turns this

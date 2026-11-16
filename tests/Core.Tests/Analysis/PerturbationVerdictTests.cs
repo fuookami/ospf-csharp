@@ -111,13 +111,13 @@ public class PerturbationVerdictTests {
 
     /// <summary>**显式声明"支持"也压过矩阵的推断** / An explicit "supported" also outranks the inference.</summary>
     /// <remarks>
-    /// **这是三态里最容易漏的一态。** B1007 已经覆盖了"显式不支持"和"空列表"，
+    /// **这是三态里最容易漏的一态。** 已有判据覆盖了"显式不支持"和"空列表"，
     /// **但没覆盖"显式支持"**——于是一个只实现了 `return declared != Unsupported` 却把
     /// `Supported` 当 `Partial` 处理的实现照样通过。
     ///
     /// 这里构造一个**模型类型受限**的矩阵，而显式声明说"支持"：**声明必须赢，否则这份声明毫无用处。**
     ///
-    /// **This is the state easiest to miss.** B1007 covered "explicitly unsupported" and "empty list" but **not "explicitly supported"** — so an implementation that maps `Supported` to
+    /// **This is the state easiest to miss.** An earlier criterion covered "explicitly unsupported" and "empty list" but **not "explicitly supported"** — so an implementation that maps `Supported` to
     /// `Partial` would still pass. The matrix here is model-type-restricted while the declaration says supported: **the declaration has to win, or it is pointless.**
     /// </remarks>
     [Fact]

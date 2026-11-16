@@ -17,9 +17,9 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 /// CPLEX 原生 PWL 的校验与写入 / CPLEX's native PWL validation and writing.
 /// </summary>
 /// <remarks>
-/// B1233 按基线 `CplexNativePiecewise.kt` 补写侧，与 B1232 的 COPT 同形。
+/// 对齐基线 `CplexNativePiecewise.kt` 补写侧，与 COPT 同形。
 ///
-/// **这一批判据的重点不在"写了 SOS2"（那一层 B1232 已经钉过、本批结构相同），**
+/// **这里判据的重点不在"写了 SOS2"（那一层已经钉过、这里结构相同），**
 /// **而在<b>两条 CPLEX 特有的校验</b>：非有限值、断点严格递增。**
 ///
 /// **它们存在的理由值得记：** **"两个后端的写入器结构相同"很容易被读成"校验也应该相同"。
@@ -28,9 +28,7 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 ///
 /// **所以这两条判据同时在验两件事：CPLEX 的防御到位，以及"合并两个写入器"这个念头是错的。**
 ///
-/// adds
-///
-/// **The criteria here focus not on "the SOS2 is written" (B1232 pinned that, and the shape matches) but on the <b>two
+/// **The criteria here focus not on "the SOS2 is written" (pinned that, and the shape matches) but on the <b>two
 /// CPLEX-specific checks</b>: non-finite values and strictly increasing breakpoints.**
 ///
 /// **Why they matter: "the two writers have the same shape" reads easily as "the checks should match too", yet each check

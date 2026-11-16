@@ -25,19 +25,19 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.CapacityScheduling.Mode
 /// * `operationTime[a, s] = 单位加工时长 · Σ_顺序位 x[a, s, o]`；
 /// * `capacity[e, s] = Σ_{执行器为 e 的动作} operationTime[a, s]`。
 ///
-/// 这一点差别很关键：B725 的 `CapacityUsageVariables` 建的是**自由变量**，它和数量之间没有任何行相连，
-/// 所以"占用 ≤ 可用时长"对数量没有任何约束力——B733 正是因此撤掉了那条判据。这里改成表达式，
+/// 这一点差别很关键： 的 `CapacityUsageVariables` 建的是**自由变量**，它和数量之间没有任何行相连，
+/// 所以"占用 ≤ 可用时长"对数量没有任何约束力—— 正是因此撤掉了那条判据。这里改成表达式，
 /// 容量约束就真的压到数量上。
 ///
 /// 单位加工时长按基线的规则取：**离散动作且有 `BatchDuration` 时用它，否则取时间窗刻度（= 1）**。
-/// （B735 的注释说 C# 接口没有 `BatchDuration`——那是错的，它从 B4xx 起就在，只是没人用。）
+/// （的注释说 C# 接口没有 `BatchDuration`——那是错的，它从 B4xx 起就在，只是没人用。）
 ///
 /// In the baseline `capacity[e, s]` is **not a free variable** but an expression derived from the amounts: `operationTime[a, s] = unit processing time · sum of x[a, s, o]` and
-/// `capacity[e, s] = sum of operationTime[a, s]` over the actions of executor `e`. That difference matters: B725's `CapacityUsageVariables` builds **free variables** with no row tying
-/// them to the amounts, so "occupancy within available duration" constrains nothing — which is exactly why B733 removed that criterion. Expressed this way the capacity constraint really
+/// `capacity[e, s] = sum of operationTime[a, s]` over the actions of executor `e`. That difference matters: the earlier `CapacityUsageVariables` builds **free variables** with no row tying
+/// them to the amounts, so "occupancy within available duration" constrains nothing — which is exactly why removed that criterion. Expressed this way the capacity constraint really
 /// presses on the amounts.
 ///
-/// The unit processing time follows the baseline's rule: **a discrete action with `BatchDuration` uses it, otherwise the window scale (1)**. (B735's comment claimed the C# interface
+/// The unit processing time follows the baseline's rule: **a discrete action with `BatchDuration` uses it, otherwise the window scale (1)**. (the earlier comment claimed the C# interface
 /// had no `BatchDuration` — wrong, it has existed since B4xx, just unused.)
 /// </remarks>
 /// <typeparam name="A">生产动作类型 / Production action type</typeparam>
@@ -86,10 +86,10 @@ public sealed class CapacityLoadExpressions<A>
     /// <param name="model">线性元模型 / The linear meta model.</param>
     /// <returns>成功或失败 / Success or failure.</returns>
     /// <remarks>
-    /// 注册顺序：先 `x`（已经在 B726 的变量层里），再 `operationTime`，最后 `capacity`。后两者都是**表达式符号**，
+    /// 注册顺序：先 `x`（已经在 的变量层里），再 `operationTime`，最后 `capacity`。后两者都是**表达式符号**，
     /// 引用前面已经注册的符号；顺序反了会得到"符号不在模型里"。
     ///
-    /// Order: `x` first (B726's variable layer), then `operationTime`, then `capacity`. The last two are **expression symbols** referencing what came before; reversing the order yields
+    /// Order: `x` first (the earlier variable layer), then `operationTime`, then `capacity`. The last two are **expression symbols** referencing what came before; reversing the order yields
     /// "symbol not in the model".
     /// </remarks>
     public Try Register(IAbstractLinearMetaModel<Flt64> model) {

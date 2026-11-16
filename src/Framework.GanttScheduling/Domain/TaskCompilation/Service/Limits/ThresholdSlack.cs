@@ -84,9 +84,9 @@ internal static class ThresholdSlack {
     /// <param name="slack">阈值松弛 / The threshold slack.</param>
     /// <returns>正部多项式 / The positive-part polynomial.</returns>
     /// <remarks>
-    /// `withNegative = false` 让 `ResultPolynomial` 里只剩 `pos` 那一项，所以它本身就是正部。基线叫 `positiveSlackPolynomial()`。
+    /// `withNegative = false` 让 `ResultPolynomial` 里只剩 `pos` 那一项，所以它本身就是正部。基线叫 `positiveSlackPolynomial`。
     ///
-    /// `withNegative = false` leaves only the `pos` term in `ResultPolynomial`, so that polynomial *is* the positive part; the baseline calls it `positiveSlackPolynomial()`.
+    /// `withNegative = false` leaves only the `pos` term in `ResultPolynomial`, so that polynomial *is* the positive part; the baseline calls it `positiveSlackPolynomial`.
     /// </remarks>
     public static LinearPolynomial<Flt64> PositivePart(LinearFunctionSymbolAdapter<Flt64> slack) {
         ArgumentNullException.ThrowIfNull(slack);

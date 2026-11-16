@@ -49,8 +49,8 @@ public class SharedPrimeReadBenchmark {
     /// </summary>
     /// <remarks>
     /// **可写是为了让测试能把查询换成一个合数**：只断言"读到一个正确的 `true`"时，
-    /// `ReadyRead()` 直接 `return true` 也能通过——**那条测试根本没证明它在读缓存**。
-    /// **Settable so a test can point the query at a composite**: asserting only "a correct `true` came back" also passes when `ReadyRead()` simply
+    /// `ReadyRead` 直接 `return true` 也能通过——**那条测试根本没证明它在读缓存**。
+    /// **Settable so a test can point the query at a composite**: asserting only "a correct `true` came back" also passes when `ReadyRead` simply
     /// `return true` — **that test never showed it reads the cache**.
     /// </remarks>
     internal UInt64 Query {

@@ -21,13 +21,13 @@ public static class SpeedUnits {
     public static readonly PhysicalUnit Knot = new DerivedUnit(
         LengthUnits.NauticalMile.Divide(TimeUnits.Hour), "knot", "kn");
 
-    // **以下 10 个速度单位是 B1126 按基线 `Velocity.kt` 补的。**
+    // **以下 10 个速度单位按基线 `Velocity.kt` 补齐。**
     //
     // **基线有 14 个速度单位，本仓原来只有 4 个**，而 `docs/` 里一次都没提过。
     // **这四个地区节与四个地区海里是配套的**：海里不同，节也不同——
     // **只补海里不补节，等于让"用 FR 海里算出的距离"无法换成"FR 节表示的速度"。**
     //
-    // **The 10 speed units below were added in B1126 from the baseline `Velocity.kt`.**
+    // **The 10 speed units below were added from the baseline `Velocity.kt`.**
     //
     // **The baseline has 14 speed units and this repo had 4**, with `docs/` silent about it.
     // **The four regional knots pair with the four regional nautical miles**: different miles mean different knots —

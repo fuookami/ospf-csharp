@@ -1,4 +1,4 @@
-// 列生成数据结构（B645）的判据 / Criteria for the column-generation data structures (B645).
+// 列生成数据结构的判据 / Criteria for the column-generation data structures.
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Bpp2d.Tests.LayerAssignment;
 
 /// <summary>
-/// **列生成数据结构（B645）** / The column-generation data structures (B645).
+/// **列生成数据结构** / The column-generation data structures.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**配置默认值照抄基线**（尤其容差不是零）、**两个"因上限结束"的标记不合并**、以及**影子价格两层的键不混用**。
@@ -28,7 +28,7 @@ public class ColumnGenerationModelsTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. `new ColumnGenerationConfig()` → 迭代 64、每轮 32、最终 MILP 开启。
+    /// 1. `new ColumnGenerationConfig` → 迭代 64、每轮 32、最终 MILP 开启。
     /// 2. **容差是 `1e-6`，不是零**——零会让"改进列"永远成立，跑到迭代上限为止。
     /// 3. 未设时间上限时 `Time` 是 `TimeSpan.Zero`（不限），不是某个"很久"。
     ///

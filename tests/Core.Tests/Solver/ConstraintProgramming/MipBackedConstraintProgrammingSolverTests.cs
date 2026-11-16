@@ -26,9 +26,9 @@ namespace Fuookami.Ospf.Core.Tests.Solver.ConstraintProgramming;
 /// MIP 驱动的 CP 求解器 / The MIP-backed CP solver.
 /// </summary>
 /// <remarks>
-/// B1263 实现 B1262 定下的设计。**判据要钉的两件事：拒绝的内容是否正确，以及线性解是否被翻译成 CP 解。**
+/// 实现的设计很短。**判据要钉的两件事：拒绝的内容是否正确，以及线性解是否被翻译成 CP 解。**
 ///
-/// B1263 implements the design B1262 laid down. **The two things the criteria must pin: is the refusal's content right, and
+/// Implements the design laid down. **The two things the criteria must pin: is the refusal's content right, and
 /// is the linear solution actually translated into a CP one.**
 /// </remarks>
 public class MipBackedConstraintProgrammingSolverTests
@@ -37,13 +37,13 @@ public class MipBackedConstraintProgrammingSolverTests
     /// **要求原生冲突证据时，它拒绝并点名原因** / It refuses a native-conflict request and names the cause.
     /// </summary>
     /// <remarks>
-    /// **这是 B1261 的教训在这里的第二次应用。** **静默忽略会让失败以
+    /// **这是教训在这里的第二次应用。** **静默忽略会让失败以
     /// "CP 输出缺少结构化 conflict 证据"的形式出现——读起来像求解器的问题。**
     ///
     /// **判据断言信息<b>点名了 MIP 驱动这条路</b>，而不只是"失败了"。**
     /// **因为随便一条错误信息也能让它失败，而那对调用方毫无用处。**
     ///
-    /// **B1261's lesson applied a second time.** **The criterion asserts the message <b>names the MIP-backed path</b>, not
+    /// **the earlier lesson applied a second time.** **The criterion asserts the message <b>names the MIP-backed path</b>, not
     /// merely that it failed — any message would satisfy "it failed", and that would be useless to the caller.**
     /// </remarks>
     [Fact]

@@ -73,7 +73,7 @@ public class OnnxIfExpansionTests
 
     /// <summary>**两个分支输出个数不同被拒绝** / Different output counts between the branches are refused.</summary>
     /// <remarks>
-    /// **这条是本批最值得写的判据：** **它不会在任何一次求解里暴露——** **两个分支各自都合法，选中的那个也会跑通，** **问题要到"下游按几个结果去接"时才显现。**
+    /// **这条是这里最值得写的判据：** **它不会在任何一次求解里暴露——** **两个分支各自都合法，选中的那个也会跑通，** **问题要到"下游按几个结果去接"时才显现。**
     ///
     /// **This is the criterion most worth writing here: it never shows up in a solve — both branches are legal on their own and the chosen one runs — the problem only
     /// appears where the downstream expects a certain number of results.**

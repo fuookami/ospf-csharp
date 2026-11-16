@@ -21,15 +21,15 @@ using SolverOutput = Fuookami.Ospf.Core.Solver.Output.SolverOutput;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B835：用假求解器把 Benders 循环真跑一遍 / Driving the Benders loop with a fake solver.
+/// 用假求解器把 Benders 循环真跑一遍 / Driving the Benders loop with a fake solver.
 /// </summary>
 /// <remarks>
-/// 这一批不需要真实后端：`BendersSolverApi` 只有 **3 个必须实现的方法**（比 B821 放弃的
+/// 这里不需要真实后端：`BendersSolverApi` 只有 **3 个必须实现的方法**（比 放弃的
 /// `ILinearSolver` 窄得多），所以一个假求解器足以让循环体真的转起来。
 ///
 /// 小范围但真实的收益：把"没收敛时的返回值"这条**最容易造出假成功**的路径钉住。
 ///
-/// This batch needs no real backend: `BendersSolverApi` has **only three mandatory methods** (far narrower than the `ILinearSolver` B821 gave up on),
+/// needs no real backend: `BendersSolverApi` has **only three mandatory methods** (far narrower than the `ILinearSolver` gave up on),
 /// so a fake is enough to make the loop actually turn. The small but real payoff: pinning the "what comes back when it does not converge" path — the one most
 /// likely to manufacture a fake success.
 /// </remarks>
@@ -93,12 +93,12 @@ public sealed class Demo2BendersLoopTests
     /// **没收敛时也必须交出最后一次主问题解** / An unconverged run still hands back the last master solution.
     /// </summary>
     /// <remarks>
-    /// 这是 B835 修的那条：此前 `Solution: Array.Empty&lt;double&gt;()` ——**"成功"的结果 + 空解向量**。
+    /// 这是 修的那条：此前 `Solution: Array.Empty&lt;double&gt;` ——**"成功"的结果 + 空解向量**。
     /// `BuildAssignments` 会按"货 × 舱位"读一个零长向量，**读出空分配**，而响应看起来是成功的。
     ///
     /// 脚本让主问题目标一直不动、子问题目标差得很远：循环会因停滞而退出，**但解必须还在**。
     ///
-    /// This is what B835 fixed: it used to be `Solution: Array.Empty&lt;double&gt;()` — **a "successful" result with an empty solution vector**, which
+    /// This is what fixed: it used to be `Solution: Array.Empty&lt;double&gt;` — **a "successful" result with an empty solution vector**, which
     /// `BuildAssignments` reads through the cargo × position layout and **produces empty assignments** from, while the response looks successful. The script keeps the
     /// master objective flat and the sub objective far away, so the loop exits on the stall window — **and the solution must still be there.**
     /// </remarks>

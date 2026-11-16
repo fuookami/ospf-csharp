@@ -29,13 +29,13 @@ namespace Fuookami.Ospf.Core.Plugin.Cplex.Tests;
 /// 其余六种延迟结构各真实求解一次 / Each of the remaining six deferred structures solved once for real.
 /// </summary>
 /// <remarks>
-/// B1248 把求解验证从一种扩到七种。**B1244／B1245 只证明了 `abs` 能解，**
+/// 把求解验证从一种扩到七种。**只有证明了 `abs` 能解，**
 /// **而"一种结构能解"推不出"每种结构能解"——七种的行结构各不相同。**
 ///
 /// **每一条的共同设计是"行承重"：** **目标函数的最优值<b>只能</b>由 fallback 行压出来。**
 /// **少那几行，模型不是"报错"，而是给出另一个值或不给下界。**
 ///
-/// B1248 widens solve verification from one kind to seven. **B1244/B1245 only proved `abs` solves**, and "one kind
+/// Widens solve verification from one kind to seven. **Only proved `abs` solves**, and "one kind
 /// solves" does not imply "every kind solves" — the seven have different row structures.**
 ///
 /// **Every case shares one design: the rows carry the answer.** **The optimum can <b>only</b> be forced out by the fallback
@@ -76,7 +76,7 @@ public class DeferredStructureSolveCoverageCplexIntegrationTest
     /// The `min` direction: minimising gives 1, the smaller of 1 and 3.
     /// </summary>
     /// <remarks>
-    /// **B1255 加这条判据，因为 `Minimum` 这个属性此前<b>没有任何地方读它</b>：**
+    /// **这条判据，因为 `Minimum` 这个属性此前<b>没有任何地方读它</b>：**
  /// **声明了、投影也在填，而生成逻辑无论方向都产 MAX 行。**
     /// **于是 `min` 会被当成 MAX 物化——模型合法、能解，只是答案是最大值。**
     ///
@@ -84,7 +84,7 @@ public class DeferredStructureSolveCoverageCplexIntegrationTest
     /// **所以这一条必须是真实求解：固定 x₁ = 1、x₂ = 3，最小化 y，正确答案是 1；
     /// 若按 MAX 物化，y 会被压到 3。**
     ///
- /// **adds this because `Minimum` was <b>read by nothing</b> — declared, filled by the projection , and the
+ /// **adds this because `Minimum` was <b>read by nothing</b> — declared, filled by the projection, and the
     /// generation produced MAX rows either way.** **So a min materialised as a MAX: legal, solvable, answering with the
     /// maximum.**
     ///

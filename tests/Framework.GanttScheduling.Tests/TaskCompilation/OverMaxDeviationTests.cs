@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **超最大偏移量从"没有这两张表"变成真的正部（B556）** / The over-max amounts go from "no such tables" to real positive parts (B556).
+/// **超最大偏移量从"没有这两张表"变成真的正部** / The over-max amounts go from "no such tables" to real positive parts.
 /// </summary>
 /// <remarks>
 /// `taskTime.overMaxDelayTime` / `overMaxAdvanceTime` 之前不存在，两个最小化目标也直接返回 `Failed`。

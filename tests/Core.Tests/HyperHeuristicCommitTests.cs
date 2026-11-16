@@ -51,7 +51,7 @@ public sealed class HyperHeuristicCommitTests {
 
     /// <summary>**零步但真的消耗了额度时，那是正常的切片边界，不禁用** / Zero steps that still consumed allowance is an ordinary boundary and does not disable.</summary>
     /// <remarks>
-    /// **这里有一处我最初写错的预期**：以为"有全局预算就一律不禁用"。基线那条是
+ /// **这里有一处最初写错的预期**：以为"有全局预算就一律不禁用"。基线那条是
     /// `result.evaluations == 0L && result.steps == 0L`——**两个都是 0 才禁用**，与有没有预算无关。
     /// 语义上讲得通：消耗了额度却没有产出，说明该算法还在工作、只是这一步没攒够一个完整步；
     /// 而"零消耗零产出"才是**空转**，继续派发它只会把决策次数烧光。

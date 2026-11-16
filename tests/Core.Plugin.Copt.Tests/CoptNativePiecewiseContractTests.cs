@@ -17,16 +17,14 @@ namespace Fuookami.Ospf.Core.Plugin.Copt.Tests;
 /// COPT 原生 PWL 的校验与写入 / COPT's native PWL validation and writing.
 /// </summary>
 /// <remarks>
-/// B1232 补写侧。**这一批的判断：读侧全绿而写侧不存在，这种半成品不会自我报告。**
+/// 补写侧。**这里的判断：读侧全绿而写侧不存在，这种半成品不会自我报告。**
 ///
 /// **报告能列出 PWL 结构、能算指纹、能校验列，
 /// 而求解器从来没收到过任何一条 PWL 约束——于是那些报告描述的是一份<b>从未生效</b>的模型。**
 ///
 /// **这也是为什么它不报错：读侧读的是自己的数据，写侧缺失不产生任何信号。**
 ///
-/// adds
-///
-/// **The report can list PWL structures, fingerprint them and validate their columns , while the solver
+/// **The report can list PWL structures, fingerprint them and validate their columns, while the solver
 /// never received a single PWL constraint — so those reports describe a model that <b>never took effect</b>.**
 ///
 /// **That is why it stays silent: the read side reads its own data, and a missing write side emits no signal.**

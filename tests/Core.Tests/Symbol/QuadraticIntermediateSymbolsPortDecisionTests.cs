@@ -13,13 +13,13 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Symbol;
 
 /// <summary>
-/// **`QuadraticIntermediateSymbols` 这个工厂对象不移植，理由与 B1258 不同** /
-/// The `QuadraticIntermediateSymbols` factory object is not ported, for a different reason than B1258's.
+/// **`QuadraticIntermediateSymbols` 这个工厂对象不移植，理由与同族另一项不同** /
+/// The `QuadraticIntermediateSymbols` factory object is not ported, for a different reason than the sibling decision.
 /// </summary>
 /// <remarks>
-/// B1259 是逐项对照的第三个块（基线 `SymbolCombination.kt`，843 行）。
+/// 逐项对照的对象是基线 `SymbolCombination.kt`（843 行）。
 ///
-/// **先按 B1258 的经验"先数叶子"：** **`IAbstractSymbolCombination`、`SymbolCombination`、
+/// **先数叶子：** **`IAbstractSymbolCombination`、`SymbolCombination`、
 /// `QuantitySymbolCombination` 本仓<b>全都有</b>**（`src/Core/Symbol/SymbolCombination.cs`）。
 ///
 /// **缺的只有 `QuadraticIntermediateSymbols`——一个 `data object`，十个 `operator fun invoke` 重载，
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 /// **而它在基线里<b>零生产调用方</b>：** **`git grep` 只命中它自己的文件与一个测试
 /// （`SymbolCombinationGenericFactoryTest.kt`）。**
 ///
-/// **这与 B1258 的理由不同，值得分清：**
+/// **这与理由不同，值得分清：**
 ///
 /// | 批次 | 不移植的理由 |
 /// | --- | --- |
@@ -42,25 +42,25 @@ namespace Fuookami.Ospf.Core.Tests.Symbol;
 ///
 /// **本仓已经为同一件事写过一次：** **`Framework.Bpp2d` 里 `Capacity` 的注释说
 /// "`LinearIntermediateSymbols1` 是 C# 无法表达的 Kotlin typealias，所以改用 `IReadOnlyList<...>`"。**
-/// **B1259 是那条先例的第二次应用。**
+/// **这里是那条先例的第二次应用。**
 ///
 /// **One more, sharper reason: the ten overloads' <b>return types are typealiases</b>, and C# expresses those
 /// structurally — `SymbolCombination<QuadraticExpressionSymbol, Shape1>` is already writable without inventing a name.**
 /// **So the factory lacks not only a caller but also a type C# would need.** **This repo already wrote that down in
-/// `Capacity`: `LinearIntermediateSymbols1` is a Kotlin typealias C# cannot express. B1259 is that precedent's second
+/// `Capacity`: `LinearIntermediateSymbols1` is a Kotlin typealias C# cannot express.** **This is that precedent's second
 /// application.**
 /// **"没人用"与"做了也没意义"是两句话。** **前者会变（有一天有人要），后者不会。**
-/// **所以这一批的判据必须能区分它们：** **它不证明"做不到"，而证明"现在做得到、只是没做"。**
+/// **所以这里的判据必须能区分它们：** **它不证明"做不到"，而证明"现在做得到、只是没做"。**
 ///
-/// B1259 is the third item of the survey (baseline `SymbolCombination.kt`, 843 lines).
+/// The survey item is the baseline's `SymbolCombination.kt` (843 lines).
 ///
-/// **Following B1258's "count the leaves first": `IAbstractSymbolCombination`, `SymbolCombination` and
+/// **Counting the leaves first: `IAbstractSymbolCombination`, `SymbolCombination` and
 /// `QuantitySymbolCombination` all exist here.** Only the `QuadraticIntermediateSymbols` factory object is missing — ten
 /// `invoke` overloads, each building a shape's worth of empty quadratic expression symbols.
 ///
 /// **And it has <b>zero production callers</b> in the baseline: `git grep` hits only its own file and one test.**
 ///
-/// **That reason differs from B1258's and the two must be kept apart: B1258's base class was "already had, unobservable, or
+/// **That reason differs from the sibling decision and the two must be kept apart: there the base class was "already had, unobservable, or
 /// an empty check", while this is "buildable, merely unused".** **"Nobody uses it" changes; "it would be pointless" does
 /// not.** **So the criterion below must distinguish them: it does not prove "cannot be done", only "can be done and is not
 /// done".**
@@ -72,7 +72,7 @@ public class QuadraticIntermediateSymbolsPortDecisionTests
     /// An empty quadratic symbol combination is constructible today; the factory is only sugar.
     /// </summary>
     /// <remarks>
-    /// **这是这一批<b>唯一有实证价值</b>的断言：** **如果"空二次组合"造不出来，那么缺的就是能力；
+    /// **这是这里<b>唯一有实证价值</b>的断言：** **如果"空二次组合"造不出来，那么缺的就是能力；
     /// 造得出来，缺的就只是十个便捷重载。**
     ///
     /// **判据同时核对 `GroupIdentifier` 与 `IndexInGroup`：** **那是 `SymbolCombination` 构造时做的事，

@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Math.Tests.Algebra.Concept;
 /// **`tests/Math.Tests` 立刻产生 1734 个编译错误**——也就是说，只要代码能编译，这些断言必然为真。
 ///
 /// **它们的价值是"清单"而不是"判据"**：读的人能一眼看到 `Flt64` 声称实现了哪些代数结构。
-/// **真正的行为判据在 `FieldLawTest`（域公理 `Validate()` 走真实算术）与 `Flt64Test`（19 条数值判据）里。**
+/// **真正的行为判据在 `FieldLawTest`（域公理 `Validate` 走真实算术）与 `Flt64Test`（19 条数值判据）里。**
 ///
 /// **一个永远不能失败的断言，如果被当成判据来计数，会让整张表看起来比实际更可信。**
 /// **这条注释就是防止那件事。**
@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Math.Tests.Algebra.Concept;
 /// **produces 1734 compile errors in `tests/Math.Tests` at once** — meaning that if the code compiles, these assertions are necessarily true.
 ///
 /// **Their value is an inventory, not a criterion**: a reader sees at a glance which algebraic structures `Flt64` claims.
-/// **The real behavioural criteria live in `FieldLawTest` (field axioms via `Validate()`, which does actual arithmetic) and `Flt64Test` (19 numeric criteria).**
+/// **The real behavioural criteria live in `FieldLawTest` (field axioms via `Validate`, which does actual arithmetic) and `Flt64Test` (19 numeric criteria).**
 ///
 /// **An assertion that can never fail, counted as a criterion, makes the whole table look more trustworthy than it is.**
 /// **This comment exists to prevent exactly that.**

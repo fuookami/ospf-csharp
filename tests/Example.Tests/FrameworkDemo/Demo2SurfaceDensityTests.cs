@@ -21,7 +21,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **表面密度（B589）** / Surface density (B589).
+/// **表面密度** / Surface density.
 /// </summary>
 /// <remarks>
 /// 表面密度 = 舱位装载重量 / 舱位面积，是**按面积算重量**的规格。三处容易做错：

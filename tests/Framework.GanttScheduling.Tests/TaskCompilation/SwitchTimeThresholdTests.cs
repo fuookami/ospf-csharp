@@ -1,4 +1,4 @@
-// 换型时间最小化的阈值分支（B701）的判据 / Criteria for the switch-time minimisation's threshold branch (B701).
+// 换型时间最小化的阈值分支的判据 / Criteria for the switch-time minimisation's threshold branch.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **换型时间最小化的阈值分支（B701）** / The switch-time minimisation's threshold branch (B701).
+/// **换型时间最小化的阈值分支** / The switch-time minimisation's threshold branch.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**阈值非零才建松弛**、**松弛名带两侧任务**、**系数在松弛外面乘**。

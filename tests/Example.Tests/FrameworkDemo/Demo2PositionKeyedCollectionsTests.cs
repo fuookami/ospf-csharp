@@ -10,19 +10,19 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B297 把 `Position` 从引用相等改成按 `Id` 值相等。**这改变了所有以它为键的集合的行为**，
+/// 把 `Position` 从引用相等改成按 `Id` 值相等。**这改变了所有以它为键的集合的行为**，
 /// 本类逐处验证那个改变是**变好**而不是**变坏**。
-/// B297 changed `Position` from reference equality to value equality by `Id`. **That changes every collection keyed by it**, and this class verifies each
+/// changed `Position` from reference equality to value equality by `Id`. **That changes every collection keyed by it**, and this class verifies each
 /// site that the change is **an improvement rather than a regression**.
 /// </summary>
 /// <remarks>
-/// B297 的计划小节明确记下这个风险："`Appointment` 等以它为键的集合行为变了，但没有测试覆盖那些集合"。
-/// 这一批就是来还这笔账的。
+/// 的计划小节明确记下这个风险："`Appointment` 等以它为键的集合行为变了，但没有测试覆盖那些集合"。
+/// 这里就是来还这笔账的。
 ///
 /// **要证明的是"新语义让跨实例查找生效"，而不是"查找返回非空"**——后者在引用语义下也可能通过
 /// （同一个实例）。所以每个判据都必须**用另一个实例去查**。
 ///
-/// B297's plan section recorded this risk explicitly: "collections keyed by `Position` changed behaviour, but no test covers them". This batch pays that debt.
+/// the earlier plan section recorded this risk explicitly: "collections keyed by `Position` changed behaviour, but no test covers them". pays that debt.
 ///
 /// **What must be shown is "the new semantics make cross-instance lookup work", not "lookup returns non-null"** — the latter can pass under reference
 /// semantics too (same instance). So every criterion here must **look up with a different instance**.
@@ -68,11 +68,11 @@ public class Demo2PositionKeyedCollectionsTests {
 
     /// <summary>**`Appointment.ItemsOf` 必须能用另一个实例查到** / `Appointment.ItemsOf` must work with a different instance.</summary>
     /// <remarks>
-    /// 这是 B297 改动最直接的影响点：`Reverse` 以 `Position` 为键，`ItemsOf` 用调用方传进来的实例去查。
+    /// 这是 改动最直接的影响点：`Reverse` 以 `Position` 为键，`ItemsOf` 用调用方传进来的实例去查。
     /// 引用语义下，**调用方只要传的不是建映射时那个实例，就永远查不到**——而 `Appointment` 的构造方与查询方
     /// 通常是不同的代码路径（聚合器建映射、求解器查货物）。
     ///
-    /// This is the most direct impact of B297: `Reverse` is keyed by `Position`, and `ItemsOf` looks up with the caller's instance. Under reference
+    /// This is the most direct impact of : `Reverse` is keyed by `Position`, and `ItemsOf` looks up with the caller's instance. Under reference
     /// semantics, **any caller passing something other than the exact instance used to build the map finds nothing** — and the builder and the querier are
     /// usually different code paths (the aggregator builds the map, the solver queries items).
     /// </remarks>
@@ -138,7 +138,7 @@ public class Demo2PositionKeyedCollectionsTests {
 
     /// <summary>**货物类型缓存必须线程安全** / The cargo-type cache must be thread-safe.</summary>
     /// <remarks>
-    /// B303 跑全量门禁时这条真的崩了：
+    /// 跑全量门禁时这条真的崩了：
     ///
     /// ```
     /// System.InvalidOperationException : Operations that change non-concurrent collections must have exclusive access.
@@ -150,7 +150,7 @@ public class Demo2PositionKeyedCollectionsTests {
     /// 判据不能是"不抛异常"——那在单线程下永远成立。这里用**并行访问 + 断言每个名字都拿到同一个实例**，
     /// 既验线程安全，也验缓存语义。
     ///
-    /// This really crashed during the B303 full gate:
+    /// This really crashed during the full gate:
     ///
     /// ```
     /// System.InvalidOperationException : Operations that change non-concurrent collections must have exclusive access.

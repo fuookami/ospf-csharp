@@ -43,7 +43,7 @@ public sealed record LoadingRectangle<V>(string Id, string SpaceId, Box2Geometry
 ///    共享几何的 `Box2Geometry`，本仓的同名类型**直接委托** `QuantityBox2.Overlapped`，所以这里也走它——
 ///    **再写一份相交算法等于给同一个语义留两份实现**。
 /// 2. **`validate` 在 `DiscreteLoadingContext` 构造里已经跑过**（本仓的构造即校验），所以这里不重复调用；
-///    基线的 `context.validate()` 是因为它的构造不做校验。**照抄一次多余的校验不会更安全，只会让失败点变两个。**
+///    基线的 `context.validate` 是因为它的构造不做校验。**照抄一次多余的校验不会更安全，只会让失败点变两个。**
 ///
 /// Aligned with the baseline's `Bpp2dDiscreteLoading.context`. **The only difference from 1-D is the intersection test** — rectangles instead of intervals;
 /// everything else (the two-way correspondence check, merging business conflicts, validation) is identical. **Why it earns a file**: Demo2's `LoadingContextFactory`

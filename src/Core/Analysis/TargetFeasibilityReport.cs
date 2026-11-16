@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// <remarks>
 /// 与基线 `TargetFeasibilityAnalyzer.kt`（915 行）里的 `TargetFeasibilityReport` 对应。
 ///
-/// **B974 只搬报告，不搬分析器**：分析器第 673 行有一处真正的 `solver.solve(model, options)`，
+/// 只搬报告，不搬分析器**：分析器第 673 行有一处真正的 `solver.solve(model, options)`，
 /// 而它之前的 `ConstraintProgrammingSnapshotBuilder` 又要重建可变模型。**那部分需要真实 CP 后端，
-/// 本批不搬，也不写空跑版本。**
+/// 这里不搬，也不写空跑版本。**
 ///
 /// **`Reachable` / `Unreachable` / `Unknown` / `Unsupported` 四个状态必须分开**：前两个是结论，
 /// 后两个是"没结论"的两种原因。**把 `Unsupported` 当成 `Unreachable`，会让"换个后端就能解"看起来像"目标不可能达成"。**
 ///
-/// Mirrors `TargetFeasibilityReport` from the baseline's `TargetFeasibilityAnalyzer.kt` (915 lines). **B974 ports the report and not the analyzer**: line 673 has a real
+/// Mirrors `TargetFeasibilityReport` from the baseline's `TargetFeasibilityAnalyzer.kt` (915 lines). **The report and not the analyzer is ported**: line 673 has a real
 /// `solver.solve(model, options)` and the `ConstraintProgrammingSnapshotBuilder` before it rebuilds a mutable model. **That part needs a real CP backend, so it was neither ported
 /// nor stubbed.** **The four statuses have to stay apart**: the first two are conclusions, the last two are two different reasons for having none. **Reading `Unsupported` as
 /// `Unreachable` makes "another backend could solve this" look like "the target cannot be met".**

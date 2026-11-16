@@ -45,10 +45,10 @@ public sealed class HyperHeuristicAssemblyTests {
     [Fact]
     public void Bindings_ShouldRejectUnknownOperator() {
         // **必须断言错误指向"未知算子"**，而不只是"失败了"：若算子被悄悄跳过，空候选集会被选择器那条校验拦住，
-        // 于是"失败"依然成立——**只是失败原因换成了别的东西**，而配置里的拼写错误再也没人指出。本批第一次变异正是这么存活的。
+        // 于是"失败"依然成立——**只是失败原因换成了别的东西**，而配置里的拼写错误再也没人指出。这里第一次变异正是这么存活的。
         // **The error must be asserted to point at the unknown operator**, not merely at "it failed": if the operator is silently skipped, the empty
         // candidate set is caught by the selector's own validation, so "it failed" still holds — **only the reason has changed**, and the misspelt name
-        // in the configuration is never mentioned again. That is exactly how the first mutation of this batch survived.
+        // in the configuration is never mentioned again. That is exactly how the first mutation of survived.
         Result<Fuookami.Ospf.Core.Solver.Heuristic.Operator.OperatorBindings, ErrorCode,
             Error<ErrorCode>> built = Bindings(
             Algorithm(updates: new[] { "nope" }), encoding: SearchEncoding.Continuous);

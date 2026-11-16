@@ -40,10 +40,10 @@ public class LayerAssignmentModelTests {
         var load = new ImpreciseLoad<FltX>();
         Result<Success, ErrorCode, Error<ErrorCode>> result = load.Register(null!);
         result.IsFailed.Should().BeTrue();
-        // **按名字拒绝**（B844）：这一批统一把"只有失败"的断言补上错误码，
+        // **按名字拒绝**：这里统一把"只有失败"的断言补上错误码，
         // 否则同一个聚合里别处的守卫也能让 `IsFailed` 变绿。
         //
-        // **Rejected by name** (B844): this batch adds the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
+        // **Rejected by name**: the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
         // aggregate could satisfy `IsFailed` just as well.
         ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(Bpp3dErrors.NullLoadColumn);
     }
@@ -70,10 +70,10 @@ public class LayerAssignmentModelTests {
         };
         Result<Success, ErrorCode, Error<ErrorCode>> result = load.AddColumns(cols!);
         result.IsFailed.Should().BeTrue();
-        // **按名字拒绝**（B844）：这一批统一把"只有失败"的断言补上错误码，
+        // **按名字拒绝**：这里统一把"只有失败"的断言补上错误码，
         // 否则同一个聚合里别处的守卫也能让 `IsFailed` 变绿。
         //
-        // **Rejected by name** (B844): this batch adds the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
+        // **Rejected by name**: the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
         // aggregate could satisfy `IsFailed` just as well.
         ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(Bpp3dErrors.NullLoadColumn);
     }
@@ -98,10 +98,10 @@ public class LayerAssignmentModelTests {
         var assign = new ImpreciseAssignment<FltX>();
         Result<Success, ErrorCode, Error<ErrorCode>> result = assign.Register(null!);
         result.IsFailed.Should().BeTrue();
-        // **按名字拒绝**（B844）：这一批统一把"只有失败"的断言补上错误码，
+        // **按名字拒绝**：这里统一把"只有失败"的断言补上错误码，
         // 否则同一个聚合里别处的守卫也能让 `IsFailed` 变绿。
         //
-        // **Rejected by name** (B844): this batch adds the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
+        // **Rejected by name**: the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
         // aggregate could satisfy `IsFailed` just as well.
         ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(Bpp3dErrors.NullAssignmentColumn);
     }
@@ -127,10 +127,10 @@ public class LayerAssignmentModelTests {
         };
         Result<Success, ErrorCode, Error<ErrorCode>> result = assign.AddColumns(cols!);
         result.IsFailed.Should().BeTrue();
-        // **按名字拒绝**（B844）：这一批统一把"只有失败"的断言补上错误码，
+        // **按名字拒绝**：这里统一把"只有失败"的断言补上错误码，
         // 否则同一个聚合里别处的守卫也能让 `IsFailed` 变绿。
         //
-        // **Rejected by name** (B844): this batch adds the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
+        // **Rejected by name**: the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
         // aggregate could satisfy `IsFailed` just as well.
         ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(Bpp3dErrors.NullAssignmentColumn);
     }
@@ -162,10 +162,10 @@ public class LayerAssignmentModelTests {
         };
         Result<Success, ErrorCode, Error<ErrorCode>> result = agg.AddColumns(cols!);
         result.IsFailed.Should().BeTrue();
-        // **按名字拒绝**（B844）：这一批统一把"只有失败"的断言补上错误码，
+        // **按名字拒绝**：这里统一把"只有失败"的断言补上错误码，
         // 否则同一个聚合里别处的守卫也能让 `IsFailed` 变绿。
         //
-        // **Rejected by name** (B844): this batch adds the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
+        // **Rejected by name**: the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
         // aggregate could satisfy `IsFailed` just as well.
         ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(Bpp3dErrors.NullLayerColumn);
     }
@@ -185,10 +185,10 @@ public class LayerAssignmentModelTests {
         var agg = new LayerAggregation<FltX>();
         Result<Success, ErrorCode, Error<ErrorCode>> result = agg.RemoveColumn(null!);
         result.IsFailed.Should().BeTrue();
-        // **按名字拒绝**（B844）：这一批统一把"只有失败"的断言补上错误码，
+        // **按名字拒绝**：这里统一把"只有失败"的断言补上错误码，
         // 否则同一个聚合里别处的守卫也能让 `IsFailed` 变绿。
         //
-        // **Rejected by name** (B844): this batch adds the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
+        // **Rejected by name**: the error code to every assertion that only said "failed", otherwise a guard elsewhere in the same
         // aggregate could satisfy `IsFailed` just as well.
         ((Failed<Success, ErrorCode, Error<ErrorCode>>)result).Error.Code.Should().Be(Bpp3dErrors.NullLayerColumn);
     }

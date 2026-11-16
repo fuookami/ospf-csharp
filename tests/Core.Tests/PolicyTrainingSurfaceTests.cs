@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests;
 
 /// <summary>
-/// B853：清单上"训练/评估没做"是**陈旧结论** / The inventory's "training/evaluation is missing" is stale.
+/// 清单上"训练/评估没做"是**陈旧结论** / The inventory's "training/evaluation is missing" is stale.
 /// </summary>
 /// <remarks>
 /// 清单里挂着 `policyTraining` 的 train / evaluate 两项。逐项核对：
@@ -21,12 +21,12 @@ namespace Fuookami.Ospf.Core.Tests;
 /// | evaluate 没做 | `PolicyEvaluator&lt;O,V&gt;.Evaluate` 在 | `PolicyTrainingRunTests` 有 5 条 |
 /// | 轨迹文件 | `TrajectoryFiles.Write` / `Read` 在 | `PolicyTrainingTests` |
 ///
-/// **这些不是"新做"，是"做完了没人划掉"。** B849 的 Demo5 是同一个病的第二例。
+/// **这些不是"新做"，是"做完了没人划掉"。** 的 Demo5 是同一个病的第二例。
 ///
 /// 判据钉住这个公开表面：**删掉任何一个入口都会红**，也就不会有人第三次把"训练/评估"写成待办。
 ///
 /// The inventory carries `policyTraining`'s train and evaluate as pending. Checked one by one (table above): **these are not pending work, they are work nobody struck
-/// off** — B849's Demo5 was the second case of the same disease. This criterion pins the public surface: **removing any entry point reds it**, so nobody writes
+/// off** — the earlier Demo5 was the second case of the same disease. This criterion pins the public surface: **removing any entry point reds it**, so nobody writes
 /// "training/evaluation" down as pending a third time.
 /// </remarks>
 public sealed class PolicyTrainingSurfaceTests

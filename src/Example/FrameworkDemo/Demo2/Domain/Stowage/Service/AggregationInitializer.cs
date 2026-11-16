@@ -75,12 +75,12 @@ internal static class AggregationInitializer
         if (input.Positions.Select(position => position.Name).Distinct().Count() != input.Positions.Count) {
             return Fail("请求舱位名称必须唯一 / request position names must be unique");
         }
-        // **基线的两条 `maxLoadCount` 校验**（B938）：`<= 0` 要拒，已装载件数超过它也要拒。
+        // **基线的两条 `maxLoadCount` 校验**：`<= 0` 要拒，已装载件数超过它也要拒。
         //
         // 少了第一条，一个"装 0 件"的舱位会变成**永远不可用的舱位**——而它看起来只是一个普通的舱位，
         // 求解器用不上它也不报错。少了第二条，一个"已装 5 件、上限 3 件"的舱位会让内核收到一个**初始就不可行**的起点。
         //
-        // **The baseline's two `maxLoadCount` checks** (B938): reject `<= 0`, and reject "loaded items exceed it". Without the first, a "holds 0 items" position
+        // **The baseline's two `maxLoadCount` checks**: reject `<= 0`, and reject "loaded items exceed it". Without the first, a "holds 0 items" position
         // becomes **permanently unusable** while looking like an ordinary one — the solver just never uses it and says nothing. Without the second, a position with
         // 5 items loaded and a cap of 3 hands the kernel **a starting point that is infeasible before it begins**.
         foreach (PositionInput position in input.Positions) {
@@ -90,7 +90,7 @@ internal static class AggregationInitializer
             if ((ulong)(position.LoadedItems?.Count ?? 0) > position.MaxLoadCount) {
                 return Fail($"已装载件数超过舱位上限 / loaded items exceed the position cap: {position.Name}");
             }
-            // **基线的两条谓词装载重量下限校验**（B940）。基线用的是 `predicateLoadWeightMin`（一个 `Double?`），
+            // **基线的两条谓词装载重量下限校验**。基线用的是 `predicateLoadWeightMin`（一个 `Double?`），
             // 本仓的对应物是三元组 `PredicateLoadWeight`，所以看的是 `Min` 那一端：
             //
             // 1. **非有限、为负、或大于舱位上限就拒**——这三个数进去，谓词重量的松弛右端就是一个非法区间，
@@ -98,7 +98,7 @@ internal static class AggregationInitializer
             // 2. **预配载模式下缺这份规格就拒**——基线明写 `stowageMode == Predistribution && any { it == null }` 就失败。
             //    缺规格时那两条软目标会悄悄消失，**模式照跑，只是不再是预配载**。
             //
-            // **The baseline's two predicate-lower-bound checks** (B940). The baseline uses `predicateLoadWeightMin` (a `Double?`); this port's counterpart is the
+            // **The baseline's two predicate-lower-bound checks** . The baseline uses `predicateLoadWeightMin` (a `Double?`); this port's counterpart is the
             // `PredicateLoadWeight` triple, so it looks at the `Min` end: reject a non-finite, negative, or above-cap value — those make the slack right-hand side an
             // illegal interval and the solver only says "infeasible", **never which end is wrong**; and reject a missing spec in predistribution mode, which the
             // baseline states outright. Without the spec the two soft objectives quietly vanish, **and the mode still runs — just no longer as predistribution**.
@@ -150,22 +150,22 @@ internal static class AggregationInitializer
                 source: cargo.Source,
                 destination: cargo.Destination,
                 status: ItemStatus.Optional,
-                // **必装从请求穿到模型**（B907）：`CargoInput.Required` → `Item.Required` → `LoadingItem.Required` → `loading_capacity_item_*` 的 `EQ`。
-                // **Required flows from the request into the model** (B907): `CargoInput.Required` → `Item.Required` → `LoadingItem.Required` → `EQ` on `loading_capacity_item_*`.
+                // **必装从请求穿到模型**：`CargoInput.Required` → `Item.Required` → `LoadingItem.Required` → `loading_capacity_item_*` 的 `EQ`。
+                // **Required flows from the request into the model**: `CargoInput.Required` → `Item.Required` → `LoadingItem.Required` → `EQ` on `loading_capacity_item_*`.
                 required: cargo.Required,
-                // **甲板来自请求**（B937）：基线是 `Main → normalMain`、其余 → `lowNotBulk`。
-                // B937 之前这里**恒为主舱**，于是下舱货被当成主舱货——而"下舱货不能放主舱"正是甲板过滤要表达的约束，
+                // **甲板来自请求**：基线是 `Main → normalMain`、其余 → `lowNotBulk`。
+                // 之前这里**恒为主舱**，于是下舱货被当成主舱货——而"下舱货不能放主舱"正是甲板过滤要表达的约束，
                 // **恒为主舱会让它从一开始就不成立**。
                 //
-                // **The deck comes from the request** (B937): the baseline maps `Main → normalMain` and everything else → `lowNotBulk`. Before B937 this was
+                // **The deck comes from the request**: the baseline maps `Main → normalMain` and everything else → `lowNotBulk`. Before this was
                 // **always main deck**, so lower-deck cargo counted as main-deck cargo — and "lower-deck cargo cannot go on the main deck" is exactly what the deck
                 // filter expresses, **which was false from the start**.
                 location: cargo.DeckLocation == DeckLocationInput.Main ? ItemLocation.MainDeck : ItemLocation.LowNotBulk,
-                // **装载顺序来自请求**（B937）。基线 `ItemOrder(order = UInt8(it.toUByte()))`，本仓对应字段叫 `Sequence`
+                // **装载顺序来自请求**。基线 `ItemOrder(order = UInt8(it.toUByte))`，本仓对应字段叫 `Sequence`
                 // （`byte?`，与基线的 `UInt8` 同宽）。之前恒不传，**等于所有货物在顺序约束上彼此无差别**。
                 // **顺序超出 `byte` 范围就拒**，不静默截断：截断会让两件不同的货拿到同一个顺序，**而那是"无顺序差别"换了个样子**。
                 //
-                // **The loading order comes from the request** (B937). The baseline writes `ItemOrder(order = UInt8(...))`; this port's field is `Sequence`
+                // **The loading order comes from the request** . The baseline writes `ItemOrder(order = UInt8(...))`; this port's field is `Sequence`
                 // (`byte?`, the same width as the baseline's `UInt8`). Omitting it made **every cargo indistinguishable to the order constraints**. **A sequence
                 // outside the `byte` range is refused, never truncated**: truncation would give two different cargos the same order, **which is "no order" wearing a
                 // different hat**.
@@ -191,35 +191,35 @@ internal static class AggregationInitializer
                 aircraftPosition: basePosition,
                 status: status,
                 mlw: new MaxLoadWeightLimit(requestPosition.MaxWeight),
-                // **最大装载件数来自请求**（B938）。之前的"保守值 1"让一个能装 20 件的舱位只能装 1 件——
+                // **最大装载件数来自请求**。之前的"保守值 1"让一个能装 20 件的舱位只能装 1 件——
                 // **不报错，只是把可行解砍掉一大半**。基线还校验 `<= 0` 要拒（见下面那道前置校验）。
                 //
-                // **The maximum item count comes from the request** (B938). The old "conservative 1" let a position that holds 20 items hold 1 — **no error, just most
+                // **The maximum item count comes from the request** . The old "conservative 1" let a position that holds 20 items hold 1 — **no error, just most
                 // of the solution space gone**. The baseline also rejects `<= 0` (see the pre-check below).
                 mla: requestPosition.MaxLoadCount,
-                // **规格来自请求**（B801）：以前恒写 `null`，于是预配载模式下 `PredicateLoadWeightLimit` 必然报"缺少规格"。
+                // **规格来自请求**：以前恒写 `null`，于是预配载模式下 `PredicateLoadWeightLimit` 必然报"缺少规格"。
                 // 三个端点逐个映射，不做"取一个数代表全部"的简化。
                 //
-                // **The spec comes from the request** (B801): it used to be hard-coded `null`, so in predistribution mode `PredicateLoadWeightLimit` could only report
+                // **The spec comes from the request**: it used to be hard-coded `null`, so in predistribution mode `PredicateLoadWeightLimit` could only report
                 // "missing specification". The three ends are mapped one by one rather than collapsed into a single representative number.
                 plw: requestPosition.PredicateLoadWeight is { } spec
                     ? new PositionPredicateLoadWeight(spec.Plw, spec.Min, spec.Max)
                     : null,
-                // **已装载货物从请求解析成 `Item`**（B936）。以前恒为 `null`，于是每个舱位的 `LoadedItems` 都是空表：
+                // **已装载货物从请求解析成 `Item`**。以前恒为 `null`，于是每个舱位的 `LoadedItems` 都是空表：
                 // 装载内核的 `FixedPositionId` 只能是 `null`，**已装载货物被当成自由货物，求解器可以把它挪走**。
                 // **名字解析不到就拒**，而不是静默丢弃：一个拼错的货物名会让"这件货已装在这里"变成"这里什么都没装"，
                 // **而后者不会报错，只会给出一个把已装载货物重新摆放的解**。
                 //
-                // **Loaded cargo names resolve to `Item`s here** (B936). They used to be `null`, so every position's `LoadedItems` was empty and the kernel's
+                // **Loaded cargo names resolve to `Item`s here** . They used to be `null`, so every position's `LoadedItems` was empty and the kernel's
                 // `FixedPositionId` could only be `null` — **cargo already on board counted as free and the solver could move it**. **An unresolvable name is
                 // refused rather than dropped**: a typo would turn "this cargo is loaded here" into "nothing is loaded here", **which raises nothing and just
                 // yields a plan that reshuffles cargo already loaded**.
                 loadedItems: ResolveLoadedItems(requestPosition.LoadedItems, items)) {
-                // **建议装载件数/重量从请求来**（B938）。基线的 `AdviceLoadAmountLimit`/`AdviceLoadWeightLimit`
+                // **建议装载件数/重量从请求来**。基线的 `AdviceLoadAmountLimit`/`AdviceLoadWeightLimit`
                 // **只收非 `null` 的舱位**，所以这两个属性拿不到值时那两条软目标**永远是空表**——不报错，只是"建议装载"
                 // 这个能力在模型里根本不存在。
                 //
-                // **The advisory count/weight come from the request** (B938). The baseline's limits **only collect positions with a non-null value**, so with no
+                // **The advisory count/weight come from the request** . The baseline's limits **only collect positions with a non-null value**, so with no
                 // source for these two the objectives were **always empty** — no error, just "advisory loading" simply not existing in the model.
                 Ala = requestPosition.Ala,
                 Alw = requestPosition.Alw,

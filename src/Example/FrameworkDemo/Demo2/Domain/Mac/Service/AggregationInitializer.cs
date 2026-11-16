@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Mac.Service;
 /// <remarks>
 /// 与基线 `mac/service/AggregationInitializer.kt` 对齐，**一条校验、一次构造**。
 ///
-/// 基线传 `horizontalStabilizers = hashMapOf()`——**空表**。这不是"还没接"，是基线现状：安定面数据来自机型表，而这张表本仓还没有。
+/// 基线传 `horizontalStabilizers = hashMapOf`——**空表**。这不是"还没接"，是基线现状：安定面数据来自机型表，而这张表本仓还没有。
 /// 因此 `MacAggregation.Register` 的安定面循环在这里是空转，`trim` 符号不会出现。照抄并记录，不假装已经接上。
 ///
-/// Aligned with the baseline: **one validation, one construction**. The baseline passes `horizontalStabilizers = hashMapOf()` — an **empty map**. That is not "not wired yet";
+/// Aligned with the baseline: **one validation, one construction**. The baseline passes `horizontalStabilizers = hashMapOf` — an **empty map**. That is not "not wired yet";
 /// it is the baseline's state: stabilizer data comes from a type table this port does not have. The stabilizer loop in `MacAggregation.Register` is therefore a no-op here and
 /// no `trim` symbol appears. Copied and recorded rather than pretending it is wired.
 /// </remarks>

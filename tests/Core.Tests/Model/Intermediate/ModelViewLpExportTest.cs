@@ -17,12 +17,24 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 
 public class ModelViewLpExportTest {
+    /// <summary>
+    /// 比较前统一行尾 / Normalise line endings before comparing.
+    /// </summary>
+    /// <remarks>
+    /// **多行字面量的换行就是源文件的换行：** **这份文件在工作区是 CRLF、而导出器写的是 `\n`，** '
+    /// **于是断言会变成"在比行尾而不是比内容"。** **统一之后再比，判据仍然逐字符钉住文本（含缩进与空行）。**
+    ///
+    /// **A multi-line literal carries the source file's line endings: this file is CRLF in the working tree while the exporter writes `\n`, so the assertion would be comparing line endings
+    /// rather than text.** Normalising first keeps the criterion character-exact on the text, indentation and blank lines included.
+    /// </remarks>
+    private static string Normalise(string text) => text.Replace("\r\n", "\n", StringComparison.Ordinal);
+
     [Fact]
     public void LinearExport_ShouldMatchGoldenTextAndVariableCategories() {
         using LinearTriadModel model = LinearFixture();
         string text = Export(model);
 
-        text.Should().Be(ExpectedLinear + "\n");
+        Normalise(text).Should().Be(Normalise(ExpectedLinear + "\n"));
         model.ContainsContinuous.Should().BeTrue();
         model.ContainsBinary.Should().BeTrue();
         model.ContainsInteger.Should().BeTrue();
@@ -63,7 +75,7 @@ public class ModelViewLpExportTest {
     public void QuadraticExport_ShouldUseSolverReadableQuadraticBlocks() {
         using QuadraticTetradModel model = QuadraticFixture();
 
-        Export(model).Should().Be(ExpectedQuadratic + "\n");
+        Normalise(Export(model)).Should().Be(Normalise(ExpectedQuadratic + "\n"));
     }
 
     [Fact]
@@ -79,7 +91,7 @@ public class ModelViewLpExportTest {
                 && bytes[0] == 0xef
                 && bytes[1] == 0xbb
                 && bytes[2] == 0xbf);
-            Encoding.UTF8.GetString(bytes).Should().Be(ExpectedLinear + "\n");
+            Normalise(Encoding.UTF8.GetString(bytes)).Should().Be(Normalise(ExpectedLinear + "\n"));
         }
         finally {
             Directory.Delete(directory, recursive: true);

@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B808：请求里的目标优先级必须真的进到模型里 / The objective priorities in the request must really reach the model.
+/// 请求里的目标优先级必须真的进到模型里 / The objective priorities in the request must really reach the model.
 /// </summary>
 public sealed class Demo2ParameterTests
 {
@@ -59,8 +59,8 @@ public sealed class Demo2ParameterTests
         pipeline.Init(request, StowageMode.WeightRecommendation).IsOk.Should().BeTrue();
 
         using var model = new LinearMetaModel<Flt64>();
-        // **必须注册载荷最大化**：`WeightRecommendationPayload` 只有它读（B808 实测——只调聚合的 `Register`，目标系数全是 0）。
-        // **Payload maximisation has to be registered**: it is the only consumer of `WeightRecommendationPayload` (measured by B808 — calling the aggregate
+        // **必须注册载荷最大化**：`WeightRecommendationPayload` 只有它读（ 实测——只调聚合的 `Register`，目标系数全是 0）。
+        // **Payload maximisation has to be registered**: it is the only consumer of `WeightRecommendationPayload` (measured by — calling the aggregate
         // `Register` alone leaves every objective coefficient at zero).
         pipeline.StowageContext.Register(StowageMode.WeightRecommendation, model).IsOk.Should().BeTrue();
         pipeline.MacContext.Register(StowageMode.WeightRecommendation, model).IsOk.Should().BeTrue();

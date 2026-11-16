@@ -1,4 +1,4 @@
-// 完工时间最小化的阈值分支（B699）的判据 / Criteria for the makespan minimisation's threshold branch (B699).
+// 完工时间最小化的阈值分支的判据 / Criteria for the makespan minimisation's threshold branch.
 
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **完工时间最小化的阈值分支（B699）** / The makespan minimisation's threshold branch (B699).
+/// **完工时间最小化的阈值分支** / The makespan minimisation's threshold branch.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**阈值在窗口起点时**直接最小化完工时间、**阈值在窗口内时**先建阈值松弛再最小化其正部、
@@ -90,10 +90,10 @@ public class MakespanThresholdTests {
     /// 四点成对：
     ///
     /// 1. 模型里**多出一条** `makespan_threshold` 符号——松弛真被加进去了。
-    ///    没有被约束的松弛去最小化是恒为零的空操作，所以"松弛在模型里"是这条分支成立的前提。
+    /// 没有被约束的松弛去最小化是恒为零的空操作，所以"松弛在模型里"是这条分支成立的前提。
     /// 2. 目标是 `Minimum` 且名仍是 `makespan`——**两条分支同名**，调用方按名字找目标时不会漏。
     /// 3. 目标的**唯一一项**引用的是松弛的**正部变量**（`makespan_threshold_pos`），不是完工时间本身，
-    ///    也不是负部——`withNegative = false` 让负部根本不存在。
+    /// 也不是负部——`withNegative = false` 让负部根本不存在。
     /// 4. 系数仍是 `coefficient`（这里取 5）。
     ///
     /// Four paired points: **one more** `makespan_threshold` symbol appears in the model, so the slack really went in — an unconstrained slack would minimise a constant zero, so its presence is

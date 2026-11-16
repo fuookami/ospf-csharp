@@ -490,7 +490,7 @@ public static class ConstraintPerturbationSupport
     ///
     /// **约束不存在也必须报 `Unknown`**：这不是"删了没用"，是"根本没删"。
     ///
-    /// The order is the point of this batch: **check the budget, derive, then solve.** **A spent budget must report `Unknown`, never "removal ineffective"**: a test that never ran
+    /// The order is the point: **check the budget, derive, then solve.** **A spent budget must report `Unknown`, never "removal ineffective"**: a test that never ran
     /// and a test that ran and found nothing **have completely different meanings and look identical.** And **a missing constraint is `Unknown` too**: that is not "removing it did
     /// nothing", it is "nothing was removed".
     /// </remarks>

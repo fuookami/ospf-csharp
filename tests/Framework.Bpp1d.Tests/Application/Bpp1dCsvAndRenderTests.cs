@@ -19,7 +19,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Application;
 /// **CSV 读取与渲染适配** / CSV loading and the render adapter.
 /// </summary>
 /// <remarks>
-/// 两者都**不需要求解器**，所以判据全都进默认全量测试——这是本会话少有的、覆盖不靠 `RunScipIntegration` 的一批。
+/// 两者都**不需要求解器**，所以判据全都进默认全量测试——这是少有的、覆盖不靠 `RunScipIntegration` 的一批。
 /// Both need **no solver**, so every criterion here lands in the default full suite — a rarity in this session.
 /// </remarks>
 public class Bpp1dCsvAndRenderTests {
@@ -215,7 +215,7 @@ public class Bpp1dCsvAndRenderTests {
 
     /// <summary>**向前重叠必须拒** / A backward overlap must be rejected.</summary>
     /// <remarks>
-    /// **本批最要紧的一条渲染判据。** 两件物品压在一起，在图上只是"挤"，**不会报错**。
+    /// **这里最要紧的一条渲染判据。** 两件物品压在一起，在图上只是"挤"，**不会报错**。
     ///
     /// **The most important render criterion here.** Two overlapping items merely **look cramped** on a chart and raise nothing.
     /// </remarks>

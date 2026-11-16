@@ -29,7 +29,7 @@ public static class LinearMechanismModelDumpExtensions {
     /// functions first.
     /// </summary>
     /// <remarks>
-    /// B1241 把延迟物化接到<b>这里</b>，因为这个扩展是<b>所有后端唯一的转换咽喉</b>：
+    /// 把延迟物化接到<b>这里</b>，因为这个扩展是<b>所有后端唯一的转换咽喉</b>：
     /// 十四个调用点、七个后端插件，全部经过它。
     ///
     /// **为什么接在转换处而不是接在每个求解器里：** **三元模型<b>装不下</b>延迟结构。
@@ -43,7 +43,7 @@ public static class LinearMechanismModelDumpExtensions {
     /// **于是带配置的求解器显式把它传进来（那份 `Eager` 是<b>用户的明确选择</b>，不是缺省），
     /// 而不带配置的检查类调用点（`*Unavailable`、构建扩展）走模型自己的策略。**
     ///
-    /// **B1241 wires deferred materialisation <b>here</b>, because this extension is the <b>single conversion choke point</b>
+    /// **Deferred materialisation is wired <b>here</b>, because this extension is the <b>single conversion choke point</b>
     /// for every backend: fourteen call sites across seven plugin assemblies all pass through it.**
     ///
     /// **Why at conversion rather than in each solver: a triad model <b>cannot hold</b> deferred structures.** **Converting a

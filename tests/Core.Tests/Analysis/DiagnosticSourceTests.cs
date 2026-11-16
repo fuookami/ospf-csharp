@@ -13,10 +13,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 诊断来源与活动性证据 / Diagnostic sources and activity evidence.
 /// </summary>
 /// <remarks>
-/// **B964 补的是 `core.analysis` 里不依赖原生后端的那三个类型**。判据钉的都是"换个后端还能不能对上"，
+/// 补的是 `core.analysis` 里不依赖原生后端的那三个类型**。判据钉的都是"换个后端还能不能对上"，
 /// 因为那正是这些类型存在的理由。
 ///
-/// **B964 ported the three `core.analysis` types that need no native backend.** The criteria pin "does it still line up after the backend changes", because that is the reason
+/// **ported the three `core.analysis` types that need no native backend.** The criteria pin "does it still line up after the backend changes", because that is the reason
 /// these types exist.
 /// </remarks>
 public class DiagnosticSourceTests {

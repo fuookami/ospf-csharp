@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Domain.DiscreteLoading;
 /// 一维离散装载几何适配 / One-dimensional discrete-loading geometry adapter.
 /// </summary>
 /// <remarks>
-/// 把 B419 的**几何扫描**（`LoadingGeometry`）接到 B420 的**稀疏装载问题**上：
+/// 把 的**几何扫描**（`LoadingGeometry`）接到 的**稀疏装载问题**上：
 /// 舱位在一维上重叠 ⇒ 它们在装载问题里互斥。
 ///
 /// **两处容易写错**：
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Domain.DiscreteLoading;
 /// **第二处尤其危险**：被丢掉的正是"不来自几何"的那部分约束——比如两条航线不能同时用，
 /// 几何上完全不重叠。**它的缺失不会让求解器报错，只会给出一个违反业务规则的解。**
 ///
-/// This wires B419's **geometry sweep** into B420's **sparse loading problem**: positions overlapping in one dimension become mutually exclusive in the loading problem.
+/// This wires the earlier **geometry sweep** into the earlier **sparse loading problem**: positions overlapping in one dimension become mutually exclusive in the loading problem.
 /// **Two easy mistakes** are in the table: a **one-way** or missing position/geometry correspondence means a position without an interval is invisible to the sweep and
 /// **every one of its real conflicts is lost**; and **replacing instead of merging** silently drops the caller's **already-declared business conflicts** — the ones that
 /// do *not* come from geometry, such as "these two lanes may not be used together while their intervals do not overlap at all". **Their absence raises no solver error;
@@ -72,10 +72,10 @@ public static class Bpp1dDiscreteLoading {
         // **这里的类型转换是真实需要的，不是噪音。** 几何侧给的是**有向边**
         // （`Bpp.Infrastructure.PositionConflict`，字段 `Earlier`/`Later`），业务侧要的是
         // **无序对**（`Bpp.Domain.DiscreteLoading.Model.PositionConflict`，字段 `First`/`Second`）。
-        // **同名不同类型**——B420/B421 里只是命名冲突，到这里变成了真正的翻译点。
+        // **同名不同类型**——里只是命名冲突，到这里变成了真正的翻译点。
         //
         // **This conversion is real, not noise.** The geometry side yields a **directed edge** (`Earlier`/`Later`) while the business side wants an **unordered pair**
-        // (`First`/`Second`). **Same name, different types** — a mere naming clash in B420/B421, an actual translation point here.
+        // (`First`/`Second`). **Same name, different types** — a mere naming clash/，an actual translation point here.
         Result<IReadOnlySet<Fuookami.Ospf.Framework.Bpp.Infrastructure.PositionConflict>, ErrorCode, Error<ErrorCode>> swept =
             LoadingGeometry.Conflicts(geometry);
         if (swept is Failed<IReadOnlySet<Fuookami.Ospf.Framework.Bpp.Infrastructure.PositionConflict>, ErrorCode, Error<ErrorCode>> failed) {
@@ -95,13 +95,13 @@ public static class Bpp1dDiscreteLoading {
         // `ponytail:` each directed edge becomes a pair, so one conflict **enters in both directions** and the set may hold both `(A,B)` and `(B,A)`. Validation does not
         // require dedup and clique generation is unaffected, so duplicates are harmless; **dedup if anything downstream counts edges.**
         var merged = new HashSet<PositionConflict>(problem.Conflicts);
-        // **方向在这里无关紧要，本批变异"反向翻译"存活**：业务侧 `PositionConflict` 是**无序对**的
+        // **方向在这里无关紧要，这里变异"反向翻译"存活**：业务侧 `PositionConflict` 是**无序对**的
         // 语义（`First`/`Second` 只是两个成员名），而 `ConflictIndex` 建图时**自己会双向登记**、
-        // `validate()` 只禁止 `First == Second`。所以 `(A,B)` 与 `(B,A)` 在后续所有环节**完全等价**。
+        // `validate` 只禁止 `First == Second`。所以 `(A,B)` 与 `(B,A)` 在后续所有环节**完全等价**。
         // **真实的等价变异，不是判据不足。** 这里按几何侧的扫描顺序写，与基线一致。
         //
-        // **Direction is irrelevant here, and the "translate backwards" mutant survived this batch**: the business `PositionConflict` is semantically an **unordered
-        // pair** (`First`/`Second` are merely member names), `ConflictIndex` registers **both directions** when building its graph, and `validate()` only forbids
+        // **Direction is irrelevant here, and the "translate backwards" mutant survived the criteria**: the business `PositionConflict` is semantically an **unordered
+        // pair** (`First`/`Second` are merely member names), `ConflictIndex` registers **both directions** when building its graph, and `validate` only forbids
         // `First == Second`. `(A,B)` and `(B,A)` are therefore **fully equivalent downstream** — **a genuine equivalent mutant, not a weak criterion.** The geometry
         // sweep's own order is kept, matching the baseline.
         foreach (Fuookami.Ospf.Framework.Bpp.Infrastructure.PositionConflict conflict in geometryConflicts) {

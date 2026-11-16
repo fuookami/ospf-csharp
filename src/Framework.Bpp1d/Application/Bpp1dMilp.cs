@@ -81,10 +81,10 @@ public sealed record Bpp1dSolution<V>(
 /// </summary>
 /// <typeparam name="V">领域数值 / Domain number.</typeparam>
 /// <remarks>
-/// **本批只做 `Bpp1dMilp`**：候选生成 → 最终整数模型。带 LP 定价循环的 `Bpp1dColumnGeneration`
-/// 留到下一批——两者的差别只在是否跑定价，`SolveFinalAsync` 是共用的。
+/// **这里只做 `Bpp1dMilp`**：候选生成 → 最终整数模型。带 LP 定价循环的 `Bpp1dColumnGeneration`
+/// 留到后续——两者的差别只在是否跑定价，`SolveFinalAsync` 是共用的。
 ///
-/// **Only `Bpp1dMilp` this batch**: generate candidates, then solve the final integer model. `Bpp1dColumnGeneration`, which adds the LP pricing loop, comes next — the
+/// **Only `Bpp1dMilp` here**: generate candidates, then solve the final integer model. `Bpp1dColumnGeneration`, which adds the LP pricing loop, comes next — the
 /// two differ only in whether pricing runs, and `SolveFinalAsync` is shared.
 /// </remarks>
 public sealed class Bpp1dMilp<V>
@@ -211,11 +211,11 @@ public sealed class Bpp1dMilp<V>
         }
 
         // **必须用方案实例本身作键。** `PackingContext.Pack` 的签名就是 `IReadOnlyDictionary<PackingPattern<V>, ulong>`；
-        // 用字符串键在这里编译不过——而这正是 B428 里绕开的那个"记录类型按引用比较字典"的陷阱。
+        // 用字符串键在这里编译不过——而这正是 里绕开的那个"记录类型按引用比较字典"的陷阱。
         // 这里的安全性来自**同一个实例**：字典里的键就是列池里的那些对象。
         //
         // **The pattern instances themselves must be the keys.** `PackingContext.Pack` takes `IReadOnlyDictionary<PackingPattern<V>, ulong>`; a string key would not
-        // compile here — which is exactly the "records compare nested dictionaries by reference" trap B428 sidestepped. It is safe because the keys **are the very
+        // compile here — which is exactly the "records compare nested dictionaries by reference" trap sidestepped. It is safe because the keys **are the very
         // instances** held in the pool.
         var usages = new Dictionary<PackingPattern<T>, ulong>();
         foreach ((PackingPattern<T> pattern, ulong usage) in extractedOk.Value) {
@@ -230,8 +230,8 @@ public sealed class Bpp1dMilp<V>
 
         var enhancements = new Dictionary<string, string>();
         foreach (IPatternModelingExtension<T> extension in config.ExtensionsOrDefault) {
-            // **扩展指标提取不在本批范围内**：基线的 `extractSolution(context, values)` 是扩展接口的第三个钩子，
-            // 本批的扩展接口只有定价钩子。**这里明确不做**，缺口记在计划文档里。
+            // **扩展指标提取不在这里范围内**：基线的 `extractSolution(context, values)` 是扩展接口的第三个钩子，
+            // 这里的扩展接口只有定价钩子。**这里明确不做**，缺口记在计划文档里。
             _ = extension;
         }
 

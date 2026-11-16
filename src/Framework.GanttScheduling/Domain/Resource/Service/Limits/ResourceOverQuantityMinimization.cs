@@ -67,13 +67,13 @@ public class ResourceOverQuantityMinimization<E, A, S, R, C, V>
     ///
     /// 1. **阈值 0 时目标项是松弛符号本身**（每个槽一个单项式）；阈值大于 0 时另建一条带阈值的松弛并加进模型，
     ///    目标项变成它的正部。**不能拿适配器的多项式当目标项**：那是 `pos - neg`，会把不该计费的方向也按负价算进去。
-    /// 2. **权重乘在单项式系数上**，乘在松弛内部会让同一个松弛在别处被复用时不带这个权重（B701 的同一课）。
+    /// 2. **权重乘在单项式系数上**，乘在松弛内部会让同一个松弛在别处被复用时不带这个权重（的同一课）。
     /// 3. **表未注册就失败**，不能当零计费——零目标会让模型照样可解，缺陷只在产出上留痕。
     ///
     /// Accumulates every slot's over quantity, weighted, into one objective. Three things are copied from the baseline: **at a zero threshold the term is the slack itself**, not its
     /// polynomial — expanding the adapter yields the sum of both directions, which looks added while charging what should not be charged; a positive threshold builds a separate thresholded
     /// slack and adds it to the model. **The weight multiplies the monomial coefficients** rather than sitting inside the slack, which would drop it wherever else that slack is reused (the
-    /// same lesson as B701). And **an unregistered table fails** rather than charging zero, since a zero objective leaves the model solvable and the defect visible only in output.
+    /// the same lesson). And **an unregistered table fails** rather than charging zero, since a zero objective leaves the model solvable and the defect visible only in output.
     /// </remarks>
     public Try Invoke(object model) {
         ArgumentNullException.ThrowIfNull(model);

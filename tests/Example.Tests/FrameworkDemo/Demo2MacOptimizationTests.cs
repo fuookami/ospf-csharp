@@ -24,7 +24,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **重心优化域（B614）** / The MAC-optimisation domain (B614).
+/// **重心优化域** / The MAC-optimisation domain.
 /// </summary>
 /// <remarks>
 /// 四条管线，全是**最小化目标**。判据的重点：纵向松弛集合**随装载模式变化**、目标名与管线名**不是同一个字符串**、
@@ -170,11 +170,11 @@ public class Demo2MacOptimizationTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. B737（窄体）→ `LateralBalance` 为 `null`。
-    /// 2. B767（宽体）→ 非 `null`，注册后符号名是 `lateral_balance_slack`。
+    /// 1. （窄体）→ `LateralBalance` 为 `null`。
+    /// 2. （宽体）→ 非 `null`，注册后符号名是 `lateral_balance_slack`。
     /// 3. **生成器的管线数量因此不同**：窄体 2 条（纵 + 安定面），宽体 3 条。
     ///
-    /// Three paired points: a B737 (narrow-body) gives a `null` `LateralBalance`; a B767 (wide-body) gives one whose registered symbol is `lateral_balance_slack`; and **the generator's
+    /// Three paired points: a (narrow-body) gives a `null` `LateralBalance`; a (wide-body) gives one whose registered symbol is `lateral_balance_slack`; and **the generator's
     /// pipeline count differs as a result** — two for a narrow-body (longitudinal plus stabilizers), three for a wide-body.
     /// </remarks>
     [Fact]
@@ -241,17 +241,17 @@ public class Demo2MacOptimizationTests {
     }
 
     /// <summary>
-    /// **系数三分支：`C` → `MacRangeC`，B737 → `B737LongitudinalBalance`，其余 → `LongitudinalBalance`** / Three coefficient branches.
+    /// **系数三分支：`C` → `MacRangeC`，→ ` LongitudinalBalance`，其余 → `LongitudinalBalance`** / Three coefficient branches.
     /// </summary>
     /// <remarks>
     /// 三点成对，用**预配载模式**让 `OPT` 松弛存在：
     ///
-    /// 1. B737 走 `B737LongitudinalBalance`（不是 `LongitudinalBalance`）。
-    /// 2. B757 走 `LongitudinalBalance`——证明第二分支判的是 **B737 本身**，不是"窄体机"。
+    /// 1. 走 ` LongitudinalBalance`（不是 `LongitudinalBalance`）。
+    /// 2. 走 `LongitudinalBalance`——证明第二分支判的是 **本身**，不是"窄体机"。
     /// 3. 三者系数取 1/2/3 时目标系数分别是 1/2/3，证明分支真的生效。
     ///
-    /// Three paired points on **predistribution** so the `OPT` slack exists: a B737 takes `B737LongitudinalBalance` (not `LongitudinalBalance`); a B757 takes
-    /// `LongitudinalBalance`, proving the middle branch tests **B737 specifically** rather than "narrow-body"; and coefficients 1/2/3 produce objective coefficients 1/2/3, proving the
+    /// Three paired points on **predistribution** so the `OPT` slack exists: a takes ` LongitudinalBalance` (not `LongitudinalBalance`); a takes
+    /// `LongitudinalBalance`, proving the middle branch tests **specifically** rather than "narrow-body"; and coefficients 1/2/3 produce objective coefficients 1/2/3, proving the
     /// branches take effect.
     /// </remarks>
     [Fact]
@@ -280,11 +280,11 @@ public class Demo2MacOptimizationTests {
             model.MetaSubObjects.Single(sub => sub.Name == "longitudinal balance")
                 .Polynomial.Monomials.Should().BeEmpty(
                     "every slack is a zero polynomial, which is why the coefficient is unobservable here");
-            // **`B737` 与 `B757` 走不同分支这件事也不可观测**：两者都是恒零松弛，乘 2 或乘 3 都得零。
-            // 实测：把 `type == AircraftType.B737` 放宽成 `B737 or B757`，判据仍然全绿。
+            // **` ` 与 ` ` 走不同分支这件事也不可观测**：两者都是恒零松弛，乘 2 或乘 3 都得零。
+            // 实测：把 `type == AircraftType. ` 放宽成 ` or `，判据仍然全绿。
             // 这里如实记录，而不是编一条"看起来在测"的断言。
-            // **Which branch a `B737` versus a `B757` takes is unobservable too**: both are zero slacks, so 2 or 3 both give zero. Measured: widening
-            // `type == AircraftType.B737` to `B737 or B757` leaves every criterion green. Recorded honestly rather than dressed up as an assertion that looks like it tests it.
+            // **Which branch a ` ` versus a ` ` takes is unobservable too**: both are zero slacks, so 2 or 3 both give zero. Measured: widening
+            // `type == AircraftType. ` to ` or ` leaves every criterion green. Recorded honestly rather than dressed up as an assertion that looks like it tests it.
         }
     }
 
@@ -294,12 +294,12 @@ public class Demo2MacOptimizationTests {
     /// <remarks>
     /// 两点成对：
     ///
-    /// 1. 关闭模式（这里用 `StowageMode` 中 `WithMacOptimization()` 为假的那个）→ **成功且空列表**。
+    /// 1. 关闭模式（这里用 `StowageMode` 中 `WithMacOptimization` 为假的那个）→ **成功且空列表**。
     /// 2. 开启模式 → 非空。
     ///
     /// 返回失败会让上层把"这个模式不需要重心优化"当成错误。
     ///
-    /// Two paired points: a disabled mode (whichever `StowageMode` has `WithMacOptimization()` false) yields **success with an empty list**, and an enabled one yields a non-empty
+    /// Two paired points: a disabled mode (whichever `StowageMode` has `WithMacOptimization` false) yields **success with an empty list**, and an enabled one yields a non-empty
     /// list. Returning a failure would make the caller treat "this mode does not need MAC optimisation" as an error.
     /// </remarks>
     [Fact]

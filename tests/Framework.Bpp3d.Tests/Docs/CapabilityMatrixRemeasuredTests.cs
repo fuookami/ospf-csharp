@@ -13,11 +13,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **矩阵里的数字要能被重新量出来** / The numbers in the matrix have to be re-measurable.
 /// </summary>
 /// <remarks>
-/// `docs/kotlin-capability-matrix.md` 四之二 里 Demo2 的每一行都写着"多少行、0 个 TODO、几处引用"。这些数字是
+/// `docs/kotlin-capability-matrix.md` 四之二里 Demo2 的每一行都写着"多少行、0 个 TODO、几处引用"。这些数字是
 /// `logs/b932-audit.py` **一次性量出来的**，之后**没有任何判据再核对过**——文档会漂，而漂了的 ✅ 比 ❌ 更危险：
 /// 它让人以为不用看。
 ///
-/// 这一批判据只重钉**不会因为改一行代码就变**的三件事：
+/// 这里判据只重钉**不会因为改一行代码就变**的三件事：
 ///
 /// | 钉什么 | 为什么它稳 |
 /// | --- | --- |
@@ -114,7 +114,7 @@ public class CapabilityMatrixRemeasuredTests
     ];
     /// <summary>**那个"空壳"其实是一个枚举** / The "shell" is really an enum.</summary>
     /// <remarks>
-    /// 矩阵四之二写"**1** 个空壳（`Domain/Aircraft/Model/FlightPhase.cs`）"。**这一批去读了那个文件**：
+    /// 矩阵四之二写"**1** 个空壳（`Domain/Aircraft/Model/FlightPhase.cs`）"。**这里去读了那个文件**：
     /// 它是 `public enum FlightPhase { ZeroFuel, TakeOff, Landing }`——**三个成员，一个不缺，能编译、能引用。**
     ///
     /// **它不是空壳，是"没有对应基线文件"的枚举。** 矩阵那个词把两件事混在一起了：
@@ -127,7 +127,7 @@ public class CapabilityMatrixRemeasuredTests
     /// 判据因此钉**真正的空壳定义**（成员为零），并**单独钉住 `FlightPhase` 有它的三个成员**——
     /// 这样"补上成员"或"删掉成员"都会红，而"矩阵叫它空壳"这件事不会再被当成事实传下去。
     ///
-    /// The matrix calls `FlightPhase.cs` a shell. **This batch read the file**: it is `public enum FlightPhase { ZeroFuel, TakeOff, Landing }` — **three members, none
+ /// The matrix calls `FlightPhase.cs` a shell. ** read the file**: it is `public enum FlightPhase { ZeroFuel, TakeOff, Landing }` — **three members, none
     /// missing, compiles and is referenced.** It is not a shell but **an enum with no baseline counterpart**, and the matrix's word conflated two cases: a type that exists
     /// with all its members and no baseline original is **an addition, not a gap**; a type with no members or only `TODO`s is **a shell**. The criterion therefore pins the
     /// **real** definition (zero members) and separately pins that `FlightPhase` keeps its three members, so adding or dropping one reddens — and the claim that the matrix
@@ -159,10 +159,10 @@ public class CapabilityMatrixRemeasuredTests
     }
     /// <summary>**`DFSGenerator` 不是空壳** / `DFSGenerator` is not a shell.</summary>
     /// <remarks>
-    /// 矩阵四之一曾经写"`DFSGenerator` 是个空壳，B281 已删除"，**两句话都不对**。这条判据钉住实测：
+    /// 矩阵四之一曾经写"`DFSGenerator` 是个空壳，已删除"，**两句话都不对**。这条判据钉住实测：
     /// 文件在、行数够、被 `FullSumGenerator` 的搜索共用。**"空壳"这个词一旦写错，就没人会去查。**
     ///
-    /// The matrix used to say `DFSGenerator` is a shell deleted in B281; **both halves are false**. This pins the measurement: the file exists, it is not a stub, and
+    /// The matrix used to say `DFSGenerator` is a shell deleted; **both halves are false**. This pins the measurement: the file exists, it is not a stub, and
     /// `FullSumGenerator` shares its search. **Once "shell" is written down wrongly, nobody goes to check.**
     /// </remarks>
     [Fact]
@@ -226,9 +226,9 @@ public class CapabilityMatrixRemeasuredTests
             // **The project it names**, not just any.
             text.Should().Contain(project + ".csproj",
                 starter + " has to reference " + project + "; a starter pointing elsewhere carries the wrong module");
-            // **程序集名各不相同**：B287 之前五个 starter 逐字节相同，`AssemblyName` 全是 `Fuookami.Ospf.Starters`，
+            // **程序集名各不相同**： 之前五个 starter 逐字节相同，`AssemblyName` 全是 `Fuookami.Ospf.Starters`，
             // 于是同名程序集互相覆盖。这条钉住那个回归。
-            // **Distinct assembly names**: before B287 all five were byte-identical with `AssemblyName` set to `Fuookami.Ospf.Starters`, so identically named
+            // **Distinct assembly names**: before all five were byte-identical with `AssemblyName` set to `Fuookami.Ospf.Starters`, so identically named
             // assemblies overwrote each other. This pins that regression.
             text.Should().Contain("<AssemblyName>Fuookami.Ospf.Starters." + starter + "</AssemblyName>",
                 "a shared assembly name makes the packages overwrite each other, which is the B287 defect");
@@ -237,12 +237,12 @@ public class CapabilityMatrixRemeasuredTests
 
     /// <summary>**第九节的每个门内文件数都能被重数出来** / Every gate file count in the ninth section can be re-counted.</summary>
     /// <remarks>
-    /// 第九节列着每个求解器插件的门内文件数。B948 一数就发现 **SCIP 少算了 36 个（10 → 46）**——
+    /// 第九节列着每个求解器插件的门内文件数。 一数就发现 **SCIP 少算了 36 个（10 → 46）**——
     /// 而 SCIP 是**这个环境里唯一真跑的后端**。**把验证写得比真少，和夸大一样有害，只是方向相反。**
     ///
     /// 计数口径：`.cs` 文件里出现 `<SYMBOL>_INTEGRATION`，且**只含该符号**（`CapabilityMatrixTests` 自己也同时提到 SCIP 与 Gurobi）。
     ///
-    /// The ninth section lists a file count per solver plugin. B948 counted them and found **SCIP under-reported by 36 (10 → 46)** — and SCIP is **the one backend
+    /// The ninth section lists a file count per solver plugin. counted them and found **SCIP under-reported by 36 (10 → 46)** — and SCIP is **the one backend
     /// that really runs in this environment**. **Under-reporting what was verified is as harmful as exaggerating, just in the other direction.** Counted as: a `.cs`
     /// file containing `<SYMBOL>_INTEGRATION` and **only that symbol** (`CapabilityMatrixTests` itself mentions both SCIP and Gurobi).
     /// </remarks>
@@ -253,25 +253,25 @@ public class CapabilityMatrixRemeasuredTests
         string matrix = DocsFile.ReadAllText(Path.Combine(root, "docs", "kotlin-capability-matrix.md"));
 
         (string Symbol, int Expected)[] gates = [
-            // B1333：新增 OnnxAffineEndpointGurobiIntegrationTest（ONNX 仿射链的端到端求解），
+            // 新增 OnnxAffineEndpointGurobiIntegrationTest（ONNX 仿射链的端到端求解），
             // GUROBI 门内文件数随之 32 → 33。这是实测事实变了，不是口径变了。
-            // B1333: the endpoint test for the ONNX affine chain adds one gate file, so GUROBI goes 32 -> 33. The measurement changed, not the rule.
-            // B1337：新增 OnnxModelAttachmentGurobiIntegrationTest（ONNX 仿射结果挂进 LinearMetaModel 求解），
+            // the endpoint test for the ONNX affine chain adds one gate file, so GUROBI goes 32 -> 33. The measurement changed, not the rule.
+            // 新增 OnnxModelAttachmentGurobiIntegrationTest（ONNX 仿射结果挂进 LinearMetaModel 求解），
             // GUROBI 门内文件数 33 → 34。
-            // B1337: the attachment test adds one gate file, so GUROBI goes 33 -> 34.
-                        // B1357：新增 OnnxSymbolicActivationGurobiIntegrationTest（符号激活挂进模型并求解），
+            // the attachment test adds one gate file, so GUROBI goes 33 -> 34.
+                        // 新增 OnnxSymbolicActivationGurobiIntegrationTest（符号激活挂进模型并求解），
             // GUROBI 门内文件数 34 → 35。
-            // B1357: the symbolic-activation test adds one gate file, so GUROBI goes 34 -> 35.
-                        // B1360：新增 OnnxQuadraticObjectiveGurobiIntegrationTest（二次目标挂进元模型并求解），
+            // the symbolic-activation test adds one gate file, so GUROBI goes 34 -> 35.
+                        // 新增 OnnxQuadraticObjectiveGurobiIntegrationTest（二次目标挂进元模型并求解），
             // GUROBI 门内文件数 35 → 36。
-            // B1360: the quadratic-objective test adds one gate file, so GUROBI goes 35 -> 36.
-                        // B1361：新增 OnnxPiecewiseActivationGurobiIntegrationTest（分段近似的 Sigmoid 挂进模型并求解），
+            // the quadratic-objective test adds one gate file, so GUROBI goes 35 -> 36.
+                        // 新增 OnnxPiecewiseActivationGurobiIntegrationTest（分段近似的 Sigmoid 挂进模型并求解），
             // GUROBI 门内文件数 36 → 37。
-            // B1361: the piecewise-activation test adds one gate file, so GUROBI goes 36 -> 37.
-            // B1387：新增的 OnnxQuadraticSolverGurobiIntegrationTest 不引用 `GUROBI_INTEGRATION` 符号，
+            // the piecewise-activation test adds one gate file, so GUROBI goes 36 -> 37.
+            // 新增的 OnnxQuadraticSolverGurobiIntegrationTest 不引用 `GUROBI_INTEGRATION` 符号，
             // 而这一条按"文件里是否引用该门符号"来数，所以 GUROBI 仍是 37——**我没有按实测改文档，而是先改对了数字。**
             //
-            // B1387: the new quadratic-solver test does not reference the GUROBI_INTEGRATION symbol, and this criterion counts by whether a file references the gate symbol, so GUROBI stays 37 —
+            // the new quadratic-solver test does not reference the GUROBI_INTEGRATION symbol, and this criterion counts by whether a file references the gate symbol, so GUROBI stays 37 —
             // **the document follows the measurement rather than the other way round.**
             ("SCIP", 46), ("GUROBI", 37), ("CPLEX", 4), ("COPT", 6),
             ("MINDOPT", 2), ("HEXALY", 1), ("MOSEK", 1),

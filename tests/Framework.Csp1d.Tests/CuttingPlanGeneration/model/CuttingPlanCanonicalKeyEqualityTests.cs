@@ -13,17 +13,17 @@ namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.model;
 /// `CuttingPlanCanonicalKey` must be equal by **content**, not by reference.
 /// </summary>
 /// <remarks>
-/// B304 在实现 `NSameGenerator` 后由测试发现：`record` 的默认相等性对 `IReadOnlyList<>` 用**引用比较**，
+/// 在实现 `NSameGenerator` 后由测试发现：`record` 的默认相等性对 `IReadOnlyList<>` 用**引用比较**，
 /// 所以两个内容完全相同的 key 被判为不等——**结构化去重完全失效，而 `DuplicateCandidates` 恒为 0 看起来正常**。
 ///
-/// 本批（B305）为这个修复补上**直接针对 key 本身**的判据，因为 B304 只验证了 `NSame` 一条路径，
+/// 这里为这个修复补上**直接针对 key 本身**的判据，因为 只验证了 `NSame` 一条路径，
 /// 而下游还有 `Csp1dColumnGeneration`（两处 `HashSet`）、`Csp1dMilp`（`DistinctByCanonicalKey`）、
 /// `Csp1dProduceContext`（`Dictionary`）、`Csp1dRecovery`（去重）——**它们全都依赖这个相等性**。
 ///
-/// B304 found this through a test after implementing `NSameGenerator`: the record's default equality compares lists by **reference**, so two keys with
+/// found this through a test after implementing `NSameGenerator`: the record's default equality compares lists by **reference**, so two keys with
 /// identical content compared unequal — **structural de-duplication did nothing while `DuplicateCandidates` sat at 0 looking normal**.
 ///
-/// This batch (B305) adds criteria **aimed at the key itself**, because B304 verified only one path (`NSame`) while downstream there are
+/// adds criteria **aimed at the key itself**, because verified only one path (`NSame`) while downstream there are
 /// `Csp1dColumnGeneration` (two `HashSet`s), `Csp1dMilp` (`DistinctByCanonicalKey`), `Csp1dProduceContext` (a `Dictionary`) and `Csp1dRecovery`
 /// (de-duplication) — **all of them rely on this equality**.
 /// </remarks>

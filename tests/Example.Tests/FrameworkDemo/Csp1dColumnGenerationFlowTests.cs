@@ -19,15 +19,15 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// The column-generation **flow itself** must be coherent: termination reason, pricing outcome and plan-count change must agree.
 /// </summary>
 /// <remarks>
-/// **这是 CSP1D 列生成第一组流程判据。** 此前只有"接线了"（B322）、"可取消"（B323）、
-/// "进度上报了"（B329—B335）——**没有一条验证流程算得对不对**。
+/// **这是 CSP1D 列生成第一组流程判据。** 此前只有"接线了"、"可取消"、
+/// "进度上报了"——**没有一条验证流程算得对不对**。
 ///
 /// 判据的设计原则：**不钉具体数字，钉三者之间的一致关系**。
 /// 钉死 `Iterations.Count == 1` 会让判据在 fixture 变化时碎，而且**说明不了流程对不对**；
 /// 钉"`AllDuplicates` ⇔ 定价 0 条 ⇔ 方案数不变"才能表达"收敛判据是靠什么下的"。
 ///
-/// **This is CSP1D column generation's first set of flow criteria.** Before this there was only "it is wired" (B322), "it can be cancelled" (B323) and "it reports
-/// progress" (B329—B335) — **not one that checked whether the flow computes the right thing**.
+/// **This is CSP1D column generation's first set of flow criteria.** Before this there was only "it is wired", "it can be cancelled" and "it reports
+/// progress"  — **not one that checked whether the flow computes the right thing**.
 ///
 /// The design rule: **pin the consistency between the three, not specific numbers**. Pinning `Iterations.Count == 1` would break with the fixture and **would not
 /// show whether the flow is right**; pinning "`AllDuplicates` ⇔ 0 priced plans ⇔ unchanged plan count" expresses **what the convergence decision rests on**.

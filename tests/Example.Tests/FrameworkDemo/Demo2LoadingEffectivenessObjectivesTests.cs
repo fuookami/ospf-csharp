@@ -1,4 +1,4 @@
-// 装载效能域三条货物目标（B618）的判据 / Criteria for the three item objectives of the loading-effectiveness domain (B618).
+// 装载效能域三条货物目标的判据 / Criteria for the three item objectives of the loading-effectiveness domain.
 
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,7 @@ using StowageModel = Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Stowage.Mo
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **装载效能的三条货物目标（B618）** / The three item objectives of loading effectiveness (B618).
+/// **装载效能的三条货物目标** / The three item objectives of loading effectiveness.
 /// </summary>
 /// <remarks>
 /// `ItemAheadLoadLimit`、`ItemReserveLimit`、`ItemReweighNeededLimit` —— 三条都是**目标**，都是 `Minimum`，都读 `loaded` 符号。

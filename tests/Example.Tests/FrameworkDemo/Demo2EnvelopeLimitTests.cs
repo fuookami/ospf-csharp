@@ -24,12 +24,12 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **CG 包络约束（B594）** / The CG envelope constraint (B594).
+/// **CG 包络约束** / The CG envelope constraint.
 /// </summary>
 /// <remarks>
 /// 每个飞行阶段 × 每条包络各加**两行**：纵向力矩 ≤ 最大指数（`_ub`）与 ≥ 最小指数（`_lb`）。
 ///
-/// 四处容易做错，本批每条都有一条判据：
+/// 四处容易做错，这里每条都有一条判据：
 ///
 /// | 处 | 做错了会怎样 |
 /// | --- | --- |

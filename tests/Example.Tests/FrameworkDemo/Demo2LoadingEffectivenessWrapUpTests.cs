@@ -1,4 +1,4 @@
-// 装载效能收尾（B625）的判据 / Criteria for the loading-effectiveness wrap-up (B625).
+// 装载效能收尾的判据 / Criteria for the loading-effectiveness wrap-up.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **装载效能收尾（B625）** / The loading-effectiveness wrap-up (B625).
+/// **装载效能收尾** / The loading-effectiveness wrap-up.
 /// </summary>
 /// <remarks>
 /// 六条拖车校验、按来源分组的保序性、以及十二条管线的条件矩阵。

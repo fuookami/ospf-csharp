@@ -18,12 +18,12 @@ public static class ElectricChargeUnits {
     /// <summary>安时 / Ampere-hour (1 Ah = 3600 C).</summary>
     public static readonly PhysicalUnit AmpereHour = new DerivedUnit(Coulomb.ScaleMultiply(Scale.Invoke(3600)), "ampere-hour", "Ah");
 
-    // 以下 6 个是 B1142 按基线 ElectricCharge.kt 补的。
+    // 以下 6 个按基线 `ElectricCharge.kt` 补齐。
     //
     // **法拉系列不在这个文件里**：**基线把它写在这里，却声明 `Capacitance` 量纲。**
     // **跟着文件名会建成电荷单位——所以它们在 `CapacitanceUnits`。**
     //
-    // The six below were added in B1142 from the baseline ElectricCharge.kt.
+    // The six below were added from the baseline ElectricCharge.kt.
     //
     // **The farad family is not here**: **the baseline writes it in this file while declaring `Capacitance`.**
     // **Following the file name would build charge units, so they live in `CapacitanceUnits`.**

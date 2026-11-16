@@ -19,10 +19,10 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 
 /// <summary>
-/// **掩码函数从空壳变成真函数（B550）** / The masking function goes from an empty stub to a real function (B550).
+/// **掩码函数从空壳变成真函数** / The masking function goes from an empty stub to a real function.
 /// </summary>
 /// <remarks>
-/// 原来的 `MaskingFunction` / `MaskingWithPolyMaskFunction` 与 B548 的 `SlackFunction` 同一个病：
+/// 原来的 `MaskingFunction` / `MaskingWithPolyMaskFunction` 与 的 `SlackFunction` 同一个病：
 /// `Evaluate` 恒 `null`、`RegisterConstraints` 恒 `Ok`、`HelperVariables` 为空数组，而它们出现在
 /// `FunctionSymbolRegistrationTest` 的列表里，于是"注册通过"这条判据一直绿着。
 ///
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// <item>**先套掩码行再定义 `m`**：`m` 那时还没有定义，求解器给它任意值，掩码行形同虚设。</item>
 /// </list>
 ///
-/// The old `MaskingFunction` / `MaskingWithPolyMaskFunction` share B548's `SlackFunction` disease: `Evaluate` always null, `RegisterConstraints` always Ok, empty
+/// The old `MaskingFunction` / `MaskingWithPolyMaskFunction` share the earlier `SlackFunction` disease: `Evaluate` always null, `RegisterConstraints` always Ok, empty
 /// `HelperVariables`, and they sit in `FunctionSymbolRegistrationTest`'s list so "registration passes" stays green. Three silent failures: (1) **one row short** leaves `y` free at
 /// some mask value and the objective pushes it to a bound, reading back plausibly; (2) **inverted bounds** clamp `y` to `[-upper, -lower]` instead of `[0, 0]` when `mask = 0` and
 /// the solution is still feasible; (3) **masking rows before defining `m`** leaves `m` undefined at that point, the solver sets it freely and the rows are decorative.

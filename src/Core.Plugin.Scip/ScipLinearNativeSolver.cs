@@ -626,7 +626,7 @@ internal static class ScipLinearNativeSolver {
         if (solutionAmount > 1) {
             effective["heuristics/dins/solnum"] = solutionAmount.ToString(CultureInfo.InvariantCulture);
         }
-        // **B1231 更正：这里此前把 `parallel/maxnthreads` 记进 `ignoredParameters`，
+        // **更正：这里此前把 `parallel/maxnthreads` 记进 `ignoredParameters`，
         // 而那个字段的语义是"已声明但<b>未生效</b>的参数"（见 `SolverReportMetadata` 的文档）。
         //
         // **它已生效**：上面第 278—280 行确实调用了 `SetIntParameter("parallel/maxnthreads", ...)`
@@ -640,7 +640,7 @@ internal static class ScipLinearNativeSolver {
         // 会让一条本来准确的披露变成一条不准确的报告——而这个方向的报告里，
         // `ignoredParameters` 是被下游当作事实读的。**
         //
-        // **B1231 correction: this used to record `parallel/maxnthreads` in `ignoredParameters`, whose documented
+        // **A correction: this used to record `parallel/maxnthreads` in `ignoredParameters`, whose documented
         // meaning is "requested parameters that were <b>not applied</b>".**
         //
         // **It <b>is</b> applied: lines 278–280 above call `SetIntParameter("parallel/maxnthreads", ...)` and return
@@ -662,7 +662,7 @@ internal static class ScipLinearNativeSolver {
         // 而读取方会以为它是某个可以下发的设置。**
         //
         // **一个"不是参数的事实"该写在文档里，不该伪装成参数。**
-        // **这一批只做一件事：把一条错误的披露从 `ignored` 里删掉。**
+        // **这里只做一件事：把一条错误的披露从 `ignored` 里删掉。**
         //
         // **The difference lives only in this comment, in no parameter table.**
         //
@@ -670,7 +670,7 @@ internal static class ScipLinearNativeSolver {
         // `concurrentSolving` key in one fabricates a parameter name SCIP does not have, and a reader would take it for a
         // setting that can be sent.**
         //
-        // **A fact that is not a parameter belongs in the docs, not disguised as one.** **This batch does one thing: it
+ // **A fact that is not a parameter belongs in the docs, not disguised as one.** ** does one thing: it
         // removes an inaccurate disclosure from `ignored`.**
         var ignored = new SortedDictionary<string, string>(StringComparer.Ordinal);
         return config.Provenance(descriptor, ignoredParameters: ignored) with {

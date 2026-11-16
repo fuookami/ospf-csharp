@@ -13,12 +13,12 @@ namespace Fuookami.Ospf.Core.Analysis;
 /// 与基线 `DiagnosticSource.kt`（171 行）对应。**这个类型刻意不含求解器行、列、生成变量或后端句柄**：
 /// `StableId` 要能当缓存键，也要能跨后端对照——**一旦把行号塞进来，换个后端就对不上了。**
 ///
-/// **B964 补**：这是 `core.analysis` 里**不依赖原生后端**的入口之一。§九 第 6 条说该模块缺 18 个文件，
+/// 补**：这是 `core.analysis` 里**不依赖原生后端**的入口之一。§九第 6 条说该模块缺 18 个文件，
 /// 而多数分析器要 IIS、活动约束、扰动重解这些**只有真后端给得出**的证据；`DiagnosticSource` / `ActivityStatus` /
 /// `ActivityEvidence` 三个不需要，所以先做这三个。
 ///
 /// Mirrors the baseline's `DiagnosticSource.kt` (171 lines). **Solver rows, columns, generated variables and backend handles are deliberately absent**: `StableId` has to
-/// work as a cache key and across backends — **a row number in it would stop matching the moment the backend changed.** **B964**: this is one of the `core.analysis` entry
+/// work as a cache key and across backends — **a row number in it would stop matching the moment the backend changed.** ****: this is one of the `core.analysis` entry
 /// points that **does not need a native backend**. §九 item 6 says the module is 18 files short, and most analyzers need IIS, active constraints or perturbation
 /// re-solving — evidence **only a real backend produces**; these three do not, so they come first.
 /// </remarks>

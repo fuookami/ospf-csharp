@@ -82,10 +82,10 @@ public class MixedSheetObjectivesTests {
     /// **未配价的板材类型取缺省值，未绑定板材也取缺省值** / An unconfigured type and an unbound layer both take the default.
     /// </summary>
     /// <remarks>
-    /// 两种情形合成一条判据是有意的：基线的 `?.let { ... } ?: default` 就是把这个合并的，
+    /// 两种情形合成一条判据是有意的：基线的 `?.let {... } ?: default` 就是把这个合并的，
     /// 而分开实现的人很容易只处理其中一种，另一种静默变成零。
     ///
-    /// Combining the two cases is deliberate: the baseline's `?.let { ... } ?: default` merges them, and a split implementation easily handles one and lets the other
+    /// Combining the two cases is deliberate: the baseline's `?.let {... } ?: default` merges them, and a split implementation easily handles one and lets the other
     /// silently become zero.
     /// </remarks>
     [Fact]

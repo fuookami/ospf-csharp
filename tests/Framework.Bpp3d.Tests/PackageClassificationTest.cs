@@ -22,8 +22,8 @@ public sealed class PackageClassificationTest {
         PackageClassificationRules.Of(false).Should().Be(PackageClassification.Inner);
 
     /// <summary>
-    /// **null 与空列表同等对待**：基线用 `isNullOrEmpty()`，若把 null 当"未知"再单独分支，会多出一条与空列表不一致的路径。
-    /// **null and empty are treated identically**: the baseline uses `isNullOrEmpty()`, and a separate null branch would create
+    /// **null 与空列表同等对待**：基线用 `isNullOrEmpty`，若把 null 当"未知"再单独分支，会多出一条与空列表不一致的路径。
+    /// **null and empty are treated identically**: the baseline uses `isNullOrEmpty`, and a separate null branch would create
     /// a path inconsistent with the empty case.
     /// </summary>
     [Fact]

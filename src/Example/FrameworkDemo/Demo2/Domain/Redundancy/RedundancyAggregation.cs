@@ -23,14 +23,14 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.Redundancy;
 ///
 /// 顺序是行为：两者都会往同一个模型上写，先写的先占位，交换会让解在退化情形下不同。
 ///
-/// **一处刻意的参数删减**：基线还把 `aircraftModel`、`flight`、`payload` 传进来，但两个子模型的 C# 实现在 B597 落地时
+/// **一处刻意的参数删减**：基线还把 `aircraftModel`、`flight`、`payload` 传进来，但两个子模型的 C# 实现在 落地时
 /// 只用到货物、舱位与装载量（`payload` 用于 `Redundancy` 的总容量，本仓的 `Redundancy` 直接从 `mlw` 求和），所以这里
 /// **不接没有消费者的参数**。
 ///
 /// Aligned with the baseline: **two sub-models**, registered **redundancy first, then the experimental longitudinal balance**. The order is behaviour — both write to the same model and
 /// the first one takes its slots, so swapping them changes the solution in degenerate cases.
 ///
-/// **One deliberate parameter omission**: the baseline also takes `aircraftModel`, `flight` and `payload`, but the C# sub-models landed in B597 read only the items, positions and loads
+/// **One deliberate parameter omission**: the baseline also takes `aircraftModel`, `flight` and `payload`, but the C# sub-models landed read only the items, positions and loads
 /// (the baseline uses `payload` for `Redundancy`'s total capacity while this port sums `mlw` directly), so this port **does not accept parameters with no consumer**.
 /// </remarks>
 public sealed class RedundancyAggregation

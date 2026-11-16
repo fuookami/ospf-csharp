@@ -300,7 +300,7 @@ public class AnalysisCasesTests
     /// 保持契约里的顺序读成名字表 / Read the cell preserving the contract's order.
     /// </summary>
     /// <remarks>
-    /// **`[correction]` 的成员顺序本身就是契约的一部分**（按 权重×松弛 升序、同成本按 stableId 升序），
+    /// **`[correction]` 的成员顺序本身就是契约的一部分**（按权重×松弛升序、同成本按 stableId 升序），
     /// **所以这里绝不能排序**——**排一次序，判据就再也看不出排序错了。**
     ///
     /// **The member order in `[correction]` is itself the contract** (ascending weight times relaxation, ties by stable id),
@@ -319,7 +319,7 @@ public class AnalysisCasesTests
 
     /// <summary>**修正集合的两个构造器与它们的边界** / The two correction builders and their boundaries.</summary>
     /// <remarks>
-    /// `weighted` 走**单数**构造器（一个集合装全部成员，按 权重×松弛 升序，同成本按 stableId 升序），
+    /// `weighted` 走**单数**构造器（一个集合装全部成员，按权重×松弛升序，同成本按 stableId 升序），
     /// `minimal` 走最小性构造器。**两者都不是"每个成员一组"。**
     ///
     /// **`minimal` 的 `minimal` 标志只看"候选数有没有被 `max_candidates` 截断"**，

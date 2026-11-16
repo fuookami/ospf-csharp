@@ -1,4 +1,4 @@
-// 装载模型第三批的判据：扭矩、CLIM、指数与容量联动 / Criteria for the third load slice: torque, CLIM, index and the capacity link.
+// 装载模型此前的判据：扭矩、CLIM、指数与容量联动 / Criteria for the third load slice: torque, CLIM, index and the capacity link.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +18,10 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **扭矩、CLIM、指数与容量联动（B579）** / Torque, CLIM, index and the capacity link (B579).
+/// **扭矩、CLIM、指数与容量联动** / Torque, CLIM, index and the capacity link.
 /// </summary>
 /// <remarks>
-/// 这一批的符号全部**建在已有符号之上**，所以最容易出的错不是"算错"而是"接错"：
+/// 这里的符号全部**建在已有符号之上**，所以最容易出的错不是"算错"而是"接错"：
 ///
 /// - 纵向力矩乘了**另一个**重量的多项式（推荐力矩乘实际重量）——数值看着正常，只是"推荐"和"实际"永远相等；
 /// - `load_index` 的系数写成货物重量而不是"该舱位力臂下的指数"，量纲对、数错位；
@@ -74,9 +74,9 @@ public class Demo2LoadTorqueTests {
                 recommendedWeightNeeded: true),
             mlw: new MaxLoadWeightLimit(mlw),
             mla: mla,
-            // B582 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
+            // 起"需要谓词重量"就必须带三元组规格：`Load` 的松弛右端取 `min`，缺规格是**错误而不是跳过**
             // （跳过会让 `y` 无下界参照，模型照解）。这批既有 fixture 默认给了 `mlw` 那一口径的值。
-            // Since B582 "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
+            // Since "needs the predicate weight" requires the triple: `Load`'s slack takes `min` and a missing specification is an **error, not a skip** (skipping leaves
             // `y` with no reference bound and the model still solves). These pre-existing fixtures default the bounds to the `mlw` figure.
             plw: new PositionPredicateLoadWeight(Plw: 1000.0, Min: 0.0, Max: 1000.0));
     }
@@ -246,7 +246,7 @@ public class Demo2LoadTorqueTests {
     /// **`y`/`z` 必须接进内核容量行** / `y`/`z` must be linked into the kernel's capacity row.
     /// </summary>
     /// <remarks>
-    /// 这是本批最危险的一处：不接容量行，模型能解、可行、报告里重量加起来对得上，只是**松弛重量对容量不可见**——
+    /// 这是这里最危险的一处：不接容量行，模型能解、可行、报告里重量加起来对得上，只是**松弛重量对容量不可见**——
     /// 实际超载的配载会被判为合法。判据查约束名，因为"有没有接上"在数值上只有求解以后才看得出来。
     ///
     /// This is the dangerous one: without the capacity link the model solves, the solution is "feasible", the report adds up — only the **slack weight is invisible to
@@ -270,11 +270,11 @@ public class Demo2LoadTorqueTests {
     /// **单装载方案下容量联动同样生效** / The capacity link applies under the single schema too.
     /// </summary>
     /// <remarks>
-    /// 基线里 `linkAdditionalWeight` 那段**不在任何 `if` 里**，所以单方案下也要接。B579 把它包进 `if (WithMultiLoadingSchema)`，
+    /// 基线里 `linkAdditionalWeight` 那段**不在任何 `if` 里**，所以单方案下也要接。 把它包进 `if (WithMultiLoadingSchema)`，
     /// 于是单方案下整段容量联动消失——而单方案恰恰是最常用的那种。**这条判据是那一版错误理解的留档改写**：
     /// 现在钉住"单方案下也有那两行"，与多方案成对。
     ///
-    /// The baseline's `linkAdditionalWeight` block sits inside no `if`, so it applies under the single schema too. B579 wrapped it in `if (WithMultiLoadingSchema)` and the whole
+    /// The baseline's `linkAdditionalWeight` block sits inside no `if`, so it applies under the single schema too. wrapped it in `if (WithMultiLoadingSchema)` and the whole
     /// link vanished under the single schema — the common case. **This criterion is the rewritten record of that misunderstanding**: it now pins "the two rows are there under the
     /// single schema as well", paired with the multi-schema case.
     /// </remarks>

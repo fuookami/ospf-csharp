@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 /// **把它写成 `dw = −δw` 或 `dw = −y` 都会让第四个分量变号或归零，**
 /// **而"轨迹仍在有界范围内"这种弱检查看不出来。**
 ///
-/// The Wang–Chen attractor from the baseline, added in B1146.
+/// The Wang–Chen attractor from the baseline.
 ///
 /// <c>dx = α(y−x)</c>, <c>dy = βx − γxz + w</c>, <c>dz = xy − δz</c>, <c>dw = −yz</c>.
 ///

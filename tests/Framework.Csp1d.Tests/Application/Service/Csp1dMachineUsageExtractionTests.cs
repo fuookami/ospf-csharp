@@ -23,14 +23,14 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **设备产能用量必须按"消耗 × 次数"累加** / Machine capacity usage must accumulate "consumption × amount".
 /// </summary>
 /// <remarks>
-/// `ExtractMachineUsages` 一直是**唯一没有判据**的提取路径（B371 记过）。
+/// `ExtractMachineUsages` 一直是**唯一没有判据**的提取路径。
 /// 它内部用 `(V)(dynamic)a * (V)(dynamic)b` 做乘加，**没有编译期类型检查**——
 /// 所以判据要同时回答两个问题：
 ///
 /// 1. **算得对不对**（`Flt64` 下的功能正确性）；
 /// 2. **单位不一致时会不会静默混加**（基线的两个 `continue` 就是干这个的）。
 ///
-/// `ExtractMachineUsages` has always been **the only extraction path without a criterion** (noted in B371). It multiplies and adds via `(V)(dynamic)a * (V)(dynamic)b`
+/// `ExtractMachineUsages` has always been **the only extraction path without a criterion** (noted). It multiplies and adds via `(V)(dynamic)a * (V)(dynamic)b`
 /// with **no compile-time type checking**, so the criteria must answer two questions: **is the arithmetic right** for `Flt64`, and **does a unit mismatch get silently
 /// summed** (the baseline's two `continue`s exist for exactly that).
 /// </remarks>

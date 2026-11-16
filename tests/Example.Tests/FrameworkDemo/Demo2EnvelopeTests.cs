@@ -23,13 +23,13 @@ using Success = Fuookami.Ospf.Utils.Functional.Success;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **CG 包络线（B592）** / The CG envelope (B592).
+/// **CG 包络线** / The CG envelope.
 /// </summary>
 /// <remarks>
 /// 包络线是一条**折线**：每种总重对应一个允许的 CG 指数边界，两侧分别给下界与上界。两支取值——该阶段总重已知时产**常数**，
 /// 未知时产**关于总重估计的分段线性符号**。
 ///
-/// 第二支是本批的核心：总重本身是决策变量的表达式，所以"允许的 CG 指数"也是表达式。写成常数要先把总重估成某个数，而那个猜测会被当成硬边界——
+/// 第二支是这里的核心：总重本身是决策变量的表达式，所以"允许的 CG 指数"也是表达式。写成常数要先把总重估成某个数，而那个猜测会被当成硬边界——
 /// 重心被限制在一个伪造的包络里，而且不会有任何报错。
 ///
 /// An envelope is a **polyline**: each total weight has an allowed CG index bound, with the two sides giving the lower and upper bounds. Two branches — a known phase total

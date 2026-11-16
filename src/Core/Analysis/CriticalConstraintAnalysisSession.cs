@@ -38,12 +38,12 @@ public enum AnalysisCacheKind
 /// **此类型刻意不求解、不降阶、不扰动、不修改模型**；它提供 S1+ 分析器可共享的生命周期与稳定输入。
 /// 缓存访问保持 internal，使本模块算法包可复用 session 而不通过公共 API 暴露 solver 产物。
 ///
-/// **B973 更正上一批的账**：B972 记的是"持有活的求解器实例，要真实后端"。**那是 grep 代理读错了**——
+/// **更正此前的账**： 记的是"持有活的求解器实例，要真实后端"。**那是 grep 代理读错了**——
 /// 唯一带 `ConstraintProgrammingSolver` 的参数**只用来读 `Descriptor`**，`BaselineSnapshot` 之外没有任何求解调用。
 /// 所以它是**完全不需要后端**的。
 ///
-/// **This type intentionally does not solve, lower, perturb, or mutate a model**; it provides the lifecycle and stable inputs that S1+ analyzers share. **B973 corrects the
-/// previous batch's ledger**: B972 recorded "holds a live solver instance, needs a real backend". **That was the grep proxy misleading the reading** — the one parameter typed
+/// **This type intentionally does not solve, lower, perturb, or mutate a model**; it provides the lifecycle and stable inputs that S1+ analyzers share. **corrects the
+/// an earlier ledger entry**: recorded "holds a live solver instance, needs a real backend". **That was the grep proxy misleading the reading** — the one parameter typed
 /// `ConstraintProgrammingSolver` **is used only to read its `Descriptor`**, and nothing outside `BaselineSnapshot` ever solves. It therefore **needs no backend at all**.
 /// </remarks>
 public sealed class CriticalConstraintAnalysisSession : IDisposable

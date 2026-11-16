@@ -531,8 +531,8 @@ public class QuantityProductivityCalendar<W, V, P, T, U> : WorkingCalendar<W>
 
     private TimeSpan CeilDuration(double valueInUnits) => TimeWindow.Ceil(_valueToDuration(new Flt64(valueInUnits)));
 
-    /// <summary>从 Quantity 提取 V 值（避免 record Value 属性与 IInvariant.Value() 方法冲突）/
-    /// Extract V value from Quantity (avoids record Value property vs IInvariant.Value() method conflict).</summary>
+    /// <summary>从 Quantity 提取 V 值（避免 record Value 属性与 IInvariant.Value 方法冲突）/
+    /// Extract V value from Quantity (avoids record Value property vs IInvariant.Value method conflict).</summary>
     private static V ExtractQuantityValue(Quantity<V> qty) {
         (V val, PhysicalUnit _) = qty;
         return val;

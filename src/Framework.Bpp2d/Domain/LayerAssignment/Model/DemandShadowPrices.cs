@@ -24,14 +24,14 @@ namespace Fuookami.Ospf.Framework.Bpp2d.Domain.LayerAssignment.Model;
 ///    下界才是"多装一件能省多少成本"的边际值；上界说的是另一件事。
 ///    取错会让检验数整体偏符号，选出来的列全是错的方向。
 /// 2. **缺项跳过**，不补零：某种需求没有对偶值说明它没进模型，补零等于宣称"它的价格是零"。
-/// 3. **键用 `DemandConstraint.ModeTag`**，不自己拼字符串——两处各写一份会让键悄悄不匹配（B659 的教训）。
+/// 3. **键用 `DemandConstraint.ModeTag`**，不自己拼字符串——两处各写一份会让键悄悄不匹配（的教训）。
 /// 4. **索引与需求项一致**：约束名里的下标就是需求项在清单里的位置。
 ///
 /// Aligned with the baseline's shadow-price chain: after the RMP solves the LP, each demand constraint's dual value goes into the shadow-price table keyed by `(mode, item)`, and the column
 /// generation's reduced cost reads that table. Four things must be copied: **take the lower-bound constraint's dual** (`_lb_`), not the upper one, since a demand constraint reads "load ≥ demand"
 /// and only the lower bound is the marginal value of loading one more unit, while the upper bound says something else entirely — getting it backwards flips the sign of every reduced cost and
 /// selects columns in the wrong direction; **skip missing entries** rather than filling zero, since a demand without a dual never entered the model and zero would claim its price is zero; **key
-/// with `DemandConstraint.ModeTag`** rather than formatting here, because two copies of the mapping let the key silently mismatch (the B659 lesson); and **the index matches the demand entry's
+/// with `DemandConstraint.ModeTag`** rather than formatting here, because two copies of the mapping let the key silently mismatch (the lesson); and **the index matches the demand entry's
 /// position**, since the constraint name's index is that entry's index.
 /// </remarks>
 public static class DemandShadowPrices
@@ -40,10 +40,10 @@ public static class DemandShadowPrices
     /// 需求约束的默认名 / The default demand-constraint name.
     /// </summary>
     /// <remarks>
-    /// **与 `DemandConstraint` 的默认名同一个值**，两边都从这一个常亮处取——写两遍会让提取键与约束名悄悄分家（B659 的教训）。
+    /// **与 `DemandConstraint` 的默认名同一个值**，两边都从这一个常亮处取——写两遍会让提取键与约束名悄悄分家（的教训）。
     ///
     /// **The same value as `DemandConstraint`'s default name**, both sides reading from this one place; two copies let the extraction key and the constraint name silently drift apart (the
-    /// B659 lesson).
+    /// lesson).
     /// </remarks>
     public const string DefaultConstraintName = "demand";
 

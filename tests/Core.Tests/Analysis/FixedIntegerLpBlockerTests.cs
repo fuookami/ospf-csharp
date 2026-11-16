@@ -62,7 +62,7 @@ public class FixedIntegerLpBlockerTests
     ///
     /// **数清楚"现在有几个实现"比写"还剩一个"可靠**——**"还剩一个"不会告诉你已经变成了两个。**
     ///
-    /// The baseline has two implementations: the lowering adapter (**ported in B1066**) **and the solver-backed one (not portable here)**.
+    /// The baseline has two implementations: the lowering adapter (**ported**) **and the solver-backed one (not portable here)**.
     /// **Counting how many exist is more reliable than writing "one is left"** — **"one is left" never tells you it has become two.**
     /// </remarks>
     [Fact]

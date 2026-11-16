@@ -15,13 +15,13 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// Claims about "who references whom" in the framework module READMEs must match the actual csproj references.
 /// </summary>
 /// <remarks>
-/// B289 抓到一处**自己写错的事实**：B278 起，九份文档都写着 `GanttScheduling` 与 `NetworkScheduling`
+/// 抓到一处**自己写错的事实**： 起，九份文档都写着 `GanttScheduling` 与 `NetworkScheduling`
 /// "本来就互相引用"，而实际是**单向**的——`NetworkScheduling → GanttScheduling`。
 /// 那个 README 里的代码块本身就画着单向箭头，**正文与自己的图表自相矛盾**。
 ///
 /// 这类错误不会让任何代码或测试失败，只能靠把"文档说的引用关系"与"csproj 的真实引用关系"逐条比对。
 ///
-/// B289 caught a **fact we had written wrong ourselves**: since B278, nine documents said `GanttScheduling` and `NetworkScheduling` "already reference
+/// caught a **fact we had written wrong ourselves**: since then, nine documents said `GanttScheduling` and `NetworkScheduling` "already reference
 /// each other", when it is actually **one-way** — `NetworkScheduling → GanttScheduling`. The README's own code block drew a one-way arrow, so **the prose
 /// contradicted its own diagram**. No code or test can catch this; only comparing "what the docs claim" against "what the csprojs actually reference".
 /// </remarks>

@@ -26,18 +26,18 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Application;
 /// | 块 | 来自 |
 /// | --- | --- |
 /// | 注册 | `Stowage.LoadingContext.Register(model)`（一直都在） |
-/// | 分区配置 | `PartitionConfiguration.Build`（B928） |
+/// | 分区配置 | `PartitionConfiguration.Build` |
 /// | 循环 | `PartitionColumnGenerationApplicationService`（框架层，一直都在） |
 ///
-/// **B826 的拒绝理由是错的**：它说"注册与分区配置没接起来"。注册早就在，分区配置在 B928 补齐。
+/// **的拒绝理由是错的**：它说"注册与分区配置没接起来"。注册早就在，分区配置在 补齐。
 /// 剩下的只是**没人把这两块交给那个服务**——就是这个文件在做的事。
 ///
 /// **模型不是新建的**：分派拿到的 `LinearMetaModel` 必须是**已经注册过七个域的那一张**，
 /// 因为列生成要在完整模型上做投影。新建一张空模型会得到一个"列生成跑完、主问题零行"的结果。
 ///
-/// **Three pieces clicked together, none of them new**: the registration has always been there, the partition configuration landed in B928, and the loop lives in the
-/// framework. **B826's refusal reason was wrong** — it claimed "the registration and the partition configuration are not wired"; the registration always was, and the
-/// configuration arrived in B928. What was missing is exactly what this file does: hand the two to that service. **The model is not a new one**: the dispatch must be
+/// **Three pieces clicked together, none of them new**: the registration has always been there, the partition configuration landed, and the loop lives in the
+/// framework. **the earlier refusal reason was wrong** — it claimed "the registration and the partition configuration are not wired"; the registration always was, and the
+/// configuration arrived. What was missing is exactly what this file does: hand the two to that service. **The model is not a new one**: the dispatch must be
 /// handed the `LinearMetaModel` that **already has the seven domains registered**, because column generation projects against the full model. A fresh empty model
 /// yields "column generation finished, master problem has zero rows".
 /// </remarks>

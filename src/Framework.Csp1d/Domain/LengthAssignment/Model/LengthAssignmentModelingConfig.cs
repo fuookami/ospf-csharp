@@ -37,8 +37,8 @@ public sealed record LengthAssignmentModelingConfig<V>(
 /// <param name="AssignedLengths">动态长度产品的卷长分配值 / Assigned lengths for dynamic-length products.</param>
 /// <param name="OverLengths">超长产品值 / Over-length values for products exceeding bounds.</param>
 /// <remarks>
-/// **两个字段永不为 null**，与基线 `= emptyList()` 一致：**"没有分配"由空列表表达**（B377）。
-/// **Neither field is ever null**, matching the baseline's `= emptyList()`: **"nothing assigned" is expressed by an empty list** (B377).
+/// **两个字段永不为 null**，与基线 `= emptyList` 一致：**"没有分配"由空列表表达**。
+/// **Neither field is ever null**, matching the baseline's `= emptyList`: **"nothing assigned" is expressed by an empty list** .
 /// </remarks>
 public sealed record LengthAssignmentModelingResult<V>(
     IReadOnlyList<ModeledAssignedLength<V>> AssignedLengths,

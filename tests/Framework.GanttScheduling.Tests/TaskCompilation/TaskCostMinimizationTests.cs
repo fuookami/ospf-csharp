@@ -17,15 +17,15 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **`TaskCostMinimization` 从空壳变成真目标（B544）** / `TaskCostMinimization` goes from an empty stub to a real objective (B544).
+/// **`TaskCostMinimization` 从空壳变成真目标** / `TaskCostMinimization` goes from an empty stub to a real objective.
 /// </summary>
 /// <remarks>
-/// B529 把它翻成"未接线就失败"。本批接线：它现在把 `bunch_cost` 多项式作为 `Minimum` 子目标加进模型。
+/// 把它翻成"未接线就失败"。这里接线：它现在把 `bunch_cost` 多项式作为 `Minimum` 子目标加进模型。
 ///
 /// 两条判据分工明确：**非模型必须失败**（守卫还在），**已注册的迭代编译必须真的加进目标**（不是返回 `Ok` 了事）。
 /// 后者若只看 `IsOk` 就完全看不到差别——空壳也返回过 `Ok`。
 ///
-/// B529 flipped it to "fail while unwired". This batch wires it: it now adds the `bunch_cost` polynomial as a `Minimum` sub-objective. The two criteria split the job:
+/// flipped it to "fail while unwired". wires it: it now adds the `bunch_cost` polynomial as a `Minimum` sub-objective. The two criteria split the job:
 /// **a non-model must fail** (the guard is still there) and **a registered iterative compilation must really enter the objective** (not merely return `Ok`). Looking only at
 /// `IsOk` would not see the difference — the empty stub returned `Ok` too.
 /// </remarks>
@@ -78,9 +78,9 @@ public class TaskCostMinimizationTests {
 
     /// <summary>**接线后真的加进目标，而且引用的是编译的代价多项式** / Once wired it really enters the objective, referencing the compilation's cost polynomial.</summary>
     /// <remarks>
-    /// 判据要落到**目标里的多项式**，不能只看 `IsOk`：B529 之前的空壳也返回 `Ok`。
+    /// 判据要落到**目标里的多项式**，不能只看 `IsOk`： 之前的空壳也返回 `Ok`。
     ///
-    /// The criterion lands on **the polynomial in the objective**, not on `IsOk`: the pre-B529 stub returned `Ok` as well.
+    /// The criterion lands on **the polynomial in the objective**, not on `IsOk`: the pre- stub returned `Ok` as well.
     /// </remarks>
     [Fact]
     public void Invoke_ShouldAddTheCostPolynomialAsAMinimumObjective() {

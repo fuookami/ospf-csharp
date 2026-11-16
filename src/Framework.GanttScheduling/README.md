@@ -24,12 +24,12 @@ checklist against these three directories.
 
 ## Known gaps
 
-**Still to be audited.** Earlier batches recorded that the Gantt task-bundle compilation, executor/task
+**Still to be audited.** earlier work recorded that the Gantt task-bundle compilation, executor/task
 constraints, and cancellation targets still contain empty implementations, and that Demo4 does not register
 the bundle cost pipeline. Those notes have not been re-verified in this session, so treat them as
 **unconfirmed** rather than current.
 
-The `Framework.GanttNetworkScheduling` bridge (Batch 278) is a separate project, because
+The `Framework.GanttNetworkScheduling` bridge (earlier) is a separate project, because
 `Framework.NetworkScheduling` already references this module.
 
 Demo4's `FlightTaskBunchGenerator` runs its own hand-written label search rather than the shared path

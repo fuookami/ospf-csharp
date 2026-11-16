@@ -29,7 +29,7 @@ public static class LengthUnits {
     /// <summary>海里 / Nautical mile (1 nmi = 1852 m).</summary>
     public static readonly PhysicalUnit NauticalMile = new DerivedUnit(SIBaseUnits.Meter, Scale.Invoke(1852), "nautical mile", "nmi");
 
-    // **以下 22 个单位是 B1125 按基线 `Length.kt` 补的。**
+    // **以下 22 个单位按基线 `Length.kt` 补齐。**
     //
     // **基线有 33 个长度单位，本仓原来只有 10 个**，而 `docs/` 里一次都没提过这件事——
     // **"少 23 个"与"够用了"在文档上长得一样。**
@@ -37,7 +37,7 @@ public static class LengthUnits {
     // **换算因子逐条抄自基线 `Length.kt` 的 `DerivedPhysicalUnit(... * Scale...)` 表达式**，
     // **一个数都没有自己算**：单位换算错了不会报错，只会让"5 海里"变成别的长度。
     //
-    // **The 22 units below were added in B1125 from the baseline `Length.kt`.**
+    // **The 22 units below were added from the baseline `Length.kt`.**
     //
     // **The baseline has 33 length units and this repo had 10**, and `docs/` never mentioned it —
     // **"23 short" and "good enough" look the same in a document.**

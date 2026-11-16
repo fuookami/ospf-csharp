@@ -38,19 +38,19 @@ namespace Fuookami.Ospf.Benchmark;
 /// 与基线 `CrossVersionSemanticDump.kt`（335 行，`19c72455` 新增）对应。 它的用途不是计时，而是让两端各跑一次、
 /// 逐行对比：网络可达与强连通分量、反向视图一致性、token 索引、素性缓存——每行都是"生产入口算出来的确定值"。
 ///
-/// 本批只转储三段：`NET`（网络）、`TOK`（token）、`PRM`（素性）。 其余三段是待办，
+/// 这里只转储三段：`NET`（网络）、`TOK`（token）、`PRM`（素性）。 其余三段是待办，
 /// 不是"没有"——`Pending` 常量逐个写明为什么还没搬，并由判据 `CrossVersionSemanticDumpTests` 钉住
 /// "待办清单必须与已实现段不重叠、且每段都写了理由"。
 ///
-/// 一个必须写明的可比性限制： 基线的 `orderDigest`／`sortedDigest` 用的是 Kotlin 的 `String.hashCode()`，
+/// 一个必须写明的可比性限制： 基线的 `orderDigest`／`sortedDigest` 用的是 Kotlin 的 `String.hashCode`，
 /// 那不是跨语言可比的值。 所以本转储不输出 `hashCode` 摘要；可逐行对比的字段是计数、排序后原样拼接的取值、
 /// 以及布尔量。 含 `hashCode` 的行在跨语言 diff 里只能各自记录、不能互比——这一点写在这里，而不是留给下一个人发现。
 ///
 /// Corresponds to the 335-line baseline. Its purpose is not timing but a line-by-line diff of two runs: network reachability and
 /// strongly connected components, reverse-view consistency, token indices, the primality cache — every line a deterministic value from a production
-/// entry point. This batch dumps three sections: `NET`, `TOK`, `PRM`. The other three are *pending*, not absent: the `Pending` constant states
+/// entry point. dumps three sections: `NET`, `TOK`, `PRM`. The other three are *pending*, not absent: the `Pending` constant states
 /// why each is not ported yet, and a criterion pins that the pending list never overlaps what is implemented and always carries a reason.
-/// One comparability limit must be stated: the baseline's digests use Kotlin's `String.hashCode()`, which is not comparable across languages, so
+/// One comparability limit must be stated: the baseline's digests use Kotlin's `String.hashCode`, which is not comparable across languages, so
 /// this dump emits no `hashCode` digest; the diffable fields are counts, sorted raw values and booleans. Lines built on `hashCode` can only be
 /// recorded per side, never compared across — written here instead of left for the next reader to discover.
 /// </remarks>
@@ -66,10 +66,10 @@ public static class CrossVersionSemanticDump
     /// A criterion requires this list to never overlap the implemented sections. Every entry carries a reason: "not done yet" on its own hangs
     /// forever, while "the missing entry is X" can be scheduled.
     /// </remarks>
-    // **B1309：三段补齐之后这份清单是空的。** **它保留下来，是因为"清单为空"本身是一个可断言的结论：**
+    // **三段补齐之后这份清单是空的。** **它保留下来，是因为"清单为空"本身是一个可断言的结论：**
     // **判据要求它与 `Implemented` 不重叠，一旦再有人把某段退回去，必须同时把理由写进这里，而不是悄悄少几行。**
     //
-    // **B1309: with the last three sections ported this list is empty.** **It stays because "the list is empty" is itself an assertable conclusion: a
+    // **with the last three sections ported this list is empty.** **It stays because "the list is empty" is itself an assertable conclusion: a
     // criterion requires it never to overlap `Implemented`, so anyone deferring a section again has to write the reason here rather than quietly
     // emitting fewer lines.**
     public static readonly IReadOnlyList<(string Section, string Reason)> Pending
@@ -275,10 +275,10 @@ public static class CrossVersionSemanticDump
     private static string SortedDigest(IEnumerable<string> values) =>
         string.Join(";", values.OrderBy(value => value, StringComparer.Ordinal));
 
-    /// <summary>布尔量渲染成小写：基线输出 `true`／`false`，而 `bool.ToString()` 给的是 `True`／`False`——
+    /// <summary>布尔量渲染成小写：基线输出 `true`／`false`，而 `bool.ToString` 给的是 `True`／`False`——
     /// 逐行 diff 会把每一行都算成差异。
     ///
-    /// Booleans render lowercase: the baseline prints `true`/`false` while `bool.ToString()` gives `True`/`False`, which would make every
+    /// Booleans render lowercase: the baseline prints `true`/`false` while `bool.ToString` gives `True`/`False`, which would make every
     /// line look different in a line-by-line diff.</summary>
     ///
     /// <param name="value">布尔值 / The boolean.</param>
@@ -457,18 +457,18 @@ public static class CrossVersionSemanticDump
     /// The generation section: three scenarios and three generators, with plan counts, stop reasons and canonical-key ordering.
     /// </summary>
     /// <remarks>
-    /// 待办理由原来是"`canonicalKey()` 是服务层的东西，基准层拿不到"。 实测：`CuttingPlanCanonicalKey.From(plan)` 就在
+    /// 待办理由原来是"`canonicalKey` 是服务层的东西，基准层拿不到"。 实测：`CuttingPlanCanonicalKey.From(plan)` 就在
     /// `Domain/CuttingPlanGeneration/model/`，`CuttingPlan&lt;V&gt;` 直接实现 `ICuttingPlanForCanonicalKey`——
     /// 拿不到的是服务层那层包装，不是键本身。 第三次同一种错法。
     ///
     /// 两处有意偏离基线，都写在这里：
-    /// ① 基线的 `hashCode()` 是 Java/Kotlin 的字符串哈希，跨语言不可比，这里改用规范键文本的排序后原样拼接（与 `NET`／`TOK`／`PRM` 同一个选择）；
+    /// ① 基线的 `hashCode` 是 Java/Kotlin 的字符串哈希，跨语言不可比，这里改用规范键文本的排序后原样拼接（与 `NET`／`TOK`／`PRM` 同一个选择）；
     /// ② 基线的 `orderDigest` 对顺序敏感，这里给的是"按到达顺序拼接后的摘要"，同样只用于同语言两次运行比对。
     ///
-    /// The pending reason used to be "`canonicalKey()` is a service-layer thing the benchmark cannot reach". Measured: `CuttingPlanCanonicalKey.From(plan)`
+    /// The pending reason used to be "`canonicalKey` is a service-layer thing the benchmark cannot reach". Measured: `CuttingPlanCanonicalKey.From(plan)`
     /// lives in `Domain/CuttingPlanGeneration/model/` and `CuttingPlan&lt;V&gt;` implements `ICuttingPlanForCanonicalKey` directly — what was unreachable was
     /// the service-layer wrapper, not the key. The third time for this same defect. Two deliberate divergences from the baseline are stated here:
-    /// the baseline's `hashCode()` is a JVM string hash that cannot be compared across languages, so this uses the sorted raw join of canonical-key text
+    /// the baseline's `hashCode` is a JVM string hash that cannot be compared across languages, so this uses the sorted raw join of canonical-key text
     /// (the same choice as `NET`/`TOK`/`PRM`), and the order-sensitive digest is likewise a same-language comparison only.
     /// </remarks>
     /// <param name="text">输出 / The output.</param>
@@ -561,11 +561,11 @@ public static class CrossVersionSemanticDump
     /// 规范键的稳定文本 / The stable text of a canonical key.
     /// </summary>
     /// <remarks>
-    /// 不能用 `record.ToString()`： `CuttingPlanCanonicalKey` 的两个集合成员是 `IReadOnlyList`，`record` 生成的
+    /// 不能用 `record.ToString`： `CuttingPlanCanonicalKey` 的两个集合成员是 `IReadOnlyList`，`record` 生成的
     /// `ToString` 打印的是集合的类型名而不是内容——第一版就是这样，于是前三个方案的摘要全都是同一串十六进制，
     /// 一个"看起来有摘要、实际没有信息"的结果。 这里逐项展开，顺序由 `CuttingPlanCanonicalKey` 自己保证（内部用了有序字典）。
     ///
-    /// `record.ToString()` cannot be used: the key's two collection members are `IReadOnlyList`, and the generated `ToString` prints the
+    /// `record.ToString` cannot be used: the key's two collection members are `IReadOnlyList`, and the generated `ToString` prints the
     /// collection's type name rather than its contents — the first version did exactly that, so the first three plans hashed to the same
     /// hexadecimal string: a digest that looks informative and carries none. The text is expanded item by item here, and the ordering is the key's own
     /// job (it uses sorted dictionaries internally).

@@ -24,10 +24,10 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **这批要闭的缺口**：`ICsp1dGenerationStrategy` 上定义了三个扩展点
 /// （`AcceptCandidate` / `CanonicalKeyFor` / `AcceptDominance`），
 /// **但整个 `src/` 里一个调用点都没有**——典型的"接口在、连接件是空壳"。
-/// B358 只接 `CanonicalKeyFor`，本文件是它的判据。
+/// 只接 `CanonicalKeyFor`，本文件是它的判据。
 ///
-/// **The gap this batch closes**: `ICsp1dGenerationStrategy` defines three extension points (`AcceptCandidate` / `CanonicalKeyFor` / `AcceptDominance`),
-/// **yet `src/` has zero call sites** — the textbook "interfaces present, connecting piece is a shell". B358 wires only `CanonicalKeyFor`; this file is its criterion.
+/// **The gap closes**: `ICsp1dGenerationStrategy` defines three extension points (`AcceptCandidate` / `CanonicalKeyFor` / `AcceptDominance`),
+/// **yet `src/` has zero call sites** — the textbook "interfaces present, connecting piece is a shell". wires only `CanonicalKeyFor`; this file is its criterion.
 /// </remarks>
 public sealed class Csp1dCanonicalKeyOverrideTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -97,14 +97,14 @@ public sealed class Csp1dCanonicalKeyOverrideTests {
 
     /// <summary>**`AcceptDominance` 必须投影到 `GenerationInput` 上** / `AcceptDominance` must be projected onto `GenerationInput`.</summary>
     /// <remarks>
-    /// **B358 记的缺口**：`AcceptDominance` 在 `src/` 里零调用点。生成器级别的判据
+    /// **记的缺口**：`AcceptDominance` 在 `src/` 里零调用点。生成器级别的判据
     /// （`GenerationDominanceOverrideTests`）证明了"字段一旦有值就会被消费"，
     /// **但证明不了"配置的策略真的变成了那个字段"**——两层之间还能断。
     ///
     /// 这条判据补上那一层：捕获初始生成器收到的 `GenerationInput`，断言
     /// `DominanceAcceptOverrides` **非空**。
     ///
-    /// **The gap recorded in B358**: `AcceptDominance` had zero call sites. The generator-level criteria (`GenerationDominanceOverrideTests`) prove "once the field has a
+    /// **The gap recorded**: `AcceptDominance` had zero call sites. The generator-level criteria (`GenerationDominanceOverrideTests`) prove "once the field has a
     /// value it is consumed", **but not "the configured strategy really became that field"** — the two layers can still be disconnected.
     ///
     /// This criterion closes that layer: it captures the `GenerationInput` the initial generator receives and asserts `DominanceAcceptOverrides` is **non-empty**.
@@ -172,7 +172,7 @@ public sealed class Csp1dCanonicalKeyOverrideTests {
     /// **这是 `AcceptCandidate` 与另外两个扩展点的实质差别**：基线在 `initialPlanPool` 里
     /// **不设 `existingPlans`**（所以是空列表），在定价里传**当前列池**。
     ///
-    /// **我第一版判据写错了**：断言"初始池的过滤永远看到空列表"，实测 `found 2`——
+    /// **最初判据写错了**：断言"初始池的过滤永远看到空列表"，实测 `found 2`——
     /// 那是因为**定价也会调用同一个过滤**，而定价传的是含 2 条方案的当前列池。
     /// 判据把两种上下文混为一谈了。
     ///
@@ -234,15 +234,15 @@ public sealed class Csp1dCanonicalKeyOverrideTests {
 
     /// <summary>**覆盖生效时，不同方案必须被折叠成一条** / With an active override, different plans must collapse into one.</summary>
     /// <remarks>
-    /// `MakeProblem()` 有两个不同产品（50mm 与 60mm），初始生成器会产出**两条规范键不同**的方案。
+    /// `MakeProblem` 有两个不同产品（50mm 与 60mm），初始生成器会产出**两条规范键不同**的方案。
     /// `ConstantKeyStrategy` 把两条都映射成同一个字符串，于是**去重后只剩一条**。
     ///
-    /// **若 `CanonicalKeyFor` 没有接线**（B358 之前的状态），两条都会留下，`InitialPlanCount == 2`。
+    /// **若 `CanonicalKeyFor` 没有接线**，两条都会留下，`InitialPlanCount == 2`。
     ///
-    /// `MakeProblem()` has two distinct products (50mm and 60mm), so the initial generator yields **two plans with different canonical keys**.
+    /// `MakeProblem` has two distinct products (50mm and 60mm), so the initial generator yields **two plans with different canonical keys**.
     /// `ConstantKeyStrategy` maps both to the same string, so **deduplication leaves one**.
     ///
-    /// **If `CanonicalKeyFor` were unwired** (the pre-B358 state), both would remain and `InitialPlanCount` would be 2.
+    /// **If `CanonicalKeyFor` were unwired** (the pre- state), both would remain and `InitialPlanCount` would be 2.
     /// </remarks>
     [Fact]
     public async Task SolveWithTraceAsync_ShouldCollapsePlansWhenTheStrategyOverridesTheCanonicalKey() {

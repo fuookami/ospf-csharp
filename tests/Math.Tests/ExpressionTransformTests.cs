@@ -12,9 +12,9 @@ namespace Fuookami.Ospf.Math.Tests;
 /// 表达式树变换 / Expression tree transformation.
 /// </summary>
 /// <remarks>
-/// **B961 补的两个入口此前不存在**，所以这里钉的是**语义**而不是"函数在不在"：后序、叶子照旧、布尔身份不变。
+/// 补的两个入口此前不存在**，所以这里钉的是**语义**而不是"函数在不在"：后序、叶子照旧、布尔身份不变。
 ///
-/// **B961 added two entry points that did not exist**, so these pin the **semantics** rather than "the function exists": post-order, leaves pass through, boolean
+/// added two entry points that did not exist**, so these pin the **semantics** rather than "the function exists": post-order, leaves pass through, boolean
 /// identity unchanged.
 /// </remarks>
 public class ExpressionTransformTests {
@@ -132,13 +132,13 @@ public class ExpressionTransformTests {
 
     /// <summary>**两步：先重建标量子树，再交给变换器** / Two steps: rebuild the scalar subtrees first, then hand over.</summary>
     /// <remarks>
-    /// **这是基线的 `BooleanExpression.transform` 重载，B1081 之前 C# 缺着。**
+    /// **这是基线的 `BooleanExpression.transform` 重载，此前 C# 缺着。**
     ///
     /// **省掉第一步（`TransformScalars(it)`）不会报错，也不会少成员**——
     /// **它只是让变换器拿到原来那些标量实例**，于是"变换"变成只改外壳。
     /// **所以判据必须能看见"标量是新实例"这件事，否则这条重载少了什么都测不出来。**
     ///
-    /// **This is the baseline `BooleanExpression.transform` overload, absent from C# until B1081.**
+    /// **This is the baseline `BooleanExpression.transform` overload, absent from C# formerly.**
     /// **Dropping the first step (`TransformScalars(it)`) raises nothing and loses no member** —
     /// **it merely hands the transformer the original scalar instances, so "transform" only changes the shell.**
     /// **So the criterion has to see that the scalars are fresh instances, or it cannot tell what the overload dropped.**

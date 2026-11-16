@@ -163,7 +163,7 @@ public class PartitionLoadingContextTests {
     /// <summary>**装配产出完整生命周期对象** / Assembly yields a complete lifecycle object.</summary>
     /// <remarks>
     /// 用真实的离散上下文与已注册模型：分区覆盖两个舱位，决策表包含分配与占位。
-    /// 这是本批唯一覆盖"装配"的判据——**其余判据都打在纯函数上**。
+    /// 这是这里唯一覆盖"装配"的判据——**其余判据都打在纯函数上**。
     ///
     /// A real discrete context and a registered model: the partition covers both positions and the decision table holds assignments and occupancies. This is the batch's
     /// only case covering **assembly**; every other criterion hits a pure function.

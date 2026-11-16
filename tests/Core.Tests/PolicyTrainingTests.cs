@@ -114,11 +114,11 @@ public sealed class PolicyTrainingTests {
 
     /// <summary>**写入失败时也不留下临时文件** / A failed write leaves no temp file either.</summary>
     /// <remarks>
-    /// 成功路径根本不会留下临时文件（它被移走了），所以**只测成功路径等于没测这条**——本批第一次变异正是这么存活下来的。
+    /// 成功路径根本不会留下临时文件（它被移走了），所以**只测成功路径等于没测这条**——这里第一次变异正是这么存活下来的。
     /// 这里让目标路径本身是一个目录，移动必然失败，再看目录里有没有残留。
     ///
     /// A successful write never leaves a temp file (it got moved away), so **testing only the success path tests nothing here** — which is exactly how
-    /// the first mutation of this batch survived. The target path is made a directory so the move must fail, and the parent is then checked for leftovers.
+    /// the first mutation of survived. The target path is made a directory so the move must fail, and the parent is then checked for leftovers.
     /// </remarks>
     [Fact]
     public void TrajectoryFiles_ShouldNotLeaveTempFileOnFailure() {

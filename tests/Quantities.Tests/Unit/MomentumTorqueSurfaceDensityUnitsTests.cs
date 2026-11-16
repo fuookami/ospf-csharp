@@ -13,13 +13,11 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **力矩与能量同量纲，所以编译器不会拦住你拿错** / Torque and energy share a dimension, so the compiler will not stop you.
 /// </summary>
 /// <remarks>
-/// B1128 补 `Momentum`、`Torque`、`SurfaceDensity` 三个量纲，共 5 个单位。
+/// 补 `Momentum`、`Torque`、`SurfaceDensity` 三个量纲，共 5 个单位。
 ///
-/// **这一批最值得钉的是力矩**：**力矩与能量在 SI 里量纲相同**（都是 `kg·m²/s²`），
+/// **这里最值得钉的是力矩**：**力矩与能量在 SI 里量纲相同**（都是 `kg·m²/s²`），
 /// **所以 `NewtonMeter` 与 `Joule` 可以互换而编译器一句话都不说**——
 /// **这是 SI 的设计取舍，不是缺陷，但意味着"数值全对、语义全丢"是可能的。**
-///
-/// adds
 ///
 /// **Torque is the one worth pinning here**: **torque and energy share a dimension in SI** (both `kg·m²/s²`),
 /// **so `NewtonMeter` and `Joule` are interchangeable and the compiler says nothing** —
@@ -119,10 +117,10 @@ public class MomentumTorqueSurfaceDensityUnitsTests
 
     /// <summary>**基线的两个面密度单位都在，且相差 1000 倍** / Both surface-density units, 1000 apart.</summary>
     /// <remarks>
-    /// **这两个名字只差一个词、差 1000 倍**——**与 B1127 的 `LitersPerMinute` / `LitersPerSecond` 是同一类风险。**
+    /// **这两个名字只差一个词、差 1000 倍**——**与 `LitersPerMinute` / `LitersPerSecond` 是同一类风险。**
     /// **g/m² 在纺织与造纸里极常用（纸张克重），混用会让整批材料的定量错 1000 倍。**
     ///
-    /// **The two names differ by one word and by 1000×** — **the same risk as B1127's `LitersPerMinute` / `LitersPerSecond`.**
+    /// **The two names differ by one word and by 1000×** — **the same risk as the earlier `LitersPerMinute` / `LitersPerSecond`.**
     /// **g/m² is ubiquitous in textiles and paper (paper weight), and mixing them misquotes a whole batch by 1000×.**
     /// </remarks>
     [Fact]

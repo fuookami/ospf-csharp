@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// An added column must **really enter the next LP model**, not merely the plan pool.
 /// </summary>
 /// <remarks>
-/// **B337 记录的缺口**：`AddColumns` 成功即视为生效，但**新列是否进入下一轮 LP 的变量集**没有被验证。
+/// 记录的缺口**：`AddColumns` 成功即视为生效，但**新列是否进入下一轮 LP 的变量集**没有被验证。
 /// "池里多了一条"与"LP 多了一个变量"是两件事——**后者才是列生成的意义**。
 ///
 /// 判据靠**在求解器入口采样**：`IColumnGenerationSolver` 的 LP 入口收到的是 `LinearMetaModel`，
@@ -43,7 +43,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **这比"方案池变大了"强**：池是 `ProduceAggregation` 自己的账本，
 /// 加列后忘了 `model.Add(variable)` 也照样会让池变大，而 LP 根本没多一个变量。
 ///
-/// **The gap recorded in B337**: `AddColumns` returning successfully was treated as effective, but **whether the new column enters the next LP's variable set** was never
+/// **The gap recorded**: `AddColumns` returning successfully was treated as effective, but **whether the new column enters the next LP's variable set** was never
 /// verified. "The pool grew by one" and "the LP grew by one variable" are different things — **the latter is what column generation is for**.
 ///
 /// The criterion **samples at the solver entry**: the `IColumnGenerationSolver` LP entry receives a `LinearMetaModel` whose `Tokens` collection is the model's
@@ -188,7 +188,7 @@ public class Csp1dColumnEnteringLpTests {
     /// 要求两轮的记号数**相等**。
     ///
     /// **The reverse criterion**: if growth came from something else (say variables re-registered each solve), the previous criterion would also pass when **no column was
-    /// added**. This runs with **default pricing** (which yields nothing) and requires the two token counts to be **equal**.
+    /// Added
     /// </remarks>
     [Fact]
     public async Task SolveWithTraceAsync_ShouldNotGrowTheModelWhenNoColumnIsAdded() {

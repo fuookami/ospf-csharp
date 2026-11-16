@@ -13,14 +13,14 @@ namespace Fuookami.Ospf.Utils.Tests.Functional;
 /// **`Variant` 的档位要和基线对齐** / The `Variant` arities have to match the baseline.
 /// </summary>
 /// <remarks>
-/// B1124 按公开类型名扫了 22 个模块，**`utils` 的命中率只有 62.9%**，而未出现的那 36 个里有一整段是
+/// 按公开类型名扫了 22 个模块，**`utils` 的命中率只有 62.9%**，而未出现的那 36 个里有一整段是
 /// `Variant9`—`Variant20`——**基线有 `Variant2` 到 `Variant20`，本仓只到 `Variant8`。**
 ///
 /// **这不是"够用了"**：`Variant` 表示"N 选一"，**它的价值在于"类型层面保证恰好一个分支"**，
 /// **少一个档位就少一个能安全表达的元数**——**而少掉的那一档，调用方只能退回 `object` 加 `if`，**
 /// **于是"漏一个分支"从编译错误变成运行时"没有反应"。**
 ///
-/// B1124 swept 22 modules by public type name, and **`utils` hit only 62.9%**; among the 36 absent names was an
+/// A sweep over 22 modules by public type name, and **`utils` hit only 62.9%**; among the 36 absent names was an
 /// entire run of `Variant9`—`Variant20` — **the baseline has `Variant2` through `Variant20`, this repo stopped at `Variant8`.**
 ///
 /// **That is not "good enough"**: `Variant` represents "one of N", **and its value is a type-level guarantee that exactly one branch is taken**,

@@ -12,15 +12,15 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Csp1d.Tests.CuttingPlanGeneration.model;
 
 /// <summary>
-/// <see cref="CrossContributionProjector.Project"/> 必须把真实切割方案接到 B302 的投影形状上。
-/// <see cref="CrossContributionProjector.Project"/> must connect a real cutting plan to B302's projection shape.
+/// <see cref="CrossContributionProjector.Project"/> 必须把真实切割方案接到 的投影形状上。
+/// <see cref="CrossContributionProjector.Project"/> must connect a real cutting plan to the earlier projection shape.
 /// </summary>
 /// <remarks>
-/// B302 把判定抽成了投影，但**投影器没有生产实现**，收集器的投影器参数只有测试传入。
-/// 本批补上适配器，于是"方案 → 投影 → 判定"这条链第一次**完整**。
+/// 把判定抽成了投影，但**投影器没有生产实现**，收集器的投影器参数只有测试传入。
+/// 这里补上适配器，于是"方案 → 投影 → 判定"这条链第一次**完整**。
 ///
-/// B302 extracted the decision into a projection but **the projector had no production implementation**, so the collector's projector parameter was only
-/// supplied by tests. This batch adds the adapter, making the "plan → projection → decision" chain **complete** for the first time.
+/// extracted the decision into a projection but **the projector had no production implementation**, so the collector's projector parameter was only
+/// supplied by tests. adds the adapter, making the "plan → projection → decision" chain **complete** for the first time.
 /// </remarks>
 public class CrossContributionProjectorTests {
     private static Quantity<Flt64> Millimetres(double value) =>

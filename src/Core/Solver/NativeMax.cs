@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Solver;
 /// 对齐基线 `NativeMax.kt` 的 `NativeMaxInputData`。
 /// **`Terms` 是按变量键合并后的非零系数。**
 ///
-/// **B1205, following the baseline's `NativeMaxInputData`.** **`Terms` holds nonzero coefficients combined by variable
+/// **Following the baseline's `NativeMaxInputData`.** **`Terms` holds nonzero coefficients combined by variable
 /// key.**
 /// &lt;/remarks>
 /// &lt;param name="Terms">按变量键合并的系数 / Coefficients combined by variable key.&lt;/param>
@@ -36,7 +36,7 @@ public sealed record NativeMaxInputData(
 /// &lt;summary>
 /// 已校验的 MAX 原语数据 / Validated MAX primitive data.
 /// &lt;/summary>
-/// &lt;remarks>B1205 按基线 `NativeMax.kt` 的 `NativeMaxData` 补。 / B1205 adds the baseline's `NativeMaxData`.&lt;/remarks>
+/// &lt;remarks>按基线 `NativeMax.kt` 的 `NativeMaxData` 补。 / Adds the baseline's `NativeMaxData`.&lt;/remarks>
 public sealed record NativeMaxData(
     IReadOnlyList<NativeMaxInputData> Inputs,
     VariableItemKey ResultKey,

@@ -54,13 +54,13 @@ public sealed class KafkaProducer : IDisposable {
 
     /// <summary>刷新队列后释放资源 / Flush the queue, then dispose.</summary>
     /// <remarks>
-    /// B1307 修的真缺陷：`Produce` 是异步投递，而原来的 `Dispose` 直接销毁客户端——排队中的消息被静默丢弃。
+    /// **这里修的是一个真缺陷：`Produce` 是异步投递，而原来的 `Dispose` 直接销毁客户端——排队中的消息被静默丢弃。**
     /// 实测证据：用本文件的生产入口发一条消息再释放，topic 的最新偏移仍然是 `0`，消费者什么都拿不到；
     /// 而"发出去却不见了"在调用方完全不可见（`Send` 不返回投递结果）。
     /// 这里先在有界时间内 flush，再释放；`Send` 仍然是异步的（那是有意为之的吞吐选择），
     /// 但"释放后消息必须已经投递出去"这一条不再默默失效。
     ///
-    /// B1307 fixes a real defect: `Produce` delivers asynchronously and the old `Dispose` destroyed the client straight away, silently dropping whatever
+    /// **A real defect was fixed here: `Produce` delivers asynchronously and the old `Dispose` destroyed the client straight away, silently dropping whatever
     /// was still queued. Measured evidence: sending one message through this file's entry point and then disposing left the topic's latest offset at 0
     /// and the consumer with nothing, and the loss was invisible to the caller because `Send` returns no delivery result. This flushes within a bounded
     /// time before disposing; `Send` stays asynchronous (a deliberate throughput choice), but "after dispose the message has actually been delivered" no

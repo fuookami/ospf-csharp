@@ -22,17 +22,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.MacOptimization.Servi
 ///
 /// 五处必须照抄：
 ///
-/// 1. **`WithMacOptimization()` 为假时返回空列表**（不是失败）。基线 `return Ok(emptyList())`。
+/// 1. **`WithMacOptimization` 为假时返回空列表**（不是失败）。基线 `return Ok(emptyList)`。
 /// 2. **顺序固定**：纵向、横向、安定面。改顺序会改变目标在 `MetaSubObjects` 里的位置，而下游按位置取值。
 /// 3. **横向只对宽体机加**：`LateralBalance` 为 `null` 时跳过。
-/// 4. **纵向系数三分支**：`C` 点 → `MacRangeC`；B737 → `B737LongitudinalBalance`；其余 → `LongitudinalBalance`。
-///    第二分支的机型判定用的是 `aggregation.AircraftModel.Type == B737`，**不是**"窄体机"——B757 走第三分支。
+/// 4. **纵向系数三分支**：`C` 点 → `MacRangeC`； → ` LongitudinalBalance`；其余 → `LongitudinalBalance`。
+///    第二分支的机型判定用的是 `aggregation.AircraftModel.Type == `，**不是**"窄体机"—— 走第三分支。
 /// 5. **安定面恒加**，即使字典为空（那时是零个目标，但管线本身在列表里）。
 ///
 /// Aligned with the baseline: **the stowage mode is checked first**, then the pipelines are assembled longitudinal → lateral (wide-body only) → stabilizers. Five things must be copied:
-/// **a false `WithMacOptimization()` yields an empty list**, not a failure; **the order is fixed**, since changing it moves the objectives within `MetaSubObjects` and downstream reads
-/// them by position; **lateral is added only for a wide-body** (`LateralBalance` null is skipped); **the longitudinal coefficient has three branches** — `C` → `MacRangeC`, B737 →
-/// `B737LongitudinalBalance`, everything else → `LongitudinalBalance`, and the middle branch tests the type for **B737 specifically**, not "narrow-body", so a B757 takes the third
+/// **a false `WithMacOptimization` yields an empty list**, not a failure; **the order is fixed**, since changing it moves the objectives within `MetaSubObjects` and downstream reads
+/// them by position; **lateral is added only for a wide-body** (`LateralBalance` null is skipped); **the longitudinal coefficient has three branches** — `C` → `MacRangeC`, →
+/// ` LongitudinalBalance`, everything else → `LongitudinalBalance`, and the middle branch tests the type for **specifically**, not "narrow-body", so a takes the third
 /// branch; and **stabilizers are always added**, even when the dictionary is empty (zero objectives, but the pipeline is still in the list).
 /// </remarks>
 internal sealed class PipelineListGenerator

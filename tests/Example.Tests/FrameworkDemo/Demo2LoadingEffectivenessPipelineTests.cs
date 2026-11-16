@@ -1,4 +1,4 @@
-// 装载效能管线编排（B619）的判据 / Criteria for the loading-effectiveness pipeline ordering (B619).
+// 装载效能管线编排的判据 / Criteria for the loading-effectiveness pipeline ordering.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **装载效能管线编排（B619）** / The loading-effectiveness pipeline ordering (B619).
+/// **装载效能管线编排** / The loading-effectiveness pipeline ordering.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**三条条件管线各自的条件**、**`reweighNeeded` 恒假**这个基线怪癖、以及**七条无法构建的管线被显式列出**。

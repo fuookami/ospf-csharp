@@ -1,4 +1,4 @@
-// 三种资源用量都真的建得起来（B740）/ All three resource usages really build their rows (B740).
+// 三种资源用量都真的建得起来/ All three resource usages really build their rows.
 
 using System;
 using System.Collections.Generic;
@@ -16,17 +16,17 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Resource;
 
 /// <summary>
-/// **三种资源用量都真的建得起来（B740）** / All three resource usages really build their rows (B740).
+/// **三种资源用量都真的建得起来** / All three resource usages really build their rows.
 /// </summary>
 /// <remarks>
 /// `BunchSchedulingConnectionResourceUsage`、`BunchSchedulingExecutionResourceUsage`、`BunchSchedulingStorageResourceUsage`
-/// 早就在，但 B729 只把 `CapacitySchedulingResourceUsage` 的注册钉死了。三者各有各的数量公式
+/// 早就在，但 只把 `CapacitySchedulingResourceUsage` 的注册钉死了。三者各有各的数量公式
 /// （连接与执行从"初始量"起，存储是"初始量 + 供应 − 消耗"），**任何一处写空都看不出来**。
 ///
 /// 写判据时又发现一层：**这三种资源在整个仓库里没有一具体实现**（`Resource` 的抽象成员没人实现过），
 /// 于是它们至今不可构造。这里给测试用的三个最小具体资源，**"能造出来"本身就是第一条判据**。
 ///
-/// All three existed already, but B729 only pinned the registration of `CapacitySchedulingResourceUsage`. Each has its own quantity formula (connection and execution start from an initial
+/// All three existed already, but only pinned the registration of `CapacitySchedulingResourceUsage`. Each has its own quantity formula (connection and execution start from an initial
 /// quantity, storage from initial + supply - consumption), so **an empty registration in any one of them would be invisible**. Writing the criteria surfaced another layer: **these three
 /// resource kinds have no concrete implementation anywhere in the repository** — nobody implemented `Resource`'s abstract members — so they could not be constructed at all. Three minimal
 /// concrete resources are provided here, and **"it can be constructed" is itself the first criterion**.
@@ -141,9 +141,9 @@ public class ResourceUsageRegistrationTests {
     /// **非法入参显式失败** / An invalid argument fails explicitly.
     /// </summary>
     /// <remarks>
-    /// 两点成对：`new object()` → `Failed` / 模型里的符号数不变。**返回 `Ok` 会让调用方以为资源用量已经进模型**，而它根本没进去。
+    /// 两点成对：`new object` → `Failed` / 模型里的符号数不变。**返回 `Ok` 会让调用方以为资源用量已经进模型**，而它根本没进去。
     ///
-    /// Two paired points: `new object()` yields `Failed`; the symbol count is unchanged. **Returning `Ok` would let the caller believe the usage reached the model** when it never did.
+    /// Two paired points: `new object` yields `Failed`; the symbol count is unchanged. **Returning `Ok` would let the caller believe the usage reached the model** when it never did.
     /// </remarks>
     [Fact]
     public void Register_ShouldFailOnANonModel() {

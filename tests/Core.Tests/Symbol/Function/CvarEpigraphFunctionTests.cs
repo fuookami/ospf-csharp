@@ -27,8 +27,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **`ResultPolynomial` 不是 CVaR，而是它的一个上界**——
 /// **只在最优阈值处取等号，其余处严格大于。**
 ///
-/// adds
-///
 /// **`ResultPolynomial` is not the CVaR but an upper bound on it** —
 /// **equality only at the optimal threshold, strictly greater elsewhere.**
 /// </remarks>

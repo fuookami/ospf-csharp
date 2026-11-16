@@ -8,14 +8,14 @@ namespace Fuookami.Ospf.Quantities.Unit;
 /// 力矩单位 / Torque units.
 /// </summary>
 /// <remarks>
-/// **B1128 按基线 `Torque.kt` 新建。**
+/// **按基线 `Torque.kt` 新建。**
 ///
 /// **力矩与能量的量纲在 SI 里是同一个**（都是 `kg·m²/s²`），
 /// **所以 `NewtonMeter` 与能量单位 `Joule` 可以互换而编译器不会拦**——
 /// **这是 SI 的已知设计取舍，不是本仓的缺陷**，但**判据要钉住"力矩单位确实按力乘长度构造"**，
 /// **否则某天有人把 `NewtonMeter` 直接指向 `Joule`，数值全对而语义全丢。**
 ///
-/// **Created in B1128 from the baseline `Torque.kt`.**
+/// **Created from the baseline `Torque.kt`.**
 ///
 /// **Torque and energy share a dimension in SI** (both `kg·m²/s²`),
 /// **so `NewtonMeter` and the energy unit `Joule` are interchangeable and the compiler will not object** —

@@ -82,10 +82,10 @@ public sealed class ConstraintProgrammingBenchmarkTests {
     /// <summary>**约束真的注册进了模型** / The constraints really reach the model.</summary>
     /// <remarks>
     /// **降阶出的行数不能证明约束进了模型**：interval 的 link 行本身就随作业数增长，把 `NoOverlap` 整个删掉，
-    /// "行数递增"仍然成立——本批变异实测如此。必须直接对**模型**断言，不是对降阶产物。
+    /// "行数递增"仍然成立——这里变异实测如此。必须直接对**模型**断言，不是对降阶产物。
     ///
     /// **The lowered row count cannot prove the constraints reached the model**: the interval link rows alone grow with the job count, so deleting the whole
-    /// `NoOverlap` still keeps "the row count increases" true — this batch's mutation run showed exactly that. Assert on the **model**, not on the lowering output.
+    /// `NoOverlap` still keeps "the row count increases" true —'s mutation run showed exactly that. Assert on the **model**, not on the lowering output.
     /// </remarks>
     /// <param name="dataset">夹具规模 / The fixture size.</param>
     [Theory]

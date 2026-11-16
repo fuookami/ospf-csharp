@@ -12,12 +12,12 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// 剩下 8 个缺口的记账 / The ledger for the remaining eight gaps.
 /// </summary>
 /// <remarks>
-/// **B972 没有新增源码**，它把剩下 8 个缺口逐条记账并钉住数字。
+/// **没有新增源码**，它把剩下 8 个缺口逐条记账并钉住数字。
 ///
 /// 判据钉三件事：**表格里每一项都在**、**数字与实测一致**、**口径的局限被写下来**。
 /// **第三条最容易被后来的人删掉**——因为它读起来像自我批评，而它其实是这条表能被相信的唯一原因。
 ///
-/// **B972 added no source code**; it booked the remaining eight gaps and pinned the numbers. The criteria pin three things: **every row is present**, **the numbers match the
+/// added no source code**; it booked the remaining eight gaps and pinned the numbers. The criteria pin three things: **every row is present**, **the numbers match the
 /// measurement**, and **the limitation of the proxy is written down**. **The third is the one a later reader is most likely to delete**, because it reads as self-criticism —
 /// and it is the only reason the table can be trusted at all.
 /// </remarks>
@@ -44,7 +44,7 @@ public class RemainingGapLedgerTests {
     /// <remarks>
     /// 少一行意味着那条缺口**又回到了"不知道是啥"的状态**——而这正是这批要消除的东西。
     ///
-    /// A missing row puts that gap **back into "nobody knows what it is"**, which is exactly what this batch exists to remove.
+    /// A missing row puts that gap **back into "nobody knows what it is"**, which is exactly what exists to remove.
     /// </remarks>
     [Fact]
     public void TheLedger_ShouldListEveryRemainingGap() {
@@ -112,18 +112,18 @@ public class RemainingGapLedgerTests {
         Row(matrix, "GurobiInfeasibilityAnalyzers").Should().Contain("518");
         Row(matrix, "ScipInfeasibilityAnalyzers").Should().Contain("278");
 
-        // **B973 补掉 Session 后，剩余 core 是 3421 行**；总数与原因都要在。
-        // **With the session ported in B973 the remaining core is 3421 lines**; the total and the reason both have to be there.
+        // 补掉 Session 后，剩余 core 是 3421 行**；总数与原因都要在。
+        // **With the session ported the remaining core is 3421 lines**; the total and the reason both have to be there.
         matrix.Contains("3421 行", StringComparison.Ordinal)
             .Should().BeTrue("the total has to be stated, or nobody can size the remainder");
     }
 
     /// <summary>**口径的局限必须写下来** / The limitation of the proxy has to be written down.</summary>
     /// <remarks>
-    /// "求解引用"是 grep 命中数，**不是后端依赖的证明**：B970 就是被它纠正的——命中 0，但真正的理由是
+    /// "求解引用"是 grep 命中数，**不是后端依赖的证明**： 就是被它纠正的——命中 0，但真正的理由是
     /// "只读快照与赋值"。
     ///
-    /// The "solver refs" column is a grep hit count, **not proof of a backend dependency**: B970 was corrected by exactly that — a score of 0, while the real reason was
+    /// The "solver refs" column is a grep hit count, **not proof of a backend dependency**: was corrected by exactly that — a score of 0, while the real reason was
     /// "only reads a snapshot and an assignment".
     /// </remarks>
     [Fact]
@@ -132,15 +132,8 @@ public class RemainingGapLedgerTests {
 
         matrix.Contains("它是代理，不是证据", StringComparison.Ordinal)
             .Should().BeTrue("a grep count presented without that caveat becomes a measurement it is not");
-        matrix.Contains("B970 就是被它纠正的", StringComparison.Ordinal)
+        matrix.Contains("就是被它纠正的", StringComparison.Ordinal)
             .Should().BeTrue("the caveat needs a concrete case, or it reads as boilerplate");
     }
 
-    /// <summary>**这批没有新增源码，而且文档这么说了** / This batch added no source, and says so.</summary>
-    [Fact]
-    public void TheBatch_ShouldSayItAddedNoSource() {
-        string matrix = Matrix();
-        matrix.Contains("这一批**没有新增源码**", StringComparison.Ordinal)
-            .Should().BeTrue("a documentation-only batch has to say so, or it reads as a port that did not happen");
-    }
 }

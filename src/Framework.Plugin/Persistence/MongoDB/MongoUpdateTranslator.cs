@@ -29,10 +29,10 @@ public static class MongoUpdateTranslator
 {
     /// <summary>把一组赋值翻成 `$set` 文档 / Translate assignments into a `$set` document.</summary>
     /// <remarks>
-    /// **空赋值返回 `null` 而不是 `$set: {}`**：基线原文 `if (assignments.isEmpty()) return Ok(null)`。
+    /// **空赋值返回 `null` 而不是 `$set: {}`**：基线原文 `if (assignments.isEmpty) return Ok(null)`。
     /// **空 `$set` 在 Mongo 里是合法但无意义的更新**，而 `null` 让调用方整个省掉这次写。
     ///
-    /// **Empty assignments return `null`, not `$set: {}`**: the baseline reads `if (assignments.isEmpty()) return Ok(null)`.
+    /// **Empty assignments return `null`, not `$set: {}`**: the baseline reads `if (assignments.isEmpty) return Ok(null)`.
     /// **An empty `$set` is legal but meaningless in Mongo**, while `null` lets the caller skip the write entirely.
     /// </remarks>
     public static Result<BsonDocument?, ErrorCode, Error<ErrorCode>> Translate(

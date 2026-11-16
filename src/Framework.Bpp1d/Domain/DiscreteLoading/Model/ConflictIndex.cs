@@ -65,12 +65,12 @@ public sealed class ConflictIndex {
                 secondNeighbours = new SortedSet<string>(System.StringComparer.Ordinal);
                 adjacency[edge.Second] = secondNeighbours;
             }
-            // **必须双向登记。** 变异"只登记一个方向"在本批的判据下**存活**——
+            // **必须双向登记。** 变异"只登记一个方向"在这里的判据下**存活**——
             // 因为下面那句守卫已经保证了正确性，单向登记只是让候选集变小（有的团因此拆得更碎，
             // 但**每个团仍合法、每条边仍被覆盖**）。**这是真实的等价变异，不是判据不足。**
             // 仍按基线双向登记，因为那才是无向图的正确表示。
             //
-            // **Both directions must be registered.** The "register only one direction" mutant **survived** this batch's criteria — the guard below already guarantees
+            // **Both directions must be registered.** The "register only one direction" mutant **survived** the criteria — the guard below already guarantees
             // correctness, and one-way registration merely shrinks the candidate set (some cliques end up split more finely, but **every clique stays legal and every edge
             // stays covered**). **That is a genuine equivalent mutant, not a weak criterion.** Both directions are still registered because that is the correct
             // representation of an undirected graph.
@@ -81,7 +81,7 @@ public sealed class ConflictIndex {
             string key = string.CompareOrdinal(edge.First, edge.Second) <= 0
                 ? $"{edge.First}\u0000{edge.Second}"
                 : $"{edge.Second}\u0000{edge.First}";
-            // **去重是必要的，但本批的变异"不去重"存活**：因为下面存的本来就是**排序后的**
+            // **去重是必要的，但这里的变异"不去重"存活**：因为下面存的本来就是**排序后的**
             // 二元组，`(A,B)` 与 `(B,A)` 去重前后**都是同一对** `["A","B"]`，
             // 第二轮把它当已覆盖的边直接删掉。**真实的等价变异。**
             //
@@ -101,7 +101,7 @@ public sealed class ConflictIndex {
             string[] seed = remaining[0];
             var clique = new HashSet<string>(System.StringComparer.Ordinal) { seed[0], seed[1] };
             var candidates = new SortedSet<string>(System.StringComparer.Ordinal);
-            // **交集只是优化，不是正确性要求。** 变异"只用一个端点的邻域"在本批判据下**存活**：
+            // **交集只是优化，不是正确性要求。** 变异"只用一个端点的邻域"在这里判据下**存活**：
             // 无论候选怎么进来，下面那句守卫都会把"不与团内全部成员冲突"的候选拒掉。
             // 求交集只是让候选集更小。**真实的等价变异。**
             //

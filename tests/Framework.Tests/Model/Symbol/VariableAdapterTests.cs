@@ -1,4 +1,4 @@
-// 变量适配器（B672）的判据 / Criteria for the variable adapter (B672).
+// 变量适配器的判据 / Criteria for the variable adapter.
 
 using System.Collections.Generic;
 using FluentAssertions;
@@ -10,7 +10,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Model.Symbol;
 
 /// <summary>
-/// **变量适配器（B672）** / The variable adapter (B672).
+/// **变量适配器** / The variable adapter.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**按引用相等判定**——两只"值相等"的变量（同类型、同名、同上下界）必须被区分开。
@@ -26,11 +26,11 @@ public class VariableAdapterTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. `InnerVariable()` 的变量**就是内层那只**（引用相等），不是副本。
-    /// 2. `OuterVariable()` 同理。
+    /// 1. `InnerVariable` 的变量**就是内层那只**（引用相等），不是副本。
+    /// 2. `OuterVariable` 同理。
     /// 3. 两个视角带的 `Adapter` **是同一个适配器实例**——不然视角与适配器会在下游被配错。
     ///
-    /// Three paired points: `InnerVariable()`'s variable **is the inner one** (reference-equal) rather than a copy, `OuterVariable()` likewise, and both views carry **the same adapter instance**,
+    /// Three paired points: `InnerVariable`'s variable **is the inner one** (reference-equal) rather than a copy, `OuterVariable` likewise, and both views carry **the same adapter instance**,
     /// which stops a view and its adapter from being mismatched downstream.
     /// </remarks>
     [Fact]

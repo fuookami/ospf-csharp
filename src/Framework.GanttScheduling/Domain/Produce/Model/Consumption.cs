@@ -56,8 +56,8 @@ public abstract class AbstractConsumption<C>(
         = Materials.OrderBy(m => m.Material.Index).ToList();
 
     /// <inheritdoc/>
-    /// <remarks>注册前为 `null`，不是 `new object()`——一个空对象会被当成"表已就绪"。
-    /// Null before registration rather than `new object()`, which would read as "the table is ready".</remarks>
+    /// <remarks>注册前为 `null`，不是 `new object`——一个空对象会被当成"表已就绪"。
+    /// Null before registration rather than `new object`, which would read as "the table is ready".</remarks>
     public abstract object? Quantity { get; }
 
     /// <inheritdoc/>
@@ -87,7 +87,7 @@ public abstract class AbstractConsumption<C>(
     /// 4. **表未建立时跳过整段**，不是失败：`refresh` 可能在注册之前被调用。
     ///
     /// **取价入口与基线不同**：基线从**符号的 `args`** 取键，而 C# 的 `IIntermediateSymbol.Args` 是从 `Parent` 派生的只读属性
-    /// （`IntermediateSymbol.cs:37`），`LinearFunctionSymbolAdapter` 也不接受 parent，符号建好之后挂不上去。B704 已经把键挂在**约束行**上，
+    /// （`IntermediateSymbol.cs:37`），`LinearFunctionSymbolAdapter` 也不接受 parent，符号建好之后挂不上去。 已经把键挂在**约束行**上，
     /// 而行正是对偶值的来源，所以这里按行取键——等价且更直接。这也是本方法**必须收模型**的原因：行只能从模型里枚举。
     ///
     /// Mirrors the baseline's `Produce.refresh` and `Consumption.refresh`: walk the over and less tables and accumulate each row's dual value into the map by its `args`. Four things must be copied:
@@ -95,7 +95,7 @@ public abstract class AbstractConsumption<C>(
     /// key can be hit by several rows and the baseline uses `putOrAdd`; **a row absent from the dual table is left alone** rather than written as a zero price, which later filtering would hide as
     /// "already computed"; and **a table that was never built skips the whole block** instead of failing, since `refresh` may run before registration. **The key's entry point differs from the
     /// baseline**: the baseline reads it from **the symbol's `args`**, while C#'s `IIntermediateSymbol.Args` is a read-only property derived from `Parent` (`IntermediateSymbol.cs:37`) and
-    /// `LinearFunctionSymbolAdapter` takes no parent, so it cannot be attached after construction. B704 already attaches the key to the **constraint row**, which is what the dual value is keyed by, so
+    /// `LinearFunctionSymbolAdapter` takes no parent, so it cannot be attached after construction. already attaches the key to the **constraint row**, which is what the dual value is keyed by, so
     /// this reads it from the row — equivalent and more direct. That is also why this method **must take the model**: rows can only be enumerated from it.
     /// </remarks>
     public virtual Try Refresh(object shadowPriceMap, object model, object shadowPrices) {

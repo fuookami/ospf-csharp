@@ -22,10 +22,10 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 一个共有辅助件：把两组多项式逐项相减并取绝对值 / Shared helper: pair up, subtract, take absolute values.
 /// </summary>
 /// <remarks>
-/// B1149。`L1DistanceFunction` 与 `LInfinityDistanceFunction` 的构造**只差最后一步**
+/// `L1DistanceFunction` 与 `LInfinityDistanceFunction` 的构造**只差最后一步**
 /// （求和 vs 取最大），**所以"逐项相减再取绝对值"共享一份。**
 ///
-/// B1149. The two distance functions differ **only in the last step** (sum versus maximum),
+/// The two distance functions differ **only in the last step** (sum versus maximum),
 /// **so "subtract pairwise, then take absolute values" is shared.**
 /// </remarks>
 internal static class DistanceTerms {
@@ -82,7 +82,7 @@ internal static class DistanceTerms {
 ///
 /// <c>Σ |left_i − right_i|</c>。
 ///
-/// The L1 distance from the baseline, added in B1149.
+/// The L1 distance from the baseline.
 ///
 /// <c>Σ |left_i − right_i|</c>.
 /// </remarks>
@@ -230,7 +230,7 @@ public sealed class L1DistanceFunction<V> : IMathFunctionSymbol<V>, IHasResultPo
 /// **`MaxFunction` 用大 M 把 <c>z ≥ |left_i − right_i|</c> 逐条挂上，于是 <c>z</c> 只有在下界方向上被约束。**
 /// **目标里最小化它才恰好等于最大绝对差；最大化它就会跑偏。**
 ///
-/// The L∞ distance from the baseline, added in B1149.
+/// The L∞ distance from the baseline.
 ///
 /// <c>max_i |left_i − right_i|</c>.
 ///

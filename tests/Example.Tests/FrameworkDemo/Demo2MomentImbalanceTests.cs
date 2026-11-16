@@ -25,7 +25,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **纵向力矩区间与横向不平衡（B600）** / The longitudinal moment interval and lateral imbalance (B600).
+/// **纵向力矩区间与横向不平衡** / The longitudinal moment interval and lateral imbalance.
 /// </summary>
 /// <remarks>
 /// 两个限制都只有两行/阶段，风险全在**命名与顺序**上：
@@ -110,10 +110,10 @@ public class Demo2MomentImbalanceTests {
             var payload = new Payload(positions, Load, plannedPayload: 5000.0, maxPayload: 20000.0);
             var fuselage = new Fuselage(null, Dow: 40000.0, Doi: 10.0, BalancedArm: 900.0);
             // 燃油表**必须让阶段间有差别**：空表时三个阶段都只有干使用力矩，多项式完全相同，
-            // "三个阶段各绑自己的力矩"这条判据就无法区分（实测报出 `not to be ... TakeOff's` 失败）。
+            // "三个阶段各绑自己的力矩"这条判据就无法区分（实测报出 `not to be... TakeOff's` 失败）。
             // 给起飞与着陆不同的燃油指数，三者的常数项互不相同。
             // The fuel map **must make the phases differ**: with an empty map all three phases carry only the dry-operating torque and their polynomials are identical, so "each phase
-            // binds its own moment" cannot be distinguished (it failed with `not to be ... TakeOff's`). Distinct indices for take-off and landing give three distinct constants.
+            // binds its own moment" cannot be distinguished (it failed with `not to be... TakeOff's`). Distinct indices for take-off and landing give three distinct constants.
             var fuel = new Dictionary<FlightPhase, FuelConstant> {
                 [FlightPhase.TakeOff] = new FuelConstant(Density: 0.8, Weight: 1000.0, Index: 1000.0),
                 [FlightPhase.Landing] = new FuelConstant(Density: 0.8, Weight: 2000.0, Index: 2000.0),
@@ -185,7 +185,7 @@ public class Demo2MomentImbalanceTests {
     /// 所以判据比的是**多项式**：逐符号系数之和 + 常数项。再加一条反向断言——它不等于**别的阶段**的多项式，
     /// 否则三个阶段都绑到同一个力矩上也能通过。
     ///
-    /// Names being right does not make the rows right. **The row's left-hand side is the expanded base symbols** (`stowage_0_0`, `y_P1`, ...), not `longitudinal_torque_*`
+    /// Names being right does not make the rows right. **The row's left-hand side is the expanded base symbols** (`stowage_0_0`, `y_P1`,...), not `longitudinal_torque_*`
     /// itself, so the criterion compares **polynomials** — summed coefficients per symbol plus the constant — and adds a reverse assertion that it does not equal **another
     /// phase's** polynomial; otherwise binding all three phases to one moment would still pass.
     /// </remarks>

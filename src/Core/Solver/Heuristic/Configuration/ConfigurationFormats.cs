@@ -268,9 +268,9 @@ public static class ConfigurationFormats {
                     "configuration must be a single document");
             }
             // **根必须是对象的检查不在这里做**：`FromNode` 已经查一遍，在这里再查一遍会让两处都存在，
-            // 而**删掉任何一处测试都照样通过**（本批变异实测如此）。单一守卫、单一位置。
+            // 而**删掉任何一处测试都照样通过**（这里变异实测如此）。单一守卫、单一位置。
             // **The "root must be an object" check is not repeated here**: `FromNode` already performs it, and having it in both places means
-            // **deleting either leaves the tests green** (measured in this batch). One guard, one place.
+            // **deleting either leaves the tests green** (measured). One guard, one place.
             return YamlToNode(stream.Documents[0].RootNode);
         } catch (YamlDotNet.Core.YamlException exception) {
             return SearchCodecSupport.SearchInvalid<JsonNode>(
@@ -534,9 +534,9 @@ public static class ConfigurationFormats {
         if (node is null) {
             return new YamlDotNet.RepresentationModel.YamlScalarNode("null");
         }
-        // **标量直接取原文，不再做引号剥离**：`ToJsonString()` 已经给字符串加了引号并对内部字符转义，
+        // **标量直接取原文，不再做引号剥离**：`ToJsonString` 已经给字符串加了引号并对内部字符转义，
         // 手工 `Trim` + `Replace` 会在含引号的字符串上出错——**而错误只体现在写出的 YAML 里**。
-        // **Scalars take their raw text without quote stripping**: `ToJsonString()` already quotes strings and escapes their contents, and a manual
+        // **Scalars take their raw text without quote stripping**: `ToJsonString` already quotes strings and escapes their contents, and a manual
         // `Trim` + `Replace` breaks on strings that contain quotes — **with the damage visible only in the emitted YAML**.
         if (node.AsValue().TryGetValue(out string? text) && text is not null) {
             return new YamlDotNet.RepresentationModel.YamlScalarNode(text);

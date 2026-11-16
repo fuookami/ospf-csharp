@@ -1,4 +1,4 @@
-// 活动排程上下文与应用服务（B691）的判据 / Criteria for the activity context and application service (B691).
+// 活动排程上下文与应用服务的判据 / Criteria for the activity context and application service.
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 
 /// <summary>
-/// **活动排程上下文与应用服务（B691）** / The activity context and application service (B691).
+/// **活动排程上下文与应用服务** / The activity context and application service.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**命名空间非法给出具体错误**、**`Choices` 只含带 placement 的项**、

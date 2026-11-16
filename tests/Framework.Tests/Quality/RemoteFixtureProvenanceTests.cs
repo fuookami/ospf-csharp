@@ -8,7 +8,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Quality;
 
 /// <summary>
-/// B854：每个 wire fixture 都必须**标注来源** / Every wire fixture must carry its provenance.
+/// 每个 wire fixture 都必须**标注来源** / Every wire fixture must carry its provenance.
 /// </summary>
 /// <remarks>
 /// `tests/Framework.Tests/RemoteFixtures/README.md` 里有一张来源表，因为它区分两种**强度完全不同**的证据：
@@ -19,12 +19,12 @@ namespace Fuookami.Ospf.Framework.Tests.Quality;
 /// | 由 C# 产出（再送回 Kotlin 严格解码） | 单侧证据 + 一次回读 |
 ///
 /// **没标来源的 fixture 是不可证伪的证据**：它和 C# 自己生成的样本长得一模一样，
-/// 而"跨语言契约通过"这句话会因此变得无法检验。B854 之前没有任何判据盯着这张表——
+/// 而"跨语言契约通过"这句话会因此变得无法检验。 之前没有任何判据盯着这张表——
 /// 加一个文件不会红，删一个文件也不会红。
 ///
 /// The README carries a provenance table because it separates two **very different strengths of evidence**: a fixture produced by the pinned Kotlin `12fdb587` is
 /// **cross-language** evidence, while one produced by C# (then strictly decoded by Kotlin) is one-sided evidence plus a read-back. **An unlabelled fixture is
-/// unfalsifiable evidence**: it looks exactly like a sample C# generated itself, so the claim "the cross-language contract passes" stops being testable. Before B854
+/// unfalsifiable evidence**: it looks exactly like a sample C# generated itself, so the claim "the cross-language contract passes" stops being testable. Before 
 /// nothing watched that table — adding a file red nothing, deleting one red nothing.
 /// </remarks>
 public sealed class RemoteFixtureProvenanceTests

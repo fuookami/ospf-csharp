@@ -24,8 +24,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 ///
 /// **一个二值指示只能表达"是或不是"，说不清"往哪边偏"。**
 ///
-/// adds
-///
 /// **One binary indicator says "is or is not" but not "which way".**
 /// </remarks>
 public class ZeroIndicatorRowsTests
@@ -64,7 +62,7 @@ public class ZeroIndicatorRowsTests
     /// **`side` 选方向：`side = 1` 走正向、`side = 0` 走负向** / `side` picks the deviation direction.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据，也是"为什么需要第二个二值"的直接证据。**
+    /// **这是这里的核心判据，也是"为什么需要第二个二值"的直接证据。**
     ///
     /// **指示 = 0、`side = 1` 时：`_zero_out_lb` 强制 `poly ≥ strictBoundary`，
     /// 而 `_zero_out_ub` 放开。**
@@ -189,7 +187,7 @@ public class ZeroIndicatorRowsTests
     ///
     /// **所以紧的那一侧对调：带行在<b>指示 = 0</b> 时紧，外行在<b>指示 = 1</b> 时紧。**
     ///
-    /// **这是本批的核心判据，也是两个函数最容易被当成同一个的地方。**
+    /// **这是这里的核心判据，也是两个函数最容易被当成同一个的地方。**
     ///
     /// **The same-looking `indicator` parameter means the opposite: zero detection says "indicator 1 is inside the
     /// band", nonzero detection says "indicator 1 is outside".**

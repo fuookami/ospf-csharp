@@ -27,17 +27,17 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.LoadingEffectiveness.
 ///
 /// 1. **是 `Minimum`**。
 /// 2. **目标名带空格**：`"item order reverse"`，与管线名 `item_order_reverse_limit` 不同。
-/// 3. **空集合时直接返回成功、不加目标**（基线的 `if (monomials.isEmpty()) return ok`）。
+/// 3. **空集合时直接返回成功、不加目标**（基线的 `if (monomials.isEmpty) return ok`）。
 /// 4. **系数按"两个（舱位, 货物）对"取，且顺序交叉**：`coefficient(position2, item1)`、`coefficient(position1, item2)`。
 ///    写成 `(position1, item1)` 会让同一对舱位的权重张冠李戴。
 /// 5. **符号缺失即失败**，不跳过——那说明注册顺序错了。
 ///
-/// 第 4 点的交叉顺序与 B616 的 `ItemPriorityReverseLimit` **完全相同**，是基线的一贯写法。
+/// 第 4 点的交叉顺序与 的 `ItemPriorityReverseLimit` **完全相同**，是基线的一贯写法。
 ///
 /// Aligned with the baseline: the reversal symbols weighted by their coefficients are summed into a **minimisation** objective named `"item order reverse"` (with a space). Five things
 /// must be copied: **it is `Minimum`**; **the name has a space**, unlike the pipeline name; **an empty set returns success without an objective** (the baseline's early return); **the
 /// coefficient takes two (position, item) pairs with crossed ordering** — `(position2, item1)` and `(position1, item2)` — since `(position1, item1)` would misassign the weights; and **a
-/// missing symbol fails rather than being skipped**, because it means the registration order is wrong. Point four's crossed ordering is **identical** to B616's
+/// missing symbol fails rather than being skipped**, because it means the registration order is wrong. Point four's crossed ordering is **identical** to the earlier
 /// `ItemPriorityReverseLimit`, the baseline being consistent.
 /// </remarks>
 internal sealed class ItemOrderReverseLimit

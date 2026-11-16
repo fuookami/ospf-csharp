@@ -42,8 +42,8 @@ internal static class AggregationInitializer
     {
         ArgumentNullException.ThrowIfNull(input);
 
-        // **上游可空**（B606 起），取非空会抛 `NullReferenceException`——那是崩溃不是失败。
-        // **The upstreams are nullable** (since B606); taking non-null throws a `NullReferenceException`, a crash rather than a failure.
+        // **上游可空**（起），取非空会抛 `NullReferenceException`——那是崩溃不是失败。
+        // **The upstreams are nullable** (since then); taking non-null throws a `NullReferenceException`, a crash rather than a failure.
         if (aircraftAggregation is null)
         {
             return Fail("飞机聚合未初始化 / the aircraft aggregation is not initialised");

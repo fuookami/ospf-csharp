@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟结构上那些<b>没有生产者</b>的输入字段 / The structure inputs that have <b>no producer</b>.
 /// </summary>
 /// <remarks>
-/// B1256 做的是 B1255 结尾提的那件事：查"搬过去了但没人读"的字段。
+/// 这里做的是此前结尾提到的那件事：查"搬过去了但没人读"的字段。
 ///
 /// **结果比预期更糟一档：** **不是"没人读"，而是<b>没人写</b>。**
 ///
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **一条永不触发的检查比没有检查更糟：** **它让人以为这里有防护。**
 ///
-/// B1256 does what B1255's closing note proposed: look for "carried over but never read" fields.
+/// This does what an earlier closing note proposed: look for "carried over but never read" fields.
 ///
 /// **The result is one notch worse than expected: not "never read" but <b>never written</b>.**
 ///
@@ -85,12 +85,12 @@ public class DeferredStructureDeadInputsTests
     /// **`UnivariateLinearPiecewiseStructure` 在证明缺失时<b>返回失败</b>，
     /// 而 `MaxStructure` 与 `IndicatorStructure` 用 `is not null` 把它绕过去。**
     ///
-    /// **这个区别是这一批的核心：** **同样的字段、同样的缺失，一个显形、一个隐形。**
+    /// **这个区别是这里的核心：** **同样的字段、同样的缺失，一个显形、一个隐形。**
     /// **而"隐形"的那两个恰好是<b>已经能真实求解</b>的两个——**
     /// **也就是说，21 次真实求解全部通过，而那三次检查一次都没跑过。**
     ///
     /// **这不会让那 21 次求解变得无效：** **它们证明的是"行压出来的答案对"，
-    /// 而不是"边界证明被校验过"。** **把这两件事分开说，是这一批要留下的东西。**
+    /// 而不是"边界证明被校验过"。** **把这两件事分开说，是这里要留下的东西。**
     ///
     /// **`UnivariateLinearPiecewiseStructure` <b>returns a failure</b> when the proof is missing, while `MaxStructure` and
     /// `IndicatorStructure` step around it with `is not null`.**
@@ -100,7 +100,7 @@ public class DeferredStructureDeadInputsTests
     /// ran once.**
     ///
     /// **That does not invalidate the 21 solves: they prove "the rows force the right answer", not "the bound proof was
-    /// verified".** **Keeping those two statements apart is what this batch leaves behind.**
+    /// verified".** **Keeping those two statements apart is what leaves behind.**
     /// </remarks>
     [Fact]
     public void OneShouldRefuseTwoShouldSkipSilently() {

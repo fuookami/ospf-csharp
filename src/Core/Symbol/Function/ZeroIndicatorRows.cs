@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`strictBoundary` 必须<b>严格大于</b> `tolerance`**：**否则"带内"与"带外"在边界上重叠，
 /// 一个点可以同时声称"在带内"与"偏离了"。** **这种重叠不会让模型不可行，只会让它有第二个解。**
 ///
-/// B1182, following the baseline's `zeroIndicatorConstraints` and `safeZeroIndicatorConstraints`.
+/// Following the baseline's `zeroIndicatorConstraints` and `safeZeroIndicatorConstraints`.
 ///
 /// **Four rows, and the <b>second binary (`sideVar`) appears only on the deviation side</b>**:
 ///

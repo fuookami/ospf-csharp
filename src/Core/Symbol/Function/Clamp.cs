@@ -20,7 +20,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **截断函数：把输入夹在 `[lower, upper]` 之间** / Clamp: squeeze the input into `[lower, upper]`.
 /// </summary>
 /// <remarks>
-/// **B1131 按基线 `CompositeFunctions.kt` 的 `ClampFunction` 补。**
+/// **按基线 `CompositeFunctions.kt` 的 `ClampFunction` 补。**
 ///
 /// **它不是一个新的数学原语**：**基线自己也是用 `MaxFunction` 与 `MinFunction` 拼出来的**
 /// （`max(input, lower)` 再 `min(…, upper)`）——
@@ -28,7 +28,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **手写一套"夹"的约束会与既有的 max/min 编码产生两套 Big-M，
 /// 而两套 Big-M 在同一模型里会互相挤掉对方的可行域。**
 ///
-/// **The `ClampFunction` from the baseline's `CompositeFunctions.kt`, added in B1131.**
+/// **The `ClampFunction` from the baseline's `CompositeFunctions.kt`.**
 ///
 /// **It is not a new mathematical primitive**: **the baseline itself builds it from `MaxFunction` and `MinFunction`**
 /// (`max(input, lower)` then `min(…, upper)`) —

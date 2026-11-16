@@ -70,8 +70,8 @@ public sealed record ColumnGenerationPackingSnapshot(
     /// <returns>键值信息 / The key-value information.</returns>
     /// <remarks>
     /// **键名照抄基线**（`sheet_count` 等蛇形名）：这些键会被下游当契约读，改成 C# 风格的 PascalCase 会静默丢字段。
-    /// 数值统一走 <see cref="Format"/>：`FltX.ToString()` 不接 `IFormatProvider`，直接用它会让小数点随区域设置变成逗号；
-/// `FltX.Value` 是 `internal`，所以经 `ToFlt64().ToDouble()` 取数。
+    /// 数值统一走 <see cref="Format"/>：`FltX.ToString` 不接 `IFormatProvider`，直接用它会让小数点随区域设置变成逗号；
+/// `FltX.Value` 是 `internal`，所以经 `ToFlt64.ToDouble` 取数。
     ///
     /// **The key names are copied from the baseline** (snake case such as `sheet_count`): downstream code reads them as a contract, and switching to C#-style PascalCase would silently
     /// drop fields. Values are formatted with the invariant culture, or the decimal separator would become a comma under some locales.

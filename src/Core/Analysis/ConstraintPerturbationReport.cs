@@ -249,11 +249,11 @@ public sealed record ConstraintPerturbationObservation(
     /// </remarks>
     public bool? RemovalEffective => Kind != ConstraintPerturbationKind.Removal
         ? null
-        // **`Unknown` 必须给 `null`，不能给 `false`。** B994 的删除测试判据当场抓到这个：
+        // **`Unknown` 必须给 `null`，不能给 `false`。** 的删除测试判据当场抓到这个：
         // 一次因预算耗尽而没跑成的删除测试，`Outcome` 是 `Unknown`，而这里返回 `false`——
         // **"没测"被写成了"删除无效"，正是本仓反复记录的那类失效。**
         //
-        // **`Unknown` has to give `null`, not `false`.** B994's removal criterion caught this on the spot: a removal test skipped for budget reasons has `Outcome == Unknown`,
+        // **`Unknown` has to give `null`, not `false`.** the earlier removal criterion caught this on the spot: a removal test skipped for budget reasons has `Outcome == Unknown`,
         // and this returned `false` — **"not measured" written down as "removal ineffective", the exact failure this repository keeps recording.**
         : Outcome switch {
             PerturbationOutcome.Effective => true,

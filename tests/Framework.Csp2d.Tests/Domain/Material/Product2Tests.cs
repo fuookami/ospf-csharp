@@ -59,9 +59,9 @@ public class Product2Tests {
 
     /// <summary>**重复产品必须被拒** / Duplicate products must be rejected.</summary>
     /// <remarks>
-    /// `ByProduct()` **后写覆盖先写**，所以同一个产品只留下一条需求，**需求总量少了，看起来像"需求更小、更容易做"**。
+    /// `ByProduct` **后写覆盖先写**，所以同一个产品只留下一条需求，**需求总量少了，看起来像"需求更小、更容易做"**。
     ///
-    /// `ByProduct()` **lets a later entry overwrite an earlier one**, so one demand survives per product, **the total shrinks, and it looks like a smaller, easier
+    /// `ByProduct` **lets a later entry overwrite an earlier one**, so one demand survives per product, **the total shrinks, and it looks like a smaller, easier
     /// problem**.
     /// </remarks>
     [Fact]

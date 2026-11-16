@@ -123,8 +123,8 @@ public sealed record GeneralizedFlowSolverTolerance(
     /// 判断是否为有限值 / Whether the value is finite.
     /// </summary>
     /// <remarks>
-    /// `IRealNumber&lt;T&gt;.IsFinite()` 是**默认接口成员**，C# 不允许在实现类实例上直接调用它，必须经接口类型调用。
-    /// `IRealNumber&lt;T&gt;.IsFinite()` is a **default interface member**; C# will not let it be called on the implementing class
+    /// `IRealNumber&lt;T&gt;.IsFinite` 是**默认接口成员**，C# 不允许在实现类实例上直接调用它，必须经接口类型调用。
+    /// `IRealNumber&lt;T&gt;.IsFinite` is a **default interface member**; C# will not let it be called on the implementing class
     /// instance, so it must be reached through the interface type.
     /// </remarks>
     /// <param name="value">待判断的值 / The value to check.</param>

@@ -1,9 +1,9 @@
 // 几何扩展与形状工厂测试 / Tests for the geometry extensions and the shape factory.
 //
-// 本批由**覆盖率审计**驱动：脚本扫出 Bpp2d 中没有被任何测试文件提及的公开类型，再人工筛掉接口与纯辅助类，
+// 这里由**覆盖率审计**驱动：脚本扫出 Bpp2d 中没有被任何测试文件提及的公开类型，再人工筛掉接口与纯辅助类，
 // 剩下真正有行为却零覆盖的部分补测。这不是凑数量——`AreaOf` 与 `BoundingArea` 的差别正是圆形件利用率被高估的
 // 经典来源，而形状工厂的拒绝路径此前完全没被走过。
-// This batch is driven by a **coverage audit**: a script listed every public type in Bpp2d that no test file mentions,
+// is driven by a **coverage audit**: a script listed every public type in Bpp2d that no test file mentions,
 // then interfaces and pure helpers were filtered out by hand, leaving the parts that genuinely have behaviour but zero
 // coverage. Not padding — the difference between `AreaOf` and `BoundingArea` is the classic source of overstated circular
 // utilisation, and the shape factory's rejection paths had never been exercised.

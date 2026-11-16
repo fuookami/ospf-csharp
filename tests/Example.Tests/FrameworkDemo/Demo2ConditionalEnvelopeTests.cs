@@ -1,4 +1,4 @@
-// 条件包络的判据（B770）/ Criteria for the conditional envelope (B770).
+// 条件包络的判据/ Criteria for the conditional envelope.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using Fuookami.Ospf.Utils.Functional;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **条件包络（B770）** / The conditional envelope (B770).
+/// **条件包络** / The conditional envelope.
 /// </summary>
 /// <remarks>
 /// 同一相位下两组边界，`valueCondition` 决定用哪一组：`true` → 第一组，`false` → 第二组，`null` → 条件是决策变量（需要 `IfThen` 开关）。

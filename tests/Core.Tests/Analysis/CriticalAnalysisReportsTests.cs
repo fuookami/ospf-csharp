@@ -17,10 +17,10 @@ namespace Fuookami.Ospf.Core.Tests.Analysis;
 /// 报告侧的两个纯函数 / The two pure functions on the report side.
 /// </summary>
 /// <remarks>
-/// **B984 补完 `CriticalConstraintAnalysisReport.kt` 的报告侧**：`buildEffectivenessRanking` 与 `summarizeGroups`。
+/// 补完 `CriticalConstraintAnalysisReport.kt` 的报告侧**：`buildEffectivenessRanking` 与 `summarizeGroups`。
 /// 两者都不碰后端。报告构造器仍缺。
 ///
-/// **B984 completes the report side of `CriticalConstraintAnalysisReport.kt`.** Neither function touches a backend; the report builder is still missing.
+/// **completes the report side of `CriticalConstraintAnalysisReport.kt`.** Neither function touches a backend; the report builder is still missing.
 /// </remarks>
 public class CriticalAnalysisReportsTests {
     private static ConstraintPerturbationObservation Observation(

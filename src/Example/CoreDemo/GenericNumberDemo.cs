@@ -38,8 +38,8 @@ public sealed class ModelBuildSummary {
 /// Generic number type demo: build simple linear and quadratic models,
 /// verify mechanism model construction.
 ///
-/// 此演示独立于 BuildModel 模式，提供 RunBuildAndDump() 方法。
-/// This demo is standalone from the BuildModel pattern, providing a RunBuildAndDump() method.
+/// 此演示独立于 BuildModel 模式，提供 RunBuildAndDump 方法。
+/// This demo is standalone from the BuildModel pattern, providing a RunBuildAndDump method.
 /// </summary>
 public sealed class GenericNumberDemo {
     private static readonly Flt64 CoeffX = new(2);

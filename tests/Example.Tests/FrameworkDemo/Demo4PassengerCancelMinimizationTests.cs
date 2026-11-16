@@ -1,4 +1,4 @@
-// 乘客取消最小化（B763）/ The passenger cancellation objective (B763).
+// 乘客取消最小化/ The passenger cancellation objective.
 
 using System;
 using System.Collections.Generic;
@@ -17,13 +17,13 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **乘客取消最小化（B763）** / The passenger cancellation objective (B763).
+/// **乘客取消最小化** / The passenger cancellation objective.
 /// </summary>
 /// <remarks>
-/// 目标与上界必须成对：取消变量有"不超过人数"的上界（B759），没有这条目标它会被压到上界（**取消能给别的约束腾地方**）；
+/// 目标与上界必须成对：取消变量有"不超过人数"的上界，没有这条目标它会被压到上界（**取消能给别的约束腾地方**）；
 /// 反过来只有目标没有上界，取消能压到零、上界就没有意义。
 ///
-/// The objective and the bound must come as a pair: the cancellation variables carry a "no more than the head count" bound (B759), and without this objective they are pushed to that
+/// The objective and the bound must come as a pair: the cancellation variables carry a "no more than the head count" bound, and without this objective they are pushed to that
 /// bound (**cancelling frees room for other constraints**); conversely an objective without a bound would let cancellation go to zero and make the bound pointless.
 /// </remarks>
 public class Demo4PassengerCancelMinimizationTests {
@@ -115,8 +115,7 @@ public class Demo4PassengerCancelMinimizationTests {
     /// 加一个"零系数目标"不会错，只会让模型多出一批永远为零的项——**而目标里的零项会一直陪你到最后一句解释里**。
     ///
     /// Two paired points: all-zero coefficients leave the objective part count unchanged; an empty passenger list adds nothing either. A zero-coefficient objective is not wrong, it only
-    /// adds a batch of always-zero terms — **and a zero term in the objective follows you all the way to the last explanation**.
-    /// </remarks>
+    /// Adds </remarks>
     [Fact]
     public void Invoke_ShouldSkipAZeroCoefficientObjective() {
         (List<FlightPassenger> passengers, PassengerCancel cancel, LinearMetaModel<Flt64> model) = Ready();

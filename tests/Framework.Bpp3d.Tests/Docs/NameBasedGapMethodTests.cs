@@ -12,14 +12,14 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **名字对不上不是证据，只是线索** / A name mismatch is a lead, not evidence.
 /// </summary>
 /// <remarks>
-/// B961 把基线 `math` 的 320 个文件名与本仓做差，得到 **91 个"缺失"**；逐个查下来**只有 1 个是真的**，
+/// 把基线 `math` 的 320 个文件名与本仓做差，得到 **91 个"缺失"**；逐个查下来**只有 1 个是真的**，
 /// 其余都在别的文件里（`Einsum`、`CombinatoricsAsync`、`EscapeTime`、`Gamma`、`Beta`）。
 ///
-/// **误报率 98.9%。** B942 当年放弃逐文件比对时只是"觉得不可靠"，**这一批把它量出来了**——
+/// **误报率 98.9%。** 当年放弃逐文件比对时只是"觉得不可靠"，**这里把它量出来了**——
 /// 于是"按文件名清单判缺口"这个做法，从此在仓库里有数字挡着。
 ///
-/// B961 differenced the baseline's 320 math file names against this repo and got **91 "missing"**; checking each showed **only one was real**, the rest living inside
-/// differently-named files. **A 98.9% false-positive rate** — B942 abandoned per-file comparison because it "felt unreliable", and **this batch measured it**, so the method now
+/// differenced the baseline's 320 math file names against this repo and got **91 "missing"**; checking each showed **only one was real**, the rest living inside
+/// differently-named files. **A 98.9% false-positive rate** — abandoned per-file comparison because it "felt unreliable", and ** measured it**, so the method now
 /// has a number standing in front of it.
 /// </remarks>
 public class NameBasedGapMethodTests

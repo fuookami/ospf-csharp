@@ -47,7 +47,7 @@ public sealed record ActivitySchedule<W>(
 ///
 /// 与基线的差异：基线是 `ActivitySchedulingAggregation` 的泛型版本，这里**固定为 `Flt64`**。
 /// 原因不是省事，而是**下游全是 `Flt64`**：`ActivityCompilation` 的变量是 `BinVar`、行系数是 `Flt64`、
-/// 模型是 `LinearMetaModel` 的 `Flt64` 实例。参数化 `V` 只会让 `CompiledActivityProblem` 的泛型版本 与
+/// 模型是 `LinearMetaModel` 的 `Flt64` 实例。参数化 `V` 只会让 `CompiledActivityProblem` 的泛型版本与
 /// `ActivityCompilation` 之间多出一个永远走不到的分支。**真需要别的数值类型时，连编译层一起参数化。**
 ///
 /// Aligned with the baseline's `ActivitySchedulingAggregation`. Three things copied: **registration happens once**, a second attempt reporting a concrete error rather than silently succeeding, since a

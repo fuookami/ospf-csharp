@@ -29,7 +29,7 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// **附加重量联动与一维几何适配** / Additional-weight linking and the 1-D geometry adapter.
 /// </summary>
 /// <remarks>
-/// 对应基线的 `linkAdditionalWeight()` 与 `Bpp1dDiscreteLoading.context()`：
+/// 对应基线的 `linkAdditionalWeight` 与 `Bpp1dDiscreteLoading.context`：
 ///
 /// | 点 | 错法 | 后果 |
 /// | --- | --- | --- |
@@ -38,16 +38,16 @@ namespace Fuookami.Ospf.Framework.Bpp1d.Tests.Domain.DiscreteLoading;
 /// | 舱位与几何一一对应 | 单向检查 | 没有区间的舱位**冲突全漏** |
 /// | 冲突是合并 | 直接替换 | 调用方**业务上已声明的互斥**被悄悄丢掉 |
 ///
-/// Mirrors the baseline's `linkAdditionalWeight()` and `Bpp1dDiscreteLoading.context()`; the table lists the four failure modes.
+/// Mirrors the baseline's `linkAdditionalWeight` and `Bpp1dDiscreteLoading.context`; the table lists the four failure modes.
 /// </remarks>
 public class DiscreteLoadingLinkTests {
     /// <summary>**附加重量必须被约束为非负** / The additional weight must be constrained non-negative.</summary>
     /// <remarks>
-    /// **本批最要紧的一条。** 这一层是**对外接口**——表达式由调用方传入。
+    /// **这里最要紧的一条。** 这一层是**对外接口**——表达式由调用方传入。
     /// 若不写 `additional >= 0`，一个负表达式就能在容量行里**抵消**既有载荷，
     /// 让"再有 N 件"看起来还能装。**求解器不会报错，它只会返回那个超载的"最优解"。**
     ///
-    /// **The most important criterion in this batch.** This layer is an **outward-facing entry point** receiving a caller-supplied expression. Without
+    /// **The most important criterion in.** This layer is an **outward-facing entry point** receiving a caller-supplied expression. Without
     /// `additional &gt;= 0`, a negative expression **cancels** the existing load in the capacity row, making "N more pieces" look like they still fit. **The solver never
     /// complains; it just returns that overloaded "optimum".**
     /// </remarks>
@@ -126,10 +126,10 @@ public class DiscreteLoadingLinkTests {
             positions: [("P1", 5UL, 5000.0)], includeAllParties: true);
 
         // **多余的 `P9` 必须与 `P1` 不重叠。** 第一版让两者都在 `[0,2]`，于是几何扫描产出一条
-        // `P1—P9` 冲突，`validate()` 的"冲突引用必须存在"**先把它拒了**——判据绿了，
+        // `P1—P9` 冲突，`validate` 的"冲突引用必须存在"**先把它拒了**——判据绿了，
         // 但**没有测到"舱位与几何一一对应"那条检查**，单向检查的变异因此存活。
         //
-        // **The extra `P9` must not overlap `P1`.** The first version put both on `[0,2]`, so the sweep produced a `P1—P9` edge and `validate()`'s "conflict references must
+        // **The extra `P9` must not overlap `P1`.** The first version put both on `[0,2]`, so the sweep produced a `P1—P9` edge and `validate`'s "conflict references must
         // exist" **rejected it first** — green without **exercising the correspondence check**, letting the one-way mutant survive.
         var extraGeometry = new List<LoadingInterval<Flt64>> {
             Metres("P1", 0.0, 1.0),

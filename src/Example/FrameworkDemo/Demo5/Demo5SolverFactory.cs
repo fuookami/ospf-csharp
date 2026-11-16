@@ -16,11 +16,11 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo5;
 /// <remarks>
 /// 与基线 `framework_demo/demo5/infrastructure/Solver.kt`（1455 B）对应。
 ///
-/// **未知求解器名必须失败**。基线是 `when (solver.lowercase()) { "scip" -> …; else -> Gurobi }`——
+/// **未知求解器名必须失败**。基线是 `when (solver.lowercase) { "scip" -> …; else -> Gurobi }`——
 /// 写错一个名字（`"gruobi"`）会**静默拿到 Gurobi**，而错误要到后端不可用时才以一个无关的失败形式出现。
 /// 这里改成显式枚举，未知名返回失败并指名它。
 ///
-/// **An unknown solver name must fail.** The baseline is `when (solver.lowercase()) { "scip" -> …; else -> Gurobi }` — a typo (`"gruobi"`) **silently
+/// **An unknown solver name must fail.** The baseline is `when (solver.lowercase) { "scip" -> …; else -> Gurobi }` — a typo (`"gruobi"`) **silently
 /// gets Gurobi**, and the mistake only surfaces later as an unrelated backend-unavailable failure. This version enumerates explicitly and reports the
 /// unknown name.
 ///

@@ -9,7 +9,7 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B824：Benders 三套注册接口的覆盖面 / Coverage of the three Benders registration entry points.
+/// Benders 三套注册接口的覆盖面 / Coverage of the three Benders registration entry points.
 /// </summary>
 /// <remarks>
 /// 基线在 demo2 域里有 **18 个文件**各定义一次 `registerForBendersMP`（聚合 + 上下文各一份），另有对应的 `registerForBendersSP`
@@ -17,18 +17,18 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 ///
 /// 本仓实测（反射，见下）：**MP 18 / SP 18 / Flush 12**，共 48。
 ///
-/// B824 时是 14 / 14 / 8：那时 `StowageContext`、`MacContext`、`LoadingEffectivenessAggregation`、`RedundancyAggregation`
-/// 四处的 MP/SP 都缺，B825 按基线补齐——**MP 与 SP 现在与基线持平（18 / 18）**。
+/// 时是 14 / 14 / 8：那时 `StowageContext`、`MacContext`、`LoadingEffectivenessAggregation`、`RedundancyAggregation`
+/// 四处的 MP/SP 都缺，按基线补齐——**MP 与 SP 现在与基线持平（18 / 18）**。
 ///
 /// 剩下的 6 个是 **聚合层** 的 flush：基线里它们是 `private fun`（`git cat-file` 实测：`loading_effectiveness`、`redundancy`、`mac` 三处都是 `private`），
 /// **外部根本调不到，基线自己也不用**。所以本仓**故意不移植**——它们是基线里的死代码，不是缺口。
 /// 判据因此钉 **12**，并在下一条里点名这六个聚合，谁"为了整齐"给它们补上公开 flush，判据会红。
 ///
 /// 这条判据钉的是**当前数字**，不是"应该有的数字"：缺口补上时它会红，**届时把它改成新的数字并在这里写明为什么**——
-/// 这正是本仓对"记录缺口的判据"的用法（B797/B801 同一套）。
+/// 这正是本仓对"记录缺口的判据"的用法。
 ///
 /// The baseline defines these three once in **18 demo2 domain files** (one per aggregation and context), **54 functions** in total (`git grep` on `12fdb587`).
-/// This port measures **MP 18 / SP 18 / Flush 12** — 48. At B824 it was 14/14/8; B825 added the four missing sets (`StowageContext`, `MacContext`,
+/// This port measures **MP 18 / SP 18 / Flush 12** — 48. At it was 14/14/8; added the four missing sets (`StowageContext`, `MacContext`,
 /// `LoadingEffectivenessAggregation`, `RedundancyAggregation`), so **MP and SP now match the baseline**. The remaining six are the **aggregation-level** flushes, which
 /// the baseline declares `private` (measured with `git cat-file` in `loading_effectiveness`, `redundancy` and `mac`): **unreachable from outside and unused by the
 /// baseline itself**, so this port **deliberately does not port them** — dead code in the baseline, not a gap. The criterion therefore pins **12** and names the six

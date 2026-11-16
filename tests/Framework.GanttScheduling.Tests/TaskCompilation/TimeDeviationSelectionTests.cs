@@ -101,14 +101,14 @@ public class TimeDeviationSelectionTests {
     }
 
     /// <summary>
-    /// **入选任务的代价复用 B497 的语义** / The selected tasks' cost reuses B497's semantics.
+    /// **入选任务的代价复用 的语义** / The selected tasks' cost reuses the earlier semantics.
     /// </summary>
     /// <remarks>
-    /// 每任务的代价与 B497 的 `TaskAdvanceTimeCost` 相同：阈值零 → 全额线性；阈值非零 → 只罚超出；系数空 → 无穷（禁止）。
-    /// 判据把三个答案各算一遍，证明本批没有引入第二套代价语义。
+    /// 每任务的代价与 的 `TaskAdvanceTimeCost` 相同：阈值零 → 全额线性；阈值非零 → 只罚超出；系数空 → 无穷（禁止）。
+    /// 判据把三个答案各算一遍，证明这里没有引入第二套代价语义。
     ///
-    /// Each task's cost matches B497's `TaskAdvanceTimeCost`: zero threshold → charge linearly; non-zero → only the excess; empty coefficient → infinity (forbid). The criterion
-    /// computes all three answers, proving this batch introduced no second cost semantics.
+    /// Each task's cost matches the earlier `TaskAdvanceTimeCost`: zero threshold → charge linearly; non-zero → only the excess; empty coefficient → infinity (forbid). The criterion
+    /// computes all three answers, proving introduced no second cost semantics.
     /// </remarks>
     [Fact]
     public void AdvanceCost_ShouldReuseTheAdvanceTimeCostSemantics() {

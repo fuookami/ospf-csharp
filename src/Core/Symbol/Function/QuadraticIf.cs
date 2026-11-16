@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次条件的三件套共用的桥接步骤 / The bridging step shared by the three quadratic-condition functions.
 /// </summary>
 /// <remarks>
-/// B1161 按基线 `QuadraticIf.kt`、`QuadraticIfThen.kt`、`QuadraticIfIn.kt` 补三个类。
+/// 对齐基线 `QuadraticIf.kt`、`QuadraticIfThen.kt`、`QuadraticIfIn.kt` 补三个类。
 ///
 /// **三个类都只做一件事**：**把二次多项式桥接成一个新的实变量 `y`（等式 `y − p = 0`），
 /// 然后把 `y` 交给<b>已有的</b>线性 `IfFunction`/`IfThenFunction`/`IfInFunction`。**
@@ -35,7 +35,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// **`y` 必须是无界 `RealVar`**：**条件可能取到负值**，
 /// **用 `URealVar` 会在求解器边界把负值截断成 0，于是 `x &lt; 0` 这类条件永远为假。**
 ///
-/// B1161, following the baseline's three quadratic-condition adapters.
+/// Following the baseline's three quadratic-condition adapters.
 ///
 /// **All three do one thing**: **bridge a quadratic polynomial to a fresh real variable `y` (the equality
 /// `y − p = 0`) and hand `y` to the <b>existing</b> linear `IfFunction`/`IfThenFunction`/`IfInFunction`.**
@@ -186,7 +186,7 @@ internal static class QuadraticBridging
 /// **判据必须验证这一点**：**辅助变量 = 桥接变量 + `IfFunction` 自己的辅助变量**，
 /// **而 `ResultPolynomial` 与"用同一桥接变量构造的 `IfFunction`"的完全相同。**
 ///
-/// B1161, following the baseline's `QuadraticIf.kt`.
+/// Following the baseline's `QuadraticIf.kt`.
 ///
 /// **This class holds no branch encoding**: **it adds one bridge variable and one equality, then hands the bridge to
 /// `IfFunction`.** **The criterion must check that**: **the helpers are the bridge plus `IfFunction`'s own, and the
@@ -308,7 +308,7 @@ public sealed class QuadraticIfFunction : IMathFunctionSymbol<Flt64>, IHasResult
 /// <remarks>
 /// 对齐基线 `QuadraticIfThen.kt`。
 ///
-/// B1161, following the baseline's `QuadraticIfThen.kt`. **One bridge per polynomial.**
+/// Following the baseline's `QuadraticIfThen.kt`. **One bridge per polynomial.**
 /// </remarks>
 public sealed class QuadraticIfThenFunction : IMathFunctionSymbol<Flt64>, IHasResultPolynomial<Flt64> {
     private readonly QuadraticPolynomial<Flt64> _condition;
@@ -444,7 +444,7 @@ public sealed class QuadraticIfThenFunction : IMathFunctionSymbol<Flt64>, IHasRe
 /// **后者的容差带返回 `null`（"不知道"），而本类在对 `lower`/`upper` 的判断上不做容差——
 /// 它把整件事交给 `IfInFunction` 的 `strictBoundary` 与 `delta`。**
 ///
-/// B1161, following the baseline's `QuadraticIfIn.kt`. **One bridge.**
+/// Following the baseline's `QuadraticIfIn.kt`. **One bridge.**
 ///
 /// **The difference from `QuadraticInStepRangeFunction`**: **that one returns `null` inside a tolerance band
 /// ("unknown"), while this one applies no tolerance to the `lower`/`upper` decision — it defers the whole matter to

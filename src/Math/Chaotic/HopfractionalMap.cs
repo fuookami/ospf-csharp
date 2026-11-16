@@ -18,7 +18,7 @@ namespace Fuookami.Ospf.Math.Chaotic;
 ///
 /// **`iterations`（默认 1000）在迭代器里只被保存、从不使用**——与 `Windmi` 的 `g`、`Sprott` 的 `b` 同类。
 ///
-/// The Hopfractional map from the baseline, added in B1147.
+/// The Hopfractional map from the baseline.
 ///
 /// <c>x' = p·x·(1 + (k·x)^q) / (1 + (s·x)^q)</c>.
 ///

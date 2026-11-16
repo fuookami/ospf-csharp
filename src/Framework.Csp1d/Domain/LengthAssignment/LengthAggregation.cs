@@ -123,14 +123,14 @@ public sealed record LengthAggregation(
             }
         }
 
-        // **与 `YieldAggregation` 同一处修正（B376）：空列表不是 null。**
+        // **与 `YieldAggregation` 同一处修正：空列表不是 null。**
         //
-        // 基线 `LengthAssignmentModelingResult` 的两个字段也是 `= emptyList()`，
+        // 基线 `LengthAssignmentModelingResult` 的两个字段也是 `= emptyList`，
         // 返回处直接传列表本身。C# 这里是**同一个 `Count > 0 ? list : null` 模式**——
-        // B376 只修了 yield，**漏了这里**。**又一次"修一处等于没修"。**
+        // 只修了 yield，**漏了这里**。**又一次"修一处等于没修"。**
         //
-        // **The same correction as `YieldAggregation` (B376): an empty list is not null.** The baseline's two fields are also `= emptyList()` and the return passes the lists
-        // through. C# had **the identical `Count > 0 ? list : null` pattern** here — B376 fixed yield only and **missed this**. **"Fixing one place changes nothing", again.**
+        // **The same correction as `YieldAggregation` : an empty list is not null.** The baseline's two fields are also `= emptyList` and the return passes the lists
+        // through. C# had **the identical `Count > 0 ? list : null` pattern** here — fixed yield only and **missed this**. **"Fixing one place changes nothing", again.**
         return new LengthAssignmentModelingResult<Flt64>(
             assignedLengths,
             overLengths

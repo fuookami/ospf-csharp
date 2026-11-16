@@ -13,8 +13,8 @@ using UInt64 = Fuookami.Ospf.Math.Algebra.Number.UInt64;
 namespace Fuookami.Ospf.Math.Ordinary;
 /// <summary>
 /// 最大公约数 / Greatest Common Divisor (GCD).
-/// <para>提供整数、浮点数、有理数 GCD 计算；常量通过 NumericConstantsRegistry.For&lt;T&gt;() 解析。</para>
-/// <para>Provides GCD for integers, floats, rationals; constants via NumericConstantsRegistry.For&lt;T&gt;().</para>
+/// <para>提供整数、浮点数、有理数 GCD 计算；常量通过 NumericConstantsRegistry.For&lt;T&gt; 解析。</para>
+/// <para>Provides GCD for integers, floats, rationals; constants via NumericConstantsRegistry.For&lt;T&gt;.</para>
 /// </summary>
 public static class Gcd {
     /// <summary>减法 GCD（内部）/ Subtraction-based GCD (internal).</summary>

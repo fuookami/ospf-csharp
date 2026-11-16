@@ -59,11 +59,11 @@ public abstract class MongoRepository<T> : IRepository<T> where T : class {
     /// <summary>**按布尔表达式查询** / Query by a boolean expression.</summary>
     /// <remarks>
     /// **在此之前，这个仓库只会按 `_id` 查**：`FindByIdAsync` 用 `Filter.Eq("_id", …)`，
-    /// `FindAllAsync` 用 `Filter.Empty`。**四个 Mongo 翻译器（B1118—B1121，共 38 条判据）没有被任何生产路径调用过**——
+    /// `FindAllAsync` 用 `Filter.Empty`。**四个 Mongo 翻译器（共 38 条判据）没有被任何生产路径调用过**——
     /// **而"翻译器对了"与"查询能按条件跑"是两件事。**
     ///
     /// **Before this, the repository only queried by `_id`**: `FindByIdAsync` uses `Filter.Eq("_id", …)` and
-    /// `FindAllAsync` uses `Filter.Empty`. **The four Mongo translators (B1118—B1121, 38 criteria) were called by no
+    /// `FindAllAsync` uses `Filter.Empty`. **The four Mongo translators (38 criteria) were called by no
     /// production path** — **and "the translator is right" is not the same as "a filtered query can run".**
     /// </remarks>
     /// <param name="predicate">布尔表达式 / Boolean expression.</param>

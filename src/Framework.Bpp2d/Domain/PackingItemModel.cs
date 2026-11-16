@@ -4,12 +4,12 @@
 // Mirrors the pinned Kotlin baseline's `Id.kt` and `Item.kt`, limited to what the layout algorithm actually needs:
 // identifier types, the abstract item, the actual item, and the two derived predicates.
 //
-// **本批的能力边界**：基线的 `AbstractItem` 还带 `materialAmounts`（`Map<MaterialKey, UInt64>`）与 `batchNo`
-// （`BatchNo?`），这两个类型依赖物料与批次模块，尚未移植，因此本批**不含这两个字段**，`ActualItem` 只承载
+// **这里的能力边界**：基线的 `AbstractItem` 还带 `materialAmounts`（`Map<MaterialKey, UInt64>`）与 `batchNo`
+// （`BatchNo?`），这两个类型依赖物料与批次模块，尚未移植，因此这里**不含这两个字段**，`ActualItem` 只承载
 // 编号、名称、形状、旋转许可与重量。缺字段会在使用处暴露为编译错误，而不是运行期悄悄为 null。
 // **Capability boundary**: the baseline's `AbstractItem` also carries `materialAmounts`
 // (`Map<MaterialKey, UInt64>`) and `batchNo` (`BatchNo?`). Those types depend on the material and batch modules,
-// which are not ported, so this batch **omits both**; `ActualItem` carries identifier, name, shape, rotation
+// which are not ported, so **both are omitted** here; `ActualItem` carries identifier, name, shape, rotation
 // allowance and weight. A missing field surfaces as a compile error at the use site instead of a silent null at run
 // time.
 

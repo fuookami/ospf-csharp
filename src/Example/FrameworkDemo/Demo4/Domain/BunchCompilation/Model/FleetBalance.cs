@@ -28,8 +28,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 ///
 /// 判据要小心的两点：检查点按 `(机场, 型别)` **去重**；同一检查点下每台飞机**各占一项**（不是一台飞机一项、也不是共享一个变量）。
 ///
-/// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush()` 再累加，所以注册时那些 `z` 项在这一轮会被清掉，
-/// `fleet_l` 变成"这一轮的束各占一项"。C# 的 `Flush()` 是空实现，这里显式 `Clear()` 再累加——**否则每多一轮就多一批项，
+/// **`AddColumns` 是"换掉"而不是"追加"**：基线每轮先 `flush` 再累加，所以注册时那些 `z` 项在这一轮会被清掉，
+/// `fleet_l` 变成"这一轮的束各占一项"。C# 的 `Flush` 是空实现，这里显式 `Clear` 再累加——**否则每多一轮就多一批项，
 /// 跑十轮之后同一个束在表达式里出现十次**。
 ///
 /// The baseline `FleetBalance.kt` counts the fleet by **checkpoint** ("minor type x airport"), puts one `z` variable per aircraft into an expression, and attaches a negative-side slack
@@ -40,7 +40,7 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo4.Domain.BunchCompilation.Mode
 /// aircraft group, and not a shared variable).
 ///
 /// **`AddColumns` replaces rather than appends**: the baseline flushes before accumulating each round, so the `z` terms from registration are cleared and `fleet_l` becomes "one term
-/// per bunch of this round". C#'s `Flush()` is a no-op, so this clears explicitly before accumulating — **otherwise every extra round adds another batch of terms, and after ten rounds
+/// per bunch of this round". C#'s `Flush` is a no-op, so this clears explicitly before accumulating — **otherwise every extra round adds another batch of terms, and after ten rounds
 /// the same bunch appears ten times in the expression**.
 /// </remarks>
 public sealed class FleetBalance {
@@ -142,9 +142,9 @@ public sealed class FleetBalance {
     /// 松弛的源多项式 / The slacks' source polynomials.
     /// </summary>
     /// <remarks>
-    /// 与 B746 同一个理由：松弛符号是适配器，看不到系数；**源多项式才是这条规则的正文**。
+    /// 与 同一个理由：松弛符号是适配器，看不到系数；**源多项式才是这条规则的正文**。
     ///
-    /// For the same reason as B746: the slack symbol is an adapter whose coefficients are invisible; **the source polynomial is the rule's body**.
+    /// For the same reason: the slack symbol is an adapter whose coefficients are invisible; **the source polynomial is the rule's body**.
     /// </remarks>
     public IReadOnlyDictionary<int, LinearExpressionSymbol> Sources => _source;
 
@@ -188,8 +188,8 @@ public sealed class FleetBalance {
             if (monomials.Count == 0) {
                 continue;
             }
-            // **先清再加**，等价于基线的 `flush()`：不清的话每轮都会把上一轮的项留在里面。
-            // **Clear, then add** — the equivalent of the baseline's `flush()`: without the clear every round keeps the previous round's terms.
+            // **先清再加**，等价于基线的 `flush`：不清的话每轮都会把上一轮的项留在里面。
+            // **Clear, then add** — the equivalent of the baseline's `flush`: without the clear every round keeps the previous round's terms.
             MutableLinearPolynomial<Flt64> mutable = _fleet[index].AsMutable();
             mutable.Clear();
             mutable.Add(new LinearPolynomial<Flt64>(monomials.ToArray(), Flt64.Zero));

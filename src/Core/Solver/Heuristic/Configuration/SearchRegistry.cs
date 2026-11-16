@@ -705,12 +705,12 @@ public sealed class SearchRegistry<O, V>
             // **`not-worse` 是基线的默认接受策略**（`HyperHeuristicConfig` 的 `acceptance` 默认值），
             // 因此它必须在注册表里能构造出来，否则**默认配置根本跑不起来**。
             //
-            // Batch 222/226 曾以"注册表不该替问题做主"为由把它留空。**那个理由站不住**：`Acceptance` 本来就接收
+ // earlier/226 曾以"注册表不该替问题做主"为由把它留空。**那个理由站不住**：`Acceptance` 本来就接收
             // `SearchProblem`，支配判据与坐标投影都是就地可得的；留空反而让默认配置不可用。
             // **`not-worse` is the baseline's default acceptance policy** (`HyperHeuristicConfig`'s `acceptance` default), so it must be
             // constructible from the registry — otherwise **the default configuration cannot run at all**.
             //
-            // Batch 222/226 left it out on the grounds that "the registry must not decide for the problem". **That reason does not hold**:
+ // earlier/226 left it out on the grounds that "the registry must not decide for the problem". **That reason does not hold**:
             // `Acceptance` already receives the `SearchProblem`, so the dominance predicate and the coordinate projection are right there; leaving it
             // out only made the default configuration unusable.
             case "not-worse": {

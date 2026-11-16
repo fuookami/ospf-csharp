@@ -22,7 +22,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// 二次掩码：<c>y = z · p</c>，<c>z</c> 为二值 / Quadratic masking: `y = z · p` with a binary `z`.
 /// </summary>
 /// <remarks>
-/// B1158 按基线 `QuadraticMaskingRange.kt` 把原本的<b>空壳</b>换成真实编码。
+/// 对齐基线 `QuadraticMaskingRange.kt` 把原本的<b>空壳</b>换成真实编码。
 ///
 /// **五条约束**：
 ///
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// | 4 | <c>y ≥ −M·z</c> | `z = 0` 时把 `y` 逼到 ≥ 0 |
 ///
 /// **1 与 2 合起来在 `z = 0` 时给 `y = p`**；**而 `z = 0` 时 `y` 本该是 0**——
-/// **所以 3 与 4 才是这一批的关键：它们把 `y` 钉在 0 上。**
+/// **所以 3 与 4 才是这里的关键：它们把 `y` 钉在 0 上。**
 /// **只有 1、2 而没有 3、4 时，`y` 在 `z = 0` 时等于 `p` 而不是 0**，
 /// **于是"掩码关掉"这个语义完全失效，而模型仍然可行。**
 ///
@@ -42,7 +42,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **这也是本类与 `MaskingFunction` 的差别**：**后者是一位线性掩码，前者接受二次多项式 `p`。**
 ///
-/// B1158 replaces a stub with the real encoding, following the baseline's `QuadraticMaskingRange.kt`.
+/// Replaces a stub with the real encoding, following the baseline's `QuadraticMaskingRange.kt`.
 ///
 /// **Five rows**:
 ///
@@ -54,7 +54,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 /// | 4 | `y ≥ −M·z` | at `z = 0` forces `y ≥ 0` |
 ///
 /// **Rows 1 and 2 together give `y = p` at `z = 0`** — **while `y` should be zero then** —
-/// **so rows 3 and 4 are what this batch turns on: they pin `y` to zero.**
+/// **so rows 3 and 4 are what is turned on here: they pin `y` to zero.**
 /// **With 1 and 2 but not 3 and 4, `y` equals `p` at `z = 0` instead of zero**, **so "the mask is off" stops meaning
 /// anything while the model stays feasible.**
 ///

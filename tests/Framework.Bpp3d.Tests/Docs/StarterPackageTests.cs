@@ -15,11 +15,11 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// Each starter package must **reference its framework modules** and **produce a unique assembly name**.
 /// </summary>
 /// <remarks>
-/// B287 之前，五个 starter 的 csproj **完全相同**：`AssemblyName` 都是 `Fuookami.Ospf.Starters`，
+/// 之前，五个 starter 的 csproj **完全相同**：`AssemblyName` 都是 `Fuookami.Ospf.Starters`，
 /// 且**一个 `ProjectReference` 都没有**。也就是说它们既互相覆盖程序集，又不引用任何东西——
 /// 装上去什么都拿不到，而构建与测试全程绿灯。
 ///
-/// Before B287 the five starter csprojs were **byte-identical**: every `AssemblyName` was `Fuookami.Ospf.Starters` and there was **not a single
+/// Before the five starter csprojs were **byte-identical**: every `AssemblyName` was `Fuookami.Ospf.Starters` and there was **not a single
 /// `ProjectReference`**. So they overwrote each other's assemblies and referenced nothing — installing one gave you nothing, while build and tests stayed
 /// green throughout.
 /// </remarks>

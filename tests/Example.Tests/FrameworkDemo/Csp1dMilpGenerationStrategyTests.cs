@@ -22,20 +22,20 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// / The MILP-direct path must honour the three generation-strategy hooks too.
 /// </summary>
 /// <remarks>
-/// **B360 记的缺口**：`Csp1dMilp.InitialPlansAsync` 是 `Csp1dColumnGeneration.InitialPlanPoolAsync` 的
+/// **记的缺口**：`Csp1dMilp.InitialPlansAsync` 是 `Csp1dColumnGeneration.InitialPlanPoolAsync` 的
 /// **平行副本**，但**三个扩展点一个都没接**——于是同一个策略**经由列生成生效、经由 MILP 直连静默失效**。
 ///
 /// 基线不是这样：`Csp1dMilp.kt:139` 的 `initialPlans` 签名里就有
 /// `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` 三者，且都在用。
 ///
-/// **这一批把两侧拉齐。**
+/// **这里把两侧拉齐。**
 ///
-/// **The gap recorded in B360**: `Csp1dMilp.InitialPlansAsync` is a **parallel copy** of `Csp1dColumnGeneration.InitialPlanPoolAsync` with **none of the three hooks wired** — so
+/// **The gap recorded**: `Csp1dMilp.InitialPlansAsync` is a **parallel copy** of `Csp1dColumnGeneration.InitialPlanPoolAsync` with **none of the three hooks wired** — so
 /// the same strategy works through column generation and **silently fails** through the MILP path.
 ///
 /// The baseline is not like that: `initialPlans` at `Csp1dMilp.kt:139` takes `candidateFilters` / `canonicalKeyOverrides` / `dominanceAcceptOverrides` and uses all three.
 ///
-/// **This batch aligns the two.**
+/// ** aligns the two.**
 /// </remarks>
 public sealed class Csp1dMilpGenerationStrategyTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -159,7 +159,7 @@ public sealed class Csp1dMilpGenerationStrategyTests {
 
     /// <summary>**MILP 路径的去重必须真的问覆盖要键** / The MILP path's dedup must actually ask the override for a key.</summary>
     /// <remarks>
-    /// **这条是变异测试逼出来的。** 我第一版只断言"输入上带了三组回调"，
+    /// **这条是变异测试逼出来的。** 最初只断言"输入上带了三组回调"，
     /// 于是变异"去重改回默认键"**存活**——因为替身返回空，去重根本没有跑。
     ///
     /// 修法：替身**产出两条规范键不同的方案**，再用 `CanonicalKeyFor` 的**调用计数**证明去重问过它。

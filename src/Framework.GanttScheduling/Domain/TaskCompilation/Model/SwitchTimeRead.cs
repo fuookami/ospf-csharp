@@ -1,8 +1,8 @@
 // 换型时间的读取 / Reading a switch time back.
 // 与固定 Kotlin 基线 `task_compilation/model/Switch.kt` 的 `switchTimeQuantity` 对应：
-// `evaluate(...) ?: switchTime[from, to].toLinearPolynomial().constant`。
+// `evaluate(...) ?: switchTime[from, to].toLinearPolynomial.constant`。
 // Mirrors `switchTimeQuantity` in the pinned baseline's `task_compilation/model/Switch.kt`:
-// `evaluate(...) ?: switchTime[from, to].toLinearPolynomial().constant`.
+// `evaluate(...) ?: switchTime[from, to].toLinearPolynomial.constant`.
 
 namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 
@@ -15,7 +15,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 1. 用解出来的 token 表**求值**；
 /// 2. 求不出值时，退回该表达式的**常数项**。
 ///
-/// 第二步不是"兜底给零"。B515 已经说过：无 `taskTime` 的分支里 `switchTime` 是一个**常量表达式**
+/// 第二步不是"兜底给零"。 已经说过：无 `taskTime` 的分支里 `switchTime` 是一个**常量表达式**
 /// （`distance(t1.end → t2.end)`），它根本没有 token 可求值。若第二步给 0，
 /// **所有固定时段排布的换型时间都会读成 0**——换型代价在报告里凭空消失，而求解本身是对的。
 ///
@@ -24,7 +24,7 @@ namespace Fuookami.Ospf.Framework.GanttScheduling.Domain.TaskCompilation.Model;
 /// 1. **evaluate** it against the solved token table;
 /// 2. when evaluation yields nothing, fall back to the expression's **constant term**.
 ///
-/// The second step is not a "default to zero". As B515 noted, in the branch without `taskTime` the `switchTime` symbol is a **constant expression**
+/// The second step is not a "default to zero". As noted, in the branch without `taskTime` the `switchTime` symbol is a **constant expression**
 /// (`distance(t1.end → t2.end)`) with no token to evaluate at all. Defaulting to 0 there means **every fixed-time arrangement reports a switch time of zero** — the switch cost
 /// silently vanishes from the report while the solve itself was correct.
 /// </remarks>

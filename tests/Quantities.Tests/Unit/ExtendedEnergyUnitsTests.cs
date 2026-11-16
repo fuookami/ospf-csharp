@@ -14,14 +14,13 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 吉瓦时用的是 mega 而不是 giga，因为基准是千瓦时 / GWh uses mega because its base is the kilowatt-hour.
 /// </summary>
 /// <remarks>
-/// B1139 补 10 个能量单位（基线 `Energy.kt`）。全是焦耳的固定倍数，
+/// 补 10 个能量单位（基线 `Energy.kt`）。全是焦耳的固定倍数，
 /// **所以风险不在公式，在三处语义**：
 /// **① `WattHour` 是 `KilowattHour` 的千分之一，方向容易反；**
 /// **② `GigawattHour` 用 `Scale.mega`（基准是 10³ Wh），名字是 giga 而 Scale 看着像错的；**
 /// **③ `Erg` 是 1e-7 J，数量级最容易写错。**
 ///
-/// adds
-/// **so the risk is semantic rather than formulaic**:
+/// Adds **so the risk is semantic rather than formulaic**:
 /// **① `WattHour` is a thousandth of `KilowattHour`, and the direction flips easily;**
 /// **② `GigawattHour` uses `Scale.mega` (base 10³ Wh): the name says giga while that Scale looks wrong;**
 /// **③ `Erg` is 1e-7 J, the magnitude easiest to mistype.**

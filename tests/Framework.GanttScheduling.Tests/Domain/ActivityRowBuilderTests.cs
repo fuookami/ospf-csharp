@@ -1,4 +1,4 @@
-// 活动行构建（B689）的判据 / Criteria for the activity row building (B689).
+// 活动行构建的判据 / Criteria for the activity row building.
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.Domain;
 
 /// <summary>
-/// **活动行构建（B689）** / The activity row building (B689).
+/// **活动行构建** / The activity row building.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**选择行上下界都是 1**、**冻结行只在冻结时产生且钉死那一个选择**、

@@ -3,11 +3,11 @@
 // （131 行）对应。
 // Mirrors the pinned baseline's `SpaceSplitAlgorithms.kt` and `BlockLoadingContext.kt`.
 //
-// 至此 `block_loading` 域在 C# 侧闭合（模型、旋转守卫、简单/复杂块、两种空间切分、装配上下文）。下一批可把三个块装载
-// 层生成器接进 `LayerGenerationContext.DefaultGenerators()`，消除 Batch 85 记下的缺口。
+// 至此 `block_loading` 域在 C# 侧闭合（模型、旋转守卫、简单/复杂块、两种空间切分、装配上下文）。后续可把三个块装载
+// 层生成器接进 `LayerGenerationContext.DefaultGenerators`，消除 earlier 记下的缺口。
 // The `block_loading` domain is now closed on the C# side (model, rotation guard, simple/complex blocks, both space
 // splits, assembly context). The next batch can wire the three block-loading layer generators into
-// `LayerGenerationContext.DefaultGenerators()` and close the gap recorded in Batch 85.
+// `LayerGenerationContext.DefaultGenerators` and close the gap recorded in earlier.
 
 using System;
 using System.Collections.Generic;

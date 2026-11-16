@@ -23,22 +23,21 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **线性插值在每个断点处与真实函数完全重合，所以"抽查断点"永远测不出段数不足。**
 /// **这条判据就是那个陷阱的可执行版本。**
 ///
-/// adds
-/// breakpoint, so "spot-check the breakpoints" can never reveal too few segments.** **This criterion is the executable
+/// Adds breakpoint, so "spot-check the breakpoints" can never reveal too few segments.** **This criterion is the executable
 /// form of that trap.**
 /// </remarks>
 public class NonlinearSourceValueTests
 {
     /// <summary>**断点处误差为零，断点之间不为零** / Zero at breakpoints, non-zero between.</summary>
     /// <remarks>
-    /// **这是本批最重要的一条**：**它同时证明两件事**——
+    /// **这是这里最重要的一条**：**它同时证明两件事**——
     /// **① `OriginalValue` 真的在算真实函数（否则断点之间也谈不上误差）；**
     /// **② "断点处误差为零"不是逼近质量的证据。**
     ///
     /// **只有 2 段的 `exp` 在 `[0, 1]` 上，中点处的误差一定大于零。**
     /// **而三个断点（0、0.5、1）处的误差必须<b>恰好</b>为零。**
     ///
-    /// **This is the batch's most important criterion**: **it proves two things at once** —
+    /// **This is the most important criterion here**: **it proves two things at once** —
     /// **① `OriginalValue` really evaluates the true function (otherwise there would be no error between breakpoints
     /// either);** **② "zero error at breakpoints" is not evidence of approximation quality.**
     ///

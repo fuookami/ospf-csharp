@@ -19,14 +19,12 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 /// 延迟物化的入口判定 / The entry decision for deferred materialisation.
 /// </summary>
 /// <remarks>
-/// B1236 补 `FunctionExpansionPolicy` 与它的第一道守卫。
+/// 补 `FunctionExpansionPolicy` 与它的第一道守卫。
 ///
-/// **这一批只做基线那个四段函数的第一段，因为它是唯一只需要一个只读属性的一段。**
+/// **这里只做基线那个四段函数的第一段，因为它是唯一只需要一个只读属性的一段。**
 /// **把能单独成立的一段先做出来，是为了让<b>剩余缺口保持清晰</b>——
 /// 现在缺的是两个集合（`DeferredFunctionStructures`、`DeferredFunctionConstraintRegions`），
 /// 而不是"整个函数"。**
-///
-/// adds
 ///
 /// **Only the first of the baseline's four parts is done, because it is the only one that needs a single read-only
 /// property.** **Doing the part that stands alone first keeps the <b>remaining gap sharp</b>: what is missing is two
@@ -122,7 +120,7 @@ public class DeferredFunctionMaterializationGateTests
     /// **入口判定的三段现在都建立在真实状态上** / All three parts of the entry decision now rest on real state.
     /// </summary>
     /// <remarks>
-    /// **B1236 这条断言"两个集合都不在"，B1237 改成"只剩最后一样"，B1238 改成"三样都在"。**
+    /// **这条断言从"两个集合都不在"改成"只剩最后一样"，后来 改成"三样都在"。**
     ///
     /// **它现在测的是另一件事：** **`ShouldSkip` 与 `Pending` 都只读模型自己的状态，
     /// <b>不再有任何一段依赖"模型上没有的东西"</b>。**
@@ -130,15 +128,15 @@ public class DeferredFunctionMaterializationGateTests
     /// **这比"三样都在"更有意义：** **三样都在是<b>数据的完备性</b>，
     /// 而"没有一段在等一个不存在的字段"是<b>接线的完备性</b>。**
     /// **前者可以做而后者不做，于是代码看似齐全却仍然跑不起来——
-    /// B1235 的"能力齐备、没有调用方"就是这一类。**
+    /// "能力齐备、没有调用方"就是这一类。**
     ///
-    /// **B1236 asserted "both collections are absent", B1237 narrowed it to "only one left", and B1238 makes it unnecessary.
+    /// **The assertion went from "both collections are absent" to "only one left", and the last condition makes it unnecessary.
     /// It now tests something else: `ShouldSkip` and `Pending` read only the model's own state, with <b>no part waiting on
     /// something the model does not have</b>.**
     ///
     /// **That is more meaningful than "all three are present": presence is <b>data completeness</b>, while "no part awaits a
     /// missing field" is <b>wiring completeness</b>.** **The former can exist without the latter, leaving code that looks
-    /// complete and still cannot run — which is exactly B1235's "everything implemented, nothing calls it".**
+    /// complete and still cannot run — which is exactly the earlier "everything implemented, nothing calls it".**
     /// </remarks>
     [Fact]
     public void TheEntryDecision_ShouldRestOnRealStateOnly() {

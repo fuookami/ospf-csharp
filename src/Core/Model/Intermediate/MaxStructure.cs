@@ -36,7 +36,7 @@ namespace Fuookami.Ospf.Core.Model.Intermediate;
 /// 只测"扩大被拒"的话，"永远拒绝"的实现也能通过；
 /// 只测"收缩可以"的话，"永远接受"的实现也能通过。**
 ///
-/// B1189, following the baseline's `MaxStructure`.
+/// Following the baseline's `MaxStructure`.
 ///
 /// **`max` needs one selector column per candidate, not one overall**: **`SelectorVariables` maps one-to-one onto
 /// `Inputs`, and so does `BigMValues`.** **A single "current maximum" column cannot express <i>which</i> candidate
@@ -232,7 +232,7 @@ public sealed record MaxStructure(
 
             // **方向：`Minimum` 时把整组行<b>整体取负</b>。**
             //
-            // **B1255 才发现 `Minimum` 这个属性此前<b>没有任何地方读它</b>——**
+            // **`Minimum` 这个属性此前<b>没有任何地方读它</b>——**
  // **声明了、投影也在填，而生成逻辑无论方向都产 MAX 行。**
             // **于是 `MinStructure` 会被当成 MAX 物化：模型合法、能解，只是答案是最大值。**
             //
@@ -248,7 +248,7 @@ public sealed record MaxStructure(
             //
             // **Direction: when `Minimum`, negate the whole row set.**
             //
-            // **B1255 found that `Minimum` was <b>read by nothing</b> — it was declared, the projection even filled it in
+            // **Found that `Minimum` was <b>read by nothing</b> — it was declared, the projection even filled it in
  // , and the generation produced MAX rows either way.** **So a min would materialise as a MAX: legal,
             // solvable, merely answering with the maximum.**
             //
@@ -305,7 +305,7 @@ public sealed record MaxStructure(
                     monomials.Add(SignedMonomial(monomial, minimum));
                 }
 
-                // **Big-M 项<b>两个方向都不取负</b>——这是 B1255 的第二处符号陷阱。**
+                // **Big-M 项<b>两个方向都不取负</b>——这是第二处符号陷阱。**
                 //
                 // **第一版把 Big-M 也一起取负，得到 `input − result ≤ −M(1 − s)`：
                 // 未选中的那个输入就变成 `result ≥ input + M`，直接把模型弄成无解。**
@@ -315,7 +315,7 @@ public sealed record MaxStructure(
                 // **松弛的方向是<b>往下</b>而不是往上——这就是"整体取负"这个想法错掉的地方，
                 // 而它只错在 Big-M 这一项上。**
                 //
-                // **The Big-M term is <b>not negated in either direction</b> — B1255's second sign trap.**
+                // **The Big-M term is <b>not negated in either direction</b> — the second sign trap.**
                 // **The first version negated it too, yielding `input - result <= -M(1 - s)`: an unselected input then reads
                 // `result >= input + M`, which is infeasible outright.**
                 // **The right MIN pair is `input - result <= M(1 - s)`: tight to `result >= input` when selected, slack to

@@ -181,7 +181,7 @@ public sealed class FlightLink {
             if (monomials.Count == 0) {
                 continue;
             }
-            // 先清再加，等价于基线的 `flush()` / Clear, then add — the equivalent of the baseline's `flush()`.
+            // 先清再加，等价于基线的 `flush` / Clear, then add — the equivalent of the baseline's `flush`.
             MutableLinearPolynomial<Flt64> mutable = expression.AsMutable();
             mutable.Clear();
             mutable.Add(new LinearPolynomial<Flt64>(monomials.ToArray(), Flt64.Zero));

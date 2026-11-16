@@ -17,7 +17,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 /// **矩阵里 `ScipFixedIntegerLpBackend.SuppliesSensitivityRanges = false` 此前写着"区间需要后端原生的 ranging 能力，
 /// SCIP 这一端尚未做"。**
 ///
-/// **"尚未做"是一个可以一直挂着的说法，而它让人以为只差一次实现。B1289 去查了到底差什么：**
+/// **"尚未做"是一个可以一直挂着的说法，而它让人以为只差一次实现。查了到底差什么：**
 ///
 /// **`ScipNative.cs` 一次导入 53 个 SCIP 函数（`NativeLibrary.GetExport`），
 /// 其中<b>没有任何一个**与 RHS 区间、灵敏度或最优基有关。**
@@ -33,7 +33,7 @@ namespace Fuookami.Ospf.Framework.Bpp3d.Tests.Docs;
 ///
 /// **The matrix says `SuppliesSensitivityRanges = false` with the reason "ranges need a backend's native ranging capability; not done
 /// for SCIP".** **"Not done yet" is a phrase that can hang forever, and it implies one implementation is all that is missing.**
-/// **B1289 checked what is actually missing: `ScipNative.cs` imports 53 SCIP functions through `NativeLibrary.GetExport`, and
+/// **What is actually missing is specific: `ScipNative.cs` imports 53 SCIP functions through `NativeLibrary.GetExport`, and
 /// <b>none</b> of them concerns RHS ranges, sensitivity or an optimal basis.** **SCIP has no `SARHSLow`/`SARHSUp` equivalent; its
 /// way is "displace the RHS and solve again", which `ConstraintPerturbationPipeline` already does — so this end is not "one
 /// implementation short" but "there is another road, and it already exists".**

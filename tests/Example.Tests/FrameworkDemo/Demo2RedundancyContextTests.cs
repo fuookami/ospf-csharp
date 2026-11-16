@@ -1,4 +1,4 @@
-// 冗余上下文（B627）的判据 / Criteria for the redundancy context (B627).
+// 冗余上下文的判据 / Criteria for the redundancy context.
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// **冗余上下文（B627）** / The redundancy context (B627).
+/// **冗余上下文** / The redundancy context.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**只在预配载给管线**、未初始化时报错、以及两个目标名与类别。

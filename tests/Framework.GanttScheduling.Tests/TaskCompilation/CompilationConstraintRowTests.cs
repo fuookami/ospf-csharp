@@ -1,4 +1,4 @@
-// 编译约束真的加行（B708）/ The compilation constraints really add rows (B708).
+// 编译约束真的加行/ The compilation constraints really add rows.
 
 using System;
 using System.Collections.Generic;
@@ -23,19 +23,19 @@ using Try = Fuookami.Ospf.Utils.Functional.Result<Fuookami.Ospf.Utils.Functional
 namespace Fuookami.Ospf.Framework.GanttScheduling.Tests.TaskCompilation;
 
 /// <summary>
-/// **编译约束真的加行（B708）** / The compilation constraints really add rows (B708).
+/// **编译约束真的加行** / The compilation constraints really add rows.
 /// </summary>
 /// <remarks>
 /// 两条编译约束以前**只做校验、不加任何行**：检查表里有没有每个条目，然后返回 `Ok`。
-/// 基线的 `invoke` 是 `model.addConstraint(x[item] eq 1, args = ...ShadowPriceKey(item))`——也就是"每个条目恰好编译一次"这条要求本身。
+/// 基线的 `invoke` 是 `model.addConstraint(x[item] eq 1, args =...ShadowPriceKey(item))`——也就是"每个条目恰好编译一次"这条要求本身。
 /// 少了它，编译量可以取任意值（包括零），排程照样"成功"，只在产出上悄悄缩水。
 ///
-/// 两条都还带着一个**已记录的垫层**：`CompilationTable.Build` 填的是 `new object()`，占位对象进不了模型，
+/// 两条都还带着一个**已记录的垫层**：`CompilationTable.Build` 填的是 `new object`，占位对象进不了模型，
 /// 所以真正建行要等那张表交出真变量。判据因此**自己造真符号**——能力本身必须被钉住，不能靠垫层缺席来"通过"。
 ///
 /// Both constraints used to **validate only and add no row**: check that the table has every item, then return `Ok`. The baseline's `invoke` is
-/// `model.addConstraint(x[item] eq 1, args = ...ShadowPriceKey(item))` — the requirement itself, that **each item is compiled exactly once**. Without it the compiled quantity may take any
-/// value (zero included) while the schedule still "succeeds", quietly shrinking output. Both also carry a **recorded ceiling**: `CompilationTable.Build` fills `new object()`, and a placeholder
+/// `model.addConstraint(x[item] eq 1, args =...ShadowPriceKey(item))` — the requirement itself, that **each item is compiled exactly once**. Without it the compiled quantity may take any
+/// value (zero included) while the schedule still "succeeds", quietly shrinking output. Both also carry a **recorded ceiling**: `CompilationTable.Build` fills `new object`, and a placeholder
 /// cannot enter a model, so real rows await a table that hands out real variables. The criteria therefore **mint real symbols themselves** — the capability must be pinned rather than "passing"
 /// because the ceiling happened to be absent.
 /// </remarks>
@@ -191,11 +191,11 @@ public class CompilationConstraintRowTests {
     /// <remarks>
     /// 三点成对：
     ///
-    /// 1. 表里是 `new object()` 时 `Invoke` 返回 **`Ok`**——占位是 `CompilationTable.Build` 的当前正常状态，改成失败会把所有分配打回。
+    /// 1. 表里是 `new object` 时 `Invoke` 返回 **`Ok`**——占位是 `CompilationTable.Build` 的当前正常状态，改成失败会把所有分配打回。
     /// 2. 模型里**一行都没有**，不能凭空造一条约束。
     /// 3. 换成真符号后同一个调用就建出真行——所以"没有行"是因为垫层，不是因为这条路径不存在。
     ///
-    /// Three paired points: with `new object()` in the table `Invoke` returns **`Ok`**, since a placeholder is `CompilationTable.Build`'s normal state today and failing would reject every
+    /// Three paired points: with `new object` in the table `Invoke` returns **`Ok`**, since a placeholder is `CompilationTable.Build`'s normal state today and failing would reject every
     /// assignment; the model has **no rows**, and no constraint may be invented; and switching to real symbols makes the same call build real rows, so "no rows" is the ceiling rather than a
     /// missing path.
     /// </remarks>

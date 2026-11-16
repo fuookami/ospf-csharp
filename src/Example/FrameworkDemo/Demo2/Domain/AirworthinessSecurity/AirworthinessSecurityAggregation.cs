@@ -26,8 +26,8 @@ namespace Fuookami.Ospf.Example.FrameworkDemo.Demo2.Domain.AirworthinessSecurity
 /// | --- | --- | --- |
 /// | <see cref="LinearDensity"/> | 总是 | |
 /// | <see cref="SurfaceDensity"/> | 总是 | |
-/// | <see cref="MaxCLIM"/> | **宽体机 且 CLIM 点表非空** | 否则为 `null`，`CLIMLimit` 也就不会加 |
-/// | <see cref="MinLowPayload"/> | 总是 | 点表为空时构造器抛异常（基线的 `first()` 也会） |
+/// | <see cref="MaxCLIM"/> | **宽体机且 CLIM 点表非空** | 否则为 `null`，`CLIMLimit` 也就不会加 |
+/// | <see cref="MinLowPayload"/> | 总是 | 点表为空时构造器抛异常（基线的 `first` 也会） |
 /// | <see cref="Envelopes"/> | 总是 | 按飞行阶段分组 |
 ///
 /// 三处容易做错：

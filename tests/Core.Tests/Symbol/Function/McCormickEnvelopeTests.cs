@@ -19,15 +19,13 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 四条边的配对方式不是随便配的 / The pairing of the four edges is not arbitrary.
 /// </summary>
 /// <remarks>
-/// B1152 补 `ConditionBounds`（基线 `Conditional.kt`）与 `McCormickEnvelopeFunction`（基线 `McCormickEnvelope.kt`）。
+/// 补 `ConditionBounds`（基线 `Conditional.kt`）与 `McCormickEnvelopeFunction`（基线 `McCormickEnvelope.kt`）。
 ///
 /// **两条 `≥` 必须用"一个角的两侧同号"（`(xL,yL)` 与 `(xU,yU)`），
 /// 两条 `≤` 必须用"交叉配对"（`(xU,yL)` 与 `(xL,yU)`）。**
 ///
 /// **把配对弄错会得到一个不含 `x·y` 的多面体——松弛"合法"但无效，而求解器不会报错，
 /// 它只会返回一个更好的目标值。**
-///
-/// adds
 ///
 /// **The two `≥` rows use the same-corner pairing (`(xL,yL)` and `(xU,yU)`) and the two `≤` rows use the cross pairing
 /// (`(xU,yL)` and `(xL,yU)`).**

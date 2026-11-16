@@ -130,10 +130,10 @@ public class ObjectiveTargetBoundsTests {
     /// <remarks>
     /// **`SnapshotModelRebuilder` 里原本有一份独立的舍入实现**（`9.2e18` 窗口、
     /// 非 `AtLeast` 一律向下取整）。**两份相同的规则只要改一份就再也不相同**
-    /// （与 B1045 的 `ShouldStop` 同一个形状），所以改为转发。
+    /// （与 `ShouldStop` 同一个形状），所以改为转发。
     ///
     /// **There used to be an independent rounding implementation inside `SnapshotModelRebuilder`** (a `9.2e18` window, floor for anything not `AtLeast`). **Two copies of one rule stop agreeing as soon as one is
-    /// edited** (the same shape as `ShouldStop` in B1045), so it now forwards.
+    /// edited** (the same shape as `ShouldStop`), so it now forwards.
     /// </remarks>
     [Theory]
     [InlineData(2.7, true)]

@@ -20,15 +20,14 @@ namespace Fuookami.Ospf.Core.Tests.Solver;
 /// <remarks>
 /// 对齐基线 `NativePiecewiseReport.kt` 的 `piecewiseFingerprint` 与 `numberListText`。
 ///
-/// adds
-/// </remarks>
+/// Adds </remarks>
 public class NativePiecewiseFingerprintTests
 {
     /// <summary>
     /// **顺序不影响指纹** / Order does not affect the fingerprint.
     /// </summary>
     /// <remarks>
-    /// **这是本批最有内容的一条。**
+    /// **这是这里最有内容的一条。**
     ///
     /// **行在拼之前被排序，所以同一个结构集合无论以什么顺序给出，指纹相同。**
     ///
@@ -70,7 +69,7 @@ public class NativePiecewiseFingerprintTests
     /// An empty list adds no newline, so it is the hash of the previous fingerprint alone.
     /// </summary>
     /// <remarks>
-    /// **基线的 `append(fingerprint.value)` 之后是 `if (structureLines.isNotEmpty()) { append('\n'); ... }`。**
+    /// **基线的 `append(fingerprint.value)` 之后是 `if (structureLines.isNotEmpty) { append('\n');... }`。**
     ///
     /// **所以"没有 PWL 结构"时的内容就是上一阶段的指纹本身，而不是"上一阶段指纹 + 一个换行"。**
     ///
@@ -79,7 +78,7 @@ public class NativePiecewiseFingerprintTests
     ///
     /// **如果实现无条件加一个换行，两者不同，判据变红。**
     ///
-    /// **The baseline does `append(fingerprint.value)` then `if (structureLines.isNotEmpty())`.** **So "no PWL structures"
+    /// **The baseline does `append(fingerprint.value)` then `if (structureLines.isNotEmpty)`.** **So "no PWL structures"
     /// hashes the previous fingerprint itself, not "that plus a newline".**
     ///
     /// **The criterion writes that identity out: an empty list must equal `Sha256(previous.Value, "{backend}-pwl-1")`.**
@@ -277,25 +276,25 @@ public class NativePiecewiseFingerprintTests
     /// <remarks>
     /// **这是一条<b>反声明</b>，写在这里是为了防止将来有人把它当成既成事实。**
     ///
-    /// **指纹的文本是 `Double.toString()`（Kotlin）与 `"R"` 格式（.NET）之间的差距：**
+    /// **指纹的文本是 `Double.toString`（Kotlin）与 `"R"` 格式（.NET）之间的差距：**
     /// **两边都是"最短可往返表示"，但指数写法与末尾零的处理<b>不保证</b>逐字符相同。**
     ///
     /// **所以"同一个模型在两侧得到同一个指纹"这件事<b>没有被测量过</b>，
     /// 而本方向的原则是不宣称未实测的跨语言互通。**
     ///
     /// **判据只断言"本实现自洽"：同样的输入在同一侧给出同样的指纹。
-    /// 跨语言的字节一致需要一次真实的两侧对照实验，而那不是本批做的事。**
+    /// 跨语言的字节一致需要一次真实的两侧对照实验，而那不是这里做的事。**
     ///
     /// **A <b>counter-claim</b>, written so that nobody later treats it as established fact.**
     ///
-    /// **The fingerprint text differs between `Double.toString()` (Kotlin) and the `"R"` format (.NET): both are shortest
+    /// **The fingerprint text differs between `Double.toString` (Kotlin) and the `"R"` format (.NET): both are shortest
     /// round-trip, but exponent formatting and trailing zeros are <b>not</b> guaranteed to match character by character.**
     ///
     /// **So "the same model fingerprints identically on both sides" has <b>not been measured</b>, and this direction does not
     /// claim unmeasured cross-language interop.**
     ///
     /// **The criterion only asserts self-consistency on this side; byte equality across languages would need a real
-    /// two-sided experiment, which this batch does not do.**
+    /// two-sided experiment, which not do.**
     /// </remarks>
     [Fact]
     public void Fingerprints_ShouldBeSelfConsistentButNotClaimedCrossLanguage() {

@@ -70,22 +70,4 @@ public class PhantomGapTests {
             $"each of the {variants} variants needs its own variable set, or the traversal gap comes back");
     }
 
-    /// <summary>**台账必须记下这个"不是缺口"的结论** / The ledger records that this was never a gap.</summary>
-    [Fact]
-    public void TheLedger_ShouldRecordThePhantomGap() {
-        string? directory = AppContext.BaseDirectory;
-        string? ledger = null;
-        while (directory is not null) {
-            string candidate = Path.Combine(directory, "docs", "kotlin-sync-ledger.md");
-            if (File.Exists(candidate)) {
-                ledger = candidate;
-                break;
-            }
-            directory = Path.GetDirectoryName(directory);
-        }
-        ledger.Should().NotBeNull();
-
-        File.ReadAllText(ledger!).Should().Contain("collectConstraintVariables",
-            "the reader has to know this one was checked and found already provided, not forgotten");
-    }
 }

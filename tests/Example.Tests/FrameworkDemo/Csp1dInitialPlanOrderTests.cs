@@ -21,7 +21,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// **初始方案池必须"先去重、再截断"** / The initial plan pool must **deduplicate before truncating**.
 /// </summary>
 /// <remarks>
-/// **B355 第五节②记的缺口**：定价值那个判据**钉不住顺序**，因为它的候选顺序不可控。
+/// **第五节②记的缺口**：定价值那个判据**钉不住顺序**，因为它的候选顺序不可控。
 /// 这里的候选顺序**可控**——用自定义初始生成器按 `[A, A, B]` 的顺序产出。
 ///
 /// 两种顺序的结果**条数不同**，所以可区分：
@@ -31,7 +31,7 @@ namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 /// | **先去重再截断**（基线） | `[A, B]` → **2 条** |
 /// | **先截断再去重** | 截断留 `[A, A]` → 去重后 **1 条** |
 ///
-/// **B355 §5②'s gap**: the pricing criterion **could not pin the order** because its candidate order was not controllable. Here it is — a custom initial generator yields
+/// **§5②'s gap**: the pricing criterion **could not pin the order** because its candidate order was not controllable. Here it is — a custom initial generator yields
 /// `[A, A, B]` in that order.
 ///
 /// The two orders differ **in cardinality**, so they are distinguishable (table above).

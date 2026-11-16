@@ -309,7 +309,7 @@ public static class ExpressionDsl {
 
 /// <summary>
 /// 布尔表达式逻辑运算扩展 / BooleanExpression logical-operator extensions.
-/// Kotlin infix and/or + operator fun not(); C# static extension class.
+/// Kotlin infix and/or + operator fun not; C# static extension class.
 /// </summary>
 public static class BooleanExpressionDslExtensions {
     /// <summary>逻辑与 / Logical AND (flattens nested And).</summary>

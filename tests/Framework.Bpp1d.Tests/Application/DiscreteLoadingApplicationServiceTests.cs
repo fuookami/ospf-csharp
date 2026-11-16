@@ -58,11 +58,11 @@ public class DiscreteLoadingApplicationServiceTests {
 
     /// <summary>**目标错位必须被抓住** / An objective mismatch must be caught.</summary>
     /// <remarks>
-    /// **本批最要紧的一条。** 求解器说目标 `2.0`，而按完整模型重算只有 `1.0`。
+    /// **这里最要紧的一条。** 求解器说目标 `2.0`，而按完整模型重算只有 `1.0`。
     /// 少了这一步复核，**模型与求解器错位**的错误会被当成正常结果返回——那类错误在业务侧最难发现，
     /// 因为结果"看起来合理"。
     ///
-    /// **The most important criterion in this batch.** The solver reports `2.0` while a recomputation from the full model gives `1.0`. Without this re-check a
+    /// **The most important criterion in.** The solver reports `2.0` while a recomputation from the full model gives `1.0`. Without this re-check a
     /// **model/solver mismatch** returns as a normal answer — the hardest class to spot in business code, because the result "looks reasonable".
     /// </remarks>
     [Fact]
@@ -121,10 +121,10 @@ public class DiscreteLoadingApplicationServiceTests {
     /// <summary>**大目标下相对容差才够用** / A large objective needs the relative tolerance.</summary>
     /// <remarks>
     /// 目标 `1e9`，求解器报的比完整模型多 `5e-4`。**相对容差 `1e-6` 下容许 `1e3`，通过；纯绝对容差 `1e-6` 会判错。**
-    /// B433 的噪音判据目标是 `1.0`，两种容差都够用，**区分不出**——这一条专门造出区分力。
+    /// 的噪音判据目标是 `1.0`，两种容差都够用，**区分不出**——这一条专门造出区分力。
     ///
     /// Objective `1e9` where the solver reports `5e-4` more than the full model. **Under the relative tolerance this allows `1e3`, so it passes; a pure absolute
-    /// tolerance of `1e-6` would flag it.** B433's noise criterion used an objective of `1.0`, where both tolerances suffice and **nothing is distinguished**.
+    /// tolerance of `1e-6` would flag it.** the earlier noise criterion used an objective of `1.0`, where both tolerances suffice and **nothing is distinguished**.
     /// </remarks>
     [Fact]
     public async Task SolveAsync_ShouldUseTheRelativeToleranceForLargeObjectives() {

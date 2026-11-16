@@ -31,13 +31,13 @@ public sealed class MockColumnGenerationSolver : IColumnGenerationSolver {
     /// <remarks>
     /// **这是"两阶段可行性"判据的唯一入口。** `Csp1dColumnGeneration` 的第一阶段只在
     /// **LP 以「模型不可行」这个具体错误码失败**时才触发；此前的 mock **只会成功或返回通用的 `SolverNotFound`**，
-    /// 所以 B351 明说"两阶段切换无判据"。
+    /// 所以 明说"两阶段切换无判据"。
     ///
     /// 计数是**按 LP 调用递减**的：`1` 表示"第一次 LP 不可行，之后都成功"——
     /// 正好触发"不可行 → 建可行性主问题 → 再解一次"。
     ///
     /// **This is the only entry point for the two-phase feasibility criteria.** `Csp1dColumnGeneration`'s phase one fires only when **the LP fails with the specific
-    /// "model infeasible" error code**; the previous mock **only succeeded or returned a generic `SolverNotFound`**, which is why B351 stated the switch had no
+    /// "model infeasible" error code**; the previous mock **only succeeded or returned a generic `SolverNotFound`**, which is why stated the switch had no
     /// criterion.
     ///
     /// The counter **decrements per LP call**: `1` means "the first LP is infeasible, every later one succeeds" — exactly what triggers
@@ -74,13 +74,13 @@ public sealed class MockColumnGenerationSolver : IColumnGenerationSolver {
     /// </summary>
     /// <remarks>
     /// **这是钉住 `1e-7` 阈值的唯一入口。** 第二阶段只在"可行性 LP 的目标值 ≤ 1e-7"时才恢复原始主问题；
-    /// 目标值恒为 0 时**任何非负阈值都会通过**，所以 B353 明说"阈值具体取值没有判据"。
+    /// 目标值恒为 0 时**任何非负阈值都会通过**，所以 明说"阈值具体取值没有判据"。
     ///
     /// 把它做成可配之后，就能构造"**目标值略大于阈值**"的中间态，
     /// 从而证明恢复是**被阈值触发的**，而不是"只要进入可行性阶段就恢复"。
     ///
     /// **This is the only entry point for pinning the `1e-7` threshold.** Phase two restores the original master only when "the feasibility LP's objective ≤ 1e-7"; with a
-    /// constant objective of 0 **any non-negative threshold passes**, which is why B353 stated the threshold's value had no criterion.
+    /// constant objective of 0 **any non-negative threshold passes**, which is why stated the threshold's value had no criterion.
     ///
     /// Making it configurable allows the intermediate state "**objective slightly above the threshold**", proving the restore is **triggered by the threshold** rather
     /// than by "entering the feasibility phase".

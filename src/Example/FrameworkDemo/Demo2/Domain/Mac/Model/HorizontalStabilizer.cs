@@ -48,11 +48,11 @@ public sealed class HorizontalStabilizer
         /// </summary>
         /// <returns>角度文本 / The angle text.</returns>
         /// <remarks>
-        /// **必须重写**。基线 `Key.toString()` 返回 `angle.toString()`，而 C# 侧原先用 `record` 的默认输出
+        /// **必须重写**。基线 `Key.toString` 返回 `angle.toString`，而 C# 侧原先用 `record` 的默认输出
         /// （`Key { Angle = …, ThrustDrate = … }`）。后果不是"名字难看"：`HorizontalStabilizerLimit` 把 `Key` 拼进目标名
         /// `"horizontal stabilizer {key}"`，默认输出会让**每个目标名都带 95 个字符的类型名**，下游按名字取目标全部落空。
         ///
-        /// **This override is required.** The baseline's `Key.toString()` returns `angle.toString()`, while the C# side used the record's default output. The consequence is not cosmetic:
+        /// **This override is required.** The baseline's `Key.toString` returns `angle.toString`, while the C# side used the record's default output. The consequence is not cosmetic:
         /// `HorizontalStabilizerLimit` interpolates the `Key` into the objective name `"horizontal stabilizer {key}"`, so the default output puts a 95-character type dump in every
         /// objective name and downstream lookups by name all miss.
         /// </remarks>
@@ -142,10 +142,10 @@ public sealed class HorizontalStabilizer
     /// <returns>操作结果 / Operation result.</returns>
     /// <remarks>
     /// 基线在 `withMacOptimization` 下还会注册一个 `warnSlack`，四个分支：上下界都有 → `SlackRangeFunction`；只有下界 → 负向阈值松弛；
-    /// 只有上界 → 正向阈值松弛；都没有 → 恒零符号。**B614 起四支全部接上**，因为 `SlackRangeFunction` 与 `SlackFunction` 本仓都已具备。
+    /// 只有上界 → 正向阈值松弛；都没有 → 恒零符号。**起四支全部接上**，因为 `SlackRangeFunction` 与 `SlackFunction` 本仓都已具备。
     ///
     /// The baseline also registers a `warnSlack` under `withMacOptimization`, in four branches: both bounds → `SlackRangeFunction`; lower only → a negative threshold slack; upper
-    /// only → a positive threshold slack; neither → a constant-zero symbol. **All four are wired up as of B614**, since this port now has both `SlackRangeFunction` and `SlackFunction`.
+    /// only → a positive threshold slack; neither → a constant-zero symbol. **All four are wired up now**, since this port now has both `SlackRangeFunction` and `SlackFunction`.
     /// </remarks>
     public Try Register(StowageMode stowageMode, LinearMetaModel<Flt64> model) {
         ArgumentNullException.ThrowIfNull(model);

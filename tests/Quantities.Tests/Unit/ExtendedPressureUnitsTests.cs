@@ -14,7 +14,7 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// 0.76 米汞柱等于一个大气压，所以大气压要除下来 / 0.76 m of mercury is one atmosphere, so divide.
 /// </summary>
 /// <remarks>
-/// B1140 补 5 个压力单位（基线 `Pressure.kt`）：`Hectopascal` / `StandardAtmosphericPressure` /
+/// 补 5 个压力单位（基线 `Pressure.kt`）：`Hectopascal` / `StandardAtmosphericPressure` /
 /// `MeterMercury` / `InchOfMercury` / `Millibar`。
 ///
 /// **其中 `MeterMercury` 没有照抄基线，因为基线的公式与它自己的注释矛盾**：
@@ -23,8 +23,6 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 ///
 /// **0.76 米的汞柱恰好压出一个标准大气压，所以要从大气压"除"回 0.76 米（133322.37 Pa），不是乘。**
 /// 本仓按注释与物理事实实现，并让 mmHg 由 mHg 派生，使"千分之一"成为恒等式。
-///
-/// adds
 ///
 /// **`MeterMercury` is not copied from the baseline, because the baseline formula contradicts its own comment**:
 /// the baseline writes "standard atmosphere times 0.76", yielding 77007 Pa and so mmHg = 77.007 Pa,
@@ -38,7 +36,7 @@ public class ExtendedPressureUnitsTests
 {
     /// <summary>**米汞柱比大气压大，不是小** / A metre of mercury exceeds an atmosphere.</summary>
     /// <remarks>
-    /// **这条是"方向"判据，而它是这一批唯一能抓住照抄基线的地方。**
+    /// **这条是"方向"判据，而它是这里唯一能抓住照抄基线的地方。**
     /// **乘法会得到 77007，除法得 133322.37——两者都"是个压力值"，只有方向区分得开。**
     ///
     /// **This is the direction criterion, and it is the only thing here that catches copying the baseline.**

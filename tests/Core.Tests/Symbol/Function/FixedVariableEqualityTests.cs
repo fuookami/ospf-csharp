@@ -20,8 +20,6 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// **`EQ` 是对称的**，**所以"左右写反"在数值上完全测不出来**——
 /// **只有系数与常数项的位置能分开。**
 ///
-/// adds
-///
 /// **`EQ` is symmetric**, **so "sides swapped" is numerically undetectable** — **only the positions of the coefficient
 /// and the constant tell them apart.**
 /// </remarks>

@@ -19,12 +19,10 @@ namespace Fuookami.Ospf.Core.Tests.Symbol.Function;
 /// 四条屏蔽边里 `dL` 与 `dU` 的位置不能互换 / `dL` and `dU` cannot swap places in the four masking rows.
 /// </summary>
 /// <remarks>
-/// B1153 补 `SelectFunction`（基线 `Select.kt`）。
+/// 补 `SelectFunction`（基线 `Select.kt`）。
 ///
 /// **编码的关键是"被屏蔽的差"**：令 <c>d = then − otherwise</c>、辅助变量 <c>z = mask · d</c>，
 /// 于是 <c>result = otherwise + z</c>——**一条等式就够，不需要两条分支不等式。**
-///
-/// adds
 ///
 /// **The encoding turns on "the masked difference"**: `d = then − otherwise` and an auxiliary `z = mask · d`, so
 /// `result = otherwise + z` — **one equality suffices.**
@@ -33,7 +31,7 @@ public class SelectFunctionTests
 {
     /// <summary>**`mask = 1` 走 then、`mask = 0` 走 otherwise** / mask 1 takes then, mask 0 takes otherwise.</summary>
     /// <remarks>
-    /// **两者都测，因为"分支反了"是这一批最容易犯的错**——
+    /// **两者都测，因为"分支反了"是这里最容易犯的错**——
     /// **而只测一条时，把两个分支互换的实现会通过。**
     ///
     /// **Both are tested because "the branches are swapped" is the easiest mistake here** —

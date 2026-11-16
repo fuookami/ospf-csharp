@@ -50,8 +50,8 @@ public class MongoBooleanTranslatorTests
         Translate(new BooleanConstant(new Trivalent.True())).Should().BeEmpty(
             "true is the empty filter, matching everything");
 
-        // **`Should().Be(document)` 在 `BsonDocument` 上会走集合断言**，所以比较 JSON 文本。
-        // **`Should().Be(document)` on `BsonDocument` resolves to a collection assertion**, so compare the JSON text.
+        // **`Should.Be(document)` 在 `BsonDocument` 上会走集合断言**，所以比较 JSON 文本。
+        // **`Should.Be(document)` on `BsonDocument` resolves to a collection assertion**, so compare the JSON text.
         string falsy = Translate(new BooleanConstant(new Trivalent.False())).ToJson();
         falsy.Should().Be("{ \"_id\" : { \"$exists\" : false } }",
             "false has to match nothing, and every document has an _id");

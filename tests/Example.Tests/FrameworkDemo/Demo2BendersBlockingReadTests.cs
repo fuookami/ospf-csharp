@@ -8,23 +8,23 @@ using Xunit;
 namespace Fuookami.Ospf.Example.Tests.FrameworkDemo;
 
 /// <summary>
-/// B861：demo2 的 Benders 结果**一次取值**，不用 `.Wait()` + `.Result` / demo2 reads the Benders result **once**, not via `.Wait()` + `.Result`.
+/// demo2 的 Benders 结果**一次取值**，不用 `.Wait` + `.Result` / demo2 reads the Benders result **once**, not via `.Wait` + `.Result`.
 /// </summary>
 /// <remarks>
-/// `Task.Wait()` 把异常包成 `AggregateException`，于是调用方 `catch (SomeSpecificException)` 接不到，日志里也只剩一层壳；
-/// 而 `.Wait()` 之后再读 `.Result` 是**第二次访问同一个任务**。`GetAwaiter().GetResult()` 原样抛出、只读一次。
+/// `Task.Wait` 把异常包成 `AggregateException`，于是调用方 `catch (SomeSpecificException)` 接不到，日志里也只剩一层壳；
+/// 而 `.Wait` 之后再读 `.Result` 是**第二次访问同一个任务**。`GetAwaiter.GetResult` 原样抛出、只读一次。
 ///
-/// **阻塞仍然存在，这一批没有消除它**：`FullLoadApplication.Execute` 是同步入口，改 async 会波及所有调用方。
+/// **阻塞仍然存在，这里没有消除它**：`FullLoadApplication.Execute` 是同步入口，改 async 会波及所有调用方。
 /// 判据只钉"不再用那两个成员"，不假装整链已经异步化。
 ///
-/// `Task.Wait()` wraps exceptions in `AggregateException`, so `catch (SomeSpecificException)` never matches and the log keeps only a shell; and reading `.Result` after
-/// `.Wait()` is **a second access to the same task**. `GetAwaiter().GetResult()` rethrows the original and reads once. **The blocking remains — this batch does not remove
+/// `Task.Wait` wraps exceptions in `AggregateException`, so `catch (SomeSpecificException)` never matches and the log keeps only a shell; and reading `.Result` after
+/// `.Wait` is **a second access to the same task**. `GetAwaiter.GetResult` rethrows the original and reads once. **The blocking remains — not remove
 /// it**: `Execute` is a sync entry and making it async would ripple through every caller. The criterion pins only "those two members are gone"; it does not pretend the
 /// whole chain became asynchronous.
 /// </remarks>
 public sealed class Demo2BendersBlockingReadTests
 {
-    /// <summary>**不许再用 `.Wait()` + `.Result`** / The `.Wait()` + `.Result` pair must not come back.</summary>
+    /// <summary>**不许再用 `.Wait` + `.Result`** / The `.Wait` + `.Result` pair must not come back.</summary>
     [Fact]
     public void TheBendersRead_ShouldNotUseWaitAndResult() {
         string code = CodeLines();
@@ -43,9 +43,9 @@ public sealed class Demo2BendersBlockingReadTests
     /// <summary>只取代码行 / Code lines only.</summary>
     /// <returns>内容 / The content.</returns>
     /// <remarks>
-    /// 注释里写着 `.Wait()` 与 `.Result` 这两个名字（B861 的解释），算进来会红在自己的说明上——B850/B859 的同一条教训。
+    /// 注释里写着 `.Wait` 与 `.Result` 这两个名字，算进来会红在自己的说明上—— / 的同一条教训。
     ///
-    /// The comments name `.Wait()` and `.Result` (B861's explanation); counting them would red the criterion on its own text — B850/B859's lesson, again.
+    /// The comments name `.Wait` and `.Result` (the earlier explanation); counting them would red the criterion on its own text — /the earlier lesson, again.
     /// </remarks>
     private static string CodeLines() {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

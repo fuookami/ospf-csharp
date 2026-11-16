@@ -117,10 +117,10 @@ public class ConflictAnalysisPreflightTests {
     /// </remarks>
     /// <summary>**选项与快照都合法时放行** / Both gates passing lets it through.</summary>
     /// <remarks>
-    /// **顺序本身测不了**：一份合法的快照在两种顺序下都放行，而造一份非法快照需要绕过 `Snapshot()` 的校验。
+    /// **顺序本身测不了**：一份合法的快照在两种顺序下都放行，而造一份非法快照需要绕过 `Snapshot` 的校验。
     /// **所以这里只钉"两道都过"，顺序由 `Check` 那一组（会话级）负责。**
     ///
-    /// **The order itself cannot be tested here**: a valid snapshot passes under either order, and building an invalid one has to get past `Snapshot()`'s own checks. **So this pins "both pass", and the
+    /// **The order itself cannot be tested here**: a valid snapshot passes under either order, and building an invalid one has to get past `Snapshot`'s own checks. **So this pins "both pass", and the
     /// order is covered by the session-level group above.**
     /// </remarks>
     [Fact]

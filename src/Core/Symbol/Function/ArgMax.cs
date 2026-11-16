@@ -30,7 +30,7 @@ namespace Fuookami.Ospf.Core.Symbol.Function;
 ///
 /// **所以结果多项式的常数项必须是 0**：**下标 0 对应"全是零"，而它不能靠常数项表达。**
 ///
-/// The ArgMaxFunction from the baseline's OrderStatistic.kt, added in B1135.
+/// The ArgMaxFunction from the baseline's OrderStatistic.kt.
 ///
 /// **`argmax` differs from `max` in exactly one way, and that is enough to get wrong**:
 /// **`max` gives the value, `argmax` gives "which one".** And "which one" is expressed **as a weighted sum of the

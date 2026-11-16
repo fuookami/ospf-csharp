@@ -73,8 +73,8 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
 
     /// <inheritdoc/>
     /// <remarks>
-    /// **实例持有而不是每次新建**：早先是 {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create(){/code}，每次访问都返回一个全新的空范围，于是 {code}symbol.Range.SetRange(...){/code} 设完就丢——基线的 `loadAmount[j].range.leq(mla)` 在 C# 里**根本无法表达**，而写上去的那行代码看起来完全正常。
-    /// **Instance-held rather than freshly created**: this used to be {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create(){/code}, returning a brand-new empty range on every access, so
+    /// **实例持有而不是每次新建**：早先是 {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create{/code}，每次访问都返回一个全新的空范围，于是 {code}symbol.Range.SetRange(...){/code} 设完就丢——基线的 `loadAmount[j].range.leq(mla)` 在 C# 里**根本无法表达**，而写上去的那行代码看起来完全正常。
+    /// **Instance-held rather than freshly created**: this used to be {code}=&gt; ExpressionRange&lt;Flt64&gt;.Create{/code}, returning a brand-new empty range on every access, so
     /// {code}symbol.Range.SetRange(...){/code} was discarded immediately — the baseline's `loadAmount[j].range.leq(mla)` was **inexpressible** in C#, while the line that tried looked fine.
     /// </remarks>
     public ExpressionRange<Flt64> Range { get; } = ExpressionRange<Flt64>.Create();
@@ -89,11 +89,10 @@ public sealed class LinearExpressionSymbol : ILinearIntermediateSymbol<Flt64> {
     /// 是否以中间变量实现（默认否）/ Whether the symbol is realized through an intermediate variable (default false).
     /// </summary>
     /// <remarks>
-    /// B1315 同步 Kotlin 2e72a17c：开启后，约束与目标引用一个辅助变量，另加一条 `aux == 定义式` 的等式约束，
+    /// 同步 Kotlin 2e72a17c：开启后，约束与目标引用一个辅助变量，另加一条 `aux == 定义式` 的等式约束，
     /// 而不是把定义表达式原地展开到每处使用。须在符号加入模型之前设置。
     ///
-    /// B1315 syncs Kotlin 2e72a17c: with this on, constraints and objectives reference an auxiliary variable plus one `aux == definition` equality instead of
-    /// inlining the definition at every use site. Set it before the symbol is added to a model.
+    /// Syncs inlining the definition at every use site. Set it before the symbol is added to a model.
     /// </remarks>
     public bool UseIntermediateVariable { get; set; }
 
@@ -336,9 +335,8 @@ public sealed class QuadraticExpressionSymbol : IQuadraticIntermediateSymbol<Flt
 
     /// <summary>是否以中间变量实现（默认否）/ Whether the symbol is realized through an intermediate variable (default false).</summary>
     /// <remarks>
-    /// B1315 同步 Kotlin 2e72a17c，与 LinearExpressionSymbol 的同名开关一致；开启后用 RealizationConstraint 取回等式加入模型。
-    /// B1315 syncs Kotlin 2e72a17c, matching the switch on LinearExpressionSymbol; when on, take the equality from RealizationConstraint.
-    /// </remarks>
+    /// 同步 Kotlin 2e72a17c，与 LinearExpressionSymbol 的同名开关一致；开启后用 RealizationConstraint 取回等式加入模型。
+    /// Syncs </remarks>
     public bool UseIntermediateVariable { get; set; }
 
     /// <summary>辅助变量（惰性创建，跨转储稳定）/ The auxiliary variable, created lazily and stable across dumps.</summary>

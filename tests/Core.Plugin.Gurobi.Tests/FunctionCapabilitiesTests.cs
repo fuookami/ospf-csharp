@@ -10,14 +10,14 @@ using Xunit;
 namespace Fuookami.Ospf.Core.Plugin.Gurobi.Tests;
 
 /// <summary>
-/// B855：能力探测**没有 SDK 就不声明任何能力** / With no SDK, detect claims nothing.
+/// 能力探测**没有 SDK 就不声明任何能力** / With no SDK, detect claims nothing.
 /// </summary>
 /// <remarks>
 /// 基线的探测器有两个可注入点（`modelClass` 与 SDK 常量），测试就靠这两个点验证"探测不到就什么都不说"。
-/// B855 把同样的可注入点搬到 .NET 侧：`Detect(modelType)` 可以喂一个假类，于是判据**不依赖本机装没装 Gurobi**——
+/// 把同样的可注入点搬到.NET 侧：`Detect(modelType)` 可以喂一个假类，于是判据**不依赖本机装没装 Gurobi**——
 /// 这一点很要紧，否则判据在 CI 上绿、在开发机上红，红绿都由环境决定。
 ///
-/// The baseline's detector has two injectable points (`modelClass` and an SDK constant), and its tests use them to verify "cannot detect → say nothing". B855 carries the
+/// The baseline's detector has two injectable points (`modelClass` and an SDK constant), and its tests use them to verify "cannot detect → say nothing". carries the
 /// same injectable point over: `Detect(modelType)` takes a fake class, so the criteria **do not depend on whether this machine has Gurobi** — which matters, because
 /// otherwise the criteria go green in CI and red on a developer machine, with the colour decided by the environment.
 /// </remarks>
@@ -26,10 +26,10 @@ public sealed class GurobiFunctionCapabilitiesTests
     /// <summary>**没有 SDK 就一项都不声明** / Nothing is claimed with no SDK.</summary>
     /// <remarks>
     /// 这条判据喂 `null`——它**明确表示没有 SDK**，而不是"随便给我一个搜索"。
-    /// B855 的第一版把"搜索程序集"和"判断某个类型"合成一个 `Detect`，于是这条路径**没有任何判据能单独走进去**：
+    /// 的第一版把"搜索程序集"和"判断某个类型"合成一个 `Detect`，于是这条路径**没有任何判据能单独走进去**：
     /// 变异把"没有 SDK"改成"声称支持 BinaryLogic"时，判据仍然绿。
     ///
-    /// This criterion feeds `null`, which **explicitly means no SDK** rather than "please go searching". B855's first version merged "search assemblies" into the same
+    /// This criterion feeds `null`, which **explicitly means no SDK** rather than "please go searching". the earlier first version merged "search assemblies" into the same
     /// `Detect`, so **no criterion could enter this path alone**: a mutation turning "no SDK" into "claims BinaryLogic" left the criteria green.
     /// </remarks>
     [Fact]

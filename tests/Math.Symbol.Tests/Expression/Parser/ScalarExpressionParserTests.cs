@@ -188,11 +188,11 @@ public class ScalarExpressionParserTests
     /// <summary>**`then` 那一支也递归回三元** / The `then` branch recurses into the ternary too.</summary>
     /// <remarks>
     /// **这一条是补上一个判据缺口**：原来那条只钉了 `else` 里的嵌套，
-    /// **于是把 `thenBranch = ParseTernary()` 改成 `ParseLogicalOr()` 之后，判据照样全绿。**
+    /// **于是把 `thenBranch = ParseTernary` 改成 `ParseLogicalOr` 之后，判据照样全绿。**
     /// **基线里两支都递归，所以两支都得钉。**
     ///
     /// **This fills a criterion gap**: the original one pinned only the nesting in `else`,
-    /// **so replacing `thenBranch = ParseTernary()` with `ParseLogicalOr()` left everything green.**
+    /// **so replacing `thenBranch = ParseTernary` with `ParseLogicalOr` left everything green.**
     /// **The baseline recurses on both branches, so both have to be pinned.**
     /// </remarks>
     [Fact]
@@ -306,7 +306,7 @@ public class ScalarExpressionParserTests
     }
 
     /// <summary>**参数本身可以是完整表达式** / An argument may itself be a full expression.</summary>
-    /// <remarks>**参数调的是三元层**，所以 `f(a ? b : c)` 与 `f(if ... fi)` 都该合法——**只调到加法层就会把它们拒掉。**</remarks>
+    /// <remarks>**参数调的是三元层**，所以 `f(a ? b : c)` 与 `f(if... fi)` 都该合法——**只调到加法层就会把它们拒掉。**</remarks>
     [Fact]
     public void TheArguments_ShouldAdmitFullExpressions()
     {

@@ -141,7 +141,7 @@ public class InterfaceVerificationTests {
         (key1 == key3).Should().BeFalse();
     }
 
-    /// <summary>**PostgreSQL 仓储也必须是抽象基类**（B926）/ The PostgreSQL repository must be an abstract base too.</summary>
+    /// <summary>**PostgreSQL 仓储也必须是抽象基类**/ The PostgreSQL repository must be an abstract base too.</summary>
     [Fact]
     public void PostgreSqlRepository_Should_Be_Abstract() {
         Type type = typeof(PostgreSqlRepository<>);
@@ -151,7 +151,7 @@ public class InterfaceVerificationTests {
     }
 
 
-    /// <summary>**PostgreSQL 提供程序真的接上了**（B926）/ The PostgreSQL provider is really wired (B926).</summary>
+    /// <summary>**PostgreSQL 提供程序真的接上了**/ The PostgreSQL provider is really wired.</summary>
     /// <remarks>
     /// 这一条**不需要活的数据库**：`UseNpgsql` 在配置阶段就确定提供程序名，
     /// 所以它能证明"依赖进了程序集、配置写对了"，而不能证明"能连上"——**后者是外部未验收项**。

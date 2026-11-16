@@ -16,7 +16,7 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// **`PackageShape.ShapeSpec` 只写不读——设置它不会产生任何效果** / `PackageShape.ShapeSpec` is written but never read, so setting it has no effect.
 /// </summary>
 /// <remarks>
-/// **本批推翻了 B351—B403 一直沿用的一条记录**：计划文档里长期写着"`PackageShapeSpec` 仍是死代码"。
+/// **这里推翻了 一直沿用的一条记录**：计划文档里长期写着"`PackageShapeSpec` 仍是死代码"。
 /// 查证后发现**说反了一半**：
 ///
 /// | 项 | 实际情况 |
@@ -26,7 +26,7 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// | **连续圆柱半径能力** | **已实现**，但走 **`CylinderPackingShape3`**（`RadiusWeightFunctionKey` 门控） |
 ///
 /// **所以这不是"功能没做"，而是"同一个概念被建了两套类型，只有一套接线"。**
-/// 这正是本会话反复记录的那个缺陷形态（"同一份投影写了两遍，只有一份被接上"）。
+/// 这正是反复记录的那个缺陷形态（"同一份投影写了两遍，只有一份被接上"）。
 ///
 /// **危险之处**：调用方写 `new PackageShape(..., ShapeSpec: VerticalCylinder(...))`
 /// 时**以为自己启用了圆柱半径求解**，实际**什么都不会发生**——能力静默失效。
@@ -34,7 +34,7 @@ namespace Fuookami.Ospf.Test.Framework.Bpp3d.Domain.Item.Model;
 /// 这条判据钉住**现状**：把 `ShapeSpec` 设成竖直圆柱，与不设，对原型提取的结果**毫无差别**。
 /// 若将来有人把 `ShapeSpec` 接上，判据会红，提醒同步更新文档与迁移说明。
 ///
-/// **This batch overturns a record carried from B351 to B403**: the plan long said "`PackageShapeSpec` is still dead code", but the truth is **half the opposite**
+/// ** overturns a record carried from to **: the plan long said "`PackageShapeSpec` is still dead code", but the truth is **half the opposite**
 /// (table above). **So this is not "the feature was never built" but "one concept was modelled twice with only one copy wired"** — exactly the defect shape this
 /// session keeps recording. **The danger**: a caller writing `new PackageShape(..., ShapeSpec: VerticalCylinder(...))` **believes cylinder radius solving is enabled**
 /// while **nothing happens** — the capability fails silently. The criterion pins the **status quo**: setting `ShapeSpec` to a vertical cylinder changes prototype

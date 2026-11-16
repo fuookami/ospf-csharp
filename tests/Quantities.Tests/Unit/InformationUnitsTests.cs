@@ -14,14 +14,14 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// KB 是 1000，KiB 是 1024——而本仓原来把 KiB 的值安在了 KB 上 / KB is 1000, KiB is 1024.
 /// </summary>
 /// <remarks>
-/// B1138 按基线 `Information.kt` 补全 18 个信息单位，**同时修掉一个真实错误**：
+/// 对齐基线 `Information.kt` 补全 18 个信息单位，**同时修掉一个真实错误**：
 /// **本仓原来的 `Kilobyte` 用的是 1024（`Kibibyte` 的值），符号却写着 `KB`。**
 /// `Megabyte`/`Gigabyte` 同样错（1024²、1024³）。
 ///
 /// **这类错误最难发现，因为"KB 是 1000 还是 1024"在业界本来就被混用**，
 /// **而符号与数值对不上这件事，从外部调用完全看不出来。**
 ///
-/// B1138 completes the 18 information units from the baseline's `Information.kt`
+/// Completes the 18 information units from the baseline's `Information.kt`
 /// **and fixes a real defect**: **this repo's `Kilobyte` used 1024 (the value of `Kibibyte`) while its symbol said `KB`.**
 /// `Megabyte`/`Gigabyte` were wrong the same way.
 ///
@@ -32,7 +32,7 @@ public class InformationUnitsTests
 {
     /// <summary>**KB 是 1000 字节，不是 1024** / KB is a thousand bytes, not 1024.</summary>
     /// <remarks>
-    /// **这是本批唯一的回归判据，而它钉的正是那个真实错误。**
+    /// **这是这里唯一的回归判据，而它钉的正是那个真实错误。**
     /// **写成 1024 时这条会红，报 `Expected 8000 to be 1000...` 之类，一眼能看出问题在字节数而不是位。**
     ///
     /// **This is the batch's one regression criterion, and it pins exactly that defect.**
@@ -60,7 +60,7 @@ public class InformationUnitsTests
     /// **第一版这条判据写的是"每一级都差 1.024"，实测第二级是 1.048576**——
     /// **因为比值是 `(1024/1000)^n`，不是常数。**
     ///
-    /// **这是本批第二次"判据自己算错"**：**判据的方向没错（两套确实不同），但幅度我凭直觉给了个常数。**
+    /// **这是这里第二次"判据自己算错"**：**判据的方向没错（两套确实不同），但幅度我凭直觉给了个常数。**
     /// **按幂写之后它同时钉住了"两级都用对了前缀"**：**某一级复制错会让该级比值偏离 `1.024^n`。**
     ///
     /// **The first version of this criterion said "1.024 at every level", and the second level measured 1.048576** —

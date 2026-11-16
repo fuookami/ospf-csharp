@@ -22,8 +22,6 @@ namespace Fuookami.Ospf.Core.Tests.Model.Intermediate;
 ///
 /// **标记接口没有成员，所以所有具体信息都要靠类型分派取出来——代价就在这里。**
 ///
-/// adds
-///
 /// **The marker has no members, so every concrete fact comes out of a type dispatch — and that is where the cost is.**
 /// </remarks>
 public class DeferredFunctionStructuresTests
@@ -32,7 +30,7 @@ public class DeferredFunctionStructuresTests
     /// **未登记的结构返回 `null`/`false`，而不是抛异常** / An unregistered structure reports absent, not an error.
     /// </summary>
     /// <remarks>
-    /// **这是本批的核心判据，也是本文件唯一的真实危险。**
+    /// **这是这里的核心判据，也是本文件唯一的真实危险。**
     ///
     /// **给标记接口写一个新实现、却忘了在分派表里加分支，
     /// 不会编译失败：那个结构会静默地报"没有结果列"。**
@@ -40,7 +38,7 @@ public class DeferredFunctionStructuresTests
     /// **调用方拿到 `null` 后通常走"不需要保留"的分支，于是模型少了一列——
     /// 而模型仍然可行、求解成功。**
     ///
-    /// **判据用一个本批临时定义的结构去证实这个行为：**
+    /// **判据用一个这里临时定义的结构去证实这个行为：**
     /// **它<b>不是</b>回归保护（漏加分支时它仍然全绿），而是把"这就是当前语义"写进测试，
     /// 让下一个加结构的人看见它还欠一个分支。**
     ///
@@ -207,6 +205,6 @@ public class DeferredFunctionStructuresTests
 
     private static readonly BinVar DifferenceResult = new("diff-result");
 
-    /// <summary>本批临时定义的结构，用来证实"未登记"的语义 / A structure defined here to prove the unregistered case.</summary>
+    /// <summary>这里临时定义的结构，用来证实"未登记"的语义 / A structure defined here to prove the unregistered case.</summary>
     private sealed record UnregisteredStructure : DeferredFunctionStructure;
 }

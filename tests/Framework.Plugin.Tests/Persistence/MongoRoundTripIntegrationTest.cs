@@ -17,11 +17,11 @@ namespace Fuookami.Ospf.Framework.Plugin.Tests.Persistence;
 /// MongoDB 真实往返（连本机实例，不是影子检查）/ A real MongoDB round-trip against a live instance.
 /// </summary>
 /// <remarks>
-/// 这是四个"环境所限"里的最后一个：MySQL、PostgreSQL、Redis、Kafka 都在 B1298—B1307 验过了，MongoDB 一直缺实例。
-/// B1308 起了一个本机容器，于是它也能用同一组判据验：入口能连、增查改删往返、不可达报原因。
+/// 这是"环境所限"那一组的最后一个：MySQL、PostgreSQL、Redis、Kafka 都已验过，MongoDB 一直缺实例。
+/// 此后了一个本机容器，于是它也能用同一组判据验：入口能连、增查改删往返、不可达报原因。
 ///
-/// This is the last of the "limited by the environment" list: MySQL, PostgreSQL, Redis and Kafka were verified in B1298—B1307 while MongoDB had no
-/// instance. B1308 starts a local container, so it gets the same set of criteria: the entry point connects, five round-trip steps, and an unreachable
+/// This is the last of the "limited by the environment" list: MySQL, PostgreSQL, Redis and Kafka were verified, while MongoDB had no
+/// instance. A local container starts, so it gets the same set of criteria: the entry point connects, five round-trip steps, and an unreachable
 /// endpoint explains itself.
 ///
 /// 连接串从环境变量 `OSPF_TEST_MONGO_CONN` 读；未设时取本机缺省。

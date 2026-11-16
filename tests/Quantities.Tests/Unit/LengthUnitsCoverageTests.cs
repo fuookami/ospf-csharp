@@ -13,15 +13,15 @@ namespace Fuookami.Ospf.Quantities.Tests.Unit;
 /// **少 23 个单位与"够用了"在文档上长得一样** / "23 short" and "good enough" look the same in a document.
 /// </summary>
 /// <remarks>
-/// B1124 按公开类型名扫 22 个模块，`quantities` 命中率 **45.6%**（167 个未出现）。
-/// B1125 逐条核实下来，其中最大的一块是**长度单位**：
+/// 按公开类型名扫 22 个模块，`quantities` 命中率 **45.6%**（167 个未出现）。
+/// 逐条核实下来，其中最大的一块是**长度单位**：
 /// **基线 `Length.kt` 有 33 个，本仓 `LengthUnits` 只有 10 个**，而 `docs/` 里一次都没提过。
 ///
 /// **单位换算错了不会报错，只会让"5 海里"变成别的长度**——
 /// **所以判据要钉的不是"字段存在"，而是"换算因子是对的"。**
 ///
-/// B1124 swept 22 modules by public type name and `quantities` hit **45.6%** (167 absent).
-/// B1125's item-by-item check found the largest block to be **length units**:
+/// A sweep over 22 modules by public type name and `quantities` hit **45.6%** (167 absent).
+/// the earlier item-by-item check found the largest block to be **length units**:
 /// **the baseline `Length.kt` has 33 and this repo's `LengthUnits` had 10**, with `docs/` silent about it.
 ///
 /// **A wrong conversion does not throw; it makes "5 nautical miles" a different length** —

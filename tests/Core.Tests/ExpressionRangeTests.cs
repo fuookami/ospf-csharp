@@ -73,7 +73,7 @@ public class ExpressionRangeTests {
     public void NoReflection_CompanionObjectInstance() {
         // Verify that ExpressionRange uses NumericConstantsRegistry, not reflection
         // This is verified by the build succeeding without companionObjectInstance
-        // and by the Create() factory working
+        // and by the Create factory working
         var range = ExpressionRange<Int64>.Create();
         range.Should().NotBeNull();
         var range2 = ExpressionRange<UInt8>.Create();

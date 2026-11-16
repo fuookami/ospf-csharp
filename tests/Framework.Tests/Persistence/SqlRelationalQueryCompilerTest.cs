@@ -75,8 +75,8 @@ public sealed class SqlRelationalQueryCompilerTest {
     }
 
     /// <summary>
-    /// 空 <c>IN</c> 集合在 SQL 里是语法错误，必须退化成常量而不是拼出 `IN ()`。
-    /// An empty <c>IN</c> set is a SQL syntax error and must degrade to a constant rather than `IN ()`.
+    /// 空 <c>IN</c> 集合在 SQL 里是语法错误，必须退化成常量而不是拼出 `IN `。
+    /// An empty <c>IN</c> set is a SQL syntax error and must degrade to a constant rather than `IN `.
     /// </summary>
     [Fact]
     public void Compile_ShouldDegradeEmptyInSet() {

@@ -1,4 +1,4 @@
-// 带状态的求解结果（B656）的判据 / Criteria for the status-carrying solve results (B656).
+// 带状态的求解结果的判据 / Criteria for the status-carrying solve results.
 
 using System;
 using System.Collections.Generic;
@@ -18,14 +18,14 @@ using Xunit;
 namespace Fuookami.Ospf.Framework.Tests.Solver;
 
 /// <summary>
-/// **带状态的求解结果（B656）** / The status-carrying solve results (B656).
+/// **带状态的求解结果** / The status-carrying solve results.
 /// </summary>
 /// <remarks>
 /// 判据的重点：**可行与不可行是两个分支**、**失败不是 `Infeasible`**、以及**转换真的发生**
-/// （只构造结果类型测不到转换逻辑，这是 B656 第一版判据的错误）。
+/// （只构造结果类型测不到转换逻辑，这是 第一版判据的错误）。
 ///
 /// The criteria focus on **feasible and infeasible being two branches**, on **a failure not being `Infeasible`**, and on **the conversion actually happening**: constructing the result types alone
-/// does not exercise it, which was the flaw in B656's first criterion.
+/// does not exercise it, which was the flaw's first criterion.
 /// </remarks>
 public class ColumnGenerationSolverStatusTests {
     private static FeasibleSolverOutput<Flt64> Output() =>
@@ -37,7 +37,7 @@ public class ColumnGenerationSolverStatusTests {
             Gap: Flt64.Zero);
 
     /// <summary>
-    /// 只实现本批要测的两个方法的最小求解器 / A minimal solver implementing only the two methods under test.
+    /// 只实现这里要测的两个方法的最小求解器 / A minimal solver implementing only the two methods under test.
     /// </summary>
     /// <remarks>
     /// **其余成员抛 `NotSupportedException`**：将来某个测试误用它们会立刻炸，而不是拿到假数据。

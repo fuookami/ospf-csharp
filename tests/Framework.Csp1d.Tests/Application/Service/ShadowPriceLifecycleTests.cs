@@ -27,7 +27,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// **影子价格主路径：有管线时走 `Refresh`，无管线时返回空映射** / The main path: `Refresh` when pipelines exist, an empty map when none do.
 /// </summary>
 /// <remarks>
-/// **B389 记的缺口**："`Csp1dShadowPriceLifecycle` 主路径无判据"——它是
+/// **记的缺口**："`Csp1dShadowPriceLifecycle` 主路径无判据"——它是
 /// `ExtractShadowPriceMap` 注释里**推荐走的那条路**，却从未被测过。
 ///
 /// 三个可观察的分支：
@@ -38,7 +38,7 @@ namespace Fuookami.Ospf.Test.Framework.Csp1d.Application.Service;
 /// | `Refresh` 失败要向上传播 | 静默继续 ⇒ **调用方以为拿到了价格** |
 /// | 转换用 `ConvertSolverValue` | 不转换 ⇒ **单位/量纲错** |
 ///
-/// **B389's gap**: the main path had no criteria — it is **the route `ExtractShadowPriceMap` recommends** yet was never tested. Three observable branches (table above).
+/// **the earlier gap**: the main path had no criteria — it is **the route `ExtractShadowPriceMap` recommends** yet was never tested. Three observable branches (table above).
 /// </remarks>
 public class ShadowPriceLifecycleTests {
     private static Quantity<Flt64> Millimetres(double value) =>
@@ -111,12 +111,12 @@ public class ShadowPriceLifecycleTests {
             "with no pipelines nothing can populate the map");
     }
 
-    /// <summary>**`Extractor()` 非 null 时，`Put(extractor)` 必须真的注册进映射** / A non-null `Extractor()` must actually be registered into the map.</summary>
+    /// <summary>**`Extractor` 非 null 时，`Put(extractor)` 必须真的注册进映射** / A non-null `Extractor` must actually be registered into the map.</summary>
     /// <remarks>
-    /// **B390 记的缺口**：CSP1D 的 `Extractor()` 都返回 `(_, _) => Flt64.Zero`，
+    /// **记的缺口**：CSP1D 的 `Extractor` 都返回 `(_, _) => Flt64.Zero`，
     /// 所以 `Put(extractor)` 这条路径**从未被走到**。
     ///
-    /// 这里用一个**自定义管线**，它的 `Extractor()` 返回 `map.Invoke(arg) + 3`——
+    /// 这里用一个**自定义管线**，它的 `Extractor` 返回 `map.Invoke(arg) + 3`——
     /// 只要它被注册，`Invoke` 的结果就会**多出 3**。
     ///
     /// | 实现错法 | 结果 |
@@ -124,8 +124,8 @@ public class ShadowPriceLifecycleTests {
     /// | 不调用 `Put(extractor)` | 0 |
     /// | 正确 | **3** |
     ///
-    /// **B390's gap**: every CSP1D `Extractor()` returns `(_, _) => Flt64.Zero`, so the `Put(extractor)` path **was never exercised**. This uses a **custom pipeline**
-    /// whose `Extractor()` returns `map.Invoke(arg) + 3`: if it gets registered, `Invoke` gains **3** (table above).
+    /// **the earlier gap**: every CSP1D `Extractor` returns `(_, _) => Flt64.Zero`, so the `Put(extractor)` path **was never exercised**. This uses a **custom pipeline**
+    /// whose `Extractor` returns `map.Invoke(arg) + 3`: if it gets registered, `Invoke` gains **3** (table above).
     /// </remarks>
     [Fact]
     public void ExtractFromDualSolution_ShouldRegisterANonNullExtractor() {
@@ -146,7 +146,7 @@ public class ShadowPriceLifecycleTests {
             "the lifecycle must ask every pipeline for its extractor");
 
         // **必须验证"真的被注册"，不只是"被问过"。** 第一版只数调用次数，
-        // 于是"问了但没 `Put`"的变异**存活**——`Extractor()` 照样被调用，判据照样绿。
+        // 于是"问了但没 `Put`"的变异**存活**——`Extractor` 照样被调用，判据照样绿。
         //
         // `FrameworkShadowPriceMap.Invoke(arg)` 会把**所有已注册提取器**的结果相加。
         // 自定义提取器返回 `7`，所以注册成功后 `Invoke` 必须给出 **7**。
@@ -172,7 +172,7 @@ public class ShadowPriceLifecycleTests {
                 "the extractor must be registered so Invoke sees its contribution");
     }
 
-    /// <summary>**`Extractor()` 被调用恰好一次**——反向对照 / `Extractor()` is called exactly once — the reverse control.</summary>
+    /// <summary>**`Extractor` 被调用恰好一次**——反向对照 / `Extractor` is called exactly once — the reverse control.</summary>
     /// <remarks>
     /// 少了这条，"**根本不问提取器**"的实现也可能蒙混过关。
     ///
@@ -197,13 +197,13 @@ public class ShadowPriceLifecycleTests {
 
     /// <summary>**`Refresh` 失败必须向上传播，不能被吞掉** / A failing `Refresh` must propagate, not be swallowed.</summary>
     /// <remarks>
-    /// **B390 记的缺口**：判据里 `Refresh` 总是成功，所以"失败被吞掉"没测过。
+    /// **记的缺口**：判据里 `Refresh` 总是成功，所以"失败被吞掉"没测过。
     ///
     /// 后果很具体：`Refresh` 失败意味着**影子价格没算出来**。若被吞掉，
     /// 调用方拿到一个**看似成功但为空**的映射，**定价阶段就用零对偶去算 reduced cost**——
     /// 而且**没有任何报错**。
     ///
-    /// **B390's gap**: `Refresh` always succeeded in the criteria, so "failure swallowed" was untested. The consequence is concrete: a failed `Refresh` means **no shadow
+    /// **the earlier gap**: `Refresh` always succeeded in the criteria, so "failure swallowed" was untested. The consequence is concrete: a failed `Refresh` means **no shadow
     /// prices were computed**; swallowing it hands the caller a **seemingly successful but empty** map, and **pricing then computes reduced cost from zero duals with no
     /// error at all**.
     /// </remarks>
@@ -226,7 +226,7 @@ public class ShadowPriceLifecycleTests {
 
     /// <summary>**`Refresh` 返回 `Fatal` 时也必须向上传播** / A `Fatal` from `Refresh` must propagate too.</summary>
     /// <remarks>
-    /// **B391 记的缺口**："`Fatal` 分支无判据"。
+    /// **记的缺口**："`Fatal` 分支无判据"。
     ///
     /// `Result` 有三种情况：`Ok` / `Failed` / **`Fatal`**。`Fatal` 表示**不可恢复**的错误
     /// （一组错误而非单个）。CSP1D 的 `Refresh` 默认实现**从不返回 `Fatal`**，
@@ -236,7 +236,7 @@ public class ShadowPriceLifecycleTests {
     /// 若实现把 `Fatal` 当成 `Ok` 继续往下走，调用方会拿到一个
     /// **看似成功的空映射**，而真正的错误（可能是多条）**全部丢失**。
     ///
-    /// **B391's gap**: "the `Fatal` branch has no criteria". `Result` has three cases — `Ok` / `Failed` / **`Fatal`** — and `Fatal` means **unrecoverable** (a list of errors
+    /// **the earlier gap**: "the `Fatal` branch has no criteria". `Result` has three cases — `Ok` / `Failed` / **`Fatal`** — and `Fatal` means **unrecoverable** (a list of errors
     /// rather than one). CSP1D's default `Refresh` **never returns it**, so the branch is unreachable on the production path — **but the interface permits it**, and any custom
     /// pipeline may return it. Treating `Fatal` as `Ok` hands the caller a **seemingly successful empty map** while the real errors (**possibly several**) are **all lost**.
     /// </remarks>
@@ -259,14 +259,14 @@ public class ShadowPriceLifecycleTests {
             .Should().HaveCount(2, "both errors must survive, not just the first");
     }
 
-    /// <summary>**`Extractor()` 返回 null 时不注册任何东西** / A null `Extractor()` registers nothing.</summary>
+    /// <summary>**`Extractor` 返回 null 时不注册任何东西** / A null `Extractor` registers nothing.</summary>
     /// <remarks>
-    /// **B391 记的缺口**："`Extractor()` 返回 null 时不 `Put` 这条没单独断言"。
+    /// **记的缺口**："`Extractor` 返回 null 时不 `Put` 这条没单独断言"。
     ///
     /// 若实现对 null 也调 `Put`，`Invoke` 会因为**调用一个 null 委托**而抛异常——
     /// 但那是在**定价阶段**才炸，离这里很远。
     ///
-    /// **B391's gap**: "the null `Extractor()` case was not asserted separately". If the implementation `Put`s a null, `Invoke` throws **when calling a null delegate** — but
+    /// **the earlier gap**: "the null `Extractor` case was not asserted separately". If the implementation `Put`s a null, `Invoke` throws **when calling a null delegate** — but
     /// that blows up **during pricing**, far away from here.
     /// </remarks>
     [Fact]
@@ -305,9 +305,9 @@ public class ShadowPriceLifecycleTests {
 
     /// <summary>**`Int64` 实例化时 `ConvertDualValue` 必须抛出，且异常信息要指出类型** / With `Int64`, `ConvertDualValue` must throw and name the type.</summary>
     /// <remarks>
-    /// **B393 记的缺口**："`Int64` / `Flt32` 实例化 CSP1D 会在运行期抛异常，本批只记录未修"。
+    /// **记的缺口**："`Int64` / `Flt32` 实例化 CSP1D 会在运行期抛异常，这里只记录未修"。
     ///
-    /// 本批查了基线：`extractFromDualSolution` 写的是
+    /// 这里查了基线：`extractFromDualSolution` 写的是
     /// `(convertSolverValue(...) as Ok).value`——`Failed` 时 `as Ok` 得 null、`.value` 立刻抛。
     /// **所以抛异常与基线等价，不是 C# 偏离。**
     ///
@@ -320,7 +320,7 @@ public class ShadowPriceLifecycleTests {
     /// | 抛但不带类型名 | **判据红**（信息缺失） |
     /// | 抛且带类型名 | **绿** |
     ///
-    /// **B393's gap**: "`Int64` / `Flt32` blow up at runtime; recorded but not fixed". This batch read the baseline: `extractFromDualSolution` writes
+ /// **the earlier gap**: "`Int64` / `Flt32` blow up at runtime; recorded but not fixed". read the baseline: `extractFromDualSolution` writes
     /// `(convertSolverValue(...) as Ok).value`, so `Failed` yields null and `.value` throws — **the throw is baseline parity, not a C# deviation**. This criterion pins
     /// **the quality of the message**: it must at least **name the type**, or users get an `InvalidOperationException` without knowing whether `Int64` or `Flt32` is at
     /// fault (table above).
@@ -362,7 +362,7 @@ public class ShadowPriceLifecycleTests {
                 });
     }
 
-    /// <summary>`Extractor()` 返回 null 的管线 / A pipeline whose `Extractor()` returns null.</summary>
+    /// <summary>`Extractor` 返回 null 的管线 / A pipeline whose `Extractor` returns null.</summary>
     private sealed class NullExtractorPipeline : ICGPipeline<AbstractCsp1dShadowPriceArguments, LinearMetaModel<Flt64>, AbstractCsp1dShadowPriceMap<AbstractCsp1dShadowPriceArguments>> {
         public int ExtractorCallCount { get; private set; }
 
