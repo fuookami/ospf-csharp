@@ -30,7 +30,25 @@ public sealed class OnnxLoweringContext
     /// </summary>
     /// <param name="Expression">表达式 / The expression.</param>
     /// <param name="Shape">形状 / The shape.</param>
-    public sealed record Binding(LinearPolynomial<Flt64> Expression, IReadOnlyList<int> Shape);
+    public sealed record Binding(LinearPolynomial<Flt64> Expression, IReadOnlyList<int> Shape)
+    {
+        /// <summary>
+        /// 逐元素列表（可选）/ The per-element list, when one exists.
+        /// </summary>
+        /// <remarks>
+        /// **可空是有意的：** **绝大多数绑定是"一个名字一个标量表达式"，** **只有需要重排或切片时才必须有元素列表。** '
+        /// **于是这一层能逐步接进来，而不是一次改遍每个调用点——** **也正因为可空，"有没有元素"本身成为一个可判断的事实，**
+        /// **拒绝消息才能说"取不到逐轮切片"，而不是猜。**
+        ///
+        /// **Nullable on purpose: most bindings are "one name, one scalar expression", and only a reordering or a slice needs the element list.** **That lets this layer be wired in
+        /// step by step instead of touching every call site — and because it is nullable, "are there elements" is a fact that can be checked, so a refusal can say "no slices
+        /// available" instead of guessing.**
+        /// </remarks>
+        public OnnxElementList? Elements { get; init; }
+
+        /// <summary>是否带逐元素列表 / Whether an element list is attached.</summary>
+        public bool HasElements => Elements is not null;
+    }
 
     private readonly List<Dictionary<string, Binding>> _scopes = new() { new Dictionary<string, Binding>(StringComparer.Ordinal) };
 
@@ -44,6 +62,7 @@ public sealed class OnnxLoweringContext
     /// <param name="expression">表达式 / The expression.</param>
     /// <param name="shape">形状 / The shape.</param>
     /// <param name="failure">失败原因 / The failure reason.</param>
+    /// <param name="elements">逐元素列表（可选）/ The per-element list, when one exists.</param>
     /// <returns>是否绑定成功 / Whether the binding was made.</returns>
     /// <remarks>
     /// **同一作用域内重名直接拒绝：** **ONNX 的输出名在同一层是唯一的，** **重名意味着模型非法或我们读错了某个字段——**
@@ -52,7 +71,12 @@ public sealed class OnnxLoweringContext
     /// **A duplicate within one scope is refused outright: ONNX output names are unique per level, so a duplicate means either an illegal model or a misread field, and
     /// silently overwriting swaps out the earlier node's result.**
     /// </remarks>
-    public bool TryBind(string name, LinearPolynomial<Flt64> expression, IReadOnlyList<int> shape, out string? failure) {
+    public bool TryBind(
+        string name,
+        LinearPolynomial<Flt64> expression,
+        IReadOnlyList<int> shape,
+        out string? failure,
+        OnnxElementList? elements = null) {
         if (string.IsNullOrEmpty(name)) {
             failure = "绑定缺少名字 / a binding has no name";
             return false;
@@ -62,7 +86,7 @@ public sealed class OnnxLoweringContext
             failure = "名字 '" + name + "' 在同一个作用域内被重复定义 / the name is defined twice in one scope";
             return false;
         }
-        current[name] = new Binding(expression, shape ?? Array.Empty<int>());
+        current[name] = new Binding(expression, shape ?? Array.Empty<int>()) { Elements = elements };
         failure = null;
         return true;
     }
@@ -74,24 +98,30 @@ public sealed class OnnxLoweringContext
     /// <param name="expression">表达式 / The expression.</param>
     /// <param name="shape">形状 / The shape.</param>
     /// <param name="failure">失败原因 / The failure reason.</param>
+    /// <param name="elements">逐元素列表（可选）/ The per-element list, when one exists.</param>
     /// <returns>是否绑定成功 / Whether the binding was made.</returns>
     /// <remarks>
     /// **与 `TryBind` 的分工是语义上的，不是宽松程度上的：** **`TryBind` 用于"声明一个名字"，重名说明模型非法；** '
     /// **`TryRebind` 用于"这个名字现在指的是新值"——** **ONNX 允许节点输出与输入同名（就地更新），'
-    /// **而那个名字在此之后的含义就是新值。** **重复的<b>节点输出</b>仍由图校验拦截，所以这里放宽不会让一个非法模型蒙混过关。**
+    /// **而那个名字在此之后的含义就是新值。** **重复的**节点输出**仍由图校验拦截，所以这里放宽不会让一个非法模型蒙混过关。**
     ///
     /// **The split with `TryBind` is semantic, not a matter of strictness: TryBind declares a name, so a duplicate means an illegal model; TryRebind says "this name now
     /// means the new value" — ONNX allows a node output to share an input's name (in-place update) and the name means the new value after it.** Duplicate **node outputs**
     /// are still caught by graph validation, so relaxing here cannot let an illegal model through.
     /// </remarks>
-    public bool TryRebind(string name, LinearPolynomial<Flt64> expression, IReadOnlyList<int> shape, out string? failure) {
+    public bool TryRebind(
+        string name,
+        LinearPolynomial<Flt64> expression,
+        IReadOnlyList<int> shape,
+        out string? failure,
+        OnnxElementList? elements = null) {
         if (string.IsNullOrEmpty(name)) {
             failure = "绑定缺少名字 / a binding has no name";
             return false;
         }
         // 覆盖发生在当前作用域：外层同名不会被改，于是"体里就地更新"不会污染外层。
         // The overwrite happens in the current scope: an outer name of the same is untouched, so an in-place update inside a body cannot pollute the enclosing scope.
-        _scopes[^1][name] = new Binding(expression, shape ?? Array.Empty<int>());
+        _scopes[^1][name] = new Binding(expression, shape ?? Array.Empty<int>()) { Elements = elements };
         failure = null;
         return true;
     }

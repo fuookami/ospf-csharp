@@ -142,6 +142,11 @@ public class MathParsingPortCountTests
         //
         // **B1356: it briefly became 31 and went back to 30.** **The "3 criteria" sentence lived in the Scan row of the unmigrated list, and that row was rewritten into
         // "runtime slices", taking the sentence with it.** **The note stays because "the number moved and came back" is not the same as "it never moved".**
+        // **B1370：31 → 30。** **第 2 行改写成列表语义之后，那句"298 条判据依赖它"被删掉了——** '
+        // **它确实是一个计数宣称，所以少了一处数字也要动，** **而不是把断言留在原地假装没变。**
+        //
+        // **B1370: 31 back to 30.** **Rewriting the second row for list semantics removed the "298 criteria rely on it" sentence —** that really was a count claim, so the drop moves
+        // the number too, instead of leaving the assertion in place pretending nothing changed.
         total.Should().Be(
             30,
             "31 such claims exist and only 3 are pinned; if the total moves, the unchecked set moved with it and "

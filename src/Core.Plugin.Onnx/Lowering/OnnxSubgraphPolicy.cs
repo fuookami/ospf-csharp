@@ -12,7 +12,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// 同步 Kotlin `dee897d2` 的 `OnnxSubgraph`。**基线的做法是"全部展开"：** **`If` 的条件必须是常量、`Loop` 的迭代次数与终止条件必须是常量、
 /// `Scan` 的扫描长度必须来自常量——** **于是建模规模随迭代次数线性增长，而这一切都发生在导入期。**
 ///
-/// **那一整套展开依赖降阶上下文（表达式、张量、令牌），还没移植；** **但展开之前的<b>可展开性判定</b>是独立的，而它恰好是"能不能导入"的分界线：**
+/// **那一整套展开依赖降阶上下文（表达式、张量、令牌），还没移植；** **但展开之前的**可展开性判定**是独立的，而它恰好是"能不能导入"的分界线：**
 /// **一个迭代次数依赖数据的 `Loop` 若被放过，** **模型会按某个猜出来的次数展开，解看着正常——只是优化的是另一个网络。**
 ///
 /// Syncs `OnnxSubgraph`. **The baseline unrolls everything: an `If` condition must be constant, a `Loop` trip count and termination constant, a `Scan` length from a

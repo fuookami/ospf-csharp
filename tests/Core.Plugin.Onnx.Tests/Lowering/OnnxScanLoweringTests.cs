@@ -1,5 +1,9 @@
 #nullable enable
 
+// IDE0007 与 IDE0008 会在同一个泛型局部上互相要求，而本文件两处都触发；按仓库既有做法文件级关闭并写理由。
+// IDE0007 and IDE0008 demand opposite things on the same generic local and both fire here; disabled at file scope per repository practice.
+#pragma warning disable IDE0007, IDE0008
+
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
@@ -227,6 +231,124 @@ public class OnnxScanLoweringTests
         result.IsOk.Should().BeTrue(result.Failure);
         result.FinalStates![0].Expression.Constant.ToDouble().Should().Be(3.0, "0 + 1 + 2");
         result.FinalStates![1].Expression.Constant.ToDouble().Should().Be(7.0, "10 - 1 - 2");
+    }
+
+    /// <summary>**切片可以是符号，不是只有常数** / Slices may be symbolic, not only constants.</summary>
+    /// <remarks>
+    /// **这一条证明的是契约本身已经支持"运行期值"：** **每一轮的切片只是一个绑定，而绑定里装的可以是含变量的表达式。** '
+    /// **所以 `Scan` 缺的不是"能不能带变量"，而是"导入期怎么把一个多元素张量切成每轮一片"——** '
+    /// **那需要逐元素表示（基线的 `sliceLeading`），是清单里同一项。**
+    ///
+    /// **This proves the contract already accepts runtime values: a round's slice is just a binding, and a binding may carry an expression with variables.** **So what Scan lacks is
+    /// not "can it hold a variable" but "how does the import time cut a multi-element tensor into one slice per round" — that needs the per-element representation (the
+    /// baseline's sliceLeading), which is the same checklist item.**
+    /// </remarks>
+    [Fact]
+    public void SymbolicSlices_ShouldCarryTheirCoefficients() {
+        var context = new OnnxLoweringContext();
+
+        // 三片分别是 x、2x、3x：两轮之后状态 = 初值 + x + 2x = x + 3x 的一半……严格算：
+        // 第一轮 state = 0 + 1x = x；第二轮 state = x + 2x = 3x。
+        // The three slices are x, 2x and 3x: after two rounds the state is x, then 3x.
+        OnnxScanLowering.Result result = OnnxScanLowering.Lower(
+            Node(length: 2, body: Body(new[] { Node("Add", "state_in", "slice_in", "state_out") }, "state_out")),
+            context,
+            new[] { Constant(0.0) },
+            new[] { Symbolic(1.0), Symbolic(2.0) },
+            new[] { "state_in", "slice_in" },
+            new[] { "final" });
+
+        result.IsOk.Should().BeTrue(result.Failure);
+        result.FinalStates![0].Expression.Monomials.Should().HaveCount(1, "the result is a multiple of x, not a constant");
+        result.FinalStates[0].Expression.Monomials[0].Coefficient.ToDouble().Should().Be(3.0,
+            "0 + x is x, then x + 2x is 3x; a contract that only accepted constants could not produce this");
+    }
+
+    private static OnnxLoweringContext.Binding Symbolic(double coefficient) {
+        var x = new RealVar("x");
+        return new OnnxLoweringContext.Binding(
+            new LinearPolynomial<Flt64>(new[] { new LinearMonomial<Flt64>(new Flt64(coefficient), x) }, Flt64.Zero),
+            Array.Empty<int>());
+    }
+
+    /// <summary>**非常量扫描输入真的逐轮切片了** / A non-constant scan input really is sliced round by round.</summary>
+    /// <remarks>
+    /// **这一条是"运行期切片"与"常量数组切片"的分水岭：** **扫描输入是三片 `x0`、`x1`、`x2`（<b>表达式**，不是数），**
+    /// **长度取它的首维，第 `i` 片喂给第 `i` 轮。** **结果 `x0 + x1 + x2` 只能由"切的是表达式"得来——** '
+    /// **若还按常量数组处理，这里连输入都没有。**
+    ///
+    /// **This is the dividing line between runtime slicing and slicing a constant array: the scan input is three slices x0, x1 and x2 — expressions, not numbers — the length is its
+    /// leading dimension and slice i feeds round i.** **The result x0 + x1 + x2 can only come from cutting expressions; a constant-array path would not even have an input here.**
+    /// </remarks>
+    [Fact]
+    public void ARuntimeScanInput_ShouldBeSlicedPerRound() {
+        var context = new OnnxLoweringContext();
+        var scanInput = OnnxElementList.Create(new[] { 3 }, Labels("x0", "x1", "x2")).Value!;
+
+        OnnxScanLowering.Result result = OnnxScanLowering.LowerWithElements(
+            Node(length: 3, body: Body(new[] { Node("Add", "state_in", "slice_in", "state_out") }, "state_out")),
+            context,
+            new[] { Constant(0.0) },
+            scanInput,
+            new[] { "state_in", "slice_in" },
+            new[] { "final" });
+
+        result.IsOk.Should().BeTrue(result.Failure);
+        result.FinalStates![0].Expression.Monomials.Should().HaveCount(3, "x0, x1 and x2 all survive with coefficient one");
+        foreach (string name in new[] { "x0", "x1", "x2" }) {
+            result.FinalStates[0].Expression.Monomials.Should().Contain(
+                monomial => monomial.Symbol.Name == name && monomial.Coefficient.ToDouble() == 1.0,
+                name + " has to arrive exactly once");
+        }
+    }
+
+    /// <summary>**首维与声明的扫描长度不符时被拒绝** / A leading dimension that disagrees with the declared length is refused.</summary>
+    /// <remarks>
+    /// **少切一轮会漏掉一片、多切一轮会少一片，两者都不报错——** **只是循环跑的次数与模型声明的不同。**
+    ///
+    /// **One round short drops a slice and one round long reads past the end, and neither raises — the loop simply runs a different number of times than the model declares.**
+    /// </remarks>
+    [Fact]
+    public void ALengthMismatch_ShouldBeRefused() {
+        var scanInput = OnnxElementList.Create(new[] { 2 }, Labels("x0", "x1")).Value!;
+
+        OnnxScanLowering.Result result = OnnxScanLowering.LowerWithElements(
+            Node(length: 3, body: Body(new[] { Node("Identity", "slice_in", "state_out") }, "state_out")),
+            new OnnxLoweringContext(),
+            new[] { Constant(0.0) },
+            scanInput,
+            new[] { "state_in", "slice_in" },
+            new[] { "final" });
+
+        result.IsOk.Should().BeFalse("two slices cannot cover three declared rounds");
+        result.Failure.Should().Contain("3").And.Contain("2", "both numbers have to appear");
+    }
+
+    /// <summary>**多元素切片被明确拒绝，而不是塞给循环体** / A multi-element slice is refused rather than handed to the body.</summary>
+    [Fact]
+    public void AMultiElementSlice_ShouldBeRefused() {
+        var scanInput = OnnxElementList.Create(new[] { 2, 3 }, Labels("a", "b", "c", "d", "e", "f")).Value!;
+
+        OnnxScanLowering.Result result = OnnxScanLowering.LowerWithElements(
+            Node(length: 2, body: Body(new[] { Node("Identity", "slice_in", "state_out") }, "state_out")),
+            new OnnxLoweringContext(),
+            new[] { Constant(0.0) },
+            scanInput,
+            new[] { "state_in", "slice_in" },
+            new[] { "final" });
+
+        result.IsOk.Should().BeFalse("each slice holds three elements while the body takes one input");
+        result.Failure.Should().Contain("元素");
+    }
+
+    private static IReadOnlyList<LinearPolynomial<Flt64>> Labels(params string[] names) {
+        var elements = new List<LinearPolynomial<Flt64>>(names.Length);
+        foreach (string name in names) {
+            elements.Add(new LinearPolynomial<Flt64>(
+                new[] { new LinearMonomial<Flt64>(Flt64.One, new RealVar(name)) },
+                Flt64.Zero));
+        }
+        return elements;
     }
 
     private static OnnxScanExpansion.ScanNode Node(long length, OnnxGraph body) =>

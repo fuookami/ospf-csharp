@@ -1,5 +1,9 @@
 #nullable enable
 
+// IDE0007 与 IDE0008 会在同一个泛型局部上互相要求，而本文件不止一处触发；按仓库既有做法文件级关闭并写理由。
+// IDE0007 and IDE0008 demand opposite things on the same generic local and fire in more than one place here; disabled at file scope per repository practice.
+#pragma warning disable IDE0007, IDE0008
+
 using System;
 using System.Collections.Generic;
 using Fuookami.Ospf.Core.Plugin.Onnx.Proto;
@@ -15,7 +19,7 @@ namespace Fuookami.Ospf.Core.Plugin.Onnx.Lowering;
 /// </summary>
 /// <remarks>
 /// 同步 Kotlin `dee897d2` 的子图体递归降阶的第一刀。**这一批只覆盖"逐元素仿射"那几个算子（`Identity`／`Cast`／`Add`／`Sub`／`Neg`／`Mul` 常数），**
-/// **但它引入了前面所有批次都没有的东西：<b>图是被逐节点走过去的，中间结果留在上下文里</b>。**
+/// **但它引入了前面所有批次都没有的东西：**图是被逐节点走过去的，中间结果留在上下文里**。**
 ///
 /// **这就是子图展开能成立的形式：** **`If` 选中一个分支体之后，把外层可见的张量作为种子灌进上下文，** **再对分支体调用这里——** **于是"子图"不再是一个特殊概念。**
 ///
@@ -29,7 +33,7 @@ public static class OnnxGraphEvaluator
 {
     /// <summary>本批支持的算子 / The operators this batch supports.</summary>
     public static readonly IReadOnlySet<string> Supported = new HashSet<string>(StringComparer.Ordinal) {
-        "Identity", "Cast", "Add", "Sub", "Neg", "Mul",
+        "Identity", "Cast", "Add", "Sub", "Neg", "Mul", "Concat", "Split", "Gather",
         // 激活算子只在输入是常量时折叠：符号输入需要函数符号（分段线性 / 正部），那要挂进模型，
         // 不是这一层能做的。把这条边界写成显式的拒绝，比让它悄悄返回输入安全得多。
         //
@@ -63,6 +67,7 @@ public static class OnnxGraphEvaluator
     /// <param name="context">上下文（提供外层可见的张量）/ The context supplying the enclosing tensors.</param>
     /// <param name="constants">常量名到标量值的映射 / The mapping from constant names to scalar values.</param>
     /// <param name="constantArrays">常量名到数组值的映射（`Scan` 用）/ The mapping from constant names to arrays, used by Scan.</param>
+    /// <param name="allowMultiElementOutput">是否允许逐元素输出（调用方已给出每元素符号）/ whether a per-element output is allowed because the caller supplies per-element symbols.</param>
     /// <param name="constantIntArrays">常量名到整数数组的映射（`Reshape` 的目标形状用）/ The mapping from constant names to integer arrays, used by Reshape targets.</param>
     /// <returns>求值结果 / The result.</returns>
     /// <remarks>
@@ -77,7 +82,11 @@ public static class OnnxGraphEvaluator
         OnnxLoweringContext context,
         IReadOnlyDictionary<string, double>? constants = null,
         IReadOnlyDictionary<string, IReadOnlyList<double>>? constantArrays = null,
-        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays = null) {
+        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays = null,
+        bool allowMultiElementOutput = false) {
+        // 消费者表：判断一个重排有没有落到按位置读的算子上，只看直接消费者是不够的。
+        // The consumer map: deciding whether a permutation reaches a positional reader cannot stop at the direct consumer.
+        IReadOnlyDictionary<string, IReadOnlyList<OnnxNode>> consumers = Consumers(graph);
         foreach (OnnxNode node in graph.Nodes) {
             if (node.OpType == "If") {
                 string? ifFailure = EvaluateIf(node, context, constants);
@@ -87,9 +96,33 @@ public static class OnnxGraphEvaluator
                 continue;
             }
             if (OnnxShapeTransform.Operators.Contains(node.OpType)) {
-                string? shapeFailure = EvaluateShape(node, context, constantIntArrays);
+                string? shapeFailure = EvaluateShape(node, context, constantIntArrays, consumers);
                 if (shapeFailure is not null) {
                     return new Result(null, shapeFailure, node.Name);
+                }
+                continue;
+            }
+            // `Split` 有多个输出，而通用路径只绑 `node.Outputs[0]`：**按通用路径走会把第二段丢掉，**
+            // 而图里后面若有人读第二段，就会读到"没有被任何节点产出"——或者更糟，读到同名的旧绑定。
+            //
+            // Split has several outputs while the generic path binds only node.Outputs[0]: **routing it generically drops the second piece, and anything reading it later would find
+            // "not produced by any node" — or worse, a stale binding under the same name.**
+            // `Gather` 的索引必须是静态常量：**索引是变量意味着"每次取的位置不同"，** **那就不是一层能展开的东西，**
+            // **而按"取第一个"处理会让模型照常求解、结果不同。**
+            //
+            // A Gather index has to be a static constant: **a variable index means "a different position each time", which is not something this layer can unroll, and treating it as
+            // "take the first" would let the model solve with a different answer.**
+            if (node.OpType == "Gather") {
+                string? gatherFailure = EvaluateGather(node, context, constantIntArrays);
+                if (gatherFailure is not null) {
+                    return new Result(null, gatherFailure, node.Name);
+                }
+                continue;
+            }
+            if (node.OpType == "Split") {
+                string? splitFailure = EvaluateSplit(node, context);
+                if (splitFailure is not null) {
+                    return new Result(null, splitFailure, node.Name);
                 }
                 continue;
             }
@@ -137,11 +170,16 @@ public static class OnnxGraphEvaluator
                 return new Result(null, "节点输出不是单个 / the node does not produce exactly one output", node.Name);
             }
 
-            OnnxLoweringContext.Binding? produced = Compute(node.OpType, operands, out string? computeFailure);
+            OnnxLoweringContext.Binding? produced = Compute(node, operands, out string? computeFailure);
             if (produced is null) {
                 return new Result(null, computeFailure, node.Name);
             }
-            if (!context.TryRebind(node.Outputs[0], produced.Expression, produced.Shape, out string? bindFailure)) {
+            // 元素列表必须随绑定一起写下去：**丢了它，逐元素的结果就被压回一个标量表达式，**
+            // 而下游会以为那个张量就是一个数——这正是列表语义要修的那件事。
+            //
+            // The element list has to be written together with the binding: **dropping it collapses an elementwise result back into one scalar expression**, and every consumer then
+            // believes the tensor is one number — exactly what list semantics exist to fix.
+            if (!context.TryRebind(node.Outputs[0], produced.Expression, produced.Shape, out string? bindFailure, produced.Elements)) {
                 return new Result(null, bindFailure, node.Name);
             }
         }
@@ -151,15 +189,28 @@ public static class OnnxGraphEvaluator
             if (!context.TryGet(output.Name, out OnnxLoweringContext.Binding binding)) {
                 return new Result(null, "图输出 '" + output.Name + "' 没有被任何节点产出 / the graph output is not produced by anything");
             }
+            if (!allowMultiElementOutput && binding.HasElements && binding.Elements!.Count > 1) {
+                return new Result(
+                    null,
+                    "图输出 '" + output.Name + "' 有 " + binding.Elements.Count
+                    + " 个元素，而按元素取输出（对齐基线的 elementIndex）还没接 / the graph output holds several elements while element-indexed output selection is not wired yet",
+                    null);
+            }
             outputs[output.Name] = binding;
         }
         return new Result(outputs, null);
     }
 
     private static OnnxLoweringContext.Binding? Compute(
-        string opType,
+        OnnxNode node,
         IReadOnlyList<OnnxLoweringContext.Binding> operands,
         out string? failure) {
+        // 节点本身要进来：**`Concat` 的轴写在属性上，** **而"只看算子名"的签名拿不到它——** '
+        // **先前的算子都只靠名字，所以这一点一直没暴露。**
+        //
+        // The node itself has to come in: **Concat's axis lives in an attribute, and a signature that knows only the operator name cannot see it —** earlier operators needed nothing but
+        // the name, which is why this never surfaced.
+        string opType = node.OpType;
         switch (opType) {
             case "Identity":
             case "Cast": {
@@ -178,6 +229,18 @@ public static class OnnxGraphEvaluator
                     return null;
                 }
                 failure = null;
+                if (operands[0].Elements is OnnxElementList negationSource) {
+                    var negated = new List<LinearPolynomial<Flt64>>(negationSource.Count);
+                    foreach (LinearPolynomial<Flt64> element in negationSource.Elements) {
+                        negated.Add(-element);
+                    }
+                    OnnxElementList.Result list = OnnxElementList.Create(operands[0].Shape, negated);
+                    if (list.Value is not OnnxElementList negatedList) {
+                        failure = list.Failure;
+                        return null;
+                    }
+                    return new OnnxLoweringContext.Binding(Provision(negatedList), operands[0].Shape) { Elements = negatedList };
+                }
                 return new OnnxLoweringContext.Binding(-operands[0].Expression, operands[0].Shape);
             }
             case "Add":
@@ -191,6 +254,21 @@ public static class OnnxGraphEvaluator
                     failure = shapeFailure;
                     return null;
                 }
+                // 有逐元素列表时按元素配对：一个 [3] 张量加另一个 [3]，是三个位置各自相加，
+                // 而不是把"整个张量"当成一个数——这正是列表语义与标量语义的分界。
+                //
+                // With an element list the pairing is per position: [3] plus [3] adds three positions rather than treating "the tensor" as one number — exactly the line between list
+                // semantics and scalar semantics.
+                if (operands[0].HasElements || operands[1].HasElements) {
+                    OnnxElementList.Result paired = Pair(opType, operands[0], operands[1]);
+                    if (!paired.IsOk) {
+                        failure = paired.Failure;
+                        return null;
+                    }
+                    failure = null;
+                    return new OnnxLoweringContext.Binding(Provision(paired.Value!), shape) { Elements = paired.Value };
+                }
+
                 failure = null;
                 // 必须合并同名单项式：`x + x` 若留成两个单项式，下游会把同一个变量算两遍——
                 // 求解器看到的是"两个不同的列"，而它给出的最优值对应的是一个变量被拆成两半的模型。
@@ -206,6 +284,35 @@ public static class OnnxGraphEvaluator
                             ? operands[0].Expression.Constant + operands[1].Expression.Constant
                             : operands[0].Expression.Constant - operands[1].Expression.Constant),
                     shape);
+            }
+            case "Concat": {
+                // 拼接按轴进行，**必须有逐元素列表**：**没有它，"第几个元素接到哪里"没有任何依据，**
+                // 而按"一个数"处理会把多段张量当成一个加数——数值上看不出异常。
+                //
+                // Concatenation happens along an axis and **requires element lists**: without them there is no ground for "which element goes where", and treating it as one number
+                // would make several tensors into a single summand — invisible numerically.
+                long axis = 0;
+                foreach (OnnxAttribute attribute in node.Attributes) {
+                    if (attribute.Name == "axis" && attribute.Integer is long value) {
+                        axis = value;
+                    }
+                }
+                var parts = new List<OnnxElementList>(operands.Count);
+                foreach (OnnxLoweringContext.Binding operand in operands) {
+                    if (operand.Elements is not OnnxElementList list) {
+                        failure = "'Concat' 的输入缺少逐元素列表 / a Concat input has no element list"
+                                  + "（对齐基线的 inputBindings：调用方要为每个输入给出每个元素的符号 / supply one symbol per element through inputBindings）";
+                        return null;
+                    }
+                    parts.Add(list);
+                }
+                OnnxElementList.Result joined = OnnxElementList.Concat(parts, (int)axis);
+                if (joined.Value is not OnnxElementList joinedList) {
+                    failure = joined.Failure;
+                    return null;
+                }
+                failure = null;
+                return new OnnxLoweringContext.Binding(Provision(joinedList), joinedList.Shape) { Elements = joinedList };
             }
             case "Mul": {
                 if (operands.Count != 2) {
@@ -300,7 +407,8 @@ public static class OnnxGraphEvaluator
     private static string? EvaluateShape(
         OnnxNode node,
         OnnxLoweringContext context,
-        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays) {
+        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays,
+        IReadOnlyDictionary<string, IReadOnlyList<OnnxNode>> consumers) {
         if (node.Inputs.Count == 0 || !context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding input)) {
             return "形状算子 '" + node.OpType + "' 的输入不在上下文里 / the shape operator's input is not in the context";
         }
@@ -337,6 +445,32 @@ public static class OnnxGraphEvaluator
             }
         }
 
+        // 顺序敏感的算子在多元素张量上无法落地：形状能算，而重排无处可写。
+        // 但只有当这个重排**落到一个按位置读的算子**上时才可见——否则逐元素消费不看位置，重排是空操作。
+        // 若绑定带逐元素列表，重排就真的发生（B1368），此时不再需要拒绝。
+        //
+        // An order-sensitive operator cannot land on a multi-element tensor here: the shape computes and the permutation has nowhere to go. But that is only visible when the
+        // permutation reaches a positional reader — an elementwise consumer does not look at position, and then the permutation is a no-op.
+        bool hasElements = input.HasElements && input.Elements!.Count == (int)ElementsOf(input.Shape);
+
+        // 形状是多元素、却没有逐元素列表：**这一步没有东西可重排，而"没有东西可重排"不等于"重排没发生"。** '
+        // 放过去会把一个 [2,3] 张量当成一个数，形状写着 6 而绑定里只有一个符号——**那是一个自相矛盾的绑定，**
+        // 任何下游按位置读它都会拿到同一个数。**所以宁可在入口拒绝。**
+        //
+        // A multi-element shape with no element list: **this step has nothing to permute, and "nothing to permute" is not "the permutation did not happen".** Letting it through
+        // treats a [2,3] tensor as one number — a shape of 6 with a single symbol in the binding, a self-contradictory binding whose every positional read returns the same number.
+        // **So it is refused at the entrance instead.**
+        if (!hasElements && ElementsOf(input.Shape) > 1) {
+            return "'" + node.OpType + "' 的输入 '" + (node.Inputs.Count > 0 ? node.Inputs[0] : "?")
+                   + "' 形状有 " + ElementsOf(input.Shape) + " 个元素，却没有逐元素列表 / the input has a multi-element shape but no element list"
+                   + "（对齐基线的 inputBindings：调用方要为每个输入给出每个元素的符号 / sync the baseline inputBindings: the caller supplies one symbol per element）";
+        }
+        if (!hasElements
+            && !OnnxShapeTransform.CanApply(node.OpType, input.Shape, out string? orderFailure)
+            && ReachesPositionalConsumer(node, consumers)) {
+            return orderFailure;
+        }
+
         OnnxShapeTransform.Result transformed = OnnxShapeTransform.Compute(
             node.OpType,
             input.Shape,
@@ -353,10 +487,236 @@ public static class OnnxGraphEvaluator
                 return "'" + node.OpType + "' 得到负的维度 " + dimension + " / the operator produced a negative dimension";
             }
         }
-        return context.TryRebind(node.Outputs[0], input.Expression, transformed.Shape!, out string? bindFailure)
+        // 有元素列表时，顺序敏感算子真的重排它；顺序保持的算子原样带过。
+        // With an element list, an order-sensitive operator really permutes it; an order-preserving one carries it through unchanged.
+        OnnxElementList? reordered = input.Elements;
+        if (hasElements && OnnxShapeTransform.OrderChanging.Contains(node.OpType) && outputPermutation(node) is IReadOnlyList<int> permutation) {
+            OnnxElementList.Result permuted = input.Elements!.Transpose(permutation);
+            if (!permuted.IsOk) {
+                return permuted.Failure;
+            }
+            reordered = permuted.Value;
+        }
+        else if (hasElements && orderPreservingMismatch(node.OpType, input.Shape, transformed.Shape!)) {
+            // `Reshape`／`Flatten`／`Squeeze`／`Unsqueeze` 只改形状，元素列表原样保留：
+            // 改形状不改元素顺序，两者元素个数相同。
+            // These only change the shape and keep the element list as is: changing the shape does not change the order, and the element counts agree.
+            reordered = input.Elements;
+        }
+        return context.TryRebind(node.Outputs[0], input.Expression, transformed.Shape!, out string? bindFailure, reordered)
             ? null
             : bindFailure;
     }
+
+    /// <summary>名字到消费它的节点的映射 / The mapping from a name to the nodes consuming it.</summary>
+    private static IReadOnlyDictionary<string, IReadOnlyList<OnnxNode>> Consumers(OnnxGraph graph) {
+        var map = new Dictionary<string, List<OnnxNode>>(StringComparer.Ordinal);
+        foreach (OnnxNode node in graph.Nodes) {
+            foreach (string input in node.Inputs) {
+                if (!map.TryGetValue(input, out List<OnnxNode>? list)) {
+                    list = new List<OnnxNode>();
+                    map[input] = list;
+                }
+                list.Add(node);
+            }
+        }
+        var result = new Dictionary<string, IReadOnlyList<OnnxNode>>(StringComparer.Ordinal);
+        foreach (KeyValuePair<string, List<OnnxNode>> entry in map) {
+            result[entry.Key] = entry.Value;
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// 这个张量的下游是否有按位置读的算子 / Whether anything downstream reads this tensor positionally.
+    /// </summary>
+    /// <remarks>
+    /// **必须沿链走到尽头：** **`Transpose → Transpose → Concat` 里第一个重排的影响会穿过第二个传下去，** **只看直接消费者会漏掉它。**
+    /// **环用一个访问集合断掉：** 图的节点顺序在合法模型里无环，但非法模型不该让这里挂住。
+    ///
+    /// **The walk has to reach the end of the chain: in Transpose → Transpose → Concat the first permutation carries through the second, and looking only at the direct consumer
+    /// misses it.** **A visited set breaks cycles: a legal graph has none, but an illegal one should not hang this.**
+    /// </remarks>
+    private static bool ReachesPositionalConsumer(OnnxNode node, IReadOnlyDictionary<string, IReadOnlyList<OnnxNode>> consumers) {
+        var pending = new Queue<string>();
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        foreach (string output in node.Outputs) {
+            pending.Enqueue(output);
+        }
+        while (pending.Count > 0) {
+            string name = pending.Dequeue();
+            if (!visited.Add(name)) {
+                continue;
+            }
+            if (!consumers.TryGetValue(name, out IReadOnlyList<OnnxNode>? readers)) {
+                continue;
+            }
+            foreach (OnnxNode reader in readers) {
+                if (OnnxShapeTransform.PositionalConsumers.Contains(reader.OpType)) {
+                    return true;
+                }
+                foreach (string output in reader.Outputs) {
+                    pending.Enqueue(output);
+                }
+            }
+        }
+        return false;
+    }
+
+    /// <summary>状态数 = 体输入数 - 1（切片占一个）/ The state count is the body's input count minus the slice.</summary>
+    private static int stateCountFor(OnnxGraph body) => body.Inputs.Count - 1;
+
+    /// <summary>
+    /// 逐元素配对两个操作数 / Pair two operands element by element.
+    /// </summary>
+    /// <remarks>
+    /// **一方是标量（没有元素列表）时按它对齐到每个位置：** **一个标量加一个张量，在 ONNX 里就是逐元素加。** '
+    /// **两方都有元素列表但长度不同则拒绝——** **那意味着广播规则没在这一层实现，而放过去会让某几个位置静默取错数。**
+    ///
+    /// **A scalar (no element list) aligns to every position: ONNX defines scalar-plus-tensor as elementwise.** **Two element lists of different lengths are refused — that means
+    /// the broadcast rule is not implemented at this layer, and letting it through would silently take the wrong number at some positions.**
+    /// </remarks>
+    private static OnnxElementList.Result Pair(string opType, OnnxLoweringContext.Binding left, OnnxLoweringContext.Binding right) {
+        IReadOnlyList<LinearPolynomial<Flt64>>? leftElements = left.Elements?.Elements;
+        IReadOnlyList<LinearPolynomial<Flt64>>? rightElements = right.Elements?.Elements;
+        if (leftElements is not null && rightElements is not null && leftElements.Count != rightElements.Count) {
+            return new OnnxElementList.Result(
+                null,
+                "'" + opType + "' 的两个操作数分别有 " + leftElements.Count + " 与 " + rightElements.Count
+                + " 个元素 / the two operands hold different element counts");
+        }
+        int count = leftElements?.Count ?? rightElements?.Count ?? 0;
+        var shape = leftElements is not null ? left.Shape : right.Shape;
+        var paired = new List<LinearPolynomial<Flt64>>(count);
+        for (int index = 0; index < count; ++index) {
+            LinearPolynomial<Flt64> a = leftElements is null ? left.Expression : leftElements[index];
+            LinearPolynomial<Flt64> b = rightElements is null ? right.Expression : rightElements[index];
+            paired.Add(opType == "Add"
+                ? Normalise(Concat(a, b), a.Constant + b.Constant)
+                : Normalise(Subtract(a, b), a.Constant - b.Constant));
+        }
+        return OnnxElementList.Create(shape, paired);
+    }
+
+    /// <summary>
+    /// 多元素绑定的标量投影 / The scalar projection of a multi-element binding.
+    /// </summary>
+    /// <remarks>
+    /// **多元素绑定没有唯一的标量表达式，** **所以这里的"表达式"不是结果，而是一个占位：** **取第一个元素，仅仅是让"要不要用 Elements"这件事在类型上说得通。**
+    /// **任何真正读 `Expression` 的地方若碰上一个多元素绑定，就会读到只属于第一个位置的值——** **因此图输出若多元素，下方会明确拒绝，而不是让它漏出去。**
+    ///
+    /// **A multi-element binding has no single scalar expression, so the expression here is not the result but a placeholder: the first element, only so that "use Elements or not"
+    /// makes sense to the type system.** **Anywhere that really reads Expression while holding a multi-element binding would get the first position only — which is why a
+    /// multi-element graph output is refused below instead of leaking.**
+    /// </remarks>
+    private static LinearPolynomial<Flt64> Provision(OnnxElementList list) => list.Elements[0];
+
+    /// <summary>
+    /// 求值一个 `Gather` / Evaluate a Gather.
+    /// </summary>
+    /// <param name="node">节点 / The node.</param>
+    /// <param name="context">上下文 / The context.</param>
+    /// <param name="constantIntArrays">整数数组常量表（索引从这里取）/ the integer-array constant table the indices come from.</param>
+    /// <returns>失败原因，或 `null` / the failure reason, or null.</returns>
+    private static string? EvaluateGather(
+        OnnxNode node,
+        OnnxLoweringContext context,
+        IReadOnlyDictionary<string, IReadOnlyList<long>>? constantIntArrays) {
+        if (node.Inputs.Count < 2 || !context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding data)) {
+            return "'Gather' 的数据输入 '" + (node.Inputs.Count > 0 ? node.Inputs[0] : "?") + "' 不在上下文里 / the data input is not in the context";
+        }
+        if (data.Elements is not OnnxElementList list) {
+            return "'Gather' 的输入缺少逐元素列表 / the input has no element list"
+                   + "（对齐基线的 inputBindings：调用方要为每个输入给出每个元素的符号 / supply one symbol per element through inputBindings）";
+        }
+        if (constantIntArrays is null || !constantIntArrays.TryGetValue(node.Inputs[1], out IReadOnlyList<long>? rawIndices)) {
+            return "'Gather' 的索引 '" + node.Inputs[1] + "' 不是静态常量 / the indices are not a static constant"
+                   + "（索引是变量意味着每次取的位置不同 / a variable index means a different position each time）";
+        }
+        long axis = 0;
+        foreach (OnnxAttribute attribute in node.Attributes) {
+            if (attribute.Name == "axis" && attribute.Integer is long value) {
+                axis = value;
+            }
+        }
+        var indices = new List<int>(rawIndices.Count);
+        foreach (long raw in rawIndices) {
+            indices.Add((int)raw);
+        }
+        OnnxElementList.Result gathered = list.Gather(indices, (int)axis);
+        if (gathered.Value is not OnnxElementList gatheredList) {
+            return gathered.Failure;
+        }
+        return context.TryRebind(node.Outputs[0], Provision(gatheredList), gatheredList.Shape, out string? bindFailure, gatheredList)
+            ? null
+            : bindFailure;
+    }
+
+    /// <summary>
+    /// 求值一个 `Split`，并把每一段绑到各自声明的名字上 / Evaluate a Split and bind each piece to its own declared name.
+    /// </summary>
+    /// <param name="node">节点 / The node.</param>
+    /// <param name="context">上下文 / The context.</param>
+    /// <returns>失败原因，或 `null` / the failure reason, or null.</returns>
+    /// <remarks>
+    /// **多输出是这一批的目的：** **`Split` 的每一段都要绑，** **否则"形状对、元素对、而后面读不到"这种半成品会被当成成功。**
+    ///
+    /// **Each piece has to be bound: otherwise a half-done job — right shape, right elements, unreadable afterwards — passes as success.**
+    /// </remarks>
+    private static string? EvaluateSplit(OnnxNode node, OnnxLoweringContext context) {
+        if (node.Inputs.Count == 0 || !context.TryGet(node.Inputs[0], out OnnxLoweringContext.Binding input)) {
+            return "'Split' 的输入 '" + (node.Inputs.Count > 0 ? node.Inputs[0] : "?") + "' 不在上下文里 / the input is not in the context";
+        }
+        if (input.Elements is not OnnxElementList list) {
+            return "'Split' 的输入缺少逐元素列表 / the input has no element list"
+                   + "（对齐基线的 inputBindings：调用方要为每个输入给出每个元素的符号 / supply one symbol per element through inputBindings）";
+        }
+        long axis = 0;
+        IReadOnlyList<int>? sizes = null;
+        foreach (OnnxAttribute attribute in node.Attributes) {
+            if (attribute.Name == "axis" && attribute.Integer is long value) {
+                axis = value;
+            }
+            if (attribute.Name == "split" && attribute.Integers is { Count: > 0 } pieces) {
+                sizes = ToInts(pieces);
+            }
+        }
+        OnnxElementList.SplitResult split = list.Split((int)axis, sizes, node.Outputs.Count);
+        if (split.Values is not IReadOnlyList<OnnxElementList> produced) {
+            return split.Failure;
+        }
+        for (int index = 0; index < produced.Count; ++index) {
+            OnnxElementList piece = produced[index];
+            if (!context.TryRebind(node.Outputs[index], Provision(piece), piece.Shape, out string? bindFailure, piece)) {
+                return bindFailure;
+            }
+        }
+        return null;
+    }
+
+    private static long ElementsOf(IReadOnlyList<int> shape) {
+        long total = 1;
+        foreach (int dimension in shape) {
+            total *= dimension;
+        }
+        return total;
+    }
+
+    /// <summary>`Transpose` 的置换（缺省为逆序）/ The permutation for Transpose, reversed when absent.</summary>
+    private static IReadOnlyList<int>? outputPermutation(OnnxNode node) {
+        foreach (OnnxAttribute attribute in node.Attributes) {
+            if (attribute.Name == "perm" && attribute.Integers is { Count: > 0 } values) {
+                return ToInts(values);
+            }
+        }
+        return null;
+    }
+
+    /// <summary>顺序保持算子改完形状后，元素列表能否原样带过 / Whether an order-preserving operator can carry the list through.</summary>
+    private static bool orderPreservingMismatch(string opType, IReadOnlyList<int> inputShape, IReadOnlyList<int> outputShape)
+        => OnnxShapeTransform.Operators.Contains(opType)
+           && !OnnxShapeTransform.OrderChanging.Contains(opType)
+           && ElementsOf(inputShape) == ElementsOf(outputShape);
 
     private static IReadOnlyList<int> ToInts(IReadOnlyList<long> values) {
         var result = new List<int>(values.Count);
@@ -493,8 +853,55 @@ public static class OnnxGraphEvaluator
         if (body is null) {
             return "'Scan' 缺少循环体 / the scan has no body";
         }
+        // 扫描输入带逐元素列表时，运行期切片就能真发生：长度取首维、每轮切一片（B1367 的入口）。
+        // When the scan input carries an element list, runtime slicing can really happen: the length is the leading dimension and each round cuts one slice.
+        if (node.Inputs.Count > 0 && context.TryGet(node.Inputs[^1], out OnnxLoweringContext.Binding scanBound) && scanBound.HasElements) {
+            var elementStates = new List<OnnxLoweringContext.Binding>(stateCountFor(body));
+            for (int index = 0; index < stateCountFor(body); ++index) {
+                string name = node.Inputs[index];
+                if (context.TryGet(name, out OnnxLoweringContext.Binding bound)) {
+                    elementStates.Add(bound);
+                }
+                else if (TryConstant(name, context, constants, out double initial)) {
+                    elementStates.Add(new OnnxLoweringContext.Binding(ConstantPolynomial(initial), Array.Empty<int>()));
+                }
+                else {
+                    return "Scan 状态 '" + name + "' 既不在上下文里也不是常量 / a state is neither in the context nor a constant";
+                }
+            }
+            var names = new List<string>();
+            foreach (OnnxValueInfo input in body.Inputs) {
+                names.Add(input.Name);
+            }
+            var shaped = new OnnxScanExpansion.ScanNode(
+                body,
+                scanBound.Elements!.Shape.Count == 0 ? 0 : scanBound.Elements.Shape[0],
+                scanBound.Elements.Shape.Count == 0 ? 0 : scanBound.Elements.Shape[0],
+                elementStates.Count,
+                elementStates.Count,
+                elementStates.Count,
+                elementStates.Count);
+            OnnxScanLowering.Result runtime = OnnxScanLowering.LowerWithElements(
+                shaped,
+                context,
+                elementStates,
+                scanBound.Elements,
+                names,
+                node.Outputs,
+                constants);
+            return runtime.IsOk ? null : runtime.Failure;
+        }
+
         if (sliceValues is null || sliceValues.Count == 0) {
-            return "'Scan' 的扫描输入必须是常量张量 / the scan input has to be a constant tensor, or the length is unknown at import time";
+            // 说真话：不是"必须是常量"，而是"逐轮切片需要元素列表，而这一层每个绑定只有一个标量表达式"。
+            // 基线用 `sliceLeading` 从张量表达式里切元素子集，那需要逐元素表示。
+            //
+            // Say the real reason: it is not "must be constant" but "a per-round slice needs an element list, and each binding here is one scalar expression". The baseline
+            // slices a sub-list of elements out of a tensor expression with sliceLeading, which needs the per-element representation.
+            return "'Scan' 的扫描输入这里取不到逐轮切片：导入期只有常量张量才拿得到每一片，"
+                 + "而运行期切片需要逐元素表示（基线用 sliceLeading 从张量表达式中切元素子集），这一层每个绑定只有一个标量表达式 / "
+                 + "per-round slices are unavailable here: only a constant tensor yields slices at import time, and a runtime slice needs the per-element representation "
+                 + "(the baseline slices elements out of a tensor expression with sliceLeading) while each binding here is one scalar expression";
         }
 
         // 节点输入：状态在前，被逐轮切片的输入在后。缺省时以"状态数 = 体输入数 - 1"推断。

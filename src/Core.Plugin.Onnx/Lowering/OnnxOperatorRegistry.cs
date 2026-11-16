@@ -48,6 +48,17 @@ public static class OnnxOperatorRegistry
             //
             // Control flow: first degree (bodies currently express affine forms only) and no operator-level bound requirement — bounds come from the input tensors and do
             // not become necessary merely because control flow is present.
+            // 形状算子：一阶、不改数值。`Transpose` 登记为可用，而"落到按位置消费者上时拒绝"由求值器负责——
+            // 前置检查只看"这个算子认识不认识"，不看"这一步在当前位置可不可观察"。
+            //
+            // Shape operators: first degree, no value changes. Transpose is registered as known, and "refused when it reaches a positional reader" belongs to the evaluator — preflight
+            // only answers "do we know this operator", not "is this step observable at this position".
+            ["Reshape"] = new("Reshape", 1, false),
+            ["Flatten"] = new("Flatten", 1, false),
+            ["Squeeze"] = new("Squeeze", 1, false),
+            ["Unsqueeze"] = new("Unsqueeze", 1, false),
+            ["Transpose"] = new("Transpose", 1, false),
+            ["Concat"] = new("Concat", 1, false),
             ["If"] = new("If", 1, false),
             ["Loop"] = new("Loop", 1, false),
             ["Scan"] = new("Scan", 1, false),

@@ -51,7 +51,12 @@ public class HandoffFreshnessTests {
     [Fact]
     public void TheHandoffTable_ShouldNameTheNewestBatch() {
         string plan = File.ReadAllText(PlanPath());
-        int newest = Regex.Matches(plan, @"^### P[4-9] Batch (\d+)", RegexOptions.Multiline)
+        // 阶段号必须允许多位：**`P[4-9]` 只认个位数阶段，而计划已经走到 P10——**
+        // **那条正则会把 P10 的批次整条漏掉，于是"最新批次"停在上一个阶段，而比较照样通过。**
+        //
+        // The phase number has to allow more than one digit: **P[4-9] only matches single-digit phases and the plan has reached P10 —** the regex would drop every P10 entry, leaving
+        // "newest batch" at the previous phase while the comparison still passed.
+        int newest = Regex.Matches(plan, @"^### P[1-9]\d* Batch (\d+)", RegexOptions.Multiline)
             .Select(match => int.Parse(match.Groups[1].Value))
             .Max();
 
@@ -117,7 +122,12 @@ public class HandoffFreshnessTests {
     public void TheNextBatchPointer_ShouldNotLagBehind() {
         string plan = File.ReadAllText(PlanPath());
 
-        int newest = Regex.Matches(plan, @"^### P[4-9] Batch (\d+)", RegexOptions.Multiline)
+        // 阶段号必须允许多位：**`P[4-9]` 只认个位数阶段，而计划已经走到 P10——**
+        // **那条正则会把 P10 的批次整条漏掉，于是"最新批次"停在上一个阶段，而比较照样通过。**
+        //
+        // The phase number has to allow more than one digit: **P[4-9] only matches single-digit phases and the plan has reached P10 —** the regex would drop every P10 entry, leaving
+        // "newest batch" at the previous phase while the comparison still passed.
+        int newest = Regex.Matches(plan, @"^### P[1-9]\d* Batch (\d+)", RegexOptions.Multiline)
             .Select(match => int.Parse(match.Groups[1].Value))
             .Max();
 
@@ -221,7 +231,9 @@ public class HandoffFreshnessTests {
         const int DeclaredLossLast = 1268;
 
         string[] missing = named
-            .Where(number => !Regex.IsMatch(plan, $@"^### P[4-9] Batch {number}[：:]", RegexOptions.Multiline))
+            // 两处假设都过时了：**阶段号已经到两位数，而标题也早就不用"数字+冒号"的写法，** **于是它会把真实存在的批次判成"只出现在交接里"。**
+            // Both assumptions were stale: **phases have reached two digits and headings no longer use number-plus-colon, so a batch that really exists got judged as "cited only in the hand-off".**
+            .Where(number => !Regex.IsMatch(plan, $@"^### P[1-9]\d* Batch {number}(?:[：:（(]|$)", RegexOptions.Multiline))
             .Select(number => $"B{number}")
             .ToArray();
 

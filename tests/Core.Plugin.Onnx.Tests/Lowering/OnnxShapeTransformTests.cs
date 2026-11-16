@@ -119,6 +119,39 @@ public class OnnxShapeTransformTests
         OnnxShapeTransform.Compute("Unsqueeze", new[] { 3, 4 }, squeezeAxes: new[] { 0, 0 }).IsOk.Should().BeFalse();
     }
 
+    /// <summary>**会重排元素的算子在多元素张量上被拒绝** / An order-changing operator on a multi-element tensor is refused.</summary>
+    /// <remarks>
+    /// **基线里 `transpose` 会按坐标重排 `input.elements`，而这一层每个绑定只有一个标量表达式加一个形状。** '
+    /// **形状换了、表达式没换——** **下游若按位置去接，拿到的就是错位的元素，而模型照常求解。** '
+    /// **所以这里不是"还没做"，是"这一层表达不了"。**
+    ///
+    /// **In the baseline transpose permutes input.elements by coordinate, while each binding here holds one scalar expression plus a shape.** **The shape changes and the
+    /// expression does not, and a positional downstream then reads misaligned elements while the model still solves.** **So this is not "not done yet" — this layer cannot
+    /// express it.**
+    /// </remarks>
+    [Fact]
+    public void AnOrderChangingOperator_ShouldBeRefusedOnMultiElement() {
+        OnnxShapeTransform.CanApply("Transpose", new[] { 2, 3 }, out string? failure).Should().BeFalse();
+        failure.Should().Contain("重排").And.Contain("元素");
+
+        OnnxShapeTransform.CanApply("Reshape", new[] { 2, 3 }, out _).Should().BeTrue("a reshape keeps the element order");
+        OnnxShapeTransform.CanApply("Flatten", new[] { 2, 3 }, out _).Should().BeTrue();
+        OnnxShapeTransform.CanApply("Squeeze", new[] { 1, 3 }, out _).Should().BeTrue();
+        OnnxShapeTransform.CanApply("Unsqueeze", new[] { 3 }, out _).Should().BeTrue();
+    }
+
+    /// <summary>**单元素张量上重排没有意义，所以放过** / On a one-element tensor the order means nothing, so it passes.</summary>
+    /// <remarks>
+    /// **放过它是因为它真的无害，不是因为"反正没人检查"。**
+    ///
+    /// **It passes because it is genuinely harmless, not because nobody checks.**
+    /// </remarks>
+    [Fact]
+    public void AnOrderChangingOperator_ShouldPassOnASingleElement() {
+        OnnxShapeTransform.CanApply("Transpose", new[] { 1 }, out string? failure).Should().BeTrue(failure);
+        OnnxShapeTransform.CanApply("Transpose", new[] { 1, 1, 1 }, out _).Should().BeTrue();
+    }
+
     /// <summary>**不认识的算子被拒绝** / An operator outside the group is refused.</summary>
     [Fact]
     public void AnOperatorOutsideTheGroup_ShouldBeRefused() {

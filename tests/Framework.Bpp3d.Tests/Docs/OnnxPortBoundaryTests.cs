@@ -56,10 +56,10 @@ public class OnnxPortBoundaryTests
             cells[4].Trim().Length.Should().BeGreaterThan(8, "the upgrade path cannot be left empty: " + row);
             cells[5].Trim().Length.Should().BeGreaterThan(4, "the impact has to be stated: " + row);
         }
-        counted.Should().BeGreaterThanOrEqualTo(4,
-            "the KNOWN unmigrated items are: shape-operator model rewriting, "
-            + "multi-state Scan, the name-level parity that is deliberately not a goal, and the ir_version branch that is not taken "
-            + "(in-place loop bodies left in B1355 and the approximated activations in B1361, which is why this count only goes down when a batch lands one)");
+        counted.Should().BeGreaterThanOrEqualTo(1,
+            "one row remains: the name-level parity that is deliberately not a goal "
+            + "(in-place loop bodies left in B1355, the approximated activations in B1361, the ir_version question in B1364 and the Scan runtime slices in B1368, which is why this "
+            + "count only goes down when a batch lands one. **It is 1 now because the list-semantics work is finished; a row is not invented to keep a number up.**");
     }
 
     /// <summary>**每一项的动机写在文档里的那一条，与它对应** / Each reason names what it would take, not merely "not done".</summary>

@@ -38,6 +38,62 @@ public static class OnnxScanLowering
     }
 
     /// <summary>
+    /// 用逐元素表示驱动展开：非常量扫描输入也能逐轮切片 / Unroll driven by the per-element representation, so a non-constant scan input can be sliced round by round.
+    /// </summary>
+    /// <param name="node">节点 / The node.</param>
+    /// <param name="context">外层上下文 / The outer context.</param>
+    /// <param name="initialStates">状态初值 / The initial states.</param>
+    /// <param name="scanInput">扫描输入的逐元素表示 / The scan input's per-element representation.</param>
+    /// <param name="bodyInputNames">循环体接收的名字（状态在前，其后是切片）/ The body names, states first and then the slice.</param>
+    /// <param name="outputNames">节点声明的输出名 / The node's declared output names.</param>
+    /// <param name="constants">常量表 / The constant table.</param>
+    /// <returns>展开结果 / The result.</returns>
+    /// <remarks>
+    /// **这一入口存在的理由，是"长度与切片都来自那个张量本身"：** **长度取首维（与基线 `lowerScan` 一致），第 `i` 片取 `SliceLeading(i)`。** '
+    /// **切片之后每轮的输入可以含变量——** **这正是"运行期切片"与"常量数组切片"的差别：** **前者切的是表达式，后者切的是数。**
+    ///
+    /// **The reason this entry exists is that both the length and the slices come from that tensor: the length is the leading dimension (as in the baseline's lowerScan) and round i
+    /// takes SliceLeading(i).** **A sliced round input may carry variables — that is exactly the difference between runtime slicing and slicing a constant array: one cuts expressions,
+    /// the other cuts numbers.**
+    /// </remarks>
+    public static Result LowerWithElements(
+        OnnxScanExpansion.ScanNode node,
+        OnnxLoweringContext context,
+        IReadOnlyList<OnnxLoweringContext.Binding> initialStates,
+        OnnxElementList scanInput,
+        IReadOnlyList<string> bodyInputNames,
+        IReadOnlyList<string> outputNames,
+        IReadOnlyDictionary<string, double>? constants = null) {
+        if (scanInput is null) {
+            return new Result("扫描输入为空 / the scan input is null", null);
+        }
+        int length = scanInput.Shape.Count == 0 ? 0 : scanInput.Shape[0];
+        if (length != node.ScanInputShape) {
+            return new Result(
+                "扫描输入的首维 " + length + " 与节点声明的扫描长度 " + node.ScanInputShape
+                + " 不符 / the leading dimension disagrees with the declared scan length, so some round would read the wrong slice", null);
+        }
+
+        var slices = new List<OnnxLoweringContext.Binding>(length);
+        for (int round = 0; round < length; ++round) {
+            OnnxElementList.Result slice = scanInput.SliceLeading(round);
+            if (!slice.IsOk) {
+                return new Result(slice.Failure, null);
+            }
+            // 切片若不是单元素，说明循环体要的是张量而不是一个位置——那一层还没做，明确拒绝。
+            // A slice with more than one element means the body wants a tensor rather than one position; that layer is not here, so refuse explicitly.
+            if (slice.Value!.Count != 1) {
+                return new Result(
+                    "第 " + round + " 片有 " + slice.Value.Count
+                    + " 个元素，而这一层只能把单元素切片喂给循环体 / the slice holds several elements while this layer can only feed a single-element slice", null);
+            }
+            slices.Add(new OnnxLoweringContext.Binding(slice.Value.Elements[0], slice.Value.Shape));
+        }
+
+        return Lower(node, context, initialStates, slices, bodyInputNames, outputNames, constants);
+    }
+
+    /// <summary>
     /// 在上下文里展开一个 `Scan` / Unroll one Scan inside a context.
     /// </summary>
     /// <param name="node">节点 / The node.</param>

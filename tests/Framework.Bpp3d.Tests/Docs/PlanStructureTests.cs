@@ -152,7 +152,7 @@ public class PlanStructureTests
     [Fact]
     public void TheStatusDoc_ShouldNameTheNewestBatch() {
         string plan = File.ReadAllText(PlanPath());
-        int newest = Regex.Matches(plan, @"^### P[4-9] Batch (\d+)", RegexOptions.Multiline)
+        int newest = Regex.Matches(plan, @"^### P[1-9]\d* Batch (\d+)", RegexOptions.Multiline)
             .Select(match => int.Parse(match.Groups[1].Value))
             .Max();
 

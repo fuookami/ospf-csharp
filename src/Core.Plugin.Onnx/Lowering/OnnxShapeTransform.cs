@@ -29,6 +29,73 @@ public static class OnnxShapeTransform
     };
 
     /// <summary>
+    /// **会改变元素顺序的算子** / The operators that change the element order.
+    /// </summary>
+    /// <remarks>
+    /// 对齐基线 `OnnxShapeOperators`：**`reshape`／`flatten` 原样带着 `input.elements`，而 `transpose` 会按坐标重排元素。**
+    /// **这一层每个绑定只有一个标量表达式加一个形状，没有逐元素列表——** **所以"重排"在这里无处可写。**
+    ///
+    /// **不写"无处可写"的后果是静默的：** **形状换了、表达式没换，** **下游若按位置去接（`MatMul`、`Concat`），**
+    /// **拿到的就是错位的元素，而模型照常求解。** **所以顺序敏感的算子在多元素张量上必须拒绝，而不是装作支持。**
+    ///
+    /// Mirrors the baseline: reshape and flatten carry input.elements unchanged while transpose permutes them by coordinate. **Each binding here holds one scalar expression
+    /// plus a shape and no element list, so the permutation has nowhere to be written down.**
+    ///
+    /// **The consequence of not writing that down is silent: the shape changes and the expression does not, and a downstream operator that reads positionally (MatMul, Concat)
+    /// receives misaligned elements while the model still solves.** **So an order-sensitive operator on a multi-element tensor has to be refused, not pretended.**
+    /// </remarks>
+    public static readonly IReadOnlySet<string> OrderChanging = new HashSet<string>(StringComparer.Ordinal) {
+        "Transpose",
+    };
+
+    /// <summary>
+    /// **按位置消费张量的算子** / The operators that consume a tensor positionally.
+    /// </summary>
+    /// <remarks>
+    /// **重排只有在被这些算子读到的时候才是可见的：** **它们按"第几个元素"取值，** **而逐元素的加法、激活、`Reshape` 都不看位置。**
+    /// **所以"要不要拒绝 `Transpose`"不是一个全局问题，而是"这个重排有没有落到一个按位置读的算子上"。**
+    ///
+    /// **A permutation is only visible where one of these operators reads it: they take "the n-th element", while elementwise addition, activations and Reshape do not look at
+    /// position.** **So "should Transpose be refused" is not a global question but "did this permutation land on a positional reader".**
+    /// </remarks>
+    public static readonly IReadOnlySet<string> PositionalConsumers = new HashSet<string>(StringComparer.Ordinal) {
+        "Concat", "Split", "Gather", "MatMul", "Gemm", "Conv", "MaxPool", "AveragePool",
+    };
+
+    /// <summary>
+    /// 判断一个算子在该张量上是否可安全落地 / Whether an operator can be applied safely to this tensor.
+    /// </summary>
+    /// <param name="opType">算子类型 / The operator type.</param>
+    /// <param name="shape">输入形状 / The input shape.</param>
+    /// <param name="failure">失败原因 / The failure reason.</param>
+    /// <returns>是否可落地 / Whether it can be applied.</returns>
+    /// <remarks>
+    /// **单元素张量上顺序没有意义，所以放过；** **多元素上顺序有意义，而这一层表达不了它——拒绝。** '
+    /// **放过单元素的理由是它真的无害，不是因为"反正没人检查"。**
+    ///
+    /// **On a one-element tensor order carries no meaning, so it passes; on a multi-element tensor order does carry meaning and this layer cannot express it, so it is refused.**
+    /// **The one-element pass exists because it is genuinely harmless, not because nobody checks.**
+    /// </remarks>
+    public static bool CanApply(string opType, IReadOnlyList<int> shape, out string? failure) {
+        if (!OrderChanging.Contains(opType)) {
+            failure = null;
+            return true;
+        }
+        long elements = 1;
+        foreach (int dimension in shape) {
+            elements *= dimension;
+        }
+        if (elements <= 1) {
+            failure = null;
+            return true;
+        }
+        failure = "'" + opType + "' 会重排 " + elements
+                  + " 个元素，而这一层每个绑定只有一个标量表达式、没有逐元素列表 / the operator permutes elements while this layer holds one scalar expression per binding "
+                  + "and no element list, so the permutation cannot be written down（重排无处可写，而下游按位置读时会静默错位 / the reorder is silently lost and a positional downstream reads the wrong element）";
+        return false;
+    }
+
+    /// <summary>
     /// 变换结果 / The transformation result.
     /// </summary>
     /// <param name="Shape">变换后的形状 / The shape after the transformation.</param>
@@ -222,7 +289,7 @@ public static class OnnxShapeTransform
 
     /// <summary>把负轴换成从末尾数的位置 / Turn a negative axis into a position counted from the end.</summary>
     /// <remarks>
-    /// **负轴加的是<b>秩</b>，不是 `秩 + 1`：** **`-1` 在秩为 3 时指第 2 位，而 `3 + 1 - 1 = 3` 会指到界外——** '
+    /// **负轴加的是**秩**，不是 `秩 + 1`：** **`-1` 在秩为 3 时指第 2 位，而 `3 + 1 - 1 = 3` 会指到界外——** '
     /// **这类错只在小形状上才看得出来。**
     ///
     /// **A negative axis adds the rank, not rank + 1: -1 with rank 3 means position 2, while 3 + 1 - 1 = 3 points outside — that kind of error only shows on small shapes.**
